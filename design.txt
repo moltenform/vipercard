@@ -1,0 +1,55 @@
+
+
+Re-write HyperCard in a very faithful way, including the look and feel of classic Macintosh interface.
+Ideas to be kept:
+  Automatically saving changes (+undo stack)
+  Nearly all concepts of stacks, cards, tool pallette, scripts
+  Giving the user power to write code is favored over aesthetic appearences
+  
+Minor changes include:
+  Event handlers are added more easily
+  UI changes; tool pallette does not hover but stays on right of screen
+  Generic "Select/move" tool for consistency with photoshop et al.
+  Ability to publish and share created stack online.
+  Ability to fork your own copy of a published stack.
+
+Slight change in focus:
+  Making animations (one frame per card) is a fun introduction, 
+  and so design will push towards this as an entry point
+
+Tech
+------------------------------
+Simple backend in Flask
+  handles user accounts
+  CRUD into database
+  only server IO, no app logic beyond puts and gets
+
+JavaScript platform
+  everything is run on the client. simple, testable, saves server cogs
+  platform layer includes
+    serialize and deserialize stack data (JSON)
+    save/load from server
+    parse and interpret HyperTalk code
+      currently using bison js, rumors that it scales poorly but seems to work fine for me.
+  running user code is inherently kinda like xss
+    first defense: all hypertalk parsed with bison js and then interpretted, no evals.
+    second defense: all code run inside a webworker (no access to DOM or our globals)
+    
+JavaScript UI
+  Use a 'canvas-based' UI.
+    Bad for many reasons -- accessibility, use on mobile devices, use on different screen resolutions, perf
+    But an intentional choice for this project as we want the classic Macintosh look and feel, including bitmap fonts
+    Extending for screenreaders etc will be investigated I suppose
+    Even though this cuts out a huge amount of the market, not designing for mobile/touch
+      Unless I have collaborators to help with this aspect, they are welcome :)
+  Can cache many graphics so we don't have to blit pixel by pixel.
+  Use Golly
+  http://danny-garcia.com/golly/
+  
+  Layers
+    Golly
+    Mac-Classic-Emulation (layer for events, activate/deactivate event loop, modal dialogs)
+    Mac-Classic-UI-Emulation (implement windows+menus+buttons)
+    ClassicCard-Emulation (take data from the current card and paint it)
+  
+
