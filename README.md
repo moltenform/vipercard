@@ -1,4 +1,4 @@
-Under active development! Code will be posted here starting Feb 26. Subscribe to the mailing list at https://groups.google.com/forum/#!forum/classiccard-interest\
+Under active development! Code will be posted here starting Feb 26. Subscribe to the mailing list at https://groups.google.com/forum/#!forum/classiccard-interest
 
 # Vision
 
@@ -28,11 +28,11 @@ Please contact me at [@downpoured](https://twitter.com/downpoured) and I'd love 
 
 Goals:
 
-    Second week of march: Working prototype
+* Second week of march: working prototype
 
-    First week of april: Begin alpha testing
+* First week of april: begin alpha testing
 
-    First week of may: all mvp features complete
+* First week of may: all mvp features complete
 
 
 
