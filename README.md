@@ -18,3 +18,16 @@ I'm sure there were countless problems with software and accessibility in the 80
 Our lives (social, career, entertainment) center around software -- but we are discouraged from learning how this software truly works. Stressful at a deep level. We are made into inadequate, passive consumers, when software has the potential to be so much more powerful.
 
 ClassicCard is an artistic statement pushing us to consider that an old black-and-white program from the 90s can inspire us to search for solutions in what modern software development is missing.
+
+# Schedule
+
+Under active development!
+With sufficient interest I will work full-time on this project until its completion.
+Please contact me at @downpoured and I'd love to hear your thoughts.
+
+Tentative time scale:
+Second week of march: Working prototype
+First week of april: Begin alpha testing
+First week of may: all mvp features complete
+
+
