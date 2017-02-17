@@ -22,12 +22,18 @@ ClassicCard is an artistic statement pushing us to consider that an old black-an
 # Schedule
 
 Under active development!
+
 With sufficient interest I will work full-time on this project until its completion.
-Please contact me at @downpoured and I'd love to hear your thoughts.
+
+Please contact me at [@downpoured](https://twitter.com/downpoured) and I'd love to hear your thoughts.
 
 Tentative time scale:
-Second week of march: Working prototype
-First week of april: Begin alpha testing
-First week of may: all mvp features complete
+
+    Second week of march: Working prototype
+
+    First week of april: Begin alpha testing
+
+    First week of may: all mvp features complete
+
 
 
