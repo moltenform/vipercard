@@ -1,5 +1,4 @@
-# ClassicCard
-re-writing hypercard in html5
+The current prototype is not ready to be shared... please wait until Feb 26.
 
 # Vision
 
