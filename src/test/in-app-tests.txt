@@ -1,0 +1,255 @@
+on mouseup
+	if the short name of the target is "testDlgs" then
+		runTestDlgs
+	else if the short name of the target is "testMisc" then
+		runTestMisc
+	else if the short name of the target is "testValOps" then
+		runTestValOps
+	else if the short name of the target is "testDraw" then
+		runTestDraw
+	end if
+end mouseup
+
+on log s
+	put cd fld "log" into prevs
+	put prevs & cr & s into cd fld "log"
+end log
+
+on assertEq expected, got
+	put "expected '"&expected&"' but got '"&got&"'" into tmsg
+	assertTrue (expected==got), tmsg
+end assertEq
+
+on assertTrue b, tmsg
+	if not b then
+		log ("assertion failed " & tmsg)
+		answer ("assertion failed " & tmsg)
+		put intentionallyStopScript into x
+	end if
+end assertTrue
+
+on runTestDlgs
+	put "" into cd fld "log"
+	answer ("answer dialog with btn 'ok'" & cr & "line 2") 
+	put it into res
+	assertEq 1, res
+	answer "dialog with btn 'opt1'" \
+		with "opt1"
+	put it into res
+	assertEq 1, res
+	answer "please click 'opt1'" \
+		with "opt1" or "opt2" or "opt3"
+	put it into res
+	assertEq 1, res
+	answer "please click 'opt2'" \
+		with "opt1" or "opt2" or "opt3"
+	put it into res
+	assertEq 2, res
+	answer "please click 'opt3'" \
+		with "opt1" or "opt2" or "opt3"
+	put it into res
+	assertEq 3, res
+	ask "sample ask dialog"
+	ask "sample ask dialog, text should say 'example'" \
+		with "example"
+	ask "please click OK" \
+		with "example"
+	put it into res
+	assertEq "example", res
+	ask "please click cancel" \
+		with "example"
+	put it into res
+	assertEq "", res
+	ask "please type test1 and click OK" \
+		with "example"
+	put it into res
+	assertEq "test1", res
+	repeat
+		answer ("let's see if we can exit an infinite "&\
+			"loop. click the stop icon (black "&\
+			"rectangle) to exit this loop")
+		log "."
+	end repeat
+	answer "should not see this."
+	assertTrue false, "notreached"
+end runTestDlgs
+
+on runTestValOps
+	put "3" into cd fld "testfld"
+	multiply cd fld "testfld" by 4
+	assertEq 12, cd fld "testfld"
+	multiply cd fld "testfld" by 5
+	assertEq 60, cd fld "testfld"
+	divide cd fld "testfld" by 3
+	assertEq 20, cd fld "testfld"
+	divide cd fld "testfld" by 2
+	assertEq 10, cd fld "testfld"
+	add 4 to cd fld "testfld"
+	assertEq 14, cd fld "testfld"
+	add 6 to cd fld "testfld"
+	assertEq 20, cd fld "testfld"
+	subtract 15 from cd fld "testfld"
+	assertEq 5, cd fld "testfld"
+	subtract 6 from cd fld "testfld"
+	assertEq -1, cd fld "testfld"
+	put "aa,cc" into cd fld "testfld"
+	delete char 2 of cd fld "testfld"
+	assertEq "a,cc", cd fld "testfld"
+	delete char 2 to 3 of cd fld "testfld"
+	assertEq "ac", cd fld "testfld"
+	put "" into cd fld "testfld"
+	
+	put "ddd,aaa,fff" into x
+	assertEq "ddd,aaa,fff", x
+	sort items of x
+	assertEq "aaa,ddd,fff", x
+	sort ascending items of x
+	assertEq "aaa,ddd,fff", x
+	sort descending items of x
+	assertEq "fff,ddd,aaa", x
+	disable cd btn "btnTest1"
+	answer "btnTest1 should be disabled."
+	enable cd btn "btnTest1"
+	answer "btnTest1 should be enabled."
+	hide cd btn "btnTest1"
+	answer "btnTest1 should be hidden."
+	show cd btn "btnTest1"
+	answer "btnTest1 should be visible."
+	
+	put "abcdefabcdefabcdefabcdef" into cd fld "testfld"
+	set the visible of cd fld "testfld" to false
+	answer "testfld should be hidden"
+	set the visible of cd fld "testfld" to true
+	answer "testfld should be visible"
+	set the textalign of cd fld "testfld" to "center"
+	answer "testfld should be centered"
+	set the textalign of cd fld "testfld" to "left"
+	answer "testfld should be alignleft"
+	set the dontwrap of cd fld "testfld" to true
+	answer "testfld should be wrapping off"
+	set the dontwrap of cd fld "testfld" to false
+	answer "testfld should be wrapping on"
+	set the textsize of cd fld "testfld" to 24
+	answer "testfld should be big text"
+	set the textsize of cd fld "testfld" to 12
+	answer "testfld should be normal text"
+	set the textsize of char 2 to 4 of \
+		cd fld "testfld" to 24
+	answer "testfld 'bcd' should be big"
+	set the textsize of char 2 to 4 of \
+		cd fld "testfld" to 12
+	answer "testfld 'bcd' should be normal"
+	put "" into cd fld "testfld"
+	
+	set the left of cd btn "btnTest1" to (the left of cd btn "btnTest1"+45)
+	set the top of cd btn "btnTest1" to (the top of cd btn "btnTest1"+45)
+	set the width of cd btn "btnTest1" to (the width of cd btn "btnTest1"+45)
+	set the height of cd btn "btnTest1" to (the height of cd btn "btnTest1"+45)
+	answer "btnTest1 should be shifted down/right and bigger"
+    set the icon of cd btn "btnTest1" to 4
+	answer "btnTest1 should have icon"
+	set the icon of cd btn "btnTest1" to 0
+	answer "btnTest1 should have no icon"
+	set the left of cd btn "btnTest1" to (the left of cd btn "btnTest1"-45)
+	set the top of cd btn "btnTest1" to (the top of cd btn "btnTest1"-45)
+	set the width of cd btn "btnTest1" to (the width of cd btn "btnTest1"-45)
+	set the height of cd btn "btnTest1" to (the height of cd btn "btnTest1"-45)
+	answer "btnTest1 should be normal size"
+	set the enabled of cd btn "btnTest1" to false
+	answer "btnTest1 should be disabled"
+	set the enabled of cd btn "btnTest1" to true
+	answer "btnTest1 should be enabled"
+	set the label of cd btn "btnTest1" to "changedlabel"
+	answer "btnTest1 should say 'changedlabel'"
+	set the label of cd btn "btnTest1" to "btnTest1"
+	answer "btnTest1 back to 'btnTest1'"
+	set the showlabel of cd btn "btnTest1" to false
+	answer "btnTest1 should not show label"
+	set the showlabel of cd btn "btnTest1" to true
+	answer "btnTest1 should show label"
+	set the visible of cd btn "btnTest1" to false
+	answer "btnTest1 should be hidden"
+	set the visible of cd btn "btnTest1" to true
+	answer "btnTest1 should be visible"
+	set the textstyle of cd btn "btnTest1" to "bold,italic"
+	answer "btnTest1 should be bold,italic"
+	set the textstyle of cd btn "btnTest1" to "plain"
+	answer "btnTest1 should not be bold,italic"
+	answer "test complete."
+end runTestValOps
+
+on runTestMisc
+	answer "about to play beep"
+	beep
+	go next
+	put "" into cd fld "fldTest"
+	answer "on card 2"
+	put "hello" into cd fld "fldTest"
+	answer "said 'hello'"
+	go prev
+	answer "back to first card"
+	put "slow count 2s" into cd fld "log"
+	repeat with x=1 to 8
+		log x
+		wait 2 second
+	end repeat
+	wait 2 seconds
+	put "faster count 60ticks" into cd fld "log"
+	repeat with x=1 to 8
+		log x
+		wait 60 ticks
+	end repeat
+	wait 2 seconds
+	put "fast count 200ms" into cd fld "log"
+	repeat with x=1 to 8
+		log x
+		wait 200 ms
+	end repeat
+	wait 2 seconds
+	put "tests complete" into cd fld "log"
+end runTestMisc
+
+on runTestDraw
+	choose "brush" tool
+	put 0 into x
+	click at 15+x, 15
+	drag from 20+x, 5 to 20+x, 15
+	
+	add 15 to x
+	choose "pencil" tool
+	click at 15+x, 15
+	drag from 20+x, 5 to 20+x, 15
+	
+	add 15 to x
+	choose "spray" tool
+	click at 15+x, 15
+	drag from 20+x, 5 to 20+x, 15
+	
+	add 15 to x
+	choose "rect" tool
+	drag from 20+x, 5 to 30+x, 15
+	
+	add 15 to x
+	choose "oval" tool
+	drag from 20+x, 5 to 30+x, 15
+	
+	add 15 to x
+	choose "line" tool
+	drag from 20+x, 5 to 30+x, 15
+	
+	answer ("we'll now draw a lot of random pixels," & \
+		"hit Stop (black rectangle) to stop.")
+	
+	choose "pencil" tool
+	put 30 into minpos
+	put 120 into maxpos
+	put maxpos-minpos into span
+	repeat with i = 1 to 99999
+		put random(span) + minpos into x
+		put random(span) + minpos into y
+		click at x,y
+	end repeat
+end runTestDraw
+
+
+
