@@ -5,34 +5,34 @@
 import { isRelease } from "../appsettings.js";
 
 export function makeUI512ErrorGeneric(firstmsg: string, prefix: string, c1?: any, c2?: any, c3?: any, c4?: any, c5?: any) {
-    let tags:string[] = []
-    firstmsg = gatherTags(firstmsg, tags)
-    c1 = gatherTags(c1, tags)
-    c2 = gatherTags(c2, tags)
-    c3 = gatherTags(c3, tags)
+    let tags: string[] = [];
+    firstmsg = gatherTags(firstmsg, tags);
+    c1 = gatherTags(c1, tags);
+    c2 = gatherTags(c2, tags);
+    c3 = gatherTags(c3, tags);
 
-    let msg = prefix + ' ' + firstmsg;
+    let msg = prefix + " " + firstmsg;
     if (c1) {
         msg += " context: " + c1.toString();
     }
 
-    msg += c2 ? ' ' + c2.toString() : "";
-    msg += c3 ? ' ' + c3.toString() : "";
-    msg += c4 ? ' ' + c4.toString() : "";
-    msg += c5 ? ' ' + c5.toString() : "";
+    msg += c2 ? " " + c2.toString() : "";
+    msg += c3 ? " " + c3.toString() : "";
+    msg += c4 ? " " + c4.toString() : "";
+    msg += c5 ? " " + c5.toString() : "";
     if (tags.length) {
-        msg += ' (' + tags.join(',') + ')'
+        msg += " (" + tags.join(",") + ")";
     }
 
     let ret = new Error(msg);
     (ret as any).isUi512Error = true;
     msg += `\n${ret.stack}`;
-    if (ui512ErrorHandling.breakOnThrow || scontains(firstmsg, 'assertion failed')) {
+    if (ui512ErrorHandling.breakOnThrow || scontains(firstmsg, "assertion failed")) {
         try {
             // prevent an infinite loop in case this throws
-            ui512ErrorHandling.appendErrMsgToLogs(true, msg)
-        } catch(e) {
-            console.error("could not log "+e.message);
+            ui512ErrorHandling.appendErrMsgToLogs(true, msg);
+        } catch (e) {
+            console.error("could not log " + e.message);
         }
 
         console.error(msg);
@@ -44,9 +44,9 @@ export function makeUI512ErrorGeneric(firstmsg: string, prefix: string, c1?: any
     } else {
         try {
             // prevent an infinite loop in case this throws
-            ui512ErrorHandling.appendErrMsgToLogs(false, msg)
-        } catch(e) {
-            console.error("could not log "+e.message);
+            ui512ErrorHandling.appendErrMsgToLogs(false, msg);
+        } catch (e) {
+            console.error("could not log " + e.message);
         }
     }
 
@@ -59,12 +59,12 @@ export function checkThrowUI512(condition: any, msg: string, c1: any = "", c2: a
     }
 }
 
-function gatherTags(s:any, tags:string[]) {
-    if (s && typeof(s) ==='string' && s[2] === '|') {
-        tags.push(s.slice(0, 2))
-        return s.slice(3)
+function gatherTags(s: any, tags: string[]) {
+    if (s && typeof s === "string" && s[2] === "|") {
+        tags.push(s.slice(0, 2));
+        return s.slice(3);
     } else {
-        return s
+        return s;
     }
 }
 
@@ -123,7 +123,7 @@ export function assertEqWarn(expected: any, received: any, c1: string, c2?: any,
     }
 }
 
-export function throwIfUndefined<T>(v: O<T>, msg1:string, msg2:any = "", msg3:any = ""): T {
+export function throwIfUndefined<T>(v: O<T>, msg1: string, msg2: any = "", msg3: any = ""): T {
     if (v === undefined) {
         let fullmsgThrowIfUndefined = "not defined";
         if (msg1 !== "") {
@@ -148,52 +148,52 @@ export class ui512ErrorHandling {
     // current pointer to latest stored in window.localStorage['vpc_log_ptr']
     static breakOnThrow = true;
     static runningTests = false;
-    static readonly maxErrLenKept = 512
-    static readonly maxNumberOfLinesKept = 256
+    static readonly maxErrLenKept = 512;
+    static readonly maxNumberOfLinesKept = 256;
 
-    protected static encodeErrMsg(s:string) {
-        s = s.substr(0, ui512ErrorHandling.maxErrLenKept)
-        return Util512.compressString(s, true)
+    protected static encodeErrMsg(s: string) {
+        s = s.substr(0, ui512ErrorHandling.maxErrLenKept);
+        return Util512.compressString(s, true);
     }
 
-    protected static decodeErrMsg(compressed:string) {
-        return Util512.decompressString(compressed, true)
+    protected static decodeErrMsg(compressed: string) {
+        return Util512.decompressString(compressed, true);
     }
-    
-    static appendErrMsgToLogs(showedDialog:boolean, s:string) {
+
+    static appendErrMsgToLogs(showedDialog: boolean, s: string) {
         // many of these will be expected errors, like script runtime errors
         // but right now we log everything
 
-        if (!ui512ErrorHandling.runningTests && !!window.localStorage && !scontains(s, 'Simple notification:')) {
+        if (!ui512ErrorHandling.runningTests && !!window.localStorage && !scontains(s, "Simple notification:")) {
             // we log errors in a compressed format
             // first character is showedDialog as 'severity', 1 or 2.
-            let encoded = (showedDialog ? '1' : '2') + ui512ErrorHandling.encodeErrMsg(s)
+            let encoded = (showedDialog ? "1" : "2") + ui512ErrorHandling.encodeErrMsg(s);
 
-            // update ring buffer pointer. 
+            // update ring buffer pointer.
             // store ptr in the local storage, not in a global, in case there's another vpc instance in other browser window
-            let ptrLatest = parseInt((window.localStorage['vpc_log_ptr'] || '0'), 10)
-            ptrLatest = Number.isFinite(ptrLatest) ? ptrLatest : 0
-            window.localStorage['vpc_log_ptr'] = ui512ErrorHandling.mod(ptrLatest + 1, ui512ErrorHandling.maxNumberOfLinesKept).toString()
-            window.localStorage['vpc_log_' + ptrLatest] = encoded
+            let ptrLatest = parseInt(window.localStorage["vpc_log_ptr"] || "0", 10);
+            ptrLatest = Number.isFinite(ptrLatest) ? ptrLatest : 0;
+            window.localStorage["vpc_log_ptr"] = ui512ErrorHandling.mod(ptrLatest + 1, ui512ErrorHandling.maxNumberOfLinesKept).toString();
+            window.localStorage["vpc_log_" + ptrLatest] = encoded;
         }
     }
 
-    static mod(a:number, n:number) {
+    static mod(a: number, n: number) {
         // more intuitive with negative numbers
-        return ((a%n)+n)%n;
+        return (a % n + n) % n;
     }
 
-    static getLatestErrLogs(amount:number):string {
-        let ret = ''
-        let ptrLatest = parseInt((window.localStorage['vpc_log_ptr'] || '0'), 10)
-        ptrLatest = Number.isFinite(ptrLatest) ? ptrLatest : 0
-        for (let i=0; i<amount; i++) {
-            let index = ui512ErrorHandling.mod(ptrLatest - i, ui512ErrorHandling.maxNumberOfLinesKept)
+    static getLatestErrLogs(amount: number): string {
+        let ret = "";
+        let ptrLatest = parseInt(window.localStorage["vpc_log_ptr"] || "0", 10);
+        ptrLatest = Number.isFinite(ptrLatest) ? ptrLatest : 0;
+        for (let i = 0; i < amount; i++) {
+            let index = ui512ErrorHandling.mod(ptrLatest - i, ui512ErrorHandling.maxNumberOfLinesKept);
             // safe to use \n as a delimiter because of our encoding
-            ret += (window.localStorage['vpc_log_' + index] || '') + '\n'
+            ret += (window.localStorage["vpc_log_" + index] || "") + "\n";
         }
 
-        return ret
+        return ret;
     }
 }
 
@@ -205,8 +205,7 @@ export type O<T> = T | undefined;
 // also useful as a way of resetting reference types --
 // if you say myArray = [3,4] then everyone holding a reference to myArray will incorrectly get the previous data
 export class refparam<T> {
-    constructor(public val:T) {
-    }
+    constructor(public val: T) {}
 }
 
 export class Util512 {
@@ -216,7 +215,7 @@ export class Util512 {
     }
 
     static booltrue(b: any) {
-        assertEq(typeof b, "boolean", '4O|');
+        assertEq(typeof b, "boolean", "4O|");
         return !!b;
     }
 
@@ -387,13 +386,13 @@ export class Util512 {
         }
     }
 
-    static freezeProperty(o:any, propName:string) {
-        Object.freeze(o[propName])
+    static freezeProperty(o: any, propName: string) {
+        Object.freeze(o[propName]);
         Object.defineProperty(o, propName, { configurable: false, writable: false });
     }
 
-    static shallowClone(o:any) {
-        return Object.assign({}, o)
+    static shallowClone(o: any) {
+        return Object.assign({}, o);
     }
 
     static escapeForRegex(s: string) {
@@ -401,9 +400,9 @@ export class Util512 {
     }
 
     static callAsMethodOnClass(clsname: string, me: any, s: string, args: any[], okIfNotExists: boolean) {
-        checkThrowUI512(s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/), "callAsMethodOnClass requires alphanumeric no spaces", s)
+        checkThrowUI512(s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/), "callAsMethodOnClass requires alphanumeric no spaces", s);
         let method = me[s];
-        assertTrue(args === undefined || Array.isArray(args), "4I|args not an array")
+        assertTrue(args === undefined || Array.isArray(args), "4I|args not an array");
         if (method && typeof method === "function") {
             assertTrue(me.hasOwnProperty(s) || me.__proto__.hasOwnProperty(s), "4H|cannot use parent classes", clsname, s);
             return method.apply(me, args);
@@ -414,7 +413,7 @@ export class Util512 {
         }
     }
 
-    static getMapKeys<U>(map:{ [key: string]: U }):string[] {
+    static getMapKeys<U>(map: { [key: string]: U }): string[] {
         let ret: string[] = [];
         for (let key in map) {
             if (map.hasOwnProperty(key)) {
@@ -425,7 +424,7 @@ export class Util512 {
         return ret;
     }
 
-    static getMapVals<T>(map:{ [key: string]: T }) {
+    static getMapVals<T>(map: { [key: string]: T }) {
         let ret: T[] = [];
         for (let key in map) {
             if (map.hasOwnProperty(key)) {
@@ -436,67 +435,72 @@ export class Util512 {
         return ret;
     }
 
-    static listUnique(ar:string[]) {
-        let ret:string[] = []
-        let values:{ [key: string]: boolean } = {}
+    static listUnique(ar: string[]) {
+        let ret: string[] = [];
+        let values: { [key: string]: boolean } = {};
         for (let i = 0; i < ar.length; i++) {
             if (!values[ar[i]]) {
                 values[ar[i]] = true;
-                ret.push(ar[i])
+                ret.push(ar[i]);
             }
         }
 
         return ret;
     }
 
-    static scriptsAlreadyLoaded:{ [key: string]: boolean } = {}
-    static asyncLoadJsIfNotAlreadyLoaded(url:string):Promise<void> {
+    static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
+    static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
         return new Promise(function(resolve, reject) {
             if (Util512.scriptsAlreadyLoaded[url]) {
-                resolve()
-                return
+                resolve();
+                return;
             }
 
-            var script = document.createElement('script')
-            script.setAttribute('src', url);
+            var script = document.createElement("script");
+            script.setAttribute("src", url);
             let loaded = false; // prevents cb from being called twice
             script.onerror = () => {
-                let urlsplit = url.split('/')
-                reject(new Error('Did not load ' + urlsplit[urlsplit.length - 1]));
-            }
+                let urlsplit = url.split("/");
+                reject(new Error("Did not load " + urlsplit[urlsplit.length - 1]));
+            };
 
             (script as any).onreadystatechange = script.onload = () => {
                 if (!loaded) {
-                    Util512.scriptsAlreadyLoaded[url] = true
-                    loaded = true
-                    resolve()
+                    Util512.scriptsAlreadyLoaded[url] = true;
+                    loaded = true;
+                    resolve();
                 }
             };
-    
-            document.getElementsByTagName('head')[0].appendChild(script);
-        })
+
+            document.getElementsByTagName("head")[0].appendChild(script);
+        });
     }
 
     // use compressToUTF16 instead of default compress() which can create invalid utf sequences
-    protected static tokenEscapeNewline = '##Newline##' // odds of occurring are less than 1/256 ^ 6
-    protected static reEscapeNewline = new RegExp(Util512.tokenEscapeNewline, 'g')
-    protected static reNewline = new RegExp('\n', 'g')
-    static compressString(s:string, escapeNewlines:boolean) {
-        let compressed = LZString.compressToUTF16(s)
+    protected static tokenEscapeNewline = "##Newline##"; // odds of occurring are less than 1/256 ^ 6
+    protected static reEscapeNewline = new RegExp(Util512.tokenEscapeNewline, "g");
+    protected static reNewline = new RegExp("\n", "g");
+    static compressString(s: string, escapeNewlines: boolean) {
+        let compressed = LZString.compressToUTF16(s);
         if (escapeNewlines) {
-            checkThrowUI512(compressed.search(Util512.reEscapeNewline) < 0, `cannot compress this data. the compressed data happened to contain the string ${Util512.tokenEscapeNewline} which mathematically is very unlikely.`)
-            return compressed.replace(Util512.reNewline, Util512.tokenEscapeNewline)
+            checkThrowUI512(
+                compressed.search(Util512.reEscapeNewline) < 0,
+                `cannot compress this data. the compressed data happened to contain the string ${
+                    Util512.tokenEscapeNewline
+                } which mathematically is very unlikely.`
+            );
+            return compressed.replace(Util512.reNewline, Util512.tokenEscapeNewline);
         } else {
-            return compressed
+            return compressed;
         }
     }
 
-    static decompressString(s:string, escapeNewlines:boolean) {
+    static decompressString(s: string, escapeNewlines: boolean) {
         if (escapeNewlines) {
-            s = s.replace(Util512.reEscapeNewline, '\n')
-            return LZString.decompressFromUTF16(s)
+            s = s.replace(Util512.reEscapeNewline, "\n");
+            return LZString.decompressFromUTF16(s);
         } else {
-            return LZString.decompressFromUTF16(s)
+            return LZString.decompressFromUTF16(s);
         }
     }
 }
@@ -524,16 +528,20 @@ export function getStrToEnum<T>(e: any, msgcontext: string, s: string): T {
     } else {
         msgcontext = msgcontext ? `Not a valid choice of ${msgcontext} ` : `Not a valid choice for this value. `;
         if (e["__isUI512Enum"] !== undefined) {
-            msgcontext += ' try one of'
+            msgcontext += " try one of";
             for (let enumMember in e) {
-                if (typeof enumMember === "string" && !enumMember.startsWith("__") && !enumMember.startsWith("alternateform") &&
-                    !scontains('0123456789', enumMember[0].toString())) {
+                if (
+                    typeof enumMember === "string" &&
+                    !enumMember.startsWith("__") &&
+                    !enumMember.startsWith("alternateform") &&
+                    !scontains("0123456789", enumMember[0].toString())
+                ) {
                     msgcontext += ", " + enumMember;
                 }
             }
         }
 
-        throw makeUI512Error(msgcontext, '4E|');
+        throw makeUI512Error(msgcontext, "4E|");
     }
 }
 
@@ -694,7 +702,7 @@ export interface Root {
     getFontManager(): IFontManager;
     getIconManager(): IIconManager;
     getSession(): O<IUI512Session>;
-    setSession(session:O<IUI512Session>): void;
+    setSession(session: O<IUI512Session>): void;
     getBrowserInfo(): BrowserOSInfo;
     replaceCurrentController(newController: any): void;
     runTests(all: boolean): void;
@@ -791,9 +799,9 @@ export enum BrowserOSInfo {
 }
 
 export class Tests_BaseClass {
-    inited = false
+    inited = false;
     init() {
-        this.inited = true
+        this.inited = true;
     }
 
     tests: (string | Function)[] = [];
@@ -805,18 +813,18 @@ export class Tests_BaseClass {
             let name = this.tests[i];
             let test = this.tests[i + 1];
             if (typeof name === "string" && typeof test === "function") {
-                assertTrue(testNamesUsed[name] === undefined, name, '3}|');
+                assertTrue(testNamesUsed[name] === undefined, name, "3}|");
                 testNamesUsed[name] = true;
                 listNames.push(name);
                 listTests.push(test);
-                listInstances.push(this)
+                listInstances.push(this);
             } else {
-                assertTrue(false, name + " " + test, '3||');
+                assertTrue(false, name + " " + test, "3||");
             }
         }
     }
 
-    assertThrows(tagmsg:string, expectederr: string, fn: Function) {
+    assertThrows(tagmsg: string, expectederr: string, fn: Function) {
         let msg: O<string>;
         try {
             ui512ErrorHandling.breakOnThrow = false;
@@ -831,21 +839,35 @@ export class Tests_BaseClass {
         assertTrue(msg !== undefined && scontains(msg, expectederr), `9d|message "${msg}" did not contain "${expectederr}" ${tagmsg}`);
     }
 
-    static slowTests:{ [key: string]: boolean } = {
-        "callback/Text Core Fonts":true,
-        "callback/Text All Fonts":true,
-    }
+    static slowTests: { [key: string]: boolean } = {
+        "callback/Text Core Fonts": true,
+        "callback/Text All Fonts": true,
+    };
 
-    static runNextTest(root: Root, listNames: string[], listTests: Function[], listInstances: Tests_BaseClass[], all:boolean, index: number) {
+    static runNextTest(
+        root: Root,
+        listNames: string[],
+        listTests: Function[],
+        listInstances: Tests_BaseClass[],
+        all: boolean,
+        index: number
+    ) {
         try {
-            ui512ErrorHandling.runningTests = true
-            Tests_BaseClass.runNextTestImpl(root, listNames, listTests, listInstances, all, index)
+            ui512ErrorHandling.runningTests = true;
+            Tests_BaseClass.runNextTestImpl(root, listNames, listTests, listInstances, all, index);
         } finally {
-            ui512ErrorHandling.runningTests = false
+            ui512ErrorHandling.runningTests = false;
         }
     }
 
-    protected static runNextTestImpl(root: Root, listNames: string[], listTests: Function[], listInstances: Tests_BaseClass[], all:boolean, index: number) {
+    protected static runNextTestImpl(
+        root: Root,
+        listNames: string[],
+        listTests: Function[],
+        listInstances: Tests_BaseClass[],
+        all: boolean,
+        index: number
+    ) {
         if (index >= listTests.length) {
             console.log(`${listTests.length + 1}/${listTests.length + 1} all tests complete!`);
         } else if (!all && Tests_BaseClass.slowTests[listNames[index]]) {
@@ -857,7 +879,7 @@ export class Tests_BaseClass {
         } else {
             console.log(`${index + 1}/${listTests.length + 1} starting ${listNames[index]}`);
             let nextTest = index + 1;
-            listInstances[index].init()
+            listInstances[index].init();
             if (listNames[index].startsWith("callback/")) {
                 listTests[index](root, () => {
                     Tests_BaseClass.runNextTest(root, listNames, listTests, listInstances, all, nextTest);
@@ -885,7 +907,7 @@ export class Tests_BaseClass {
 
         console.log("starting tests...");
         Tests_BaseClass.runNextTest(root, listNames, listTests, listInstances, all, 0);
-    } 
+    }
 }
 
 /* CharClassify
@@ -1001,8 +1023,8 @@ export class MapKeyToObject<T> {
 
     add(key: string, obj: T) {
         assertTrue(slength(key) > 0, `3^|invalid id ${key}`);
-        if(this.objects[key] !== undefined) {
-             throw makeUI512Error(`3]|duplicate key, ${key} already exists`);
+        if (this.objects[key] !== undefined) {
+            throw makeUI512Error(`3]|duplicate key, ${key} already exists`);
         }
 
         this.objects[key] = obj;
@@ -1017,11 +1039,11 @@ export class MapKeyToObject<T> {
     }
 
     getVals(): T[] {
-        return Util512.getMapVals(this.objects)
+        return Util512.getMapVals(this.objects);
     }
 
     getKeys(): string[] {
-        return Util512.getMapKeys(this.objects)
+        return Util512.getMapKeys(this.objects);
     }
 }
 

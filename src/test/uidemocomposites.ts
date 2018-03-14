@@ -14,7 +14,6 @@ import { RectOverlapType, RectUtils, ModifierKeys, osTranslateModifiers, toShort
 import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
 
-
 export class UI512TestCompositesController extends UI512Controller {
     testrbExclusive = new UI512CompRadioButtonGroup("testrbExclusive");
     testrbInclusive = new UI512CompRadioButtonGroup("testrbInclusive");
@@ -23,19 +22,19 @@ export class UI512TestCompositesController extends UI512Controller {
     testModalDlg = new UI512CompStdDialog("testModalDlg", this.lang);
     public init(root: Root) {
         super.init(root);
-        addDefaultListeners(this.listeners)
-        let editTextBehavior = new EditTextBehavior()
+        addDefaultListeners(this.listeners);
+        let editTextBehavior = new EditTextBehavior();
         this.listeners[UI512EventType.KeyDown.valueOf()] = [
-            BasicHandlers.trackKeyDown, 
-            BasicHandlers.basicKeyShortcuts, 
+            BasicHandlers.trackKeyDown,
+            BasicHandlers.basicKeyShortcuts,
             UI512TestCompositesController.respondKeyDown, // inserted before editTextBehavior so that we can recieve the "Enter" keystroke
-            editTextBehavior.onKeyDown.bind(editTextBehavior)
+            editTextBehavior.onKeyDown.bind(editTextBehavior),
         ];
     }
 
     private static respondKeyDown(c: UI512DemoComposites, root: Root, d: KeyDownEventDetails) {
         if (c.testEditor.children.length && c.currentFocus && c.testEditor.el && c.currentFocus === c.testEditor.el.id) {
-            c.testEditor.respondKeydown(root, d)
+            c.testEditor.respondKeydown(root, d);
         }
     }
 }
@@ -56,10 +55,10 @@ export class UI512DemoComposites extends UI512TestCompositesController {
         let testBtns = ["WhichChecked", "RunTest", "DldImage", "Dlg1", "Dlg2", "DlgAsk"];
         let layoutTestBtns = new GridLayout(clientrect[0] + 10, clientrect[1] + 330, 100, 15, testBtns, [1], 5, 5);
         layoutTestBtns.createElems(this.app, grp, "btn", UI512ElButton, () => {}, true, true);
-        
+
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseUp, UI512DemoComposites.respondMouseUp);
-        this.rebuildFieldScrollbars()
+        this.rebuildFieldScrollbars();
     }
 
     private static respondMouseUp(c: UI512DemoComposites, root: Root, d: MouseUpEventDetails) {
@@ -127,7 +126,7 @@ export class Test_DrawComposites extends Tests_BaseClass {
         bg.set("style", UI512BtnStyle.opaque);
         bg.setDimensions(bounds[0], bounds[1], bounds[2], bounds[3]);
         bg.set("autohighlight", false);
-        
+
         // add choice groups
         c.testrbExclusive.items = [["apple", "lngApple"], ["cherry", "lngCherry"], ["strawberry", "lngStrawberry"]];
         c.testrbExclusive.isExclusive = true;
@@ -192,7 +191,7 @@ end1`.replace(/\r\n/g, "\n")
         testc.inited = true;
         testc.app = new UI512Application([0, 0, w, h], testc);
         this.addElements(testc, testc.app.bounds);
-        testc.rebuildFieldScrollbars()
+        testc.rebuildFieldScrollbars();
 
         // first pass rendering adds the scrollbars
         // don't show any borders
@@ -229,7 +228,7 @@ end1`.replace(/\r\n/g, "\n")
         c.useOSClipboard = false;
         c.clipManager.simClipboard = "";
         this.simulateKey(root, c, "C", "c", false, true);
-        assertEq("\n", c.clipManager.simClipboard, '1R|');
+        assertEq("\n", c.clipManager.simClipboard, "1R|");
     }
 
     drawTestCaseComposites2(root: Root, c: UI512TestCompositesController) {
@@ -238,7 +237,7 @@ end1`.replace(/\r\n/g, "\n")
         c.testrbInclusive.setWhichChecked(c.app, ["fries", "hamburger", "soda"]);
         c.testrbInclusive.setWhichChecked(c.app, ["hot dog"]);
         c.testToolbox.setWhich(c.app, "letter");
-        c.setCurrentFocus(root, c.testEditor.getEl().id)
+        c.setCurrentFocus(root, c.testEditor.getEl().id);
         this.simulateKey(root, c, "Home", "", false, true);
         this.simulateKey(root, c, "A", "a", false, true);
         this.simulateKey(root, c, "Backspace", "", false, false);
@@ -259,7 +258,7 @@ end1`.replace(/\r\n/g, "\n")
         const w = 928;
         const h = 360;
         const screensToDraw = 2;
-        assertEq(w, ScreenConsts.screenwidth, '1Q|');
+        assertEq(w, ScreenConsts.screenwidth, "1Q|");
         let tmpCanvasDom = document.createElement("canvas");
         tmpCanvasDom.width = w;
         tmpCanvasDom.height = h;

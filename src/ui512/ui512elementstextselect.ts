@@ -228,63 +228,63 @@ export class SelAndEntryImpl {
 }
 
 export interface IGenericTextField {
-    setftxt(newtxt: FormattedText, context:ChangeContext):void;
-    getftxt():FormattedText;
-    canEdit():boolean;
-    canSelectText():boolean;
-    isMultiline():boolean;
-    setSel(a:number, b:number):void;
-    getSel():[number, number];
-    identifier():string;
-    getHeight():number
-    getDefaultFont():string
-    getReadonlyUi512():UI512ElTextField
-    getScrollAmt():number
-    setScrollAmt(n:O<number>):void
+    setftxt(newtxt: FormattedText, context: ChangeContext): void;
+    getftxt(): FormattedText;
+    canEdit(): boolean;
+    canSelectText(): boolean;
+    isMultiline(): boolean;
+    setSel(a: number, b: number): void;
+    getSel(): [number, number];
+    identifier(): string;
+    getHeight(): number;
+    getDefaultFont(): string;
+    getReadonlyUi512(): UI512ElTextField;
+    getScrollAmt(): number;
+    setScrollAmt(n: O<number>): void;
 }
 
 export class UI512ElTextFieldAsGeneric implements IGenericTextField {
-    constructor(protected impl:UI512ElTextField ) {}
-    setftxt(newtxt: FormattedText, context:ChangeContext) {
-        this.impl.setftxt(newtxt, context)
+    constructor(protected impl: UI512ElTextField) {}
+    setftxt(newtxt: FormattedText, context: ChangeContext) {
+        this.impl.setftxt(newtxt, context);
     }
-    getftxt():FormattedText {
-        return this.impl.get_ftxt()
+    getftxt(): FormattedText {
+        return this.impl.get_ftxt();
     }
     canEdit() {
-        return this.impl.get_b('canedit')
+        return this.impl.get_b("canedit");
     }
-    canSelectText():boolean {
-        return this.impl.get_b('canselecttext')
+    canSelectText(): boolean {
+        return this.impl.get_b("canselecttext");
     }
-    isMultiline():boolean  {
-        return this.impl.get_b('multiline')
+    isMultiline(): boolean {
+        return this.impl.get_b("multiline");
     }
-    setSel(a:number, b:number):void {
-        this.impl.set('selcaret', a)
-        this.impl.set('selend', b)
+    setSel(a: number, b: number): void {
+        this.impl.set("selcaret", a);
+        this.impl.set("selend", b);
     }
-    getSel():[number, number] {
-        return [this.impl.get_n('selcaret'), this.impl.get_n('selend')]
+    getSel(): [number, number] {
+        return [this.impl.get_n("selcaret"), this.impl.get_n("selend")];
     }
-    identifier():string {
+    identifier(): string {
         return this.impl.id;
     }
-    getHeight():number {
-        return this.impl.h
+    getHeight(): number {
+        return this.impl.h;
     }
-    getDefaultFont():string {
-        return this.impl.get_s('defaultFont')
+    getDefaultFont(): string {
+        return this.impl.get_s("defaultFont");
     }
-    getReadonlyUi512():UI512ElTextField {
-        return this.impl
+    getReadonlyUi512(): UI512ElTextField {
+        return this.impl;
     }
-    getScrollAmt():number  {
-        return this.impl.get_n('scrollamt')
+    getScrollAmt(): number {
+        return this.impl.get_n("scrollamt");
     }
-    setScrollAmt(n:O<number>):void {
-        if (n!==undefined && n!==null) {
-            return this.impl.set('scrollamt', n)
+    setScrollAmt(n: O<number>): void {
+        if (n !== undefined && n !== null) {
+            return this.impl.set("scrollamt", n);
         }
     }
 }
@@ -315,10 +315,10 @@ export class SelAndEntry {
         let tRead = el.getftxt();
         let tWritable = tRead.getUnlockedCopy();
         SelAndEntry.validatestartstop(el);
-        let [selcaretBefore, selendBefore] = el.getSel()
+        let [selcaretBefore, selendBefore] = el.getSel();
         let [tResult, nCaret, nEnd] = fn(tWritable, selcaretBefore, selendBefore);
         el.setftxt(tResult, ChangeContext.Default);
-        el.setSel(nCaret, nEnd)
+        el.setSel(nCaret, nEnd);
         SelAndEntry.validatestartstop(el);
 
         if (!el.isMultiline()) {
@@ -329,8 +329,8 @@ export class SelAndEntry {
             );
         }
 
-        let amt = ScrollbarImpl.getScrollPosThatWouldMakeStartCaretVisible(root, el.getReadonlyUi512())
-        el.setScrollAmt(amt)
+        let amt = ScrollbarImpl.getScrollPosThatWouldMakeStartCaretVisible(root, el.getReadonlyUi512());
+        el.setScrollAmt(amt);
     }
 
     protected static changeSelInField(
@@ -342,20 +342,20 @@ export class SelAndEntry {
         SelAndEntry.validatestartstop(el);
         let t = el.getftxt();
         if (t.len() && el.canSelectText()) {
-            let [ncaretBefore, nendBefore] = el.getSel()
+            let [ncaretBefore, nendBefore] = el.getSel();
             let [nextCaret, nextEnd] = fn(t, ncaretBefore, nendBefore);
-            el.setSel(nextCaret, nextEnd)
+            el.setSel(nextCaret, nextEnd);
             SelAndEntry.validatestartstop(el);
-            let amt = ScrollbarImpl.getScrollPosThatWouldMakeStartCaretVisible(root, el.getReadonlyUi512())
-            el.setScrollAmt(amt)
+            let amt = ScrollbarImpl.getScrollPosThatWouldMakeStartCaretVisible(root, el.getReadonlyUi512());
+            el.setScrollAmt(amt);
         }
     }
 
     static validatestartstop(el: IGenericTextField) {
-        let [ncaret, nend] = el.getSel()
+        let [ncaret, nend] = el.getSel();
         ncaret = fitIntoInclusive(ncaret, 0, el.getftxt().len());
         nend = fitIntoInclusive(nend, 0, el.getftxt().len());
-        el.setSel(ncaret, nend)
+        el.setSel(ncaret, nend);
     }
 
     static changeSelSelectAll(root: Root, el: IGenericTextField) {
@@ -423,7 +423,7 @@ export class SelAndEntry {
     }
 
     static changeSelPageUpDown(root: Root, el: IGenericTextField, isUp: boolean, isExtend: boolean) {
-        let [ncaret, nend] = el.getSel()        
+        let [ncaret, nend] = el.getSel();
         let approxLineHeight = ScrollbarImpl.getApproxLineHeight(root, el.getReadonlyUi512(), ncaret);
         if (approxLineHeight) {
             // go about one line less than the amount of lines per page, and minimum of one line
@@ -462,7 +462,7 @@ export class SelAndEntry {
     }
 
     static mouseClickSelectByLines(root: Root, el: IGenericTextField, x: number, y: number) {
-        let [selcaretBefore, selendBefore] = el.getSel()
+        let [selcaretBefore, selendBefore] = el.getSel();
         this.mouseClickPositionToSetCaret(root, el, x, y, false);
         SelAndEntry.changeSelInField(root, el, (t, ncaret, nend) => {
             if (el.getftxt().len() > 0 && (ncaret !== selcaretBefore || nend !== selendBefore)) {
@@ -492,7 +492,7 @@ export class SelAndEntry {
     }
 
     static selectByLinesWhichLine(el: IGenericTextField) {
-        let [selcaret, selend] = el.getSel()
+        let [selcaret, selend] = el.getSel();
         if (selcaret === selend || el.getftxt().len() === 0) {
             return undefined;
         } else {
@@ -529,7 +529,7 @@ export class SelAndEntry {
         if (el.canSelectText()) {
             SelAndEntry.validatestartstop(el);
             let t = el.getftxt();
-            let [p1, p2] = el.getSel()
+            let [p1, p2] = el.getSel();
             let pp1 = Math.min(p1, p2),
                 pp2 = Math.max(p1, p2);
             return t.toUnformattedSubstr(pp1, pp2 - pp1);

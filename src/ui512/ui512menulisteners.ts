@@ -66,14 +66,14 @@ export class MenuBehavior {
         let sendEvent = () => {
             MenuBehavior.closeAllActiveMenus(c);
             c.openState = MenuOpenState.MenusClosed;
-            
+
             try {
                 c.rawEvent(root, new MenuItemClickedDetails(item.id, d.mods));
                 if ((c as any).cursorRefreshPending !== undefined) {
-                    (c as any).cursorRefreshPending = true
+                    (c as any).cursorRefreshPending = true;
                 }
             } catch (e) {
-                ui512RespondError(e, "MenuItemClicked response")
+                ui512RespondError(e, "MenuItemClicked response");
             }
         };
 
@@ -162,7 +162,7 @@ class IgnoreDuringAnimation extends TemporaryIgnoreEvents {
     constructor(public item: UI512MenuItem, public callback: () => void) {
         super();
     }
-    
+
     shouldRestore(ms: number) {
         if (this.firstMs === 0) {
             this.firstMs = ms;

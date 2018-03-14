@@ -59,7 +59,7 @@ export class FormattedText {
     }
 
     setFontAt(i: number, s: string) {
-        assertTrueWarn(s.length > 0, "")
+        assertTrueWarn(s.length > 0, "");
         assertTrue(!this.locked, "3q|locked");
         assertTrue(!scontains(s, specialCharFontChange), `3p|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`);
         this.fontArray[i] = s;
@@ -71,7 +71,7 @@ export class FormattedText {
     }
 
     setFontEverywhere(s: string) {
-        assertTrueWarn(s.length > 0, "")        
+        assertTrueWarn(s.length > 0, "");
         assertTrue(!this.locked, "3n|locked");
         assertTrue(!scontains(s, specialCharFontChange), `3m|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`);
         for (let i = 0; i < this.fontArray.length; i++) {
@@ -80,9 +80,12 @@ export class FormattedText {
     }
 
     push(char: number, font: string) {
-        assertTrueWarn(font.length > 0, "")        
+        assertTrueWarn(font.length > 0, "");
         assertTrue(!this.locked, "3l|locked");
-        assertTrue(!scontains(font, specialCharFontChange), `3k|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`);
+        assertTrue(
+            !scontains(font, specialCharFontChange),
+            `3k|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
+        );
         this.charArray.push(char);
         this.fontArray.push(font);
     }
@@ -98,11 +101,11 @@ export class FormattedText {
     }
 
     isLocked() {
-        return this.locked
+        return this.locked;
     }
 
     getUnlockedCopy() {
-        let other = this.clone()
+        let other = this.clone();
         other.locked = false;
         return other;
     }
@@ -134,7 +137,10 @@ export class FormattedText {
             tnew.charArray.push(insert.charCodeAt(i));
         }
 
-        assertTrue(!scontains(font, specialCharFontChange), `3g|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`);
+        assertTrue(
+            !scontains(font, specialCharFontChange),
+            `3g|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
+        );
         tnew.charArray = tnew.charArray.concat(t.charArray.slice(n + nDelete));
 
         tnew.fontArray = t.fontArray.slice(0, n);
@@ -178,7 +184,7 @@ export class FormattedText {
         if (info === BrowserOSInfo.Windows) {
             s = s.replace(new RegExp("\n", "g"), "\r\n");
         }
-        
+
         return s;
     }
 
@@ -194,7 +200,7 @@ export class FormattedText {
     }
 
     len() {
-        assertEqWarn(this.charArray.length, this.fontArray.length, '3f|');
+        assertEqWarn(this.charArray.length, this.fontArray.length, "3f|");
         return this.charArray.length;
     }
 
@@ -202,8 +208,8 @@ export class FormattedText {
         assertTrue(!this.locked, "3e|locked");
         this.charArray = [];
         this.fontArray = [];
-        assertEq(-1, s.indexOf("\r"), '3d|');
-        assertEq(-1, s.indexOf("\x00"), '3c|');
+        assertEq(-1, s.indexOf("\r"), "3d|");
+        assertEq(-1, s.indexOf("\x00"), "3c|");
 
         if (!s.startsWith(specialCharFontChange)) {
             s = TextRendererFontManager.setInitialFont(s, TextRendererFontManager.defaultFont);
@@ -221,7 +227,7 @@ export class FormattedText {
                 }
             } else {
                 currentFont = parts[i];
-                assertTrue(currentFont.length > 0 ,'')
+                assertTrue(currentFont.length > 0, "");
                 assertTrue(
                     !scontains(currentFont, specialCharFontChange),
                     `3a|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
@@ -233,7 +239,7 @@ export class FormattedText {
     toPersisted() {
         let s = "";
         let currentFont: O<string> = undefined;
-        assertEq(this.charArray.length, this.fontArray.length, '3Z|');
+        assertEq(this.charArray.length, this.fontArray.length, "3Z|");
         for (let i = 0; i < this.charArray.length; i++) {
             if (currentFont !== this.fontArray[i]) {
                 s += specialCharFontChange + this.fontArray[i] + specialCharFontChange;
@@ -247,7 +253,7 @@ export class FormattedText {
 
     toUnformatted() {
         let ret = this.charArray.map(c => String.fromCharCode(c)).join("");
-        assertEq(this.len(), ret.length, '3Y|');
+        assertEq(this.len(), ret.length, "3Y|");
         return ret;
     }
 
@@ -762,7 +768,7 @@ export class TextRendererFontManager implements IFontManager {
 
     protected wrapTextIntoLines(s: FormattedText, args: RenderTextArgs) {
         let boxW = args.wrap ? args.boxw : largearea;
-        boxW = Math.max(1, boxW)
+        boxW = Math.max(1, boxW);
         let ret = [new LineTextToRender()];
         let curx = 0;
         for (let i = 0; i < s.len(); i++) {
@@ -772,8 +778,7 @@ export class TextRendererFontManager implements IFontManager {
             // todo: putting abc\ndef into a very narrow field of width 1px, wrapping enabled
             // currently adds an extra vertical space between the c and the d
             // doesn't look that bad, but maybe something to revisit
-            let measurement = letter===specialCharNumNewline ? 0 : 
-                ret[ret.length - 1].measureChar(this.cache, font, letter).newlogicalx;
+            let measurement = letter === specialCharNumNewline ? 0 : ret[ret.length - 1].measureChar(this.cache, font, letter).newlogicalx;
             curx += measurement;
             let tooFarToRight = curx >= boxW;
             let addNewLine = tooFarToRight && ret[ret.length - 1].text.len() > 0;
@@ -892,21 +897,21 @@ export class TextRendererFontManager implements IFontManager {
 
     static makeAsteriskOnlyIfApplicable(textin: FormattedText, args: RenderTextArgs) {
         if (!args.asteriskOnly) {
-            return textin
+            return textin;
         }
 
-        let modifiedText = textin.clone()
-        let c = '\xA5'.charCodeAt(0)
-        for (let i=0; i<modifiedText.len(); i++) {
-            modifiedText.setCharAt(i, c)
+        let modifiedText = textin.clone();
+        let c = "\xA5".charCodeAt(0);
+        for (let i = 0; i < modifiedText.len(); i++) {
+            modifiedText.setCharAt(i, c);
         }
 
-        modifiedText.lock()
-        return modifiedText
+        modifiedText.lock();
+        return modifiedText;
     }
 
     protected drawStringIntoBoxImpl(textin: FormattedText, canvas: O<CanvasWrapper>, args: RenderTextArgs): DrawCharResult {
-        textin = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args)
+        textin = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
         let lines = this.wrapTextIntoLines(textin, args);
         let totalWidth = 0,
             totalHeight = 0;
@@ -965,23 +970,23 @@ export class TextRendererFontManager implements IFontManager {
         return specialCharFontChange + font + specialCharFontChange + s;
     }
 
-    static makeInitialTextDisabled(s:string) {
-        let search1 = specialCharFontChange + 'chicago_12_biuosdce' + specialCharFontChange
-        let repl1 = specialCharFontChange + 'chicago_12_biuos+dce' + specialCharFontChange
-        let search2 = specialCharFontChange + 'geneva_9_biuosdce' + specialCharFontChange
-        let repl2 = specialCharFontChange + 'geneva_9_biuos+dce' + specialCharFontChange
-        
+    static makeInitialTextDisabled(s: string) {
+        let search1 = specialCharFontChange + "chicago_12_biuosdce" + specialCharFontChange;
+        let repl1 = specialCharFontChange + "chicago_12_biuos+dce" + specialCharFontChange;
+        let search2 = specialCharFontChange + "geneva_9_biuosdce" + specialCharFontChange;
+        let repl2 = specialCharFontChange + "geneva_9_biuos+dce" + specialCharFontChange;
+
         if (s.length == 0) {
             // empty string, no point in changing style
-            return s
+            return s;
         } else if (s.charAt(0) !== specialCharFontChange) {
             // text uses the default font, so add disabled style
-            return repl1 + s
+            return repl1 + s;
         } else {
             // there are only 2 fonts where we support a disabled style,
             // if it's one of these we will make it disabled,
             // otherwise, leave formatting as is.
-            return s.replace(new RegExp(search1, 'ig'), repl1).replace(new RegExp(search2, 'ig'), repl2)
+            return s.replace(new RegExp(search1, "ig"), repl1).replace(new RegExp(search2, "ig"), repl2);
         }
     }
 }

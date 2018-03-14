@@ -1,4 +1,3 @@
-
 import { UI512Lang, cProductName } from "./lang-base.js";
 import { assertTrue, assertEq, Root, RepeatingTimer } from "../ui512/ui512utils.js";
 
@@ -15,10 +14,10 @@ let langTable: { [key: string]: string } = {
 
 export class UI512LangEnUs implements UI512Lang {
     translate(s: string) {
-        if (s === '') {
-            return ''
+        if (s === "") {
+            return "";
         }
-        
+
         assertTrue(s.startsWith("lng"), "0B|not starts with lng");
         let ret = langTable[s] || "???????";
         ret = ret.replace(/%cProductName/g, cProductName);

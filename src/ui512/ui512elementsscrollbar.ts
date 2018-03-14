@@ -46,7 +46,7 @@ export class ScrollbarImpl {
             }
         }
     }
-    
+
     static setScrollbarPositionsForRender(
         root: Root,
         app: UI512Application,
@@ -58,9 +58,12 @@ export class ScrollbarImpl {
             return;
         }
 
-        assertEqWarn(el.get_b("scrollbar"), !!grp.findEl(scrollbarIdToscrollbarPartId(el.id, "arrowup")), 
-            "forgot to call rebuildFieldScrollbars? "+el.id)
-        
+        assertEqWarn(
+            el.get_b("scrollbar"),
+            !!grp.findEl(scrollbarIdToscrollbarPartId(el.id, "arrowup")),
+            "forgot to call rebuildFieldScrollbars? " + el.id
+        );
+
         if (!el || !el.visible || !el.getdirty() || !el.get_b("scrollbar")) {
             return;
         }
@@ -265,7 +268,7 @@ export class ScrollbarImpl {
         return drawn ? found : undefined;
     }
 
-    static getScrollPosThatWouldMakeStartCaretVisible(root: Root, el: UI512ElTextField):O<number> {
+    static getScrollPosThatWouldMakeStartCaretVisible(root: Root, el: UI512ElTextField): O<number> {
         el.set("showcaret", true);
         if (!el.get_n("scrollamt") && !el.get_b("scrollbar")) {
             // perf optimization; we don't care about scrolling for non-scrollbar fields.
@@ -301,7 +304,7 @@ export class ScrollbarImpl {
             if (chgScroll !== 0) {
                 let scroll = el.get_n("scrollamt") + chgScroll;
                 scroll = fitIntoInclusive(scroll, 0, maxscroll);
-                return scroll
+                return scroll;
             }
         }
     }

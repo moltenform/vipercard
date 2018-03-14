@@ -55,7 +55,7 @@ export class MenuPositioning {
 
     static removeMenuRoot(app: UI512Application, grp: UI512ElGroup, menuroot: UI512MenuRoot) {
         let [grpbar, grpitems] = MenuPositioning.getMenuGroups(app, false);
-        assertEq(grp.id, grpbar.id, '2]|');
+        assertEq(grp.id, grpbar.id, "2]|");
         MenuPositioning.removeMenuHelperObjects(app, grpitems, menuroot);
         let children = menuroot.getchildren(app);
         for (let child of children) {
@@ -81,7 +81,7 @@ export class MenuPositioning {
         let dropdownbg = grpitems.getEl(menuroot.id + "##dropdownbg");
         let fontmanager = root.getFontManager() as TextRendererFontManager;
         header.set("highlightactive", true);
-        
+
         // find the longest string
         let longest = 0;
         let items = header.getchildren(app);
@@ -119,7 +119,7 @@ export class MenuPositioning {
                 rect[2] - (MenuConsts.shadowsizeleft + MenuConsts.shadowsizeright),
                 MenuConsts.itemheight
             );
-            
+
             items[i].set("visible", true);
         }
     }
@@ -132,7 +132,7 @@ export class MenuPositioning {
         // top bar
         let [grpbar, grpitems] = MenuPositioning.getMenuGroups(app);
         menuroot.setDimensions(app.bounds[0], app.bounds[1], app.bounds[2], MenuConsts.barheight - 1);
-        assertTrueWarn(grpitems.findEl(menuroot.id + "##dropdownbg"), "forgot to call createMenuHelperObjects?")
+        assertTrueWarn(grpitems.findEl(menuroot.id + "##dropdownbg"), "forgot to call createMenuHelperObjects?");
 
         // draw menu headers
         // following emulator, they actually overlap.
@@ -211,7 +211,7 @@ export class MenuPositioning {
             dropdn.set("labeltext", lang.translate(headerlabeluntranslated));
         }
 
-        assertTrueWarn(grpitems.findEl(menuroot.id + "##dropdownbg"), "forgot to call createMenuHelperObjects?")
+        assertTrueWarn(grpitems.findEl(menuroot.id + "##dropdownbg"), "forgot to call createMenuHelperObjects?");
         for (let menustring of armenu) {
             let [itemid, itemuntranslated, hotkey] = menustring.split("|");
             itemid = slength(itemid) ? itemid : "unnamedmenu" + Math.random();
@@ -232,7 +232,7 @@ export class MenuPositioning {
         let [grpbar, grpitems] = MenuPositioning.getMenuGroups(c.app);
 
         // ensures background items are created first, because they should be behind foreground
-        MenuPositioning.createMenuHelperObjects(c.app, grpitems, menuroot)
+        MenuPositioning.createMenuHelperObjects(c.app, grpitems, menuroot);
 
         let dropdowns: string[] = [];
         for (let ar of st) {

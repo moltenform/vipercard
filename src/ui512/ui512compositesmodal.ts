@@ -25,23 +25,14 @@ export class UI512CompStdDialog extends UI512CompBase {
     dlgtype = UI512CompStdDialogType.answer;
     labeltext = "";
     btnlabels = ["", "", ""];
-    cancelBtnBounds = [0, 0, 0, 0]
+    cancelBtnBounds = [0, 0, 0, 0];
     translatedProvidedText = "";
     resultText: O<string>;
-    constructor(compid: string, protected lang:UI512Lang) {
+    constructor(compid: string, protected lang: UI512Lang) {
         super(compid);
     }
 
-    protected drawBtn(
-        app: UI512Application,
-        grp: UI512ElGroup,
-        dims: number[],
-        n: number,
-        x: number,
-        y: number,
-        w: number,
-        h: number,
-    ) {
+    protected drawBtn(app: UI512Application, grp: UI512ElGroup, dims: number[], n: number, x: number, y: number, w: number, h: number) {
         if (this.btnlabels[n]) {
             let btn = this.genBtn(app, grp, `choicebtn${n}`);
             btn.set("style", n === 0 ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
@@ -76,8 +67,7 @@ export class UI512CompStdDialog extends UI512CompBase {
         let prompt = this.genChild(app, grp, "dlgprompt", UI512ElLabel);
         prompt.set("labeltext", this.labeltext);
         prompt.set("labelwrap", true);
-        prompt.setDimensionsX1Y1(dims[0] + marginx, dims[1] + marginy, 
-            dims[0] + dims[2] - marginx, dims[1] + dims[3] - marginy);
+        prompt.setDimensionsX1Y1(dims[0] + marginx, dims[1] + marginy, dims[0] + dims[2] - marginx, dims[1] + dims[3] - marginy);
 
         this.btnlabels[0] = this.btnlabels[0] || this.lang.translate("lngOK");
         if (this.dlgtype === UI512CompStdDialogType.answer) {
@@ -94,15 +84,15 @@ export class UI512CompStdDialog extends UI512CompBase {
         }
     }
 
-    autoRegisterAndSuppressAndRestore(root:Root, ctrl: UI512Controller, app: UI512Application, fnGetResult: (n: number) => void) {
+    autoRegisterAndSuppressAndRestore(root: Root, ctrl: UI512Controller, app: UI512Application, fnGetResult: (n: number) => void) {
         // this might be overly powerful. but it is convenient.
         // we'll temporarily replace *all* current listeners with the default UI512Controller listeners.
         // because we replaced the idle event listener, we've basically frozen the app in its place.
         ctrl.mouseDragStatus = MouseDragStatus.None;
         let savedFocus = ctrl.currentFocus;
-        let savedCursor = UI512CursorAccess.getCursor()
+        let savedCursor = UI512CursorAccess.getCursor();
         ctrl.setCurrentFocus(root, this.dlgtype === UI512CompStdDialogType.ask ? this.getElId(`inputfld`) : undefined);
-        UI512CursorAccess.setCursor(UI512Cursors.arrow)
+        UI512CursorAccess.setCursor(UI512Cursors.arrow);
         let nChosen = -1;
         let whenComplete = () => {
             eventFilter.restoreInteraction(app, this.grpid);
@@ -112,7 +102,7 @@ export class UI512CompStdDialog extends UI512CompBase {
             this.resultText = inputfld ? inputfld.get_ftxt().toUnformatted() : undefined;
             this.destroy(ctrl, app);
             fnGetResult(nChosen);
-            UI512CursorAccess.setCursor(savedCursor)
+            UI512CursorAccess.setCursor(savedCursor);
         };
 
         let eventFilter = new IgnoreDuringModalDialog(whenComplete);
@@ -121,12 +111,21 @@ export class UI512CompStdDialog extends UI512CompBase {
         eventFilter.capture(ctrl);
         addDefaultListeners(ctrl.listeners);
         ctrl.listenEvent(UI512EventType.MouseDown, (c: UI512Controller, root: Root, d: MouseDownEventDetails) => {
-            if (RectUtils.hasPoint(d.mouseX, d.mouseY, this.cancelBtnBounds[0], this.cancelBtnBounds[1],this.cancelBtnBounds[2],this.cancelBtnBounds[3])) {
-                nChosen = 3
+            if (
+                RectUtils.hasPoint(
+                    d.mouseX,
+                    d.mouseY,
+                    this.cancelBtnBounds[0],
+                    this.cancelBtnBounds[1],
+                    this.cancelBtnBounds[2],
+                    this.cancelBtnBounds[3]
+                )
+            ) {
+                nChosen = 3;
                 eventFilter.completed = true;
             }
         });
-        
+
         ctrl.listenEvent(UI512EventType.MouseUp, (c: UI512Controller, root: Root, d: MouseUpEventDetails) => {
             nChosen = this.getWhichBtnFromClick(d);
             if (nChosen !== -1) {
@@ -174,24 +173,40 @@ export class UI512CompStdDialog extends UI512CompBase {
         return [x, y, w, h];
     }
 
-    standardAnswer(root:Root, c:UI512Controller, app: UI512Application, prompt: string, fnOnResult?: (n: number) => void, choice1='', choice2='', choice3='') {
-        fnOnResult = fnOnResult || (() => {})
+    standardAnswer(
+        root: Root,
+        c: UI512Controller,
+        app: UI512Application,
+        prompt: string,
+        fnOnResult?: (n: number) => void,
+        choice1 = "",
+        choice2 = "",
+        choice3 = ""
+    ) {
+        fnOnResult = fnOnResult || (() => {});
         this.dlgtype = UI512CompStdDialogType.answer;
         this.btnlabels = [choice1, choice2, choice3];
-        this.labeltext = prompt
-        this.resultText = ''
+        this.labeltext = prompt;
+        this.resultText = "";
         this.create(c, app, this.lang);
         this.autoRegisterAndSuppressAndRestore(root, c, app, fnOnResult);
     }
 
-    standardAsk(root:Root, c:UI512Controller, app: UI512Application, prompt:string, defText:string, fnOnResult: (ret:O<string>, n:number) => void) {
+    standardAsk(
+        root: Root,
+        c: UI512Controller,
+        app: UI512Application,
+        prompt: string,
+        defText: string,
+        fnOnResult: (ret: O<string>, n: number) => void
+    ) {
         this.dlgtype = UI512CompStdDialogType.ask;
-        this.translatedProvidedText = defText
-        this.resultText = ''
-        this.btnlabels = [this.lang.translate('lngOK'), this.lang.translate('lngCancel'), ''];
-        this.labeltext = prompt
+        this.translatedProvidedText = defText;
+        this.resultText = "";
+        this.btnlabels = [this.lang.translate("lngOK"), this.lang.translate("lngCancel"), ""];
+        this.labeltext = prompt;
         this.create(c, app, this.lang);
-        let cb = (n:number) => fnOnResult(n === 0 ? this.resultText : undefined, n)
+        let cb = (n: number) => fnOnResult(n === 0 ? this.resultText : undefined, n);
         this.autoRegisterAndSuppressAndRestore(root, c, app, cb);
     }
 }

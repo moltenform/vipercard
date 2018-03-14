@@ -203,7 +203,7 @@ export class Test_DrawPaint extends Tests_BaseClass {
     protected drawShapes(painter: UI512Painter, w: number, h: number) {
         painter.higherPlotEllipse(0, 0, w - 5, h - 5, clrBlack, undefined, 1);
         painter.higherRoundRect(0, 0, w / 2, h / 2, clrBlack, clrWhite, 1);
-        painter.higherRectangle(w / 2, h / 2, w / 2+w / 2, h / 2+h / 2, clrBlack, undefined, 1);
+        painter.higherRectangle(w / 2, h / 2, w / 2 + w / 2, h / 2 + h / 2, clrBlack, undefined, 1);
     }
 
     protected testSetPixelAndSerialize(app: UI512Application, grp: UI512ElGroup, mainPaint: CanvasWrapper, mainPainter: UI512Painter) {
@@ -248,9 +248,8 @@ export class Test_DrawPaint extends Tests_BaseClass {
     }
 
     protected testIrregularPoly(app: UI512Application, grp: UI512ElGroup, mainPaint: CanvasWrapper, mainPainter: UI512Painter) {
-        let [polygonX, polygonY] = this.getIrregularPolygon(610, 310, 80, 60);        
-        let pnt = new PaintOntoCanvas(PaintOntoCanvasShapes.IrregularPolygon, 
-            polygonX, polygonY, clrBlack, clrBlack, true)
+        let [polygonX, polygonY] = this.getIrregularPolygon(610, 310, 80, 60);
+        let pnt = new PaintOntoCanvas(PaintOntoCanvasShapes.IrregularPolygon, polygonX, polygonY, clrBlack, clrBlack, true);
         PaintOntoCanvas.go(pnt, mainPainter);
     }
 
@@ -324,8 +323,8 @@ export class Test_DrawPaint extends Tests_BaseClass {
                 pnt.xpts = [bnds[0], bnds[0] + Math.floor(bnds[2] / 2), bnds[0] + bnds[2]];
                 pnt.ypts = [bnds[1], bnds[1] + Math.floor(bnds[3] / 8), bnds[1] + bnds[3]];
             } else {
-                pnt.xpts = [bnds[0], bnds[0]+bnds[2]];
-                pnt.ypts = [bnds[1], bnds[1]+bnds[3]];
+                pnt.xpts = [bnds[0], bnds[0] + bnds[2]];
+                pnt.ypts = [bnds[1], bnds[1] + bnds[3]];
             }
 
             PaintOntoCanvas.go(pnt, mainPainter);
@@ -354,19 +353,15 @@ export class Test_DrawPaint extends Tests_BaseClass {
         let canvasMainPaint = new UI512ElCanvasPiece("canvasMainPaint");
         grp.addElement(c.app, canvasMainPaint);
         let cvmain = CanvasWrapper.createMemoryCanvas(bounds[2], bounds[3]);
-        canvasMainPaint.setCanvas(cvmain)
+        canvasMainPaint.setCanvas(cvmain);
         canvasMainPaint.setDimensions(0, 0, bounds[2], bounds[3]);
-        cvmain.clear()
-        let canvasMainPainter = makePainterCvCanvas(
-            cvmain,
-            cvmain.canvas.width,
-            cvmain.canvas.height
-        );
+        cvmain.clear();
+        let canvasMainPainter = makePainterCvCanvas(cvmain, cvmain.canvas.width, cvmain.canvas.height);
 
         this.testSmears(c.app, grp, cvmain, canvasMainPainter);
         this.testShapes(c.app, grp, cvmain, canvasMainPainter);
         this.testSetPixelAndSerialize(c.app, grp, cvmain, canvasMainPainter);
-        this.testIrregularPoly(c.app, grp, cvmain, canvasMainPainter)
+        this.testIrregularPoly(c.app, grp, cvmain, canvasMainPainter);
         c.rebuildFieldScrollbars();
     }
 

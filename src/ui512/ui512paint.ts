@@ -7,19 +7,19 @@ import { IconInfo, RenderIcon, RenderIconSet, RenderIconManager, UI512ImageColle
 import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
 
-export const clrBlack = 0
-export const clrWhite = 1
-export const clrTransp = 2
+export const clrBlack = 0;
+export const clrWhite = 1;
+export const clrTransp = 2;
 // 100 and above are patterns from 001.png
 
-export function makePainterCvDataDraw(arr: Uint8ClampedArray, widthParam:number, heightParam:number) {
-    let ret = new UI512Painter()
-    ret.cbGetCanvasWidth = () =>widthParam
+export function makePainterCvDataDraw(arr: Uint8ClampedArray, widthParam: number, heightParam: number) {
+    let ret = new UI512Painter();
+    ret.cbGetCanvasWidth = () => widthParam;
     ret.cbGetCanvasHeight = () => heightParam;
     ret.cbGetBackingSurface = () => arr;
-    ret.cbGetSurfaceName = () => 'makePainterCvDataDraw';
-    ret.cbSupportsPatterns = () => false;    
-    ret.cbSetPixel = (x: number, y: number, color: number) =>  {
+    ret.cbGetSurfaceName = () => "makePainterCvDataDraw";
+    ret.cbSupportsPatterns = () => false;
+    ret.cbSetPixel = (x: number, y: number, color: number) => {
         if (!RectUtils.hasPoint(x, y, 0, 0, widthParam, heightParam)) {
             return;
         }
@@ -43,17 +43,17 @@ export function makePainterCvDataDraw(arr: Uint8ClampedArray, widthParam:number,
         } else {
             assertTrueWarn(false, `2~|unknown color ${color}`);
         }
-    }
+    };
 
     ret.cbFillRect = (xin: number, yin: number, win: number, hin: number, color: number) => {
-        for (let y=yin; y<yin+hin; y++) {
-            for (let x=xin; x<xin+win; x++) {
-                ret.cbSetPixel(x, y, color)
+        for (let y = yin; y < yin + hin; y++) {
+            for (let x = xin; x < xin + win; x++) {
+                ret.cbSetPixel(x, y, color);
             }
         }
-    }
- 
-    ret.cbReadPixelSupported = () => true    
+    };
+
+    ret.cbReadPixelSupported = () => true;
     ret.cbReadPixel = (x: number, y: number) => {
         const i = (y * widthParam + x) * 4;
         if (arr[i] === 0 && arr[i + 1] === 0 && arr[i + 2] === 0 && arr[i + 3] < 5) {
@@ -66,19 +66,19 @@ export function makePainterCvDataDraw(arr: Uint8ClampedArray, widthParam:number,
             assertTrueWarn(false, `2||unsupported color ${arr[i]},${arr[i + 1]},${arr[i + 2]},${arr[i + 3]}`);
             return clrBlack;
         }
-    }
+    };
 
-    return ret
+    return ret;
 }
 
-export function makePainterCvDataWithPatternSupport(arr: Uint8ClampedArray, widthParam:number, heightParam:number) {
-    let ret = makePainterCvDataDraw(arr, widthParam, heightParam)
-    ret.cbGetCanvasWidth = () =>widthParam
+export function makePainterCvDataWithPatternSupport(arr: Uint8ClampedArray, widthParam: number, heightParam: number) {
+    let ret = makePainterCvDataDraw(arr, widthParam, heightParam);
+    ret.cbGetCanvasWidth = () => widthParam;
     ret.cbGetCanvasHeight = () => heightParam;
     ret.cbGetBackingSurface = () => arr;
-    ret.cbGetSurfaceName = ()=> 'makePainterCvDataWithPatternSupport'
-    ret.cbSupportsPatterns = () => true;    
-    let rawSetPixel = ret.cbSetPixel
+    ret.cbGetSurfaceName = () => "makePainterCvDataWithPatternSupport";
+    ret.cbSupportsPatterns = () => true;
+    let rawSetPixel = ret.cbSetPixel;
     ret.cbSetPixel = (x: number, y: number, color: number) => {
         const offsetpatternx = 0;
         const offsetpatterny = 0;
@@ -86,7 +86,7 @@ export function makePainterCvDataWithPatternSupport(arr: Uint8ClampedArray, widt
         if (color >= 100) {
             const dim = 8;
             let patternstring = UI512Painter.patterns[color];
-            assertEq(dim * dim, slength(patternstring), '3B|');
+            assertEq(dim * dim, slength(patternstring), "3B|");
             let xmod = (x + offsetpatternx) % dim;
             let ymod = (y + offsetpatterny) % dim;
             let index = ymod * dim + xmod;
@@ -95,42 +95,42 @@ export function makePainterCvDataWithPatternSupport(arr: Uint8ClampedArray, widt
         }
 
         rawSetPixel(x, y, color);
-    }
+    };
 
     ret.cbFillRect = (xin: number, yin: number, win: number, hin: number, color: number) => {
-        for (let y=yin; y<yin+hin; y++) {
-            for (let x=xin; x<xin+win; x++) {
-                ret.cbSetPixel(x, y, color)
+        for (let y = yin; y < yin + hin; y++) {
+            for (let x = xin; x < xin + win; x++) {
+                ret.cbSetPixel(x, y, color);
             }
         }
-    }
+    };
 
-    return ret
+    return ret;
 }
 
-export function simplifyPattern(colorOrPattern:number) {
+export function simplifyPattern(colorOrPattern: number) {
     // perf optimization to not support patterns when possible
     if (colorOrPattern === 100) {
-        return clrWhite
+        return clrWhite;
     } else if (colorOrPattern === 105) {
-        return clrBlack
+        return clrBlack;
     } else {
-        return colorOrPattern
+        return colorOrPattern;
     }
 }
 
-export function needsPatternSupport(fillcolor:O<number>) {
-    return fillcolor && fillcolor > 50
+export function needsPatternSupport(fillcolor: O<number>) {
+    return fillcolor && fillcolor > 50;
 }
 
-export function makePainterCvCanvas(cv: CanvasWrapper, widthParam:number, heightParam:number) {
-    let ret = new UI512Painter()
-    ret.cbGetCanvasWidth = () =>widthParam
+export function makePainterCvCanvas(cv: CanvasWrapper, widthParam: number, heightParam: number) {
+    let ret = new UI512Painter();
+    ret.cbGetCanvasWidth = () => widthParam;
     ret.cbGetCanvasHeight = () => heightParam;
     ret.cbGetBackingSurface = () => cv;
-    ret.cbGetSurfaceName = () => 'makePainterCvCanvas';
+    ret.cbGetSurfaceName = () => "makePainterCvCanvas";
     ret.cbSupportsPatterns = () => false;
-    const cvcontext = cv.context
+    const cvcontext = cv.context;
     ret.cbSetPixel = (x: number, y: number, color: number) => {
         if (color === clrBlack) {
             cv.fillPixelUnchecked(x, y, "black");
@@ -141,12 +141,12 @@ export function makePainterCvCanvas(cv: CanvasWrapper, widthParam:number, height
         } else {
             assertTrueWarn(false, "32|unsupported color", color);
         }
-    }
+    };
 
-    ret.cbReadPixelSupported = () => false
+    ret.cbReadPixelSupported = () => false;
     ret.cbReadPixel = (x: number, y: number): number => {
-        throw makeUI512Error("31|not implemented")
-    }
+        throw makeUI512Error("31|not implemented");
+    };
 
     ret.cbFillRect = (x: number, y: number, w: number, h: number, color: number) => {
         if (color === clrBlack) {
@@ -158,9 +158,9 @@ export function makePainterCvCanvas(cv: CanvasWrapper, widthParam:number, height
         } else {
             assertTrueWarn(false, "30|unsupported color", color);
         }
-    }
+    };
 
-    return ret
+    return ret;
 }
 
 export class UI512Painter {
@@ -176,81 +176,88 @@ export class UI512Painter {
 
     fillRectMightBeClear(x: number, y: number, w: number, h: number, fill: O<number>) {
         if (fill !== undefined) {
-            this.cbFillRect(x, y, w, h, fill)
+            this.cbFillRect(x, y, w, h, fill);
         }
     }
 
     // "pencil" tool
     higherSmearPixels(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number) {
-        let realSetPixel = this.cbSetPixel        
+        let realSetPixel = this.cbSetPixel;
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
             realSetPixel(x, y, color);
-        })
+        });
     }
 
     // "square brush" or "eraser" tool
-    higherSmearRectangle(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number, diameterx:number, diametery:number) {
-        let realFillRect = this.cbFillRect
+    higherSmearRectangle(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number, diameterx: number, diametery: number) {
+        let realFillRect = this.cbFillRect;
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
-            realFillRect( x - Math.floor(diameterx/2), y - Math.floor(diametery/2), diameterx, diametery, color)
-        })
+            realFillRect(x - Math.floor(diameterx / 2), y - Math.floor(diametery / 2), diameterx, diametery, color);
+        });
     }
 
     // "brush" tool
     higherSmearSmallBrush(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number) {
-        let realFillRect = this.cbFillRect
+        let realFillRect = this.cbFillRect;
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
             // central 4x2 rectangle
-            realFillRect(x-1, y, 4, 2, color)
+            realFillRect(x - 1, y, 4, 2, color);
             // first smaller 2x1 rectangle
-            realFillRect(x, y-1, 2, 1, color)
+            realFillRect(x, y - 1, 2, 1, color);
             // second smaller 2x1 rectangle
-            realFillRect(x, y+2, 2, 1, color)
-        })
+            realFillRect(x, y + 2, 2, 1, color);
+        });
     }
 
     // "spraycan" tool
     higherSmearSpraycan(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number) {
-        let realSetPixel = this.cbSetPixel
+        let realSetPixel = this.cbSetPixel;
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
-            realSetPixel(x + -1, y + -8, color)
-            realSetPixel(x + 3, y + -7, color)
-            realSetPixel(x + -6, y + -6, color)
-            realSetPixel(x + 0, y + -6, color)
-            realSetPixel(x + -3, y + -5, color)
-            realSetPixel(x + 2, y + -4, color)
-            realSetPixel(x + 6, y + -4, color)
-            realSetPixel(x + -8, y + -3, color)
-            realSetPixel(x + -2, y + -3, color)
-            realSetPixel(x + -5, y + -2, color)
-            realSetPixel(x + 1, y + -2, color)
-            realSetPixel(x + 4, y + -2, color)
-            realSetPixel(x + -1, y + -1, color)
-            realSetPixel(x + 7, y + -1, color)
-            realSetPixel(x + -3, y + 0, color)
-            realSetPixel(x + 1, y + 0, color)
-            realSetPixel(x + -8, y + 1, color)
-            realSetPixel(x + -5, y + 1, color)
-            realSetPixel(x + 4, y + 1, color)
-            realSetPixel(x + -2, y + 2, color)
-            realSetPixel(x + 2, y + 2, color)
-            realSetPixel(x + 6, y + 2, color)
-            realSetPixel(x + -4, y + 3, color)
-            realSetPixel(x + -7, y + 4, color)
-            realSetPixel(x + -1, y + 4, color)
-            realSetPixel(x + 2, y + 4, color)
-            realSetPixel(x + 5, y + 5, color)
-            realSetPixel(x + -4, y + 6, color)
-            realSetPixel(x + 0, y + 7, color)
-        })
+            realSetPixel(x + -1, y + -8, color);
+            realSetPixel(x + 3, y + -7, color);
+            realSetPixel(x + -6, y + -6, color);
+            realSetPixel(x + 0, y + -6, color);
+            realSetPixel(x + -3, y + -5, color);
+            realSetPixel(x + 2, y + -4, color);
+            realSetPixel(x + 6, y + -4, color);
+            realSetPixel(x + -8, y + -3, color);
+            realSetPixel(x + -2, y + -3, color);
+            realSetPixel(x + -5, y + -2, color);
+            realSetPixel(x + 1, y + -2, color);
+            realSetPixel(x + 4, y + -2, color);
+            realSetPixel(x + -1, y + -1, color);
+            realSetPixel(x + 7, y + -1, color);
+            realSetPixel(x + -3, y + 0, color);
+            realSetPixel(x + 1, y + 0, color);
+            realSetPixel(x + -8, y + 1, color);
+            realSetPixel(x + -5, y + 1, color);
+            realSetPixel(x + 4, y + 1, color);
+            realSetPixel(x + -2, y + 2, color);
+            realSetPixel(x + 2, y + 2, color);
+            realSetPixel(x + 6, y + 2, color);
+            realSetPixel(x + -4, y + 3, color);
+            realSetPixel(x + -7, y + 4, color);
+            realSetPixel(x + -1, y + 4, color);
+            realSetPixel(x + 2, y + 4, color);
+            realSetPixel(x + 5, y + 5, color);
+            realSetPixel(x + -4, y + 6, color);
+            realSetPixel(x + 0, y + 7, color);
+        });
     }
 
-    protected smearShapes(xpts: LockableArr<number>, ypts: LockableArr<number>, color: number, newSetPixel:(x: number, y: number, color: number) => void) {
-        let realSetPixel = this.cbSetPixel
-        let realFillRect = this.cbFillRect
+    protected smearShapes(
+        xpts: LockableArr<number>,
+        ypts: LockableArr<number>,
+        color: number,
+        newSetPixel: (x: number, y: number, color: number) => void
+    ) {
+        let realSetPixel = this.cbSetPixel;
+        let realFillRect = this.cbFillRect;
         try {
-            this.cbFillRect = () => { throw makeUI512Error("shouldn't be called") }
-            this.cbSetPixel = newSetPixel
+            this.cbFillRect = () => {
+                throw makeUI512Error("shouldn't be called");
+            };
+            this.cbSetPixel = newSetPixel;
             if (xpts.len() === 1 && ypts.len() === 1) {
                 // plot one point
                 this.plotLine(xpts.at(0), ypts.at(0), xpts.at(0), ypts.at(0), color);
@@ -261,8 +268,8 @@ export class UI512Painter {
                 }
             }
         } finally {
-            this.cbSetPixel = realSetPixel
-            this.cbFillRect = realFillRect
+            this.cbSetPixel = realSetPixel;
+            this.cbFillRect = realFillRect;
         }
     }
 
@@ -272,88 +279,96 @@ export class UI512Painter {
     this new way works better than all of them though.
     */
 
-    protected canAdjustLineSize(fillcolor: O<number>, linesize:number, fn:(fill:O<number>, ofx:number, ofy:number)=>void) {
-        fn(fillcolor, 0, 0)
+    protected canAdjustLineSize(fillcolor: O<number>, linesize: number, fn: (fill: O<number>, ofx: number, ofy: number) => void) {
+        fn(fillcolor, 0, 0);
         if (linesize > 1) {
             // draw lots of transparent ones to make the border bigger
-            fn(undefined, 0, 1)
-            fn(undefined, 0, -1)
-            fn(undefined, 1, 0)
-            fn(undefined, -1, 0)
+            fn(undefined, 0, 1);
+            fn(undefined, 0, -1);
+            fn(undefined, 1, 0);
+            fn(undefined, -1, 0);
         }
     }
 
-    higherStraightLine(x0: number, y0: number, x1: number, y1: number, color: number, linesize:number) {
-        let w = x1-x0
-        let h = y1-y0
-        return this.canAdjustLineSize(0, linesize, (fillcolorinput:O<number>, ofx:number, ofy:number)=> {
-            let x1 = x0+ofx+w, y1 = y0+ofy+h
-            this.plotLine(x0+ofx, y0+ofy, x1, y1, color)
-        })
+    higherStraightLine(x0: number, y0: number, x1: number, y1: number, color: number, linesize: number) {
+        let w = x1 - x0;
+        let h = y1 - y0;
+        return this.canAdjustLineSize(0, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+            let x1 = x0 + ofx + w,
+                y1 = y0 + ofy + h;
+            this.plotLine(x0 + ofx, y0 + ofy, x1, y1, color);
+        });
     }
 
-    higherRoundRect(x0: number, y0: number, x1: number, y1: number, color: number, fillcolor: O<number>, linesize:number) {
-        let w = x1-x0
-        let h = y1-y0
-        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput:O<number>, ofx:number, ofy:number)=> {
-            this.drawvpcroundrectPorted(x0+ofx, y0+ofy, w, h, color, fillcolorinput)
-        })
+    higherRoundRect(x0: number, y0: number, x1: number, y1: number, color: number, fillcolor: O<number>, linesize: number) {
+        let w = x1 - x0;
+        let h = y1 - y0;
+        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+            this.drawvpcroundrectPorted(x0 + ofx, y0 + ofy, w, h, color, fillcolorinput);
+        });
     }
 
-    higherRectangle(x0: number, y0: number, x1: number, y1: number, color: number, fillcolor: O<number>, linesize:number) {
-        let w = x1-x0
-        let h = y1-y0
-        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput:O<number>, ofx:number, ofy:number)=> {
-            this.drawboxthinborderPorted(x0+ofx, y0+ofy, w, h, color, fillcolorinput)
-        })
+    higherRectangle(x0: number, y0: number, x1: number, y1: number, color: number, fillcolor: O<number>, linesize: number) {
+        let w = x1 - x0;
+        let h = y1 - y0;
+        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+            this.drawboxthinborderPorted(x0 + ofx, y0 + ofy, w, h, color, fillcolorinput);
+        });
     }
 
-    higherCurve(x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, color: number, linesize:number) {
-        return this.canAdjustLineSize(0, linesize, (fillcolorinput:O<number>, ofx:number, ofy:number)=> {
-            this.plotQuadBezier(x0+ofx, y0+ofy, x1+ofx, y1+ofy, x2+ofx, y2+ofy, color);
-        })
+    higherCurve(x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, color: number, linesize: number) {
+        return this.canAdjustLineSize(0, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+            this.plotQuadBezier(x0 + ofx, y0 + ofy, x1 + ofx, y1 + ofy, x2 + ofx, y2 + ofy, color);
+        });
     }
 
-    higherPlotEllipse(xm: number, ym: number, x1: number, y1: number, color: number, fillcolor: O<number>, linesize:number) {
-        let w = x1-xm
-        let h = y1-ym
-        let centerx = xm + Math.floor(w / 2)
-        let centery = ym + Math.floor(h / 2)
-        let a = Math.floor(w / 2)
-        let b = Math.floor(h / 2)
-        
-        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput:O<number>, ofx:number, ofy:number)=> {
-            this.plotEllipseAxis(centerx+ofx, centery+ofy, a, b, color, fillcolorinput);
-        })
+    higherPlotEllipse(xm: number, ym: number, x1: number, y1: number, color: number, fillcolor: O<number>, linesize: number) {
+        let w = x1 - xm;
+        let h = y1 - ym;
+        let centerx = xm + Math.floor(w / 2);
+        let centery = ym + Math.floor(h / 2);
+        let a = Math.floor(w / 2);
+        let b = Math.floor(h / 2);
+
+        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+            this.plotEllipseAxis(centerx + ofx, centery + ofy, a, b, color, fillcolorinput);
+        });
     }
 
     floodFill(xinput: number, yinput: number, color: number) {
-        assertTrue(isFinite(xinput) && isFinite(yinput), "not finite", xinput, yinput)
+        assertTrue(isFinite(xinput) && isFinite(yinput), "not finite", xinput, yinput);
         if (color > 50) {
             // if pattern support is needed, do it in 2 steps.
             // necessary because our algorithm reads what we have set to see where we have gone.
             // , so it'd be thrown off if we are drawing a pattern as we are going.
-            let currentColor = this.cbReadPixel(xinput, yinput)
-            let changedColor:number
+            let currentColor = this.cbReadPixel(xinput, yinput);
+            let changedColor: number;
             if (currentColor === clrBlack) {
-                changedColor = clrWhite
+                changedColor = clrWhite;
             } else if (currentColor === clrWhite) {
-                changedColor = clrBlack
+                changedColor = clrBlack;
             } else {
-                changedColor = clrBlack
+                changedColor = clrBlack;
             }
-            let simpleDraw = makePainterCvDataDraw(this.cbGetBackingSurface(), this.cbGetCanvasWidth(), this.cbGetCanvasHeight())
-            let recordOutputX:number[] =[], recordOutputY:number[] = []
-            simpleDraw.floodFillWithoutPattern(xinput, yinput, changedColor, recordOutputX, recordOutputY)
+            let simpleDraw = makePainterCvDataDraw(this.cbGetBackingSurface(), this.cbGetCanvasWidth(), this.cbGetCanvasHeight());
+            let recordOutputX: number[] = [],
+                recordOutputY: number[] = [];
+            simpleDraw.floodFillWithoutPattern(xinput, yinput, changedColor, recordOutputX, recordOutputY);
             for (let i = 0; i < recordOutputX.length; i++) {
                 this.cbSetPixel(recordOutputX[i], recordOutputY[i], color);
             }
         } else {
-            this.floodFillWithoutPattern(xinput, yinput, color, undefined, undefined)
+            this.floodFillWithoutPattern(xinput, yinput, color, undefined, undefined);
         }
     }
 
-    protected floodFillWithoutPattern(xinput: number, yinput: number, tmpColor: number, recordOutputX?:number[], recordOutputY?:number[]) {
+    protected floodFillWithoutPattern(
+        xinput: number,
+        yinput: number,
+        tmpColor: number,
+        recordOutputX?: number[],
+        recordOutputY?: number[]
+    ) {
         // from Jared Updike, http://stackoverflow.com/questions/1257117/does-anyone-have-a-working-non-recursive-floodfill-algorithm-written-in-c
         // modified by Ben Fisher, lb_drawing.h from fastpixelpic
         const w = this.cbGetCanvasWidth();
@@ -525,7 +540,7 @@ export class UI512Painter {
 
         if (!(xx * sx <= 0 && yy * sy <= 0)) {
             console.error("38|sign of gradient must not change");
-            return
+            return;
         }
 
         if (sx * sx + sy * sy > xx * xx + yy * yy) {
@@ -630,15 +645,7 @@ export class UI512Painter {
         this.plotQuadBezierSeg(x0, y0, x1, y1, x2, y2, color); /* remaining part */
     }
 
-    fillPolygon(
-        x0: number,
-        y0: number,
-        w: number,
-        h: number,
-        xpts: LockableArr<number>,
-        ypts: LockableArr<number>,
-        color: number
-    ) {
+    fillPolygon(x0: number, y0: number, w: number, h: number, xpts: LockableArr<number>, ypts: LockableArr<number>, color: number) {
         let nodeX: number[] = [];
         let sortByNumber = (a: number, b: number) => {
             return a - b;
@@ -933,8 +940,8 @@ export class UI512Painter {
     }
 
     static readonly defaultPattern = "pattern148";
-    static readonly defaultLineColor = clrBlack
-    static readonly defaultFillColor = -1
+    static readonly defaultLineColor = clrBlack;
+    static readonly defaultFillColor = -1;
     static readonly c0 = "0".charCodeAt(0);
     static readonly c1 = "1".charCodeAt(0);
     static readonly patterns: { [key: number]: string } = {
@@ -1040,35 +1047,39 @@ export class UI512ImageSerialization {
     First create a width*height string containing one of the ascii characters 0,1,2
     Then compress this string.
     */
-    readonly asciiBlack = clrBlack.toString().charAt(0)
-    readonly asciiWhite = clrWhite.toString().charAt(0)
-    readonly asciiTransp = clrTransp.toString().charAt(0)
-    readonly asciiNumBlack = clrBlack.toString().charCodeAt(0)
-    readonly asciiNumWhite = clrWhite.toString().charCodeAt(0)
-    readonly asciiNumTransp = clrTransp.toString().charCodeAt(0)
+    readonly asciiBlack = clrBlack.toString().charAt(0);
+    readonly asciiWhite = clrWhite.toString().charAt(0);
+    readonly asciiTransp = clrTransp.toString().charAt(0);
+    readonly asciiNumBlack = clrBlack.toString().charCodeAt(0);
+    readonly asciiNumWhite = clrWhite.toString().charCodeAt(0);
+    readonly asciiNumTransp = clrTransp.toString().charCodeAt(0);
 
     loadFromString(canvas: CanvasWrapper, compressed: string) {
         const w = canvas.canvas.width;
         const h = canvas.canvas.height;
         if (compressed.length === 0) {
             // for convenience, treat empty string as a white image.
-            canvas.fillRect(0, 0, w, h, 0, 0, w, h, 'white')
-            return
+            canvas.fillRect(0, 0, w, h, 0, 0, w, h, "white");
+            return;
         }
-        
-        let data = canvas.context.createImageData(w, h);
-        assertEq(data.data.length, 4 * w * h, '2{|');
-        let uncompressed = Util512.decompressString(compressed, false);
-        checkThrowUI512(uncompressed.length * 4 === data.data.length, 
-            "length mismatch, expected, got", data.data.length, uncompressed.length * 4)
 
-        let drawer = makePainterCvDataDraw(data.data, w, h)
-        let i = 0
-        for (let y = 0; y<h; y++) {
-            for (let x = 0; x<w; x++) {
-                let pixel = uncompressed.charCodeAt(i)
-                drawer.cbSetPixel(x, y, pixel - this.asciiNumBlack)
-                i++
+        let data = canvas.context.createImageData(w, h);
+        assertEq(data.data.length, 4 * w * h, "2{|");
+        let uncompressed = Util512.decompressString(compressed, false);
+        checkThrowUI512(
+            uncompressed.length * 4 === data.data.length,
+            "length mismatch, expected, got",
+            data.data.length,
+            uncompressed.length * 4
+        );
+
+        let drawer = makePainterCvDataDraw(data.data, w, h);
+        let i = 0;
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                let pixel = uncompressed.charCodeAt(i);
+                drawer.cbSetPixel(x, y, pixel - this.asciiNumBlack);
+                i++;
             }
         }
 
@@ -1079,31 +1090,31 @@ export class UI512ImageSerialization {
         const w = canvas.canvas.width;
         const h = canvas.canvas.height;
         let data = canvas.context.getImageData(0, 0, w, h);
-        return this.writeToStringFromData(data.data, w , h)
+        return this.writeToStringFromData(data.data, w, h);
     }
 
-    writeToStringFromData(data:Uint8ClampedArray, w:number, h:number) {
-        assertEq(data.length, 4 * w * h, '2`|');
-        let reader = makePainterCvDataDraw(data, w, h)
+    writeToStringFromData(data: Uint8ClampedArray, w: number, h: number) {
+        assertEq(data.length, 4 * w * h, "2`|");
+        let reader = makePainterCvDataDraw(data, w, h);
         let result = "";
-        let map: { [key: number]: string } = {}
-        map[clrBlack] = this.asciiBlack
-        map[clrWhite] = this.asciiWhite
-        map[clrTransp] = this.asciiTransp
+        let map: { [key: number]: string } = {};
+        map[clrBlack] = this.asciiBlack;
+        map[clrWhite] = this.asciiWhite;
+        map[clrTransp] = this.asciiTransp;
 
-        for (let y = 0; y<h; y++) {
-            for (let x = 0; x<w; x++) {
-                let clr = reader.cbReadPixel(x, y)
-                result += map[clr]
+        for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+                let clr = reader.cbReadPixel(x, y);
+                result += map[clr];
             }
         }
-        
+
         return Util512.compressString(result, false);
     }
 }
 
 export enum PaintOntoCanvasShapes {
-    __isUI512Enum = 1,    
+    __isUI512Enum = 1,
     SmearPencil,
     SmearRectangle,
     SmearSmallBrush,
@@ -1118,134 +1129,157 @@ export enum PaintOntoCanvasShapes {
 }
 
 export class PaintOntoCanvas {
-    mods:ModifierKeys;
-    cardId:string
-    constructor(public shape:PaintOntoCanvasShapes, 
-        public xpts:number[],
-        public ypts:number[],
-        public color:number,
-        public fillColor:number,
+    mods: ModifierKeys;
+    cardId: string;
+    constructor(
+        public shape: PaintOntoCanvasShapes,
+        public xpts: number[],
+        public ypts: number[],
+        public color: number,
+        public fillColor: number,
         public isFilled = true,
-        public lineSize = 1,
-     ) {}
+        public lineSize = 1
+    ) {}
 
-    static fromMemoryOpts(shape:PaintOntoCanvasShapes, isErase:boolean, fromOptsPattern:string, 
-        fromOptsFillcolor:number, fromOptsLineColor:number, fromOptsWide:boolean) {
-        let fill = fromOptsFillcolor
-        let isFilled = fromOptsFillcolor !== -1
+    static fromMemoryOpts(
+        shape: PaintOntoCanvasShapes,
+        isErase: boolean,
+        fromOptsPattern: string,
+        fromOptsFillcolor: number,
+        fromOptsLineColor: number,
+        fromOptsWide: boolean
+    ) {
+        let fill = fromOptsFillcolor;
+        let isFilled = fromOptsFillcolor !== -1;
         if (shape === PaintOntoCanvasShapes.Bucket) {
-            let pattern = fromOptsPattern
-            isFilled = true
-            fill = 0
-            if (pattern.startsWith('pattern')) {
-                let npattern = parseInt(pattern.substr('pattern'.length), 10)
-                fill = isFinite(npattern) ? npattern : 0
+            let pattern = fromOptsPattern;
+            isFilled = true;
+            fill = 0;
+            if (pattern.startsWith("pattern")) {
+                let npattern = parseInt(pattern.substr("pattern".length), 10);
+                fill = isFinite(npattern) ? npattern : 0;
             }
         }
-        
-        let ret = new PaintOntoCanvas(shape, [], [], 
-            fromOptsLineColor,
-            fill,
-            isFilled,
-            fromOptsWide ? 5 : 1)
+
+        let ret = new PaintOntoCanvas(shape, [], [], fromOptsLineColor, fill, isFilled, fromOptsWide ? 5 : 1);
 
         if (isErase) {
-            ret.color = clrWhite
-            ret.fillColor = clrWhite
-            ret.isFilled = true
+            ret.color = clrWhite;
+            ret.fillColor = clrWhite;
+            ret.isFilled = true;
         }
-        
-        return ret
+
+        return ret;
     }
 
-    static go(args:PaintOntoCanvas, painter:UI512Painter) {
-        let color:number = args.color
-        let fillcolor:O<number> = args.isFilled ? simplifyPattern(args.fillColor) : undefined
+    static go(args: PaintOntoCanvas, painter: UI512Painter) {
+        let color: number = args.color;
+        let fillcolor: O<number> = args.isFilled ? simplifyPattern(args.fillColor) : undefined;
         if (args.shape != PaintOntoCanvasShapes.Bucket) {
-            assertTrue(!needsPatternSupport(color) && !needsPatternSupport(fillcolor), 
-                "not yet implemented (currently kinda slow when tested)")
+            assertTrue(
+                !needsPatternSupport(color) && !needsPatternSupport(fillcolor),
+                "not yet implemented (currently kinda slow when tested)"
+            );
         }
-        
-        let xpts = args.xpts
-        let ypts = args.ypts
 
-        switch(args.shape) {
-            case PaintOntoCanvasShapes.SmearPencil:{
-                return painter.higherSmearPixels(new LockableArr(xpts), new LockableArr(ypts), color)
-            } case PaintOntoCanvasShapes.SmearRectangle:{
-                return painter.higherSmearRectangle(new LockableArr(xpts), new LockableArr(ypts), color, 16, 16)
-            } case PaintOntoCanvasShapes.SmearSpraycan: {
-                return painter.higherSmearSpraycan(new LockableArr(xpts), new LockableArr(ypts), color)
-            } case PaintOntoCanvasShapes.SmearSmallBrush: {
-                return painter.higherSmearSmallBrush(new LockableArr(xpts), new LockableArr(ypts), color)
-            } case PaintOntoCanvasShapes.ShapeLine:{
-                assertEq(2, xpts.length, "ShapeLine")
-                assertEq(2, ypts.length, "ShapeLine")
-                return painter.higherStraightLine(xpts[0], ypts[0], xpts[1], ypts[1], color, args.lineSize)
-            } case PaintOntoCanvasShapes.ShapeRectangle:{
-                assertEq(2, xpts.length, "ShapeRectangle")
-                assertEq(2, ypts.length, "ShapeRectangle")
-                return painter.higherRectangle(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize)
-            } case PaintOntoCanvasShapes.ShapeElipse:{
-                assertEq(2, xpts.length, "ShapeElipse")
-                assertEq(2, ypts.length, "ShapeElipse")
-                return painter.higherPlotEllipse(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize)
-            } case PaintOntoCanvasShapes.ShapeRoundRect:{
-                assertEq(2, xpts.length, "ShapeRoundRect")
-                assertEq(2, ypts.length, "ShapeRoundRect")
-                return painter.higherRoundRect(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize)
-            } case PaintOntoCanvasShapes.ShapeCurve:{
-                assertEq(3, xpts.length, "ShapeCurve")
-                assertEq(3, ypts.length, "ShapeCurve")
-                return painter.higherCurve(xpts[0], ypts[0], xpts[1], ypts[1], xpts[2], ypts[2], color, args.lineSize)
-            } case PaintOntoCanvasShapes.Bucket: {
-                assertEq(1, xpts.length, "Bucket")
-                assertEq(1, ypts.length, "Bucket")
-                return PaintOntoCanvas.paintBucketSlowButWorks(painter, xpts[0], ypts[0], fillcolor||0)
-            } case PaintOntoCanvasShapes.IrregularPolygon: {
-                return PaintOntoCanvas.paintIrregularPolySlowButWorks(painter, xpts, ypts, fillcolor||0)
-            } default: {
-                assertTrueWarn(false, "unknown shape", args.shape)
+        let xpts = args.xpts;
+        let ypts = args.ypts;
+
+        switch (args.shape) {
+            case PaintOntoCanvasShapes.SmearPencil: {
+                return painter.higherSmearPixels(new LockableArr(xpts), new LockableArr(ypts), color);
+            }
+            case PaintOntoCanvasShapes.SmearRectangle: {
+                return painter.higherSmearRectangle(new LockableArr(xpts), new LockableArr(ypts), color, 16, 16);
+            }
+            case PaintOntoCanvasShapes.SmearSpraycan: {
+                return painter.higherSmearSpraycan(new LockableArr(xpts), new LockableArr(ypts), color);
+            }
+            case PaintOntoCanvasShapes.SmearSmallBrush: {
+                return painter.higherSmearSmallBrush(new LockableArr(xpts), new LockableArr(ypts), color);
+            }
+            case PaintOntoCanvasShapes.ShapeLine: {
+                assertEq(2, xpts.length, "ShapeLine");
+                assertEq(2, ypts.length, "ShapeLine");
+                return painter.higherStraightLine(xpts[0], ypts[0], xpts[1], ypts[1], color, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeRectangle: {
+                assertEq(2, xpts.length, "ShapeRectangle");
+                assertEq(2, ypts.length, "ShapeRectangle");
+                return painter.higherRectangle(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeElipse: {
+                assertEq(2, xpts.length, "ShapeElipse");
+                assertEq(2, ypts.length, "ShapeElipse");
+                return painter.higherPlotEllipse(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeRoundRect: {
+                assertEq(2, xpts.length, "ShapeRoundRect");
+                assertEq(2, ypts.length, "ShapeRoundRect");
+                return painter.higherRoundRect(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeCurve: {
+                assertEq(3, xpts.length, "ShapeCurve");
+                assertEq(3, ypts.length, "ShapeCurve");
+                return painter.higherCurve(xpts[0], ypts[0], xpts[1], ypts[1], xpts[2], ypts[2], color, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.Bucket: {
+                assertEq(1, xpts.length, "Bucket");
+                assertEq(1, ypts.length, "Bucket");
+                return PaintOntoCanvas.paintBucketSlowButWorks(painter, xpts[0], ypts[0], fillcolor || 0);
+            }
+            case PaintOntoCanvasShapes.IrregularPolygon: {
+                return PaintOntoCanvas.paintIrregularPolySlowButWorks(painter, xpts, ypts, fillcolor || 0);
+            }
+            default: {
+                assertTrueWarn(false, "unknown shape", args.shape);
             }
         }
     }
 
-    static paintIrregularPolySlowButWorks(painter:UI512Painter, xpts:number[], ypts:number[], fillcolor:number) {
-        fillcolor = simplifyPattern(fillcolor)
-        assertTrue(!needsPatternSupport(fillcolor), "not yet implemented")
+    static paintIrregularPolySlowButWorks(painter: UI512Painter, xpts: number[], ypts: number[], fillcolor: number) {
+        fillcolor = simplifyPattern(fillcolor);
+        assertTrue(!needsPatternSupport(fillcolor), "not yet implemented");
         if (painter.cbReadPixelSupported()) {
-            painter.fillPolygon(0,0,painter.cbGetCanvasWidth(),
-                painter.cbGetCanvasHeight(),new LockableArr(xpts),new LockableArr(ypts),fillcolor )
+            painter.fillPolygon(
+                0,
+                0,
+                painter.cbGetCanvasWidth(),
+                painter.cbGetCanvasHeight(),
+                new LockableArr(xpts),
+                new LockableArr(ypts),
+                fillcolor
+            );
         } else {
             // unfortunately, we'll have to make a new painter that supports reading pixels
-            let cv:CanvasWrapper = painter.cbGetBackingSurface()
-            assertTrue(cv instanceof CanvasWrapper, "cv instanceof CanvasWrapper")
+            let cv: CanvasWrapper = painter.cbGetBackingSurface();
+            assertTrue(cv instanceof CanvasWrapper, "cv instanceof CanvasWrapper");
             const w = cv.canvas.width;
             const h = cv.canvas.height;
             let data = cv.context.getImageData(0, 0, w, h);
 
-            let painterWithData = makePainterCvDataDraw(data.data, w, h)
-            painterWithData.fillPolygon(0,0,w,h,new LockableArr(xpts),new LockableArr(ypts),fillcolor )
-            cv.context.putImageData(data, 0, 0)
+            let painterWithData = makePainterCvDataDraw(data.data, w, h);
+            painterWithData.fillPolygon(0, 0, w, h, new LockableArr(xpts), new LockableArr(ypts), fillcolor);
+            cv.context.putImageData(data, 0, 0);
         }
     }
 
-    static paintBucketSlowButWorks(painter:UI512Painter, x:number, y:number, fillpattern:number) {
-        fillpattern = simplifyPattern(fillpattern)
+    static paintBucketSlowButWorks(painter: UI512Painter, x: number, y: number, fillpattern: number) {
+        fillpattern = simplifyPattern(fillpattern);
         if (painter.cbReadPixelSupported()) {
-            painter.floodFill(x, y, fillpattern)
+            painter.floodFill(x, y, fillpattern);
         } else {
             // unfortunately, we'll have to make a new painter that supports reading pixels
-            let cv:CanvasWrapper = painter.cbGetBackingSurface()
-            assertTrue(cv instanceof CanvasWrapper, "cv instanceof CanvasWrapper")
+            let cv: CanvasWrapper = painter.cbGetBackingSurface();
+            assertTrue(cv instanceof CanvasWrapper, "cv instanceof CanvasWrapper");
             const w = cv.canvas.width;
             const h = cv.canvas.height;
             let data = cv.context.getImageData(0, 0, w, h);
 
-            let painterWithData = fillpattern > 50 ? makePainterCvDataWithPatternSupport(data.data, w, h) :
-                makePainterCvDataDraw(data.data, w, h)
-            painterWithData.floodFill(x, y, fillpattern)
-            cv.context.putImageData(data, 0, 0)
+            let painterWithData =
+                fillpattern > 50 ? makePainterCvDataWithPatternSupport(data.data, w, h) : makePainterCvDataDraw(data.data, w, h);
+            painterWithData.floodFill(x, y, fillpattern);
+            cv.context.putImageData(data, 0, 0);
         }
     }
 }

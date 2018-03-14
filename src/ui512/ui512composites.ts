@@ -116,7 +116,7 @@ export abstract class UI512CompBase {
 
     abstract createSpecific(app: UI512Application, lang: UI512Lang): void;
 
-    create(c:UI512ControllerBase, app: UI512Application, lang: UI512Lang) {
+    create(c: UI512ControllerBase, app: UI512Application, lang: UI512Lang) {
         assertEq(0, this.children.length, `2v|creating composite twice? ${this.compositeId}`);
         if (!app.findGroup(this.grpid)) {
             let grp = new UI512ElGroup(this.grpid, app.observer);
@@ -124,13 +124,13 @@ export abstract class UI512CompBase {
         }
 
         this.createSpecific(app, lang);
-        c.rebuildFieldScrollbars()        
+        c.rebuildFieldScrollbars();
     }
 
-    destroy(c:UI512ControllerBase, app: UI512Application) {
+    destroy(c: UI512ControllerBase, app: UI512Application) {
         this.children.length = 0;
         app.removeGroup(this.grpid);
-        c.rebuildFieldScrollbars()
+        c.rebuildFieldScrollbars();
     }
 
     protected drawWindowDecoration(app: UI512Application, c: BorderDecorationConsts, hasclosebtn: boolean) {

@@ -127,35 +127,35 @@ export class UI512ElTextField extends UI512Element {
         return super.setftxt(newtxt, context);
     }
 
-    static setListChoices(el:UI512ElTextField, choices:string[]) {
+    static setListChoices(el: UI512ElTextField, choices: string[]) {
         if (choices.length) {
             // little hack: add a space before each item because it looks better
-            let s = choices.map(item=>(' ' + item)).join('\n')
-            let ftxt = FormattedText.newFromUnformatted(s)
+            let s = choices.map(item => " " + item).join("\n");
+            let ftxt = FormattedText.newFromUnformatted(s);
 
             // little hack: add an ending newline so that selecting the last line looks right
             // logic elsewhere prevents this last ending line from being actually chosen/selected.
             // we'll add the ending newline in a small font so it won't affect the scrollbar much.
-            ftxt.push(specialCharNumNewline, TextRendererFontManager.smallestFont)
-            el.setftxt(ftxt)
+            ftxt.push(specialCharNumNewline, TextRendererFontManager.smallestFont);
+            el.setftxt(ftxt);
         } else {
-            el.setftxt(FormattedText.newFromUnformatted(''))
+            el.setftxt(FormattedText.newFromUnformatted(""));
         }
     }
 
-    static makeChoiceBox(app:UI512Application, grp:UI512ElGroup, id:string, x:number, y:number) {
-        const leftChoicesW = 130
-        const leftChoicesH = 117
-        let fld = new UI512ElTextField(id)
-        grp.addElement(app, fld)
+    static makeChoiceBox(app: UI512Application, grp: UI512ElGroup, id: string, x: number, y: number) {
+        const leftChoicesW = 130;
+        const leftChoicesH = 117;
+        let fld = new UI512ElTextField(id);
+        grp.addElement(app, fld);
         fld.set("scrollbar", true);
         fld.set("selectbylines", true);
         fld.set("multiline", true);
         fld.set("canselecttext", true);
         fld.set("canedit", false);
         fld.set("labelwrap", false);
-        fld.setDimensions(x,y, leftChoicesW, leftChoicesH)
-        return fld
+        fld.setDimensions(x, y, leftChoicesW, leftChoicesH);
+        return fld;
     }
 }
 
@@ -163,30 +163,30 @@ export class UI512ElCanvasPiece extends UI512Element {
     readonly typeName: string = "UI512ElCanvasPiece";
     private canvas: CanvasWrapper;
     private cachedPnter: UI512Painter;
-    setCanvas(cv:CanvasWrapper) {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded')+ 1)
-        this.canvas = cv
+    setCanvas(cv: CanvasWrapper) {
+        this.set("incrementUntilLoaded", this.get_n("incrementUntilLoaded") + 1);
+        this.canvas = cv;
     }
     getCanvasForWrite() {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded')+ 1)
-        return this.canvas
+        this.set("incrementUntilLoaded", this.get_n("incrementUntilLoaded") + 1);
+        return this.canvas;
     }
     getCanvasForRead() {
-        return this.canvas
+        return this.canvas;
     }
     getCvWidth() {
-        return this.canvas.canvas.width
+        return this.canvas.canvas.width;
     }
     getCvHeight() {
-        return this.canvas.canvas.height
+        return this.canvas.canvas.height;
     }
     setCachedPnter(pnter: UI512Painter) {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded')+ 1)
-        this.cachedPnter = pnter
+        this.set("incrementUntilLoaded", this.get_n("incrementUntilLoaded") + 1);
+        this.cachedPnter = pnter;
     }
     getCachedPnterForWrite() {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded')+ 1)
-        return this.cachedPnter
+        this.set("incrementUntilLoaded", this.get_n("incrementUntilLoaded") + 1);
+        return this.cachedPnter;
     }
 
     protected _srcx = 0;
@@ -266,7 +266,7 @@ export class UI512ElGroup {
     observer: ElementObserver;
     protected elements = new OrderedHash<UI512Element>();
     protected visible = true;
-    
+
     // perf optimization: restrict mouse interaction to be within bounds
     enableMouseInteraction = true;
     mouseInteractionBounds: [number, number, number, number] = [0, 0, largearea, largearea];
@@ -277,23 +277,22 @@ export class UI512ElGroup {
     }
 
     getVisible() {
-        return this.visible
+        return this.visible;
     }
 
-    setVisible(v:boolean, context = ChangeContext.Default) {
+    setVisible(v: boolean, context = ChangeContext.Default) {
         if (v !== this.visible) {
-            this.observer.changeSeen(context, "(groupSetVisible)", "visible", this.visible, v);        
-            this.visible = v
+            this.observer.changeSeen(context, "(groupSetVisible)", "visible", this.visible, v);
+            this.visible = v;
         }
     }
 
     updateBoundsBasedOnChildren() {
-        let setAtLeastOne = false
-        let extremes = [Number.POSITIVE_INFINITY,Number.POSITIVE_INFINITY,
-            Number.NEGATIVE_INFINITY,Number.NEGATIVE_INFINITY]
-        
+        let setAtLeastOne = false;
+        let extremes = [Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY];
+
         for (let el of this.elements.iter()) {
-            setAtLeastOne = true
+            setAtLeastOne = true;
             extremes[0] = Math.min(extremes[0], el.x);
             extremes[1] = Math.min(extremes[1], el.y);
             extremes[2] = Math.max(extremes[2], el.right);
@@ -301,15 +300,15 @@ export class UI512ElGroup {
         }
 
         if (setAtLeastOne) {
-            this.mouseInteractionBounds[0] = extremes[0]
-            this.mouseInteractionBounds[1] = extremes[1]
-            this.mouseInteractionBounds[2] = extremes[2] - extremes[0]
-            this.mouseInteractionBounds[3] = extremes[3] - extremes[1]
+            this.mouseInteractionBounds[0] = extremes[0];
+            this.mouseInteractionBounds[1] = extremes[1];
+            this.mouseInteractionBounds[2] = extremes[2] - extremes[0];
+            this.mouseInteractionBounds[3] = extremes[3] - extremes[1];
         } else {
-            this.mouseInteractionBounds[0] = 0
-            this.mouseInteractionBounds[1] = 0
-            this.mouseInteractionBounds[2] = 0
-            this.mouseInteractionBounds[3] = 0
+            this.mouseInteractionBounds[0] = 0;
+            this.mouseInteractionBounds[1] = 0;
+            this.mouseInteractionBounds[2] = 0;
+            this.mouseInteractionBounds[3] = 0;
         }
     }
 

@@ -10,13 +10,12 @@ import { UI512ViewDrawBorders } from "../ui512/ui512renderborders.js";
 import { clrBlack, clrWhite, clrTransp, makePainterCvDataDraw, makePainterCvDataWithPatternSupport, simplifyPattern, needsPatternSupport, makePainterCvCanvas, UI512Painter, DissolveImages, UI512ImageSerialization, PaintOntoCanvasShapes, PaintOntoCanvas } from "../ui512/ui512paint.js";
 import { UI512MenuItem, UI512MenuRoot, UI512MenuDropdown } from "../ui512/ui512elementsmenu.js";
 import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
-/* autoimport:end */
-
 import { isRelease, projectBuildStamp1, projectBuildStamp2, projectBuildStamp3 } from "../appsettings.js";
+/* autoimport:end */
 
 export class UI512ViewDraw {
     allowMultipleFocus = false;
-    
+
     getSubRect(b: UI512ViewDrawBorders, padx: number, pady: number) {
         return RectUtils.getSubRectRaw(b.bx, b.by, b.w, b.h, padx, pady);
     }
@@ -40,7 +39,7 @@ export class UI512ViewDraw {
         wrap: boolean,
         halign: boolean,
         valign: boolean,
-        styleEnabled:boolean
+        styleEnabled: boolean
     ) {
         if (rect) {
             let opts = new RenderTextArgs(rect[0], rect[1], rect[2], rect[3], halign, valign, wrap);
@@ -53,7 +52,7 @@ export class UI512ViewDraw {
     drawTextIfDefinedOpts(b: UI512ViewDrawBorders, text: string, opts: RenderTextArgs, styleEnabled: boolean) {
         let fontManager = cast(b.root.getFontManager(), TextRendererFontManager);
         if (!styleEnabled) {
-            text = TextRendererFontManager.makeInitialTextDisabled(text)
+            text = TextRendererFontManager.makeInitialTextDisabled(text);
         }
 
         let drawn = fontManager.drawStringIntoBox(text, b.canvas, opts);
@@ -78,7 +77,7 @@ export class UI512ViewDraw {
         }
     }
 
-    drawBothTextAndIcon(b: UI512ViewDrawBorders, rect: O<number[]>, iconinfo: IconInfo, s: string, styleEnabled:boolean) {
+    drawBothTextAndIcon(b: UI512ViewDrawBorders, rect: O<number[]>, iconinfo: IconInfo, s: string, styleEnabled: boolean) {
         const lineheight = 12;
         const marginbetween = 0;
         let srcrect = RenderIconSet.lookupRectangle(iconinfo.iconsetid, iconinfo.iconnumber);
@@ -143,7 +142,7 @@ export class UI512ViewDraw {
                 el.get_b("labelwrap"),
                 el.get_b("labelhalign"),
                 el.get_b("labelvalign"),
-                el.get_b('enabledstyle')
+                el.get_b("enabledstyle")
             );
         }
     }
@@ -184,12 +183,12 @@ export class UI512ViewDraw {
                 el.get_b("labelwrap"),
                 el.get_b("labelhalign"),
                 el.get_b("labelvalign"),
-                el.get_b('enabledstyle')
+                el.get_b("enabledstyle")
             );
         } else if (!slength(el.get_s("labeltext")) && iconinfo) {
             this.drawIconIfDefined(b, subrect, iconinfo);
         } else if (slength(el.get_s("labeltext")) && iconinfo) {
-            this.drawBothTextAndIcon(b, subrect, iconinfo, el.get_s("labeltext"), el.get_b('enabledstyle'));
+            this.drawBothTextAndIcon(b, subrect, iconinfo, el.get_s("labeltext"), el.get_b("enabledstyle"));
         }
     }
 
@@ -295,7 +294,7 @@ export class UI512ViewDraw {
                     el.get_b("labelwrap"),
                     el.get_b("labelhalign"),
                     el.get_b("labelvalign"),
-                    el.get_b('enabledstyle')
+                    el.get_b("enabledstyle")
                 );
             }
         } else {
@@ -316,7 +315,7 @@ export class UI512ViewDraw {
                 el.get_b("labelwrap"),
                 el.get_b("labelhalign"),
                 el.get_b("labelvalign"),
-                el.get_b('enabledstyle')
+                el.get_b("enabledstyle")
             );
         }
     }
@@ -367,24 +366,36 @@ export class UI512ViewDraw {
         // draw the label
         if (el.w > MenuConsts.firstLabelPadding) {
             let boxMain = [b.bx + MenuConsts.firstLabelPadding, b.by, el.w - MenuConsts.firstLabelPadding, el.h];
-            this.drawTextIfDefined(b, boxMain, el.get_s("labeltext"), false, false, true, el.get_b('enabledstyle'));
+            this.drawTextIfDefined(b, boxMain, el.get_s("labeltext"), false, false, true, el.get_b("enabledstyle"));
         }
 
         // draw the second label (cmd shortcut)
         if (el.w > MenuConsts.secondLabelDistance) {
             let boxRight = [b.bx + el.w - MenuConsts.secondLabelDistance, b.by, MenuConsts.secondLabelDistance, el.h];
-            this.drawTextIfDefined(b, boxRight, el.get_s("labelhotkey"), false, false, true, el.get_b('enabledstyle'));
+            this.drawTextIfDefined(b, boxRight, el.get_s("labelhotkey"), false, false, true, el.get_b("enabledstyle"));
         }
 
         // highlight it
-        if (el.get_b("highlightactive") && el.get_b('enabledstyle')) {
+        if (el.get_b("highlightactive") && el.get_b("enabledstyle")) {
             this.drawInvertIfDefined(b, [b.bx, b.by, el.w, el.h]);
         }
     }
 
     drawUI512ElCanvasPieceMethod(b: UI512ViewDrawBorders, el: UI512ElCanvasPiece) {
         if (el.getCanvasForRead()) {
-            b.canvas.drawFromImage(el.getCanvasForRead().canvas, el.get_n("srcx"), el.get_n("srcy"), el.w, el.h, el.x, el.y, el.x, el.y, el.w, el.h);
+            b.canvas.drawFromImage(
+                el.getCanvasForRead().canvas,
+                el.get_n("srcx"),
+                el.get_n("srcy"),
+                el.w,
+                el.h,
+                el.x,
+                el.y,
+                el.x,
+                el.y,
+                el.w,
+                el.h
+            );
         }
     }
 

@@ -21,41 +21,41 @@ export abstract class UI512ControllerBase extends UI512ControllerAbstract {
     trackKeyOption = false;
     trackKeyShift = false;
     listeners: { [t: number]: Function[] } = {};
-    callbackQueueFromAsyncs: (O<()=>void>)[] = []
-    continueEventAfterError = true
+    callbackQueueFromAsyncs: (O<() => void>)[] = [];
+    continueEventAfterError = true;
     needRedraw = true;
     view = new UI512ViewDraw();
     inited = false;
     openState = MenuOpenState.MenusClosed;
     tmpIgnore: O<TemporaryIgnoreEvents>;
 
-    importMouseTracking(other:UI512ControllerBase) {
+    importMouseTracking(other: UI512ControllerBase) {
         // but don't copy over trackClickedIds
         if (other.trackMouse !== undefined) {
-            this.trackMouse = other.trackMouse 
-            this.trackPressedBtns = other.trackPressedBtns
-            this.trackKeyCmd = other.trackKeyCmd 
-            this.trackKeyOption = other.trackKeyOption 
-            this.trackKeyShift = other.trackKeyShift 
+            this.trackMouse = other.trackMouse;
+            this.trackPressedBtns = other.trackPressedBtns;
+            this.trackKeyCmd = other.trackKeyCmd;
+            this.trackKeyOption = other.trackKeyOption;
+            this.trackKeyShift = other.trackKeyShift;
         }
     }
 
     get currentFocus() {
-        return this._currentFocus
+        return this._currentFocus;
     }
 
-    setCurrentFocus(root: Root, next:O<string>) {
+    setCurrentFocus(root: Root, next: O<string>) {
         if (next !== this._currentFocus) {
-            let evt = new FocusChangedEventDetails(this._currentFocus, next)
-            
+            let evt = new FocusChangedEventDetails(this._currentFocus, next);
+
             try {
-                this.rawEvent(root, evt)
+                this.rawEvent(root, evt);
             } catch (e) {
-                ui512RespondError(e, "FocusChangedEvent response")
+                ui512RespondError(e, "FocusChangedEvent response");
             }
-            
+
             if (!evt.preventChange) {
-                this._currentFocus = next
+                this._currentFocus = next;
             }
         }
     }
@@ -82,7 +82,7 @@ export abstract class UI512ControllerBase extends UI512ControllerAbstract {
                     } catch (e) {
                         ui512RespondError(e, "event " + d.type());
                         if (!this.continueEventAfterError) {
-                            break
+                            break;
                         }
                     }
                 }
@@ -139,13 +139,13 @@ export abstract class UI512ControllerBase extends UI512ControllerAbstract {
         this.needRedraw = true;
     }
 
-    placeCallbackInQueue(cb:()=>void) {
-        this.callbackQueueFromAsyncs.push(cb)
+    placeCallbackInQueue(cb: () => void) {
+        this.callbackQueueFromAsyncs.push(cb);
     }
 
     abstract removeEl(gpid: string, elid: string, context: ChangeContext): void;
     protected abstract setPositionsForRender(root: Root, cmptotal: RenderComplete): void;
-    abstract rebuildFieldScrollbars():void;
+    abstract rebuildFieldScrollbars(): void;
 }
 
 export class BasicHandlers {
@@ -261,19 +261,19 @@ export class BasicHandlers {
             let wasShortcut = true;
             switch (d.readableShortcut) {
                 case "Cmd+Opt+Shift+R":
-                        c.invalidateAll();
+                    c.invalidateAll();
                     break;
                 case "Cmd+Opt+Shift+Q":
-                        CanvasWrapper.setDebugRenderingWithChangingColors(!CanvasWrapper.debugRenderingWithChangingColors);
-                        c.invalidateAll();
+                    CanvasWrapper.setDebugRenderingWithChangingColors(!CanvasWrapper.debugRenderingWithChangingColors);
+                    c.invalidateAll();
                     break;
                 case "Opt+T":
-                        root.runTests(false);
-                        c.invalidateAll();
+                    root.runTests(false);
+                    c.invalidateAll();
                     break;
                 case "Opt+Shift+T":
-                        root.runTests(true);
-                        c.invalidateAll();
+                    root.runTests(true);
+                    c.invalidateAll();
                     break;
                 default:
                     wasShortcut = false;
@@ -287,16 +287,16 @@ export class BasicHandlers {
     }
 
     static onIdleRunCallbackQueueFromAsyncs(c: UI512ControllerBase, root: Root, d: KeyDownEventDetails) {
-        for (let i=0; i<c.callbackQueueFromAsyncs.length; i++) {
+        for (let i = 0; i < c.callbackQueueFromAsyncs.length; i++) {
             // assign it to undefined, so that if it throws, we won't be stuck in a loop calling it over again.
-            let cb = c.callbackQueueFromAsyncs[i]
-            c.callbackQueueFromAsyncs[i] = undefined
+            let cb = c.callbackQueueFromAsyncs[i];
+            c.callbackQueueFromAsyncs[i] = undefined;
             if (cb) {
-                cb()
+                cb();
             }
         }
 
-        c.callbackQueueFromAsyncs = []
+        c.callbackQueueFromAsyncs = [];
     }
 }
 

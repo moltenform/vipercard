@@ -16,7 +16,7 @@ export class UI512DemoMenus extends UI512Controller {
     test = new Test_DrawMenus();
     public init(root: Root) {
         super.init(root);
-        addDefaultListeners(this.listeners)
+        addDefaultListeners(this.listeners);
 
         let clientrect = this.getStandardWindowBounds();
         this.app = new UI512Application(clientrect, this);
@@ -43,7 +43,7 @@ export class UI512DemoMenus extends UI512Controller {
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseUp, UI512DemoMenus.respondMouseUp);
         this.listenEvent(UI512EventType.MenuItemClicked, UI512DemoMenus.respondMenuItemClick);
-        this.rebuildFieldScrollbars()        
+        this.rebuildFieldScrollbars();
     }
 
     private static respondMenuItemClick(c: UI512DemoMenus, root: Root, d: MenuItemClickedDetails) {
@@ -206,7 +206,7 @@ export class Test_DrawMenus extends Tests_BaseClass {
     testDrawMenus(root: Root) {
         const w = 928;
         const h = 300;
-        assertEq(w, ScreenConsts.screenwidth, '1S|');
+        assertEq(w, ScreenConsts.screenwidth, "1S|");
         let tmpCanvasDom = document.createElement("canvas");
         tmpCanvasDom.width = w;
         tmpCanvasDom.height = h;

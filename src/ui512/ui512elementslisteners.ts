@@ -10,7 +10,7 @@ import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
 
 export abstract class EventDetails {
-    isEventDetails = true
+    isEventDetails = true;
     abstract type(): UI512EventType;
     protected _handled = false;
     constructor() {}
@@ -22,13 +22,13 @@ export abstract class EventDetails {
         this._handled = true;
     }
 
-    getAffectedElements():UI512Element[] {
-        return []
+    getAffectedElements(): UI512Element[] {
+        return [];
     }
 }
 
 export abstract class KeyEventDetails extends EventDetails {
-    isKeyEventDetails = true
+    isKeyEventDetails = true;
     constructor(
         public readonly timestamp: number,
         public readonly keyCode: string,
@@ -41,7 +41,7 @@ export abstract class KeyEventDetails extends EventDetails {
 }
 
 export abstract class MouseEventDetails extends EventDetails {
-    isMouseEventDetails = true
+    isMouseEventDetails = true;
     constructor(
         public readonly timestamp: number,
         public mouseX: number,
@@ -70,20 +70,20 @@ export class MouseMoveEventDetails extends EventDetails {
         return UI512EventType.MouseMove;
     }
 
-    getAffectedElements():UI512Element[] {
-        let ret = []
+    getAffectedElements(): UI512Element[] {
+        let ret = [];
         if (this.elPrev) {
-            ret.push(this.elPrev)
+            ret.push(this.elPrev);
         }
         if (this.elNext) {
-            ret.push(this.elNext)
+            ret.push(this.elNext);
         }
-        return ret
+        return ret;
     }
 }
 
 export class IdleEventDetails extends EventDetails {
-    isIdleEventDetails = true
+    isIdleEventDetails = true;
     constructor(public readonly milliseconds: number) {
         super();
     }
@@ -100,12 +100,12 @@ export class MouseEnterDetails extends EventDetails {
     type() {
         return UI512EventType.MouseEnter;
     }
-    getAffectedElements():UI512Element[] {
-        let ret = []
+    getAffectedElements(): UI512Element[] {
+        let ret = [];
         if (this.el) {
-            ret.push(this.el)
+            ret.push(this.el);
         }
-        return ret
+        return ret;
     }
 }
 
@@ -117,17 +117,17 @@ export class MouseLeaveDetails extends EventDetails {
     type() {
         return UI512EventType.MouseLeave;
     }
-    getAffectedElements():UI512Element[] {
-        let ret = []
+    getAffectedElements(): UI512Element[] {
+        let ret = [];
         if (this.el) {
-            ret.push(this.el)
+            ret.push(this.el);
         }
-        return ret
+        return ret;
     }
 }
 
 export class MenuItemClickedDetails extends EventDetails {
-    isMenuItemClickedDetails = true
+    isMenuItemClickedDetails = true;
     constructor(public readonly id: string, public readonly mods: ModifierKeys) {
         super();
     }
@@ -137,14 +137,14 @@ export class MenuItemClickedDetails extends EventDetails {
 }
 
 export class KeyUpEventDetails extends KeyEventDetails {
-    isKeyUpEventDetails = true
+    isKeyUpEventDetails = true;
     type() {
         return UI512EventType.KeyUp;
     }
 }
 
 export class KeyDownEventDetails extends KeyEventDetails {
-    isKeyDownEventDetails = true
+    isKeyDownEventDetails = true;
     readonly readableShortcut: string;
     constructor(timestamp: number, keyCode: string, keyChar: string, repeated: boolean, mods: ModifierKeys) {
         super(timestamp, keyCode, keyChar, repeated, mods);
@@ -165,15 +165,15 @@ export class MouseUpEventDetails extends MouseEventDetails {
     type() {
         return UI512EventType.MouseUp;
     }
-    getAffectedElements():UI512Element[] {
-        let ret = []
+    getAffectedElements(): UI512Element[] {
+        let ret = [];
         if (this.elRaw) {
-            ret.push(this.elRaw)
+            ret.push(this.elRaw);
         }
         if (this.elClick) {
-            ret.push(this.elClick)
+            ret.push(this.elClick);
         }
-        return ret
+        return ret;
     }
 }
 
@@ -183,12 +183,12 @@ export class MouseDownEventDetails extends MouseEventDetails {
     type() {
         return UI512EventType.MouseDown;
     }
-    getAffectedElements():UI512Element[] {
-        let ret = []
+    getAffectedElements(): UI512Element[] {
+        let ret = [];
         if (this.el) {
-            ret.push(this.el)
+            ret.push(this.el);
         }
-        return ret
+        return ret;
     }
 }
 
@@ -198,17 +198,17 @@ export class MouseDownDoubleEventDetails extends MouseEventDetails {
     type() {
         return UI512EventType.MouseDownDouble;
     }
-    getAffectedElements():UI512Element[] {
-        let ret = []
+    getAffectedElements(): UI512Element[] {
+        let ret = [];
         if (this.el) {
-            ret.push(this.el)
+            ret.push(this.el);
         }
-        return ret
+        return ret;
     }
 }
 
 export class PasteTextEventDetails extends EventDetails {
-    isPasteTextEventDetails = true
+    isPasteTextEventDetails = true;
     constructor(public readonly timestamp: number, public readonly text: string, public readonly fromOS: boolean) {
         super();
     }
@@ -219,8 +219,8 @@ export class PasteTextEventDetails extends EventDetails {
 }
 
 export class FocusChangedEventDetails extends EventDetails {
-    isFocusChangedEventDetails = true
-    preventChange = false
+    isFocusChangedEventDetails = true;
+    preventChange = false;
     constructor(public readonly idPrev: O<string>, public readonly idNext: O<string>) {
         super();
     }
@@ -243,7 +243,7 @@ export enum UI512EventType {
     MenuItemClicked,
     PasteText,
     Idle,
-    FocusChanged
+    FocusChanged,
 }
 
 export abstract class UI512ControllerAbstract implements ElementObserver {

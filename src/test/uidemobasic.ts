@@ -15,8 +15,8 @@ export class UI512DemoBasic extends UI512Controller {
     counter = 0;
     init(root: Root) {
         super.init(root);
-        addDefaultListeners(this.listeners)
-        
+        addDefaultListeners(this.listeners);
+
         let clientrect = this.getStandardWindowBounds();
         this.app = new UI512Application(clientrect, this);
         let grp = new UI512ElGroup("grpmain");
@@ -37,13 +37,13 @@ export class UI512DemoBasic extends UI512Controller {
 
         this.listenEvent(UI512EventType.MouseEnter, (_: object, r: Root, d: MouseEnterDetails) => {
             if (d.el && d.el.id === "btn1") {
-                UI512CursorAccess.setCursor(UI512Cursors.hand)
+                UI512CursorAccess.setCursor(UI512Cursors.hand);
             }
         });
 
         this.listenEvent(UI512EventType.MouseLeave, (_: object, r: Root, d: MouseLeaveDetails) => {
             if (d.el && d.el.id === "btn1") {
-                UI512CursorAccess.setCursor(UI512Cursors.arrow)
+                UI512CursorAccess.setCursor(UI512Cursors.arrow);
             }
         });
 
@@ -57,7 +57,7 @@ export class UI512DemoBasic extends UI512Controller {
         });
 
         this.listenEvent(UI512EventType.MouseUp, UI512DemoBasic.respondMouseUp);
-        this.rebuildFieldScrollbars()
+        this.rebuildFieldScrollbars();
     }
 
     private static respondMouseUp(c: UI512DemoBasic, root: Root, d: MouseUpEventDetails) {

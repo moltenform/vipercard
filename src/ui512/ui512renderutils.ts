@@ -147,7 +147,12 @@ export function toShortcutString(mods: ModifierKeys, code: string) {
     }
 
     // from "KeyA" to "A"
-    if (code.length === 4 && code.toLowerCase().startsWith("key") && code.charCodeAt(3) >= "A".charCodeAt(0) && code.charCodeAt(3) <= "Z".charCodeAt(0)) {
+    if (
+        code.length === 4 &&
+        code.toLowerCase().startsWith("key") &&
+        code.charCodeAt(3) >= "A".charCodeAt(0) &&
+        code.charCodeAt(3) <= "Z".charCodeAt(0)
+    ) {
         code = code.substr(3);
     }
 
@@ -174,10 +179,10 @@ export class CanvasWrapper {
         }
     }
 
-    static createMemoryCanvas(width:number, height:number) {
+    static createMemoryCanvas(width: number, height: number) {
         let hiddenCanvasDom = document.createElement("canvas");
-        hiddenCanvasDom.width = width
-        hiddenCanvasDom.height = height
+        hiddenCanvasDom.width = width;
+        hiddenCanvasDom.height = height;
         let a = new CanvasWrapper(hiddenCanvasDom);
         a.fillRectUnchecked(0, 0, a.canvas.width, a.canvas.height, "white");
         return a;
@@ -319,7 +324,7 @@ export class CanvasWrapper {
                 Util512.isValidNumber(dy),
             "3&|bad dims"
         );
-        
+
         if (CanvasWrapper.debugRenderingWithChangingColors && Math.random() > 0.8) {
             this.fillRectUnchecked(dx, dy, sWidth, sHeight, "black");
         } else {
@@ -369,10 +374,10 @@ export class CanvasWrapper {
         return this.drawFromImage(img, sx, sy, width, height, destx0, desty0, boxX0, boxY0, boxW, boxH);
     }
 
-    public temporarilyChangeCompositeMode(s:string, fn:()=>void) {
+    public temporarilyChangeCompositeMode(s: string, fn: () => void) {
         try {
             this.context.globalCompositeOperation = s;
-            fn()
+            fn();
         } finally {
             this.context.globalCompositeOperation = "source-over";
         }
@@ -402,7 +407,7 @@ export class CanvasWrapper {
 }
 
 export enum UI512Cursors {
-    __isUI512Enum = 1,    
+    __isUI512Enum = 1,
     unknown = 2,
     arrow = 3,
     beam = 4,
@@ -422,38 +427,38 @@ export enum UI512Cursors {
 }
 
 export class UI512CursorAccess {
-    protected static currentCursor = UI512Cursors.unknown
-    static defaultCursor = UI512Cursors.arrow
-    static getCursor(): UI512Cursors  {
-        return UI512CursorAccess.currentCursor
+    protected static currentCursor = UI512Cursors.unknown;
+    static defaultCursor = UI512Cursors.arrow;
+    static getCursor(): UI512Cursors {
+        return UI512CursorAccess.currentCursor;
     }
 
     static setCursor(nextCursor: UI512Cursors) {
         if (nextCursor !== UI512CursorAccess.currentCursor) {
-            let el = document.getElementById('mainDomCanvas')
+            let el = document.getElementById("mainDomCanvas");
             if (el) {
-                assertEq('number', typeof nextCursor, '3#|')
-                let className = 'classCursor' + nextCursor.toString()
-                el.className = className
+                assertEq("number", typeof nextCursor, "3#|");
+                let className = "classCursor" + nextCursor.toString();
+                el.className = className;
             }
-    
-            UI512CursorAccess.currentCursor = nextCursor
+
+            UI512CursorAccess.currentCursor = nextCursor;
         }
     }
 
     protected static getCursorFromClass() {
-        let el = document.getElementById('mainDomCanvas')
+        let el = document.getElementById("mainDomCanvas");
         if (el) {
             let className = el.className;
-            let n = parseInt(className.replace(/classCursor/, ''), 10)
+            let n = parseInt(className.replace(/classCursor/, ""), 10);
             if (isFinite(n)) {
                 if (findEnumToStr<UI512Cursors>(UI512Cursors, n) !== undefined) {
-                    return n
+                    return n;
                 }
             }
         }
 
-        return UI512Cursors.unknown
+        return UI512Cursors.unknown;
     }
 }
 
@@ -517,12 +522,17 @@ assertEq(
         ScreenConsts.xareawidth +
         ScreenConsts.xtoolwidth * ScreenConsts.xtoolcount +
         ScreenConsts.xtoolmargin +
-        ScreenConsts.xrightmargin
-, '3 |');
+        ScreenConsts.xrightmargin,
+    "3 |"
+);
 
-assertEq(ScreenConsts.screenheight, ScreenConsts.ytopmargin + ScreenConsts.ymenubar + ScreenConsts.yareaheight + ScreenConsts.ylowermargin, '3z|');
-assertEq(0, ScreenConsts.screenwidth % 8, '3y|');
-assertEq(0, ScreenConsts.screenheight % 8, '3x|');
+assertEq(
+    ScreenConsts.screenheight,
+    ScreenConsts.ytopmargin + ScreenConsts.ymenubar + ScreenConsts.yareaheight + ScreenConsts.ylowermargin,
+    "3z|"
+);
+assertEq(0, ScreenConsts.screenwidth % 8, "3y|");
+assertEq(0, ScreenConsts.screenheight % 8, "3x|");
 
 export function getStandardWindowBounds() {
     return [
@@ -547,8 +557,8 @@ export function compareCanvas(knownGoodImage: any, canvasGot: CanvasWrapper, imw
     hiddenCanvasExpected.drawFromImage(knownGoodImage, 0, 0, imwidth, imheight, 0, 0, 0, 0, imwidth, imheight);
     let dataExpected = hiddenCanvasExpected.context.getImageData(0, 0, imwidth, imheight);
     let dataGot = canvasGot.context.getImageData(0, 0, imwidth, imheight);
-    assertEq(dataExpected.data.length, dataGot.data.length, '3w|');
-    assertEq(dataExpected.data.length, 4 * imwidth * imheight, '3v|');
+    assertEq(dataExpected.data.length, dataGot.data.length, "3w|");
+    assertEq(dataExpected.data.length, 4 * imwidth * imheight, "3v|");
     let countDifferences = 0;
     for (let i = 0; i < dataExpected.data.length; i += 4) {
         if (getColorFromCanvasData(dataExpected.data, i) !== getColorFromCanvasData(dataGot.data, i)) {
@@ -622,7 +632,7 @@ async function testUtilCompareCanvasWithExpectedAsyncOne(dldgot: boolean, fnGetP
     } else {
         let countDifferences = compareCanvas(knownGoodImage, hiddenCanvas, imwidth, imheight, true);
         if (params.expectCountDifferentPixels !== 0) {
-            assertEq(params.expectCountDifferentPixels, countDifferences, '3s|');
+            assertEq(params.expectCountDifferentPixels, countDifferences, "3s|");
         }
 
         if (countDifferences === params.expectCountDifferentPixels) {

@@ -19,8 +19,8 @@ export class EditTextBehavior {
     static readonly amtScrollArrowClicked = 12;
     static readonly amtScrollAreaClicked = 36;
 
-    protected gelFromEl(el:O<UI512ElTextField>):O<IGenericTextField> {
-        return el ? new UI512ElTextFieldAsGeneric(el) : undefined
+    protected gelFromEl(el: O<UI512ElTextField>): O<IGenericTextField> {
+        return el ? new UI512ElTextFieldAsGeneric(el) : undefined;
     }
 
     onMouseDownScroll(c: UI512Controller, root: Root, d: MouseDownEventDetails) {
@@ -35,9 +35,9 @@ export class EditTextBehavior {
 
     onMouseDownSelect(c: UI512Controller, root: Root, d: MouseDownEventDetails) {
         if (d.button === 0 && d.el instanceof UI512ElTextField && d.el.get_b("canselecttext") && c.canSelectTextInField(d.el)) {
-            let gel = this.gelFromEl(d.el)
+            let gel = this.gelFromEl(d.el);
             if (!gel) {
-                return
+                return;
             }
 
             if ((d.mods & ModifierKeys.Cmd) !== 0 || (d.mods & ModifierKeys.Opt) !== 0) {
@@ -67,7 +67,7 @@ export class EditTextBehavior {
                 c.canSelectTextInField(el) &&
                 !el.get_b("selectbylines")
             ) {
-                let gel = this.gelFromEl(el)
+                let gel = this.gelFromEl(el);
                 if (gel) {
                     if (RectUtils.hasPoint(d.mouseX, d.mouseY, el.x, el.y, el.w, el.h)) {
                         SelAndEntry.mouseClickPositionAdjustSelection(root, gel, d.mouseX, d.mouseY);
@@ -86,7 +86,7 @@ export class EditTextBehavior {
                 c.canSelectTextInField(d.el) &&
                 !d.el.get_b("selectbylines")
             ) {
-                let gel = this.gelFromEl(d.el)
+                let gel = this.gelFromEl(d.el);
                 if (gel) {
                     // disable the drag-to-select
                     c.mouseDragStatus = MouseDragStatus.None;
@@ -108,9 +108,9 @@ export class EditTextBehavior {
             return;
         }
 
-        let gel = this.gelFromEl(el)
+        let gel = this.gelFromEl(el);
         if (!gel) {
-            return
+            return;
         }
 
         let wasShortcut = true;
@@ -242,7 +242,7 @@ export class EditTextBehavior {
                 charcode = d.keyChar.charCodeAt(0);
             let toRoman = FormattedText.fromHostCharsetStrict(char, root.getBrowserInfo());
             if (toRoman && toRoman.length === 1 && toRoman.charCodeAt(0) >= 32 && charcode >= 32) {
-                let gel = this.gelFromEl(el)
+                let gel = this.gelFromEl(el);
                 if (gel) {
                     // insert the char into the field
                     SelAndEntry.changeTextInsert(root, gel, toRoman);
@@ -256,7 +256,7 @@ export class EditTextBehavior {
         let el = SelAndEntry.getSelectedField(c);
         if (el && !(d.fromOS && !c.useOSClipboard)) {
             let text = d.fromOS ? FormattedText.fromExternalCharset(d.text, root.getBrowserInfo()) : d.text;
-            let gel = this.gelFromEl(el)
+            let gel = this.gelFromEl(el);
             if (gel) {
                 SelAndEntry.changeTextInsert(root, gel, text);
             }
@@ -265,14 +265,14 @@ export class EditTextBehavior {
 
     sendCutOrCopy(c: UI512Controller, root: Root, el: UI512ElTextField, isCut: boolean) {
         if (el) {
-            let gel = this.gelFromEl(el)
+            let gel = this.gelFromEl(el);
             if (!gel) {
-                return
+                return;
             }
 
-            if (el.get_b('asteriskonly')) {
+            if (el.get_b("asteriskonly")) {
                 // this is a password "asteriskonly" field so don't allow cut/copy
-                return
+                return;
             }
 
             let sel = SelAndEntry.getSelectedText(root, gel);
@@ -320,7 +320,7 @@ export class EditTextBehavior {
 }
 
 export function addDefaultListeners(listeners: { [t: number]: Function[] }) {
-    let editTextBehavior = new EditTextBehavior()
+    let editTextBehavior = new EditTextBehavior();
     listeners[UI512EventType.MouseDown.valueOf()] = [
         BasicHandlers.trackMouseStatusMouseDown,
         BasicHandlers.trackCurrentElMouseDown,
@@ -338,18 +338,28 @@ export function addDefaultListeners(listeners: { [t: number]: Function[] }) {
         editTextBehavior.onMouseUp.bind(editTextBehavior),
     ];
 
-    listeners[UI512EventType.Idle.valueOf()] = [editTextBehavior.onIdle.bind(editTextBehavior),
-        BasicHandlers.onIdleRunCallbackQueueFromAsyncs];
-    listeners[UI512EventType.MouseMove.valueOf()] = [BasicHandlers.trackCurrentElMouseMove, editTextBehavior.onMouseMoveSelect.bind(editTextBehavior)];
-    listeners[UI512EventType.MouseEnter.valueOf()] = [BasicHandlers.trackHighlightedButtonMouseEnter, MenuBehavior.onMouseEnter];
-    listeners[UI512EventType.MouseLeave.valueOf()] = [BasicHandlers.trackHighlightedButtonMouseLeave, MenuBehavior.onMouseLeave];
-    listeners[UI512EventType.KeyDown.valueOf()] = [
-        BasicHandlers.trackKeyDown, 
-        BasicHandlers.basicKeyShortcuts, 
-        editTextBehavior.onKeyDown.bind(editTextBehavior)
+    listeners[UI512EventType.Idle.valueOf()] = [
+        editTextBehavior.onIdle.bind(editTextBehavior),
+        BasicHandlers.onIdleRunCallbackQueueFromAsyncs,
     ];
-    
+    listeners[UI512EventType.MouseMove.valueOf()] = [
+        BasicHandlers.trackCurrentElMouseMove,
+        editTextBehavior.onMouseMoveSelect.bind(editTextBehavior),
+    ];
+    listeners[UI512EventType.MouseEnter.valueOf()] = [BasicHandlers.trackHighlightedButtonMouseEnter, 
+        MenuBehavior.onMouseEnter];
+    listeners[UI512EventType.MouseLeave.valueOf()] = [BasicHandlers.trackHighlightedButtonMouseLeave, 
+        MenuBehavior.onMouseLeave];
+    listeners[UI512EventType.KeyDown.valueOf()] = [
+        BasicHandlers.trackKeyDown,
+        BasicHandlers.basicKeyShortcuts,
+        editTextBehavior.onKeyDown.bind(editTextBehavior),
+    ];
+
     listeners[UI512EventType.KeyUp.valueOf()] = [BasicHandlers.trackKeyUp];
-    listeners[UI512EventType.MouseDownDouble.valueOf()] = [BasicHandlers.trackMouseDoubleDown, editTextBehavior.onMouseDoubleDown.bind(editTextBehavior)];
+    listeners[UI512EventType.MouseDownDouble.valueOf()] = [
+        BasicHandlers.trackMouseDoubleDown,
+        editTextBehavior.onMouseDoubleDown.bind(editTextBehavior),
+    ];
     listeners[UI512EventType.PasteText.valueOf()] = [editTextBehavior.onPasteText.bind(editTextBehavior)];
 }

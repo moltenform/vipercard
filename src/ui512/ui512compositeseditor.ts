@@ -16,25 +16,25 @@ import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
 
 class AutoIndentMatch {
-    startPattern:RegExp
-    desiredEndPattern:RegExp
-    desiredEndText:string
+    startPattern: RegExp;
+    desiredEndPattern: RegExp;
+    desiredEndText: string;
 }
 
 export class UI512AutoIndent {
     lineContinuation = ["\\"];
-    linesCauseIndent:[RegExp, RegExp, string][] = [
-        [/^start1\b/, /^end1\b/, 'end1'],
-        [/^start\s+b2\b/, /^end\s+b2\b/, 'end'], 
-        [/^start\s+b2\b/, /^end\s+b2\b/, 'end'],
-        [/^on\s+(\w+)\b/, /^end\s+%MATCH%\b/, 'end %MATCH%']];
+    linesCauseIndent: [RegExp, RegExp, string][] = [
+        [/^start1\b/, /^end1\b/, "end1"],
+        [/^start\s+b2\b/, /^end\s+b2\b/, "end"],
+        [/^start\s+b2\b/, /^end\s+b2\b/, "end"],
+        [/^on\s+(\w+)\b/, /^end\s+%MATCH%\b/, "end %MATCH%"],
+    ];
     caseSensitive = true;
     useTabs = true;
     useAutoIndent = true;
     useAutoCreateBlock = true;
     readonly reNull = new RegExp("");
-    constructor() {
-    }
+    constructor() {}
 
     protected lineIsContinuation(s: string) {
         for (let cont of this.lineContinuation) {
@@ -49,17 +49,16 @@ export class UI512AutoIndent {
     getLevelChangeIsStartNewBlock(s: string, stack: AutoIndentMatch[], st: RegExp, end: RegExp, endText: string) {
         let matched = s.match(st);
         if (matched) {
-            let nextword = ''
+            let nextword = "";
             if (scontains(endText, "%MATCH%")) {
                 assertTrue(matched.length > 1, "2s|the regex should have a 2nd group to capture next word");
                 if (matched[1].match(/^\w+$/)) {
                     nextword = matched[1];
                 }
             }
-            
-            
-            let store = new AutoIndentMatch()
-            store.startPattern = st
+
+            let store = new AutoIndentMatch();
+            store.startPattern = st;
             store.desiredEndPattern = new RegExp(end.source.replace(/%MATCH%/g, nextword));
             store.desiredEndText = endText.replace(/%MATCH%/g, nextword);
             stack.push(store);
@@ -70,7 +69,7 @@ export class UI512AutoIndent {
     }
 
     getLevelChangeIsEndOfBlock(s: string, stack: AutoIndentMatch[]) {
-        let desiredMatch = stack[stack.length - 1]
+        let desiredMatch = stack[stack.length - 1];
         let matched = s.match(desiredMatch.desiredEndPattern);
         if (matched) {
             stack.pop();
@@ -80,8 +79,9 @@ export class UI512AutoIndent {
         }
     }
 
-    protected getLevelChange(sTrimmed: string, stack: AutoIndentMatch[]):[boolean, boolean] {
-        let isBlockStart = false, isBlockEnd = false
+    protected getLevelChange(sTrimmed: string, stack: AutoIndentMatch[]): [boolean, boolean] {
+        let isBlockStart = false,
+            isBlockEnd = false;
         sTrimmed = sTrimmed.trim();
         if (!this.caseSensitive) {
             sTrimmed = sTrimmed.toLowerCase();
@@ -91,8 +91,8 @@ export class UI512AutoIndent {
         for (let [st, end, endInsert] of this.linesCauseIndent) {
             let rt = this.getLevelChangeIsStartNewBlock(sTrimmed, stack, st, end, endInsert);
             if (rt !== 0) {
-                isBlockStart = true
-                break
+                isBlockStart = true;
+                break;
             }
         }
 
@@ -100,30 +100,30 @@ export class UI512AutoIndent {
         if (stack.length > 0) {
             let rt = this.getLevelChangeIsEndOfBlock(sTrimmed, stack);
             if (rt !== 0) {
-                isBlockEnd = true
+                isBlockEnd = true;
             }
         }
 
-        return [isBlockStart, isBlockEnd]
+        return [isBlockStart, isBlockEnd];
     }
 
-    runAutoIndentImpl(lns: Lines, selcaret:number, selend:number, len: number, attemptInsertText:boolean): [Lines, number, number] {
+    runAutoIndentImpl(lns: Lines, selcaret: number, selend: number, len: number, attemptInsertText: boolean): [Lines, number, number] {
         let wasEnd = selcaret >= len;
         let currentline = lns.indexToLineNumber(selcaret);
 
         let lnsout = new Lines(FormattedText.newFromPersisted(""));
         lnsout.lns = [];
 
-        let overrideLevel:O<number> = undefined;
+        let overrideLevel: O<number> = undefined;
         let level = 0;
         let lastUnclosedDelta = 0;
-        let lastUnclosedMatch : O<AutoIndentMatch>
+        let lastUnclosedMatch: O<AutoIndentMatch>;
         let stack: AutoIndentMatch[] = [];
         for (let i = 0; i < lns.lns.length; i++) {
             let s = lns.getLineUnformatted(i);
             let isContinuation = this.lineIsContinuation(s);
-            let [isBlockStart, isBlockEnd] = this.getLevelChange(s, stack)
-            
+            let [isBlockStart, isBlockEnd] = this.getLevelChange(s, stack);
+
             if (i === currentline - 1 && !isContinuation && isBlockStart) {
                 lastUnclosedDelta = 1;
                 lastUnclosedMatch = stack[stack.length - 1];
@@ -137,7 +137,7 @@ export class UI512AutoIndent {
             s = TextRendererFontManager.setInitialFont(s, UI512CompCodeEditor.currentFont);
             lnsout.lns[i] = FormattedText.newFromPersisted(s);
             overrideLevel = isContinuation ? level + 1 : undefined;
-            
+
             if (isBlockStart) {
                 level += 1;
             }
@@ -152,17 +152,15 @@ export class UI512AutoIndent {
             }
         }
 
-        assertEqWarn(lns.lns.length, lnsout.lns.length, '2r|');
+        assertEqWarn(lns.lns.length, lnsout.lns.length, "2r|");
         assertTrueWarn(currentline < lnsout.lns.length, "2q|invalid currentline");
         let index = lnsout.lineNumberToLineEndIndex(currentline);
-        return [lnsout, index, index]
+        return [lnsout, index, index];
     }
 
     runAutoIndent(lns: Lines, el: UI512ElTextField): Lines {
-        let len = el.get_ftxt().len()
-        let [lnsout, newselcaret, newselend] = this.runAutoIndentImpl(
-            lns, el.get_n("selcaret"), el.get_n("selend"),
-            len, true)
+        let len = el.get_ftxt().len();
+        let [lnsout, newselcaret, newselend] = this.runAutoIndentImpl(lns, el.get_n("selcaret"), el.get_n("selend"), len, true);
         el.set("selcaret", newselcaret);
         el.set("selend", newselend);
         return lnsout;
@@ -224,16 +222,18 @@ export class UI512CompCodeEditor extends UI512CompBase {
     static fontface = "monaco";
     static fontstyle = TextFontStyling.Default;
     static fontsize = 9;
-    static currentFont = `${UI512CompCodeEditor.fontface}_${UI512CompCodeEditor.fontsize}_${textFontStylingToString(UI512CompCodeEditor.fontstyle)}`;
-    autoIndent:UI512AutoIndent
+    static currentFont = `${UI512CompCodeEditor.fontface}_${UI512CompCodeEditor.fontsize}_${textFontStylingToString(
+        UI512CompCodeEditor.fontstyle
+    )}`;
+    autoIndent: UI512AutoIndent;
 
     constructor(compositeId: string) {
-        super(compositeId)
+        super(compositeId);
         this.autoIndent = new UI512AutoIndent();
     }
 
     setFont(fontface: string, size: number, style: TextFontStyling) {
-        assertTrueWarn(false, "nyi")
+        assertTrueWarn(false, "nyi");
     }
 
     getEl() {
@@ -273,12 +273,12 @@ export class UI512CompCodeEditor extends UI512CompBase {
         }
     }
 
-    respondKeydown(root:Root, d: KeyDownEventDetails) {
+    respondKeydown(root: Root, d: KeyDownEventDetails) {
         if (!this.getEl().get_b("canselecttext") || !this.getEl().get_b("canedit")) {
             return;
         }
 
-        let gel = new UI512ElTextFieldAsGeneric(this.getEl())
+        let gel = new UI512ElTextFieldAsGeneric(this.getEl());
         let wasShortcut = true;
         switch (d.readableShortcut) {
             case "Cmd+D":
@@ -296,7 +296,7 @@ export class UI512CompCodeEditor extends UI512CompBase {
                 // Ctrl Q adds or removes based on what is there
                 SelAndEntry.changeTextToggleLinePrefix(root, gel, this.lineCommentPrefix);
                 break;
-            case 'Enter':
+            case "Enter":
                 SelAndEntry.changeTextInsert(root, gel, "\n");
                 this.autoIndent.runAutoIndentAll(this.getEl());
                 break;
@@ -310,4 +310,3 @@ export class UI512CompCodeEditor extends UI512CompBase {
         }
     }
 }
-

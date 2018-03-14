@@ -29,7 +29,7 @@ export abstract class UI512Controller extends UI512ControllerBase {
     clipManager = new ClipManager();
     timerSlowIdle = new RepeatingTimer(this.timerblinkperiod);
     useOSClipboard = false;
-    mouseDragStatus: number = MouseDragStatus.None;    
+    mouseDragStatus: number = MouseDragStatus.None;
     lang: UI512Lang = new UI512LangNull();
 
     init(root: Root) {
@@ -55,7 +55,7 @@ export abstract class UI512Controller extends UI512ControllerBase {
     }
 
     getStandardWindowBounds() {
-        return getStandardWindowBounds()
+        return getStandardWindowBounds();
     }
 
     rebuildFieldScrollbars() {
@@ -73,7 +73,7 @@ export abstract class UI512Controller extends UI512ControllerBase {
                     ScrollbarImpl.rebuildFieldScrollbar(this.app, grp, el);
                 }
             }
-        }        
+        }
     }
 
     protected setPositionsForRender(root: Root, cmptotal: RenderComplete) {

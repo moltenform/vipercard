@@ -12,7 +12,6 @@ import { RectOverlapType, RectUtils, ModifierKeys, osTranslateModifiers, toShort
 import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
 
-
 export class UI512DemoButtons extends UI512Controller {
     counter = 0;
     isCurrentlyResizingButton = false;
@@ -23,7 +22,7 @@ export class UI512DemoButtons extends UI512Controller {
 
     public init(root: Root) {
         super.init(root);
-        addDefaultListeners(this.listeners)
+        addDefaultListeners(this.listeners);
         let clientrect = this.getStandardWindowBounds();
         this.app = new UI512Application(clientrect, this);
         let grp = new UI512ElGroup("grpmain");
@@ -44,7 +43,7 @@ export class UI512DemoButtons extends UI512Controller {
         this.listenEvent(UI512EventType.MouseUp, UI512DemoButtons.respondMouseUp);
         this.listenEvent(UI512EventType.MouseMove, UI512DemoButtons.respondMouseMove);
         this.listenEvent(UI512EventType.KeyUp, UI512DemoButtons.respondKeyUp);
-        this.rebuildFieldScrollbars()
+        this.rebuildFieldScrollbars();
     }
 
     private static respondMouseUp(c: UI512DemoButtons, root: Root, d: MouseUpEventDetails) {

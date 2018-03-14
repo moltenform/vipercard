@@ -77,8 +77,8 @@ export abstract class UI512Settable extends UI512Gettable {
     protected locked = false;
     observer: ElementObserver;
 
-    lock(locked:boolean) {
-        this.locked = locked
+    lock(locked: boolean) {
+        this.locked = locked;
     }
 
     constructor(id: string, observer: ElementObserver = elementObserverDefault) {
@@ -90,7 +90,7 @@ export abstract class UI512Settable extends UI512Gettable {
     }
 
     set<T>(s: string, newval: T, context = ChangeContext.Default) {
-        checkThrowUI512(!this.locked, "6L|tried to set value when locked. setting during refresh()?")
+        checkThrowUI512(!this.locked, "6L|tried to set value when locked. setting during refresh()?");
         let prev = this.get(s);
         assertEq(typeof prev, typeof newval, `2#|property ${s} type mismatch`);
         (this as any)["_" + s] = newval;
@@ -101,7 +101,7 @@ export abstract class UI512Settable extends UI512Gettable {
     }
 
     setftxt(newtxt: FormattedText, context = ChangeContext.Default) {
-        checkThrowUI512(!this.locked, "tried to set value when locked. setting during refresh()?")
+        checkThrowUI512(!this.locked, "tried to set value when locked. setting during refresh()?");
         let prev = this.get_ftxt();
         assertTrue(!!newtxt, "2!|invalid newtxt", this.id);
         (this as any)["_" + UI512Settable.formattedTextField] = newtxt;
@@ -126,11 +126,11 @@ export abstract class UI512Settable extends UI512Gettable {
 
 export abstract class UI512Element extends UI512Settable {
     readonly typeName: string = "UI512Element";
-    transparentToClicks = false
+    transparentToClicks = false;
     protected _canFocus = false;
     protected _visible = true;
     protected _enabled = true;
-    protected _enabledstyle = true;        
+    protected _enabledstyle = true;
 
     get enabled() {
         return this._enabled;
@@ -155,7 +155,7 @@ export abstract class UI512Element extends UI512Settable {
     }
 
     setDimensionsX1Y1(newx0: number, newy0: number, newx1: number, newy1: number, context = ChangeContext.Default) {
-        this.setDimensions(newx0, newy0, newx1-newx0, newy1-newy0)
+        this.setDimensions(newx0, newy0, newx1 - newx0, newy1 - newy0);
     }
 
     get x() {

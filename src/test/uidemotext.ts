@@ -19,7 +19,7 @@ export class UI512DemoText extends UI512Controller {
     testrunner: Test_DrawText;
     public init(root: Root) {
         super.init(root);
-        addDefaultListeners(this.listeners)
+        addDefaultListeners(this.listeners);
         this.testrunner = new Test_DrawText();
         this.testrunner.uicontext = true;
 
@@ -57,7 +57,7 @@ export class UI512DemoText extends UI512Controller {
         this.invalidateAll();
 
         this.listenEvent(UI512EventType.MouseUp, UI512DemoText.respondMouseUp);
-        this.rebuildFieldScrollbars()    
+        this.rebuildFieldScrollbars();
     }
 
     drawTextDemo(root: Root) {
@@ -277,12 +277,18 @@ export class Test_DrawText extends Tests_BaseClass {
                     // todo: putting abc\ndef into a very narrow field of width 1px, wrapping enabled
                     // currently adds an extra vertical space between the c and the d
                     // doesn't look that bad, but maybe something to revisit
-                    s = TextRendererFontManager.setInitialFont("abcd\nef\n\n\ngh", `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`);
+                    s = TextRendererFontManager.setInitialFont(
+                        "abcd\nef\n\n\ngh",
+                        `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
+                    );
                     args.boxw = 3;
                     args.wrap = true;
                 } else if (i === 3) {
                     /* very narrow, wrap disabled */
-                    s = TextRendererFontManager.setInitialFont("abcd\nef\n\n\ngh", `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`);
+                    s = TextRendererFontManager.setInitialFont(
+                        "abcd\nef\n\n\ngh",
+                        `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
+                    );
                     args.boxw = 3;
                     args.wrap = false;
                 } else if (i === 4) {
@@ -369,7 +375,7 @@ export class Test_RenderTextUtils extends Tests_BaseClass {
             for (let [expected, sinput] of this.cleanCharsTests) {
                 let newtxt = FormattedText.newFromUnformatted(sinput);
                 let unformatted = newtxt.toUnformatted();
-                assertEq(expected, unformatted, '1k|');
+                assertEq(expected, unformatted, "1k|");
             }
         },
         "test_fromHostCharset",
@@ -377,79 +383,85 @@ export class Test_RenderTextUtils extends Tests_BaseClass {
             let fromHost = (s: string) => FormattedText.fromExternalCharset(s, BrowserOSInfo.Unknown);
             for (let [expected, sinput] of this.cleanCharsTests) {
                 let unformatted = fromHost(sinput);
-                assertEq(expected, unformatted, '1j|');
+                assertEq(expected, unformatted, "1j|");
             }
 
             // control chars are not accepted
-            assertEq("ab?cd?", fromHost("ab\x03cd\x03"), '1i|');
+            assertEq("ab?cd?", fromHost("ab\x03cd\x03"), "1i|");
             // more control chars are not accepted
-            assertEq("ab?cd????", fromHost("ab\x01cd\x06\x0f\x15\x1a"), '1h|');
+            assertEq("ab?cd????", fromHost("ab\x01cd\x06\x0f\x15\x1a"), "1h|");
             // tabs are accepted
-            assertEq("ab\tcd?", fromHost("ab\tcd\x03"), '1g|');
+            assertEq("ab\tcd?", fromHost("ab\tcd\x03"), "1g|");
             // accented letters are translated
             assertEq(
                 "ab" + String.fromCharCode(135, 32, 136, 32, 146, 32, 147, 32, 148, 32, 153, 32, 155),
-                fromHost("ab\u00e1 \u00e0 \u00ed \u00ec \u00ee \u00f4 \u00f5")
-            , '1f|');
+                fromHost("ab\u00e1 \u00e0 \u00ed \u00ec \u00ee \u00f4 \u00f5"),
+                "1f|"
+            );
             // greek letters are translated
             assertEq(
                 "ab" + String.fromCharCode(185, 32, 184, 32, 183, 32, 181, 32, 190, 32, 174, 32, 207),
-                fromHost("ab\u03C0 \u220F \u2211 \u00B5 \u00E6 \u00C6 \u0153")
-            , '1e|');
+                fromHost("ab\u03C0 \u220F \u2211 \u00B5 \u00E6 \u00C6 \u0153"),
+                "1e|"
+            );
             // symbols are translated
-            assertEq("ab" + String.fromCharCode(166, 32, 165, 32, 161), fromHost("ab\u00B6 \u2022 \u00B0"), '1d|');
+            assertEq("ab" + String.fromCharCode(166, 32, 165, 32, 161), fromHost("ab\u00B6 \u2022 \u00B0"), "1d|");
             // unknown lower letters are not accepted (1/4, superscript 1, capital thorn)
-            assertEq("ab???cd", fromHost("ab\u00BC\u00B9\u00DEcd"), '1c|');
+            assertEq("ab???cd", fromHost("ab\u00BC\u00B9\u00DEcd"), "1c|");
             // unknown higher letters are not accepted
-            assertEq("12???34", fromHost("12\u05E7\u3042\uB9D034"), '1b|');
+            assertEq("12???34", fromHost("12\u05E7\u3042\uB9D034"), "1b|");
             // different fallback
-            assertEq("ab!cd!", FormattedText.fromExternalCharset("ab\x03cd\x03", BrowserOSInfo.Unknown, "!"), '1a|');
+            assertEq("ab!cd!", FormattedText.fromExternalCharset("ab\x03cd\x03", BrowserOSInfo.Unknown, "!"), "1a|");
             // into charset, control chars are not accepted
-            assertEq("ab?cd?", FormattedText.toExternalCharset("ab\x05cd\x05", BrowserOSInfo.Unknown), '1Z|');
+            assertEq("ab?cd?", FormattedText.toExternalCharset("ab\x05cd\x05", BrowserOSInfo.Unknown), "1Z|");
             // into charset, different fallback
-            assertEq("ab!cd!", FormattedText.toExternalCharset("ab\x05cd\x05", BrowserOSInfo.Unknown, "!"), '1Y|');
+            assertEq("ab!cd!", FormattedText.toExternalCharset("ab\x05cd\x05", BrowserOSInfo.Unknown, "!"), "1Y|");
             // into charset, tabs are accepted
-            assertEq("AB\nCD\tEF", FormattedText.toExternalCharset("AB\nCD\tEF", BrowserOSInfo.Unknown), '1X|');
+            assertEq("AB\nCD\tEF", FormattedText.toExternalCharset("AB\nCD\tEF", BrowserOSInfo.Unknown), "1X|");
             // into charset, greek letters are translated
             assertEq(
                 "ab\u03C0 \u220F \u2211 \u00B5 \u00E6 \u00C6 \u0153",
-                FormattedText.toExternalCharset("ab" + String.fromCharCode(185, 32, 184, 32, 183, 32, 181, 32, 190, 32, 174, 32, 207), BrowserOSInfo.Unknown)
-            , '1W|');
+                FormattedText.toExternalCharset(
+                    "ab" + String.fromCharCode(185, 32, 184, 32, 183, 32, 181, 32, 190, 32, 174, 32, 207),
+                    BrowserOSInfo.Unknown
+                ),
+                "1W|"
+            );
             // into charset, unknown letters are not accepted
-            assertEq("12???34", FormattedText.toExternalCharset("12\u001f\u0100\u221134", BrowserOSInfo.Unknown), '1V|');
+            assertEq("12???34", FormattedText.toExternalCharset("12\u001f\u0100\u221134", BrowserOSInfo.Unknown), "1V|");
         },
         "test_asteriskOnly",
         () => {
-            let args = new RenderTextArgs(0,0,largearea,largearea)
-            args.asteriskOnly = true
+            let args = new RenderTextArgs(0, 0, largearea, largearea);
+            args.asteriskOnly = true;
 
             // zero-length string
-            let textin = FormattedText.newFromUnformatted("")
-            let modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args)
-            assertEq(0, modded.len(), "")
-            assertTrue(modded.isLocked(), "")
+            let textin = FormattedText.newFromUnformatted("");
+            let modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
+            assertEq(0, modded.len(), "");
+            assertTrue(modded.isLocked(), "");
 
             // no formatting
-            textin = FormattedText.newFromUnformatted("abcd")
-            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args)
-            assertEq("abcd", textin.toUnformatted(), "")
-            assertEq("\xA5\xA5\xA5\xA5", modded.toUnformatted(), "")
-            assertEq(4, modded.len(), "")
+            textin = FormattedText.newFromUnformatted("abcd");
+            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
+            assertEq("abcd", textin.toUnformatted(), "");
+            assertEq("\xA5\xA5\xA5\xA5", modded.toUnformatted(), "");
+            assertEq(4, modded.len(), "");
 
             // formatting is preserved
-            let font1 = new TextFontSpec('geneva', TextFontStyling.Default, 12).toSpecString()
-            let font2 = new TextFontSpec('times', TextFontStyling.Bold, 14).toSpecString()
-            let s = TextRendererFontManager.setInitialFont("abc", font1) + 
-                TextRendererFontManager.setInitialFont("def", font2);
-            let expected = TextRendererFontManager.setInitialFont("\xA5\xA5\xA5", font1) + 
+            let font1 = new TextFontSpec("geneva", TextFontStyling.Default, 12).toSpecString();
+            let font2 = new TextFontSpec("times", TextFontStyling.Bold, 14).toSpecString();
+            let s = TextRendererFontManager.setInitialFont("abc", font1) + TextRendererFontManager.setInitialFont("def", font2);
+            let expected =
+                TextRendererFontManager.setInitialFont("\xA5\xA5\xA5", font1) +
                 TextRendererFontManager.setInitialFont("\xA5\xA5\xA5", font2);
-            textin = FormattedText.newFromPersisted(s)
-            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args)
-            assertEq("abcdef", textin.toUnformatted(), "")
-            assertEq("\xA5\xA5\xA5\xA5\xA5\xA5", modded.toUnformatted(), "")
-            assertEq(6, modded.len(), "")
-            assertEq(expected, modded.toPersisted(), "")
-        }
+            textin = FormattedText.newFromPersisted(s);
+            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
+            assertEq("abcdef", textin.toUnformatted(), "");
+            assertEq("\xA5\xA5\xA5\xA5\xA5\xA5", modded.toUnformatted(), "");
+            assertEq(6, modded.len(), "");
+            assertEq(expected, modded.toPersisted(), "");
+        },
     ];
 }
 

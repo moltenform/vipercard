@@ -16,7 +16,7 @@ export class UI512DemoTextEdit extends UI512Controller {
     test = new Test_DrawTextEdit();
     public init(root: Root) {
         super.init(root);
-        addDefaultListeners(this.listeners)
+        addDefaultListeners(this.listeners);
 
         let clientrect = this.getStandardWindowBounds();
         this.app = new UI512Application(clientrect, this);
@@ -36,8 +36,8 @@ export class UI512DemoTextEdit extends UI512Controller {
         let testSelByLines = new UI512ElTextField("testSelByLines");
         grp.addElement(this.app, testSelByLines);
         testSelByLines.setDimensions(485, 270, 170, 80);
-        let choices = "choice 0\nchoice 1\nchoice 2 (another)\nchoice 3\nchoice 4\nchoice 5\nchoice 6\nchoice 7".split('\n')
-        UI512ElTextField.setListChoices(testSelByLines, choices)
+        let choices = "choice 0\nchoice 1\nchoice 2 (another)\nchoice 3\nchoice 4\nchoice 5\nchoice 6\nchoice 7".split("\n");
+        UI512ElTextField.setListChoices(testSelByLines, choices);
 
         testSelByLines.set("scrollbar", true);
         testSelByLines.set("selectbylines", true);
@@ -53,7 +53,7 @@ export class UI512DemoTextEdit extends UI512Controller {
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseUp, UI512DemoTextEdit.respondMouseUp);
         this.listenEvent(UI512EventType.KeyDown, UI512DemoTextEdit.respondKeyDown);
-        this.rebuildFieldScrollbars()        
+        this.rebuildFieldScrollbars();
     }
 
     private static respondMouseUp(c: UI512DemoTextEdit, root: Root, d: MouseUpEventDetails) {
@@ -69,7 +69,7 @@ export class UI512DemoTextEdit extends UI512Controller {
             } else if (d.elClick.id === "btnWhichChoice") {
                 let grp = c.app.getGroup("grp");
                 let el = cast(grp.getEl("testSelByLines"), UI512ElTextField);
-                let gel = new UI512ElTextFieldAsGeneric(el)                
+                let gel = new UI512ElTextFieldAsGeneric(el);
                 let whichLine = SelAndEntry.selectByLinesWhichLine(gel);
                 console.log(`the chosen line is: ${whichLine} `);
             }
@@ -91,12 +91,12 @@ export class UI512DemoTextEdit extends UI512Controller {
         if (el && el.get_b("multiline") && el.get_n("selcaret") === el.get_n("selend")) {
             // simply insert a \t
             if (!hasShift) {
-                let gel = new UI512ElTextFieldAsGeneric(el)                                
+                let gel = new UI512ElTextFieldAsGeneric(el);
                 SelAndEntry.changeTextInsert(root, gel, "\t");
             }
         } else if (el && el.get_b("multiline")) {
             // indent or dedent
-            let gel = new UI512ElTextFieldAsGeneric(el)                            
+            let gel = new UI512ElTextFieldAsGeneric(el);
             SelAndEntry.changeTextIndentation(root, gel, hasShift);
         }
 
@@ -107,7 +107,7 @@ export class UI512DemoTextEdit extends UI512Controller {
 export class UI512TestTextEditController extends UI512Controller {
     public init(root: Root) {
         super.init(root);
-        addDefaultListeners(this.listeners)
+        addDefaultListeners(this.listeners);
     }
 }
 
@@ -251,7 +251,7 @@ export class Test_DrawTextEdit extends Tests_BaseClass {
             }
         });
 
-        c.rebuildFieldScrollbars()
+        c.rebuildFieldScrollbars();
     }
 
     drawTestCase(root: Root, testnumber: number, tmpCanvas: CanvasWrapper, w: number, h: number, i: number, complete: RenderComplete) {
@@ -291,7 +291,7 @@ export class Test_DrawTextEdit extends Tests_BaseClass {
         const w = 928;
         const h = 400;
         const screensToDraw = 3;
-        assertEq(w, ScreenConsts.screenwidth, '1t|');
+        assertEq(w, ScreenConsts.screenwidth, "1t|");
         let tmpCanvasDom = document.createElement("canvas");
         tmpCanvasDom.width = w;
         tmpCanvasDom.height = h;
@@ -529,8 +529,8 @@ export class Test_DrawTextEdit extends Tests_BaseClass {
 }
 
 export class Test_SelAndEntry extends Tests_BaseClass {
-    constructor(protected root:Root) {
-        super()
+    constructor(protected root: Root) {
+        super();
     }
 
     tests = [
@@ -995,68 +995,68 @@ export class Test_SelAndEntry extends Tests_BaseClass {
         "test_selectLineInField,selectByLinesWhichLine",
         () => {
             // empty field
-            let el = new UI512ElTextField("test", new ElementObserverNoOp())
-            let gel = new UI512ElTextFieldAsGeneric(el)
-            el.setftxt(FormattedText.newFromUnformatted(""))
-            SelAndEntry.selectLineInField(this.root, gel, 0)
-            assertEq(0, el.get_n('selcaret'), "")
-            assertEq(0, el.get_n('selend'), "")
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 2)
-            assertEq(0, el.get_n('selcaret'), "")
-            assertEq(0, el.get_n('selend'), "")
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "")
+            let el = new UI512ElTextField("test", new ElementObserverNoOp());
+            let gel = new UI512ElTextFieldAsGeneric(el);
+            el.setftxt(FormattedText.newFromUnformatted(""));
+            SelAndEntry.selectLineInField(this.root, gel, 0);
+            assertEq(0, el.get_n("selcaret"), "");
+            assertEq(0, el.get_n("selend"), "");
+            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 2);
+            assertEq(0, el.get_n("selcaret"), "");
+            assertEq(0, el.get_n("selend"), "");
+            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
 
             // field with no empty lines
-            el.setftxt(FormattedText.newFromUnformatted("abc\ndef\nghi"))
-            SelAndEntry.selectLineInField(this.root, gel, 0)
-            assertEq(0, el.get_n('selcaret'), "")
-            assertEq(4, el.get_n('selend'), "")
-            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 1)
-            assertEq(4, el.get_n('selcaret'), "")
-            assertEq(8, el.get_n('selend'), "")
-            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 2)
-            assertEq(8, el.get_n('selcaret'), "")
-            assertEq(11, el.get_n('selend'), "")
-            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 3)
-            assertEq(11, el.get_n('selcaret'), "")
-            assertEq(11, el.get_n('selend'), "")
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 4)
-            assertEq(11, el.get_n('selcaret'), "")
-            assertEq(11, el.get_n('selend'), "")
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "")
+            el.setftxt(FormattedText.newFromUnformatted("abc\ndef\nghi"));
+            SelAndEntry.selectLineInField(this.root, gel, 0);
+            assertEq(0, el.get_n("selcaret"), "");
+            assertEq(4, el.get_n("selend"), "");
+            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 1);
+            assertEq(4, el.get_n("selcaret"), "");
+            assertEq(8, el.get_n("selend"), "");
+            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 2);
+            assertEq(8, el.get_n("selcaret"), "");
+            assertEq(11, el.get_n("selend"), "");
+            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 3);
+            assertEq(11, el.get_n("selcaret"), "");
+            assertEq(11, el.get_n("selend"), "");
+            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 4);
+            assertEq(11, el.get_n("selcaret"), "");
+            assertEq(11, el.get_n("selend"), "");
+            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
 
             // field with some empty lines
-            el.setftxt(FormattedText.newFromUnformatted("\nabc\n\ndef\n"))
-            SelAndEntry.selectLineInField(this.root, gel, 0)
-            assertEq(0, el.get_n('selcaret'), "")
-            assertEq(1, el.get_n('selend'), "")
-            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 1)
-            assertEq(1, el.get_n('selcaret'), "")
-            assertEq(5, el.get_n('selend'), "")
-            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 2)
-            assertEq(5, el.get_n('selcaret'), "")
-            assertEq(6, el.get_n('selend'), "")
-            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 3)
-            assertEq(6, el.get_n('selcaret'), "")
-            assertEq(10, el.get_n('selend'), "")
-            assertEq(3, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 4)
-            assertEq(10, el.get_n('selcaret'), "")
-            assertEq(10, el.get_n('selend'), "")
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "")
-            SelAndEntry.selectLineInField(this.root, gel, 5)
-            assertEq(10, el.get_n('selcaret'), "")
-            assertEq(10, el.get_n('selend'), "")
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "")
-        }
+            el.setftxt(FormattedText.newFromUnformatted("\nabc\n\ndef\n"));
+            SelAndEntry.selectLineInField(this.root, gel, 0);
+            assertEq(0, el.get_n("selcaret"), "");
+            assertEq(1, el.get_n("selend"), "");
+            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 1);
+            assertEq(1, el.get_n("selcaret"), "");
+            assertEq(5, el.get_n("selend"), "");
+            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 2);
+            assertEq(5, el.get_n("selcaret"), "");
+            assertEq(6, el.get_n("selend"), "");
+            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 3);
+            assertEq(6, el.get_n("selcaret"), "");
+            assertEq(10, el.get_n("selend"), "");
+            assertEq(3, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 4);
+            assertEq(10, el.get_n("selcaret"), "");
+            assertEq(10, el.get_n("selend"), "");
+            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
+            SelAndEntry.selectLineInField(this.root, gel, 5);
+            assertEq(10, el.get_n("selcaret"), "");
+            assertEq(10, el.get_n("selend"), "");
+            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
+        },
     ];
 
     // ^ is caret, # is end, | is newline
@@ -1067,7 +1067,7 @@ export class Test_SelAndEntry extends Tests_BaseClass {
         let args = [t, selcaret, selend, ...moreargs];
         let [nextselcaret, nextselend] = fn.apply(null, args);
         let [expectedt, expectedcaret, expectedend] = this.fromPlainText(expected);
-        assertEq(expectedt.toPersisted(), t.toPersisted(), '1s|');
+        assertEq(expectedt.toPersisted(), t.toPersisted(), "1s|");
         assertEq(expectedcaret, nextselcaret, "1r|incorrect caret position");
         assertEq(expectedend, nextselend, "1q|incorrect select-end position");
     }
@@ -1079,9 +1079,9 @@ export class Test_SelAndEntry extends Tests_BaseClass {
         let args = [t, selcaret, selend, ...moreargs];
         let [nextt, nextselcaret, nextselend] = fn.apply(null, args);
         let [expectedt, expectedcaret, expectedend] = this.fromPlainText(expected);
-        assertEq(expectedt.toPersisted(), nextt.toPersisted(), '1p|');
-        assertEq(expectedcaret, nextselcaret, '1o|');
-        assertEq(expectedend, nextselend, '1n|');
+        assertEq(expectedt.toPersisted(), nextt.toPersisted(), "1p|");
+        assertEq(expectedcaret, nextselcaret, "1o|");
+        assertEq(expectedend, nextselend, "1n|");
     }
 
     protected fromPlainText(s: string): [FormattedText, number, number] {
