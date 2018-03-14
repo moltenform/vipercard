@@ -1,38 +1,32 @@
-Under active development! Code will be posted here starting Feb 26. Subscribe to the mailing list at https://groups.google.com/forum/#!forum/classiccard-interest
 
 # Vision
 
-The point is not to make something fun to use, although the end product will be fun to use.
+Creativity and technology are often linked. Scientific breakthroughs can arise from accidental playful discoveries. Software has so much potential as a vehicle of creative expression -- you can build quick prototypes and iterations, actions can be stored and undone, platforms are essentially deterministic, there are no parts to order, variable costs are near-zero, and ideas shared quickly. Writing software should be a potential way of self-expression for any number of people regardless of background, just as it has impacted my life. We are moving in this direction, but even in the current age that celebrates coding and builds code camps and impressive free online tutorials, I feel that we're not yet in the right place.
 
-The point is not to make something useful, although the end product will be usable.
+There are many barriers. Factors of location and environment are strong; others have written about this more effectively than I, but here is what I have seen first-hand. Ten years ago, when I lived in a rural area, I volunteered my time writing scheduling software for a school district, and soon realized that many families did not have internet access. Our government is just this month canceling plans to allow internet service to reach rural areas. In TEALS presentations I learned that 75% of US high schools do not even have a single class to teach programming. Increasing action to address these problems is needed. I’m not saying people under economic injustice should just “learn to code” -- I'm saying that we who have access to technology are often unaware of the difficulty of having stabile access to technology in fragile circumstances and abandoned communities. And even once access to technology is present, there are cultural barriers. Programming is mythologized so that only those seen as having a certain type of “intelligence” are encouraged to pursue it. This affects many groups, including the elderly. There are so many positive initiatives and energy in the right direction towards helping people, but they fight against the tide of years of accumulated software development complexity, cultural stereotypes, strong opinions about what who should use which development toolkits, and unhelpful learning environments that assume large amounts of prior knowledge.
 
-The point is not even to make something educational, at least not directly.
+I'm sure there were countless problems with software and accessibility in the 80s and early 90s, which were before my time. But I am fascinated by the idea that the line between “user” and “programmer” was so blurred. You set up your Commodore 64 and typed in its software, line by line. You shared fun BASIC scripts with your friends, and even made your own modifications! Self-expression and self-efficacy are important. These computers had an incredibly difficult learning curve, but they also gave the dignity of assuming the user was capable of learning to not only operate, but transform and create. And HyperCard on the Macintosh did this even more amazingly.
 
-I view this project as an artistic statement. Software has the potential to become close to pure invention -- quick iteration is possible, platforms are reliable, actions are done and undone, there are no parts to order, variable costs are near-zero, and ideas are shared quickly. My dream is that writing software can be a way of self-expression for any ever-increasing number of people regardless of background, just as it has transformed my life. We are moving in this direction, but even in the age that celebrates coding and builds code camps and free online tutorials, I feel that we haven’t taken the right path.
+Our lives (social, career, entertainment) center around software -- but we are discouraged from learning how this software truly works. It is stressful at a deep level. We are made into inadequate, passive consumers, when software has the potential to be so much more.
 
-There are many barriers. Outside factors are strong; others have written about this more eloquently than I, but here are a few observations. Ten years ago I wrote scheduling software for a school district in a rural area where many families did not even have internet access, and our government is just this month canceling plans to expand internet service to rural areas. In TEALS presentations I learned that 75% of US high schools do not even have a single class to teach programming. Increasing the awareness of these problems is needed. I’m not saying people under economic injustice should just “learn to code” -- I am talking about self-expression and self-efficacy. And even once access to technology is present, there are barriers. Programming is heavily culturally mythologized so that only those seen as  “smart” are encouraged to pursue it. This affects both the young and the elderly. There are so many positive initiatives and energy in the right direction towards helping people, but they fight against the tide of years of accumulated software development complexity, cultural stereotypes, ideas about what who should use development toolkits, and unhelpful learning environments that assume large amounts of prior knowledge.
+ViperCard is, in part, my effort to push us to consider that an old black-and-white program from the 90s can inspire us to look for what modern software development is missing.
 
-I'm sure there were countless problems with software and accessibility in the 80s and early 90s. But I am fascinated by the idea that the line between “user” and “programmer” was so blurred. You set up your Commodore 64 and typed in its software, line by line. You shared fun BASIC scripts with your friends, and even made your own modifications! These computers had an incredibly steep learning curve, but they also gave the dignity of assuming the user was capable of learning to not only operate, but transform and create. And HyperCard on the Macintosh did this even more amazingly.
+# Caveats
 
-Our lives (social, career, entertainment) center around software -- but we are discouraged from learning how this software truly works. Stressful at a deep level. We are made into inadequate, passive consumers, when software has the potential to be so much more powerful.
+Current shortcoming that are not yet addressed:
 
-ClassicCard is an artistic statement pushing us to consider that an old black-and-white program from the 90s can inspire us to search for what modern software development is missing.
+- A gradual step-by-step introduction to scripting is planned.
 
-# Schedule
+- By drawing the UI from scratch, ViperCard is currently not compatible with screen readers and accessibility tools.
 
-Under active development!
+- ViperCard is currently not compatible with mobile or tablet, despite the importance of these platforms.
 
-With moderate interest I will work full-time on this project until its completion.
+- Internal documentation is not yet written for how to extend ViperCard to add wholly new JavaScript commands.
 
-Please contact me at [@downpoured](https://twitter.com/downpoured) and I'd love to hear your thoughts, or subscribe to the mailing list at https://groups.google.com/forum/#!forum/classiccard-interest
+# Communication
 
-Goals:
-
-* Second week of march: working prototype
-
-* First week of april: begin alpha testing
-
-* First week of may: all mvp features complete
+I plan to set up a Google groups account for communication. 
+The mailing list is currently at https://groups.google.com/forum/#!forum/classiccard-interest
 
 
 
