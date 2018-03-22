@@ -1,8 +1,8 @@
 
 /* autoimport:start */
-import { IconInfo, RenderIcon, RenderIconSet, RenderIconManager, UI512ImageCollectionCollection, UI512ImageCollection, UI512ImageCollectionImage } from "../ui512/ui512rendericon.js";
-import { UI512ViewDraw } from "../ui512/ui512elementsdefaultview.js";
-import { makeUI512ErrorGeneric, checkThrowUI512, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, IUI512Session, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
+import { IconInfo, RenderIcon, RenderIconSet, RenderIconManager } from "../ui512/ui512rendericon.js";
+import { UI512ViewDraw, PaintOntoCanvasShapes, PaintOntoCanvas } from "../ui512/ui512elementsdefaultview.js";
+import { makeUI512ErrorGeneric, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
 import { UI512ElementWithText, UI512ElementWithHighlight, UI512BtnStyle, UI512ElementButtonGeneral, UI512ElButton, UI512ElLabel, UI512FldStyle, UI512ElTextField, UI512ElCanvasPiece, GridLayout, UI512ElGroup, UI512Application, ElementObserverToTwo } from "../ui512/ui512elements.js";
 import { ChangeContext, ElementObserverVal, ElementObserver, ElementObserverNoOp, ElementObserverDefault, elementObserverNoOp, elementObserverDefault, UI512Gettable, UI512Settable, UI512Element } from "../ui512/ui512elementsbase.js";
 import { EditTextBehavior, addDefaultListeners } from "../ui512/ui512elementstextlisten.js";
@@ -11,6 +11,7 @@ import { EventDetails, KeyEventDetails, MouseEventDetails, MouseMoveEventDetails
 import { RectOverlapType, RectUtils, ModifierKeys, osTranslateModifiers, toShortcutString, DrawableImage, CanvasWrapper, UI512Cursors, UI512CursorAccess, getColorFromCanvasData, MenuConsts, ScrollConsts, ScreenConsts, getStandardWindowBounds, sleep, compareCanvas, CanvasTestParams, testUtilCompareCanvasWithExpected } from "../ui512/ui512renderutils.js";
 import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
+
 
 export class UI512DemoButtons extends UI512Controller {
     counter = 0;
@@ -72,7 +73,7 @@ export class UI512DemoButtons extends UI512Controller {
     }
 
     private static respondKeyUp(c: UI512DemoButtons, root: Root, d: KeyDownEventDetails) {
-        if (d.keyChar === "k" && d.mods === ModifierKeys.Cmd) {
+        if (d.keyChar === "k" && d.mods === ModifierKeys.Command) {
             c.isCurrentlyResizingButton = !c.isCurrentlyResizingButton;
             console.log("Resizing is " + (c.isCurrentlyResizingButton ? "on" : "off"));
         }
@@ -89,7 +90,10 @@ export class UI512DemoButtons extends UI512Controller {
             let grp = c.app.getGroup("grpmain");
             for (let el of grp.iterEls()) {
                 if (el.id.startsWith("btntest")) {
+                    //let n = parseInt(el.id.split("btnnumber")[1], 10);
+                    //if (n >= c.testrunner.numberOfBgButtons) {
                     el.setDimensions(el.x, el.y, neww, newh);
+                    //}
                 }
             }
         }

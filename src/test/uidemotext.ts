@@ -1,7 +1,7 @@
 
 /* autoimport:start */
 import { specialCharOnePixelSpace, specialCharFontChange, specialCharZeroPixelChar, specialCharCmdSymbol, specialCharNumNewline, specialCharNumZeroPixelChar, largearea, RenderTextArgs, FormattedText, TextFontStyling, textFontStylingToString, stringToTextFontStyling, TextFontSpec, TextRendererGrid, TextRendererFont, TextRendererFontCache, CharRectType, TextRendererFontManager, renderTextArgsFromEl, Lines } from "../ui512/ui512rendertext.js";
-import { makeUI512ErrorGeneric, checkThrowUI512, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, IUI512Session, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
+import { makeUI512ErrorGeneric, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
 import { UI512ElementWithText, UI512ElementWithHighlight, UI512BtnStyle, UI512ElementButtonGeneral, UI512ElButton, UI512ElLabel, UI512FldStyle, UI512ElTextField, UI512ElCanvasPiece, GridLayout, UI512ElGroup, UI512Application, ElementObserverToTwo } from "../ui512/ui512elements.js";
 import { ChangeContext, ElementObserverVal, ElementObserver, ElementObserverNoOp, ElementObserverDefault, elementObserverNoOp, elementObserverDefault, UI512Gettable, UI512Settable, UI512Element } from "../ui512/ui512elementsbase.js";
 import { EditTextBehavior, addDefaultListeners } from "../ui512/ui512elementstextlisten.js";
@@ -429,38 +429,6 @@ export class Test_RenderTextUtils extends Tests_BaseClass {
             );
             // into charset, unknown letters are not accepted
             assertEq("12???34", FormattedText.toExternalCharset("12\u001f\u0100\u221134", BrowserOSInfo.Unknown), "1V|");
-        },
-        "test_asteriskOnly",
-        () => {
-            let args = new RenderTextArgs(0, 0, largearea, largearea);
-            args.asteriskOnly = true;
-
-            // zero-length string
-            let textin = FormattedText.newFromUnformatted("");
-            let modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
-            assertEq(0, modded.len(), "");
-            assertTrue(modded.isLocked(), "");
-
-            // no formatting
-            textin = FormattedText.newFromUnformatted("abcd");
-            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
-            assertEq("abcd", textin.toUnformatted(), "");
-            assertEq("\xA5\xA5\xA5\xA5", modded.toUnformatted(), "");
-            assertEq(4, modded.len(), "");
-
-            // formatting is preserved
-            let font1 = new TextFontSpec("geneva", TextFontStyling.Default, 12).toSpecString();
-            let font2 = new TextFontSpec("times", TextFontStyling.Bold, 14).toSpecString();
-            let s = TextRendererFontManager.setInitialFont("abc", font1) + TextRendererFontManager.setInitialFont("def", font2);
-            let expected =
-                TextRendererFontManager.setInitialFont("\xA5\xA5\xA5", font1) +
-                TextRendererFontManager.setInitialFont("\xA5\xA5\xA5", font2);
-            textin = FormattedText.newFromPersisted(s);
-            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
-            assertEq("abcdef", textin.toUnformatted(), "");
-            assertEq("\xA5\xA5\xA5\xA5\xA5\xA5", modded.toUnformatted(), "");
-            assertEq(6, modded.len(), "");
-            assertEq(expected, modded.toPersisted(), "");
         },
     ];
 }

@@ -1,8 +1,9 @@
 
 /* autoimport:start */
-import { clrBlack, clrWhite, clrTransp, makePainterCvDataDraw, makePainterCvDataWithPatternSupport, simplifyPattern, needsPatternSupport, makePainterCvCanvas, UI512Painter, DissolveImages, UI512ImageSerialization, PaintOntoCanvasShapes, PaintOntoCanvas } from "../ui512/ui512paint.js";
-import { IconInfo, RenderIcon, RenderIconSet, RenderIconManager, UI512ImageCollectionCollection, UI512ImageCollection, UI512ImageCollectionImage } from "../ui512/ui512rendericon.js";
-import { makeUI512ErrorGeneric, checkThrowUI512, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, IUI512Session, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
+import { clrBlack, clrWhite, clrTransp, makePainterCvDataDraw, makePainterCvDataWithPatternSupport, simplifyPattern, needsPatternSupport, makePainterCvCanvas, UI512Painter, DissolveImages, UI512ImageSerialization } from "../ui512/ui512paint.js";
+import { IconInfo, RenderIcon, RenderIconSet, RenderIconManager } from "../ui512/ui512rendericon.js";
+import { UI512ViewDraw, PaintOntoCanvasShapes, PaintOntoCanvas } from "../ui512/ui512elementsdefaultview.js";
+import { makeUI512ErrorGeneric, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
 import { UI512ElementWithText, UI512ElementWithHighlight, UI512BtnStyle, UI512ElementButtonGeneral, UI512ElButton, UI512ElLabel, UI512FldStyle, UI512ElTextField, UI512ElCanvasPiece, GridLayout, UI512ElGroup, UI512Application, ElementObserverToTwo } from "../ui512/ui512elements.js";
 import { ChangeContext, ElementObserverVal, ElementObserver, ElementObserverNoOp, ElementObserverDefault, elementObserverNoOp, elementObserverDefault, UI512Gettable, UI512Settable, UI512Element } from "../ui512/ui512elementsbase.js";
 import { EditTextBehavior, addDefaultListeners } from "../ui512/ui512elementstextlisten.js";
@@ -48,8 +49,8 @@ export class UI512DemoPaint extends UI512TestPaintController {
 
         let elfloodtest = new UI512ElCanvasPiece("elfloodtest");
         grp.addElement(this.app, elfloodtest);
-        elfloodtest.setCanvas(this.fltest.start());
-        elfloodtest.setDimensions(700, 50, elfloodtest.getCvWidth(), elfloodtest.getCvHeight());
+        elfloodtest.canvas = this.fltest.start();
+        elfloodtest.setDimensions(700, 50, elfloodtest.canvas.canvas.width, elfloodtest.canvas.canvas.height);
 
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseDown, UI512DemoPaint.respondMouseDown);
@@ -88,7 +89,10 @@ export class UI512DemoPaint extends UI512TestPaintController {
         if (!c.fltest.isdone) {
             let grp = c.app.getGroup("grp");
             let elfloodtest = cast(grp.getEl("elfloodtest"), UI512ElCanvasPiece);
-            c.fltest.floodFillTest(root, elfloodtest.getCanvasForWrite());
+            c.fltest.floodFillTest(root, elfloodtest.canvas);
+            if (c.fltest.isdone) {
+                elfloodtest.set("incrementUntilLoaded", elfloodtest.get_n("incrementUntilLoaded") + 1);
+            }
         }
     }
 
@@ -243,18 +247,12 @@ export class Test_DrawPaint extends Tests_BaseClass {
             let el = new UI512ElCanvasPiece(`setPixelAndSerialize${n}`);
             grp.addElement(app, el);
             el.setDimensions(bnds[0], bnds[1], bnds[2], bnds[3]);
-            el.setCanvas(whichCanvas);
+            el.canvas = whichCanvas;
         });
     }
 
-    protected testIrregularPoly(app: UI512Application, grp: UI512ElGroup, mainPaint: CanvasWrapper, mainPainter: UI512Painter) {
-        let [polygonX, polygonY] = this.getIrregularPolygon(610, 310, 80, 60);
-        let pnt = new PaintOntoCanvas(PaintOntoCanvasShapes.IrregularPolygon, polygonX, polygonY, clrBlack, clrBlack, true);
-        PaintOntoCanvas.go(pnt, mainPainter);
-    }
-
     protected drawBlackRectangle(mainPaint: CanvasWrapper, mainPainter: UI512Painter, x: number, y: number, w: number, h: number) {
-        let pnt = new PaintOntoCanvas(PaintOntoCanvasShapes.ShapeRectangle, [x, x + w], [y, y + h], clrBlack, clrBlack, true);
+        let pnt = new PaintOntoCanvas(PaintOntoCanvasShapes.ShapeRectangle, [x, x + w], [y, y + h], 0, 0, true);
         PaintOntoCanvas.go(pnt, mainPainter);
     }
 
@@ -282,7 +280,7 @@ export class Test_DrawPaint extends Tests_BaseClass {
             pnt = new PaintOntoCanvas(type, [], [], color, 0);
             PaintOntoCanvas.go(pnt, mainPainter);
 
-            // drawing a smear with 1 point should still appear
+            // drawing a smear with 1 point should be a no-op
             pnt = new PaintOntoCanvas(type, [bnds[0] + bnds[2] - 5], [bnds[1] + bnds[3] - 5], color, 0);
             PaintOntoCanvas.go(pnt, mainPainter);
         });
@@ -352,16 +350,18 @@ export class Test_DrawPaint extends Tests_BaseClass {
 
         let canvasMainPaint = new UI512ElCanvasPiece("canvasMainPaint");
         grp.addElement(c.app, canvasMainPaint);
-        let cvmain = CanvasWrapper.createMemoryCanvas(bounds[2], bounds[3]);
-        canvasMainPaint.setCanvas(cvmain);
+        canvasMainPaint.canvas = CanvasWrapper.createMemoryCanvas(bounds[2], bounds[3]);
         canvasMainPaint.setDimensions(0, 0, bounds[2], bounds[3]);
-        cvmain.clear();
-        let canvasMainPainter = makePainterCvCanvas(cvmain, cvmain.canvas.width, cvmain.canvas.height);
+        canvasMainPaint.canvas.clear();
+        let canvasMainPainter = makePainterCvCanvas(
+            canvasMainPaint.canvas,
+            canvasMainPaint.canvas.canvas.width,
+            canvasMainPaint.canvas.canvas.height
+        );
 
-        this.testSmears(c.app, grp, cvmain, canvasMainPainter);
-        this.testShapes(c.app, grp, cvmain, canvasMainPainter);
-        this.testSetPixelAndSerialize(c.app, grp, cvmain, canvasMainPainter);
-        this.testIrregularPoly(c.app, grp, cvmain, canvasMainPainter);
+        this.testSmears(c.app, grp, canvasMainPaint.canvas, canvasMainPainter);
+        this.testShapes(c.app, grp, canvasMainPaint.canvas, canvasMainPainter);
+        this.testSetPixelAndSerialize(c.app, grp, canvasMainPaint.canvas, canvasMainPainter);
         c.rebuildFieldScrollbars();
     }
 

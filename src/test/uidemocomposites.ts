@@ -4,7 +4,7 @@ import { UI512CompStdDialogType, UI512CompStdDialog } from "../ui512/ui512compos
 import { UI512AutoIndent, UI512CompCodeEditor } from "../ui512/ui512compositeseditor.js";
 import { BorderDecorationConsts, PalBorderDecorationConsts, WndBorderDecorationConsts, UI512CompBase, UI512CompRadioButtonGroup, UI512CompToolbox } from "../ui512/ui512composites.js";
 import { UI512ControllerBase, BasicHandlers, MenuOpenState, TemporaryIgnoreEvents } from "../ui512/ui512controllerbase.js";
-import { makeUI512ErrorGeneric, checkThrowUI512, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, IUI512Session, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
+import { makeUI512ErrorGeneric, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
 import { UI512ElementWithText, UI512ElementWithHighlight, UI512BtnStyle, UI512ElementButtonGeneral, UI512ElButton, UI512ElLabel, UI512FldStyle, UI512ElTextField, UI512ElCanvasPiece, GridLayout, UI512ElGroup, UI512Application, ElementObserverToTwo } from "../ui512/ui512elements.js";
 import { ChangeContext, ElementObserverVal, ElementObserver, ElementObserverNoOp, ElementObserverDefault, elementObserverNoOp, elementObserverDefault, UI512Gettable, UI512Settable, UI512Element } from "../ui512/ui512elementsbase.js";
 import { EditTextBehavior, addDefaultListeners } from "../ui512/ui512elementstextlisten.js";
@@ -13,6 +13,7 @@ import { EventDetails, KeyEventDetails, MouseEventDetails, MouseMoveEventDetails
 import { RectOverlapType, RectUtils, ModifierKeys, osTranslateModifiers, toShortcutString, DrawableImage, CanvasWrapper, UI512Cursors, UI512CursorAccess, getColorFromCanvasData, MenuConsts, ScrollConsts, ScreenConsts, getStandardWindowBounds, sleep, compareCanvas, CanvasTestParams, testUtilCompareCanvasWithExpected } from "../ui512/ui512renderutils.js";
 import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
+
 
 export class UI512TestCompositesController extends UI512Controller {
     testrbExclusive = new UI512CompRadioButtonGroup("testrbExclusive");
@@ -74,16 +75,16 @@ export class UI512DemoComposites extends UI512TestCompositesController {
             } else if (d.elClick.id === "btnDlg1") {
                 c.testModalDlg.dlgtype = UI512CompStdDialogType.answer;
                 c.testModalDlg.btnlabels = ["", "", ""];
-                c.testModalDlg.create(c, c.app, c.lang);
+                c.testModalDlg.create(c.app, c.lang);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(root, c, c.app, n => c.gotFromDlg(n));
             } else if (d.elClick.id === "btnDlg2") {
                 c.testModalDlg.dlgtype = UI512CompStdDialogType.answer;
-                c.testModalDlg.btnlabels = ["Ch A", "Ch B", "Ch C"];
-                c.testModalDlg.create(c, c.app, c.lang);
+                c.testModalDlg.btnlabels = ["lngCh A", "lngCh B", "lngCh C"];
+                c.testModalDlg.create(c.app, c.lang);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(root, c, c.app, n => c.gotFromDlg(n));
             } else if (d.elClick.id === "btnDlgAsk") {
                 c.testModalDlg.dlgtype = UI512CompStdDialogType.ask;
-                c.testModalDlg.create(c, c.app, c.lang);
+                c.testModalDlg.create(c.app, c.lang);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(root, c, c.app, n => c.gotFromDlg(n));
             }
 
@@ -134,14 +135,14 @@ export class Test_DrawComposites extends Tests_BaseClass {
         c.testrbExclusive.logicalHeight = 1;
         c.testrbExclusive.x = 50;
         c.testrbExclusive.y = 50;
-        c.testrbExclusive.create(c, c.app, c.lang);
+        c.testrbExclusive.create(c.app, c.lang);
         c.testrbInclusive.items = [["fries", "lngFries"], ["hamburger", "lngHamburger"], ["soda", "lngSoda"], ["hot dog", "lngHot Dog"]];
         c.testrbInclusive.isExclusive = false;
         c.testrbInclusive.logicalWidth = 100;
         c.testrbInclusive.logicalHeight = 1;
         c.testrbInclusive.x = 50;
         c.testrbInclusive.y = 130;
-        c.testrbInclusive.create(c, c.app, c.lang);
+        c.testrbInclusive.create(c.app, c.lang);
 
         // add toolbox
         const iconw = 20;
@@ -155,7 +156,7 @@ export class Test_DrawComposites extends Tests_BaseClass {
         c.testToolbox.logicalWidth = 3 * iconw - 2;
         c.testToolbox.logicalHeight = 1;
         c.testToolbox.items = [["rectangle", 9], ["roundrect", 10], ["bucket", 11], ["cirle", 12], ["heart", 13], ["letter", 14]];
-        c.testToolbox.create(c, c.app, c.lang);
+        c.testToolbox.create(c.app, c.lang);
 
         // add code editor
         c.testEditor.x = 200;
@@ -165,7 +166,7 @@ export class Test_DrawComposites extends Tests_BaseClass {
         c.testEditor.autoIndent.caseSensitive = false;
         c.testEditor.autoIndent.lineContinuation = ["\\", "\xC2" /* roman logical not */];
         c.testEditor.lineCommentPrefix = "--~ ";
-        c.testEditor.create(c, c.app, c.lang);
+        c.testEditor.create(c.app, c.lang);
         c.testEditor.setCaption(c.app, 'Script "New Button"');
         c.testEditor.setContent(
             `abc
@@ -279,7 +280,7 @@ end1`.replace(/\r\n/g, "\n")
 
     simulateKey(root: Root, c: UI512TestCompositesController, keyCode: string, keyChar: string, isShift: boolean, isCmd = false) {
         let mods = isShift ? ModifierKeys.Shift : ModifierKeys.None;
-        mods |= isCmd ? ModifierKeys.Cmd : ModifierKeys.None;
+        mods |= isCmd ? ModifierKeys.Command : ModifierKeys.None;
         let d = new KeyDownEventDetails(0, keyCode, keyChar, false, mods);
         c.rawEvent(root, d);
     }

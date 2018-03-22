@@ -2,7 +2,7 @@
 /* autoimport:start */
 import { specialCharOnePixelSpace, specialCharFontChange, specialCharZeroPixelChar, specialCharCmdSymbol, specialCharNumNewline, specialCharNumZeroPixelChar, largearea, RenderTextArgs, FormattedText, TextFontStyling, textFontStylingToString, stringToTextFontStyling, TextFontSpec, TextRendererGrid, TextRendererFont, TextRendererFontCache, CharRectType, TextRendererFontManager, renderTextArgsFromEl, Lines } from "../ui512/ui512rendertext.js";
 import { SelAndEntryImpl, IGenericTextField, UI512ElTextFieldAsGeneric, SelAndEntry, ClipManager } from "../ui512/ui512elementstextselect.js";
-import { makeUI512ErrorGeneric, checkThrowUI512, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, IUI512Session, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
+import { makeUI512ErrorGeneric, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
 import { UI512ElementWithText, UI512ElementWithHighlight, UI512BtnStyle, UI512ElementButtonGeneral, UI512ElButton, UI512ElLabel, UI512FldStyle, UI512ElTextField, UI512ElCanvasPiece, GridLayout, UI512ElGroup, UI512Application, ElementObserverToTwo } from "../ui512/ui512elements.js";
 import { ChangeContext, ElementObserverVal, ElementObserver, ElementObserverNoOp, ElementObserverDefault, elementObserverNoOp, elementObserverDefault, UI512Gettable, UI512Settable, UI512Element } from "../ui512/ui512elementsbase.js";
 import { EditTextBehavior, addDefaultListeners } from "../ui512/ui512elementstextlisten.js";
@@ -323,7 +323,7 @@ export class Test_DrawTextEdit extends Tests_BaseClass {
 
     simulateKey(root: Root, c: UI512TestTextEditController, keyCode: string, keyChar: string, isShift: boolean, isCmd = false) {
         let mods = isShift ? ModifierKeys.Shift : ModifierKeys.None;
-        mods |= isCmd ? ModifierKeys.Cmd : ModifierKeys.None;
+        mods |= isCmd ? ModifierKeys.Command : ModifierKeys.None;
         let d = new KeyDownEventDetails(0, keyCode, keyChar, false, mods);
         c.rawEvent(root, d);
     }
@@ -529,10 +529,6 @@ export class Test_DrawTextEdit extends Tests_BaseClass {
 }
 
 export class Test_SelAndEntry extends Tests_BaseClass {
-    constructor(protected root: Root) {
-        super();
-    }
-
     tests = [
         "testchangeSelSelectAll",
         () => {
@@ -936,6 +932,7 @@ export class Test_SelAndEntry extends Tests_BaseClass {
 
         "testchangeSelLeftRightUntilWord",
         () => {
+            // todo: more tests
             // move left by words
             this.testChangeSel("#^abcd", "^#abcd", SelAndEntryImpl.changeSelLeftRight, true, false, true);
             this.testChangeSel("#^abcd", "ab^#cd", SelAndEntryImpl.changeSelLeftRight, true, false, true);
@@ -971,6 +968,7 @@ export class Test_SelAndEntry extends Tests_BaseClass {
         },
         "testchangeSelCurrentWord",
         () => {
+            // todo: more tests
             this.testChangeSel("^#", "^#", SelAndEntryImpl.changeSelCurrentWord);
             this.testChangeSel("^a#", "^#a", SelAndEntryImpl.changeSelCurrentWord);
             this.testChangeSel("^abc#", "^#abc", SelAndEntryImpl.changeSelCurrentWord);
@@ -991,71 +989,6 @@ export class Test_SelAndEntry extends Tests_BaseClass {
             this.testChangeSel("1 abc^ #2", "1 abc^# 2", SelAndEntryImpl.changeSelCurrentWord);
             this.testChangeSel("1 abc^  #2", "1 abc^#  2", SelAndEntryImpl.changeSelCurrentWord);
             this.testChangeSel("1 abc^  #2", "1 abc ^# 2", SelAndEntryImpl.changeSelCurrentWord);
-        },
-        "test_selectLineInField,selectByLinesWhichLine",
-        () => {
-            // empty field
-            let el = new UI512ElTextField("test", new ElementObserverNoOp());
-            let gel = new UI512ElTextFieldAsGeneric(el);
-            el.setftxt(FormattedText.newFromUnformatted(""));
-            SelAndEntry.selectLineInField(this.root, gel, 0);
-            assertEq(0, el.get_n("selcaret"), "");
-            assertEq(0, el.get_n("selend"), "");
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 2);
-            assertEq(0, el.get_n("selcaret"), "");
-            assertEq(0, el.get_n("selend"), "");
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
-
-            // field with no empty lines
-            el.setftxt(FormattedText.newFromUnformatted("abc\ndef\nghi"));
-            SelAndEntry.selectLineInField(this.root, gel, 0);
-            assertEq(0, el.get_n("selcaret"), "");
-            assertEq(4, el.get_n("selend"), "");
-            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 1);
-            assertEq(4, el.get_n("selcaret"), "");
-            assertEq(8, el.get_n("selend"), "");
-            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 2);
-            assertEq(8, el.get_n("selcaret"), "");
-            assertEq(11, el.get_n("selend"), "");
-            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 3);
-            assertEq(11, el.get_n("selcaret"), "");
-            assertEq(11, el.get_n("selend"), "");
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 4);
-            assertEq(11, el.get_n("selcaret"), "");
-            assertEq(11, el.get_n("selend"), "");
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
-
-            // field with some empty lines
-            el.setftxt(FormattedText.newFromUnformatted("\nabc\n\ndef\n"));
-            SelAndEntry.selectLineInField(this.root, gel, 0);
-            assertEq(0, el.get_n("selcaret"), "");
-            assertEq(1, el.get_n("selend"), "");
-            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 1);
-            assertEq(1, el.get_n("selcaret"), "");
-            assertEq(5, el.get_n("selend"), "");
-            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 2);
-            assertEq(5, el.get_n("selcaret"), "");
-            assertEq(6, el.get_n("selend"), "");
-            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 3);
-            assertEq(6, el.get_n("selcaret"), "");
-            assertEq(10, el.get_n("selend"), "");
-            assertEq(3, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 4);
-            assertEq(10, el.get_n("selcaret"), "");
-            assertEq(10, el.get_n("selend"), "");
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
-            SelAndEntry.selectLineInField(this.root, gel, 5);
-            assertEq(10, el.get_n("selcaret"), "");
-            assertEq(10, el.get_n("selend"), "");
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), "");
         },
     ];
 

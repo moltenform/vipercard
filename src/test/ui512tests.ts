@@ -1,23 +1,32 @@
 
 /* autoimport:start */
+import { Test_ScriptEval } from "../test/vpctestscripteval.js";
+import { Test_ScriptRun } from "../test/vpctestscriptrun.js";
+import { Test_Parsing } from "../test/vpctestscriptparse.js";
+import { Test_VpcUtils } from "../test/vpctestutils.js";
 import { RectOverlapType, RectUtils, ModifierKeys, osTranslateModifiers, toShortcutString, DrawableImage, CanvasWrapper, UI512Cursors, UI512CursorAccess, getColorFromCanvasData, MenuConsts, ScrollConsts, ScreenConsts, getStandardWindowBounds, sleep, compareCanvas, CanvasTestParams, testUtilCompareCanvasWithExpected } from "../ui512/ui512renderutils.js";
-import { makeUI512ErrorGeneric, checkThrowUI512, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, IUI512Session, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
-import { cProductName, cTkSyntaxMarker, makeVpcScriptErr, makeVpcInternalErr, checkThrow, checkThrowEq, FormattedSubstringUtil, CodeLimits, VpcIntermedValBase, IntermedMapOfIntermedVals, VpcVal, VpcValS, VpcValN, VpcValBool, VarCollection, VariableCollectionConstants, ReadableContainer, WritableContainer, RequestedChunk, CountNumericId, VpcScriptErrorBase, VpcScriptRuntimeError, VpcScriptSyntaxError, VpcUI512Serialization } from "../vpcscript/vpcutil.js";
-import { RequestedChunkType, PropAdjective, SortStyle, OrdinalOrPosition, RequestedChunkTextPreposition, VpcElType, vpcElTypeToString, VpcTool, toolToPaintOntoCanvasShapes, VpcToolCtg, getToolCategory, VpcBuiltinMsg, getMsgNameFromType, VpcOpCtg, getPositionFromOrdinalOrPosition } from "../vpcscript/vpcenums.js";
+import { UI512DemoButtons, Test_DrawButtons } from "../test/uidemobuttons.js";
+import { UI512TestCompositesController, UI512DemoComposites, Test_DrawComposites } from "../test/uidemocomposites.js";
+import { UI512DemoMenus, UI512TestMenusController, Test_DrawMenus } from "../test/uidemomenus.js";
+import { UI512DemoPaint, Test_DrawPaint } from "../test/uidemopaint.js";
+import { UI512DemoText, Test_DrawText, Test_RenderTextUtils, Test_CanvasComparison } from "../test/uidemotext.js";
+import { UI512DemoTextEdit, UI512TestTextEditController, Test_DrawTextEdit, Test_SelAndEntry } from "../test/uidemotextedit.js";
+import { makeUI512ErrorGeneric, makeUI512Error, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, throwIfUndefined, ui512ErrorHandling, O, refparam, Util512, findStrToEnum, getStrToEnum, findEnumToStr, getEnumToStrOrUnknown, scontains, slength, setarr, cast, isString, fitIntoInclusive, RenderComplete, defaultSort, LockableArr, RepeatingTimer, IFontManager, IIconManager, Root, OrderedHash, BrowserOSInfo, Tests_BaseClass, CharClass, GetCharClass, MapKeyToObject, MapKeyToObjectCanSet } from "../ui512/ui512utils.js";
+import { cProductName, cTkSyntaxMarker, makeVpcScriptErr, makeVpcInternalErr, checkThrow, checkThrowEq, FormattedSubstringUtil, CodeLimits, VpcIntermedValBase, IntermedMapOfIntermedVals, VpcVal, VpcValS, VpcValN, VpcValBool, VarCollection, VariableCollectionConstants, VpcEvalHelpers, ReadableContainer, WritableContainer, RequestedChunk, ChunkResolution, VpcUI512Serialization, CountNumericId } from "../vpcscript/vpcutil.js";
+import { RequestedChunkType, PropAdjective, SortStyle, OrdinalOrPosition, RequestedChunkTextPreposition, VpcElType, VpcTool, toolToPaintOntoCanvasShapes, VpcToolCtg, getToolCategory, VpcBuiltinMsg, getMsgNameFromType, VpcOpCtg, getPositionFromOrdinalOrPosition } from "../vpcscript/vpcenums.js";
 import { UI512Lang, UI512LangNull } from  "../locale/lang-base.js";
 /* autoimport:end */
 
-declare var LZString: any;
 
 export class Test_ui512Utils extends Tests_BaseClass {
     tests = [
         "testAssertThrow",
         () => {
-            this.assertThrows("", "mymessage", () => {
+            this.assertThrows("mymessage", () => {
                 throw makeUI512Error("1N|1 mymessage 2");
             });
 
-            this.assertThrows("", "xyz", () => {
+            this.assertThrows("xyz", () => {
                 throw new Error("1 xyz 2");
             });
         },
@@ -272,241 +281,7 @@ export class Test_ui512Utils extends Tests_BaseClass {
             // get canonical string for chars
             assertEq("Chars", findEnumToStr<RequestedChunkType>(RequestedChunkType, RequestedChunkType.alternateforms_chars), "0T|");
         },
-        "test_utils_isMapEmpty",
-        () => {
-            let map0 = {};
-            let map1 = { a: true };
-            let map2 = { abc: "abc", def: "def" };
-            let cls0 = new TestClsEmpty();
-            let cls1 = new TestClsOne();
-            let cls2 = new TestClsOne();
-            (cls2 as any).aSingleAdded = 1;
-
-            assertTrue(Util512.isMapEmpty(map0), "");
-            assertTrue(!Util512.isMapEmpty(map1), "");
-            assertTrue(!Util512.isMapEmpty(map2), "");
-            assertTrue(Util512.isMapEmpty(cls0 as any), "");
-            assertTrue(!Util512.isMapEmpty(cls1 as any), "");
-            assertTrue(!Util512.isMapEmpty(cls2 as any), "");
-        },
-        "test_utils_freezeProperty",
-        () => {
-            let map1 = { a: true, b: true };
-            Util512.freezeProperty(map1, "a");
-            map1.b = false;
-            this.assertThrows("", "read only property", () => {
-                map1.a = false;
-            });
-        },
-        "test_utils_freezeRecurse",
-        () => {
-            // freeze a simple object
-            let simple = { a: true, b: true };
-            assertTrue(!Object.isFrozen(simple), "");
-            Util512.freezeRecurse(simple);
-            this.assertThrows("", "read only property", () => {
-                simple.a = false;
-            });
-
-            // freeze a complex object
-            let c1 = new TestClsOne();
-            let c2 = new TestClsOne();
-            let c3 = new TestClsOne();
-            (c1 as any).child = c2;
-            (c2 as any).child = c3;
-            (c3 as any).nullchild = undefined;
-            assertTrue(!Object.isFrozen(c1), "");
-            Util512.freezeRecurse(c1);
-            assertTrue(Object.isFrozen(c1), "");
-            assertTrue(Object.isFrozen(c2), "");
-            assertTrue(Object.isFrozen(c3), "");
-            this.assertThrows("", "read only property", () => {
-                c1.aSingleProp = false;
-            });
-            this.assertThrows("", "not extensible", () => {
-                (c1 as any).newProp = true;
-            });
-        },
-        "test_utils_getMapKeys_shallowClone",
-        () => {
-            let map0 = {};
-            let map1 = { a: true };
-            let map2 = { abc: "abc", def: "_def" };
-            let cls0 = new TestClsEmpty();
-            let cls1 = new TestClsOne();
-            let cls2 = new TestClsOne();
-            (cls2 as any).aSingleAdded = 1;
-
-            // test getMapKeys
-            assertEq("", this.getMapKeysString(map0), "");
-            assertEq("a:true,", this.getMapKeysString(map1), "");
-            assertEq("abc:abc,def:_def,", this.getMapKeysString(map2), "");
-            assertEq("", this.getMapKeysString(cls0 as any), "");
-            assertEq("aSingleProp:true,", this.getMapKeysString(cls1 as any), "");
-            assertEq("aSingleAdded:1,aSingleProp:true,", this.getMapKeysString(cls2 as any), "");
-
-            // test getMapVals
-            assertEq("", this.getMapValsString(map0), "");
-            assertEq("true", this.getMapValsString(map1), "");
-            assertEq("_def,abc", this.getMapValsString(map2), "");
-            assertEq("", this.getMapValsString(cls0 as any), "");
-            assertEq("true", this.getMapValsString(cls1 as any), "");
-            assertEq("1,true", this.getMapValsString(cls2 as any), "");
-
-            // test shallowClone
-            assertEq("", this.getMapKeysString(Util512.shallowClone(map0)), "");
-            assertEq("a:true,", this.getMapKeysString(Util512.shallowClone(map1)), "");
-            assertEq("abc:abc,def:_def,", this.getMapKeysString(Util512.shallowClone(map2)), "");
-            assertEq("", this.getMapKeysString(Util512.shallowClone(cls0 as any)), "");
-            assertEq("aSingleProp:true,", this.getMapKeysString(Util512.shallowClone(cls1 as any)), "");
-            assertEq("aSingleAdded:1,aSingleProp:true,", this.getMapKeysString(Util512.shallowClone(cls2 as any)), "");
-        },
-        "test_utils_escapeForRegex",
-        () => {
-            assertEq("", Util512.escapeForRegex(""), "");
-            assertEq("abc", Util512.escapeForRegex("abc"), "");
-            assertEq("\\[abc\\]", Util512.escapeForRegex("[abc]"), "");
-            assertEq("123\\[abc\\]456", Util512.escapeForRegex("123[abc]456"), "");
-            assertEq("\\.\\.", Util512.escapeForRegex(".."), "");
-            assertEq("\\|\\|", Util512.escapeForRegex("||"), "");
-            assertEq("\\[\\[", Util512.escapeForRegex("[["), "");
-            assertEq("\\]\\]", Util512.escapeForRegex("]]"), "");
-            assertEq("\\(\\(", Util512.escapeForRegex("(("), "");
-            assertEq("\\)\\)", Util512.escapeForRegex("))"), "");
-            assertEq("\\/\\/", Util512.escapeForRegex("//"), "");
-            assertEq("\\\\\\\\", Util512.escapeForRegex("\\\\"), "");
-        },
-        "test_utils_callAsMethodOnClassInvalid",
-        () => {
-            // should throw on invalid method name
-            let c = new TestClsWithMethods();
-            for (let okIfNotExists of [false, true]) {
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "a", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "?", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "a b", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "1a", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "_c", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "__c", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, ".", [true, 1], okIfNotExists)
-                );
-                this.assertThrows("", "requires alphanumeric", () =>
-                    Util512.callAsMethodOnClass("TestClsWithMethods", c, "a.b", [true, 1], okIfNotExists)
-                );
-            }
-
-            // attempt to call missing method
-            Util512.callAsMethodOnClass("TestClsWithMethods", c, "notExist", [true, 1], true);
-            this.assertThrows("", "could not find", () =>
-                Util512.callAsMethodOnClass("TestClsWithMethods", c, "notExist", [true, 1], false)
-            );
-        },
-        "test_utils_callAsMethodOnClassValid",
-        () => {
-            // call a valid method
-            let c1 = new TestClsWithMethods();
-            Util512.callAsMethodOnClass("TestClsWithMethods", c1, "go_abc", [true, 1], false);
-            assertEq(true, c1.calledAbc, "");
-            assertEq(false, c1.calledZ, "");
-            let c2 = new TestClsWithMethods();
-            Util512.callAsMethodOnClass("TestClsWithMethods", c2, "go_z", [true, 1], false);
-            assertEq(false, c2.calledAbc, "");
-            assertEq(true, c2.calledZ, "");
-        },
-        "test_utils_listUnique",
-        () => {
-            assertEq([], Util512.listUnique([]), "");
-            assertEq(["1"], Util512.listUnique(["1"]), "");
-            assertEq(["1", "2", "3"], Util512.listUnique(["1", "2", "3"]), "");
-            assertEq(["1", "2", "3"], Util512.listUnique(["1", "2", "2", "3"]), "");
-            assertEq(["1", "2", "3"], Util512.listUnique(["1", "2", "3", "3"]), "");
-            assertEq(["1", "2", "3"], Util512.listUnique(["1", "2", "2", "3", "2"]), "");
-            assertEq(["1", "2", "3"], Util512.listUnique(["1", "2", "2", "3", "3"]), "");
-            assertEq(["1", "2", "3"], Util512.listUnique(["1", "2", "3", "2", "3"]), "");
-        },
-        "test_utils_fitIntoInclusive",
-        () => {
-            assertEq(1, fitIntoInclusive(0, 1, 1), "");
-            assertEq(1, fitIntoInclusive(1, 1, 1), "");
-            assertEq(1, fitIntoInclusive(2, 1, 1), "");
-            assertEq(1, fitIntoInclusive(0, 1, 3), "");
-            assertEq(1, fitIntoInclusive(1, 1, 3), "");
-            assertEq(2, fitIntoInclusive(2, 1, 3), "");
-            assertEq(3, fitIntoInclusive(3, 1, 3), "");
-            assertEq(3, fitIntoInclusive(4, 1, 3), "");
-        },
-        "test_utils_compressString",
-        () => {
-            // simple compress and uncompress
-            for (let escapeNewlines of [false, true]) {
-                assertEq("\u2020 ", Util512.compressString("", escapeNewlines), "");
-                assertEq("\u10E8 ", Util512.compressString("a", escapeNewlines), "");
-                assertEq("\u10E6\u4866\u4AEA  ", Util512.compressString("aaaaaaaabbbbbbbb", escapeNewlines), "");
-                assertEq("\u10E6\u4866\u4AE8\u31B0 ", Util512.compressString("aaaaaaaabbbbbbbbc", escapeNewlines), "");
-                assertEq("\u10E6\u7070\u0256\u4CF0 ", Util512.compressString("aaaaaaa\nbbbbbbbbb", escapeNewlines), "");
-                assertEq("", Util512.decompressString("\u2020 ", escapeNewlines), "");
-                assertEq("a", Util512.decompressString("\u10E8 ", escapeNewlines), "");
-                assertEq("aaaaaaaabbbbbbbb", Util512.decompressString("\u10E6\u4866\u4AEA  ", escapeNewlines), "");
-                assertEq("aaaaaaaabbbbbbbbc", Util512.decompressString("\u10E6\u4866\u4AE8\u31B0 ", escapeNewlines), "");
-                assertEq("aaaaaaa\nbbbbbbbbb", Util512.decompressString("\u10E6\u7070\u0256\u4CF0 ", escapeNewlines), "");
-            }
-
-            // test the case where compresing a string results in a string with newline(s)
-            let realCompress = LZString.compressToUTF16;
-            try {
-                LZString.compressToUTF16 = (s: string) => "fake\nfake";
-                assertEq("fake\nfake", Util512.compressString("a", false), "");
-                assertEq("fake##Newline##fake", Util512.compressString("a", true), "");
-                LZString.compressToUTF16 = (s: string) => "fake\nfake\nfake";
-                assertEq("fake\nfake\nfake", Util512.compressString("a", false), "");
-                assertEq("fake##Newline##fake##Newline##fake", Util512.compressString("a", true), "");
-            } finally {
-                LZString.compressToUTF16 = realCompress;
-            }
-
-            // test the case where compresing a string results in a string with our newline marker
-            // (mathematically extremely unlikely)
-            try {
-                LZString.compressToUTF16 = (s: string) => "fake##Newline##fake";
-                assertEq("fake##Newline##fake", Util512.compressString("a", false), "");
-                this.assertThrows("", "cannot compress", () => Util512.compressString("a", true));
-            } finally {
-                LZString.compressToUTF16 = realCompress;
-            }
-        },
     ];
-
-    protected getMapKeysString<T>(map: { [key: string]: T }) {
-        let keys = Util512.getMapKeys(map);
-        keys.sort();
-        let ret = "";
-        for (let key of keys) {
-            ret += key + ":" + map[key] + ",";
-        }
-
-        return ret;
-    }
-
-    protected getMapValsString<T>(map: { [key: string]: T }) {
-        let vals = Util512.getMapVals(map);
-        vals.sort();
-        return vals.join(",");
-    }
 }
 
 export class Test_CanvasWrapper extends Tests_BaseClass {
@@ -760,23 +535,24 @@ export class Test_CanvasWrapper extends Tests_BaseClass {
     ];
 }
 
-class TestClsEmpty {}
+export function runTests(root: Root, all = true) {
+    let registeredTests = [
+        [() => new Test_VpcUtils()],
+        [() => new Test_Parsing()],
+        [() => new Test_ScriptEval(root)],
+        [() => new Test_ScriptRun(root)],
+        [() => new Test_ui512Utils()],
+        [() => new Test_CanvasWrapper()],
+        [() => new Test_CanvasComparison()],
+        [() => new Test_RenderTextUtils()],
+        [() => new Test_SelAndEntry()],
+        [() => new Test_DrawButtons()],
+        [() => new Test_DrawMenus()],
+        [() => new Test_DrawTextEdit()],
+        [() => new Test_DrawComposites()],
+        [() => new Test_DrawText()],
+        [() => new Test_DrawPaint()],
+    ];
 
-class TestClsOne {
-    aSingleProp = true;
-}
-
-class TestClsWithMethods {
-    calledAbc = false;
-    calledZ = false;
-    go_abc(p1: boolean, p2: number) {
-        assertEq(true, p1, "");
-        assertEq(1, p2, "");
-        this.calledAbc = true;
-    }
-    go_z(p1: boolean, p2: number) {
-        assertEq(true, p1, "");
-        assertEq(1, p2, "");
-        this.calledZ = true;
-    }
+    Tests_BaseClass.runTestsArray(root, registeredTests, all);
 }
