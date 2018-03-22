@@ -6,7 +6,7 @@ This is a community project, all source code is released to the public.
 
 * Try it now at [vipercard.net](https://www.vipercard.net)
 
-* Follow us on [twitter](https://www.vipercard.net) and talk about your projects on [google groups](https://groups.google.com/forum/#!forum/vipercard)
+* Follow on [twitter](https://twitter.com/vipercarddotnet) and talk about your projects on [google groups](https://groups.google.com/forum/#!forum/vipercard)
 
 * Donate at [donorbox.org](https://donorbox.org/vipercard)
 
