@@ -13,7 +13,7 @@ ViperCard is, in part, my effort to push us to consider that an old black-and-wh
 
 # Caveats
 
-Current shortcoming that are not yet addressed:
+Current shortcomings that are not yet addressed:
 
 - A gradual step-by-step introduction to scripting is planned.
 

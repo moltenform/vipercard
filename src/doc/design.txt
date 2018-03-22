@@ -2,7 +2,6 @@
 
 Re-write HyperCard in a very faithful way, including the look and feel of classic Macintosh interface.
 Ideas to be kept:
-  Automatically saving changes (+undo stack)
   Nearly all concepts of stacks, cards, tool pallette, scripts
   Giving the user power to write code is favored over aesthetic appearences
   
@@ -52,4 +51,6 @@ JavaScript UI
     Mac-Classic-UI-Emulation (implement windows+menus+buttons)
     ClassicCard-Emulation (take data from the current card and paint it)
   
+  Backgrounds not needed at this time.
+  Automatically saving changes (+undo stack) would be good.
 
