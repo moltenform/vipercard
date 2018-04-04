@@ -1,0 +1,19 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "**/.git": true,         // this is a default value
+        "**/.DS_Store": true,    // this is a default value
+        "**/node_modules": true, // this excludes all folders 
+                                 // named "node_modules" from 
+                                 // the explore tree
+    "**/nocpy*": true,
+    "release": true,
+    "srcfull": true,
+    "tools": true,
+    "resources": true,
+    "listexports.py": true,
+    "favicon.ico": true,
+    "package-lock.json": true
+    },
+    "python.pythonPath": "C:\\data\\local\\devsoftware\\py_64_36\\python.exe"
+}

@@ -1,0 +1,105 @@
+
+{
+    "rules": {
+      "prefer-destructuring":true, //added now
+      "prefer-rest-params":true, //added now
+      "no-parameter-reassignment":false, // consider in future
+      "no-internal-module":true, //added now
+      "no-unnecessary-type-assertion":true, //added now
+      "no-var-requires":true, //added now
+      // "prefer-for-of": true, // performance, it is slower
+      "await-promise": true, //added now
+      "ban-comma-operator": true, //added now
+      "no-conditional-assignment": true, //added now
+      "no-duplicate-super": true, //added now
+      "no-duplicate-switch-case": true, //added now
+      // "no-dynamic-delete": true, //added now
+      "no-floating-promises": true, //added now
+      "no-for-in-array": true, //added now
+      "no-invalid-template-strings": true, //added now
+      "no-invalid-this": true, //added now
+      "no-misused-new": true, //added now
+      "no-return-await": true, //added now
+      "no-sparse-arrays": true, //added now
+      "no-string-throw": true, //added now
+      "no-this-assignment": true, //added now
+      "no-unbound-method": [true, "ignore-static"], //added now
+      "no-unsafe-finally": true, //added now
+      // "no-void-expression": true, //added now TODO:enable this
+      "switch-default": true, //added now
+      "use-isnan": true, //added now
+      "deprecation": true, //added now
+      "no-duplicate-imports": true, //added now
+      "import-spacing": true, //added now
+      // "newline-per-chained-call": true, //added now
+      "new-parens": true, //added now
+      "no-angle-bracket-type-assertion": true, //added now
+      // "no-unnecessary-initializer": true, //added now
+      "return-undefined": true, //added now
+      "one-variable-per-declaration": [true, "ignore-for-loop"], //added now
+      "array-type": [true, "array"], //added now
+      "space-before-function-paren": [true, {"anonymous": "always", "named": "never", "asyncArrow": "always"}],
+      "only-arrow-functions":[true, "allow-named-functions"], //added now
+
+      "class-name": true, //
+      "comment-format": [true, "check-space"],
+      "curly": true,
+      "eofline": true,
+      "forin": true,
+      "indent": [true, "spaces"],
+      "label-position": true,
+      "max-line-length": [true, 9999],
+      "member-access": false, //
+      "member-ordering": false, //
+      "no-arg": true,
+      "no-bitwise": false, //
+      "no-console": [true,
+        "debug",
+        "info",
+        "time",
+        "timeEnd",
+        "trace"
+      ],
+      "no-construct": true,
+      "no-debugger": false, //
+      "no-duplicate-variable": true,
+      "no-empty": false, //
+      "no-eval": true,
+      "no-inferrable-types": true,
+      "no-shadowed-variable": true,
+      "no-string-literal": false, //
+      "no-switch-case-fall-through": true,
+      "no-trailing-whitespace": true,
+      "no-unused-expression": true,
+      // "no-use-before-declare": true,
+      "no-var-keyword": true,
+      "object-literal-sort-keys": false, //
+      "one-line": [true,
+        "check-open-brace",
+        "check-catch",
+        "check-else",
+        "check-finally",
+        "check-whitespace"
+      ],
+      "quotemark": [true, "single", "avoid-escape"],
+      "radix": true,
+      "semicolon": true,
+      "trailing-comma": false, //
+      "triple-equals": [true, "allow-null-check"],
+      "typedef-whitespace": [true, {
+        "call-signature": "nospace",
+        "index-signature": "nospace",
+        "parameter": "nospace",
+        "property-declaration": "nospace",
+        "variable-declaration": "nospace"
+      }],
+      "variable-name": false,
+      "whitespace": [true,
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-separator",
+        "check-type"
+      ]
+    }
+  }

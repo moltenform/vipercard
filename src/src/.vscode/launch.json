@@ -1,0 +1,35 @@
+
+{
+    "version": "0.1.0",
+    "configurations": [
+
+        {
+            "name": "127:8080",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://127.0.0.1:8080/",
+            "webRoot": "${workspaceRoot}"
+        },
+        {
+            "name": "127:8999",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://127.0.0.1:8999/",
+            "webRoot": "${workspaceRoot}"
+        },
+        {
+            "name": "Python",
+            "type": "python",
+            "pythonPath":"${config:python.pythonPath}",
+            "request": "launch",
+            "stopOnEntry": true,
+            "console": "externalTerminal",
+            "program": "${file}",
+            "cwd": "${workspaceFolder}",
+            "debugOptions": [
+                "RedirectOutput"
+            ],
+            "env": {"name":"value"}
+        }
+    ]
+}

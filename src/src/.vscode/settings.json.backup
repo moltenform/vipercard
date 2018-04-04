@@ -1,0 +1,23 @@
+// Place your settings in this file to overwrite the default settings
+{
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "window.zoomLevel": 0,
+    "editor.minimap.enabled": false,
+    "prettier.printWidth": 140, /* (default: 80) */
+    "prettier.tabWidth": 4, /* (default: 2) */
+    "prettier.singleQuote": false, /* (default: false) */
+    "prettier.trailingComma": "es5", /* (default: 'none') */
+    "prettier.bracketSpacing": true, /* (default: true) */
+    "prettier.jsxBracketSameLine": false, /* (default: false) */
+    "prettier.semi": true, /* (default: true) */
+    "prettier.useTabs": false,
+    "workbench.panel.location": "bottom",
+    "problems.decorations.enabled": false,
+    "git.ignoreMissingGitWarning": true,
+    "python.disablePromptForFeatures": [
+        "pylint"
+    ],
+    "workbench.startupEditor": "newUntitledFile" /* (default: false) */
+    /* fewer messy italic tabs */
+    //"workbench.editor.enablePreview": false
+}

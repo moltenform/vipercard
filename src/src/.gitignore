@@ -1,0 +1,10 @@
+
+/node_modules
+/release
+
+
+# ones that are separate for build and ship
+/.tsconfig.json
+/0.2/index.html
+
+

@@ -1,0 +1,65 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+    {
+    "key": "ctrl+tab",
+    "command": "workbench.action.nextEditor"
+    },
+    {
+        "key": "ctrl+shift+tab",
+        "command": "workbench.action.previousEditor"
+    },
+    {
+        "key": "ctrl+l",
+        "command": "editor.action.deleteLines"
+    }
+    ,
+    {
+        "key": "ctrl+-",
+        "command": "workbench.action.navigateBack"
+    },
+    { "key": "ctrl+shift+-",       
+    "command": "workbench.action.navigateForward"
+},
+{
+    "key": "ctrl+shift+f4",
+    "command": "extension.node-debug.pickLoadedScript",
+    "when": "debugType == 'chrome'"
+},
+{
+    "key": "ctrl+f4",
+    "command": "-extension.node-debug.pickLoadedScript",
+    "when": "debugType == 'chrome'"
+},
+{
+    "key": "ctrl+shift+q",
+    "command": "editor.action.blockComment",
+    "when": "editorTextFocus && !editorReadonly"
+},
+{
+    "key": "shift+alt+a",
+    "command": "-editor.action.blockComment",
+    "when": "editorTextFocus && !editorReadonly"
+},
+{
+    "key": "ctrl+q",
+    "command": "editor.action.commentLine",
+    "when": "editorTextFocus && !editorReadonly"
+},
+{
+    "key": "ctrl+/",
+    "command": "-editor.action.commentLine",
+    "when": "editorTextFocus && !editorReadonly"
+},
+{
+    "key": "ctrl+d",
+    "command": "editor.action.copyLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
+},
+{
+    "key": "shift+alt+down",
+    "command": "-editor.action.copyLinesDownAction",
+    "when": "editorTextFocus && !editorReadonly"
+}
+]
+
+
