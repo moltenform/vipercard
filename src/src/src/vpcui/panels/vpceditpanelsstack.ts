@@ -1,0 +1,23 @@
+
+/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512drawtextclasses.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
+/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpceditpanelsbase.js';
+
+export class PropPanelCompositeStack extends PropPanelCompositeBase {
+    isPropPanelCompositeStack = true;
+    compositeType = 'PropPanelCompositeStack';
+    readonly velTypeShortName = '';
+    readonly velTypeLongName = '';
+    readonly velType = VpcElType.Stack;
+    topInputs: [string, string, number][] = [['lngStack Name:', 'name', 190]];
+    leftChoices: [string, string][] = [];
+    rightOptions: [string, string][] = [];
+    fillInValuesTip(app: UI512Application, vel: VpcElBase) {
+        let txt = this.appli.lang().translate('lngRefer to this element in a script as\nthis stack');
+        txt = TextRendererFontManager.setInitialFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
+        this.lblNamingTip.set('labeltext', txt);
+    }
+}
