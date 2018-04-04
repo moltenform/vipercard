@@ -1,6 +1,7 @@
 
 /node_modules
 /release
+/.vscode
 
 
 # ones that are separate for build and ship
