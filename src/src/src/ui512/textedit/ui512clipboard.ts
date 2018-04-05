@@ -5,6 +5,7 @@
 /* auto */ import { PasteTextEventDetails } from '../../ui512/menu/ui512events.js';
 
 export class ClipManager implements ClipManagerInterface {
+    isClipManager = true;
     root: any;
     simClipboard = '';
     readonly clipboardreadyperiod = 2000;

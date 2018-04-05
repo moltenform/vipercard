@@ -59,7 +59,7 @@ export class PaintExportToGif {
     async beginPaintExportToGif(speed: number) {
         try {
             this.setStatus('lngLoading .gif creation module...');
-            await Util512.asyncLoadJsIfNotAlreadyLoaded('/external/jsgif/jsgifcombined.js');
+            await Util512.asyncLoadJsIfNotAlreadyLoaded('/lib/jsgif/jsgifcombined.js');
             this.setStatus('lngBegin .gif export.');
 
             if (speed < 1 || speed > 10) {

@@ -19,7 +19,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
     // "pencil" tool
     higherSmearPixels(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number) {
-        let realSetPixel = this.setPixel;
+        let realSetPixel = this.setPixel.bind(this);
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
             realSetPixel(x, y, color);
         });
@@ -33,7 +33,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         diameterx: number,
         diametery: number
     ) {
-        let realFillRect = this.fillRect;
+        let realFillRect = this.fillRect.bind(this);
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
             realFillRect(x - Math.floor(diameterx / 2), y - Math.floor(diametery / 2), diameterx, diametery, color);
         });
@@ -41,7 +41,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
     // "brush" tool
     higherSmearSmallBrush(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number) {
-        let realFillRect = this.fillRect;
+        let realFillRect = this.fillRect.bind(this);
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
             // central 4x2 rectangle
             realFillRect(x - 1, y, 4, 2, color);
@@ -54,7 +54,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
     // "spraycan" tool
     higherSmearSpraycan(xpts: LockableArr<number>, ypts: LockableArr<number>, colorparam: number) {
-        let realSetPixel = this.setPixel;
+        let realSetPixel = this.setPixel.bind(this);
         this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
             realSetPixel(x + -1, y + -8, color);
             realSetPixel(x + 3, y + -7, color);
@@ -94,8 +94,8 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         color: number,
         newSetPixel: (x: number, y: number, color: number) => void
     ) {
-        let realSetPixel = this.setPixel;
-        let realFillRect = this.fillRect;
+        let savedSetPixel = this.setPixel;
+        let savedFillRect = this.fillRect;
         try {
             this.fillRect = () => {
                 throw makeUI512Error("shouldn't be called");
@@ -111,8 +111,8 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
                 }
             }
         } finally {
-            this.setPixel = realSetPixel;
-            this.fillRect = realFillRect;
+            this.setPixel = savedSetPixel;
+            this.fillRect = savedFillRect;
         }
     }
 

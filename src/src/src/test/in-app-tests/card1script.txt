@@ -1,3 +1,4 @@
+
 on mouseup
 	if the short name of the target is "testDlgs" then
 		runTestDlgs
@@ -9,11 +10,6 @@ on mouseup
 		runTestDraw
 	end if
 end mouseup
-
-on log s
-	put cd fld "log" into prevs
-	put prevs & cr & s into cd fld "log"
-end log
 
 on assertEq expected, got
 	put "expected '"&expected&"' but got '"&got&"'" into tmsg
@@ -75,29 +71,29 @@ on runTestDlgs
 end runTestDlgs
 
 on runTestValOps
-	put "3" into cd fld "testfld"
-	multiply cd fld "testfld" by 4
-	assertEq 12, cd fld "testfld"
-	multiply cd fld "testfld" by 5
-	assertEq 60, cd fld "testfld"
-	divide cd fld "testfld" by 3
-	assertEq 20, cd fld "testfld"
-	divide cd fld "testfld" by 2
-	assertEq 10, cd fld "testfld"
-	add 4 to cd fld "testfld"
-	assertEq 14, cd fld "testfld"
-	add 6 to cd fld "testfld"
-	assertEq 20, cd fld "testfld"
-	subtract 15 from cd fld "testfld"
-	assertEq 5, cd fld "testfld"
-	subtract 6 from cd fld "testfld"
-	assertEq -1, cd fld "testfld"
-	put "aa,cc" into cd fld "testfld"
-	delete char 2 of cd fld "testfld"
-	assertEq "a,cc", cd fld "testfld"
-	delete char 2 to 3 of cd fld "testfld"
-	assertEq "ac", cd fld "testfld"
-	put "" into cd fld "testfld"
+	put "3" into cd fld "fldTest"
+	multiply cd fld "fldTest" by 4
+	assertEq 12, cd fld "fldTest"
+	multiply cd fld "fldTest" by 5
+	assertEq 60, cd fld "fldTest"
+	divide cd fld "fldTest" by 3
+	assertEq 20, cd fld "fldTest"
+	divide cd fld "fldTest" by 2
+	assertEq 10, cd fld "fldTest"
+	add 4 to cd fld "fldTest"
+	assertEq 14, cd fld "fldTest"
+	add 6 to cd fld "fldTest"
+	assertEq 20, cd fld "fldTest"
+	subtract 15 from cd fld "fldTest"
+	assertEq 5, cd fld "fldTest"
+	subtract 6 from cd fld "fldTest"
+	assertEq -1, cd fld "fldTest"
+	put "aa,cc" into cd fld "fldTest"
+	delete char 2 of cd fld "fldTest"
+	assertEq "a,cc", cd fld "fldTest"
+	delete char 2 to 3 of cd fld "fldTest"
+	assertEq "ac", cd fld "fldTest"
+	put "" into cd fld "fldTest"
 	
 	put "ddd,aaa,fff" into x
 	assertEq "ddd,aaa,fff", x
@@ -116,30 +112,30 @@ on runTestValOps
 	show cd btn "btnTest1"
 	answer "btnTest1 should be visible."
 	
-	put "abcdefabcdefabcdefabcdef" into cd fld "testfld"
-	set the visible of cd fld "testfld" to false
+	put "abcdefabcdefabcdefabcdef" into cd fld "fldTest"
+	set the visible of cd fld "fldTest" to false
 	answer "testfld should be hidden"
-	set the visible of cd fld "testfld" to true
+	set the visible of cd fld "fldTest" to true
 	answer "testfld should be visible"
-	set the textalign of cd fld "testfld" to "center"
+	set the textalign of cd fld "fldTest" to "center"
 	answer "testfld should be centered"
-	set the textalign of cd fld "testfld" to "left"
+	set the textalign of cd fld "fldTest" to "left"
 	answer "testfld should be alignleft"
-	set the dontwrap of cd fld "testfld" to true
+	set the dontwrap of cd fld "fldTest" to true
 	answer "testfld should be wrapping off"
-	set the dontwrap of cd fld "testfld" to false
+	set the dontwrap of cd fld "fldTest" to false
 	answer "testfld should be wrapping on"
-	set the textsize of cd fld "testfld" to 24
+	set the textsize of cd fld "fldTest" to 24
 	answer "testfld should be big text"
-	set the textsize of cd fld "testfld" to 12
+	set the textsize of cd fld "fldTest" to 12
 	answer "testfld should be normal text"
 	set the textsize of char 2 to 4 of \
-		cd fld "testfld" to 24
+		cd fld "fldTest" to 24
 	answer "testfld 'bcd' should be big"
 	set the textsize of char 2 to 4 of \
-		cd fld "testfld" to 12
+		cd fld "fldTest" to 12
 	answer "testfld 'bcd' should be normal"
-	put "" into cd fld "testfld"
+	put "" into cd fld "fldTest"
 	
 	set the left of cd btn "btnTest1" to (the left of cd btn "btnTest1"+45)
 	set the top of cd btn "btnTest1" to (the top of cd btn "btnTest1"+45)
@@ -189,19 +185,19 @@ on runTestMisc
 	go prev
 	answer "back to first card"
 	put "slow count 2s" into cd fld "log"
-	repeat with x=1 to 8
+	repeat with x=1 to 5
 		log x
 		wait 2 second
 	end repeat
 	wait 2 seconds
 	put "faster count 60ticks" into cd fld "log"
-	repeat with x=1 to 8
+	repeat with x=1 to 5
 		log x
 		wait 60 ticks
 	end repeat
 	wait 2 seconds
 	put "fast count 200ms" into cd fld "log"
-	repeat with x=1 to 8
+	repeat with x=1 to 5
 		log x
 		wait 200 ms
 	end repeat
@@ -250,6 +246,4 @@ on runTestDraw
 		click at x,y
 	end repeat
 end runTestDraw
-
-
 

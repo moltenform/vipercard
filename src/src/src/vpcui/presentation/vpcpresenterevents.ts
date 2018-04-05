@@ -5,13 +5,13 @@
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { EventDetails, IdleEventDetails, KeyDownEventDetails, KeyEventDetails, MenuItemClickedDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseEventDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails, } from '../../ui512/menu/ui512events.js';
+/* auto */ import { EventDetails, IdleEventDetails, KeyDownEventDetails, KeyEventDetails, MenuItemClickedDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseEventDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512events.js';
 /* auto */ import { MenuBehavior } from '../../ui512/menu/ui512menulisteners.js';
 /* auto */ import { IGenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512genericfield.js';
 /* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512scrollbar.js';
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512basichandlers.js';
 /* auto */ import { EditTextBehavior } from '../../ui512/textedit/ui512textevents.js';
-/* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgNameFromType, getToolCategory, } from '../../vpc/vpcutils/vpcenums.js';
+/* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgNameFromType, getToolCategory } from '../../vpc/vpcutils/vpcenums.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
 /* auto */ import { VpcScriptMessage } from '../../vpc/vel/vpcoutsideinterfaces.js';
 /* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcappli.js';

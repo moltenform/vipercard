@@ -7,8 +7,26 @@ import { isRelease } from './appsettings.js';
 rootStartCanvas
 rootUI512
 
+/test/vpcui/
+testregistration
+
+/test/vpc/
+vpctestserver
+vpctestscripteval
+vpctestscriptrun
+vpctestscriptparse
+vpctestutils
+
 /test/ui512/
+uidemocomposites
+uidemotextedit
+uidemomenus
+uidemobuttons
+uidemopaint
+uidemotext
 uidemobasic
+testui512elements
+testui512utils
 
 /vpcui/intro/
 vpcintro

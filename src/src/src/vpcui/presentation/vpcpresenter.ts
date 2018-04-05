@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, Root, Util512, getEnumToStrOrUnknown } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
@@ -8,7 +8,7 @@
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
 /* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512modaldialog.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, } from '../../vpc/vpcutils/vpcenums.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcenums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcutils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcval.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velbase.js';

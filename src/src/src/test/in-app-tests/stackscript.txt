@@ -1,0 +1,5 @@
+
+on log s
+	put cd fld "log" into prevs
+	put prevs & cr & s into cd fld "log"
+end log

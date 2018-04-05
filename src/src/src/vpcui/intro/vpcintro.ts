@@ -5,7 +5,7 @@
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
 /* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, } from '../../ui512/menu/ui512events.js';
+/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512textevents.js';
 /* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512modaldialog.js';
 /* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcintroprovider.js';

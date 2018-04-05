@@ -138,7 +138,7 @@ export function testUtilCompareCanvasWithExpected(
     fnGetParams: Function | Function[],
     callbackWhenComplete?: Function
 ) {
-    UI512BeginAsync(() => testUtilCompareCanvasWithExpectedAsync(dldgot, fnGetParams, callbackWhenComplete));
+    UI512BeginAsync(() => testUtilCompareCanvasWithExpectedAsync(dldgot, fnGetParams, callbackWhenComplete), undefined, true);
 }
 
 export function UI512BeginAsyncIgnoreFailures<T>(asyncFn: () => Promise<T>) {
@@ -146,13 +146,13 @@ export function UI512BeginAsyncIgnoreFailures<T>(asyncFn: () => Promise<T>) {
     asyncFn();
 }
 
-export function UI512BeginAsync<T>(asyncFn: () => Promise<T>, onComplete?: (r: T | Error) => void) {
+export function UI512BeginAsync<T>(asyncFn: () => Promise<T>, onComplete?: (r: T | Error) => void, alertOnError=false) {
     // tslint:disable-next-line
-    UI512BeginAsyncImpl(asyncFn, onComplete);
+    UI512BeginAsyncImpl(asyncFn, onComplete, alertOnError);
 }
 
 let g_callVpAsyncFnBusy = false;
-async function UI512BeginAsyncImpl<T>(asyncFn: () => Promise<T>, onComplete?: (r: T | Error) => void) {
+async function UI512BeginAsyncImpl<T>(asyncFn: () => Promise<T>, onComplete?: (r: T | Error) => void, alertOnError=false) {
     let alreadyWaiting = 'Already waiting...';
     try {
         if (g_callVpAsyncFnBusy) {
@@ -175,6 +175,10 @@ async function UI512BeginAsyncImpl<T>(asyncFn: () => Promise<T>, onComplete?: (r
             !scontains(eToString, ui512InternalErr)
         ) {
             UI512ErrorHandling.appendErrMsgToLogs(false, 'unhandled in async ' + eToString);
+        }
+
+        if (alertOnError) {
+            assertTrue(false, "unhandled in async " + eToString)
         }
 
         if (onComplete) {

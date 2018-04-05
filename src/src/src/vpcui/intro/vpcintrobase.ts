@@ -6,7 +6,7 @@
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, } from '../../ui512/menu/ui512events.js';
+/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
 /* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
 /* auto */ import { UI512CompBase, WndBorderDecorationConsts } from '../../ui512/composites/ui512composites.js';
 

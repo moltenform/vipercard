@@ -11,6 +11,13 @@
 /* auto */ import { VpcInitIcons } from '../../vpc/vpcutils/vpciniticons.js';
 /* auto */ import { VpcUiIntro } from '../../vpcui/intro/vpcintro.js';
 /* auto */ import { UI512DemoBasic } from '../../test/ui512/uidemobasic.js';
+/* auto */ import { UI512DemoText } from '../../test/ui512/uidemotext.js';
+/* auto */ import { UI512DemoPaint } from '../../test/ui512/uidemopaint.js';
+/* auto */ import { UI512DemoButtons } from '../../test/ui512/uidemobuttons.js';
+/* auto */ import { UI512DemoMenus } from '../../test/ui512/uidemomenus.js';
+/* auto */ import { UI512DemoTextEdit } from '../../test/ui512/uidemotextedit.js';
+/* auto */ import { UI512DemoComposites } from '../../test/ui512/uidemocomposites.js';
+/* auto */ import { runTestsImpl } from '../../test/vpcui/testregistration.js';
 
 export class UI512Root implements Root {
     domCanvas: CanvasWrapper;
@@ -32,14 +39,14 @@ export class UI512Root implements Root {
         this.iconManager = new RenderIconManager();
         this.domCanvas = new CanvasWrapper(domCanvas);
 
-        this.controller = new UI512DemoBasic();
+        // this.controller = new UI512DemoBasic();
         // this.controller = new UI512DemoButtons();
         // this.controller = new UI512DemoComposites();
         // this.controller = new UI512DemoMenus();
         // this.controller = new UI512DemoPaint();
         // this.controller = new UI512DemoText();
         // this.controller = new UI512DemoTextEdit();
-        // this.controller = new VpcUiIntro();
+        this.controller = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
         UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor);
 
@@ -188,7 +195,7 @@ export class UI512Root implements Root {
     }
 
     public runTests(all: boolean) {
-        // runTests(this, all);
+        runTestsImpl(this, all);
     }
 }
 
