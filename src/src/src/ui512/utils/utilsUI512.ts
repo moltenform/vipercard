@@ -397,7 +397,7 @@ export class ValHolder<T> {
  * findStrToEnum<MyEnum>(MyEnum, s)
  */
 export function findStrToEnum<T>(enm: any, s: string): O<T> {
-    assertTrue(enm['__isUI512Enum'] !== undefined, 
+    assertTrue(enm['__isUI512Enum'] !== undefined,
         '4F|must provide an enum type with __isUI512Enum defined.');
     if (s === '__isUI512Enum') {
         return undefined;
@@ -421,7 +421,7 @@ export function getStrToEnum<T>(enm: any, msgContext: string, s: string): T {
     if (found !== undefined) {
         return found;
     } else {
-        msgContext = msgContext ? `Not a valid choice of ${msgContext} ` : 
+        msgContext = msgContext ? `Not a valid choice of ${msgContext} ` :
             `Not a valid choice for this value. `;
         if (enm['__isUI512Enum'] !== undefined) {
             msgContext += ' try one of';
@@ -449,7 +449,7 @@ export function getStrToEnum<T>(enm: any, msgContext: string, s: string): T {
  * findEnumToStr<MyEnum>(MyEnum, n)
  */
 export function findEnumToStr<T>(enm: any, n: number): O<string> {
-    assertTrue(enm['__isUI512Enum'] !== undefined, 
+    assertTrue(enm['__isUI512Enum'] !== undefined,
         '4D|must provide an enum type with __isUI512Enum defined.');
 
     /* using simply e[n] would work, but fragile if enum implementation changes. */
@@ -715,7 +715,7 @@ export enum BrowserOSInfo {
 
 /**
  * CharClassify
- * 
+ *
  * Permission to use, copy, modify, and distribute this software and its
  * documentation for any purpose and without fee is hereby granted,
  * provided that the above copyright notice appear in all copies and that

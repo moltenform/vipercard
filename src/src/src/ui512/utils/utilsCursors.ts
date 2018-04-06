@@ -1,5 +1,5 @@
 
-/* auto */ import { assertEq, base10, findEnumToStr } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
 
 /**
  * assign a number to cursor

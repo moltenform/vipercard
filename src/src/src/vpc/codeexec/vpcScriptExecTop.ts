@@ -1,16 +1,16 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VarCollection, VariableCollectionConstants } from '../../vpc/vpcutils/vpcvarcollection.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite, VpcScriptMessage } from '../../vpc/vel/vpcoutsideinterfaces.js';
-/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpccheckreserved.js';
-/* auto */ import { VpcAllCode } from '../../vpc/codepreparse/vpcallcode.js';
-/* auto */ import { VpcParsingCache } from '../../vpc/codeexec/vpcscriptcacheparsed.js';
-/* auto */ import { ExecuteStatements } from '../../vpc/codeexec/vpcscriptexecstatement.js';
-/* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcscriptexecframestack.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VarCollection, VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite, VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
+/* auto */ import { VpcAllCode } from '../../vpc/codepreparse/vpcAllCode.js';
+/* auto */ import { VpcParsingCache } from '../../vpc/codeexec/vpcScriptCacheParsed.js';
+/* auto */ import { ExecuteStatements } from '../../vpc/codeexec/vpcScriptExecStatement.js';
+/* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
 
 export class CodeExecTop {
     constants = new VariableCollectionConstants();

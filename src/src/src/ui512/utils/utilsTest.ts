@@ -75,7 +75,7 @@ export class UI512TestBase {
     };
 
     /**
-     * tests are run in a chain of functions, 
+     * tests are run in a chain of functions,
      * the end of each test ends up calling runNextTest(),
      * this makes it simple to test async calls.
      */

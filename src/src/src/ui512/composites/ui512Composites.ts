@@ -1,13 +1,13 @@
 
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512presenterbase.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
 
 export class BorderDecorationConsts {
     headHeight = 0;

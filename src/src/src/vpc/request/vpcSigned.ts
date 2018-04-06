@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ExpTextEncoder } from '../../vpc/request/bridgetextencoding.js';
+/* auto */ import { ExpTextEncoder } from '../../vpc/request/bridgeTextEncoding.js';
 
 export function getUnixTimeSeconds() {
     let d = new Date();

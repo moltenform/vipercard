@@ -1,6 +1,6 @@
 
-/* auto */ import { ChvParser } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { tks } from '../../vpc/codeparse/vpctokens.js';
+/* auto */ import { ChvParser } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { tks } from '../../vpc/codeparse/vpcTokens.js';
 
 // changes to chevrotain added by Ben Fisher, 2017
 // function buildInitDefFunc(childrenNames) {

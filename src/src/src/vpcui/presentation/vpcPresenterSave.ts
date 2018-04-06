@@ -2,11 +2,11 @@
 /* auto */ import { O, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { BrowserOSInfo, Util512, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { VpcSession, vpcStacksFlagContent } from '../../vpc/request/vpcrequest.js';
-/* auto */ import { IVpcSaveUtils } from '../../vpcui/nonmodaldialogs/vpcnonmodalcommon.js';
-/* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcsenderrreport.js';
-/* auto */ import { VpcFormNonModalDialogLogIn } from '../../vpcui/nonmodaldialogs/vpcformlogin.js';
-/* auto */ import { VpcPresenterInterface } from '../../vpcui/presentation/vpcpresenterinterface.js';
+/* auto */ import { VpcSession, vpcStacksFlagContent } from '../../vpc/request/vpcRequest.js';
+/* auto */ import { IVpcSaveUtils } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcSendErrReport.js';
+/* auto */ import { VpcFormNonModalDialogLogIn } from '../../vpcui/nonmodaldialogs/vpcFormLogin.js';
+/* auto */ import { VpcPresenterInterface } from '../../vpcui/presentation/vpcPresenterInterface.js';
 
 declare var saveAs: any;
 

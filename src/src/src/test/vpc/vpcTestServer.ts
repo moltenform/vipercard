@@ -2,9 +2,9 @@
 /* auto */ import { O, UI512ErrorHandling, assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq, sleep } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { sendSignedRequestJson, sendWebRequestGetJson } from '../../vpc/request/vpcsigned.js';
-/* auto */ import { VpcSession, vpcStacksFlagContent, vpcStacksGetData, vpcUsersCheckLogin, vpcUsersCreate, vpcUsersEnterEmailVerifyCode } from '../../vpc/request/vpcrequest.js';
+/* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { sendSignedRequestJson, sendWebRequestGetJson } from '../../vpc/request/vpcSigned.js';
+/* auto */ import { VpcSession, vpcStacksFlagContent, vpcStacksGetData, vpcUsersCheckLogin, vpcUsersCreate, vpcUsersEnterEmailVerifyCode } from '../../vpc/request/vpcRequest.js';
 
 function nexttest(callback: Function) {
     if (callback) {
@@ -47,7 +47,7 @@ async function doBasicTest(callback: Function) {
 export class TestVpcBasicServerTests extends UI512TestBase {
     tests = [
         'callback/basicServerTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             doBasicTest(callback);
         },
     ];
@@ -678,31 +678,31 @@ export class TestVpcServerTests extends UI512TestBase {
     fakeStackData3 = '';
     tests = [
         'callback/clearDataForServerTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => clearDataForServerTests(callback), undefined, true);
         },
         'callback/createUserTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => createUserTests(callback), undefined, true);
         },
         'callback/checkLoginAndEmailVerifyTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => checkLoginAndEmailVerifyTests(callback), undefined, true);
         },
         'callback/createLogEntryTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => createLogEntryTests(callback), undefined, true);
         },
         'callback/createStacksTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => createStacksTests(this, callback), undefined, true);
         },
         'callback/getStacksTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => getStacksTests(this, callback), undefined, true);
         },
         'callback/updateStacksTests',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => updateStacksTests(this, callback), undefined, true);
         },
     ];

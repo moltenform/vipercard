@@ -2,13 +2,13 @@
 /* auto */ import { O, assertTrueWarn, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { findEnumToStr, getStrToEnum, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512presenterbase.js';
-/* auto */ import { OrdinalOrPosition, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcpaintrender.js';
-/* auto */ import { PatternsToolbox, ToolboxDims } from '../../vpcui/panels/vpctoolboxpatterns.js';
-/* auto */ import { NavToolbox } from '../../vpcui/panels/vpctoolboxnav.js';
-/* auto */ import { MainToolbox } from '../../vpcui/panels/vpctoolboxtools.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { OrdinalOrPosition, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
+/* auto */ import { PatternsToolbox, ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
+/* auto */ import { NavToolbox } from '../../vpcui/panels/vpcToolboxNav.js';
+/* auto */ import { MainToolbox } from '../../vpcui/panels/vpcToolboxTools.js';
 
 export class VpcAppToolboxes extends VpcAppInterfaceLayer {
     toolsmain = new MainToolbox('toolsmain');

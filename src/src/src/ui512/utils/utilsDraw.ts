@@ -4,6 +4,9 @@
 
 export type DrawableImage = HTMLCanvasElement | HTMLImageElement;
 
+/**
+ * wrap a canvas element.
+ */
 export class CanvasWrapper {
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
@@ -14,6 +17,8 @@ export class CanvasWrapper {
             this.canvas = canvas;
             this.context = context as CanvasRenderingContext2D;
             let contextSetParams = this.context as any;
+
+            /* we want sharp, aliased, non-smoothed graphics */
             contextSetParams.imageSmoothingEnabled = false; /* standard */
             contextSetParams.mozImageSmoothingEnabled = false; /* Firefox */
             contextSetParams.oImageSmoothingEnabled = false; /* Opera */
@@ -22,6 +27,9 @@ export class CanvasWrapper {
         }
     }
 
+    /**
+     * create, but don't add to DOM. very useful for bg rendering.
+     */
     static createMemoryCanvas(width: number, height: number) {
         let hiddenCanvasDom = window.document.createElement('canvas');
         hiddenCanvasDom.width = width;
@@ -31,10 +39,16 @@ export class CanvasWrapper {
         return a;
     }
 
+    /**
+     * set pixel, ignored if out of bounds
+     */
     public fillPixelUnchecked(x: number, y: number, fillStyle: string) {
         return this.fillRectUnchecked(x, y, 1, 1, fillStyle);
     }
 
+    /**
+     * set pixel, asserts if out of bounds
+     */
     public fillPixel(
         x: number,
         y: number,
@@ -55,27 +69,37 @@ export class CanvasWrapper {
         }
     }
 
+    /**
+     * fill rectangle, ignored if out of bounds
+     */
     fillRectUnchecked(x0: number, y0: number, width: number, height: number, fillStyle: string) {
         assertTrue(width >= 0, '3;|invalid width ' + width.toString());
         assertTrue(height >= 0, '3:|invalid height ' + height.toString());
         assertTrue(
             Util512.isValidNumber(x0) &&
-                Util512.isValidNumber(y0) &&
-                Util512.isValidNumber(width) &&
-                Util512.isValidNumber(height),
-            '3/|bad dims'
+            Util512.isValidNumber(y0) &&
+            Util512.isValidNumber(width) &&
+            Util512.isValidNumber(height),
+            '3/|dimensions must be numeric'
         );
+
+        /* to visualize bugs with unnecessary redraws, use random colors in this mode */
         if (CanvasWrapper.debugRenderingWithChangingColors && fillStyle !== 'white') {
-            let rr = Math.trunc(Math.random() * 200);
-            let gg = Math.trunc(Math.random() * 200);
-            let bb = Math.trunc(Math.random() * 200);
-            fillStyle = `rgb(${rr},${gg},${bb})`;
+            let r = Math.trunc(Math.random() * 200);
+            let g = Math.trunc(Math.random() * 200);
+            let b = Math.trunc(Math.random() * 200);
+            fillStyle = `rgb(${r},${g},${b})`;
         }
 
         this.context.fillStyle = fillStyle;
         this.context.fillRect(x0, y0, width, height);
     }
 
+    /**
+     * fill rectangle.
+     * the "box" is the region of the canvas we are allowed to write to,
+     * any writes outside of this region will be clipped
+     */
     public fillRect(
         x0: number,
         y0: number,
@@ -100,6 +124,9 @@ export class CanvasWrapper {
         return rectClipped;
     }
 
+    /**
+     * rectangle outline.
+     */
     public outlineRect(
         x0: number,
         y0: number,
@@ -117,6 +144,10 @@ export class CanvasWrapper {
         this.fillRect(x0 + width, y0, 1, height, boxX0, boxY0, boxW, boxH, fillStyle);
     }
 
+    /**
+     * invert colors in a rectangle.
+     * globalCompositeOperations save my life :)
+     */
     private invertColorsRectUnchecked(x0: number, y0: number, width: number, height: number) {
         assertTrue(width >= 0, '3-|invalid width ' + width.toString());
         assertTrue(height >= 0, '3,|invalid height ' + height.toString());
@@ -125,7 +156,7 @@ export class CanvasWrapper {
                 Util512.isValidNumber(y0) &&
                 Util512.isValidNumber(width) &&
                 Util512.isValidNumber(height),
-            '3+|bad dims'
+            '3+|dimensions must be numeric'
         );
 
         if (CanvasWrapper.debugRenderingWithChangingColors && Math.random() > 0.75) {
@@ -138,6 +169,11 @@ export class CanvasWrapper {
         }
     }
 
+    /**
+     * invert colors in a rectangle.
+     * the "box" is the region of the canvas we are allowed to write to,
+     * any writes outside of this region will be clipped
+     */
     public invertColorsRect(
         x0: number,
         y0: number,
@@ -161,58 +197,69 @@ export class CanvasWrapper {
         return rectClipped;
     }
 
+    /**
+     * draw an image, or a piece of another canvas, onto the canvas
+     */
     private drawFromImageUnchecked(
         img: DrawableImage,
-        sx: number,
-        sy: number,
-        sWidth: number,
-        sHeight: number,
-        dx: number,
-        dy: number
+        srcX: number,
+        srcY: number,
+        srcWidth: number,
+        srcHeight: number,
+        destX: number,
+        destY: number
     ) {
-        assertTrue(sWidth >= 0, '3)|invalid sWidth ' + sWidth.toString());
-        assertTrue(sHeight >= 0, '3(|invalid height ' + sHeight.toString());
+        assertTrue(srcWidth >= 0, '3)|invalid sWidth ' + srcWidth.toString());
+        assertTrue(srcHeight >= 0, '3(|invalid height ' + srcHeight.toString());
         assertTrue(
-            Util512.isValidNumber(sx) &&
-                Util512.isValidNumber(sy) &&
-                Util512.isValidNumber(sWidth) &&
-                Util512.isValidNumber(sHeight) &&
-                Util512.isValidNumber(dx) &&
-                Util512.isValidNumber(dy),
-            '3&|bad dims'
+            Util512.isValidNumber(srcX) &&
+                Util512.isValidNumber(srcY) &&
+                Util512.isValidNumber(srcWidth) &&
+                Util512.isValidNumber(srcHeight) &&
+                Util512.isValidNumber(destX) &&
+                Util512.isValidNumber(destY),
+            '3&|dimensions must be numeric'
         );
 
         if (CanvasWrapper.debugRenderingWithChangingColors && Math.random() > 0.8) {
-            this.fillRectUnchecked(dx, dy, sWidth, sHeight, 'black');
+            this.fillRectUnchecked(destX, destY, srcWidth, srcHeight, 'black');
         } else {
-            this.context.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, sWidth, sHeight);
+            this.context.drawImage(img, srcX, srcY, srcWidth, srcHeight, destX, destY, srcWidth, srcHeight);
         }
     }
 
+    /**
+     * draw an image, or a piece of another canvas, onto the canvas
+     * the "box" is the region of the canvas we are allowed to write to,
+     * any writes outside of this region will be clipped
+     */
     public drawFromImage(
         img: DrawableImage,
-        sx: number,
-        sy: number,
+        srcX: number,
+        srcY: number,
         width: number,
         height: number,
-        destx0: number,
-        desty0: number,
-        boxX0: number,
-        boxY0: number,
+        destX: number,
+        destY: number,
+        boxX: number,
+        boxY: number,
         boxW: number,
         boxH: number
     ) {
-        let rectClipped = RectUtils.getRectClipped(destx0, desty0, width, height, boxX0, boxY0, boxW, boxH);
+        let rectClipped = RectUtils.getRectClipped(destX, destY, width, height, boxX, boxY, boxW, boxH);
         if (rectClipped[2] === 0 || rectClipped[3] === 0) {
-            return [destx0, desty0, 0, 0];
+            return [destX, destY, 0, 0];
         } else {
-            sx += rectClipped[0] - destx0;
-            sy += rectClipped[1] - desty0;
-            this.drawFromImageUnchecked(img, sx, sy, rectClipped[2], rectClipped[3], rectClipped[0], rectClipped[1]);
+            srcX += rectClipped[0] - destX;
+            srcY += rectClipped[1] - destY;
+            this.drawFromImageUnchecked(img, srcX, srcY, rectClipped[2], rectClipped[3], rectClipped[0], rectClipped[1]);
             return rectClipped;
         }
     }
 
+    /**
+     * draw image centered in the box.
+     */
     public drawFromImageCentered(
         img: DrawableImage,
         sx: number,
@@ -231,6 +278,9 @@ export class CanvasWrapper {
         return this.drawFromImage(img, sx, sy, width, height, destx0, desty0, boxX0, boxY0, boxW, boxH);
     }
 
+    /**
+     * use a try/finally block to ensure that the mode is reset, even if an exception is thrown.
+     */
     public temporarilyChangeCompositeMode(s: string, fn: () => void) {
         try {
             this.context.globalCompositeOperation = s;
@@ -240,38 +290,45 @@ export class CanvasWrapper {
         }
     }
 
+    /**
+     * clear everything on the canvas. note that transparent != white.
+     */
     public clear() {
         this.resetTransform();
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+    /**
+     * resizing a canvas implicitly clears all contents, so name method likewise
+     */
     public resizeAndClear(newWidth: number, newHeight: number) {
         assertTrue(newWidth >= 0, '3%|invalid newWidth ' + newWidth.toString());
         assertTrue(newHeight >= 0, '3$|invalid newHeight ' + newHeight.toString());
         this.canvas.width = newWidth;
         this.canvas.height = newHeight;
     }
+
+    /**
+     * reset any current scaling/transformations
+     */
     public resetTransform() {
         this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
 
-    // every black pixel drawn with a different color,
-    // so that if we are redrawing more than expected, it shows up.
+    /**
+     * use this mode to visually see where redrawing is occurring,
+     * if a region is rapidly flickering rainbow colors, there is a bug causing extra re-draws.
+     */
     static debugRenderingWithChangingColors = false;
     static setDebugRenderingWithChangingColors(b: boolean) {
         this.debugRenderingWithChangingColors = b;
     }
 }
 
-export enum RectOverlapType {
-    __isUI512Enum = 1,
-    NoOverlap,
-    PartialOverlap,
-    BoxCompletelyCovers,
-    BoxCompletelyWithin,
-}
-
 export class RectUtils {
+    /**
+     * return a rectangle that is the intersection of the rectangles.
+     */
     static getRectClipped(
         x0: number,
         y0: number,
@@ -293,19 +350,19 @@ export class RectUtils {
         let newwidth;
         let newheight;
         if (x0 >= boxx1 || y0 >= boxy1) {
-            // it's way outside on the right or bottom
+            /* it's way outside on the right or bottom */
             newx0 = boxX0;
             newy0 = boxY0;
             newwidth = 0;
             newheight = 0;
         } else if (x1 < boxX0 || y1 < boxY0) {
-            // it's way outside on the left or top
+            /* it's way outside on the left or top */
             newx0 = boxX0;
             newy0 = boxY0;
             newwidth = 0;
             newheight = 0;
         } else {
-            // it's at least partially overlapping
+            /* it's at least partially overlapping */
             newx0 = x0 >= boxX0 ? x0 : boxX0;
             newy0 = y0 >= boxY0 ? y0 : boxY0;
             newx1 = x1 <= boxx1 ? x1 : boxx1;
@@ -323,12 +380,15 @@ export class RectUtils {
                 newx0 + newwidth <= boxX0 + boxW &&
                 newy0 >= boxY0 &&
                 newy0 + newheight <= boxY0 + boxH,
-            '3>|bad dims'
+            '3>|dimensions must be numeric'
         );
 
         return [newx0, newy0, newwidth, newheight];
     }
 
+    /**
+     * same as getRectClipped, but just return the type of overlap rather than resulting rectangle.
+     */
     static getOverlap(
         x0: number,
         y0: number,
@@ -344,10 +404,10 @@ export class RectUtils {
         const x1 = x0 + width;
         const y1 = y0 + height;
         if (x0 >= boxx1 || y0 >= boxy1) {
-            // it's way outside on the right or bottom
+            /* it's way outside on the right or bottom */
             return RectOverlapType.NoOverlap;
         } else if (x1 < boxx0 || y1 < boxy0) {
-            // it's way outside on the left or top
+            /* it's way outside on the left or top */
             return RectOverlapType.NoOverlap;
         } else if (x0 >= boxx0 && x1 <= boxx1 && y0 >= boxy0 && y1 <= boxy1) {
             return RectOverlapType.BoxCompletelyCovers;
@@ -358,10 +418,16 @@ export class RectUtils {
         }
     }
 
+    /**
+     * is point within rectangle.
+     */
     static hasPoint(x: number, y: number, boxx0: number, boxy0: number, boxw: number, boxh: number) {
         return x >= boxx0 && x < boxx0 + boxw && y >= boxy0 && y < boxy0 + boxh;
     }
 
+    /**
+     * shrink a rectangle by a defined amount of padding, and keep it centered.
+     */
     static getSubRectRaw(x: number, y: number, w: number, h: number, padx: number, pady: number) {
         if (w > padx * 2 && h > pady * 2) {
             return [x + padx, y + pady, w - padx * 2, h - pady * 2];
@@ -369,4 +435,15 @@ export class RectUtils {
             return undefined;
         }
     }
+}
+
+/**
+ * for determining overlap between two rectangles
+ */
+export enum RectOverlapType {
+    __isUI512Enum = 1,
+    NoOverlap,
+    PartialOverlap,
+    BoxCompletelyCovers,
+    BoxCompletelyWithin,
 }

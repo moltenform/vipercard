@@ -1,7 +1,7 @@
 
-/* auto */ import { UI512Element, UI512ElementWithHighlight } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
+/* auto */ import { UI512Element, UI512ElementWithHighlight } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 
 export enum UI512BtnStyle {
     __isUI512Enum = 1,

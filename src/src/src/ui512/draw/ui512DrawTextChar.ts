@@ -2,7 +2,7 @@
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { DrawCharResult, TextFontStyling, TextRendererFont, specialCharNumNewline, specialCharNumNonBreakingSpace, specialCharNumOnePixelSpace, specialCharNumTab, specialCharNumZeroPixelChar } from '../../ui512/draw/ui512drawtextclasses.js';
+/* auto */ import { DrawCharResult, TextFontStyling, TextRendererFont, specialCharNumNewline, specialCharNumNonBreakingSpace, specialCharNumOnePixelSpace, specialCharNumTab, specialCharNumZeroPixelChar } from '../../ui512/draw/ui512DrawTextClasses.js';
 
 const space = ' '.charCodeAt(0);
 const dash = '-'.charCodeAt(0);

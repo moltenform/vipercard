@@ -2,17 +2,17 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, getRoot, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { IdleEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { VpcAboutDialog } from '../../vpcui/menu/vpcaboutdialog.js';
-/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcintroprovider.js';
-/* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcintrobase.js';
-/* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcintrointerface.js';
-/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcintrojson.js';
-/* auto */ import { IntroOpenPage } from '../../vpcui/intro/vpcintroopen.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { IdleEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { VpcAboutDialog } from '../../vpcui/menu/vpcAboutDialog.js';
+/* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroBase.js';
+/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
+/* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
+/* auto */ import { IntroOpenPage } from '../../vpcui/intro/vpcIntroOpen.js';
 
 export class IntroFirstPage extends IntroPageBase {
     compositeType = 'IntroFirstPage';

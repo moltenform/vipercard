@@ -1,10 +1,10 @@
 
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512toolbox.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export class PatternsToolbox extends UI512CompToolbox {
     // instead of hiliting the current item, draw a box around it

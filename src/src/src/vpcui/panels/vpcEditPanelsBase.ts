@@ -1,23 +1,23 @@
 
 /* auto */ import { O, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, cast } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512genericfield.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512textselect.js';
-/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512composites.js';
-/* auto */ import { VpcElType, vpcElTypeToString } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { IsPropPanel } from '../../vpcui/panels/vpcpanelsbase.js';
-/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpceditscripteditor.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
+/* auto */ import { VpcElType, vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { IsPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
 
 export abstract class PropPanelCompositeBase extends UI512CompBase implements IsPropPanel {
     isPropPanelCompositeBase = true;

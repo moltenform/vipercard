@@ -1,10 +1,10 @@
 
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpceditpanelsbase.js';
+/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
 
 export class PropPanelCompositeStack extends PropPanelCompositeBase {
     isPropPanelCompositeStack = true;

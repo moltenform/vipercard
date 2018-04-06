@@ -3,21 +3,21 @@
 /* auto */ import { Util512, assertEq, assertEqWarn, base10, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512LangNull } from '../../ui512/lang/langbase.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { VpcElType, VpcOpCtg, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcvaleval.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velbutton.js';
-/* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgejslru.js';
-/* auto */ import { VpcApplication } from '../../vpcui/state/vpcstate.js';
-/* auto */ import { VpcAppControllerEvents } from '../../vpcui/presentation/vpcpresenterevents.js';
-/* auto */ import { VpcAppController } from '../../vpcui/presentation/vpcpresenter.js';
-/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcintroprovider.js';
+/* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512LangNull } from '../../ui512/lang/langBase.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { VpcElType, VpcOpCtg, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgeJSLru.js';
+/* auto */ import { VpcApplication } from '../../vpcui/state/vpcState.js';
+/* auto */ import { VpcAppControllerEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
+/* auto */ import { VpcAppController } from '../../vpcui/presentation/vpcPresenter.js';
+/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
 
 export class TestVpcScriptRun extends UI512TestBase {
     ctrller: VpcAppController;
@@ -472,7 +472,7 @@ put ${s} into testresult`;
 
     tests = [
         'callback/vpctestscriptruninit',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => this.initEnvironment(callback), undefined, true);
         },
         'test_jslru',

@@ -2,22 +2,22 @@
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { ModifierKeys, ScreenConsts, getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { ModifierKeys, ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { KeyDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { ClipManager } from '../../ui512/textedit/ui512clipboard.js';
-/* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512basichandlers.js';
-/* auto */ import { EditTextBehavior, addDefaultListeners } from '../../ui512/textedit/ui512textevents.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
-/* auto */ import { UI512CompRadioButtonGroup } from '../../ui512/composites/ui512buttongroup.js';
-/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512toolbox.js';
-/* auto */ import { UI512CompStdDialog, UI512CompStdDialogType } from '../../ui512/composites/ui512modaldialog.js';
-/* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512codeeditor.js';
+/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { KeyDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { ClipManager } from '../../ui512/textedit/ui512Clipboard.js';
+/* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
+/* auto */ import { EditTextBehavior, addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512CompRadioButtonGroup } from '../../ui512/composites/ui512ButtonGroup.js';
+/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
+/* auto */ import { UI512CompStdDialog, UI512CompStdDialogType } from '../../ui512/composites/ui512ModalDialog.js';
+/* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512CodeEditor.js';
 
 export class UI512TestCompositesController extends UI512Controller {
     testrbExclusive = new UI512CompRadioButtonGroup('testrbExclusive');
@@ -112,7 +112,7 @@ export class TestDrawUI512Composites extends UI512TestBase {
     uicontext = false;
     tests = [
         'callback/Test Drawing Composites',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.testDrawComposites(), callback);
         },
     ];

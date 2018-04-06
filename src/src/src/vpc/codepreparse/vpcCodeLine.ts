@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcpreparsecommon.js';
+/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 
 export class VpcCodeLine {
     readonly lineId: number;

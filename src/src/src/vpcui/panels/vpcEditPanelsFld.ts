@@ -1,6 +1,6 @@
 
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpceditpanelsbase.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
 
 export class PropPanelCompositeField extends PropPanelCompositeBase {
     isPropPanelCompositeField = true;

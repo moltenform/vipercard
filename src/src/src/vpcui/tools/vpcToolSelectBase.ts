@@ -4,14 +4,14 @@
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { largearea } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512drawpaint.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512elementscanvaspiece.js';
-/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpctoolbase.js';
+/* auto */ import { largearea } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPaint.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
 
 export enum SelectToolMode {
     SelectingRegion,

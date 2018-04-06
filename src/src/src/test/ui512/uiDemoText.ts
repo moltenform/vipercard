@@ -2,20 +2,19 @@
 /* auto */ import { assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { BrowserOSInfo, RenderComplete, assertEq, cast, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { TextFontSpec, TextFontStyling, largearea, specialCharFontChange, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512drawtextparams.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512textevents.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
+/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { TextFontSpec, TextFontStyling, largearea, specialCharFontChange, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512DrawTextParams.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 
 export class UI512DemoText extends UI512Controller {
     typeface = 'geneva';
@@ -157,19 +156,19 @@ export class TestDrawUI512Text extends UI512TestBase {
     readonly margin = 1;
     tests = [
         'callback/Text Core Fonts',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.draw1(), callback);
         },
         'callback/Text All Fonts',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.draw2(), callback);
         },
         'callback/Text Wrap, align, underlign',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.draw3(), callback);
         },
         'callback/Text corner cases',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.draw4(), callback);
         },
     ];
@@ -402,7 +401,7 @@ export class TestDrawUI512Text extends UI512TestBase {
         );
     }
 
-    runtest(testnum: number, dldimage: boolean, callback?: Function) {
+    runtest(testnum: number, dldimage: boolean, callback?: NullaryFn) {
         let tests = [() => this.draw1(), () => this.draw2(), () => this.draw3(), () => this.draw4()];
         let testToRun = testnum === -1 ? tests : tests[testnum - 1];
         testUtilCompareCanvasWithExpected(dldimage, testToRun, callback);
@@ -544,7 +543,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
     readonly imheight = 556;
     tests = [
         'callback/Simple Draw Rectangles',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 canvas.fillRect(3, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -564,7 +563,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Simple Draw Rectangles with no-op drawing',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 canvas.fillRect(3, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -592,7 +591,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Should fail if shifted',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 canvas.fillRect(3 + 1, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -614,7 +613,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Should fail if black pixel turned white',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 canvas.fillRect(3, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -636,7 +635,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Should fail if white pixel turned black (NW)',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 canvas.fillRect(3, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -659,7 +658,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Should fail if white pixel turned black (NE)',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 canvas.fillRect(3, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -682,7 +681,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Should fail if white pixel turned black (SW)',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper) => {
                 canvas.fillRect(3, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -705,7 +704,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Should fail if white pixel turned black (SE)',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 canvas.fillRect(3, 5, 30, 50, 0, 0, this.imwidth, this.imheight, 'black');
                 canvas.fillRect(22, 40, 40, 400, 0, 0, this.imwidth, this.imheight, 'black');
@@ -728,7 +727,7 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         },
 
         'callback/Should succeed even if the first renders are wrong',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             let countRenderAttempt = 0;
             let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
                 if (countRenderAttempt === 0) {

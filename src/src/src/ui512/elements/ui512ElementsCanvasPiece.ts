@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 
 export class UI512ElCanvasPiece extends UI512Element {
     readonly typeName: string = 'UI512ElCanvasPiece';

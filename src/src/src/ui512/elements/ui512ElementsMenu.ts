@@ -1,8 +1,8 @@
 
-/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512BtnStyle, UI512ElementButtonGeneral } from '../../ui512/elements/ui512elementsbutton.js';
+/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElementButtonGeneral } from '../../ui512/elements/ui512ElementsButton.js';
 
 function idstolist<T extends UI512Element>(app: UI512Application, grpname: string, childids: string): T[] {
     let list = childids.split('|');

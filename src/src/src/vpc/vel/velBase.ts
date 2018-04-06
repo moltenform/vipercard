@@ -1,10 +1,10 @@
 
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { isString } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512Settable } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 
 export enum PrpTyp {
     __isUI512Enum = 1,

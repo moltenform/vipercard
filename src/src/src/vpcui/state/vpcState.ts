@@ -1,17 +1,17 @@
 
 /* auto */ import { assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ElementObserver, ElementObserverDefault, ElementObserverNoOp, UI512Settable } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velbutton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
-/* auto */ import { VpcModel } from '../../vpc/vel/velmodel.js';
-/* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcscriptexectop.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from '../../vpcui/state/vpcundo.js';
-/* auto */ import { VpcOutsideWorld } from '../../vpcui/state/vpcfulloutside.js';
+/* auto */ import { ElementObserver, ElementObserverDefault, ElementObserverNoOp, UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
+/* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from '../../vpcui/state/vpcUndo.js';
+/* auto */ import { VpcOutsideWorld } from '../../vpcui/state/vpcFullOutside.js';
 
 // for trivial settings that don't need to be in the undo stack
 // (note that undo/redo can be annoying to use if redo doesn't work

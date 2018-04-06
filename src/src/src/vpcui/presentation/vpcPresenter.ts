@@ -4,23 +4,23 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512modaldialog.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velserialize.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { vpcElTypeAsSeenInName } from '../../vpc/vel/velresolvereference.js';
-/* auto */ import { VpcSerialization } from '../../vpcui/state/vpcstateserialize.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpctoolbase.js';
-/* auto */ import { SelectToolMode, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpctoolselectbase.js';
-/* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcreplmessagebox.js';
-/* auto */ import { VpcControllerInit } from '../../vpcui/presentation/vpcpresenterinit.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialize.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { vpcElTypeAsSeenInName } from '../../vpc/vel/velResolveReference.js';
+/* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
+/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { SelectToolMode, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
+/* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
+/* auto */ import { VpcControllerInit } from '../../vpcui/presentation/vpcPresenterInit.js';
 
 export class VpcAppController extends VpcControllerInit {
     showError(scriptErr: VpcScriptErrorBase) {

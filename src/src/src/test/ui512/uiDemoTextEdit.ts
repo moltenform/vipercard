@@ -2,25 +2,25 @@
 /* auto */ import { O, assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, Util512, assertEq, cast } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { ModifierKeys, ScreenConsts, ScrollConsts, getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { ModifierKeys, ScreenConsts, ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange, specialCharNonBreakingSpace, textFontStylingToString } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512genericfield.js';
-/* auto */ import { SelAndEntryImpl } from '../../ui512/textedit/ui512textselectclasses.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512textselect.js';
-/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512textevents.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
+/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange, specialCharNonBreakingSpace, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { SelAndEntryImpl } from '../../ui512/textedit/ui512TextSelectClasses.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 
 export class UI512DemoTextEdit extends UI512Controller {
     test = new TestDrawUI512TextEdit();
@@ -127,7 +127,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
     uicontext = false;
     tests = [
         'callback/Test Drawing Text Edits',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.testDrawTextEdit(), callback);
         },
     ];

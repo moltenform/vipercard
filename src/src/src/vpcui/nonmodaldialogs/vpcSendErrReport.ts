@@ -2,12 +2,12 @@
 /* auto */ import { vpcversion } from '../../config.js';
 /* auto */ import { UI512ErrorHandling, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { VpcSession } from '../../vpc/request/vpcrequest.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcnonmodalcommon.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { VpcSession } from '../../vpc/request/vpcRequest.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 
 export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBase {
     showHeader = true;

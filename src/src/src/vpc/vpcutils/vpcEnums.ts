@@ -1,10 +1,10 @@
 
 /* auto */ import { makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { Lines } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { PaintOntoCanvasShapes } from '../../ui512/draw/ui512imageserialize.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { Lines } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { PaintOntoCanvasShapes } from '../../ui512/draw/ui512ImageSerialize.js';
 
 export enum RequestedChunkType {
     __isUI512Enum = 1,

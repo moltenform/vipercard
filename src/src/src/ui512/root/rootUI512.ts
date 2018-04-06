@@ -4,20 +4,20 @@
 /* auto */ import { UI512CursorAccess } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512drawicon.js';
-/* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
-/* auto */ import { VpcInitIcons } from '../../vpc/vpcutils/vpciniticons.js';
-/* auto */ import { VpcUiIntro } from '../../vpcui/intro/vpcintro.js';
-/* auto */ import { UI512DemoBasic } from '../../test/ui512/uidemobasic.js';
-/* auto */ import { UI512DemoText } from '../../test/ui512/uidemotext.js';
-/* auto */ import { UI512DemoPaint } from '../../test/ui512/uidemopaint.js';
-/* auto */ import { UI512DemoButtons } from '../../test/ui512/uidemobuttons.js';
-/* auto */ import { UI512DemoMenus } from '../../test/ui512/uidemomenus.js';
-/* auto */ import { UI512DemoTextEdit } from '../../test/ui512/uidemotextedit.js';
-/* auto */ import { UI512DemoComposites } from '../../test/ui512/uidemocomposites.js';
-/* auto */ import { runTestsImpl } from '../../test/vpcui/testregistration.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { VpcInitIcons } from '../../vpc/vpcutils/vpcInitIcons.js';
+/* auto */ import { VpcUiIntro } from '../../vpcui/intro/vpcIntro.js';
+/* auto */ import { UI512DemoBasic } from '../../test/ui512/uiDemoBasic.js';
+/* auto */ import { UI512DemoText } from '../../test/ui512/uiDemoText.js';
+/* auto */ import { UI512DemoPaint } from '../../test/ui512/uiDemoPaint.js';
+/* auto */ import { UI512DemoButtons } from '../../test/ui512/uiDemoButtons.js';
+/* auto */ import { UI512DemoMenus } from '../../test/ui512/uiDemoMenus.js';
+/* auto */ import { UI512DemoTextEdit } from '../../test/ui512/uiDemoTextEdit.js';
+/* auto */ import { UI512DemoComposites } from '../../test/ui512/uiDemoComposites.js';
+/* auto */ import { runTestsImpl } from '../../test/vpcui/testRegistration.js';
 
 export class UI512FullRoot implements Root {
     domCanvas: CanvasWrapper;

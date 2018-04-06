@@ -1,8 +1,8 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { CharRectType } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { TextRendererFontCache } from '../../ui512/draw/ui512drawtextloadjson.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
+/* auto */ import { CharRectType } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { TextRendererFontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 
 export function renderTextArgsFromEl(el: any, subrect: number[], hasFocus: boolean): [RenderTextArgs, FormattedText] {
     let args = new RenderTextArgs(

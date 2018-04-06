@@ -1,12 +1,12 @@
 
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 
 export enum UI512FldStyle {
     __isUI512Enum = 1,

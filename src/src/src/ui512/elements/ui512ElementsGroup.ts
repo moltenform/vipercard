@@ -1,10 +1,10 @@
 
 /* auto */ import { O, checkThrowUI512 } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { OrderedHash } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { largearea } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { largearea } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 
 export class UI512ElGroup {
     readonly id: string;

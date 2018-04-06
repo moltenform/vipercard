@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcutils.js';
+/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcUtils.js';
 
 export const cTkSyntaxMarker = '\n';
 const maxint32 = 2147483647;

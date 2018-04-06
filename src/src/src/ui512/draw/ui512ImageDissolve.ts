@@ -1,8 +1,8 @@
 
 /* auto */ import { RenderComplete, cast, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { IconInfo } from '../../ui512/draw/ui512drawiconclasses.js';
-/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512drawicon.js';
+/* auto */ import { IconInfo } from '../../ui512/draw/ui512DrawIconClasses.js';
+/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512DrawIcon.js';
 
 export class DissolveImages {
     readonly iconset = 'fordissolvet';

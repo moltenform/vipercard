@@ -1,11 +1,11 @@
 
 /* auto */ import { O, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcvarcollection.js';
-/* auto */ import { VpcScriptMessage } from '../../vpc/vel/vpcoutsideinterfaces.js';
-/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcallcode.js';
+/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
+/* auto */ import { VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcAllCode.js';
 
 export class CodeExecFrame {
     locals = new VarCollection(CodeLimits.maxLocalVars, 'local');

@@ -1,6 +1,6 @@
 
-/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgechv.js';
+/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 
 export interface VisitingVisitor {
     RuleHOrdinal(ctx: VisitingContext): string | VpcIntermedValBase;

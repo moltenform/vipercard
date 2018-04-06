@@ -3,16 +3,16 @@
 /* auto */ import { cProductName } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, assertEqWarn } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { OrdinalOrPosition } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcValN } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcvaleval.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpctestscriptrun.js';
+/* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { OrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcValN } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpcTestScriptRun.js';
 
 export class Test_ScriptEval extends TestVpcScriptRun {
     constructor() {
@@ -21,7 +21,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
 
     tests = [
         'callback/vpctestscriptevalinit',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             UI512BeginAsync(() => this.initEnvironment(callback), undefined, true);
         },
         'test_evalRuleExpr,RuleLvl1',

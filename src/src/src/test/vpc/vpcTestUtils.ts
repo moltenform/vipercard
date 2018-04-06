@@ -1,12 +1,12 @@
 
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { RequestedChunkTextPreposition, RequestedChunkType, VpcOpCtg } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcvaleval.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcchunk.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcoutsideinterfaces.js';
-/* auto */ import { ReadableContainerVar, WritableContainerVar } from '../../vpc/vel/velresolvereference.js';
+/* auto */ import { RequestedChunkTextPreposition, RequestedChunkType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
+/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { ReadableContainerVar, WritableContainerVar } from '../../vpc/vel/velResolveReference.js';
 
 class MockWorld {
     result = '_';

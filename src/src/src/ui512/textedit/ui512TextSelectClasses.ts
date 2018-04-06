@@ -2,8 +2,8 @@
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { GetCharClass, Util512 } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512formattedtext.js';
+/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512FormattedText.js';
 
 export class SelAndEntryImpl {
     static changeSelSelectAll(t: FormattedText, ncaret: number, nend: number): [number, number] {

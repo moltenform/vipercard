@@ -1,15 +1,15 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { vpcUsersCreate } from '../../vpc/request/vpcrequest.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcnonmodalcommon.js';
+/* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { vpcUsersCreate } from '../../vpc/request/vpcRequest.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 
 export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase {
-    fnCbWhenSignedIn: () => void = () => {};
+    fnCbWhenSignedIn: NullaryFn = () => {};
     showHeader = true;
     captionText = 'lngNew User';
     hasCloseBtn = true;

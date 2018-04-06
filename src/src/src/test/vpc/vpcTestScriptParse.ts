@@ -2,10 +2,10 @@
 /* auto */ import { assertTrue, cProductName, makeVpcScriptErr, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { ChvLexer } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { tks, tokenType } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcrules.js';
-/* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcvisitor.js';
+/* auto */ import { ChvLexer } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { tks, tokenType } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
+/* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor.js';
 
 declare var saveAs: any;
 

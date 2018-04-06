@@ -1,10 +1,10 @@
 
 /* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velbutton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 
 export class VpcElBg extends VpcElBase {
     isVpcElBg = true;

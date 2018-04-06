@@ -2,12 +2,12 @@
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq, findEnumToStr } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { Lines } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { PropAdjective, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcvaleval.js';
-/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcoutsideclasses.js';
-/* auto */ import { OutsideWorldRead, VpcScriptMessage } from '../../vpc/vel/vpcoutsideinterfaces.js';
+/* auto */ import { Lines } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { PropAdjective, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
+/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { OutsideWorldRead, VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
 
 export class VpcBuiltinFunctions {
     // confirmed in emulator that this is not tied to itemdelimeter.

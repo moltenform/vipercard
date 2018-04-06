@@ -3,18 +3,18 @@
 /* auto */ import { cast, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512ImageCollection, UI512ImageCollectionCollection, UI512ImageCollectionImage } from '../../ui512/draw/ui512imagecollection.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512genericfield.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512textselect.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpctoolboxpatterns.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpctoolbase.js';
+/* auto */ import { UI512ImageCollection, UI512ImageCollectionCollection, UI512ImageCollectionImage } from '../../ui512/draw/ui512ImageCollection.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
+/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
 
 export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     currentImg: O<UI512ImageCollectionImage>;

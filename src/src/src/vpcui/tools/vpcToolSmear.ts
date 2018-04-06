@@ -2,13 +2,13 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512drawpaint.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512elementscanvaspiece.js';
-/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpctoolbase.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPaint.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
 
 enum SmearToolMode {
     Inited,

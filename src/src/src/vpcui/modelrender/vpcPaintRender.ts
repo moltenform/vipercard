@@ -3,18 +3,18 @@
 /* auto */ import { MapKeyToObjectCanSet, cast } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrWhite } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512drawpaint.js';
-/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes, UI512ImageSerialization } from '../../ui512/draw/ui512imageserialize.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512elementscanvaspiece.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512presenterbase.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { VpcOutsideWorld } from '../../vpcui/state/vpcfulloutside.js';
-/* auto */ import { PaintExportToGif } from '../../vpcui/modelrender/vpcgifexport.js';
+/* auto */ import { clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPaint.js';
+/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes, UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcOutsideWorld } from '../../vpcui/state/vpcFullOutside.js';
+/* auto */ import { PaintExportToGif } from '../../vpcui/modelrender/vpcGifExport.js';
 
 export abstract class VpcAppInterfaceLayer {
     appli: IVpcStateInterface;

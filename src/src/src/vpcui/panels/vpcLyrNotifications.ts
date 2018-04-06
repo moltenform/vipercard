@@ -1,14 +1,14 @@
 
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcpaintrender.js';
-/* auto */ import { VpcAppResizeHandles } from '../../vpcui/panels/vpclyrdraghandles.js';
+/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
+/* auto */ import { VpcAppResizeHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
 
 export class VpcAppCoverArea extends VpcAppInterfaceLayer {
     elems: { [key: string]: UI512Element } = {};

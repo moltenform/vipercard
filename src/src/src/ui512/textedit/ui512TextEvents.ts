@@ -3,17 +3,17 @@
 /* auto */ import { getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { MouseDragStatus, UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512presenterwithmenu.js';
-/* auto */ import { MenuBehavior } from '../../ui512/menu/ui512menulisteners.js';
-/* auto */ import { IGenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512genericfield.js';
-/* auto */ import { ScrollbarImpl, getIsScrollArrowClicked, scrollbarIdToscrollbarPartId } from '../../ui512/textedit/ui512scrollbar.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512textselect.js';
-/* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512basichandlers.js';
+/* auto */ import { MouseDragStatus, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
+/* auto */ import { MenuBehavior } from '../../ui512/menu/ui512MenuListeners.js';
+/* auto */ import { IGenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { ScrollbarImpl, getIsScrollArrowClicked, scrollbarIdToscrollbarPartId } from '../../ui512/textedit/ui512Scrollbar.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 
 export class EditTextBehavior {
     static readonly amtScrollArrowClicked = 12;

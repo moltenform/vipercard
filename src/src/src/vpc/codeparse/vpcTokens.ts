@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue, cProductName } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ChvIToken, ChvLexer, ChvToken } from '../../vpc/codeparse/bridgechv.js';
+/* auto */ import { ChvIToken, ChvLexer, ChvToken } from '../../vpc/codeparse/bridgeChv.js';
 
 export function tokenType(ctr: { new (...args: any[]): any }): number {
     let tk = (ctr as any).tokenType;

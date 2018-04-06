@@ -2,9 +2,9 @@
 /* auto */ import { getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512ElementWithHighlight } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512presenterwithmenu.js';
+/* auto */ import { UI512ElementWithHighlight } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 
 export class BasicHandlers {
     static trackMouseStatusMouseDown(c: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {

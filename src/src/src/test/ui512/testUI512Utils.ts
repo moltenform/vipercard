@@ -3,7 +3,7 @@
 /* auto */ import { OrderedHash, Util512, assertEq, defaultSort, findEnumToStr, findStrToEnum, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { RequestedChunkType } from '../../vpc/vpcutils/vpcenums.js';
+/* auto */ import { RequestedChunkType } from '../../vpc/vpcutils/vpcEnums.js';
 
 declare var LZString: any;
 

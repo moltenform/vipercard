@@ -1,8 +1,8 @@
 
 /* auto */ import { assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, setRoot } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ScreenConsts, ui512TranslateModifiers, toShortcutString } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
+/* auto */ import { ScreenConsts, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512FullRoot } from '../../ui512/root/rootUI512.js';
 
 let mainVPCStartCanvasStarted = false;

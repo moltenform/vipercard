@@ -1,8 +1,8 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RepeatingTimer, getRoot } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ClipManagerInterface } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { PasteTextEventDetails } from '../../ui512/menu/ui512events.js';
+/* auto */ import { ClipManagerInterface } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
 
 export class ClipManager implements ClipManagerInterface {
     isClipManager = true;

@@ -1,21 +1,21 @@
 
 /* auto */ import { O, assertTrue, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512imageserialize.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { CodeLimits, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcvarcollection.js';
-/* auto */ import { OutsideWorldReadWrite, VpcScriptMessage } from '../../vpc/vel/vpcoutsideinterfaces.js';
-/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpccheckreserved.js';
-/* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpccodeline.js';
-/* auto */ import { BranchTracking } from '../../vpc/codepreparse/vpcbranchprocess.js';
-/* auto */ import { VpcAllCode, VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcallcode.js';
-/* auto */ import { VpcParsingCache } from '../../vpc/codeexec/vpcscriptcacheparsed.js';
-/* auto */ import { ScriptAsyncOperations } from '../../vpc/codeexec/vpcscriptexecasync.js';
-/* auto */ import { ExecuteStatements } from '../../vpc/codeexec/vpcscriptexecstatement.js';
-/* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcscriptexecframe.js';
+/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { CodeLimits, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
+/* auto */ import { OutsideWorldReadWrite, VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
+/* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
+/* auto */ import { BranchTracking } from '../../vpc/codepreparse/vpcBranchProcessing.js';
+/* auto */ import { VpcAllCode, VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcAllCode.js';
+/* auto */ import { VpcParsingCache } from '../../vpc/codeexec/vpcScriptCacheParsed.js';
+/* auto */ import { ScriptAsyncOperations } from '../../vpc/codeexec/vpcScriptExecAsync.js';
+/* auto */ import { ExecuteStatements } from '../../vpc/codeexec/vpcScriptExecStatement.js';
+/* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 
 export class CodeExecFrameStack {
     stack: O<CodeExecFrame>[] = [undefined];

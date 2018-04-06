@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { IIconManager, Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { RenderIcon, RenderIconSet } from '../../ui512/draw/ui512drawiconclasses.js';
+/* auto */ import { RenderIcon, RenderIconSet } from '../../ui512/draw/ui512DrawIconClasses.js';
 
 export class RenderIconManager implements IIconManager {
     cachedIconSets: { [key: string]: RenderIconSet } = {};

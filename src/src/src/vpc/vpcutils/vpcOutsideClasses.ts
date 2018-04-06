@@ -1,8 +1,8 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcIntermedValBase } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcchunk.js';
+/* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcIntermedValBase } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
 
 export class RequestedVelRef extends VpcIntermedValBase {
     isRequestedVelRef = true;

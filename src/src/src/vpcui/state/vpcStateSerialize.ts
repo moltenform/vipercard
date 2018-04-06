@@ -2,10 +2,10 @@
 /* auto */ import { vpcversion } from '../../config.js';
 /* auto */ import { UI512Compress, assertTrue, assertTrueWarn, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { checkThrowEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velserialize.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialize.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export class VpcSerialization {
     serializeAll(appli: IVpcStateInterface) {

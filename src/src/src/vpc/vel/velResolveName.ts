@@ -1,16 +1,16 @@
 
 /* auto */ import { O, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { checkThrowEq, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { PropAdjective, VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcoutsideclasses.js';
-/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velbutton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velstack.js';
-/* auto */ import { VpcModel } from '../../vpc/vel/velmodel.js';
-/* auto */ import { vpcElTypeAsSeenInName } from '../../vpc/vel/velresolvereference.js';
+/* auto */ import { PropAdjective, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
+/* auto */ import { vpcElTypeAsSeenInName } from '../../vpc/vel/velResolveReference.js';
 
 export class VelResolveName {
     constructor(protected model: VpcModel) {}

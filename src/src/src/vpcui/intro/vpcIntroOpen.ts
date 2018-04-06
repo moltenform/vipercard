@@ -3,22 +3,22 @@
 /* auto */ import { slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512genericfield.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512textselect.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512presenterbase.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
-/* auto */ import { VpcSession } from '../../vpc/request/vpcrequest.js';
-/* auto */ import { VpcFormNonModalDialogBase } from '../../vpcui/nonmodaldialogs/vpcnonmodalcommon.js';
-/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcintroprovider.js';
-/* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcintrobase.js';
-/* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcintrointerface.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { VpcSession } from '../../vpc/request/vpcRequest.js';
+/* auto */ import { VpcFormNonModalDialogBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroBase.js';
+/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
 
 export class IntroOpenPage extends IntroPageBase {
     compositeType = 'IntroOpenPage';

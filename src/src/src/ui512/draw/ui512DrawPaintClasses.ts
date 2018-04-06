@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrueWarn, makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512BasePainterUtils } from '../../ui512/draw/ui512drawpattern.js';
+/* auto */ import { UI512BasePainterUtils } from '../../ui512/draw/ui512DrawPattern.js';
 
 /* tslint:disable:no-unbound-method */
 

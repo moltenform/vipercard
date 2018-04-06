@@ -1,20 +1,20 @@
 
 /* auto */ import { O, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512imageserialize.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { EventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512composites.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcoutsideinterfaces.js';
-/* auto */ import { VpcModel } from '../../vpc/vel/velmodel.js';
-/* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcscriptexecframe.js';
-/* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcscriptexecframestack.js';
-/* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcscriptexectop.js';
-/* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { VpcApplication } from '../../vpcui/state/vpcstate.js';
-/* auto */ import { VpcAppControllerEvents } from '../../vpcui/presentation/vpcpresenterevents.js';
-/* auto */ import { VpcAppController } from '../../vpcui/presentation/vpcpresenter.js';
+/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { EventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
+/* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
+/* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
+/* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
+/* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcApplication } from '../../vpcui/state/vpcState.js';
+/* auto */ import { VpcAppControllerEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
+/* auto */ import { VpcAppController } from '../../vpcui/presentation/vpcPresenter.js';
 
 export class VpcStateInterfaceCompleted implements IVpcStateInterface {
     protected appl: VpcApplication;

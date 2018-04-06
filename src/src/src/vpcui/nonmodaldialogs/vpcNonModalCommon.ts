@@ -1,18 +1,18 @@
 
 /* auto */ import { O, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512BeginAsyncSetLabelText, UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512presenterbase.js';
-/* auto */ import { BorderDecorationConsts, UI512CompBase, WndBorderDecorationConsts } from '../../ui512/composites/ui512composites.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcpaintrender.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512BeginAsyncSetLabelText, UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { BorderDecorationConsts, UI512CompBase, WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
 
 // see UI512BeginAsyncSetLabelText
 

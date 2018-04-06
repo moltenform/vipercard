@@ -1,15 +1,15 @@
 
 /* auto */ import { O, assertTrue, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject, MapKeyToObjectCanSet, Util512, ValHolder, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcvisitor.js';
-/* auto */ import { LoopLimit, MakeLowerCase, MapBuiltinCmds, SplitIntoLinesProducer } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpccheckreserved.js';
-/* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpccodeline.js';
-/* auto */ import { DetermineCategory } from '../../vpc/codepreparse/vpcdeterminecategory.js';
-/* auto */ import { SyntaxRewriter } from '../../vpc/codepreparse/vpcrewrite.js';
-/* auto */ import { BranchTracking } from '../../vpc/codepreparse/vpcbranchprocess.js';
+/* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor.js';
+/* auto */ import { LoopLimit, MakeLowerCase, MapBuiltinCmds, SplitIntoLinesProducer } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
+/* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
+/* auto */ import { DetermineCategory } from '../../vpc/codepreparse/vpcDetermineCategory.js';
+/* auto */ import { SyntaxRewriter } from '../../vpc/codepreparse/vpcRewrite.js';
+/* auto */ import { BranchTracking } from '../../vpc/codepreparse/vpcBranchProcessing.js';
 
 /*
 code compilation/execution strategy

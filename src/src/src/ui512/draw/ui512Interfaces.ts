@@ -2,7 +2,8 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
+/* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 
 export interface ClipManagerInterface {
     ensureReadyForPaste(milliseconds: number): void;
@@ -72,7 +73,7 @@ export interface UI512PresenterInterface {
     trackKeyOption: boolean;
     trackKeyShift: boolean;
     listeners: { [t: number]: Function[] };
-    callbackQueueFromAsyncs: (O<() => void>)[];
+    callbackQueueFromAsyncs: (O<NullaryFn>)[];
     continueEventAfterError: boolean;
     needRedraw: boolean;
     inited: boolean;

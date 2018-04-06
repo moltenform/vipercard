@@ -1,8 +1,8 @@
 
 /* auto */ import { assertTrue, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { isString } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from '../../ui512/elements/ui512elementsgettable.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
 
 export class VpcUI512Serialization {
     static serializeUiGettable(vel: UI512Gettable, attrlist: string[]) {

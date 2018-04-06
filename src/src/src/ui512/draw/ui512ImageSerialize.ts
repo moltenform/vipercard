@@ -3,9 +3,9 @@
 /* auto */ import { assertEq, base10 } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrBlack, clrTransp, clrWhite, needsPatternSupport, simplifyPattern } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
-/* auto */ import { UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512drawpaint.js';
+/* auto */ import { clrBlack, clrTransp, clrWhite, needsPatternSupport, simplifyPattern } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPaint.js';
 
 export class UI512ImageSerialization {
     /*

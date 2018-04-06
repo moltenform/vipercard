@@ -1,8 +1,8 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
 
 /*
 use a generic field-like object

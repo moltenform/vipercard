@@ -2,10 +2,10 @@
 /* auto */ import { O, assertTrue, assertTrueWarn, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEqWarn, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { TextFontStyling, specialCharNumNewline, textFontStylingToString } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
+/* auto */ import { TextFontStyling, specialCharNumNewline, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
 
 class AutoIndentMatch {
     startPattern: RegExp;

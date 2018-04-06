@@ -1,11 +1,11 @@
 
 /* auto */ import { checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcsubsstring.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velbase.js';
+/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
 export class VpcElButton extends VpcElSizable {
     isVpcElButton = true;

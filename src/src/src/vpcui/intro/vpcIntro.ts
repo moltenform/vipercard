@@ -1,19 +1,19 @@
 
 /* auto */ import { Util512, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512textevents.js';
-/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512modaldialog.js';
-/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcintroprovider.js';
-/* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcintrointerface.js';
-/* auto */ import { IntroWaitWhileLoadingPage } from '../../vpcui/intro/vpcintroloading.js';
-/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcintrojson.js';
-/* auto */ import { IntroOpenPage } from '../../vpcui/intro/vpcintroopen.js';
-/* auto */ import { IntroFirstPage } from '../../vpcui/intro/vpcintrofirst.js';
+/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
+/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
+/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
+/* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
+/* auto */ import { IntroWaitWhileLoadingPage } from '../../vpcui/intro/vpcIntroLoading.js';
+/* auto */ import { IntroOpenPage } from '../../vpcui/intro/vpcIntroOpen.js';
+/* auto */ import { IntroFirstPage } from '../../vpcui/intro/vpcIntroFirst.js';
 
 export class VpcUiIntro extends VpcIntroPresenterInterface {
     counter = 0;

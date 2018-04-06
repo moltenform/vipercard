@@ -2,16 +2,16 @@
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512imageserialize.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcBuiltinMsg, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcchunk.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcoutsideclasses.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcBuiltinMsg, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 
 export class VpcScriptMessage {
     clickLoc: O<number[]>;

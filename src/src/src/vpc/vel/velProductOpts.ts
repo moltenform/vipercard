@@ -3,15 +3,15 @@
 /* auto */ import { assertTrueWarn, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512Patterns } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velbutton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velstack.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512Patterns } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 
 export class VpcElProductOpts extends VpcElBase {
     // unlike other elements, nothing here is persisted during save.

@@ -1,9 +1,9 @@
 
 /* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpccodeline.js';
+/* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
 
 // remember the entrance/exit points of a block.
 // we'll use this to set the blockInformation for these lines,

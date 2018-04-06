@@ -3,10 +3,10 @@
 /* auto */ import { Util512, sleep } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512menuanimation.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 declare var GIFEncoder: any;
 declare var saveAs: any;

@@ -1,14 +1,14 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512presenterwithmenu.js';
-/* auto */ import { IGenericTextField } from '../../ui512/textedit/ui512genericfield.js';
-/* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512scrollbar.js';
-/* auto */ import { SelAndEntryImpl } from '../../ui512/textedit/ui512textselectclasses.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
+/* auto */ import { IGenericTextField } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
+/* auto */ import { SelAndEntryImpl } from '../../ui512/textedit/ui512TextSelectClasses.js';
 
 export class SelAndEntry {
     protected static readOnlyScrollbarImpl = new ScrollbarImpl();

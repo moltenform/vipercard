@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { ShapeToolState, VpcAppUIToolShape } from '../../vpcui/tools/vpctoolshape.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { ShapeToolState, VpcAppUIToolShape } from '../../vpcui/tools/vpcToolShape.js';
 
 export class VpcAppUIToolCurve extends VpcAppUIToolShape {
     protected drawPartial(cv: CanvasWrapper, st: ShapeToolState, tl: VpcTool, x: number, y: number) {

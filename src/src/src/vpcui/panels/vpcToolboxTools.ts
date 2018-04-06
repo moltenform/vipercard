@@ -1,10 +1,10 @@
 
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512toolbox.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpctoolboxpatterns.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
 
 export class MainToolbox extends UI512CompToolbox {
     compositeType = 'toolbox_main';

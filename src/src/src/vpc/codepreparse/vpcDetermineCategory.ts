@@ -1,13 +1,13 @@
 
 /* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { BuildFakeTokens, isTkType, tks, tokenType } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcrules.js';
-/* auto */ import { MapBuiltinCmds, VpcLineCategory } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { CheckReservedWords, CodeSymbols } from '../../vpc/codepreparse/vpccheckreserved.js';
-/* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpccodeline.js';
+/* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { BuildFakeTokens, isTkType, tks, tokenType } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
+/* auto */ import { MapBuiltinCmds, VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { CheckReservedWords, CodeSymbols } from '../../vpc/codepreparse/vpcCheckReserved.js';
+/* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpcCodeLine.js';
 
 export class DetermineCategory {
     buildFake = new BuildFakeTokens();

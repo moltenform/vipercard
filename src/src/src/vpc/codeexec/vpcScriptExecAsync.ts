@@ -1,8 +1,8 @@
 
 /* auto */ import { O, makeVpcInternalErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcoutsideinterfaces.js';
+/* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
 
 export class VpcScriptExecAsync {
     static go_wait(

@@ -5,15 +5,15 @@
 /* auto */ import { ModifierKeys, getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { elementObserverNoOp } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512elementsview.js';
-/* auto */ import { KeyDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512textevents.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
+/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { elementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementsView.js';
+/* auto */ import { KeyDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 
 export class UI512DemoButtons extends UI512Controller {
     counter = 0;
@@ -115,7 +115,7 @@ export class TestDrawUI512Buttons extends UI512TestBase {
     uicontext = false;
     tests = [
         'callback/Test Drawing Buttons',
-        (callback: Function) => {
+        (callback:()=>void) => {
             testUtilCompareCanvasWithExpected(false, () => this.testDrawButtons(), callback);
         },
     ];

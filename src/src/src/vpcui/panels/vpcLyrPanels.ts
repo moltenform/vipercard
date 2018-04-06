@@ -2,22 +2,22 @@
 /* auto */ import { O, msgNotification, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512presenterbase.js';
-/* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcModel } from '../../vpc/vel/velmodel.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcpaintrender.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpctoolboxpatterns.js';
-/* auto */ import { IsPropPanel } from '../../vpcui/panels/vpcpanelsbase.js';
-/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpceditscripteditor.js';
-/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpceditpanelsbase.js';
-/* auto */ import { PropPanelCompositeBlank } from '../../vpcui/panels/vpceditpanelsempty.js';
-/* auto */ import { PropPanelCompositeField } from '../../vpcui/panels/vpceditpanelsfld.js';
-/* auto */ import { PropPanelCompositeBtn } from '../../vpcui/panels/vpceditpanelsbtn.js';
-/* auto */ import { PropPanelCompositeCard } from '../../vpcui/panels/vpceditpanelscard.js';
-/* auto */ import { PropPanelCompositeStack } from '../../vpcui/panels/vpceditpanelsstack.js';
-/* auto */ import { VpcAppResizeHandles } from '../../vpcui/panels/vpclyrdraghandles.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
+/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
+/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
+/* auto */ import { IsPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
+/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
+/* auto */ import { PropPanelCompositeBlank } from '../../vpcui/panels/vpcEditPanelsEmpty.js';
+/* auto */ import { PropPanelCompositeField } from '../../vpcui/panels/vpcEditPanelsFld.js';
+/* auto */ import { PropPanelCompositeBtn } from '../../vpcui/panels/vpcEditPanelsBtn.js';
+/* auto */ import { PropPanelCompositeCard } from '../../vpcui/panels/vpcEditPanelsCard.js';
+/* auto */ import { PropPanelCompositeStack } from '../../vpcui/panels/vpcEditPanelsStack.js';
+/* auto */ import { VpcAppResizeHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
 
 export class VpcAppPropPanel extends VpcAppInterfaceLayer {
     blank = new PropPanelCompositeBlank('editPanelBlank');

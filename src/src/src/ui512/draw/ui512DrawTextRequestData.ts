@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrue, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, TextRendererGrid, typefacenameToTypefaceIdFull } from '../../ui512/draw/ui512drawtextclasses.js';
+/* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, TextRendererGrid, typefacenameToTypefaceIdFull } from '../../ui512/draw/ui512DrawTextClasses.js';
 
 export class TextRendererFontCache {
     static readonly defaultFont = 'chicago_12_biuosdce';

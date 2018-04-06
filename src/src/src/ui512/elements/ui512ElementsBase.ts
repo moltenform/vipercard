@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrue, cleanExceptionMsg } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512Settable } from '../../ui512/elements/ui512elementsgettable.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
 
 export abstract class UI512Element extends UI512Settable {
     readonly typeName: string = 'UI512Element';

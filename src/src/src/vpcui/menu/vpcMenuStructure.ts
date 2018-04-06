@@ -1,9 +1,9 @@
 
 /* auto */ import { O, cProductName } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { isString } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcpaintrender.js';
+/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
 
 export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
     constructor() {

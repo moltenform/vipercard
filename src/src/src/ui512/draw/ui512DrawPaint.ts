@@ -1,10 +1,10 @@
 
-/* auto */ import { isRelease } from '../../config.js';
 /* auto */ import { assertTrue, assertTrueWarn, makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Patterns, clrBlack, clrTransp, clrWhite } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
+/* auto */ import { clrThreshold } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512Patterns, clrBlack, clrTransp, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
 
 export class UI512PainterCvData extends UI512Painter {
     constructor(public arr: Uint8ClampedArray, public widthParam: number, public heightParam: number) {
@@ -46,29 +46,28 @@ export class UI512PainterCvData extends UI512Painter {
     }
 
     readPixel(x: number, y: number) {
-        // browsers can change the colors written, see https://en.wikipedia.org/wiki/Canvas_fingerprinting
-        // fortunately I'm just drawing black and white
         const i = (y * this.widthParam + x) * 4;
-        const minThreshold = isRelease ? 20 : 5;
-        const largeThreshold = isRelease ? 230 : 250;
+        clrThreshold
+        const clrLarge = 256 - clrThreshold;
+        //dfgdfg
         if (
-            this.arr[i] < minThreshold &&
-            this.arr[i + 1] < minThreshold &&
-            this.arr[i + 2] < minThreshold &&
-            this.arr[i + 3] < minThreshold
+            this.arr[i] < clrThreshold &&
+            this.arr[i + 1] < clrThreshold &&
+            this.arr[i + 2] < clrThreshold &&
+            this.arr[i + 3] < clrThreshold
         ) {
             return clrTransp;
         } else if (
-            this.arr[i] > largeThreshold &&
-            this.arr[i + 1] > largeThreshold &&
-            this.arr[i + 2] > largeThreshold
+            this.arr[i] > clrLarge &&
+            this.arr[i + 1] > clrLarge &&
+            this.arr[i + 2] > clrLarge
         ) {
             return clrWhite;
         } else if (
-            this.arr[i] < minThreshold &&
-            this.arr[i + 1] < minThreshold &&
-            this.arr[i + 2] < minThreshold &&
-            this.arr[i + 3] > largeThreshold
+            this.arr[i] < clrThreshold &&
+            this.arr[i + 1] < clrThreshold &&
+            this.arr[i + 2] < clrThreshold &&
+            this.arr[i + 3] > clrLarge
         ) {
             return clrBlack;
         } else {

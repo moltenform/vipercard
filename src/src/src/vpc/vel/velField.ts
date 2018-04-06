@@ -1,14 +1,14 @@
 
 /* auto */ import { makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { TextFontSpec, specialCharNumNewline } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { RequestedChunkType, VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcVal, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcsubsstring.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcchunk.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velbase.js';
+/* auto */ import { TextFontSpec, specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { RequestedChunkType, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcVal, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
+/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
 export class VpcElField extends VpcElSizable {
     isVpcElField = true;

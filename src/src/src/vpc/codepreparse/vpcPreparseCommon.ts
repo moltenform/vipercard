@@ -1,10 +1,10 @@
 
 /* auto */ import { O, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CodeLimits, CountNumericId } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcrules.js';
+/* auto */ import { CodeLimits, CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
 
 export class MakeLowerCase {
     go(tk: ChvIToken) {

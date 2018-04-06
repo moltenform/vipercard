@@ -1,17 +1,17 @@
 
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEqWarn, isString } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { ElementObserver, ElementObserverVal } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
-/* auto */ import { VelResolveName } from '../../vpc/vel/velresolvename.js';
-/* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { UndoableActionCreateOrDelVelement } from '../../vpcui/state/vpcrawcreate.js';
-/* auto */ import { VpcSerialization } from '../../vpcui/state/vpcstateserialize.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { ElementObserver, ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VelResolveName } from '../../vpc/vel/velResolveName.js';
+/* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { UndoableActionCreateOrDelVelement } from '../../vpcui/state/vpcRawCreate.js';
+/* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
 
 export interface UndoableAction {
     do(appli: IVpcStateInterface): void;

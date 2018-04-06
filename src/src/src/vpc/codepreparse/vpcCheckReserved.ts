@@ -1,11 +1,11 @@
 
 /* auto */ import { checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { findStrToEnum, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcBuiltinMsg } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VariableCollectionConstants } from '../../vpc/vpcutils/vpcvarcollection.js';
-/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velproductopts.js';
-/* auto */ import { alsoReservedWordsList, partialReservedWordsList } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcscriptfunctions.js';
+/* auto */ import { VpcBuiltinMsg } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
+/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
+/* auto */ import { alsoReservedWordsList, partialReservedWordsList } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcScriptFunctions.js';
 
 export enum CodeSymbols {
     requestHandlerCall = '$requesthandlercall',

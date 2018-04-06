@@ -1,6 +1,6 @@
 
-/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512ElementWithText } from '../../ui512/elements/ui512elementsbase.js';
+/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512ElementWithText } from '../../ui512/elements/ui512ElementsBase.js';
 
 export class UI512ElLabel extends UI512ElementWithText {
     readonly typeName: string = 'UI512ElLabel';

@@ -1,8 +1,8 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { TemporaryIgnoreEventsInterface } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512MenuItem } from '../../ui512/elements/ui512elementsmenu.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512presenterwithmenu.js';
+/* auto */ import { TemporaryIgnoreEventsInterface } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512MenuItem } from '../../ui512/elements/ui512ElementsMenu.js';
+/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 
 export abstract class TemporaryIgnoreEvents implements TemporaryIgnoreEventsInterface {
     savedListeners: { [t: number]: Function[] } = {};

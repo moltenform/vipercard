@@ -2,24 +2,24 @@
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, Util512, assertEq, cast, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { ScreenConsts, getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
-/* auto */ import { UI512PainterCvCanvas, UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512drawpaint.js';
-/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes, UI512ImageSerialization } from '../../ui512/draw/ui512imageserialize.js';
-/* auto */ import { IconInfo } from '../../ui512/draw/ui512drawiconclasses.js';
-/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512drawicon.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512elementscanvaspiece.js';
-/* auto */ import { IdleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512textevents.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
+/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { UI512PainterCvCanvas, UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPaint.js';
+/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes, UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { IconInfo } from '../../ui512/draw/ui512DrawIconClasses.js';
+/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { IdleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 
 class UI512TestPaintController extends UI512Controller {
     testFillRect: CanvasWrapper;
@@ -192,11 +192,11 @@ export class TestDrawUI512Paint extends UI512TestBase {
     uicontext = false;
     tests = [
         'callback/Test Shape',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.testDrawShape(), callback);
         },
         'callback/Test Flood Fill',
-        (callback: Function) => {
+        (callback: NullaryFn) => {
             testUtilCompareCanvasWithExpected(false, () => this.testDrawFloodFill(), callback);
         },
     ];

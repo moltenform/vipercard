@@ -1,13 +1,13 @@
 
 /* auto */ import { respondUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ChangeContext, MenuOpenState } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512elementsmenu.js';
-/* auto */ import { MenuItemClickedDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512presenterwithmenu.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512menurender.js';
-/* auto */ import { IgnoreDuringAnimation } from '../../ui512/menu/ui512menuanimation.js';
+/* auto */ import { ChangeContext, MenuOpenState } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementsMenu.js';
+/* auto */ import { MenuItemClickedDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
+/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
+/* auto */ import { IgnoreDuringAnimation } from '../../ui512/menu/ui512MenuAnimation.js';
 
 export class MenuBehavior {
     static setwhichIsExpanded(

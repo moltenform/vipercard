@@ -1,11 +1,11 @@
 
 /* auto */ import { assertTrue, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcrules.js';
-/* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcvisitor.js';
-/* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpccodeline.js';
-/* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgejslru.js';
+/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
+/* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor.js';
+/* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpcCodeLine.js';
+/* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgeJSLru.js';
 
 export class VpcParsingCache {
     cache = new ExpLRUMap<string, any>(CodeLimits.cacheThisManyParsedLines);

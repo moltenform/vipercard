@@ -1,8 +1,8 @@
 
 /* auto */ import { assertTrue, checkThrowUI512, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 
 export type ElementObserverVal = string | boolean | number | FormattedText;
 

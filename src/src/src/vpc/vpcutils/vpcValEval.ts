@@ -1,8 +1,8 @@
 
 /* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { checkThrowEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcOpCtg } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
+/* auto */ import { VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 
 export class VpcEvalHelpers {
     tmp1: [boolean, any] = [false, undefined];

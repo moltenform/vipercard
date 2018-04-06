@@ -1,12 +1,12 @@
 
 /* auto */ import { O, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ElementObserverDefault } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velstack.js';
-/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velproductopts.js';
+/* auto */ import { ElementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
 
 export class VpcModel {
     // set by _VpcDocLoader_ which calls ensureDocumentNotEmpty()

@@ -1,12 +1,12 @@
 
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { BuildFakeTokens, isTkType, tks, typeGreaterLessThanEqual } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { MapBuiltinCmds } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpccheckreserved.js';
-/* auto */ import { ExpandCustomFunctions } from '../../vpc/codepreparse/vpcexpandfncalls.js';
+/* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { BuildFakeTokens, isTkType, tks, typeGreaterLessThanEqual } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { MapBuiltinCmds } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
+/* auto */ import { ExpandCustomFunctions } from '../../vpc/codepreparse/vpcExpandFnCalls.js';
 
 export class SyntaxRewriter {
     protected readonly buildFake = new BuildFakeTokens();

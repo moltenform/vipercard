@@ -1,7 +1,7 @@
 
-/* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512presenter.js';
-/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512modaldialog.js';
+/* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
 
 export class VpcAboutDialog {
     static show(c: UI512Controller, dlg: UI512CompStdDialog) {
@@ -72,7 +72,7 @@ export class VpcAboutDialog {
                     VpcAboutDialog.show(c, dlg);
                 }
             },
-            
+
             c.lang.translate('lngBack'),
             c.lang.translate('lngJS Libs Used'),
             c.lang.translate('lngFull terms')

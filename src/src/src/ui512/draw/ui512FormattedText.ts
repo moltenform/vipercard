@@ -2,8 +2,8 @@
 /* auto */ import { O, assertTrue, assertTrueWarn, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { BrowserOSInfo, Util512, assertEq, assertEqWarn } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { CharsetTranslation, specialCharFontChange, specialCharNumNewline } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { TextRendererFontCache } from '../../ui512/draw/ui512drawtextloadjson.js';
+/* auto */ import { CharsetTranslation, specialCharFontChange, specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { TextRendererFontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
 
 const space = ' '.charCodeAt(0);
 const dash = '-'.charCodeAt(0);

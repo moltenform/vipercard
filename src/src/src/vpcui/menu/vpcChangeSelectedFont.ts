@@ -1,12 +1,12 @@
 
 /* auto */ import { O, assertTrueWarn, checkThrow, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { PropAdjective, RequestedChunkType, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcchunk.js';
-/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcoutsideclasses.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
+/* auto */ import { PropAdjective, RequestedChunkType, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export class VpcChangeSelectedFont {
     cbGetEditToolSelectedFldOrBtn: () => O<VpcElBase>;

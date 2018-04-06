@@ -2,15 +2,16 @@
 /* auto */ import { O, respondUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, RepeatingTimer, Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512elementsview.js';
-/* auto */ import { EventDetails, FocusChangedEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512presenterwithmenu.js';
-/* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512menuanimation.js';
+/* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementsView.js';
+/* auto */ import { EventDetails, FocusChangedEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
+/* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
 
 export abstract class UI512ControllerBase implements UI512PresenterWithMenuInterface {
     app: UI512Application;
@@ -24,7 +25,7 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
     trackKeyOption = false;
     trackKeyShift = false;
     listeners: { [t: number]: Function[] } = {};
-    callbackQueueFromAsyncs: (O<() => void>)[] = [];
+    callbackQueueFromAsyncs: (O<NullaryFn>)[] = [];
     continueEventAfterError = true;
     needRedraw = true;
     view = new UI512ViewDraw();

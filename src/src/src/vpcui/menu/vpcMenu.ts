@@ -1,8 +1,8 @@
 
-/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512menurender.js';
-/* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcAppMenuStructure } from '../../vpcui/menu/vpcmenustructure.js';
+/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
+/* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcAppMenuStructure } from '../../vpcui/menu/vpcMenuStructure.js';
 
 export class VpcAppMenus extends VpcAppMenuStructure {
     init() {

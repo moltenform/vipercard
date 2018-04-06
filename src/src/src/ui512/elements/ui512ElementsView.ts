@@ -3,18 +3,18 @@
 /* auto */ import { RenderComplete, Util512, cast, getRoot, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { MenuConsts, ScreenConsts, ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { RenderTextArgs, renderTextArgsFromEl } from '../../ui512/draw/ui512drawtextparams.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { IconInfo, RenderIconSet } from '../../ui512/draw/ui512drawiconclasses.js';
-/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512drawicon.js';
-/* auto */ import { UI512ViewDrawBorders } from '../../ui512/draw/ui512drawborders.js';
-/* auto */ import { UI512Element, UI512ElementWithHighlight } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512elementslabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElementButtonGeneral } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512elementscanvaspiece.js';
-/* auto */ import { UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512elementsmenu.js';
+/* auto */ import { RenderTextArgs, renderTextArgsFromEl } from '../../ui512/draw/ui512DrawTextParams.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { IconInfo, RenderIconSet } from '../../ui512/draw/ui512DrawIconClasses.js';
+/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { UI512ViewDrawBorders } from '../../ui512/draw/ui512DrawBorders.js';
+/* auto */ import { UI512Element, UI512ElementWithHighlight } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
+/* auto */ import { UI512BtnStyle, UI512ElementButtonGeneral } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementsMenu.js';
 
 export class UI512ViewDraw {
     allowMultipleFocus = false;

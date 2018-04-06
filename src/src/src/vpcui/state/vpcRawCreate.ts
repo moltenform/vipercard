@@ -1,16 +1,16 @@
 
 /* auto */ import { assertTrueWarn, checkThrow, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEqWarn } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velbutton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velstack.js';
-/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velproductopts.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export abstract class UndoableActionCreateOrDelVelement {
     isUndoableActionCreateOrDelVel = true;

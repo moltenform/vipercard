@@ -1,12 +1,12 @@
 
 /* auto */ import { checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velfield.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/vpcoutsideinterfaces.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
 
 export function vpcElTypeAsSeenInName(tp: VpcElType) {
     switch (tp) {

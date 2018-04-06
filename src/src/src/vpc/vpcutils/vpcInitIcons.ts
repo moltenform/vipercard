@@ -1,6 +1,6 @@
 
 /* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { IconSetInfo, RenderIconSet } from '../../ui512/draw/ui512drawiconclasses.js';
+/* auto */ import { IconSetInfo, RenderIconSet } from '../../ui512/draw/ui512DrawIconClasses.js';
 
 export class VpcInitIcons {
     static go() {

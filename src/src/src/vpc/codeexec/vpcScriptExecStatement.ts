@@ -3,21 +3,22 @@
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, RequestedChunkTextPreposition, RequestedChunkType, SortStyle, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcchunk.js';
-/* auto */ import { VpcAudio } from '../../vpc/vpcutils/vpcaudio.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcoutsideclasses.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velstack.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcoutsideinterfaces.js';
-/* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { fromNickname } from '../../vpc/codeparse/vpcvisitor.js';
-/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpccodeline.js';
-/* auto */ import { ScriptAsyncOperations, VpcScriptExecAsync } from '../../vpc/codeexec/vpcscriptexecasync.js';
+/* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, RequestedChunkTextPreposition, RequestedChunkType, SortStyle, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { VpcAudio } from '../../vpc/vpcutils/vpcAudio.js';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { fromNickname } from '../../vpc/codeparse/vpcVisitor.js';
+/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpcCodeLine.js';
+/* auto */ import { ScriptAsyncOperations, VpcScriptExecAsync } from '../../vpc/codeexec/vpcScriptExecAsync.js';
 
 export class ExecuteStatements {
     outside: OutsideWorldReadWrite;
@@ -25,7 +26,7 @@ export class ExecuteStatements {
         (prompt: string, fnOnResult: (n: number) => void, choice1: string, choice2: string, choice3: string) => void
     >;
     cbAskMsg: O<(prompt: string, deftxt: string, fnOnResult: (ret: O<string>, n: number) => void) => void>;
-    cbStopCodeRunning: O<() => void>;
+    cbStopCodeRunning: O<NullaryFn>;
     asyncOps: ScriptAsyncOperations;
     go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<number>) {
         checkThrowEq(VpcLineCategory.statement, line.ctg, '7h|not a statement');

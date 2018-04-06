@@ -2,11 +2,11 @@
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { IFontManager } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CharRectType, DrawCharResult, TextRendererFont, largearea, specialCharFontChange, specialCharNumNewline, specialCharNumZeroPixelChar, typefacenameToTypefaceIdFull } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { TextRendererFontCache } from '../../ui512/draw/ui512drawtextloadjson.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512drawtextparams.js';
-/* auto */ import { TextRendererFontDrawChar } from '../../ui512/draw/ui512drawtextchar.js';
+/* auto */ import { CharRectType, DrawCharResult, TextRendererFont, largearea, specialCharFontChange, specialCharNumNewline, specialCharNumZeroPixelChar, typefacenameToTypefaceIdFull } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { TextRendererFontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512DrawTextParams.js';
+/* auto */ import { TextRendererFontDrawChar } from '../../ui512/draw/ui512DrawTextChar.js';
 
 const space = ' '.charCodeAt(0);
 const dash = '-'.charCodeAt(0);

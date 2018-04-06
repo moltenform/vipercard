@@ -1,11 +1,11 @@
 
 /* auto */ import { assertTrue, makeVpcInternalErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { CountNumericIdNormal } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { CountNumericIdNormal } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 
 export class VpcElStack extends VpcElBase {
     isVpcElStack = true;

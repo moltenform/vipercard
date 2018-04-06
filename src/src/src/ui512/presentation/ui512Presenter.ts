@@ -1,15 +1,15 @@
 
 /* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Lang, UI512LangNull } from '../../ui512/lang/langbase.js';
-/* auto */ import { ChangeContext, MouseDragStatus } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512elementstextfield.js';
-/* auto */ import { UI512MenuRoot } from '../../ui512/elements/ui512elementsmenu.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512menurender.js';
-/* auto */ import { ClipManager } from '../../ui512/textedit/ui512clipboard.js';
-/* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512scrollbar.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512presenterbase.js';
+/* auto */ import { UI512Lang, UI512LangNull } from '../../ui512/lang/langBase.js';
+/* auto */ import { ChangeContext, MouseDragStatus } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512MenuRoot } from '../../ui512/elements/ui512ElementsMenu.js';
+/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
+/* auto */ import { ClipManager } from '../../ui512/textedit/ui512Clipboard.js';
+/* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
+/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
 
 export abstract class UI512Controller extends UI512ControllerBase {
     readonly timerblinkperiod = 500;

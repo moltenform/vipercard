@@ -1,7 +1,7 @@
 
 /* auto */ import { checkThrow, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObjectCanSet, Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcval.js';
+/* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 
 export class VarCollection extends MapKeyToObjectCanSet<VpcVal> {
     protected length = 0;

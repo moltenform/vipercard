@@ -2,10 +2,10 @@
 /* auto */ import { O, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { OrderedHash } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512interfaces.js';
-/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512ApplicationInterface, UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
+/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ApplicationInterface, UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 
 export class UI512Application implements UI512ApplicationInterface {
     protected groups = new OrderedHash<UI512ElGroup>();

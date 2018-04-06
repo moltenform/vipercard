@@ -1,17 +1,17 @@
 
 /* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcInternalErr, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, checkThrowEq, getStrToEnum, isString, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkType, VpcElType, VpcOpCtg } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcval.js';
-/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcvaleval.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcchunk.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcoutsideclasses.js';
-/* auto */ import { OutsideWorldRead } from '../../vpc/vel/vpcoutsideinterfaces.js';
-/* auto */ import { ReadableContainerStr } from '../../vpc/vel/velresolvereference.js';
-/* auto */ import { ChvIToken, ChvLexer } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { listTokens } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcrules.js';
-/* auto */ import { VisitingContext, VisitingVisitor } from '../../vpc/codeparse/vpcvisitormethods.js';
+/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkType, VpcElType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
+/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { OutsideWorldRead } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { ReadableContainerStr } from '../../vpc/vel/velResolveReference.js';
+/* auto */ import { ChvIToken, ChvLexer } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { listTokens } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
+/* auto */ import { VisitingContext, VisitingVisitor } from '../../vpc/codeparse/vpcVisitorMethods.js';
 
 class CachedObjects {
     lexer: O<ChvLexer> = undefined;

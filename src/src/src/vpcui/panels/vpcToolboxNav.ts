@@ -1,10 +1,10 @@
 
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512drawtext.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512toolbox.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpctoolboxpatterns.js';
+/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
 
 export class NavToolbox extends UI512CompToolbox {
     compositeType = 'toolbox_nav';

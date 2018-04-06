@@ -1,21 +1,21 @@
 
 /* auto */ import { makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { BrowserOSInfo, getRoot } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512modaldialog.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcenums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velbase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velcard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velbg.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { IVpcSaveUtils, VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcnonmodalcommon.js';
-/* auto */ import { DialogDocsType, VpcAppNonModalDialogDocs } from '../../vpcui/nonmodaldialogs/vpcdocviewer.js';
-/* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcsenderrreport.js';
-/* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcreplmessagebox.js';
-/* auto */ import { VpcFormNonModalDialogLogIn } from '../../vpcui/nonmodaldialogs/vpcformlogin.js';
-/* auto */ import { VpcAboutDialog } from '../../vpcui/menu/vpcaboutdialog.js';
-/* auto */ import { VpcChangeSelectedFont } from '../../vpcui/menu/vpcchangeselectedfont.js';
+/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { IVpcSaveUtils, VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { DialogDocsType, VpcAppNonModalDialogDocs } from '../../vpcui/nonmodaldialogs/vpcDocViewer.js';
+/* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcSendErrReport.js';
+/* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
+/* auto */ import { VpcFormNonModalDialogLogIn } from '../../vpcui/nonmodaldialogs/vpcFormLogin.js';
+/* auto */ import { VpcAboutDialog } from '../../vpcui/menu/vpcAboutDialog.js';
+/* auto */ import { VpcChangeSelectedFont } from '../../vpcui/menu/vpcChangeSelectedFont.js';
 
 export class VpcMenuActions {
     fontChanger: VpcChangeSelectedFont;

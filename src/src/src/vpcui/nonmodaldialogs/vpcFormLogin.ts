@@ -1,19 +1,19 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { getRoot } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512BeginAsync, UI512BeginAsyncIsBusy } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512elementsbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { VpcSession, vpcUsersCheckLogin, vpcUsersEnterEmailVerifyCode } from '../../vpc/request/vpcrequest.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcappli.js';
-/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcnonmodalcommon.js';
-/* auto */ import { VpcFormNonModalDialogLogInInterface, VpcFormNonModalDialogNewUser } from '../../vpcui/nonmodaldialogs/vpcformnewuser.js';
+/* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { VpcSession, vpcUsersCheckLogin, vpcUsersEnterEmailVerifyCode } from '../../vpc/request/vpcRequest.js';
+/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { VpcFormNonModalDialogLogInInterface, VpcFormNonModalDialogNewUser } from '../../vpcui/nonmodaldialogs/vpcFormNewUser.js';
 
 export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
     implements VpcFormNonModalDialogLogInInterface {
-    fnCbWhenSignedIn: () => void = () => {};
+    fnCbWhenSignedIn: NullaryFn = () => {};
     showHeader = true;
     captionText = 'lngLog In';
     hasCloseBtn = true;
@@ -46,15 +46,11 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
             this.appli.setNonModalDialog(undefined);
             this.children = [];
         } else if (short === 'btnnewaccount') {
-            if (UI512BeginAsyncIsBusy()) {
-                this.setStatus(appli.lang(), 'lngOperation still in progress...');
-            } else {
-                this.appli.setNonModalDialog(undefined);
-                this.children = [];
-                let newuserform = new VpcFormNonModalDialogNewUser(this.appli, VpcFormNonModalDialogLogIn);
-                newuserform.fnCbWhenSignedIn = this.fnCbWhenSignedIn;
-                this.appli.setNonModalDialog(newuserform);
-            }
+            this.appli.setNonModalDialog(undefined);
+            this.children = [];
+            let newuserform = new VpcFormNonModalDialogNewUser(this.appli, VpcFormNonModalDialogLogIn);
+            newuserform.fnCbWhenSignedIn = this.fnCbWhenSignedIn;
+            this.appli.setNonModalDialog(newuserform);
         }
     }
 

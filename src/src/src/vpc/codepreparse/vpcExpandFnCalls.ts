@@ -1,11 +1,11 @@
 
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { ValHolder, assertEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CodeLimits, CountNumericId } from '../../vpc/vpcutils/vpcutils.js';
-/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgechv.js';
-/* auto */ import { BuildFakeTokens, isTkType, tks } from '../../vpc/codeparse/vpctokens.js';
-/* auto */ import { LoopLimit, MapBuiltinCmds } from '../../vpc/codepreparse/vpcpreparsecommon.js';
-/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpccheckreserved.js';
+/* auto */ import { CodeLimits, CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
+/* auto */ import { BuildFakeTokens, isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { LoopLimit, MapBuiltinCmds } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 
 export class ExpandCustomFunctions {
     protected readonly buildFake = new BuildFakeTokens();

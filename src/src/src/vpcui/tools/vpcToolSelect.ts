@@ -1,9 +1,9 @@
 
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512drawpattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512drawpaintclasses.js';
-/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes } from '../../ui512/draw/ui512imageserialize.js';
-/* auto */ import { SelectToolState, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpctoolselectbase.js';
+/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { SelectToolState, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
 
 export class VpcAppUIRectSelect extends VpcAppUIGeneralSelect {
     protected selectingDrawTheBorder(

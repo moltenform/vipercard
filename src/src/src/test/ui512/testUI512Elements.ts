@@ -2,17 +2,17 @@
 /* auto */ import { assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { ModifierKeys, getUI512WindowBounds, ui512TranslateModifiers, toShortcutString } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512LangNull } from '../../ui512/lang/langbase.js';
-/* auto */ import { largearea } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
-/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512elementsgettable.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512elementsgroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { GridLayout, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512codeeditor.js';
-/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpceditscripteditor.js';
+/* auto */ import { ModifierKeys, getUI512WindowBounds, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { UI512LangNull } from '../../ui512/lang/langBase.js';
+/* auto */ import { largearea } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { GridLayout, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512CodeEditor.js';
+/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
 
 export class TestUI512Elements extends UI512TestBase {
     tests = [

@@ -1,10 +1,10 @@
 
 /* auto */ import { Util512, cast } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langbase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512elementsapp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512elementsbutton.js';
-/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512events.js';
-/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512composites.js';
+/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 
 export class UI512CompRadioButtonGroup extends UI512CompBase {
     items: [string, string][] = [['circle', 'lngCircle'], ['rectangle', 'lngRectangle']];

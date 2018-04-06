@@ -1,8 +1,8 @@
 
 /* auto */ import { makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { base10, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512drawtextclasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512formattedtext.js';
+/* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 
 export class FormattedSubstringUtil {
     static vpcstyleToInt(list: string[]): TextFontStyling {
