@@ -32,7 +32,7 @@ export class BranchTracking {
 
     findCurrentLoop() {
         for (let i = this.stackBlocks.length - 1; i >= 0; i--) {
-            if (this.stackBlocks[i].cat === VpcLineCategory.repeatForever) {
+            if (this.stackBlocks[i].cat === VpcLineCategory.RepeatForever) {
                 return this.stackBlocks[i];
             }
         }
@@ -41,7 +41,7 @@ export class BranchTracking {
     }
 
     findCurrentHandler(): BranchTrackingBlock {
-        checkThrowEq(VpcLineCategory.handlerStart, this.stackBlocks[0].cat, `7>|could not find current handler`);
+        checkThrowEq(VpcLineCategory.HandlerStart, this.stackBlocks[0].cat, `7>|could not find current handler`);
         return this.stackBlocks[0];
     }
 
@@ -60,63 +60,63 @@ export class BranchTracking {
     }
 
     go(line: VpcCodeLine) {
-        if (this.stackBlocks.length === 0 && line.ctg !== VpcLineCategory.handlerStart) {
+        if (this.stackBlocks.length === 0 && line.ctg !== VpcLineCategory.HandlerStart) {
             throw makeVpcScriptErr(`5q|only 'on mouseup' and 'function myfunction' can exist at this scope`);
-        } else if (this.stackBlocks.length > 0 && line.ctg === VpcLineCategory.handlerStart) {
+        } else if (this.stackBlocks.length > 0 && line.ctg === VpcLineCategory.HandlerStart) {
             throw makeVpcScriptErr(`5p|cannot begin a handler inside an existing handler`);
         }
 
         switch (line.ctg) {
-            case VpcLineCategory.repeatForever: // fall-through
-            case VpcLineCategory.repeatWhile: // fall-through
-            case VpcLineCategory.repeatUntil:
-                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.repeatForever, line));
+            case VpcLineCategory.RepeatForever: // fall-through
+            case VpcLineCategory.RepeatWhile: // fall-through
+            case VpcLineCategory.RepeatUntil:
+                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.RepeatForever, line));
                 break;
-            case VpcLineCategory.repeatNext: // fall-through
-            case VpcLineCategory.repeatExit:
+            case VpcLineCategory.RepeatNext: // fall-through
+            case VpcLineCategory.RepeatExit:
                 let tracking = this.findCurrentLoop();
                 tracking.add(line);
                 break;
-            case VpcLineCategory.repeatEnd:
+            case VpcLineCategory.RepeatEnd:
                 let topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
                 checkThrowEq(
-                    VpcLineCategory.repeatForever,
+                    VpcLineCategory.RepeatForever,
                     topOfStack.cat,
                     `7<|cannot "end repeat" interleaved within some other block.`
                 );
                 topOfStack.add(line);
                 this.finalizeBlock();
                 break;
-            case VpcLineCategory.ifStart:
-                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.ifStart, line));
+            case VpcLineCategory.IfStart:
+                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.IfStart, line));
                 break;
-            case VpcLineCategory.ifElse: // fall-through
-            case VpcLineCategory.ifElsePlain:
+            case VpcLineCategory.IfElse: // fall-through
+            case VpcLineCategory.IfElsePlain:
                 topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
                 checkThrowEq(
-                    VpcLineCategory.ifStart,
+                    VpcLineCategory.IfStart,
                     topOfStack.cat,
                     `7;|cannot have an "else" interleaved within some other block.`
                 );
                 topOfStack.add(line);
                 break;
-            case VpcLineCategory.ifEnd:
+            case VpcLineCategory.IfEnd:
                 topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
                 checkThrowEq(
-                    VpcLineCategory.ifStart,
+                    VpcLineCategory.IfStart,
                     topOfStack.cat,
                     `7:|cannot have an "end if" interleaved within some other block.`
                 );
                 topOfStack.add(line);
                 this.finalizeBlock();
                 break;
-            case VpcLineCategory.handlerStart:
-                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.handlerStart, line));
+            case VpcLineCategory.HandlerStart:
+                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.HandlerStart, line));
                 break;
-            case VpcLineCategory.handlerEnd:
+            case VpcLineCategory.HandlerEnd:
                 topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
                 checkThrowEq(
-                    VpcLineCategory.handlerStart,
+                    VpcLineCategory.HandlerStart,
                     topOfStack.cat,
                     `7/|cannot have an "end myHandler" interleaved within some other block.`
                 );
@@ -128,8 +128,8 @@ export class BranchTracking {
                 this.handlers.add(firstname, new VpcCodeLineReference(topOfStack.relevantLines[0]));
                 this.finalizeBlock();
                 break;
-            case VpcLineCategory.handlerExit: // fall-through
-            case VpcLineCategory.handlerPass:
+            case VpcLineCategory.HandlerExit: // fall-through
+            case VpcLineCategory.HandlerPass:
                 // if we're in "on mouseup", it's illegal to say "exit otherHandler"
                 let currentHandlerStart = this.findCurrentHandler().relevantLines[0];
                 checkThrow(currentHandlerStart.excerptToParse.length > 1, '7.|expected on myHandler, not found');
@@ -143,7 +143,7 @@ export class BranchTracking {
                     gotName
                 );
                 break;
-            case VpcLineCategory.invalid:
+            case VpcLineCategory.Invalid:
                 throw makeVpcInternalErr('5o|should not have this line category');
             default:
                 break;

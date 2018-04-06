@@ -8,7 +8,7 @@
 /* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgeJSLru.js';
 
 export class VpcParsingCache {
-    cache = new ExpLRUMap<string, any>(CodeLimits.cacheThisManyParsedLines);
+    cache = new ExpLRUMap<string, any>(CodeLimits.CacheThisManyParsedLines);
     parser: ChvParserClass;
     visitor: any;
     constructor() {
@@ -45,12 +45,12 @@ export class VpcParsingCache {
             this.parser.errors.length = 0;
             parsed = firstRule.apply(this.parser, []);
         } catch (e) {
-            let err = e.message.toString().substr(0, CodeLimits.limitChevErr);
+            let err = e.message.toString().substr(0, CodeLimits.LimitChevErr);
             throw makeVpcScriptErr('4;|parse error: ' + err);
         }
 
         if (this.parser.errors.length) {
-            let err = this.parser.errors[0].toString().substr(0, CodeLimits.limitChevErr);
+            let err = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErr);
             throw makeVpcScriptErr('4:|parse error: ' + err);
         }
 

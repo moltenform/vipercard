@@ -16,7 +16,7 @@ export class VpcChangeSelectedFont {
     runFontMenuActionsIfApplicable(s: string) {
         if (s.startsWith('mnuItemTool')) {
             let toolNumber = parseInt(s.substr('mnuItemTool'.length), 10);
-            toolNumber = isFinite(toolNumber) ? toolNumber : VpcTool.browse;
+            toolNumber = isFinite(toolNumber) ? toolNumber : VpcTool.Browse;
             this.appli.setTool(toolNumber);
             return true;
         } else if (s.startsWith('mnuItemSetFontFace')) {

@@ -37,13 +37,13 @@ export class UI512DemoBasic extends UI512Controller {
 
         this.listenEvent(UI512EventType.MouseEnter, (_: object, d: MouseEnterDetails) => {
             if (d.el && d.el.id === 'btn1') {
-                UI512CursorAccess.setCursor(UI512Cursors.hand);
+                UI512CursorAccess.setCursor(UI512Cursors.Hand);
             }
         });
 
         this.listenEvent(UI512EventType.MouseLeave, (_: object, d: MouseLeaveDetails) => {
             if (d.el && d.el.id === 'btn1') {
-                UI512CursorAccess.setCursor(UI512Cursors.arrow);
+                UI512CursorAccess.setCursor(UI512Cursors.Arrow);
             }
         });
 

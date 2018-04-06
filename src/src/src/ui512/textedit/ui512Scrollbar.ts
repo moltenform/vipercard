@@ -108,13 +108,13 @@ export class ScrollbarImpl {
             complete.complete = false;
         }
 
-        let sbx = el.right - ScrollConsts.barwidth;
-        pieces.arrowup.setDimensions(sbx, el.y, ScrollConsts.boxheight, ScrollConsts.boxheight);
+        let sbx = el.right - ScrollConsts.BarWidth;
+        pieces.arrowup.setDimensions(sbx, el.y, ScrollConsts.BoxHeight, ScrollConsts.BoxHeight);
         pieces.arrowdn.setDimensions(
             sbx,
-            el.bottom - ScrollConsts.boxheight,
-            ScrollConsts.boxheight,
-            ScrollConsts.boxheight
+            el.bottom - ScrollConsts.BoxHeight,
+            ScrollConsts.BoxHeight,
+            ScrollConsts.BoxHeight
         );
 
         if (scrollratio === -1 || scrollratio === undefined) {
@@ -122,7 +122,7 @@ export class ScrollbarImpl {
             // show blank rectangle with no thumb
             pieces.scrollthm.setDimensions(0, 0, 0, 0);
             pieces.scrollbgdn.setDimensions(0, 0, 0, 0);
-            pieces.scrollbgup.setDimensions(pieces.arrowup.x, pieces.arrowup.y, ScrollConsts.barwidth, el.h);
+            pieces.scrollbgup.setDimensions(pieces.arrowup.x, pieces.arrowup.y, ScrollConsts.BarWidth, el.h);
 
             pieces.scrollbgup.set('iconsetid', '');
             pieces.scrollbgup.set('iconnumber', 0);
@@ -138,13 +138,13 @@ export class ScrollbarImpl {
         } else {
             // content is long
             // show thumbnail
-            let spaceinbetween = pieces.arrowdn.y - pieces.arrowup.bottom - ScrollConsts.boxheight;
+            let spaceinbetween = pieces.arrowdn.y - pieces.arrowup.bottom - ScrollConsts.BoxHeight;
             let thumbPos = Math.floor(scrollratio * spaceinbetween) + pieces.arrowup.bottom;
-            let midpoint = thumbPos + Math.floor(ScrollConsts.boxheight / 2);
+            let midpoint = thumbPos + Math.floor(ScrollConsts.BoxHeight / 2);
             midpoint = midpoint + midpoint % 2; // should always be an even number
-            pieces.scrollbgup.setDimensions(sbx, el.y, ScrollConsts.barwidth, midpoint - el.y);
-            pieces.scrollbgdn.setDimensions(sbx, midpoint, ScrollConsts.barwidth, el.bottom - midpoint);
-            pieces.scrollthm.setDimensions(sbx + 1, thumbPos, ScrollConsts.boxheight - 2, ScrollConsts.boxheight);
+            pieces.scrollbgup.setDimensions(sbx, el.y, ScrollConsts.BarWidth, midpoint - el.y);
+            pieces.scrollbgdn.setDimensions(sbx, midpoint, ScrollConsts.BarWidth, el.bottom - midpoint);
+            pieces.scrollthm.setDimensions(sbx + 1, thumbPos, ScrollConsts.BoxHeight - 2, ScrollConsts.BoxHeight);
 
             pieces.scrollbgup.set('iconsetid', '001');
             pieces.scrollbgup.set('iconnumber', 144);
@@ -187,7 +187,7 @@ export class ScrollbarImpl {
             }
         }
 
-        return el.w > ScrollConsts.barwidth + 1 && el.h > 3 * ScrollConsts.boxheight + 1;
+        return el.w > ScrollConsts.BarWidth + 1 && el.h > 3 * ScrollConsts.BoxHeight + 1;
     }
 
     protected simulateDrawField(
@@ -339,7 +339,7 @@ export class ScrollbarImpl {
         } else {
             let drawn = this.simulateDrawField(el, true /*measure height*/, true /*beyond visible*/, undefined);
             if (drawn) {
-                let ret = drawn.lowestpixeldrawn + ScrollConsts.padBottomOfField;
+                let ret = drawn.lowestpixeldrawn + ScrollConsts.PadBottomOfField;
                 el.set('contentHeightInPixels', ret);
                 return ret;
             } else {

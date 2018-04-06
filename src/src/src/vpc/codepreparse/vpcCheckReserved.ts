@@ -8,8 +8,8 @@
 /* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcScriptFunctions.js';
 
 export enum CodeSymbols {
-    requestHandlerCall = '$requesthandlercall',
-    requestEval = '$requesteval',
+    RequestHandlerCall = '$requesthandlercall',
+    RequestEval = '$requesteval',
 }
 
 export class CheckReservedWords {

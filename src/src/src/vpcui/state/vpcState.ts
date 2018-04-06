@@ -18,7 +18,7 @@
 // because trivial actions always zap the ability to redo)
 
 export class VpcRuntimeOpts extends UI512Settable {
-    protected _mimicCurrentTool = VpcTool.browse;
+    protected _mimicCurrentTool = VpcTool.Browse;
     protected _screenLocked = false;
     protected _copiedVelId = '';
     protected _lastSavedStateId = '';

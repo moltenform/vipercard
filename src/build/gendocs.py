@@ -503,6 +503,16 @@ formfeed
 linefeed`
 
 =====
+Tips & Shortcuts
+=====
+
+- Double-click the eraser tool to clear paint on the current card.
+
+- Use the message box (from the Go menu, choose Message Box) to quickly try running code.
+
+- Hit tab key in code editor to run autoindent.
+
+=====
 Credits
 =====
 

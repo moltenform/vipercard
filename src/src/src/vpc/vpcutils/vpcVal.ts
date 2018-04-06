@@ -22,7 +22,7 @@ export class VpcVal extends VpcIntermedValBase {
         // discourage people outside this file from calling the constructor
         assertTrue(token === restrictConstructorAccess, "66|please don't use the VpcVal constructor directly");
         assertTrue(v !== null && v !== undefined, '65|tried to set string as null or undefined');
-        checkThrow(v.length < CodeLimits.maxStringLength, '8w|exceeded max string length');
+        checkThrow(v.length < CodeLimits.MaxStringLength, '8w|exceeded max string length');
         this.v = v;
     }
 

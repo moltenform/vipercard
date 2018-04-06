@@ -20,11 +20,11 @@ export class VpcAppCoverArea extends VpcAppInterfaceLayer {
         // create a white opaque rectangle to cover up user elements that leave the user area
         this.elems.cover = new UI512ElButton('grpAppHelperElemsCover');
         grpHelperElems.addElement(this.appli.UI512App(), this.elems.cover);
-        this.elems.cover.set('style', UI512BtnStyle.opaque);
+        this.elems.cover.set('style', UI512BtnStyle.Opaque);
         this.elems.cover.set('autohighlight', false);
-        let coverx = this.appli.bounds()[0] + ScreenConsts.xareawidth;
+        let coverx = this.appli.bounds()[0] + ScreenConsts.xAreaWidth;
         let covery = this.appli.bounds()[1];
-        let coverw = 10 + this.appli.bounds()[2] - ScreenConsts.xareawidth;
+        let coverw = 10 + this.appli.bounds()[2] - ScreenConsts.xAreaWidth;
         let coverh = 10 + this.appli.bounds()[3];
         this.elems.cover.setDimensions(coverx, covery, coverw, coverh);
 
@@ -58,7 +58,7 @@ export class VpcAppCoverArea extends VpcAppInterfaceLayer {
 
     updateUI512Els() {
         let currentTool = this.appli.getOption_n('currentTool');
-        let showNyi = getToolCategory(currentTool) === VpcToolCtg.ctgNyi;
+        let showNyi = getToolCategory(currentTool) === VpcToolCtg.CtgNyi;
         this.elems.nyiMsg.set('visible', showNyi);
     }
 

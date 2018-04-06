@@ -189,7 +189,7 @@ export class VpcMenuActions {
         let first = this.appli.createElem(currentCardId, VpcElType.Btn, 0, undefined);
         first.set('showlabel', false);
         first.set('autohilite', false);
-        first.set('style', UI512BtnStyle.transparent);
+        first.set('style', UI512BtnStyle.Transparent);
         first.set('name', 'spacegame_sprites_n' + 0);
         first.set('script', '');
         let firstidgot = first.id;
@@ -197,7 +197,7 @@ export class VpcMenuActions {
             let v = this.appli.createElem(currentCardId, VpcElType.Btn, 0, undefined);
             v.set('showlabel', false);
             v.set('autohilite', false);
-            v.set('style', UI512BtnStyle.transparent);
+            v.set('style', UI512BtnStyle.Transparent);
             v.set('name', 'spacegame_sprites_n' + 0);
             v.set('script', '');
         }
@@ -291,14 +291,14 @@ export class VpcMenuActions {
 
     go_mnuCardInfo() {
         let currentCardId = this.appli.getOption_s('currentCardId');
-        this.appli.setTool(VpcTool.button);
+        this.appli.setTool(VpcTool.Button);
         this.appli.setOption('selectedVelId', currentCardId);
         this.appli.setOption('viewingScriptVelId', '');
     }
 
     go_mnuStackInfo() {
         let currentstackid = this.appli.getModel().stack.id;
-        this.appli.setTool(VpcTool.button);
+        this.appli.setTool(VpcTool.Button);
         this.appli.setOption('selectedVelId', currentstackid);
         this.appli.setOption('viewingScriptVelId', '');
     }

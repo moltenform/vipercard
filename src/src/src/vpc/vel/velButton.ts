@@ -7,6 +7,27 @@
 /* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
+export enum VpcBtnStyle {
+    __isUI512Enum = 1,    
+    transparent = UI512BtnStyle.Transparent, 
+    rectangle = UI512BtnStyle.Rectangle,
+    opaque = UI512BtnStyle.Opaque,
+    roundrect = UI512BtnStyle.RoundRect,
+    plain = UI512BtnStyle.Plain,
+    shadow = UI512BtnStyle.Shadow,
+    osstandard = UI512BtnStyle.OSStandard,
+    osdefault = UI512BtnStyle.OSDefault,
+    osboxmodal = UI512BtnStyle.OSBoxModal,
+    checkbox = UI512BtnStyle.Checkbox,
+    radio = UI512BtnStyle.Radio,
+    alternateforms_standard = UI512BtnStyle.OSStandard,
+    alternateforms_default = UI512BtnStyle.OSDefault,
+    alternateforms_rect = UI512BtnStyle.Rectangle,
+}
+
 export class VpcElButton extends VpcElSizable {
     isVpcElButton = true;
     protected _autohilite = true;
@@ -15,7 +36,7 @@ export class VpcElButton extends VpcElSizable {
     protected _checkmark = false;
     protected _icon = 0;
     protected _showlabel = true;
-    protected _style: number = UI512BtnStyle.rectangle;
+    protected _style: number = VpcBtnStyle.rectangle;
     protected _label = '';
     protected _textalign = 'center';
     protected _textfont = 'chicago';
@@ -71,22 +92,22 @@ export class VpcElButton extends VpcElSizable {
     }
 
     static btnGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
-        getters['textalign'] = [PrpTyp.str, 'textalign'];
-        getters['script'] = [PrpTyp.str, 'script'];
-        getters['textstyle'] = [PrpTyp.str, (me: VpcElButton) => FormattedSubstringUtil.vpcstyleFromInt(me._textstyle)];
+        getters['textalign'] = [PrpTyp.Str, 'textalign'];
+        getters['script'] = [PrpTyp.Str, 'script'];
+        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => FormattedSubstringUtil.vpcstyleFromInt(me._textstyle)];
         getters['style'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElButton) => {
-                let ret = getEnumToStrOrUnknown<UI512BtnStyle>(UI512BtnStyle, me._style);
+                let ret = getEnumToStrOrUnknown<VpcBtnStyle>(VpcBtnStyle, me._style);
                 return ret.replace(/osstandard/, 'standard').replace(/osdefault/, 'default');
             },
         ];
     }
 
     static btnSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
-        setters['name'] = [PrpTyp.str, 'name'];
+        setters['name'] = [PrpTyp.Str, 'name'];
         setters['textstyle'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElButton, s: string) => {
                 let list = s.split(',').map(item => item.trim());
                 me.set('textstyle', FormattedSubstringUtil.vpcstyleToInt(list));
@@ -94,16 +115,16 @@ export class VpcElButton extends VpcElSizable {
         ];
 
         setters['style'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElButton, s: string) => {
-                let styl = getStrToEnum<UI512BtnStyle>(UI512BtnStyle, 'Button style', s);
-                checkThrow(styl !== UI512BtnStyle.osboxmodal, '7D|this style is only supported internally');
+                let styl = getStrToEnum<VpcBtnStyle>(VpcBtnStyle, 'Button style', s);
+                checkThrow(styl !== VpcBtnStyle.osboxmodal, '7D|this style is only supported internally');
                 me.set('style', styl);
             },
         ];
 
         setters['textalign'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElButton, s: string) => {
                 s = s.toLowerCase().trim();
                 if (s === 'left') {
@@ -119,16 +140,16 @@ export class VpcElButton extends VpcElSizable {
 
     static simpleBtnGetSet(): [string, PrpTyp][] {
         return [
-            ['autohilite', PrpTyp.bool],
-            ['enabled', PrpTyp.bool],
-            ['hilite', PrpTyp.bool],
-            ['checkmark', PrpTyp.bool],
-            ['icon', PrpTyp.num],
-            ['label', PrpTyp.str],
-            ['showlabel', PrpTyp.bool],
-            ['visible', PrpTyp.bool],
-            ['textfont', PrpTyp.str],
-            ['textsize', PrpTyp.num],
+            ['autohilite', PrpTyp.Bool],
+            ['enabled', PrpTyp.Bool],
+            ['hilite', PrpTyp.Bool],
+            ['checkmark', PrpTyp.Bool],
+            ['icon', PrpTyp.Num],
+            ['label', PrpTyp.Str],
+            ['showlabel', PrpTyp.Bool],
+            ['visible', PrpTyp.Bool],
+            ['textfont', PrpTyp.Str],
+            ['textsize', PrpTyp.Num],
         ];
     }
 

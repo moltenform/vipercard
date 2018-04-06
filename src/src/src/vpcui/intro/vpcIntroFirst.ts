@@ -24,7 +24,7 @@ export class IntroFirstPage extends IntroPageBase {
         let cbHands = (a: number, b: number, el: UI512ElButton) => {
             el.set('iconsetid', 'logo');
             el.set('iconnumber', 2);
-            el.set('style', UI512BtnStyle.transparent);
+            el.set('style', UI512BtnStyle.Transparent);
             el.set('autohighlight', false);
             this.children.push(el);
         };
@@ -66,7 +66,7 @@ export class IntroFirstPage extends IntroPageBase {
         const btnx = this.x + Math.trunc((this.logicalWidth - btnwidth) / 2);
 
         let coverbgforbtns = this.genBtn(app, grp, 'coverbgforbtns');
-        coverbgforbtns.set('style', UI512BtnStyle.opaque);
+        coverbgforbtns.set('style', UI512BtnStyle.Opaque);
         coverbgforbtns.set('autohighlight', false);
         coverbgforbtns.setDimensions(btnx, ycentered, btnwidth, yspacebtns);
 
@@ -87,7 +87,7 @@ export class IntroFirstPage extends IntroPageBase {
                 let id = 'choice_' + btnKeywords[b];
                 let el = this.genBtn(app, grp, id);
                 el.setDimensions(bnds[0], bnds[1] - 4, bnds[2], bnds[3]);
-                el.set('style', btnKeywords[b] === 'showFeatured' ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
+                el.set('style', btnKeywords[b] === 'showFeatured' ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
                 el.set('labeltext', lng(btnLabels[b]));
                 if (btnKeywords[b] === 'showFeatured') {
                     el.setDimensions(el.x, el.y - 6, el.w, el.h + 10);

@@ -125,20 +125,20 @@ export class TestDrawUI512Buttons extends UI512TestBase {
     }
 
     readonly stylesToTest: number[] = [
-        UI512BtnStyle.rectangle,
-        UI512BtnStyle.transparent,
-        UI512BtnStyle.opaque,
-        UI512BtnStyle.plain,
-        UI512BtnStyle.shadow,
-        UI512BtnStyle.osstandard,
-        UI512BtnStyle.osdefault,
-        UI512BtnStyle.radio,
-        UI512BtnStyle.checkbox,
+        UI512BtnStyle.Rectangle,
+        UI512BtnStyle.Transparent,
+        UI512BtnStyle.Opaque,
+        UI512BtnStyle.Plain,
+        UI512BtnStyle.Shadow,
+        UI512BtnStyle.OSStandard,
+        UI512BtnStyle.OSDefault,
+        UI512BtnStyle.Radio,
+        UI512BtnStyle.Checkbox,
     ];
 
     setBtnStyle(button: UI512ElButton, props: BtnPropsToTest, style: UI512BtnStyle): UI512ElButton {
         button.set('style', style);
-        button.set('labelhalign', !(style === UI512BtnStyle.radio || style === UI512BtnStyle.checkbox));
+        button.set('labelhalign', !(style === UI512BtnStyle.Radio || style === UI512BtnStyle.Checkbox));
         button.set('labelvalign', true);
 
         switch (props) {

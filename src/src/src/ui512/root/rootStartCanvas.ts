@@ -137,8 +137,8 @@ function mainOnResize(root: UI512FullRoot, gly: any) {
 
     let availW = window.innerWidth;
     let availH = window.innerHeight;
-    let canFitW = Math.max(1, Math.trunc(availW / ScreenConsts.screenwidth));
-    let canFitH = Math.max(1, Math.trunc(availH / ScreenConsts.screenheight));
+    let canFitW = Math.max(1, Math.trunc(availW / ScreenConsts.ScreenWidth));
+    let canFitH = Math.max(1, Math.trunc(availH / ScreenConsts.ScreenHeight));
     let canFitTotal = Math.min(canFitW, canFitH);
     if (!Util512.isValidNumber(canFitTotal)) {
         assertTrueWarn(false, `3?|invalid canFitW=${canFitW} canFitW=${canFitW}`);
@@ -156,12 +156,12 @@ function mainOnResize(root: UI512FullRoot, gly: any) {
 
     if (canFitTotal !== root.scaleMouseCoords) {
         let domElement = gly.domElement;
-        gly.width = ScreenConsts.screenwidth; // sets both priv['domElement']['width'] and priv['width']
-        gly.height = ScreenConsts.screenheight; // sets both priv['domElement']['height'] and priv['height']
-        domElement.style.width = ScreenConsts.screenwidth * canFitTotal + 'px';
-        domElement.style.height = ScreenConsts.screenheight * canFitTotal + 'px';
+        gly.width = ScreenConsts.ScreenWidth; // sets both priv['domElement']['width'] and priv['width']
+        gly.height = ScreenConsts.ScreenHeight; // sets both priv['domElement']['height'] and priv['height']
+        domElement.style.width = ScreenConsts.ScreenWidth * canFitTotal + 'px';
+        domElement.style.height = ScreenConsts.ScreenHeight * canFitTotal + 'px';
         root.scaleMouseCoords = canFitTotal;
-        root.rawResize(ScreenConsts.screenwidth, ScreenConsts.screenheight);
+        root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
     }
 }
 

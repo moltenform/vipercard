@@ -36,9 +36,9 @@ export class VpcElBg extends VpcElBase {
     static bgInit() {
         if (!VpcElBg.cachedGetters || !VpcElBg.cachedSetters) {
             VpcElBg.cachedGetters = {};
-            VpcElBg.cachedGetters['script'] = [PrpTyp.str, 'script'];
+            VpcElBg.cachedGetters['script'] = [PrpTyp.Str, 'script'];
             VpcElBg.cachedSetters = {};
-            VpcElBg.cachedSetters['name'] = [PrpTyp.str, 'name'];
+            VpcElBg.cachedSetters['name'] = [PrpTyp.Str, 'name'];
             Util512.freezeRecurse(VpcElBg.cachedGetters);
             Util512.freezeRecurse(VpcElBg.cachedSetters);
         }

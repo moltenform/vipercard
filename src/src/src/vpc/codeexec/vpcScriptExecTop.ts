@@ -15,7 +15,7 @@
 export class CodeExecTop {
     constants = new VariableCollectionConstants();
     check = new CheckReservedWords();
-    globals = new VarCollection(CodeLimits.maxGlobalVars, 'global');
+    globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
     runStatements = new ExecuteStatements();
     parsingCache = new VpcParsingCache();
     workQueue: CodeExecFrameStack[] = [];
@@ -141,7 +141,7 @@ export class CodeExecTop {
             // we just finished a handler
             this.workQueue.splice(0, 1);
             this.outside.SetOption('screenLocked', false);
-            this.outside.SetOption('mimicCurrentTool', VpcTool.browse);
+            this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
             return;
         }
 
@@ -158,7 +158,7 @@ export class CodeExecTop {
             // we just finished a handler
             this.workQueue.splice(0, 1);
             this.outside.SetOption('screenLocked', false);
-            this.outside.SetOption('mimicCurrentTool', VpcTool.browse);
+            this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
             return;
         }
     }

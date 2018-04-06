@@ -19,7 +19,7 @@ export class UI512CompRadioButtonGroup extends UI512CompBase {
         let cury = this.y;
         for (let item of this.items) {
             let el = this.genBtn(app, grp, item[0]);
-            el.set('style', this.isExclusive ? UI512BtnStyle.radio : UI512BtnStyle.checkbox);
+            el.set('style', this.isExclusive ? UI512BtnStyle.Radio : UI512BtnStyle.Checkbox);
             el.set('labelhalign', false);
             el.set('labelvalign', true);
             el.setDimensions(this.x, cury, this.logicalWidth, this.elemheight);

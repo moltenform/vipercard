@@ -218,7 +218,7 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
             ) - this.appli.userBounds()[1];
         if (this.state && this.state.mode === SelectToolMode.SelectingRegion) {
             // if lasso, close the loop
-            if (tl === VpcTool.lasso) {
+            if (tl === VpcTool.Lasso) {
                 this.respondMouseMove(
                     tl,
                     new MouseMoveEventDetails(0, d.mouseX, d.mouseY, this.state.rawstartX, this.state.rawstartY),
@@ -410,15 +410,15 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
             el &&
             el.id.endsWith('PlaceholderForCursor')
         ) {
-            return UI512Cursors.arrow;
+            return UI512Cursors.Arrow;
         } else {
-            return UI512Cursors.crosshair;
+            return UI512Cursors.Crosshair;
         }
     }
 
     blinkSelection() {
         if (
-            (this.appli.getTool() === VpcTool.select || this.appli.getTool() === VpcTool.lasso) &&
+            (this.appli.getTool() === VpcTool.Select || this.appli.getTool() === VpcTool.Lasso) &&
             this.state &&
             this.state.mode === SelectToolMode.SelectedRegion
         ) {

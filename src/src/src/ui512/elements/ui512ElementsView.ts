@@ -134,9 +134,9 @@ export class UI512ViewDraw {
         let iconinfo = new IconInfo('001', -1);
         iconinfo.iconcentered = true;
 
-        if (el.get_n('style') === UI512BtnStyle.radio && el.get_b('checkmark')) {
+        if (el.get_n('style') === UI512BtnStyle.Radio && el.get_b('checkmark')) {
             iconinfo.iconnumber = el.get_b('highlightactive') ? 34 : 32;
-        } else if (el.get_n('style') === UI512BtnStyle.radio && !el.get_b('checkmark')) {
+        } else if (el.get_n('style') === UI512BtnStyle.Radio && !el.get_b('checkmark')) {
             iconinfo.iconnumber = el.get_b('highlightactive') ? 35 : 33;
         } else if (el.get_b('checkmark')) {
             iconinfo.iconnumber = el.get_b('highlightactive') ? 30 : 28;
@@ -251,37 +251,37 @@ export class UI512ViewDraw {
     /* tslint:disable:no-unbound-method */
     drawUI512ElementButtonGeneralMethod(b: UI512ViewDrawBorders, el: UI512ElementButtonGeneral) {
         switch (el.get_n('style')) {
-            case UI512BtnStyle.transparent:
+            case UI512BtnStyle.Transparent:
                 this.renderButtonTransparent(b, el);
                 break;
-            case UI512BtnStyle.opaque:
+            case UI512BtnStyle.Opaque:
                 this.renderButtonStandard(b, el, b.drawboxnoborder, b.drawboxnoborderclicked, 1);
                 break;
-            case UI512BtnStyle.roundrect:
+            case UI512BtnStyle.RoundRect:
                 this.renderButtonStandard(b, el, b.drawvpcbtn, b.drawvpcbtnclicked, 7);
                 break;
-            case UI512BtnStyle.plain:
+            case UI512BtnStyle.Plain:
                 this.renderButtonStandard(b, el, b.drawvpcroundrect, b.drawvpcroundrectclicked, 7);
                 break;
-            case UI512BtnStyle.shadow:
+            case UI512BtnStyle.Shadow:
                 this.renderButtonStandard(b, el, b.drawosboxshadow, b.drawosboxshadowclicked, 4);
                 break;
-            case UI512BtnStyle.osstandard:
+            case UI512BtnStyle.OSStandard:
                 this.renderButtonStandard(b, el, b.drawosbtn, b.drawosbtnclicked, 5);
                 break;
-            case UI512BtnStyle.osdefault:
+            case UI512BtnStyle.OSDefault:
                 this.renderButtonStandard(b, el, b.drawosdefaultbtn, b.drawosdefaultbtnclicked, 9);
                 break;
-            case UI512BtnStyle.osboxmodal:
+            case UI512BtnStyle.OSBoxModal:
                 this.renderButtonStandard(b, el, b.drawosboxmodal, b.drawosboxmodal, 7);
                 break;
-            case UI512BtnStyle.checkbox:
+            case UI512BtnStyle.Checkbox:
                 this.renderButtonCheckbox(b, el);
                 break;
-            case UI512BtnStyle.radio:
+            case UI512BtnStyle.Radio:
                 this.renderButtonCheckbox(b, el);
                 break;
-            case UI512BtnStyle.rectangle:
+            case UI512BtnStyle.Rectangle:
                 this.renderButtonStandard(b, el, b.drawboxthinborder, b.drawboxthinborderclicked, 1);
                 break;
             default:
@@ -298,13 +298,13 @@ export class UI512ViewDraw {
         let measured = fontmanager.measureString(el.get_s('labeltext'));
         if (measured && subrectAlmostAll) {
             // get the smaller rectangle that will contain the text
-            let shrinkx = Math.floor((el.w - (measured.rightmostpixeldrawn + ScrollConsts.windowCaptionSpacing)) / 2);
+            let shrinkx = Math.floor((el.w - (measured.rightmostpixeldrawn + ScrollConsts.WindowCaptionSpacing)) / 2);
 
             // the white rectangle should cover the horizontal lines but not the outer border
             let subrect = this.getSubRect(b, Math.max(0, shrinkx), 1);
             if (subrect) {
                 b.canvas.fillRect(subrect[0], subrect[1], subrect[2], subrect[3], b.bx, b.by, b.w, b.h, 'white');
-                subrectAlmostAll[1] += ScrollConsts.windowCaptionAdjustTextY;
+                subrectAlmostAll[1] += ScrollConsts.WindowCaptionAdjustTextY;
                 this.drawTextIfDefined(
                     b,
                     subrectAlmostAll,
@@ -367,9 +367,9 @@ export class UI512ViewDraw {
             iconinfo.iconadjustsrcx = shiftleft;
             iconinfo.iconcentered = true;
             let subrect = [
-                b.bx + MenuConsts.shadowsizeleft,
+                b.bx + MenuConsts.ShadowSizeLeft,
                 b.by,
-                el.w - (MenuConsts.shadowsizeleft + MenuConsts.shadowsizeright),
+                el.w - (MenuConsts.ShadowSizeLeft + MenuConsts.ShadowSizeRight),
                 el.h,
             ];
 
@@ -379,7 +379,7 @@ export class UI512ViewDraw {
 
     renderMenuItemText(b: UI512ViewDrawBorders, el: UI512MenuItem) {
         // draw the checkmark, if applicable
-        let boxLeft = [b.bx, b.by, MenuConsts.firstLabelPadding, el.h];
+        let boxLeft = [b.bx, b.by, MenuConsts.FirstLabelPadding, el.h];
         if (el.get_b('checkmark')) {
             let iconinfo = new IconInfo('001', 19);
             iconinfo.iconcentered = true;
@@ -387,14 +387,14 @@ export class UI512ViewDraw {
         }
 
         // draw the label
-        if (el.w > MenuConsts.firstLabelPadding) {
-            let boxMain = [b.bx + MenuConsts.firstLabelPadding, b.by, el.w - MenuConsts.firstLabelPadding, el.h];
+        if (el.w > MenuConsts.FirstLabelPadding) {
+            let boxMain = [b.bx + MenuConsts.FirstLabelPadding, b.by, el.w - MenuConsts.FirstLabelPadding, el.h];
             this.drawTextIfDefined(b, boxMain, el.get_s('labeltext'), false, false, true, el.get_b('enabledstyle'));
         }
 
         // draw the second label (cmd shortcut)
-        if (el.w > MenuConsts.secondLabelDistance) {
-            let boxRight = [b.bx + el.w - MenuConsts.secondLabelDistance, b.by, MenuConsts.secondLabelDistance, el.h];
+        if (el.w > MenuConsts.SecondLabelDistance) {
+            let boxRight = [b.bx + el.w - MenuConsts.SecondLabelDistance, b.by, MenuConsts.SecondLabelDistance, el.h];
             this.drawTextIfDefined(b, boxRight, el.get_s('labelhotkey'), false, false, true, el.get_b('enabledstyle'));
         }
 
@@ -424,13 +424,13 @@ export class UI512ViewDraw {
 
     protected getBorderAndMarginForField(b: UI512ViewDrawBorders, style: number): [O<Function>, number, number] {
         switch (style) {
-            case UI512FldStyle.transparent:
+            case UI512FldStyle.Transparent:
                 return [undefined, 3, 1];
-            case UI512FldStyle.opaque:
+            case UI512FldStyle.Opaque:
                 return [b.drawboxnoborder, 3, 1];
-            case UI512FldStyle.shadow:
+            case UI512FldStyle.Shadow:
                 return [b.drawosboxshadow, 4, 4];
-            case UI512FldStyle.rectangle:
+            case UI512FldStyle.Rectangle:
                 return [b.drawboxthinborder, 3, 1];
             default:
                 assertTrueWarn(false, `4c|unknown field style ${style}`);
@@ -442,7 +442,7 @@ export class UI512ViewDraw {
         let [fnborder, padx, pady] = this.getBorderAndMarginForField(b, el.get_n('style'));
         if (el.get_b('scrollbar')) {
             // make it smaller to make room for the scrollbar
-            b.w = b.w - ScrollConsts.barwidth + 1;
+            b.w = b.w - ScrollConsts.BarWidth + 1;
             b.w = Math.max(1, b.w);
         }
 
@@ -544,14 +544,14 @@ export class UI512ViewDraw {
         // draw the thick borders
         // in debug mode, change the color for each build to easily visualize when changes are applied.
         const color = this.getColorFromBuildStamp();
-        const screen = [0, 0, ScreenConsts.screenwidth, ScreenConsts.screenheight];
+        const screen = [0, 0, ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight];
 
         // left margin
         canvas.fillRect(
             0,
             0,
-            ScreenConsts.xleftmargin,
-            ScreenConsts.screenheight,
+            ScreenConsts.xLeftMargin,
+            ScreenConsts.ScreenHeight,
             screen[0],
             screen[1],
             screen[2],
@@ -561,10 +561,10 @@ export class UI512ViewDraw {
 
         // right margin
         canvas.fillRect(
-            ScreenConsts.screenwidth - ScreenConsts.xrightmargin,
+            ScreenConsts.ScreenWidth - ScreenConsts.xRightMargin,
             0,
-            ScreenConsts.screenheight,
-            ScreenConsts.xrightmargin,
+            ScreenConsts.ScreenHeight,
+            ScreenConsts.xRightMargin,
             screen[0],
             screen[1],
             screen[2],
@@ -576,8 +576,8 @@ export class UI512ViewDraw {
         canvas.fillRect(
             0,
             0,
-            ScreenConsts.screenwidth,
-            ScreenConsts.ytopmargin,
+            ScreenConsts.ScreenWidth,
+            ScreenConsts.yTopMargin,
             screen[0],
             screen[1],
             screen[2],
@@ -588,9 +588,9 @@ export class UI512ViewDraw {
         // bottom margin
         canvas.fillRect(
             0,
-            ScreenConsts.screenheight - ScreenConsts.ylowermargin,
-            ScreenConsts.screenwidth,
-            ScreenConsts.ylowermargin,
+            ScreenConsts.ScreenHeight - ScreenConsts.yLowerMargin,
+            ScreenConsts.ScreenWidth,
+            ScreenConsts.yLowerMargin,
             screen[0],
             screen[1],
             screen[2],
@@ -603,10 +603,10 @@ export class UI512ViewDraw {
             this.renderCurvedCorner(
                 canvas,
                 corner,
-                ScreenConsts.xleftmargin,
-                ScreenConsts.ytopmargin,
+                ScreenConsts.xLeftMargin,
+                ScreenConsts.yTopMargin,
                 0,
-                ScreenConsts.ylowermargin,
+                ScreenConsts.yLowerMargin,
                 screen[2],
                 screen[3],
                 complete

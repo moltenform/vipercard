@@ -10,11 +10,10 @@
 
 export enum UI512FldStyle {
     __isUI512Enum = 1,
-    opaque,
-    transparent,
-    rectangle,
-    shadow,
-    alternateforms_rect = rectangle,
+    Opaque,
+    Transparent,
+    Rectangle,
+    Shadow,
 }
 
 // a scrollbar is not part of the field, it is created separately.
@@ -35,7 +34,7 @@ export class UI512ElTextField extends UI512Element {
     protected _asteriskonly = false;
     protected _scrollbar = false;
     protected _scrollamt = 0;
-    protected _style: number = UI512FldStyle.rectangle;
+    protected _style: number = UI512FldStyle.Rectangle;
     protected _addvspacing = 0;
     protected _defaultFont = '';
     protected _contentHeightInPixels = -1;

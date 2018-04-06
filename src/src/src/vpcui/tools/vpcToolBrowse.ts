@@ -28,9 +28,9 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolResponseBase {
 
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
         if (el && el.typeName === 'UI512ElTextField' && el.get_b('canselecttext')) {
-            return UI512Cursors.arrow;
+            return UI512Cursors.Arrow;
         } else {
-            return UI512Cursors.hand;
+            return UI512Cursors.Hand;
         }
     }
 

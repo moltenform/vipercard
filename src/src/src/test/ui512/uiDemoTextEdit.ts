@@ -173,7 +173,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
         // add bg
         let bg = new UI512ElButton('bg');
         grp.addElement(c.app, bg);
-        bg.set('style', UI512BtnStyle.opaque);
+        bg.set('style', UI512BtnStyle.Opaque);
         bg.setDimensions(bounds[0], bounds[1], bounds[2], bounds[3]);
         bg.set('autohighlight', false);
 
@@ -189,10 +189,10 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
 
         // test different styles
         let styles: number[] = [
-            UI512FldStyle.opaque,
-            UI512FldStyle.transparent,
-            UI512FldStyle.rectangle,
-            UI512FldStyle.shadow,
+            UI512FldStyle.Opaque,
+            UI512FldStyle.Transparent,
+            UI512FldStyle.Rectangle,
+            UI512FldStyle.Shadow,
         ];
         let layoutst = new GridLayout(b0 + 10, b1 + 5, 60, 45, styles, [1], 10, 10);
         layoutst.createElems(c.app, grp, 'testStyles', UI512ElTextField, (a, b, el) => {
@@ -275,7 +275,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
                     el.set('addvspacing', 8);
                     break;
                 case 'small':
-                    el.setDimensions(el.x, el.y, el.w, ScrollConsts.boxheight * 2);
+                    el.setDimensions(el.x, el.y, el.w, ScrollConsts.BoxHeight * 2);
                     el.set('scrollbar', true);
                     this.geneva(el, 'scrll hidden bc of size');
                     break;
@@ -333,7 +333,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
         const w = 928;
         const h = 400;
         const screensToDraw = 3;
-        assertEq(w, ScreenConsts.screenwidth, '1t|');
+        assertEq(w, ScreenConsts.ScreenWidth, '1t|');
         let tmpCanvasDom = window.document.createElement('canvas');
         tmpCanvasDom.width = w;
         tmpCanvasDom.height = h;

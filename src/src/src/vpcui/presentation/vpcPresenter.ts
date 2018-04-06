@@ -34,7 +34,7 @@ export class VpcAppController extends VpcControllerInit {
             let vel = this.appli.getModel().findByIdUntyped(velId);
             vel = vel || this.appli.getModel().getCurrentCard();
             if (VpcElBase.isActuallyMsgRepl(vel)) {
-                this.setTool(VpcTool.button);
+                this.setTool(VpcTool.Button);
                 if (
                     this.lyrNonModalDlgHolder.current &&
                     this.lyrNonModalDlgHolder.current instanceof VpcAppNonModalDialogReplBox
@@ -59,7 +59,7 @@ export class VpcAppController extends VpcControllerInit {
                 }
             }
 
-            this.setTool(VpcTool.button);
+            this.setTool(VpcTool.Button);
 
             // set the runtime flags
             this.appli.getCodeExec().lastEncounteredScriptErr = scriptErr;
@@ -92,7 +92,7 @@ export class VpcAppController extends VpcControllerInit {
 
             let nextResp = this.getToolResponse(next);
             this.appli.undoableAction(() => nextResp.onOpenTool());
-            if (next === VpcTool.stamp || was === VpcTool.stamp) {
+            if (next === VpcTool.Stamp || was === VpcTool.Stamp) {
                 this.rebuildFieldScrollbars();
             }
 
@@ -263,7 +263,7 @@ export class VpcAppController extends VpcControllerInit {
             let curs = this.getToolResponse(tl).whichCursor(tl, el);
             UI512CursorAccess.setCursor(curs);
         } else {
-            UI512CursorAccess.setCursor(UI512Cursors.arrow);
+            UI512CursorAccess.setCursor(UI512Cursors.Arrow);
         }
     }
 
@@ -368,7 +368,7 @@ export class VpcAppController extends VpcControllerInit {
         this.appli.setOption('viewingScriptVelId', '');
         // update before tool is set
         this.lyrPropPanel.updateUI512Els();
-        this.setTool(type === VpcElType.Btn ? VpcTool.button : VpcTool.field);
+        this.setTool(type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field);
         return vel;
     }
 
@@ -382,8 +382,8 @@ export class VpcAppController extends VpcControllerInit {
             // move it a bit
             let amtToMove = Util512.getRandIntInclusiveWeak(10, 50);
             dupeSizable.setDimensions(
-                Math.min(ScreenConsts.xareawidth, dupe.get_n('x') + amtToMove),
-                Math.min(ScreenConsts.yareaheight, dupe.get_n('y') + amtToMove),
+                Math.min(ScreenConsts.xAreaWidth, dupe.get_n('x') + amtToMove),
+                Math.min(ScreenConsts.yAreaHeight, dupe.get_n('y') + amtToMove),
                 dupe.get_n('w'),
                 dupe.get_n('h')
             );
@@ -413,7 +413,7 @@ export class VpcAppController extends VpcControllerInit {
 
         // did we just type something into properties...
         // if so it feels more intuitive to not actually undo, but just erase the recent change.
-        if (isUndo && getToolCategory(this.getTool()) === VpcToolCtg.ctgEdit) {
+        if (isUndo && getToolCategory(this.getTool()) === VpcToolCtg.CtgEdit) {
             let areThereUnsavedChanges = false;
             this.appli.doWithoutAbilityToUndoExpectingNoChanges(() => {
                 areThereUnsavedChanges = this.lyrPropPanel.areThereUnsavedChanges();

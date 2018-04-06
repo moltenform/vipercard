@@ -160,7 +160,7 @@ export class SelAndEntryImpl {
     }
 
     static setIndentLevel(t: FormattedText, level: number, preferTab: boolean, defaultFont: string) {
-        let space = preferTab ? '\t' : Util512.repeat(ScrollConsts.tabSize, ' ').join('');
+        let space = preferTab ? '\t' : Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         // 1) erase all current whitespace
         let countCharsToDelete = Lines.getNonSpaceStartOfLine(t, true);
         t.splice(0, countCharsToDelete);

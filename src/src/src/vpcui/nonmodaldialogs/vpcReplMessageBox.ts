@@ -74,12 +74,12 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
 
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
-        bg.set('style', this.showHeader ? UI512BtnStyle.rectangle : UI512BtnStyle.opaque);
+        bg.set('style', this.showHeader ? UI512BtnStyle.Rectangle : UI512BtnStyle.Opaque);
         bg.setDimensions(this.x, this.y + headheight, this.logicalWidth, this.logicalHeight - headheight);
 
         this.scrollGot = this.genChild(app, grp, 'scrollGot', UI512ElTextField);
         this.scrollGot.setDimensions(this.x + 14 + 5, this.y + 50 + 5, 460 + 15, 50);
-        this.scrollGot.set('style', UI512FldStyle.rectangle);
+        this.scrollGot.set('style', UI512FldStyle.Rectangle);
         this.scrollGot.set('scrollbar', true);
         this.scrollGot.set('canedit', false);
 
@@ -89,11 +89,11 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         dasheline.set('iconnumber', 1);
         dasheline.set('iconadjustheight', -47);
         dasheline.set('autohighlight', false);
-        dasheline.set('style', UI512BtnStyle.opaque);
+        dasheline.set('style', UI512BtnStyle.Opaque);
 
         this.entry = this.genChild(app, grp, 'entry', UI512ElTextField);
         this.entry.setDimensions(this.x + 18 - 1, this.y + 15 + 9 + 1, 478, 30);
-        this.entry.set('style', UI512FldStyle.transparent);
+        this.entry.set('style', UI512FldStyle.Transparent);
 
         this.entry.set('multiline', false);
         this.appli.getController().setCurrentFocus(this.entry.id);
@@ -140,7 +140,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
     }
 
     busy = false;
-    rememberedTool = VpcTool.button;
+    rememberedTool = VpcTool.Button;
     launchScript(scr: string) {
         scr = scr.trim();
         if (!scr || !scr.length) {
@@ -167,7 +167,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
             fakeEl.h = fakeVel.get_n('h');
 
             this.rememberedTool = this.appli.getTool();
-            this.appli.setTool(VpcTool.browse);
+            this.appli.setTool(VpcTool.Browse);
             // inject fake event
             this.appli.getCodeExec().lastEncounteredScriptErr = undefined;
             let simEvent = new MouseUpEventDetails(

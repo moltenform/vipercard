@@ -24,6 +24,9 @@ export enum RequestedChunkType {
     alternateforms_lines = Lines,
 }
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
 export enum PropAdjective {
     __isUI512Enum = 1,
     empty,
@@ -34,6 +37,9 @@ export enum PropAdjective {
     alternateforms_abbr = abbrev,
 }
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
 export enum SortStyle {
     __isUI512Enum = 1,
     text,
@@ -41,6 +47,9 @@ export enum SortStyle {
     international,
 }
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
 export enum OrdinalOrPosition {
     __isUI512Enum = 1,
     last,
@@ -63,6 +72,9 @@ export enum OrdinalOrPosition {
     alternateforms_prev = previous,
 }
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
 export enum RequestedChunkTextPreposition {
     __isUI512Enum = 1,
     into,
@@ -123,48 +135,48 @@ export function vpcElTypeToString(type: VpcElType, veryshort: boolean) {
 
 export enum VpcTool {
     __isUI512Enum = 1,
-    browse,
-    button,
-    field,
-    select,
-    brush,
-    bucket,
-    stamp,
-    pencil,
-    line,
-    lasso,
-    eraser,
-    rect,
-    oval,
-    roundrect,
-    curve,
-    spray,
-    alternateforms_spray_can = spray,
-    alternateforms_round_rect = roundrect,
-    __first = browse,
-    __last = spray,
+    Browse,
+    Button,
+    Field,
+    Select,
+    Brush,
+    Bucket,
+    Stamp,
+    Pencil,
+    Line,
+    Lasso,
+    Eraser,
+    Rect,
+    Oval,
+    Roundrect,
+    Curve,
+    Spray,
+    alternateforms_Spray_can = Spray,
+    alternateforms_Round_rect = Roundrect,
+    __first = Browse,
+    __last = Spray,
 }
 
 export function toolToPaintOntoCanvasShapes(tl: VpcTool) {
-    if (tl === VpcTool.line) {
+    if (tl === VpcTool.Line) {
         return PaintOntoCanvasShapes.ShapeLine;
-    } else if (tl === VpcTool.rect) {
+    } else if (tl === VpcTool.Rect) {
         return PaintOntoCanvasShapes.ShapeRectangle;
-    } else if (tl === VpcTool.oval) {
+    } else if (tl === VpcTool.Oval) {
         return PaintOntoCanvasShapes.ShapeElipse;
-    } else if (tl === VpcTool.roundrect) {
+    } else if (tl === VpcTool.Roundrect) {
         return PaintOntoCanvasShapes.ShapeRoundRect;
-    } else if (tl === VpcTool.brush) {
+    } else if (tl === VpcTool.Brush) {
         return PaintOntoCanvasShapes.SmearSmallBrush;
-    } else if (tl === VpcTool.pencil) {
+    } else if (tl === VpcTool.Pencil) {
         return PaintOntoCanvasShapes.SmearPencil;
-    } else if (tl === VpcTool.eraser) {
+    } else if (tl === VpcTool.Eraser) {
         return PaintOntoCanvasShapes.SmearRectangle;
-    } else if (tl === VpcTool.spray) {
+    } else if (tl === VpcTool.Spray) {
         return PaintOntoCanvasShapes.SmearSpraycan;
-    } else if (tl === VpcTool.curve) {
+    } else if (tl === VpcTool.Curve) {
         return PaintOntoCanvasShapes.ShapeCurve;
-    } else if (tl === VpcTool.bucket) {
+    } else if (tl === VpcTool.Bucket) {
         return PaintOntoCanvasShapes.Bucket;
     } else {
         throw makeUI512Error('toPaintOntoCanvasShapes unsupported tool ' + tl);
@@ -173,57 +185,60 @@ export function toolToPaintOntoCanvasShapes(tl: VpcTool) {
 
 export enum VpcToolCtg {
     __isUI512Enum = 1,
-    ctgBrowse,
-    ctgEdit,
-    ctgShape,
-    ctgRectSelect,
-    ctgLasso,
-    ctgSmear,
-    ctgBucket,
-    ctgCurve,
-    ctgStamp,
-    ctgNyi,
+    CtgBrowse,
+    CtgEdit,
+    CtgShape,
+    CtgRectSelect,
+    CtgLasso,
+    CtgSmear,
+    CtgBucket,
+    CtgCurve,
+    CtgStamp,
+    CtgNyi,
 }
 
 export function getToolCategory(tl: VpcTool): VpcToolCtg {
     switch (tl) {
-        case VpcTool.browse:
-            return VpcToolCtg.ctgBrowse;
-        case VpcTool.button:
-            return VpcToolCtg.ctgEdit;
-        case VpcTool.field:
-            return VpcToolCtg.ctgEdit;
-        case VpcTool.select:
-            return VpcToolCtg.ctgRectSelect;
-        case VpcTool.brush:
-            return VpcToolCtg.ctgSmear;
-        case VpcTool.bucket:
-            return VpcToolCtg.ctgBucket;
-        case VpcTool.stamp:
-            return VpcToolCtg.ctgStamp;
-        case VpcTool.pencil:
-            return VpcToolCtg.ctgSmear;
-        case VpcTool.line:
-            return VpcToolCtg.ctgShape;
-        case VpcTool.lasso:
-            return VpcToolCtg.ctgLasso;
-        case VpcTool.eraser:
-            return VpcToolCtg.ctgSmear;
-        case VpcTool.rect:
-            return VpcToolCtg.ctgShape;
-        case VpcTool.oval:
-            return VpcToolCtg.ctgShape;
-        case VpcTool.roundrect:
-            return VpcToolCtg.ctgShape;
-        case VpcTool.spray:
-            return VpcToolCtg.ctgSmear;
-        case VpcTool.curve:
-            return VpcToolCtg.ctgCurve;
+        case VpcTool.Browse:
+            return VpcToolCtg.CtgBrowse;
+        case VpcTool.Button:
+            return VpcToolCtg.CtgEdit;
+        case VpcTool.Field:
+            return VpcToolCtg.CtgEdit;
+        case VpcTool.Select:
+            return VpcToolCtg.CtgRectSelect;
+        case VpcTool.Brush:
+            return VpcToolCtg.CtgSmear;
+        case VpcTool.Bucket:
+            return VpcToolCtg.CtgBucket;
+        case VpcTool.Stamp:
+            return VpcToolCtg.CtgStamp;
+        case VpcTool.Pencil:
+            return VpcToolCtg.CtgSmear;
+        case VpcTool.Line:
+            return VpcToolCtg.CtgShape;
+        case VpcTool.Lasso:
+            return VpcToolCtg.CtgLasso;
+        case VpcTool.Eraser:
+            return VpcToolCtg.CtgSmear;
+        case VpcTool.Rect:
+            return VpcToolCtg.CtgShape;
+        case VpcTool.Oval:
+            return VpcToolCtg.CtgShape;
+        case VpcTool.Roundrect:
+            return VpcToolCtg.CtgShape;
+        case VpcTool.Spray:
+            return VpcToolCtg.CtgSmear;
+        case VpcTool.Curve:
+            return VpcToolCtg.CtgCurve;
         default:
             throw makeUI512Error(`4/|unknown tool ${tl}`);
     }
 }
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
 export enum VpcBuiltinMsg {
     __isUI512Enum = 1,
     openbackground,
@@ -243,6 +258,9 @@ export enum VpcBuiltinMsg {
     __custom,
 }
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
 export enum MapTermToMilliseconds {
     __isUI512Enum = 1,
     tick = 16,

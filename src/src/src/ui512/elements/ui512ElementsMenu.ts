@@ -40,12 +40,12 @@ export class UI512MenuDropdown extends UI512ElementButtonGeneral {
     protected _fixedwidth = -1;
     protected _iconsetid = '';
     protected _iconnumber = -1;
-    protected _style: number = UI512BtnStyle.transparent;
+    protected _style: number = UI512BtnStyle.Transparent;
     protected _autohighlight = true;
 
     constructor(idString: string, observer: ElementObserver = elementObserverDefault) {
         super(idString, observer);
-        this._style = UI512BtnStyle.transparent;
+        this._style = UI512BtnStyle.Transparent;
         this._autohighlight = false;
     }
 

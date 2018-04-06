@@ -20,7 +20,7 @@ export class SplitIntoLinesProducer {
 
     nextWithnewlines(): O<ChvIToken[]> {
         let currentLine: ChvIToken[] = [];
-        let limit = new LoopLimit(CodeLimits.maxTokensInLine, 'maxTokensInLine');
+        let limit = new LoopLimit(CodeLimits.MaxTokensInLine, 'maxTokensInLine');
         while (limit.next()) {
             let tk = this.instream[this.index];
             this.index += 1;
@@ -57,26 +57,26 @@ export class SplitIntoLinesProducer {
 
 export enum VpcLineCategory {
     __isUI512Enum = 1,
-    invalid,
-    handlerStart,
-    handlerEnd,
-    handlerExit,
-    productExit,
-    handlerPass,
-    returnExpr,
-    ifStart,
-    ifElsePlain,
-    ifElse,
-    ifEnd,
-    repeatExit,
-    repeatNext,
-    repeatForever,
-    repeatUntil,
-    repeatWhile,
-    repeatEnd,
-    declareGlobal,
-    statement,
-    callHandler,
+    Invalid,
+    HandlerStart,
+    HandlerEnd,
+    HandlerExit,
+    ProductExit,
+    HandlerPass,
+    ReturnExpr,
+    IfStart,
+    IfElsePlain,
+    IfElse,
+    IfEnd,
+    RepeatExit,
+    RepeatNext,
+    RepeatForever,
+    RepeatUntil,
+    RepeatWhile,
+    RepeatEnd,
+    DeclareGlobal,
+    Statement,
+    CallHandler,
 }
 
 export class MapBuiltinCmds extends MapKeyToObject<Function> {

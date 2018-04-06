@@ -78,17 +78,17 @@ export class UI512DemoComposites extends UI512TestCompositesController {
                 console.log('Food: ' + c.testrbInclusive.getWhichChecked(c.app));
                 console.log('Tool: ' + c.testToolbox.getWhich());
             } else if (d.elClick.id === 'btnDlg1') {
-                c.testModalDlg.dlgtype = UI512CompStdDialogType.answer;
+                c.testModalDlg.dlgtype = UI512CompStdDialogType.Answer;
                 c.testModalDlg.btnlabels = ['', '', ''];
                 c.testModalDlg.create(c, c.app);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(c, c.app, n => c.gotFromDlg(n));
             } else if (d.elClick.id === 'btnDlg2') {
-                c.testModalDlg.dlgtype = UI512CompStdDialogType.answer;
+                c.testModalDlg.dlgtype = UI512CompStdDialogType.Answer;
                 c.testModalDlg.btnlabels = ['Ch A', 'Ch B', 'Ch C'];
                 c.testModalDlg.create(c, c.app);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(c, c.app, n => c.gotFromDlg(n));
             } else if (d.elClick.id === 'btnDlgAsk') {
-                c.testModalDlg.dlgtype = UI512CompStdDialogType.ask;
+                c.testModalDlg.dlgtype = UI512CompStdDialogType.Ask;
                 c.testModalDlg.btnlabels = ['OK', 'Cancel'];
                 c.testModalDlg.create(c, c.app);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(c, c.app, n => c.gotFromDlg(n));
@@ -130,7 +130,7 @@ export class TestDrawUI512Composites extends UI512TestBase {
         // add bg
         let bg = new UI512ElButton('bg');
         grp.addElement(c.app, bg);
-        bg.set('style', UI512BtnStyle.opaque);
+        bg.set('style', UI512BtnStyle.Opaque);
         bg.setDimensions(bounds[0], bounds[1], bounds[2], bounds[3]);
         bg.set('autohighlight', false);
 
@@ -287,7 +287,7 @@ end1`.replace(/\r\n/g, '\n')
         const w = 928;
         const h = 360;
         const screensToDraw = 2;
-        assertEq(w, ScreenConsts.screenwidth, '1Q|');
+        assertEq(w, ScreenConsts.ScreenWidth, '1Q|');
         let tmpCanvasDom = window.document.createElement('canvas');
         tmpCanvasDom.width = w;
         tmpCanvasDom.height = h;

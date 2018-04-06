@@ -10,6 +10,19 @@
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
+export enum VpcFldStyleInclScroll {
+    __isUI512Enum = 1,
+    opaque = UI512FldStyle.Opaque,
+    transparent = UI512FldStyle.Transparent,
+    rectangle = UI512FldStyle.Rectangle,
+    shadow = UI512FldStyle.Shadow,
+    alternateforms_rect = UI512FldStyle.Rectangle,
+    scrolling = 200,
+}
+
 export class VpcElField extends VpcElSizable {
     isVpcElField = true;
     protected _dontwrap = false;
@@ -19,7 +32,7 @@ export class VpcElField extends VpcElSizable {
     protected _selcaret = 0;
     protected _selend = 0;
     protected _scroll = 0;
-    protected _style: number = UI512FldStyleInclScrolling.rectangle;
+    protected _style: number = VpcFldStyleInclScroll.rectangle;
     protected _visible = true;
     protected _script = '';
     protected _textalign = 'left';
@@ -89,17 +102,17 @@ export class VpcElField extends VpcElSizable {
     }
 
     static fldGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
-        getters['singleline'] = [PrpTyp.bool, 'singleline'];
-        getters['textalign'] = [PrpTyp.str, 'textalign'];
-        getters['alltext'] = [PrpTyp.str, (me: VpcElField) => me.get_ftxt().toUnformatted()];
+        getters['singleline'] = [PrpTyp.Bool, 'singleline'];
+        getters['textalign'] = [PrpTyp.Str, 'textalign'];
+        getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.get_ftxt().toUnformatted()];
         getters['defaulttextstyle'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField) => FormattedSubstringUtil.vpcstyleFromInt(me._defaulttextstyle),
         ];
         getters['style'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField) => {
-                return getEnumToStrOrUnknown<UI512FldStyleInclScrolling>(UI512FldStyleInclScrolling, me._style);
+                return getEnumToStrOrUnknown<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, me._style);
             },
         ];
 
@@ -111,12 +124,12 @@ export class VpcElField extends VpcElSizable {
     }
 
     static fldSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
-        setters['name'] = [PrpTyp.str, 'name'];
+        setters['name'] = [PrpTyp.Str, 'name'];
         setters['style'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField, s: string) => {
-                let styl = getStrToEnum<UI512FldStyleInclScrolling>(
-                    UI512FldStyleInclScrolling,
+                let styl = getStrToEnum<VpcFldStyleInclScroll>(
+                    VpcFldStyleInclScroll,
                     'Field style or "scrolling"',
                     s
                 );
@@ -128,7 +141,7 @@ export class VpcElField extends VpcElSizable {
         ];
 
         setters['textstyle'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField, s: string) => {
                 me.setProp('defaulttextstyle', VpcValS(s));
                 me.setEntireFontFromDefaultFont();
@@ -136,7 +149,7 @@ export class VpcElField extends VpcElSizable {
         ];
 
         setters['textfont'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField, s: string) => {
                 me.set('defaulttextfont', s);
                 me.setEntireFontFromDefaultFont();
@@ -144,7 +157,7 @@ export class VpcElField extends VpcElSizable {
         ];
 
         setters['textsize'] = [
-            PrpTyp.num,
+            PrpTyp.Num,
             (me: VpcElField, n: number) => {
                 me.set('defaulttextsize', n);
                 me.setEntireFontFromDefaultFont();
@@ -153,7 +166,7 @@ export class VpcElField extends VpcElSizable {
 
         // as done by ui when the field tool is selected, or when saying put "abc" into cd fld 1 with no chunk qualifications
         setters['alltext'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField, s: string) => {
                 let newtxt = FormattedText.newFromUnformatted(s);
                 newtxt.setFontEverywhere(me.getDefaultFontAsUi512());
@@ -162,7 +175,7 @@ export class VpcElField extends VpcElSizable {
         ];
 
         setters['defaulttextstyle'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField, s: string) => {
                 let list = s.split(',').map(item => item.trim());
                 me.set('defaulttextstyle', FormattedSubstringUtil.vpcstyleToInt(list));
@@ -170,7 +183,7 @@ export class VpcElField extends VpcElSizable {
         ];
 
         setters['textalign'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElField, s: string) => {
                 s = s.toLowerCase().trim();
                 if (s === 'left') {
@@ -184,7 +197,7 @@ export class VpcElField extends VpcElSizable {
         ];
 
         setters['singleline'] = [
-            PrpTyp.bool,
+            PrpTyp.Bool,
             (me: VpcElField, b: boolean) => {
                 me.set('singleline', b);
                 if (b) {
@@ -204,13 +217,13 @@ export class VpcElField extends VpcElSizable {
 
     static simpleFldGetSet(): [string, PrpTyp][] {
         return [
-            ['dontwrap', PrpTyp.bool],
-            ['enabled', PrpTyp.bool],
-            ['locktext', PrpTyp.bool],
-            ['scroll', PrpTyp.num],
-            ['defaulttextfont', PrpTyp.str],
-            ['defaulttextsize', PrpTyp.num],
-            ['visible', PrpTyp.bool],
+            ['dontwrap', PrpTyp.Bool],
+            ['enabled', PrpTyp.Bool],
+            ['locktext', PrpTyp.Bool],
+            ['scroll', PrpTyp.Num],
+            ['defaulttextfont', PrpTyp.Str],
+            ['defaulttextsize', PrpTyp.Num],
+            ['visible', PrpTyp.Bool],
         ];
     }
 
@@ -314,12 +327,3 @@ export class VpcElField extends VpcElSizable {
     }
 }
 
-export enum UI512FldStyleInclScrolling {
-    __isUI512Enum = 1,
-    opaque = UI512FldStyle.opaque,
-    transparent = UI512FldStyle.transparent,
-    rectangle = UI512FldStyle.rectangle,
-    shadow = UI512FldStyle.shadow,
-    alternateforms_rect = UI512FldStyle.rectangle,
-    scrolling = 200,
-}

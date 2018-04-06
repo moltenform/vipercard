@@ -22,7 +22,7 @@ export class VpcElProductOpts extends VpcElBase {
     protected _longname = `Applications:${cProductName} Folder:${cProductName}`;
 
     // settings that shouldn't be touched directly
-    protected _currentTool = VpcTool.pencil;
+    protected _currentTool = VpcTool.Pencil;
     allowSetCurrentTool = false;
 
     // settings stored here to get an undoable setting
@@ -63,17 +63,17 @@ export class VpcElProductOpts extends VpcElBase {
 
     static prodGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         // hard-coded responses to properties
-        getters['environment'] = [PrpTyp.str, () => 'development'];
-        getters['freesize'] = [PrpTyp.num, () => 0];
-        getters['size'] = [PrpTyp.num, () => 0];
-        getters['stacksinuse'] = [PrpTyp.str, () => ''];
-        getters['suspended'] = [PrpTyp.bool, () => false];
-        getters['version/long'] = [PrpTyp.str, () => vpcversion];
-        getters['version'] = [PrpTyp.str, () => vpcversion[0] + '.' + vpcversion[1]];
+        getters['environment'] = [PrpTyp.Str, () => 'development'];
+        getters['freesize'] = [PrpTyp.Num, () => 0];
+        getters['size'] = [PrpTyp.Num, () => 0];
+        getters['stacksinuse'] = [PrpTyp.Str, () => ''];
+        getters['suspended'] = [PrpTyp.Bool, () => false];
+        getters['version/long'] = [PrpTyp.Str, () => vpcversion];
+        getters['version'] = [PrpTyp.Str, () => vpcversion[0] + '.' + vpcversion[1]];
 
-        getters['itemdelimiter'] = [PrpTyp.str, 'itemDel'];
+        getters['itemdelimiter'] = [PrpTyp.Str, 'itemDel'];
         getters['cursor'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElProductOpts) => {
                 let curs = UI512CursorAccess.getCursor();
                 return getEnumToStrOrUnknown<UI512Cursors>(UI512Cursors, curs);
@@ -83,7 +83,7 @@ export class VpcElProductOpts extends VpcElBase {
 
     static prodSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
         setters['itemdelimiter'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElProductOpts, s: string) => {
                 checkThrowEq(1, s.length, `7C|length of itemdel must be 1`);
                 me.set('itemDel', s);
@@ -91,7 +91,7 @@ export class VpcElProductOpts extends VpcElBase {
         ];
 
         setters['cursor'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElProductOpts, s: string) => {
                 if (s === '1') {
                     s = 'beam';
@@ -103,13 +103,13 @@ export class VpcElProductOpts extends VpcElBase {
                     s = 'watch';
                 }
 
-                let n = getStrToEnum<UI512Cursors>(UI512Cursors, `cursor ${s} not supported`, s);
-                UI512CursorAccess.setCursor(n);
+                let n = getStrToEnum<VpcCursors>(VpcCursors, `cursor ${s} not supported`, s);
+                UI512CursorAccess.setCursor(n.valueOf());
             },
         ];
 
         setters['idlerate'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElProductOpts, s: string) => {
                 if (s === 'faster') {
                     me.set('suggestedIdleRate', 'faster');
@@ -162,4 +162,24 @@ export class VpcElProductOpts extends VpcElBase {
             !!VpcElProductOpts.cachedSetters[propName]
         );
     }
+}
+
+/**
+ * values here are intentionally lowercase, this enum is used when running a script.
+ */
+export enum VpcCursors {
+    __isUI512Enum 	=	 1,
+    arrow 	=	 UI512Cursors.Arrow, 
+    beam 	=	 UI512Cursors.Beam, 
+    crosshair 	=	 UI512Cursors.Crosshair, 
+    hand 	=	 UI512Cursors.Hand, 
+    pencil 	=	 UI512Cursors.Pencil, 
+    plus 	=	 UI512Cursors.Plus, 
+    watch 	=	 UI512Cursors.Watch, 
+    paintbrush 	=	 UI512Cursors.PaintBrush, 
+    paintbucket 	=	 UI512Cursors.PaintBucket, 
+    painttext 	=	 UI512Cursors.PaintText, 
+    paintlasso 	=	 UI512Cursors.PaintLasso, 
+    painteraser 	=	 UI512Cursors.PaintEraser, 
+    paintspray 	=	 UI512Cursors.PaintSpray, 
 }

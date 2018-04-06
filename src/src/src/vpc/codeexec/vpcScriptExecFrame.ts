@@ -8,7 +8,7 @@
 /* auto */ import { VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcAllCode.js';
 
 export class CodeExecFrame {
-    locals = new VarCollection(CodeLimits.maxLocalVars, 'local');
+    locals = new VarCollection(CodeLimits.MaxLocalVars, 'local');
     codeSection: VpcCodeOfOneVel;
     protected _offset: number;
     offsetsMarked: { [offset: number]: boolean } = {};
@@ -30,7 +30,7 @@ export class CodeExecFrame {
         this._offset += 1;
         checkThrow(this._offset < this.codeSection.lines.length, '7n|went past end of code');
         checkThrow(
-            this.codeSection.lines[this.offset].ctg !== VpcLineCategory.handlerStart,
+            this.codeSection.lines[this.offset].ctg !== VpcLineCategory.HandlerStart,
             '7m|we should never walk onto a handler start'
         );
     }
@@ -42,7 +42,7 @@ export class CodeExecFrame {
         this._offset = newOffset;
         checkThrow(this._offset < this.codeSection.lines.length, '7l|went past end of code');
         checkThrow(
-            okToStartHandler || this.codeSection.lines[this.offset].ctg !== VpcLineCategory.handlerStart,
+            okToStartHandler || this.codeSection.lines[this.offset].ctg !== VpcLineCategory.HandlerStart,
             '7k|we should never walk onto a handler start'
         );
 

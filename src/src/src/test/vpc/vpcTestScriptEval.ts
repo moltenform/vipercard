@@ -1153,7 +1153,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             // setting style
             const fld = this.appl.model.getById(this.elIds.fld_b_c_1, VpcElField);
-            assertEq(UI512FldStyle.rectangle, fld.get_n('style'), '1 |');
+            assertEq(UI512FldStyle.Rectangle, fld.get_n('style'), '1 |');
             batch = [
                 ['the style of cd fld "p1"', 'rectangle'],
                 ['set the style of cd fld "p1" to "xyz"\\0', 'ERR:Field style or'],
@@ -1162,7 +1162,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the style of cd fld "p1" to "transparent"\\the style of cd fld "p1"', 'transparent'],
             ];
             this.testBatchEvaluate(batch);
-            assertEq(UI512FldStyle.transparent, fld.get_n('style'), '1z|');
+            assertEq(UI512FldStyle.Transparent, fld.get_n('style'), '1z|');
 
             // reading per-character formatting
             // here's what we'll set it to: Courier/Bold/24"ab"Courier/ItalicShadow/18"cd"Times/Plain/18ef
@@ -1759,7 +1759,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['random(3) is in "123"', `true`],
                 ['random(0)', `ERR:value must be >= 1`],
                 ['random(-1)', `ERR:value must be >= 1`],
-                ['screenrect()', `0,0,${ScreenConsts.screenwidth},${ScreenConsts.screenheight}`],
+                ['screenrect()', `0,0,${ScreenConsts.ScreenWidth},${ScreenConsts.ScreenHeight}`],
                 ['chartonum("")', `0`],
                 ['chartonum("a")', `97`],
                 ['chartonum("abc")', `97`],

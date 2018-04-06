@@ -89,7 +89,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
 
         // draw the code editor field
         this.el = this.genChild(app, grp, 'editor', UI512ElTextField);
-        this.el.set('style', UI512FldStyle.rectangle);
+        this.el.set('style', UI512FldStyle.Rectangle);
         this.el.set('labelwrap', false);
         this.el.set('scrollbar', true);
         this.el.set('defaultFont', UI512CompCodeEditorFont.font);
@@ -113,7 +113,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
         const btnH = 23;
         let btnCompile = this.genBtn(app, grp, 'btnScriptEditorCompile');
         btnCompile.set('labeltext', '');
-        btnCompile.set('style', UI512BtnStyle.osstandard);
+        btnCompile.set('style', UI512BtnStyle.OSStandard);
         btnCompile.setDimensions(
             this.x + this.logicalWidth - (btnW + spaceFromRight),
             this.y + this.logicalHeight - (btnH + spaceFromBottom),

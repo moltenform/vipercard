@@ -79,9 +79,9 @@ export class VpcElStack extends VpcElBase {
     static stackInit() {
         if (!VpcElStack.cachedGetters || !VpcElStack.cachedSetters) {
             VpcElStack.cachedGetters = {};
-            VpcElStack.cachedGetters['script'] = [PrpTyp.str, 'script'];
+            VpcElStack.cachedGetters['script'] = [PrpTyp.Str, 'script'];
             VpcElStack.cachedSetters = {};
-            VpcElStack.cachedSetters['name'] = [PrpTyp.str, 'name'];
+            VpcElStack.cachedSetters['name'] = [PrpTyp.Str, 'name'];
             Util512.freezeRecurse(VpcElStack.cachedGetters);
             Util512.freezeRecurse(VpcElStack.cachedSetters);
         }

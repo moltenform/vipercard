@@ -21,7 +21,7 @@ export class TextRendererFontDrawChar {
     ): DrawCharResult {
         if (n === specialCharNumTab) {
             let obj = new DrawCharResult(0, 0, 0);
-            for (let i = 0; i < ScrollConsts.tabSize; i++) {
+            for (let i = 0; i < ScrollConsts.TabSize; i++) {
                 obj = TextRendererFontDrawChar.drawChar(
                     font,
                     0x20,

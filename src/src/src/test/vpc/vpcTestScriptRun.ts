@@ -37,7 +37,7 @@ export class TestVpcScriptRun extends UI512TestBase {
         if (!this.initedAppl) {
             [this.ctrller, this.appl] = await this.startEnvironment();
             this.appl.appli.doWithoutAbilityToUndo(() => this.populateModel());
-            this.appl.appli.doWithoutAbilityToUndo(() => this.ctrller.setTool(VpcTool.browse));
+            this.appl.appli.doWithoutAbilityToUndo(() => this.ctrller.setTool(VpcTool.Browse));
 
             // make showError a no-op instead of opening the script.
             this.ctrller.showError = a => {};
@@ -242,7 +242,7 @@ export class TestVpcScriptRun extends UI512TestBase {
         }
 
         // fake a click inside btnGo
-        assertEq(VpcTool.browse, this.ctrller.getTool(), '');
+        assertEq(VpcTool.Browse, this.ctrller.getTool(), '');
         this.ctrller.trackMouse = [this.simMouseX, this.simMouseY];
         let fakeEvent = new MouseUpEventDetails(1, this.simClickX, this.simClickY, 0, ModifierKeys.None);
         VpcAppControllerEvents.scheduleScriptMsgImpl(this.ctrller, fakeEvent, btnGo.id, false);

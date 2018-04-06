@@ -33,10 +33,10 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
             // click on an item to select it
             let velid = this.cbModelRender().elIdToVelId(d.el.id) || '';
             if (velid.length && d.el.typeName === 'UI512ElTextField') {
-                this.appli.setTool(VpcTool.field);
+                this.appli.setTool(VpcTool.Field);
                 this.appli.setOption('selectedVelId', velid);
             } else if (velid.length && d.el.typeName === 'UI512ElementButtonGeneral') {
-                this.appli.setTool(VpcTool.button);
+                this.appli.setTool(VpcTool.Button);
                 this.appli.setOption('selectedVelId', velid);
             } else {
                 this.appli.setOption('selectedVelId', '');
@@ -130,7 +130,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
     }
 
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
-        return UI512Cursors.arrow;
+        return UI512Cursors.Arrow;
     }
 
     onOpenTool() {

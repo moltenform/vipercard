@@ -8,7 +8,7 @@ export class VpcCodeLine {
     readonly firstToken: ChvIToken;
     protected parseRule: O<Function>;
     excerptToParse: ChvIToken[] = [];
-    ctg = VpcLineCategory.invalid;
+    ctg = VpcLineCategory.Invalid;
     blockInfo: O<VpcCodeLineReference[]>;
     allImages: O<string>;
     tmpEntireLine: O<ChvIToken[]>;

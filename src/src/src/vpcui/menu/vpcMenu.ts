@@ -76,7 +76,7 @@ export class VpcAppMenus extends VpcAppMenuStructure {
             MenuPositioning.setItemStatus(this.appli.UI512App(), `mnuItemTool${i}`, check, true);
         }
 
-        let selectedId = toolCtg === VpcToolCtg.ctgEdit ? this.appli.getOption_s('selectedVelId') : '';
+        let selectedId = toolCtg === VpcToolCtg.CtgEdit ? this.appli.getOption_s('selectedVelId') : '';
         this.refreshCopyPasteMnuItem(selectedId, 'mnuCopyCardOrVel', 'lngCopy Card', 'lngCopy Button', 'lngCopy Field');
         let copiedId = this.appli.getOption_s('copiedVelId');
         this.refreshCopyPasteMnuItem(

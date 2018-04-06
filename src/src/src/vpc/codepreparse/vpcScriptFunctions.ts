@@ -207,7 +207,7 @@ export class VpcBuiltinFunctions {
     }
 
     call_screenrect(args: VpcVal[]) {
-        return VpcValS(`0,0,${ScreenConsts.screenwidth},${ScreenConsts.screenheight}`);
+        return VpcValS(`0,0,${ScreenConsts.ScreenWidth},${ScreenConsts.ScreenHeight}`);
     }
 
     call_counting(args: VpcVal[]) {

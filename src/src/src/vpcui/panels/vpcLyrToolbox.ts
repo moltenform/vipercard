@@ -24,22 +24,22 @@ export class VpcAppToolboxes extends VpcAppInterfaceLayer {
     init(c: UI512ControllerBase) {
         // add main toolbox
         this.toolsmain.iconsetid = '001';
-        this.toolsmain.x = this.appli.bounds()[0] + ScreenConsts.xareawidth + 1;
-        this.toolsmain.y = this.appli.bounds()[1] + ScreenConsts.ymenubar - 1;
+        this.toolsmain.x = this.appli.bounds()[0] + ScreenConsts.xAreaWidth + 1;
+        this.toolsmain.y = this.appli.bounds()[1] + ScreenConsts.yMenuBar - 1;
         this.toolsmain.callbackOnChange = s => this.toolsmainCallback(s);
         this.toolsmainDefaultLoc = MainToolbox.layout(this.toolsmain, this.appli);
 
         // add navigation toolbox
         this.toolsnav.iconsetid = '001';
-        this.toolsnav.x = this.toolsmain.x + ToolboxDims.toolsnavaddedx;
-        this.toolsnav.y = this.toolsmain.y + ToolboxDims.toolbarheight;
+        this.toolsnav.x = this.toolsmain.x + ToolboxDims.NavAddedX;
+        this.toolsnav.y = this.toolsmain.y + ToolboxDims.ToolbarHeight;
         this.toolsnav.callbackOnChange = s => this.toolsnavCallback(s);
         this.toolsnavDefaultLoc = NavToolbox.layout(this.toolsnav, this.appli);
 
         // add patterns toolbox
         this.toolspatterns.iconsetid = '001';
         this.toolspatterns.x = this.toolsmain.x;
-        this.toolspatterns.y = this.toolsnav.y + ToolboxDims.toolbarheight;
+        this.toolspatterns.y = this.toolsnav.y + ToolboxDims.ToolbarHeight;
         this.toolspatterns.callbackOnChange = s => this.toolspatternsCallback(s);
         this.toolspatternsDefaultLoc = PatternsToolbox.layout(this.toolspatterns, this.appli);
     }
@@ -133,7 +133,7 @@ export class VpcAppToolboxes extends VpcAppInterfaceLayer {
         this.toolsnav.refreshNavIcons(this.appli.UI512App(), coderunning, cardnum);
 
         // patterns toolbox
-        this.toolspatterns.setVisible(this.appli.UI512App(), currentTool === VpcTool.bucket);
+        this.toolspatterns.setVisible(this.appli.UI512App(), currentTool === VpcTool.Bucket);
         this.toolspatterns.setWhich(this.appli.UI512App(), this.appli.getOption_s('currentPattern'));
     }
 }

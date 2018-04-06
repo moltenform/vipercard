@@ -154,7 +154,7 @@ export abstract class UI512CompBase {
 
             // draw header fill
             let headerfill = this.genBtn(app, grp, 'headerfill');
-            headerfill.set('style', UI512BtnStyle.opaque);
+            headerfill.set('style', UI512BtnStyle.Opaque);
             headerfill.set('autohighlight', false);
             headerfill.set('iconsetid', c.filliconset);
             headerfill.set('iconnumber', c.filliconnumber);
@@ -171,7 +171,7 @@ export abstract class UI512CompBase {
         if (hasclosebtn) {
             // draw background for close button
             let closebtnbg = this.genBtn(app, grp, 'closebtnbg');
-            closebtnbg.set('style', UI512BtnStyle.opaque);
+            closebtnbg.set('style', UI512BtnStyle.Opaque);
             closebtnbg.set('autohighlight', false);
             let clx = c.closeBtnX - Math.floor((c.closeBtnBgWidth - c.closeBtnWidth) / 2);
             closebtnbg.setDimensions(this.x + clx, this.y + 1, c.closeBtnBgWidth, c.headHeight - 2);

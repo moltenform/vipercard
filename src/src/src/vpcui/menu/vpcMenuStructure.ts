@@ -183,12 +183,12 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
 
     initkeymappings() {
         this.keymappings['ArrowLeft'] = (self: VpcAppMenuStructure) => {
-            if (self.appli.getTool() !== VpcTool.browse) {
+            if (self.appli.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardPrev';
             }
         };
         this.keymappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
-            if (self.appli.getTool() !== VpcTool.browse) {
+            if (self.appli.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardNext';
             }
         };

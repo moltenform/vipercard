@@ -48,7 +48,7 @@ export class CodeExecFrameStack {
         code: VpcCodeOfOneVel,
         codeline: VpcCodeLineReference
     ) {
-        checkThrowEq(VpcTool.browse, this.outside.GetCurrentTool(true), 'not browse tool?');
+        checkThrowEq(VpcTool.Browse, this.outside.GetCurrentTool(true), 'not browse tool?');
         let newframe = new CodeExecFrame(msgName, msg);
         newframe.codeSection = code;
         this.validatedGoto(newframe, codeline, true);
@@ -73,7 +73,7 @@ export class CodeExecFrameStack {
 
         let started = performance.now();
         assertTrue(this.stack.length >= 1 && this.stack[0] === undefined, '5f|popped too many off the stack');
-        assertTrue(this.stack.length < CodeLimits.maxCodeFrames, '5e|stack overflow... unbounded recursion?');
+        assertTrue(this.stack.length < CodeLimits.MaxCodeFrames, '5e|stack overflow... unbounded recursion?');
         let count = 0;
         while (this.stack.length > 1) {
             let isComplete = this.runOneLine(blocked);
@@ -147,7 +147,7 @@ export class CodeExecFrameStack {
     }
 
     protected evalRequestedExpression(parsed: any, curline: VpcCodeLine): VpcVal {
-        assertTrue(curline.ctg !== VpcLineCategory.statement, '5b|', curline.ctg);
+        assertTrue(curline.ctg !== VpcLineCategory.Statement, '5b|', curline.ctg);
         assertTrue(
             this.parsingCache.parser.RuleTopLevelRequestEval === curline.getParseRule(),
             '5a|expected eval parse rule'
@@ -275,7 +275,7 @@ export class CodeExecFrameStack {
         let blockEnd = blockInfo[blockInfo.length - 1];
         assertEq(curline.offset, blockInfo[0].offset, '5U|');
         assertEq(curline.lineId, blockInfo[0].lineid, '5T|');
-        assertEq(VpcLineCategory.ifEnd, curframe.codeSection.lines[blockEnd.offset].ctg, '5S|');
+        assertEq(VpcLineCategory.IfEnd, curframe.codeSection.lines[blockEnd.offset].ctg, '5S|');
 
         // mark all of the child branches as untried.
         for (let i = 0; i < blockInfo.length; i++) {

@@ -395,7 +395,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
         let layoutPatternBg = new GridLayout(0, 0, 68, 68, Util512.range(20), Util512.range(20), 30, 30);
         let bg = new UI512ElButton('bg');
         grp.addElement(c.app, bg);
-        bg.set('style', UI512BtnStyle.opaque);
+        bg.set('style', UI512BtnStyle.Opaque);
         bg.setDimensions(bounds[0], bounds[1], bounds[2], bounds[3]);
         bg.set('autohighlight', false);
         layoutPatternBg.createElems(c.app, grp, 'bgGrid', UI512ElButton, () => {});
@@ -445,7 +445,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
         const w = 928;
         const h = 400;
         const screensToDraw = 1;
-        assertEq(w, ScreenConsts.screenwidth, '1T|');
+        assertEq(w, ScreenConsts.ScreenWidth, '1T|');
         let tmpCanvasDom = window.document.createElement('canvas');
         tmpCanvasDom.width = w;
         tmpCanvasDom.height = h;

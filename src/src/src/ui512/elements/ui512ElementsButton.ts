@@ -5,25 +5,22 @@
 
 export enum UI512BtnStyle {
     __isUI512Enum = 1,
-    transparent,
-    rectangle,
-    opaque,
-    roundrect,
-    plain,
-    shadow,
-    osstandard,
-    osdefault,
-    osboxmodal,
-    checkbox,
-    radio,
-    alternateforms_standard = osstandard,
-    alternateforms_default = osdefault,
-    alternateforms_rect = rectangle,
+    Transparent,
+    Rectangle,
+    Opaque,
+    RoundRect,
+    Plain,
+    Shadow,
+    OSStandard,
+    OSDefault,
+    OSBoxModal,
+    Checkbox,
+    Radio,
 }
 
 export abstract class UI512ElementButtonGeneral extends UI512ElementWithHighlight {
     readonly typeName: string = 'UI512ElementButtonGeneral';
-    protected _style: number = UI512BtnStyle.rectangle;
+    protected _style: number = UI512BtnStyle.Rectangle;
 }
 
 export class UI512ElButton extends UI512ElementButtonGeneral {}

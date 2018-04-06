@@ -138,7 +138,7 @@ class VpcCodeProcessor {
         let lexed = lexer.tokenize(code);
         if (lexed.errors.length) {
             latestSrcLineSeen.val = lexed.errors[0].line;
-            let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.limitChevErr);
+            let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErr);
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
 
@@ -152,7 +152,7 @@ class VpcCodeProcessor {
         let splitter = new SplitIntoLinesProducer(lexed.tokens, idgen, makeLowercase);
         let syntaxRewriter = new SyntaxRewriter(idgen, idGenThisScript, mapBuiltinCmds, checkReserved);
         let branchTracking = new BranchTracking(idgen);
-        let limit = new LoopLimit(CodeLimits.maxLinesInScript, 'maxLinesInScript');
+        let limit = new LoopLimit(CodeLimits.MaxLinesInScript, 'maxLinesInScript');
         while (limit.next()) {
             let tokenList = splitter.next();
             if (tokenList) {

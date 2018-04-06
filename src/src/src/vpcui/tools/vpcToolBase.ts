@@ -36,6 +36,6 @@ export class VpcAppUIToolNyi extends VpcAppUIToolResponseBase {
     cancelCurrentToolAction(): void {}
 
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
-        return UI512Cursors.arrow;
+        return UI512Cursors.Arrow;
     }
 }

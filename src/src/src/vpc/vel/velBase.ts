@@ -8,9 +8,9 @@
 
 export enum PrpTyp {
     __isUI512Enum = 1,
-    str,
-    num,
-    bool,
+    Str,
+    Num,
+    Bool,
 }
 
 export type PropGetter<T extends VpcElBase> = [PrpTyp, string | ((me: T) => string | number | boolean)];
@@ -61,21 +61,21 @@ export abstract class VpcElBase extends UI512Settable {
         if (found) {
             let typ = found[0];
             let mappedprop = found[1];
-            if (typ === PrpTyp.str) {
+            if (typ === PrpTyp.Str) {
                 if (typeof mappedprop === 'function') {
                     return VpcValS(mappedprop(this) as string);
                 } else {
                     assertTrue(isString(mappedprop), '4,|not a string');
                     return VpcValS(this.get_s(mappedprop));
                 }
-            } else if (typ === PrpTyp.num) {
+            } else if (typ === PrpTyp.Num) {
                 if (typeof mappedprop === 'function') {
                     return VpcValN(mappedprop(this) as number);
                 } else {
                     assertTrue(isString(mappedprop), '4+|not a string');
                     return VpcValN(this.get_n(mappedprop));
                 }
-            } else if (typ === PrpTyp.bool) {
+            } else if (typ === PrpTyp.Bool) {
                 if (typeof mappedprop === 'function') {
                     return VpcValBool(mappedprop(this) as boolean);
                 } else {
@@ -95,21 +95,21 @@ export abstract class VpcElBase extends UI512Settable {
         if (found) {
             let typ = found[0];
             let mappedprop = found[1];
-            if (typ === PrpTyp.str) {
+            if (typ === PrpTyp.Str) {
                 if (typeof mappedprop === 'function') {
                     mappedprop(this, val.readAsString());
                 } else {
                     assertTrue(isString(mappedprop), '4&|prop name not a string');
                     this.set(mappedprop, val.readAsString());
                 }
-            } else if (typ === PrpTyp.num) {
+            } else if (typ === PrpTyp.Num) {
                 if (typeof mappedprop === 'function') {
                     mappedprop(this, val.readAsStrictInteger(this.tmpar));
                 } else {
                     assertTrue(isString(mappedprop), '4%|prop name not a string');
                     this.set(mappedprop, val.readAsStrictInteger(this.tmpar));
                 }
-            } else if (typ === PrpTyp.bool) {
+            } else if (typ === PrpTyp.Bool) {
                 if (typeof mappedprop === 'function') {
                     mappedprop(this, val.readAsStrictBoolean(this.tmpar));
                 } else {
@@ -184,17 +184,17 @@ export abstract class VpcElSizable extends VpcElBase {
     }
 
     static szGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
-        getters['width'] = [PrpTyp.num, 'w'];
-        getters['height'] = [PrpTyp.num, 'h'];
-        getters['left'] = [PrpTyp.num, 'x'];
-        getters['top'] = [PrpTyp.num, 'y'];
-        getters['right'] = [PrpTyp.num, (me: VpcElSizable) => me._x + me._w];
-        getters['bottom'] = [PrpTyp.num, (me: VpcElSizable) => me._y + me._h];
-        getters['topleft'] = [PrpTyp.str, (me: VpcElSizable) => `${me._x},${me._y}`];
-        getters['botright'] = [PrpTyp.str, (me: VpcElSizable) => `${me._x + me._w},${me._y + me._h}`];
-        getters['rect'] = [PrpTyp.str, (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`];
+        getters['width'] = [PrpTyp.Num, 'w'];
+        getters['height'] = [PrpTyp.Num, 'h'];
+        getters['left'] = [PrpTyp.Num, 'x'];
+        getters['top'] = [PrpTyp.Num, 'y'];
+        getters['right'] = [PrpTyp.Num, (me: VpcElSizable) => me._x + me._w];
+        getters['bottom'] = [PrpTyp.Num, (me: VpcElSizable) => me._y + me._h];
+        getters['topleft'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y}`];
+        getters['botright'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + me._w},${me._y + me._h}`];
+        getters['rect'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`];
         getters['loc'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`,
         ];
         getters['bottomright'] = getters['botright'];
@@ -203,29 +203,29 @@ export abstract class VpcElSizable extends VpcElBase {
     }
 
     static szSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
-        setters['width'] = [PrpTyp.num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, n, me._h)];
-        setters['height'] = [PrpTyp.num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, me._w, n)];
-        setters['left'] = [PrpTyp.num, (me: VpcElSizable, n: number) => me.setDimensions(n, me._y, me._w, me._h)];
-        setters['top'] = [PrpTyp.num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n, me._w, me._h)];
+        setters['width'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, n, me._h)];
+        setters['height'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, me._w, n)];
+        setters['left'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(n, me._y, me._w, me._h)];
+        setters['top'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n, me._w, me._h)];
         setters['right'] = [
-            PrpTyp.num,
+            PrpTyp.Num,
             (me: VpcElSizable, n: number) => me.setDimensions(n - me._w, me._y, me._w, me._h),
         ];
         setters['bottom'] = [
-            PrpTyp.num,
+            PrpTyp.Num,
             (me: VpcElSizable, n: number) => me.setDimensions(me._x, n - me._h, me._w, me._h),
         ];
         setters['topleft'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElSizable, s: string) => me.setDimensions(getc(me, s, 0), getc(me, s, 1), me._w, me._h),
         ];
         setters['botright'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElSizable, s: string) =>
                 me.setDimensions(me._x, me._y, getc(me, s, 0) - me._x, getc(me, s, 1) - me._y),
         ];
         setters['rect'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElSizable, s: string) =>
                 me.setDimensions(
                     getc(me, s, 0),
@@ -235,7 +235,7 @@ export abstract class VpcElSizable extends VpcElBase {
                 ),
         ];
         setters['loc'] = [
-            PrpTyp.str,
+            PrpTyp.Str,
             (me: VpcElSizable, s: string) => {
                 let wasLocX = me._x + Math.trunc(me._w / 2);
                 let wasLocY = me._y + Math.trunc(me._h / 2);

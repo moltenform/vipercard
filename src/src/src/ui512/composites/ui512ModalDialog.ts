@@ -19,13 +19,13 @@
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 
 export enum UI512CompStdDialogType {
-    ask,
-    answer,
+    Ask,
+    Answer,
 }
 
 export class UI512CompStdDialog extends UI512CompBase {
     compositeType = 'modaldialog';
-    dlgtype = UI512CompStdDialogType.answer;
+    dlgtype = UI512CompStdDialogType.Answer;
     labeltext = '';
     btnlabels = ['', '', ''];
     cancelBtnBounds: number[][] = [];
@@ -48,7 +48,7 @@ export class UI512CompStdDialog extends UI512CompBase {
     ) {
         if (this.btnlabels[n]) {
             let btn = this.genBtn(app, grp, `choicebtn${n}`);
-            btn.set('style', n === 0 ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
+            btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
             btn.set('autohighlight', true);
             btn.set('labeltext', this.btnlabels[n]);
             btn.setDimensions(x + dims[0], y + dims[1], w, h);
@@ -81,11 +81,11 @@ export class UI512CompStdDialog extends UI512CompBase {
     }
 
     createSpecific(app: UI512Application) {
-        const marginx = this.dlgtype === UI512CompStdDialogType.ask ? 15 : 16;
-        const marginy = this.dlgtype === UI512CompStdDialogType.ask ? 13 : 16;
+        const marginx = this.dlgtype === UI512CompStdDialogType.Ask ? 15 : 16;
+        const marginy = this.dlgtype === UI512CompStdDialogType.Ask ? 13 : 16;
         let grp = app.getGroup(this.grpid);
         let bg = this.genBtn(app, grp, 'bgbtn');
-        bg.set('style', UI512BtnStyle.osboxmodal);
+        bg.set('style', UI512BtnStyle.OSBoxModal);
         bg.set('autohighlight', false);
         let dims = this.getFullDimensions();
         bg.setDimensions(dims[0], dims[1], dims[2], dims[3]);
@@ -101,11 +101,11 @@ export class UI512CompStdDialog extends UI512CompBase {
         );
 
         this.btnlabels[0] = this.btnlabels[0] || lng('lngOK');
-        if (this.dlgtype === UI512CompStdDialogType.answer) {
+        if (this.dlgtype === UI512CompStdDialogType.Answer) {
             this.drawBtn(app, grp, dims, 0, 230, 105, 99, 28);
             this.drawBtn(app, grp, dims, 1, 126, 108, 91, 20);
             this.drawBtn(app, grp, dims, 2, 19, 108, 91, 20);
-        } else if (this.dlgtype === UI512CompStdDialogType.ask) {
+        } else if (this.dlgtype === UI512CompStdDialogType.Ask) {
             this.resultText = undefined;
             this.drawBtn(app, grp, dims, 0, 174, 64, 69, 29);
             this.drawBtn(app, grp, dims, 1, 252, 68, 68, 21);
@@ -132,8 +132,8 @@ export class UI512CompStdDialog extends UI512CompBase {
         ctrl.mouseDragStatus = MouseDragStatus.None;
         let savedFocus = ctrl.getCurrentFocus();
         let savedCursor = UI512CursorAccess.getCursor();
-        ctrl.setCurrentFocus(this.dlgtype === UI512CompStdDialogType.ask ? this.getElId(`inputfld`) : undefined);
-        UI512CursorAccess.setCursor(UI512Cursors.arrow);
+        ctrl.setCurrentFocus(this.dlgtype === UI512CompStdDialogType.Ask ? this.getElId(`inputfld`) : undefined);
+        UI512CursorAccess.setCursor(UI512Cursors.Arrow);
         let nChosen = -1;
         let whenComplete = () => {
             eventFilter.restoreInteraction(app, this.grpid);
@@ -199,11 +199,11 @@ export class UI512CompStdDialog extends UI512CompBase {
         let w: number;
         let h: number;
         let yratio: number;
-        if (this.dlgtype === UI512CompStdDialogType.answer) {
+        if (this.dlgtype === UI512CompStdDialogType.Answer) {
             w = 344;
             h = 156 - 11;
             yratio = 0.275;
-        } else if (this.dlgtype === UI512CompStdDialogType.ask) {
+        } else if (this.dlgtype === UI512CompStdDialogType.Ask) {
             w = 338;
             h = 106;
             yratio = 0.3;
@@ -211,8 +211,8 @@ export class UI512CompStdDialog extends UI512CompBase {
             throw makeUI512Error(`2n|unknown dialog type ${this.dlgtype}`);
         }
 
-        const screenh = ScreenConsts.screenheight;
-        const screenw = ScreenConsts.screenwidth;
+        const screenh = ScreenConsts.ScreenHeight;
+        const screenw = ScreenConsts.ScreenWidth;
 
         // centered horizontally
         let x = Math.floor((screenw - w) / 2);
@@ -233,7 +233,7 @@ export class UI512CompStdDialog extends UI512CompBase {
         choice3 = ''
     ) {
         fnOnResult = fnOnResult || (() => {});
-        this.dlgtype = UI512CompStdDialogType.answer;
+        this.dlgtype = UI512CompStdDialogType.Answer;
         this.btnlabels = [choice1, choice2, choice3];
         this.labeltext = prompt;
         this.resultText = '';
@@ -249,7 +249,7 @@ export class UI512CompStdDialog extends UI512CompBase {
         defText: string,
         fnOnResult: (ret: O<string>, n: number) => void
     ) {
-        this.dlgtype = UI512CompStdDialogType.ask;
+        this.dlgtype = UI512CompStdDialogType.Ask;
         this.translatedProvidedText = defText;
         this.resultText = '';
         this.btnlabels = [lng('lngOK'), lng('lngCancel'), ''];

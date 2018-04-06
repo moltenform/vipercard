@@ -34,9 +34,9 @@ export class VpcElCard extends VpcElBase {
     static cdInit() {
         if (!VpcElCard.cachedGetters || !VpcElCard.cachedSetters) {
             VpcElCard.cachedGetters = {};
-            VpcElCard.cachedGetters['script'] = [PrpTyp.str, 'script'];
+            VpcElCard.cachedGetters['script'] = [PrpTyp.Str, 'script'];
             VpcElCard.cachedSetters = {};
-            VpcElCard.cachedSetters['name'] = [PrpTyp.str, 'name'];
+            VpcElCard.cachedSetters['name'] = [PrpTyp.Str, 'name'];
             Util512.freezeRecurse(VpcElCard.cachedGetters);
             Util512.freezeRecurse(VpcElCard.cachedSetters);
         }

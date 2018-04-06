@@ -52,7 +52,7 @@ export class UI512DemoText extends UI512Controller {
         // caption:
         let caption = new UI512ElButton('caption');
         grp.addElement(this.app, caption);
-        caption.set('style', UI512BtnStyle.opaque);
+        caption.set('style', UI512BtnStyle.Opaque);
         caption.setDimensions(70, 300, 180, 15);
 
         let mainfield = new UI512ElButton('mainfield');

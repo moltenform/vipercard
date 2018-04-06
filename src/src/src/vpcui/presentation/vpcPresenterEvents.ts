@@ -138,7 +138,7 @@ export class VpcAppControllerEvents {
         // if we're not in the browse tool,
         // stop all behavior like highlighting a button or selecting text in field
         let isVel = d.getAffectedElements().some(item => !!c.lyrModelRender.elIdToVelId(item.id));
-        if (isVel && c.appli.getTool() !== VpcTool.browse) {
+        if (isVel && c.appli.getTool() !== VpcTool.Browse) {
             d.setHandled();
         }
     }
@@ -148,8 +148,8 @@ export class VpcAppControllerEvents {
             if (d.el && d.el.id) {
                 let short = c.lyrToolboxes.toolsmain.fromFullId(d.el.id);
                 if (short && short.endsWith('##eraser')) {
-                    c.appli.setTool(VpcTool.eraser);
-                    let resp = cast(c.getToolResponse(VpcTool.eraser), VpcAppUIToolSmear);
+                    c.appli.setTool(VpcTool.Eraser);
+                    let resp = cast(c.getToolResponse(VpcTool.Eraser), VpcAppUIToolSmear);
                     resp.clearAllPaint();
                 }
             }
@@ -240,7 +240,7 @@ export class VpcAppControllerEvents {
                 !d.handled() &&
                 currentFocus &&
                 scontains(currentFocus, 'VpcPanelScriptEditor##editor') &&
-                getToolCategory(c.appli.getTool()) === VpcToolCtg.ctgEdit &&
+                getToolCategory(c.appli.getTool()) === VpcToolCtg.CtgEdit &&
                 slength(c.appli.getOption_s('viewingScriptVelId'))
             ) {
                 // code editor keyboard shortcuts
@@ -252,7 +252,7 @@ export class VpcAppControllerEvents {
                 c.lyrNonModalDlgHolder.respondKeyDown(d);
             }
 
-            if (!c.appli.isCodeRunning() && !d.handled() && getToolCategory(c.appli.getTool()) === VpcToolCtg.ctgEdit) {
+            if (!c.appli.isCodeRunning() && !d.handled() && getToolCategory(c.appli.getTool()) === VpcToolCtg.CtgEdit) {
                 // prop panel keyboard shortcuts
                 c.lyrPropPanel.respondKeydown(d);
             }
@@ -261,7 +261,7 @@ export class VpcAppControllerEvents {
                 ed.onKeyDown(c, d);
             }
 
-            if (!c.appli.isCodeRunning() && !d.handled() && c.appli.getTool() === VpcTool.browse) {
+            if (!c.appli.isCodeRunning() && !d.handled() && c.appli.getTool() === VpcTool.Browse) {
                 VpcAppControllerEvents.scheduleScriptMsg(c, c.appli, d);
             }
 
@@ -276,7 +276,7 @@ export class VpcAppControllerEvents {
     }
 
     static respondKeyUp(c: VpcPresenterInterface, d: EventDetails) {
-        if (!d.handled() && c.appli.getTool() === VpcTool.browse) {
+        if (!d.handled() && c.appli.getTool() === VpcTool.Browse) {
             VpcAppControllerEvents.scheduleScriptMsg(c, c.appli, d);
         }
 
@@ -297,11 +297,11 @@ export class VpcAppControllerEvents {
             c.cursorRefreshPending = false;
         }
 
-        if (!d.handled() && codeRunning && curtool !== VpcTool.browse) {
+        if (!d.handled() && codeRunning && curtool !== VpcTool.Browse) {
             c.appli.getCodeExec().forceStopRunning();
         }
 
-        if (!d.handled() && curtool === VpcTool.browse) {
+        if (!d.handled() && curtool === VpcTool.Browse) {
             // run scripts. note that anything a script does is undoable.
             c.timerRunScript.update(d.milliseconds);
             if (c.timerRunScript.isDue()) {
@@ -322,7 +322,7 @@ export class VpcAppControllerEvents {
             c.timerSendMouseWithin.update(d.milliseconds);
             if (c.timerSendMouseWithin.isDue()) {
                 c.timerSendMouseWithin.reset();
-                if (curtool === VpcTool.browse) {
+                if (curtool === VpcTool.Browse) {
                     // send mousewithin
                     VpcAppControllerEvents.scheduleScriptMsg(c, c.appli, d, c.trackMouse[0], c.trackMouse[1]);
                 }
@@ -332,7 +332,7 @@ export class VpcAppControllerEvents {
         if (!d.handled()) {
             // should be fairly fast, not adding anything to a queue, if there is no handler.
             // send onidle event to script
-            if (curtool === VpcTool.browse) {
+            if (curtool === VpcTool.Browse) {
                 VpcAppControllerEvents.scheduleScriptMsg(c, c.appli, d, -1, -1);
             }
         }
@@ -355,7 +355,7 @@ export class VpcAppControllerEvents {
         mouseX = -1,
         mouseY = -1
     ) {
-        if (d.handled() || appli.getTool() !== VpcTool.browse) {
+        if (d.handled() || appli.getTool() !== VpcTool.Browse) {
             return;
         }
 

@@ -7,22 +7,22 @@
  */
 export enum UI512Cursors {
     __isUI512Enum = 1,
-    unknown = 2,
-    arrow = 3,
-    beam = 4,
-    crosshair = 5,
-    hand = 6,
-    pencil = 7,
-    plus = 8,
-    watch = 9,
-    paintbrush = 10,
-    paintbucket = 11,
-    painttext = 12,
-    paintlasso = 13,
-    painteraser = 14,
-    paintspray = 15,
-    hosthand = 20,
-    hostpointer = 21,
+    Unknown = 2,
+    Arrow = 3,
+    Beam = 4,
+    Crosshair = 5,
+    Hand = 6,
+    Pencil = 7,
+    Plus = 8,
+    Watch = 9,
+    PaintBrush = 10,
+    PaintBucket = 11,
+    PaintText = 12,
+    PaintLasso = 13,
+    PaintEraser = 14,
+    PaintSpray = 15,
+    HostHand = 20,
+    HostPointer = 21,
 }
 
 /**
@@ -30,8 +30,8 @@ export enum UI512Cursors {
  * won't have any effect on performance
  */
 export class UI512CursorAccess {
-    protected static currentCursor = UI512Cursors.unknown;
-    static defaultCursor = UI512Cursors.arrow;
+    protected static currentCursor = UI512Cursors.Unknown;
+    static defaultCursor = UI512Cursors.Arrow;
     static getCursor(): UI512Cursors {
         return UI512CursorAccess.currentCursor;
     }

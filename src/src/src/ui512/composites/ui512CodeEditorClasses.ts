@@ -172,7 +172,7 @@ export class UI512AutoIndent {
 
     lineSetIndent(s: string, n: number) {
         s = s.replace(/^[ \t]+/, '');
-        let space = this.useTabs ? '\t' : Util512.repeat(ScrollConsts.tabSize, ' ').join('');
+        let space = this.useTabs ? '\t' : Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         for (let i = 0; i < n; i++) {
             s = space + s;
         }

@@ -122,7 +122,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         let grp = app.getGroup(this.grpid);
         for (let [lbltxt, inid] of this.rightOptions) {
             let inp = this.genBtn(app, grp, `toggle##${inid}`);
-            inp.set('style', UI512BtnStyle.checkbox);
+            inp.set('style', UI512BtnStyle.Checkbox);
             inp.set('labeltext', lng(lbltxt));
             inp.set('labelhalign', false);
             inp.set('labelvalign', true);
@@ -151,7 +151,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         const btnH = 23;
         let scriptBtn = this.genBtn(app, grp, this.isBlank ? 'btnGenPart' : 'btnScript');
         scriptBtn.set('labeltext', lng('lngScript...'));
-        scriptBtn.set('style', UI512BtnStyle.osstandard);
+        scriptBtn.set('style', UI512BtnStyle.OSStandard);
         scriptBtn.setDimensions(
             this.x + this.logicalWidth - (btnW + spaceFromRight),
             this.y + this.logicalHeight - (btnH + spaceFromBottom),
@@ -175,7 +175,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         for (let [lbltxt, inid, inputW] of this.topInputs) {
             let el = grp.getEl(this.getElId(`inp##${inid}`));
             if (inid === 'fldcontent') {
-                el.set('style', UI512FldStyle.transparent);
+                el.set('style', UI512FldStyle.Transparent);
                 el.set('canedit', false);
                 el.set('canselecttext', false);
                 el.set('h', 50);

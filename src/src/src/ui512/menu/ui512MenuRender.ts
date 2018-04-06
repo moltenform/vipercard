@@ -41,7 +41,7 @@ export class MenuPositioning {
         if (!grpitems.findEl(dropdownbgid)) {
             let dropdownbg = new UI512ElButton(dropdownbgid, menuroot.observer);
             dropdownbg.set('autohighlight', false);
-            dropdownbg.set('style', UI512BtnStyle.shadow);
+            dropdownbg.set('style', UI512BtnStyle.Shadow);
             grpitems.addElement(app, dropdownbg);
         }
     }
@@ -90,10 +90,10 @@ export class MenuPositioning {
                 return;
             }
 
-            longest = Math.max(longest, measured.newlogicalx + MenuConsts.addtowidth);
+            longest = Math.max(longest, measured.newlogicalx + MenuConsts.AddToWidth);
         }
 
-        let totalheight = MenuConsts.itemheight * items.length;
+        let totalheight = MenuConsts.ItemHeight * items.length;
         let rect = [header.x, header.bottom, longest, totalheight];
 
         let rightside = header.get_n('fixedoffset') !== -1;
@@ -111,16 +111,16 @@ export class MenuPositioning {
             rect[0],
             rect[1] - 1,
             rect[2],
-            rect[3] + 1 + MenuConsts.shadowsizebottom /* for the shadow*/
+            rect[3] + 1 + MenuConsts.ShadowSizeBottom /* for the shadow*/
         );
 
         // draw items
         for (let i = 0; i < items.length; i++) {
             items[i].setDimensions(
-                rect[0] + MenuConsts.shadowsizeleft,
-                rect[1] + MenuConsts.itemheight * i,
-                rect[2] - (MenuConsts.shadowsizeleft + MenuConsts.shadowsizeright),
-                MenuConsts.itemheight
+                rect[0] + MenuConsts.ShadowSizeLeft,
+                rect[1] + MenuConsts.ItemHeight * i,
+                rect[2] - (MenuConsts.ShadowSizeLeft + MenuConsts.ShadowSizeRight),
+                MenuConsts.ItemHeight
             );
 
             items[i].set('visible', true);
@@ -139,12 +139,12 @@ export class MenuPositioning {
 
         // top bar
         let [grpbar, grpitems] = MenuPositioning.getMenuGroups(app);
-        menuroot.setDimensions(app.bounds[0], app.bounds[1], app.bounds[2], MenuConsts.barheight - 1);
+        menuroot.setDimensions(app.bounds[0], app.bounds[1], app.bounds[2], MenuConsts.BarHeight - 1);
         assertTrueWarn(grpitems.findEl(menuroot.id + '##dropdownbg'), 'forgot to call createMenuHelperObjects?');
 
         // draw menu headers
         // following emulator, they actually overlap.
-        let curx = app.bounds[0] + MenuConsts.topheadermargin1;
+        let curx = app.bounds[0] + MenuConsts.TopHeaderMargin1;
         let curwidth = 0;
         let fontmanager = getRoot().getFontManager() as TextRendererFontManager;
         let counticonsdrawn = 0;
@@ -160,7 +160,7 @@ export class MenuPositioning {
                     return;
                 }
 
-                curwidth = measured.newlogicalx + MenuConsts.xspacing;
+                curwidth = measured.newlogicalx + MenuConsts.XSpacing;
             }
 
             if (header.get_n('fixedoffset') !== -1) {
@@ -169,7 +169,7 @@ export class MenuPositioning {
 
             // the emulator has a 1 pixel margin between top of screen and menu,
             // but we'll not do that because it doesn't look good against black background
-            header.setDimensions(curx - 4, app.bounds[1], curwidth + 5, MenuConsts.barheight - 1);
+            header.setDimensions(curx - 4, app.bounds[1], curwidth + 5, MenuConsts.BarHeight - 1);
             curx += curwidth;
 
             // draw active one

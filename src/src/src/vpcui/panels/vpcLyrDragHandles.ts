@@ -43,7 +43,7 @@ export class VpcAppResizeHandles extends VpcAppInterfaceLayer {
         for (let i = 0; i < 4; i++) {
             let handle = new UI512ElButton(`grpAppHelperElemsHandle${i}`);
             grpHelperElems.addElement(this.appli.UI512App(), handle);
-            handle.set('style', UI512BtnStyle.rectangle);
+            handle.set('style', UI512BtnStyle.Rectangle);
             handle.set('visible', true);
             handle.set('autohighlight', false);
             handle.set('highlightactive', true);
@@ -54,7 +54,7 @@ export class VpcAppResizeHandles extends VpcAppInterfaceLayer {
 
     getSelectedUiElForHandles(currentTool: VpcTool) {
         let selectedVelId = this.appli.getOption_s('selectedVelId');
-        if (getToolCategory(currentTool) === VpcToolCtg.ctgEdit && slength(selectedVelId)) {
+        if (getToolCategory(currentTool) === VpcToolCtg.CtgEdit && slength(selectedVelId)) {
             // if the current card / stack is selected,
             // we won't find an element, that's ok.
             let uigrp = this.appli.UI512App().getGroup('VpcModelRender');

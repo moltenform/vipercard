@@ -318,7 +318,7 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         let fromOptsWide = this.GetOption_b('optWideLines');
         let ret = PaintOntoCanvas.fromMemoryOpts(
             toolToPaintOntoCanvasShapes(tl),
-            tl === VpcTool.eraser,
+            tl === VpcTool.Eraser,
             fromOptsPattern,
             fromOptsFillcolor,
             fromOptsLineColor,
@@ -332,7 +332,7 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
     SimulateClick(argsGiven: number[], mods: ModifierKeys): void {
         let mimcTool = this.GetCurrentTool(false);
         checkThrow(
-            mimcTool !== VpcTool.browse,
+            mimcTool !== VpcTool.Browse,
             '7R|please first run something like \'choose "pencil" tool\' to specify which tool to draw with'
         );
         let args = this.paintOptionsFromCurrentOptions(false, mods);

@@ -69,15 +69,15 @@ export class CountNumericIdNormal implements CountNumericId {
 }
 
 export enum CodeLimits {
-    maxCustomFnCallsAllowedInLine = 100,
-    maxTokensInLine = 512,
-    maxLinesInScript = 32 * 1024,
-    maxCodeFrames = 1000,
-    cacheThisManyParsedLines = 10 * 1000,
-    maxLocalVars = 128,
-    maxGlobalVars = 128,
-    maxStringLength = 64 * 1024,
-    maxVelChildren = 256,
-    limitChevErr = 128,
-    maxStackNameLen = 256,
+    MaxCustomFnCallsAllowedInLine = 100,
+    MaxTokensInLine = 512,
+    MaxLinesInScript = 32 * 1024,
+    MaxCodeFrames = 1000,
+    CacheThisManyParsedLines = 10 * 1000,
+    MaxLocalVars = 128,
+    MaxGlobalVars = 128,
+    MaxStringLength = 64 * 1024,
+    MaxVelChildren = 256,
+    LimitChevErr = 128,
+    MaxStackNameLen = 256,
 }

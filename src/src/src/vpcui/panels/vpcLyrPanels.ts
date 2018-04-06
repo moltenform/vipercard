@@ -38,10 +38,10 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
         this.panels.add(VpcElType.Product.toString(), this.editor);
         for (let panel of this.panels.getVals()) {
             panel.appli = this.appli;
-            panel.x = this.appli.bounds()[0] + ScreenConsts.xareawidth + 1;
-            panel.y = this.appli.bounds()[1] + ScreenConsts.ymenubar + ToolboxDims.toolsIconH + 8;
-            panel.logicalWidth = ScreenConsts.screenwidth - (ScreenConsts.xareawidth + 1);
-            panel.logicalHeight = ScreenConsts.yareaheight - ToolboxDims.toolsIconH;
+            panel.x = this.appli.bounds()[0] + ScreenConsts.xAreaWidth + 1;
+            panel.y = this.appli.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
+            panel.logicalWidth = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
+            panel.logicalHeight = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
             panel.create(c, this.appli.UI512App());
             panel.setVisible(this.appli.UI512App(), false);
             panel.cbGetAndValidateSelectedVel = b => this.getAndValidateSelectedVel(b);
@@ -62,7 +62,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
         let selVel = this.appli.getOption_s(propname);
         let vel = this.appli.getModel().findByIdUntyped(selVel);
         let currentCard = this.appli.getModel().getCurrentCard().id;
-        if (vel && getToolCategory(this.appli.getTool()) === VpcToolCtg.ctgEdit) {
+        if (vel && getToolCategory(this.appli.getTool()) === VpcToolCtg.CtgEdit) {
             // make sure the parent makes sense
             if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
                 if (vel.parentId === currentCard) {
@@ -83,7 +83,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
     updateUI512Els() {
         let selected = this.getAndValidateSelectedVel('selectedVelId');
         let shouldBeActive: O<IsPropPanel>;
-        if (getToolCategory(this.appli.getOption_n('currentTool')) !== VpcToolCtg.ctgEdit) {
+        if (getToolCategory(this.appli.getOption_n('currentTool')) !== VpcToolCtg.CtgEdit) {
             shouldBeActive = undefined;
         } else if (slength(this.appli.getOption_s('viewingScriptVelId'))) {
             shouldBeActive = this.editor;
@@ -108,7 +108,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
     }
 
     saveChangesToModel(onlyCheckIfDirty: boolean) {
-        if (this.active && getToolCategory(this.appli.getTool()) === VpcToolCtg.ctgEdit) {
+        if (this.active && getToolCategory(this.appli.getTool()) === VpcToolCtg.CtgEdit) {
             this.active.saveChangesToModel(this.appli.UI512App(), onlyCheckIfDirty);
             this.updateUI512Els();
         }
@@ -168,7 +168,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
                     this.editor.respondToClick(this.appli.UI512App(), d.elClick.id);
                 } else if (d.elClick.id && d.elClick.id.endsWith('##btnGenPart')) {
                     let action =
-                        this.appli.getOption_n('currentTool') === VpcTool.button
+                        this.appli.getOption_n('currentTool') === VpcTool.Button
                             ? 'mnuObjectsNewBtn'
                             : 'mnuObjectsNewFld';
                     this.appli.performMenuAction(action);

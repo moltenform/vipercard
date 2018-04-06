@@ -43,7 +43,7 @@ export class UI512CompCodeEditor extends UI512CompBase {
         cury += spacerheight - 1;
 
         this.el = this.genChild(app, grp, 'editor', UI512ElTextField);
-        this.el.set('style', UI512FldStyle.rectangle);
+        this.el.set('style', UI512FldStyle.Rectangle);
         this.el.set('labelwrap', false);
         this.el.set('scrollbar', true);
         this.el.set('defaultFont', UI512CompCodeEditorFont.font);

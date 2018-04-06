@@ -158,7 +158,7 @@ export class TestDrawUI512Menus extends UI512TestBase {
         let bg = new UI512ElButton('bg');
         grp.addElement(c.app, bg);
         bg.set('labeltext', bgtext);
-        bg.set('style', UI512BtnStyle.opaque);
+        bg.set('style', UI512BtnStyle.Opaque);
         bg.setDimensions(bounds[0], bounds[1], bounds[2], bounds[3]);
         bg.set('enabled', false);
         bg.set('enabledstyle', false);
@@ -223,7 +223,7 @@ export class TestDrawUI512Menus extends UI512TestBase {
     testDrawMenus() {
         const w = 928;
         const h = 300;
-        assertEq(w, ScreenConsts.screenwidth, '1S|');
+        assertEq(w, ScreenConsts.ScreenWidth, '1S|');
         let tmpCanvasDom = window.document.createElement('canvas');
         tmpCanvasDom.width = w;
         tmpCanvasDom.height = h;

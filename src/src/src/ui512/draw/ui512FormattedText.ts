@@ -374,7 +374,7 @@ export class Lines {
     }
 
     static getIndentLevel(t: FormattedText) {
-        let spaces = Util512.repeat(ScrollConsts.tabSize, ' ').join('');
+        let spaces = Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         let s = t.toUnformatted();
         const maxIndents = 1024;
         let count = 0;

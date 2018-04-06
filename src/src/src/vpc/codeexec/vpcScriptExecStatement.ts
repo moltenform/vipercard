@@ -29,7 +29,7 @@ export class ExecuteStatements {
     cbStopCodeRunning: O<NullaryFn>;
     asyncOps: ScriptAsyncOperations;
     go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<number>) {
-        checkThrowEq(VpcLineCategory.statement, line.ctg, '7h|not a statement');
+        checkThrowEq(VpcLineCategory.Statement, line.ctg, '7h|not a statement');
         let firstToken = line.excerptToParse[0];
         checkThrow(isTkType(firstToken, tks.TokenTkidentifier), `7g|expect built-in statement`);
         let vals = visitResult as IntermedMapOfIntermedVals;
@@ -255,15 +255,19 @@ export class ExecuteStatements {
         let nm = fromNickname('FACTOR');
         let factor = throwIfUndefined(this.findChildVal(vals, nm), '5G|');
 
-        let stl = factor.readAsString().replace(/ +/, '_');
-        let tl = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', stl);
+        let sTool = factor.readAsString().replace(/ +/, '_');
+
+        checkThrow(sTool.length > 1, "not a valid tool name.");
+        /* the vals in the enum start with a capital letter */
+        sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase()
+        let tl = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
         let ctg = getToolCategory(tl);
         if (
-            ctg === VpcToolCtg.ctgShape ||
-            ctg === VpcToolCtg.ctgSmear ||
-            ctg === VpcToolCtg.ctgBucket ||
-            ctg === VpcToolCtg.ctgCurve ||
-            ctg === VpcToolCtg.ctgBrowse
+            ctg === VpcToolCtg.CtgShape ||
+            ctg === VpcToolCtg.CtgSmear ||
+            ctg === VpcToolCtg.CtgBucket ||
+            ctg === VpcToolCtg.CtgCurve ||
+            ctg === VpcToolCtg.CtgBrowse
         ) {
             this.outside.SetOption('mimicCurrentTool', tl);
         } else {

@@ -54,7 +54,7 @@ export class NavToolbox extends UI512CompToolbox {
     static layout(toolsnav: NavToolbox, appli: IVpcStateInterface) {
         toolsnav.iconh = 24;
         toolsnav.widthOfIcon = (id: string) => {
-            return ToolboxDims.toolsnavw;
+            return ToolboxDims.NavW;
         };
 
         const black = 77;
@@ -66,12 +66,12 @@ export class NavToolbox extends UI512CompToolbox {
             ['makeAnimOrStatus', black],
         ];
 
-        toolsnav.logicalWidth = toolsnav.items.length * ToolboxDims.toolsnavw - (toolsnav.items.length - 1);
+        toolsnav.logicalWidth = toolsnav.items.length * ToolboxDims.NavW - (toolsnav.items.length - 1);
         toolsnav.logicalHeight = 1;
         toolsnav.hasclosebtn = false;
         toolsnav.create(appli.getController(), appli.UI512App());
         toolsnav.setWhich(appli.UI512App(), undefined);
-        toolsnav.logicalHeight = ToolboxDims.toolbarheight;
+        toolsnav.logicalHeight = ToolboxDims.ToolbarHeight;
         return [toolsnav.x, toolsnav.y];
     }
 }

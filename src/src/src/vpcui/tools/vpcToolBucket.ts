@@ -30,6 +30,6 @@ export class VpcAppUIToolBucket extends VpcAppUIToolResponseBase {
     cancelCurrentToolAction(): void {}
 
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
-        return UI512Cursors.crosshair;
+        return UI512Cursors.Crosshair;
     }
 }

@@ -20,9 +20,9 @@ export class MainToolbox extends UI512CompToolbox {
     }
 
     static layout(toolsmain: MainToolbox, appli: IVpcStateInterface) {
-        toolsmain.iconh = ToolboxDims.toolsIconH;
+        toolsmain.iconh = ToolboxDims.IconH;
         toolsmain.widthOfIcon = (id: string) => {
-            return ToolboxDims.toolsmainw;
+            return ToolboxDims.MainW;
         };
 
         toolsmain.items = [
@@ -44,13 +44,13 @@ export class MainToolbox extends UI512CompToolbox {
             ['spray', 8],
         ];
         assertEq(16, toolsmain.items.length, '6y|');
-        toolsmain.logicalWidth = toolsmain.items.length * ToolboxDims.toolsmainw - (toolsmain.items.length - 1);
+        toolsmain.logicalWidth = toolsmain.items.length * ToolboxDims.MainW - (toolsmain.items.length - 1);
         toolsmain.logicalHeight = 1;
         toolsmain.hasclosebtn = false;
         toolsmain.create(appli.getController(), appli.UI512App());
         toolsmain.setWhich(appli.UI512App(), 'edit');
 
-        toolsmain.logicalHeight = ToolboxDims.toolbarheight;
+        toolsmain.logicalHeight = ToolboxDims.ToolbarHeight;
         return [toolsmain.x, toolsmain.y];
     }
 }

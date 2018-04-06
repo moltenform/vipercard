@@ -12,7 +12,7 @@
 /* auto */ import { IGenericTextField } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { VpcElType, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { UI512FldStyleInclScrolling, VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcFldStyleInclScroll, VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
@@ -32,7 +32,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         // buttons
         this.directMapProperty[VpcElType.Btn + '/autohilite'] = 'autohighlight';
         this.indirectProperty[VpcElType.Btn + '/enabled'] = (vel, el, newv) => {
-            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.ctgEdit;
+            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('enabledstyle', newv);
             el.set('enabled', isEdit ? true : newv);
         };
@@ -63,7 +63,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             el.set('labelhalign', newv !== 'left', ChangeContext.FromRenderModel);
         };
         this.indirectProperty[VpcElType.Btn + '/visible'] = (vel, el, newv) => {
-            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.ctgEdit;
+            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('visible', isEdit ? true : newv);
         };
 
@@ -76,7 +76,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             el.set('multiline', !newv, ChangeContext.FromRenderModel);
         };
         this.indirectProperty[VpcElType.Fld + '/enabled'] = (vel, el, newv) => {
-            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.ctgEdit;
+            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('enabledstyle', newv);
             el.set('enabled', isEdit ? true : newv);
         };
@@ -89,8 +89,8 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         this.directMapProperty[VpcElType.Fld + '/scroll'] = 'scrollamt';
         this.indirectProperty[VpcElType.Fld + '/style'] = (vel, el, newv) => {
             let wasScroll = el.get_b('scrollbar');
-            if (newv === UI512FldStyleInclScrolling.scrolling) {
-                el.set('style', UI512FldStyle.rectangle, ChangeContext.FromRenderModel);
+            if (newv === VpcFldStyleInclScroll.scrolling) {
+                el.set('style', UI512FldStyle.Rectangle, ChangeContext.FromRenderModel);
                 el.set('scrollbar', true, ChangeContext.FromRenderModel);
             } else {
                 el.set('style', newv, ChangeContext.FromRenderModel);
@@ -104,7 +104,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
 
         this.directMapProperty[VpcElType.Fld + '/scrollbar'] = 'scrollbar';
         this.indirectProperty[VpcElType.Fld + '/visible'] = (vel, el, newv) => {
-            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.ctgEdit;
+            let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('visible', isEdit ? true : newv);
         };
         this.indirectProperty[VpcElType.Fld + '/textalign'] = (vel, el, newv) => {

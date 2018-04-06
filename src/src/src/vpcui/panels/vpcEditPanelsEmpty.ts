@@ -34,7 +34,7 @@ export class PropPanelCompositeBlank extends PropPanelCompositeBase {
         let grp = app.getGroup(this.grpid);
         let btnGenPart = grp.getEl(this.getElId('btnGenPart'));
         let currentTool = this.appli.getOption_n('currentTool');
-        let lbl = currentTool === VpcTool.button ? 'lngMake new button' : 'lngMake new field';
+        let lbl = currentTool === VpcTool.Button ? 'lngMake new button' : 'lngMake new field';
         btnGenPart.set('labeltext', lng(lbl));
     }
 }

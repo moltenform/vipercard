@@ -36,7 +36,7 @@ export abstract class IntroPageBase extends UI512CompBase {
 
     drawCommonFirst(app: UI512Application, grp: UI512ElGroup) {
         let wndbg = this.genBtn(app, grp, 'wndbg');
-        wndbg.set('style', UI512BtnStyle.shadow);
+        wndbg.set('style', UI512BtnStyle.Shadow);
         wndbg.set('autohighlight', false);
         wndbg.setDimensions(this.x, this.y, this.logicalWidth + 1, this.logicalHeight + 2);
         let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasclosebtn);
@@ -57,7 +57,7 @@ export abstract class IntroPageBase extends UI512CompBase {
     drawCommonLast(app: UI512Application, grp: UI512ElGroup) {
         for (let i of Util512.range(6)) {
             this.fadedWindowDragging[i] = this.genBtn(app, grp, `faded${i}`);
-            this.fadedWindowDragging[i].set('style', UI512BtnStyle.transparent);
+            this.fadedWindowDragging[i].set('style', UI512BtnStyle.Transparent);
             this.fadedWindowDragging[i].set('iconsetid', 'logo');
             this.fadedWindowDragging[i].set('iconnumber', 1);
         }
@@ -133,7 +133,7 @@ export abstract class IntroPageBase extends UI512CompBase {
     ) {
         let btn = this.genBtn(app, grp, `choicebtn${n}`);
         let labeltext = n === 0 ? lng('lngOK') : lng('lngCancel');
-        btn.set('style', n === 0 ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
+        btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
         btn.set('autohighlight', true);
         btn.set('labeltext', labeltext);
         btn.setDimensions(x, y, w, h);

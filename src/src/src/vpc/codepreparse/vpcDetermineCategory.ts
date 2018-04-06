@@ -20,7 +20,7 @@ export class DetermineCategory {
         protected check: CheckReservedWords
     ) {
         this.sharedRequestEval = {
-            image: CodeSymbols.requestEval,
+            image: CodeSymbols.RequestEval,
             startOffset: -1,
             startLine: -1,
             startColumn: -1,
@@ -33,7 +33,7 @@ export class DetermineCategory {
         };
 
         this.sharedRequestUserHandler = {
-            image: CodeSymbols.requestHandlerCall,
+            image: CodeSymbols.RequestHandlerCall,
             startOffset: -1,
             startLine: -1,
             startColumn: -1,
@@ -91,18 +91,18 @@ export class DetermineCategory {
 
     protected isParsingNeeded(ctg: VpcLineCategory) {
         switch (ctg) {
-            case VpcLineCategory.handlerStart: // fall-through
-            case VpcLineCategory.handlerEnd: // fall-through
-            case VpcLineCategory.handlerExit: // fall-through
-            case VpcLineCategory.productExit: // fall-through
-            case VpcLineCategory.handlerPass: // fall-through
-            case VpcLineCategory.ifElsePlain: // fall-through
-            case VpcLineCategory.ifEnd: // fall-through
-            case VpcLineCategory.repeatExit: // fall-through
-            case VpcLineCategory.repeatNext: // fall-through
-            case VpcLineCategory.repeatForever: // fall-through
-            case VpcLineCategory.repeatEnd: // fall-through
-            case VpcLineCategory.declareGlobal: // fall-through
+            case VpcLineCategory.HandlerStart: // fall-through
+            case VpcLineCategory.HandlerEnd: // fall-through
+            case VpcLineCategory.HandlerExit: // fall-through
+            case VpcLineCategory.ProductExit: // fall-through
+            case VpcLineCategory.HandlerPass: // fall-through
+            case VpcLineCategory.IfElsePlain: // fall-through
+            case VpcLineCategory.IfEnd: // fall-through
+            case VpcLineCategory.RepeatExit: // fall-through
+            case VpcLineCategory.RepeatNext: // fall-through
+            case VpcLineCategory.RepeatForever: // fall-through
+            case VpcLineCategory.RepeatEnd: // fall-through
+            case VpcLineCategory.DeclareGlobal: // fall-through
                 return false;
             default:
                 return true;
@@ -110,7 +110,7 @@ export class DetermineCategory {
     }
 
     go_builtincmd(firstImage: string, line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.statement;
+        output.ctg = VpcLineCategory.Statement;
         output.excerptToParse = line;
         output.setParseRule(this.mapBuiltinCmds.get(firstImage));
     }
@@ -126,7 +126,7 @@ export class DetermineCategory {
             );
         }
 
-        output.ctg = VpcLineCategory.callHandler;
+        output.ctg = VpcLineCategory.CallHandler;
         checkThrow(
             this.check.okHandlerName(line[0].image),
             `8K|it looked like you were calling a handler like mouseUp or myHandler, but this is a reserved word.`
@@ -165,7 +165,7 @@ export class DetermineCategory {
     }
 
     helper_handlerStart(line: ChvIToken[], output: VpcCodeLine, firstToken: ChvIToken) {
-        output.ctg = VpcLineCategory.handlerStart;
+        output.ctg = VpcLineCategory.HandlerStart;
         checkThrow(line.length > 1, `8F|cannot have a line that is just "on"`);
         DetermineCategory.checkCommonMistakenVarNames(line[1]);
         checkThrow(this.check.okHandlerName(line[1].image), `8E|name of handler is a reserved word.`);
@@ -189,7 +189,7 @@ export class DetermineCategory {
     }
 
     go_global(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.declareGlobal;
+        output.ctg = VpcLineCategory.DeclareGlobal;
         checkThrow(line.length > 1, `8C|cannot have a line that is just "global"`);
         this.helper_getListOfValidIdentifiers(line, output, 1);
     }
@@ -212,26 +212,26 @@ export class DetermineCategory {
     }
 
     go_end_handler(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.handlerEnd;
+        output.ctg = VpcLineCategory.HandlerEnd;
         this.go_handlerend_common(line, output, 'end');
     }
 
     go_exit_handler(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.handlerExit;
+        output.ctg = VpcLineCategory.HandlerExit;
         this.go_handlerend_common(line, output, 'exit');
     }
 
     go_pass(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.handlerPass;
+        output.ctg = VpcLineCategory.HandlerPass;
         this.go_handlerend_common(line, output, 'pass');
     }
 
     go_exit_product(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.productExit;
+        output.ctg = VpcLineCategory.ProductExit;
     }
 
     go_return(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.returnExpr;
+        output.ctg = VpcLineCategory.ReturnExpr;
         checkThrow(
             line.length > 1,
             `88|cannot have a line that is just "return". if you really want to return void, try exit myhandler.`
@@ -240,7 +240,7 @@ export class DetermineCategory {
     }
 
     go_if(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.ifStart;
+        output.ctg = VpcLineCategory.IfStart;
         let lasttk = line[line.length - 1];
         checkThrow(
             isTkType(lasttk, tks.TokenTkidentifier) && lasttk.image === 'then',
@@ -251,7 +251,7 @@ export class DetermineCategory {
     }
 
     go_else_if_cond(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.ifElse;
+        output.ctg = VpcLineCategory.IfElse;
         let lasttk = line[line.length - 1];
         checkThrow(
             isTkType(lasttk, tks.TokenTkidentifier) && lasttk.image === 'then',
@@ -266,12 +266,12 @@ export class DetermineCategory {
     }
 
     go_else_if_plain(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.ifElsePlain;
+        output.ctg = VpcLineCategory.IfElsePlain;
         checkThrowEq(1, line.length, `82|line should be just 'else'`);
     }
 
     go_end_if(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.ifEnd;
+        output.ctg = VpcLineCategory.IfEnd;
         checkThrowEq(2, line.length, `81|line should be just 'end if'`);
     }
 
@@ -284,17 +284,17 @@ export class DetermineCategory {
     }
 
     go_exit_repeat(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.repeatExit;
+        output.ctg = VpcLineCategory.RepeatExit;
         checkThrowEq(2, line.length, `80|line should be just 'exit repeat'`);
     }
 
     go_end_repeat(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.repeatEnd;
+        output.ctg = VpcLineCategory.RepeatEnd;
         checkThrowEq(2, line.length, `7~|line should be just 'end repeat'`);
     }
 
     go_next(line: ChvIToken[], output: VpcCodeLine) {
-        output.ctg = VpcLineCategory.repeatNext;
+        output.ctg = VpcLineCategory.RepeatNext;
         checkThrowEq(2, line.length, `7}|line should be just 'next repeat'`);
         checkThrow(
             isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'repeat',
@@ -304,13 +304,13 @@ export class DetermineCategory {
 
     go_repeat(line: ChvIToken[], output: VpcCodeLine) {
         if (line.length === 1) {
-            output.ctg = VpcLineCategory.repeatForever;
+            output.ctg = VpcLineCategory.RepeatForever;
         } else if (isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'while') {
-            output.ctg = VpcLineCategory.repeatWhile;
+            output.ctg = VpcLineCategory.RepeatWhile;
             checkThrow(line.length > 2, `7{|can't have "repeat while" without an expression`);
             output.excerptToParse = line.slice(2);
         } else if (isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'until') {
-            output.ctg = VpcLineCategory.repeatUntil;
+            output.ctg = VpcLineCategory.RepeatUntil;
             checkThrow(line.length > 2, `9e|can't have "repeat until" without an expression`);
             output.excerptToParse = line.slice(2);
         } else {

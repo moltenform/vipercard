@@ -29,7 +29,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         // draw bg
         let fullBg = new UI512ElButton('bg');
         grp.addElement(this.app, fullBg);
-        fullBg.set('style', UI512BtnStyle.opaque);
+        fullBg.set('style', UI512BtnStyle.Opaque);
         fullBg.setDimensions(this.bounds[0], this.bounds[1], this.bounds[2], this.bounds[3]);
         fullBg.set('autohighlight', false);
 
@@ -48,7 +48,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         layoutPatternBg.createElems(this.app, grp, 'bgpattern', UI512ElButton, (col, row, el) => {
             el.set('iconsetid', 'logo');
             el.set('iconnumber', 1);
-            el.set('style', UI512BtnStyle.transparent);
+            el.set('style', UI512BtnStyle.Transparent);
             el.set('autohighlight', false);
         });
 

@@ -131,7 +131,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
 
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
-        bg.set('style', this.showHeader ? UI512BtnStyle.rectangle : UI512BtnStyle.opaque);
+        bg.set('style', this.showHeader ? UI512BtnStyle.Rectangle : UI512BtnStyle.Opaque);
         bg.setDimensions(this.x, this.y + headheight, this.logicalWidth, this.logicalHeight - headheight);
 
         const fldVerticalMargin = 5;
@@ -153,7 +153,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
 
             let rght = this.genChild<UI512ElTextField>(app, grp, 'fld' + fldId, UI512ElTextField);
             rght.setDimensions(curx, cury, this.fldWidth, h);
-            rght.set('style', UI512FldStyle.rectangle);
+            rght.set('style', UI512FldStyle.Rectangle);
             rght.set('multiline', heightMult > 1);
             rght.set('nudgey', 2);
 
@@ -218,7 +218,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
     ) {
         if (this.btns[n]) {
             let btn = this.genBtn(app, grp, `btn${this.btns[n][0]}`);
-            btn.set('style', n === 0 ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
+            btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
             btn.set('autohighlight', true);
             btn.set('labeltext', lng(this.btns[n][1]));
             btn.setDimensions(x, y, w, h);

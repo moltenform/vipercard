@@ -83,7 +83,7 @@ export class ExpandCustomFunctions {
 
     rewriteToAllowCustomFns(line: ChvIToken[]) {
         let ret: ChvIToken[][] = [];
-        let limit = new LoopLimit(CodeLimits.maxCustomFnCallsAllowedInLine, 'maxCustomFnCallsAllowedInLine');
+        let limit = new LoopLimit(CodeLimits.MaxCustomFnCallsAllowedInLine, 'maxCustomFnCallsAllowedInLine');
         let cantUseYetAr = new ValHolder<{ [key: number]: boolean }>({});
         while (limit.next()) {
             // look for a custom function call

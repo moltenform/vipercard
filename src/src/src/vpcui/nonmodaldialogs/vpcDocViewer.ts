@@ -285,7 +285,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         } else {
             rghtFld.setDimensionsX1Y1(top.x + top.w + 10, top.y, this.x + this.logicalWidth, btm.bottom);
         }
-        rghtFld.set('style', UI512FldStyle.rectangle);
+        rghtFld.set('style', UI512FldStyle.Rectangle);
         rghtFld.set('canselecttext', true);
         rghtFld.set('canedit', false);
         rghtFld.set('scrollbar', this.type === DialogDocsType.Reference);
@@ -296,11 +296,11 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         rghtBtn.set('visible', this.type !== DialogDocsType.Reference);
         rghtBtn.set(
             'style',
-            this.type === DialogDocsType.Screenshots ? UI512BtnStyle.rectangle : UI512BtnStyle.transparent
+            this.type === DialogDocsType.Screenshots ? UI512BtnStyle.Rectangle : UI512BtnStyle.Transparent
         );
 
         let btnStartVid = this.genBtn(this.appli.UI512App(), grp, 'btnStartVid');
-        btnStartVid.set('style', UI512BtnStyle.osstandard);
+        btnStartVid.set('style', UI512BtnStyle.OSStandard);
         btnStartVid.set('autohighlight', true);
         btnStartVid.set('labeltext', 'Start Video');
         btnStartVid.set('visible', this.type === DialogDocsType.Screenshots);

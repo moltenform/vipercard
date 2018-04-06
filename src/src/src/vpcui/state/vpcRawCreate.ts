@@ -72,8 +72,8 @@ export abstract class UndoableActionCreateOrDelVelement {
         // check bounds, note that it is ok to insert one past the end.
         assertTrueWarn(this.insertindex >= 0 && this.insertindex <= ar.length, '6c|incorrect insertion point');
         checkThrow(
-            ar.length < CodeLimits.maxVelChildren,
-            `8)|exceeded maximum number of child elements (${CodeLimits.maxVelChildren})`
+            ar.length < CodeLimits.MaxVelChildren,
+            `8)|exceeded maximum number of child elements (${CodeLimits.MaxVelChildren})`
         );
         ar.splice(this.insertindex, 0, el);
     }

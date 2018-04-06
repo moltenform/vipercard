@@ -2,43 +2,43 @@
 /* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utilsUI512.js';
 
 export enum MenuConsts {
-    addtowidth = 45 + 6,
-    shadowsizeleft = 1,
-    shadowsizeright = 2,
-    shadowsizetop = 1,
-    shadowsizebottom = 2,
-    itemheight = 16,
-    xspacing = 13,
-    firstLabelPadding = 13,
-    secondLabelDistance = 24,
-    topheadermargin1 = 11,
-    topheadermargin2 = 500,
-    barheight = 21,
+    AddToWidth = 45 + 6,
+    ShadowSizeLeft = 1,
+    ShadowSizeRight = 2,
+    ShadowSizeTop = 1,
+    ShadowSizeBottom = 2,
+    ItemHeight = 16,
+    XSpacing = 13,
+    FirstLabelPadding = 13,
+    SecondLabelDistance = 24,
+    TopHeaderMargin1 = 11,
+    TopHeaderMargin2 = 500,
+    BarHeight = 21,
 }
 
 export enum ScrollConsts {
-    barwidth = 16,
-    boxheight = 16,
-    amtPerClick = 10,
-    padBottomOfField = 6,
-    tabSize = 4,
-    windowCaptionSpacing = 12,
-    windowCaptionAdjustTextY = 1,
+    BarWidth = 16,
+    BoxHeight = 16,
+    AmtPerClick = 10,
+    PadBottomOfField = 6,
+    TabSize = 4,
+    WindowCaptionSpacing = 12,
+    WindowCaptionAdjustTextY = 1,
 }
 
 export enum ScreenConsts {
-    xleftmargin = 47,
-    xareawidth = 512,
-    xtoolwidth = 23,
-    xtoolcount = 16,
-    xtoolmargin = 1,
-    xrightmargin = 0,
-    ytopmargin = 47,
-    ymenubar = 20,
-    yareaheight = 342,
-    ylowermargin = 7,
-    screenwidth = 928,
-    screenheight = 416,
+    xLeftMargin = 47,
+    xAreaWidth = 512,
+    xToolWidth = 23,
+    xToolCount = 16,
+    xToolMargin = 1,
+    xRightMargin = 0,
+    yTopMargin = 47,
+    yMenuBar = 20,
+    yAreaHeight = 342,
+    yLowerMargin = 7,
+    ScreenWidth = 928,
+    ScreenHeight = 416,
 }
 
 /**
@@ -46,10 +46,10 @@ export enum ScreenConsts {
  */
 export function getUI512WindowBounds() {
     return [
-        ScreenConsts.xleftmargin,
-        ScreenConsts.ytopmargin,
-        ScreenConsts.screenwidth - (ScreenConsts.xleftmargin + ScreenConsts.xrightmargin),
-        ScreenConsts.screenheight - (ScreenConsts.ytopmargin + ScreenConsts.ylowermargin),
+        ScreenConsts.xLeftMargin,
+        ScreenConsts.yTopMargin,
+        ScreenConsts.ScreenWidth - (ScreenConsts.xLeftMargin + ScreenConsts.xRightMargin),
+        ScreenConsts.ScreenHeight - (ScreenConsts.yTopMargin + ScreenConsts.yLowerMargin),
     ];
 }
 
@@ -57,12 +57,12 @@ export function getUI512WindowBounds() {
  * screen width should equal all the widths put together
  */
 assertEq(
-    ScreenConsts.screenwidth,
-    ScreenConsts.xleftmargin +
-        ScreenConsts.xareawidth +
-        ScreenConsts.xtoolwidth * ScreenConsts.xtoolcount +
-        ScreenConsts.xtoolmargin +
-        ScreenConsts.xrightmargin,
+    ScreenConsts.ScreenWidth,
+    ScreenConsts.xLeftMargin +
+        ScreenConsts.xAreaWidth +
+        ScreenConsts.xToolWidth * ScreenConsts.xToolCount +
+        ScreenConsts.xToolMargin +
+        ScreenConsts.xRightMargin,
     '3 |'
 );
 
@@ -70,16 +70,16 @@ assertEq(
  * screen height should equal all the heights put together
  */
 assertEq(
-    ScreenConsts.screenheight,
-    ScreenConsts.ytopmargin + ScreenConsts.ymenubar + ScreenConsts.yareaheight + ScreenConsts.ylowermargin,
+    ScreenConsts.ScreenHeight,
+    ScreenConsts.yTopMargin + ScreenConsts.yMenuBar + ScreenConsts.yAreaHeight + ScreenConsts.yLowerMargin,
     '3z|'
 );
 
 /**
  * let's use dimensions divisible by 8
  */
-assertEq(0, ScreenConsts.screenwidth % 8, '3y|');
-assertEq(0, ScreenConsts.screenheight % 8, '3x|');
+assertEq(0, ScreenConsts.ScreenWidth % 8, '3y|');
+assertEq(0, ScreenConsts.ScreenHeight % 8, '3x|');
 
 /**
  * ModifierKeys bitfield.

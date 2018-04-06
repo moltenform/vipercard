@@ -169,16 +169,16 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         let grp = new UI512ElGroup('grpVpcAppUIToolStamp');
         this.appli.UI512App().addGroup(grp);
 
-        let px = this.appli.bounds()[0] + ScreenConsts.xareawidth + 1;
-        let py = this.appli.bounds()[1] + ScreenConsts.ymenubar + ToolboxDims.toolsIconH + 8;
-        let pw = ScreenConsts.screenwidth - (ScreenConsts.xareawidth + 1);
-        let ph = ScreenConsts.yareaheight - ToolboxDims.toolsIconH;
+        let px = this.appli.bounds()[0] + ScreenConsts.xAreaWidth + 1;
+        let py = this.appli.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
+        let pw = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
+        let ph = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
 
         // draw background rectangle
         let bg = new UI512ElButton('grpVpcAppUIToolStampBg');
         grp.addElement(this.appli.UI512App(), bg);
         bg.set('autohighlight', false);
-        bg.set('style', UI512BtnStyle.rectangle);
+        bg.set('style', UI512BtnStyle.Rectangle);
         bg.setDimensions(px, py, pw, ph);
 
         // draw category choices
@@ -200,7 +200,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         // draw status icon
         let statusicon = new UI512ElButton('grpVpcAppUIToolStampStatus');
         grp.addElement(this.appli.UI512App(), statusicon);
-        statusicon.set('style', UI512BtnStyle.opaque);
+        statusicon.set('style', UI512BtnStyle.Opaque);
         statusicon.set('iconsetid', '001');
         statusicon.set('iconnumber', 76); // white
         statusicon.setDimensions(px + 312, py + 15, 30, 30);
@@ -237,6 +237,6 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     }
 
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
-        return UI512Cursors.crosshair;
+        return UI512Cursors.Crosshair;
     }
 }

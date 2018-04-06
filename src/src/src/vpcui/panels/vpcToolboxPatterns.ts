@@ -44,13 +44,13 @@ export class PatternsToolbox extends UI512CompToolbox {
     }
 
     static layout(toolspatterns: PatternsToolbox, appli: IVpcStateInterface) {
-        toolspatterns.iconh = ToolboxDims.toolsIconH;
+        toolspatterns.iconh = ToolboxDims.IconH;
         toolspatterns.widthOfIcon = (id: string) => {
-            return ToolboxDims.toolspatternsw;
+            return ToolboxDims.PatternsW;
         };
 
         toolspatterns.logicalWidth =
-            ToolboxDims.toolspatternperrow * ToolboxDims.toolspatternsw - (ToolboxDims.toolspatternperrow - 1);
+            ToolboxDims.PatternsPerRow * ToolboxDims.PatternsW - (ToolboxDims.PatternsPerRow - 1);
         toolspatterns.logicalHeight = 1;
         toolspatterns.items = [
             ['pattern100', 76],
@@ -106,17 +106,17 @@ export class PatternsToolbox extends UI512CompToolbox {
         toolspatterns.hasclosebtn = false;
         toolspatterns.create(appli.getController(), appli.UI512App());
         toolspatterns.setWhich(appli.UI512App(), appli.getOption_s('currentPattern'));
-        toolspatterns.logicalHeight = ToolboxDims.toolbarheight * 3;
+        toolspatterns.logicalHeight = ToolboxDims.ToolbarHeight * 3;
         return [toolspatterns.x, toolspatterns.y];
     }
 }
 
 export enum ToolboxDims {
-    toolsIconH = 24,
-    toolsmainw = 24,
-    toolspatternsw = 24,
-    toolspatternperrow = 16,
-    toolbarheight = 33,
-    toolsnavw = 24,
-    toolsnavaddedx = 253,
+    IconH = 24,
+    MainW = 24,
+    PatternsW = 24,
+    PatternsPerRow = 16,
+    ToolbarHeight = 33,
+    NavW = 24,
+    NavAddedX = 253,
 }
