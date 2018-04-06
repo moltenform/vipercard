@@ -1,6 +1,7 @@
 
 /* auto */ import { makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { BrowserOSInfo, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
@@ -27,13 +28,13 @@ export class VpcMenuActions {
     // OS menu
     go_mnuOSAbout() {
         let c = this.appli.getController();
-        let dlg = new UI512CompStdDialog('OSAboutDlg', this.appli.lang());
+        let dlg = new UI512CompStdDialog('OSAboutDlg');
         VpcAboutDialog.show(c, dlg);
     }
 
     go_mnuOSDonate() {
         let c = this.appli.getController();
-        let dlg = new UI512CompStdDialog('OSAboutDlg', this.appli.lang());
+        let dlg = new UI512CompStdDialog('OSAboutDlg');
         VpcAboutDialog.showDonateIndirectly(c, dlg);
     }
 
@@ -54,10 +55,7 @@ export class VpcMenuActions {
     go_mnuReportSec() {
         throw makeVpcInternalErr(
             msgNotification +
-                this.appli
-                    .lang()
-                    .translate(
-                        'lngSecurity issues are taken seriously. If you are aware of an issue that has security\n' +
+                lng('lngSecurity issues are taken seriously. If you are aware of an issue that has security\n' +
                             'implications, please contact the developers\nat security@vipercard.net.'
                     )
         );
@@ -249,10 +247,7 @@ export class VpcMenuActions {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Option' : 'Alt';
         throw makeVpcInternalErr(
             msgNotification +
-                this.appli
-                    .lang()
-                    .translate(
-                        `lngTo make many of copies of a shape, first use the 'lasso' or 'select' tool to select the region. Then, hold the ${keyname} key, click within the region, and drag.`
+            lng(`lngTo make many of copies of a shape, first use the 'lasso' or 'select' tool to select the region. Then, hold the ${keyname} key, click within the region, and drag.`
                     )
         );
     }
@@ -260,21 +255,21 @@ export class VpcMenuActions {
     go_mnuCut() {
         throw makeVpcInternalErr(
             msgNotification +
-                this.appli.lang().translate('lngPlease use the keyboard shortcut Cmd+X to \ncut text.')
+                lng('lngPlease use the keyboard shortcut Cmd+X to \ncut text.')
         );
     }
 
     go_mnuCopy() {
         throw makeVpcInternalErr(
             msgNotification +
-                this.appli.lang().translate('lngPlease use the keyboard shortcut Cmd+C to \ncopy text.')
+                lng('lngPlease use the keyboard shortcut Cmd+C to \ncopy text.')
         );
     }
 
     go_mnuPaste() {
         throw makeVpcInternalErr(
             msgNotification +
-                this.appli.lang().translate('lngPlease use the keyboard shortcut Cmd+V to \npaste text.')
+                lng('lngPlease use the keyboard shortcut Cmd+V to \npaste text.')
         );
     }
 

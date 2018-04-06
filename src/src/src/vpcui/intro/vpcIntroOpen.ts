@@ -3,7 +3,7 @@
 /* auto */ import { slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
@@ -44,14 +44,14 @@ export class IntroOpenPage extends IntroPageBase {
         super(compid, bounds, x, y);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpid);
-        let headerheight = this.drawCommonFirst(app, grp, lang);
+        let headerheight = this.drawCommonFirst(app, grp);
 
         // draw the OK and cancel buttons
         let wndbg = grp.getEl(this.getElId('wndbg'));
-        this.drawBtn(app, grp, 1, this.x + 180, this.y + 287, 68, 21, lang);
-        this.drawBtn(app, grp, 0, this.x + 180 - (252 - 174), this.y + 287 - 4, 69, 29, lang);
+        this.drawBtn(app, grp, 1, this.x + 180, this.y + 287, 68, 21);
+        this.drawBtn(app, grp, 0, this.x + 180 - (252 - 174), this.y + 287 - 4, 69, 29);
 
         // draw the logo
         let half = Math.floor(this.logicalWidth / 2);
@@ -77,7 +77,7 @@ export class IntroOpenPage extends IntroPageBase {
 
         // draw the prompt
         let prompt = this.genChild(app, grp, 'prompt', UI512ElLabel);
-        let caption = lang.translate('lngFeatured stacks...');
+        let caption = lng('lngFeatured stacks...');
         prompt.set('labeltext', caption);
         prompt.setDimensions(this.x + 20, this.y + 50, 200, 50);
 
@@ -94,10 +94,10 @@ export class IntroOpenPage extends IntroPageBase {
         this.chooser.setDimensions(this.x + 26, this.y + 84, 190, 140);
         grp.getEl(this.getElId('footerText')).set('visible', false);
 
-        // let btnOpenFromAccount = this.drawBtn(app, grp, 3, this.x + 311, this.y + 240, 149, 31, lang);
-        // btnOpenFromAccount.set('labeltext', lang.translate("lngMy stacks..."))
-        // let btnDelete = this.drawBtn(app, grp, 4, btnOpenFromAccount.x, btnOpenFromAccount.bottom + 10, 149, 31, lang);
-        // btnDelete.set('labeltext', lang.translate("lngDelete..."))
+        // let btnOpenFromAccount = this.drawBtn(app, grp, 3, this.x + 311, this.y + 240, 149, 31);
+        // btnOpenFromAccount.set('labeltext', lng("lngMy stacks..."))
+        // let btnDelete = this.drawBtn(app, grp, 4, btnOpenFromAccount.x, btnOpenFromAccount.bottom + 10, 149, 31);
+        // btnDelete.set('labeltext', lng("lngDelete..."))
 
         if (this.openType === OpenFromLocation.FromStaticDemo) {
             let sDocs: string[] = [];
@@ -112,7 +112,7 @@ export class IntroOpenPage extends IntroPageBase {
             UI512BeginAsync(() => this.getListChoicesAsync(prompt), undefined, true);
         }
 
-        this.drawCommonLast(app, grp, lang);
+        this.drawCommonLast(app, grp);
     }
 
     async getListChoicesAsync(prompt: UI512Element) {
@@ -160,7 +160,7 @@ export class IntroOpenPage extends IntroPageBase {
             let chosenId = IntroOpenPage.getChosen(self);
             if (chosenId && slength(chosenId)) {
                 // open the document
-                let loader = new VpcDocLoader(c.lang, chosenId, c.lang.translate('lngstack'), self.openType);
+                let loader = new VpcDocLoader(chosenId, lng('lngstack'), self.openType);
                 c.beginLoadDocument(loader);
             }
         } else if (el.id.endsWith('choicebtn1')) {
@@ -186,7 +186,7 @@ export class IntroOpenPage extends IntroPageBase {
                 n => {
                     c.goBackToFirstScreen();
                 },
-                c.lang.translate('lngOK')
+                lng('lngOK')
             );
         }
     }
@@ -198,7 +198,7 @@ export class IntroOpenPage extends IntroPageBase {
                 if (n===0) {
                     this.deleteSelected(c)
                 }
-            }, c.lang.translate('lngOK'), c.lang.translate('lngCancel'))
+            }, lng('lngOK'), lng('lngCancel'))
         }*/
     }
 }

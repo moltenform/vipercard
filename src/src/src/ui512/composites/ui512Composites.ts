@@ -1,7 +1,6 @@
 
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -112,16 +111,16 @@ export abstract class UI512CompBase {
         return el;
     }
 
-    abstract createSpecific(app: UI512Application, lang: UI512Lang): void;
+    abstract createSpecific(app: UI512Application): void;
 
-    create(c: UI512ControllerBase, app: UI512Application, lang: UI512Lang) {
+    create(c: UI512ControllerBase, app: UI512Application) {
         assertEq(0, this.children.length, `2v|creating composite twice? ${this.compositeId}`);
         if (!app.findGroup(this.grpid)) {
             let grp = new UI512ElGroup(this.grpid, app.observer);
             app.addGroup(grp);
         }
 
-        this.createSpecific(app, lang);
+        this.createSpecific(app);
         c.rebuildFieldScrollbars();
     }
 

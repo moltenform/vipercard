@@ -1,6 +1,7 @@
 
 /* auto */ import { O, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
@@ -36,7 +37,7 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolResponseBase {
     onDeleteSelection() {
         throw makeVpcInternalErr(
             msgNotification +
-                this.appli.lang().translate('lngPlease press Backspace on the keyboard to \ndelete text.')
+                lng('lngPlease press Backspace on the keyboard to \ndelete text.')
         );
     }
 }

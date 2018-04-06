@@ -1,7 +1,6 @@
 
 /* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Lang, UI512LangNull } from '../../ui512/lang/langBase.js';
 /* auto */ import { ChangeContext, MouseDragStatus } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
@@ -16,7 +15,6 @@ export abstract class UI512Controller extends UI512ControllerBase {
     timerSlowIdle = new RepeatingTimer(this.timerblinkperiod);
     useOSClipboard = false;
     mouseDragStatus: number = MouseDragStatus.None;
-    lang: UI512Lang = new UI512LangNull();
 
     init() {
         let clipManager = new ClipManager();

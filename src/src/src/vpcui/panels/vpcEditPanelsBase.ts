@@ -1,7 +1,7 @@
 
 /* auto */ import { O, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, cast } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
@@ -42,9 +42,9 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
 
     lblNamingTip: UI512ElLabel;
     protected refreshTip(name: string, id: string) {
-        let shortname = vpcElTypeToString(this.velType, this.appli.lang(), true);
-        let longname = vpcElTypeToString(this.velType, this.appli.lang(), false);
-        let txt = this.appli.lang().translate('lngRefer to this %typ in a script as');
+        let shortname = vpcElTypeToString(this.velType, true);
+        let longname = vpcElTypeToString(this.velType, false);
+        let txt = lng('lngRefer to this %typ in a script as');
         txt = txt.replace(/%typ/g, longname);
         txt += `\n${shortname} id ${id}`;
         if (name.length) {
@@ -55,7 +55,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         this.lblNamingTip.set('labeltext', txt);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         Util512.freezeProperty(this, 'topInputs');
         Util512.freezeProperty(this, 'leftChoices');
         Util512.freezeProperty(this, 'rightOptions');
@@ -82,7 +82,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         let grp = app.getGroup(this.grpid);
         for (let [lbltxt, inid, inputW] of this.topInputs) {
             let lbl = this.genChild<UI512ElLabel>(app, grp, `lbl##${inid}`, UI512ElLabel);
-            lbl.set('labeltext', this.appli.lang().translate(lbltxt));
+            lbl.set('labeltext', lng(lbltxt));
             lbl.set('labelhalign', false);
             lbl.set('labelvalign', true);
             lbl.setDimensions(this.x + lblX, curY, inputX - lblX, inputH);
@@ -109,7 +109,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         fld.set('canselecttext', true);
         fld.set('canedit', false);
         fld.set('labelwrap', false);
-        UI512ElTextField.setListChoices(fld, this.leftChoices.map(item => this.appli.lang().translate(item[0])));
+        UI512ElTextField.setListChoices(fld, this.leftChoices.map(item => lng(item[0])));
         fld.setDimensions(this.x + this.leftChoicesX, startY, this.leftChoicesW, this.leftChoicesH);
     }
 
@@ -123,7 +123,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         for (let [lbltxt, inid] of this.rightOptions) {
             let inp = this.genBtn(app, grp, `toggle##${inid}`);
             inp.set('style', UI512BtnStyle.checkbox);
-            inp.set('labeltext', this.appli.lang().translate(lbltxt));
+            inp.set('labeltext', lng(lbltxt));
             inp.set('labelhalign', false);
             inp.set('labelvalign', true);
             inp.setDimensions(this.x + this.rightOptionsX, curY, this.logicalWidth - this.rightOptionsX, inputH);
@@ -150,7 +150,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
         const btnW = 68;
         const btnH = 23;
         let scriptBtn = this.genBtn(app, grp, this.isBlank ? 'btnGenPart' : 'btnScript');
-        scriptBtn.set('labeltext', this.appli.lang().translate('lngScript...'));
+        scriptBtn.set('labeltext', lng('lngScript...'));
         scriptBtn.set('style', UI512BtnStyle.osstandard);
         scriptBtn.setDimensions(
             this.x + this.logicalWidth - (btnW + spaceFromRight),

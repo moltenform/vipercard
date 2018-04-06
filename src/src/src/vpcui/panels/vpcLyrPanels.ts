@@ -42,7 +42,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
             panel.y = this.appli.bounds()[1] + ScreenConsts.ymenubar + ToolboxDims.toolsIconH + 8;
             panel.logicalWidth = ScreenConsts.screenwidth - (ScreenConsts.xareawidth + 1);
             panel.logicalHeight = ScreenConsts.yareaheight - ToolboxDims.toolsIconH;
-            panel.create(c, this.appli.UI512App(), this.appli.lang());
+            panel.create(c, this.appli.UI512App());
             panel.setVisible(this.appli.UI512App(), false);
             panel.cbGetAndValidateSelectedVel = b => this.getAndValidateSelectedVel(b);
         }

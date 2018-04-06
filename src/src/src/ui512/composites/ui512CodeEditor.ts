@@ -1,6 +1,5 @@
 
 /* auto */ import { O, assertTrueWarn, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
@@ -32,7 +31,7 @@ export class UI512CompCodeEditor extends UI512CompBase {
         return throwIfUndefined(this.el, '2p|elem not created');
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpid);
         let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 

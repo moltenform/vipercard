@@ -1,6 +1,7 @@
 
 /* auto */ import { O, assertTrueWarn, checkThrow, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { PropAdjective, RequestedChunkType, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
@@ -44,7 +45,7 @@ export class VpcChangeSelectedFont {
         if (!worked) {
             throw makeVpcInternalErr(
                 msgNotification +
-                    this.appli.lang().translate('lngNo selection found. Select a button or field.')
+                    lng('lngNo selection found. Select a button or field.')
             );
         }
     }
@@ -70,10 +71,7 @@ export class VpcChangeSelectedFont {
         if (!worked) {
             throw makeVpcInternalErr(
                 msgNotification +
-                    this.appli
-                        .lang()
-                        .translate(
-                            'lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.'
+                    lng('lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.'
                         )
             );
         }

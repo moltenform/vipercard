@@ -2,7 +2,6 @@
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcElType, VpcTool, toolToPaintOntoCanvasShapes } from '../../vpc/vpcutils/vpcEnums.js';
@@ -30,7 +29,7 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
     readonly builtinFns: VpcBuiltinFunctions;
     protected readonly check = new CheckReservedWords();
     appli: IVpcStateInterface;
-    constructor(protected lang: UI512Lang) {
+    constructor() {
         this.builtinFns = new VpcBuiltinFunctions(this as OutsideWorldRead);
     }
 
@@ -275,10 +274,6 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
 
     CallBuiltinFunction(s: string, args: VpcVal[]): VpcVal {
         return this.builtinFns.call(s, args);
-    }
-
-    Lang(): UI512Lang {
-        return this.lang;
     }
 
     GetFrameInfo(): [VpcScriptMessage, VpcVal[]] {

@@ -144,9 +144,6 @@ export class VpcStateInterfaceCompleted implements IVpcStateInterface {
     userBounds() {
         return this.ctrller.userBounds;
     }
-    lang() {
-        return this.ctrller.lang;
-    }
     getCurrentCardNum() {
         return this.ctrller.getCurrentCardNum();
     }

@@ -2,7 +2,6 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -36,10 +35,10 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
     onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void {
         if (short === 'btnok') {
             if (this.waitingForVerifyCode) {
-                this.setStatus(appli.lang(), 'lngInitial account verification...');
+                this.setStatus('lngInitial account verification...');
                 this.doLoginVerifyCode(appli, this.waitingForVerifyCode);
             } else {
-                this.setStatus(appli.lang(), 'lngLogging in...');
+                this.setStatus('lngLogging in...');
                 this.doLogin(appli);
             }
         } else if (short === 'btnclose') {
@@ -54,8 +53,8 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
         }
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
-        super.createSpecific(app, lang);
+    createSpecific(app: UI512Application) {
+        super.createSpecific(app);
         let grp = app.getGroup(this.grpid);
         let fldPw = grp.getEl(this.getElId('fldpw'));
         fldPw.set('asteriskonly', true);
@@ -68,7 +67,7 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
         // this.autoShowNeedEmailCode
         // doesn't help since it wouldn't have the right state yet, needs keybuffer.
         if (this.autoShowNeedEmailCode) {
-            this.setStatus(this.appli.lang(), 'lngAn e-mail has been sent to verify.');
+            this.setStatus('lngAn e-mail has been sent to verify.');
         }
 
         let btnNewAccount = grp.getEl(this.getElId('btnnewaccount'));
@@ -94,16 +93,16 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
                 } else if (result instanceof VpcSession) {
                     // login was successful!
                     getRoot().setSession(result);
-                    this.setStatus(appli.lang(), 'lngLogged in.');
+                    this.setStatus('lngLogged in.');
                     this.appli.setNonModalDialog(undefined);
                     this.children = [];
                     this.fnCbWhenSignedIn();
                 } else if (result instanceof Error) {
                     // login was not successful -- prob missing user or wrong password
-                    this.setStatus(appli.lang(), 'lngDid not log in, ' + result.toString());
+                    this.setStatus('lngDid not log in, ' + result.toString());
                 } else if (result[0] === 'need_email_verify' && result.length === 3) {
                     // login needs email verification
-                    this.setStatus(appli.lang(), 'lngPlease enter the verification code sent via e-mail.');
+                    this.setStatus('lngPlease enter the verification code sent via e-mail.');
                     let grp = appli.UI512App().getGroup(this.grpid);
                     let fldEmailVerify = grp.getEl(this.getElId('fldcode_email_verify'));
                     fldEmailVerify.set('visible', true);
@@ -111,7 +110,7 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
                     lblEmailVerify.set('visible', true);
                     this.waitingForVerifyCode = result[2];
                 } else {
-                    this.setStatus(appli.lang(), 'lngDid not log in, unknown.');
+                    this.setStatus('lngDid not log in, unknown.');
                 }
             }
         );
@@ -128,13 +127,13 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
                 } else if (result instanceof VpcSession) {
                     // login was successful!
                     getRoot().setSession(result);
-                    this.setStatus(appli.lang(), 'lngLogged in.');
+                    this.setStatus('lngLogged in.');
                     this.appli.setNonModalDialog(undefined);
                     this.children = [];
                     this.fnCbWhenSignedIn();
                 } else {
                     // login was not successful -- prob wrong password
-                    this.setStatus(appli.lang(), 'lng ' + result.toString());
+                    this.setStatus('lng ' + result.toString());
                 }
             }
         );

@@ -2,6 +2,7 @@
 /* auto */ import { O, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { BrowserOSInfo, Util512, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { VpcSession, vpcStacksFlagContent } from '../../vpc/request/vpcRequest.js';
 /* auto */ import { IVpcSaveUtils } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 /* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcSendErrReport.js';
@@ -156,7 +157,7 @@ export class VpcSaveUtils implements IVpcSaveUtils {
         let gotlink = this.getShareLink();
         let br = getRoot().getBrowserInfo();
         let key = BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
-        this.c.askMsg(this.c.lang.translate(`lngPress ${key}+C to copy this link!`), gotlink, () => {});
+        this.c.askMsg(lng(`lngPress ${key}+C to copy this link!`), gotlink, () => {});
     }
 
     mnuGoExportJson(): void {
@@ -259,7 +260,7 @@ export class VpcSaveUtils implements IVpcSaveUtils {
                 stackowner === this.c.appli.getModel().stack.lineageUsernameNull()
             ) {
                 throw makeVpcInternalErr(
-                    msgNotification + this.c.lang.translate('lngFirst, go to File->Save to upload the stack.')
+                    msgNotification + lng('lngFirst, go to File->Save to upload the stack.')
                 );
             }
 
@@ -274,7 +275,7 @@ export class VpcSaveUtils implements IVpcSaveUtils {
                 if (this.c.isDocDirty()) {
                     throw makeVpcInternalErr(
                         msgNotification +
-                            this.c.lang.translate(
+                            lng(
                                 "lngIt looks like you have unsaved changes, we're reminding you to hit Save first."
                             )
                     );

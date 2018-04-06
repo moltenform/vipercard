@@ -3,7 +3,7 @@
 /* auto */ import { O, cleanExceptionMsg, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObjectCanSet, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
@@ -60,7 +60,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
         this.autoIndent.useAutoCreateBlock = true;
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         // occurs because apparent discrepency between 'screenwidth' and bounds[2], not sure why those don't match
         this.logicalWidth -= 46;
         if (!isRelease) {
@@ -127,11 +127,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
         let grp = app.getGroup(this.grpid);
         if (!vel) {
             this.setStatusLabeltext('', undefined, '', '');
-            grp.getEl(this.getElId('caption')).set('labeltext', this.appli.lang().translate('lngElement not found.'));
+            grp.getEl(this.getElId('caption')).set('labeltext', lng('lngElement not found.'));
         } else {
             let caption = grp.getEl(this.getElId('caption'));
-            let captionMsg = this.appli.lang().translate('lngScript of %c');
-            let velName = vpcElTypeToString(vel.getType(), this.appli.lang(), true) + ` "${vel.get_s('name')}"`;
+            let captionMsg = lng('lngScript of %c');
+            let velName = vpcElTypeToString(vel.getType(), true) + ` "${vel.get_s('name')}"`;
             captionMsg = captionMsg.replace(/%c/g, velName);
             captionMsg = captionMsg.substr(0, 36);
             caption.set('labeltext', captionMsg);
@@ -181,25 +181,25 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
         if (slength(this.status2a.get_s('labeltext')) || this.needsCompilation.find(vel.id)) {
             btnCompile.set(
                 'labeltext',
-                TextRendererFontManager.setInitialFont(this.appli.lang().translate('lngSave Script'), this.genevaBold)
+                TextRendererFontManager.setInitialFont(lng('lngSave Script'), this.genevaBold)
             );
         } else {
             btnCompile.set(
                 'labeltext',
-                TextRendererFontManager.setInitialFont(this.appli.lang().translate('lngSave Script'), this.genevaPlain)
+                TextRendererFontManager.setInitialFont(lng('lngSave Script'), this.genevaPlain)
             );
         }
     }
 
     protected setStatusLabeltext(sType: string, n: O<number>, sMsg: string, sMsgMore: string) {
-        this.status1a.set('labeltext', this.appli.lang().translate(sType));
+        this.status1a.set('labeltext', lng(sType));
         this.status2b.set('labeltext', TextRendererFontManager.setInitialFont(sMsg, this.monaco));
 
         this.statusErrMoreDetails = sMsgMore;
         if (n === undefined) {
             this.status2a.set('labeltext', '');
         } else {
-            let txt = this.appli.lang().translate('lngLine') + ` ${n},`;
+            let txt = lng('lngLine') + ` ${n},`;
             txt = TextRendererFontManager.setInitialFont(txt, this.monaco);
             this.status2a.set('labeltext', txt);
         }

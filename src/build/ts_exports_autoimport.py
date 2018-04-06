@@ -172,7 +172,8 @@ def doSomeAutomaticFormatting(lines):
     
 if __name__ == '__main__':
     srcdirectory = '../src/src'
+    layers = readLayers(srcdirectory)
     autoAddImports(srcdirectory)
-    enforceLayering(srcdirectory)
+    #~ enforceLayering(srcdirectory)
     
     

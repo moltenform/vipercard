@@ -1,4 +1,5 @@
 
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
 /* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
@@ -6,7 +7,7 @@
 
 export class VpcAppMenus extends VpcAppMenuStructure {
     init() {
-        MenuPositioning.buildFromStruct(this.appli.getController(), this.getMenuStruct(), this.appli.lang());
+        MenuPositioning.buildFromStruct(this.appli.getController(), this.getMenuStruct());
         MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsHideProduct', undefined, false);
         MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsHideOthers', undefined, false);
         MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsShowAll', undefined, false);
@@ -96,7 +97,7 @@ export class VpcAppMenus extends VpcAppMenuStructure {
                 menuId,
                 undefined,
                 undefined,
-                this.appli.lang().translate(txt)
+                lng(txt)
             );
         } else {
             MenuPositioning.setItemStatus(
@@ -104,7 +105,7 @@ export class VpcAppMenus extends VpcAppMenuStructure {
                 menuId,
                 undefined,
                 undefined,
-                this.appli.lang().translate(fallback)
+                lng(fallback)
             );
         }
     }

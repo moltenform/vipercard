@@ -1,6 +1,7 @@
 
 /* auto */ import { Util512, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -52,7 +53,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         });
 
         this.activePage = new IntroFirstPage('introFirstPage', this.bounds);
-        this.activePage.create(this, this.app, this.lang);
+        this.activePage.create(this, this.app);
         this.rebuildFieldScrollbars();
 
         this.invalidateAll();
@@ -69,21 +70,20 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         let [x, y] = [this.activePage.x, this.activePage.y];
         this.activePage.destroy(this, this.app);
         this.activePage = new IntroFirstPage('introFirstPage', this.bounds, x, y);
-        this.activePage.create(this, this.app, this.lang);
+        this.activePage.create(this, this.app);
     }
 
     newDocument() {
         let loader = new VpcDocLoader(
-            this.lang,
             '',
-            this.lang.translate('lngnew stack'),
+            lng('lngnew stack'),
             OpenFromLocation.NewDoc
         );
         this.beginLoadDocument(loader);
     }
 
     getModal() {
-        return new UI512CompStdDialog('mainModalDlg', this.lang);
+        return new UI512CompStdDialog('mainModalDlg');
     }
 
     static respondKeyDown(c: VpcUiIntro, d: KeyDownEventDetails) {
@@ -110,7 +110,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
 
     beginLoadDocument(loader: VpcDocLoader) {
         this.provideExitCallbacks(loader);
-        let translatedLoadMessage = this.lang.translate('lngLoading %docname');
+        let translatedLoadMessage = lng('lngLoading %docname');
         translatedLoadMessage = translatedLoadMessage.replace(/%docname/g, loader.docname);
         let [x, y] = [this.activePage.x, this.activePage.y];
         this.activePage.destroy(this, this.app);
@@ -122,7 +122,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
             loader,
             translatedLoadMessage,
         );
-        this.activePage.create(this, this.app, this.lang);
+        this.activePage.create(this, this.app);
         this.rebuildFieldScrollbars();
         (this.activePage as IntroWaitWhileLoadingPage).go(this);
     }

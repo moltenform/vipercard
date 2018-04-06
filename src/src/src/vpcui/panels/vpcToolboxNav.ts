@@ -69,7 +69,7 @@ export class NavToolbox extends UI512CompToolbox {
         toolsnav.logicalWidth = toolsnav.items.length * ToolboxDims.toolsnavw - (toolsnav.items.length - 1);
         toolsnav.logicalHeight = 1;
         toolsnav.hasclosebtn = false;
-        toolsnav.create(appli.getController(), appli.UI512App(), appli.lang());
+        toolsnav.create(appli.getController(), appli.UI512App());
         toolsnav.setWhich(appli.UI512App(), undefined);
         toolsnav.logicalHeight = ToolboxDims.toolbarheight;
         return [toolsnav.x, toolsnav.y];

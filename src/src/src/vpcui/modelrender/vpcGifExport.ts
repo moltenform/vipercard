@@ -3,6 +3,7 @@
 /* auto */ import { Util512, sleep } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
 /* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
@@ -50,7 +51,7 @@ export class PaintExportToGif {
 
     protected setStatus(s: string, s2 = '') {
         if (this.createdElem) {
-            this.createdElem.set('labeltext', this.appli.lang().translate(s) + ' ' + s2);
+            this.createdElem.set('labeltext', lng(s) + ' ' + s2);
         }
     }
 

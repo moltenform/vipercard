@@ -3,7 +3,6 @@
 /* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 
 export interface ClipManagerInterface {
     ensureReadyForPaste(milliseconds: number): void;
@@ -61,7 +60,6 @@ export interface UI512PresenterInterface {
     timerSlowIdle: RepeatingTimer;
     useOSClipboard: boolean;
     mouseDragStatus: number;
-    lang: UI512Lang;
 
     removeEl(gpid: string, elid: string, context?: ChangeContext): void;
     rebuildFieldScrollbars(): void;

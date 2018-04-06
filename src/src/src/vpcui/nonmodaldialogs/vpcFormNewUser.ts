@@ -1,7 +1,6 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { vpcUsersCreate } from '../../vpc/request/vpcRequest.js';
@@ -33,8 +32,8 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
         VpcFormNonModalDialogFormBase.standardWindowBounds(this, appli);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
-        super.createSpecific(app, lang);
+    createSpecific(app: UI512Application) {
+        super.createSpecific(app);
         let grp = app.getGroup(this.grpid);
         let fldPw = grp.getEl(this.getElId('fldpw'));
         fldPw.set('asteriskonly', true);
@@ -51,7 +50,7 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
 
     onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void {
         if (short === 'btnok') {
-            this.setStatus(appli.lang(), 'lngCreating user...');
+            this.setStatus('lngCreating user...');
             this.doCreateUser(appli);
         } else if (short === 'btncancel') {
             this.goBackToLogin();
@@ -61,7 +60,7 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
     doCreateUser(appli: IVpcStateInterface) {
         let paramFields = this.readFields(appli.UI512App());
         if (paramFields['pw'] !== paramFields['pwagain']) {
-            this.setStatus(appli.lang(), 'lngPasswords do not match.');
+            this.setStatus('lngPasswords do not match.');
             return;
         }
 
@@ -76,9 +75,9 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
                     // it sent an email to the place, now get recovery code
                     this.goBackToLogin(paramFields['username']);
                 } else if (result instanceof Error) {
-                    this.setStatus(appli.lang(), 'lng ' + result.toString());
+                    this.setStatus('lng ' + result.toString());
                 } else {
-                    this.setStatus(appli.lang(), 'lngDid create user, unknown.');
+                    this.setStatus('lngDid create user, unknown.');
                 }
             }
         );

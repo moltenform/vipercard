@@ -1,6 +1,5 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
@@ -23,9 +22,9 @@ export class IntroWaitWhileLoadingPage extends IntroPageBase {
         super(compid, bounds, x, y);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpid);
-        let headerheight = this.drawCommonFirst(app, grp, lang);
+        let headerheight = this.drawCommonFirst(app, grp);
 
         // draw the prompt
         const margin = 80;
@@ -40,7 +39,7 @@ export class IntroWaitWhileLoadingPage extends IntroPageBase {
             this.y + this.logicalHeight - margin
         );
 
-        this.drawCommonLast(app, grp, lang);
+        this.drawCommonLast(app, grp);
     }
 
     static respondBtnClick(c: UI512Controller, self: IntroWaitWhileLoadingPage, el: UI512Element) {}

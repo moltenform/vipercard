@@ -47,7 +47,7 @@ export class MainToolbox extends UI512CompToolbox {
         toolsmain.logicalWidth = toolsmain.items.length * ToolboxDims.toolsmainw - (toolsmain.items.length - 1);
         toolsmain.logicalHeight = 1;
         toolsmain.hasclosebtn = false;
-        toolsmain.create(appli.getController(), appli.UI512App(), appli.lang());
+        toolsmain.create(appli.getController(), appli.UI512App());
         toolsmain.setWhich(appli.UI512App(), 'edit');
 
         toolsmain.logicalHeight = ToolboxDims.toolbarheight;

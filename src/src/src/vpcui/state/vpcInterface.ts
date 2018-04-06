@@ -1,6 +1,5 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -40,7 +39,6 @@ export interface IVpcStateInterface {
     placeCallbackInQueue(cb: () => void): void;
     bounds(): number[];
     userBounds(): number[];
-    lang(): UI512Lang;
     getCurrentCardNum(): number;
     setCurrentCardNum(pos: OrdinalOrPosition): void;
     getTool(): number;

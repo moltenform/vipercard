@@ -170,7 +170,7 @@ export class TestDrawUI512Menus extends UI512TestBase {
 
         // add the menu
         let [grpbar, grpitems] = MenuPositioning.getMenuGroups(c.app);
-        MenuPositioning.buildFromStruct(c, this.getMenuStruct(), c.lang);
+        MenuPositioning.buildFromStruct(c, this.getMenuStruct());
         grpitems.getEl('mnuOptSecond').set('checkmark', true);
         let toDisable = ['mnuCut', 'mnuCopy', 'mnuClear', 'mnuTextStyle'];
         for (let shortid of toDisable) {

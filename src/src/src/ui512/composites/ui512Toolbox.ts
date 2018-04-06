@@ -1,7 +1,6 @@
 
 /* auto */ import { O, assertTrueWarn, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { PalBorderDecorationConsts, UI512CompBase } from '../../ui512/composites/ui512Composites.js';
@@ -21,7 +20,7 @@ export class UI512CompToolbox extends UI512CompBase {
         return Math.floor(this.logicalWidth / this.items.length);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         Util512.freezeRecurse(this.items);
         let grp = app.getGroup(this.grpid);
         let headerheight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasclosebtn);

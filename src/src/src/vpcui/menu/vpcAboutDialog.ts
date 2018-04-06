@@ -1,4 +1,5 @@
 
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
@@ -26,9 +27,9 @@ export class VpcAboutDialog {
                     VpcAboutDialog.showMore(c, dlg);
                 }
             },
-            c.lang.translate('lngClose'),
-            c.lang.translate('lngDonate'),
-            c.lang.translate('lngMore')
+            lng('lngClose'),
+            lng('lngDonate'),
+            lng('lngMore')
         );
     }
 
@@ -46,8 +47,8 @@ export class VpcAboutDialog {
             n => {
                 dlg.cbOnMouseUp = undefined;
             },
-            c.lang.translate('lngDonate'),
-            c.lang.translate('lngClose')
+            lng('lngDonate'),
+            lng('lngClose')
         );
     }
 
@@ -73,9 +74,9 @@ export class VpcAboutDialog {
                 }
             },
 
-            c.lang.translate('lngBack'),
-            c.lang.translate('lngJS Libs Used'),
-            c.lang.translate('lngFull terms')
+            lng('lngBack'),
+            lng('lngJS Libs Used'),
+            lng('lngFull terms')
         );
     }
 
@@ -92,7 +93,7 @@ export class VpcAboutDialog {
             n => {
                 VpcAboutDialog.show(c, dlg);
             },
-            c.lang.translate('lngBack')
+            lng('lngBack')
         );
     }
 }

@@ -1,5 +1,5 @@
 
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
@@ -23,14 +23,14 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
         super(compid, bounds, undefined, undefined);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpid);
-        let headerheight = this.drawCommonFirst(app, grp, lang);
+        let headerheight = this.drawCommonFirst(app, grp);
 
         let noteToUser = this.genChild(app, grp, 'noteToUser', UI512ElLabel);
         noteToUser.set(
             'labeltext',
-            lang.translate(
+            lng(
                 'lngOpen from .json file.\n\n\nPlease click anywhere on this page\nto choose a .json file to open...'
             )
         );
@@ -44,7 +44,7 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
         let btnOkY = basey;
         let btnOkW = 69;
         let btnOkH = 29;
-        this.drawBtn(app, grp, 1, basex + (252 - 174), basey + (68 - 64), 68, 21, lang);
+        this.drawBtn(app, grp, 1, basex + (252 - 174), basey + (68 - 64), 68, 21);
 
         let elCanvas = window.document.getElementById('mainDomCanvas') || window.document.body;
         let elCanvasBounds = elCanvas.getBoundingClientRect();
@@ -100,7 +100,7 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
         thediv.appendChild(thelabel);
         thediv.appendChild(filepicker);
         window.document.body.appendChild(thediv);
-        this.drawCommonLast(app, grp, lang);
+        this.drawCommonLast(app, grp);
         grp.getEl(this.getElId('footerText')).set('visible', false);
     }
 
@@ -144,9 +144,8 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
 
             let text = reader.result;
             let loader = new VpcDocLoader(
-                this.c.lang,
                 text,
-                this.c.lang.translate('lngfile from disk'),
+                lng('lngfile from disk'),
                 OpenFromLocation.FromJsonFile
             );
             this.c.beginLoadDocument(loader);

@@ -3,7 +3,6 @@
 /* auto */ import { RenderComplete, RepeatingTimer, Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -32,7 +31,6 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
     inited = false;
     openState = MenuOpenState.MenusClosed;
     tmpIgnore: O<TemporaryIgnoreEvents>;
-    lang: UI512Lang;
     mouseDragStatus: number;
     useOSClipboard: boolean;
     clipManager: ClipManagerInterface;

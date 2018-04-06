@@ -502,6 +502,47 @@ cr
 formfeed
 linefeed`
 
+=====
+Credits
+=====
+
+ViperCard
+https://github.com/downpoured/vipercard
+Copyright (C) 2018 Ben Fisher
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. 
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+ViperCard uses the following libraries:
+
+Chevrotain
+    https://github.com/SAP/chevrotain
+    Apache License 2.0
+FileSaver.js
+    https://github.com/eligrey/FileSaver.js
+    MIT License
+Golly
+    https://github.com/dannygarcia/golly
+    MIT License
+JSGIF
+    https://github.com/antimatter15/jsgif
+    MIT License
+js-lru
+    https://github.com/rsms/js-lru
+    MIT license
+Clipboard.js
+    https://github.com/zenorocha/clipboard.js/
+    MIT License
+Bresenham easy.filter
+    http://members.chello.at/easyfilter/bresenham.html
+    written permission of author
+
+and a small excerpt from the SciTE code editor,
+ported from C++ to TypeScript by Ben Fisher
+SciTE
+    https://www.scintilla.org/SciTE.html
+    https://www.scintilla.org/License.txt
 '''
 
 
@@ -2770,13 +2811,13 @@ def goSection(s, sname):
         ret['body'] +=body
         ret['body'] = ret['body'].replace(f'{specialCharFontChange}Examples:\n', f'{specialCharFontChange}Examples:\n{specialCharFontChange}monaco_9_biuosdce{specialCharFontChange}')
         section['entries'].append(ret)
-        #~ print(ret['title'])
     
     if sname.lower() not in ['fundamentals']:
         section['entries'].sort(key=lambda x: x['title'])
     return section
+    
 def go():
-    outloc = '../../resources/docs/'
+    outloc = '../src/resources/docs/'
     for sectionname in sections:
         s = sections[sectionname].replace('\r\n', '\n')
         section = goSection(s, sectionname)
@@ -2795,16 +2836,9 @@ def go():
             event_handlers='lngEvent Handlers',
             properties='lngProperties')
         
+        print('// prettier-ignore')
         print(f'["{sectionname}", "{mapIt[sectionname]}", {theArrS}],')
-        #~ break
         
 
-#~ go()
-import os
-os.chdir(r'C:\data\hard-drive-only\data_5\!movies!for!makemolten\viper\3 art\draw1')
+go()
 
-for i in range(50720-1, 50733+1):
-    src = f'{50720-1}.png'
-    dest = f'{i}.png'
-    files.move(dest, f'del3\\{i}.png', False)
-    files.copy(src, dest, False)

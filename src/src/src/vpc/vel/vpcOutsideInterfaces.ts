@@ -2,7 +2,6 @@
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcBuiltinMsg, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
@@ -57,7 +56,6 @@ export interface OutsideWorldRead {
     CountElements(type: VpcElType, parentref: RequestedVelRef): number;
     IsBuiltinFunction(s: string): boolean;
     CallBuiltinFunction(s: string, args: VpcVal[]): VpcVal;
-    Lang(): UI512Lang;
 }
 
 export interface OutsideWorldReadWrite extends OutsideWorldRead {

@@ -1,7 +1,6 @@
 
-/* auto */ import { cProductName } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
@@ -35,7 +34,7 @@ export abstract class IntroPageBase extends UI512CompBase {
         }
     }
 
-    drawCommonFirst(app: UI512Application, grp: UI512ElGroup, lang: UI512Lang) {
+    drawCommonFirst(app: UI512Application, grp: UI512ElGroup) {
         let wndbg = this.genBtn(app, grp, 'wndbg');
         wndbg.set('style', UI512BtnStyle.shadow);
         wndbg.set('autohighlight', false);
@@ -43,10 +42,10 @@ export abstract class IntroPageBase extends UI512CompBase {
         let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasclosebtn);
 
         let caption = grp.getEl(this.getElId('caption'));
-        caption.set('labeltext', lang.translate('lngWelcome to %cProductName'));
+        caption.set('labeltext', lng('lngWelcome to ViperCard'));
 
         let footerText = this.genChild(app, grp, 'footerText', UI512ElLabel);
-        footerText.set('labeltext', lang.translate('lngby Ben Fisher'));
+        footerText.set('labeltext', lng('lngby Ben Fisher'));
         footerText.setDimensions(this.x + 5, this.y + this.logicalHeight - 20, 300, 20);
 
         let footerTextRight = this.genChild(app, grp, 'footerTextRight', UI512ElLabel);
@@ -55,7 +54,7 @@ export abstract class IntroPageBase extends UI512CompBase {
         return headerheight;
     }
 
-    drawCommonLast(app: UI512Application, grp: UI512ElGroup, lang: UI512Lang) {
+    drawCommonLast(app: UI512Application, grp: UI512ElGroup) {
         for (let i of Util512.range(6)) {
             this.fadedWindowDragging[i] = this.genBtn(app, grp, `faded${i}`);
             this.fadedWindowDragging[i].set('style', UI512BtnStyle.transparent);
@@ -131,10 +130,9 @@ export abstract class IntroPageBase extends UI512CompBase {
         y: number,
         w: number,
         h: number,
-        lang: UI512Lang
     ) {
         let btn = this.genBtn(app, grp, `choicebtn${n}`);
-        let labeltext = n === 0 ? lang.translate('lngOK') : lang.translate('lngCancel');
+        let labeltext = n === 0 ? lng('lngOK') : lng('lngCancel');
         btn.set('style', n === 0 ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
         btn.set('autohighlight', true);
         btn.set('labeltext', labeltext);

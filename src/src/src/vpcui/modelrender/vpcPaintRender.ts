@@ -240,7 +240,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
     }
 
     protected argsFromCurrentOptions(xpts: number[], ypts: number[]) {
-        let outside = new VpcOutsideWorld(this.appli.lang());
+        let outside = new VpcOutsideWorld();
         outside.appli = this.appli;
         let args = outside.paintOptionsFromCurrentOptions(true, ModifierKeys.None);
         args.xpts = xpts;

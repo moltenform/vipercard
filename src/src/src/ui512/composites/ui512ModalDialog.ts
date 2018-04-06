@@ -3,7 +3,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { MouseDragStatus, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
@@ -32,7 +32,7 @@ export class UI512CompStdDialog extends UI512CompBase {
     cbOnMouseUp: O<(btn: number) => void>;
     translatedProvidedText = '';
     resultText: O<string>;
-    constructor(compid: string, protected lang: UI512Lang) {
+    constructor(compid: string) {
         super(compid);
     }
 
@@ -80,7 +80,7 @@ export class UI512CompStdDialog extends UI512CompBase {
         fld.set('nudgey', 2);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         const marginx = this.dlgtype === UI512CompStdDialogType.ask ? 15 : 16;
         const marginy = this.dlgtype === UI512CompStdDialogType.ask ? 13 : 16;
         let grp = app.getGroup(this.grpid);
@@ -100,7 +100,7 @@ export class UI512CompStdDialog extends UI512CompBase {
             dims[1] + dims[3] - marginy
         );
 
-        this.btnlabels[0] = this.btnlabels[0] || this.lang.translate('lngOK');
+        this.btnlabels[0] = this.btnlabels[0] || lng('lngOK');
         if (this.dlgtype === UI512CompStdDialogType.answer) {
             this.drawBtn(app, grp, dims, 0, 230, 105, 99, 28);
             this.drawBtn(app, grp, dims, 1, 126, 108, 91, 20);
@@ -237,7 +237,7 @@ export class UI512CompStdDialog extends UI512CompBase {
         this.btnlabels = [choice1, choice2, choice3];
         this.labeltext = prompt;
         this.resultText = '';
-        this.create(c, app, this.lang);
+        this.create(c, app);
         this.autoRegisterAndSuppressAndRestore(c, app, fnOnResult);
     }
 
@@ -252,9 +252,9 @@ export class UI512CompStdDialog extends UI512CompBase {
         this.dlgtype = UI512CompStdDialogType.ask;
         this.translatedProvidedText = defText;
         this.resultText = '';
-        this.btnlabels = [this.lang.translate('lngOK'), this.lang.translate('lngCancel'), ''];
+        this.btnlabels = [lng('lngOK'), lng('lngCancel'), ''];
         this.labeltext = prompt;
-        this.create(c, app, this.lang);
+        this.create(c, app);
         let cb = (n: number) => {
             fnOnResult(n === 0 ? this.resultText : undefined, n);
         };

@@ -4,7 +4,6 @@
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512LangNull } from '../../ui512/lang/langBase.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcElType, VpcOpCtg, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
@@ -51,8 +50,7 @@ export class TestVpcScriptRun extends UI512TestBase {
     }
 
     async startEnvironment(): Promise<[VpcAppController, VpcApplication]> {
-        let lang = new UI512LangNull();
-        let loader = new VpcDocLoader(lang, '', '', OpenFromLocation.NewDoc);
+        let loader = new VpcDocLoader('', '', OpenFromLocation.NewDoc);
         await loader.loadDocumentTop();
         if (loader.ctrller && loader.appl) {
             return [loader.ctrller, loader.appl];

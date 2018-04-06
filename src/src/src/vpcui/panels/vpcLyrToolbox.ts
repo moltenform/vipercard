@@ -2,6 +2,7 @@
 /* auto */ import { O, assertTrueWarn, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { findEnumToStr, getStrToEnum, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { OrdinalOrPosition, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
@@ -88,7 +89,7 @@ export class VpcAppToolboxes extends VpcAppInterfaceLayer {
         this.appli.setCurrentCardNum(pos);
         let isNow = this.appli.getOption_s('currentCardId');
         if (was === isNow) {
-            this.cbAnswerMsg(this.appli.lang().translate(msg), () => {});
+            this.cbAnswerMsg(lng(msg), () => {});
             // remember to not run other code after showing modal dialog
         }
     }

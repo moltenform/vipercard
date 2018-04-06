@@ -1,6 +1,5 @@
 
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
@@ -10,8 +9,8 @@ export class PatternsToolbox extends UI512CompToolbox {
     // instead of hiliting the current item, draw a box around it
     compositeType = 'toolbox_patterns';
     borders: UI512ElButton[] = [];
-    createSpecific(app: UI512Application, lang: UI512Lang) {
-        super.createSpecific(app, lang);
+    createSpecific(app: UI512Application) {
+        super.createSpecific(app);
         let grp = app.getGroup(this.grpid);
         for (let i = 0; i < 4; i++) {
             this.borders[i] = this.genBtn(app, grp, 'selectwithbox' + i);
@@ -105,7 +104,7 @@ export class PatternsToolbox extends UI512CompToolbox {
         ];
         assertEq(48, toolspatterns.items.length, '6x|');
         toolspatterns.hasclosebtn = false;
-        toolspatterns.create(appli.getController(), appli.UI512App(), appli.lang());
+        toolspatterns.create(appli.getController(), appli.UI512App());
         toolspatterns.setWhich(appli.UI512App(), appli.getOption_s('currentPattern'));
         toolspatterns.logicalHeight = ToolboxDims.toolbarheight * 3;
         return [toolspatterns.x, toolspatterns.y];

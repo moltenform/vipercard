@@ -1,19 +1,18 @@
 
-/* auto */ import { assertTrue, cProductName } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 
-export interface UI512Lang {
-    translate(s: string): string;
-}
+const lngPrefix = 'lng'
+const lngPrefixLength = 'lng'.length
 
-export class UI512LangNull implements UI512Lang {
-    translate(s: string) {
-        if (s.length === 0) {
-            return s;
-        }
-
-        assertTrue(s.startsWith('lng'), '0C|not starts with lng');
-        let ret = s.substr('lng'.length);
-        ret = ret.replace(/%cProductName/g, cProductName);
-        return ret;
+/**
+ * for internationalization + globalization
+ * */
+export function lng(s:string) {
+    if (!s.length) {
+        return s;
     }
+
+    assertTrue(s.startsWith(lngPrefix), '0C|must start with prefix', lngPrefix);
+    let ret = s.substr(lngPrefixLength);
+    return ret;
 }

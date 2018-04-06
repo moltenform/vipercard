@@ -2,7 +2,7 @@
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, cast } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
@@ -73,10 +73,10 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         let topGeneric = grp.getEl(this.getElId('topChoice'));
         let top = cast(topGeneric, UI512ElTextField);
         if (this.type === DialogDocsType.Reference) {
-            let choices = this.referenceInfo.map(item => this.appli.lang().translate(item[1]));
+            let choices = this.referenceInfo.map(item => lng(item[1]));
             UI512ElTextField.setListChoices(top, choices);
         } else if (this.type === DialogDocsType.Screenshots) {
-            let choices = this.screenshotsInfo.map(item => this.appli.lang().translate(item[1]));
+            let choices = this.screenshotsInfo.map(item => lng(item[1]));
             UI512ElTextField.setListChoices(top, choices);
             let btmGeneric = grp.getEl(this.getElId('btmChoice'));
             btmGeneric.set('visible', false);
@@ -240,7 +240,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         }
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         // draw a 1px border around the panel
         let grp = app.getGroup(this.grpid);
         let bg = this.genBtn(app, grp, 'bg');
@@ -312,7 +312,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         );
 
         let caption = dialogDocsTypeToStr(this.type);
-        grp.getEl(this.getElId('caption')).set('labeltext', lang.translate(caption));
+        grp.getEl(this.getElId('caption')).set('labeltext', lng(caption));
 
         this.initialPopulate();
     }

@@ -2,7 +2,7 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, getRoot, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
@@ -17,9 +17,9 @@
 export class IntroFirstPage extends IntroPageBase {
     compositeType = 'IntroFirstPage';
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpid);
-        let headerheight = this.drawCommonFirst(app, grp, lang);
+        let headerheight = this.drawCommonFirst(app, grp);
         // draw weird hands
         let cbHands = (a: number, b: number, el: UI512ElButton) => {
             el.set('iconsetid', 'logo');
@@ -88,7 +88,7 @@ export class IntroFirstPage extends IntroPageBase {
                 let el = this.genBtn(app, grp, id);
                 el.setDimensions(bnds[0], bnds[1] - 4, bnds[2], bnds[3]);
                 el.set('style', btnKeywords[b] === 'showFeatured' ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
-                el.set('labeltext', lang.translate(btnLabels[b]));
+                el.set('labeltext', lng(btnLabels[b]));
                 if (btnKeywords[b] === 'showFeatured') {
                     el.setDimensions(el.x, el.y - 6, el.w, el.h + 10);
                 } else if (btnKeywords[b] === 'showAbout') {
@@ -97,7 +97,7 @@ export class IntroFirstPage extends IntroPageBase {
             }
         });
 
-        this.drawCommonLast(app, grp, lang);
+        this.drawCommonLast(app, grp);
     }
 
     static haveCheckedUrl = false;
@@ -123,9 +123,8 @@ export class IntroFirstPage extends IntroPageBase {
                     // open the document
                     let demoid = demoname + '.json';
                     let loader = new VpcDocLoader(
-                        c.lang,
                         demoid,
-                        c.lang.translate('lngfeatured stack'),
+                        lng('lngfeatured stack'),
                         OpenFromLocation.FromStaticDemo
                     );
                     c.beginLoadDocument(loader);
@@ -133,9 +132,8 @@ export class IntroFirstPage extends IntroPageBase {
                 }
             } else if (pts.length === 2) {
                 let loader = new VpcDocLoader(
-                    c.lang,
                     id,
-                    c.lang.translate('lngstack'),
+                    lng('lngstack'),
                     OpenFromLocation.FromStackIdOnline
                 );
                 c.beginLoadDocument(loader);
@@ -163,18 +161,18 @@ export class IntroFirstPage extends IntroPageBase {
         let [x, y] = [c.activePage.x, c.activePage.y];
         c.activePage.destroy(c, c.app);
         c.activePage = new IntroOpenPage('introOpenPage', c.bounds, x, y, openType);
-        c.activePage.create(c, c.app, c.lang);
+        c.activePage.create(c, c.app);
 
         if (openType === OpenFromLocation.FromJsonFile) {
             // user clicked 'open from json'
             let [x1, y1] = [c.activePage.x, c.activePage.y];
             c.activePage.destroy(c, c.app);
             c.activePage = new IntroOpenFromDiskPage('IntroOpenFromDiskPage', c.bounds, x1, y1, c);
-            c.activePage.create(c, c.app, c.lang);
+            c.activePage.create(c, c.app);
         } else if (openType === OpenFromLocation.ShowLoginForm) {
             if (!getRoot().getSession()) {
                 // we have to load the full ui, just to get the dialog to get then to log in
-                let loader = new VpcDocLoader(c.lang, '', '', OpenFromLocation.ShowLoginForm);
+                let loader = new VpcDocLoader('', '', OpenFromLocation.ShowLoginForm);
                 c.beginLoadDocument(loader);
             } else {
                 c.activePage.destroy(c, c.app);
@@ -185,7 +183,7 @@ export class IntroFirstPage extends IntroPageBase {
                     y,
                     OpenFromLocation.FromStackIdOnline
                 );
-                c.activePage.create(c, c.app, c.lang);
+                c.activePage.create(c, c.app);
             }
         }
     }

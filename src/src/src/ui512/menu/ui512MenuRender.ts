@@ -2,7 +2,7 @@
 /* auto */ import { O, assertTrueWarn, checkThrowUI512 } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, assertEq, base10, cast, getRoot, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { MenuConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -197,7 +197,6 @@ export class MenuPositioning {
         grpbar: UI512ElGroup,
         grpitems: UI512ElGroup,
         menuroot: UI512MenuRoot,
-        lang: UI512Lang,
         dropdowns: string[],
         childids: string[],
         ar: any
@@ -223,7 +222,7 @@ export class MenuPositioning {
             dropdn.set('fixedwidth', parseInt(fixwidth, base10));
             dropdn.set('labeltext', '');
         } else {
-            dropdn.set('labeltext', lang.translate(headerlabeluntranslated));
+            dropdn.set('labeltext', lng(headerlabeluntranslated));
         }
 
         assertTrueWarn(grpitems.findEl(menuroot.id + '##dropdownbg'), 'forgot to call createMenuHelperObjects?');
@@ -234,7 +233,7 @@ export class MenuPositioning {
 
             grpitems.addElement(app, item);
             childids.push(itemid);
-            item.set('labeltext', itemuntranslated === '---' ? itemuntranslated : lang.translate(itemuntranslated));
+            item.set('labeltext', itemuntranslated === '---' ? itemuntranslated : lng(itemuntranslated));
             item.set('labelhotkey', hotkey.replace(/ /g, ''));
             item.set('visible', false);
         }
@@ -242,7 +241,7 @@ export class MenuPositioning {
         return dropdn;
     }
 
-    static buildFromStruct(c: UI512PresenterWithMenuInterface, st: any[], lang: UI512Lang) {
+    static buildFromStruct(c: UI512PresenterWithMenuInterface, st: any[]) {
         let menuroot = MenuPositioning.getMenuRoot(c.app);
         let [grpbar, grpitems] = MenuPositioning.getMenuGroups(c.app);
 
@@ -257,7 +256,6 @@ export class MenuPositioning {
                 grpbar,
                 grpitems,
                 menuroot,
-                lang,
                 dropdowns,
                 childids,
                 ar

@@ -3,6 +3,7 @@
 /* auto */ import { cast, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512ImageCollection, UI512ImageCollectionCollection, UI512ImageCollectionImage } from '../../ui512/draw/ui512ImageCollection.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
@@ -111,7 +112,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     protected onChooseCategory() {
         let ctg = this.getChosenCategory();
         if (ctg) {
-            let lns = ctg.children.map(ch => this.appli.lang().translate(ch.name));
+            let lns = ctg.children.map(ch => lng(ch.name));
             let el = this.appli.UI512App().findElemById('grpVpcAppUIToolStampChoiceRight');
             if (el) {
                 UI512ElTextField.setListChoices(cast(el, UI512ElTextField), lns);
@@ -207,14 +208,14 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         // draw bottom-left label
         let lbl2 = new UI512ElLabel('grpVpcAppUIToolStampLbl2');
         grp.addElement(this.appli.UI512App(), lbl2);
-        lbl2.set('labeltext', this.appli.lang().translate('lng"Art Bits" (1987)'));
+        lbl2.set('labeltext', lng('lng"Art Bits" (1987)'));
         lbl2.setDimensions(px + 13, py + 280, 200, 20);
 
         // optimize group
         grp.updateBoundsBasedOnChildren();
 
         // set left choices
-        UI512ElTextField.setListChoices(lft, this.directories.map(item => this.appli.lang().translate(item[1])));
+        UI512ElTextField.setListChoices(lft, this.directories.map(item => lng(item[1])));
 
         // auto-choose the first entry in the list
         let lftgel = new UI512ElTextFieldAsGeneric(cast(lft, UI512ElTextField));

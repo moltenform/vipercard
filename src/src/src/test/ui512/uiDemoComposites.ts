@@ -24,7 +24,7 @@ export class UI512TestCompositesController extends UI512Controller {
     testrbInclusive = new UI512CompRadioButtonGroup('testrbInclusive');
     testToolbox = new UI512CompToolbox('testToolbox');
     testEditor = new UI512CompCodeEditor('testCodeEditor');
-    testModalDlg = new UI512CompStdDialog('testModalDlg', this.lang);
+    testModalDlg = new UI512CompStdDialog('testModalDlg');
     public init() {
         super.init();
         addDefaultListeners(this.listeners);
@@ -80,17 +80,17 @@ export class UI512DemoComposites extends UI512TestCompositesController {
             } else if (d.elClick.id === 'btnDlg1') {
                 c.testModalDlg.dlgtype = UI512CompStdDialogType.answer;
                 c.testModalDlg.btnlabels = ['', '', ''];
-                c.testModalDlg.create(c, c.app, c.lang);
+                c.testModalDlg.create(c, c.app);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(c, c.app, n => c.gotFromDlg(n));
             } else if (d.elClick.id === 'btnDlg2') {
                 c.testModalDlg.dlgtype = UI512CompStdDialogType.answer;
                 c.testModalDlg.btnlabels = ['Ch A', 'Ch B', 'Ch C'];
-                c.testModalDlg.create(c, c.app, c.lang);
+                c.testModalDlg.create(c, c.app);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(c, c.app, n => c.gotFromDlg(n));
             } else if (d.elClick.id === 'btnDlgAsk') {
                 c.testModalDlg.dlgtype = UI512CompStdDialogType.ask;
                 c.testModalDlg.btnlabels = ['OK', 'Cancel'];
-                c.testModalDlg.create(c, c.app, c.lang);
+                c.testModalDlg.create(c, c.app);
                 c.testModalDlg.autoRegisterAndSuppressAndRestore(c, c.app, n => c.gotFromDlg(n));
             }
 
@@ -141,7 +141,7 @@ export class TestDrawUI512Composites extends UI512TestBase {
         c.testrbExclusive.logicalHeight = 1;
         c.testrbExclusive.x = 50;
         c.testrbExclusive.y = 50;
-        c.testrbExclusive.create(c, c.app, c.lang);
+        c.testrbExclusive.create(c, c.app);
         c.testrbInclusive.items = [
             ['fries', 'lngFries'],
             ['hamburger', 'lngHamburger'],
@@ -153,7 +153,7 @@ export class TestDrawUI512Composites extends UI512TestBase {
         c.testrbInclusive.logicalHeight = 1;
         c.testrbInclusive.x = 50;
         c.testrbInclusive.y = 130;
-        c.testrbInclusive.create(c, c.app, c.lang);
+        c.testrbInclusive.create(c, c.app);
 
         // add toolbox
         const iconw = 20;
@@ -174,7 +174,7 @@ export class TestDrawUI512Composites extends UI512TestBase {
             ['heart', 13],
             ['letter', 14],
         ];
-        c.testToolbox.create(c, c.app, c.lang);
+        c.testToolbox.create(c, c.app);
 
         // add code editor
         c.testEditor.x = 200;
@@ -184,7 +184,7 @@ export class TestDrawUI512Composites extends UI512TestBase {
         c.testEditor.autoIndent.caseSensitive = false;
         c.testEditor.autoIndent.lineContinuation = ['\\', '\xC2' /* roman logical not */];
         c.testEditor.lineCommentPrefix = '--~ ';
-        c.testEditor.create(c, c.app, c.lang);
+        c.testEditor.create(c, c.app);
         c.testEditor.setCaption(c.app, 'Script "New Button"');
         c.testEditor.setContent(
             `abc

@@ -1,5 +1,5 @@
 
-/* auto */ import { O, cProductName } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { isString } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
@@ -16,7 +16,7 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
             [
                 'mnuHeaderOS|icon:001:80:26',
                 [
-                    'mnuOSAbout|lngAbout %cProductName...|',
+                    'mnuOSAbout|lngAbout ViperCard...|',
                     'mnuOSDonate|lngDonate...|',
                     '|---|',
                     'mnuReportErr|lngReport an error...|',
@@ -38,7 +38,7 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuShareALink|lngShare a link...|',
                     'mnuPublishFeatured|lngPublish to featured...|',
                     '|---|',
-                    'mnuQuit|lngQuit %cProductName|\xBD U',
+                    'mnuQuit|lngQuit ViperCard|\xBD U',
                 ],
             ],
             [
@@ -159,7 +159,7 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                 'mnuHeaderHelpIcon|icon:001:75:27',
                 864,
                 [
-                    'mnuOSAbout2|lngAbout %cProductName...|',
+                    'mnuOSAbout2|lngAbout ViperCard...|',
                     '|---|',
                     'mnuDlgHelpScreenshots|lngExamples & Tutorials...|',
                     'mnuDlgHelpReference|lngScript Reference...|',
@@ -169,11 +169,11 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                 'mnuHeaderAppIcon|icon:001:78:27',
                 891,
                 [
-                    'mnuSysAppsHideProduct|lngHide %cProductName|',
+                    'mnuSysAppsHideProduct|lngHide ViperCard|',
                     'mnuSysAppsHideOthers|lngHide Others|',
                     'mnuSysAppsShowAll|lngShow All|',
                     '|---|',
-                    'mnuSysAppsCheckProduct|lng%cProductName|',
+                    'mnuSysAppsCheckProduct|lngViperCard|',
                 ],
             ],
         ];

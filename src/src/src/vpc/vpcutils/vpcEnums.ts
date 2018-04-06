@@ -1,7 +1,7 @@
 
 /* auto */ import { makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { Lines } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { PaintOntoCanvasShapes } from '../../ui512/draw/ui512ImageSerialize.js';
@@ -81,7 +81,7 @@ export enum VpcElType {
     Product,
 }
 
-export function vpcElTypeToString(type: VpcElType, lang: UI512Lang, veryshort: boolean) {
+export function vpcElTypeToString(type: VpcElType, veryshort: boolean) {
     if (veryshort) {
         if (type === VpcElType.Unknown) {
             return '';
@@ -104,15 +104,15 @@ export function vpcElTypeToString(type: VpcElType, lang: UI512Lang, veryshort: b
         if (type === VpcElType.Unknown) {
             return '';
         } else if (type === VpcElType.Btn) {
-            return lang.translate('lngbutton');
+            return lng('lngbutton');
         } else if (type === VpcElType.Fld) {
-            return lang.translate('lngfield');
+            return lng('lngfield');
         } else if (type === VpcElType.Card) {
-            return lang.translate('lngcard');
+            return lng('lngcard');
         } else if (type === VpcElType.Bg) {
-            return lang.translate('lngbackground');
+            return lng('lngbackground');
         } else if (type === VpcElType.Stack) {
-            return lang.translate('lngstack');
+            return lng('lngstack');
         } else if (type === VpcElType.Product) {
             return '';
         } else {

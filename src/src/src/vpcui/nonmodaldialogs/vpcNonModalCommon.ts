@@ -1,7 +1,7 @@
 
 /* auto */ import { O, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512BeginAsyncSetLabelText, UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -38,7 +38,7 @@ export class VpcAppNonModalDlgHolder extends VpcAppInterfaceLayer {
         }
 
         if (frm && frm instanceof VpcFormNonModalDialogBase) {
-            frm.create(this.c, this.appli.UI512App(), this.appli.lang());
+            frm.create(this.c, this.appli.UI512App());
             this.current = frm;
         } else if (frm) {
             throw makeVpcInternalErr('expected VpcFormNonModalDialogBase.');
@@ -120,13 +120,13 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
         me.logicalHeight = appli.bounds()[3] - (me.y - appli.bounds()[1]);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpid);
         let headheight = 0;
         if (this.showHeader) {
             headheight = this.drawWindowDecoration(app, this.decorations, this.hasCloseBtn) - 1;
             let caption = grp.getEl(this.getElId('caption'));
-            caption.set('labeltext', lang.translate(this.captionText));
+            caption.set('labeltext', lng(this.captionText));
         }
 
         let bg = this.genBtn(app, grp, 'bg');
@@ -148,7 +148,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
 
             let lbl = this.genChild<UI512ElLabel>(app, grp, 'lblFor' + fldId, UI512ElLabel);
             lbl.setDimensions(curx, cury, this.lblWidth, h);
-            lbl.set('labeltext', lang.translate(fldUntransed));
+            lbl.set('labeltext', lng(fldUntransed));
             curx += this.lblWidth + this.lblMarginSpace;
 
             let rght = this.genChild<UI512ElTextField>(app, grp, 'fld' + fldId, UI512ElTextField);
@@ -167,11 +167,11 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
 
         cury += fldVerticalMargin * 2;
         curx = startx + totalWidthForCenter - 90;
-        this.drawBtn(app, grp, 0, curx, cury, 69, 29, lang);
+        this.drawBtn(app, grp, 0, curx, cury, 69, 29);
         curx -= 69 + this.lblMarginSpace * 2;
-        this.drawBtn(app, grp, 1, curx, cury + 4, 68, 21, lang);
+        this.drawBtn(app, grp, 1, curx, cury + 4, 68, 21);
         curx -= 68 + this.lblMarginSpace * 2;
-        this.drawBtn(app, grp, 2, curx, cury + 4, 68, 21, lang);
+        this.drawBtn(app, grp, 2, curx, cury + 4, 68, 21);
 
         curx = startx;
         cury += 30;
@@ -194,14 +194,14 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
         return ret;
     }
 
-    setStatus(lang: UI512Lang, s: string) {
+    setStatus(s: string) {
         if (this.lblStatus) {
             s = s.replace(/\r\n/g, '').replace(/\n/g, '');
             if (!s.endsWith('.')) {
                 s += '.';
             }
 
-            this.lblStatus.set('labeltext', lang.translate(s));
+            this.lblStatus.set('labeltext', lng(s));
         }
     }
 
@@ -215,13 +215,12 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
         y: number,
         w: number,
         h: number,
-        lang: UI512Lang
     ) {
         if (this.btns[n]) {
             let btn = this.genBtn(app, grp, `btn${this.btns[n][0]}`);
             btn.set('style', n === 0 ? UI512BtnStyle.osdefault : UI512BtnStyle.osstandard);
             btn.set('autohighlight', true);
-            btn.set('labeltext', lang.translate(this.btns[n][1]));
+            btn.set('labeltext', lng(this.btns[n][1]));
             btn.setDimensions(x, y, w, h);
         }
     }

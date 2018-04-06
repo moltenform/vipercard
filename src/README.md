@@ -1,12 +1,12 @@
 
-Source code for ViperCard.net.
-
-    Refactoring is scheduled to take place 3/29/18, to better organize this code.
+Source code for [vipercard.net](https://www.vipercard.net).
 
     ui512 is my general-purpose user-interface layer, remembering when screen resolutions were 512x342.
     
-    vpcscript is the script parser and interpreter. I wrote a custom python script to help generate the Chevrotain grammar.
+    ui512 can be used as a standalone library for another gpl project, see uidemobasic.ts for a "hello world" example 
     
-    vpcui is the ViperCard-specific user interface.
+    vpc contains the script parser and interpreter. I wrote a custom python script to assist in writing the Chevrotain grammar.
+    
+    vpcui is ViperCard's user interface.
     
     

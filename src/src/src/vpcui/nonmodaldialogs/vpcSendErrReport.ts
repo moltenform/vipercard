@@ -2,7 +2,6 @@
 /* auto */ import { vpcversion } from '../../config.js';
 /* auto */ import { UI512ErrorHandling, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { VpcSession } from '../../vpc/request/vpcRequest.js';
@@ -36,8 +35,8 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
         VpcFormNonModalDialogFormBase.standardWindowBounds(this, appli);
     }
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
-        super.createSpecific(app, lang);
+    createSpecific(app: UI512Application) {
+        super.createSpecific(app);
         let grp = app.getGroup(this.grpid);
         let header = grp.findEl(this.getElId('lblForheader'));
         if (header) {
@@ -79,12 +78,12 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
                     return;
                 } else if (result instanceof Error) {
                     if (scontains(result.toString(), 'could not create log entry')) {
-                        this.setStatus(appli.lang(), 'lngAlready sent.');
+                        this.setStatus('lngAlready sent.');
                     } else {
-                        this.setStatus(appli.lang(), 'lng ' + result.toString());
+                        this.setStatus('lng ' + result.toString());
                     }
                 } else {
-                    this.setStatus(appli.lang(), 'lngSent report.');
+                    this.setStatus('lngSent report.');
                 }
             }
         );
@@ -100,7 +99,7 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
         let fullstackid = VpcSession.getFullStackId(stackowner, stackid);
 
         // ok to set props on lblStatus, since we have a firm reference, if form has been closed is a no-op
-        this.setStatus(appli.lang(), 'lngSending report...');
+        this.setStatus('lngSending report...');
         await ses.vpLogEntriesCreate(userdesc, lastClientLogs, fullstackid);
         return true;
     }

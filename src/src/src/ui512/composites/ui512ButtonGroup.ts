@@ -1,6 +1,6 @@
 
 /* auto */ import { Util512, cast } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
@@ -13,7 +13,7 @@ export class UI512CompRadioButtonGroup extends UI512CompBase {
     elemheight = 20;
     compositeType = 'buttongroup';
 
-    createSpecific(app: UI512Application, lang: UI512Lang) {
+    createSpecific(app: UI512Application) {
         Util512.freezeRecurse(this.items);
         let grp = app.getGroup(this.grpid);
         let cury = this.y;
@@ -23,7 +23,7 @@ export class UI512CompRadioButtonGroup extends UI512CompBase {
             el.set('labelhalign', false);
             el.set('labelvalign', true);
             el.setDimensions(this.x, cury, this.logicalWidth, this.elemheight);
-            let translated = lang.translate(item[1]);
+            let translated = lng(item[1]);
             el.set('labeltext', translated);
             cury += this.elemheight + this.elemymargin;
         }

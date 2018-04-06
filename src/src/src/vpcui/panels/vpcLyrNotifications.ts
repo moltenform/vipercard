@@ -1,5 +1,6 @@
 
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
@@ -29,7 +30,7 @@ export class VpcAppCoverArea extends VpcAppInterfaceLayer {
 
         // a message to the user saying "nyi"
         const margin = 45;
-        let msg = this.appli.lang().translate('lng(This feature is not yet supported.)');
+        let msg = lng('lng(This feature is not yet supported.)');
         let font = new TextFontSpec('geneva', 0, 10);
         msg = TextRendererFontManager.setInitialFont(msg, font.toSpecString());
         this.elems.nyiMsg = new UI512ElLabel('grpAppHelperElemsNyiMsg');
@@ -42,7 +43,7 @@ export class VpcAppCoverArea extends VpcAppInterfaceLayer {
         this.elems.nyiMsg.setDimensions(this.elems.cover.x, this.elems.cover.y, this.elems.cover.w, this.elems.cover.h);
 
         // a message to the user saying where tutorials are.
-        let s = this.appli.lang().translate('lngNew? Click here to see how to use ViperCard. (Close).');
+        let s = lng('lngNew? Click here to see how to use ViperCard. (Close).');
         let style = 'biuosdce';
         s = TextRendererFontManager.setInitialFont(s, `chicago_10_${style}`);
         let lbl = new UI512ElLabel('grpAppHelperElemsShowTutorial');

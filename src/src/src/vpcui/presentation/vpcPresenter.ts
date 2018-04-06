@@ -4,6 +4,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
@@ -119,7 +120,7 @@ export class VpcAppController extends VpcControllerInit {
             !this.app.findElemById('mainModalDlg##modaldialog##dlgprompt'),
             'internal error, dialog box already shown'
         );
-        let modalDlg = new UI512CompStdDialog('mainModalDlg', this.lang);
+        let modalDlg = new UI512CompStdDialog('mainModalDlg');
         let stopelid = this.lyrToolboxes.toolsnav.getElId('choice##cardNumOrStop');
         let stopel = this.app.getElemById(stopelid);
         modalDlg.cancelBtnBounds = [
@@ -297,10 +298,10 @@ export class VpcAppController extends VpcControllerInit {
 
         if (this.isDocDirty()) {
             this.answerMsg(
-                this.lang.translate('lngReminder that unsaved changes will be lost.\nContinue?'),
+                lng('lngReminder that unsaved changes will be lost.\nContinue?'),
                 doExit,
-                this.lang.translate('lngOK'),
-                this.lang.translate('lngCancel')
+                lng('lngOK'),
+                lng('lngCancel')
             );
         } else {
             doExit();
@@ -314,10 +315,10 @@ export class VpcAppController extends VpcControllerInit {
             this.makePasteVel(id);
         } else if (id && id.length) {
             throw makeVpcInternalErr(
-                msgNotification + this.lang.translate('lngPasting this type of element is not yet supported.')
+                msgNotification + lng('lngPasting this type of element is not yet supported.')
             );
         } else {
-            throw makeVpcInternalErr(msgNotification + this.lang.translate('lngNothing has been copied.'));
+            throw makeVpcInternalErr(msgNotification + lng('lngNothing has been copied.'));
         }
     }
 
@@ -347,7 +348,7 @@ export class VpcAppController extends VpcControllerInit {
         );
         if (type === VpcElType.Btn) {
             vel.setProp('style', VpcValS('roundrect'));
-            vel.set('label', this.lang.translate('lngNew Button'));
+            vel.set('label', lng('lngNew Button'));
             vel.set('showlabel', true);
             vel.set('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp');
             this.appli.getCodeExec().updateChangedCode(vel, vel.get_s('script'));
@@ -389,7 +390,7 @@ export class VpcAppController extends VpcControllerInit {
             // and compile its script too...
             this.appli.getCodeExec().updateChangedCode(dupe, dupe.get_s('script'));
         } else {
-            throw makeVpcInternalErr(msgNotification + this.lang.translate("lngCan't paste this."));
+            throw makeVpcInternalErr(msgNotification + lng("lngCan't paste this."));
         }
     }
 
@@ -444,7 +445,7 @@ export class VpcAppController extends VpcControllerInit {
                 this.lyrModelRender.fullRedrawNeeded();
             });
         } else {
-            throw makeVpcInternalErr(msgNotification + this.lang.translate(msgIfFalse));
+            throw makeVpcInternalErr(msgNotification + lng(msgIfFalse));
         }
     }
 

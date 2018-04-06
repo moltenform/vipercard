@@ -1,5 +1,5 @@
 
-/* auto */ import { UI512Lang } from '../../ui512/lang/langBase.js';
+/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -16,10 +16,10 @@ export class PropPanelCompositeBlank extends PropPanelCompositeBase {
     topInputs: [string, string, number][] = [];
     leftChoices: [string, string][] = [];
     rightOptions: [string, string][] = [];
-    createSpecific(app: UI512Application, lang: UI512Lang) {
-        super.createSpecific(app, lang);
+    createSpecific(app: UI512Application) {
+        super.createSpecific(app);
 
-        let txt = this.appli.lang().translate('lngNothing is selected.');
+        let txt = lng('lngNothing is selected.');
         txt = TextRendererFontManager.setInitialFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
         this.lblNamingTip.set('labeltext', txt);
         this.lblNamingTip.setDimensions(
@@ -35,6 +35,6 @@ export class PropPanelCompositeBlank extends PropPanelCompositeBase {
         let btnGenPart = grp.getEl(this.getElId('btnGenPart'));
         let currentTool = this.appli.getOption_n('currentTool');
         let lbl = currentTool === VpcTool.button ? 'lngMake new button' : 'lngMake new field';
-        btnGenPart.set('labeltext', this.appli.lang().translate(lbl));
+        btnGenPart.set('labeltext', lng(lbl));
     }
 }

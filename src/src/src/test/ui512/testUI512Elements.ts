@@ -3,7 +3,6 @@
 /* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys, getUI512WindowBounds, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512LangNull } from '../../ui512/lang/langBase.js';
 /* auto */ import { largearea } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
@@ -671,14 +670,13 @@ y
         let fakeGrp = new UI512ElGroup('fakegrp');
         let fakeCtrller = { rebuildFieldScrollbars: () => {} } as any;
         let ed = new VpcPanelScriptEditor('vpcPanelScriptEditor');
-        let lang = new UI512LangNull();
         ed.logicalWidth = 1000;
         ed.logicalHeight = 1000;
         ed.refreshFromModel = (a) => {};
         ed.saveChangesToModel = (a, b) => {};
         ed.cbGetAndValidateSelectedVel = s => undefined;
         ed.appli = { UI512App: () => {} } as any;
-        ed.create(fakeCtrller, fakeApp, lang);
+        ed.create(fakeCtrller, fakeApp);
         return ed;
     }
 }
