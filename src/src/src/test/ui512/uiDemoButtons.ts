@@ -143,18 +143,18 @@ export class TestDrawUI512Buttons extends UI512TestBase {
 
         switch (props) {
             case BtnPropsToTest.IconAndNoLabel:
-                button.set('iconsetid', '001');
+                button.set('icongroupid', '001');
                 button.set('iconnumber', 11);
                 break;
             case BtnPropsToTest.IconAndLabelAndChecked:
-                button.set('iconsetid', '002');
+                button.set('icongroupid', '002');
                 button.set('iconnumber', 71 + 21);
                 button.set('labeltext', 'label text');
                 button.set('checkmark', true);
                 break;
             case BtnPropsToTest.IconAndLabelMultiline:
                 // intentionally show a truncated icon
-                button.set('iconsetid', '001');
+                button.set('icongroupid', '001');
                 button.set('iconnumber', 12);
                 button.set('iconadjustx', 6);
                 button.set('iconadjusty', 2);

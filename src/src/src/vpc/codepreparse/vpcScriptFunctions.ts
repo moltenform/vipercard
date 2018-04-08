@@ -2,7 +2,7 @@
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq, findEnumToStr } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { Lines } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512Lines } from '../../ui512/textedit/ui512TextLines.js';
 /* auto */ import { PropAdjective, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
@@ -382,7 +382,7 @@ export class VpcBuiltinFunctions {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = fld.get_n('selcaret');
-            let lines = new Lines(fld.get_ftxt());
+            let lines = new UI512Lines(fld.get_ftxt());
             return VpcValN(lines.indexToLineNumber(start));
         } else {
             return VpcVal.Empty;
@@ -392,7 +392,7 @@ export class VpcBuiltinFunctions {
     call_tool(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let nTool = this.readoutside.GetCurrentTool(false);
         let s = findEnumToStr<VpcTool>(VpcTool, nTool);
-        return VpcValS(s ? s : '');
+        return VpcValS(s ? s.toLowerCase() : '');
     }
 
     protected getFullNameById(id: string, adjective: PropAdjective, type: VpcElType) {

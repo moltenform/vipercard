@@ -1,7 +1,7 @@
 
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
@@ -20,7 +20,7 @@ export class PropPanelCompositeBlank extends PropPanelCompositeBase {
         super.createSpecific(app);
 
         let txt = lng('lngNothing is selected.');
-        txt = TextRendererFontManager.setInitialFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
+        txt = UI512DrawText.setFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
         this.lblNamingTip.set('labeltext', txt);
         this.lblNamingTip.setDimensions(
             this.lblNamingTip.x,

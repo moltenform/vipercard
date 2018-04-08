@@ -6,7 +6,7 @@
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { VpcSession, vpcUsersCheckLogin, vpcUsersEnterEmailVerifyCode } from '../../vpc/request/vpcRequest.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 /* auto */ import { VpcFormNonModalDialogLogInInterface, VpcFormNonModalDialogNewUser } from '../../vpcui/nonmodaldialogs/vpcFormNewUser.js';
 
@@ -27,12 +27,12 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
     ];
     btns: [string, string][] = [['ok', 'lngOK'], ['close', 'lngClose'], ['newaccount', 'lngNew User']];
 
-    constructor(protected appli: IVpcStateInterface, public newUserOk: boolean) {
+    constructor(protected appli: VpcStateInterface, public newUserOk: boolean) {
         super('vpcFormNonModalDialogLogIn' + Math.random());
     }
 
     waitingForVerifyCode: O<ArrayBuffer>;
-    onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void {
+    onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void {
         if (short === 'btnok') {
             if (this.waitingForVerifyCode) {
                 this.setStatus('lngInitial account verification...');
@@ -82,7 +82,7 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
         }
     }
 
-    doLogin(appli: IVpcStateInterface) {
+    doLogin(appli: VpcStateInterface) {
         let paramFields = this.readFields(appli.UI512App());
         UI512BeginAsync(
             () => vpcUsersCheckLogin(paramFields['username'], paramFields['pw']),
@@ -116,7 +116,7 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
         );
     }
 
-    doLoginVerifyCode(appli: IVpcStateInterface, keybuffer: ArrayBuffer) {
+    doLoginVerifyCode(appli: VpcStateInterface, keybuffer: ArrayBuffer) {
         let paramFields = this.readFields(appli.UI512App());
         UI512BeginAsync(
             () => vpcUsersEnterEmailVerifyCode(paramFields['username'], keybuffer, paramFields['code_email_verify']),

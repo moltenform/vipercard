@@ -1,6 +1,6 @@
 
 /* auto */ import { O, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { IUI512Session, Util512, base10, checkThrowEq, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { UI512IsSessionInterface, Util512, base10, checkThrowEq, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { getUnixTimeSeconds, makeNonce, pbkdf2, sendSignedRequestJson, sendWebRequestGetJson } from '../../vpc/request/vpcSigned.js';
 
 export async function vpcUsersCreate(username: string, pw: string, email: string): Promise<string> {
@@ -144,7 +144,7 @@ export async function vpcStacksGetData(stackfullid: string): Promise<{ [key: str
     }
 }
 
-export class VpcSession implements IUI512Session {
+export class VpcSession implements UI512IsSessionInterface {
     static getUrlForOpeningStack(loc: string, stackowner: string, stackid: string, stackname: string): string {
         let shorterstackid = stackid;
         if (shorterstackid.startsWith('S')) {

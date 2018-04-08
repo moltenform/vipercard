@@ -7,12 +7,14 @@
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
 /* auto */ import { UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPaint.js';
 
+/**
+ * serialize an image to a string
+ * 
+ * create a long string of ascii characters 0,1,2,
+ * one character for each pixel in the image.
+ * then run lz to compress the string to binary data.
+ */
 export class UI512ImageSerialization {
-    /*
-    Serialization.
-    First create a width*height string containing one of the ascii characters 0,1,2
-    Then compress this string.
-    */
     readonly asciiBlack = clrBlack.toString().charAt(0);
     readonly asciiWhite = clrWhite.toString().charAt(0);
     readonly asciiTransp = clrTransp.toString().charAt(0);
@@ -24,7 +26,7 @@ export class UI512ImageSerialization {
         const w = canvas.canvas.width;
         const h = canvas.canvas.height;
         if (compressed.length === 0) {
-            // for convenience, treat empty string as a white image.
+            /* treat empty string as an empty white image. */
             canvas.fillRect(0, 0, w, h, 0, 0, w, h, 'white');
             return;
         }
@@ -32,7 +34,6 @@ export class UI512ImageSerialization {
         let data = canvas.context.createImageData(w, h);
         assertEq(data.data.length, 4 * w * h, '2{|');
         let uncompressed = UI512Compress.decompressString(compressed);
-
         if (uncompressed.length * 4 !== data.data.length) {
             let loc = window.location.href;
             if (scontains(loc, 'U3ZcVJ')) {
@@ -49,12 +50,12 @@ export class UI512ImageSerialization {
             uncompressed.length * 4
         );
 
-        let drawer = new UI512PainterCvData(data.data, w, h);
+        let paint = new UI512PainterCvData(data.data, w, h);
         let i = 0;
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
                 let pixel = uncompressed.charCodeAt(i);
-                drawer.setPixel(x, y, pixel - this.asciiNumBlack);
+                paint.setPixel(x, y, pixel - this.asciiNumBlack);
                 i++;
             }
         }
@@ -89,6 +90,9 @@ export class UI512ImageSerialization {
     }
 }
 
+/**
+ * painted shapes supported
+ */
 export enum PaintOntoCanvasShapes {
     __isUI512Enum = 1,
     SmearPencil,
@@ -104,19 +108,25 @@ export enum PaintOntoCanvasShapes {
     IrregularPolygon,
 }
 
+/**
+ * high-level interface for painting a shape on a canvas
+ */
 export class PaintOntoCanvas {
     mods: ModifierKeys;
     cardId: string;
     constructor(
         public shape: PaintOntoCanvasShapes,
-        public xpts: number[],
-        public ypts: number[],
+        public xPts: number[],
+        public yPts: number[],
         public color: number,
         public fillColor: number,
         public isFilled = true,
         public lineSize = 1
     ) {}
 
+    /**
+     * get arguments based on flags
+     */
     static fromMemoryOpts(
         shape: PaintOntoCanvasShapes,
         isErase: boolean,
@@ -138,7 +148,6 @@ export class PaintOntoCanvas {
         }
 
         let ret = new PaintOntoCanvas(shape, [], [], fromOptsLineColor, fill, isFilled, fromOptsWide ? 5 : 1);
-
         if (isErase) {
             ret.color = clrWhite;
             ret.fillColor = clrWhite;
@@ -148,64 +157,66 @@ export class PaintOntoCanvas {
         return ret;
     }
 
+    /**
+     * apply paint onto canvas
+     */
     static go(args: PaintOntoCanvas, painter: UI512Painter) {
         let color: number = args.color;
-        let fillcolor: O<number> = args.isFilled ? simplifyPattern(args.fillColor) : undefined;
+        let fill: O<number> = args.isFilled ? simplifyPattern(args.fillColor) : undefined;
         if (args.shape !== PaintOntoCanvasShapes.Bucket) {
             assertTrue(
-                !needsPatternSupport(color) && !needsPatternSupport(fillcolor),
+                !needsPatternSupport(color) && !needsPatternSupport(fill),
                 'not yet implemented (currently kinda slow when tested)'
             );
         }
 
-        let xpts = args.xpts;
-        let ypts = args.ypts;
-
+        let xPts = args.xPts;
+        let yPts = args.yPts;
         switch (args.shape) {
             case PaintOntoCanvasShapes.SmearPencil: {
-                return painter.higherSmearPixels(xpts, ypts, color);
+                return painter.publicSmearPencil(xPts, yPts, color);
             }
             case PaintOntoCanvasShapes.SmearRectangle: {
-                return painter.higherSmearRectangle(xpts, ypts, color, 16, 16);
+                return painter.publicSmearRectangle(xPts, yPts, color, 16, 16);
             }
             case PaintOntoCanvasShapes.SmearSpraycan: {
-                return painter.higherSmearSpraycan(xpts, ypts, color);
+                return painter.publicSmearSpraycan(xPts, yPts, color);
             }
             case PaintOntoCanvasShapes.SmearSmallBrush: {
-                return painter.higherSmearSmallBrush(xpts, ypts, color);
-            }
-            case PaintOntoCanvasShapes.ShapeLine: {
-                assertEq(2, xpts.length, 'ShapeLine');
-                assertEq(2, ypts.length, 'ShapeLine');
-                return painter.higherStraightLine(xpts[0], ypts[0], xpts[1], ypts[1], color, args.lineSize);
-            }
-            case PaintOntoCanvasShapes.ShapeRectangle: {
-                assertEq(2, xpts.length, 'ShapeRectangle');
-                assertEq(2, ypts.length, 'ShapeRectangle');
-                return painter.higherRectangle(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize);
-            }
-            case PaintOntoCanvasShapes.ShapeElipse: {
-                assertEq(2, xpts.length, 'ShapeElipse');
-                assertEq(2, ypts.length, 'ShapeElipse');
-                return painter.higherPlotEllipse(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize);
-            }
-            case PaintOntoCanvasShapes.ShapeRoundRect: {
-                assertEq(2, xpts.length, 'ShapeRoundRect');
-                assertEq(2, ypts.length, 'ShapeRoundRect');
-                return painter.higherRoundRect(xpts[0], ypts[0], xpts[1], ypts[1], color, fillcolor, args.lineSize);
-            }
-            case PaintOntoCanvasShapes.ShapeCurve: {
-                assertEq(3, xpts.length, 'ShapeCurve');
-                assertEq(3, ypts.length, 'ShapeCurve');
-                return painter.higherCurve(xpts[0], ypts[0], xpts[1], ypts[1], xpts[2], ypts[2], color, args.lineSize);
-            }
-            case PaintOntoCanvasShapes.Bucket: {
-                assertEq(1, xpts.length, 'Bucket');
-                assertEq(1, ypts.length, 'Bucket');
-                return PaintOntoCanvas.paintBucketSlowButWorks(painter, xpts[0], ypts[0], fillcolor || 0);
+                return painter.publicSmearSmallBrush(xPts, yPts, color);
             }
             case PaintOntoCanvasShapes.IrregularPolygon: {
-                return PaintOntoCanvas.paintIrregularPolySlowButWorks(painter, xpts, ypts, fillcolor || 0);
+                return painter.fillPolygon(0,0,painter.getCanvasWidth(), painter.getCanvasHeight(), xPts, yPts, color)
+            }
+            case PaintOntoCanvasShapes.ShapeLine: {
+                assertEq(2, xPts.length, 'ShapeLine');
+                assertEq(2, yPts.length, 'ShapeLine');
+                return painter.publicStraightLine(xPts[0], yPts[0], xPts[1], yPts[1], color, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeRectangle: {
+                assertEq(2, xPts.length, 'ShapeRectangle');
+                assertEq(2, yPts.length, 'ShapeRectangle');
+                return painter.publicRectangle(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeElipse: {
+                assertEq(2, xPts.length, 'ShapeElipse');
+                assertEq(2, yPts.length, 'ShapeElipse');
+                return painter.publicPlotEllipse(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeRoundRect: {
+                assertEq(2, xPts.length, 'ShapeRoundRect');
+                assertEq(2, yPts.length, 'ShapeRoundRect');
+                return painter.publicRoundRect(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.ShapeCurve: {
+                assertEq(3, xPts.length, 'ShapeCurve');
+                assertEq(3, yPts.length, 'ShapeCurve');
+                return painter.publicCurve(xPts[0], yPts[0], xPts[1], yPts[1], xPts[2], yPts[2], color, args.lineSize);
+            }
+            case PaintOntoCanvasShapes.Bucket: {
+                assertEq(1, xPts.length, 'Bucket');
+                assertEq(1, yPts.length, 'Bucket');
+                return PaintOntoCanvas.paintBucketSlowButWorks(painter, xPts[0], yPts[0], fill || 0);
             }
             default: {
                 assertTrueWarn(false, 'unknown shape', args.shape);
@@ -213,50 +224,24 @@ export class PaintOntoCanvas {
         }
     }
 
-    static paintIrregularPolySlowButWorks(painter: UI512Painter, xpts: number[], ypts: number[], fillcolor: number) {
-        fillcolor = simplifyPattern(fillcolor);
-        assertTrue(!needsPatternSupport(fillcolor), 'not yet implemented');
+    /**
+     * the other shapes work against either a canvas or against raw data
+     * this one needs to be against raw data, so might need to call getImageData.
+     */
+    static paintBucketSlowButWorks(painter: UI512Painter, x: number, y: number, fillPattern: number) {
+        fillPattern = simplifyPattern(fillPattern);
         if (painter.readPixelSupported()) {
-            painter.fillPolygon(
-                0,
-                0,
-                painter.getCanvasWidth(),
-                painter.getCanvasHeight(),
-                xpts,
-                ypts,
-                fillcolor
-            );
+            painter.floodFill(x, y, fillPattern);
         } else {
-            // unfortunately, we'll have to make a new painter that supports reading pixels
+            /* unfortunately, we'll have to make a new painter that supports reading pixels */
             let cv: CanvasWrapper = painter.getBackingSurface();
             assertTrue(cv instanceof CanvasWrapper, 'cv instanceof CanvasWrapper');
             const w = cv.canvas.width;
             const h = cv.canvas.height;
             let data = cv.context.getImageData(0, 0, w, h);
 
-            let painterWithData = new UI512PainterCvData(data.data, w, h);
-            painterWithData.fillPolygon(0, 0, w, h, xpts, ypts, fillcolor);
-            cv.context.putImageData(data, 0, 0);
-        }
-    }
-
-    static paintBucketSlowButWorks(painter: UI512Painter, x: number, y: number, fillpattern: number) {
-        fillpattern = simplifyPattern(fillpattern);
-        if (painter.readPixelSupported()) {
-            painter.floodFill(x, y, fillpattern);
-        } else {
-            // unfortunately, we'll have to make a new painter that supports reading pixels
-            let cv: CanvasWrapper = painter.getBackingSurface();
-            assertTrue(cv instanceof CanvasWrapper, 'cv instanceof CanvasWrapper');
-            const w = cv.canvas.width;
-            const h = cv.canvas.height;
-            let data = cv.context.getImageData(0, 0, w, h);
-
-            let painterWithData =
-                fillpattern > 50
-                    ? new UI512PainterCvDataAndPatterns(data.data, w, h)
-                    : new UI512PainterCvData(data.data, w, h);
-            painterWithData.floodFill(x, y, fillpattern);
+            let painterWithData = new UI512PainterCvDataAndPatterns(data.data, w, h)
+            painterWithData.floodFill(x, y, fillPattern);
             cv.context.putImageData(data, 0, 0);
         }
     }

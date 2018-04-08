@@ -48,9 +48,14 @@ export abstract class UI512Controller extends UI512ControllerBase {
 
             // now we can modify safely
             let stilldirty: { [key: string]: boolean } = {};
+            let builder = new ScrollbarImpl()
             for (let el of els) {
                 if (el instanceof UI512ElTextField) {
-                    new ScrollbarImpl().rebuildFieldScrollbar(this.app, grp, el);
+                    if (el.get_b('scrollbar')) {
+                        builder.buildScrollbar(this.app, grp, el);
+                    } else {
+                        builder.removeScrollbar(this.app, grp, el);
+                    }
                 }
             }
         }
@@ -69,7 +74,7 @@ export abstract class UI512Controller extends UI512ControllerBase {
             for (let el of els) {
                 let cmpthis = new RenderComplete();
                 if (el instanceof UI512ElTextField) {
-                    new ScrollbarImpl().setScrollbarPositionsForRender(this.app, grp, el, cmpthis);
+                    new ScrollbarImpl().setPositions(this.app, grp, el, cmpthis);
                 } else if (el instanceof UI512MenuRoot) {
                     MenuPositioning.setMenubarPositionsForRender(this.app, el, cmpthis);
                 }

@@ -2,7 +2,7 @@
 /* auto */ import { O, assertTrueWarn, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
@@ -35,24 +35,24 @@ export class UI512CompCodeEditor extends UI512CompBase {
         let grp = app.getGroup(this.grpid);
         let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 
-        let cury = this.y + headerheight - 1;
+        let curY = this.y + headerheight - 1;
         const spacerheight = headerheight;
         let spacer = this.genBtn(app, grp, 'spacer');
         spacer.set('autohighlight', false);
-        spacer.setDimensions(this.x, cury, this.logicalWidth, spacerheight);
-        cury += spacerheight - 1;
+        spacer.setDimensions(this.x, curY, this.logicalWidth, spacerheight);
+        curY += spacerheight - 1;
 
         this.el = this.genChild(app, grp, 'editor', UI512ElTextField);
         this.el.set('style', UI512FldStyle.Rectangle);
         this.el.set('labelwrap', false);
         this.el.set('scrollbar', true);
         this.el.set('defaultFont', UI512CompCodeEditorFont.font);
-        this.el.setDimensionsX1Y1(this.x, cury, this.x + this.logicalWidth, this.y + this.logicalHeight);
+        this.el.setDimensionsX1Y1(this.x, curY, this.x + this.logicalWidth, this.y + this.logicalHeight);
     }
 
     setContent(s: string) {
-        s = TextRendererFontManager.setInitialFont(s, UI512CompCodeEditorFont.font);
-        let txt = FormattedText.newFromPersisted(s);
+        s = UI512DrawText.setFont(s, UI512CompCodeEditorFont.font);
+        let txt = FormattedText.newFromSerialized(s);
         this.getEl().setftxt(txt);
     }
 

@@ -4,7 +4,7 @@
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { TextFontSpec, TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
@@ -18,7 +18,7 @@
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcFormNonModalDialogBase, VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 
 export class StackHistory {
@@ -54,7 +54,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
     entry: UI512ElTextField;
     scrollGot: UI512ElTextField;
     historyTyped = new StackHistory();
-    constructor(protected appli: IVpcStateInterface) {
+    constructor(protected appli: VpcStateInterface) {
         super('VpcAppNonModalDialogReplBox' + Math.random());
         let app = this.appli.UI512App();
 
@@ -85,7 +85,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
 
         let dasheline = this.genBtn(app, grp, 'dasheline');
         dasheline.setDimensions(this.x + 14 - 1, this.y + 30 + 9 + 1, 490, 8);
-        dasheline.set('iconsetid', '000');
+        dasheline.set('icongroupid', '000');
         dasheline.set('iconnumber', 1);
         dasheline.set('iconadjustheight', -47);
         dasheline.set('autohighlight', false);
@@ -108,17 +108,17 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
     setFontAndText(el: UI512ElTextField, s: string, typfacename: string, siz: number) {
         let spec = new TextFontSpec(typfacename, TextFontStyling.Default, siz);
         el.set('defaultFont', spec.toSpecString());
-        let t = FormattedText.newFromPersisted(TextRendererFontManager.setInitialFont(s, spec.toSpecString()));
+        let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
         el.setftxt(t);
     }
 
-    onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void {
+    onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void {
         if (short && short === 'closebtn') {
             this.appli.setNonModalDialog(undefined);
         }
     }
 
-    onMouseDown(short: string, el: UI512Element, appli: IVpcStateInterface): void {}
+    onMouseDown(short: string, el: UI512Element, appli: VpcStateInterface): void {}
 
     onKeyDown(elid: O<string>, short: O<string>, d: KeyDownEventDetails): void {
         if (short === 'entry' && (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')) {

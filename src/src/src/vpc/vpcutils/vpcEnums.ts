@@ -3,7 +3,6 @@
 /* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { Lines } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { PaintOntoCanvasShapes } from '../../ui512/draw/ui512ImageSerialize.js';
 
 export enum RequestedChunkType {

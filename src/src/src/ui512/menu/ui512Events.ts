@@ -1,5 +1,6 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { UI512IsEventInterface } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys, toShortcutString } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
@@ -202,7 +203,7 @@ export class MouseDownDoubleEventDetails extends MouseEventDetails {
     }
 }
 
-export class PasteTextEventDetails extends EventDetails {
+export class PasteTextEventDetails extends EventDetails implements UI512IsEventInterface {
     isPasteTextEventDetails = true;
     constructor(public readonly timestamp: number, public readonly text: string, public readonly fromOS: boolean) {
         super();

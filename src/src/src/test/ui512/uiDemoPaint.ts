@@ -11,7 +11,7 @@
 /* auto */ import { UI512PainterCvCanvas, UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPaint.js';
 /* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes, UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialize.js';
 /* auto */ import { IconInfo } from '../../ui512/draw/ui512DrawIconClasses.js';
-/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIcon.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -78,6 +78,7 @@ export class UI512DemoPaint extends UI512TestPaintController {
     }
 
     private static respondMouseUp(c: UI512DemoPaint, d: MouseUpEventDetails) {
+        c.isDragging = false
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
                 c.test.runtestShape(true);
@@ -101,13 +102,14 @@ export class UI512DemoPaint extends UI512TestPaintController {
         }
     }
 
+    isDragging = false
     beginDragDrop(x: number, y: number, el: UI512Element) {
         this.mouseDragDropOffset = [x - el.x, y - el.y];
-        this.mouseDragStatus = MouseDragStatusDemoPaint.DragAndDrop;
+        this.isDragging = true;
     }
 
     static respondMouseMove(c: UI512DemoPaint, d: MouseMoveEventDetails) {
-        if (c.mouseDragStatus === MouseDragStatusDemoPaint.DragAndDrop && c.trackPressedBtns[0]) {
+        if (c.isDragging && c.trackPressedBtns[0]) {
             let el = c.app.findElemById(c.trackClickedIds[0]);
             if (el) {
                 let newx = d.mouseX - c.mouseDragDropOffset[0];
@@ -116,14 +118,6 @@ export class UI512DemoPaint extends UI512TestPaintController {
             }
         }
     }
-}
-
-enum MouseDragStatusDemoPaint {
-    __isUI512Enum = 1,
-    None,
-    ScrollArrow,
-    SelectingText,
-    DragAndDrop, // newly added value
 }
 
 class FloodFillTest {
@@ -137,11 +131,11 @@ class FloodFillTest {
     }
 
     floodFillTest(canvas: CanvasWrapper) {
-        let iconManager = cast(getRoot().getIconManager(), RenderIconManager);
+        let iconManager = cast(getRoot().getDrawIcon(), UI512IconManager);
         let readyToLoad = true;
         this.layout.combinations((n, _, iconnumber, bnds) => {
             let info = new IconInfo('002', iconnumber);
-            let icon = iconManager.findIcon(info.iconsetid, info.iconnumber);
+            let icon = iconManager.findIcon(info.iconGroup, info.iconNumber);
             if (!icon) {
                 readyToLoad = false;
                 return;
@@ -210,9 +204,9 @@ export class TestDrawUI512Paint extends UI512TestBase {
     }
 
     protected drawShapes(painter: UI512Painter, w: number, h: number) {
-        painter.higherPlotEllipse(0, 0, w - 5, h - 5, clrBlack, undefined, 1);
-        painter.higherRoundRect(0, 0, w / 2, h / 2, clrBlack, clrWhite, 1);
-        painter.higherRectangle(w / 2, h / 2, w / 2 + w / 2, h / 2 + h / 2, clrBlack, undefined, 1);
+        painter.publicPlotEllipse(0, 0, w - 5, h - 5, clrBlack, undefined, 1);
+        painter.publicRoundRect(0, 0, w / 2, h / 2, clrBlack, clrWhite, 1);
+        painter.publicRectangle(w / 2, h / 2, w / 2 + w / 2, h / 2 + h / 2, clrBlack, undefined, 1);
     }
 
     protected testSetPixelAndSerialize(
@@ -370,11 +364,11 @@ export class TestDrawUI512Paint extends UI512TestBase {
                 linesize
             );
             if (type === PaintOntoCanvasShapes.ShapeCurve) {
-                pnt.xpts = [bnds[0], bnds[0] + Math.floor(bnds[2] / 2), bnds[0] + bnds[2]];
-                pnt.ypts = [bnds[1], bnds[1] + Math.floor(bnds[3] / 8), bnds[1] + bnds[3]];
+                pnt.xPts = [bnds[0], bnds[0] + Math.floor(bnds[2] / 2), bnds[0] + bnds[2]];
+                pnt.yPts = [bnds[1], bnds[1] + Math.floor(bnds[3] / 8), bnds[1] + bnds[3]];
             } else {
-                pnt.xpts = [bnds[0], bnds[0] + bnds[2]];
-                pnt.ypts = [bnds[1], bnds[1] + bnds[3]];
+                pnt.xPts = [bnds[0], bnds[0] + bnds[2]];
+                pnt.yPts = [bnds[1], bnds[1] + bnds[3]];
             }
 
             PaintOntoCanvas.go(pnt, mainPainter);
@@ -382,9 +376,9 @@ export class TestDrawUI512Paint extends UI512TestBase {
     }
 
     protected getIrregularPolygon(x: number, y: number, w: number, h: number) {
-        let xpts = [x, x + w, x, x, x + Math.floor(w / 2)];
-        let ypts = [y, y + Math.floor(h / 2), y + h, y + Math.floor(h / 2), y + Math.floor(h / 2)];
-        return [xpts, ypts];
+        let xPts = [x, x + w, x, x, x + Math.floor(w / 2)];
+        let yPts = [y, y + Math.floor(h / 2), y + h, y + Math.floor(h / 2), y + Math.floor(h / 2)];
+        return [xPts, yPts];
     }
 
     addElements(c: UI512Controller, bounds: number[]) {

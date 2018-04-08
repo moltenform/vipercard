@@ -1,51 +1,55 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { CharRectType } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { TextRendererFontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
+/* auto */ import { UI512FontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 
-export function renderTextArgsFromEl(el: any, subrect: number[], hasFocus: boolean): [RenderTextArgs, FormattedText] {
+/**
+ * fill out a RenderTextArgs object
+ * based on the properties of a text field element
+ */
+export function renderTextArgsFromEl(el: CanGetValue, subRect: number[], hasFocus: boolean): [RenderTextArgs, FormattedText] {
     let args = new RenderTextArgs(
-        subrect[0],
-        subrect[1],
-        subrect[2],
-        subrect[3],
+        subRect[0],
+        subRect[1],
+        subRect[2],
+        subRect[3],
         el.get_b('labelhalign'),
         el.get_b('labelvalign'),
         el.get_b('labelwrap')
     );
 
-    // adjust positions
-    args.boxx += el.get_n('nudgex');
-    args.boxy += el.get_n('nudgey');
-    args.boxw -= el.get_n('nudgex');
-    args.boxh -= el.get_n('nudgey');
+    /* adjust positions */
+    args.boxX += el.get_n('nudgex');
+    args.boxY += el.get_n('nudgey');
+    args.boxW -= el.get_n('nudgex');
+    args.boxH -= el.get_n('nudgey');
 
-    // we currently don't support v-aligned text fields. can be used in a label.
-    args.valign = false;
-    args.addvspacing = el.get_n('addvspacing');
-    args.hscrollamt = 0;
-    args.vscrollamt = el.get_n('scrollamt');
+    /* we currently don't support v-aligned text fields. can be used in a label. */
+    args.vAlign = false;
+    args.addVSpacing = el.get_n('addvspacing');
+    args.hScrollAmt = 0;
+    args.vScrollAmt = el.get_n('scrollamt');
     args.defaultFont = el.get_s('defaultFont');
     args.asteriskOnly = el.get_b('asteriskonly');
 
     if (el.get_b('selectbylines')) {
-        // always show the highlight, even when text in another field is being edited.
+        /* always show the highlight, even when text in another field is being edited. */
         hasFocus = true;
 
-        // shrink margins of the field.
-        args.boxx -= 2;
-        args.boxw += 4;
+        /* shrink margins of the field. */
+        args.boxX -= 2;
+        args.boxW += 4;
     }
 
     if (hasFocus && el.get_b('canselecttext')) {
-        args.selcaret = el.get_n('selcaret');
-        args.selend = el.get_n('selend');
+        args.selCaret = el.get_n('selcaret');
+        args.selEnd = el.get_n('selend');
         args.showCaret = el.get_b('showcaret');
     }
 
-    if (el.get_b('selectbylines') && args.selcaret === args.selend) {
-        // when selecting by lines, don't show the normal blinking caret
+    if (el.get_b('selectbylines') && args.selCaret === args.selEnd) {
+        /* when selecting by lines, don't show the normal blinking caret */
         args.showCaret = false;
     }
 
@@ -53,25 +57,39 @@ export function renderTextArgsFromEl(el: any, subrect: number[], hasFocus: boole
     return [args, ret];
 }
 
+/**
+ * arguments that will be passed to RenderText
+ */
 export class RenderTextArgs {
     constructor(
-        public boxx: number,
-        public boxy: number,
-        public boxw: number,
-        public boxh: number,
-        public halign = false,
-        public valign = false,
+        public boxX: number,
+        public boxY: number,
+        public boxW: number,
+        public boxH: number,
+        public hAlign = false,
+        public vAlign = false,
         public wrap = false
     ) {}
 
-    addvspacing = 0;
-    vscrollamt = 0;
-    hscrollamt = 0;
-    selcaret = -1;
-    selend = -1;
+    addVSpacing = 0;
+    vScrollAmt = 0;
+    hScrollAmt = 0;
+    selCaret = -1;
+    selEnd = -1;
     showCaret = false;
-    defaultFont = TextRendererFontCache.defaultFont;
     drawBeyondVisible = true;
     asteriskOnly = false;
-    callbackPerChar: O<(charindex: number, type: CharRectType, bounds: number[]) => boolean>;
+    defaultFont = UI512FontCache.defaultFont;
+    callbackPerChar: O<(charIndex: number, type: CharRectType, bounds: number[]) => boolean>;
 }
+
+/**
+ * rough structure of a _UI512Gettable_
+ */
+interface CanGetValue {
+    get_b(s:string):boolean;
+    get_n(s:string):number;
+    get_s(s:string):string;
+    get_ftxt():FormattedText;
+}
+

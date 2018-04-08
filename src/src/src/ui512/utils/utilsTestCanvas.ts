@@ -15,12 +15,9 @@ export function compareCanvas(
     height: number,
     drawRed: boolean
 ) {
-    let hiddenCanvasExpectedDom = window.document.createElement('canvas');
-    hiddenCanvasExpectedDom.width = width;
-    hiddenCanvasExpectedDom.height = height;
-    let hiddenCanvasExpected = new CanvasWrapper(hiddenCanvasExpectedDom);
-    hiddenCanvasExpected.drawFromImage(imageExpected, 0, 0, width, height, 0, 0, 0, 0, width, height);
-    let dataExpected = hiddenCanvasExpected.context.getImageData(0, 0, width, height);
+    let cvExpected = CanvasWrapper.createMemoryCanvas(width, height)
+    cvExpected.drawFromImage(imageExpected, 0, 0, width, height, 0, 0, 0, 0, width, height);
+    let dataExpected = cvExpected.context.getImageData(0, 0, width, height);
     let dataGot = imageGot.context.getImageData(0, 0, width, height);
     assertEq(dataExpected.data.length, dataGot.data.length, '3w|');
     assertEq(dataExpected.data.length, 4 * width * height, '3v|');

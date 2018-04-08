@@ -10,8 +10,8 @@
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
-/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
 /* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
+/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
 /* auto */ import { IntroWaitWhileLoadingPage } from '../../vpcui/intro/vpcIntroLoading.js';
 /* auto */ import { IntroOpenPage } from '../../vpcui/intro/vpcIntroOpen.js';
 /* auto */ import { IntroFirstPage } from '../../vpcui/intro/vpcIntroFirst.js';
@@ -46,7 +46,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
             -4
         );
         layoutPatternBg.createElems(this.app, grp, 'bgpattern', UI512ElButton, (col, row, el) => {
-            el.set('iconsetid', 'logo');
+            el.set('icongroupid', 'logo');
             el.set('iconnumber', 1);
             el.set('style', UI512BtnStyle.Transparent);
             el.set('autohighlight', false);
@@ -131,7 +131,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         let exitToMainMenu = () => {
             let ctrller = new VpcUiIntro();
             ctrller.init();
-            getRoot().replaceCurrentController(ctrller);
+            getRoot().replaceCurrentPresenter(ctrller);
             return ctrller;
         };
 

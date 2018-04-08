@@ -11,12 +11,12 @@
 /* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
 /* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
-/* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcApplication } from '../../vpcui/state/vpcState.js';
 /* auto */ import { VpcAppControllerEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcAppController } from '../../vpcui/presentation/vpcPresenter.js';
 
-export class VpcStateInterfaceCompleted implements IVpcStateInterface {
+export class VpcStateInterfaceCompleted implements VpcStateInterface {
     protected appl: VpcApplication;
     protected ctrller: VpcAppController;
     init(appl: VpcApplication, ctrller: VpcAppController) {

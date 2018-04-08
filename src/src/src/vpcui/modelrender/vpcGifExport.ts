@@ -7,7 +7,7 @@
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
 /* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 declare var GIFEncoder: any;
 declare var saveAs: any;
@@ -15,7 +15,7 @@ declare var saveAs: any;
 export class PaintExportToGif {
     createdElem: O<UI512ElLabel>;
     constructor(
-        protected appli: IVpcStateInterface,
+        protected appli: VpcStateInterface,
         protected cbRefreshCachedPaintForCard: (cdid: string) => [string, CanvasWrapper]
     ) {}
 

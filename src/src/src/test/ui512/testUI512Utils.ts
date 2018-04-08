@@ -539,6 +539,13 @@ export class TestUI512Utils extends UI512TestBase {
             assertEq(3, fitIntoInclusive(3, 1, 3), '');
             assertEq(3, fitIntoInclusive(4, 1, 3), '');
         },
+        'test_utils_padStart',
+        () => {
+            assertEq('123', Util512.padStart(123, 2, '0'), "")
+            assertEq('123', Util512.padStart(123, 3, '0'), "")
+            assertEq('0123', Util512.padStart(123, 4, '0'), "")
+            assertEq('00123', Util512.padStart(123, 5, '0'), "")
+        },
         'test_utils_compressString',
         () => {
             // simple compress and uncompress
@@ -601,11 +608,11 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
             let expected = [x0, y0, w, h];
             assertEq(expected, got, '0S|');
         },
@@ -615,13 +622,13 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
-            x0 = boxx0;
-            w = boxw;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
+            x0 = boxX0;
+            w = boxW;
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
             let expected = [x0, y0, w, h];
             assertEq(expected, got, '0R|');
         },
@@ -631,13 +638,13 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
-            y0 = boxy0;
-            h = boxh;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
+            y0 = boxY0;
+            h = boxH;
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
             let expected = [x0, y0, w, h];
             assertEq(expected, got, '0Q|');
         },
@@ -647,12 +654,12 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             x0 = 6;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
             let expected = [10, y0, 30 - (10 - 6), h];
             assertEq(expected, got, '0P|');
         },
@@ -662,12 +669,12 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             y0 = 50;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
             let expected = [x0, 60, w, 22 - (60 - 50)];
             assertEq(expected, got, '0O|');
         },
@@ -677,12 +684,12 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             w = 300;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
             let expected = [x0, y0, 200 + 10 - 15, h];
             assertEq(expected, got, '0N|');
         },
@@ -692,27 +699,27 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             h = 400;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
             let expected = [x0, y0, w, 130 + 60 - 65];
             assertEq(expected, got, '0M|');
         },
         'test_getRectCompletelyCovers',
         () => {
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
-            let x0 = boxx0 - 5,
-                y0 = boxy0 - 7,
-                w = boxw + 24,
-                h = boxh + 31;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [boxx0, boxy0, boxw, boxh];
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
+            let x0 = boxX0 - 5,
+                y0 = boxY0 - 7,
+                w = boxW + 24,
+                h = boxH + 31;
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [boxX0, boxY0, boxW, boxH];
             assertEq(expected, got, '0L|');
         },
         'test_getRectOutsideLeft',
@@ -721,14 +728,14 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             x0 = 3;
             w = 6;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [boxx0, boxy0, 0, 0];
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [boxX0, boxY0, 0, 0];
             assertEq(expected, got, '0K|');
         },
         'test_getRectOutsideLeftTouches',
@@ -737,14 +744,14 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             x0 = 3;
             w = 7;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [boxx0, y0, 0, h];
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [boxX0, y0, 0, h];
             assertEq(expected, got, '0J|');
         },
         'test_getRectBarelyInsideLeft',
@@ -753,14 +760,14 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             x0 = 3;
             w = 8;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [boxx0, y0, 1, h];
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [boxX0, y0, 1, h];
             assertEq(expected, got, '0I|');
         },
         'test_getRectOutsideTop',
@@ -769,14 +776,14 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             y0 = 55;
             h = 4;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [boxx0, boxy0, 0, 0];
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [boxX0, boxY0, 0, 0];
             assertEq(expected, got, '0H|');
         },
         'test_getRectOutsideTopTouches',
@@ -785,14 +792,14 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             y0 = 55;
             h = 5;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [x0, boxy0, w, 0];
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [x0, boxY0, w, 0];
             assertEq(expected, got, '0G|');
         },
         'test_getRectBarelyInsideTop',
@@ -801,14 +808,14 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
             y0 = 55;
             h = 6;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [x0, boxy0, w, 1];
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [x0, boxY0, w, 1];
             assertEq(expected, got, '0F|');
         },
         'test_getRectOutsideRight',
@@ -817,13 +824,13 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
-            x0 = boxx0 + boxw;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [boxx0, boxy0, 0, 0];
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
+            x0 = boxX0 + boxW;
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [boxX0, boxY0, 0, 0];
             assertEq(expected, got, '0E|');
         },
         'test_getRectOutsideBottom',
@@ -832,13 +839,13 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
             let y0 = 65;
             let w = 30;
             let h = 22;
-            let boxx0 = 10;
-            let boxy0 = 60;
-            let boxw = 200;
-            let boxh = 130;
-            y0 = boxy0 + boxh;
-            let got = RectUtils.getRectClipped(x0, y0, w, h, boxx0, boxy0, boxw, boxh);
-            let expected = [boxx0, boxy0, 0, 0];
+            let boxX0 = 10;
+            let boxY0 = 60;
+            let boxW = 200;
+            let boxH = 130;
+            y0 = boxY0 + boxH;
+            let got = RectUtils.getRectClipped(x0, y0, w, h, boxX0, boxY0, boxW, boxH);
+            let expected = [boxX0, boxY0, 0, 0];
             assertEq(expected, got, '0D|');
         },
     ];

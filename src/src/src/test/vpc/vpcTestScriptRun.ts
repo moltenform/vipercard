@@ -807,7 +807,7 @@ put x into x\\x`,
                 ['choose "round rect" tool\\tool()', 'roundrect'],
                 ['choose "round  rect" tool\\tool()', 'roundrect'],
                 ['choose "xyz" tool\\tool()', 'ERR:Not a valid choice'],
-                ['choose "" tool\\tool()', 'ERR:Not a valid choice'],
+                ['choose "" tool\\tool()', 'ERR:valid tool name'],
             ];
 
             this.testBatchEvaluate(batch);

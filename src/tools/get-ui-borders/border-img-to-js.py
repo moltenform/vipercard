@@ -88,7 +88,7 @@ def processOneSide(nameWithoutR, piecewidth, pieceheight, im, pix, isleftside, c
         codelines.append('')
     
     if isleftside:
-        codelines.append('// drawing middle')
+        codelines.append('/* drawing middle */')
         middlePartPixels = colToShorthand(im.size[0], im.size[1], pix, im.size[0]-1)
         
         # draw the middle top part
@@ -150,9 +150,9 @@ def goProcess(nameWithoutR, codelines):
     if 'markedcenter-' in nameWithoutR:
         codelines.append("this.drawRect(basex, basey, width, height, 'w');")
     
-    codelines.append('// drawing left side')
+    codelines.append('/* drawing left side */')
     processOneSide(nameWithoutR, imleft.size[0], imleft.size[1], imleft, pixleft, True, codelines)
-    codelines.append('// drawing right side')
+    codelines.append('/* drawing right side */')
     processOneSide(nameWithoutR, imright.size[0], imright.size[1], imright, pixright, False, codelines)
 
     codelines.append(f'return true;')
@@ -183,6 +183,12 @@ def shorten(s):
         if lstr.startswith('this.dr(') and (lstr.endswith(', "t")') or lstr.endswith(', \'t\')')):
             lines[i] = whitespace+'/* (transparent) ' + line.strip() + ' */'
     s = '\n'.join(lines)
+    s = s.replace('"t"', 'cT')
+    s = s.replace('"w"', 'cW')
+    s = s.replace('"b"', 'cB')
+    s = s.replace("'t'", 'cT')
+    s = s.replace("'w'", 'cW')
+    s = s.replace("'b'", 'cB')
     return s
 
 def writeCodelines(codelines):
@@ -199,7 +205,8 @@ def writeCodelines(codelines):
 def goAll():
     for file, short in files.listfiles('.'):
         if file.endswith('.png') and not '-r' in file:
-            print('// ' + short)
+            print('')
+            print('/* ' + short + ' */')
             codelines = Codelines()
             goProcess(short.replace('.png', ''), codelines)
             allLines = writeCodelines(codelines)

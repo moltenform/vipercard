@@ -30,7 +30,6 @@ export class UI512TestCompositesController extends UI512Controller {
         addDefaultListeners(this.listeners);
         let editTextBehavior = new EditTextBehavior();
         this.listeners[UI512EventType.KeyDown.valueOf()] = [
-            BasicHandlers.trackKeyDown,
             BasicHandlers.basicKeyShortcuts,
             UI512TestCompositesController.respondKeyDown, // inserted before editTextBehavior so that we can recieve the "Enter" keystroke
             editTextBehavior.onKeyDown.bind(editTextBehavior),
@@ -157,7 +156,7 @@ export class TestDrawUI512Composites extends UI512TestBase {
 
         // add toolbox
         const iconw = 20;
-        c.testToolbox.iconsetid = '001';
+        c.testToolbox.icongroupid = '001';
         c.testToolbox.x = 50;
         c.testToolbox.y = 300;
         c.testToolbox.iconh = 22;

@@ -3,7 +3,7 @@
 /* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys, getUI512WindowBounds, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { largearea } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
@@ -42,7 +42,7 @@ export class TestUI512Elements extends UI512TestBase {
         'test_utils_updateBoundsBasedOnChildren',
         () => {
             let [app, grp] = this.makeFakeGroup();
-            assertEq([0, 0, largearea, largearea], grp.mouseInteractionBounds, '');
+            assertEq([0, 0, largeArea, largeArea], grp.mouseInteractionBounds, '');
             grp.updateBoundsBasedOnChildren();
             assertEq([0, 0, 0, 0], grp.mouseInteractionBounds, '');
             grp.getEl('btn1').setDimensions(15, 30, 40, 50);

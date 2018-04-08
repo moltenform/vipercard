@@ -4,14 +4,14 @@
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { VpcSession, vpcStacksFlagContent } from '../../vpc/request/vpcRequest.js';
-/* auto */ import { IVpcSaveUtils } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { VpcSaveUtilsInterface } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 /* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcSendErrReport.js';
 /* auto */ import { VpcFormNonModalDialogLogIn } from '../../vpcui/nonmodaldialogs/vpcFormLogin.js';
 /* auto */ import { VpcPresenterInterface } from '../../vpcui/presentation/vpcPresenterInterface.js';
 
 declare var saveAs: any;
 
-export class VpcSaveUtils implements IVpcSaveUtils {
+export class VpcSaveUtils implements VpcSaveUtilsInterface {
     busy = false;
     constructor(protected c: VpcPresenterInterface) {}
 

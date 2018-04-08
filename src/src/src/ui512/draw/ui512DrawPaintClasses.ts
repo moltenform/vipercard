@@ -5,9 +5,13 @@
 
 /* tslint:disable:no-unbound-method */
 
+/**
+ * abstract painting class, can be attached to different surfaces
+ * clr is generally clrBlack or clrWhite, but at this layer we support any color.
+ */
 export abstract class UI512Painter extends UI512BasePainterUtils {
-    abstract setPixel(x: number, y: number, color: number): void;
-    abstract fillRect(x: number, y: number, w: number, h: number, color: number): void;
+    abstract setPixel(x: number, y: number, clr: number): void;
+    abstract fillRect(x: number, y: number, w: number, h: number, clr: number): void;
     abstract readPixel(x: number, y: number): number;
     abstract readPixelSupported(): boolean;
     abstract getCanvasWidth(): number;
@@ -16,45 +20,58 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     abstract getSurfaceName(): string;
     abstract supportsPatterns(): boolean;
 
-    // "pencil" tool
-    higherSmearPixels(xpts: number[], ypts: number[], colorparam: number) {
+    /**
+     * draw with a single pixel brush
+     * 
+     * a 'smear' is this: you're in say the pencil tool, and you drag to draw a jagged line on the screen
+     * internally, whenever the mouse moves, we add a line segment from previous point to next point
+     * to render what you drew, we'll draw each of these line segments.
+     */
+    publicSmearPencil(xPts: number[], yPts: number[], clrIn: number) {
         let realSetPixel = this.setPixel.bind(this);
-        this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
-            realSetPixel(x, y, color);
+        this.smearShapeImpl(xPts, yPts, clrIn, (x: number, y: number, clr: number) => {
+            realSetPixel(x, y, clr);
         });
     }
 
-    // "square brush" or "eraser" tool
-    higherSmearRectangle(
-        xpts: number[],
-        ypts: number[],
+    /**
+     * draw with a solid rectangle brush, used for eraser tool.
+     */
+    publicSmearRectangle(
+        xPts: number[],
+        yPts: number[],
         colorparam: number,
         diameterx: number,
         diametery: number
     ) {
         let realFillRect = this.fillRect.bind(this);
-        this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
-            realFillRect(x - Math.floor(diameterx / 2), y - Math.floor(diametery / 2), diameterx, diametery, color);
+        this.smearShapeImpl(xPts, yPts, colorparam, (x, y, color) => {
+            realFillRect(x - Math.floor(diameterx / 2), 
+                y - Math.floor(diametery / 2), diameterx, diametery, color);
         });
     }
 
-    // "brush" tool
-    higherSmearSmallBrush(xpts: number[], ypts: number[], colorparam: number) {
+    /**
+     * draw with a solid brush shape
+     */
+    publicSmearSmallBrush(xPts: number[], yPts: number[], colorparam: number) {
         let realFillRect = this.fillRect.bind(this);
-        this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
-            // central 4x2 rectangle
+        this.smearShapeImpl(xPts, yPts, colorparam, (x, y, color) => {
+            /* central 4x2 rectangle */
             realFillRect(x - 1, y, 4, 2, color);
-            // first smaller 2x1 rectangle
+            /* first smaller 2x1 rectangle */
             realFillRect(x, y - 1, 2, 1, color);
-            // second smaller 2x1 rectangle
+            /* second smaller 2x1 rectangle */
             realFillRect(x, y + 2, 2, 1, color);
         });
     }
 
-    // "spraycan" tool
-    higherSmearSpraycan(xpts: number[], ypts: number[], colorparam: number) {
+    /**
+     * draw a brush that is a spray of pixels
+     */
+    publicSmearSpraycan(xPts: number[], yPts: number[], colorparam: number) {
         let realSetPixel = this.setPixel.bind(this);
-        this.smearShapes(xpts, ypts, colorparam, (x: number, y: number, color: number) => {
+        this.smearShapeImpl(xPts, yPts, colorparam, (x, y, color) => {
             realSetPixel(x + -1, y + -8, color);
             realSetPixel(x + 3, y + -7, color);
             realSetPixel(x + -6, y + -6, color);
@@ -87,66 +104,23 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         });
     }
 
-    protected smearShapes(
-        xpts: number[],
-        ypts: number[],
-        color: number,
-        newSetPixel: (x: number, y: number, color: number) => void
-    ) {
-        let savedSetPixel = this.setPixel;
-        let savedFillRect = this.fillRect;
-        try {
-            this.fillRect = () => {
-                throw makeUI512Error("shouldn't be called");
-            };
-            this.setPixel = newSetPixel;
-            if (xpts.length === 1 && ypts.length === 1) {
-                // plot one point
-                this.plotLine(xpts[0], ypts[0], xpts[0], ypts[0], color);
-            } else {
-                // unconnected polygon
-                for (let i = 0; i < xpts.length - 1; i++) {
-                    this.plotLine(xpts[i], ypts[i], xpts[i + 1], ypts[i + 1], color);
-                }
-            }
-        } finally {
-            this.setPixel = savedSetPixel;
-            this.fillRect = savedFillRect;
-        }
-    }
-
-    /*
-    drawing thicker lines used to be done by drawing the shape x times in a diagonal line from x-linesize/2 to x+linesize/2.
-    drawing an elipse can be done by drawing n ellipses from furthest out inwards, which works
-    this new way works better than all of them though.
-    */
-
-    protected canAdjustLineSize(
-        fillcolor: O<number>,
-        linesize: number,
-        fn: (fill: O<number>, ofx: number, ofy: number) => void
-    ) {
-        fn(fillcolor, 0, 0);
-        if (linesize > 1) {
-            // draw lots of transparent ones to make the border bigger
-            fn(undefined, 0, 1);
-            fn(undefined, 0, -1);
-            fn(undefined, 1, 0);
-            fn(undefined, -1, 0);
-        }
-    }
-
-    higherStraightLine(x0: number, y0: number, x1in: number, y1in: number, color: number, linesize: number) {
+    /**
+     * draw a straight line
+     */
+    publicStraightLine(x0: number, y0: number, x1in: number, y1in: number, clr: number, linesize: number) {
         let w = x1in - x0;
         let h = y1in - y0;
-        return this.canAdjustLineSize(0, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+        return this.drawShapeAdjustableBorderImpl(0, linesize, (fillcolorinput, ofx, ofy) => {
             let x1 = x0 + ofx + w;
             let y1 = y0 + ofy + h;
-            this.plotLine(x0 + ofx, y0 + ofy, x1, y1, color);
+            this.plotLine(x0 + ofx, y0 + ofy, x1, y1, clr);
         });
     }
 
-    higherRoundRect(
+    /**
+     * draw a rounded rectangle
+     */
+    publicRoundRect(
         x0: number,
         y0: number,
         x1: number,
@@ -157,12 +131,12 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     ) {
         let w = x1 - x0;
         let h = y1 - y0;
-        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+        return this.drawShapeAdjustableBorderImpl(fillcolor, linesize, (fillcolorinput, ofx, ofy) => {
             this.drawvpcroundrectPorted(x0 + ofx, y0 + ofy, w, h, color, fillcolorinput);
         });
     }
 
-    higherRectangle(
+    publicRectangle(
         x0: number,
         y0: number,
         x1: number,
@@ -173,12 +147,12 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     ) {
         let w = x1 - x0;
         let h = y1 - y0;
-        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+        return this.drawShapeAdjustableBorderImpl(fillcolor, linesize, (fillcolorinput, ofx, ofy) => {
             this.drawboxthinborderPorted(x0 + ofx, y0 + ofy, w, h, color, fillcolorinput);
         });
     }
 
-    higherCurve(
+    publicCurve(
         x0: number,
         y0: number,
         x1: number,
@@ -188,12 +162,12 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         color: number,
         linesize: number
     ) {
-        return this.canAdjustLineSize(0, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+        return this.drawShapeAdjustableBorderImpl(0, linesize, (fillcolorinput, ofx, ofy) => {
             this.plotQuadBezier(x0 + ofx, y0 + ofy, x1 + ofx, y1 + ofy, x2 + ofx, y2 + ofy, color);
         });
     }
 
-    higherPlotEllipse(
+    publicPlotEllipse(
         xm: number,
         ym: number,
         x1: number,
@@ -209,49 +183,108 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         let a = Math.floor(w / 2);
         let b = Math.floor(h / 2);
 
-        return this.canAdjustLineSize(fillcolor, linesize, (fillcolorinput: O<number>, ofx: number, ofy: number) => {
+        return this.drawShapeAdjustableBorderImpl(fillcolor, linesize, (fillcolorinput, ofx, ofy) => {
             this.plotEllipseAxis(centerx + ofx, centery + ofy, a, b, color, fillcolorinput);
         });
     }
 
-    floodFill(xinput: number, yinput: number, color: number) {
+    /**
+     * implementation to draw a smear
+     */
+    protected smearShapeImpl(
+        xPts: number[],
+        yPts: number[],
+        color: number,
+        newSetPixel: (x: number, y: number, color: number) => void
+    ) {
+        let savedSetPixel = this.setPixel;
+        let savedFillRect = this.fillRect;
+        try {
+            this.fillRect = () => {
+                throw makeUI512Error("shouldn't be called");
+            };
+            this.setPixel = newSetPixel;
+            if (xPts.length === 1 && yPts.length === 1) {
+                /* plot one point */
+                this.plotLine(xPts[0], yPts[0], xPts[0], yPts[0], color);
+            } else {
+                /* draw all line segments */
+                for (let i = 0; i < xPts.length - 1; i++) {
+                    this.plotLine(xPts[i], yPts[i], xPts[i + 1], yPts[i + 1], color);
+                }
+            }
+        } finally {
+            this.setPixel = savedSetPixel;
+            this.fillRect = savedFillRect;
+        }
+    }
+
+    /**
+     * implementation to draw a shape
+     * optionally draw a "thicker" line by drawing the same shape 5 times, once in the center and all around it.
+     */
+    protected drawShapeAdjustableBorderImpl(
+        fillcolor: O<number>,
+        linesize: number,
+        fn: (fill: O<number>, offsetX: number, ofsetfY: number) => void
+    ) {
+        fn(fillcolor, 0, 0);
+        if (linesize > 1) {
+            /* draw the shape again (with transparent fill) to make border thicker */
+            fn(undefined, 0, 1);
+            fn(undefined, 0, -1);
+            fn(undefined, 1, 0);
+            fn(undefined, -1, 0);
+        }
+    }
+
+    /**
+     * flood fill ('bucket tool')
+     */
+    floodFill(xIn: number, yIn: number, color: number) {
         throw makeUI512Error('not implemented');
     }
 
-    protected floodFillWithoutPattern(
-        xinput: number,
-        yinput: number,
+    /**
+     * flood fill ('bucket tool') implementation
+     * 
+     * by Jared Updike
+     * http://stackoverflow.com/questions/1257117/does-anyone-have-a-working-non-recursive-floodfill-algorithm-written-in-c
+     * released under Creative Commons Attribution-Share Alike
+     * ported to JavaScript by Ben Fisher, 2017
+     */
+    protected floodFillImpl(
+        xIn: number,
+        yIn: number,
         tmpColor: number,
         recordOutputX?: number[],
         recordOutputY?: number[]
-    ) {
-        // from Jared Updike, http://stackoverflow.com/questions/1257117/does-anyone-have-a-working-non-recursive-floodfill-algorithm-written-in-c
-        // modified by Ben Fisher, lb_drawing.h from fastpixelpic
+    ):void {
         const w = this.getCanvasWidth();
         const h = this.getCanvasHeight();
-        if (!RectUtils.hasPoint(xinput, yinput, 0, 0, w, h)) {
-            return 0;
+        if (!RectUtils.hasPoint(xIn, yIn, 0, 0, w, h)) {
+            return;
         }
 
+        /* queue of work to do */
         let qx: number[] = [];
         let qy: number[] = [];
-
-        const targetColor = this.readPixel(xinput, yinput);
+        const targetColor = this.readPixel(xIn, yIn);
         if (targetColor === tmpColor) {
-            // no work needed
-            return 0;
+            /* no work needed */
+            return;
         }
 
-        qx.push(xinput);
-        qy.push(yinput);
+        qx.push(xIn);
+        qy.push(yIn);
         let countPixelsWritten = 0;
-        let maxallowediters = 1000 * w * h;
+        let maxAllowedIters = 1000 * w * h;
         let counter = 0;
         while (qx.length > 0) {
             counter += 1;
-            if (counter > maxallowediters) {
+            if (counter > maxAllowedIters) {
                 assertTrueWarn(false, `39|exceeded maxallowediters ${counter}`);
-                return countPixelsWritten;
+                return;
             }
 
             let x = qx.pop() as number;
@@ -274,13 +307,25 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
                 qy.push(y - 1);
             }
         }
-
-        return countPixelsWritten;
     }
 
-    /*
+    /**
+     * plot ellipse fitting the rectangle, rather than with center+radius
+     */
+    plotEllipse(xm: number, ym: number, w: number, h: number, color: number, fillcolor: O<number>) {
+        this.plotEllipseAxis(
+            xm + Math.floor(w / 2),
+            ym + Math.floor(h / 2),
+            Math.floor(w / 2),
+            Math.floor(h / 2),
+            color,
+            fillcolor
+        );
+    }
+
+    /**
     * Bresenham Curve Rasterizing Algorithms
-    Used with explicit permission, e-mail on Oct 27 2017
+    * Used with explicit permission of author, e-mail on Oct 27 2017
     * @author  Zingl Alois
     * @date    17.12.2014
     * @version 1.3
@@ -315,17 +360,6 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
                 y0 += sy;
             } /* y step */
         }
-    }
-
-    plotEllipse(xm: number, ym: number, w: number, h: number, color: number, fillcolor: O<number>) {
-        this.plotEllipseAxis(
-            xm + Math.floor(w / 2),
-            ym + Math.floor(h / 2),
-            Math.floor(w / 2),
-            Math.floor(h / 2),
-            color,
-            fillcolor
-        );
     }
 
     protected plotEllipseAxis(xm: number, ym: number, a: number, b: number, color: number, fillcolor: O<number>) {

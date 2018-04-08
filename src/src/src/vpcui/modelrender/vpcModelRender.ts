@@ -3,16 +3,16 @@
 /* auto */ import { RepeatingTimer, getRoot, isString } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { ElementObserver, ElementObserverVal, UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
-/* auto */ import { IGenericTextField } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { GenericTextField } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { VpcElType, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcFldStyleInclScroll, VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElField, VpcFldStyleInclScroll } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
@@ -39,8 +39,8 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         this.directMapProperty[VpcElType.Btn + '/hilite'] = 'highlightactive';
         this.directMapProperty[VpcElType.Btn + '/checkmark'] = 'checkmark';
         this.indirectProperty[VpcElType.Btn + '/icon'] = (vel, el, newv) => {
-            el.set('iconnumber', (newv as number) - 1, ChangeContext.FromRenderModel);
-            el.set('iconsetid', getIconSetId(vel, el, newv), ChangeContext.FromRenderModel);
+            el.set('iconnumber', (newv as number) - 1);
+            el.set('icongroupid', getIconGroupId(vel, el, newv));
         };
         this.indirectProperty[VpcElType.Btn + '/showlabel'] = (vel, el, newv) => {
             this.refreshLabelWithFont(vel, el);
@@ -60,7 +60,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             this.refreshLabelWithFont(vel, el);
         };
         this.indirectProperty[VpcElType.Btn + '/textalign'] = (vel, el, newv) => {
-            el.set('labelhalign', newv !== 'left', ChangeContext.FromRenderModel);
+            el.set('labelhalign', newv !== 'left');
         };
         this.indirectProperty[VpcElType.Btn + '/visible'] = (vel, el, newv) => {
             let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.CtgEdit;
@@ -70,10 +70,10 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         // fields
         // changing defaulttextfont, defaulttextsize, defaulttextstyle does nothing on its own
         this.indirectProperty[VpcElType.Fld + '/dontwrap'] = (vel, el, newv) => {
-            el.set('labelwrap', !newv, ChangeContext.FromRenderModel);
+            el.set('labelwrap', !newv);
         };
         this.indirectProperty[VpcElType.Fld + '/singleline'] = (vel, el, newv) => {
-            el.set('multiline', !newv, ChangeContext.FromRenderModel);
+            el.set('multiline', !newv);
         };
         this.indirectProperty[VpcElType.Fld + '/enabled'] = (vel, el, newv) => {
             let isEdit = getToolCategory(this.appli.getOption_n('currentTool')) === VpcToolCtg.CtgEdit;
@@ -81,8 +81,8 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             el.set('enabled', isEdit ? true : newv);
         };
         this.indirectProperty[VpcElType.Fld + '/locktext'] = (vel, el, newv) => {
-            el.set('canselecttext', !newv, ChangeContext.FromRenderModel);
-            el.set('canedit', !newv, ChangeContext.FromRenderModel);
+            el.set('canselecttext', !newv);
+            el.set('canedit', !newv);
         };
         this.directMapProperty[VpcElType.Fld + '/selcaret'] = 'selcaret';
         this.directMapProperty[VpcElType.Fld + '/selend'] = 'selend';
@@ -90,11 +90,11 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         this.indirectProperty[VpcElType.Fld + '/style'] = (vel, el, newv) => {
             let wasScroll = el.get_b('scrollbar');
             if (newv === VpcFldStyleInclScroll.scrolling) {
-                el.set('style', UI512FldStyle.Rectangle, ChangeContext.FromRenderModel);
-                el.set('scrollbar', true, ChangeContext.FromRenderModel);
+                el.set('style', UI512FldStyle.Rectangle);
+                el.set('scrollbar', true);
             } else {
-                el.set('style', newv, ChangeContext.FromRenderModel);
-                el.set('scrollbar', false, ChangeContext.FromRenderModel);
+                el.set('style', newv);
+                el.set('scrollbar', false);
             }
 
             if (wasScroll !== el.get_b('scrollbar')) {
@@ -108,22 +108,22 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             el.set('visible', isEdit ? true : newv);
         };
         this.indirectProperty[VpcElType.Fld + '/textalign'] = (vel, el, newv) => {
-            el.set('labelhalign', newv !== 'left', ChangeContext.FromRenderModel);
+            el.set('labelhalign', newv !== 'left');
         };
 
         // location
         for (let type of [VpcElType.Btn, VpcElType.Fld]) {
             this.indirectProperty[type + '/x'] = (vel, el, newv) => {
-                el.set('x', this.appli.userBounds()[0] + (newv as number), ChangeContext.FromRenderModel);
+                el.set('x', this.appli.userBounds()[0] + (newv as number));
             };
             this.indirectProperty[type + '/y'] = (vel, el, newv) => {
-                el.set('y', this.appli.userBounds()[1] + (newv as number), ChangeContext.FromRenderModel);
+                el.set('y', this.appli.userBounds()[1] + (newv as number));
             };
             this.indirectProperty[type + '/w'] = (vel, el, newv) => {
-                el.set('w', newv, ChangeContext.FromRenderModel);
+                el.set('w', newv);
             };
             this.indirectProperty[type + '/h'] = (vel, el, newv) => {
-                el.set('h', newv, ChangeContext.FromRenderModel);
+                el.set('h', newv);
             };
         }
 
@@ -211,9 +211,9 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
     protected refreshLabelWithFont(elv: VpcElBase, target: UI512Element) {
         if (elv instanceof VpcElButton) {
             let lbl = elv.get_b('showlabel')
-                ? TextRendererFontManager.setInitialFont(elv.get_s('label'), elv.getFontAsUi512())
+                ? UI512DrawText.setFont(elv.get_s('label'), elv.getFontAsUi512())
                 : '';
-            target.set('labeltext', lbl, ChangeContext.FromRenderModel);
+            target.set('labeltext', lbl);
         } else {
             throw makeVpcInternalErr(`6+|expected button`);
         }
@@ -300,7 +300,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             this.applyOneChange(vpcel, prop, newv, true);
         }
 
-        target.setftxt(vpcel.get_ftxt(), ChangeContext.FromRenderModel);
+        target.setftxt(vpcel.get_ftxt());
     }
 
     protected applyOneChange(vel: VpcElBase, propname: string, newv: ElementObserverVal, fromScratch: boolean) {
@@ -313,11 +313,11 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             if (fnSetProperty !== undefined) {
                 fnSetProperty(vel, target, newv);
             } else if (ui512propname !== undefined) {
-                target.set(ui512propname, newv, ChangeContext.FromRenderModel);
+                target.set(ui512propname, newv);
             } else if (propname === UI512Settable.formattedTextField) {
                 let newvAsText = newv as FormattedText;
                 assertTrue(newvAsText && newvAsText.isFormattedText, '6)|bad formatted text', vel.id);
-                target.setftxt(newvAsText, ChangeContext.FromRenderModel);
+                target.setftxt(newvAsText);
             } else {
                 // it's a property that doesn't impact rendering. that's ok.
             }
@@ -392,12 +392,12 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
     }
 }
 
-export class VpcElTextFieldAsGeneric implements IGenericTextField {
+export class VpcElTextFieldAsGeneric implements GenericTextField {
     constructor(protected el512: UI512ElTextField, protected impl: VpcElField) {}
-    setftxt(newtxt: FormattedText, context: ChangeContext) {
+    setFmtTxt(newtxt: FormattedText, context: ChangeContext) {
         this.impl.setftxt(newtxt, context);
     }
-    getftxt(): FormattedText {
+    getFmtTxt(): FormattedText {
         return this.impl.get_ftxt();
     }
     canEdit() {
@@ -416,7 +416,7 @@ export class VpcElTextFieldAsGeneric implements IGenericTextField {
     getSel(): [number, number] {
         return [this.impl.get_n('selcaret'), this.impl.get_n('selend')];
     }
-    identifier(): string {
+    getID(): string {
         return this.impl.id;
     }
     getHeight(): number {
@@ -425,7 +425,7 @@ export class VpcElTextFieldAsGeneric implements IGenericTextField {
     getDefaultFont(): string {
         return this.impl.getDefaultFontAsUi512();
     }
-    getReadonlyUi512(): UI512ElTextField {
+    getReadOnlyUI512(): UI512ElTextField {
         return this.el512;
     }
     getScrollAmt(): number {
@@ -438,7 +438,7 @@ export class VpcElTextFieldAsGeneric implements IGenericTextField {
     }
 }
 
-function getIconSetId(vel: VpcElBase, el: UI512Element, newv: ElementObserverVal) {
+function getIconGroupId(vel: VpcElBase, el: UI512Element, newv: ElementObserverVal) {
     if (!newv) {
         return '';
     } else if (vel.get_s('name').startsWith('glider_sprites')) {

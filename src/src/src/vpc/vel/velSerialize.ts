@@ -13,7 +13,7 @@ export class VpcUI512Serialization {
             if (attrname === UI512Settable.formattedTextField) {
                 let vAsText = v as FormattedText;
                 assertTrue(vAsText && vAsText.isFormattedText, 'invalid ftxt');
-                ret[attrname] = vAsText.toPersisted();
+                ret[attrname] = vAsText.toSerialized();
             } else {
                 ret[attrname] = v;
             }
@@ -31,7 +31,7 @@ export class VpcUI512Serialization {
                 if (v !== null && v !== undefined) {
                     if (attrname === UI512Settable.formattedTextField) {
                         if (isString(v)) {
-                            let vAsText = FormattedText.newFromPersisted(v);
+                            let vAsText = FormattedText.newFromSerialized(v);
                             vel.setftxt(vAsText);
                         } else {
                             assertTrue(v instanceof FormattedText, 'not a string or FormattedText');
@@ -55,7 +55,7 @@ export class VpcUI512Serialization {
             if (v !== null && v !== undefined) {
                 if (attrname === UI512Settable.formattedTextField) {
                     if (isString(v)) {
-                        let vAsText = FormattedText.newFromPersisted(v);
+                        let vAsText = FormattedText.newFromSerialized(v);
                         setter.setftxt(vAsText);
                     } else {
                         assertTrue(v instanceof FormattedText, 'not a string or FormattedText');

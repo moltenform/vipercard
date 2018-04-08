@@ -22,13 +22,13 @@
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 // friendly interface exposed to ui and scripts
 export class VpcOutsideWorld implements OutsideWorldReadWrite {
     readonly builtinFns: VpcBuiltinFunctions;
     protected readonly check = new CheckReservedWords();
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
     constructor() {
         this.builtinFns = new VpcBuiltinFunctions(this as OutsideWorldRead);
     }
@@ -337,8 +337,8 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         );
         let args = this.paintOptionsFromCurrentOptions(false, mods);
         for (let i = 0; i < argsGiven.length; i += 2) {
-            args.xpts.push(argsGiven[i]);
-            args.ypts.push(argsGiven[i + 1]);
+            args.xPts.push(argsGiven[i]);
+            args.yPts.push(argsGiven[i + 1]);
         }
 
         let [frstack, frame] = this.getExecFrameStack();

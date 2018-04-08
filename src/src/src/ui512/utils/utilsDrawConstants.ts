@@ -101,30 +101,30 @@ export function ui512TranslateModifiers(
     altKey: boolean,
     metaKey: boolean
 ) {
-    let result = ModifierKeys.None;
+    let ret = ModifierKeys.None;
     if (shiftKey) {
-        result |= ModifierKeys.Shift;
+        ret |= ModifierKeys.Shift;
     }
 
     if (browserOS === BrowserOSInfo.Mac) {
         /* there are apparently differences between chrome+safari here,
         so allow either. */
         if (ctrlKey || metaKey) {
-            result |= ModifierKeys.Cmd;
+            ret |= ModifierKeys.Cmd;
         }
         if (altKey) {
-            result |= ModifierKeys.Opt;
+            ret |= ModifierKeys.Opt;
         }
     } else {
         if (ctrlKey) {
-            result |= ModifierKeys.Cmd;
+            ret |= ModifierKeys.Cmd;
         }
         if (altKey) {
-            result |= ModifierKeys.Opt;
+            ret |= ModifierKeys.Opt;
         }
     }
 
-    return result;
+    return ret;
 }
 
 /**

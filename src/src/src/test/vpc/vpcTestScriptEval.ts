@@ -6,7 +6,7 @@
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { OrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcValN } from '../../vpc/vpcutils/vpcVal.js';
@@ -1168,19 +1168,19 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             // here's what we'll set it to: Courier/Bold/24"ab"Courier/ItalicShadow/18"cd"Times/Plain/18ef
             const fldPerChar = this.appl.model.getById(this.elIds.fld_b_c_2, VpcElField);
             let sfmt = '';
-            sfmt += TextRendererFontManager.setInitialFont(
+            sfmt += UI512DrawText.setFont(
                 'ab',
                 new TextFontSpec('Courier', TextFontStyling.Bold, 24).toSpecString()
             );
-            sfmt += TextRendererFontManager.setInitialFont(
+            sfmt += UI512DrawText.setFont(
                 'cd',
                 new TextFontSpec('Courier', TextFontStyling.Italic | TextFontStyling.Shadow, 18).toSpecString()
             );
-            sfmt += TextRendererFontManager.setInitialFont(
+            sfmt += UI512DrawText.setFont(
                 'ef',
                 new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString()
             );
-            this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromPersisted(sfmt)));
+            this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
             batch = [
                 // non per-character properties
                 ['the defaulttextfont of cd fld "p2"', 'geneva'],
@@ -1214,7 +1214,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
 
             // formatting should have been preserved
-            let contents = fldPerChar.get_ftxt().toPersisted();
+            let contents = fldPerChar.get_ftxt().toSerialized();
             assertEqWarn(sfmt, contents, '1y|');
 
             batch = [
@@ -1263,7 +1263,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
 
             // confirm formatting
-            contents = fldPerChar.get_ftxt().toPersisted();
+            contents = fldPerChar.get_ftxt().toSerialized();
             assertEqWarn(
                 '|Courier_24_+biuosdce|a|geneva_24_+biuosdce|b|geneva_18_b+iuo+sdce|c|Courier_18_bi+uosdce|d|Times_18_bi+uosdce|e|Times_14_biuosdce|f',
                 contents.replace(new RegExp(specialCharFontChange, 'g'), '|'),
@@ -1284,8 +1284,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             ];
 
             for (let [action, expectedFont] of actions) {
-                this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromPersisted(sfmt)));
-                assertEq(sfmt, fldPerChar.get_ftxt().toPersisted(), '1w|');
+                this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
+                assertEq(sfmt, fldPerChar.get_ftxt().toSerialized(), '1w|');
                 batch = [
                     ['set the defaulttextfont of cd fld "p2" to "geneva"\\0', '0'],
                     ['set the defaulttextstyle of cd fld "p2" to "plain"\\0', '0'],
@@ -1295,8 +1295,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 this.testBatchEvaluate(batch);
 
                 // formatting should have been lost
-                contents = fldPerChar.get_ftxt().toPersisted();
-                let expected = TextRendererFontManager.setInitialFont('abcdef', expectedFont.toSpecString());
+                contents = fldPerChar.get_ftxt().toSerialized();
+                let expected = UI512DrawText.setFont('abcdef', expectedFont.toSpecString());
                 assertEq(expected, contents, '1v|');
             }
 

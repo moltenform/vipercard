@@ -7,14 +7,14 @@
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { EventDetails, IdleEventDetails, KeyDownEventDetails, KeyEventDetails, MenuItemClickedDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseEventDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { MenuBehavior } from '../../ui512/menu/ui512MenuListeners.js';
-/* auto */ import { IGenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 /* auto */ import { EditTextBehavior } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgNameFromType, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
-/* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcElTextFieldAsGeneric, VpcModelRender } from '../../vpcui/modelrender/vpcModelRender.js';
 /* auto */ import { VpcAppUIToolSmear } from '../../vpcui/tools/vpcToolSmear.js';
 /* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
@@ -89,14 +89,12 @@ export class VpcAppControllerEvents {
         ];
 
         this.c.listeners[UI512EventType.KeyUp.valueOf()] = [
-            BasicHandlers.trackKeyUp,
             VpcAppControllerEvents.cancelEvtIfCodeRunning,
             VpcAppControllerEvents.respondKeyUp,
             VpcAppControllerEvents.cancelEvtIfNotBrowseTool,
         ];
 
         this.c.listeners[UI512EventType.KeyDown.valueOf()] = [
-            BasicHandlers.trackKeyDown,
             BasicHandlers.basicKeyShortcuts,
             (a1: VpcPresenterInterface, a3: KeyDownEventDetails) =>
                 VpcAppControllerEvents.respondKeyDown(a1, a3, this.editTextBehavior),
@@ -350,7 +348,7 @@ export class VpcAppControllerEvents {
 
     static scheduleScriptMsg(
         c: VpcPresenterInterface,
-        appli: IVpcStateInterface,
+        appli: VpcStateInterface,
         d: EventDetails,
         mouseX = -1,
         mouseY = -1
@@ -463,7 +461,7 @@ export class EditTextBehaviorSendToVel extends EditTextBehavior {
     protected getScrollbarImpl() {
         return this.scrollbarImplSendToVel;
     }
-    protected gelFromEl(el: O<UI512ElTextField>): O<IGenericTextField> {
+    protected gelFromEl(el: O<UI512ElTextField>): O<GenericTextField> {
         if (el) {
             let vel = this.c.lyrModelRender.elIdToVel(el.id);
             if (vel) {
@@ -485,7 +483,7 @@ export class ScrollbarImplSendToVel extends ScrollbarImpl {
         super();
     }
 
-    protected gelFromEl(el: O<UI512Element>): O<IGenericTextField> {
+    protected gelFromEl(el: O<UI512Element>): O<GenericTextField> {
         if (el && el instanceof UI512ElTextField) {
             let vel = this.c.lyrModelRender.elIdToVel(el.id);
             if (vel) {

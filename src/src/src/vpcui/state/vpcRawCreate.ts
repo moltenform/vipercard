@@ -10,7 +10,7 @@
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 /* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export abstract class UndoableActionCreateOrDelVelement {
     isUndoableActionCreateOrDelVel = true;
@@ -30,7 +30,7 @@ export abstract class UndoableActionCreateOrDelVelement {
         }
     }
 
-    static getparentarray(parentId: string, appli: IVpcStateInterface, type: VpcElType): VpcElBase[] {
+    static getparentarray(parentId: string, appli: VpcStateInterface, type: VpcElType): VpcElBase[] {
         let parent = appli.getModel().getByIdUntyped(parentId);
         let parentasCard = parent as VpcElCard;
         let parentasBg = parent as VpcElBg;
@@ -49,7 +49,7 @@ export abstract class UndoableActionCreateOrDelVelement {
         }
     }
 
-    protected determineIndexInAr(vel: VpcElBase, appli: IVpcStateInterface) {
+    protected determineIndexInAr(vel: VpcElBase, appli: VpcStateInterface) {
         let ar = UndoableActionCreateOrDelVelement.getparentarray(this.parentid, appli, vel.getType());
         for (let i = 0; i < ar.length; i++) {
             if (ar[i].id === vel.id) {
@@ -60,7 +60,7 @@ export abstract class UndoableActionCreateOrDelVelement {
         throw makeVpcInternalErr(`6d|could not find place in parent array for ${vel.id}`);
     }
 
-    protected create(appli: IVpcStateInterface) {
+    protected create(appli: VpcStateInterface) {
         let ctr = UndoableActionCreateOrDelVelement.getconstructor(this.type);
         let el = appli.rawCreate(this.velId, this.parentid, ctr);
         let ar = UndoableActionCreateOrDelVelement.getparentarray(this.parentid, appli, el.getType());
@@ -78,7 +78,7 @@ export abstract class UndoableActionCreateOrDelVelement {
         ar.splice(this.insertindex, 0, el);
     }
 
-    protected remove(appli: IVpcStateInterface) {
+    protected remove(appli: VpcStateInterface) {
         appli.causeFullRedraw();
         let el = appli.getModel().getByIdUntyped(this.velId);
         let ar = UndoableActionCreateOrDelVelement.getparentarray(el.parentId, appli, el.getType());
@@ -90,7 +90,7 @@ export abstract class UndoableActionCreateOrDelVelement {
         el.makeDormant();
     }
 
-    static ensureDocumentNotEmpty(appli: IVpcStateInterface, createFirstCard: boolean) {
+    static ensureDocumentNotEmpty(appli: VpcStateInterface, createFirstCard: boolean) {
         let model = appli.getModel();
         if (!model.productOpts) {
             appli.doWithoutAbilityToUndo(() => {

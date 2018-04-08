@@ -12,18 +12,18 @@
 /* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcOutsideWorld } from '../../vpcui/state/vpcFullOutside.js';
 /* auto */ import { PaintExportToGif } from '../../vpcui/modelrender/vpcGifExport.js';
 
 export abstract class VpcAppInterfaceLayer {
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
     abstract init(c: UI512ControllerBase): void;
     abstract updateUI512Els(): void;
 }
 
 export class VpcPaintRender extends VpcAppInterfaceLayer {
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
     canvasesByCardid = new MapKeyToObjectCanSet<[string, CanvasWrapper]>();
     canvasesForPainting: CanvasWrapper[] = [];
     paintgrp: UI512ElGroup;
@@ -218,13 +218,13 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
     }
 
     drawPartialSmear(
-        xpts: number[],
-        ypts: number[],
+        xPts: number[],
+        yPts: number[],
         elPiece: O<UI512ElCanvasPiece>,
         painter: UI512Painter,
         setShape?: PaintOntoCanvasShapes
     ) {
-        let args = this.argsFromCurrentOptions(xpts, ypts);
+        let args = this.argsFromCurrentOptions(xPts, yPts);
         if (setShape) {
             args.shape = setShape;
         }
@@ -234,17 +234,17 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         }
     }
 
-    drawPartialShape(xpts: number[], ypts: number[], elPiece: UI512ElCanvasPiece, painter: UI512Painter) {
+    drawPartialShape(xPts: number[], yPts: number[], elPiece: UI512ElCanvasPiece, painter: UI512Painter) {
         elPiece.getCanvasForWrite();
-        return this.drawPartialSmear(xpts, ypts, elPiece, painter);
+        return this.drawPartialSmear(xPts, yPts, elPiece, painter);
     }
 
-    protected argsFromCurrentOptions(xpts: number[], ypts: number[]) {
+    protected argsFromCurrentOptions(xPts: number[], yPts: number[]) {
         let outside = new VpcOutsideWorld();
         outside.appli = this.appli;
         let args = outside.paintOptionsFromCurrentOptions(true, ModifierKeys.None);
-        args.xpts = xpts;
-        args.ypts = ypts;
+        args.xPts = xPts;
+        args.yPts = yPts;
         return args;
     }
 

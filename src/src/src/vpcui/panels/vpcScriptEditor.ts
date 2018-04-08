@@ -6,7 +6,7 @@
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
@@ -21,17 +21,17 @@
 /* auto */ import { vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { IsPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
 
-export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropPanel {
+export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcPropPanel {
     isVpcPanelScriptEditor = true;
     hasCloseBtn = true;
     autoCreateBlock = true;
     compositeType = 'VpcPanelScriptEditor';
     lineCommentPrefix = '--~ ';
     el: O<UI512ElTextField>;
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
 
     needsCompilation = new MapKeyToObjectCanSet<boolean>();
     cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
@@ -81,11 +81,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
         let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 
         // draw spacer
-        let cury = this.y + headerheight - 1;
+        let curY = this.y + headerheight - 1;
         let spacer = this.genBtn(app, grp, 'spacer');
         spacer.set('autohighlight', false);
-        spacer.setDimensions(this.x, cury, this.logicalWidth, spacerHeight);
-        cury += spacerHeight - 1;
+        spacer.setDimensions(this.x, curY, this.logicalWidth, spacerHeight);
+        curY += spacerHeight - 1;
 
         // draw the code editor field
         this.el = this.genChild(app, grp, 'editor', UI512ElTextField);
@@ -94,7 +94,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
         this.el.set('scrollbar', true);
         this.el.set('defaultFont', UI512CompCodeEditorFont.font);
         this.el.set('nudgey', 2);
-        this.el.setDimensions(this.x, cury, this.logicalWidth, this.y + this.logicalHeight - cury - footerHeight);
+        this.el.setDimensions(this.x, curY, this.logicalWidth, this.y + this.logicalHeight - curY - footerHeight);
 
         // draw status text row 1
         this.status1a = this.genChild(app, grp, 'status1a', UI512ElLabel);
@@ -181,26 +181,26 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements IsPropP
         if (slength(this.status2a.get_s('labeltext')) || this.needsCompilation.find(vel.id)) {
             btnCompile.set(
                 'labeltext',
-                TextRendererFontManager.setInitialFont(lng('lngSave Script'), this.genevaBold)
+                UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold)
             );
         } else {
             btnCompile.set(
                 'labeltext',
-                TextRendererFontManager.setInitialFont(lng('lngSave Script'), this.genevaPlain)
+                UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain)
             );
         }
     }
 
     protected setStatusLabeltext(sType: string, n: O<number>, sMsg: string, sMsgMore: string) {
         this.status1a.set('labeltext', lng(sType));
-        this.status2b.set('labeltext', TextRendererFontManager.setInitialFont(sMsg, this.monaco));
+        this.status2b.set('labeltext', UI512DrawText.setFont(sMsg, this.monaco));
 
         this.statusErrMoreDetails = sMsgMore;
         if (n === undefined) {
             this.status2a.set('labeltext', '');
         } else {
             let txt = lng('lngLine') + ` ${n},`;
-            txt = TextRendererFontManager.setInitialFont(txt, this.monaco);
+            txt = UI512DrawText.setFont(txt, this.monaco);
             this.status2a.set('labeltext', txt);
         }
     }

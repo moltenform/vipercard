@@ -71,7 +71,7 @@ export class IntroOpenPage extends IntroPageBase {
         let logo = this.genBtn(app, grp, 'logo');
         logo.set('style', UI512BtnStyle.Opaque);
         logo.set('autohighlight', false);
-        logo.set('iconsetid', 'logo');
+        logo.set('icongroupid', 'logo');
         logo.set('iconnumber', 0);
         logo.setDimensions(logobounds[0], logobounds[1], logobounds[2], logobounds[3]);
 

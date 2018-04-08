@@ -33,12 +33,12 @@ export class UI512MenuRoot extends UI512Element {
 }
 
 export class UI512MenuDropdown extends UI512ElementButtonGeneral {
-    /* _labeltext, _iconsetid, _iconnumber */
+    /* _labeltext, _icongroupid, _iconnumber */
     protected _labeltext = '';
     protected _childids = ''; // list of item ids separated by |
     protected _fixedoffset = -1;
     protected _fixedwidth = -1;
-    protected _iconsetid = '';
+    protected _icongroupid = '';
     protected _iconnumber = -1;
     protected _style: number = UI512BtnStyle.Transparent;
     protected _autohighlight = true;

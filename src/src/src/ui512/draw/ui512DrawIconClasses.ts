@@ -2,30 +2,25 @@
 /* auto */ import { O, assertTrue, assertTrueWarn, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 
+/**
+ * arguments for drawing icon into a box
+ */
 export class IconInfo {
-    iconadjustx = 0;
-    iconadjusty = 0;
-    iconadjustwidth = 0;
-    iconadjustheight = 0;
-    iconadjustsrcx = 0;
-    iconadjustsrcy = 0;
-    iconcentered = true;
-    constructor(public iconsetid: string, public iconnumber: number) {}
-    getcopy() {
-        let ret = new IconInfo(this.iconsetid, this.iconnumber);
-        ret.iconadjustx = this.iconadjustx;
-        ret.iconadjusty = this.iconadjusty;
-        ret.iconadjustsrcx = this.iconadjustsrcx;
-        ret.iconadjustsrcy = this.iconadjustsrcy;
-        ret.iconadjustwidth = this.iconadjustwidth;
-        ret.iconadjustheight = this.iconadjustheight;
-        ret.iconcentered = this.iconcentered;
-        return ret;
-    }
+    adjustX = 0;
+    adjustY = 0;
+    adjustWidth = 0;
+    adjustHeight = 0;
+    adjustSrcX = 0;
+    adjustSrcY = 0;
+    centered = true;
+    constructor(public iconGroup: string, public iconNumber: number) { }
 }
 
+/**
+ * drawing an icon into box
+ */
 export class RenderIcon {
-    constructor(public set: RenderIconSet, public srcrect: number[]) {}
+    constructor(public set: RenderIconGroup, public srcRect: number[]) { }
     public drawIntoBox(
         canvas: CanvasWrapper,
         info: IconInfo,
@@ -34,21 +29,22 @@ export class RenderIcon {
         boxW: number,
         boxH: number
     ) {
-        let srcrect = [
-            this.srcrect[0] + info.iconadjustsrcx,
-            this.srcrect[1] + info.iconadjustsrcy,
-            this.srcrect[2] + info.iconadjustwidth - info.iconadjustsrcx,
-            this.srcrect[3] + info.iconadjustheight - info.iconadjustsrcy,
+        let srcRect = [
+            this.srcRect[0] + info.adjustSrcX,
+            this.srcRect[1] + info.adjustSrcY,
+            this.srcRect[2] + info.adjustWidth - info.adjustSrcX,
+            this.srcRect[3] + info.adjustHeight - info.adjustSrcY,
         ];
-        if (info.iconcentered) {
+
+        if (info.centered) {
             canvas.drawFromImageCentered(
                 this.set.image,
-                srcrect[0],
-                srcrect[1],
-                srcrect[2],
-                srcrect[3],
-                info.iconadjustx,
-                info.iconadjusty,
+                srcRect[0],
+                srcRect[1],
+                srcRect[2],
+                srcRect[3],
+                info.adjustX,
+                info.adjustY,
                 boxX0,
                 boxY0,
                 boxW,
@@ -57,12 +53,12 @@ export class RenderIcon {
         } else {
             canvas.drawFromImage(
                 this.set.image,
-                srcrect[0],
-                srcrect[1],
-                srcrect[2],
-                srcrect[3],
-                boxX0 + info.iconadjustx,
-                boxY0 + info.iconadjusty,
+                srcRect[0],
+                srcRect[1],
+                srcRect[2],
+                srcRect[3],
+                boxX0 + info.adjustX,
+                boxY0 + info.adjustY,
                 boxX0,
                 boxY0,
                 boxW,
@@ -72,75 +68,90 @@ export class RenderIcon {
     }
 }
 
-export class RenderIconSet {
+/**
+ * a group of cached icons.
+ * each group is one .png file on the server.
+ */
+export class RenderIconGroup {
     image: any;
     loadedImage = false;
     customDims: { [key: number]: number[] } = {};
     customOffsets: { [key: number]: number[] } = {};
     totalIcons = 0;
-    gridsize = 1;
-    gridspacing = 1;
-    gridwidth = 1;
-    static setInfo: { [setid: string]: IconSetInfo } = {};
+    gridSize = 1;
+    gridSpacing = 1;
+    gridWidth = 1;
 
-    constructor(public readonly iconsetid: string) {
-        let info = RenderIconSet.setInfo[iconsetid];
-        assertTrue(info, '3I|unknown icon set', iconsetid);
+    /* a map from group id to IconGroupInfo */
+    static cachedGridInfo: { [groupId: string]: IconGroupInfo } = {};
+
+    /* initialize from the cached IconGroupInfo information */
+    constructor(public readonly groupId: string) {
+        let info = RenderIconGroup.cachedGridInfo[groupId];
+        assertTrue(info, '3I|unknown icon set', groupId);
         if (info) {
             this.customDims = info.customDims;
             this.customOffsets = info.customOffsets;
-            this.gridsize = info.gridsize;
-            this.gridspacing = info.gridspacing;
-            this.gridwidth = info.gridwidth;
+            this.gridSize = info.gridSize;
+            this.gridSpacing = info.gridSpacing;
+            this.gridWidth = info.gridWidth;
             this.totalIcons = info.totalIcons;
         }
     }
 
-    getRectangle(iconnumber: number) {
-        if (iconnumber < 0 || iconnumber >= this.totalIcons) {
+    /* get source rectangle */
+    getRectangle(iconNumber: number) {
+        if (iconNumber < 0 || iconNumber >= this.totalIcons) {
             return undefined;
         }
-        let offsets = this.customOffsets[iconnumber];
+
+        /* srcx and srcy can either be manually set in customOffsets,
+        or computed assuming that icons are laid out in a grid */
+        let offsets = this.customOffsets[iconNumber];
         if (offsets === undefined) {
-            let gridy = Math.trunc(iconnumber / this.gridwidth);
-            let gridx = iconnumber - gridy * this.gridwidth;
+            let gridY = Math.trunc(iconNumber / this.gridWidth);
+            let gridX = iconNumber - gridY * this.gridWidth;
             offsets = [
-                gridx * this.gridsize + (gridx + 1) * this.gridspacing,
-                gridy * this.gridsize + (gridy + 1) * this.gridspacing,
+                gridX * this.gridSize + (gridX + 1) * this.gridSpacing,
+                gridY * this.gridSize + (gridY + 1) * this.gridSpacing,
             ];
         }
 
-        let dims = this.customDims[iconnumber];
+        /* width and height can either be manually set in customDims,
+        or computed assuming that icons are laid out in a grid */
+        let dims = this.customDims[iconNumber];
         if (dims === undefined) {
-            assertTrueWarn(
-                this.iconsetid === 'fordissolve' || this.iconsetid === '002' || this.iconsetid === 'spacegame',
-                '3H|falling back to default grid size'
-            );
-            dims = [this.gridsize, this.gridsize];
+            dims = [this.gridSize, this.gridSize];
         }
 
         return [offsets[0], offsets[1], dims[0], dims[1]];
     }
 
-    getIcon(iconnumber: number): RenderIcon {
-        let rectangle = this.getRectangle(iconnumber);
+    /* get icon, throws if not found */
+    getIcon(iconNumber: number): RenderIcon {
+        let rect = this.getRectangle(iconNumber);
         return new RenderIcon(
             this,
-            throwIfUndefined(rectangle, '3G|could not load icon number', iconnumber, this.iconsetid)
+            throwIfUndefined(rect, '3G|could not load icon number', iconNumber, this.groupId)
         );
     }
 
-    static lookupRectangle(iconsetid: string, iconnumber: number): O<number[]> {
-        let set = new RenderIconSet(iconsetid);
-        return set.getRectangle(iconnumber);
+    /* get icon, return undefined if not found  */
+    static lookupRectangle(iconGroupId: string, iconNumber: number): O<number[]> {
+        let group = new RenderIconGroup(iconGroupId);
+        return group.getRectangle(iconNumber);
     }
 }
 
-export class IconSetInfo {
+/**
+ * by default, icons are arranged in a grid.
+ * you can use customDims and customOffsets to specify arbitrary positions for the icons.
+ */
+export class IconGroupInfo {
     customDims: { [key: number]: number[] } = {};
     customOffsets: { [key: number]: number[] } = {};
     totalIcons = 0;
-    gridsize = 1;
-    gridspacing = 1;
-    gridwidth = 1;
+    gridSize = 1;
+    gridSpacing = 1;
+    gridWidth = 1;
 }

@@ -4,7 +4,7 @@
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -13,7 +13,7 @@
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
 /* auto */ import { WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcFormNonModalDialogBase, VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 
 export enum DialogDocsType {
@@ -57,7 +57,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
     ];
     referenceJsonData: { [key: string]: any } = {};
 
-    constructor(protected appli: IVpcStateInterface, public type: DialogDocsType) {
+    constructor(protected appli: VpcStateInterface, public type: DialogDocsType) {
         super('vpcAppNonModalDialogDocs' + Math.random());
 
         // adjust size
@@ -160,7 +160,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         }
         if (rghtBtn) {
             rghtBtn.set('iconnumber', 0);
-            rghtBtn.set('iconsetid', '');
+            rghtBtn.set('icongroupid', '');
 
             if (!isWaiting && this.type === DialogDocsType.Screenshots) {
                 this.giveRightBtnText(rghtBtn);
@@ -178,7 +178,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         if (entryTitle) {
             for (let jsonEntry of jsonData.entries) {
                 if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
-                    let txt = FormattedText.newFromPersisted(jsonEntry.body);
+                    let txt = FormattedText.newFromSerialized(jsonEntry.body);
                     let rghtFld = grp.findEl(this.getElId('rghtFld'));
                     if (rghtFld) {
                         rghtFld.setftxt(txt);
@@ -235,7 +235,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
             let rghtBtn = grp.findEl(this.getElId('rghtBtn'));
             if (rghtBtn) {
                 rghtBtn.set('iconnumber', ln);
-                rghtBtn.set('iconsetid', 'screenshots_' + sectionid);
+                rghtBtn.set('icongroupid', 'screenshots_' + sectionid);
             }
         }
     }
@@ -247,26 +247,26 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         bg.set('autohighlight', false);
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
 
-        let cury = this.y;
+        let curY = this.y;
         let headheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
-        cury += headheight;
+        curY += headheight;
 
-        cury += 15;
+        curY += 15;
         let top = UI512ElTextField.makeChoiceBox(
             this.appli.UI512App(),
             grp,
             this.getElId('topChoice'),
             this.x + 15,
-            cury
+            curY
         );
         top.set('w', 131);
-        cury += top.h + 15;
+        curY += top.h + 15;
         let btm = UI512ElTextField.makeChoiceBox(
             this.appli.UI512App(),
             grp,
             this.getElId('btmChoice'),
             this.x + 15,
-            cury
+            curY
         );
         btm.set('w', 131);
 
@@ -320,7 +320,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
     protected giveRightBtnText(rghtBtn: UI512Element) {
         let s = 'Click here to view a tutorial showing how to use ViperCard.';
         let style = 'b+iuosdce';
-        s = TextRendererFontManager.setInitialFont(s, `geneva_14_${style}`);
+        s = UI512DrawText.setFont(s, `geneva_14_${style}`);
         rghtBtn.set('labeltext', s);
     }
 
@@ -367,7 +367,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         }
     }
 
-    onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void {
+    onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void {
         if (short === 'topChoice') {
             this.onChooseCategory(cast(el, UI512ElTextField));
         } else if (short === 'btmChoice') {
@@ -379,5 +379,5 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         }
     }
 
-    onMouseDown(short: string, el: UI512Element, appli: IVpcStateInterface): void {}
+    onMouseDown(short: string, el: UI512Element, appli: VpcStateInterface): void {}
 }

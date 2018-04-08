@@ -135,17 +135,17 @@ export class FormattedSubstringUtil {
     }
 
     static getChunkTextFace(txt: FormattedText, defaultFont: string, instart: number, inlen: number): string {
-        let fn = (s: string) => TextFontSpec.getFacePart(s);
+        let fn = (s: string) => TextFontSpec.getTypeface(s);
         return FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
     }
 
     static setChunkTextFace(txt: FormattedText, defaultFont: string, instart: number, inlen: number, snext: string) {
-        let fn = (scurrent: string) => TextFontSpec.setFacePart(scurrent, snext);
+        let fn = (scurrent: string) => TextFontSpec.setTypeface(scurrent, snext);
         return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
     }
 
     static getChunkTextSize(txt: FormattedText, defaultFont: string, instart: number, inlen: number): number | string {
-        let fn = (s: string) => TextFontSpec.getSizePart(s);
+        let fn = (s: string) => TextFontSpec.getFontSize(s);
         let ret = FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
         let n = parseInt(ret, base10);
         return ret === 'mixed' ? ret : isFinite(n) ? n : 0;
@@ -153,19 +153,19 @@ export class FormattedSubstringUtil {
 
     static setChunkTextSize(txt: FormattedText, defaultFont: string, instart: number, inlen: number, next: number) {
         let ssize = next.toString();
-        let fn = (scurrent: string) => TextFontSpec.setSizePart(scurrent, ssize);
+        let fn = (scurrent: string) => TextFontSpec.setFontSize(scurrent, ssize);
         return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
     }
 
     static getChunkTextStyle(txt: FormattedText, defaultFont: string, instart: number, inlen: number): string[] {
-        let fn = (s: string) => TextFontSpec.getStylePart(s);
+        let fn = (s: string) => TextFontSpec.getFontStyle(s);
         let ret = FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
         return ret === 'mixed' ? ['mixed'] : FormattedSubstringUtil.ui512styleTovpcStyleList(ret);
     }
 
     static setChunkTextStyle(txt: FormattedText, defaultFont: string, instart: number, inlen: number, list: string[]) {
         let snext = FormattedSubstringUtil.ui512styleFromvpcStyleList(list);
-        let fn = (scurrent: string) => TextFontSpec.setStylePart(scurrent, snext);
+        let fn = (scurrent: string) => TextFontSpec.setFontStyle(scurrent, snext);
         return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
     }
 }

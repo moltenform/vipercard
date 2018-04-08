@@ -4,7 +4,7 @@
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { largearea } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
 /* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPaint.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
@@ -27,12 +27,12 @@ export class SelectToolState {
     rawstartY = -1;
     startX = -1;
     startY = -1;
-    minX = largearea;
-    minY = largearea;
-    maxX = -largearea;
-    maxY = -largearea;
+    minX = largeArea;
+    minY = largeArea;
+    maxX = -largeArea;
+    maxY = -largeArea;
     topPtX = 0;
-    topPtY = largearea;
+    topPtY = largeArea;
     rectx = 0;
     recty = 0;
     recordxpts: number[];

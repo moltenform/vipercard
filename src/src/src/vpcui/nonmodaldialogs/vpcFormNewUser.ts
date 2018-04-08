@@ -4,7 +4,7 @@
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { vpcUsersCreate } from '../../vpc/request/vpcRequest.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 
 export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase {
@@ -27,7 +27,7 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
     btns: [string, string][] = [['ok', 'lngOK'], ['cancel', 'lngCancel']];
     fieldsThatAreLabels: { [key: string]: boolean } = { descr_email: true };
 
-    constructor(protected appli: IVpcStateInterface, protected formLoginClass: VpcFormNonModalDialogLogInConstructor) {
+    constructor(protected appli: VpcStateInterface, protected formLoginClass: VpcFormNonModalDialogLogInConstructor) {
         super('vpcAppNonModalDialogSendReport' + Math.random());
         VpcFormNonModalDialogFormBase.standardWindowBounds(this, appli);
     }
@@ -48,7 +48,7 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
         }
     }
 
-    onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void {
+    onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void {
         if (short === 'btnok') {
             this.setStatus('lngCreating user...');
             this.doCreateUser(appli);
@@ -57,7 +57,7 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
         }
     }
 
-    doCreateUser(appli: IVpcStateInterface) {
+    doCreateUser(appli: VpcStateInterface) {
         let paramFields = this.readFields(appli.UI512App());
         if (paramFields['pw'] !== paramFields['pwagain']) {
             this.setStatus('lngPasswords do not match.');
@@ -96,7 +96,7 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
 }
 
 export interface VpcFormNonModalDialogLogInConstructor {
-    new (appli: IVpcStateInterface, newUserOk: boolean): VpcFormNonModalDialogLogInInterface;
+    new (appli: VpcStateInterface, newUserOk: boolean): VpcFormNonModalDialogLogInInterface;
 }
 
 export interface VpcFormNonModalDialogLogInInterface {

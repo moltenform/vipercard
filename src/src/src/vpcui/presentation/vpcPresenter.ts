@@ -6,7 +6,7 @@
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
@@ -76,6 +76,7 @@ export class VpcAppController extends VpcControllerInit {
     getToolResponse(t: VpcTool) {
         let ctg = getToolCategory(t);
         let nm = 'tl' + getEnumToStrOrUnknown<VpcToolCtg>(VpcToolCtg, ctg);
+        nm = nm.replace(/tlCtg/, 'tlctg')
         let tlresp = (this as any)[nm] as VpcAppUIToolResponseBase;
         if (!tlresp || !tlresp.isVpcAppUIToolResponseBase) {
             throw makeVpcInternalErr(`6G|not found ${nm} ${t}`);
@@ -354,8 +355,8 @@ export class VpcAppController extends VpcControllerInit {
             this.appli.getCodeExec().updateChangedCode(vel, vel.get_s('script'));
         } else {
             let elfld = vel as VpcElField;
-            let newtxt = FormattedText.newFromPersisted(
-                TextRendererFontManager.setInitialFont('abcde\nabcde\nabcde', elfld.getDefaultFontAsUi512())
+            let newtxt = FormattedText.newFromSerialized(
+                UI512DrawText.setFont('abcde\nabcde\nabcde', elfld.getDefaultFontAsUi512())
             );
             elfld.setftxt(newtxt);
             elfld.setProp('style', VpcValS('scrolling'));

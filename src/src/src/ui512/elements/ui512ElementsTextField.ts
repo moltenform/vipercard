@@ -2,7 +2,7 @@
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
@@ -45,7 +45,7 @@ export class UI512ElTextField extends UI512Element {
         this._labelwrap = true;
         this._labelvalign = false;
         this._labelhalign = false;
-        this._defaultFont = TextRendererFontManager.defaultFont;
+        this._defaultFont = UI512DrawText.defaultFont;
         this._ftxt.lock();
     }
 
@@ -88,7 +88,7 @@ export class UI512ElTextField extends UI512Element {
             // little hack: add an ending newline so that selecting the last line looks right
             // logic elsewhere prevents this last ending line from being actually chosen/selected.
             // we'll add the ending newline in a small font so it won't affect the scrollbar much.
-            ftxt.push(specialCharNumNewline, TextRendererFontManager.smallestFont);
+            ftxt.push(specialCharNumNewline, UI512DrawText.smallestFont);
             el.setftxt(ftxt);
         } else {
             el.setftxt(FormattedText.newFromUnformatted(''));

@@ -8,7 +8,7 @@
 export class UI512CompToolbox extends UI512CompBase {
     protected whichChosen: O<string>;
     compositeType = 'toolbox';
-    iconsetid = '';
+    icongroupid = '';
     items: [string, number][] = [['circle', 23 /*iconnumber*/], ['rectangle', 24 /*iconnumber*/]];
     hasclosebtn = true;
     headerh = 10;
@@ -25,25 +25,25 @@ export class UI512CompToolbox extends UI512CompBase {
         let grp = app.getGroup(this.grpid);
         let headerheight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasclosebtn);
 
-        let curx = this.x;
-        let cury = this.y + headerheight - 1;
+        let curX = this.x;
+        let curY = this.y + headerheight - 1;
         let marginx = -1;
         let marginy = -1;
         for (let item of this.items) {
             let el = this.genBtn(app, grp, 'choice##' + item[0]);
             let thiswidth = this.widthOfIcon(item[0]);
-            el.set('iconsetid', this.iconsetid);
+            el.set('icongroupid', this.icongroupid);
             el.set('iconnumber', item[1]);
-            el.setDimensions(curx, cury, thiswidth, this.iconh);
+            el.setDimensions(curX, curY, thiswidth, this.iconh);
 
-            curx += thiswidth + marginx;
-            if (curx >= this.x + this.logicalWidth + marginx) {
-                curx = this.x;
-                cury += this.iconh + marginy;
+            curX += thiswidth + marginx;
+            if (curX >= this.x + this.logicalWidth + marginx) {
+                curX = this.x;
+                curY += this.iconh + marginy;
             }
         }
 
-        this.totalheight = cury + this.iconh;
+        this.totalheight = curY + this.iconh;
         this.whichChosen = this.items[0][0];
         this.refreshHighlight(app);
     }

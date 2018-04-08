@@ -11,8 +11,8 @@
  * values here are intentionally lowercase, this enum is used when running a script.
  */
 export enum VpcBtnStyle {
-    __isUI512Enum = 1,    
-    transparent = UI512BtnStyle.Transparent, 
+    __isUI512Enum = 1,
+    transparent = UI512BtnStyle.Transparent,
     rectangle = UI512BtnStyle.Rectangle,
     opaque = UI512BtnStyle.Opaque,
     roundrect = UI512BtnStyle.RoundRect,

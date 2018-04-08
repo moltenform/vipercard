@@ -68,7 +68,7 @@ export abstract class UI512ElementWithHighlight extends UI512ElementWithText {
     protected _highlightactive = false;
     protected _autohighlight = true;
     protected _checkmark = false;
-    protected _iconsetid = '';
+    protected _icongroupid = '';
     protected _iconnumber = -1;
     protected _iconnumberwhenhighlight = -1;
     protected _iconadjustx = 0;

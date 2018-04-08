@@ -332,58 +332,58 @@ export class RectUtils {
     static getRectClipped(
         x0: number,
         y0: number,
-        width: number,
-        height: number,
+        w: number,
+        h: number,
         boxX0: number,
         boxY0: number,
         boxW: number,
         boxH: number
     ) {
-        const x1 = x0 + width;
-        const y1 = y0 + height;
-        const boxx1 = boxX0 + boxW;
-        const boxy1 = boxY0 + boxH;
-        let newx0;
-        let newy0;
-        let newx1;
-        let newy1;
-        let newwidth;
-        let newheight;
-        if (x0 >= boxx1 || y0 >= boxy1) {
+        const x1 = x0 + w;
+        const y1 = y0 + h;
+        const boxX1 = boxX0 + boxW;
+        const boxY1 = boxY0 + boxH;
+        let newX0;
+        let newY0;
+        let newX1;
+        let newY1;
+        let newW;
+        let newH;
+        if (x0 >= boxX1 || y0 >= boxY1) {
             /* it's way outside on the right or bottom */
-            newx0 = boxX0;
-            newy0 = boxY0;
-            newwidth = 0;
-            newheight = 0;
+            newX0 = boxX0;
+            newY0 = boxY0;
+            newW = 0;
+            newH = 0;
         } else if (x1 < boxX0 || y1 < boxY0) {
             /* it's way outside on the left or top */
-            newx0 = boxX0;
-            newy0 = boxY0;
-            newwidth = 0;
-            newheight = 0;
+            newX0 = boxX0;
+            newY0 = boxY0;
+            newW = 0;
+            newH = 0;
         } else {
             /* it's at least partially overlapping */
-            newx0 = x0 >= boxX0 ? x0 : boxX0;
-            newy0 = y0 >= boxY0 ? y0 : boxY0;
-            newx1 = x1 <= boxx1 ? x1 : boxx1;
-            newy1 = y1 <= boxy1 ? y1 : boxy1;
-            newwidth = newx1 - newx0;
-            newheight = newy1 - newy0;
+            newX0 = x0 >= boxX0 ? x0 : boxX0;
+            newY0 = y0 >= boxY0 ? y0 : boxY0;
+            newX1 = x1 <= boxX1 ? x1 : boxX1;
+            newY1 = y1 <= boxY1 ? y1 : boxY1;
+            newW = newX1 - newX0;
+            newH = newY1 - newY0;
         }
 
         assertTrue(
-            width >= 0 &&
-                height >= 0 &&
-                newwidth <= width &&
-                newheight <= height &&
-                newx0 >= boxX0 &&
-                newx0 + newwidth <= boxX0 + boxW &&
-                newy0 >= boxY0 &&
-                newy0 + newheight <= boxY0 + boxH,
+            w >= 0 &&
+                h >= 0 &&
+                newW <= w &&
+                newH <= h &&
+                newX0 >= boxX0 &&
+                newX0 + newW <= boxX0 + boxW &&
+                newY0 >= boxY0 &&
+                newY0 + newH <= boxY0 + boxH,
             '3>|dimensions must be numeric'
         );
 
-        return [newx0, newy0, newwidth, newheight];
+        return [newX0, newY0, newW, newH];
     }
 
     /**
@@ -392,26 +392,26 @@ export class RectUtils {
     static getOverlap(
         x0: number,
         y0: number,
-        width: number,
-        height: number,
-        boxx0: number,
-        boxy0: number,
-        boxw: number,
-        boxh: number,
-        boxx1: number,
-        boxy1: number
+        w: number,
+        h: number,
+        boxX0: number,
+        boxY0: number,
+        boxW: number,
+        boxH: number,
+        boxX1: number,
+        boxY1: number
     ): RectOverlapType {
-        const x1 = x0 + width;
-        const y1 = y0 + height;
-        if (x0 >= boxx1 || y0 >= boxy1) {
+        const x1 = x0 + w;
+        const y1 = y0 + h;
+        if (x0 >= boxX1 || y0 >= boxY1) {
             /* it's way outside on the right or bottom */
             return RectOverlapType.NoOverlap;
-        } else if (x1 < boxx0 || y1 < boxy0) {
+        } else if (x1 < boxX0 || y1 < boxY0) {
             /* it's way outside on the left or top */
             return RectOverlapType.NoOverlap;
-        } else if (x0 >= boxx0 && x1 <= boxx1 && y0 >= boxy0 && y1 <= boxy1) {
+        } else if (x0 >= boxX0 && x1 <= boxX1 && y0 >= boxY0 && y1 <= boxY1) {
             return RectOverlapType.BoxCompletelyCovers;
-        } else if (boxx0 >= x0 && boxx1 <= x1 && boxy0 >= y0 && boxy1 <= y1) {
+        } else if (boxX0 >= x0 && boxX1 <= x1 && boxY0 >= y0 && boxY1 <= y1) {
             return RectOverlapType.BoxCompletelyWithin;
         } else {
             return RectOverlapType.PartialOverlap;
@@ -421,16 +421,16 @@ export class RectUtils {
     /**
      * is point within rectangle.
      */
-    static hasPoint(x: number, y: number, boxx0: number, boxy0: number, boxw: number, boxh: number) {
-        return x >= boxx0 && x < boxx0 + boxw && y >= boxy0 && y < boxy0 + boxh;
+    static hasPoint(x: number, y: number, boxX0: number, boxY0: number, boxW: number, boxH: number) {
+        return x >= boxX0 && x < boxX0 + boxW && y >= boxY0 && y < boxY0 + boxH;
     }
 
     /**
      * shrink a rectangle by a defined amount of padding, and keep it centered.
      */
-    static getSubRectRaw(x: number, y: number, w: number, h: number, padx: number, pady: number) {
-        if (w > padx * 2 && h > pady * 2) {
-            return [x + padx, y + pady, w - padx * 2, h - pady * 2];
+    static getSubRectRaw(x: number, y: number, w: number, h: number, padX: number, padY: number) {
+        if (w > padX * 2 && h > padY * 2) {
+            return [x + padX, y + padY, w - padX * 2, h - padY * 2];
         } else {
             return undefined;
         }

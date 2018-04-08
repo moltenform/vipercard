@@ -8,7 +8,7 @@
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange, specialCharNonBreakingSpace, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -34,7 +34,7 @@ export class UI512DemoTextEdit extends UI512Controller {
         this.test.addElements(this, clientrect);
         this.test.uicontext = true;
 
-        let curx = 10;
+        let curX = 10;
         let grp = this.app.getGroup('grp');
 
         // run this after hitting toggle scroll a couple times to make sure we're not leaking elements
@@ -139,7 +139,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
     geneva(el: UI512ElTextField, s: string) {
         let spec = new TextFontSpec('geneva', TextFontStyling.Default, 10);
         el.set('defaultFont', spec.toSpecString());
-        let t = FormattedText.newFromPersisted(TextRendererFontManager.setInitialFont(s, spec.toSpecString()));
+        let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
         el.setftxt(t);
     }
 
@@ -152,7 +152,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
         s += c + 'geneva_12_' + textFontStylingToString(TextFontStyling.Bold) + c + 'ab';
         s += c + 'chicago_18_' + textFontStylingToString(TextFontStyling.Underline) + c + 'ab';
         s += c + 'chicago_12_' + textFontStylingToString(TextFontStyling.Underline) + c + 'ab';
-        return FormattedText.newFromPersisted(s);
+        return FormattedText.newFromSerialized(s);
     }
 
     toggleScroll(c: UI512Controller) {
@@ -197,7 +197,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
         let layoutst = new GridLayout(b0 + 10, b1 + 5, 60, 45, styles, [1], 10, 10);
         layoutst.createElems(c.app, grp, 'testStyles', UI512ElTextField, (a, b, el) => {
             el.set('style', a);
-            el.setftxt(FormattedText.newFromPersisted('text\ntext'));
+            el.setftxt(FormattedText.newFromSerialized('text\ntext'));
         });
 
         // test large fields with varying amounts of text
@@ -461,7 +461,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
         // make it big enough to have a scrollbar
         let wastoosmall = c.app.getElemById('testCases_9');
         wastoosmall.setDimensions(wastoosmall.x, wastoosmall.y, wastoosmall.w, 120);
-        cast(wastoosmall, UI512ElTextField).setftxt(FormattedText.newFromPersisted('now ok'));
+        cast(wastoosmall, UI512ElTextField).setftxt(FormattedText.newFromSerialized('now ok'));
     }
 
     drawTestCaseSelection(c: UI512TestTextEditController) {
@@ -1246,11 +1246,11 @@ export class TestUI512SelAndEntry extends UI512TestBase {
         input = input.replace(/\|/g, '\n');
         let [t, selcaret, selend] = this.fromPlainText(input);
         let args = [t, selcaret, selend, ...moreargs];
-        let [nextselcaret, nextselend] = fn.apply(null, args);
-        let [expectedt, expectedcaret, expectedend] = this.fromPlainText(expected);
-        assertEq(expectedt.toPersisted(), t.toPersisted(), '1s|');
-        assertEq(expectedcaret, nextselcaret, '1r|incorrect caret position');
-        assertEq(expectedend, nextselend, '1q|incorrect select-end position');
+        let [gotSelCaret, gotSelEnd] = fn.apply(null, args);
+        let [expectedTxt, expectedCaret, expectedEnd] = this.fromPlainText(expected);
+        assertEq(expectedTxt.toSerialized(), t.toSerialized(), '1s|');
+        assertEq(expectedCaret, gotSelCaret, '1r|incorrect caret position');
+        assertEq(expectedEnd, gotSelEnd, '1q|incorrect select-end position');
     }
 
     testChangeText(expected: string, input: string, fn: Function, ...moreargs: any[]) {
@@ -1258,16 +1258,16 @@ export class TestUI512SelAndEntry extends UI512TestBase {
         input = input.replace(/\|/g, '\n');
         let [t, selcaret, selend] = this.fromPlainText(input);
         let args = [t, selcaret, selend, ...moreargs];
-        let [nextt, nextselcaret, nextselend] = fn.apply(null, args);
-        let [expectedt, expectedcaret, expectedend] = this.fromPlainText(expected);
-        assertEq(expectedt.toPersisted(), nextt.toPersisted(), '1p|');
-        assertEq(expectedcaret, nextselcaret, '1o|');
-        assertEq(expectedend, nextselend, '1n|');
+        let [gotTxt, gotSelCaret, gotSelEnd] = fn.apply(null, args);
+        let [expectedTxt, expectedCaret, expectedEnd] = this.fromPlainText(expected);
+        assertEq(expectedTxt.toSerialized(), gotTxt.toSerialized(), '1p|');
+        assertEq(expectedCaret, gotSelCaret, '1o|');
+        assertEq(expectedEnd, gotSelEnd, '1n|');
     }
 
     protected fromPlainText(s: string): [FormattedText, number, number] {
         // step 1) get a string without the font changes
-        let tToGetUnformatted = FormattedText.newFromPersisted(s);
+        let tToGetUnformatted = FormattedText.newFromSerialized(s);
         let sUnformatted = tToGetUnformatted.toUnformatted();
         assertTrue(
             scontains(sUnformatted, '^') && scontains(sUnformatted, '#'),
@@ -1290,7 +1290,7 @@ export class TestUI512SelAndEntry extends UI512TestBase {
         }
 
         // step 3) create formatted text
-        let t = FormattedText.newFromPersisted(s.replace(/#/g, '').replace(/\^/g, ''));
+        let t = FormattedText.newFromSerialized(s.replace(/#/g, '').replace(/\^/g, ''));
         return [t, selcaret, selend];
     }
 }

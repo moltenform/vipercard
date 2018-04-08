@@ -1,11 +1,11 @@
 
-/* auto */ import { O, assertTrue, respondUI512Error } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { BrowserOSInfo, IUI512Session, RenderComplete, RepeatingTimer, Root, Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { O, assertTrue, assertTrueWarn, respondUI512Error } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { BrowserOSInfo, RenderComplete, RepeatingTimer, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512 } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512CursorAccess } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIcon.js';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcInitIcons } from '../../vpc/vpcutils/vpcInitIcons.js';
@@ -22,30 +22,30 @@
 export class UI512FullRoot implements Root {
     domCanvas: CanvasWrapper;
     controller: UI512Controller;
-    fontManager: TextRendererFontManager;
-    iconManager: RenderIconManager;
+    fontManager: UI512DrawText;
+    iconManager: UI512IconManager;
     browserOSInfo: BrowserOSInfo;
     prevMouseDown: O<MouseDownEventDetails>;
     scaleMouseCoords: O<number>;
-    session: O<IUI512Session>;
+    session: O<UI512IsSessionInterface>;
 
-    // send a ping to the apps every 0.1 seconds
+    /* send a ping to the apps every 0.1 seconds */
     timerSendIdleEvent = new RepeatingTimer(100);
     mouseButtonsExpected = 0;
 
     init(domCanvas: HTMLCanvasElement) {
         this.browserOSInfo = Util512.getBrowserOS(window.navigator.userAgent);
-        this.fontManager = new TextRendererFontManager();
-        this.iconManager = new RenderIconManager();
+        this.fontManager = new UI512DrawText();
+        this.iconManager = new UI512IconManager();
         this.domCanvas = new CanvasWrapper(domCanvas);
 
-        // this.controller = new UI512DemoBasic();
-        // this.controller = new UI512DemoButtons();
-        // this.controller = new UI512DemoComposites();
-        // this.controller = new UI512DemoMenus();
-        // this.controller = new UI512DemoPaint();
-        // this.controller = new UI512DemoText();
-        // this.controller = new UI512DemoTextEdit();
+        /* this.controller = new UI512DemoBasic(); */
+        /* this.controller = new UI512DemoButtons(); */
+        /* this.controller = new UI512DemoComposites(); */
+        /* this.controller = new UI512DemoMenus(); */
+        /* this.controller = new UI512DemoPaint(); */
+        /* this.controller = new UI512DemoText(); */
+        /* this.controller = new UI512DemoTextEdit(); */
         this.controller = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
         UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor);
@@ -67,11 +67,11 @@ export class UI512FullRoot implements Root {
         }
     }
 
-    public getFontManager() {
+    public getDrawText() {
         return this.fontManager;
     }
 
-    public getIconManager() {
+    public getDrawIcon() {
         return this.iconManager;
     }
 
@@ -79,7 +79,7 @@ export class UI512FullRoot implements Root {
         return this.session;
     }
 
-    public setSession(ss: O<IUI512Session>) {
+    public setSession(ss: O<UI512IsSessionInterface>) {
         this.session = ss;
     }
 
@@ -87,7 +87,7 @@ export class UI512FullRoot implements Root {
         return this.browserOSInfo;
     }
 
-    replaceCurrentController(newController: any) {
+    replaceCurrentPresenter(newController: any) {
         assertTrue(newController && newController instanceof UI512Controller, '3@|not a controller');
         if (newController.importMouseTracking) {
             newController.importMouseTracking(this.controller);
@@ -95,6 +95,12 @@ export class UI512FullRoot implements Root {
 
         this.controller = newController;
         this.invalidateAll();
+    }
+
+    sendEvent(evt: UI512IsEventInterface) {
+        let details = evt as EventDetails
+        assertTrueWarn(details.isEventDetails, "")
+        return this.event(details)
     }
 
     event(details: EventDetails) {
@@ -142,7 +148,7 @@ export class UI512FullRoot implements Root {
                         details.mods
                     );
 
-                    // don't set d.el yet, this.prevMouseDown.el might be out of date.
+                    /* don't set d.el yet, this.prevMouseDown.el might be out of date. */
                     this.event(newevent);
                 }
             }
@@ -158,16 +164,16 @@ export class UI512FullRoot implements Root {
     }
 
     sendMissedEvents(buttons: number) {
-        // observed behavior: let's say there is a button on the screen. you click the button,
-        // and it highlights as expected. you then, while holding the mouse button down, drag the
-        // cursor outside of the window. then release the mouse button when the cursor is outside.
-        // now, when you bring the cursor back into the window, it *incorrectly* thinks that
-        // the button should be re-highlighted, even though the mouse button is up, because
-        // we never got the mouseup event.
+        /* observed behavior: let's say there is a button on the screen. you click the button, */
+        /* and it highlights as expected. you then, while holding the mouse button down, drag the */
+        /* cursor outside of the window. then release the mouse button when the cursor is outside. */
+        /* now, when you bring the cursor back into the window, it *incorrectly* thinks that */
+        /* the button should be re-highlighted, even though the mouse button is up, because */
+        /* we never got the mouseup event. */
 
-        // so, I wrote this fix. if we see that the mouse buttons are different than we
-        // expected, send simulated "mouseup" events for each mouse button that is now up.
-        // (the same could be done for mousedown events, but we don't have any drag-into-window scenario now).
+        /* so, I wrote this fix. if we see that the mouse buttons are different than we */
+        /* expected, send simulated "mouseup" events for each mouse button that is now up. */
+        /* (the same could be done for mousedown events, but we don't have any drag-into-window scenario now). */
         const maxNumberOfMouseButtons = 10;
         let needToSendMouseUp = this.mouseButtonsExpected & ~buttons;
         this.mouseButtonsExpected = buttons;

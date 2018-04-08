@@ -40,8 +40,8 @@ vpcIntro
 vpcIntroFirst
 vpcIntroOpen
 vpcIntroLoading
-vpcIntroInterface
 vpcIntroPickFile
+vpcIntroInterface
 vpcIntroProvider
 vpcIntroBase
 vpcInterfaceImpl
@@ -198,6 +198,7 @@ ui512TextSelectClasses
 ui512Scrollbar
 ui512Clipboard
 ui512GenericField
+ui512TextLines
 
 
 /ui512/menu/
@@ -220,7 +221,7 @@ ui512ElementsBase
 ui512ElementsGettable
 
 /ui512/draw/
-ui512ImageDissolve
+ui512ImageDissolve--
 ui512DrawBorders
 ui512DrawIcon
 ui512DrawIconClasses
@@ -229,12 +230,13 @@ ui512DrawPaint
 ui512DrawPaintClasses
 ui512DrawPattern
 ui512DrawText
-ui512ImageCollection
 ui512DrawTextChar
 ui512DrawTextParams
 ui512FormattedText
 ui512DrawTextRequestData
 ui512DrawTextClasses
+ui512DrawTextTransCharset
+ui512ImageCollection
 ui512Interfaces
 
 /ui512/lang/

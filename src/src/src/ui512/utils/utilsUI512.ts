@@ -12,8 +12,8 @@ export class Util512 {
     /**
      * use for map/reduce
      */
-    static add(a: number, b: number) {
-        return a + b;
+    static add(n1: number, n2: number) {
+        return n1 + n2;
     }
 
     /**
@@ -315,7 +315,9 @@ export class Util512 {
 
             let script = window.document.createElement('script');
             script.setAttribute('src', url);
-            let loaded = false; // prevents cb from being called twice
+
+            /* prevents cb from being called twice */
+            let loaded = false;
             script.onerror = () => {
                 let urlsplit = url.split('/');
                 reject(new Error('Did not load ' + urlsplit[urlsplit.length - 1]));
@@ -332,6 +334,25 @@ export class Util512 {
             window.document.getElementsByTagName('head')[0].appendChild(script);
         });
     }
+
+    /**
+     * padStart, copied from reference implementation on mozilla.org
+     */
+    static padStart(sIn:string|number, targetLength:number, padString:string) {
+        let s = '' + sIn
+        padString = typeof padString !== 'undefined' ? padString : ' ';
+        if (s.length > targetLength) {
+            return s;
+        } else {
+            targetLength = targetLength - s.length;
+            if (targetLength > padString.length) {
+                /* append to original to ensure we are longer than needed */
+                padString += padString.repeat(targetLength / padString.length);
+            }
+
+            return padString.slice(0, targetLength) + s;
+        }
+    };
 
     /**
      * make random bytes, return as base64.
@@ -584,19 +605,22 @@ export class RepeatingTimer {
 }
 
 /**
- * root (top-level) object.
+ * root (top-level) object
  */
-export interface IFontManager {}
-export interface IIconManager {}
-export interface IUI512Session {}
+export interface UI512IsDrawTextInterface { }
+export interface UI512IsDrawIconInterface { }
+export interface UI512IsSessionInterface { }
+export interface UI512IsPresenterInterface { }
+export interface UI512IsEventInterface { }
 export interface Root {
     invalidateAll(): void;
-    getFontManager(): IFontManager;
-    getIconManager(): IIconManager;
-    getSession(): O<IUI512Session>;
-    setSession(session: O<IUI512Session>): void;
+    getDrawText(): UI512IsDrawTextInterface;
+    getDrawIcon(): UI512IsDrawIconInterface;
+    getSession(): O<UI512IsSessionInterface>;
+    setSession(session: O<UI512IsSessionInterface>): void;
     getBrowserInfo(): BrowserOSInfo;
-    replaceCurrentController(newController: any): void;
+    sendEvent(evt:UI512IsEventInterface): void;
+    replaceCurrentPresenter(pr: O<UI512IsPresenterInterface>): void;
     runTests(all: boolean): void;
 }
 
@@ -768,7 +792,7 @@ export class GetCharClass {
         } else if (c <= 0xff) {
             return CharClass.Punctuation;
         } else {
-            // let's choose to treat all unicode non-ascii as word.
+            /* let's choose to treat all unicode non-ascii as word. */
             return CharClass.Word;
         }
     }

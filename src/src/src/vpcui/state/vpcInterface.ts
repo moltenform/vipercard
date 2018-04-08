@@ -15,7 +15,7 @@
 /* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
 /* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
 
-export interface IVpcStateInterface {
+export interface VpcStateInterface {
     getOption_s(prop: string): string;
     getOption_n(prop: string): number;
     getOption_b(prop: string): boolean;

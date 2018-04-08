@@ -3,14 +3,14 @@
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
-export interface IsPropPanel {
+export interface VpcPropPanel {
     x: number;
     y: number;
     logicalWidth: number;
     logicalHeight: number;
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
     create(c: UI512ControllerBase, app: UI512Application): void;
     setVisible(app: UI512Application, visible: boolean): void;
     refreshFromModel(app: UI512Application): void;

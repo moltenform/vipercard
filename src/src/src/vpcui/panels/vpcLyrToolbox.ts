@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrueWarn, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrueWarn, checkThrow, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { findEnumToStr, getStrToEnum, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
@@ -23,36 +23,39 @@ export class VpcAppToolboxes extends VpcAppInterfaceLayer {
 
     init(c: UI512ControllerBase) {
         // add main toolbox
-        this.toolsmain.iconsetid = '001';
+        this.toolsmain.icongroupid = '001';
         this.toolsmain.x = this.appli.bounds()[0] + ScreenConsts.xAreaWidth + 1;
         this.toolsmain.y = this.appli.bounds()[1] + ScreenConsts.yMenuBar - 1;
         this.toolsmain.callbackOnChange = s => this.toolsmainCallback(s);
         this.toolsmainDefaultLoc = MainToolbox.layout(this.toolsmain, this.appli);
 
         // add navigation toolbox
-        this.toolsnav.iconsetid = '001';
+        this.toolsnav.icongroupid = '001';
         this.toolsnav.x = this.toolsmain.x + ToolboxDims.NavAddedX;
         this.toolsnav.y = this.toolsmain.y + ToolboxDims.ToolbarHeight;
         this.toolsnav.callbackOnChange = s => this.toolsnavCallback(s);
         this.toolsnavDefaultLoc = NavToolbox.layout(this.toolsnav, this.appli);
 
         // add patterns toolbox
-        this.toolspatterns.iconsetid = '001';
+        this.toolspatterns.icongroupid = '001';
         this.toolspatterns.x = this.toolsmain.x;
         this.toolspatterns.y = this.toolsnav.y + ToolboxDims.ToolbarHeight;
         this.toolspatterns.callbackOnChange = s => this.toolspatternsCallback(s);
         this.toolspatternsDefaultLoc = PatternsToolbox.layout(this.toolspatterns, this.appli);
     }
 
-    toolsmainCallback(id: O<string>) {
+    toolsmainCallback(sTool: O<string>) {
         let toolParsed: VpcTool;
-        if (id) {
-            toolParsed = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', id);
+        if (sTool) {
+            checkThrow(sTool.length > 1, "not a valid tool name.");
+            /* the vals in the enum start with a capital letter */
+            sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase()
+            toolParsed = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
             this.appli.setTool(toolParsed);
             this.appli.setOption('viewingScriptVelId', '');
             this.appli.setOption('selectedVelId', '');
         } else {
-            assertTrueWarn(false, `6w|invalid tool id ${id}`);
+            assertTrueWarn(false, `6w|invalid tool id ${sTool}`);
         }
     }
 

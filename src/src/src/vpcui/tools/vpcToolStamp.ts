@@ -160,7 +160,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         this.images = new UI512ImageCollectionCollection();
         this.currentImg = undefined;
         for (let [id, name, n] of this.directories) {
-            let cl = new UI512ImageCollection(id, name);
+            let cl = new UI512ImageCollection(id, name, '/resources/images/stamps/');
             cl.genChildren(n);
             this.images.children.push(cl);
         }
@@ -201,7 +201,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         let statusicon = new UI512ElButton('grpVpcAppUIToolStampStatus');
         grp.addElement(this.appli.UI512App(), statusicon);
         statusicon.set('style', UI512BtnStyle.Opaque);
-        statusicon.set('iconsetid', '001');
+        statusicon.set('icongroupid', '001');
         statusicon.set('iconnumber', 76); // white
         statusicon.setDimensions(px + 312, py + 15, 30, 30);
 

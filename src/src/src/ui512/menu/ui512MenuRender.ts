@@ -3,7 +3,7 @@
 /* auto */ import { RenderComplete, assertEq, base10, cast, getRoot, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { MenuConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
@@ -68,7 +68,6 @@ export class MenuPositioning {
     }
 
     static setMenubarPositionsForRenderItems(
-
         app: UI512Application,
         grpbar: UI512ElGroup,
         grpitems: UI512ElGroup,
@@ -77,7 +76,7 @@ export class MenuPositioning {
         complete: RenderComplete
     ) {
         let dropdownbg = grpitems.getEl(menuroot.id + '##dropdownbg');
-        let fontmanager = getRoot().getFontManager() as TextRendererFontManager;
+        let fontmanager = getRoot().getDrawText() as UI512DrawText;
         header.set('highlightactive', true);
 
         // find the longest string
@@ -90,7 +89,7 @@ export class MenuPositioning {
                 return;
             }
 
-            longest = Math.max(longest, measured.newlogicalx + MenuConsts.AddToWidth);
+            longest = Math.max(longest, measured.newLogicalX + MenuConsts.AddToWidth);
         }
 
         let totalheight = MenuConsts.ItemHeight * items.length;
@@ -144,9 +143,9 @@ export class MenuPositioning {
 
         // draw menu headers
         // following emulator, they actually overlap.
-        let curx = app.bounds[0] + MenuConsts.TopHeaderMargin1;
+        let curX = app.bounds[0] + MenuConsts.TopHeaderMargin1;
         let curwidth = 0;
-        let fontmanager = getRoot().getFontManager() as TextRendererFontManager;
+        let fontmanager = getRoot().getDrawText() as UI512DrawText;
         let counticonsdrawn = 0;
         let dropdns = menuroot.getchildren(app);
         grpitems.setVisible(false);
@@ -160,17 +159,17 @@ export class MenuPositioning {
                     return;
                 }
 
-                curwidth = measured.newlogicalx + MenuConsts.XSpacing;
+                curwidth = measured.newLogicalX + MenuConsts.XSpacing;
             }
 
             if (header.get_n('fixedoffset') !== -1) {
-                curx = header.get_n('fixedoffset');
+                curX = header.get_n('fixedoffset');
             }
 
             // the emulator has a 1 pixel margin between top of screen and menu,
             // but we'll not do that because it doesn't look good against black background
-            header.setDimensions(curx - 4, app.bounds[1], curwidth + 5, MenuConsts.BarHeight - 1);
-            curx += curwidth;
+            header.setDimensions(curX - 4, app.bounds[1], curwidth + 5, MenuConsts.BarHeight - 1);
+            curX += curwidth;
 
             // draw active one
             header.set('highlightactive', false);
@@ -216,8 +215,8 @@ export class MenuPositioning {
         grpbar.addElementAfter(app, dropdn, menuroot.id);
         dropdn.set('fixedoffset', fixedoffset);
         if (headerlabeluntranslated.startsWith('icon:')) {
-            let [_, iconsetid, iconnumber, fixwidth] = headerlabeluntranslated.split(':');
-            dropdn.set('iconsetid', iconsetid);
+            let [_, icongroupid, iconnumber, fixwidth] = headerlabeluntranslated.split(':');
+            dropdn.set('icongroupid', icongroupid);
             dropdn.set('iconnumber', parseInt(iconnumber, base10));
             dropdn.set('fixedwidth', parseInt(fixwidth, base10));
             dropdn.set('labeltext', '');

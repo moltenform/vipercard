@@ -1,6 +1,6 @@
 
 /* auto */ import { O, respondUI512Error } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, RepeatingTimer, Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, RepeatingTimer, UI512IsPresenterInterface, Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
@@ -12,7 +12,7 @@
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 /* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
 
-export abstract class UI512ControllerBase implements UI512PresenterWithMenuInterface {
+export abstract class UI512ControllerBase implements UI512PresenterWithMenuInterface, UI512IsPresenterInterface {
     app: UI512Application;
     readonly defaultPriority = 10;
     readonly maxMouseButtons = 5;
@@ -20,9 +20,6 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
     trackMouse = [-1, -1];
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
-    trackKeyCmd = false;
-    trackKeyOption = false;
-    trackKeyShift = false;
     listeners: { [t: number]: Function[] } = {};
     callbackQueueFromAsyncs: (O<NullaryFn>)[] = [];
     continueEventAfterError = true;
@@ -41,9 +38,6 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
         if (other.trackMouse !== undefined) {
             this.trackMouse = other.trackMouse;
             this.trackPressedBtns = other.trackPressedBtns;
-            this.trackKeyCmd = other.trackKeyCmd;
-            this.trackKeyOption = other.trackKeyOption;
-            this.trackKeyShift = other.trackKeyShift;
         }
     }
 

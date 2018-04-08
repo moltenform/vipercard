@@ -131,7 +131,7 @@ export class CodeExecFrameStack {
 
     protected runOneLineImpl(curframe: CodeExecFrame, curline: VpcCodeLine, blocked: ValHolder<number>) {
         let parsed = this.parsingCache.getParsedLine(curline);
-        let methodname = 'visit_' + getEnumToStrOrUnknown<VpcLineCategory>(VpcLineCategory, curline.ctg);
+        let methodname = 'visit' + getEnumToStrOrUnknown<VpcLineCategory>(VpcLineCategory, curline.ctg);
         Util512.callAsMethodOnClass(
             'CodeExecFrameStack',
             this,
@@ -188,7 +188,7 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_statement(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any, blocked: ValHolder<number>) {
+    visitStatement(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any, blocked: ValHolder<number>) {
         let visited = parsed ? this.evalGeneralVisit(parsed, curline) : VpcVal.Empty;
         this.execStatements.go(curline, visited, blocked);
         if (blocked.val === 0) {
@@ -196,7 +196,7 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_declareGlobal(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitDeclareGlobal(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         for (let i = 0; i < curline.excerptToParse.length; i++) {
             let varname = curline.excerptToParse[i].image;
             checkThrow(varname !== 'it' && this.check.okLocalVar(varname), '7s|reserved word', varname);
@@ -210,7 +210,7 @@ export class CodeExecFrameStack {
         curframe.next();
     }
 
-    visit_handlerStart(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitHandlerStart(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         // confirm handler name
         assertTrue(curline.excerptToParse.length > 1, '5X|wrong readyToParse length');
         assertEqWarn(curframe.handlerName.toLowerCase(), curline.excerptToParse[1].image.toLowerCase(), '5W|');
@@ -225,22 +225,22 @@ export class CodeExecFrameStack {
         curframe.next();
     }
 
-    visit_handlerEnd(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitHandlerEnd(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         this.stack.pop();
     }
 
-    visit_productExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitProductExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         while (this.stack.length > 1) {
             this.stack.pop();
         }
     }
 
-    visit_handlerExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitHandlerExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         // we've validated curline.readyToParse[1] in the BranchTracking class
         this.stack.pop();
     }
 
-    visit_handlerPass(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitHandlerPass(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         // we've validated curline.readyToParse[1] in the BranchTracking class
         // in the rewriting stage we've added a "return" after this line, for simplicity
         curframe.next();
@@ -250,7 +250,7 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_returnExpr(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitReturnExpr(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         let evald = this.evalRequestedExpression(parsed, curline);
         // set the result as a local variable in the frame beneath
         let frameBeneath = this.stack[this.stack.length - 2];
@@ -269,7 +269,7 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_ifStart(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitIfStart(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         // if blocks must start with "if" and end with an "end if"
         let blockInfo = this.getBlockInfo(curline, 2);
         let blockEnd = blockInfo[blockInfo.length - 1];
@@ -294,7 +294,7 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_ifElsePlain(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitIfElsePlain(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         let blockInfo = this.getBlockInfo(curline, 3);
         let anyTaken = blockInfo.some(ln => curframe.offsetsMarked[ln.offset]);
         if (anyTaken) {
@@ -308,7 +308,7 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_ifElse(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitIfElse(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         let blockInfo = this.getBlockInfo(curline, 3);
         let anyTaken = blockInfo.some(ln => curframe.offsetsMarked[ln.offset]);
         if (anyTaken) {
@@ -333,28 +333,28 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_ifEnd(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitIfEnd(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         curframe.next();
     }
 
-    visit_repeatExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitRepeatExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         // advance to one line past the end of the loop
         let blockInfo = this.getBlockInfo(curline, 2);
         this.validatedGoto(curframe, blockInfo[blockInfo.length - 1]);
         curframe.next();
     }
 
-    visit_repeatEnd(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitRepeatEnd(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         // go back to the top of the loop
         let blockInfo = this.getBlockInfo(curline, 2);
         this.validatedGoto(curframe, blockInfo[0]);
     }
 
-    visit_repeatNext(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        return this.visit_repeatEnd(curframe, curline, parsed);
+    visitRepeatNext(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+        return this.visitRepeatEnd(curframe, curline, parsed);
     }
 
-    visit_repeatForever(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitRepeatForever(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         curframe.next();
     }
 
@@ -373,11 +373,11 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_repeatWhile(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitRepeatWhile(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         return this.helpRepeat(curframe, curline, parsed, false);
     }
 
-    visit_repeatUntil(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitRepeatUntil(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         return this.helpRepeat(curframe, curline, parsed, true);
     }
 
@@ -394,7 +394,7 @@ export class CodeExecFrameStack {
         }
     }
 
-    visit_callHandler(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
+    visitCallHandler(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         // reset the result, in case the callee doesn't return anything
         curframe.locals.set('$result', VpcVal.Empty);
         let newhandlername = curline.excerptToParse[1].image;

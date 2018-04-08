@@ -7,11 +7,11 @@
 /* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
 /* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export class VpcChangeSelectedFont {
     cbGetEditToolSelectedFldOrBtn: () => O<VpcElBase>;
-    constructor(protected appli: IVpcStateInterface) {}
+    constructor(protected appli: VpcStateInterface) {}
 
     runFontMenuActionsIfApplicable(s: string) {
         if (s.startsWith('mnuItemTool')) {

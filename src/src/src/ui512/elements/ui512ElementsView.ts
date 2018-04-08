@@ -4,9 +4,9 @@
 /* auto */ import { MenuConsts, ScreenConsts, ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { RenderTextArgs, renderTextArgsFromEl } from '../../ui512/draw/ui512DrawTextParams.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { IconInfo, RenderIconSet } from '../../ui512/draw/ui512DrawIconClasses.js';
-/* auto */ import { RenderIconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { IconInfo, RenderIconGroup } from '../../ui512/draw/ui512DrawIconClasses.js';
+/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIcon.js';
 /* auto */ import { UI512ViewDrawBorders } from '../../ui512/draw/ui512DrawBorders.js';
 /* auto */ import { UI512Element, UI512ElementWithHighlight } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -53,9 +53,9 @@ export class UI512ViewDraw {
     }
 
     drawTextIfDefinedOpts(b: UI512ViewDrawBorders, text: string, opts: RenderTextArgs, styleEnabled: boolean) {
-        let fontManager = cast(getRoot().getFontManager(), TextRendererFontManager);
+        let fontManager = cast(getRoot().getDrawText(), UI512DrawText);
         if (!styleEnabled) {
-            text = TextRendererFontManager.makeInitialTextDisabled(text);
+            text = UI512DrawText.makeInitialTextDisabled(text);
         }
 
         let drawn = fontManager.drawStringIntoBox(text, b.canvas, opts);
@@ -69,9 +69,9 @@ export class UI512ViewDraw {
 
     drawIconIfDefined(b: UI512ViewDrawBorders, rect: O<number[]>, iconinfo: IconInfo, overrideCentered?: boolean) {
         if (rect) {
-            const iconcentered = overrideCentered === undefined ? iconinfo.iconcentered : overrideCentered;
-            let iconManager = cast(getRoot().getIconManager(), RenderIconManager);
-            let icon = iconManager.findIcon(iconinfo.iconsetid, iconinfo.iconnumber);
+            const iconcentered = overrideCentered === undefined ? iconinfo.centered : overrideCentered;
+            let iconManager = cast(getRoot().getDrawIcon(), UI512IconManager);
+            let icon = iconManager.findIcon(iconinfo.iconGroup, iconinfo.iconNumber);
             if (icon) {
                 icon.drawIntoBox(b.canvas, iconinfo, rect[0], rect[1], rect[2], rect[3]);
             } else {
@@ -89,9 +89,9 @@ export class UI512ViewDraw {
     ) {
         const lineheight = 12;
         const marginbetween = 0;
-        let srcrect = RenderIconSet.lookupRectangle(iconinfo.iconsetid, iconinfo.iconnumber);
+        let srcrect = RenderIconGroup.lookupRectangle(iconinfo.iconGroup, iconinfo.iconNumber);
         if (rect && srcrect) {
-            let iconheight = srcrect[3] + iconinfo.iconadjustheight;
+            let iconheight = srcrect[3] + iconinfo.adjustHeight;
             let boxIconAndTextWidth = rect[2];
             let boxIconAndTextHeight = iconheight + marginbetween + lineheight;
             let boxIconAndTextX = rect[0];
@@ -105,15 +105,15 @@ export class UI512ViewDraw {
                 let boxTextOnlyWidth = boxIconAndTextWidth;
                 let boxTextOnlyHeight = Math.max(1, rect[3] - (boxTextOnlyY - rect[1]));
 
-                // Follow what HC does and set the font to 9pt Geneva. in fact, in HC no other font is supported.
+                /* Follow what HC does and set the font to 9pt Geneva. in fact, in HC no other font is supported. */
                 let style = styleEnabled ? 'biuosdce' : 'biuos+dce';
-                let labelsmall = TextRendererFontManager.setInitialFont(s, `geneva_9_${style}`);
+                let labelsmall = UI512DrawText.setFont(s, `geneva_9_${style}`);
 
-                // Follow what HC does and strip out any newlines
+                /* Follow what HC does and strip out any newlines */
                 labelsmall = labelsmall.replace(/\r|\n/g, '');
                 let boxText = [boxTextOnlyX, boxTextOnlyY, boxTextOnlyWidth, boxTextOnlyWidth];
 
-                // Follow what HC does and do not wrap the label text, even if asked to
+                /* Follow what HC does and do not wrap the label text, even if asked to */
                 this.drawTextIfDefined(
                     b,
                     boxText,
@@ -132,16 +132,16 @@ export class UI512ViewDraw {
         const padleft = 2;
         const iconwidth = 12;
         let iconinfo = new IconInfo('001', -1);
-        iconinfo.iconcentered = true;
+        iconinfo.centered = true;
 
         if (el.get_n('style') === UI512BtnStyle.Radio && el.get_b('checkmark')) {
-            iconinfo.iconnumber = el.get_b('highlightactive') ? 34 : 32;
+            iconinfo.iconNumber = el.get_b('highlightactive') ? 34 : 32;
         } else if (el.get_n('style') === UI512BtnStyle.Radio && !el.get_b('checkmark')) {
-            iconinfo.iconnumber = el.get_b('highlightactive') ? 35 : 33;
+            iconinfo.iconNumber = el.get_b('highlightactive') ? 35 : 33;
         } else if (el.get_b('checkmark')) {
-            iconinfo.iconnumber = el.get_b('highlightactive') ? 30 : 28;
+            iconinfo.iconNumber = el.get_b('highlightactive') ? 30 : 28;
         } else {
-            iconinfo.iconnumber = el.get_b('highlightactive') ? 31 : 29;
+            iconinfo.iconNumber = el.get_b('highlightactive') ? 31 : 29;
         }
 
         let boxIcon = [b.bx + padleft, b.by, padleft + iconwidth, b.h];
@@ -149,7 +149,7 @@ export class UI512ViewDraw {
         let boxTextY = b.by;
         let boxText = [boxTextX, boxTextY, b.w - (boxTextX - b.bx), b.h];
         if (boxIcon[2] > 0 && boxText[2] > 0) {
-            iconinfo.iconcentered = true;
+            iconinfo.centered = true;
 
             this.drawIconIfDefined(b, boxIcon, iconinfo);
             this.drawTextIfDefined(
@@ -165,17 +165,17 @@ export class UI512ViewDraw {
     }
 
     iconInfoFromEl(el: UI512ElementWithHighlight): O<IconInfo> {
-        if (el.get_s('iconsetid').length > 0 && el.get_n('iconnumber') >= 0) {
-            let ret = new IconInfo(el.get_s('iconsetid'), el.get_n('iconnumber'));
-            ret.iconadjustx = el.get_n('iconadjustx');
-            ret.iconadjusty = el.get_n('iconadjusty');
-            ret.iconadjustwidth = el.get_n('iconadjustwidth');
-            ret.iconadjustheight = el.get_n('iconadjustheight');
-            ret.iconadjustsrcx = el.get_n('iconadjustsrcx');
-            ret.iconadjustsrcy = el.get_n('iconadjustsrcy');
-            ret.iconcentered = el.get_b('iconcentered');
+        if (el.get_s('icongroupid').length > 0 && el.get_n('iconnumber') >= 0) {
+            let ret = new IconInfo(el.get_s('icongroupid'), el.get_n('iconnumber'));
+            ret.adjustX = el.get_n('iconadjustx');
+            ret.adjustY = el.get_n('iconadjusty');
+            ret.adjustWidth = el.get_n('iconadjustwidth');
+            ret.adjustHeight = el.get_n('iconadjustheight');
+            ret.adjustSrcX = el.get_n('iconadjustsrcx');
+            ret.adjustSrcY = el.get_n('iconadjustsrcy');
+            ret.centered = el.get_b('iconcentered');
             if (el.get_b('highlightactive') && el.get_n('iconnumberwhenhighlight') >= 0) {
-                ret.iconnumber = el.get_n('iconnumberwhenhighlight');
+                ret.iconNumber = el.get_n('iconnumberwhenhighlight');
             }
 
             return ret;
@@ -191,7 +191,7 @@ export class UI512ViewDraw {
         let iconinfo = this.iconInfoFromEl(el);
         let subrect = this.getSubRect(b, padx, pady);
         if (!slength(el.get_s('labeltext')) && !iconinfo) {
-            // nothing to do
+            /* nothing to do */
         } else if (slength(el.get_s('labeltext')) && !iconinfo) {
             this.drawTextIfDefined(
                 b,
@@ -217,22 +217,22 @@ export class UI512ViewDraw {
         decorationSize: number
     ) {
         if (el.get_b('highlightactive') && el.get_n('iconnumberwhenhighlight') === -1) {
-            // draw the border
+            /* draw the border */
             fnHighlight.apply(b);
             let subrect = this.getSubRect(b, decorationSize, decorationSize);
             if (subrect && !b.didFallbackToSimpleRect) {
-                // clear the insides
+                /* clear the insides */
                 this.drawFillIfDefined(b, subrect, 'white');
-                // draw the label
+                /* draw the label */
                 this.renderButtonTextOrIcon(b, el, decorationSize, decorationSize);
-                // invert colors on the insides
+                /* invert colors on the insides */
                 this.drawInvertIfDefined(b, subrect);
             }
         } else {
-            // draw the border
+            /* draw the border */
             fnNotHighlight.apply(b);
             if (!b.didFallbackToSimpleRect && b.w > decorationSize * 2 && b.h > decorationSize * 2) {
-                // draw the label
+                /* draw the label */
                 this.renderButtonTextOrIcon(b, el, decorationSize, decorationSize);
             }
         }
@@ -292,15 +292,15 @@ export class UI512ViewDraw {
     }
 
     renderStaticLabelTransparentExceptChars(b: UI512ViewDrawBorders, el: UI512ElLabel) {
-        // measure the string so that we can white out the space before drawing letters
-        let fontmanager = cast(getRoot().getFontManager(), TextRendererFontManager);
+        /* measure the string so that we can white out the space before drawing letters */
+        let fontmanager = cast(getRoot().getDrawText(), UI512DrawText);
         let subrectAlmostAll = this.getSubRect(b, 1, 1);
         let measured = fontmanager.measureString(el.get_s('labeltext'));
         if (measured && subrectAlmostAll) {
-            // get the smaller rectangle that will contain the text
-            let shrinkx = Math.floor((el.w - (measured.rightmostpixeldrawn + ScrollConsts.WindowCaptionSpacing)) / 2);
+            /* get the smaller rectangle that will contain the text */
+            let shrinkx = Math.floor((el.w - (measured.rightmostPixelDrawn + ScrollConsts.WindowCaptionSpacing)) / 2);
 
-            // the white rectangle should cover the horizontal lines but not the outer border
+            /* the white rectangle should cover the horizontal lines but not the outer border */
             let subrect = this.getSubRect(b, Math.max(0, shrinkx), 1);
             if (subrect) {
                 b.canvas.fillRect(subrect[0], subrect[1], subrect[2], subrect[3], b.bx, b.by, b.w, b.h, 'white');
@@ -354,18 +354,18 @@ export class UI512ViewDraw {
     }
 
     renderMenuItemDivider(b: UI512ViewDrawBorders, el: UI512MenuItem) {
-        // instead of drawing lots of dots, use a slice of this black/white image as an "icon"
+        /* instead of drawing lots of dots, use a slice of this black/white image as an "icon" */
         let iconinfo = new IconInfo('001', 145);
-        let srcrect = RenderIconSet.lookupRectangle(iconinfo.iconsetid, iconinfo.iconnumber);
+        let srcrect = RenderIconGroup.lookupRectangle(iconinfo.iconGroup, iconinfo.iconNumber);
         assertTrueWarn(srcrect, '4e|expected to get srcrect');
         if (srcrect) {
             let resultingwidth = Math.min(el.w, srcrect[2]);
             let resultingheight = 1;
             const shiftleft = 1;
-            iconinfo.iconadjustwidth = shiftleft + resultingwidth - srcrect[2];
-            iconinfo.iconadjustheight = resultingheight - srcrect[3];
-            iconinfo.iconadjustsrcx = shiftleft;
-            iconinfo.iconcentered = true;
+            iconinfo.adjustWidth = shiftleft + resultingwidth - srcrect[2];
+            iconinfo.adjustHeight = resultingheight - srcrect[3];
+            iconinfo.adjustSrcX = shiftleft;
+            iconinfo.centered = true;
             let subrect = [
                 b.bx + MenuConsts.ShadowSizeLeft,
                 b.by,
@@ -378,27 +378,27 @@ export class UI512ViewDraw {
     }
 
     renderMenuItemText(b: UI512ViewDrawBorders, el: UI512MenuItem) {
-        // draw the checkmark, if applicable
+        /* draw the checkmark, if applicable */
         let boxLeft = [b.bx, b.by, MenuConsts.FirstLabelPadding, el.h];
         if (el.get_b('checkmark')) {
             let iconinfo = new IconInfo('001', 19);
-            iconinfo.iconcentered = true;
+            iconinfo.centered = true;
             this.drawIconIfDefined(b, boxLeft, iconinfo);
         }
 
-        // draw the label
+        /* draw the label */
         if (el.w > MenuConsts.FirstLabelPadding) {
             let boxMain = [b.bx + MenuConsts.FirstLabelPadding, b.by, el.w - MenuConsts.FirstLabelPadding, el.h];
             this.drawTextIfDefined(b, boxMain, el.get_s('labeltext'), false, false, true, el.get_b('enabledstyle'));
         }
 
-        // draw the second label (cmd shortcut)
+        /* draw the second label (cmd shortcut) */
         if (el.w > MenuConsts.SecondLabelDistance) {
             let boxRight = [b.bx + el.w - MenuConsts.SecondLabelDistance, b.by, MenuConsts.SecondLabelDistance, el.h];
             this.drawTextIfDefined(b, boxRight, el.get_s('labelhotkey'), false, false, true, el.get_b('enabledstyle'));
         }
 
-        // highlight it
+        /* highlight it */
         if (el.get_b('highlightactive') && el.get_b('enabledstyle')) {
             this.drawInvertIfDefined(b, [b.bx, b.by, el.w, el.h]);
         }
@@ -441,7 +441,7 @@ export class UI512ViewDraw {
     getSubRectForField(b: UI512ViewDrawBorders, el: UI512ElTextField): [O<Function>, O<number[]>] {
         let [fnborder, padx, pady] = this.getBorderAndMarginForField(b, el.get_n('style'));
         if (el.get_b('scrollbar')) {
-            // make it smaller to make room for the scrollbar
+            /* make it smaller to make room for the scrollbar */
             b.w = b.w - ScrollConsts.BarWidth + 1;
             b.w = Math.max(1, b.w);
         }
@@ -460,7 +460,7 @@ export class UI512ViewDraw {
             let [args, rtext] = renderTextArgsFromEl(el, subrect, hasFocus);
             args.drawBeyondVisible = false;
 
-            let fontManager = cast(getRoot().getFontManager(), TextRendererFontManager);
+            let fontManager = cast(getRoot().getDrawText(), UI512DrawText);
             if (!fontManager.drawFormattedStringIntoBox(rtext, b.canvas, args)) {
                 b.complete.complete = false;
             }
@@ -541,12 +541,12 @@ export class UI512ViewDraw {
     }
 
     renderBorders(canvas: CanvasWrapper, complete: RenderComplete) {
-        // draw the thick borders
-        // in debug mode, change the color for each build to easily visualize when changes are applied.
+        /* draw the thick borders */
+        /* in debug mode, change the color for each build to easily visualize when changes are applied. */
         const color = this.getColorFromBuildStamp();
         const screen = [0, 0, ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight];
 
-        // left margin
+        /* left margin */
         canvas.fillRect(
             0,
             0,
@@ -559,7 +559,7 @@ export class UI512ViewDraw {
             'black'
         );
 
-        // right margin
+        /* right margin */
         canvas.fillRect(
             ScreenConsts.ScreenWidth - ScreenConsts.xRightMargin,
             0,
@@ -572,7 +572,7 @@ export class UI512ViewDraw {
             'black'
         );
 
-        // top margin
+        /* top margin */
         canvas.fillRect(
             0,
             0,
@@ -585,7 +585,7 @@ export class UI512ViewDraw {
             'black'
         );
 
-        // bottom margin
+        /* bottom margin */
         canvas.fillRect(
             0,
             ScreenConsts.ScreenHeight - ScreenConsts.yLowerMargin,
@@ -598,7 +598,7 @@ export class UI512ViewDraw {
             color
         );
 
-        // draw the rounded corners
+        /* draw the rounded corners */
         for (let corner of ['nw', 'ne', 'sw', 'se']) {
             this.renderCurvedCorner(
                 canvas,

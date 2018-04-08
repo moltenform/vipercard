@@ -76,7 +76,8 @@ export class VpcElProductOpts extends VpcElBase {
             PrpTyp.Str,
             (me: VpcElProductOpts) => {
                 let curs = UI512CursorAccess.getCursor();
-                return getEnumToStrOrUnknown<UI512Cursors>(UI512Cursors, curs);
+                let ret = getEnumToStrOrUnknown<UI512Cursors>(UI512Cursors, curs);
+                return ret.toLowerCase()
             },
         ];
     }
@@ -169,17 +170,17 @@ export class VpcElProductOpts extends VpcElBase {
  */
 export enum VpcCursors {
     __isUI512Enum 	=	 1,
-    arrow 	=	 UI512Cursors.Arrow, 
-    beam 	=	 UI512Cursors.Beam, 
-    crosshair 	=	 UI512Cursors.Crosshair, 
-    hand 	=	 UI512Cursors.Hand, 
-    pencil 	=	 UI512Cursors.Pencil, 
-    plus 	=	 UI512Cursors.Plus, 
-    watch 	=	 UI512Cursors.Watch, 
-    paintbrush 	=	 UI512Cursors.PaintBrush, 
-    paintbucket 	=	 UI512Cursors.PaintBucket, 
-    painttext 	=	 UI512Cursors.PaintText, 
-    paintlasso 	=	 UI512Cursors.PaintLasso, 
-    painteraser 	=	 UI512Cursors.PaintEraser, 
-    paintspray 	=	 UI512Cursors.PaintSpray, 
+    arrow 	=	 UI512Cursors.Arrow,
+    beam 	=	 UI512Cursors.Beam,
+    crosshair 	=	 UI512Cursors.Crosshair,
+    hand 	=	 UI512Cursors.Hand,
+    pencil 	=	 UI512Cursors.Pencil,
+    plus 	=	 UI512Cursors.Plus,
+    watch 	=	 UI512Cursors.Watch,
+    paintbrush 	=	 UI512Cursors.PaintBrush,
+    paintbucket 	=	 UI512Cursors.PaintBucket,
+    painttext 	=	 UI512Cursors.PaintText,
+    paintlasso 	=	 UI512Cursors.PaintLasso,
+    painteraser 	=	 UI512Cursors.PaintEraser,
+    paintspray 	=	 UI512Cursors.PaintSpray,
 }

@@ -3,9 +3,12 @@
 /* auto */ import { assertEq, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { clrThreshold } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Patterns, clrBlack, clrTransp, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512Patterns, clrBlack, clrTransp, clrWhite, needsPatternSupport, simplifyPattern } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
 
+/**
+ * paint into an array of raw pixel data
+ */
 export class UI512PainterCvData extends UI512Painter {
     constructor(public arr: Uint8ClampedArray, public widthParam: number, public heightParam: number) {
         super();
@@ -37,25 +40,20 @@ export class UI512PainterCvData extends UI512Painter {
         }
     }
 
-    fillRect(xin: number, yin: number, win: number, hin: number, color: number): void {
-        for (let y = yin; y < yin + hin; y++) {
-            for (let x = xin; x < xin + win; x++) {
+    fillRect(xIn: number, yIn: number, wIn: number, hIn: number, color: number): void {
+        for (let y = yIn; y < yIn + hIn; y++) {
+            for (let x = xIn; x < xIn + wIn; x++) {
                 this.setPixel(x, y, color);
             }
         }
     }
 
     readPixel(x: number, y: number) {
+        /* remember to use clrThreshold, since writing to a Canvas is lossy */
         const i = (y * this.widthParam + x) * 4;
-        clrThreshold
         const clrLarge = 256 - clrThreshold;
-        //dfgdfg
-        if (
-            this.arr[i] < clrThreshold &&
-            this.arr[i + 1] < clrThreshold &&
-            this.arr[i + 2] < clrThreshold &&
-            this.arr[i + 3] < clrThreshold
-        ) {
+
+        if (this.arr[i + 3] < clrThreshold) {
             return clrTransp;
         } else if (
             this.arr[i] > clrLarge &&
@@ -66,14 +64,13 @@ export class UI512PainterCvData extends UI512Painter {
         } else if (
             this.arr[i] < clrThreshold &&
             this.arr[i + 1] < clrThreshold &&
-            this.arr[i + 2] < clrThreshold &&
-            this.arr[i + 3] > clrLarge
+            this.arr[i + 2] < clrThreshold
         ) {
             return clrBlack;
         } else {
             assertTrueWarn(
                 false,
-                `2||unsupported color ${this.arr[i]},${this.arr[i + 1]},${this.arr[i + 2]},${this.arr[i + 3]}`
+                `2||unknown color ${this.arr[i]},${this.arr[i + 1]},${this.arr[i + 2]},${this.arr[i + 3]}`
             );
             return clrBlack;
         }
@@ -103,40 +100,54 @@ export class UI512PainterCvData extends UI512Painter {
         return false;
     }
 
-    floodFill(xinput: number, yinput: number, color: number) {
-        assertTrue(isFinite(xinput) && isFinite(yinput), 'not finite', xinput, yinput);
-        if (color > 50) {
-            // if pattern support is needed, do it in 2 steps.
-            // necessary because our algorithm reads what we have set to see where we have gone.
-            // , so it'd be thrown off if we are drawing a pattern as we are going.
-            let currentColor = this.readPixel(xinput, yinput);
-            let changedColor: number;
-            if (currentColor === clrBlack) {
-                changedColor = clrWhite;
-            } else if (currentColor === clrWhite) {
-                changedColor = clrBlack;
-            } else {
-                changedColor = clrBlack;
-            }
-
-            let simpleDraw = new UI512PainterCvData(
-                this.getBackingSurface(),
-                this.getCanvasWidth(),
-                this.getCanvasHeight()
-            );
-
-            let recordOutputX: number[] = [];
-            let recordOutputY: number[] = [];
-            simpleDraw.floodFillWithoutPattern(xinput, yinput, changedColor, recordOutputX, recordOutputY);
-            for (let i = 0; i < recordOutputX.length; i++) {
-                this.setPixel(recordOutputX[i], recordOutputY[i], color);
-            }
+    floodFill(xIn: number, yIn: number, color: number) {
+        assertTrue(isFinite(xIn) && isFinite(yIn), 'not finite', xIn, yIn);
+        color = simplifyPattern(color)
+        if (needsPatternSupport(color)) {
+            this.floodFillInTwoStages(xIn, yIn, color)
         } else {
-            this.floodFillWithoutPattern(xinput, yinput, color, undefined, undefined);
+            this.floodFillImpl(xIn, yIn, color, undefined, undefined);
+        }
+    }
+
+    protected floodFillInTwoStages(xIn: number, yIn: number, color: number) {
+        /* we need to use two stages, because our algorithm reads 
+        what we have set to see where we have already placed a pixel.*/
+        
+        /* find the opposite color of what is already there */
+        let currentColor = this.readPixel(xIn, yIn);
+        let oppositeColor = this.getOppositeColor(currentColor)
+
+        /* make a painter with a simple setPixel */
+        let simpleDraw = new UI512PainterCvData(
+            this.getBackingSurface(),
+            this.getCanvasWidth(),
+            this.getCanvasHeight()
+        );
+
+        /* stage 1: run flood fill with a solid color and record every pixel drawn */
+        let recordOutputX: number[] = [];
+        let recordOutputY: number[] = [];
+        simpleDraw.floodFillImpl(xIn, yIn, oppositeColor, recordOutputX, recordOutputY);
+
+        /* stage 2: replace drawn pixels with our pattern */
+        for (let i = 0; i < recordOutputX.length; i++) {
+            this.setPixel(recordOutputX[i], recordOutputY[i], color);
+        }
+    }
+
+    protected getOppositeColor(clr:number) {
+        if (clr === clrBlack) {
+            return clrWhite;
+        } else {
+            return clrBlack;
         }
     }
 }
 
+/**
+ * paint into an array of raw pixel data, supports drawing with a pattern
+ */
 export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
     constructor(public arr: Uint8ClampedArray, public widthParam: number, public heightParam: number) {
         super(arr, widthParam, heightParam);
@@ -145,8 +156,9 @@ export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
     setPixel(x: number, y: number, color: number): void {
         const offsetpatternx = 0;
         const offsetpatterny = 0;
-        // fill with a pattern
-        if (color >= 100) {
+        /* fill with a pattern */
+        /* note: this is slow, but works well enough for now */
+        if (needsPatternSupport(color)) {
             const dim = 8;
             let patternstring = UI512Patterns.patterns[color];
             assertEq(dim * dim, slength(patternstring), '3B|');
@@ -160,14 +172,6 @@ export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
         super.setPixel(x, y, color);
     }
 
-    fillRect(xin: number, yin: number, win: number, hin: number, color: number): void {
-        for (let y = yin; y < yin + hin; y++) {
-            for (let x = xin; x < xin + win; x++) {
-                this.setPixel(x, y, color);
-            }
-        }
-    }
-
     getSurfaceName() {
         return 'makePainterCvDataWithPatternSupport';
     }
@@ -177,6 +181,10 @@ export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
     }
 }
 
+/**
+ * paint onto an HTML5 canvas object
+ * efficiently draws rectangles, since it can call fillRect.
+ */
 export class UI512PainterCvCanvas extends UI512Painter {
     constructor(public cv: CanvasWrapper, public widthParam: number, public heightParam: number) {
         super();

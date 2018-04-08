@@ -2,7 +2,7 @@
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
@@ -32,7 +32,7 @@ export class VpcAppCoverArea extends VpcAppInterfaceLayer {
         const margin = 45;
         let msg = lng('lng(This feature is not yet supported.)');
         let font = new TextFontSpec('geneva', 0, 10);
-        msg = TextRendererFontManager.setInitialFont(msg, font.toSpecString());
+        msg = UI512DrawText.setFont(msg, font.toSpecString());
         this.elems.nyiMsg = new UI512ElLabel('grpAppHelperElemsNyiMsg');
         grpHelperElems.addElement(this.appli.UI512App(), this.elems.nyiMsg);
         this.elems.nyiMsg.set('visible', false);
@@ -45,7 +45,7 @@ export class VpcAppCoverArea extends VpcAppInterfaceLayer {
         // a message to the user saying where tutorials are.
         let s = lng('lngNew? Click here to see how to use ViperCard. (Close).');
         let style = 'biuosdce';
-        s = TextRendererFontManager.setInitialFont(s, `chicago_10_${style}`);
+        s = UI512DrawText.setFont(s, `chicago_10_${style}`);
         let lbl = new UI512ElLabel('grpAppHelperElemsShowTutorial');
         grpHelperElems.addElement(this.appli.UI512App(), lbl);
         lbl.set('labelhalign', false);

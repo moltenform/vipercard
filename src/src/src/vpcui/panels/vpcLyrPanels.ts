@@ -9,7 +9,7 @@
 /* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
-/* auto */ import { IsPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
 /* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
 /* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
 /* auto */ import { PropPanelCompositeBlank } from '../../vpcui/panels/vpcEditPanelsEmpty.js';
@@ -21,9 +21,9 @@
 
 export class VpcAppPropPanel extends VpcAppInterfaceLayer {
     blank = new PropPanelCompositeBlank('editPanelBlank');
-    panels = new MapKeyToObject<IsPropPanel>();
+    panels = new MapKeyToObject<VpcPropPanel>();
     editor = new VpcPanelScriptEditor('editPanelScript');
-    active: O<IsPropPanel> = this.blank;
+    active: O<VpcPropPanel> = this.blank;
 
     // set in initLayers
     model: VpcModel;
@@ -82,7 +82,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
 
     updateUI512Els() {
         let selected = this.getAndValidateSelectedVel('selectedVelId');
-        let shouldBeActive: O<IsPropPanel>;
+        let shouldBeActive: O<VpcPropPanel>;
         if (getToolCategory(this.appli.getOption_n('currentTool')) !== VpcToolCtg.CtgEdit) {
             shouldBeActive = undefined;
         } else if (slength(this.appli.getOption_s('viewingScriptVelId'))) {

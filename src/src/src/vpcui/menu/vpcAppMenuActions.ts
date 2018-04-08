@@ -9,8 +9,8 @@
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { IVpcSaveUtils, VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcFormNonModalDialogFormBase, VpcSaveUtilsInterface } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 /* auto */ import { DialogDocsType, VpcAppNonModalDialogDocs } from '../../vpcui/nonmodaldialogs/vpcDocViewer.js';
 /* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcSendErrReport.js';
 /* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
@@ -20,8 +20,8 @@
 
 export class VpcMenuActions {
     fontChanger: VpcChangeSelectedFont;
-    saveUtils: IVpcSaveUtils;
-    constructor(protected appli: IVpcStateInterface) {
+    saveUtils: VpcSaveUtilsInterface;
+    constructor(protected appli: VpcStateInterface) {
         this.fontChanger = new VpcChangeSelectedFont(appli);
     }
 

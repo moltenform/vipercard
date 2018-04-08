@@ -4,76 +4,88 @@
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
 
-/*
-use a generic field-like object
-when inside vipercard, modifies the vel (vipercard element)
-when inside ui512, modifies the ui512 element
-
-for example, when you type the right arrow key in a vipercard element,
-we need to apply the change to the vipercard model.
-vpcmodelrender will then echo the change to the actual backing ui512 element.
-necessary because otherwise we wouldn't get undo-ability or script visibility.
-
-*/
-
-export interface IGenericTextField {
-    setftxt(newtxt: FormattedText, context: ChangeContext): void;
-    getftxt(): FormattedText;
+/**
+ * IGenericTextField, a generic text-field-like object.
+ *
+ * let's say you are typing on the keyboard to insert a letter into the text field.
+ * if this is a UI512 text field, we can directly insert the letter.
+ * but if it is a ViperCard text field,
+ * we need to update the _VpcElField_ model first, for undoability,
+ * and let modelrender insert the letter into the field.
+ */
+export interface GenericTextField {
+    setFmtTxt(newtxt: FormattedText, context: ChangeContext): void;
+    getFmtTxt(): FormattedText;
     canEdit(): boolean;
     canSelectText(): boolean;
     isMultiline(): boolean;
     setSel(a: number, b: number): void;
     getSel(): [number, number];
-    identifier(): string;
+    getID(): string;
     getHeight(): number;
     getDefaultFont(): string;
-    getReadonlyUi512(): UI512ElTextField;
+    getReadOnlyUI512(): UI512ElTextField;
     getScrollAmt(): number;
     setScrollAmt(n: O<number>): void;
 }
 
-export class UI512ElTextFieldAsGeneric implements IGenericTextField {
-    constructor(protected impl: UI512ElTextField) {}
-    setftxt(newtxt: FormattedText, context: ChangeContext) {
-        this.impl.setftxt(newtxt, context);
+/**
+ * GenericTextField wrapping a normal UI512ElTextField
+ */
+export class UI512ElTextFieldAsGeneric implements GenericTextField {
+    constructor(protected el: UI512ElTextField) {}
+    setFmtTxt(newtxt: FormattedText, context: ChangeContext) {
+        this.el.setftxt(newtxt, context);
     }
-    getftxt(): FormattedText {
-        return this.impl.get_ftxt();
+
+    getFmtTxt(): FormattedText {
+        return this.el.get_ftxt();
     }
+
     canEdit() {
-        return this.impl.get_b('canedit');
+        return this.el.get_b('canedit');
     }
+
     canSelectText(): boolean {
-        return this.impl.get_b('canselecttext');
+        return this.el.get_b('canselecttext');
     }
+
     isMultiline(): boolean {
-        return this.impl.get_b('multiline');
+        return this.el.get_b('multiline');
     }
+
     setSel(a: number, b: number): void {
-        this.impl.set('selcaret', a);
-        this.impl.set('selend', b);
+        this.el.set('selcaret', a);
+        this.el.set('selend', b);
     }
+
     getSel(): [number, number] {
-        return [this.impl.get_n('selcaret'), this.impl.get_n('selend')];
+        return [this.el.get_n('selcaret'), this.el.get_n('selend')];
     }
-    identifier(): string {
-        return this.impl.id;
+
+    getID(): string {
+        return this.el.id;
     }
+
     getHeight(): number {
-        return this.impl.h;
+        return this.el.h;
     }
+
     getDefaultFont(): string {
-        return this.impl.get_s('defaultFont');
+        return this.el.get_s('defaultFont');
     }
-    getReadonlyUi512(): UI512ElTextField {
-        return this.impl;
+
+    getReadOnlyUI512(): UI512ElTextField {
+        return this.el;
     }
+
     getScrollAmt(): number {
-        return this.impl.get_n('scrollamt');
+        return this.el.get_n('scrollamt');
     }
+
     setScrollAmt(n: O<number>): void {
         if (n !== undefined && n !== null) {
-            return this.impl.set('scrollamt', n);
+            return this.el.set('scrollamt', n);
         }
     }
 }

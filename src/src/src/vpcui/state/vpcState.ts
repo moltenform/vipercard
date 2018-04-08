@@ -9,7 +9,7 @@
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
 /* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from '../../vpcui/state/vpcUndo.js';
 /* auto */ import { VpcOutsideWorld } from '../../vpcui/state/vpcFullOutside.js';
 
@@ -64,7 +64,7 @@ export class VpcApplication {
     // (started by _VpcDocLoader_)
     undoManager: UndoManager;
     // (started in _VpcAppController_ constructor)
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
 
     createElem(parent_id: string, type: VpcElType, insertIndex = -1, newid?: string) {
         if (!newid) {

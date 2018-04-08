@@ -10,8 +10,8 @@
 /* auto */ import { VpcAboutDialog } from '../../vpcui/menu/vpcAboutDialog.js';
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroBase.js';
 /* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
-/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
 /* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
+/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
 /* auto */ import { IntroOpenPage } from '../../vpcui/intro/vpcIntroOpen.js';
 
 export class IntroFirstPage extends IntroPageBase {
@@ -22,7 +22,7 @@ export class IntroFirstPage extends IntroPageBase {
         let headerheight = this.drawCommonFirst(app, grp);
         // draw weird hands
         let cbHands = (a: number, b: number, el: UI512ElButton) => {
-            el.set('iconsetid', 'logo');
+            el.set('icongroupid', 'logo');
             el.set('iconnumber', 2);
             el.set('style', UI512BtnStyle.Transparent);
             el.set('autohighlight', false);

@@ -101,12 +101,15 @@ export function throwIfUndefined<T>(v: O<T>, s1: string, s2: any = '', s3: any =
         if (s1 !== '') {
             msg += ', ' + s1.toString();
         }
+
         if (s2 !== '') {
             msg += ', ' + s2.toString();
         }
+
         if (s3 !== '') {
             msg += ', ' + s3.toString();
         }
+
         throw makeUI512Error(msg);
     } else {
         return v;
@@ -143,17 +146,17 @@ export class UI512Compress {
 }
 
 /**
- * store the last N log entries, without needing to move contents or allocate more memory.
+ * store the last <size> log entries, without needing to move contents or allocate more memory.
  */
 export abstract class RingBuffer {
-    constructor (protected n: number) { }
+    constructor (protected size: number) { }
 
     /**
      * add log to buffer.
      */
     append(s:string) {
         let ptrLatest = this.getLatestIndex()
-        ptrLatest = this.mod(ptrLatest + 1, this.n)
+        ptrLatest = this.mod(ptrLatest + 1, this.size)
         this.setAt(ptrLatest, s)
         this.setLatestIndex(ptrLatest)
     }
@@ -162,11 +165,11 @@ export abstract class RingBuffer {
      * retrieve the latest entries.
      */
     retrieve(howMany:number) {
-        assertTrue(howMany < this.n, "")
+        assertTrue(howMany < this.size, "")
         let ptrLatest = this.getLatestIndex()
         let ret:string[] = []
         for (let i = 0; i < howMany; i++) {
-            let index = this.mod(ptrLatest - i, this.n);
+            let index = this.mod(ptrLatest - i, this.size);
             ret.push(this.getAt(index))
         }
 
@@ -311,12 +314,18 @@ export function joinIntoMessage(c0:string, prefix:string, s1?: any, s2?: any, s3
     return message;
 }
 
+/**
+ * break into debugger. V8 js perf sometimes hurt if seeing a debugger statement, so separate it here.
+ */
 function breakIntoDebugger() {
     if (!isRelease) {
         debugger;
     }
 }
 
+/**
+ * record and show an unhandled exception
+ */
 function recordAndShowErr(firstMsg:string, msg:string) {
     if (UI512ErrorHandling.breakOnThrow || scontains(firstMsg, 'assertion failed')) {
         UI512ErrorHandling.appendErrMsgToLogs(true, msg);
@@ -328,6 +337,11 @@ function recordAndShowErr(firstMsg:string, msg:string) {
     }
 }
 
+/**
+ * we add two-digit tags to most asserts, so that if a bug report comes in,
+ * we have more context about the site of failure.
+ * assert tags are in the form xx|; this fn extracts them from a string.
+ */
 function findTags(s: any, tags: string[]) {
     if (s && typeof s === 'string' && s[2] === '|') {
         tags.push(s.slice(0, 2));

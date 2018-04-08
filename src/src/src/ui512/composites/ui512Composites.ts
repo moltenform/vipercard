@@ -10,27 +10,27 @@
 
 export class BorderDecorationConsts {
     headHeight = 0;
-    fillshrinkX = 0;
-    fillshrinkY = 0;
+    fillShrinkX = 0;
+    fillShrinkY = 0;
     closeBtnBgWidth = 0;
     closeBtnWidth = 0;
     closeBtnHeight = 0;
     closeBtnX = 0;
     closeBtnY = 0;
-    filliconset = '';
-    filliconnumber = 0;
-    filliconadjustx = 0;
-    filliconadjusty = 0;
+    fillIconGroup = '';
+    fillIconNumber = 0;
+    fillIconAdjustX = 0;
+    fillIconAdjustY = 0;
     footer = 2;
 }
 
 export class PalBorderDecorationConsts extends BorderDecorationConsts {
     readonly headHeight = 11;
-    readonly fillshrinkX = -1;
-    readonly fillshrinkY = -1;
-    readonly filliconset = '000';
-    readonly filliconnumber = 2;
-    readonly filliconadjusty = 1;
+    readonly fillShrinkX = -1;
+    readonly fillShrinkY = -1;
+    readonly fillIconGroup = '000';
+    readonly fillIconNumber = 2;
+    readonly fillIconAdjustY = 1;
     readonly closeBtnBgWidth = 11;
     readonly closeBtnWidth = 7;
     readonly closeBtnHeight = 7;
@@ -40,11 +40,11 @@ export class PalBorderDecorationConsts extends BorderDecorationConsts {
 
 export class WndBorderDecorationConsts extends BorderDecorationConsts {
     readonly headHeight = 19;
-    readonly fillshrinkX = 1;
-    readonly fillshrinkY = 2;
-    readonly filliconset = '000';
-    readonly filliconnumber = 3;
-    readonly filliconadjusty = 1;
+    readonly fillShrinkX = 1;
+    readonly fillShrinkY = 2;
+    readonly fillIconGroup = '000';
+    readonly fillIconNumber = 3;
+    readonly fillIconAdjustY = 1;
     readonly closeBtnBgWidth = 13;
     readonly closeBtnWidth = 11;
     readonly closeBtnHeight = 11;
@@ -139,14 +139,14 @@ export abstract class UI512CompBase {
         headerbox.setDimensions(this.x, this.y, this.logicalWidth, c.headHeight);
 
         // get header fill rect
-        if (c.fillshrinkX >= 0) {
+        if (c.fillShrinkX >= 0) {
             let fillrect = RectUtils.getSubRectRaw(
                 this.x,
                 this.y,
                 this.logicalWidth,
                 c.headHeight,
-                c.fillshrinkX,
-                c.fillshrinkY
+                c.fillShrinkX,
+                c.fillShrinkY
             );
             if (!fillrect) {
                 return c.headHeight;
@@ -156,16 +156,16 @@ export abstract class UI512CompBase {
             let headerfill = this.genBtn(app, grp, 'headerfill');
             headerfill.set('style', UI512BtnStyle.Opaque);
             headerfill.set('autohighlight', false);
-            headerfill.set('iconsetid', c.filliconset);
-            headerfill.set('iconnumber', c.filliconnumber);
-            headerfill.set('iconadjustx', c.filliconadjustx);
-            headerfill.set('iconadjusty', c.filliconadjusty);
+            headerfill.set('icongroupid', c.fillIconGroup);
+            headerfill.set('iconnumber', c.fillIconNumber);
+            headerfill.set('iconadjustx', c.fillIconAdjustX);
+            headerfill.set('iconadjusty', c.fillIconAdjustY);
             headerfill.setDimensions(fillrect[0], fillrect[1], fillrect[2], fillrect[3]);
         } else {
-            headerbox.set('iconsetid', c.filliconset);
-            headerbox.set('iconnumber', c.filliconnumber);
-            headerbox.set('iconadjustx', c.filliconadjustx);
-            headerbox.set('iconadjusty', c.filliconadjusty);
+            headerbox.set('icongroupid', c.fillIconGroup);
+            headerbox.set('iconnumber', c.fillIconNumber);
+            headerbox.set('iconadjustx', c.fillIconAdjustX);
+            headerbox.set('iconadjusty', c.fillIconAdjustY);
         }
 
         if (hasclosebtn) {

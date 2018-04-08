@@ -5,7 +5,7 @@
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { VpcSession } from '../../vpc/request/vpcRequest.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 
 export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBase {
@@ -30,7 +30,7 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
     ];
     fieldsThatAreLabels: { [key: string]: boolean } = { header: true };
 
-    constructor(protected appli: IVpcStateInterface) {
+    constructor(protected appli: VpcStateInterface) {
         super('vpcAppNonModalDialogSendReport' + Math.random());
         VpcFormNonModalDialogFormBase.standardWindowBounds(this, appli);
     }
@@ -52,7 +52,7 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
         }
     }
 
-    onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void {
+    onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void {
         if (short === 'btnerrorlogs') {
             let lastClientLogs = UI512ErrorHandling.getLatestErrLogs(50);
             let obj: any = { logs: ['(logs are compressed with lz-string)', lastClientLogs], version: vpcversion };
@@ -67,7 +67,7 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
         }
     }
 
-    doSendErrReport(appli: IVpcStateInterface) {
+    doSendErrReport(appli: VpcStateInterface) {
         let paramFields = this.readFields(appli.UI512App());
         let ses = VpcSession.fromRoot() as VpcSession;
         UI512BeginAsync(
@@ -89,7 +89,7 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
         );
     }
 
-    async asyncSendErrReport(appli: IVpcStateInterface, userdesc: string) {
+    async asyncSendErrReport(appli: VpcStateInterface, userdesc: string) {
         let ses = VpcSession.fromRoot() as VpcSession;
 
         // get the last 30 logged errors, which might be useful.

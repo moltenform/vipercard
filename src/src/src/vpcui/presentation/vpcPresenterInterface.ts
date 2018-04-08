@@ -5,7 +5,7 @@
 /* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcPaintRender } from '../../vpcui/modelrender/vpcPaintRender.js';
 /* auto */ import { VpcModelRender } from '../../vpcui/modelrender/vpcModelRender.js';
 /* auto */ import { VpcAppToolboxes } from '../../vpcui/panels/vpcLyrToolbox.js';
@@ -56,6 +56,6 @@ export abstract class VpcPresenterInterface extends UI512Controller {
     lyrPropPanel: VpcAppPropPanel;
     lyrMenus: VpcAppMenus;
     lyrNonModalDlgHolder: VpcAppNonModalDlgHolder;
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
     cameFromDemoSoNeverPromptSave: string;
 }

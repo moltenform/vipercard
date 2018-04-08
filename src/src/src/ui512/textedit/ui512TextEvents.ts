@@ -10,8 +10,8 @@
 /* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 /* auto */ import { MenuBehavior } from '../../ui512/menu/ui512MenuListeners.js';
-/* auto */ import { IGenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { ScrollbarImpl, getIsScrollArrowClicked, scrollbarIdToscrollbarPartId } from '../../ui512/textedit/ui512Scrollbar.js';
+/* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { ScrollbarImpl, fldIdToScrollbarPartId, getAmountIfScrollArrowClicked } from '../../ui512/textedit/ui512Scrollbar.js';
 /* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 
@@ -20,7 +20,7 @@ export class EditTextBehavior {
     static readonly amtScrollAreaClicked = 36;
     protected scrollbarImpl = new ScrollbarImpl();
 
-    protected gelFromEl(el: O<UI512ElTextField>): O<IGenericTextField> {
+    protected gelFromEl(el: O<UI512ElTextField>): O<GenericTextField> {
         return el ? new UI512ElTextFieldAsGeneric(el) : undefined;
     }
 
@@ -30,7 +30,7 @@ export class EditTextBehavior {
 
     onMouseDownScroll(c: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
         if (d.button === 0 && d.el instanceof UI512ElButton) {
-            let moveAmt = getIsScrollArrowClicked(d.el.id);
+            let moveAmt = getAmountIfScrollArrowClicked(d.el.id);
             if (moveAmt !== undefined) {
                 this.getScrollbarImpl().onScrollArrowClicked(c, d.el.id, moveAmt);
                 c.mouseDragStatus = MouseDragStatus.ScrollArrow;
@@ -207,7 +207,7 @@ export class EditTextBehavior {
                 SelAndEntry.changeSelArrowKeyUpDownVisual(gel, true, true);
                 break;
             case 'Cmd+ArrowUp':
-                let arrowbtnup = scrollbarIdToscrollbarPartId(el.id, 'arrowup');
+                let arrowbtnup = fldIdToScrollbarPartId(el.id, 'arrowUp');
                 this.getScrollbarImpl().onScrollArrowClicked(
                     c,
                     arrowbtnup,
@@ -221,7 +221,7 @@ export class EditTextBehavior {
                 SelAndEntry.changeSelArrowKeyUpDownVisual(gel, false, true);
                 break;
             case 'Cmd+ArrowDown':
-                let arrowbtndn = scrollbarIdToscrollbarPartId(el.id, 'arrowdn');
+                let arrowbtndn = fldIdToScrollbarPartId(el.id, 'arrowDn');
                 this.getScrollbarImpl().onScrollArrowClicked(c, arrowbtndn, EditTextBehavior.amtScrollArrowClicked);
                 break;
             case 'Enter':
@@ -318,7 +318,7 @@ export class EditTextBehavior {
         // scroll down more if user is still clicked on the down arrow
         let clickedid = c.trackClickedIds[0];
         if (c.mouseDragStatus === MouseDragStatus.ScrollArrow && clickedid) {
-            let moveAmt = getIsScrollArrowClicked(clickedid);
+            let moveAmt = getAmountIfScrollArrowClicked(clickedid);
             if (moveAmt) {
                 let el = c.app.findElemById(clickedid);
                 if (el && RectUtils.hasPoint(c.trackMouse[0], c.trackMouse[1], el.x, el.y, el.w, el.h)) {
@@ -370,12 +370,11 @@ export function addDefaultListeners(listeners: { [t: number]: Function[] }) {
         MenuBehavior.onMouseLeave,
     ];
     listeners[UI512EventType.KeyDown.valueOf()] = [
-        BasicHandlers.trackKeyDown,
         BasicHandlers.basicKeyShortcuts,
         editTextBehavior.onKeyDown.bind(editTextBehavior),
     ];
 
-    listeners[UI512EventType.KeyUp.valueOf()] = [BasicHandlers.trackKeyUp];
+    listeners[UI512EventType.KeyUp.valueOf()] = [];
     listeners[UI512EventType.MouseDownDouble.valueOf()] = [
         BasicHandlers.trackMouseDoubleDown,
         editTextBehavior.onMouseDoubleDown.bind(editTextBehavior),

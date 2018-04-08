@@ -3,9 +3,10 @@
 /* auto */ import { Util512, assertEqWarn, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { TextFontStyling, specialCharNumNewline, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512Lines } from '../../ui512/textedit/ui512TextLines.js';
 
 class AutoIndentMatch {
     startPattern: RegExp;
@@ -100,16 +101,16 @@ export class UI512AutoIndent {
     }
 
     runAutoIndentImpl(
-        lns: Lines,
+        lns: UI512Lines,
         selcaret: number,
         selend: number,
         len: number,
         attemptInsertText: boolean
-    ): [Lines, number, number] {
+    ): [UI512Lines, number, number] {
         let wasEnd = selcaret >= len;
         let currentline = lns.indexToLineNumber(selcaret);
 
-        let lnsout = new Lines(FormattedText.newFromPersisted(''));
+        let lnsout = new UI512Lines(FormattedText.newFromSerialized(''));
         lnsout.lns = [];
 
         let overrideLevel: O<number> = undefined;
@@ -132,8 +133,8 @@ export class UI512AutoIndent {
             }
 
             s = this.lineSetIndent(s, overrideLevel !== undefined ? overrideLevel : level);
-            s = TextRendererFontManager.setInitialFont(s, UI512CompCodeEditorFont.font);
-            lnsout.lns[i] = FormattedText.newFromPersisted(s);
+            s = UI512DrawText.setFont(s, UI512CompCodeEditorFont.font);
+            lnsout.lns[i] = FormattedText.newFromSerialized(s);
             overrideLevel = isContinuation ? level + 1 : undefined;
 
             if (isBlockStart) {
@@ -156,7 +157,7 @@ export class UI512AutoIndent {
         return [lnsout, index, index];
     }
 
-    runAutoIndent(lns: Lines, el: UI512ElTextField): Lines {
+    runAutoIndent(lns: UI512Lines, el: UI512ElTextField): UI512Lines {
         let len = el.get_ftxt().len();
         let [lnsout, newselcaret, newselend] = this.runAutoIndentImpl(
             lns,
@@ -181,7 +182,7 @@ export class UI512AutoIndent {
     }
 
     createAutoBlock(
-        lnsout: Lines,
+        lnsout: UI512Lines,
         currentline: number,
         lastEncounteredDesiredMatch: O<AutoIndentMatch>,
         delta: number
@@ -193,7 +194,7 @@ export class UI512AutoIndent {
         }
 
         // we'll do a second pass later to correct the indentation
-        let s = TextRendererFontManager.setInitialFont(
+        let s = UI512DrawText.setFont(
             lastEncounteredDesiredMatch.desiredEndText,
             UI512CompCodeEditorFont.font
         );
@@ -205,7 +206,7 @@ export class UI512AutoIndent {
             s += '\n';
         }
 
-        let txt = FormattedText.newFromPersisted(s);
+        let txt = FormattedText.newFromSerialized(s);
         lnsout.lns.splice(currentline + 1, 0, txt);
         return true;
     }
@@ -215,7 +216,7 @@ export class UI512AutoIndent {
             return;
         }
 
-        let lns = new Lines(el.get_ftxt());
+        let lns = new UI512Lines(el.get_ftxt());
         let lnsAfterIndent = this.runAutoIndent(lns, el);
         let next = lnsAfterIndent.flatten();
         let flattxtcurrent = el.get_ftxt().toUnformatted();

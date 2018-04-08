@@ -1,7 +1,6 @@
 
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq, defaultSort } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { Lines } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { OrdinalOrPosition, RequestedChunkTextPreposition, RequestedChunkType, SortStyle, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcIntermedValBase, VpcVal } from '../../vpc/vpcutils/vpcVal.js';

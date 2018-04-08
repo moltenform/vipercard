@@ -5,10 +5,10 @@
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialize.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export class VpcSerialization {
-    serializeAll(appli: IVpcStateInterface) {
+    serializeAll(appli: VpcStateInterface) {
         let ret: any = {};
         ret.product = 'vpc';
         ret.fileformatmajor = 2;
@@ -36,7 +36,7 @@ export class VpcSerialization {
         return ret;
     }
 
-    deserializeAll(building: IVpcStateInterface, incoming: any) {
+    deserializeAll(building: VpcStateInterface, incoming: any) {
         building.doWithoutAbilityToUndo(() => {
             checkThrowEq('vpc', incoming.product, '');
             checkThrowEq(2, incoming.fileformatmajor, 'file comes from a future version, cannot open');
@@ -54,7 +54,7 @@ export class VpcSerialization {
         });
     }
 
-    deserializeVel(building: IVpcStateInterface, incoming: any) {
+    deserializeVel(building: VpcStateInterface, incoming: any) {
         if (incoming.type === VpcElType.Stack) {
             // we don't need to create a new element, just copy over the attrs
             VpcUI512Serialization.deserializeUiSettable(
@@ -75,7 +75,7 @@ export class VpcSerialization {
         }
     }
 
-    serializeVelCompressed(building: IVpcStateInterface, vel: VpcElBase, insertIndex: number): string {
+    serializeVelCompressed(building: VpcStateInterface, vel: VpcElBase, insertIndex: number): string {
         let s = '';
         building.doWithoutAbilityToUndoExpectingNoChanges(() => {
             let obj = this.serializeVel(vel);
@@ -85,7 +85,7 @@ export class VpcSerialization {
         return UI512Compress.compressString(s);
     }
 
-    deserializeVelCompressed(building: IVpcStateInterface, s: string): VpcElBase {
+    deserializeVelCompressed(building: VpcStateInterface, s: string): VpcElBase {
         let created: VpcElBase = undefined as any;
         building.doWithoutAbilityToUndo(() => {
             s = UI512Compress.decompressString(s);

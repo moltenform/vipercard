@@ -3,7 +3,8 @@
 /* auto */ import { GetCharClass, Util512 } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText, Lines } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { UI512Lines } from '../../ui512/textedit/ui512TextLines.js';
 
 export class SelAndEntryImpl {
     static changeSelSelectAll(t: FormattedText, ncaret: number, nend: number): [number, number] {
@@ -29,11 +30,11 @@ export class SelAndEntryImpl {
         isLeft: boolean,
         isExtend: boolean
     ): [number, number] {
-        let lines = new Lines(t);
+        let lines = new UI512Lines(t);
         let linenumber = lines.indexToLineNumber(ncaret);
         if (isLeft) {
             let startofline = lines.lineNumberToIndex(linenumber);
-            let startoflinenonspace = startofline + Lines.getNonSpaceStartOfLine(lines.lns[linenumber], true);
+            let startoflinenonspace = startofline + UI512Lines.getNonSpaceStartOfLine(lines.lns[linenumber], true);
 
             let nextcaret = ncaret <= startoflinenonspace ? startofline : startoflinenonspace;
             let nextend = isExtend ? nend : nextcaret;
@@ -122,7 +123,7 @@ export class SelAndEntryImpl {
 
         // let's just duplicate the line where the caret is at
         let index = ncaret;
-        let lines = new Lines(t);
+        let lines = new UI512Lines(t);
         let linenumbertoDupe = lines.indexToLineNumber(index);
         let ln = lines.lns[linenumbertoDupe];
         let lncopy = ln.clone();
@@ -145,7 +146,7 @@ export class SelAndEntryImpl {
             return [t, ncaret, nend];
         }
 
-        let lines = new Lines(t);
+        let lines = new UI512Lines(t);
         let linenumber = lines.indexToLineNumber(ncaret);
         assertTrue(lines.lns.length > 0, '2<|lines.lns is empty');
         if (linenumber >= lines.lns.length - 1) {
@@ -162,7 +163,7 @@ export class SelAndEntryImpl {
     static setIndentLevel(t: FormattedText, level: number, preferTab: boolean, defaultFont: string) {
         let space = preferTab ? '\t' : Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         // 1) erase all current whitespace
-        let countCharsToDelete = Lines.getNonSpaceStartOfLine(t, true);
+        let countCharsToDelete = UI512Lines.getNonSpaceStartOfLine(t, true);
         t.splice(0, countCharsToDelete);
 
         // 2) add spaces
@@ -185,7 +186,7 @@ export class SelAndEntryImpl {
 
         // otherwise, lets do a batch indent/dedent
         let cb = (thisline: FormattedText) => {
-            let level = Lines.getIndentLevel(thisline);
+            let level = UI512Lines.getIndentLevel(thisline);
             level += isLeft ? -1 : 1;
             level = Math.max(0, level);
             let newline = SelAndEntryImpl.setIndentLevel(thisline, level, true, defaultFont);
@@ -193,7 +194,7 @@ export class SelAndEntryImpl {
             thisline.append(newline);
         };
 
-        return Lines.alterSelectedLines(t, ncaret, nend, cb);
+        return UI512Lines.alterSelectedLines(t, ncaret, nend, cb);
     }
 
     static changeTextToggleLinePrefix(
@@ -213,7 +214,7 @@ export class SelAndEntryImpl {
         }
 
         let cb = (thisline: FormattedText) => {
-            let linestart = Lines.getNonSpaceStartOfLine(thisline, false);
+            let linestart = UI512Lines.getNonSpaceStartOfLine(thisline, false);
             let existingPrefix = thisline.toUnformattedSubstr(linestart, prefix.length);
             if (existingPrefix === prefix) {
                 SelAndEntryImpl.changeTextDeleteSelection(thisline, linestart, linestart + prefix.length);
@@ -230,7 +231,7 @@ export class SelAndEntryImpl {
             }
         };
 
-        return Lines.alterSelectedLines(t, ncaret, nend, cb);
+        return UI512Lines.alterSelectedLines(t, ncaret, nend, cb);
     }
 
     static getLeftRight(

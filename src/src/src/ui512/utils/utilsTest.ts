@@ -16,28 +16,6 @@ export class UI512TestBase {
     }
 
     /**
-     * walk through list of tests
-     * the list alternates between string and function.
-     */
-    getAllTests(listNames: string[], listTests: Function[], listInstances: UI512TestBase[]) {
-        let testNamesUsed: { [name: string]: boolean } = {};
-        assertTrue(this.tests.length % 2 === 0, '3~|list must alternate between str and function');
-        for (let i = 0; i < this.tests.length; i += 2) {
-            let name = this.tests[i];
-            let test = this.tests[i + 1];
-            if (typeof name === 'string' && typeof test === 'function') {
-                assertTrue(testNamesUsed[name] === undefined, name, '3}|');
-                testNamesUsed[name] = true;
-                listNames.push(name);
-                listTests.push(test);
-                listInstances.push(this);
-            } else {
-                assertTrue(false, name + ' ' + test, '3||list must alternate between str and function');
-            }
-        }
-    }
-
-    /**
      * assert that an exception is thrown, with a certain message
      */
     assertThrows(tagmsg: string, expectederr: string, fn: Function) {
@@ -66,6 +44,28 @@ export class UI512TestBase {
     }
 
     /**
+     * walk through list of tests
+     * the list alternates between string and function.
+     */
+    getAllTests(listNames: string[], listTests: Function[], listInstances: UI512TestBase[]) {
+        let checkDuplicateNames: { [name: string]: boolean } = {};
+        assertTrue(this.tests.length % 2 === 0, '3~|list must alternate between str and function');
+        for (let i = 0; i < this.tests.length; i += 2) {
+            let name = this.tests[i];
+            let test = this.tests[i + 1];
+            if (typeof name === 'string' && typeof test === 'function') {
+                assertTrue(checkDuplicateNames[name] === undefined, name, '3}|');
+                checkDuplicateNames[name] = true;
+                listNames.push(name);
+                listTests.push(test);
+                listInstances.push(this);
+            } else {
+                assertTrue(false, name + ' ' + test, '3||list must alternate between str and function');
+            }
+        }
+    }
+
+    /**
      * certain tests are labeled as slow and are skipped by default,
      * press cmd-shift-alt-t to include these tests, see 'all' parameter.
      */
@@ -83,17 +83,17 @@ export class UI512TestBase {
         listNames: string[],
         listTests: Function[],
         listInstances: UI512TestBase[],
-        all: boolean,
+        runAllTests: boolean,
         index: number
     ) {
         if (index >= listTests.length) {
             console.log(`${listTests.length + 1}/${listTests.length + 1} all tests complete!`);
-        } else if (!all && UI512TestBase.slowTests[listNames[index]]) {
+        } else if (!runAllTests && UI512TestBase.slowTests[listNames[index]]) {
             console.log(`skipping a test suite ${listNames[index]} because it is 'slow'`);
 
             /* use setTimeout instead of directly recursing, just so we avoid hitting any type of stack size limit. */
             setTimeout(() => {
-                UI512TestBase.runNextTest(listNames, listTests, listInstances, all, index + 1);
+                UI512TestBase.runNextTest(listNames, listTests, listInstances, runAllTests, index + 1);
             }, 1);
         } else {
             console.log(`${index + 1}/${listTests.length + 1} starting ${listNames[index]}`);
@@ -102,14 +102,14 @@ export class UI512TestBase {
             if (listNames[index].startsWith('callback/')) {
                 /* it's an async test, and so provide a "callback" parameter, it's up to the test to remember to call it. */
                 listTests[index](() => {
-                    UI512TestBase.runNextTest(listNames, listTests, listInstances, all, nextTest);
+                    UI512TestBase.runNextTest(listNames, listTests, listInstances, runAllTests, nextTest);
                 });
             } else {
                 listTests[index]();
 
                 /* use setTimeout instead of directly recursing, just so we avoid hitting any type of stack size limit. */
                 setTimeout(() => {
-                    UI512TestBase.runNextTest(listNames, listTests, listInstances, all, nextTest);
+                    UI512TestBase.runNextTest(listNames, listTests, listInstances, runAllTests, nextTest);
                 }, 1);
             }
         }
@@ -122,12 +122,12 @@ export class UI512TestBase {
         listNames: string[],
         listTests: Function[],
         listInstances: UI512TestBase[],
-        all: boolean,
+        runAllTests: boolean,
         index: number
     ) {
         try {
             UI512ErrorHandling.runningTests = true;
-            UI512TestBase.runNextTestImpl(listNames, listTests, listInstances, all, index);
+            UI512TestBase.runNextTestImpl(listNames, listTests, listInstances, runAllTests, index);
         } finally {
             UI512ErrorHandling.runningTests = false;
         }
@@ -136,7 +136,7 @@ export class UI512TestBase {
     /**
      * run all registered tests.
      */
-    static runTestsArray(registeredTests: any[], all = true) {
+    static runTestsArray(registeredTests: any[], runAllTests = true) {
         console.log('gathering tests...');
         let listNames: string[] = [];
         let listTests: Function[] = [];
@@ -149,6 +149,6 @@ export class UI512TestBase {
         }
 
         console.log('starting tests...');
-        UI512TestBase.runNextTest(listNames, listTests, listInstances, all, 0);
+        UI512TestBase.runNextTest(listNames, listTests, listInstances, runAllTests, 0);
     }
 }

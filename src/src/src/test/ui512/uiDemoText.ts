@@ -5,10 +5,10 @@
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { TextFontSpec, TextFontStyling, largearea, specialCharFontChange, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { TextFontSpec, TextFontStyling, largeArea, specialCharFontChange, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512DrawTextParams.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
@@ -88,7 +88,7 @@ export class UI512DemoText extends UI512Controller {
 
         for (let size of listSizes) {
             let font = this.typeface + '_' + size + '_' + textFontStylingToString(this.style);
-            demo += TextRendererFontManager.setInitialFont(this.demoText, font);
+            demo += UI512DrawText.setFont(this.demoText, font);
             demo += delim;
         }
 
@@ -192,7 +192,7 @@ export class TestDrawUI512Text extends UI512TestBase {
         for (let i = 0; i < list.length; i++) {
             let demotext = 'File Edit Tools #123 Draw! :) ^^ {omnivore}';
             demotext += addNewlines ? '\n' : '';
-            demotextformatted += TextRendererFontManager.setInitialFont(demotext, list[i]);
+            demotextformatted += UI512DrawText.setFont(demotext, list[i]);
         }
         return demotextformatted;
     }
@@ -203,7 +203,7 @@ export class TestDrawUI512Text extends UI512TestBase {
         const imheight = 556;
         let list: string[] = [];
         this.addFonts(list, 'chicago,courier,geneva', '10,12,14,18,24', 'biuosdce,+biuosdce');
-        let fontManager = getRoot().getFontManager() as TextRendererFontManager;
+        let fontManager = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = !!fontManager.drawStringIntoBox(
                 this.getFormattedText(list, true),
@@ -237,7 +237,7 @@ export class TestDrawUI512Text extends UI512TestBase {
         this.addFonts(list, 'helvetica', '12', 'biuosdce');
         this.addFonts(list, 'monaco', '9,12', 'biuosdce');
         this.addFonts(list, 'symbol', '12', 'biuosdce');
-        let fontManager = getRoot().getFontManager() as TextRendererFontManager;
+        let fontManager = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = !!fontManager.drawStringIntoBox(
                 this.getFormattedText(list, true),
@@ -262,7 +262,7 @@ export class TestDrawUI512Text extends UI512TestBase {
         const imheight = 556;
         let list: string[] = [];
         this.addFonts(list, 'geneva', '10,24,12', 'biuosdce,b+i+uosdce,biuosd+ce,bi+uosdc+e');
-        let fontManager = getRoot().getFontManager() as TextRendererFontManager;
+        let fontManager = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = !!fontManager.drawStringIntoBox(
                 this.getFormattedText(list, false),
@@ -285,10 +285,10 @@ export class TestDrawUI512Text extends UI512TestBase {
         // tests corner cases
         const imwidth = 700;
         const imheight = 200;
-        let fontManager = getRoot().getFontManager() as TextRendererFontManager;
+        let fontManager = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             let draws = (s: string, args: RenderTextArgs) => {
-                canvas.fillRect(args.boxx, args.boxy, args.boxw, args.boxh, 0, 0, imwidth, imheight, '#dddddd');
+                canvas.fillRect(args.boxX, args.boxY, args.boxW, args.boxH, 0, 0, imwidth, imheight, '#dddddd');
                 complete.and_b(!!fontManager.drawStringIntoBox(s, canvas, args));
             };
 
@@ -299,7 +299,7 @@ export class TestDrawUI512Text extends UI512TestBase {
                 if (i === 0) {
                     /* consecutive newlines */
                     s = '\n\na\n\n\n';
-                    args.halign = true;
+                    args.hAlign = true;
                 } else if (i === 1) {
                     /* all newlines */
                     s = '\n\n\n';
@@ -308,19 +308,19 @@ export class TestDrawUI512Text extends UI512TestBase {
                     // todo: putting abc\ndef into a very narrow field of width 1px, wrapping enabled
                     // currently adds an extra vertical space between the c and the d
                     // doesn't look that bad, but maybe something to revisit
-                    s = TextRendererFontManager.setInitialFont(
+                    s = UI512DrawText.setFont(
                         'abcd\nef\n\n\ngh',
                         `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
                     );
-                    args.boxw = 3;
+                    args.boxW = 3;
                     args.wrap = true;
                 } else if (i === 3) {
                     /* very narrow, wrap disabled */
-                    s = TextRendererFontManager.setInitialFont(
+                    s = UI512DrawText.setFont(
                         'abcd\nef\n\n\ngh',
                         `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
                     );
-                    args.boxw = 3;
+                    args.boxW = 3;
                     args.wrap = false;
                 } else if (i === 4) {
                     /* test drawing interesting characters */
@@ -338,48 +338,48 @@ export class TestDrawUI512Text extends UI512TestBase {
                         '\n{' +
                         String.fromCharCode('m'.charCodeAt(0) + 8 * 16) +
                         '}'; /* in bounds, become a rectangle */
-                    s = TextRendererFontManager.setInitialFont(
+                    s = UI512DrawText.setFont(
                         s,
                         `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                 } else if (i === 5) {
                     /* unsupported typefaces should go back to the default font */
-                    let available = TextRendererFontManager.setInitialFont(
+                    let available = UI512DrawText.setFont(
                         'abc',
                         `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                     s = available;
-                    s += TextRendererFontManager.setInitialFont(
+                    s += UI512DrawText.setFont(
                         'abc',
                         `geneva_123_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                     s += available;
-                    s += TextRendererFontManager.setInitialFont(
+                    s += UI512DrawText.setFont(
                         'abc',
                         `geneva_19_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                     s += available;
-                    s += TextRendererFontManager.setInitialFont(
+                    s += UI512DrawText.setFont(
                         'abc',
                         `chicago_0_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                     s += available;
-                    s += TextRendererFontManager.setInitialFont(
+                    s += UI512DrawText.setFont(
                         'abc',
                         `genevaextra_12_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                     s += available;
-                    s += TextRendererFontManager.setInitialFont(
+                    s += UI512DrawText.setFont(
                         'abc',
                         `notavailable_12_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                     s += available;
-                    s += TextRendererFontManager.setInitialFont(
+                    s += UI512DrawText.setFont(
                         'abc',
                         `Courier12_12_${textFontStylingToString(TextFontStyling.Default)}`
                     );
                     s += available;
-                    s += TextRendererFontManager.setInitialFont(
+                    s += UI512DrawText.setFont(
                         'serif',
                         `cOurIer_14_${textFontStylingToString(TextFontStyling.Default)}`
                     );
@@ -501,18 +501,18 @@ export class TestRenderUI512TextUtils extends UI512TestBase {
         },
         'test_asteriskOnly',
         () => {
-            let args = new RenderTextArgs(0, 0, largearea, largearea);
+            let args = new RenderTextArgs(0, 0, largeArea, largeArea);
             args.asteriskOnly = true;
 
             // zero-length string
             let textin = FormattedText.newFromUnformatted('');
-            let modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
+            let modded = UI512DrawText.makeAsteriskOnlyIfApplicable(textin, args);
             assertEq(0, modded.len(), '');
             assertTrue(modded.isLocked(), '');
 
             // no formatting
             textin = FormattedText.newFromUnformatted('abcd');
-            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
+            modded = UI512DrawText.makeAsteriskOnlyIfApplicable(textin, args);
             assertEq('abcd', textin.toUnformatted(), '');
             assertEq('\xA5\xA5\xA5\xA5', modded.toUnformatted(), '');
             assertEq(4, modded.len(), '');
@@ -521,17 +521,17 @@ export class TestRenderUI512TextUtils extends UI512TestBase {
             let font1 = new TextFontSpec('geneva', TextFontStyling.Default, 12).toSpecString();
             let font2 = new TextFontSpec('times', TextFontStyling.Bold, 14).toSpecString();
             let s =
-                TextRendererFontManager.setInitialFont('abc', font1) +
-                TextRendererFontManager.setInitialFont('def', font2);
+                UI512DrawText.setFont('abc', font1) +
+                UI512DrawText.setFont('def', font2);
             let expected =
-                TextRendererFontManager.setInitialFont('\xA5\xA5\xA5', font1) +
-                TextRendererFontManager.setInitialFont('\xA5\xA5\xA5', font2);
-            textin = FormattedText.newFromPersisted(s);
-            modded = TextRendererFontManager.makeAsteriskOnlyIfApplicable(textin, args);
+                UI512DrawText.setFont('\xA5\xA5\xA5', font1) +
+                UI512DrawText.setFont('\xA5\xA5\xA5', font2);
+            textin = FormattedText.newFromSerialized(s);
+            modded = UI512DrawText.makeAsteriskOnlyIfApplicable(textin, args);
             assertEq('abcdef', textin.toUnformatted(), '');
             assertEq('\xA5\xA5\xA5\xA5\xA5\xA5', modded.toUnformatted(), '');
             assertEq(6, modded.len(), '');
-            assertEq(expected, modded.toPersisted(), '');
+            assertEq(expected, modded.toSerialized(), '');
         },
     ];
 }

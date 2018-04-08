@@ -1,71 +1,96 @@
 
 /* auto */ import { getRoot } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { UI512ElementWithHighlight } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 
 export class BasicHandlers {
-    static trackMouseStatusMouseDown(c: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
-        if (d.button >= 0 && d.button < c.trackPressedBtns.length) {
-            c.trackPressedBtns[d.button] = true;
+    /**
+     * keep a record of which mouse buttons are currently down.
+     */
+    static trackMouseStatusMouseDown(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
+        if (d.button >= 0 && d.button < pr.trackPressedBtns.length) {
+            pr.trackPressedBtns[d.button] = true;
         } else {
             d.setHandled();
         }
     }
 
-    static trackMouseStatusMouseUp(c: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
-        if (d.button >= 0 && d.button < c.trackPressedBtns.length) {
-            c.trackPressedBtns[d.button] = false;
+    /**
+     * keep a record of which mouse buttons are currently down, set to false.
+     */
+    static trackMouseStatusMouseUp(pr: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
+        if (d.button >= 0 && d.button < pr.trackPressedBtns.length) {
+            pr.trackPressedBtns[d.button] = false;
         } else {
             d.setHandled();
         }
     }
 
-    static trackCurrentElMouseDown(c: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
-        d.el = c.app.coordsToElement(d.mouseX, d.mouseY);
-        if (!c.canInteract(d.el)) {
+    /**
+     * find which element the user clicked on, and save it in the event.
+     */
+    static trackCurrentElMouseDown(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
+        d.el = pr.app.coordsToElement(d.mouseX, d.mouseY);
+        if (!pr.canInteract(d.el)) {
             d.el = undefined;
         }
 
         if (d.el) {
-            c.trackClickedIds[d.button] = d.el.id;
+            pr.trackClickedIds[d.button] = d.el.id;
         } else {
-            c.trackClickedIds[d.button] = undefined;
+            pr.trackClickedIds[d.button] = undefined;
         }
     }
 
-    static trackCurrentElMouseUp(c: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
-        d.elRaw = c.app.coordsToElement(d.mouseX, d.mouseY);
-        d.elClick = d.elRaw && c.trackClickedIds[d.button] === d.elRaw.id ? d.elRaw : undefined;
-        if (!c.canInteract(d.elRaw)) {
+    /**
+     * did the user click down and release on the same element?
+     * if so, set "elClick".
+     * otherwise, only "elRaw" is set.
+     */
+    static trackCurrentElMouseUp(pr: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
+        d.elRaw = pr.app.coordsToElement(d.mouseX, d.mouseY);
+        d.elClick = d.elRaw && pr.trackClickedIds[d.button] === d.elRaw.id ? d.elRaw : undefined;
+        if (!pr.canInteract(d.elRaw)) {
             d.elRaw = undefined;
             d.elClick = undefined;
         }
 
-        c.trackClickedIds[d.button] = undefined;
+        pr.trackClickedIds[d.button] = undefined;
     }
 
-    static trackCurrentElMouseMove(c: UI512PresenterWithMenuInterface, d: MouseMoveEventDetails) {
-        c.trackMouse = [d.mouseX, d.mouseY];
-        d.elNext = c.app.coordsToElement(d.mouseX, d.mouseY);
-        d.elPrev = c.app.coordsToElement(d.prevMouseX, d.prevMouseY);
+    /**
+     * keep a record of mouse position
+     */
+    static trackCurrentElMouseMove(pr: UI512PresenterWithMenuInterface, d: MouseMoveEventDetails) {
+        pr.trackMouse = [d.mouseX, d.mouseY];
+        d.elNext = pr.app.coordsToElement(d.mouseX, d.mouseY);
+        d.elPrev = pr.app.coordsToElement(d.prevMouseX, d.prevMouseY);
     }
 
-    static trackMouseDoubleDown(c: UI512PresenterWithMenuInterface, d: MouseDownDoubleEventDetails) {
-        d.el = c.app.coordsToElement(d.mouseX, d.mouseY);
+    /**
+     * find which element the user clicked on, and save it in the event.
+     */
+    static trackMouseDoubleDown(pr: UI512PresenterWithMenuInterface, d: MouseDownDoubleEventDetails) {
+        d.el = pr.app.coordsToElement(d.mouseX, d.mouseY);
     }
 
-    static trackHighlightedButtonMouseDown(c: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
-        if (d.button === 0 && c.canInteract(d.el) && d.el instanceof UI512ElementWithHighlight) {
+    /**
+     * if the element is "autohighlight", make it highlighted when mouse is down on it.
+     */
+    static trackHighlightedButtonMouseDown(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
+        if (d.button === 0 && pr.canInteract(d.el) && d.el instanceof UI512ElementWithHighlight) {
             if (d.el.get_b('autohighlight')) {
                 d.el.set('highlightactive', true);
             }
         }
     }
 
-    static trackHighlightedButtonMouseUp(c: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
+    /**
+     * if the element is "autohighlight", make it not highlighted when mouse is up on it.
+     */
+    static trackHighlightedButtonMouseUp(pr: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
         if (d.button === 0 && d.elClick && d.elClick instanceof UI512ElementWithHighlight) {
             if (d.elClick.get_b('autohighlight')) {
                 d.elClick.set('highlightactive', false);
@@ -73,15 +98,21 @@ export class BasicHandlers {
         }
     }
 
-    static trackHighlightedButtonMouseEnter(c: UI512PresenterWithMenuInterface, d: MouseEnterDetails) {
-        if (c.trackClickedIds[0] === d.el.id && c.canInteract(d.el) && d.el instanceof UI512ElementWithHighlight) {
+    /**
+     * if the element is "autohighlight", make it highlighted when mouse is down on it.
+     */
+    static trackHighlightedButtonMouseEnter(pr: UI512PresenterWithMenuInterface, d: MouseEnterDetails) {
+        if (pr.trackClickedIds[0] === d.el.id && pr.canInteract(d.el) && d.el instanceof UI512ElementWithHighlight) {
             if (d.el.get_b('autohighlight')) {
                 d.el.set('highlightactive', true);
             }
         }
     }
 
-    static trackHighlightedButtonMouseLeave(c: UI512PresenterWithMenuInterface, d: MouseLeaveDetails) {
+    /**
+     * if the element is "autohighlight", make it highlighted when mouse is down on it.
+     */
+    static trackHighlightedButtonMouseLeave(pr: UI512PresenterWithMenuInterface, d: MouseLeaveDetails) {
         if (d.el && d.el instanceof UI512ElementWithHighlight) {
             if (d.el.get_b('autohighlight')) {
                 d.el.set('highlightactive', false);
@@ -89,46 +120,25 @@ export class BasicHandlers {
         }
     }
 
-    static trackKeyDown(c: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
-        if ((d.mods & ModifierKeys.Cmd) !== 0) {
-            c.trackKeyCmd = true;
-        }
-        if ((d.mods & ModifierKeys.Opt) !== 0) {
-            c.trackKeyOption = true;
-        }
-        if ((d.mods & ModifierKeys.Shift) !== 0) {
-            c.trackKeyShift = true;
-        }
-    }
-
-    static trackKeyUp(c: UI512PresenterWithMenuInterface, d: KeyUpEventDetails) {
-        if ((d.mods & ModifierKeys.Cmd) !== 0) {
-            c.trackKeyCmd = false;
-        }
-        if ((d.mods & ModifierKeys.Opt) !== 0) {
-            c.trackKeyOption = false;
-        }
-        if ((d.mods & ModifierKeys.Shift) !== 0) {
-            c.trackKeyShift = false;
-        }
-    }
-
-    static basicKeyShortcuts(c: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
-        // define a few global hotkeys
+    /**
+     * define a few global shortcut keys.
+     * (we used to track keydown for cmd, option, and shift,
+     * but it was too easy for these events to be stuck or missed if key released offscreen)
+     */
+    static basicKeyShortcuts(pr: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
         if (!d.repeated) {
             let wasShortcut = true;
             switch (d.readableShortcut) {
                 case 'Cmd+Opt+Shift+Q':
-                    CanvasWrapper.setDebugRenderingWithChangingColors(!CanvasWrapper.debugRenderingWithChangingColors);
-                    c.invalidateAll();
+                    pr.invalidateAll();
+                    CanvasWrapper.setDebugRenderingWithChangingColors(
+                        !CanvasWrapper.debugRenderingWithChangingColors);
                     break;
                 case 'Opt+Shift+T':
                     getRoot().runTests(false);
-                    c.invalidateAll();
                     break;
                 case 'Cmd+Opt+Shift+T':
                     getRoot().runTests(true);
-                    c.invalidateAll();
                     break;
                 default:
                     wasShortcut = false;
@@ -141,16 +151,21 @@ export class BasicHandlers {
         }
     }
 
-    static onIdleRunCallbackQueueFromAsyncs(c: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
-        for (let i = 0; i < c.callbackQueueFromAsyncs.length; i++) {
-            // assign it to undefined, so that if it throws, we won't be stuck in a loop calling it over again.
-            let cb = c.callbackQueueFromAsyncs[i];
-            c.callbackQueueFromAsyncs[i] = undefined;
+    /**
+     * run callbacks that were sent to the main event loop.
+     */
+    static onIdleRunCallbackQueueFromAsyncs(pr: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
+        for (let i = 0; i < pr.callbackQueueFromAsyncs.length; i++) {
+            let cb = pr.callbackQueueFromAsyncs[i];
+
+            /* set to undefined before calling it: otherwise if it throws an exception,
+            we might call it repeatedly. */
+            pr.callbackQueueFromAsyncs[i] = undefined;
             if (cb) {
                 cb();
             }
         }
 
-        c.callbackQueueFromAsyncs = [];
+        pr.callbackQueueFromAsyncs = [];
     }
 }

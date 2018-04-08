@@ -16,7 +16,7 @@ export class VpcAppUILasso extends VpcAppUIGeneralSelect {
         tmousenx: number,
         tmouseny: number
     ) {
-        // lasso select.
+        /* lasso select. */
         if (this.state) {
             let args = new PaintOntoCanvas(
                 PaintOntoCanvasShapes.SmearPencil,
@@ -54,6 +54,7 @@ export class VpcAppUILasso extends VpcAppUIGeneralSelect {
                 clrBlack,
                 true
             );
+            
             PaintOntoCanvas.go(args, this.state.elStage.getCachedPnterForWrite());
         }
     }

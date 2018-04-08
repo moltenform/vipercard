@@ -2,7 +2,7 @@
 /* auto */ import { O, checkThrowUI512 } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { OrderedHash } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { largearea } from '../../ui512/draw/ui512DrawTextClasses.js';
+/* auto */ import { largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 
@@ -14,7 +14,7 @@ export class UI512ElGroup {
 
     // perf optimization: restrict mouse interaction to be within bounds
     enableMouseInteraction = true;
-    mouseInteractionBounds: [number, number, number, number] = [0, 0, largearea, largearea];
+    mouseInteractionBounds: [number, number, number, number] = [0, 0, largeArea, largeArea];
 
     constructor(id: string, observer: ElementObserver = elementObserverDefault) {
         this.id = id;

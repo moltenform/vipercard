@@ -1,9 +1,9 @@
 
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
 
 export class NavToolbox extends UI512CompToolbox {
@@ -28,7 +28,7 @@ export class NavToolbox extends UI512CompToolbox {
         let btnMakeAnimOrStatus = grpnav.getEl(this.getElId('choice##makeAnimOrStatus'));
 
         if (coderunning) {
-            btnCardNumOrStop.set('iconsetid', '001');
+            btnCardNumOrStop.set('icongroupid', '001');
             btnCardNumOrStop.set('iconnumber', 90);
             btnCardNumOrStop.set('labeltext', '');
             btnCardNumOrStop.set('autohighlight', true);
@@ -37,11 +37,11 @@ export class NavToolbox extends UI512CompToolbox {
             btnMakeAnimOrStatus.set('iconnumber', 76); // white
             btnMakeAnimOrStatus.set('autohighlight', false);
         } else {
-            btnCardNumOrStop.set('iconsetid', '');
+            btnCardNumOrStop.set('icongroupid', '');
             btnCardNumOrStop.set('iconnumber', -1);
             btnCardNumOrStop.set(
                 'labeltext',
-                TextRendererFontManager.setInitialFont((cardnum + 1).toString(), this.geneva)
+                UI512DrawText.setFont((cardnum + 1).toString(), this.geneva)
             );
             btnCardNumOrStop.set('autohighlight', false);
             btnDupeCardOrStatus.set('iconnumber', 98); // dupecard
@@ -51,7 +51,7 @@ export class NavToolbox extends UI512CompToolbox {
         }
     }
 
-    static layout(toolsnav: NavToolbox, appli: IVpcStateInterface) {
+    static layout(toolsnav: NavToolbox, appli: VpcStateInterface) {
         toolsnav.iconh = 24;
         toolsnav.widthOfIcon = (id: string) => {
             return ToolboxDims.NavW;

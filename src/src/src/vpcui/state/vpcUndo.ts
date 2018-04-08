@@ -9,13 +9,13 @@
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VelResolveName } from '../../vpc/vel/velResolveName.js';
-/* auto */ import { IVpcStateInterface, TypeOfUndoAction } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { UndoableActionCreateOrDelVelement } from '../../vpcui/state/vpcRawCreate.js';
 /* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
 
 export interface UndoableAction {
-    do(appli: IVpcStateInterface): void;
-    undo(appli: IVpcStateInterface): void;
+    do(appli: VpcStateInterface): void;
+    undo(appli: VpcStateInterface): void;
 }
 
 export class UndoableActionCreateVel extends UndoableActionCreateOrDelVelement implements UndoableAction {
@@ -24,7 +24,7 @@ export class UndoableActionCreateVel extends UndoableActionCreateOrDelVelement i
         super(id, parent_id, type, insertIndex);
     }
 
-    do(appli: IVpcStateInterface) {
+    do(appli: VpcStateInterface) {
         checkThrow(
             !appli.getCodeExec().isCodeRunning(),
             "8(|currently can't add or remove an element while code is running"
@@ -32,7 +32,7 @@ export class UndoableActionCreateVel extends UndoableActionCreateOrDelVelement i
         this.create(appli);
     }
 
-    undo(appli: IVpcStateInterface) {
+    undo(appli: VpcStateInterface) {
         checkThrow(
             !appli.getCodeExec().isCodeRunning(),
             "8&|currently can't add or remove an element while code is running"
@@ -45,7 +45,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
     isUndoableActionDeleteVel = true;
     data = '';
     childcount: number;
-    constructor(vel: VpcElBase, appli: IVpcStateInterface) {
+    constructor(vel: VpcElBase, appli: VpcStateInterface) {
         super(vel.id, vel.parentId, vel.getType(), -1);
         UndoableActionDeleteVel.checkIfCanDelete(vel, appli);
         let velAsCard = vel as VpcElCard;
@@ -62,7 +62,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
         this.data = new VpcSerialization().serializeVelCompressed(appli, vel, this.insertindex);
     }
 
-    static checkIfCanDelete(vel: VpcElBase, appli: IVpcStateInterface) {
+    static checkIfCanDelete(vel: VpcElBase, appli: VpcStateInterface) {
         let currentCard = appli.getModel().getByIdUntyped(appli.getModel().productOpts.get_s('currentCardId'));
         let velAsCard = vel as VpcElCard;
         let velAsBg = vel as VpcElBg;
@@ -85,7 +85,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
         }
     }
 
-    do(appli: IVpcStateInterface) {
+    do(appli: VpcStateInterface) {
         checkThrow(
             !appli.getCodeExec().isCodeRunning(),
             "8$|currently can't add or remove an element while code is running"
@@ -97,7 +97,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
         this.remove(appli);
     }
 
-    undo(appli: IVpcStateInterface) {
+    undo(appli: VpcStateInterface) {
         let readded = new VpcSerialization().deserializeVelCompressed(appli, this.data);
         appli.rawRevive(readded);
     }
@@ -126,8 +126,8 @@ class UndoableActionModifyVelement implements UndoableAction {
             }
         } else if (prevVal instanceof FormattedText) {
             if (newVal instanceof FormattedText) {
-                prevVal = '@' + UI512Compress.compressString(prevVal.toPersisted());
-                newVal = '@' + UI512Compress.compressString(newVal.toPersisted());
+                prevVal = '@' + UI512Compress.compressString(prevVal.toSerialized());
+                newVal = '@' + UI512Compress.compressString(newVal.toSerialized());
             } else {
                 throw makeVpcInternalErr('both must be FormattedText ' + propname + ' ' + velId);
             }
@@ -139,14 +139,14 @@ class UndoableActionModifyVelement implements UndoableAction {
         this.newVal = newVal;
     }
 
-    do(appli: IVpcStateInterface) {
+    do(appli: VpcStateInterface) {
         let el = appli.getModel().getByIdUntyped(this.velId);
         let newVal = this.newVal;
         if (typeof newVal === 'string' && newVal.charAt(0) === '$') {
             newVal = UI512Compress.decompressString(newVal.substr(1));
         } else if (typeof newVal === 'string' && newVal.charAt(0) === '@') {
             let newValPs = UI512Compress.decompressString(newVal.substr(1));
-            newVal = FormattedText.newFromPersisted(newValPs);
+            newVal = FormattedText.newFromSerialized(newValPs);
         }
 
         if (this.propname === 'currentTool' && typeof newVal === 'number') {
@@ -156,14 +156,14 @@ class UndoableActionModifyVelement implements UndoableAction {
         }
     }
 
-    undo(appli: IVpcStateInterface) {
+    undo(appli: VpcStateInterface) {
         let el = appli.getModel().getByIdUntyped(this.velId);
         let prevVal = this.prevVal;
         if (typeof prevVal === 'string' && prevVal.charAt(0) === '$') {
             prevVal = UI512Compress.decompressString(prevVal.substr(1));
         } else if (typeof prevVal === 'string' && prevVal.charAt(0) === '@') {
             let prevValPs = UI512Compress.decompressString(prevVal.substr(1));
-            prevVal = FormattedText.newFromPersisted(prevValPs);
+            prevVal = FormattedText.newFromSerialized(prevValPs);
         }
 
         if (this.propname === 'currentTool' && typeof prevVal === 'number') {
@@ -205,13 +205,13 @@ class UndoableChangeSet {
         return this.list.length > 0;
     }
 
-    do(appli: IVpcStateInterface) {
+    do(appli: VpcStateInterface) {
         for (let i = 0; i < this.list.length; i++) {
             this.list[i].do(appli);
         }
     }
 
-    undo(appli: IVpcStateInterface) {
+    undo(appli: VpcStateInterface) {
         for (let i = this.list.length - 1; i >= 0; i--) {
             this.list[i].undo(appli);
         }
@@ -309,7 +309,7 @@ export class UndoManager implements ElementObserver {
         }
     }
 
-    performUndo(appli: IVpcStateInterface) {
+    performUndo(appli: VpcStateInterface) {
         if (appli.getCodeExec().isCodeRunning()) {
             return false;
         }
@@ -326,7 +326,7 @@ export class UndoManager implements ElementObserver {
         }
     }
 
-    performRedo(appli: IVpcStateInterface) {
+    performRedo(appli: VpcStateInterface) {
         if (appli.getCodeExec().isCodeRunning()) {
             return false;
         }

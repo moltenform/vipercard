@@ -58,7 +58,7 @@ export abstract class IntroPageBase extends UI512CompBase {
         for (let i of Util512.range(6)) {
             this.fadedWindowDragging[i] = this.genBtn(app, grp, `faded${i}`);
             this.fadedWindowDragging[i].set('style', UI512BtnStyle.Transparent);
-            this.fadedWindowDragging[i].set('iconsetid', 'logo');
+            this.fadedWindowDragging[i].set('icongroupid', 'logo');
             this.fadedWindowDragging[i].set('iconnumber', 1);
         }
 

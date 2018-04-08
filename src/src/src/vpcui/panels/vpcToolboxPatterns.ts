@@ -3,7 +3,7 @@
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export class PatternsToolbox extends UI512CompToolbox {
     // instead of hiliting the current item, draw a box around it
@@ -43,7 +43,7 @@ export class PatternsToolbox extends UI512CompToolbox {
         }
     }
 
-    static layout(toolspatterns: PatternsToolbox, appli: IVpcStateInterface) {
+    static layout(toolspatterns: PatternsToolbox, appli: VpcStateInterface) {
         toolspatterns.iconh = ToolboxDims.IconH;
         toolspatterns.widthOfIcon = (id: string) => {
             return ToolboxDims.PatternsW;

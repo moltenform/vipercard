@@ -4,7 +4,7 @@
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { TextRendererFontManager } from '../../ui512/draw/ui512DrawText.js';
+/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
@@ -15,14 +15,14 @@
 /* auto */ import { VpcElType, vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { IsPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
 /* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
 
-export abstract class PropPanelCompositeBase extends UI512CompBase implements IsPropPanel {
+export abstract class PropPanelCompositeBase extends UI512CompBase implements VpcPropPanel {
     isPropPanelCompositeBase = true;
     isBlank = false;
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
     isExclusive = false;
     compositeType = 'PropPanelCompositeBase';
     firstSectionH = 100;
@@ -51,7 +51,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Is
             txt += `\nor\n${shortname} "${name}"`;
         }
 
-        txt = TextRendererFontManager.setInitialFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
+        txt = UI512DrawText.setFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
         this.lblNamingTip.set('labeltext', txt);
     }
 

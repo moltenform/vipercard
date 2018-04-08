@@ -11,12 +11,12 @@
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { BorderDecorationConsts, UI512CompBase, WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
-/* auto */ import { IVpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
 
 // see UI512BeginAsyncSetLabelText
 
-export interface IVpcSaveUtils {
+export interface VpcSaveUtilsInterface {
     mnuGoSave(): void;
     mnuGoSave_As(): void;
     mnuGoShareLink(): void;
@@ -28,7 +28,7 @@ export interface IVpcSaveUtils {
 }
 
 export class VpcAppNonModalDlgHolder extends VpcAppInterfaceLayer {
-    appli: IVpcStateInterface;
+    appli: VpcStateInterface;
     c: UI512ControllerBase;
     current: O<VpcFormNonModalDialogBase>;
     setNonModalDialog(frm: O<UI512CompBase>) {
@@ -84,8 +84,8 @@ export class VpcAppNonModalDlgHolder extends VpcAppInterfaceLayer {
 }
 
 export abstract class VpcFormNonModalDialogBase extends UI512CompBase {
-    abstract onClickBtn(short: string, el: UI512Element, appli: IVpcStateInterface): void;
-    abstract onMouseDown(short: string, el: UI512Element, appli: IVpcStateInterface): void;
+    abstract onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void;
+    abstract onMouseDown(short: string, el: UI512Element, appli: VpcStateInterface): void;
     onKeyDown(elid: O<string>, short: O<string>, d: KeyDownEventDetails): void {}
 }
 
@@ -106,14 +106,14 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
     fieldsThatAreLabels: { [key: string]: boolean } = {};
     decorations: BorderDecorationConsts = new WndBorderDecorationConsts();
 
-    static standardWindowBounds(me: UI512CompBase, appli: IVpcStateInterface) {
+    static standardWindowBounds(me: UI512CompBase, appli: VpcStateInterface) {
         me.x = appli.userBounds()[0];
         me.y = appli.userBounds()[1] + 32;
         me.logicalWidth = appli.userBounds()[2] + 2;
         me.logicalHeight = appli.userBounds()[3] - (me.y - appli.userBounds()[1]);
     }
 
-    static largeWindowBounds(me: UI512CompBase, appli: IVpcStateInterface) {
+    static largeWindowBounds(me: UI512CompBase, appli: VpcStateInterface) {
         me.x = appli.userBounds()[0];
         me.y = appli.bounds()[1] + 3;
         me.logicalWidth = appli.bounds()[2];
@@ -140,19 +140,19 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
             this.fields.length * fldVerticalMargin + this.fields.map(t => t[2] * this.fldHeight).reduce(Util512.add);
         const startx = this.x + Math.round((this.logicalWidth - totalWidthForCenter) / 2);
         const starty = this.y + Math.round((this.logicalHeight - totalHeightForCenter) / 2);
-        let curx;
-        let cury = starty;
+        let curX;
+        let curY = starty;
         for (let [fldId, fldUntransed, heightMult] of this.fields) {
             let h = heightMult * this.fldHeight;
-            curx = startx;
+            curX = startx;
 
             let lbl = this.genChild<UI512ElLabel>(app, grp, 'lblFor' + fldId, UI512ElLabel);
-            lbl.setDimensions(curx, cury, this.lblWidth, h);
+            lbl.setDimensions(curX, curY, this.lblWidth, h);
             lbl.set('labeltext', lng(fldUntransed));
-            curx += this.lblWidth + this.lblMarginSpace;
+            curX += this.lblWidth + this.lblMarginSpace;
 
             let rght = this.genChild<UI512ElTextField>(app, grp, 'fld' + fldId, UI512ElTextField);
-            rght.setDimensions(curx, cury, this.fldWidth, h);
+            rght.setDimensions(curX, curY, this.fldWidth, h);
             rght.set('style', UI512FldStyle.Rectangle);
             rght.set('multiline', heightMult > 1);
             rght.set('nudgey', 2);
@@ -162,22 +162,22 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
                 rght.set('visible', false);
             }
 
-            cury += h + fldVerticalMargin;
+            curY += h + fldVerticalMargin;
         }
 
-        cury += fldVerticalMargin * 2;
-        curx = startx + totalWidthForCenter - 90;
-        this.drawBtn(app, grp, 0, curx, cury, 69, 29);
-        curx -= 69 + this.lblMarginSpace * 2;
-        this.drawBtn(app, grp, 1, curx, cury + 4, 68, 21);
-        curx -= 68 + this.lblMarginSpace * 2;
-        this.drawBtn(app, grp, 2, curx, cury + 4, 68, 21);
+        curY += fldVerticalMargin * 2;
+        curX = startx + totalWidthForCenter - 90;
+        this.drawBtn(app, grp, 0, curX, curY, 69, 29);
+        curX -= 69 + this.lblMarginSpace * 2;
+        this.drawBtn(app, grp, 1, curX, curY + 4, 68, 21);
+        curX -= 68 + this.lblMarginSpace * 2;
+        this.drawBtn(app, grp, 2, curX, curY + 4, 68, 21);
 
-        curx = startx;
-        cury += 30;
+        curX = startx;
+        curY += 30;
 
         this.lblStatus = this.genChild<UI512ElLabel>(app, grp, 'lblStatusOfForm', UI512ElLabel);
-        this.lblStatus.setDimensionsX1Y1(curx, cury, this.x + this.logicalWidth - 1, cury + 27);
+        this.lblStatus.setDimensionsX1Y1(curX, curY, this.x + this.logicalWidth - 1, curY + 27);
     }
 
     protected readFields(app: UI512Application, trim = true) {
@@ -205,7 +205,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
         }
     }
 
-    onMouseDown(short: string, el: UI512Element, appli: IVpcStateInterface): void {}
+    onMouseDown(short: string, el: UI512Element, appli: VpcStateInterface): void {}
 
     protected drawBtn(
         app: UI512Application,
