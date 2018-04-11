@@ -134,7 +134,7 @@ export class ExecuteStatements {
         if (attempt1) {
             let attempt = attempt1[0] as T;
             checkThrowEq(1, attempt1.length, '7V|expected length 1');
-            checkThrow((attempt as any)['is' + typeAsString] === true, '7U|wrong type');
+            checkThrow((attempt as any)['is' + typeAsString] === true, '7U|wrong type'); /* gettable */
             return attempt;
         } else {
             return undefined;
@@ -257,9 +257,9 @@ export class ExecuteStatements {
 
         let sTool = factor.readAsString().replace(/ +/, '_');
 
-        checkThrow(sTool.length > 1, "not a valid tool name.");
+        checkThrow(sTool.length > 1, 'not a valid tool name.');
         /* the vals in the enum start with a capital letter */
-        sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase()
+        sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase();
         let tl = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
         let ctg = getToolCategory(tl);
         if (

@@ -1,6 +1,6 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512, getEnumToStrOrUnknown } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { RenderComplete, Util512 } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
@@ -8,7 +8,7 @@
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
+/* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
@@ -18,12 +18,11 @@
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { vpcElTypeAsSeenInName } from '../../vpc/vel/velResolveReference.js';
 /* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
 /* auto */ import { SelectToolMode, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
 /* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
-/* auto */ import { VpcControllerInit } from '../../vpcui/presentation/vpcPresenterInit.js';
+/* auto */ import { VpcPresenterInit } from '../../vpcui/presentation/vpcPresenterInit.js';
 
-export class VpcAppController extends VpcControllerInit {
+export class VpcPresenter extends VpcPresenterInit {
     showError(scriptErr: VpcScriptErrorBase) {
         this.appli.getCodeExec().forceStopRunning();
 
@@ -74,15 +73,7 @@ export class VpcAppController extends VpcControllerInit {
     }
 
     getToolResponse(t: VpcTool) {
-        let ctg = getToolCategory(t);
-        let nm = 'tl' + getEnumToStrOrUnknown<VpcToolCtg>(VpcToolCtg, ctg);
-        nm = nm.replace(/tlCtg/, 'tlctg')
-        let tlresp = (this as any)[nm] as VpcAppUIToolResponseBase;
-        if (!tlresp || !tlresp.isVpcAppUIToolResponseBase) {
-            throw makeVpcInternalErr(`6G|not found ${nm} ${t}`);
-        } else {
-            return tlresp;
-        }
+        return throwIfUndefined(this.tlToResponse[t.valueOf()], 'not found', t);
     }
 
     setTool(next: VpcTool) {
@@ -118,20 +109,20 @@ export class VpcAppController extends VpcControllerInit {
 
     protected getModalDlg() {
         checkThrow(
-            !this.app.findElemById('mainModalDlg##modaldialog##dlgprompt'),
+            !this.app.findEl('mainModalDlg##modaldialog##dlgprompt'),
             'internal error, dialog box already shown'
         );
-        let modalDlg = new UI512CompStdDialog('mainModalDlg');
+        let modalDlg = new UI512CompModalDialog('mainModalDlg');
         let stopelid = this.lyrToolboxes.toolsnav.getElId('choice##cardNumOrStop');
-        let stopel = this.app.getElemById(stopelid);
+        let stopel = this.app.getEl(stopelid);
         modalDlg.cancelBtnBounds = [
             [stopel.x, stopel.y, stopel.w, stopel.h],
             [
                 this.lyrToolboxes.toolsmain.x,
                 this.lyrToolboxes.toolsmain.y,
                 this.lyrToolboxes.toolsmain.logicalWidth,
-                this.lyrToolboxes.toolsmain.logicalHeight,
-            ],
+                this.lyrToolboxes.toolsmain.logicalHeight
+            ]
         ];
         return modalDlg;
     }
@@ -142,16 +133,8 @@ export class VpcAppController extends VpcControllerInit {
         let resp = this.getToolResponse(this.getTool());
         resp.cancelCurrentToolAction();
         let modalDlg = this.getModalDlg();
-        modalDlg.standardAnswer(
-            this,
-            this.app,
-            prompt,
-            fnOnResult,
-            choice1 || '',
-            choice2 || '',
-            choice3 || ''
-        );
-        assertTrueWarn(this.app.findElemById('mainModalDlg##modaldialog##dlgprompt'), 'expect to have been created');
+        modalDlg.standardAnswer(this, this.app, prompt, fnOnResult, choice1 || '', choice2 || '', choice3 || '');
+        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'expect to have been created');
     }
 
     // after calling this, you should exit the current handler and not run any other code,
@@ -161,7 +144,7 @@ export class VpcAppController extends VpcControllerInit {
         resp.cancelCurrentToolAction();
         let modalDlg = this.getModalDlg();
         modalDlg.standardAsk(this, this.app, prompt, defText, fnOnResult);
-        assertTrueWarn(this.app.findElemById('mainModalDlg##modaldialog##dlgprompt'), 'expect to have been created');
+        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'expect to have been created');
     }
 
     askMsgAsync(prompt: string, defText: string): Promise<[O<string>, number]> {
@@ -230,7 +213,7 @@ export class VpcAppController extends VpcControllerInit {
         );
     }
 
-    render(canvas: CanvasWrapper, ms: number, cmptotal: RenderComplete) {
+    render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete) {
         this.lyrModelRender.checkIfScreenWasJustUnlocked();
         let shouldUpdate = this.lyrModelRender.needUIToolsRedraw || this.lyrModelRender.needFullRedraw;
         let er: any = undefined;
@@ -246,7 +229,7 @@ export class VpcAppController extends VpcControllerInit {
             }
         }
 
-        super.render(canvas, ms, cmptotal);
+        super.render(canvas, ms, cmpTotal);
         if (er) {
             throw er;
         }
@@ -283,8 +266,8 @@ export class VpcAppController extends VpcControllerInit {
                 // scribble over everything to make sure no-one reuses it.
                 this.listeners = [];
                 this.appli.destroy();
-                this.appli = undefined as any;
-                this.runtime = undefined as any;
+                this.appli = undefined as any; /* destroy() */
+                this.runtime = undefined as any; /* destroy() */
                 if (s === 'mnuNewStack') {
                     this.cbExitToNewDocument();
                 } else if (s === 'mnuOpen') {
@@ -315,9 +298,7 @@ export class VpcAppController extends VpcControllerInit {
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             this.makePasteVel(id);
         } else if (id && id.length) {
-            throw makeVpcInternalErr(
-                msgNotification + lng('lngPasting this type of element is not yet supported.')
-            );
+            throw makeVpcInternalErr(msgNotification + lng('lngPasting this type of element is not yet supported.'));
         } else {
             throw makeVpcInternalErr(msgNotification + lng('lngNothing has been copied.'));
         }
@@ -479,7 +460,7 @@ export class VpcAppController extends VpcControllerInit {
     }
 
     performMenuActionImpl(s: string) {
-        let method = (this.menuActions as any)['go_' + s];
+        let method = Util512.isMethodOnClass(this.menuActions, 'go_' + s);
         if (method !== undefined) {
             method.apply(this.menuActions, [this.appli]);
         } else if (s === 'mnuObjectsNewBtn') {
@@ -499,5 +480,12 @@ export class VpcAppController extends VpcControllerInit {
         let serializer = new VpcSerialization();
         let serialized = serializer.serializeAll(this.appli);
         return JSON.stringify(serialized);
+    }
+
+    /**
+     * queueRefreshCursor, someone has told us we need to refresh the cursor
+     */
+    queueRefreshCursor(): void {
+        this.cursorRefreshPending = true;
     }
 }

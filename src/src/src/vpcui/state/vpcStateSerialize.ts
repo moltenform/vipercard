@@ -1,6 +1,6 @@
 
 /* auto */ import { vpcversion } from '../../config.js';
-/* auto */ import { UI512Compress, assertTrue, assertTrueWarn, checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { checkThrowEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
@@ -86,7 +86,7 @@ export class VpcSerialization {
     }
 
     deserializeVelCompressed(building: VpcStateInterface, s: string): VpcElBase {
-        let created: VpcElBase = undefined as any;
+        let created: O<VpcElBase>;
         building.doWithoutAbilityToUndo(() => {
             s = UI512Compress.decompressString(s);
             let incoming = JSON.parse(s);
@@ -101,6 +101,7 @@ export class VpcSerialization {
             created = building.createElem(incoming.parent_id, incoming.type, incoming.insertIndex, incoming.id);
             VpcUI512Serialization.deserializeUiSettable(created, created.getAttributesList(), incoming.attrs);
         });
-        return created;
+
+        return throwIfUndefined(created, '');
     }
 }

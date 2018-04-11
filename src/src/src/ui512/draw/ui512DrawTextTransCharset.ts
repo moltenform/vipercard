@@ -231,7 +231,7 @@ export class CharsetTranslation {
                 241: '\u00D2',
                 242: '\u00DA',
                 243: '\u00DB',
-                244: '\u00D9',
+                244: '\u00D9'
             };
 
             Object.freeze(CharsetTranslation.romanToUn);
@@ -457,7 +457,7 @@ export class CharsetTranslation {
                 210: '\u00f1',
                 218: '\u00f2',
                 219: '\u00f3',
-                217: '\u00f4',
+                217: '\u00f4'
             };
 
             Object.freeze(CharsetTranslation.unToRoman);

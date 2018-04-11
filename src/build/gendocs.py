@@ -12,12 +12,10 @@ sections['fundamentals'] = r'''
 Introduction
 =====
 
-If you are new, please see the Tutorial Screenshots first!
-(From the Help menu, select Tutorial Screenshots...)
+Welcome to ViperCard, an open source re-creation and re-imagination of 1987's HyperCard.
 
+If you are new, the example videos will be helpful -- from the Help menu (the icon with a ? in the upper right corner of the screen), select "Examples & Tutorials".
 
-The documentation here is technical and unpolished;
-it will be improved over time.
 
 =====
 Fundamentals
@@ -35,7 +33,7 @@ If this script is placed in a button, and the Browse tool is chosen
 A line of code beginning with -- is ignored.
 This is often used to write explanatory comments.
 It can also be used to temporarily "disable" some code.
-You can press Ctrl-Q in the script editor to quickly
+You can press Cmd+Q in the script editor to quickly
 comment-out or uncomment a line.
 
 `on mouseUp
@@ -506,11 +504,42 @@ linefeed`
 Tips & Shortcuts
 =====
 
-- Double-click the eraser tool to clear paint on the current card.
+General tips
 
-- Use the message box (from the Go menu, choose Message Box) to quickly try running code.
+-   Double-click the eraser tool to clear paint on the current card
+-   Use the message box (from the Go menu, choose Message Box) to quickly try running code
+-   If your script is caught in an infinite loop, click the Stop button (black rectangle) to stop the script
 
-- Hit tab key in code editor to run autoindent.
+Keyboard shortcuts when editing text,
+
+-   Cmd+C to copy
+-   Cmd+X to cut
+-   Cmd+V to paste
+-   Cmd+A to select all
+-   Cmd+Backspace to delete entire word
+-   PageUp / PageDown to scroll one page
+-   Shift+PageUp / Shift+PageDown to select one page
+-   Home to move to start of line
+-   Shift+Home to select to start of line
+-   Cmd+Home to move to the start
+-   Cmd+Shift+Home to select to the start
+-   Left Arrow to move to the left
+-   Shift+Left Arrow to select to the left
+-   Cmd+Left Arrow to move left one word
+-   Cmd+Shift+Left Arrow to select left one word
+-   Cmd+Arrow Up to scroll up
+-   Cmd+Arrow Down to scroll down
+-   Cmd+D to duplicate the current line
+-   Cmd+L to delete the current line
+-   Cmd+Q to quickly comment-out or uncomment the current line
+-   Cmd+Q when many lines are selected to comment-out all of them
+-   Tab key, to automatically indent code
+
+Some of the main differences between ViperCard and HyperCard:
+-  ViperCard is open source software that can run in any modern web browser
+-  you can export stacks as a modern json format
+-  art-stamps feature for adding clip art
+-  new animation features like save-to-gif
 
 =====
 Credits
@@ -2720,8 +2749,6 @@ Examples:
 
 put the suspended into z
 
-
-
 '''
 
 specialCharFontChange = "\x02"
@@ -2729,26 +2756,6 @@ specialCharFontChange = "\x02"
 def map(iterable, func):
     for i in iterable:
         yield func(i)
-
-#~ class JsonicBucket(object):
-    #~ _data=None
-    #~ def __init__(self):
-        #~ self._data = {}
-
-    #~ def __getattribute__(self, name):
-        #~ if name.startswith('_'):
-            #~ return object.__getattribute__(self, name)
-        #~ else:
-            #~ return self._data[name]
-
-    #~ def __setattribute__(self, name, value):
-        #~ if name.startswith('_'):
-            #~ object.__setattr__(self, name, value)
-        #~ else:
-            #~ self._data[name] = value
-
-    #~ def __delattr__(self, name):
-        #~ raise RuntimeError
 
 def addFormatting(s):
     # ^ for bold
@@ -2828,6 +2835,9 @@ def goSection(s, sname):
     
 def go():
     outloc = '../src/resources/docs/'
+    print('')
+    print('')
+    print('Please place the following into vpcDocViewer.ts:')
     for sectionname in sections:
         s = sections[sectionname].replace('\r\n', '\n')
         section = goSection(s, sectionname)
@@ -2837,8 +2847,12 @@ def go():
         f.write(json.dumps(section))
         f.write('\n')
         f.close()
+        
+        titlesWithSingleQuote = [se['title'] for se in section['entries'] if "'" in se['title']]
+        assertTrue(not len(titlesWithSingleQuote), titlesWithSingleQuote)
+        
         theArr = [se['title'] for se in section['entries']]
-        theArrS = json.dumps(theArr)
+        theArrS = json.dumps(theArr).replace('"', "'")
         assertTrue(not '===' in theArrS)
         mapIt = dict(fundamentals='lngFundamentals',
             commands='lngCommands',
@@ -2847,7 +2861,7 @@ def go():
             properties='lngProperties')
         
         print('// prettier-ignore')
-        print(f'["{sectionname}", "{mapIt[sectionname]}", {theArrS}],')
+        print(f"['{sectionname}', '{mapIt[sectionname]}', {theArrS}],")
         
 
 go()

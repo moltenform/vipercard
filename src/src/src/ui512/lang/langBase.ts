@@ -1,13 +1,13 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 
-const lngPrefix = 'lng'
-const lngPrefixLength = 'lng'.length
+const lngPrefix = 'lng';
+const lngPrefixLength = 'lng'.length;
 
 /**
  * for internationalization + globalization
  * */
-export function lng(s:string) {
+export function lng(s: string) {
     if (!s.length) {
         return s;
     }

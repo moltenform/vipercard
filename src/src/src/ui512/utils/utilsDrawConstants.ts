@@ -13,7 +13,7 @@ export enum MenuConsts {
     SecondLabelDistance = 24,
     TopHeaderMargin1 = 11,
     TopHeaderMargin2 = 500,
-    BarHeight = 21,
+    BarHeight = 21
 }
 
 export enum ScrollConsts {
@@ -24,6 +24,8 @@ export enum ScrollConsts {
     TabSize = 4,
     WindowCaptionSpacing = 12,
     WindowCaptionAdjustTextY = 1,
+    ChoiceListDefaultWidth = 130,
+    ChoiceListDefaultHeight = 117
 }
 
 export enum ScreenConsts {
@@ -38,7 +40,7 @@ export enum ScreenConsts {
     yAreaHeight = 342,
     yLowerMargin = 7,
     ScreenWidth = 928,
-    ScreenHeight = 416,
+    ScreenHeight = 416
 }
 
 /**
@@ -49,7 +51,7 @@ export function getUI512WindowBounds() {
         ScreenConsts.xLeftMargin,
         ScreenConsts.yTopMargin,
         ScreenConsts.ScreenWidth - (ScreenConsts.xLeftMargin + ScreenConsts.xRightMargin),
-        ScreenConsts.ScreenHeight - (ScreenConsts.yTopMargin + ScreenConsts.yLowerMargin),
+        ScreenConsts.ScreenHeight - (ScreenConsts.yTopMargin + ScreenConsts.yLowerMargin)
     ];
 }
 
@@ -88,7 +90,7 @@ export enum ModifierKeys {
     None = 0,
     Shift = 1 << 0,
     Cmd = 1 << 1,
-    Opt = 1 << 2,
+    Opt = 1 << 2
 }
 
 /**

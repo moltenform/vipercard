@@ -21,7 +21,7 @@ export enum MenuOpenState {
     __isUI512Enum = 1,
     MenusClosed,
     MenusOpenInitialMouseDown,
-    MenusOpen,
+    MenusOpen
 }
 
 /**
@@ -41,7 +41,7 @@ export enum UI512EventType {
     MenuItemClicked,
     PasteText,
     Idle,
-    FocusChanged,
+    FocusChanged
 }
 
 /**
@@ -52,7 +52,7 @@ export enum UI512EventType {
  */
 export enum ChangeContext {
     __isUI512Enum = 1,
-    Default,
+    Default
 }
 
 /**
@@ -66,7 +66,7 @@ export enum MouseDragStatus {
     None,
     ScrollArrow,
     SelectingText,
-    DragAndDrop,
+    DragAndDrop
 }
 
 /**

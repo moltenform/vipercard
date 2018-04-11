@@ -2,7 +2,7 @@
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
-/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { SelectToolState, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
 
 export class VpcAppUIRectSelect extends VpcAppUIGeneralSelect {
@@ -17,8 +17,8 @@ export class VpcAppUIRectSelect extends VpcAppUIGeneralSelect {
     ) {
         // rect select.
         cv.clear();
-        let args = new PaintOntoCanvas(
-            PaintOntoCanvasShapes.ShapeRectangle,
+        let args = new UI512PaintDispatch(
+            UI512PaintDispatchShapes.ShapeRectangle,
             [st.startX, tmousenx],
             [st.startY, tmouseny],
             clrBlack,
@@ -26,7 +26,7 @@ export class VpcAppUIRectSelect extends VpcAppUIGeneralSelect {
             false,
             1
         );
-        PaintOntoCanvas.go(args, painter);
+        UI512PaintDispatch.go(args, painter);
     }
 
     protected makeBlack() {
@@ -35,15 +35,15 @@ export class VpcAppUIRectSelect extends VpcAppUIGeneralSelect {
             // fails for cases where the top of the shape is a sharp spike 1pixel wide
             let floodfillx = this.state.topPtX + 1;
             let floodfilly = this.state.topPtY + 1;
-            let args = new PaintOntoCanvas(
-                PaintOntoCanvasShapes.Bucket,
+            let args = new UI512PaintDispatch(
+                UI512PaintDispatchShapes.Bucket,
                 [floodfillx],
                 [floodfilly],
                 clrBlack,
                 clrBlack,
                 true
             );
-            PaintOntoCanvas.go(args, this.state.elStage.getCachedPnterForWrite());
+            UI512PaintDispatch.go(args, this.state.elStage.getCachedPainterForWrite());
         }
     }
 

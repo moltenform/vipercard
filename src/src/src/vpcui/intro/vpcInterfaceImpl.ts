@@ -1,6 +1,6 @@
 
 /* auto */ import { O, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { EventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
@@ -13,13 +13,13 @@
 /* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcApplication } from '../../vpcui/state/vpcState.js';
-/* auto */ import { VpcAppControllerEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
-/* auto */ import { VpcAppController } from '../../vpcui/presentation/vpcPresenter.js';
+/* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
+/* auto */ import { VpcPresenter } from '../../vpcui/presentation/vpcPresenter.js';
 
 export class VpcStateInterfaceCompleted implements VpcStateInterface {
     protected appl: VpcApplication;
-    protected ctrller: VpcAppController;
-    init(appl: VpcApplication, ctrller: VpcAppController) {
+    protected ctrller: VpcPresenter;
+    init(appl: VpcApplication, ctrller: VpcPresenter) {
         this.appl = appl;
         this.ctrller = ctrller;
     }
@@ -124,14 +124,14 @@ export class VpcStateInterfaceCompleted implements VpcStateInterface {
     }
 
     scheduleScriptEventSend(d: EventDetails) {
-        return VpcAppControllerEvents.scheduleScriptMsg(this.ctrller, this, d);
+        return VpcPresenterEvents.scheduleScriptMsg(this.ctrller, this, d);
     }
 
     UI512App() {
         return this.ctrller.app;
     }
 
-    getController() {
+    getPresenter() {
         return this.ctrller;
     }
 
@@ -171,7 +171,7 @@ export class VpcStateInterfaceCompleted implements VpcStateInterface {
     performMenuAction(s: string) {
         return this.ctrller.performMenuAction(s);
     }
-    commitSimulatedClicks(queue: PaintOntoCanvas[]) {
+    commitSimulatedClicks(queue: UI512PaintDispatch[]) {
         return this.ctrller.lyrPaintRender.commitSimulatedClicks(queue);
     }
     causeUIRedraw() {
@@ -190,13 +190,13 @@ export class VpcStateInterfaceCompleted implements VpcStateInterface {
     }
 
     destroy(): void {
-        this.appl.appli = undefined as any;
+        this.appl.appli = undefined as any; /* destroy() */
         this.appl.model.destroy();
-        this.appl.model = undefined as any;
+        this.appl.model = undefined as any; /* destroy() */
         this.appl.runtime.destroy();
-        this.appl.runtime = undefined as any;
-        this.appl.undoManager = undefined as any;
-        this.appl = undefined as any;
-        this.ctrller = undefined as any;
+        this.appl.runtime = undefined as any; /* destroy() */
+        this.appl.undoManager = undefined as any; /* destroy() */
+        this.appl = undefined as any; /* destroy() */
+        this.ctrller = undefined as any; /* destroy() */
     }
 }

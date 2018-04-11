@@ -13,15 +13,17 @@ class MockWorld {
     SetVarContents(varname: string, v: VpcVal) {
         this.result = v.readAsString();
     }
+
     ReadVarContents(varname: string): VpcVal {
         return VpcValS(this.result);
     }
+
     getMock(): OutsideWorldReadWrite {
-        return (this as any) as OutsideWorldReadWrite;
+        return (this as any) as OutsideWorldReadWrite; /* test code */
     }
 }
 
-export class Test_VpcUtils extends UI512TestBase {
+export class TestVpcUtils extends UI512TestBase {
     readonly itemdel = ',';
     mockReadVar = new MockWorld();
     constructor() {
@@ -521,6 +523,6 @@ export class Test_VpcUtils extends UI512TestBase {
             this.testSetChunk('abc123', 'abc', RequestedChunkType.Chars, 5, 7);
             this.testSetChunk('a,b,c,,123', 'a,b,c', RequestedChunkType.Items, 5, 7);
             this.testSetChunk(',,cd,,123', ',,cd,', RequestedChunkType.Items, 5, 7);
-        },
+        }
     ];
 }

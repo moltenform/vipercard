@@ -12,38 +12,54 @@
 /* auto */ import { MenuBehavior } from '../../ui512/menu/ui512MenuListeners.js';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { ScrollbarImpl, fldIdToScrollbarPartId, getAmountIfScrollArrowClicked } from '../../ui512/textedit/ui512Scrollbar.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 
-export class EditTextBehavior {
+/**
+ * Base class for text events
+ */
+export class UI512TextEvents {
     static readonly amtScrollArrowClicked = 12;
     static readonly amtScrollAreaClicked = 36;
-    protected scrollbarImpl = new ScrollbarImpl();
 
+    /**
+     * get generic text field from a UI512ElTextField
+     * subclasses can provide a different implementation
+     */
     protected gelFromEl(el: O<UI512ElTextField>): O<GenericTextField> {
         return el ? new UI512ElTextFieldAsGeneric(el) : undefined;
     }
 
+    /**
+     * get scrollbar positioning class
+     * subclasses can provide a different implementation
+     */
     protected getScrollbarImpl() {
-        return this.scrollbarImpl;
+        return new ScrollbarImpl();
     }
 
-    onMouseDownScroll(c: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
+    /**
+     * onMouseDown, see if scroll arrow clicked
+     */
+    onMouseDownScroll(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
         if (d.button === 0 && d.el instanceof UI512ElButton) {
             let moveAmt = getAmountIfScrollArrowClicked(d.el.id);
             if (moveAmt !== undefined) {
-                this.getScrollbarImpl().onScrollArrowClicked(c, d.el.id, moveAmt);
-                c.mouseDragStatus = MouseDragStatus.ScrollArrow;
+                this.getScrollbarImpl().onScrollArrowClicked(pr, d.el.id, moveAmt);
+                pr.mouseDragStatus = MouseDragStatus.ScrollArrow;
             }
         }
     }
 
-    onMouseDownSelect(c: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
+    /**
+     * onMouseDown, see if we should select text
+     */
+    onMouseDownSelect(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
         if (
             d.button === 0 &&
             d.el instanceof UI512ElTextField &&
             d.el.get_b('canselecttext') &&
-            c.canSelectTextInField(d.el)
+            pr.canSelectTextInField(d.el)
         ) {
             let gel = this.gelFromEl(d.el);
             if (!gel) {
@@ -54,64 +70,76 @@ export class EditTextBehavior {
                 return;
             }
 
-            c.setCurrentFocus(d.el.id);
+            pr.setCurrentFocus(d.el.id);
             if (d.el.get_b('selectbylines')) {
                 SelAndEntry.mouseClickSelectByLines(gel, d.mouseX, d.mouseY);
             } else {
                 let isShift = (d.mods & ModifierKeys.Shift) !== 0;
-                SelAndEntry.mouseClickPositionToSetCaret(gel, d.mouseX, d.mouseY, isShift);
+                SelAndEntry.mouseClickCoordsToSetCaret(gel, d.mouseX, d.mouseY, isShift);
                 if (!isShift) {
-                    c.mouseDragStatus = MouseDragStatus.SelectingText;
+                    pr.mouseDragStatus = MouseDragStatus.SelectingText;
                 }
             }
         }
     }
 
-    onMouseMoveSelect(c: UI512PresenterWithMenuInterface, d: MouseMoveEventDetails) {
-        if (c.mouseDragStatus === MouseDragStatus.SelectingText && c.trackPressedBtns[0]) {
-            let el = c.app.findElemById(c.trackClickedIds[0]);
+    /**
+     * onMouseMove, see if we should select text
+     */
+    onMouseMoveSelect(pr: UI512PresenterWithMenuInterface, d: MouseMoveEventDetails) {
+        if (pr.mouseDragStatus === MouseDragStatus.SelectingText && pr.trackPressedBtns[0]) {
+            let el = pr.app.findEl(pr.trackClickedIds[0]);
             if (
                 el &&
                 el instanceof UI512ElTextField &&
                 el.get_b('canselecttext') &&
-                c.canSelectTextInField(el) &&
+                pr.canSelectTextInField(el) &&
                 !el.get_b('selectbylines')
             ) {
                 let gel = this.gelFromEl(el);
                 if (gel) {
                     if (RectUtils.hasPoint(d.mouseX, d.mouseY, el.x, el.y, el.w, el.h)) {
-                        SelAndEntry.mouseClickPositionAdjustSelection(gel, d.mouseX, d.mouseY);
+                        SelAndEntry.mouseClickCoordsAdjustSelection(gel, d.mouseX, d.mouseY);
                     }
                 }
             }
         }
     }
 
-    onMouseDoubleDown(c: UI512PresenterWithMenuInterface, d: MouseDownDoubleEventDetails) {
+    /**
+     * onMouseDoubleDown, select the current word
+     */
+    onMouseDoubleDown(pr: UI512PresenterWithMenuInterface, d: MouseDownDoubleEventDetails) {
         if (d.button === 0) {
             if (
                 d.el &&
                 d.el instanceof UI512ElTextField &&
                 d.el.get_b('canselecttext') &&
-                c.canSelectTextInField(d.el) &&
+                pr.canSelectTextInField(d.el) &&
                 !d.el.get_b('selectbylines')
             ) {
                 let gel = this.gelFromEl(d.el);
                 if (gel) {
-                    // disable the drag-to-select
-                    c.mouseDragStatus = MouseDragStatus.None;
+                    /* disable the drag-to-select */
+                    pr.mouseDragStatus = MouseDragStatus.None;
                     SelAndEntry.changeSelCurrentWord(gel);
                 }
             }
         }
     }
 
-    onMouseUp(c: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
-        c.mouseDragStatus = MouseDragStatus.None;
+    /**
+     * onMouseUp, we are no longer dragging
+     */
+    onMouseUp(pr: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
+        pr.mouseDragStatus = MouseDragStatus.None;
     }
 
-    onKeyDown(c: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
-        let el = SelAndEntry.getSelectedField(c);
+    /**
+     * onKeyDown, send both keyboard shortcuts and inserted text to the field
+     */
+    onKeyDown(pr: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
+        let el = SelAndEntry.getSelectedField(pr);
         if (el && el.get_b('selectbylines')) {
             return;
         } else if (!el || d.handled()) {
@@ -209,9 +237,9 @@ export class EditTextBehavior {
             case 'Cmd+ArrowUp':
                 let arrowbtnup = fldIdToScrollbarPartId(el.id, 'arrowUp');
                 this.getScrollbarImpl().onScrollArrowClicked(
-                    c,
+                    pr,
                     arrowbtnup,
-                    -1 * EditTextBehavior.amtScrollArrowClicked
+                    -1 * UI512TextEvents.amtScrollArrowClicked
                 );
                 break;
             case 'ArrowDown':
@@ -222,7 +250,7 @@ export class EditTextBehavior {
                 break;
             case 'Cmd+ArrowDown':
                 let arrowbtndn = fldIdToScrollbarPartId(el.id, 'arrowDn');
-                this.getScrollbarImpl().onScrollArrowClicked(c, arrowbtndn, EditTextBehavior.amtScrollArrowClicked);
+                this.getScrollbarImpl().onScrollArrowClicked(pr, arrowbtndn, UI512TextEvents.amtScrollArrowClicked);
                 break;
             case 'Enter':
                 SelAndEntry.changeTextInsert(gel, '\n');
@@ -231,21 +259,18 @@ export class EditTextBehavior {
                 SelAndEntry.changeTextInsert(gel, '\n');
                 break;
             case 'Cmd+C':
-                // note: at least for now, I am defaulting to a private clipboard that doesn't interact with OS clipboard,
-                // for no reason other than to make it "feel" lke a separate emulator that is somehow detached from the normal world
-                // user can attach to OS clipboard by setting c.useOSClipboard
-                this.sendCutOrCopy(c, el, false);
+                this.sendCutOrCopy(pr, el, false);
                 break;
             case 'Cmd+X':
-                this.sendCutOrCopy(c, el, true);
+                this.sendCutOrCopy(pr, el, true);
                 break;
             default:
                 wasShortcut = false;
                 break;
         }
 
-        if (d.readableShortcut === 'Cmd+V' && !c.useOSClipboard) {
-            c.clipManager.paste(c.useOSClipboard);
+        if (d.readableShortcut === 'Cmd+V' && !pr.useOSClipboard) {
+            pr.clipManager.paste(pr.useOSClipboard);
             wasShortcut = true;
         }
 
@@ -257,7 +282,7 @@ export class EditTextBehavior {
             let toRoman = FormattedText.fromHostCharsetStrict(char, getRoot().getBrowserInfo());
             if (toRoman && toRoman.length === 1 && toRoman.charCodeAt(0) >= 32 && charcode >= 32) {
                 if (gel) {
-                    // insert the char into the field
+                    /* insert the char into the field */
                     SelAndEntry.changeTextInsert(gel, toRoman);
                     d.setHandled();
                 }
@@ -265,9 +290,12 @@ export class EditTextBehavior {
         }
     }
 
-    onPasteText(c: UI512PresenterWithMenuInterface, d: PasteTextEventDetails) {
-        let el = SelAndEntry.getSelectedField(c);
-        if (el && !(d.fromOS && !c.useOSClipboard)) {
+    /**
+     * onPasteText, insert the text
+     */
+    onPasteText(pr: UI512PresenterWithMenuInterface, d: PasteTextEventDetails) {
+        let el = SelAndEntry.getSelectedField(pr);
+        if (el && !(d.fromOS && !pr.useOSClipboard)) {
             let text = d.fromOS ? FormattedText.fromExternalCharset(d.text, getRoot().getBrowserInfo()) : d.text;
             let gel = this.gelFromEl(el);
             if (gel) {
@@ -276,7 +304,10 @@ export class EditTextBehavior {
         }
     }
 
-    sendCutOrCopy(c: UI512PresenterWithMenuInterface, el: UI512ElTextField, isCut: boolean) {
+    /**
+     * cut or copy text
+     */
+    sendCutOrCopy(pr: UI512PresenterWithMenuInterface, el: UI512ElTextField, isCut: boolean) {
         if (el) {
             let gel = this.gelFromEl(el);
             if (!gel) {
@@ -284,14 +315,14 @@ export class EditTextBehavior {
             }
 
             if (el.get_b('asteriskonly')) {
-                // this is a password "asteriskonly" field so don't allow cut/copy
+                /* this is a password "asteriskonly" field so don't allow cut/copy */
                 return;
             }
 
             let sel = SelAndEntry.getSelectedText(gel);
             if (sel && sel.length > 0) {
-                let text = c.useOSClipboard ? FormattedText.toExternalCharset(sel, getRoot().getBrowserInfo()) : sel;
-                let succeeded = c.clipManager.copy(text, c.useOSClipboard);
+                let text = pr.useOSClipboard ? FormattedText.toExternalCharset(sel, getRoot().getBrowserInfo()) : sel;
+                let succeeded = pr.clipManager.copy(text, pr.useOSClipboard);
                 if (succeeded && isCut && sel.length > 0) {
                     SelAndEntry.changeTextBackspace(gel, false, false);
                 }
@@ -299,14 +330,17 @@ export class EditTextBehavior {
         }
     }
 
-    onBlinkCaret(c: UI512PresenterWithMenuInterface, d: IdleEventDetails) {
-        c.timerSlowIdle.update(d.milliseconds);
-        if (c.timerSlowIdle.isDue()) {
-            c.timerSlowIdle.reset();
+    /**
+     * onIdle, blink the caret
+     */
+    protected onBlinkCaret(pr: UI512PresenterWithMenuInterface, d: IdleEventDetails) {
+        pr.timerSlowIdle.update(d.milliseconds);
+        if (pr.timerSlowIdle.isDue()) {
+            pr.timerSlowIdle.reset();
 
-            // blink the caret for this field
-            if (c.getCurrentFocus()) {
-                let el = c.app.findElemById(c.getCurrentFocus());
+            /* blink the caret for this field */
+            if (pr.getCurrentFocus()) {
+                let el = pr.app.findEl(pr.getCurrentFocus());
                 if (el && el instanceof UI512ElTextField && el.get_b('canselecttext')) {
                     el.set('showcaret', !el.get_b('showcaret'));
                 }
@@ -314,35 +348,41 @@ export class EditTextBehavior {
         }
     }
 
-    onIdle(c: UI512PresenterWithMenuInterface, d: IdleEventDetails) {
-        // scroll down more if user is still clicked on the down arrow
-        let clickedid = c.trackClickedIds[0];
-        if (c.mouseDragStatus === MouseDragStatus.ScrollArrow && clickedid) {
+    /**
+     * onIdle, continue scrolling if holding mouse down on field
+     */
+    onIdle(pr: UI512PresenterWithMenuInterface, d: IdleEventDetails) {
+        /* scroll down more if user is still clicked on the down arrow */
+        let clickedid = pr.trackClickedIds[0];
+        if (pr.mouseDragStatus === MouseDragStatus.ScrollArrow && clickedid) {
             let moveAmt = getAmountIfScrollArrowClicked(clickedid);
             if (moveAmt) {
-                let el = c.app.findElemById(clickedid);
-                if (el && RectUtils.hasPoint(c.trackMouse[0], c.trackMouse[1], el.x, el.y, el.w, el.h)) {
-                    this.getScrollbarImpl().onScrollArrowClicked(c, clickedid, moveAmt);
+                let el = pr.app.findEl(clickedid);
+                if (el && RectUtils.hasPoint(pr.trackMouse[0], pr.trackMouse[1], el.x, el.y, el.w, el.h)) {
+                    this.getScrollbarImpl().onScrollArrowClicked(pr, clickedid, moveAmt);
                 }
             }
         }
 
-        this.onBlinkCaret(c, d);
-        if (c.useOSClipboard) {
-            c.clipManager.ensureReadyForPaste(d.milliseconds);
+        this.onBlinkCaret(pr, d);
+        if (pr.useOSClipboard) {
+            pr.clipManager.ensureReadyForPaste(d.milliseconds);
         }
     }
 }
 
+/**
+ * default listeners for a presenter with text editing.
+ */
 export function addDefaultListeners(listeners: { [t: number]: Function[] }) {
-    let editTextBehavior = new EditTextBehavior();
+    let editTextBehavior = new UI512TextEvents();
     listeners[UI512EventType.MouseDown.valueOf()] = [
         BasicHandlers.trackMouseStatusMouseDown,
         BasicHandlers.trackCurrentElMouseDown,
         BasicHandlers.trackHighlightedButtonMouseDown,
         MenuBehavior.onMouseDown,
         editTextBehavior.onMouseDownScroll.bind(editTextBehavior),
-        editTextBehavior.onMouseDownSelect.bind(editTextBehavior),
+        editTextBehavior.onMouseDownSelect.bind(editTextBehavior)
     ];
 
     listeners[UI512EventType.MouseUp.valueOf()] = [
@@ -350,34 +390,42 @@ export function addDefaultListeners(listeners: { [t: number]: Function[] }) {
         BasicHandlers.trackCurrentElMouseUp,
         BasicHandlers.trackHighlightedButtonMouseUp,
         MenuBehavior.onMouseUp,
-        editTextBehavior.onMouseUp.bind(editTextBehavior),
+        editTextBehavior.onMouseUp.bind(editTextBehavior)
     ];
 
     listeners[UI512EventType.Idle.valueOf()] = [
         editTextBehavior.onIdle.bind(editTextBehavior),
-        BasicHandlers.onIdleRunCallbackQueueFromAsyncs,
+        BasicHandlers.onIdleRunCallbackQueueFromAsyncs
     ];
+
     listeners[UI512EventType.MouseMove.valueOf()] = [
         BasicHandlers.trackCurrentElMouseMove,
-        editTextBehavior.onMouseMoveSelect.bind(editTextBehavior),
+        editTextBehavior.onMouseMoveSelect.bind(editTextBehavior)
     ];
+
     listeners[UI512EventType.MouseEnter.valueOf()] = [
         BasicHandlers.trackHighlightedButtonMouseEnter,
-        MenuBehavior.onMouseEnter,
+        MenuBehavior.onMouseEnter
     ];
+
     listeners[UI512EventType.MouseLeave.valueOf()] = [
         BasicHandlers.trackHighlightedButtonMouseLeave,
-        MenuBehavior.onMouseLeave,
+        MenuBehavior.onMouseLeave
     ];
+
     listeners[UI512EventType.KeyDown.valueOf()] = [
         BasicHandlers.basicKeyShortcuts,
-        editTextBehavior.onKeyDown.bind(editTextBehavior),
+        editTextBehavior.onKeyDown.bind(editTextBehavior)
     ];
 
     listeners[UI512EventType.KeyUp.valueOf()] = [];
+
     listeners[UI512EventType.MouseDownDouble.valueOf()] = [
         BasicHandlers.trackMouseDoubleDown,
-        editTextBehavior.onMouseDoubleDown.bind(editTextBehavior),
+        editTextBehavior.onMouseDoubleDown.bind(editTextBehavior)
     ];
-    listeners[UI512EventType.PasteText.valueOf()] = [editTextBehavior.onPasteText.bind(editTextBehavior)];
+
+    listeners[UI512EventType.PasteText.valueOf()] = [
+        editTextBehavior.onPasteText.bind(editTextBehavior)];
 }
+

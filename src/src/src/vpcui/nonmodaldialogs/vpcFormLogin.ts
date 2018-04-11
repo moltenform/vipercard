@@ -23,7 +23,7 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
     fields: [string, string, number][] = [
         ['username', 'lngUsername:', 1],
         ['pw', 'lngPassword:', 1],
-        ['code_email_verify', 'lngE-mail verif-\nication code:', 2],
+        ['code_email_verify', 'lngE-mail verif-\nication code:', 2]
     ];
     btns: [string, string][] = [['ok', 'lngOK'], ['close', 'lngClose'], ['newaccount', 'lngNew User']];
 
@@ -55,7 +55,7 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
 
     createSpecific(app: UI512Application) {
         super.createSpecific(app);
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let fldPw = grp.getEl(this.getElId('fldpw'));
         fldPw.set('asteriskonly', true);
         let fldEmailVerify = grp.getEl(this.getElId('fldcode_email_verify'));
@@ -103,7 +103,7 @@ export class VpcFormNonModalDialogLogIn extends VpcFormNonModalDialogFormBase
                 } else if (result[0] === 'need_email_verify' && result.length === 3) {
                     // login needs email verification
                     this.setStatus('lngPlease enter the verification code sent via e-mail.');
-                    let grp = appli.UI512App().getGroup(this.grpid);
+                    let grp = appli.UI512App().getGroup(this.grpId);
                     let fldEmailVerify = grp.getEl(this.getElId('fldcode_email_verify'));
                     fldEmailVerify.set('visible', true);
                     let lblEmailVerify = grp.getEl(this.getElId('lblForcode_email_verify'));

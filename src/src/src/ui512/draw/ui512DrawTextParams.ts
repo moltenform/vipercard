@@ -8,7 +8,11 @@
  * fill out a RenderTextArgs object
  * based on the properties of a text field element
  */
-export function renderTextArgsFromEl(el: CanGetValue, subRect: number[], hasFocus: boolean): [RenderTextArgs, FormattedText] {
+export function renderTextArgsFromEl(
+    el: CanGetValue,
+    subRect: number[],
+    hasFocus: boolean
+): [RenderTextArgs, FormattedText] {
     let args = new RenderTextArgs(
         subRect[0],
         subRect[1],
@@ -87,9 +91,8 @@ export class RenderTextArgs {
  * rough structure of a _UI512Gettable_
  */
 interface CanGetValue {
-    get_b(s:string):boolean;
-    get_n(s:string):number;
-    get_s(s:string):string;
-    get_ftxt():FormattedText;
+    get_b(s: string): boolean;
+    get_n(s: string): number;
+    get_s(s: string): string;
+    get_ftxt(): FormattedText;
 }
-

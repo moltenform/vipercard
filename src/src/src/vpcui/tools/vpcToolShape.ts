@@ -13,7 +13,7 @@
 
 enum ShapeToolMode {
     Inited,
-    Dragging,
+    Dragging
 }
 
 export class ShapeToolState {

@@ -13,8 +13,8 @@
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { UI512CompCodeEditorFont } from '../../ui512/composites/ui512CodeEditorClasses.js';
 /* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512CodeEditor.js';
@@ -30,7 +30,6 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
     autoCreateBlock = true;
     compositeType = 'VpcPanelScriptEditor';
     lineCommentPrefix = '--~ ';
-    el: O<UI512ElTextField>;
     appli: VpcStateInterface;
 
     needsCompilation = new MapKeyToObjectCanSet<boolean>();
@@ -51,7 +50,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             [/^if\b/, /^(else\b)|(end\s+if)\b/, 'end if'],
             [/^else\b/, /^(else\b)|(end\s+if)\b/, ''],
             [/^on\s+(\w+)\b/, /^end\s+%MATCH%\b/, 'end %MATCH%'],
-            [/^function\s+(\w+)\b/, /^end\s+%MATCH%\b/, 'end %MATCH%'],
+            [/^function\s+(\w+)\b/, /^end\s+%MATCH%\b/, 'end %MATCH%']
         ];
 
         this.autoIndent.caseSensitive = true;
@@ -72,7 +71,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         const footerHeight = 65;
 
         // draw a 1px border around the panel
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
@@ -124,7 +123,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
 
     refreshFromModel(app: UI512Application) {
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         if (!vel) {
             this.setStatusLabeltext('', undefined, '', '');
             grp.getEl(this.getElId('caption')).set('labeltext', lng('lngElement not found.'));
@@ -136,15 +135,13 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             captionMsg = captionMsg.substr(0, 36);
             caption.set('labeltext', captionMsg);
 
-            let selcaret = this.el!.get_n('selcaret');
-            let selend = this.el!.get_n('selend');
-            let scrl = this.el!.get_n('scrollamt');
-            let newftxt = FormattedText.newFromUnformatted(vel.get_s('script'));
-            newftxt.setFontEverywhere(this.monaco);
-            this.el!.setftxt(newftxt);
-            this.el!.set('selcaret', selcaret);
-            this.el!.set('selend', selend);
-            this.el!.set('scrollamt', scrl);
+            let selcaret = this.el.get_n('selcaret');
+            let selend = this.el.get_n('selend');
+            let scrl = this.el.get_n('scrollamt');
+            this.setContent(vel.get_s('script'));
+            this.el.set('selcaret', selcaret);
+            this.el.set('selend', selend);
+            this.el.set('scrollamt', scrl);
 
             this.refreshStatusLabels(app, vel);
         }
@@ -176,18 +173,12 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             }
         }
 
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
         if (slength(this.status2a.get_s('labeltext')) || this.needsCompilation.find(vel.id)) {
-            btnCompile.set(
-                'labeltext',
-                UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold)
-            );
+            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
         } else {
-            btnCompile.set(
-                'labeltext',
-                UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain)
-            );
+            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
         }
     }
 
@@ -229,7 +220,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         this.appli.causeUIRedraw();
     }
 
-    scrollToErrorPosition(c: O<UI512ControllerBase>) {
+    scrollToErrorPosition(pr: O<UI512PresenterBase>) {
         let linenotxt = this.status2a.get_s('labeltext');
         if (this.el && linenotxt.length > 0) {
             let thenums = linenotxt.split(' ')[1].replace(/,/g, '');
@@ -239,15 +230,15 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
                 let gel = new UI512ElTextFieldAsGeneric(this.el);
                 SelAndEntry.selectLineInField(gel, thenum);
 
-                if (c) {
-                    c.setCurrentFocus(this.el.id);
+                if (pr) {
+                    pr.setCurrentFocus(this.el.id);
                 }
             }
         }
     }
 
     respondKeydown(d: KeyDownEventDetails) {
-        if (!this.getEl().get_b('canselecttext') || !this.getEl().get_b('canedit')) {
+        if (!this.el || !this.el.get_b('canselecttext') || !this.el.get_b('canedit')) {
             return;
         }
 

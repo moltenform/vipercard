@@ -6,10 +6,14 @@
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { EventDetails } from '../../ui512/menu/ui512Events.js';
 
+/**
+ * forward-declare more of the Presenter class
+ */
 export interface UI512PresenterWithMenuInterface extends UI512PresenterInterface {
     app: UI512Application;
 
     rawEvent(d: EventDetails): void;
     canInteract(el: O<UI512Element>): boolean;
     canSelectTextInField(el: O<UI512ElTextField>): boolean;
+    queueRefreshCursor(): void;
 }

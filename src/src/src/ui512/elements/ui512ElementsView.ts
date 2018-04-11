@@ -11,54 +11,87 @@
 /* auto */ import { UI512Element, UI512ElementWithHighlight } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElementButtonGeneral } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512BtnStyle, UI512ElementButtonBase } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
 /* auto */ import { UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementsMenu.js';
 
+/**
+ * draw UI elements onto a canvas
+ */
 export class UI512ViewDraw {
     allowMultipleFocus = false;
 
-    getSubRect(b: UI512ViewDrawBorders, padx: number, pady: number) {
-        return RectUtils.getSubRectRaw(b.bx, b.by, b.w, b.h, padx, pady);
+    /**
+     * shrink a rectangle by a defined amount of padding, and keep it centered.
+     */
+    getSubRect(b: UI512ViewDrawBorders, padX: number, padY: number) {
+        return RectUtils.getSubRectRaw(b.bx, b.by, b.w, b.h, padX, padY);
     }
 
-    drawFillIfDefined(b: UI512ViewDrawBorders, rect: number[], fillstyle: string) {
+    /**
+     * fill a rectangle, no-op if rect isn't set
+     */
+    drawFillIfDefined(b: UI512ViewDrawBorders, rect: number[], fillStyle: string) {
         if (rect) {
-            b.canvas.fillRect(rect[0], rect[1], rect[2], rect[3], b.bx, b.by, b.w, b.h, fillstyle);
+            b.canvas.fillRect(rect[0], rect[1], rect[2], rect[3], b.bx, b.by, b.w, b.h, fillStyle);
         }
     }
 
+    /**
+     * invert colors for a rectangle, no-op if rect isn't set
+     */
     drawInvertIfDefined(b: UI512ViewDrawBorders, rect: number[]) {
         if (rect) {
             b.canvas.invertColorsRect(rect[0], rect[1], rect[2], rect[3], b.bx, b.by, b.w, b.h);
         }
     }
 
+    /**
+     * draw text in a rectangle, no-op if rect isn't set
+     */
     drawTextIfDefined(
         b: UI512ViewDrawBorders,
         rect: O<number[]>,
         text: string,
         wrap: boolean,
-        halign: boolean,
-        valign: boolean,
+        hAlign: boolean,
+        vAlign: boolean,
         styleEnabled: boolean
     ) {
         if (rect) {
-            let opts = new RenderTextArgs(rect[0], rect[1], rect[2], rect[3], halign, valign, wrap);
-            return this.drawTextIfDefinedOpts(b, text, opts, styleEnabled);
+            let opts = new RenderTextArgs(rect[0], rect[1], rect[2], rect[3], hAlign, vAlign, wrap);
+            return this.drawText(b, text, opts, styleEnabled);
         } else {
             return undefined;
         }
     }
 
-    drawTextIfDefinedOpts(b: UI512ViewDrawBorders, text: string, opts: RenderTextArgs, styleEnabled: boolean) {
-        let fontManager = cast(getRoot().getDrawText(), UI512DrawText);
+    /**
+     * draw text in a rectangle from element, no-op if rect isn't set
+     */
+    drawTextIfDefinedFromEl(b: UI512ViewDrawBorders, rect: O<number[]>, el: UI512Element) {
+        return this.drawTextIfDefined(
+            b,
+            rect,
+            el.get_s('labeltext'),
+            el.get_b('labelwrap'),
+            el.get_b('labelhalign'),
+            el.get_b('labelvalign'),
+            el.get_b('enabledstyle')
+        );
+    }
+
+    /**
+     * draw text in a rectangle
+     */
+    drawText(b: UI512ViewDrawBorders, text: string, opts: RenderTextArgs, styleEnabled: boolean) {
+        let drawText = cast(getRoot().getDrawText(), UI512DrawText);
         if (!styleEnabled) {
             text = UI512DrawText.makeInitialTextDisabled(text);
         }
 
-        let drawn = fontManager.drawStringIntoBox(text, b.canvas, opts);
+        let drawn = drawText.drawStringIntoBox(text, b.canvas, opts);
         if (drawn) {
             return drawn;
         } else {
@@ -67,104 +100,99 @@ export class UI512ViewDraw {
         }
     }
 
-    drawIconIfDefined(b: UI512ViewDrawBorders, rect: O<number[]>, iconinfo: IconInfo, overrideCentered?: boolean) {
+    /**
+     * draw icon in a rectangle, no-op if rect isn't set
+     */
+    drawIconIfDefined(b: UI512ViewDrawBorders, rect: O<number[]>, iconInfo: IconInfo, overrideCentered?: boolean) {
         if (rect) {
-            const iconcentered = overrideCentered === undefined ? iconinfo.centered : overrideCentered;
+            const iconCentered = overrideCentered === undefined ? iconInfo.centered : overrideCentered;
             let iconManager = cast(getRoot().getDrawIcon(), UI512IconManager);
-            let icon = iconManager.findIcon(iconinfo.iconGroup, iconinfo.iconNumber);
+            let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
             if (icon) {
-                icon.drawIntoBox(b.canvas, iconinfo, rect[0], rect[1], rect[2], rect[3]);
+                icon.drawIntoBox(b.canvas, iconInfo, rect[0], rect[1], rect[2], rect[3]);
             } else {
                 b.complete.complete = false;
             }
         }
     }
 
+    /**
+     * render a button
+     */
+    renderButtonImpl(b: UI512ViewDrawBorders, el: UI512ElementButtonBase, padX: number, padY: number) {
+        assertTrue(b.w >= 2 * padX, '4h|too small');
+        assertTrue(b.h >= 2 * padY, '4g|too small');
+
+        let iconInfo = this.getIconInfo(el);
+        let subRect = this.getSubRect(b, padX, padY);
+        if (!slength(el.get_s('labeltext')) && !iconInfo) {
+            /* case 1) no icon and no label */
+        } else if (slength(el.get_s('labeltext')) && !iconInfo) {
+            /* case 2) no icon and a label */
+            this.drawTextIfDefinedFromEl(b, subRect, el);
+        } else if (!slength(el.get_s('labeltext')) && iconInfo) {
+            /* case 3) icon and no label */
+            this.drawIconIfDefined(b, subRect, iconInfo);
+        } else if (slength(el.get_s('labeltext')) && iconInfo) {
+            /* case 4) both icon and label */
+            this.drawBothTextAndIcon(b, subRect, iconInfo, el.get_s('labeltext'), el.get_b('enabledstyle'));
+        }
+    }
+
+    /**
+     * draw both text and icon in a rectangle, no-op if rect isn't set
+     */
     drawBothTextAndIcon(
         b: UI512ViewDrawBorders,
         rect: O<number[]>,
-        iconinfo: IconInfo,
+        iconInfo: IconInfo,
         s: string,
         styleEnabled: boolean
     ) {
-        const lineheight = 12;
-        const marginbetween = 0;
-        let srcrect = RenderIconGroup.lookupRectangle(iconinfo.iconGroup, iconinfo.iconNumber);
-        if (rect && srcrect) {
-            let iconheight = srcrect[3] + iconinfo.adjustHeight;
+        const lineHeight = 12;
+        const marginBetween = 0;
+        let srcRect = RenderIconGroup.lookupRectangle(iconInfo.iconGroup, iconInfo.iconNumber);
+        if (rect && srcRect) {
+            let iconH = srcRect[3] + iconInfo.adjustHeight;
             let boxIconAndTextWidth = rect[2];
-            let boxIconAndTextHeight = iconheight + marginbetween + lineheight;
+            let boxIconAndTextHeight = iconH + marginBetween + lineHeight;
             let boxIconAndTextX = rect[0];
             let boxIconAndTextY = rect[1] + Math.trunc((rect[3] - boxIconAndTextHeight) / 2);
 
             if (boxIconAndTextWidth <= rect[2] && boxIconAndTextHeight <= rect[3]) {
-                let boxIconOnly = [boxIconAndTextX, boxIconAndTextY, boxIconAndTextWidth, iconheight];
-                this.drawIconIfDefined(b, boxIconOnly, iconinfo);
+                let boxIconOnly = [boxIconAndTextX, boxIconAndTextY, boxIconAndTextWidth, iconH];
+                this.drawIconIfDefined(b, boxIconOnly, iconInfo);
                 let boxTextOnlyX = boxIconAndTextX;
-                let boxTextOnlyY = boxIconAndTextY + iconheight + marginbetween;
+                let boxTextOnlyY = boxIconAndTextY + iconH + marginBetween;
                 let boxTextOnlyWidth = boxIconAndTextWidth;
                 let boxTextOnlyHeight = Math.max(1, rect[3] - (boxTextOnlyY - rect[1]));
 
                 /* Follow what HC does and set the font to 9pt Geneva. in fact, in HC no other font is supported. */
                 let style = styleEnabled ? 'biuosdce' : 'biuos+dce';
-                let labelsmall = UI512DrawText.setFont(s, `geneva_9_${style}`);
+                let labelSmall = UI512DrawText.setFont(s, `geneva_9_${style}`);
 
                 /* Follow what HC does and strip out any newlines */
-                labelsmall = labelsmall.replace(/\r|\n/g, '');
+                labelSmall = labelSmall.replace(/\r|\n/g, '');
                 let boxText = [boxTextOnlyX, boxTextOnlyY, boxTextOnlyWidth, boxTextOnlyWidth];
 
                 /* Follow what HC does and do not wrap the label text, even if asked to */
                 this.drawTextIfDefined(
                     b,
                     boxText,
-                    labelsmall,
-                    false /*wrap*/,
-                    true /*halign*/,
-                    false /*valign*/,
+                    labelSmall,
+                    false /* wrap */,
+                    true /* hAlign */,
+                    false /* vAlign */,
                     styleEnabled
                 );
             }
         }
     }
 
-    renderButtonCheckbox(b: UI512ViewDrawBorders, el: UI512ElementButtonGeneral) {
-        const spacebetweencheckandtext = 4;
-        const padleft = 2;
-        const iconwidth = 12;
-        let iconinfo = new IconInfo('001', -1);
-        iconinfo.centered = true;
-
-        if (el.get_n('style') === UI512BtnStyle.Radio && el.get_b('checkmark')) {
-            iconinfo.iconNumber = el.get_b('highlightactive') ? 34 : 32;
-        } else if (el.get_n('style') === UI512BtnStyle.Radio && !el.get_b('checkmark')) {
-            iconinfo.iconNumber = el.get_b('highlightactive') ? 35 : 33;
-        } else if (el.get_b('checkmark')) {
-            iconinfo.iconNumber = el.get_b('highlightactive') ? 30 : 28;
-        } else {
-            iconinfo.iconNumber = el.get_b('highlightactive') ? 31 : 29;
-        }
-
-        let boxIcon = [b.bx + padleft, b.by, padleft + iconwidth, b.h];
-        let boxTextX = b.bx + padleft + iconwidth + spacebetweencheckandtext;
-        let boxTextY = b.by;
-        let boxText = [boxTextX, boxTextY, b.w - (boxTextX - b.bx), b.h];
-        if (boxIcon[2] > 0 && boxText[2] > 0) {
-            iconinfo.centered = true;
-
-            this.drawIconIfDefined(b, boxIcon, iconinfo);
-            this.drawTextIfDefined(
-                b,
-                boxText,
-                el.get_s('labeltext'),
-                el.get_b('labelwrap'),
-                el.get_b('labelhalign'),
-                el.get_b('labelvalign'),
-                el.get_b('enabledstyle')
-            );
-        }
-    }
-
-    iconInfoFromEl(el: UI512ElementWithHighlight): O<IconInfo> {
+    /**
+     * populate an IconInfo object by getting properties from the element
+     */
+    getIconInfo(el: UI512ElementWithHighlight): O<IconInfo> {
         if (el.get_s('icongroupid').length > 0 && el.get_n('iconnumber') >= 0) {
             let ret = new IconInfo(el.get_s('icongroupid'), el.get_n('iconnumber'));
             ret.adjustX = el.get_n('iconadjustx');
@@ -184,34 +212,44 @@ export class UI512ViewDraw {
         }
     }
 
-    renderButtonTextOrIcon(b: UI512ViewDrawBorders, el: UI512ElementButtonGeneral, padx: number, pady: number) {
-        assertTrue(b.w > 2 * padx, '4h|too small');
-        assertTrue(b.h > 2 * pady, '4g|too small');
+    /**
+     * render a checkbox and label
+     */
+    renderButtonCheckbox(b: UI512ViewDrawBorders, el: UI512ElementButtonBase) {
+        let iconInfo = new IconInfo('001', -1);
+        iconInfo.centered = true;
+        const spaceBetweenCheckAndText = 4;
+        const padLeft = 2;
+        const iconWidth = 12;
 
-        let iconinfo = this.iconInfoFromEl(el);
-        let subrect = this.getSubRect(b, padx, pady);
-        if (!slength(el.get_s('labeltext')) && !iconinfo) {
-            /* nothing to do */
-        } else if (slength(el.get_s('labeltext')) && !iconinfo) {
-            this.drawTextIfDefined(
-                b,
-                subrect,
-                el.get_s('labeltext'),
-                el.get_b('labelwrap'),
-                el.get_b('labelhalign'),
-                el.get_b('labelvalign'),
-                el.get_b('enabledstyle')
-            );
-        } else if (!slength(el.get_s('labeltext')) && iconinfo) {
-            this.drawIconIfDefined(b, subrect, iconinfo);
-        } else if (slength(el.get_s('labeltext')) && iconinfo) {
-            this.drawBothTextAndIcon(b, subrect, iconinfo, el.get_s('labeltext'), el.get_b('enabledstyle'));
+        if (el.get_n('style') === UI512BtnStyle.Radio && el.get_b('checkmark')) {
+            iconInfo.iconNumber = el.get_b('highlightactive') ? 34 : 32;
+        } else if (el.get_n('style') === UI512BtnStyle.Radio && !el.get_b('checkmark')) {
+            iconInfo.iconNumber = el.get_b('highlightactive') ? 35 : 33;
+        } else if (el.get_b('checkmark')) {
+            iconInfo.iconNumber = el.get_b('highlightactive') ? 30 : 28;
+        } else {
+            iconInfo.iconNumber = el.get_b('highlightactive') ? 31 : 29;
+        }
+
+        let boxIcon = [b.bx + padLeft, b.by, padLeft + iconWidth, b.h];
+        let boxTextX = b.bx + padLeft + iconWidth + spaceBetweenCheckAndText;
+        let boxTextY = b.by;
+        let boxText = [boxTextX, boxTextY, b.w - (boxTextX - b.bx), b.h];
+        if (boxIcon[2] > 0 && boxText[2] > 0) {
+            iconInfo.centered = true;
+
+            this.drawIconIfDefined(b, boxIcon, iconInfo);
+            this.drawTextIfDefinedFromEl(b, boxText, el);
         }
     }
 
-    renderButtonStandard(
+    /**
+     * render an opaque button (clears out insides before drawing)
+     */
+    renderOpaqueButton(
         b: UI512ViewDrawBorders,
-        el: UI512ElementButtonGeneral,
+        el: UI512ElementButtonBase,
         fnNotHighlight: Function,
         fnHighlight: Function,
         decorationSize: number
@@ -219,61 +257,67 @@ export class UI512ViewDraw {
         if (el.get_b('highlightactive') && el.get_n('iconnumberwhenhighlight') === -1) {
             /* draw the border */
             fnHighlight.apply(b);
-            let subrect = this.getSubRect(b, decorationSize, decorationSize);
-            if (subrect && !b.didFallbackToSimpleRect) {
+            let subRect = this.getSubRect(b, decorationSize, decorationSize);
+            if (subRect && !b.didFallbackToSimpleRect) {
                 /* clear the insides */
-                this.drawFillIfDefined(b, subrect, 'white');
+                this.drawFillIfDefined(b, subRect, 'white');
                 /* draw the label */
-                this.renderButtonTextOrIcon(b, el, decorationSize, decorationSize);
+                this.renderButtonImpl(b, el, decorationSize, decorationSize);
                 /* invert colors on the insides */
-                this.drawInvertIfDefined(b, subrect);
+                this.drawInvertIfDefined(b, subRect);
             }
         } else {
             /* draw the border */
             fnNotHighlight.apply(b);
             if (!b.didFallbackToSimpleRect && b.w > decorationSize * 2 && b.h > decorationSize * 2) {
                 /* draw the label */
-                this.renderButtonTextOrIcon(b, el, decorationSize, decorationSize);
+                this.renderButtonImpl(b, el, decorationSize, decorationSize);
             }
         }
     }
 
-    renderButtonTransparent(b: UI512ViewDrawBorders, el: UI512ElementButtonGeneral) {
+    /**
+     * draw transparent button
+     */
+    renderButtonTransparent(b: UI512ViewDrawBorders, el: UI512ElementButtonBase) {
         if (el.get_b('highlightactive') && el.get_n('iconnumberwhenhighlight') === -1) {
             b.drawboxnoborder();
-            this.renderButtonTextOrIcon(b, el, 0, 0);
+            this.renderButtonImpl(b, el, 0, 0);
             this.drawInvertIfDefined(b, [b.bx, b.by, el.w, el.h]);
         } else {
-            this.renderButtonTextOrIcon(b, el, 0, 0);
+            this.renderButtonImpl(b, el, 0, 0);
         }
     }
 
-    /* tslint:disable:no-unbound-method */
-    drawUI512ElementButtonGeneralMethod(b: UI512ViewDrawBorders, el: UI512ElementButtonGeneral) {
+    /**
+     * draw a button
+     */
+    goUI512ElementButtonBase(b: UI512ViewDrawBorders, el: UI512ElementButtonBase) {
+        /* tslint:disable:no-unbound-method */
         switch (el.get_n('style')) {
             case UI512BtnStyle.Transparent:
                 this.renderButtonTransparent(b, el);
                 break;
             case UI512BtnStyle.Opaque:
-                this.renderButtonStandard(b, el, b.drawboxnoborder, b.drawboxnoborderclicked, 1);
+                this.renderOpaqueButton(b, el, b.drawboxnoborder, b.drawboxnoborderclicked, 1);
                 break;
             case UI512BtnStyle.RoundRect:
-                this.renderButtonStandard(b, el, b.drawvpcbtn, b.drawvpcbtnclicked, 7);
+                this.renderOpaqueButton(b, el, b.drawvpcbtn, b.drawvpcbtnclicked, 7);
                 break;
             case UI512BtnStyle.Plain:
-                this.renderButtonStandard(b, el, b.drawvpcroundrect, b.drawvpcroundrectclicked, 7);
+                this.renderOpaqueButton(b, el, b.drawvpcroundrect, b.drawvpcroundrectclicked, 7);
                 break;
             case UI512BtnStyle.Shadow:
-                this.renderButtonStandard(b, el, b.drawosboxshadow, b.drawosboxshadowclicked, 4);
+                this.renderOpaqueButton(b, el, b.drawosboxshadow, b.drawosboxshadowclicked, 4);
                 break;
             case UI512BtnStyle.OSStandard:
-                this.renderButtonStandard(b, el, b.drawosbtn, b.drawosbtnclicked, 5);
+                this.renderOpaqueButton(b, el, b.drawosbtn, b.drawosbtnclicked, 5);
                 break;
             case UI512BtnStyle.OSDefault:
-                this.renderButtonStandard(b, el, b.drawosdefaultbtn, b.drawosdefaultbtnclicked, 9);
+                this.renderOpaqueButton(b, el, b.drawosdefaultbtn, b.drawosdefaultbtnclicked, 9);
                 break;
             case UI512BtnStyle.OSBoxModal:
-                this.renderButtonStandard(b, el, b.drawosboxmodal, b.drawosboxmodal, 7);
+                this.renderOpaqueButton(b, el, b.drawosboxmodal, b.drawosboxmodal, 7);
                 break;
             case UI512BtnStyle.Checkbox:
                 this.renderButtonCheckbox(b, el);
@@ -282,70 +326,66 @@ export class UI512ViewDraw {
                 this.renderButtonCheckbox(b, el);
                 break;
             case UI512BtnStyle.Rectangle:
-                this.renderButtonStandard(b, el, b.drawboxthinborder, b.drawboxthinborderclicked, 1);
+                this.renderOpaqueButton(b, el, b.drawboxthinborder, b.drawboxthinborderclicked, 1);
                 break;
             default:
                 assertTrueWarn(false, `4f|unknown button style ${el.get_n('style')}`);
-                this.renderButtonStandard(b, el, b.drawboxthinborder, b.drawboxthinborderclicked, 2);
+                this.renderOpaqueButton(b, el, b.drawboxthinborder, b.drawboxthinborderclicked, 2);
                 break;
         }
     }
 
+    /**
+     * draw a mostly-transparent label, used for dialog captions
+     */
     renderStaticLabelTransparentExceptChars(b: UI512ViewDrawBorders, el: UI512ElLabel) {
         /* measure the string so that we can white out the space before drawing letters */
-        let fontmanager = cast(getRoot().getDrawText(), UI512DrawText);
+        let drawText = cast(getRoot().getDrawText(), UI512DrawText);
         let subrectAlmostAll = this.getSubRect(b, 1, 1);
-        let measured = fontmanager.measureString(el.get_s('labeltext'));
+        let measured = drawText.measureString(el.get_s('labeltext'));
         if (measured && subrectAlmostAll) {
             /* get the smaller rectangle that will contain the text */
             let shrinkx = Math.floor((el.w - (measured.rightmostPixelDrawn + ScrollConsts.WindowCaptionSpacing)) / 2);
 
             /* the white rectangle should cover the horizontal lines but not the outer border */
-            let subrect = this.getSubRect(b, Math.max(0, shrinkx), 1);
-            if (subrect) {
-                b.canvas.fillRect(subrect[0], subrect[1], subrect[2], subrect[3], b.bx, b.by, b.w, b.h, 'white');
+            let subRect = this.getSubRect(b, Math.max(0, shrinkx), 1);
+            if (subRect) {
+                b.canvas.fillRect(subRect[0], subRect[1], subRect[2], subRect[3], b.bx, b.by, b.w, b.h, 'white');
                 subrectAlmostAll[1] += ScrollConsts.WindowCaptionAdjustTextY;
-                this.drawTextIfDefined(
-                    b,
-                    subrectAlmostAll,
-                    el.get_s('labeltext'),
-                    el.get_b('labelwrap'),
-                    el.get_b('labelhalign'),
-                    el.get_b('labelvalign'),
-                    el.get_b('enabledstyle')
-                );
+                this.drawTextIfDefinedFromEl(b, subrectAlmostAll, el);
             }
         } else {
             b.complete.complete = false;
         }
     }
 
-    drawUI512ElLabelMethod(b: UI512ViewDrawBorders, el: UI512ElLabel) {
+    /**
+     * draw a label
+     */
+    goUI512ElLabel(b: UI512ViewDrawBorders, el: UI512ElLabel) {
         if (el.get_b('transparentExceptChars')) {
             this.renderStaticLabelTransparentExceptChars(b, el);
         } else {
             b.drawboxnoborder();
-            let subrect = this.getSubRect(b, 1, 1);
-            this.drawTextIfDefined(
-                b,
-                subrect,
-                el.get_s('labeltext'),
-                el.get_b('labelwrap'),
-                el.get_b('labelhalign'),
-                el.get_b('labelvalign'),
-                el.get_b('enabledstyle')
-            );
+            let subRect = this.getSubRect(b, 1, 1);
+            this.drawTextIfDefinedFromEl(b, subRect, el);
         }
     }
 
-    drawUI512MenuRootMethod(b: UI512ViewDrawBorders, el: UI512MenuRoot) {
-        if (el.get_s('childids')) {
+    /**
+     * draw a white rectangle for menu root
+     */
+    goUI512MenuRoot(b: UI512ViewDrawBorders, el: UI512MenuRoot) {
+        if (el.get_s('childids').length > 0) {
             b.drawboxnoborder();
             b.canvas.fillRect(el.x, el.bottom - 1, el.w, 1, el.x, el.y, el.w, el.h, 'black');
         }
     }
 
-    drawUI512MenuItemMethod(b: UI512ViewDrawBorders, el: UI512MenuItem) {
+    /**
+     * draw a menu item
+     */
+    goUI512MenuItem(b: UI512ViewDrawBorders, el: UI512MenuItem) {
         if (el.get_s('labeltext') === '---') {
             this.renderMenuItemDivider(b, el);
         } else {
@@ -353,46 +393,55 @@ export class UI512ViewDraw {
         }
     }
 
+    /**
+     * draw a grayed-out menu separator item
+     */
     renderMenuItemDivider(b: UI512ViewDrawBorders, el: UI512MenuItem) {
-        /* instead of drawing lots of dots, use a slice of this black/white image as an "icon" */
-        let iconinfo = new IconInfo('001', 145);
-        let srcrect = RenderIconGroup.lookupRectangle(iconinfo.iconGroup, iconinfo.iconNumber);
-        assertTrueWarn(srcrect, '4e|expected to get srcrect');
-        if (srcrect) {
-            let resultingwidth = Math.min(el.w, srcrect[2]);
+        /* faster than drawing lots of dots, draw a carefully sized slice of an image */
+        let iconInfo = new IconInfo('001', 145);
+        let srcRect = RenderIconGroup.lookupRectangle(iconInfo.iconGroup, iconInfo.iconNumber);
+        assertTrueWarn(srcRect, '4e|expected to get srcRect');
+        if (srcRect) {
+            /* adjust so that the icon width is exactly the width we want */
+            let resultingwidth = Math.min(el.w, srcRect[2]);
             let resultingheight = 1;
+
+            /* adjust by 1px so the pattern of dots and dashes looks correct against the black border */
             const shiftleft = 1;
-            iconinfo.adjustWidth = shiftleft + resultingwidth - srcrect[2];
-            iconinfo.adjustHeight = resultingheight - srcrect[3];
-            iconinfo.adjustSrcX = shiftleft;
-            iconinfo.centered = true;
-            let subrect = [
+            iconInfo.adjustWidth = shiftleft + resultingwidth - srcRect[2];
+            iconInfo.adjustHeight = resultingheight - srcRect[3];
+            iconInfo.adjustSrcX = shiftleft;
+            iconInfo.centered = true;
+            let subRect = [
                 b.bx + MenuConsts.ShadowSizeLeft,
                 b.by,
                 el.w - (MenuConsts.ShadowSizeLeft + MenuConsts.ShadowSizeRight),
-                el.h,
+                el.h
             ];
 
-            this.drawIconIfDefined(b, [b.bx, b.by, el.w, el.h], iconinfo);
+            this.drawIconIfDefined(b, [b.bx, b.by, el.w, el.h], iconInfo);
         }
     }
 
+    /**
+     * render a menu item
+     */
     renderMenuItemText(b: UI512ViewDrawBorders, el: UI512MenuItem) {
         /* draw the checkmark, if applicable */
         let boxLeft = [b.bx, b.by, MenuConsts.FirstLabelPadding, el.h];
         if (el.get_b('checkmark')) {
-            let iconinfo = new IconInfo('001', 19);
-            iconinfo.centered = true;
-            this.drawIconIfDefined(b, boxLeft, iconinfo);
+            let iconInfo = new IconInfo('001', 19);
+            iconInfo.centered = true;
+            this.drawIconIfDefined(b, boxLeft, iconInfo);
         }
 
-        /* draw the label */
+        /* draw the first text */
         if (el.w > MenuConsts.FirstLabelPadding) {
             let boxMain = [b.bx + MenuConsts.FirstLabelPadding, b.by, el.w - MenuConsts.FirstLabelPadding, el.h];
             this.drawTextIfDefined(b, boxMain, el.get_s('labeltext'), false, false, true, el.get_b('enabledstyle'));
         }
 
-        /* draw the second label (cmd shortcut) */
+        /* draw the second text (cmd shortcut) */
         if (el.w > MenuConsts.SecondLabelDistance) {
             let boxRight = [b.bx + el.w - MenuConsts.SecondLabelDistance, b.by, MenuConsts.SecondLabelDistance, el.h];
             this.drawTextIfDefined(b, boxRight, el.get_s('labelhotkey'), false, false, true, el.get_b('enabledstyle'));
@@ -404,7 +453,10 @@ export class UI512ViewDraw {
         }
     }
 
-    drawUI512ElCanvasPieceMethod(b: UI512ViewDrawBorders, el: UI512ElCanvasPiece) {
+    /**
+     * render piece of an image
+     */
+    goUI512ElCanvasPiece(b: UI512ViewDrawBorders, el: UI512ElCanvasPiece) {
         if (el.getCanvasForRead()) {
             b.canvas.drawFromImage(
                 el.getCanvasForRead().canvas,
@@ -422,6 +474,9 @@ export class UI512ViewDraw {
         }
     }
 
+    /**
+     * different styles have different borders and margins
+     */
     protected getBorderAndMarginForField(b: UI512ViewDrawBorders, style: number): [O<Function>, number, number] {
         switch (style) {
             case UI512FldStyle.Transparent:
@@ -438,37 +493,47 @@ export class UI512ViewDraw {
         }
     }
 
+    /**
+     * shrink a rectangle by a defined amount of padding, and keep it centered.
+     */
     getSubRectForField(b: UI512ViewDrawBorders, el: UI512ElTextField): [O<Function>, O<number[]>] {
-        let [fnborder, padx, pady] = this.getBorderAndMarginForField(b, el.get_n('style'));
+        let [fnborder, padX, padY] = this.getBorderAndMarginForField(b, el.get_n('style'));
         if (el.get_b('scrollbar')) {
             /* make it smaller to make room for the scrollbar */
             b.w = b.w - ScrollConsts.BarWidth + 1;
             b.w = Math.max(1, b.w);
         }
 
-        let subrect = this.getSubRect(b, padx, pady);
-        return [fnborder, subrect];
+        let subRect = this.getSubRect(b, padX, padY);
+        return [fnborder, subRect];
     }
 
-    protected drawUI512ElTextFieldMethod(b: UI512ViewDrawBorders, el: UI512ElTextField, hasFocus: boolean) {
-        let [fnborder, subrect] = this.getSubRectForField(b, el);
+    /**
+     * render a text field
+     */
+    protected goUI512ElTextField(b: UI512ViewDrawBorders, el: UI512ElTextField, hasFocus: boolean) {
+        let [fnborder, subRect] = this.getSubRectForField(b, el);
         if (fnborder) {
             fnborder.apply(b);
         }
 
-        if (subrect) {
-            let [args, rtext] = renderTextArgsFromEl(el, subrect, hasFocus);
+        if (subRect) {
+            let [args, rtext] = renderTextArgsFromEl(el, subRect, hasFocus);
             args.drawBeyondVisible = false;
 
-            let fontManager = cast(getRoot().getDrawText(), UI512DrawText);
-            if (!fontManager.drawFormattedStringIntoBox(rtext, b.canvas, args)) {
+            let drawText = cast(getRoot().getDrawText(), UI512DrawText);
+            if (!drawText.drawFormattedStringIntoBox(rtext, b.canvas, args)) {
                 b.complete.complete = false;
             }
         }
     }
 
+    /**
+     * loop and render everything visible
+     * if something can't be rendered, e.g. font isn't loaded yet,
+     * the RenderComplete flag will be set to false
+     */
     renderAllElements(
-
         canvas: CanvasWrapper,
         app: UI512Application,
         bounds: number[],
@@ -477,17 +542,7 @@ export class UI512ViewDraw {
         clearBefore = true
     ) {
         if (clearBefore) {
-            canvas.fillRect(
-                bounds[0],
-                bounds[1],
-                bounds[2],
-                bounds[3],
-                bounds[0],
-                bounds[1],
-                bounds[2],
-                bounds[3],
-                'white'
-            );
+            canvas.fillRectUnchecked(bounds[0], bounds[1], bounds[2], bounds[3], 'white');
         }
 
         for (let grp of app.iterGrps()) {
@@ -499,27 +554,33 @@ export class UI512ViewDraw {
         }
     }
 
+    /**
+     * render an element
+     * if something can't be rendered, e.g. font isn't loaded yet,
+     * the RenderComplete flag will be set to false
+     */
     renderElement(canvas: CanvasWrapper, el: UI512Element, hasFocus: boolean, complete: RenderComplete) {
         assertTrueWarn(el.w >= 0, '4b|too small');
         assertTrueWarn(el.h >= 0, '4a|too small');
         if (el.w === 0 && el.h === 0) {
             return;
-        }
-
-        if (!el.visible) {
+        } else if (!el.visible) {
             return;
         }
 
+        /* use the 'borders' argument to also store canvas and bounds */
         let b = new UI512ViewDrawBorders(canvas, el.x, el.y, el.w, el.h, complete);
         hasFocus = hasFocus || this.allowMultipleFocus;
-        let methodname = 'draw' + el.typeName + 'Method';
+        let methodname = 'go' + el.typename;
         Util512.callAsMethodOnClass('UI512ViewDraw', this, methodname, [b, el, hasFocus], false);
     }
 
+    /**
+     * render everything, including the rounded black corners of the screen
+     */
     renderApp(
-
         canvas: CanvasWrapper,
-        cmptotal: RenderComplete,
+        cmpTotal: RenderComplete,
         app: UI512Application,
         currentFocus: O<string>,
         needRedraw: boolean,
@@ -528,22 +589,20 @@ export class UI512ViewDraw {
         let needDrawBorders = false;
         if (needRedraw) {
             needDrawBorders = true;
-            this.renderAllElements(canvas, app, app.bounds, cmptotal, currentFocus, clearBefore);
+            this.renderAllElements(canvas, app, app.bounds, cmpTotal, currentFocus, clearBefore);
         }
 
         if (needDrawBorders && clearBefore) {
-            this.renderBorders(canvas, cmptotal);
+            this.renderBorders(canvas, cmpTotal);
         }
     }
 
-    getColorFromBuildStamp() {
-        return 'black';
-    }
-
+    /**
+     * render the rounded black corners of the screen
+     */
     renderBorders(canvas: CanvasWrapper, complete: RenderComplete) {
         /* draw the thick borders */
-        /* in debug mode, change the color for each build to easily visualize when changes are applied. */
-        const color = this.getColorFromBuildStamp();
+        const color = 'black';
         const screen = [0, 0, ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight];
 
         /* left margin */
@@ -556,7 +615,7 @@ export class UI512ViewDraw {
             screen[1],
             screen[2],
             screen[3],
-            'black'
+            color
         );
 
         /* right margin */
@@ -569,7 +628,7 @@ export class UI512ViewDraw {
             screen[1],
             screen[2],
             screen[3],
-            'black'
+            color
         );
 
         /* top margin */
@@ -582,7 +641,7 @@ export class UI512ViewDraw {
             screen[1],
             screen[2],
             screen[3],
-            'black'
+            color
         );
 
         /* bottom margin */
@@ -614,31 +673,33 @@ export class UI512ViewDraw {
         }
     }
 
+    /**
+     * draw one corner
+     */
     renderCurvedCorner(
         canvas: CanvasWrapper,
         corner: string,
-        marginl: number,
-        margint: number,
-        marginr: number,
-        marginb: number,
-        screenwidth: number,
-        screenheight: number,
-
+        marginL: number,
+        marginT: number,
+        marginR: number,
+        marginB: number,
+        screenW: number,
+        screenH: number,
         complete: RenderComplete
     ) {
         let rect = [0, 0, 5, 5];
         if (corner === 'nw') {
-            rect[0] = marginl;
-            rect[1] = margint;
+            rect[0] = marginL;
+            rect[1] = marginT;
         } else if (corner === 'sw') {
-            rect[0] = marginl;
-            rect[1] = screenheight - rect[3] - marginb;
+            rect[0] = marginL;
+            rect[1] = screenH - rect[3] - marginB;
         } else if (corner === 'ne') {
-            rect[0] = screenwidth - rect[2] - marginr;
-            rect[1] = margint;
+            rect[0] = screenW - rect[2] - marginR;
+            rect[1] = marginT;
         } else if (corner === 'se') {
-            rect[0] = screenwidth - rect[2] - marginr;
-            rect[1] = screenheight - rect[3] - marginb;
+            rect[0] = screenW - rect[2] - marginR;
+            rect[1] = screenH - rect[3] - marginB;
         }
 
         let b = new UI512ViewDrawBorders(canvas, rect[0], rect[1], rect[2], rect[3], complete);

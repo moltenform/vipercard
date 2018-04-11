@@ -119,15 +119,17 @@ export class FormattedText {
         /* previously used splice() and fn.apply() to do this in a few lines,
         but if done with long strings might hit the javascript engine's argument count limit */
         let tnew = new FormattedText();
-        tnew.charArray = t.charArray.slice(0, n);
-        for (let i = 0; i < insert.length; i++) {
-            tnew.charArray.push(insert.charCodeAt(i));
-        }
-
         assertTrue(
             !scontains(font, specialCharFontChange),
             `3g|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
         );
+        assertTrue(n >= 0, 'invalid n', n)
+        assertTrue(nDelete >= 0, 'invalid nDelete', nDelete)
+
+        tnew.charArray = t.charArray.slice(0, n);
+        for (let i = 0; i < insert.length; i++) {
+            tnew.charArray.push(insert.charCodeAt(i));
+        }
 
         tnew.fontArray = t.fontArray.slice(0, n);
         for (let i = 0; i < insert.length; i++) {
@@ -160,8 +162,8 @@ export class FormattedText {
     }
 
     /**
-    * when reading text input by user, translate from utf16 to os-roman
-    */
+     * when reading text input by user, translate from utf16 to os-roman
+     */
     static fromExternalCharset(s: string, info: BrowserOSInfo, fallback = '?') {
         s = s.replace(new RegExp(specialCharFontChange, 'g'), '');
         s = s.replace(new RegExp('\x00', 'g'), '');
@@ -172,8 +174,8 @@ export class FormattedText {
     }
 
     /**
-    * when outputting our text to external os (Edit->Paste), translate from os-roman to utf16
-    */
+     * when outputting our text to external os (Edit->Paste), translate from os-roman to utf16
+     */
     static toExternalCharset(s: string, info: BrowserOSInfo, fallback = '?') {
         s = s.replace(new RegExp(specialCharFontChange, 'g'), '');
         s = s.replace(new RegExp('\x00', 'g'), '');
@@ -229,7 +231,6 @@ export class FormattedText {
         return s;
     }
 
-
     /**
      * deserialize formatted text from string
      */
@@ -280,4 +281,3 @@ export class FormattedText {
             .join('');
     }
 }
-

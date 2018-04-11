@@ -7,7 +7,7 @@
  */
 export class VpcInitIcons {
     static go() {
-        /* exit early if already loaded. */        
+        /* exit early if already loaded. */
         if (RenderIconGroup.cachedGridInfo['000']) {
             return;
         }

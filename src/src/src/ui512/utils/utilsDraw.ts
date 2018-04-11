@@ -16,7 +16,7 @@ export class CanvasWrapper {
             checkThrowUI512(context, '3=|could not create 2d context');
             this.canvas = canvas;
             this.context = context as CanvasRenderingContext2D;
-            let contextSetParams = this.context as any;
+            let contextSetParams = this.context as any; /* browser compat */
 
             /* we want sharp, aliased, non-smoothed graphics */
             contextSetParams.imageSmoothingEnabled = false; /* standard */
@@ -77,9 +77,9 @@ export class CanvasWrapper {
         assertTrue(height >= 0, '3:|invalid height ' + height.toString());
         assertTrue(
             Util512.isValidNumber(x0) &&
-            Util512.isValidNumber(y0) &&
-            Util512.isValidNumber(width) &&
-            Util512.isValidNumber(height),
+                Util512.isValidNumber(y0) &&
+                Util512.isValidNumber(width) &&
+                Util512.isValidNumber(height),
             '3/|dimensions must be numeric'
         );
 
@@ -146,7 +146,7 @@ export class CanvasWrapper {
 
     /**
      * invert colors in a rectangle.
-     * globalCompositeOperations save my life :)
+     * it's so nice to have globalCompositeOperations
      */
     private invertColorsRectUnchecked(x0: number, y0: number, width: number, height: number) {
         assertTrue(width >= 0, '3-|invalid width ' + width.toString());
@@ -252,7 +252,15 @@ export class CanvasWrapper {
         } else {
             srcX += rectClipped[0] - destX;
             srcY += rectClipped[1] - destY;
-            this.drawFromImageUnchecked(img, srcX, srcY, rectClipped[2], rectClipped[3], rectClipped[0], rectClipped[1]);
+            this.drawFromImageUnchecked(
+                img,
+                srcX,
+                srcY,
+                rectClipped[2],
+                rectClipped[3],
+                rectClipped[0],
+                rectClipped[1]
+            );
             return rectClipped;
         }
     }
@@ -445,5 +453,5 @@ export enum RectOverlapType {
     NoOverlap,
     PartialOverlap,
     BoxCompletelyCovers,
-    BoxCompletelyWithin,
+    BoxCompletelyWithin
 }

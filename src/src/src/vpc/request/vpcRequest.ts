@@ -18,7 +18,7 @@ export async function vpcUsersCreate(username: string, pw: string, email: string
         salt: saltB64,
         key: keyB64,
         username: username,
-        email: email,
+        email: email
     };
 
     let url = '/vpusers/create';
@@ -40,7 +40,7 @@ export async function vpcUsersCheckLogin(username: string, pw: string, fakeIp?: 
     let paramsGetSalt: any = {
         nonce: nonce,
         now: now,
-        username: username,
+        username: username
     };
     if (fakeIp) {
         paramsGetSalt.simulateRemoteIp = fakeIp;
@@ -59,7 +59,7 @@ export async function vpcUsersCheckLogin(username: string, pw: string, fakeIp?: 
     let params: any = {
         nonce: nonce,
         now: now,
-        username: username,
+        username: username
     };
     if (fakeIp) {
         params.simulateRemoteIp = fakeIp;
@@ -95,7 +95,7 @@ export async function vpcUsersEnterEmailVerifyCode(
         nonce: nonce,
         now: now,
         username: username,
-        code_email_verify: code_email_verify,
+        code_email_verify: code_email_verify
     };
 
     let url = '/vpusers/verify_email';
@@ -118,7 +118,7 @@ export async function vpcStacksFlagContent(
     let params: any = {
         stackfullid: fullid,
         FlagContentcurrentusername: currentusername,
-        simulateRemoteIp: simulateRemoteIp || '',
+        simulateRemoteIp: simulateRemoteIp || ''
     };
 
     let url = '/vpstacks/flag_content';
@@ -132,7 +132,7 @@ export async function vpcStacksFlagContent(
 
 export async function vpcStacksGetData(stackfullid: string): Promise<{ [key: string]: string }> {
     let params = {
-        stackfullid: stackfullid,
+        stackfullid: stackfullid
     };
 
     let url = '/vpstacks/get_data';
@@ -176,7 +176,7 @@ export class VpcSession implements UI512IsSessionInterface {
             nonce: nonce,
             now: now,
             username: this.username,
-            new_email: newEmail,
+            new_email: newEmail
         };
 
         let url = '/vpusers/update_email';
@@ -206,7 +206,7 @@ export class VpcSession implements UI512IsSessionInterface {
             username: this.username,
             logentries_user_typed_desc: logentries_user_typed_desc,
             logentries_last_client_logs: logentries_last_client_logs,
-            logentries_stackserverguid: logentries_stackserverguid,
+            logentries_stackserverguid: logentries_stackserverguid
         };
         if (setfakeIp) {
             params.simulateRemoteIp = setfakeIp;
@@ -240,7 +240,7 @@ export class VpcSession implements UI512IsSessionInterface {
             stacknewpartialid: stacknewpartialid,
             stackname: newname,
             stackdata: newstackdata,
-            simulatemaxstacks: setFakeMaxStacks,
+            simulatemaxstacks: setFakeMaxStacks
         };
 
         let url = '/vpstacks/save_as';
@@ -261,7 +261,7 @@ export class VpcSession implements UI512IsSessionInterface {
             username: this.username,
             ownerusername: this.username,
             stackpartialid: stackpartialid,
-            stackdata: newstackdata,
+            stackdata: newstackdata
         };
 
         let url = '/vpstacks/save_data';
@@ -281,7 +281,7 @@ export class VpcSession implements UI512IsSessionInterface {
             nonce: nonce,
             now: now,
             username: this.username,
-            ownerusername: ownerusername,
+            ownerusername: ownerusername
         };
 
         let url = '/vpstacks/my_stacks';
@@ -296,7 +296,7 @@ export class VpcSession implements UI512IsSessionInterface {
     static async vpcStacksCountJsonSaves(stackowner: string, stackid: string, currentusername: string) {
         let stackfullid = VpcSession.getFullStackId(stackowner, stackid);
         let params = {
-            stackfullid: stackfullid,
+            stackfullid: stackfullid
         };
 
         let url = '/vpstacks/count_json_saves';

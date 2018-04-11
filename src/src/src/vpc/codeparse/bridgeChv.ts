@@ -229,7 +229,7 @@ declare namespace chevrotain {
         LEXER_DEFINITION_CANNOT_CONTAIN_UNDEFINED = 10,
         SOI_ANCHOR_FOUND = 11,
         EMPTY_MATCH_PATTERN = 12,
-        NO_LINE_BREAKS_FLAGS = 13,
+        NO_LINE_BREAKS_FLAGS = 13
     }
     export interface ILexerDefinitionError {
         message: string;
@@ -449,7 +449,7 @@ declare namespace chevrotain {
         INVALID_NESTED_RULE_NAME = 10,
         DUPLICATE_NESTED_NAME = 11,
         NO_NON_EMPTY_LOOKAHEAD = 12,
-        AMBIGUOUS_PREFIX_ALTS = 13,
+        AMBIGUOUS_PREFIX_ALTS = 13
     }
     export type IgnoredRuleIssues = {
         [dslNameAndOccurrence: string]: boolean;
@@ -1567,7 +1567,7 @@ declare namespace chevrotain {
         grammar: gast.ISerializedGast[],
         {
             resourceBase,
-            css,
+            css
         }?: {
             /**
              * Base Url to load the runtime resources for rendering the diagrams

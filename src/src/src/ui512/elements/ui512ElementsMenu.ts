@@ -1,21 +1,16 @@
 
+/* auto */ import { specialCharCmdSymbol } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { ElementObserver, elementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElementButtonGeneral } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512BtnStyle, UI512ElementButtonBase } from '../../ui512/elements/ui512ElementsButton.js';
 
-function idstolist<T extends UI512Element>(app: UI512Application, grpname: string, childids: string): T[] {
-    let list = childids.split('|');
-    if (list.length) {
-        let grp = app.getGroup(grpname);
-        return list.map(s => grp.getEl(s) as T);
-    } else {
-        return [];
-    }
-}
-
+/**
+ * the model for a UI menu item
+ * you can use specialCharCmdSymbol in the hotkey to make the symbol.
+ */
 export class UI512MenuItem extends UI512Element {
-    readonly typeName: string = 'UI512MenuItem';
+    readonly typename: string = 'UI512MenuItem';
     protected _highlightactive = false;
     protected _labeltext = '';
     protected _labelhotkey = '';
@@ -23,25 +18,20 @@ export class UI512MenuItem extends UI512Element {
     protected _enabled = true;
 }
 
-export class UI512MenuRoot extends UI512Element {
-    readonly typeName: string = 'UI512MenuRoot';
-    protected _whichIsExpanded = -1;
-    protected _childids = ''; // list of item ids separated by |
-    getchildren(app: UI512Application) {
-        return idstolist<UI512MenuDropdown>(app, '$$grpmenubar', this._childids);
-    }
-}
-
-export class UI512MenuDropdown extends UI512ElementButtonGeneral {
-    /* _labeltext, _icongroupid, _iconnumber */
+/**
+ * the model for a UI menu drop-down
+ */
+export class UI512MenuDropdown extends UI512ElementButtonBase {
     protected _labeltext = '';
-    protected _childids = ''; // list of item ids separated by |
     protected _fixedoffset = -1;
     protected _fixedwidth = -1;
-    protected _icongroupid = '';
-    protected _iconnumber = -1;
     protected _style: number = UI512BtnStyle.Transparent;
     protected _autohighlight = true;
+    protected _icongroupid = '';
+    protected _iconnumber = -1;
+
+    /* list of item ids separated by | */
+    protected _childids = '';
 
     constructor(idString: string, observer: ElementObserver = elementObserverDefault) {
         super(idString, observer);
@@ -49,7 +39,35 @@ export class UI512MenuDropdown extends UI512ElementButtonGeneral {
         this._autohighlight = false;
     }
 
+    getChildren(app: UI512Application) {
+        return idsToList<UI512MenuItem>(app, this._childids, '$$grpmenuitems');
+    }
+}
+
+/**
+ * the model for a UI menu root element
+ */
+export class UI512MenuRoot extends UI512Element {
+    readonly typename: string = 'UI512MenuRoot';
+    protected _whichIsExpanded = -1;
+
+    /* list of item ids separated by | */
+    protected _childids = '';
+
     getchildren(app: UI512Application) {
-        return idstolist<UI512MenuItem>(app, '$$grpmenuitems', this._childids);
+        return idsToList<UI512MenuDropdown>(app, this._childids, '$$grpmenubar');
+    }
+}
+
+/**
+ * calls getElByID on a list of ids.
+ */
+function idsToList<T extends UI512Element>(app: UI512Application, childIds: string, grpId: string): T[] {
+    let list = childIds.split('|');
+    if (list.length) {
+        let grp = app.getGroup(grpId);
+        return list.map(s => grp.getEl(s) as T);
+    } else {
+        return [];
     }
 }

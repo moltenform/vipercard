@@ -12,7 +12,7 @@
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
 /* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
@@ -29,7 +29,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         ['plants', 'lngplants', 16],
         ['symbols', 'lngsymbols', 8],
         ['things', 'lngthings', 22],
-        ['transport', 'lngtransport', 24],
+        ['transport', 'lngtransport', 24]
     ];
 
     respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {
@@ -75,7 +75,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     cancelCurrentToolAction(): void {}
 
     protected getChosenCategory() {
-        let el = this.appli.UI512App().findElemById('grpVpcAppUIToolStampChoiceLeft');
+        let el = this.appli.UI512App().findEl('grpVpcAppUIToolStampChoiceLeft');
         if (el) {
             let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
             let ln = SelAndEntry.selectByLinesWhichLine(gel);
@@ -93,7 +93,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     protected getChosenImage() {
         let ctg = this.getChosenCategory();
         if (ctg) {
-            let el = this.appli.UI512App().findElemById('grpVpcAppUIToolStampChoiceRight');
+            let el = this.appli.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
             if (el && el.get_ftxt().len() > 0) {
                 let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
                 let ln = SelAndEntry.selectByLinesWhichLine(gel);
@@ -113,7 +113,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         let ctg = this.getChosenCategory();
         if (ctg) {
             let lns = ctg.children.map(ch => lng(ch.name));
-            let el = this.appli.UI512App().findElemById('grpVpcAppUIToolStampChoiceRight');
+            let el = this.appli.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
             if (el) {
                 UI512ElTextField.setListChoices(cast(el, UI512ElTextField), lns);
                 el.set('selcaret', 0);

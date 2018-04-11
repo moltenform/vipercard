@@ -7,7 +7,7 @@
 
 export class VpcAppMenus extends VpcAppMenuStructure {
     init() {
-        MenuPositioning.buildFromStruct(this.appli.getController(), this.getMenuStruct());
+        MenuPositioning.buildFromArray(this.appli.getPresenter(), this.getMenuStruct());
         MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsHideProduct', undefined, false);
         MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsHideOthers', undefined, false);
         MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsShowAll', undefined, false);
@@ -92,21 +92,9 @@ export class VpcAppMenus extends VpcAppMenuStructure {
         let found = this.appli.getModel().findByIdUntyped(id);
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             let txt = found.getType() === VpcElType.Btn ? txtBtn : txtFld;
-            MenuPositioning.setItemStatus(
-                this.appli.UI512App(),
-                menuId,
-                undefined,
-                undefined,
-                lng(txt)
-            );
+            MenuPositioning.setItemStatus(this.appli.UI512App(), menuId, undefined, undefined, lng(txt));
         } else {
-            MenuPositioning.setItemStatus(
-                this.appli.UI512App(),
-                menuId,
-                undefined,
-                undefined,
-                lng(fallback)
-            );
+            MenuPositioning.setItemStatus(this.appli.UI512App(), menuId, undefined, undefined, lng(fallback));
         }
     }
 

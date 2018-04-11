@@ -3,7 +3,7 @@
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroBase.js';
 /* auto */ import { VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
 
@@ -17,16 +17,16 @@ export class IntroWaitWhileLoadingPage extends IntroPageBase {
         x: number,
         y: number,
         public loader: VpcDocLoader,
-        public initialLoadMessage: string,
+        public initialLoadMessage: string
     ) {
         super(compid, bounds, x, y);
     }
 
     createSpecific(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let headerheight = this.drawCommonFirst(app, grp);
 
-        // draw the prompt
+        /* draw the prompt */
         const margin = 80;
         this.prompt = this.genChild(app, grp, 'prompt', UI512ElLabel);
         this.prompt.set('labeltext', this.initialLoadMessage + '...');
@@ -42,9 +42,9 @@ export class IntroWaitWhileLoadingPage extends IntroPageBase {
         this.drawCommonLast(app, grp);
     }
 
-    static respondBtnClick(c: UI512Controller, self: IntroWaitWhileLoadingPage, el: UI512Element) {}
+    static respondBtnClick(pr: UI512Presenter, self: IntroWaitWhileLoadingPage, el: UI512Element) {}
 
-    go(currentCntrl: UI512Controller) {
+    go(currentCntrl: UI512Presenter) {
         this.loader.startLoadDocument(currentCntrl, s => {
             if (this.prompt) {
                 this.prompt.set('labeltext', s);

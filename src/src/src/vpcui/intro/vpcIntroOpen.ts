@@ -11,9 +11,9 @@
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcSession } from '../../vpc/request/vpcRequest.js';
 /* auto */ import { VpcFormNonModalDialogBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroBase.js';
@@ -30,22 +30,16 @@ export class IntroOpenPage extends IntroPageBase {
         ['demo_game.json', 'Make a game'],
         ['demo_anim.json', 'Simple animation'],
         ['demo_glider.json', 'GLIDER 4.0'],
-        ['demo_spacegame.json', 'Spaceman Gamma'],
+        ['demo_spacegame.json', 'Spaceman Gamma']
     ];
     loadedFromOnline: [string, string][] = [];
 
-    constructor(
-        compid: string,
-        bounds: number[],
-        x: number,
-        y: number,
-        protected openType: OpenFromLocation
-    ) {
+    constructor(compid: string, bounds: number[], x: number, y: number, protected openType: OpenFromLocation) {
         super(compid, bounds, x, y);
     }
 
     createSpecific(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let headerheight = this.drawCommonFirst(app, grp);
 
         // draw the OK and cancel buttons
@@ -155,43 +149,43 @@ export class IntroOpenPage extends IntroPageBase {
         }
     }
 
-    static respondBtnClick(c: VpcIntroPresenterInterface, self: IntroOpenPage, el: UI512Element) {
+    static respondBtnClick(pr: VpcIntroPresenterInterface, self: IntroOpenPage, el: UI512Element) {
         if (el.id.endsWith('choicebtn0')) {
             let chosenId = IntroOpenPage.getChosen(self);
             if (chosenId && slength(chosenId)) {
                 // open the document
                 let loader = new VpcDocLoader(chosenId, lng('lngstack'), self.openType);
-                c.beginLoadDocument(loader);
+                pr.beginLoadDocument(loader);
             }
         } else if (el.id.endsWith('choicebtn1')) {
-            c.goBackToFirstScreen();
+            pr.goBackToFirstScreen();
         }
     }
 
-    destroy(c: UI512ControllerBase, app: UI512Application) {
+    destroy(pr: UI512PresenterBase, app: UI512Application) {
         if (this.signInForm) {
-            this.signInForm.destroy(c, app);
+            this.signInForm.destroy(pr, app);
         }
 
-        super.destroy(c, app);
+        super.destroy(pr, app);
     }
 
-    deleteSelected(c: VpcIntroPresenterInterface) {
+    deleteSelected(pr: VpcIntroPresenterInterface) {
         let whichData = IntroOpenPage.getChosen(this);
         if (true) {
-            c.getModal().standardAnswer(
-                c,
-                c.app,
+            pr.getModal().standardAnswer(
+                pr,
+                pr.app,
                 'Item removed',
                 n => {
-                    c.goBackToFirstScreen();
+                    pr.goBackToFirstScreen();
                 },
                 lng('lngOK')
             );
         }
     }
 
-    respondKeyDown(c: UI512Controller, d: KeyDownEventDetails) {
+    respondKeyDown(pr: UI512Presenter, d: KeyDownEventDetails) {
         /*
         if (d.readableShortcut === 'Delete' || d.readableShortcut === 'Backspace') {
             c.getModal().standardAnswer(c, c.app, 'Confirm deletion?', (n)=>{

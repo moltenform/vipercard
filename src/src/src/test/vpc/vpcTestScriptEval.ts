@@ -14,7 +14,7 @@
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpcTestScriptRun.js';
 
-export class Test_ScriptEval extends TestVpcScriptRun {
+export class TestScriptEval extends TestVpcScriptRun {
     constructor() {
         super();
     }
@@ -46,7 +46,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['false _and_ false', 'false'],
                 ['true _or_ true', 'true'],
                 ['true _or_ false', 'true'],
-                ['false _or_ false', 'false'],
+                ['false _or_ false', 'false']
             ];
             this.testBatchEvalCommutative(batch);
 
@@ -77,7 +77,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['"abc" _==_ "abc "', 'false'],
                 ['"abc" _is_ "abc"', 'true'],
                 ['"abc" _is_ "abb"', 'false'],
-                ['"abc" _is_ "abc "', 'false'],
+                ['"abc" _is_ "abc "', 'false']
             ];
             this.testBatchEvalInvertAndCommute(batch);
 
@@ -156,7 +156,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['123 _is_ 123', 'true'],
                 ['123 _is_ 124', 'false'],
                 ['123 _is_ " 123 "', 'true'],
-                ['123 _is_ 0', 'false'],
+                ['123 _is_ 0', 'false']
             ];
             this.testBatchEvalInvertAndCommute(batch);
 
@@ -181,7 +181,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['12 == 12 == true', 'true'],
                 ['12 == 12 == "true"', 'true'],
                 ['12 == 13 == true', 'false'],
-                ['12 == 12 == false', 'false'],
+                ['12 == 12 == false', 'false']
             ];
             this.testBatchEvaluate(batch);
         },
@@ -193,7 +193,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['1 is a number1', 'ERR:needs one of {number|'],
                 ['1 is a numbe', 'ERR:needs one of {number|'],
                 ['1 is a abcdef', 'ERR:needs one of {number|'],
-                ['1 is a n', 'ERR:needs one of {number|'],
+                ['1 is a n', 'ERR:needs one of {number|']
             ];
             this.testBatchEvaluate(batch);
 
@@ -279,7 +279,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['" 12,13,14,15 a " _is_ a rect', 'false'],
                 ['" a 12,13,14,15 " _is_ a rect', 'false'],
                 ['" , 12,13,14,15 " _is_ a rect', 'false'],
-                ['" 12,13,14,15 , " _is_ a rect', 'false'],
+                ['" 12,13,14,15 , " _is_ a rect', 'false']
             ];
 
             this.testBatchEvalInvert(batch);
@@ -306,7 +306,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['"abc" _is_ within "abc"', 'true'],
                 ['"abd" _is_ within "abc"', 'false'],
                 ['"abcd" _is_ within "abc"', 'false'],
-                ['"abdd" _is_ within "abc"', 'false'],
+                ['"abdd" _is_ within "abc"', 'false']
             ];
             this.testBatchEvalInvert(batch);
         },
@@ -336,7 +336,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['"a" & "b" & "c" & "d"', 'abcd'],
                 ['"a" & "b" && "c" & "d"', 'ab cd'],
                 ['"a" && "b" && "c" && "d"', 'a b c d'],
-                ['"a" && "b" && "c"', 'a b c'],
+                ['"a" && "b" && "c"', 'a b c']
             ];
             this.testBatchEvaluate(batch);
         },
@@ -360,7 +360,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['2 _*_ 2', '4'],
                 ['1 _*_ -1', '-1'],
                 ['123 _*_ 0', '0'],
-                ['123 _*_ -0', '0'],
+                ['123 _*_ -0', '0']
             ];
             this.testBatchEvalCommutative(batch, false);
 
@@ -381,7 +381,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['2.2 _*_ 2.4', '5.28'],
                 ['1.1 _*_ -1', '-1.1'],
                 ['123.9 _*_ 0', '0'],
-                ['123.9 _*_ -0', '0'],
+                ['123.9 _*_ -0', '0']
             ];
             this.testBatchEvalCommutative(batch, true);
 
@@ -420,7 +420,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['2 mod 2', '0'],
                 ['1 mod -1', '0'],
                 ['123 mod 0', 'ERR:> 1e18'],
-                ['123 mod -0', 'ERR:> 1e18'],
+                ['123 mod -0', 'ERR:> 1e18']
             ];
             this.testBatchEvaluate(batch, false);
 
@@ -459,7 +459,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['123.4 / 0', 'ERR:> 1e18'],
                 ['123.4 / -0', 'ERR:> 1e18'],
                 ['12 div 2.3', '5'],
-                ['12 mod 2.3', '0.5'],
+                ['12 mod 2.3', '0.5']
             ];
             this.testBatchEvaluate(batch, true);
 
@@ -472,7 +472,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['12 * 34 * 56 * 78', '1782144'],
                 ['12 * 34 * 56', '22848'],
                 ['12 * 34 / 56 * 78', '568.285714285714285'],
-                ['12 / 34 / 56 / 78', '0.00008080155'],
+                ['12 / 34 / 56 / 78', '0.00008080155']
             ];
             this.testBatchEvaluate(batch, true);
 
@@ -498,7 +498,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['12 _div_ "12.3."', 'ERR:expected a number'],
                 ['12 _mod_ "12a"', 'ERR:expected a number'],
                 ['12 _mod_ "12 a"', 'ERR:expected a number'],
-                ['12 _mod_ "12.3."', 'ERR:expected a number'],
+                ['12 _mod_ "12.3."', 'ERR:expected a number']
             ];
             this.testBatchEvalCommutative(batch);
         },
@@ -542,7 +542,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['not "tru"', 'ERR:expected true or false'],
                 ['not " true"', 'ERR:expected true or false'],
                 ['not "truea"', 'ERR:expected true or false'],
-                ['not "atrue"', 'ERR:expected true or false'],
+                ['not "atrue"', 'ERR:expected true or false']
             ];
             this.testBatchEvaluate(batch);
             batch = [
@@ -583,7 +583,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 // composite chunks, currently needs parens
                 ['char 2 of (item 2 of "abc,def,ghi")', 'e'],
                 ['char 2 of (word 2 of (item 2 of "abc,d1 e2 f3,ghi"))', '2'],
-                ['char 2 of (word 2 of (item 2 of (line 2 of ("abc def" & newline & "abc,d1 e2 f3,ghi"))))', '2'],
+                ['char 2 of (word 2 of (item 2 of (line 2 of ("abc def" & newline & "abc,d1 e2 f3,ghi"))))', '2']
             ];
             this.testBatchEvaluate(batch);
             batch = [
@@ -631,7 +631,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['first word of "ab cd ef gh"', 'ab'],
                 ['second word of "ab cd ef gh"', 'cd'],
                 ['middle word of "ab cd ef gh"', 'ef'],
-                ['last word of "ab cd ef gh"', 'gh'],
+                ['last word of "ab cd ef gh"', 'gh']
             ];
             this.testBatchEvaluate(batch);
 
@@ -649,7 +649,7 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['put 2 into x\\char x + 1 of "abcd"', 'ERR:5:NoViableAlt'],
                 ['put 2 into x\nput 3 into y\\char x to y + 1 of "abcd"', 'ERR:6:NoViableAlt'],
                 ['put 2 into x\\char -x of "abcd"', 'ERR:5:NoViableAlt'],
-                ['put 2 into x\nput 3 into y\\char x to -y of "abcd"', 'ERR:6:NoViableAlt'],
+                ['put 2 into x\nput 3 into y\\char x to -y of "abcd"', 'ERR:6:NoViableAlt']
             ];
             this.testBatchEvaluate(batch);
 
@@ -682,25 +682,25 @@ export class Test_ScriptEval extends TestVpcScriptRun {
                 ['the autohilite of cd btn "notexist"', 'ERR:find the specified element'],
                 [
                     '(the autohilite of cd btn "p1") or (the autohilite of cd btn "notexist")',
-                    'ERR:find the specified element',
+                    'ERR:find the specified element'
                 ],
                 ['the locktext of cd fld "p1"', 'false'],
                 ['the locktext of cd fld "notexist"', 'ERR:find the specified element'],
                 [
                     '(the locktext of cd fld "p1") and (the locktext of cd fld "notexist")',
-                    'ERR:find the specified element',
+                    'ERR:find the specified element'
                 ],
 
                 [
                     `put counting() into cfirst
 get true or char 1 of counting() is "z"\\counting() - cfirst`,
-                    '2',
+                    '2'
                 ],
                 [
                     `put counting() into cfirst
 get false and char 1 of counting() is "z"\\counting() - cfirst`,
-                    '2',
-                ],
+                    '2'
+                ]
             ];
             this.testBatchEvaluate(batch);
         },
@@ -829,7 +829,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of cd btn "p1" of cd 4`, `${this.elIds.btn_b_d_1}`],
                 [`the short id of cd btn "p1" of cd "d"`, `${this.elIds.btn_b_d_1}`],
                 [`the short id of cd btn "p1" of cd "d" of bg 3`, `${this.elIds.btn_c_d_1}`],
-                [`the short id of cd btn "p1" of cd "d" of bg 3 of this stack`, `${this.elIds.btn_c_d_1}`],
+                [`the short id of cd btn "p1" of cd "d" of bg 3 of this stack`, `${this.elIds.btn_c_d_1}`]
             ];
             this.testBatchEvaluate(batch);
         },
@@ -876,7 +876,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
                 // nonsettable props
                 ['set the id of cd fld "p1" to 100\\0', 'ERR:unknown property'],
-                ['set the script of cd fld "p1" to "abc"\\0', 'ERR:unknown property'],
+                ['set the script of cd fld "p1" to "abc"\\0', 'ERR:unknown property']
             ];
             this.testBatchEvaluate(batch);
 
@@ -900,7 +900,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the itemdelimiter to "" \\ 0', 'ERR:length of itemdel must be 1'],
                 ['set the itemdelimiter to ",," \\ 0', 'ERR:length of itemdel must be 1'],
                 ['set the cursor to "plus" \\ the cursor', 'plus'],
-                ['set the cursor to "arrow" \\ the cursor', 'arrow'],
+                ['set the cursor to "arrow" \\ the cursor', 'arrow']
             ];
             this.testBatchEvaluate(batch);
 
@@ -928,7 +928,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the script of cd 3', `${this.appl.model.stack.bgs[1].cards[1].get_s('script')}`],
                 ['the short name of cd 3', 'c'],
                 ['set the name of cd 3 to "newname" \\ the short name of cd 3', 'newname'],
-                ['set the name of cd 3 to "c" \\ the short name of cd 3', 'c'],
+                ['set the name of cd 3 to "c" \\ the short name of cd 3', 'c']
             ];
             this.testBatchEvaluate(batch);
 
@@ -990,13 +990,13 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                     `set the name of cd btn id ${this.elIds.btn_b_c_1} to "newname" \\ the short name of cd btn id ${
                         this.elIds.btn_b_c_1
                     }`,
-                    'newname',
+                    'newname'
                 ],
                 [
                     `set the name of cd btn id ${this.elIds.btn_b_c_1} to "p1" \\ the short name of cd btn id ${
                         this.elIds.btn_b_c_1
                     }`,
-                    'p1',
+                    'p1'
                 ],
 
                 // type checking, coords
@@ -1030,14 +1030,14 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the left of cd btn "p1" to ""\\0', 'ERR:expected an integer'],
                 ['set the left of cd btn "p1" to "10a"\\0', 'ERR:expected an integer'],
                 ['set the left of cd btn "p1" to "a10"\\0', 'ERR:expected an integer'],
-                ['set the left of cd btn "p1" to "10.1"\\0', 'ERR:expected an integer'],
+                ['set the left of cd btn "p1" to "10.1"\\0', 'ERR:expected an integer']
             ];
             this.testBatchEvaluate(batch);
             let batchWithFld = batch.map((item): [string, string] => [
                 item[0]
                     .replace(/ cd btn /g, ' cd fld ')
                     .replace(new RegExp(`${this.elIds.btn_b_c_1}`, 'g'), `${this.elIds.fld_b_c_1}`),
-                item[1],
+                item[1]
             ]);
             this.testBatchEvaluate(batchWithFld);
 
@@ -1072,20 +1072,20 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the textstyle of cd btn "p1" to "bold,xyz"\\0', 'ERR:unrecognized text style'],
                 [
                     'set the textstyle of cd btn "p1" to "bold,italic,underline,outline,shadow,condense,extend"\\the textstyle of cd btn "p1"',
-                    'bold,italic,underline,outline,shadow,condense,extend',
+                    'bold,italic,underline,outline,shadow,condense,extend'
                 ],
                 [
                     'set the textstyle of cd btn "p1" to bold,italic,underline,outline,shadow,condense,extend\\the textstyle of cd btn "p1"',
-                    'bold,italic,underline,outline,shadow,condense,extend',
+                    'bold,italic,underline,outline,shadow,condense,extend'
                 ],
                 [
                     'set the textstyle of cd btn "p1" to " Underline , Italic , Bold "\\the textstyle of cd btn "p1"',
-                    'bold,italic,underline',
+                    'bold,italic,underline'
                 ],
                 ['the textalign of cd btn "p1"', 'center'],
                 ['set the textalign of cd btn "p1" to "xyz"\\0', 'ERR:support setting text align to'],
                 ['set the textalign of cd btn "p1" to "left"\\the textalign of cd btn "p1"', 'left'],
-                ['set the textalign of cd btn "p1" to center\\the textalign of cd btn "p1"', 'center'],
+                ['set the textalign of cd btn "p1" to center\\the textalign of cd btn "p1"', 'center']
             ];
 
             this.testBatchEvaluate(batch);
@@ -1109,31 +1109,31 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the defaulttextfont of cd fld "p1" to helvetica\\0', 'ERR:no variable found'],
                 [
                     'set the defaulttextfont of cd fld "p1" to "helvetica"\\the defaulttextfont of cd fld "p1"',
-                    'helvetica',
+                    'helvetica'
                 ],
 
                 // validated get/set
                 ['the defaulttextstyle of cd fld "p1"', 'plain'],
                 [
                     'set the defaulttextstyle of cd fld "p1" to "outline"\\the defaulttextstyle of cd fld "p1"',
-                    'outline',
+                    'outline'
                 ],
                 [
                     'set the defaulttextstyle of cd fld "p1" to " bold , shadow , italic "\\the defaulttextstyle of cd fld "p1"',
-                    'bold,italic,shadow',
+                    'bold,italic,shadow'
                 ],
                 [
                     'set the defaulttextstyle of cd fld "p1" to " italic , outline, extend, bold "\\the defaulttextstyle of cd fld "p1"',
-                    'bold,italic,outline,extend',
+                    'bold,italic,outline,extend'
                 ],
 
                 [
                     'set the defaulttextstyle of cd fld "p1" to bold, shadow, italic \\the defaulttextstyle of cd fld "p1"',
-                    'bold,italic,shadow',
+                    'bold,italic,shadow'
                 ],
                 [
                     'set the defaulttextstyle of cd fld "p1" to italic , outline, extend, bold \\the defaulttextstyle of cd fld "p1"',
-                    'bold,italic,outline,extend',
+                    'bold,italic,outline,extend'
                 ],
                 ['set the defaulttextstyle of cd fld "p1" to "plain"\\the defaulttextstyle of cd fld "p1"', 'plain'],
                 ['set the defaulttextstyle of cd fld "p1" to ""\\0', 'ERR:unrecognized text style'],
@@ -1147,7 +1147,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the textalign of cd fld "p1" to left\\the textalign of cd fld "p1"', 'left'],
                 ['set the textalign of cd fld "p1" to "right"\\0', 'ERR:currently support setting text align'],
                 ['set the textalign of cd fld "p1" to "xyz"\\0', 'ERR:currently support setting text align'],
-                ['set the textalign of cd fld "p1" to xyz\\0', 'ERR:no variable found'],
+                ['set the textalign of cd fld "p1" to xyz\\0', 'ERR:no variable found']
             ];
             this.testBatchEvaluate(batch);
 
@@ -1159,7 +1159,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the style of cd fld "p1" to "xyz"\\0', 'ERR:Field style or'],
                 ['set the style of cd fld "p1" to "opaque"\\the style of cd fld "p1"', 'opaque'],
                 ['set the style of cd fld "p1" to "scrolling"\\the style of cd fld "p1"', 'scrolling'],
-                ['set the style of cd fld "p1" to "transparent"\\the style of cd fld "p1"', 'transparent'],
+                ['set the style of cd fld "p1" to "transparent"\\the style of cd fld "p1"', 'transparent']
             ];
             this.testBatchEvaluate(batch);
             assertEq(UI512FldStyle.Transparent, fld.get_n('style'), '1z|');
@@ -1168,18 +1168,12 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             // here's what we'll set it to: Courier/Bold/24"ab"Courier/ItalicShadow/18"cd"Times/Plain/18ef
             const fldPerChar = this.appl.model.getById(this.elIds.fld_b_c_2, VpcElField);
             let sfmt = '';
-            sfmt += UI512DrawText.setFont(
-                'ab',
-                new TextFontSpec('Courier', TextFontStyling.Bold, 24).toSpecString()
-            );
+            sfmt += UI512DrawText.setFont('ab', new TextFontSpec('Courier', TextFontStyling.Bold, 24).toSpecString());
             sfmt += UI512DrawText.setFont(
                 'cd',
                 new TextFontSpec('Courier', TextFontStyling.Italic | TextFontStyling.Shadow, 18).toSpecString()
             );
-            sfmt += UI512DrawText.setFont(
-                'ef',
-                new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString()
-            );
+            sfmt += UI512DrawText.setFont('ef', new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString());
             this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
             batch = [
                 // non per-character properties
@@ -1209,7 +1203,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the textfont of char 1 to 2 of bg 1', 'ERR:NoViableAltException'],
                 ['the dontwrap of char 1 to 2 of cd fld "p2"', 'ERR:can only say'],
                 ['the style of char 1 to 2 of cd fld "p2"', 'ERR:can only say'],
-                ['the xyz of char 1 to 2 of cd fld "p2"', 'ERR:can only say'],
+                ['the xyz of char 1 to 2 of cd fld "p2"', 'ERR:can only say']
             ];
             this.testBatchEvaluate(batch);
 
@@ -1221,15 +1215,15 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 // setting per-character formatting
                 [
                     'set the textfont of char 2 to 3 of cd fld "p2" to "geneva"\\the textfont of char 2 to 3 of cd fld "p2"',
-                    'geneva',
+                    'geneva'
                 ],
                 [
                     'set the textstyle of char 4 to 5 of cd fld "p2" to "underline"\\the textstyle of char 4 to 5 of cd fld "p2"',
-                    'underline',
+                    'underline'
                 ],
                 [
                     'set the textsize of char 6 to 6 of cd fld "p2" to "14"\\the textsize of char 6 to 6 of cd fld "p2"',
-                    '14',
+                    '14'
                 ],
 
                 // confirm what was set
@@ -1258,7 +1252,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the textfont of char 1 to 2 of bg 1 to "Geneva"\\0', 'ERR:NoViableAltException'],
                 ['set the dontwrap of char 1 to 2 of cd fld "p2" to "false"\\0', 'ERR:can only say'],
                 ['set the style of char 1 to 2 of cd fld "p2" to "opaque"\\0', 'ERR:can only say'],
-                ['set the xyz of char 1 to 2 of cd fld "p2" to "Geneva"\\0', 'ERR:can only say'],
+                ['set the xyz of char 1 to 2 of cd fld "p2" to "Geneva"\\0', 'ERR:can only say']
             ];
             this.testBatchEvaluate(batch);
 
@@ -1279,8 +1273,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the textsize of cd fld "p2" to "9"', new TextFontSpec('geneva', 0, 9)],
                 [
                     'set the textfont of char 1 to 400 of cd fld "p2" to "times"\nset the textstyle of char 1 to 400 of cd fld "p2" to "underline,outline"\nset the textsize of char 1 to 400 of cd fld "p2" to "28"\n',
-                    new TextFontSpec('times', TextFontStyling.Outline | TextFontStyling.Underline, 28),
-                ],
+                    new TextFontSpec('times', TextFontStyling.Outline | TextFontStyling.Underline, 28)
+                ]
             ];
 
             for (let [action, expectedFont] of actions) {
@@ -1290,7 +1284,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                     ['set the defaulttextfont of cd fld "p2" to "geneva"\\0', '0'],
                     ['set the defaulttextstyle of cd fld "p2" to "plain"\\0', '0'],
                     ['set the defaulttextsize of cd fld "p2" to "12"\\0', '0'],
-                    [`${action}\\0`, '0'],
+                    [`${action}\\0`, '0']
                 ];
                 this.testBatchEvaluate(batch);
 
@@ -1385,14 +1379,14 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short name of cd btn id ${this.elIds.btn_b_c_1}`, `card button id ${this.elIds.btn_b_c_1}`],
                 [
                     `the long name of cd btn id ${this.elIds.btn_b_c_1}`,
-                    `card button id ${this.elIds.btn_b_c_1} of card id ${this.elIds.card_b_c} of this stack`,
+                    `card button id ${this.elIds.btn_b_c_1} of card id ${this.elIds.card_b_c} of this stack`
                 ],
                 [`the name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
                 [`the abbr name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
                 [`the short name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
                 [
                     `the long name of cd fld id ${this.elIds.fld_b_c_1}`,
-                    `card field id ${this.elIds.fld_b_c_1} of card id ${this.elIds.card_b_c} of this stack`,
+                    `card field id ${this.elIds.fld_b_c_1} of card id ${this.elIds.card_b_c} of this stack`
                 ],
 
                 // restore names
@@ -1418,7 +1412,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the owner of cd 1', 'bkgnd "a"'],
                 ['the owner of second cd', 'bkgnd "b"'],
                 ['the owner of fifth cd', 'bkgnd "c"'],
-                ['the owner of cd "d" of bg 3', 'bkgnd "c"'],
+                ['the owner of cd "d" of bg 3', 'bkgnd "c"']
             ];
             this.testBatchEvaluate(batch);
         },
@@ -1464,7 +1458,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['-(2^80)', 'ERR:> 1e18'],
                 ['2e15 * -2e15', 'ERR:> 1e18'],
                 ['(2e20 + 3e10)/(4e17)', 'ERR:> 1e18'],
-                ['(2^80 - 5^35)/(2e22)', 'ERR:> 1e18'],
+                ['(2^80 - 5^35)/(2e22)', 'ERR:> 1e18']
             ];
             this.testBatchEvaluate(batch, true);
 
@@ -1564,7 +1558,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['strToNumber("3.3456e2") = "334.56"', 'true'],
                 ['strToNumber("3.3456e2") = 334.56', 'true'],
                 ['strToNumber(3.3456e2) = "334.56"', 'true'],
-                ['strToNumber(3.3456e2) = 334.56', 'true'],
+                ['strToNumber(3.3456e2) = 334.56', 'true']
             ];
             this.testBatchEvaluate(batch, false);
         },
@@ -1591,7 +1585,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['one', '1'],
                 ['up', 'up'],
                 ['cr', '\n'],
-                ['return', '\n'],
+                ['return', '\n']
             ];
             this.testBatchEvaluate(batch);
 
@@ -1648,7 +1642,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the number of cards of bg 4', 'ERR:Cannot find this element'], // confirmed in emulator that it should throw
                 ['the number of bgs', '3'],
                 ['the number of bgs of this stack', '3'],
-                ['selectedtext()', ''] /* use as breakpoint */,
+                ['selectedtext()', ''] /* use as breakpoint */
             ];
             this.testBatchEvaluate(batch);
 
@@ -1725,7 +1719,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a cd fld "p1" of next cd`, 'true'],
                 [`there _is_ a cd fld "p2" of cd "d" of bg 1`, 'false'],
                 [`there _is_ a cd fld "p2" of cd "d" of bg 2`, 'true'],
-                [`there _is_ a cd fld "p2" of cd "d" of bg 3`, 'false'],
+                [`there _is_ a cd fld "p2" of cd "d" of bg 3`, 'false']
             ];
             this.testBatchEvalInvert(batch);
 
@@ -1744,7 +1738,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the rand', "ERR:you can't say something"],
                 ['the sin of 2', 'ERR:NoViableAltException'],
                 ['the xyz', "ERR:you can't say something"],
-                ['sin of 2', 'ERR:NoViableAltException'],
+                ['sin of 2', 'ERR:NoViableAltException']
             ];
             this.testBatchEvaluate(batch);
 
@@ -1829,8 +1823,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 put (curYear - 1904) * sInYear into lowBound
                 put lowBound + sInYear into upperBound
                 \\x > lowBound and x < upperBound`,
-                    'true',
-                ],
+                    'true'
+                ]
             ];
             this.testBatchEvaluate(batch);
 
@@ -1906,7 +1900,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['ln1(6)', '1.9459101490553132'],
                 ['exp1(1.9459101490553132)', '6'],
                 ['log2(5)', '2.321928094887362'],
-                ['exp2(2.321928094887362)', '5'],
+                ['exp2(2.321928094887362)', '5']
             ];
             this.testBatchEvaluate(batch, true);
 
@@ -1941,9 +1935,9 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 // casing
                 ['CLICKLOC()', `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`],
                 ['clIcKloC()', `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`],
-                ['ClickLoc()', `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`],
+                ['ClickLoc()', `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`]
             ];
             this.testBatchEvaluate(batch);
-        },
+        }
     ];
 }

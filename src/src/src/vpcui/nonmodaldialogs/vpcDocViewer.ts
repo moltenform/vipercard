@@ -11,7 +11,7 @@
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
 /* auto */ import { WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcFormNonModalDialogBase, VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
@@ -19,7 +19,7 @@
 export enum DialogDocsType {
     None,
     Screenshots,
-    Reference,
+    Reference
 }
 
 function dialogDocsTypeToStr(e: DialogDocsType) {
@@ -39,21 +39,21 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
     readonly screenshotsInfo: [string, string, number][] = [
         ['vid1', 'lngVideo: Animation', 1],
         ['vid2', 'lngVideo: Game', 1],
-        ['vid3', 'lngVideo: Art', 1],
+        ['vid3', 'lngVideo: Art', 1]
         // ['anim', 'lngSteps: Animation', 29],
         // ['hello', 'lngSteps: Script', 11],
     ];
     readonly referenceInfo: [string, string, string[]][] = [
         // prettier-ignore
-        ["fundamentals", "lngFundamentals", ["Introduction", "Fundamentals", "Expressions", "Variables", "Structure", "Lists/arrays", "Custom funcs", "Chunks", "Constants", "Credits"]],
+        ['fundamentals', 'lngFundamentals', ['Introduction', 'Fundamentals', 'Expressions', 'Variables', 'Structure', 'Lists/arrays', 'Custom funcs', 'Chunks', 'Constants', 'Tips & Shortcuts', 'Credits']],
         // prettier-ignore
-        ["functions", "lngFunctions", ["abs", "atan", "charToNum", "clickh", "clickloc", "clickv", "commandKey", "contains", "cos", "diskSpace", "exp", "exp1", "exp2", "heapSpace", "is a", "is in", "is within", "keyChar", "keyRepeated", "length", "ln", "ln1", "log2", "max", "me", "min", "mouse", "mouseclick", "mouseh", "mouseloc", "mousev", "numToChar", "number", "numberToStr", "offset", "optionKey", "param", "paramCount", "params", "random", "result", "round", "screenRect", "seconds", "selectedChunk", "selectedField", "selectedLine", "selectedText", "shiftKey", "sin", "sqrt", "stackSpace", "strToNumber", "sum", "systemVersion", "tan", "target", "there is a", "ticks", "tool", "trunc"]],
+        ['functions', 'lngFunctions', ['abs', 'atan', 'charToNum', 'clickh', 'clickloc', 'clickv', 'commandKey', 'contains', 'cos', 'diskSpace', 'exp', 'exp1', 'exp2', 'heapSpace', 'is a', 'is in', 'is within', 'keyChar', 'keyRepeated', 'length', 'ln', 'ln1', 'log2', 'max', 'me', 'min', 'mouse', 'mouseclick', 'mouseh', 'mouseloc', 'mousev', 'numToChar', 'number', 'numberToStr', 'offset', 'optionKey', 'param', 'paramCount', 'params', 'random', 'result', 'round', 'screenRect', 'seconds', 'selectedChunk', 'selectedField', 'selectedLine', 'selectedText', 'shiftKey', 'sin', 'sqrt', 'stackSpace', 'strToNumber', 'sum', 'systemVersion', 'tan', 'target', 'there is a', 'ticks', 'tool', 'trunc']],
         // prettier-ignore
-        ["event_handlers", "lngEvent Handlers", ["on afterKeyDown", "on afterKeyUp", "on closeCard", "on idle", "on mouseDoubleClick", "on mouseDown", "on mouseEnter", "on mouseLeave", "on mouseUp", "on mouseWithin", "on openCard", "on openStack"]],
+        ['event_handlers', 'lngEvent Handlers', ['on afterKeyDown', 'on afterKeyUp', 'on closeCard', 'on idle', 'on mouseDoubleClick', 'on mouseDown', 'on mouseEnter', 'on mouseLeave', 'on mouseUp', 'on mouseWithin', 'on openCard', 'on openStack']],
         // prettier-ignore
-        ["commands", "lngCommands", ["add", "answer", "ask", "beep", "choose", "click", "create", "delete", "disable", "divide", "drag", "enable", "exit", "exit repeat", "get", "global", "go", "hide", "if/then", "lock screen", "multiply", "next repeat", "pass", "put", "repeat", "return", "set", "show", "sort", "subtract", "unlock screen", "wait"]],
+        ['commands', 'lngCommands', ['add', 'answer', 'ask', 'beep', 'choose', 'click', 'create', 'delete', 'disable', 'divide', 'drag', 'enable', 'exit', 'exit repeat', 'get', 'global', 'go', 'hide', 'if/then', 'lock screen', 'multiply', 'next repeat', 'pass', 'put', 'repeat', 'return', 'set', 'show', 'sort', 'subtract', 'unlock screen', 'wait']],
         // prettier-ignore
-        ["properties", "lngProperties", ["btn: abbrev id", "btn: abbrev name", "btn: autohilite", "btn: botright", "btn: bottom", "btn: bottomright", "btn: checkmark", "btn: enabled", "btn: height", "btn: hilite", "btn: icon", "btn: id", "btn: label", "btn: left", "btn: loc", "btn: location", "btn: long id", "btn: long name", "btn: name", "btn: rect", "btn: rectangle", "btn: right", "btn: script", "btn: short id", "btn: short name", "btn: showlabel", "btn: style", "btn: textalign", "btn: textfont", "btn: textsize", "btn: textstyle", "btn: top", "btn: topleft", "btn: visible", "btn: width", "card: abbrev id", "card: abbrev name", "card: id", "card: long id", "card: long name", "card: name", "card: short id", "card: short name", "fld: abbrev id", "fld: abbrev name", "fld: alltext", "fld: botright", "fld: bottom", "fld: bottomright", "fld: defaulttextfont", "fld: defaulttextsize", "fld: defaulttextstyle", "fld: dontwrap", "fld: enabled", "fld: height", "fld: id", "fld: left", "fld: loc", "fld: location", "fld: locktext", "fld: long id", "fld: long name", "fld: name", "fld: rect", "fld: rectangle", "fld: right", "fld: scroll", "fld: short id", "fld: short name", "fld: singleline", "fld: style", "fld: textalign", "fld: textfont", "fld: textsize", "fld: textstyle", "fld: top", "fld: topleft", "fld: visible", "fld: width", "global: environment", "global: freesize", "global: idlerate", "global: itemdelimiter", "global: long version", "global: size", "global: stacksinuse", "global: suspended", "global: version"]],
+        ['properties', 'lngProperties', ['btn: abbrev id', 'btn: abbrev name', 'btn: autohilite', 'btn: botright', 'btn: bottom', 'btn: bottomright', 'btn: checkmark', 'btn: enabled', 'btn: height', 'btn: hilite', 'btn: icon', 'btn: id', 'btn: label', 'btn: left', 'btn: loc', 'btn: location', 'btn: long id', 'btn: long name', 'btn: name', 'btn: rect', 'btn: rectangle', 'btn: right', 'btn: script', 'btn: short id', 'btn: short name', 'btn: showlabel', 'btn: style', 'btn: textalign', 'btn: textfont', 'btn: textsize', 'btn: textstyle', 'btn: top', 'btn: topleft', 'btn: visible', 'btn: width', 'card: abbrev id', 'card: abbrev name', 'card: id', 'card: long id', 'card: long name', 'card: name', 'card: short id', 'card: short name', 'fld: abbrev id', 'fld: abbrev name', 'fld: alltext', 'fld: botright', 'fld: bottom', 'fld: bottomright', 'fld: defaulttextfont', 'fld: defaulttextsize', 'fld: defaulttextstyle', 'fld: dontwrap', 'fld: enabled', 'fld: height', 'fld: id', 'fld: left', 'fld: loc', 'fld: location', 'fld: locktext', 'fld: long id', 'fld: long name', 'fld: name', 'fld: rect', 'fld: rectangle', 'fld: right', 'fld: scroll', 'fld: short id', 'fld: short name', 'fld: singleline', 'fld: style', 'fld: textalign', 'fld: textfont', 'fld: textsize', 'fld: textstyle', 'fld: top', 'fld: topleft', 'fld: visible', 'fld: width', 'global: environment', 'global: freesize', 'global: idlerate', 'global: itemdelimiter', 'global: long version', 'global: size', 'global: stacksinuse', 'global: suspended', 'global: version']],
     ];
     referenceJsonData: { [key: string]: any } = {};
 
@@ -69,7 +69,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
     }
 
     initialPopulate() {
-        let grp = this.appli.UI512App().getGroup(this.grpid);
+        let grp = this.appli.UI512App().getGroup(this.grpId);
         let topGeneric = grp.getEl(this.getElId('topChoice'));
         let top = cast(topGeneric, UI512ElTextField);
         if (this.type === DialogDocsType.Reference) {
@@ -111,7 +111,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         }
 
         // reset right side
-        let grp = this.appli.UI512App().getGroup(this.grpid);
+        let grp = this.appli.UI512App().getGroup(this.grpId);
         this.resetRightSide(grp, false);
 
         // deselect bottom choice
@@ -130,7 +130,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
                     let vidTitles = [
                         'Video 1:\nhow to make\nan animated GIF',
                         'Video 2:\nhow to make a game',
-                        'Video 3:\nhow to make\ninteractive art',
+                        'Video 3:\nhow to make\ninteractive art'
                     ];
 
                     let btnStartVid = grp.getEl(this.getElId('btnStartVid'));
@@ -174,15 +174,17 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
         let entryTitles = this.referenceInfo[ctg][2];
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = SelAndEntry.selectByLinesWhichLine(gel);
-        let entryTitle = entryTitles[ln as any];
-        if (entryTitle) {
-            for (let jsonEntry of jsonData.entries) {
-                if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
-                    let txt = FormattedText.newFromSerialized(jsonEntry.body);
-                    let rghtFld = grp.findEl(this.getElId('rghtFld'));
-                    if (rghtFld) {
-                        rghtFld.setftxt(txt);
-                        return;
+        if (ln !== undefined) {
+            let entryTitle = entryTitles[ln];
+            if (entryTitle) {
+                for (let jsonEntry of jsonData.entries) {
+                    if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
+                        let txt = FormattedText.newFromSerialized(jsonEntry.body);
+                        let rghtFld = grp.findEl(this.getElId('rghtFld'));
+                        if (rghtFld) {
+                            rghtFld.setftxt(txt);
+                            return;
+                        }
                     }
                 }
             }
@@ -190,7 +192,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
     }
 
     protected onChooseItem(btm: UI512ElTextField) {
-        let grp = this.appli.UI512App().getGroup(this.grpid);
+        let grp = this.appli.UI512App().getGroup(this.grpId);
         let topGeneric = grp.getEl(this.getElId('topChoice'));
         let top = cast(topGeneric, UI512ElTextField);
         let ctg = this.getChosenCategoryNumber(top);
@@ -242,7 +244,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
 
     createSpecific(app: UI512Application) {
         // draw a 1px border around the panel
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
@@ -326,7 +328,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
 
     protected clickedBtnStartVid(rightBtn: UI512Element) {
         if (this.type === DialogDocsType.Screenshots) {
-            let grp = this.appli.UI512App().getGroup(this.grpid);
+            let grp = this.appli.UI512App().getGroup(this.grpId);
             let btmGeneric = grp.getEl(this.getElId('btmChoice'));
             let top = cast(grp.getEl(this.getElId('topChoice')), UI512ElTextField);
             let ctg = this.getChosenCategoryNumber(top);
@@ -340,7 +342,7 @@ export class VpcAppNonModalDialogDocs extends VpcFormNonModalDialogBase {
     protected clickedRightBtn(rightBtn: UI512Element) {
         if (this.type === DialogDocsType.Screenshots) {
             // advance to the next picture, if applicable.
-            let grp = this.appli.UI512App().getGroup(this.grpid);
+            let grp = this.appli.UI512App().getGroup(this.grpId);
             let btmGeneric = grp.getEl(this.getElId('btmChoice'));
             let btm = cast(btmGeneric, UI512ElTextField);
             let gel = new UI512ElTextFieldAsGeneric(btm);

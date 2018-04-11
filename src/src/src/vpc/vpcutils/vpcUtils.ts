@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { UI512AttachableErr, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
 
 export interface ReadableContainer {
     isDefined(): boolean;
@@ -12,7 +12,7 @@ export interface WritableContainer extends ReadableContainer {
     splice(insertion: number, lenToDelete: number, newtext: string): void;
 }
 
-export class VpcScriptErrorBase {
+export class VpcScriptErrorBase implements UI512AttachableErr {
     isVpcScriptErrorBase = true;
     velid = '';
     lineNumber = -1;
@@ -79,5 +79,5 @@ export enum CodeLimits {
     MaxStringLength = 64 * 1024,
     MaxVelChildren = 256,
     LimitChevErr = 128,
-    MaxStackNameLen = 256,
+    MaxStackNameLen = 256
 }

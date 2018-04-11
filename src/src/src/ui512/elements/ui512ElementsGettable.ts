@@ -4,69 +4,80 @@
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 
+/* properties can be any one of these types */
 export type ElementObserverVal = string | boolean | number | FormattedText;
 
+/* when properties are set on an Element, an Observer can be attached to receive a callback for all changes */
 export interface ElementObserver {
     changeSeen(
         context: ChangeContext,
-        elid: string,
-        propname: string,
-        prev: ElementObserverVal,
-        newv: ElementObserverVal
+        elId: string,
+        propName: string,
+        prevVal: ElementObserverVal,
+        newVal: ElementObserverVal
     ): void;
 }
 
+/* all Elements must have an observer. so use this class if the observer truly isn't needed */
 export class ElementObserverNoOp implements ElementObserver {
     changeSeen(
         context: ChangeContext,
-        elid: string,
-        propname: string,
-        prev: ElementObserverVal,
-        newv: ElementObserverVal
+        elId: string,
+        propName: string,
+        prevVal: ElementObserverVal,
+        newVal: ElementObserverVal
     ) {}
 }
 
+/* Elements have this observer by default, to remind you to attach to a better Observer. */
 export class ElementObserverDefault implements ElementObserver {
     changeSeen(
         context: ChangeContext,
-        elid: string,
-        propname: string,
-        prev: ElementObserverVal,
-        newv: ElementObserverVal
+        elId: string,
+        propName: string,
+        prevVal: ElementObserverVal,
+        newVal: ElementObserverVal
     ) {
         assertTrue(false, '2,|no observer attached');
     }
 }
 
+/* pre-made instances for convenience */
 export const elementObserverNoOp = new ElementObserverNoOp();
 export const elementObserverDefault = new ElementObserverDefault();
 
+/**
+ * a "Gettable" class has all of its properties marked as protected,
+ * and allows access to them through a get() method.
+ * types are checked at runtime, since we've forfeited TS's compile time checking.
+ */
 export abstract class UI512Gettable {
     get_n(s: string): number {
         let v = this.get(s);
-        assertEq(typeof 0, typeof v, `2+|property ${s} expected type ${typeof 0}`);
-        return v as number;
+        assertEq(typeof 0, typeof v, `2+|${s} expected type ${typeof 0}`);
+        return v;
     }
 
     get_s(s: string): string {
         let v = this.get(s);
-        assertEq(typeof '', typeof v, `2*|property ${s} expected type ${typeof ''}`);
-        return v as string;
+        assertEq(typeof '', typeof v, `2*|${s} expected type ${typeof ''}`);
+        return v;
     }
 
     get_b(s: string): boolean {
         let v = this.get(s);
-        assertEq('boolean', typeof v, `2)|property ${s} expected type 'boolean'}`);
-        return v as boolean;
+        assertEq('boolean', typeof v, `2)|${s} expected type 'boolean'}`);
+        return v;
     }
 
     get_generic(s: string): ElementObserverVal {
-        return this.get(s);
+        let v = this.get(s);
+        assertTrue(v !== null && v !== undefined, `2(|${s} undefined`);
+        return v;
     }
 
     protected get(s: string): any {
-        let v: any = (this as any)['_' + s];
-        assertTrue(v !== null && v !== undefined, `2(|property ${s} undefined`);
+        let v: any = (this as any)['_' + s]; /* gettable */
         return v;
     }
 
@@ -74,12 +85,21 @@ export abstract class UI512Gettable {
         let v = this.get(UI512Settable.formattedTextField);
         let ftxt = v as FormattedText;
         assertTrue(ftxt && ftxt.isFormattedText, `2&|did not get formatted text as expected`);
-        // safe to allow access because the "lock" bit has been set
+
+        /* ensure the "lock" bit has been set before we allow access
+        otherwise, you could make changes to the object and we'd never recieve any change notification */
         ftxt.lock();
         return ftxt;
     }
 }
 
+/**
+ * a "Settable" class has all of its properties marked as protected,
+ * and allows access to them through a set() method.
+ *
+ * ChangeContext can indicate the origin of the event, it
+ * currently has no effect anywhere.
+ */
 export abstract class UI512Settable extends UI512Gettable {
     static readonly formattedTextField = 'ftxt';
     readonly id: string;
@@ -99,34 +119,35 @@ export abstract class UI512Settable extends UI512Gettable {
         this.observer = observer;
     }
 
-    set<T>(s: string, newval: T, context = ChangeContext.Default) {
+    /* type inference works well enough that you shouldn't ever have to specify the type. */
+    set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         checkThrowUI512(!this.locked, '6L|tried to set value when locked. setting during refresh()?');
-        let prev = this.get(s);
-        assertEq(typeof prev, typeof newval, `2#|property ${s} type mismatch`);
-        (this as any)['_' + s] = newval;
-        if (prev !== newval) {
+        let prevVal = this.get(s);
+        assertEq(typeof prevVal, typeof newVal, `2#|property ${s} type mismatch`);
+        (this as any)['_' + s] = newVal; /* gettable */
+        if (prevVal !== newVal) {
             this.dirty = true;
-            this.observer.changeSeen(context, this.id, s, prev, newval as any);
+            this.observer.changeSeen(context, this.id, s, prevVal, newVal);
         }
     }
 
-    setftxt(newtxt: FormattedText, context = ChangeContext.Default) {
+    setftxt(newTxt: FormattedText, context = ChangeContext.Default) {
         checkThrowUI512(!this.locked, 'tried to set value when locked. setting during refresh()?');
-        let prev = this.get_ftxt();
-        assertTrue(!!newtxt, '2!|invalid newtxt', this.id);
-        (this as any)['_' + UI512Settable.formattedTextField] = newtxt;
-        if (prev !== newtxt) {
+        let prevVal = this.get_ftxt();
+        assertTrue(!!newTxt, '2!|invalid newtxt', this.id);
+        (this as any)['_' + UI512Settable.formattedTextField] = newTxt; /* gettable */
+        if (prevVal !== newTxt) {
             this.dirty = true;
-            newtxt.lock();
-            this.observer.changeSeen(context, this.id, UI512Settable.formattedTextField, prev, newtxt);
+            newTxt.lock();
+            this.observer.changeSeen(context, this.id, UI512Settable.formattedTextField, prevVal, newTxt);
         }
     }
 
-    getdirty() {
+    getDirty() {
         return this.dirty;
     }
 
-    setdirty(newval: boolean, context = ChangeContext.Default) {
+    setDirty(newval: boolean, context = ChangeContext.Default) {
         this.dirty = newval;
         if (newval) {
             this.observer.changeSeen(context, this.id, '', '', '');
@@ -134,17 +155,20 @@ export abstract class UI512Settable extends UI512Gettable {
     }
 }
 
+/**
+ * relay an Observer event to two classes.
+ */
 export class ElementObserverToTwo implements ElementObserver {
     observer1: ElementObserver;
     observer2: ElementObserver;
     changeSeen(
         context: ChangeContext,
-        elid: string,
-        propname: string,
-        prev: ElementObserverVal,
-        newv: ElementObserverVal
+        elId: string,
+        propName: string,
+        prevVal: ElementObserverVal,
+        newVal: ElementObserverVal
     ) {
-        this.observer1.changeSeen(context, elid, propname, prev, newv);
-        this.observer2.changeSeen(context, elid, propname, prev, newv);
+        this.observer1.changeSeen(context, elId, propName, prevVal, newVal);
+        this.observer2.changeSeen(context, elId, propName, prevVal, newVal);
     }
 }

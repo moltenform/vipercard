@@ -2,9 +2,9 @@
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcElType, VpcTool, toolToPaintOntoCanvasShapes } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
@@ -316,8 +316,8 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         let fromOptsFillcolor = this.GetOption_n('optPaintFillColor');
         let fromOptsLineColor = this.GetOption_n('optPaintLineColor');
         let fromOptsWide = this.GetOption_b('optWideLines');
-        let ret = PaintOntoCanvas.fromMemoryOpts(
-            toolToPaintOntoCanvasShapes(tl),
+        let ret = UI512PaintDispatch.fromMemoryOpts(
+            toolToDispatchShapes(tl),
             tl === VpcTool.Eraser,
             fromOptsPattern,
             fromOptsFillcolor,
@@ -345,7 +345,7 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         frstack.paintQueue.push(args);
     }
 
-    CommitSimulatedClicks(queue: PaintOntoCanvas[]): void {
+    CommitSimulatedClicks(queue: UI512PaintDispatch[]): void {
         this.appli.commitSimulatedClicks(queue);
     }
 

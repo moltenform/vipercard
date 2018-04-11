@@ -31,7 +31,7 @@ export class PropPanelCompositeBlank extends PropPanelCompositeBase {
     }
 
     refreshFromModel(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let btnGenPart = grp.getEl(this.getElId('btnGenPart'));
         let currentTool = this.appli.getOption_n('currentTool');
         let lbl = currentTool === VpcTool.Button ? 'lngMake new button' : 'lngMake new field';

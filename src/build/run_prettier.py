@@ -122,8 +122,9 @@ def goTsLint(srcdirectory):
             
 
 if __name__ == '__main__':
+    # "trailingComma": "es5", 
+    # "trailingComma": "none", 
     srcdirectory = '../src/src'
-    goTsLint(srcdirectory)
-    #~ srcdirectory = r'C:\data\data_1\b\pydev\devhiatus\classiccard\ClassicCard\src\src\src\vpcui\presentation'
-    #~ goPrettier(srcdirectory)
+    #~ goTsLint(srcdirectory)
+    goPrettier(srcdirectory)
     

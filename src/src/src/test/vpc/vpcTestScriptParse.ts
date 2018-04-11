@@ -118,7 +118,7 @@ export class TestVpcParsing extends UI512TestBase {
         RuleLvl2Expression: [['RuleLvl2Sub', 0], ['RuleLvl3Expression', 0]],
         RuleLvl3Expression: [['RuleLvl4Expression', 1], ['RuleLvl4Expression', 0]],
         RuleLvl4Expression: [['RuleLvl5Expression', 1], ['RuleLvl5Expression', 0]],
-        RuleLvl5Expression: [['RuleLvl6Expression', 1], ['RuleLvl6Expression', 0]],
+        RuleLvl5Expression: [['RuleLvl6Expression', 1], ['RuleLvl6Expression', 0]]
     };
 
     flattenParseTree(obj: any) {
@@ -3132,6 +3132,6 @@ HContainer(
 HContainer(
     HSimpleContainer( $x ) ) $put $into`
             );
-        },
+        }
     ];
 }

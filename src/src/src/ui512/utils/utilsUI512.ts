@@ -53,7 +53,7 @@ export class Util512 {
      * as distinct from Array.concat which returns a new object
      */
     static extendArray<T>(ar: T[], added: T[]) {
-        let argsToSplice:any[] = [ar.length, 0];
+        let argsToSplice: any[] = [ar.length, 0];
         Array.prototype.splice.apply(ar, argsToSplice.concat(added));
     }
 
@@ -258,6 +258,13 @@ export class Util512 {
     }
 
     /**
+     * for use with callAsMethodOnClass
+     */
+    static isMethodOnClass(me: any, s: string) {
+        return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
+    }
+
+    /**
      * returns list of keys.
      */
     static getMapKeys<U>(map: { [key: string]: U }): string[] {
@@ -274,7 +281,7 @@ export class Util512 {
     /**
      * returns list of vals.
      */
-    static getMapVals<T>(map: { [key: string]: T }) {
+    static getMapVals<T>(map: { [key: string]: T }): T[] {
         let ret: T[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -307,7 +314,7 @@ export class Util512 {
     static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
     static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            assertTrue(url.startsWith('/'), "")
+            assertTrue(url.startsWith('/'), '');
             if (Util512.scriptsAlreadyLoaded[url]) {
                 resolve();
                 return;
@@ -323,13 +330,15 @@ export class Util512 {
                 reject(new Error('Did not load ' + urlsplit[urlsplit.length - 1]));
             };
 
-            (script as any).onreadystatechange = script.onload = () => {
+            script.onload = () => {
                 if (!loaded) {
                     Util512.scriptsAlreadyLoaded[url] = true;
                     loaded = true;
                     resolve();
                 }
             };
+
+            (script as any).onreadystatechange = script.onload; /* browser compat */
 
             window.document.getElementsByTagName('head')[0].appendChild(script);
         });
@@ -338,8 +347,8 @@ export class Util512 {
     /**
      * padStart, copied from reference implementation on mozilla.org
      */
-    static padStart(sIn:string|number, targetLength:number, padString:string) {
-        let s = '' + sIn
+    static padStart(sIn: string | number, targetLength: number, padString: string) {
+        let s = '' + sIn;
         padString = typeof padString !== 'undefined' ? padString : ' ';
         if (s.length > targetLength) {
             return s;
@@ -352,7 +361,7 @@ export class Util512 {
 
             return padString.slice(0, targetLength) + s;
         }
-    };
+    }
 
     /**
      * make random bytes, return as base64.
@@ -387,7 +396,7 @@ export class Util512 {
      */
     static fromBase64UrlSafe(s: string) {
         if (s.length % 4 !== 0) {
-            s += '==='.slice(0, 4 - (s.length % 4));
+            s += '==='.slice(0, 4 - s.length % 4);
         }
         return atob(s.replace(/_/g, '/').replace(/-/g, '+'));
     }
@@ -408,7 +417,7 @@ export class Util512 {
  * holds a value. useful for out-parameters.
  */
 export class ValHolder<T> {
-    constructor(public val: T) { }
+    constructor(public val: T) {}
 }
 
 /**
@@ -418,8 +427,7 @@ export class ValHolder<T> {
  * findStrToEnum<MyEnum>(MyEnum, s)
  */
 export function findStrToEnum<T>(enm: any, s: string): O<T> {
-    assertTrue(enm['__isUI512Enum'] !== undefined,
-        '4F|must provide an enum type with __isUI512Enum defined.');
+    assertTrue(enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
     if (s === '__isUI512Enum') {
         return undefined;
     } else if (s.startsWith('alternateforms_')) {
@@ -442,8 +450,7 @@ export function getStrToEnum<T>(enm: any, msgContext: string, s: string): T {
     if (found !== undefined) {
         return found;
     } else {
-        msgContext = msgContext ? `Not a valid choice of ${msgContext} ` :
-            `Not a valid choice for this value. `;
+        msgContext = msgContext ? `Not a valid choice of ${msgContext} ` : `Not a valid choice for this value. `;
         if (enm['__isUI512Enum'] !== undefined) {
             msgContext += ' try one of';
             for (let enumMember in enm) {
@@ -470,14 +477,11 @@ export function getStrToEnum<T>(enm: any, msgContext: string, s: string): T {
  * findEnumToStr<MyEnum>(MyEnum, n)
  */
 export function findEnumToStr<T>(enm: any, n: number): O<string> {
-    assertTrue(enm['__isUI512Enum'] !== undefined,
-        '4D|must provide an enum type with __isUI512Enum defined.');
+    assertTrue(enm['__isUI512Enum'] !== undefined, '4D|must provide an enum type with __isUI512Enum defined.');
 
     /* using simply e[n] would work, but fragile if enum implementation changes. */
     for (let enumMember in enm) {
-        if (enm[enumMember] === n &&
-            !enumMember.startsWith('__') &&
-            !enumMember.startsWith('alternateform')) {
+        if (enm[enumMember] === n && !enumMember.startsWith('__') && !enumMember.startsWith('alternateform')) {
             return enumMember.toString();
         }
     }
@@ -505,12 +509,12 @@ export function slength(s: string | null | undefined) {
  * ts inference let's us type simply
  * let myObj = cast(o, MyClass)
  */
-export function cast<T>(instance: any, ctor: { new (...args: any[]): T }): T {
+export function cast<T>(instance: any, ctor: { new (...args: any[]): T }, context?: string): T {
     if (instance instanceof ctor) {
         return instance;
     }
 
-    throw new Error('type cast exception');
+    throw makeUI512Error('type cast exception', context);
 }
 
 /**
@@ -607,11 +611,11 @@ export class RepeatingTimer {
 /**
  * root (top-level) object
  */
-export interface UI512IsDrawTextInterface { }
-export interface UI512IsDrawIconInterface { }
-export interface UI512IsSessionInterface { }
-export interface UI512IsPresenterInterface { }
-export interface UI512IsEventInterface { }
+export interface UI512IsDrawTextInterface {}
+export interface UI512IsDrawIconInterface {}
+export interface UI512IsSessionInterface {}
+export interface UI512IsPresenterInterface {}
+export interface UI512IsEventInterface {}
 export interface Root {
     invalidateAll(): void;
     getDrawText(): UI512IsDrawTextInterface;
@@ -619,7 +623,8 @@ export interface Root {
     getSession(): O<UI512IsSessionInterface>;
     setSession(session: O<UI512IsSessionInterface>): void;
     getBrowserInfo(): BrowserOSInfo;
-    sendEvent(evt:UI512IsEventInterface): void;
+    setTimerRate(s: string): void;
+    sendEvent(evt: UI512IsEventInterface): void;
     replaceCurrentPresenter(pr: O<UI512IsPresenterInterface>): void;
     runTests(all: boolean): void;
 }
@@ -627,17 +632,17 @@ export interface Root {
 /**
  * get top-level object
  */
-let rootHolder:Root[] = []
-export function getRoot():Root {
-    checkThrow(rootHolder[0], "root not yet set.")
-    return rootHolder[0]
+let rootHolder: Root[] = [];
+export function getRoot(): Root {
+    checkThrow(rootHolder[0], 'root not yet set.');
+    return rootHolder[0];
 }
 
 /**
  * set top-level object
  */
-export function setRoot(r:Root) {
-    rootHolder[0] = r
+export function setRoot(r: Root) {
+    rootHolder[0] = r;
 }
 
 /**
@@ -734,7 +739,7 @@ export enum BrowserOSInfo {
     Unknown,
     Windows,
     Linux,
-    Mac,
+    Mac
 }
 
 /**
@@ -753,7 +758,7 @@ export enum CharClass {
     Space,
     NewLine,
     Word,
-    Punctuation,
+    Punctuation
 }
 
 /**
@@ -774,6 +779,9 @@ export class GetCharClass {
     static readonly space = ' '.charCodeAt(0);
     static readonly nonbreakingspace = '\xCA'.charCodeAt(0);
 
+    /**
+     * classify a character as word or whitespace
+     */
     static get(c: number) {
         if (c === GetCharClass.cr || c === GetCharClass.nl) {
             return CharClass.NewLine;
@@ -797,8 +805,17 @@ export class GetCharClass {
         }
     }
 
+    /**
+     * move left or right in the text editor...
+     * charCodeAt gets the character code at an index in the string
+     * len is the length of the string
+     * n is current index (caret position) in the string
+     * isLeft is true if moving left, false if moving right
+     * isUntilWord means to keep moving until word boundary is seen.
+     * returns the next caret position.
+     */
     static getLeftRight(
-        charAt: Function,
+        charCodeAt: (pos:number)=>number,
         len: number,
         n: number,
         isLeft: boolean,
@@ -811,14 +828,14 @@ export class GetCharClass {
 
         if (isUntilWord && isLeft) {
             if (includeTrailingSpace) {
-                while (n > 0 && GetCharClass.get(charAt(n - 1)) === CharClass.Space) {
+                while (n > 0 && GetCharClass.get(charCodeAt(n - 1)) === CharClass.Space) {
                     n--;
                 }
             }
 
             if (n > 0) {
-                let classStart = GetCharClass.get(charAt(n - 1));
-                while (n > 0 && GetCharClass.get(charAt(n - 1)) === classStart) {
+                let classStart = GetCharClass.get(charCodeAt(n - 1));
+                while (n > 0 && GetCharClass.get(charCodeAt(n - 1)) === classStart) {
                     n--;
                 }
             }
@@ -827,13 +844,13 @@ export class GetCharClass {
                 n -= 1;
             }
 
-            let classStart = GetCharClass.get(charAt(n));
-            while (n < len && GetCharClass.get(charAt(n)) === classStart) {
+            let classStart = GetCharClass.get(charCodeAt(n));
+            while (n < len && GetCharClass.get(charCodeAt(n)) === classStart) {
                 n++;
             }
 
             if (includeTrailingSpace) {
-                while (n < len && GetCharClass.get(charAt(n)) === CharClass.Space) {
+                while (n < len && GetCharClass.get(charCodeAt(n)) === CharClass.Space) {
                     n++;
                 }
             }
@@ -929,7 +946,7 @@ export function checkThrowEq(expected: any, got: any, msg: string, c1: any = '',
  */
 export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?: any) {
     if (defaultSort(expected, received) !== 0) {
-        let msg = `assertion failed in assertEq, expected '${expected}' but got '${received}'.`
+        let msg = `assertion failed in assertEq, expected '${expected}' but got '${received}'.`;
         throw makeUI512Error(msg, c1, c2, c3);
     }
 }
@@ -940,7 +957,7 @@ export function assertEq(expected: any, received: any, c1: string, c2?: any, c3?
  */
 export function assertEqWarn(expected: any, received: any, c1: string, c2?: any, c3?: any) {
     if (defaultSort(expected, received) !== 0) {
-        let msg = `warning, assertion failed in assertEqWarn, expected '${expected}' but got '${received}'.`
+        let msg = `warning, assertion failed in assertEqWarn, expected '${expected}' but got '${received}'.`;
         let er = makeUI512Error(msg, c1, c2, c3);
         if (!window.confirm('continue?')) {
             throw er;

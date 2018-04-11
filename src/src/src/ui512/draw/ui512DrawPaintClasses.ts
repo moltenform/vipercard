@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrueWarn, makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512BasePainterUtils } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { UI512BasePainterUtils, clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
 
 /* tslint:disable:no-unbound-method */
 
@@ -22,7 +22,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
     /**
      * draw with a single pixel brush
-     * 
+     *
      * a 'smear' is this: you're in say the pencil tool, and you drag to draw a jagged line on the screen
      * internally, whenever the mouse moves, we add a line segment from previous point to next point
      * to render what you drew, we'll draw each of these line segments.
@@ -37,17 +37,10 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     /**
      * draw with a solid rectangle brush, used for eraser tool.
      */
-    publicSmearRectangle(
-        xPts: number[],
-        yPts: number[],
-        colorparam: number,
-        diameterx: number,
-        diametery: number
-    ) {
+    publicSmearRectangle(xPts: number[], yPts: number[], colorparam: number, diameterx: number, diametery: number) {
         let realFillRect = this.fillRect.bind(this);
         this.smearShapeImpl(xPts, yPts, colorparam, (x, y, color) => {
-            realFillRect(x - Math.floor(diameterx / 2), 
-                y - Math.floor(diametery / 2), diameterx, diametery, color);
+            realFillRect(x - Math.floor(diameterx / 2), y - Math.floor(diametery / 2), diameterx, diametery, color);
         });
     }
 
@@ -247,7 +240,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
     /**
      * flood fill ('bucket tool') implementation
-     * 
+     *
      * by Jared Updike
      * http://stackoverflow.com/questions/1257117/does-anyone-have-a-working-non-recursive-floodfill-algorithm-written-in-c
      * released under Creative Commons Attribution-Share Alike
@@ -259,7 +252,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         tmpColor: number,
         recordOutputX?: number[],
         recordOutputY?: number[]
-    ):void {
+    ): void {
         const w = this.getCanvasWidth();
         const h = this.getCanvasHeight();
         if (!RectUtils.hasPoint(xIn, yIn, 0, 0, w, h)) {
@@ -293,8 +286,8 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
                 countPixelsWritten += 1;
                 this.setPixel(x, y, tmpColor);
                 if (recordOutputX) {
-                    (recordOutputX as any).push(x);
-                    (recordOutputY as any).push(y);
+                    recordOutputX.push(x);
+                    recordOutputY!.push(y);
                 }
 
                 qx.push(x + 1);
@@ -324,13 +317,13 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     }
 
     /**
-    * Bresenham Curve Rasterizing Algorithms
-    * Used with explicit permission of author, e-mail on Oct 27 2017
-    * @author  Zingl Alois
-    * @date    17.12.2014
-    * @version 1.3
-    * @url     http://members.chello.at/easyfilter/bresenham.html
-    */
+     * Bresenham Curve Rasterizing Algorithms
+     * Used with explicit permission of author, e-mail on Oct 27 2017
+     * @author  Zingl Alois
+     * @date    17.12.2014
+     * @version 1.3
+     * @url     http://members.chello.at/easyfilter/bresenham.html
+     */
     plotLine(x0: number, y0: number, x1: number, y1: number, color: number) {
         x0 = Math.floor(x0);
         y0 = Math.floor(y0);

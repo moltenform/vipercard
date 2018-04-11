@@ -15,10 +15,10 @@ export class UI512ImageCollectionCollection {
 export class UI512ImageCollection {
     children: UI512ImageCollectionImage[] = [];
     suffix = '.png';
-    constructor(public id: string, public name: string, public readonly url:string) {}
+    constructor(public id: string, public name: string, public readonly url: string) {}
     genChildren(largestNumber: number) {
         for (let i = 1; i <= largestNumber; i++) {
-            let id = Util512.padStart(i, 2, '0')
+            let id = Util512.padStart(i, 2, '0');
             let name = 'lng' + i.toString();
             this.children.push(new UI512ImageCollectionImage(id, name));
             this.children[this.children.length - 1].parent = this;

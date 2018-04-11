@@ -7,22 +7,22 @@
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIcon.js';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcInitIcons } from '../../vpc/vpcutils/vpcInitIcons.js';
 /* auto */ import { VpcUiIntro } from '../../vpcui/intro/vpcIntro.js';
-/* auto */ import { UI512DemoBasic } from '../../test/ui512/uiDemoBasic.js';
+/* auto */ import { UI512DemoTextEdit } from '../../test/ui512/uiDemoTextEdit.js';
 /* auto */ import { UI512DemoText } from '../../test/ui512/uiDemoText.js';
 /* auto */ import { UI512DemoPaint } from '../../test/ui512/uiDemoPaint.js';
-/* auto */ import { UI512DemoButtons } from '../../test/ui512/uiDemoButtons.js';
 /* auto */ import { UI512DemoMenus } from '../../test/ui512/uiDemoMenus.js';
-/* auto */ import { UI512DemoTextEdit } from '../../test/ui512/uiDemoTextEdit.js';
 /* auto */ import { UI512DemoComposites } from '../../test/ui512/uiDemoComposites.js';
+/* auto */ import { UI512DemoButtons } from '../../test/ui512/uiDemoButtons.js';
+/* auto */ import { UI512DemoBasic } from '../../test/ui512/uiDemoBasic.js';
 /* auto */ import { runTestsImpl } from '../../test/vpcui/testRegistration.js';
 
 export class UI512FullRoot implements Root {
     domCanvas: CanvasWrapper;
-    controller: UI512Controller;
-    fontManager: UI512DrawText;
+    presenter: UI512Presenter;
+    drawText: UI512DrawText;
     iconManager: UI512IconManager;
     browserOSInfo: BrowserOSInfo;
     prevMouseDown: O<MouseDownEventDetails>;
@@ -35,25 +35,25 @@ export class UI512FullRoot implements Root {
 
     init(domCanvas: HTMLCanvasElement) {
         this.browserOSInfo = Util512.getBrowserOS(window.navigator.userAgent);
-        this.fontManager = new UI512DrawText();
+        this.drawText = new UI512DrawText();
         this.iconManager = new UI512IconManager();
         this.domCanvas = new CanvasWrapper(domCanvas);
 
-        /* this.controller = new UI512DemoBasic(); */
-        /* this.controller = new UI512DemoButtons(); */
-        /* this.controller = new UI512DemoComposites(); */
-        /* this.controller = new UI512DemoMenus(); */
-        /* this.controller = new UI512DemoPaint(); */
-        /* this.controller = new UI512DemoText(); */
-        /* this.controller = new UI512DemoTextEdit(); */
-        this.controller = new VpcUiIntro();
+        /* this.presenter = new UI512DemoBasic(); */
+        /* this.presenter = new UI512DemoButtons(); */
+        /* this.presenter = new UI512DemoComposites(); */
+        /* this.presenter = new UI512DemoMenus(); */
+        /* this.presenter = new UI512DemoPaint(); */
+        /* this.presenter = new UI512DemoText(); */
+        /* this.presenter = new UI512DemoTextEdit(); */
+        this.presenter = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
         UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor);
 
         VpcInitIcons.go();
 
         try {
-            this.controller.init();
+            this.presenter.init();
         } catch (e) {
             respondUI512Error(e, 'init');
         }
@@ -61,14 +61,14 @@ export class UI512FullRoot implements Root {
 
     public invalidateAll() {
         try {
-            this.controller.invalidateAll();
+            this.presenter.invalidateAll();
         } catch (e) {
             respondUI512Error(e, 'invalidateAll');
         }
     }
 
     public getDrawText() {
-        return this.fontManager;
+        return this.drawText;
     }
 
     public getDrawIcon() {
@@ -87,20 +87,20 @@ export class UI512FullRoot implements Root {
         return this.browserOSInfo;
     }
 
-    replaceCurrentPresenter(newController: any) {
-        assertTrue(newController && newController instanceof UI512Controller, '3@|not a controller');
-        if (newController.importMouseTracking) {
-            newController.importMouseTracking(this.controller);
+    replaceCurrentPresenter(newPr: any) {
+        assertTrue(newPr && newPr instanceof UI512Presenter, '3@|not a presenter');
+        if (newPr.importMouseTracking) {
+            newPr.importMouseTracking(this.presenter);
         }
 
-        this.controller = newController;
+        this.presenter = newPr;
         this.invalidateAll();
     }
 
     sendEvent(evt: UI512IsEventInterface) {
-        let details = evt as EventDetails
-        assertTrueWarn(details.isEventDetails, "")
-        return this.event(details)
+        let details = evt as EventDetails;
+        assertTrueWarn(details.isEventDetails, '');
+        return this.event(details);
     }
 
     event(details: EventDetails) {
@@ -126,7 +126,7 @@ export class UI512FullRoot implements Root {
 
         if (!details.handled()) {
             try {
-                this.controller.rawEvent(details);
+                this.presenter.rawEvent(details);
             } catch (e) {
                 respondUI512Error(e, 'event ' + details.type());
             }
@@ -194,10 +194,15 @@ export class UI512FullRoot implements Root {
 
         let complete = new RenderComplete();
         try {
-            this.controller.render(this.domCanvas, milliseconds, complete);
+            this.presenter.render(this.domCanvas, milliseconds, complete);
         } catch (e) {
             respondUI512Error(e, 'drawFrame');
         }
+    }
+
+    setTimerRate(s: string): void {
+        let rate = s === 'faster' ? 50 : 100;
+        this.timerSendIdleEvent = new RepeatingTimer(rate);
     }
 
     public runTests(all: boolean) {

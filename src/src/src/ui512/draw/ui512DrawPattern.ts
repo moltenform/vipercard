@@ -10,7 +10,7 @@ export const clrTransp = 2;
  * if clr is 100 and above, it represents a pattern
  */
 export function needsPatternSupport(fillcolor: O<number>) {
-    return fillcolor!==undefined && fillcolor >= 100;
+    return fillcolor !== undefined && fillcolor >= 100;
 }
 
 /**
@@ -82,7 +82,7 @@ export class UI512Patterns {
         145: '1011000100110000000000110001101111011000110000000000110010001101',
         146: '0010001000000100100011000111010000100010000101111001100000010000',
         147: '0100010010001000000100010010001001000100100010000001000100100010',
-        148: '1111111111101111111111111011101111111111111011111111111111111111',
+        148: '1111111111101111111111111011101111111111111011111111111111111111'
     };
 
     static readonly defaultPattern = 'pattern148';
@@ -103,17 +103,9 @@ export abstract class UI512BasePainterUtils {
      * fill a polygon
      * http://alienryderflex.com/polygon_fill/
      * Darel Rex Finley, released as public-domain
-     * ported to JavaScript by Ben Fisher 
+     * ported to JavaScript by Ben Fisher
      */
-    fillPolygon(
-        x0: number,
-        y0: number,
-        w: number,
-        h: number,
-        xPts: number[],
-        yPts: number[],
-        color: number
-    ) {
+    fillPolygon(x0: number, y0: number, w: number, h: number, xPts: number[], yPts: number[], color: number) {
         let nodeX: number[] = [];
         let sortByNumber = (a: number, b: number) => {
             return a - b;
@@ -122,7 +114,7 @@ export abstract class UI512BasePainterUtils {
         /* loop through the rows of the image */
         for (let pixelY = y0; pixelY < y0 + h; pixelY++) {
             nodeX.length = 0;
-             /* build a list of nodes */
+            /* build a list of nodes */
             let nodes = 0;
             let j = xPts.length - 1;
             let i = 0;
@@ -139,7 +131,7 @@ export abstract class UI512BasePainterUtils {
             /* sort the nodes */
             nodeX.sort(sortByNumber);
 
-             /* fill the pixels between node pairs. */
+            /* fill the pixels between node pairs. */
             const IMAGE_LEFT = x0;
             const IMAGE_RIGHT = x0 + w;
             for (i = 0; i < nodes; i += 2) {
@@ -402,20 +394,13 @@ export abstract class UI512BasePainterUtils {
     /**
      * same as drawBorder's drawboxthinborder, but ported to painting.
      */
-    drawboxthinborderPorted(
-        x0: number,
-        y0: number,
-        w: number,
-        h: number,
-        clr: number,
-        fill: O<number>
-    ) {
+    drawboxthinborderPorted(x0: number, y0: number, w: number, h: number, clr: number, fill: O<number>) {
         if (w > 0 && h > 0) {
             let realBorderSize = 1;
 
             /* clear it */
             this.fillRectMightBeClear(x0, y0, w, h, fill);
-            
+
             /* draw borders */
             this.fillRect(x0, y0, w, realBorderSize, clr);
             this.fillRect(x0, y0, realBorderSize, h, clr);
@@ -435,4 +420,3 @@ export abstract class UI512BasePainterUtils {
         }
     }
 }
-

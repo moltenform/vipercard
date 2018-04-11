@@ -2,6 +2,7 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { isString } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512MenuDefn } from '../../ui512/menu/ui512MenuRender.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
 
@@ -11,7 +12,7 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
         this.initkeymappings();
     }
 
-    protected getMenuStruct() {
+    protected getMenuStruct(): UI512MenuDefn[] {
         return [
             [
                 'mnuHeaderOS|icon:001:80:26',
@@ -21,8 +22,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     '|---|',
                     'mnuReportErr|lngReport an error...|',
                     'mnuReportSec|lngReport security issue...|',
-                    'mnuFlagStack|lngFlag content...|',
-                ],
+                    'mnuFlagStack|lngFlag content...|'
+                ]
             ],
             [
                 'mnuHeaderFile|lngFile',
@@ -38,8 +39,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuShareALink|lngShare a link...|',
                     'mnuPublishFeatured|lngPublish to featured...|',
                     '|---|',
-                    'mnuQuit|lngQuit ViperCard|\xBD U',
-                ],
+                    'mnuQuit|lngQuit ViperCard|\xBD U'
+                ]
             ],
             [
                 'mnuHeaderEdit|lngEdit',
@@ -58,9 +59,9 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuPasteCardOrVel|lngPaste Card|',
                     '|---|',
                     'mnuNewCard|lngNew Card|',
-                    'mnuDelCard|lngDelete Card|',
+                    'mnuDelCard|lngDelete Card|'
                     // "mnuDupeCard|lngDuplicate Card|",
-                ],
+                ]
             ],
             [
                 'mnuHeaderGo|lngGo',
@@ -70,8 +71,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuGoCardNext|lngNext|\xBD 3',
                     'mnuGoCardLast|lngLast|\xBD 4',
                     '|---|',
-                    'mnuMsgBox|lngMessage Box|\xBD M',
-                ],
+                    'mnuMsgBox|lngMessage Box|\xBD M'
+                ]
             ],
             [
                 'mnuHeaderTools|lngTools',
@@ -91,8 +92,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuItemTool14|lngOval|',
                     'mnuItemTool15|lngRoundrect|',
                     'mnuItemTool16|lngCurve|',
-                    'mnuItemTool17|lngSpray|',
-                ],
+                    'mnuItemTool17|lngSpray|'
+                ]
             ],
             [
                 'mnuHeaderObjects|lngObjects',
@@ -101,8 +102,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuStackInfo|lngStack Info...|',
                     '|---|',
                     'mnuObjectsNewBtn|lngNew Button|',
-                    'mnuObjectsNewFld|lngNew Field|',
-                ],
+                    'mnuObjectsNewFld|lngNew Field|'
+                ]
             ],
             [
                 'mnuHeaderDraw|lngDraw',
@@ -119,8 +120,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuPaintDrawMult|lngMultiple|',
                     'mnuPaintManyCopies|lngMany copies...|',
                     '|---|',
-                    'mnuExportGif|lngAnimated .gif...|',
-                ],
+                    'mnuExportGif|lngAnimated .gif...|'
+                ]
             ],
             [
                 'mnuHeaderFont|lngFont',
@@ -129,8 +130,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuItemSetFontFaceGeneva|lngGeneva|',
                     'mnuItemSetFontFaceCourier|lngCourier|',
                     'mnuItemSetFontFaceTimes|lngTimes|',
-                    'mnuItemSetFontFaceNew York|lngNew York|',
-                ],
+                    'mnuItemSetFontFaceNew York|lngNew York|'
+                ]
             ],
             [
                 'mnuHeaderFontStyle|lngStyle',
@@ -151,8 +152,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuItemSetFontSize12|lng12|',
                     'mnuItemSetFontSize14|lng14|',
                     'mnuItemSetFontSize18|lng18|',
-                    'mnuItemSetFontSize24|lng24|',
-                ],
+                    'mnuItemSetFontSize24|lng24|'
+                ]
             ],
             ['topClock|lng12/28/18', 776, ['|lngPlaceholder|']],
             [
@@ -162,8 +163,8 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuOSAbout2|lngAbout ViperCard...|',
                     '|---|',
                     'mnuDlgHelpScreenshots|lngExamples & Tutorials...|',
-                    'mnuDlgHelpReference|lngScript Reference...|',
-                ],
+                    'mnuDlgHelpReference|lngScript Reference...|'
+                ]
             ],
             [
                 'mnuHeaderAppIcon|icon:001:78:27',
@@ -173,9 +174,9 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
                     'mnuSysAppsHideOthers|lngHide Others|',
                     'mnuSysAppsShowAll|lngShow All|',
                     '|---|',
-                    'mnuSysAppsCheckProduct|lngViperCard|',
-                ],
-            ],
+                    'mnuSysAppsCheckProduct|lngViperCard|'
+                ]
+            ]
         ];
     }
 

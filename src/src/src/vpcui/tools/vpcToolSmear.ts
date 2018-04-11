@@ -12,7 +12,7 @@
 
 enum SmearToolMode {
     Inited,
-    Dragging,
+    Dragging
 }
 
 class SmearToolState {

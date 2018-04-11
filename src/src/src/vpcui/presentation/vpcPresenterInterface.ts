@@ -2,7 +2,7 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
@@ -18,7 +18,7 @@
 /* auto */ import { VpcAppNonModalDlgHolder } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 /* auto */ import { VpcAppMenus } from '../../vpcui/menu/vpcMenu.js';
 
-export abstract class VpcPresenterInterface extends UI512Controller {
+export abstract class VpcPresenterInterface extends UI512Presenter {
     abstract answerMsg(
         prompt: string,
         fnOnResult?: (n: number) => void,

@@ -76,7 +76,7 @@ export enum VpcLineCategory {
     RepeatEnd,
     DeclareGlobal,
     Statement,
-    CallHandler,
+    CallHandler
 }
 
 export class MapBuiltinCmds extends MapKeyToObject<Function> {

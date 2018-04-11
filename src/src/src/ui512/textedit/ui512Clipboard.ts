@@ -27,7 +27,7 @@ export class ClipManager implements ClipManagerInterface {
         this.timerClipboardReady.update(milliseconds);
         if (this.timerClipboardReady.isDue()) {
             this.timerClipboardReady.reset();
-            this.goEnsureReadyForPaste()
+            this.goEnsureReadyForPaste();
         }
     }
 
@@ -56,7 +56,7 @@ export class ClipManager implements ClipManagerInterface {
             try {
                 succeeded = window.document.execCommand('copy');
             } catch (e) {
-                console.warn(e)
+                console.warn(e);
                 succeeded = false;
             }
 
@@ -74,7 +74,7 @@ export class ClipManager implements ClipManagerInterface {
         try {
             ClipManager.ensureReadyForPasteImpl(this.getOrCreateHidden());
         } catch (e) {
-            console.warn("ensureReadyForPaste " + e)
+            console.warn('ensureReadyForPaste ' + e);
         }
     }
 

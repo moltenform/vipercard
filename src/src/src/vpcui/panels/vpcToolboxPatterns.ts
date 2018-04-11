@@ -11,7 +11,7 @@ export class PatternsToolbox extends UI512CompToolbox {
     borders: UI512ElButton[] = [];
     createSpecific(app: UI512Application) {
         super.createSpecific(app);
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         for (let i = 0; i < 4; i++) {
             this.borders[i] = this.genBtn(app, grp, 'selectwithbox' + i);
             this.borders[i].set('autohighlight', false);
@@ -23,7 +23,7 @@ export class PatternsToolbox extends UI512CompToolbox {
     }
 
     protected refreshHighlight(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let lookfor = this.whichChosen;
         for (let item of this.items) {
             let id = this.getElId('choice##' + item[0]);
@@ -44,7 +44,7 @@ export class PatternsToolbox extends UI512CompToolbox {
     }
 
     static layout(toolspatterns: PatternsToolbox, appli: VpcStateInterface) {
-        toolspatterns.iconh = ToolboxDims.IconH;
+        toolspatterns.iconH = ToolboxDims.IconH;
         toolspatterns.widthOfIcon = (id: string) => {
             return ToolboxDims.PatternsW;
         };
@@ -100,11 +100,11 @@ export class PatternsToolbox extends UI512CompToolbox {
             ['pattern144', 86],
             ['pattern145', 87],
             ['pattern146', 88],
-            ['pattern105', 77],
+            ['pattern105', 77]
         ];
         assertEq(48, toolspatterns.items.length, '6x|');
-        toolspatterns.hasclosebtn = false;
-        toolspatterns.create(appli.getController(), appli.UI512App());
+        toolspatterns.hasCloseBtn = false;
+        toolspatterns.create(appli.getPresenter(), appli.UI512App());
         toolspatterns.setWhich(appli.UI512App(), appli.getOption_s('currentPattern'));
         toolspatterns.logicalHeight = ToolboxDims.ToolbarHeight * 3;
         return [toolspatterns.x, toolspatterns.y];
@@ -118,5 +118,5 @@ export enum ToolboxDims {
     PatternsPerRow = 16,
     ToolbarHeight = 33,
     NavW = 24,
-    NavAddedX = 253,
+    NavAddedX = 253
 }

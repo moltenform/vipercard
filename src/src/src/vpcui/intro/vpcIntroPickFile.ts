@@ -3,7 +3,7 @@
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroBase.js';
 /* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
 /* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
@@ -12,39 +12,31 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
     isIntroOpenFromDiskPage = true;
     compositeType = 'IntroOpenFromDiskPage';
     canDrag = false;
-    constructor(
-        compid: string,
-        bounds: number[],
-        x: number,
-        y: number,
-        protected c: VpcIntroPresenterInterface,
-    ) {
+    constructor(compid: string, bounds: number[], x: number, y: number, protected pr: VpcIntroPresenterInterface) {
         // always display centered, even if was changed earlier
         super(compid, bounds, undefined, undefined);
     }
 
     createSpecific(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let headerheight = this.drawCommonFirst(app, grp);
 
         let noteToUser = this.genChild(app, grp, 'noteToUser', UI512ElLabel);
         noteToUser.set(
             'labeltext',
-            lng(
-                'lngOpen from .json file.\n\n\nPlease click anywhere on this page\nto choose a .json file to open...'
-            )
+            lng('lngOpen from .json file.\n\n\nPlease click anywhere on this page\nto choose a .json file to open...')
         );
         noteToUser.setDimensions(this.x + 30, this.y + 30, 300, 200);
 
         // draw the cancel button
         let wndbg = grp.getEl(this.getElId('wndbg'));
-        const basex = wndbg.right - 170;
-        const basey = wndbg.bottom - 50;
-        let btnOkX = basex;
-        let btnOkY = basey;
+        const baseX = wndbg.right - 170;
+        const baseY = wndbg.bottom - 50;
+        let btnOkX = baseX;
+        let btnOkY = baseY;
         let btnOkW = 69;
         let btnOkH = 29;
-        this.drawBtn(app, grp, 1, basex + (252 - 174), basey + (68 - 64), 68, 21);
+        this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
 
         let elCanvas = window.document.getElementById('mainDomCanvas') || window.document.body;
         let elCanvasBounds = elCanvas.getBoundingClientRect();
@@ -53,7 +45,7 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
             elCanvasBounds.left + elCanvasBounds.width / 6,
             elCanvasBounds.top + elCanvasBounds.height / 16,
             elCanvasBounds.width - elCanvasBounds.width / 3,
-            3 * elCanvasBounds.height / 4,
+            3 * elCanvasBounds.height / 4
         ];
 
         // uploading a file...
@@ -110,7 +102,7 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
             return;
         }
 
-        let picker = window.document.getElementById('idFilePicker') as any;
+        let picker = window.document.getElementById('idFilePicker') as HTMLInputElement;
         if (!picker) {
             alert('file picker element not found');
             return;
@@ -143,28 +135,24 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
             }
 
             let text = reader.result;
-            let loader = new VpcDocLoader(
-                text,
-                lng('lngfile from disk'),
-                OpenFromLocation.FromJsonFile
-            );
-            this.c.beginLoadDocument(loader);
+            let loader = new VpcDocLoader(text, lng('lngfile from disk'), OpenFromLocation.FromJsonFile);
+            this.pr.beginLoadDocument(loader);
         }
     }
 
-    destroy(c: UI512ControllerBase, app: UI512Application) {
+    destroy(pr: UI512PresenterBase, app: UI512Application) {
         let el = window.document.getElementById('divvpcfilepicker');
         if (el) {
             window.document.body.removeChild(el);
         }
 
-        super.destroy(c, app);
+        super.destroy(pr, app);
     }
 
-    static respondBtnClick(c: VpcIntroPresenterInterface, self: IntroOpenFromDiskPage, el: UI512Element) {
+    static respondBtnClick(pr: VpcIntroPresenterInterface, self: IntroOpenFromDiskPage, el: UI512Element) {
         if (el.id.endsWith('choicebtn0') || el.id.endsWith('choicebtn1')) {
             // user clicked cancel, go back to first screen
-            c.goBackToFirstScreen();
+            pr.goBackToFirstScreen();
         }
     }
 }

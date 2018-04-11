@@ -42,14 +42,15 @@ async function doBasicTest(callback: Function) {
     }
 
     nexttest(callback);
+    return true;
 }
 
 export class TestVpcBasicServerTests extends UI512TestBase {
     tests = [
         'callback/basicServerTests',
         (callback: NullaryFn) => {
-            doBasicTest(callback);
-        },
+            UI512BeginAsync(() => doBasicTest(callback), undefined, true);
+        }
     ];
 }
 
@@ -101,7 +102,7 @@ async function createUserTests(callback: Function) {
         username: 'test4',
         email: 'test4@test.com',
         simulateCurrentServerTime: '1520806647',
-        simulateRemoteIp: fakeIp(),
+        simulateRemoteIp: fakeIp()
     };
 
     // fails: iterations is wrong
@@ -202,7 +203,7 @@ async function createUserTests(callback: Function) {
             username: 'test1',
             email: 'newtest1@test.com',
             simulateCurrentServerTime: '1520809583',
-            simulateRemoteIp: fakeIp(),
+            simulateRemoteIp: fakeIp()
         };
         let url = '/vpusers/create';
         let response = await sendSignedRequestJson(
@@ -225,7 +226,7 @@ async function createUserTests(callback: Function) {
             username: 'test1sameemail',
             email: 'test1@test.com',
             simulateCurrentServerTime: '1520809677',
-            simulateRemoteIp: fakeIp(),
+            simulateRemoteIp: fakeIp()
         };
         let url = '/vpusers/create';
         let response = await sendSignedRequestJson(
@@ -248,7 +249,7 @@ async function createUserTests(callback: Function) {
         username: 'test4',
         email: 'test4@test.com',
         simulateCurrentServerTime: '1520811408',
-        simulateRemoteIp: fakeIp(),
+        simulateRemoteIp: fakeIp()
     };
     let urlWorks = '/vpusers/create';
     let responseWorks = await sendSignedRequestJson(
@@ -398,7 +399,7 @@ async function createStacksTests(tst: TestVpcServerTests, callback: Function) {
     let fakeStackName = 'My stack acc\u00e9nt';
     let fakeStackStruct: any = {
         anId: Util512.weakUuid(),
-        unicode: '\u2666chars\u0301\u27F0smiling\uD83D\uDE00',
+        unicode: '\u2666chars\u0301\u27F0smiling\uD83D\uDE00'
     };
     let fakeStackData = JSON.stringify(fakeStackStruct);
     tst.fakeStackData1 = fakeStackData + '1';
@@ -704,6 +705,6 @@ export class TestVpcServerTests extends UI512TestBase {
         'callback/updateStacksTests',
         (callback: NullaryFn) => {
             UI512BeginAsync(() => updateStacksTests(this, callback), undefined, true);
-        },
+        }
     ];
 }

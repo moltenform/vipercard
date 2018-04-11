@@ -16,18 +16,12 @@ export const cProductName = 'ViperCard';
  * make an error object, record the error, and depending on severity, show alert box
  * you can pass in arguments to indicate context of when/why error occurred
  */
-export function makeUI512ErrorGeneric(
-    firstMsg: string,
-    prefix: string,
-    s1?: any,
-    s2?: any,
-    s3?: any,
-) {
-    let msg = joinIntoMessage(firstMsg, prefix, s1, s2, s3)
+export function makeUI512ErrorGeneric(firstMsg: string, prefix: string, s1?: any, s2?: any, s3?: any) {
+    let msg = joinIntoMessage(firstMsg, prefix, s1, s2, s3);
     let err = new Error(msg);
     try {
-        (err as any).isUi512Error = true;
-        recordAndShowErr(firstMsg, msg + '\n' + err.stack)
+        markUI512Err(err);
+        recordAndShowErr(firstMsg, msg + '\n' + err.stack);
     } catch (e) {
         console.error('could not record err ' + e.message);
     }
@@ -47,6 +41,7 @@ export function makeUI512Error(msg: string, s1?: any, s2?: any, s3?: any) {
  */
 export function respondUI512Error(e: Error, context: string) {
     if ((e as any).isUi512Error) {
+        /* assert.ts */
         console.log('caught ' + e.message + ' at context ' + context);
         console.log(e.stack);
         window.alert(e.message + ' ' + context);
@@ -93,10 +88,10 @@ export function checkThrowUI512(condition: any, msg: string, s1: any = '', s2: a
 }
 
 /**
- * a quick way to go from optional<T> to T
+ * a way to safely go from optional<T> to T
  */
 export function throwIfUndefined<T>(v: O<T>, s1: string, s2: any = '', s3: any = ''): T {
-    if (v === undefined) {
+    if (v === undefined || v === null) {
         let msg = 'not defined';
         if (s1 !== '') {
             msg += ', ' + s1.toString();
@@ -149,31 +144,31 @@ export class UI512Compress {
  * store the last <size> log entries, without needing to move contents or allocate more memory.
  */
 export abstract class RingBuffer {
-    constructor (protected size: number) { }
+    constructor(protected size: number) {}
 
     /**
      * add log to buffer.
      */
-    append(s:string) {
-        let ptrLatest = this.getLatestIndex()
-        ptrLatest = this.mod(ptrLatest + 1, this.size)
-        this.setAt(ptrLatest, s)
-        this.setLatestIndex(ptrLatest)
+    append(s: string) {
+        let ptrLatest = this.getLatestIndex();
+        ptrLatest = this.mod(ptrLatest + 1, this.size);
+        this.setAt(ptrLatest, s);
+        this.setLatestIndex(ptrLatest);
     }
 
     /**
      * retrieve the latest entries.
      */
-    retrieve(howMany:number) {
-        assertTrue(howMany < this.size, "")
-        let ptrLatest = this.getLatestIndex()
-        let ret:string[] = []
+    retrieve(howMany: number) {
+        assertTrue(howMany < this.size, '');
+        let ptrLatest = this.getLatestIndex();
+        let ret: string[] = [];
         for (let i = 0; i < howMany; i++) {
             let index = this.mod(ptrLatest - i, this.size);
-            ret.push(this.getAt(index))
+            ret.push(this.getAt(index));
         }
 
-        return ret
+        return ret;
     }
 
     /**
@@ -183,10 +178,10 @@ export abstract class RingBuffer {
         return (a % n + n) % n;
     }
 
-    abstract getAt(index:number) : string;
-    abstract setAt(index:number, s:string) : void;
-    abstract getLatestIndex() : number;
-    abstract setLatestIndex(index:number) : void;
+    abstract getAt(index: number): string;
+    abstract setAt(index: number, s: string): void;
+    abstract getLatestIndex(): number;
+    abstract setLatestIndex(index: number): void;
 }
 
 /**
@@ -194,11 +189,11 @@ export abstract class RingBuffer {
  * vpc_log_ptr should be in local storage, vpc could be running in 2 browser windows.
  */
 class RingBufferLocalStorage extends RingBuffer {
-    getAt(index:number) : string {
+    getAt(index: number): string {
         return window.localStorage['vpc_log_' + index] || '';
     }
 
-    setAt(index:number, s:string) {
+    setAt(index: number, s: string) {
         window.localStorage['vpc_log_' + index] = s;
     }
 
@@ -207,8 +202,8 @@ class RingBufferLocalStorage extends RingBuffer {
         return Number.isFinite(ptrLatest) ? ptrLatest : 0;
     }
 
-    setLatestIndex(index:number) {
-        window.localStorage['vpc_log_ptr'] = index.toString()
+    setLatestIndex(index: number) {
+        window.localStorage['vpc_log_ptr'] = index.toString();
     }
 }
 
@@ -220,7 +215,7 @@ export class UI512ErrorHandling {
     static runningTests = false;
     static readonly maxEntryLength = 512;
     static readonly maxLinesKept = 256;
-    static store = new RingBufferLocalStorage(UI512ErrorHandling.maxLinesKept)
+    static store = new RingBufferLocalStorage(UI512ErrorHandling.maxLinesKept);
 
     protected static encodeErrMsg(s: string) {
         s = s.substr(0, UI512ErrorHandling.maxEntryLength);
@@ -232,12 +227,10 @@ export class UI512ErrorHandling {
     }
 
     static appendErrMsgToLogs(showedDialog: boolean, s: string) {
-        if (!UI512ErrorHandling.runningTests &&
-            !!window.localStorage &&
-            !scontains(s, msgNotification)) {
-            let severity = showedDialog ? '1' : '2'
+        if (!UI512ErrorHandling.runningTests && !!window.localStorage && !scontains(s, msgNotification)) {
+            let severity = showedDialog ? '1' : '2';
             let encoded = severity + UI512ErrorHandling.encodeErrMsg(s);
-            UI512ErrorHandling.store.append(encoded)
+            UI512ErrorHandling.store.append(encoded);
         }
     }
 
@@ -248,15 +241,13 @@ export class UI512ErrorHandling {
 
 export function makeVpcScriptErr(s: string) {
     let err = makeUI512ErrorGeneric(s, msgScriptErr);
-    (err as any).isVpcError = true;
-    (err as any).isVpcScriptError = true;
+    markUI512Err(err, true, false, true);
     return err;
 }
 
 export function makeVpcInternalErr(s: string) {
     let err = makeUI512ErrorGeneric(s, msgInternalErr);
-    (err as any).isVpcError = true;
-    (err as any).isVpcInternalError = true;
+    markUI512Err(err, true, true, false);
     return err;
 }
 
@@ -299,7 +290,7 @@ export function cleanExceptionMsg(s: string) {
 /**
  * combine strings, and move all 'tags' to the end
  */
-export function joinIntoMessage(c0:string, prefix:string, s1?: any, s2?: any, s3?: any) {
+export function joinIntoMessage(c0: string, prefix: string, s1?: any, s2?: any, s3?: any) {
     let tags: string[] = [];
     c0 = findTags(c0, tags);
     s1 = findTags(s1, tags);
@@ -315,6 +306,29 @@ export function joinIntoMessage(c0:string, prefix:string, s1?: any, s2?: any, s3
 }
 
 /**
+ * an error that can be attached with markUI512Err
+ */
+export interface UI512AttachableErr {}
+
+/**
+ * stamp the error object with our flags
+ * we'd rather make a subclass of Error but some browsers don't like that.
+ */
+export function markUI512Err(
+    e: Error,
+    vpc?: boolean,
+    internal?: boolean,
+    script?: boolean,
+    attachErr?: UI512AttachableErr
+) {
+    (e as any).isUi512Error = true; /* assert.ts */
+    (e as any).isVpcError = vpc ? true : undefined; /* assert.ts */
+    (e as any).isVpcScriptError = script ? true : undefined; /* assert.ts */
+    (e as any).isVpcInternalError = internal ? true : undefined; /* assert.ts */
+    (e as any).attachErr = attachErr ? attachErr : undefined; /* assert.ts */
+}
+
+/**
  * break into debugger. V8 js perf sometimes hurt if seeing a debugger statement, so separate it here.
  */
 function breakIntoDebugger() {
@@ -326,7 +340,7 @@ function breakIntoDebugger() {
 /**
  * record and show an unhandled exception
  */
-function recordAndShowErr(firstMsg:string, msg:string) {
+function recordAndShowErr(firstMsg: string, msg: string) {
     if (UI512ErrorHandling.breakOnThrow || scontains(firstMsg, 'assertion failed')) {
         UI512ErrorHandling.appendErrMsgToLogs(true, msg);
         console.error(msg);

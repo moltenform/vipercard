@@ -19,13 +19,13 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
             'lngThank you for reporting a potential area\nof improvement. ' +
                 'We will notify you of any\nupdates or fixes\nby posting to \ngroups.google.com/forum/#!forum/vipercard' +
                 '',
-            4,
+            4
         ],
-        ['desc', 'lngDescription of\nbug or error\nmessage, incl.\ncontext:', 3],
+        ['desc', 'lngDescription of\nbug or error\nmessage, incl.\ncontext:', 3]
     ];
     btns: [string, string][] = [
         ['ok', 'lngSend'],
-        ['close', 'lngClose'],
+        ['close', 'lngClose']
         /*['errorlogs', 'lngGet Logs'],*/
     ];
     fieldsThatAreLabels: { [key: string]: boolean } = { header: true };
@@ -37,7 +37,7 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
 
     createSpecific(app: UI512Application) {
         super.createSpecific(app);
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let header = grp.findEl(this.getElId('lblForheader'));
         if (header) {
             header.setDimensions(header.x - 20, header.y, header.w + 40, header.h);

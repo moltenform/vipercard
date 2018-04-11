@@ -25,7 +25,7 @@ export enum VpcBtnStyle {
     radio = UI512BtnStyle.Radio,
     alternateforms_standard = UI512BtnStyle.OSStandard,
     alternateforms_default = UI512BtnStyle.OSDefault,
-    alternateforms_rect = UI512BtnStyle.Rectangle,
+    alternateforms_rect = UI512BtnStyle.Rectangle
 }
 
 export class VpcElButton extends VpcElSizable {
@@ -65,7 +65,7 @@ export class VpcElButton extends VpcElSizable {
         'textstyle',
         'visible',
         'script',
-        'name',
+        'name'
     ];
 
     getAttributesList() {
@@ -100,7 +100,7 @@ export class VpcElButton extends VpcElSizable {
             (me: VpcElButton) => {
                 let ret = getEnumToStrOrUnknown<VpcBtnStyle>(VpcBtnStyle, me._style);
                 return ret.replace(/osstandard/, 'standard').replace(/osdefault/, 'default');
-            },
+            }
         ];
     }
 
@@ -111,7 +111,7 @@ export class VpcElButton extends VpcElSizable {
             (me: VpcElButton, s: string) => {
                 let list = s.split(',').map(item => item.trim());
                 me.set('textstyle', FormattedSubstringUtil.vpcstyleToInt(list));
-            },
+            }
         ];
 
         setters['style'] = [
@@ -120,7 +120,7 @@ export class VpcElButton extends VpcElSizable {
                 let styl = getStrToEnum<VpcBtnStyle>(VpcBtnStyle, 'Button style', s);
                 checkThrow(styl !== VpcBtnStyle.osboxmodal, '7D|this style is only supported internally');
                 me.set('style', styl);
-            },
+            }
         ];
 
         setters['textalign'] = [
@@ -134,7 +134,7 @@ export class VpcElButton extends VpcElSizable {
                 } else {
                     throw makeVpcScriptErr(`4z|we don't currently support setting text align to ${s}`);
                 }
-            },
+            }
         ];
     }
 
@@ -149,7 +149,7 @@ export class VpcElButton extends VpcElSizable {
             ['showlabel', PrpTyp.Bool],
             ['visible', PrpTyp.Bool],
             ['textfont', PrpTyp.Str],
-            ['textsize', PrpTyp.Num],
+            ['textsize', PrpTyp.Num]
         ];
     }
 

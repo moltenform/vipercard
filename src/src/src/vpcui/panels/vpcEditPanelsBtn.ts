@@ -11,7 +11,7 @@ export class PropPanelCompositeBtn extends PropPanelCompositeBase {
     topInputs: [string, string, number][] = [
         ['lngButton Name:', 'name', 190],
         ['lngButton Label:', 'label', 190],
-        ['lngIcon:', 'icon', 45],
+        ['lngIcon:', 'icon', 45]
     ];
 
     leftChoices: [string, string][] = [
@@ -24,12 +24,12 @@ export class PropPanelCompositeBtn extends PropPanelCompositeBase {
         ['lngRadio', 'radio'],
         ['lngPlain', 'plain'],
         ['lngOS Standard', 'standard'],
-        ['lngOS Default', 'default'],
+        ['lngOS Default', 'default']
     ];
 
     rightOptions: [string, string][] = [
         ['lngShow Label', 'showlabel'],
         ['lngAuto Hilite', 'autohilite'],
-        ['lngEnabled', 'enabled'],
+        ['lngEnabled', 'enabled']
     ];
 }

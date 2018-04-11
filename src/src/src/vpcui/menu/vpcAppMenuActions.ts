@@ -4,7 +4,7 @@
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
+/* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
@@ -27,15 +27,15 @@ export class VpcMenuActions {
 
     // OS menu
     go_mnuOSAbout() {
-        let c = this.appli.getController();
-        let dlg = new UI512CompStdDialog('OSAboutDlg');
-        VpcAboutDialog.show(c, dlg);
+        let pr = this.appli.getPresenter();
+        let dlg = new UI512CompModalDialog('OSAboutDlg');
+        VpcAboutDialog.show(pr, dlg);
     }
 
     go_mnuOSDonate() {
-        let c = this.appli.getController();
-        let dlg = new UI512CompStdDialog('OSAboutDlg');
-        VpcAboutDialog.showDonateIndirectly(c, dlg);
+        let pr = this.appli.getPresenter();
+        let dlg = new UI512CompModalDialog('OSAboutDlg');
+        VpcAboutDialog.showDonateIndirectly(pr, dlg);
     }
 
     go_mnuReportErr() {
@@ -55,9 +55,10 @@ export class VpcMenuActions {
     go_mnuReportSec() {
         throw makeVpcInternalErr(
             msgNotification +
-                lng('lngSecurity issues are taken seriously. If you are aware of an issue that has security\n' +
-                            'implications, please contact the developers\nat security@vipercard.net.'
-                    )
+                lng(
+                    'lngSecurity issues are taken seriously. If you are aware of an issue that has security\n' +
+                        'implications, please contact the developers\nat security@vipercard.net.'
+                )
         );
     }
 
@@ -139,7 +140,7 @@ export class VpcMenuActions {
     // Edit menu
     go_mnuUseHostClipboard() {
         this.appli.setOption('optUseHostClipboard', !this.appli.getOption_b('optUseHostClipboard'));
-        this.appli.getController().useOSClipboard = this.appli.getOption_b('optUseHostClipboard');
+        this.appli.getPresenter().useOSClipboard = this.appli.getOption_b('optUseHostClipboard');
     }
 
     go_mnuNewCard() {
@@ -247,30 +248,22 @@ export class VpcMenuActions {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Option' : 'Alt';
         throw makeVpcInternalErr(
             msgNotification +
-            lng(`lngTo make many of copies of a shape, first use the 'lasso' or 'select' tool to select the region. Then, hold the ${keyname} key, click within the region, and drag.`
-                    )
+                lng(
+                    `lngTo make many of copies of a shape, first use the 'lasso' or 'select' tool to select the region. Then, hold the ${keyname} key, click within the region, and drag.`
+                )
         );
     }
 
     go_mnuCut() {
-        throw makeVpcInternalErr(
-            msgNotification +
-                lng('lngPlease use the keyboard shortcut Cmd+X to \ncut text.')
-        );
+        throw makeVpcInternalErr(msgNotification + lng('lngPlease use the keyboard shortcut Cmd+X to \ncut text.'));
     }
 
     go_mnuCopy() {
-        throw makeVpcInternalErr(
-            msgNotification +
-                lng('lngPlease use the keyboard shortcut Cmd+C to \ncopy text.')
-        );
+        throw makeVpcInternalErr(msgNotification + lng('lngPlease use the keyboard shortcut Cmd+C to \ncopy text.'));
     }
 
     go_mnuPaste() {
-        throw makeVpcInternalErr(
-            msgNotification +
-                lng('lngPlease use the keyboard shortcut Cmd+V to \npaste text.')
-        );
+        throw makeVpcInternalErr(msgNotification + lng('lngPlease use the keyboard shortcut Cmd+V to \npaste text.'));
     }
 
     go_mnuGoCardFirst() {

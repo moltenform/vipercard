@@ -19,7 +19,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         trackFrameTime: false,
         fnaddtodom: (container: any, d: any) => {
             container.insertBefore(d, window.document.getElementById('elemMessageBelow'));
-        },
+        }
     };
 
     let browserOSInfo = Util512.getBrowserOS(window.navigator.userAgent);
@@ -128,7 +128,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         return !details.handled();
     };
 
-    setRoot(root)
+    setRoot(root);
     mainOnResize(root, gly);
 }
 
@@ -166,4 +166,4 @@ function mainOnResize(root: UI512FullRoot, gly: any) {
 }
 
 // expose this function globally
-(window as any).mainVPCStartCanvas = mainVPCStartCanvas;
+(window as any).mainVPCStartCanvas = mainVPCStartCanvas; /* on window */

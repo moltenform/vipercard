@@ -3,7 +3,7 @@
 /* auto */ import { ChvIToken, ChvLexer, ChvToken } from '../../vpc/codeparse/bridgeChv.js';
 
 export function tokenType(ctr: { new (...args: any[]): any }): number {
-    let tk = (ctr as any).tokenType;
+    let tk = (ctr as any).tokenType; /* tokenType added by Chv at runtime */
     assertTrue(tk !== undefined && tk !== null, '8^|tk is null');
     return tk;
 }
@@ -23,7 +23,7 @@ function cloneToken(tk: ChvIToken): ChvIToken {
         endColumn: tk.endColumn,
         isInsertedInRecovery: tk.isInsertedInRecovery,
         tokenType: tk.tokenType,
-        tokenClassName: tk.tokenClassName,
+        tokenClassName: tk.tokenClassName
     };
 }
 
@@ -245,7 +245,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
     logical: true,
     and: true,
     contains: true,
-    within: true,
+    within: true
 };
 
 alsoReservedWordsList[cProductName.toLowerCase()] = true;
@@ -397,7 +397,7 @@ export const listTokens = [
     TokenId,
     TokenWithin,
     TokenNumber,
-    TokenTkidentifier,
+    TokenTkidentifier
 ];
 export const tks = {
     TokenTkcomment: TokenTkcomment,
@@ -434,7 +434,7 @@ export const tks = {
     TokenId: TokenId,
     TokenWithin: TokenWithin,
     TokenNumber: TokenNumber,
-    TokenTkidentifier: TokenTkidentifier,
+    TokenTkidentifier: TokenTkidentifier
 };
 
 Object.freeze(tks);
@@ -502,7 +502,7 @@ export const partialReservedWordsList: { [key: string]: boolean } = {
     to: true,
     within: true,
     word: true,
-    words: true,
+    words: true
 };
 
 Object.freeze(partialReservedWordsList);

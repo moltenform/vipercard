@@ -2,7 +2,7 @@
   "name": "vipercard",
   "version": "0.0.1",
   "description": "vipercard",
-  "main": "./dist/main.js",
+  "main": "./lib/vpcbundlemin.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/downpoured/vipercard"

@@ -20,7 +20,7 @@ export enum VpcFldStyleInclScroll {
     rectangle = UI512FldStyle.Rectangle,
     shadow = UI512FldStyle.Shadow,
     alternateforms_rect = UI512FldStyle.Rectangle,
-    scrolling = 200,
+    scrolling = 200
 }
 
 export class VpcElField extends VpcElSizable {
@@ -67,7 +67,7 @@ export class VpcElField extends VpcElSizable {
         'defaulttextfont',
         'defaulttextsize',
         'defaulttextstyle',
-        'ftxt',
+        'ftxt'
     ];
 
     getAttributesList() {
@@ -107,13 +107,13 @@ export class VpcElField extends VpcElSizable {
         getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.get_ftxt().toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField) => FormattedSubstringUtil.vpcstyleFromInt(me._defaulttextstyle),
+            (me: VpcElField) => FormattedSubstringUtil.vpcstyleFromInt(me._defaulttextstyle)
         ];
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElField) => {
                 return getEnumToStrOrUnknown<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, me._style);
-            },
+            }
         ];
 
         // interestingly, when calling these without providing a chunk, they act on the default font
@@ -128,16 +128,12 @@ export class VpcElField extends VpcElSizable {
         setters['style'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string) => {
-                let styl = getStrToEnum<VpcFldStyleInclScroll>(
-                    VpcFldStyleInclScroll,
-                    'Field style or "scrolling"',
-                    s
-                );
+                let styl = getStrToEnum<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, 'Field style or "scrolling"', s);
                 me.set('style', styl);
 
                 // changing style resets scroll amount
                 me.setProp('scroll', VpcValN(0));
-            },
+            }
         ];
 
         setters['textstyle'] = [
@@ -145,7 +141,7 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, s: string) => {
                 me.setProp('defaulttextstyle', VpcValS(s));
                 me.setEntireFontFromDefaultFont();
-            },
+            }
         ];
 
         setters['textfont'] = [
@@ -153,7 +149,7 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, s: string) => {
                 me.set('defaulttextfont', s);
                 me.setEntireFontFromDefaultFont();
-            },
+            }
         ];
 
         setters['textsize'] = [
@@ -161,7 +157,7 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, n: number) => {
                 me.set('defaulttextsize', n);
                 me.setEntireFontFromDefaultFont();
-            },
+            }
         ];
 
         // as done by ui when the field tool is selected, or when saying put "abc" into cd fld 1 with no chunk qualifications
@@ -171,7 +167,7 @@ export class VpcElField extends VpcElSizable {
                 let newtxt = FormattedText.newFromUnformatted(s);
                 newtxt.setFontEverywhere(me.getDefaultFontAsUi512());
                 me.setftxt(newtxt);
-            },
+            }
         ];
 
         setters['defaulttextstyle'] = [
@@ -179,7 +175,7 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, s: string) => {
                 let list = s.split(',').map(item => item.trim());
                 me.set('defaulttextstyle', FormattedSubstringUtil.vpcstyleToInt(list));
-            },
+            }
         ];
 
         setters['textalign'] = [
@@ -193,7 +189,7 @@ export class VpcElField extends VpcElSizable {
                 } else {
                     throw makeVpcScriptErr(`4y|we don't currently support setting text align to ${s}`);
                 }
-            },
+            }
         ];
 
         setters['singleline'] = [
@@ -211,7 +207,7 @@ export class VpcElField extends VpcElSizable {
                         }
                     }
                 }
-            },
+            }
         ];
     }
 
@@ -223,7 +219,7 @@ export class VpcElField extends VpcElSizable {
             ['scroll', PrpTyp.Num],
             ['defaulttextfont', PrpTyp.Str],
             ['defaulttextsize', PrpTyp.Num],
-            ['visible', PrpTyp.Bool],
+            ['visible', PrpTyp.Bool]
         ];
     }
 
@@ -326,4 +322,3 @@ export class VpcElField extends VpcElSizable {
         return VpcValS(this.specialGetPropChunkImpl(prop, start, end));
     }
 }
-

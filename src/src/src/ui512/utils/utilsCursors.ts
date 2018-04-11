@@ -22,7 +22,7 @@ export enum UI512Cursors {
     PaintEraser = 14,
     PaintSpray = 15,
     HostHand = 20,
-    HostPointer = 21,
+    HostPointer = 21
 }
 
 /**

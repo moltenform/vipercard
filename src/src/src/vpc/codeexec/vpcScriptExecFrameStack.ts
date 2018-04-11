@@ -1,7 +1,7 @@
 
 /* auto */ import { O, assertTrue, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { CodeLimits, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
@@ -19,7 +19,7 @@
 
 export class CodeExecFrameStack {
     stack: O<CodeExecFrame>[] = [undefined];
-    paintQueue: PaintOntoCanvas[] = [];
+    paintQueue: UI512PaintDispatch[] = [];
     hasRunCode = false;
     static staticAsyncOps = new ScriptAsyncOperations();
     constructor(

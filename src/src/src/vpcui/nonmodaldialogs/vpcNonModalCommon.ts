@@ -2,19 +2,17 @@
 /* auto */ import { O, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { UI512BeginAsyncSetLabelText, UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { BorderDecorationConsts, UI512CompBase, WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
-
-// see UI512BeginAsyncSetLabelText
 
 export interface VpcSaveUtilsInterface {
     mnuGoSave(): void;
@@ -29,23 +27,23 @@ export interface VpcSaveUtilsInterface {
 
 export class VpcAppNonModalDlgHolder extends VpcAppInterfaceLayer {
     appli: VpcStateInterface;
-    c: UI512ControllerBase;
+    pr: UI512PresenterBase;
     current: O<VpcFormNonModalDialogBase>;
     setNonModalDialog(frm: O<UI512CompBase>) {
         if (this.current) {
-            this.current.destroy(this.c, this.appli.UI512App());
+            this.current.destroy(this.pr, this.appli.UI512App());
             this.current = undefined;
         }
 
         if (frm && frm instanceof VpcFormNonModalDialogBase) {
-            frm.create(this.c, this.appli.UI512App());
+            frm.create(this.pr, this.appli.UI512App());
             this.current = frm;
         } else if (frm) {
             throw makeVpcInternalErr('expected VpcFormNonModalDialogBase.');
         }
     }
 
-    init(c: UI512ControllerBase) {}
+    init(pr: UI512PresenterBase) {}
 
     updateUI512Els() {}
 
@@ -55,7 +53,7 @@ export class VpcAppNonModalDlgHolder extends VpcAppInterfaceLayer {
                 let short = this.current.fromFullId(d.elClick.id);
                 if (short === 'caption') {
                     // clicked the close box
-                    this.current.destroy(this.c, this.appli.UI512App());
+                    this.current.destroy(this.pr, this.appli.UI512App());
                     this.current = undefined;
                 } else if (short) {
                     this.current.onClickBtn(short, d.elClick, this.appli);
@@ -121,7 +119,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
     }
 
     createSpecific(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let headheight = 0;
         if (this.showHeader) {
             headheight = this.drawWindowDecoration(app, this.decorations, this.hasCloseBtn) - 1;
@@ -182,7 +180,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
 
     protected readFields(app: UI512Application, trim = true) {
         let ret: { [key: string]: string } = {};
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         for (let [fldId, fldUntransed, heightMult] of this.fields) {
             let el = grp.getEl(this.getElId('fld' + fldId));
             ret[fldId] = el.get_ftxt().toUnformatted();
@@ -207,15 +205,7 @@ export abstract class VpcFormNonModalDialogFormBase extends VpcFormNonModalDialo
 
     onMouseDown(short: string, el: UI512Element, appli: VpcStateInterface): void {}
 
-    protected drawBtn(
-        app: UI512Application,
-        grp: UI512ElGroup,
-        n: number,
-        x: number,
-        y: number,
-        w: number,
-        h: number,
-    ) {
+    protected drawBtn(app: UI512Application, grp: UI512ElGroup, n: number, x: number, y: number, w: number, h: number) {
         if (this.btns[n]) {
             let btn = this.genBtn(app, grp, `btn${this.btns[n][0]}`);
             btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);

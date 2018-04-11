@@ -15,13 +15,13 @@ export function compareCanvas(
     height: number,
     drawRed: boolean
 ) {
-    let cvExpected = CanvasWrapper.createMemoryCanvas(width, height)
+    let cvExpected = CanvasWrapper.createMemoryCanvas(width, height);
     cvExpected.drawFromImage(imageExpected, 0, 0, width, height, 0, 0, 0, 0, width, height);
     let dataExpected = cvExpected.context.getImageData(0, 0, width, height);
     let dataGot = imageGot.context.getImageData(0, 0, width, height);
     assertEq(dataExpected.data.length, dataGot.data.length, '3w|');
     assertEq(dataExpected.data.length, 4 * width * height, '3v|');
-    let countDifferences = drawDifferencesInRed(dataExpected, dataGot, drawRed)
+    let countDifferences = drawDifferencesInRed(dataExpected, dataGot, drawRed);
     if (drawRed) {
         imageGot.context.putImageData(dataGot, 0, 0);
     }
@@ -32,15 +32,15 @@ export function compareCanvas(
 /**
  * draw different pixels in red.
  */
-function drawDifferencesInRed(dataExpected:ImageData, dataGot:ImageData, drawRed: boolean) {
+function drawDifferencesInRed(dataExpected: ImageData, dataGot: ImageData, drawRed: boolean) {
     let countDifferences = 0;
     for (let i = 0; i < dataExpected.data.length; i += 4) {
-        let expected = getColorFromCanvasData(dataExpected.data, i)
-        let got = getColorFromCanvasData(dataGot.data, i)
+        let expected = getColorFromCanvasData(dataExpected.data, i);
+        let got = getColorFromCanvasData(dataGot.data, i);
 
         /* for these tests, white and transparent compare equal */
-        expected = expected === 't' ? 'w' : expected
-        got = got === 't' ? 'w' : got
+        expected = expected === 't' ? 'w' : expected;
+        got = got === 't' ? 'w' : got;
         if (expected !== got) {
             if (drawRed) {
                 dataGot.data[i] = 255;
@@ -53,27 +53,24 @@ function drawDifferencesInRed(dataExpected:ImageData, dataGot:ImageData, drawRed
         }
     }
 
-    return countDifferences
+    return countDifferences;
 }
 
 export class CanvasTestParams {
     constructor(
         public testName: string,
         public urlImgExpected: string,
-
         /* we'll run the callback repeatedly until complete flag returns true */
         public draw: (canvas: CanvasWrapper, complete: RenderComplete) => void,
         public width: number,
         public height: number,
-
         /* is this a unit test, or did user start the test explicitly by clicking on a button? */
         public uiContext: boolean,
-
         /* used for testing the test infrastructure */
         public expectDifferentPixels = 0
-    ) { }
+    ) {}
 
-    readonly maxCalls = 500
+    readonly maxCalls = 500;
 }
 
 /**
@@ -84,8 +81,8 @@ declare var saveAs: any;
 /**
  * run the callback repeatedly until both imExpected loads and imGot's RenderComplete is done.
  */
-async function callDrawUntilRenderComplete(p:CanvasTestParams, imExpected:HTMLImageElement) {
-    let imGot = CanvasWrapper.createMemoryCanvas(p.width, p.height)
+async function callDrawUntilRenderComplete(p: CanvasTestParams, imExpected: HTMLImageElement) {
+    let imGot = CanvasWrapper.createMemoryCanvas(p.width, p.height);
     let finished = false;
     for (let i = 0; i < p.maxCalls; i++) {
         if (imExpected.complete) {
@@ -108,7 +105,7 @@ async function callDrawUntilRenderComplete(p:CanvasTestParams, imExpected:HTMLIm
         throw new Error('test failed, timed out');
     }
 
-    return imGot
+    return imGot;
 }
 
 /**
@@ -120,7 +117,7 @@ async function UI512RenderAndCompareImage(download: boolean, fnGetDrawParams: Ge
     let p = fnGetDrawParams();
     let imExpected = new Image();
     Util512.beginLoadImage(p.urlImgExpected, imExpected, () => {});
-    let imGot = await callDrawUntilRenderComplete(p, imExpected)
+    let imGot = await callDrawUntilRenderComplete(p, imExpected);
 
     if (download) {
         console.log('Image sent to download, test complete.');
@@ -132,10 +129,8 @@ async function UI512RenderAndCompareImage(download: boolean, fnGetDrawParams: Ge
         if (countDifferences === p.expectDifferentPixels) {
             console.log(`\t\ttest ${p.testName} passed`);
         } else {
-            let ratioWrong = (countDifferences / (p.width * p.height))
-            console.log(
-                `${p.testName} failed, ${countDifferences} pixels ${100 * ratioWrong}% do not match.`
-            );
+            let ratioWrong = countDifferences / (p.width * p.height);
+            console.log(`${p.testName} failed, ${countDifferences} pixels ${100 * ratioWrong}% do not match.`);
 
             console.log('Delta image sent to download, failures marked in red.');
             imGot.canvas.toBlob(blob => {
@@ -178,7 +173,7 @@ export function testUtilCompareCanvasWithExpected(
 ) {
     UI512BeginAsync(
         () => UI512RenderAndCompareImages(download, fnGetDrawParams, callbackWhenComplete),
-        undefined, /* callback */
+        undefined /* callback */,
         true /* alertOnError */
     );
 }
@@ -188,7 +183,7 @@ export function testUtilCompareCanvasWithExpected(
  * intentionally will not start if another async fn is already in progress.
  */
 export function UI512BeginAsyncIgnoreFailures<T>(asyncFn: () => Promise<T>) {
-    UI512BeginAsync(asyncFn, undefined, false)
+    UI512BeginAsync(asyncFn, undefined, false);
 }
 
 /**
@@ -248,7 +243,7 @@ async function UI512BeginAsyncImpl<T>(
 /**
  * function taking no arguments
  */
-export type NullaryFn = ()=>void
+export type NullaryFn = () => void;
 
 /**
  * browsers can change the colors written, see https://en.wikipedia.org/wiki/Canvas_fingerprinting

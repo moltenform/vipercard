@@ -27,7 +27,7 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolResponseBase {
     cancelCurrentToolAction() {}
 
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
-        if (el && el.typeName === 'UI512ElTextField' && el.get_b('canselecttext')) {
+        if (el && el.typename === 'UI512ElTextField' && el.get_b('canselecttext')) {
             return UI512Cursors.Arrow;
         } else {
             return UI512Cursors.Hand;
@@ -35,9 +35,6 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolResponseBase {
     }
 
     onDeleteSelection() {
-        throw makeVpcInternalErr(
-            msgNotification +
-                lng('lngPlease press Backspace on the keyboard to \ndelete text.')
-        );
+        throw makeVpcInternalErr(msgNotification + lng('lngPlease press Backspace on the keyboard to \ndelete text.'));
     }
 }

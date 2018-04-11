@@ -21,7 +21,7 @@ export class NavToolbox extends UI512CompToolbox {
 
     refreshNavIcons(app: UI512Application, coderunning: boolean, cardnum: number) {
         this.setWhich(app, undefined);
-        let grpnav = app.getGroup(this.grpid);
+        let grpnav = app.getGroup(this.grpId);
 
         let btnCardNumOrStop = grpnav.getEl(this.getElId('choice##cardNumOrStop'));
         let btnDupeCardOrStatus = grpnav.getEl(this.getElId('choice##dupeCardOrStatus'));
@@ -39,10 +39,7 @@ export class NavToolbox extends UI512CompToolbox {
         } else {
             btnCardNumOrStop.set('icongroupid', '');
             btnCardNumOrStop.set('iconnumber', -1);
-            btnCardNumOrStop.set(
-                'labeltext',
-                UI512DrawText.setFont((cardnum + 1).toString(), this.geneva)
-            );
+            btnCardNumOrStop.set('labeltext', UI512DrawText.setFont((cardnum + 1).toString(), this.geneva));
             btnCardNumOrStop.set('autohighlight', false);
             btnDupeCardOrStatus.set('iconnumber', 98); // dupecard
             btnDupeCardOrStatus.set('autohighlight', true);
@@ -52,7 +49,7 @@ export class NavToolbox extends UI512CompToolbox {
     }
 
     static layout(toolsnav: NavToolbox, appli: VpcStateInterface) {
-        toolsnav.iconh = 24;
+        toolsnav.iconH = 24;
         toolsnav.widthOfIcon = (id: string) => {
             return ToolboxDims.NavW;
         };
@@ -63,13 +60,13 @@ export class NavToolbox extends UI512CompToolbox {
             ['cardPrev', 94],
             ['cardNext', 95],
             ['dupeCardOrStatus', black],
-            ['makeAnimOrStatus', black],
+            ['makeAnimOrStatus', black]
         ];
 
         toolsnav.logicalWidth = toolsnav.items.length * ToolboxDims.NavW - (toolsnav.items.length - 1);
         toolsnav.logicalHeight = 1;
-        toolsnav.hasclosebtn = false;
-        toolsnav.create(appli.getController(), appli.UI512App());
+        toolsnav.hasCloseBtn = false;
+        toolsnav.create(appli.getPresenter(), appli.UI512App());
         toolsnav.setWhich(appli.UI512App(), undefined);
         toolsnav.logicalHeight = ToolboxDims.ToolbarHeight;
         return [toolsnav.x, toolsnav.y];

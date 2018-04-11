@@ -1,8 +1,10 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { vpcUsersCreate } from '../../vpc/request/vpcRequest.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
@@ -21,8 +23,8 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
         [
             'descr_email',
             'lng(This e-mail address and all information\nprovided will not be shared with any\nthird party.)',
-            2,
-        ],
+            2
+        ]
     ];
     btns: [string, string][] = [['ok', 'lngOK'], ['cancel', 'lngCancel']];
     fieldsThatAreLabels: { [key: string]: boolean } = { descr_email: true };
@@ -34,7 +36,7 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
 
     createSpecific(app: UI512Application) {
         super.createSpecific(app);
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let fldPw = grp.getEl(this.getElId('fldpw'));
         fldPw.set('asteriskonly', true);
         let fldPwAgain = grp.getEl(this.getElId('fldpwagain'));
@@ -86,12 +88,15 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
     protected goBackToLogin(autoFillUsername?: string) {
         this.appli.setNonModalDialog(undefined);
         this.children = [];
-        let newform = new this.formLoginClass(this.appli, true);
-        VpcFormNonModalDialogFormBase.standardWindowBounds(newform as any, this.appli);
-        newform.fnCbWhenSignedIn = this.fnCbWhenSignedIn;
-        newform.autoFillUsername = autoFillUsername;
-        newform.autoShowNeedEmailCode = !!autoFillUsername;
-        this.appli.setNonModalDialog(newform as any);
+        let newForm = new this.formLoginClass(this.appli, true);
+        let formAsComp = (newForm as any) as UI512CompBase; /* cast verified */
+        checkThrow(formAsComp && formAsComp.isUI512CompBase, '');
+
+        VpcFormNonModalDialogFormBase.standardWindowBounds(formAsComp, this.appli);
+        newForm.fnCbWhenSignedIn = this.fnCbWhenSignedIn;
+        newForm.autoFillUsername = autoFillUsername;
+        newForm.autoShowNeedEmailCode = !!autoFillUsername;
+        this.appli.setNonModalDialog(formAsComp);
     }
 }
 

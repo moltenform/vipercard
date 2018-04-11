@@ -4,7 +4,7 @@
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
@@ -28,7 +28,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
     // set in initLayers
     model: VpcModel;
     handles: VpcAppResizeHandles;
-    init(c: UI512ControllerBase) {
+    init(pr: UI512PresenterBase) {
         this.editor.appli = this.appli;
         this.panels.add(VpcElType.Btn.toString(), new PropPanelCompositeBtn('editPanelBtn'));
         this.panels.add(VpcElType.Card.toString(), new PropPanelCompositeCard('editPanelCd'));
@@ -42,7 +42,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
             panel.y = this.appli.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
             panel.logicalWidth = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
             panel.logicalHeight = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
-            panel.create(c, this.appli.UI512App());
+            panel.create(pr, this.appli.UI512App());
             panel.setVisible(this.appli.UI512App(), false);
             panel.cbGetAndValidateSelectedVel = b => this.getAndValidateSelectedVel(b);
         }

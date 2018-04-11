@@ -10,13 +10,21 @@
 /* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementsView.js';
 /* auto */ import { EventDetails, FocusChangedEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
-/* auto */ import { TemporaryIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
+/* auto */ import { TemporarilyIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
 
-export abstract class UI512ControllerBase implements UI512PresenterWithMenuInterface, UI512IsPresenterInterface {
-    app: UI512Application;
+/**
+ * a Presenter receives Events,
+ * updates Models accordingly,
+ * and sends Models to ElementsView to be drawn.
+ *
+ * UI512PresenterBase can draw a UI not including indirectly constructed elements (scrollbars and menus).
+ * for those, use the full _UI512Presenter_ class.
+ */
+export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterface, UI512IsPresenterInterface {
     readonly defaultPriority = 10;
     readonly maxMouseButtons = 5;
-    private _currentFocus: O<string>;
+    private currentFocus: O<string>;
+    app: UI512Application;
     trackMouse = [-1, -1];
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
@@ -24,30 +32,40 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
     callbackQueueFromAsyncs: (O<NullaryFn>)[] = [];
     continueEventAfterError = true;
     needRedraw = true;
-    view = new UI512ViewDraw();
     inited = false;
     openState = MenuOpenState.MenusClosed;
-    tmpIgnore: O<TemporaryIgnoreEvents>;
+    view = new UI512ViewDraw();
+    tmpIgnore: O<TemporarilyIgnoreEvents>;
     mouseDragStatus: number;
     useOSClipboard: boolean;
     clipManager: ClipManagerInterface;
     timerSlowIdle: RepeatingTimer;
 
+    /**
+     * copy over mouse-tracking state from another presenter.
+     */
     importMouseTracking(other: UI512PresenterWithMenuInterface) {
-        // but don't copy over trackClickedIds
+        /* note, we don't need to copy over trackClickedIds,
+        since having a click+drag persist across loading a screen would be weird. */
         if (other.trackMouse !== undefined) {
             this.trackMouse = other.trackMouse;
             this.trackPressedBtns = other.trackPressedBtns;
         }
     }
 
+    /**
+     * which element is focused
+     */
     getCurrentFocus() {
-        return this._currentFocus;
+        return this.currentFocus;
     }
 
+    /**
+     * set element with the focus
+     */
     setCurrentFocus(next: O<string>) {
-        if (next !== this._currentFocus) {
-            let evt = new FocusChangedEventDetails(this._currentFocus, next);
+        if (next !== this.currentFocus) {
+            let evt = new FocusChangedEventDetails(this.currentFocus, next);
 
             try {
                 this.rawEvent(evt);
@@ -56,20 +74,23 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
             }
 
             if (!evt.preventChange) {
-                this._currentFocus = next;
+                this.currentFocus = next;
             }
 
-            // change 3/30
-            // adjust focus to be appropriate to length of content
-            let nextfocus = this.app.findElemById(next);
-            if (nextfocus && nextfocus instanceof UI512ElTextField) {
-                let txt = nextfocus.get_ftxt();
-                nextfocus.set('selcaret', fitIntoInclusive(nextfocus.get_n('selcaret'), 0, txt.len()));
-                nextfocus.set('selend', fitIntoInclusive(nextfocus.get_n('selend'), 0, txt.len()));
+            /* change 3/30 */
+            /* adjust focus to be appropriate to length of content */
+            let nextFocus = this.app.findEl(next);
+            if (nextFocus && nextFocus instanceof UI512ElTextField) {
+                let txt = nextFocus.get_ftxt();
+                nextFocus.set('selcaret', fitIntoInclusive(nextFocus.get_n('selcaret'), 0, txt.len()));
+                nextFocus.set('selend', fitIntoInclusive(nextFocus.get_n('selend'), 0, txt.len()));
             }
         }
     }
 
+    /**
+     * register to listen for an event
+     */
     listenEvent(type: UI512EventType, fn: Function) {
         let ar = this.listeners[type.valueOf()];
         if (ar !== undefined) {
@@ -79,11 +100,15 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
         }
     }
 
+    /**
+     * handle an incoming event, and dispatch it to all of the listeners
+     */
     rawEvent(d: EventDetails) {
         let evtNumber = d.type().valueOf();
         let ar = this.listeners[evtNumber];
         if (ar) {
-            // don't use a for/of loop here because it eats exceptions
+            /* don't use a for/of loop here, because it has a try/catch that 
+            sometimes makes debugging inconvenient */
             for (let i = 0; i < ar.length; i++) {
                 let cb = ar[i];
                 if (!d.handled()) {
@@ -104,6 +129,7 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
                 if (d.elPrev) {
                     this.rawEvent(new MouseLeaveDetails(d.elPrev));
                 }
+
                 if (d.elNext && this.canInteract(d.elNext)) {
                     this.rawEvent(new MouseEnterDetails(d.elNext));
                 }
@@ -111,6 +137,9 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
         }
     }
 
+    /**
+     * can the element be interacted with
+     */
     canInteract(el: O<UI512Element>) {
         if (el) {
             return el.enabled && el.visible;
@@ -119,27 +148,43 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
         }
     }
 
+    /**
+     * return true if text can be selected in this field
+     */
     canSelectTextInField(el: UI512ElTextField): boolean {
-        // subclasses can provide other logic here
+        /* subclasses can provide other logic here */
         return true;
     }
 
+    /**
+     * implementation of the change Observer. cause redraw if an element has changed.
+     */
     changeSeen(context: ChangeContext): void {
         this.needRedraw = true;
     }
 
-    render(canvas: CanvasWrapper, ms: number, cmptotal: RenderComplete): void {
+    /**
+     * cause redraw if an element has changed.
+     */
+    invalidateAll() {
+        this.needRedraw = true;
+    }
+
+    /**
+     * render - if an element has changed, draw all elements onto the canvas!
+     */
+    render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete): void {
         if (!this.inited) {
-            cmptotal.complete = false;
+            cmpTotal.complete = false;
             return;
         }
 
         if (this.needRedraw) {
-            this.setPositionsForRender(cmptotal);
+            this.setPositionsForRender(cmpTotal);
         }
 
-        this.view.renderApp(canvas, cmptotal, this.app, this._currentFocus, this.needRedraw);
-        if (cmptotal.complete) {
+        this.view.renderApp(canvas, cmpTotal, this.app, this.currentFocus, this.needRedraw);
+        if (cmpTotal.complete) {
             this.needRedraw = false;
         }
 
@@ -148,15 +193,20 @@ export abstract class UI512ControllerBase implements UI512PresenterWithMenuInter
         }
     }
 
-    invalidateAll() {
-        this.needRedraw = true;
-    }
-
+    /**
+     * this is a way to run code asynchronously, while still having UI512 in the callback, to get error-handling.
+     */
     placeCallbackInQueue(cb: () => void) {
         this.callbackQueueFromAsyncs.push(cb);
     }
 
+    /**
+     * queueRefreshCursor, not needed here but a subclass can implement it
+     */
+    queueRefreshCursor(): void {}
+
     abstract removeEl(gpid: string, elid: string, context: ChangeContext): void;
-    protected abstract setPositionsForRender(cmptotal: RenderComplete): void;
+    protected abstract setPositionsForRender(cmpTotal: RenderComplete): void;
     abstract rebuildFieldScrollbars(): void;
 }
+

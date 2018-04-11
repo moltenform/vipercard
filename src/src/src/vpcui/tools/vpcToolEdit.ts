@@ -32,10 +32,10 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
         } else if (d.el && d.el.id.startsWith('VpcModelRender$$')) {
             // click on an item to select it
             let velid = this.cbModelRender().elIdToVelId(d.el.id) || '';
-            if (velid.length && d.el.typeName === 'UI512ElTextField') {
+            if (velid.length && d.el.typename === 'UI512ElTextField') {
                 this.appli.setTool(VpcTool.Field);
                 this.appli.setOption('selectedVelId', velid);
-            } else if (velid.length && d.el.typeName === 'UI512ElementButtonGeneral') {
+            } else if (velid.length && d.el.typename === 'UI512ElementButtonBase') {
                 this.appli.setTool(VpcTool.Button);
                 this.appli.setOption('selectedVelId', velid);
             } else {
@@ -47,7 +47,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
             if (handle !== undefined && !this.dragStatus) {
                 let vel = this.propPanel.getAndValidateSelectedVel('selectedVelId');
                 if (vel && (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld)) {
-                    let targetEl = this.appli.UI512App().findElemById('VpcModelRender$$' + vel.id);
+                    let targetEl = this.appli.UI512App().findEl('VpcModelRender$$' + vel.id);
                     if (targetEl) {
                         // distance from initial click to center of handle
                         let distanceFromHandleCenterX =
@@ -95,9 +95,9 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
                 );
             } else {
                 // for the other handles, set the location
-                let newx = d.mouseX - this.dragStatus.distanceFromFirstHandleCenterX;
-                let newy = d.mouseY - this.dragStatus.distanceFromFirstHandleCenterY;
-                this.dragStatus.el.setDimensions(newx, newy, this.dragStatus.el.w, this.dragStatus.el.h);
+                let newX = d.mouseX - this.dragStatus.distanceFromFirstHandleCenterX;
+                let newY = d.mouseY - this.dragStatus.distanceFromFirstHandleCenterY;
+                this.dragStatus.el.setDimensions(newX, newY, this.dragStatus.el.w, this.dragStatus.el.h);
             }
 
             this.propPanel.handles.updateUI512Els();

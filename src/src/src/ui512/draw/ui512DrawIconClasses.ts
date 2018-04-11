@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 
 /**
@@ -13,14 +13,14 @@ export class IconInfo {
     adjustSrcX = 0;
     adjustSrcY = 0;
     centered = true;
-    constructor(public iconGroup: string, public iconNumber: number) { }
+    constructor(public iconGroup: string, public iconNumber: number) {}
 }
 
 /**
  * drawing an icon into box
  */
 export class RenderIcon {
-    constructor(public set: RenderIconGroup, public srcRect: number[]) { }
+    constructor(public set: RenderIconGroup, public srcRect: number[]) {}
     public drawIntoBox(
         canvas: CanvasWrapper,
         info: IconInfo,
@@ -33,7 +33,7 @@ export class RenderIcon {
             this.srcRect[0] + info.adjustSrcX,
             this.srcRect[1] + info.adjustSrcY,
             this.srcRect[2] + info.adjustWidth - info.adjustSrcX,
-            this.srcRect[3] + info.adjustHeight - info.adjustSrcY,
+            this.srcRect[3] + info.adjustHeight - info.adjustSrcY
         ];
 
         if (info.centered) {
@@ -113,7 +113,7 @@ export class RenderIconGroup {
             let gridX = iconNumber - gridY * this.gridWidth;
             offsets = [
                 gridX * this.gridSize + (gridX + 1) * this.gridSpacing,
-                gridY * this.gridSize + (gridY + 1) * this.gridSpacing,
+                gridY * this.gridSize + (gridY + 1) * this.gridSpacing
             ];
         }
 
@@ -130,10 +130,7 @@ export class RenderIconGroup {
     /* get icon, throws if not found */
     getIcon(iconNumber: number): RenderIcon {
         let rect = this.getRectangle(iconNumber);
-        return new RenderIcon(
-            this,
-            throwIfUndefined(rect, '3G|could not load icon number', iconNumber, this.groupId)
-        );
+        return new RenderIcon(this, throwIfUndefined(rect, '3G|could not load icon number', iconNumber, this.groupId));
     }
 
     /* get icon, return undefined if not found  */

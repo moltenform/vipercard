@@ -16,7 +16,7 @@
 export enum SelectToolMode {
     SelectingRegion,
     SelectedRegion,
-    MovingRegion,
+    MovingRegion
 }
 
 export class SelectToolState {
@@ -78,7 +78,7 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
             state.elBorder.transparentToClicks = true;
 
             state.elStage.setCanvas(this.cbPaintRender().getTemporaryCanvas(1));
-            state.elStage.setCachedPnter(
+            state.elStage.setCachedPainter(
                 new UI512PainterCvCanvas(
                     state.elStage.getCanvasForWrite(),
                     state.elStage.getCvWidth(),
@@ -155,7 +155,7 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
             this.selectingDrawTheBorder(
                 this.state,
                 this.state.elStage.getCanvasForWrite(),
-                this.state.elStage.getCachedPnterForWrite(),
+                this.state.elStage.getCachedPainterForWrite(),
                 tmousepx,
                 tmousepy,
                 tmousenx,
@@ -178,8 +178,8 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
                 this.state.elStage.getCanvasForWrite().clear();
             }
 
-            let newx = tmousenx - this.state.rectx - this.state.offsetForMoveX;
-            let newy = tmouseny - this.state.recty - this.state.offsetForMoveY;
+            let newX = tmousenx - this.state.rectx - this.state.offsetForMoveX;
+            let newY = tmouseny - this.state.recty - this.state.offsetForMoveY;
 
             this.state.elStage
                 .getCanvasForWrite()
@@ -189,15 +189,15 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
                     0,
                     this.state.cvPiece.canvas.width,
                     this.state.cvPiece.canvas.height,
-                    newx,
-                    newy,
+                    newX,
+                    newY,
                     0,
                     0,
                     this.state.elStage.getCvWidth(),
                     this.state.elStage.getCvHeight()
                 );
-            this.state.elBorder.set('x', newx + this.state.rectx + this.appli.userBounds()[0]);
-            this.state.elBorder.set('y', newy + this.state.recty + this.appli.userBounds()[1]);
+            this.state.elBorder.set('x', newX + this.state.rectx + this.appli.userBounds()[0]);
+            this.state.elBorder.set('y', newY + this.state.recty + this.appli.userBounds()[1]);
             this.state.elPlaceholderForCursor.set('x', this.state.elBorder.x);
             this.state.elPlaceholderForCursor.set('y', this.state.elBorder.y);
         }

@@ -6,7 +6,7 @@
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { UI512CompBase, WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 
 export abstract class IntroPageBase extends UI512CompBase {
@@ -16,7 +16,7 @@ export abstract class IntroPageBase extends UI512CompBase {
     protected dragOffsetX = 0;
     protected dragOffsetY = 0;
     protected appBounds: number[];
-    hasclosebtn = false;
+    hasCloseBtn = false;
     btnIds: { [key: string]: string } = {};
 
     constructor(compid: string, bounds: number[], x?: number, y?: number) {
@@ -39,7 +39,7 @@ export abstract class IntroPageBase extends UI512CompBase {
         wndbg.set('style', UI512BtnStyle.Shadow);
         wndbg.set('autohighlight', false);
         wndbg.setDimensions(this.x, this.y, this.logicalWidth + 1, this.logicalHeight + 2);
-        let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasclosebtn);
+        let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 
         let caption = grp.getEl(this.getElId('caption'));
         caption.set('labeltext', lng('lngWelcome to ViperCard'));
@@ -85,7 +85,7 @@ export abstract class IntroPageBase extends UI512CompBase {
         this.fadedWindowDragging[5].setDimensions(x + half, y + this.logicalHeight, half, 1);
     }
 
-    respondMouseDown(c: UI512Controller, d: MouseDownEventDetails) {
+    respondMouseDown(pr: UI512Presenter, d: MouseDownEventDetails) {
         if (d.el && d.el.id === this.getElId('caption') && !this.isDraggingWindow && this.canDrag) {
             this.isDraggingWindow = true;
 
@@ -96,15 +96,15 @@ export abstract class IntroPageBase extends UI512CompBase {
         }
     }
 
-    respondMouseMove(c: UI512Controller, d: MouseMoveEventDetails) {
+    respondMouseMove(pr: UI512Presenter, d: MouseMoveEventDetails) {
         this.setFadedDragPositions(d.mouseX - this.dragOffsetX, d.mouseY - this.dragOffsetY);
     }
 
-    respondKeyDown(c: UI512Controller, d: KeyDownEventDetails) {}
+    respondKeyDown(pr: UI512Presenter, d: KeyDownEventDetails) {}
 
-    respondIdle(c: UI512Controller, d: IdleEventDetails) {}
+    respondIdle(pr: UI512Presenter, d: IdleEventDetails) {}
 
-    respondMouseUp(c: UI512Controller, d: MouseUpEventDetails) {
+    respondMouseUp(pr: UI512Presenter, d: MouseUpEventDetails) {
         if (this.isDraggingWindow) {
             this.isDraggingWindow = false;
             this.setFadedDragPositionsVisible(false);
@@ -118,19 +118,11 @@ export abstract class IntroPageBase extends UI512CompBase {
                 this.appBounds[0] + this.appBounds[2] - this.logicalWidth
             );
             nexty = fitIntoInclusive(nexty, this.appBounds[1], this.appBounds[1] + this.appBounds[3] - 100);
-            this.moveAllTo(nextx, nexty, c.app);
+            this.moveAllTo(nextx, nexty, pr.app);
         }
     }
 
-    protected drawBtn(
-        app: UI512Application,
-        grp: UI512ElGroup,
-        n: number,
-        x: number,
-        y: number,
-        w: number,
-        h: number,
-    ) {
+    protected drawBtn(app: UI512Application, grp: UI512ElGroup, n: number, x: number, y: number, w: number, h: number) {
         let btn = this.genBtn(app, grp, `choicebtn${n}`);
         let labeltext = n === 0 ? lng('lngOK') : lng('lngCancel');
         btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);

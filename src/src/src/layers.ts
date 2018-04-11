@@ -9,7 +9,6 @@ import { isRelease } from './config.js';
 
 /*
 
-
 /ui512/root/
 rootStartCanvas
 rootUI512
@@ -25,15 +24,30 @@ vpcTestScriptParse
 vpcTestUtils
 
 /test/ui512/
-uiDemoComposites
-uiDemoTextEdit
-uiDemoMenus
+uiDemoBasic
 uiDemoButtons
+uiDemoComposites
+uiDemoMenus
 uiDemoPaint
 uiDemoText
-uiDemoBasic
+uiDemoTextEdit
+testUI512CodeEditor
+testUI512Composites
+testUI512DrawText
+testUI512MenuRender
+testUI512ElementsViewButtons
 testUI512Elements
-testUI512Utils
+testUI512Paint
+testUI512PaintFlood
+testUI512TextEvents
+testUI512TextModify
+testUI512TextSelectEvents
+testUI512FormattedText
+testUtilsDraw
+testUtilsCanvasWrapper
+testUtilsUI512Class
+testUtilsUI512
+testUtilsAssert
 
 /vpcui/intro/
 vpcIntro
@@ -52,7 +66,6 @@ vpcPresenterInit
 vpcPresenterEvents
 vpcPresenterSave
 vpcPresenterInterface
-
 
 /vpcui/menu/
 vpcAppMenuActions
@@ -99,12 +112,10 @@ vpcToolboxTools
 vpcToolboxNav
 vpcToolboxPatterns
 
-
 /vpcui/modelrender/
 vpcModelRender
 vpcPaintRender
 vpcGifExport
-
 
 /vpcui/state/
 vpcState
@@ -113,7 +124,6 @@ vpcUndo
 vpcStateSerialize
 vpcRawCreate
 vpcInterface
-
 
 /vpc/request/
 vpcRequest
@@ -128,7 +138,6 @@ vpcScriptExecStatement
 vpcScriptExecAsync
 vpcScriptCacheParsed
 bridgeJSLru
-
 
 /vpc/codepreparse/
 vpcAllCode
@@ -147,7 +156,6 @@ vpcVisitorMethods
 vpcRules
 vpcTokens
 bridgeChv
-
 
 /vpc/vel/
 velResolveName
@@ -175,7 +183,6 @@ vpcVal
 vpcUtils
 vpcEnums
 
-
 /ui512/composites/
 ui512CodeEditor
 ui512CodeEditorClasses
@@ -188,18 +195,15 @@ ui512Composites
 ui512Presenter
 ui512PresenterBase
 
-
-
 /ui512/textedit/
 ui512TextEvents
 ui512BasicHandlers
-ui512TextSelect
-ui512TextSelectClasses
+ui512TextModify
+ui512TextModifyClasses
 ui512Scrollbar
 ui512Clipboard
 ui512GenericField
 ui512TextLines
-
 
 /ui512/menu/
 ui512MenuListeners
@@ -221,11 +225,12 @@ ui512ElementsBase
 ui512ElementsGettable
 
 /ui512/draw/
-ui512ImageDissolve--
+ui512ImageDissolve
+ui512ImageSerialize
 ui512DrawBorders
 ui512DrawIcon
 ui512DrawIconClasses
-ui512ImageSerialize
+ui512DrawPaintDispatch
 ui512DrawPaint
 ui512DrawPaintClasses
 ui512DrawPattern

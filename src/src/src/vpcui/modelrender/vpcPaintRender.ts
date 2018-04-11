@@ -6,11 +6,12 @@
 /* auto */ import { clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
 /* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPaint.js';
-/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes, UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
+/* auto */ import { UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialize.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
 /* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcOutsideWorld } from '../../vpcui/state/vpcFullOutside.js';
@@ -18,7 +19,7 @@
 
 export abstract class VpcAppInterfaceLayer {
     appli: VpcStateInterface;
-    abstract init(c: UI512ControllerBase): void;
+    abstract init(pr: UI512PresenterBase): void;
     abstract updateUI512Els(): void;
 }
 
@@ -33,7 +34,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         super();
     }
 
-    init(c: UI512ControllerBase) {
+    init(pr: UI512PresenterBase) {
         this.userPaintW = this.appli.userBounds()[2];
         this.userPaintH = this.appli.userBounds()[3];
         this.paintgrp = new UI512ElGroup('VpcPaintRender');
@@ -46,7 +47,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
     }
 
     updateUI512ElsImpl(): void {
-        let mainPaint = cast(this.appli.UI512App().getElemById('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
+        let mainPaint = cast(this.appli.UI512App().getEl('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
         let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
         let [currentlyCachedV, currentlyCachedIm] = this.refreshCachedPaintForCard(currentCardId);
         mainPaint.setCanvas(currentlyCachedIm);
@@ -93,13 +94,13 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
     }
 
     deleteTempPaintEls() {
-        let mainPaint = this.appli.UI512App().getElemById('VpcModelRender$$renderbg');
+        let mainPaint = this.appli.UI512App().getEl('VpcModelRender$$renderbg');
         this.paintgrp.removeAllEls();
         this.paintgrp.addElement(this.appli.UI512App(), mainPaint);
     }
 
     getMainBg(): UI512ElCanvasPiece {
-        return cast(this.appli.UI512App().getElemById('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
+        return cast(this.appli.UI512App().getEl('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
     }
 
     getTemporaryCanvas(n: number, w = -1, h = -1) {
@@ -131,8 +132,8 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         h: number
     ) {
         this.commitPaintOps((mainCanvas, painter) => {
-            let argsMask = new PaintOntoCanvas(
-                PaintOntoCanvasShapes.ShapeRectangle,
+            let argsMask = new UI512PaintDispatch(
+                UI512PaintDispatchShapes.ShapeRectangle,
                 [x, x + w],
                 [y, y + h],
                 clrWhite,
@@ -140,7 +141,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
                 true,
                 1
             );
-            PaintOntoCanvas.go(argsMask, painter);
+            UI512PaintDispatch.go(argsMask, painter);
             mainCanvas.drawFromImage(
                 incoming.canvas,
                 0,
@@ -159,8 +160,8 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
 
     commitRectangleDelete(x: number, y: number, w: number, h: number) {
         this.commitPaintOps((mainCanvas, painter) => {
-            let argsMask = new PaintOntoCanvas(
-                PaintOntoCanvasShapes.ShapeRectangle,
+            let argsMask = new UI512PaintDispatch(
+                UI512PaintDispatchShapes.ShapeRectangle,
                 [x, x + w],
                 [y, y + h],
                 clrWhite,
@@ -168,14 +169,14 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
                 true,
                 1
             );
-            PaintOntoCanvas.go(argsMask, painter);
+            UI512PaintDispatch.go(argsMask, painter);
         });
     }
 
     commitPaintBucket(x: number, y: number) {
         this.commitPaintOps((mainCanvas, painter) => {
             let args = this.argsFromCurrentOptions([x], [y]);
-            PaintOntoCanvas.go(args, painter);
+            UI512PaintDispatch.go(args, painter);
         });
     }
 
@@ -222,13 +223,13 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         yPts: number[],
         elPiece: O<UI512ElCanvasPiece>,
         painter: UI512Painter,
-        setShape?: PaintOntoCanvasShapes
+        setShape?: UI512PaintDispatchShapes
     ) {
         let args = this.argsFromCurrentOptions(xPts, yPts);
         if (setShape) {
             args.shape = setShape;
         }
-        PaintOntoCanvas.go(args, painter);
+        UI512PaintDispatch.go(args, painter);
         if (elPiece) {
             elPiece.getCanvasForWrite();
         }
@@ -260,9 +261,9 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         currentCard.set('paint', serialized);
     }
 
-    commitSimulatedClicks(queue: PaintOntoCanvas[]) {
+    commitSimulatedClicks(queue: UI512PaintDispatch[]) {
         let curCard = '';
-        let queuesPerCard: PaintOntoCanvas[][] = [];
+        let queuesPerCard: UI512PaintDispatch[][] = [];
         for (let item of queue) {
             if (item.cardId === curCard) {
                 queuesPerCard[queuesPerCard.length - 1].push(item);
@@ -279,7 +280,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
             let painter = new UI512PainterCvCanvas(cvs, cvs.canvas.width, cvs.canvas.height);
 
             for (let item of queuePerCard) {
-                PaintOntoCanvas.go(item, painter);
+                UI512PaintDispatch.go(item, painter);
             }
 
             let serialized = new UI512ImageSerialization().writeToString(cvs);
@@ -287,7 +288,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         }
     }
 
-    paintExportToGif(c: UI512Controller, speed: number) {
+    paintExportToGif(pr: UI512Presenter, speed: number) {
         let gif = new PaintExportToGif(this.appli, cdid => this.refreshCachedPaintForCard(cdid));
         gif.begin(speed);
     }

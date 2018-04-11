@@ -17,14 +17,15 @@
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 
+/**
+ * creation and positioning of scrollbar elements
+ */
 export class ScrollbarImpl {
     /**
      * if calling set(), you should always use a GenericTextField and not the UI512Element
      */
     protected gelFromEl(el: O<UI512Element>): O<GenericTextField> {
-        return el && el instanceof UI512ElTextField ?
-            new UI512ElTextFieldAsGeneric(el) :
-            undefined;
+        return el && el instanceof UI512ElTextField ? new UI512ElTextFieldAsGeneric(el) : undefined;
     }
 
     /**
@@ -76,12 +77,7 @@ export class ScrollbarImpl {
      * position scrollbar elements.
      * if the font has not yet loaded, returns early and doesn't set the RenderComplete flag.
      */
-    setPositions(
-        app: UI512Application,
-        grp: UI512ElGroup,
-        el: UI512ElTextField,
-        complete: RenderComplete
-    ) {
+    setPositions(app: UI512Application, grp: UI512ElGroup, el: UI512ElTextField, complete: RenderComplete) {
         if (!el) {
             return;
         }
@@ -92,7 +88,7 @@ export class ScrollbarImpl {
             'forgot to call rebuildFieldScrollbars? ' + el.id
         );
 
-        if (!el || !el.visible || !el.getdirty() || !el.get_b('scrollbar')) {
+        if (!el || !el.visible || !el.getDirty() || !el.get_b('scrollbar')) {
             return;
         }
 
@@ -183,11 +179,11 @@ export class ScrollbarImpl {
      */
     protected getScrollbarPieces(app: UI512Application, el: UI512Element): { [key: string]: UI512Element } {
         return {
-            arrowUp: app.getElemById(fldIdToScrollbarPartId(el.id, 'arrowUp')),
-            arrowDn: app.getElemById(fldIdToScrollbarPartId(el.id, 'arrowDn')),
-            scrollBgUp: app.getElemById(fldIdToScrollbarPartId(el.id, 'scrollBgUp')),
-            scrollBgDn: app.getElemById(fldIdToScrollbarPartId(el.id, 'scrollBgDn')),
-            scrollThm: app.getElemById(fldIdToScrollbarPartId(el.id, 'scrollThm')),
+            arrowUp: app.getEl(fldIdToScrollbarPartId(el.id, 'arrowUp')),
+            arrowDn: app.getEl(fldIdToScrollbarPartId(el.id, 'arrowDn')),
+            scrollBgUp: app.getEl(fldIdToScrollbarPartId(el.id, 'scrollBgUp')),
+            scrollBgDn: app.getEl(fldIdToScrollbarPartId(el.id, 'scrollBgDn')),
+            scrollThm: app.getEl(fldIdToScrollbarPartId(el.id, 'scrollThm'))
         };
     }
 
@@ -220,15 +216,8 @@ export class ScrollbarImpl {
         drawBeyondVisible: boolean,
         callbackPerChar: O<(charindex: number, type: CharRectType, bounds: number[]) => boolean>
     ) {
-        let b = new UI512ViewDrawBorders(
-            new CanvasWrapper(undefined),
-            el.x,
-            el.y,
-            el.w,
-            el.h,
-            new RenderComplete()
-        );
-
+        /* mimic the logic in elementView */
+        let b = new UI512ViewDrawBorders(new CanvasWrapper(undefined), el.x, el.y, el.w, el.h, new RenderComplete());
         let view = new UI512ViewDraw();
         let [_, subRect] = view.getSubRectForField(b, el);
         if (!subRect) {
@@ -237,7 +226,7 @@ export class ScrollbarImpl {
 
         /* drawBeyondVisible is a perf optimization, telling text render to stop looping
         once it leaves visible area. */
-        let fontManager = cast(getRoot().getDrawText(), UI512DrawText);
+        let drawText = cast(getRoot().getDrawText(), UI512DrawText);
         let [args, fmtText] = renderTextArgsFromEl(el, subRect, false);
         args.callbackPerChar = callbackPerChar;
         args.drawBeyondVisible = drawBeyondVisible;
@@ -250,13 +239,13 @@ export class ScrollbarImpl {
             args.vScrollAmt = 0;
         }
 
-        let drawn = fontManager.drawFormattedStringIntoBox(fmtText, undefined, args);
+        let drawn = drawText.drawFormattedStringIntoBox(fmtText, undefined, args);
         return drawn ? drawn : undefined;
     }
 
     /**
-     * when you click on a letter in a field, which letter did you click on?
-    */
+     * when you click on a letter in a field, or the margin to left or right, which letter does it correspond with?
+     */
     fromMouseCoordsToCaretPosition(el: UI512ElTextField, x: number, y: number) {
         let [found, lowest] = this.getCoordToCharInField(el, x, y, false /* draw beyond visible */);
         if (found) {
@@ -271,7 +260,6 @@ export class ScrollbarImpl {
                 /* padding area always belongs to its adjacent character */
                 return found.charIndex;
             }
-
         } else if (RectUtils.hasPoint(x, y, el.x, el.y, el.w, el.h) && lowest !== undefined && y >= lowest) {
             /* user clicked below all of the text */
             return el.get_ftxt().len();
@@ -280,6 +268,9 @@ export class ScrollbarImpl {
         }
     }
 
+    /**
+     * when you click on a letter in a field, which letter did you click on?
+     */
     getCoordToCharInField(
         el: UI512ElTextField,
         x: number,
@@ -289,11 +280,11 @@ export class ScrollbarImpl {
         /* if font loaded but pos not seen: return [] */
         /* if font not yet loaded: return undefined */
         let lowest = -1;
-        let found: O<FoundCharByLocation>
+        let found: O<FoundCharByLocation>;
         let cb = (charindex: number, type: CharRectType, bounds: number[]) => {
             lowest = Math.max(lowest, bounds[1] + bounds[3]);
             if (RectUtils.hasPoint(x, y, bounds[0], bounds[1], bounds[2], bounds[3])) {
-                found = new FoundCharByLocation(bounds[0], bounds[1], bounds[2], bounds[3], charindex, type, 0)
+                found = new FoundCharByLocation(bounds[0], bounds[1], bounds[2], bounds[3], charindex, type, 0);
 
                 /* signal that we can stop iterating */
                 return false;
@@ -306,14 +297,17 @@ export class ScrollbarImpl {
         return drawn ? [found, lowest] : [undefined, undefined];
     }
 
-    getCharacterInFieldToPosition(el: UI512ElTextField, index: number) {
-        // if font loaded but char not seen: return []
-        // if font not yet loaded: return undefined
+    /**
+     * where was the letter drawn on the screen in x, y coordinates?
+     */
+    getCharacterInFieldToCoords(el: UI512ElTextField, index: number) {
+        /* if font loaded but char not seen: return [] */
+        /* if font not yet loaded: return undefined */
         let found: number[] = [];
         let cb = (charindex: number, type: CharRectType, bounds: number[]) => {
             if (type === CharRectType.Char && charindex === index) {
                 found = [bounds[0], bounds[1], bounds[2], bounds[3], charindex, type];
-                return false; // we can stop iterating now
+                return false; /* we can stop iterating now */
             } else {
                 return true;
             }
@@ -323,34 +317,38 @@ export class ScrollbarImpl {
         return drawn ? found : undefined;
     }
 
+    /**
+     * if there is a lot of content in the field, where should we scroll to so that you can
+     * see the caret?
+     */
     getScrollPosThatWouldMakeStartCaretVisible(el: UI512ElTextField): O<number> {
         el.set('showcaret', true);
         if (!el.get_n('scrollamt') && !el.get_b('scrollbar')) {
-            // perf optimization; we don't care about scrolling for non-scrollbar fields.
+            /* perf optimization; we don't care about scrolling for non-scrollbar fields. */
             return undefined;
         }
 
         let index = el.get_n('selcaret');
         let contentHeightInPixels = this.getCachedHeightOfField(el);
         if (!contentHeightInPixels) {
-            // font not yet loaded
+            /* font not yet loaded */
             return undefined;
         }
 
-        let maxscroll = contentHeightInPixels - el.h;
-        if (maxscroll <= 0) {
-            // we can see everything in the field, no need to set the scroll
-            // set scroll to 0
+        let maxScroll = contentHeightInPixels - el.h;
+        if (maxScroll <= 0) {
+            /* we can see everything in the field, no need to set the scroll */
+            /* set scroll to 0 */
             return 0;
         }
 
-        let found = this.getCharacterInFieldToPosition(el, index);
+        let found = this.getCharacterInFieldToCoords(el, index);
         if (found && found.length > 0) {
             let drawnY = found[1];
             let drawnBottom = found[1] + found[3];
             let chgScroll = 0;
             if (drawnY > el.y && drawnBottom < el.bottom) {
-                // it's already visible, we are ok
+                /* it's already visible, we are ok */
             } else if (drawnY <= el.y) {
                 chgScroll = drawnY - el.y;
             } else if (drawnBottom >= el.bottom) {
@@ -359,12 +357,15 @@ export class ScrollbarImpl {
 
             if (chgScroll !== 0) {
                 let scroll = el.get_n('scrollamt') + chgScroll;
-                scroll = fitIntoInclusive(scroll, 0, maxscroll);
+                scroll = fitIntoInclusive(scroll, 0, maxScroll);
                 return scroll;
             }
         }
     }
 
+    /**
+     * get the height of content in the field, for better perf use cached height if available
+     */
     getCachedHeightOfField(el: UI512ElTextField) {
         let cachedHeight = el.get_n('contentHeightInPixels');
         if (cachedHeight && cachedHeight !== -1) {
@@ -381,25 +382,31 @@ export class ScrollbarImpl {
         }
     }
 
+    /**
+     * the value 'scrollamt' is in pixels, but we want to get the ratio from 0.0 (top) to 1.0 (bottom)
+     */
     repositionScrollbarGetThumbPos(el: UI512ElTextField) {
         let contentHeightInPixels = this.getCachedHeightOfField(el);
         if (contentHeightInPixels === undefined) {
             return undefined;
         }
 
-        let maxscroll = contentHeightInPixels - el.h;
-        if (maxscroll <= 0) {
+        let maxScroll = contentHeightInPixels - el.h;
+        if (maxScroll <= 0) {
             return -1;
         }
 
-        let scrollratio = el.get_n('scrollamt') / (maxscroll + 0.0);
-        scrollratio = fitIntoInclusive(scrollratio, 0.0, 1.0);
-        return scrollratio;
+        let scrollRatio = el.get_n('scrollamt') / (maxScroll + 0.0);
+        scrollRatio = fitIntoInclusive(scrollRatio, 0.0, 1.0);
+        return scrollRatio;
     }
 
-    onScrollArrowClicked(c: UI512PresenterWithMenuInterface, arrowid: string, amt: number) {
-        let fldid = scrollbarPartIdToFldId(arrowid);
-        let el = c.app.findElemById(fldid);
+    /**
+     * set scroll amount when clicking scroll bar
+     */
+    onScrollArrowClicked(pr: UI512PresenterWithMenuInterface, arrowId: string, amt: number) {
+        let fldid = scrollbarPartIdToFldId(arrowId);
+        let el = pr.app.findEl(fldid);
         let gel = this.gelFromEl(el);
         if (el && gel) {
             let contentHeightInPixels = el.get_n('contentHeightInPixels');
@@ -409,21 +416,25 @@ export class ScrollbarImpl {
                 return;
             }
 
-            let maxscroll = contentHeightInPixels - el.h;
-            if (maxscroll <= 0) {
+            let maxScroll = contentHeightInPixels - el.h;
+            if (maxScroll <= 0) {
                 /* the content is too short for a scrollbar to even be needed */
                 return;
             }
 
-            let curscroll = gel.getScrollAmt();
-            curscroll += amt;
-            curscroll = fitIntoInclusive(curscroll, 0, maxscroll);
-            gel.setScrollAmt(curscroll);
+            let curScroll = gel.getScrollAmt();
+            curScroll += amt;
+            curScroll = fitIntoInclusive(curScroll, 0, maxScroll);
+            gel.setScrollAmt(curScroll);
         }
     }
 
+    /**
+     * how tall in pixels is a line of text in this field?
+     */
     getApproxLineHeight(el: UI512ElTextField, index: number) {
         if (el.get_ftxt().len() === 0) {
+            /* field has no content */
             return undefined;
         }
 
@@ -432,10 +443,10 @@ export class ScrollbarImpl {
         let textGetHeight = new FormattedText();
         textGetHeight.push('|'.charCodeAt(0), font);
 
-        let fontmanager = getRoot().getDrawText() as UI512DrawText;
+        let drawText = getRoot().getDrawText() as UI512DrawText;
         let args = new RenderTextArgs(0, 0, largeArea, largeArea, false, false, false);
         args.addVSpacing = el.get_n('addvspacing');
-        let drawn = fontmanager.drawFormattedStringIntoBox(textGetHeight, undefined, args);
+        let drawn = drawText.drawFormattedStringIntoBox(textGetHeight, undefined, args);
         if (drawn) {
             return drawn.lowestPixelDrawn;
         } else {
@@ -445,24 +456,34 @@ export class ScrollbarImpl {
     }
 }
 
+/**
+ * scrollbar parts have an id based on the parent element
+ */
 export function fldIdToScrollbarPartId(elId: string, partName: string) {
     return elId + '##sb##' + partName;
 }
 
+/**
+ * scrollbar parts have an id based on the parent element
+ */
 export function scrollbarPartIdToFldId(s: string) {
     let pts = s.split('##sb##');
     assertTrue(pts.length > 1, '2^|unexpected element id');
     return pts[0];
 }
 
-export function getAmountIfScrollArrowClicked(elid: string) {
-    if (elid.endsWith('##sb##arrowDn')) {
+/**
+ * how far to scroll if clicked
+ * if you click on the inside of the scrollbar, not on the arrow, move a greater distance
+ */
+export function getAmountIfScrollArrowClicked(elId: string) {
+    if (elId.endsWith('##sb##arrowDn')) {
         return 15;
-    } else if (elid.endsWith('##sb##arrowUp')) {
+    } else if (elId.endsWith('##sb##arrowUp')) {
         return -15;
-    } else if (elid.endsWith('##sb##scrollBgDn')) {
+    } else if (elId.endsWith('##sb##scrollBgDn')) {
         return 100;
-    } else if (elid.endsWith('##sb##scrollBgUp')) {
+    } else if (elId.endsWith('##sb##scrollBgUp')) {
         return -100;
     } else {
         return undefined;

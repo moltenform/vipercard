@@ -5,62 +5,86 @@
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { PalBorderDecorationConsts, UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 
+/**
+ * a "toolbox"/tool pallete
+ * to use this composite, 
+ * create an onMouseUp listener in your presenter 
+ * that forwards the event to this object's respondMouseUp
+ * 
+ * see uiDemoComposites for an example.
+ */
 export class UI512CompToolbox extends UI512CompBase {
     protected whichChosen: O<string>;
+    protected totalHeight = 0;
     compositeType = 'toolbox';
-    icongroupid = '';
-    items: [string, number][] = [['circle', 23 /*iconnumber*/], ['rectangle', 24 /*iconnumber*/]];
-    hasclosebtn = true;
-    headerh = 10;
-    iconh = 20;
+    iconGroupId = '';
+    items: [string, number][] = [];
+    hasCloseBtn = true;
+    iconH = 20;
     callbackOnChange: O<(id: O<string>) => void>;
-    protected totalheight = 0;
 
-    widthOfIcon(iconid: string) {
-        return Math.floor(this.logicalWidth / this.items.length);
-    }
-
+    /**
+     * draw UI
+     */
     createSpecific(app: UI512Application) {
         Util512.freezeRecurse(this.items);
-        let grp = app.getGroup(this.grpid);
-        let headerheight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasclosebtn);
+        let grp = app.getGroup(this.grpId);
+        let headerHeight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasCloseBtn);
 
         let curX = this.x;
-        let curY = this.y + headerheight - 1;
-        let marginx = -1;
-        let marginy = -1;
+        let curY = this.y + headerHeight - 1;
+        let marginX = -1;
+        let marginY = -1;
         for (let item of this.items) {
+            /* draw a button for each tool */
             let el = this.genBtn(app, grp, 'choice##' + item[0]);
             let thiswidth = this.widthOfIcon(item[0]);
-            el.set('icongroupid', this.icongroupid);
+            el.set('icongroupid', this.iconGroupId);
             el.set('iconnumber', item[1]);
-            el.setDimensions(curX, curY, thiswidth, this.iconh);
+            el.setDimensions(curX, curY, thiswidth, this.iconH);
 
-            curX += thiswidth + marginx;
-            if (curX >= this.x + this.logicalWidth + marginx) {
+            curX += thiswidth + marginX;
+            if (curX >= this.x + this.logicalWidth + marginX) {
+                /* we've gone too far to the right, make a new row */
                 curX = this.x;
-                curY += this.iconh + marginy;
+                curY += this.iconH + marginY;
             }
         }
 
-        this.totalheight = curY + this.iconh;
+        this.totalHeight = curY + this.iconH;
         this.whichChosen = this.items[0][0];
         this.refreshHighlight(app);
     }
 
+    /**
+     * returns short id of chosen tool
+     */
     getWhich() {
         return throwIfUndefined(this.whichChosen, '2u|this.whichChosen');
     }
 
+    /**
+     * set the current tool
+     */
     setWhich(app: UI512Application, subid: O<string>) {
         this.whichChosen = subid;
         this.refreshHighlight(app);
     }
 
-    listenMouseUp(app: UI512Application, d: MouseUpEventDetails) {
-        let grp = app.getGroup(this.grpid);
+    /**
+     * width in pixels of each tool part
+     */
+    widthOfIcon(iconid: string) {
+        return Math.floor(this.logicalWidth / this.items.length);
+    }
+
+    /**
+     * onMouseUp, see if one of our tools was clicked
+     */
+    respondMouseUp(app: UI512Application, d: MouseUpEventDetails) {
+        let grp = app.getGroup(this.grpId);
         if (!grp || !grp.getVisible()) {
-            // optimization for a hidden toolbox
+            /* optimization for a hidden toolbox */
             return;
         }
 
@@ -71,6 +95,7 @@ export class UI512CompToolbox extends UI512CompBase {
                 userId = userId.substr('choice##'.length);
                 let found = this.items.filter(o => o[0] === userId);
                 if (found.length) {
+                    /* it was one of ours, highlight it */
                     let wasChosenBefore = this.whichChosen;
                     this.whichChosen = found[0][0];
                     this.refreshHighlight(app);
@@ -78,22 +103,17 @@ export class UI512CompToolbox extends UI512CompBase {
                         this.callbackOnChange(this.whichChosen);
                     }
                 } else {
-                    assertTrueWarn(false, `2t|did not find ${userId} in ${this.idprefix}`);
+                    assertTrueWarn(false, `2t|did not find ${userId} in ${this.idPrefix}`);
                 }
             }
         }
     }
 
-    changeIcon(app: UI512Application, shortid: string, iconnumber: number) {
-        let grp = app.getGroup(this.grpid);
-        let el = grp.findEl(this.getElId(shortid));
-        if (el) {
-            el.set('iconnumber', iconnumber);
-        }
-    }
-
+    /**
+     * refresh our UI as to which tool is active
+     */
     protected refreshHighlight(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let lookfor = this.whichChosen;
         for (let item of this.items) {
             let id = this.getElId('choice##' + item[0]);

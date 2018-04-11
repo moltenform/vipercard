@@ -131,8 +131,7 @@ export class BasicHandlers {
             switch (d.readableShortcut) {
                 case 'Cmd+Opt+Shift+Q':
                     pr.invalidateAll();
-                    CanvasWrapper.setDebugRenderingWithChangingColors(
-                        !CanvasWrapper.debugRenderingWithChangingColors);
+                    CanvasWrapper.setDebugRenderingWithChangingColors(!CanvasWrapper.debugRenderingWithChangingColors);
                     break;
                 case 'Opt+Shift+T':
                     getRoot().runTests(false);

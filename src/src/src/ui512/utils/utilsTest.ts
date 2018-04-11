@@ -71,7 +71,7 @@ export class UI512TestBase {
      */
     static slowTests: { [key: string]: boolean } = {
         'callback/Text Core Fonts': true,
-        'callback/Text All Fonts': true,
+        'callback/Text All Fonts': true
     };
 
     /**

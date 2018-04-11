@@ -55,17 +55,9 @@ export class UI512PainterCvData extends UI512Painter {
 
         if (this.arr[i + 3] < clrThreshold) {
             return clrTransp;
-        } else if (
-            this.arr[i] > clrLarge &&
-            this.arr[i + 1] > clrLarge &&
-            this.arr[i + 2] > clrLarge
-        ) {
+        } else if (this.arr[i] > clrLarge && this.arr[i + 1] > clrLarge && this.arr[i + 2] > clrLarge) {
             return clrWhite;
-        } else if (
-            this.arr[i] < clrThreshold &&
-            this.arr[i + 1] < clrThreshold &&
-            this.arr[i + 2] < clrThreshold
-        ) {
+        } else if (this.arr[i] < clrThreshold && this.arr[i + 1] < clrThreshold && this.arr[i + 2] < clrThreshold) {
             return clrBlack;
         } else {
             assertTrueWarn(
@@ -102,21 +94,21 @@ export class UI512PainterCvData extends UI512Painter {
 
     floodFill(xIn: number, yIn: number, color: number) {
         assertTrue(isFinite(xIn) && isFinite(yIn), 'not finite', xIn, yIn);
-        color = simplifyPattern(color)
+        color = simplifyPattern(color);
         if (needsPatternSupport(color)) {
-            this.floodFillInTwoStages(xIn, yIn, color)
+            this.floodFillInTwoStages(xIn, yIn, color);
         } else {
             this.floodFillImpl(xIn, yIn, color, undefined, undefined);
         }
     }
 
     protected floodFillInTwoStages(xIn: number, yIn: number, color: number) {
-        /* we need to use two stages, because our algorithm reads 
+        /* we need to use two stages, because our algorithm reads
         what we have set to see where we have already placed a pixel.*/
-        
+
         /* find the opposite color of what is already there */
         let currentColor = this.readPixel(xIn, yIn);
-        let oppositeColor = this.getOppositeColor(currentColor)
+        let oppositeColor = this.getOppositeColor(currentColor);
 
         /* make a painter with a simple setPixel */
         let simpleDraw = new UI512PainterCvData(
@@ -136,7 +128,7 @@ export class UI512PainterCvData extends UI512Painter {
         }
     }
 
-    protected getOppositeColor(clr:number) {
+    protected getOppositeColor(clr: number) {
         if (clr === clrBlack) {
             return clrWhite;
         } else {

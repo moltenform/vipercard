@@ -8,7 +8,7 @@
 
 export class MainToolbox extends UI512CompToolbox {
     compositeType = 'toolbox_main';
-    listenMouseUp(app: UI512Application, d: MouseUpEventDetails) {
+    respondMouseUp(app: UI512Application, d: MouseUpEventDetails) {
         if (d.elClick) {
             let short = this.fromFullId(d.elClick.id);
             if (short === 'closebtn') {
@@ -16,11 +16,11 @@ export class MainToolbox extends UI512CompToolbox {
             }
         }
 
-        super.listenMouseUp(app, d);
+        super.respondMouseUp(app, d);
     }
 
     static layout(toolsmain: MainToolbox, appli: VpcStateInterface) {
-        toolsmain.iconh = ToolboxDims.IconH;
+        toolsmain.iconH = ToolboxDims.IconH;
         toolsmain.widthOfIcon = (id: string) => {
             return ToolboxDims.MainW;
         };
@@ -41,13 +41,13 @@ export class MainToolbox extends UI512CompToolbox {
             ['Roundrect', 10],
             ['Curve', 13],
             ['Stamp', 97],
-            ['Spray', 8],
+            ['Spray', 8]
         ];
         assertEq(16, toolsmain.items.length, '6y|');
         toolsmain.logicalWidth = toolsmain.items.length * ToolboxDims.MainW - (toolsmain.items.length - 1);
         toolsmain.logicalHeight = 1;
-        toolsmain.hasclosebtn = false;
-        toolsmain.create(appli.getController(), appli.UI512App());
+        toolsmain.hasCloseBtn = false;
+        toolsmain.create(appli.getPresenter(), appli.UI512App());
         toolsmain.setWhich(appli.UI512App(), 'Browse');
 
         toolsmain.logicalHeight = ToolboxDims.ToolbarHeight;

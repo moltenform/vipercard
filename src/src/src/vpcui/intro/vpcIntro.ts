@@ -4,11 +4,11 @@
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
-/* auto */ import { UI512CompStdDialog } from '../../ui512/composites/ui512ModalDialog.js';
+/* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
 /* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
 /* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
@@ -74,37 +74,33 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
     }
 
     newDocument() {
-        let loader = new VpcDocLoader(
-            '',
-            lng('lngnew stack'),
-            OpenFromLocation.NewDoc
-        );
+        let loader = new VpcDocLoader('', lng('lngnew stack'), OpenFromLocation.NewDoc);
         this.beginLoadDocument(loader);
     }
 
     getModal() {
-        return new UI512CompStdDialog('mainModalDlg');
+        return new UI512CompModalDialog('mainModalDlg');
     }
 
-    static respondKeyDown(c: VpcUiIntro, d: KeyDownEventDetails) {
-        if (c.activePage) {
-            c.activePage.respondKeyDown(c, d);
+    static respondKeyDown(pr: VpcUiIntro, d: KeyDownEventDetails) {
+        if (pr.activePage) {
+            pr.activePage.respondKeyDown(pr, d);
         }
     }
 
-    static respondMouseUp(c: VpcUiIntro, d: MouseUpEventDetails) {
-        if (c.activePage) {
-            c.activePage.respondMouseUp(c, d);
+    static respondMouseUp(pr: VpcUiIntro, d: MouseUpEventDetails) {
+        if (pr.activePage) {
+            pr.activePage.respondMouseUp(pr, d);
         }
 
-        if (d.elClick && c.activePage instanceof IntroFirstPage) {
-            IntroFirstPage.respondBtnClick(c, c.activePage, d.elClick);
-        } else if (d.elClick && c.activePage instanceof IntroOpenPage) {
-            IntroOpenPage.respondBtnClick(c, c.activePage, d.elClick);
-        } else if (d.elClick && c.activePage instanceof IntroWaitWhileLoadingPage) {
-            IntroWaitWhileLoadingPage.respondBtnClick(c, c.activePage, d.elClick);
-        } else if (d.elClick && c.activePage instanceof IntroOpenFromDiskPage) {
-            IntroOpenFromDiskPage.respondBtnClick(c, c.activePage, d.elClick);
+        if (d.elClick && pr.activePage instanceof IntroFirstPage) {
+            IntroFirstPage.respondBtnClick(pr, pr.activePage, d.elClick);
+        } else if (d.elClick && pr.activePage instanceof IntroOpenPage) {
+            IntroOpenPage.respondBtnClick(pr, pr.activePage, d.elClick);
+        } else if (d.elClick && pr.activePage instanceof IntroWaitWhileLoadingPage) {
+            IntroWaitWhileLoadingPage.respondBtnClick(pr, pr.activePage, d.elClick);
+        } else if (d.elClick && pr.activePage instanceof IntroOpenFromDiskPage) {
+            IntroOpenFromDiskPage.respondBtnClick(pr, pr.activePage, d.elClick);
         }
     }
 
@@ -120,7 +116,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
             x,
             y,
             loader,
-            translatedLoadMessage,
+            translatedLoadMessage
         );
         this.activePage.create(this, this.app);
         this.rebuildFieldScrollbars();
@@ -155,21 +151,21 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         };
     }
 
-    static respondMouseDown(c: VpcUiIntro, d: MouseDownEventDetails) {
-        if (c.activePage) {
-            c.activePage.respondMouseDown(c, d);
+    static respondMouseDown(pr: VpcUiIntro, d: MouseDownEventDetails) {
+        if (pr.activePage) {
+            pr.activePage.respondMouseDown(pr, d);
         }
     }
 
-    static respondMouseMove(c: VpcUiIntro, d: MouseMoveEventDetails) {
-        if (c.activePage) {
-            c.activePage.respondMouseMove(c, d);
+    static respondMouseMove(pr: VpcUiIntro, d: MouseMoveEventDetails) {
+        if (pr.activePage) {
+            pr.activePage.respondMouseMove(pr, d);
         }
     }
 
-    static respondIdle(c: VpcUiIntro, d: IdleEventDetails) {
-        if (c.activePage) {
-            c.activePage.respondIdle(c, d);
+    static respondIdle(pr: VpcUiIntro, d: IdleEventDetails) {
+        if (pr.activePage) {
+            pr.activePage.respondIdle(pr, d);
         }
     }
 }

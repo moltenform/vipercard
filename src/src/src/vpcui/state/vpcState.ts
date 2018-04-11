@@ -26,7 +26,7 @@ export class VpcRuntimeOpts extends UI512Settable {
         mimicCurrentTool: true,
         screenLocked: true,
         copiedVelId: true,
-        lastSavedStateId: true,
+        lastSavedStateId: true
     };
 
     constructor() {
@@ -39,7 +39,7 @@ export class VpcRuntimeOpts extends UI512Settable {
 }
 
 export class VpcRuntime {
-    // set by _VpcDocLoader_, _VpcAppController_::init
+    // set by _VpcDocLoader_, _VpcPresenter_::init
     codeExec: CodeExecTop;
     outside: VpcOutsideWorld;
     useThisObserverForVpcEls: ElementObserver = new ElementObserverNoOp();
@@ -47,10 +47,10 @@ export class VpcRuntime {
 
     destroy() {
         this.opts.destroy();
-        this.opts = undefined as any;
-        this.codeExec = undefined as any;
-        this.useThisObserverForVpcEls = undefined as any;
-        this.outside = undefined as any;
+        this.opts = undefined as any; /* destroy() */
+        this.codeExec = undefined as any; /* destroy() */
+        this.useThisObserverForVpcEls = undefined as any; /* destroy() */
+        this.outside = undefined as any; /* destroy() */
     }
 }
 
@@ -63,7 +63,7 @@ export class VpcApplication {
     model: VpcModel;
     // (started by _VpcDocLoader_)
     undoManager: UndoManager;
-    // (started in _VpcAppController_ constructor)
+    // (started in _VpcPresenter_ constructor)
     appli: VpcStateInterface;
 
     createElem(parent_id: string, type: VpcElType, insertIndex = -1, newid?: string) {

@@ -10,7 +10,7 @@
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { VpcElType, vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
@@ -61,7 +61,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         Util512.freezeProperty(this, 'rightOptions');
 
         // draw a 1px border around the panel
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
@@ -79,7 +79,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         let totalUsedH = this.topInputs.length * inputH + (this.topInputs.length - 1) * inputMargin;
         let startY = this.y + Math.floor((this.firstSectionH - totalUsedH) / 2);
         let curY = startY;
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         for (let [lbltxt, inid, inputW] of this.topInputs) {
             let lbl = this.genChild<UI512ElLabel>(app, grp, `lbl##${inid}`, UI512ElLabel);
             lbl.set('labeltext', lng(lbltxt));
@@ -100,7 +100,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
             return;
         }
 
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let startY = this.y + this.firstSectionH + Math.floor((this.secondSectionH - this.leftChoicesH) / 2);
         let fld = this.genChild<UI512ElTextField>(app, grp, `leftchoice`, UI512ElTextField);
         fld.set('scrollbar', true);
@@ -119,7 +119,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         let totalUsedH = this.rightOptions.length * inputH + (this.rightOptions.length - 1) * inputMargin;
         let startY = this.y + this.firstSectionH + Math.floor((this.secondSectionH - totalUsedH) / 2);
         let curY = startY;
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         for (let [lbltxt, inid] of this.rightOptions) {
             let inp = this.genBtn(app, grp, `toggle##${inid}`);
             inp.set('style', UI512BtnStyle.Checkbox);
@@ -134,7 +134,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
     createLowerSection(app: UI512Application) {
         let tipsX = this.leftChoicesX + 0;
         let tipsY = this.firstSectionH + this.secondSectionH - 9;
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         this.lblNamingTip = this.genChild<UI512ElLabel>(app, grp, `lbl##tip`, UI512ElLabel);
         this.lblNamingTip.set('labelhalign', false);
         this.lblNamingTip.set('labelvalign', false);
@@ -171,7 +171,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         }
 
         this.fillInValuesTip(app, vel);
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         for (let [lbltxt, inid, inputW] of this.topInputs) {
             let el = grp.getEl(this.getElId(`inp##${inid}`));
             if (inid === 'fldcontent') {
@@ -233,7 +233,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         }
 
         // if you are adding/removing a button's icon, set font as appropriate
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let elIcon = grp.findEl(this.getElId(`inp##icon`));
         if (elIcon && vel.getType() === VpcElType.Btn && !onlyCheckIfDirty) {
             let typed = elIcon.get_ftxt().toUnformatted();

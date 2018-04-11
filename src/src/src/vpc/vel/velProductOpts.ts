@@ -5,6 +5,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Patterns } from '../../ui512/draw/ui512DrawPattern.js';
+/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
@@ -50,7 +51,7 @@ export class VpcElProductOpts extends VpcElBase {
         super(id, parentid);
     }
 
-    set<T>(s: string, newval: T, context = ChangeContext.Default) {
+    set(s: string, newval: ElementObserverVal, context = ChangeContext.Default) {
         assertTrueWarn(s !== 'currentTool' || this.allowSetCurrentTool, '');
         return super.set(s, newval, context);
     }
@@ -77,8 +78,8 @@ export class VpcElProductOpts extends VpcElBase {
             (me: VpcElProductOpts) => {
                 let curs = UI512CursorAccess.getCursor();
                 let ret = getEnumToStrOrUnknown<UI512Cursors>(UI512Cursors, curs);
-                return ret.toLowerCase()
-            },
+                return ret.toLowerCase();
+            }
         ];
     }
 
@@ -88,7 +89,7 @@ export class VpcElProductOpts extends VpcElBase {
             (me: VpcElProductOpts, s: string) => {
                 checkThrowEq(1, s.length, `7C|length of itemdel must be 1`);
                 me.set('itemDel', s);
-            },
+            }
         ];
 
         setters['cursor'] = [
@@ -106,7 +107,7 @@ export class VpcElProductOpts extends VpcElBase {
 
                 let n = getStrToEnum<VpcCursors>(VpcCursors, `cursor ${s} not supported`, s);
                 UI512CursorAccess.setCursor(n.valueOf());
-            },
+            }
         ];
 
         setters['idlerate'] = [
@@ -119,7 +120,7 @@ export class VpcElProductOpts extends VpcElBase {
                 } else {
                     checkThrow(false, `unsupported idlerate, try "faster" or "default"`);
                 }
-            },
+            }
         ];
     }
 
@@ -169,18 +170,18 @@ export class VpcElProductOpts extends VpcElBase {
  * values here are intentionally lowercase, this enum is used when running a script.
  */
 export enum VpcCursors {
-    __isUI512Enum 	=	 1,
-    arrow 	=	 UI512Cursors.Arrow,
-    beam 	=	 UI512Cursors.Beam,
-    crosshair 	=	 UI512Cursors.Crosshair,
-    hand 	=	 UI512Cursors.Hand,
-    pencil 	=	 UI512Cursors.Pencil,
-    plus 	=	 UI512Cursors.Plus,
-    watch 	=	 UI512Cursors.Watch,
-    paintbrush 	=	 UI512Cursors.PaintBrush,
-    paintbucket 	=	 UI512Cursors.PaintBucket,
-    painttext 	=	 UI512Cursors.PaintText,
-    paintlasso 	=	 UI512Cursors.PaintLasso,
-    painteraser 	=	 UI512Cursors.PaintEraser,
-    paintspray 	=	 UI512Cursors.PaintSpray,
+    __isUI512Enum = 1,
+    arrow = UI512Cursors.Arrow,
+    beam = UI512Cursors.Beam,
+    crosshair = UI512Cursors.Crosshair,
+    hand = UI512Cursors.Hand,
+    pencil = UI512Cursors.Pencil,
+    plus = UI512Cursors.Plus,
+    watch = UI512Cursors.Watch,
+    paintbrush = UI512Cursors.PaintBrush,
+    paintbucket = UI512Cursors.PaintBucket,
+    painttext = UI512Cursors.PaintText,
+    paintlasso = UI512Cursors.PaintLasso,
+    painteraser = UI512Cursors.PaintEraser,
+    paintspray = UI512Cursors.PaintSpray
 }

@@ -38,7 +38,7 @@ export class VpcBuiltinFunctions {
         offset: 2,
         max: -1,
         min: -1,
-        sum: -1,
+        sum: -1
     };
 
     protected static fnsNeedOutside: { [key: string]: number } = {
@@ -64,7 +64,7 @@ export class VpcBuiltinFunctions {
         selectedfield: 0,
         selectedline: 0,
         selectedtext: 0,
-        tool: 0,
+        tool: 0
     };
 
     protected static simpleMath: { [key: string]: Function } = {
@@ -80,7 +80,7 @@ export class VpcBuiltinFunctions {
         exp1: (f: number) => Math.exp(f) - 1,
         exp2: (f: number) => Math.pow(2, f),
         sqrt: (f: number) => Math.sqrt(f),
-        trunc: (f: number) => Math.trunc(f),
+        trunc: (f: number) => Math.trunc(f)
     };
 
     constructor(protected readoutside: OutsideWorldRead) {

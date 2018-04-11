@@ -11,7 +11,7 @@
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
 /* auto */ import { KeyDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextSelect.js';
+/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
 /* auto */ import { PalBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
@@ -65,7 +65,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
     }
 
     createSpecific(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
 
         let headheight = 0;
         if (this.showHeader) {
@@ -96,7 +96,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         this.entry.set('style', UI512FldStyle.Transparent);
 
         this.entry.set('multiline', false);
-        this.appli.getController().setCurrentFocus(this.entry.id);
+        this.appli.getPresenter().setCurrentFocus(this.entry.id);
         this.entry.set('defaultFont', 'geneva');
         let msg = 'put "abc"';
         this.setFontAndText(this.entry, msg, 'geneva', 12);
@@ -243,7 +243,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         }
 
         // set focus back
-        this.appli.getController().setCurrentFocus(this.entry.id);
+        this.appli.getPresenter().setCurrentFocus(this.entry.id);
     }
 
     static makeAllVarsGlobals(linesImproved: string[], lineWithNoStringLiterals: string) {

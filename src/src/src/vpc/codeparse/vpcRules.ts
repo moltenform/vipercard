@@ -61,13 +61,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectPart);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkidentifier);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -84,14 +84,14 @@ export class ChvParserClass extends ChvParser {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkcharorwordoritemorlineorplural);
                     this.SUBRULE1(this.RuleHChunk_1);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHOrdinal);
                     this.CONSUME2(tks.TokenTkcharorwordoritemorlineorplural);
-                },
-            },
+                }
+            }
         ]);
         this.SUBRULE1(this.RuleOf);
     });
@@ -111,18 +111,18 @@ export class ChvParserClass extends ChvParser {
                     this.CONSUME1(tks.TokenTklparen);
                     this.SUBRULE1(this.RuleExpr);
                     this.CONSUME1(tks.TokenTkrparen);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTknumliteral);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHSimpleContainer);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -138,33 +138,33 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectBtn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectFld);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectCard);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectBg);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectStack);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObject_1);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -173,13 +173,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkcardorpluralsyn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkbkgndorpluralsyn);
-                },
-            },
+                }
+            }
         ]);
         this.OR2([
             {
@@ -187,14 +187,14 @@ export class ChvParserClass extends ChvParser {
                     this.CONSUME1(tks.TokenTkbtnorpluralsyn);
                     this.CONSUME1(tks.TokenId);
                     this.SUBRULE1(this.RuleLvl6Expression);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkbtnorpluralsyn);
                     this.SUBRULE2(this.RuleLvl6Expression);
-                },
-            },
+                }
+            }
         ]);
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleOf);
@@ -207,13 +207,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkcardorpluralsyn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkbkgndorpluralsyn);
-                },
-            },
+                }
+            }
         ]);
         this.OR2([
             {
@@ -221,14 +221,14 @@ export class ChvParserClass extends ChvParser {
                     this.CONSUME1(tks.TokenTkfldorpluralsyn);
                     this.CONSUME1(tks.TokenId);
                     this.SUBRULE1(this.RuleLvl6Expression);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkfldorpluralsyn);
                     this.SUBRULE2(this.RuleLvl6Expression);
-                },
-            },
+                }
+            }
         ]);
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleOf);
@@ -243,26 +243,26 @@ export class ChvParserClass extends ChvParser {
                     this.CONSUME1(tks.TokenTkcardorpluralsyn);
                     this.CONSUME1(tks.TokenId);
                     this.SUBRULE1(this.RuleLvl6Expression);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkcardorpluralsyn);
                     this.SUBRULE2(this.RuleLvl6Expression);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHOrdinal);
                     this.CONSUME3(tks.TokenTkcardorpluralsyn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHPosition);
                     this.CONSUME4(tks.TokenTkcardorpluralsyn);
-                },
-            },
+                }
+            }
         ]);
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleOf);
@@ -277,26 +277,26 @@ export class ChvParserClass extends ChvParser {
                     this.CONSUME1(tks.TokenTkbkgndorpluralsyn);
                     this.CONSUME1(tks.TokenId);
                     this.SUBRULE1(this.RuleLvl6Expression);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkbkgndorpluralsyn);
                     this.SUBRULE2(this.RuleLvl6Expression);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHOrdinal);
                     this.CONSUME3(tks.TokenTkbkgndorpluralsyn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHPosition);
                     this.CONSUME4(tks.TokenTkbkgndorpluralsyn);
-                },
-            },
+                }
+            }
         ]);
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleOf);
@@ -314,13 +314,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectBtn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectFld);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -329,18 +329,18 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectCard);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectBg);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectStack);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -355,18 +355,18 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkidentifier);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTo);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkinonly);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -416,13 +416,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkidentifier);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkordinal);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -466,13 +466,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkbtnorpluralsyn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkfldorpluralsyn);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -483,13 +483,13 @@ export class ChvParserClass extends ChvParser {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHChunk);
                     this.SUBRULE1(this.RuleHSimpleContainer);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectPart);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -550,18 +550,18 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleNtDest);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHOrdinal);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHPosition);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -571,13 +571,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObjectPart);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkidentifier);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -622,13 +622,13 @@ export class ChvParserClass extends ChvParser {
                     ALT: () => {
                         this.SUBRULE1(this.RuleHChunk);
                         this.SUBRULE1(this.RuleObjectFld);
-                    },
+                    }
                 },
                 {
                     ALT: () => {
                         this.SUBRULE1(this.RuleObject);
-                    },
-                },
+                    }
+                }
             ]);
         });
         this.CONSUME1(tks.TokenTo);
@@ -641,18 +641,18 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleShow_1);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleShow_2);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkidentifier);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -720,13 +720,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenId);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkidentifier);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -735,7 +735,7 @@ export class ChvParserClass extends ChvParser {
             SEP: tks.TokenTkcomma,
             DEF: () => {
                 this.SUBRULE1(this.RuleLvl4Expression);
-            },
+            }
         });
     });
 
@@ -744,13 +744,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkofonly);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkinonly);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -759,28 +759,28 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCall_Length);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCallWithParens);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCallWithoutParensOrGlobalGetPropOrTarget);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCallNumberOf);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleExprThereIs);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -799,20 +799,20 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkidentifier);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenLength);
-                },
-            },
+                }
+            }
         ]);
         this.CONSUME1(tks.TokenTklparen);
         this.MANY_SEP({
             SEP: tks.TokenTkcomma,
             DEF: () => {
                 this.SUBRULE1(this.RuleExpr);
-            },
+            }
         });
         this.CONSUME1(tks.TokenTkrparen);
     });
@@ -836,23 +836,23 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCallNumberOf_1);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCallNumberOf_2);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCallNumberOf_3);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCallNumberOf_4);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -867,25 +867,25 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkcardorpluralsyn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkbkgndorpluralsyn);
-                },
-            },
+                }
+            }
         ]);
         this.OR2([
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkbtnorpluralsyn);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkfldorpluralsyn);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -914,28 +914,28 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleExprGetProperty);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleFnCall);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHSimpleContainer);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkstringliteral);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTknumliteral);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -953,13 +953,13 @@ export class ChvParserClass extends ChvParser {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHChunk);
                     this.SUBRULE1(this.RuleObjectFld);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleObject);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -1005,18 +1005,18 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleLvl2TypeCheck);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleLvl2Within);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleLvl3Expression);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -1026,13 +1026,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenNumber);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME2(tks.TokenTkidentifier);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -1041,13 +1041,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkinonly);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenWithin);
-                },
-            },
+                }
+            }
         ]);
         this.SUBRULE1(this.RuleLvl3Expression);
     });
@@ -1082,13 +1082,13 @@ export class ChvParserClass extends ChvParser {
                 {
                     ALT: () => {
                         this.CONSUME1(tks.TokenTkplusorminus);
-                    },
+                    }
                 },
                 {
                     ALT: () => {
                         this.CONSUME1(tks.TokenNot);
-                    },
-                },
+                    }
+                }
             ]);
         });
         this.OPTION2(() => {
@@ -1098,15 +1098,15 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleExprSource);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTklparen);
                     this.SUBRULE1(this.RuleExpr);
                     this.CONSUME1(tks.TokenTkrparen);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -1115,13 +1115,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenOr);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenAnd);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -1130,13 +1130,13 @@ export class ChvParserClass extends ChvParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenContains);
-                },
+                }
             },
             {
                 ALT: () => {
                     this.CONSUME1(tks.TokenTkgreaterorlessequalorequal);
-                },
-            },
+                }
+            }
         ]);
     });
 
@@ -1164,7 +1164,7 @@ export class ChvParserClass extends ChvParser {
             SEP: tks.TokenTkcomma,
             DEF: () => {
                 this.SUBRULE1(this.RuleExpr);
-            },
+            }
         });
     });
 }

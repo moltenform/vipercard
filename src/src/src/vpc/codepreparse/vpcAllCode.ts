@@ -1,7 +1,7 @@
 
-/* auto */ import { O, assertTrue, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, makeVpcScriptErr, markUI512Err } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject, MapKeyToObjectCanSet, Util512, ValHolder, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, VpcScriptErrorBase, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor.js';
 /* auto */ import { LoopLimit, MakeLowerCase, MapBuiltinCmds, SplitIntoLinesProducer } from '../../vpc/codepreparse/vpcPreparseCommon.js';
@@ -109,17 +109,22 @@ export class VpcAllCode {
 
     findHandlerInScript(id: O<string>, handlername: string): O<[VpcCodeOfOneVel, VpcCodeLineReference]> {
         if (id) {
-            let velScript = this.findCode(id);
-            let codeOfOneVel = velScript as VpcCodeOfOneVel;
-            if (codeOfOneVel && codeOfOneVel.isVpcCodeOfOneVel) {
-                let handler = codeOfOneVel.handlers.find(handlername);
+            let ret = this.findCode(id);
+            let retAsCode = ret as VpcCodeOfOneVel;
+            if (retAsCode && retAsCode.isVpcCodeOfOneVel) {
+                let handler = retAsCode.handlers.find(handlername);
                 if (handler) {
-                    return [codeOfOneVel, handler];
+                    return [retAsCode, handler];
                 }
-            } else if (velScript) {
-                let err = makeVpcScriptErr('$compilation error$');
-                (err as any).vpcScriptErr = velScript;
-                throw err;
+            } else if (ret) {
+                let retAsErr = ret as VpcScriptErrorBase;
+                if (retAsErr && retAsErr.isVpcScriptErrorBase) {
+                    let err = makeVpcScriptErr('$compilation error$');
+                    markUI512Err(err, true, false, true, retAsErr);
+                    throw err;
+                } else {
+                    throw makeVpcScriptErr('VpcCodeOfOneVel did not return expected type ' + ret);
+                }
             }
         }
     }

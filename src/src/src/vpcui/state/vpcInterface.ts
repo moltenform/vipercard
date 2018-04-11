@@ -1,10 +1,10 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { EventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
@@ -35,7 +35,7 @@ export interface VpcStateInterface {
     undoableAction(fn: () => void, typ?: TypeOfUndoAction): void;
     scheduleScriptEventSend(d: EventDetails): void;
     UI512App(): UI512Application;
-    getController(): UI512Controller;
+    getPresenter(): UI512Presenter;
     placeCallbackInQueue(cb: () => void): void;
     bounds(): number[];
     userBounds(): number[];
@@ -47,7 +47,7 @@ export interface VpcStateInterface {
     getCurrentFocusVelField(): O<VpcElField>;
     getCurrentFocus(): O<string>;
     setCurrentFocus(s: O<string>): void;
-    commitSimulatedClicks(queue: PaintOntoCanvas[]): void;
+    commitSimulatedClicks(queue: UI512PaintDispatch[]): void;
     performMenuAction(s: string): void;
     causeUIRedraw(): void;
     causeFullRedraw(): void;
@@ -59,5 +59,5 @@ export interface VpcStateInterface {
 export enum TypeOfUndoAction {
     None,
     StartNewAction, // always create new action
-    StartReusableAction, // if latest action is also StartReusableAction, glue it together
+    StartReusableAction // if latest action is also StartReusableAction, glue it together
 }

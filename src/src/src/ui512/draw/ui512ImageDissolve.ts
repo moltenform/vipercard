@@ -31,7 +31,7 @@ export class DissolveImages {
         const tileW = icon.srcRect[2];
         const tileH = icon.srcRect[3];
 
-        c2.temporarilyChangeCompositeMode('destination-in',  () => {
+        c2.temporarilyChangeCompositeMode('destination-in', () => {
             c2.context.globalCompositeOperation = 'destination-in';
             for (let tileY = 0; tileY < Math.ceil(c2.canvas.height / tileH); tileY++) {
                 for (let tileX = 0; tileX < Math.ceil(c2.canvas.width / tileW); tileX++) {
@@ -40,7 +40,7 @@ export class DissolveImages {
                     icon!.drawIntoBox(c2, info, destX, destY, tileX, tileY);
                 }
             }
-        })
+        });
 
         c1.drawFromImage(
             c2.canvas,

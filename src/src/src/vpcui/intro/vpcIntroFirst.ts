@@ -4,8 +4,8 @@
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { GridLayout, UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { IdleEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcAboutDialog } from '../../vpcui/menu/vpcAboutDialog.js';
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroBase.js';
@@ -18,7 +18,7 @@ export class IntroFirstPage extends IntroPageBase {
     compositeType = 'IntroFirstPage';
 
     createSpecific(app: UI512Application) {
-        let grp = app.getGroup(this.grpid);
+        let grp = app.getGroup(this.grpId);
         let headerheight = this.drawCommonFirst(app, grp);
         // draw weird hands
         let cbHands = (a: number, b: number, el: UI512ElButton) => {
@@ -101,16 +101,16 @@ export class IntroFirstPage extends IntroPageBase {
     }
 
     static haveCheckedUrl = false;
-    respondIdle(c: VpcIntroPresenterInterface, d: IdleEventDetails) {
+    respondIdle(pr: VpcIntroPresenterInterface, d: IdleEventDetails) {
         if (!IntroFirstPage.haveCheckedUrl) {
             IntroFirstPage.haveCheckedUrl = true;
-            UI512BeginAsync(() => this.checkIfGivenStackInUrl(c), undefined, false);
+            UI512BeginAsync(() => this.checkIfGivenStackInUrl(pr), undefined, false);
         }
 
-        super.respondIdle(c, d);
+        super.respondIdle(pr, d);
     }
 
-    async checkIfGivenStackInUrl(c: VpcIntroPresenterInterface) {
+    async checkIfGivenStackInUrl(pr: VpcIntroPresenterInterface) {
         let id = this.parseStackIdFromParams(location.href);
         if (id && slength(id)) {
             id = id.replace(/%7C/g, '|').replace(/%7c/g, '|');
@@ -122,21 +122,13 @@ export class IntroFirstPage extends IntroPageBase {
                 if (demoname.startsWith('demo_') && demoname.match(/^[a-zA-Z0-9_-]{1,100}$/)) {
                     // open the document
                     let demoid = demoname + '.json';
-                    let loader = new VpcDocLoader(
-                        demoid,
-                        lng('lngfeatured stack'),
-                        OpenFromLocation.FromStaticDemo
-                    );
-                    c.beginLoadDocument(loader);
+                    let loader = new VpcDocLoader(demoid, lng('lngfeatured stack'), OpenFromLocation.FromStaticDemo);
+                    pr.beginLoadDocument(loader);
                     return;
                 }
             } else if (pts.length === 2) {
-                let loader = new VpcDocLoader(
-                    id,
-                    lng('lngstack'),
-                    OpenFromLocation.FromStackIdOnline
-                );
-                c.beginLoadDocument(loader);
+                let loader = new VpcDocLoader(id, lng('lngstack'), OpenFromLocation.FromStackIdOnline);
+                pr.beginLoadDocument(loader);
                 return;
             }
         }
@@ -157,54 +149,48 @@ export class IntroFirstPage extends IntroPageBase {
         }
     }
 
-    static showOpenPage(c: VpcIntroPresenterInterface, openType: OpenFromLocation) {
-        let [x, y] = [c.activePage.x, c.activePage.y];
-        c.activePage.destroy(c, c.app);
-        c.activePage = new IntroOpenPage('introOpenPage', c.bounds, x, y, openType);
-        c.activePage.create(c, c.app);
+    static showOpenPage(pr: VpcIntroPresenterInterface, openType: OpenFromLocation) {
+        let [x, y] = [pr.activePage.x, pr.activePage.y];
+        pr.activePage.destroy(pr, pr.app);
+        pr.activePage = new IntroOpenPage('introOpenPage', pr.bounds, x, y, openType);
+        pr.activePage.create(pr, pr.app);
 
         if (openType === OpenFromLocation.FromJsonFile) {
             // user clicked 'open from json'
-            let [x1, y1] = [c.activePage.x, c.activePage.y];
-            c.activePage.destroy(c, c.app);
-            c.activePage = new IntroOpenFromDiskPage('IntroOpenFromDiskPage', c.bounds, x1, y1, c);
-            c.activePage.create(c, c.app);
+            let [x1, y1] = [pr.activePage.x, pr.activePage.y];
+            pr.activePage.destroy(pr, pr.app);
+            pr.activePage = new IntroOpenFromDiskPage('IntroOpenFromDiskPage', pr.bounds, x1, y1, pr);
+            pr.activePage.create(pr, pr.app);
         } else if (openType === OpenFromLocation.ShowLoginForm) {
             if (!getRoot().getSession()) {
                 // we have to load the full ui, just to get the dialog to get then to log in
                 let loader = new VpcDocLoader('', '', OpenFromLocation.ShowLoginForm);
-                c.beginLoadDocument(loader);
+                pr.beginLoadDocument(loader);
             } else {
-                c.activePage.destroy(c, c.app);
-                c.activePage = new IntroOpenPage(
-                    'introOpenPage',
-                    c.bounds,
-                    x,
-                    y,
-                    OpenFromLocation.FromStackIdOnline
-                );
-                c.activePage.create(c, c.app);
+                pr.activePage.destroy(pr, pr.app);
+                pr.activePage = new IntroOpenPage('introOpenPage', pr.bounds, x, y, OpenFromLocation.FromStackIdOnline);
+                pr.activePage.create(pr, pr.app);
             }
         }
     }
 
-    static respondBtnClick(c: VpcIntroPresenterInterface, self: O<IntroFirstPage>, el: UI512Element) {
+    static respondBtnClick(pr: VpcIntroPresenterInterface, self: O<IntroFirstPage>, el: UI512Element) {
         if (el.id.endsWith('choice_newStack')) {
-            c.newDocument();
+            pr.newDocument();
         } else if (el.id.endsWith('choice_showAbout')) {
-            VpcAboutDialog.show(c, c.getModal());
+            VpcAboutDialog.show(pr, pr.getModal());
         } else if (el.id.endsWith('choice_showFeatured')) {
-            IntroFirstPage.showOpenPage(c, OpenFromLocation.FromStaticDemo);
+            IntroFirstPage.showOpenPage(pr, OpenFromLocation.FromStaticDemo);
         } else if (el.id.endsWith('choice_openStack')) {
-            c.getModal().standardAnswer(
-                c,
-                c.app,
+            pr.getModal().standardAnswer(
+                pr,
+                pr.app,
                 'From which location would you like to open?',
                 n => {
                     if (n === 0) {
-                        IntroFirstPage.showOpenPage(c, OpenFromLocation.ShowLoginForm);
+                        IntroFirstPage.showOpenPage(pr, OpenFromLocation.ShowLoginForm);
                     } else if (n === 1) {
-                        IntroFirstPage.showOpenPage(c, OpenFromLocation.FromJsonFile);
+                        IntroFirstPage.showOpenPage(pr, OpenFromLocation.FromJsonFile);
                     }
                 },
                 'Online',

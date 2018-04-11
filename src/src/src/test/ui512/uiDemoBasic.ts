@@ -8,9 +8,9 @@
 /* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { IdleEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
-/* auto */ import { UI512Controller } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 
-export class UI512DemoBasic extends UI512Controller {
+export class UI512DemoBasic extends UI512Presenter {
     timer = new RepeatingTimer(2000);
     counter = 0;
     init() {
@@ -51,7 +51,7 @@ export class UI512DemoBasic extends UI512Controller {
             this.timer.update(d.milliseconds);
             if (this.timer.isDue()) {
                 this.timer.reset();
-                let getbtn2 = cast(this.app.getElemById('btn2'), UI512ElButton);
+                let getbtn2 = cast(this.app.getEl('btn2'), UI512ElButton);
                 getbtn2.set('labeltext', getbtn2.get_s('labeltext') === 'pulsating' ? 'pulsating...' : 'pulsating');
             }
         });
@@ -60,7 +60,7 @@ export class UI512DemoBasic extends UI512Controller {
         this.rebuildFieldScrollbars();
     }
 
-    private static respondMouseUp(c: UI512DemoBasic, d: MouseUpEventDetails) {
+    private static respondMouseUp(pr: UI512DemoBasic, d: MouseUpEventDetails) {
         if (d.button !== 0) {
             return;
         }
@@ -68,10 +68,10 @@ export class UI512DemoBasic extends UI512Controller {
         if (d.elClick) {
             console.log('hello from ' + d.elClick.id);
             if (d.elClick.id === 'btn1') {
-                c.counter += 1;
+                pr.counter += 1;
 
                 let btn1 = cast(d.elClick, UI512ElButton);
-                btn1.set('labeltext', 'counter: ' + c.counter.toString());
+                btn1.set('labeltext', 'counter: ' + pr.counter.toString());
                 btn1.setDimensions(btn1.x + 10, btn1.y + 10, btn1.w, btn1.h);
             }
         }

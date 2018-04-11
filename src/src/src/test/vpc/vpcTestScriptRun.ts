@@ -14,12 +14,12 @@
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgeJSLru.js';
 /* auto */ import { VpcApplication } from '../../vpcui/state/vpcState.js';
-/* auto */ import { VpcAppControllerEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
-/* auto */ import { VpcAppController } from '../../vpcui/presentation/vpcPresenter.js';
+/* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
+/* auto */ import { VpcPresenter } from '../../vpcui/presentation/vpcPresenter.js';
 /* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
 
 export class TestVpcScriptRun extends UI512TestBase {
-    ctrller: VpcAppController;
+    ctrller: VpcPresenter;
     appl: VpcApplication;
     elIds: { [key: string]: string } = {};
     evalHelpers = new VpcEvalHelpers();
@@ -49,7 +49,7 @@ export class TestVpcScriptRun extends UI512TestBase {
         }
     }
 
-    async startEnvironment(): Promise<[VpcAppController, VpcApplication]> {
+    async startEnvironment(): Promise<[VpcPresenter, VpcApplication]> {
         let loader = new VpcDocLoader('', '', OpenFromLocation.NewDoc);
         await loader.loadDocumentTop();
         if (loader.ctrller && loader.appl) {
@@ -139,7 +139,7 @@ export class TestVpcScriptRun extends UI512TestBase {
             btn_b_d_1: btn_b_d_1.id,
             fld_c_d_1: fld_c_d_1.id,
             btn_c_d_1: btn_c_d_1.id,
-            btn_go: btn_go.id,
+            btn_go: btn_go.id
         };
 
         let ids = Util512.getMapVals(this.elIds);
@@ -245,7 +245,7 @@ export class TestVpcScriptRun extends UI512TestBase {
         assertEq(VpcTool.Browse, this.ctrller.getTool(), '');
         this.ctrller.trackMouse = [this.simMouseX, this.simMouseY];
         let fakeEvent = new MouseUpEventDetails(1, this.simClickX, this.simClickY, 0, ModifierKeys.None);
-        VpcAppControllerEvents.scheduleScriptMsgImpl(this.ctrller, fakeEvent, btnGo.id, false);
+        VpcPresenterEvents.scheduleScriptMsgImpl(this.ctrller, fakeEvent, btnGo.id, false);
 
         // message should now be in the queue
         assertTrue(this.appl.runtime.codeExec.workQueue.length > 0, '2V|should be in queue');
@@ -558,7 +558,7 @@ put ${s} into testresult`;
                 ['put 4 into length\\0', 'ERR:NotAllInputParsedException'],
                 ['put 4 into id\\0', 'ERR:NotAllInputParsedException'],
                 ['put 4 into and\\0', 'ERR:NotAllInputParsedException'],
-                ['put 4 into autohilite\\0', 'ERR:name not allowed'],
+                ['put 4 into autohilite\\0', 'ERR:name not allowed']
             ];
             this.testBatchEvaluate(batch);
 
@@ -594,58 +594,58 @@ put ${s} into testresult`;
                 [
                     `get 1 + 2 -- + 3 -- + 4
 put it into x\\x`,
-                    '3',
+                    '3'
                 ],
                 [
                     `get 1 + 2 -- + 3 + 4
 put it into x\\x`,
-                    '3',
+                    '3'
                 ],
                 [
                     `get 1 + 2 -- + 3
 put it into x\\x`,
-                    '3',
+                    '3'
                 ],
                 [
                     `get 1 + 2 -- 3
 put it into x\\x`,
-                    '3',
+                    '3'
                 ],
                 [
                     `get 1 + 2 --3
 put it into x\\x`,
-                    '3',
+                    '3'
                 ],
                 [
                     `get 1 + 2--3
 put it into x\\x`,
-                    '3',
+                    '3'
                 ],
                 [
                     `get 1 + 2-- 3
 put it into x\\x`,
-                    '3',
+                    '3'
                 ],
                 [
                     `get 1 + 2- -3
 put it into x\\x`,
-                    '6',
+                    '6'
                 ],
                 [
                     `get 1 + 2 - -3
 put it into x\\x`,
-                    '6',
+                    '6'
                 ],
                 [
                     `get 1 + 2 - - 3
 put it into x\\x`,
-                    '6',
+                    '6'
                 ],
                 [
                     `put 1 into x
 -- put x + 1 into x
 put x into x\\x`,
-                    '1',
+                    '1'
                 ],
                 [
                     `put 1 into x
@@ -653,20 +653,20 @@ put x into x\\x`,
 -- put x + 1 into x
 -- put x + 1 into x
 put x into x\\x`,
-                    '1',
+                    '1'
                 ],
                 [
                     `put 1 into x--'lex''error' #$%$%
   -- put x + 1 into x 'lex''error' #$%$%
 put x into x\\x`,
-                    '1',
+                    '1'
                 ],
                 [
                     `put 1 into x--parse 0 error 0 number number number
     -- put x + 1 into x 0 parse 0 error 0 number number number
 put x into x\\x`,
-                    '1',
-                ],
+                    '1'
+                ]
             ];
             this.testBatchEvaluate(batch);
 
@@ -807,7 +807,7 @@ put x into x\\x`,
                 ['choose "round rect" tool\\tool()', 'roundrect'],
                 ['choose "round  rect" tool\\tool()', 'roundrect'],
                 ['choose "xyz" tool\\tool()', 'ERR:Not a valid choice'],
-                ['choose "" tool\\tool()', 'ERR:valid tool name'],
+                ['choose "" tool\\tool()', 'ERR:valid tool name']
             ];
 
             this.testBatchEvaluate(batch);
@@ -883,7 +883,7 @@ put x into x\\x`,
                 ['add (1+2) to cd fld "p2"\\cd fld "p2"', 'ERR:expected a number'],
                 ['subtract (1+2) from cd fld "p2"\\cd fld "p2"', 'ERR:expected a number'],
                 ['multiply cd fld "p2" by (1+2)\\cd fld "p2"', 'ERR:expected a number'],
-                ['divide cd fld "p2" by (1+3)\\cd fld "p2"', 'ERR:expected a number'],
+                ['divide cd fld "p2" by (1+3)\\cd fld "p2"', 'ERR:expected a number']
             ];
 
             this.testBatchEvaluate(batch, true);
@@ -924,7 +924,7 @@ put x into x\\x`,
                 ['go to card 1 of bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
                 ['go to card 1 of bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
                 ['go to card 1 of bg 2 of this stack\\the short id of this cd', `${this.elIds.card_b_b}`],
-                ['go to card 1 of bg 3 of this stack\\the short id of this cd', `${this.elIds.card_c_d}`],
+                ['go to card 1 of bg 3 of this stack\\the short id of this cd', `${this.elIds.card_c_d}`]
             ];
             this.testBatchEvaluate(batch);
 
@@ -942,7 +942,7 @@ put x into x\\x`,
                 ['disable cd btn "p1"\\the enabled of cd btn "p1"', `false`],
                 ['disable cd btn "p1"\\the enabled of cd btn "p1"', `false`],
                 ['enable cd btn "p1"\\the enabled of cd btn "p1"', `true`],
-                ['enable cd btn "p1"\\the enabled of cd btn "p1"', `true`],
+                ['enable cd btn "p1"\\the enabled of cd btn "p1"', `true`]
             ];
             this.testBatchEvaluate(batch);
 
@@ -989,7 +989,7 @@ put x into x\\x`,
                 ['show cd fld "p1" at 12, 23\\the loc of cd fld "p1"', `12,23`],
                 ['show cd fld "p1" at "12", "23"\\the loc of cd fld "p1"', `12,23`],
                 ['show cd fld "p1" at "12, 23"\\the loc of cd fld "p1"', `ERR:MismatchedTokenException`],
-                ['show cd fld "p1" at (12), (" 23 ")\\the loc of cd fld "p1"', `12,23`],
+                ['show cd fld "p1" at (12), (" 23 ")\\the loc of cd fld "p1"', `12,23`]
             ];
             this.testBatchEvaluate(batch);
 
@@ -1020,7 +1020,7 @@ put x into x\\x`,
                 ['sort xyz items of x xyz\\x', `ERR:Not a valid choice`],
                 ['sort items of x xyz\\x', `ERR:Not a valid choice`],
                 ['sort xyz of x\\x', `ERR:MismatchedTokenException`],
-                ['sort xyz xyz of x\\x', `ERR:MismatchedTokenException`],
+                ['sort xyz xyz of x\\x', `ERR:MismatchedTokenException`]
             ];
             this.testBatchEvaluate(batch);
 
@@ -1055,7 +1055,7 @@ put x into x\\x`,
                 ['put initlist into x\\0', '0'],
                 ['delete char 2 to 999 of x\\x', 'a'],
                 ['put initlist into x\\0', '0'],
-                ['delete char 1 to 999 of x\\x', ''],
+                ['delete char 1 to 999 of x\\x', '']
             ];
             this.testBatchEvaluate(batch);
 
@@ -1219,7 +1219,7 @@ put x into x\\x`,
                 ['put "abc" after char 2 of newvar6\\0', 'ERR:no variable found'],
                 ['put "abc" into char 2 to 3 of newvar7\\0', 'ERR:no variable found'],
                 ['put "abc" before char 2 to 3 of newvar8\\0', 'ERR:no variable found'],
-                ['put "abc" after char 2 to 3 of newvar9\\0', 'ERR:no variable found'],
+                ['put "abc" after char 2 to 3 of newvar9\\0', 'ERR:no variable found']
             ];
             this.testBatchEvaluate(batch);
 
@@ -1234,7 +1234,7 @@ put x into x\\x`,
                 ['get not true\\it', `false`],
                 ['get\\0', `ERR:NoViableAltException`],
                 ['get the\\0', `ERR:NoViableAltException`],
-                ['put 123 into it\\0', `ERR:variable name not allowed`],
+                ['put 123 into it\\0', `ERR:variable name not allowed`]
             ];
             this.testBatchEvaluate(batch);
         },
@@ -1261,42 +1261,42 @@ put x into x\\x`,
 if 2+3 > 4 then
 put 3 into x
 end if` + '\\x',
-                    '3',
+                    '3'
                 ],
                 [
                     `put 2 into x
 if 2+3 < 4 then
 put 3 into x
 end if` + '\\x',
-                    '2',
+                    '2'
                 ],
                 [
                     `put 2 into x
 if 2+3 > 4 and the number of cds in this stack is in "456" then
 put 3 into x
 end if` + '\\x',
-                    '3',
+                    '3'
                 ],
                 [
                     `put 2 into x
 if 2+3 > 4 and the number of cds in this stack is not in "456" then
 put 3 into x
 end if` + '\\x',
-                    '2',
+                    '2'
                 ],
                 [
                     `put 2 into x
 if 2+3 < 4 or the number of cds in this stack is in "456" then
 put 3 into x
 end if` + '\\x',
-                    '3',
+                    '3'
                 ],
                 [
                     `put 2 into x
 if 2+3 < 4 or the number of cds in this stack is not in "456" then
 put 3 into x
 end if` + '\\x',
-                    '2',
+                    '2'
                 ],
                 [
                     `put 2 into x
@@ -1305,7 +1305,7 @@ put 3 into x
 else if 2+3 is 6 then
 put 4 into x
 end if` + '\\x',
-                    '2',
+                    '2'
                 ],
                 [
                     `put 2 into x
@@ -1314,7 +1314,7 @@ put 3 into x
 else if 2+3 is 5 then
 put 4 into x
 end if` + '\\x',
-                    '4',
+                    '4'
                 ],
                 [
                     `if 2+3 < 4 then
@@ -1322,7 +1322,7 @@ put 100 into x
 else
 put 101 into x
 end if` + '\\x',
-                    '101',
+                    '101'
                 ],
                 [
                     `if 2+3 > 4 then
@@ -1330,7 +1330,7 @@ put 100 into x
 else
 put 101 into x
 end if` + '\\x',
-                    '100',
+                    '100'
                 ],
                 // use counter to see which loop conditions have been evald
                 [
@@ -1344,7 +1344,7 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-                    '1000 2',
+                    '1000 2'
                 ],
                 [
                     `put counting() into cfirst
@@ -1357,7 +1357,7 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-                    '1001 3',
+                    '1001 3'
                 ],
                 [
                     `put counting() into cfirst
@@ -1370,7 +1370,7 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-                    '1002 4',
+                    '1002 4'
                 ],
                 [
                     `put counting() into cfirst
@@ -1383,7 +1383,7 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-                    '1003 4',
+                    '1003 4'
                 ],
                 // order matters
                 [
@@ -1394,7 +1394,7 @@ put 21 into x
 else if true then
 put 22 into x
 end if\\x`,
-                    '21',
+                    '21'
                 ],
                 // nested if
                 [
@@ -1405,8 +1405,8 @@ put 100 into x
 end if
 end if
 end if\\x`,
-                    '100',
-                ],
+                    '100'
+                ]
             ];
             this.testBatchEvaluate(batch);
 
@@ -1420,7 +1420,7 @@ repeat while i<3
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-                    `a 0 1 2`,
+                    `a 0 1 2`
                 ],
                 // condition never true
                 [
@@ -1430,7 +1430,7 @@ repeat while i>0
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-                    `a`,
+                    `a`
                 ],
                 // simple loop
                 [
@@ -1440,7 +1440,7 @@ repeat until i>=3
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-                    `b 0 1 2`,
+                    `b 0 1 2`
                 ],
                 // condition never true
                 [
@@ -1450,7 +1450,7 @@ repeat until i>=0
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-                    `b`,
+                    `b`
                 ],
                 // nested loop, and a second loop right after the first
                 [
@@ -1469,7 +1469,7 @@ repeat while j<4
 put s && "j" & j into s
 put j+1 into j
 end repeat\\s`,
-                    `a j0 j1 0 j0 j1 1 j0 j1 2 j2 j3`,
+                    `a j0 j1 0 j0 j1 1 j0 j1 2 j2 j3`
                 ],
                 // inner loop changes iteration count
                 [
@@ -1483,7 +1483,7 @@ put s && i & "," & j into s
 put j+1 into j
 end repeat
 end repeat\\s`,
-                    `a 1,0 2,0 2,1 3,0 3,1 3,2`,
+                    `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
                 // condition must be checked every iteration
                 [
@@ -1494,7 +1494,7 @@ repeat until i>=(3 + counting() * 0)
 put s && i into s
 put i+1 into i
 end repeat\\s && (counting() - firstc)`,
-                    `b 0 1 2 5`,
+                    `b 0 1 2 5`
                 ],
                 // "times" syntax rewriting, simplest form.
                 // currently, the condition is evald every time.
@@ -1504,7 +1504,7 @@ put counting() into firstc
 repeat (counting() * 0 + 3) times
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a a a a 5`,
+                    `a a a a 5`
                 ],
                 // "times" syntax rewriting, loop never done
                 [
@@ -1513,7 +1513,7 @@ put counting() into firstc
 repeat (counting() * 0 + 0) times
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a 2`,
+                    `a 2`
                 ],
                 // "times" syntax rewriting, loop never done
                 [
@@ -1522,7 +1522,7 @@ put counting() into firstc
 repeat (counting() * 0 - 1) times
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a 2`,
+                    `a 2`
                 ],
                 // "with" syntax rewriting, simplest form.
                 [
@@ -1531,7 +1531,7 @@ put counting() into firstc
 repeat with x = 1 to (counting() * 0 + 3)
 put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
-                    `a a1 a2 a3 5`,
+                    `a a1 a2 a3 5`
                 ],
                 // "with" syntax rewriting, loop never done
                 [
@@ -1540,7 +1540,7 @@ put counting() into firstc
 repeat with x = 1 to (counting() * 0 + 0)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a 2`,
+                    `a 2`
                 ],
                 // "with" syntax rewriting, loop never done
                 [
@@ -1549,7 +1549,7 @@ put counting() into firstc
 repeat with x = 1 to (counting() * 0 - 1)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a 2`,
+                    `a 2`
                 ],
                 // "with down" syntax rewriting, simplest form.
                 [
@@ -1558,7 +1558,7 @@ put counting() into firstc
 repeat with x = 3 down to (counting() * 0)
 put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
-                    `a a3 a2 a1 a0 6`,
+                    `a a3 a2 a1 a0 6`
                 ],
                 // "with down" syntax rewriting, loop never done
                 [
@@ -1567,7 +1567,7 @@ put counting() into firstc
 repeat with x = 0 down to (1 + counting() * 0)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a 2`,
+                    `a 2`
                 ],
                 // "with down" syntax rewriting, loop never done
                 [
@@ -1576,7 +1576,7 @@ put counting() into firstc
 repeat with x = -1 down to (1 + counting() * 0)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a 2`,
+                    `a 2`
                 ],
                 // "with" syntax rewriting, expect start only eval'd once
                 [
@@ -1585,7 +1585,7 @@ put counting() into firstc
 repeat with x = (counting() * 0 + 1) to 3
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-                    `a a a a 2`,
+                    `a a a a 2`
                 ],
                 // "with" syntax rewriting, nested loop
                 [
@@ -1599,7 +1599,7 @@ end repeat
 repeat with k = j to 4
 put s && "k" & k into s
 end repeat\\s`,
-                    `a j0 j1 0 j0 j1 1 j0 j1 2 k1 k2 k3 k4`,
+                    `a j0 j1 0 j0 j1 1 j0 j1 2 k1 k2 k3 k4`
                 ],
                 // "with" syntax rewriting, inner loop count changes
                 [
@@ -1609,7 +1609,7 @@ repeat with j = 0 + 0 to i
 put s && (i+1) & "," & j into s
 end repeat
 end repeat\\s`,
-                    `a 1,0 2,0 2,1 3,0 3,1 3,2`,
+                    `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
                 // simple test next repeat
                 [
@@ -1619,7 +1619,7 @@ put s && x into s
 next repeat
 put "_" into s
 end repeat\\s`,
-                    `a 1 2 3`,
+                    `a 1 2 3`
                 ],
                 // simple test exit repeat
                 [
@@ -1629,7 +1629,7 @@ put s && x into s
 exit repeat
 put "_" into s
 end repeat\\s`,
-                    `a 1`,
+                    `a 1`
                 ],
                 // next repeat in the nested loop
                 [
@@ -1641,7 +1641,7 @@ next repeat
 put "_" into s
 end repeat
 end repeat\\s`,
-                    `a 1,0 2,0 2,1 3,0 3,1 3,2`,
+                    `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
                 // next repeat out of the nested loop
                 [
@@ -1654,7 +1654,7 @@ end repeat
 next repeat
 put "_" into s
 end repeat\\s`,
-                    `a 1,0 2,0 2,1 3,0 3,1 3,2`,
+                    `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
                 // exit repeat in the nested loop
                 [
@@ -1666,7 +1666,7 @@ exit repeat
 put "_" into s
 end repeat
 end repeat\\s`,
-                    `a 1,0 2,0 3,0`,
+                    `a 1,0 2,0 3,0`
                 ],
                 // exit repeat out of the nested loop
                 [
@@ -1679,8 +1679,8 @@ end repeat
 exit repeat
 put "_" into s
 end repeat\\s`,
-                    `a 1,0`,
-                ],
+                    `a 1,0`
+                ]
             ];
 
             this.testBatchEvaluate(batch);
@@ -1695,7 +1695,7 @@ if x == 2 or x == 4 then
 put s && x into s
 end if
 end repeat\\s`,
-                    `a 2 4`,
+                    `a 2 4`
                 ],
                 // nested if statement inside a loop
                 [
@@ -1723,7 +1723,7 @@ else
     end if
 end if
 end repeat\\s`,
-                    `agot1got2got3got4got5`,
+                    `agot1got2got3got4got5`
                 ],
                 // if statement and exit repeat
                 [
@@ -1734,7 +1734,7 @@ if x == 2 then
 exit repeat
 end if
 end repeat\\s`,
-                    `a 1 2`,
+                    `a 1 2`
                 ],
                 // if statement and next repeat
                 [
@@ -1746,7 +1746,7 @@ next repeat
 end if
 put s & "-" into s
 end repeat\\s`,
-                    `a 1- 2 3- 4-`,
+                    `a 1- 2 3- 4-`
                 ],
                 // nested if statement and exit repeat
                 [
@@ -1759,7 +1759,7 @@ exit repeat
 end if
 end if
 end repeat\\s`,
-                    `a 1 2 3 4`,
+                    `a 1 2 3 4`
                 ],
                 // nested if statement and next repeat
                 [
@@ -1773,7 +1773,7 @@ end if
 end if
 put s & "-" into s
 end repeat\\s`,
-                    `a 1- 2- 3- 4 5- 6`,
+                    `a 1- 2- 3- 4 5- 6`
                 ],
                 // exit repeat out of infinite loop
                 [
@@ -1784,7 +1784,7 @@ if the length of s > 4 then
 exit repeat
 end if
 end repeat\\s`,
-                    `aaaaa`,
+                    `aaaaa`
                 ],
                 // if statements *must* be reset
                 [
@@ -1801,7 +1801,7 @@ repeat with x = 1 to 4
     end if
     put s & "-" into s
 end repeat\\s`,
-                    `a a- b- z-`,
+                    `a a- b- z-`
                 ],
                 // loop inside of an if
                 [
@@ -1813,8 +1813,8 @@ end repeat
 else
 put "_" into s
 end if\\s`,
-                    `a 1 2 3`,
-                ],
+                    `a 1 2 3`
+                ]
             ];
             this.testBatchEvaluate(batch);
 
@@ -1844,7 +1844,7 @@ end if\\s`,
                 // if you don't declare it as a global, it is treated as a local
                 ['3 * testvar', 'ERR:no variable found'],
                 ['put "z" into testvar\\testvar', 'z'],
-                ['put "z" into testvar\nglobal testvar\\testvar', '1'],
+                ['put "z" into testvar\nglobal testvar\\testvar', '1']
             ];
             this.testBatchEvaluate(batch);
         },
@@ -1869,7 +1869,7 @@ end if\\s`,
                 // the result before anything is called
                 ['put 3 into result\\0', 'ERR:name not allowed'],
                 ['result()', ''],
-                ['the result()', ''],
+                ['the result()', '']
             ];
             this.testBatchEvaluate(batch);
 
@@ -2191,7 +2191,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                 ['abs(1) && mm(abs(1),mm(abs(2),mm(abs(3)))) && abs(1)', '1 m9(1,m8(2,m7(3,,),),) 1'],
                 [
                     'abs(1) && mm(90+(1),90+(2),"" & mm(90+(3),90+(4),"" & mm(90+(5),90+(6)))) && abs(1)',
-                    '1 m12(91,92,m11(93,94,m10(95,96,))) 1',
+                    '1 m12(91,92,m11(93,94,m10(95,96,))) 1'
                 ],
                 // currently allow the call on the other side as well
                 ['global g\nput 0 into g\\0', '0'],
@@ -2203,7 +2203,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                 ['put 0 into ret\nadd (the length of mm(1)) to ret\\ret', '7'],
                 [
                     'put "0,0,0,0,0,0,0,0,0" into ret\nadd 3 to item (the length of mm(1)) of ret\\ret',
-                    '0,0,0,0,0,0,3,0,0',
+                    '0,0,0,0,0,0,3,0,0'
                 ],
                 ['get abs(mm(1))\\0', 'ERR:expected a number'],
                 ['repeat while length(mm(1)) > 15\nend repeat\\0', 'ERR:support custom fn calls'],
@@ -2218,7 +2218,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
             else
             get 2
             end if\\it`,
-                    '1',
+                    '1'
                 ],
                 [
                     `if false then
@@ -2226,7 +2226,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
             else if char 1 of mm(1) is "m" then
             get 2
             end if\\it`,
-                    'ERR:6:support custom fn calls',
+                    'ERR:6:support custom fn calls'
                 ],
                 // custom fn error reporting
                 ['get mm(1\\it', 'ERR:missing )'],
@@ -2236,46 +2236,46 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                     `put "abc" into x
 
             show cd btn "notfound"\\0`,
-                    'ERR:6:could not find the specified',
+                    'ERR:6:could not find the specified'
                 ],
                 [
                     `put "abc" into x
 
 
             show cd btn "notfound"\\0`,
-                    'ERR:7:could not find the specified',
+                    'ERR:7:could not find the specified'
                 ],
                 // using continued lines, line number reporting should be affected
                 [
                     `put "abc" {BSLASH}\n into x
             show cd btn "notfound"\\0`,
-                    'ERR:6:could not find the specified',
+                    'ERR:6:could not find the specified'
                 ],
                 [
                     `put "abc" {BSLASH}\n into {BSLASH}\n x
             show cd btn "notfound"\\0`,
-                    'ERR:7:could not find the specified',
+                    'ERR:7:could not find the specified'
                 ],
                 [
                     `put {BSLASH}\n "abc" {BSLASH}\n into {BSLASH}\n x
             show cd btn "notfound"\\0`,
-                    'ERR:8:could not find the specified',
+                    'ERR:8:could not find the specified'
                 ],
                 // but using put-expansion, line number reporting should not be affected, even though we're adding calls
                 [
                     `put mm(1) into x
             show cd btn "notfound"\\0`,
-                    'ERR:5:could not find the specified',
+                    'ERR:5:could not find the specified'
                 ],
                 [
                     `put mm(1) && mm(1) into x
             show cd btn "notfound"\\0`,
-                    'ERR:5:could not find the specified',
+                    'ERR:5:could not find the specified'
                 ],
                 [
                     `put mm(mm(1)) into x
             show cd btn "notfound"\\0`,
-                    'ERR:5:could not find the specified',
+                    'ERR:5:could not find the specified'
                 ],
                 // difference between what is allowed and what is not
                 ['global g\nput 0 into g\\0', '0'],
@@ -2284,7 +2284,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                 ['mm(1)\\0', `ERR:isn't C`],
                 ['mm (1)\\the result', 'm2(1,,)'],
                 ['mm(1),(2)\\0', `ERR:isn't C`],
-                ['mm (1),(2)\\the result', 'm3(1,2,)'],
+                ['mm (1),(2)\\the result', 'm3(1,2,)']
             ];
             this.testBatchEvaluate(batch);
             this.updateObjectScript(this.elIds.card_a_a, ``);
@@ -2807,6 +2807,6 @@ put 3 into x`,
                 );
                 this.runGeneralCode('', '', 'no handler', 3, false, true);
             }
-        },
+        }
     ];
 }

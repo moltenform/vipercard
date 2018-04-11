@@ -218,7 +218,7 @@ export class SyntaxRewriter {
             this.buildFake.makeIdentifier(line[0], newvarname),
             this.buildFake.makeGreaterLessThanEqual(line[0], '='),
             this.buildFake.makeNumLiteral(line[0], 1),
-            this.buildFake.make(line[0], tks.TokenTo),
+            this.buildFake.make(line[0], tks.TokenTo)
         ];
 
         repeatWith = repeatWith.concat(line.slice(1));
@@ -270,7 +270,7 @@ export class SyntaxRewriter {
         let incOrDec = [
             this.buildFake.makeIdentifier(line[0], newvarname),
             this.buildFake.makePlusMinus(line[0], isCountDown ? '-' : '+'),
-            this.buildFake.makeNumLiteral(line[0], 1),
+            this.buildFake.makeNumLiteral(line[0], 1)
         ];
 
         ret.push(this.buildPutIntoStatement(newvarname, line, initExprStart, initExprEnd));

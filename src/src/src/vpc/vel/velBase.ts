@@ -10,7 +10,7 @@ export enum PrpTyp {
     __isUI512Enum = 1,
     Str,
     Num,
-    Bool,
+    Bool
 }
 
 export type PropGetter<T extends VpcElBase> = [PrpTyp, string | ((me: T) => string | number | boolean)];
@@ -39,10 +39,10 @@ export abstract class VpcElBase extends UI512Settable {
 
     makeDormant() {
         // cause errors if anyone tries to access the object
-        this.getters = undefined as any;
-        this.setters = undefined as any;
-        this.set = undefined as any;
-        this.setftxt = undefined as any;
+        this.getters = undefined as any; /* destroy() */
+        this.setters = undefined as any; /* destroy() */
+        this.set = undefined as any; /* destroy() */
+        this.setftxt = undefined as any; /* destroy() */
     }
 
     static simpleGetSet(
@@ -170,11 +170,11 @@ export abstract class VpcElSizable extends VpcElBase {
     protected _y = 0;
     protected _w = 0;
     protected _h = 0;
-    setDimensions(newx: number, newy: number, neww: number, newh: number, context = ChangeContext.Default) {
+    setDimensions(newX: number, newY: number, neww: number, newh: number, context = ChangeContext.Default) {
         checkThrow(neww >= 0, `7H|width must be >= 0 but got ${neww}`);
         checkThrow(newh >= 0, `7G|height must be >= 0 but got ${newh}`);
-        this.set('x', newx, context);
-        this.set('y', newy, context);
+        this.set('x', newX, context);
+        this.set('y', newY, context);
         this.set('w', neww, context);
         this.set('h', newh, context);
     }
@@ -195,7 +195,7 @@ export abstract class VpcElSizable extends VpcElBase {
         getters['rect'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`];
         getters['loc'] = [
             PrpTyp.Str,
-            (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`,
+            (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`
         ];
         getters['bottomright'] = getters['botright'];
         getters['rectangle'] = getters['rect'];
@@ -209,20 +209,20 @@ export abstract class VpcElSizable extends VpcElBase {
         setters['top'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n, me._w, me._h)];
         setters['right'] = [
             PrpTyp.Num,
-            (me: VpcElSizable, n: number) => me.setDimensions(n - me._w, me._y, me._w, me._h),
+            (me: VpcElSizable, n: number) => me.setDimensions(n - me._w, me._y, me._w, me._h)
         ];
         setters['bottom'] = [
             PrpTyp.Num,
-            (me: VpcElSizable, n: number) => me.setDimensions(me._x, n - me._h, me._w, me._h),
+            (me: VpcElSizable, n: number) => me.setDimensions(me._x, n - me._h, me._w, me._h)
         ];
         setters['topleft'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) => me.setDimensions(getc(me, s, 0), getc(me, s, 1), me._w, me._h),
+            (me: VpcElSizable, s: string) => me.setDimensions(getc(me, s, 0), getc(me, s, 1), me._w, me._h)
         ];
         setters['botright'] = [
             PrpTyp.Str,
             (me: VpcElSizable, s: string) =>
-                me.setDimensions(me._x, me._y, getc(me, s, 0) - me._x, getc(me, s, 1) - me._y),
+                me.setDimensions(me._x, me._y, getc(me, s, 0) - me._x, getc(me, s, 1) - me._y)
         ];
         setters['rect'] = [
             PrpTyp.Str,
@@ -232,7 +232,7 @@ export abstract class VpcElSizable extends VpcElBase {
                     getc(me, s, 1),
                     getc(me, s, 2) - getc(me, s, 0),
                     getc(me, s, 3) - getc(me, s, 1)
-                ),
+                )
         ];
         setters['loc'] = [
             PrpTyp.Str,
@@ -242,7 +242,7 @@ export abstract class VpcElSizable extends VpcElBase {
                 let moveX = getc(me, s, 0) - wasLocX;
                 let moveY = getc(me, s, 1) - wasLocY;
                 me.setDimensions(me._x + moveX, me._y + moveY, me._w, me._h);
-            },
+            }
         ];
         setters['bottomright'] = setters['botright'];
         setters['rectangle'] = setters['rect'];

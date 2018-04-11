@@ -43,10 +43,7 @@ export class VpcChangeSelectedFont {
     setAlign(v: string) {
         let worked = this.setAlignImpl(v);
         if (!worked) {
-            throw makeVpcInternalErr(
-                msgNotification +
-                    lng('lngNo selection found. Select a button or field.')
-            );
+            throw makeVpcInternalErr(msgNotification + lng('lngNo selection found. Select a button or field.'));
         }
     }
 
@@ -71,8 +68,9 @@ export class VpcChangeSelectedFont {
         if (!worked) {
             throw makeVpcInternalErr(
                 msgNotification +
-                    lng('lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.'
-                        )
+                    lng(
+                        'lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.'
+                    )
             );
         }
     }

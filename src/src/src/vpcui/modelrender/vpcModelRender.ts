@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, assertTrueWarn, makeVpcInternalErr, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RepeatingTimer, getRoot, isString } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { getRoot, isString } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
@@ -98,7 +98,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             }
 
             if (wasScroll !== el.get_b('scrollbar')) {
-                this.appli.getController().rebuildFieldScrollbars();
+                this.appli.getPresenter().rebuildFieldScrollbars();
             }
         };
 
@@ -210,9 +210,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
 
     protected refreshLabelWithFont(elv: VpcElBase, target: UI512Element) {
         if (elv instanceof VpcElButton) {
-            let lbl = elv.get_b('showlabel')
-                ? UI512DrawText.setFont(elv.get_s('label'), elv.getFontAsUi512())
-                : '';
+            let lbl = elv.get_b('showlabel') ? UI512DrawText.setFont(elv.get_s('label'), elv.getFontAsUi512()) : '';
             target.set('labeltext', lbl);
         } else {
             throw makeVpcInternalErr(`6+|expected button`);
@@ -280,7 +278,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
     }
 
     velIdToEl(id: string) {
-        return this.appli.UI512App().findElemById(this.velIdToElId(id));
+        return this.appli.UI512App().findEl(this.velIdToElId(id));
     }
 
     protected buildBtnFromScratch(vpcel: VpcElButton) {
@@ -351,8 +349,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         if (isString(s)) {
             // should still be slower than the keyboard rate,
             // because we don't want idle rates to win over keydown events
-            let rate = s === 'faster' ? 50 : 100;
-            (getRoot() as any).timerSendIdleEvent = new RepeatingTimer(rate);
+            getRoot().setTimerRate(s.toString());
         }
     }
 

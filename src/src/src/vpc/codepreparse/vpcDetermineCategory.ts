@@ -29,7 +29,7 @@ export class DetermineCategory {
             endColumn: -1,
             isInsertedInRecovery: false,
             tokenType: tokenType(tks.TokenTkidentifier),
-            tokenClassName: undefined,
+            tokenClassName: undefined
         };
 
         this.sharedRequestUserHandler = {
@@ -42,7 +42,7 @@ export class DetermineCategory {
             endColumn: -1,
             isInsertedInRecovery: false,
             tokenType: tokenType(tks.TokenTkidentifier),
-            tokenClassName: undefined,
+            tokenClassName: undefined
         };
     }
 
@@ -74,7 +74,7 @@ export class DetermineCategory {
             return output;
         } else {
             let methodname = `go_${firstImage.replace(/\^/g, '')}`;
-            methodname = (this as any)[methodname] ? methodname : 'go_customhandler';
+            methodname = Util512.isMethodOnClass(this, methodname) ? methodname : 'go_customhandler';
             let ret = Util512.callAsMethodOnClass('DetermineCategory', this, methodname, [line, output], false);
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {

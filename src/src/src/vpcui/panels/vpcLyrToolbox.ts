@@ -4,7 +4,7 @@
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ControllerBase } from '../../ui512/presentation/ui512PresenterBase.js';
+/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { OrdinalOrPosition, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
 /* auto */ import { PatternsToolbox, ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
@@ -21,23 +21,23 @@ export class VpcAppToolboxes extends VpcAppInterfaceLayer {
     cbStopCodeRunning: () => void;
     cbAnswerMsg: (s: string, cb: () => void) => void;
 
-    init(c: UI512ControllerBase) {
+    init(pr: UI512PresenterBase) {
         // add main toolbox
-        this.toolsmain.icongroupid = '001';
+        this.toolsmain.iconGroupId = '001';
         this.toolsmain.x = this.appli.bounds()[0] + ScreenConsts.xAreaWidth + 1;
         this.toolsmain.y = this.appli.bounds()[1] + ScreenConsts.yMenuBar - 1;
         this.toolsmain.callbackOnChange = s => this.toolsmainCallback(s);
         this.toolsmainDefaultLoc = MainToolbox.layout(this.toolsmain, this.appli);
 
         // add navigation toolbox
-        this.toolsnav.icongroupid = '001';
+        this.toolsnav.iconGroupId = '001';
         this.toolsnav.x = this.toolsmain.x + ToolboxDims.NavAddedX;
         this.toolsnav.y = this.toolsmain.y + ToolboxDims.ToolbarHeight;
         this.toolsnav.callbackOnChange = s => this.toolsnavCallback(s);
         this.toolsnavDefaultLoc = NavToolbox.layout(this.toolsnav, this.appli);
 
         // add patterns toolbox
-        this.toolspatterns.icongroupid = '001';
+        this.toolspatterns.iconGroupId = '001';
         this.toolspatterns.x = this.toolsmain.x;
         this.toolspatterns.y = this.toolsnav.y + ToolboxDims.ToolbarHeight;
         this.toolspatterns.callbackOnChange = s => this.toolspatternsCallback(s);
@@ -47,9 +47,9 @@ export class VpcAppToolboxes extends VpcAppInterfaceLayer {
     toolsmainCallback(sTool: O<string>) {
         let toolParsed: VpcTool;
         if (sTool) {
-            checkThrow(sTool.length > 1, "not a valid tool name.");
+            checkThrow(sTool.length > 1, 'not a valid tool name.');
             /* the vals in the enum start with a capital letter */
-            sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase()
+            sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase();
             toolParsed = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
             this.appli.setTool(toolParsed);
             this.appli.setOption('viewingScriptVelId', '');

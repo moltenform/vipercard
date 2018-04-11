@@ -8,7 +8,7 @@ export class VpcUI512Serialization {
     static serializeUiGettable(vel: UI512Gettable, attrlist: string[]) {
         let ret: { [key: string]: ElementObserverVal } = {};
         for (let attrname of attrlist) {
-            let v = (vel as any)['_' + attrname];
+            let v = vel.get_generic(attrname);
             assertTrueWarn(v !== undefined, attrname);
             if (attrname === UI512Settable.formattedTextField) {
                 let vAsText = v as FormattedText;
@@ -51,11 +51,11 @@ export class VpcUI512Serialization {
 
     static copyAttrsOver(getter: UI512Gettable, setter: UI512Settable, attrlist: string[]) {
         for (let attrname of attrlist) {
-            let v = (getter as any)['_' + attrname];
+            let v = getter.get_generic(attrname);
             if (v !== null && v !== undefined) {
                 if (attrname === UI512Settable.formattedTextField) {
                     if (isString(v)) {
-                        let vAsText = FormattedText.newFromSerialized(v);
+                        let vAsText = FormattedText.newFromSerialized(v as string);
                         setter.setftxt(vAsText);
                     } else {
                         assertTrue(v instanceof FormattedText, 'not a string or FormattedText');

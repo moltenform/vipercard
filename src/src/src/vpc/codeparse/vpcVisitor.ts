@@ -39,7 +39,7 @@ let mapNicknames: { [key: string]: string } = {
     FACTOR: 'RuleLvl6Expression',
     MAYBE_FACTOR: 'RuleLvl6Expression',
     MAYBE_ALLOW_ARITH: 'RuleLvl4Expression',
-    ARITH: 'RuleLvl4Expression',
+    ARITH: 'RuleLvl4Expression'
 };
 
 export function fromNickname(s: string) {
@@ -86,7 +86,7 @@ export function createVisitor(parser: ChvParserClass): object {
         }
 
         H$BuildMap(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            const ctxany = ctx as any;
+            const ctxany = ctx;
             let ret = new IntermedMapOfIntermedVals();
             for (let key in ctxany) {
                 if (!ctxany.hasOwnProperty(key)) {
@@ -265,7 +265,7 @@ export function createVisitor(parser: ChvParserClass): object {
 
         Helper$ReadVpcVal(ctx: VisitingContext, name: string, isNickname: boolean): VpcVal {
             name = isNickname ? fromNickname(name) : name;
-            let chsub = (ctx as any)[name];
+            let chsub = ctx[name];
             checkThrow(!!chsub[0], `9P|expected this to have a RuleLvl6Expression`);
             let evaledvpc = this.visit(chsub[0]) as VpcVal;
             checkThrow(evaledvpc.isVpcVal, `9O|expected a vpcval when looking up element id or name`);

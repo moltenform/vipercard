@@ -3,7 +3,7 @@
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { clrBlack } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
-/* auto */ import { PaintOntoCanvas, PaintOntoCanvasShapes } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { SelectToolState, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
 
 export class VpcAppUILasso extends VpcAppUIGeneralSelect {
@@ -18,8 +18,8 @@ export class VpcAppUILasso extends VpcAppUIGeneralSelect {
     ) {
         /* lasso select. */
         if (this.state) {
-            let args = new PaintOntoCanvas(
-                PaintOntoCanvasShapes.SmearPencil,
+            let args = new UI512PaintDispatch(
+                UI512PaintDispatchShapes.SmearPencil,
                 [tmousepx, tmousenx],
                 [tmousepy, tmouseny],
                 clrBlack,
@@ -27,7 +27,7 @@ export class VpcAppUILasso extends VpcAppUIGeneralSelect {
                 false,
                 1
             );
-            PaintOntoCanvas.go(args, painter);
+            UI512PaintDispatch.go(args, painter);
             if (
                 tmousepx !== this.state.recordxpts[this.state.recordxpts.length - 1] ||
                 tmousepy !== this.state.recordypts[this.state.recordypts.length - 1]
@@ -43,19 +43,19 @@ export class VpcAppUILasso extends VpcAppUIGeneralSelect {
 
     protected makeBlack() {
         if (this.state) {
-            let cv = cast(this.state.elStage.getCachedPnterForWrite().getBackingSurface(), CanvasWrapper);
+            let cv = cast(this.state.elStage.getCachedPainterForWrite().getBackingSurface(), CanvasWrapper);
             cv.clear();
 
-            let args = new PaintOntoCanvas(
-                PaintOntoCanvasShapes.IrregularPolygon,
+            let args = new UI512PaintDispatch(
+                UI512PaintDispatchShapes.IrregularPolygon,
                 this.state.recordxpts,
                 this.state.recordypts,
                 clrBlack,
                 clrBlack,
                 true
             );
-            
-            PaintOntoCanvas.go(args, this.state.elStage.getCachedPnterForWrite());
+
+            UI512PaintDispatch.go(args, this.state.elStage.getCachedPainterForWrite());
         }
     }
 

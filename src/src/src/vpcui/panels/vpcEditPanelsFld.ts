@@ -10,7 +10,7 @@ export class PropPanelCompositeField extends PropPanelCompositeBase {
     readonly velType = VpcElType.Fld;
     topInputs: [string, string, number][] = [
         ['lngField Name:', 'name', 190],
-        ['lngField Contents:', 'fldcontent', 205],
+        ['lngField Contents:', 'fldcontent', 205]
     ];
 
     leftChoices: [string, string][] = [
@@ -18,13 +18,13 @@ export class PropPanelCompositeField extends PropPanelCompositeBase {
         ['lngScrolling', 'scrolling'],
         ['lngShadow', 'shadow'],
         ['lngOpaque', 'opaque'],
-        ['lngTransparent', 'transparent'],
+        ['lngTransparent', 'transparent']
     ];
 
     rightOptions: [string, string][] = [
         ['lngLock Text', 'locktext'],
         ["lngDon't Wrap", 'dontwrap'],
         ['lngSingle Line', 'singleline'],
-        ['lngEnabled', 'enabled'],
+        ['lngEnabled', 'enabled']
     ];
 }

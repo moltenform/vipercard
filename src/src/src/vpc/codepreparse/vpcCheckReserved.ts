@@ -9,7 +9,7 @@
 
 export enum CodeSymbols {
     RequestHandlerCall = '$requesthandlercall',
-    RequestEval = '$requesteval',
+    RequestEval = '$requesteval'
 }
 
 export class CheckReservedWords {

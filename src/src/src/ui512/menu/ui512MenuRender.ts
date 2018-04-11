@@ -10,93 +10,84 @@
 /* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementsMenu.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 
-function isMenuDirty(app: UI512Application, menu: UI512MenuRoot) {
-    if (menu.getdirty()) {
-        return true;
-    }
+/**
+ * you can build a menu in code,
+ * but for convenience we have a way to build meny from an array
+ * see example in uiDemoMenus
+ */
+export type UI512MenuDefn = [string, string[]] | [string, number, string[]];
 
-    let children = menu.getchildren(app);
-    for (let child of children) {
-        if (child.getdirty()) {
-            return true;
-        }
-    }
-
-    if (menu.get_n('whichIsExpanded') >= 0) {
-        for (let child of children) {
-            for (let subchild of child.getchildren(app)) {
-                if (subchild.getdirty()) {
-                    return true;
-                }
-            }
-        }
-    }
-
-    return false;
-}
-
+/**
+ * sets the position of the models
+ * and creates a few helper elements
+ */
 export class MenuPositioning {
-    static createMenuHelperObjects(app: UI512Application, grpitems: UI512ElGroup, menuroot: UI512MenuRoot) {
-        let dropdownbgid = menuroot.id + '##dropdownbg';
-        if (!grpitems.findEl(dropdownbgid)) {
-            let dropdownbg = new UI512ElButton(dropdownbgid, menuroot.observer);
-            dropdownbg.set('autohighlight', false);
-            dropdownbg.set('style', UI512BtnStyle.Shadow);
-            grpitems.addElement(app, dropdownbg);
+    /**
+     * create menu helper elements. must be called when adding a menubar.
+     */
+    static createMenuHelperEls(app: UI512Application, grpItems: UI512ElGroup, menuRoot: UI512MenuRoot) {
+        let dropdownBgId = menuRoot.id + '##dropdownBg';
+        if (!grpItems.findEl(dropdownBgId)) {
+            let dropdownBg = new UI512ElButton(dropdownBgId, menuRoot.observer);
+            dropdownBg.set('autohighlight', false);
+            dropdownBg.set('style', UI512BtnStyle.Shadow);
+            grpItems.addElement(app, dropdownBg);
         }
     }
 
-    static removeMenuHelperObjects(app: UI512Application, grpitems: UI512ElGroup, menuroot: UI512MenuRoot) {
-        let dropdownbgid = menuroot.id + '##dropdownbg';
-        grpitems.removeElement(dropdownbgid);
+    /**
+     * remove helper elements. call when removing a menubar.
+     */
+    static removeMenuHelperObjects(app: UI512Application, grpItems: UI512ElGroup, menuRoot: UI512MenuRoot) {
+        let dropdownBgId = menuRoot.id + '##dropdownBg';
+        grpItems.removeElement(dropdownBgId);
     }
 
-    static removeMenuRoot(app: UI512Application, grp: UI512ElGroup, menuroot: UI512MenuRoot) {
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(app, false);
-        assertEq(grp.id, grpbar.id, '2]|');
-        MenuPositioning.removeMenuHelperObjects(app, grpitems, menuroot);
-        let children = menuroot.getchildren(app);
+    /**
+     * remove a menu
+     */
+    static removeMenuRoot(app: UI512Application, grp: UI512ElGroup, menuRoot: UI512MenuRoot) {
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app, false);
+        assertEq(grp.id, grpBar.id, '2]|');
+        MenuPositioning.removeMenuHelperObjects(app, grpItems, menuRoot);
+        let children = menuRoot.getchildren(app);
         for (let child of children) {
-            for (let subchild of child.getchildren(app)) {
-                grpitems.removeElement(subchild.id);
+            for (let subchild of child.getChildren(app)) {
+                grpItems.removeElement(subchild.id);
             }
 
-            grpbar.removeElement(child.id);
+            grpBar.removeElement(child.id);
         }
 
-        grpbar.removeElement(menuroot.id);
+        grpBar.removeElement(menuRoot.id);
     }
 
-    static setMenubarPositionsForRenderItems(
+    /**
+     * set positions of menu items.
+     */
+    static setMenuItemPositions(
         app: UI512Application,
-        grpbar: UI512ElGroup,
-        grpitems: UI512ElGroup,
-        menuroot: UI512MenuRoot,
+        menuRoot: UI512MenuRoot,
         header: UI512MenuDropdown,
         complete: RenderComplete
     ) {
-        let dropdownbg = grpitems.getEl(menuroot.id + '##dropdownbg');
-        let fontmanager = getRoot().getDrawText() as UI512DrawText;
+        /* highlight the menu name */
         header.set('highlightactive', true);
 
-        // find the longest string
-        let longest = 0;
-        let items = header.getchildren(app);
-        for (let item of items) {
-            let measured = fontmanager.measureString(item.get_s('labeltext'));
-            if (!measured) {
-                complete.complete = false;
-                return;
-            }
-
-            longest = Math.max(longest, measured.newLogicalX + MenuConsts.AddToWidth);
+        /* find the widest string, and set the width based on that */
+        let items = header.getChildren(app);
+        let widest = MenuPositioning.getWidestString(items);
+        if (widest === undefined) {
+            /* font has not loaded yet */
+            complete.complete = false;
+            return;
         }
 
-        let totalheight = MenuConsts.ItemHeight * items.length;
-        let rect = [header.x, header.bottom, longest, totalheight];
-
-        let rightside = header.get_n('fixedoffset') !== -1;
-        if (rightside) {
+        let totalHeight = MenuConsts.ItemHeight * items.length;
+        let rect = [header.x, header.bottom, widest, totalHeight];
+        let isRightSide = header.get_n('fixedoffset') !== -1;
+        if (isRightSide) {
+            /* drawing a menu on the right side, it is right-justified */
             const farRight = app.bounds[0] + app.bounds[2];
             let shiftAmount = rect[0] + rect[2] - farRight;
             if (shiftAmount > 0) {
@@ -104,16 +95,18 @@ export class MenuPositioning {
             }
         }
 
-        // draw shadowed bg
-        // the top of this rect will goes under the main menu bar, so the top line won't be seen
-        dropdownbg.setDimensions(
+        /* draw shadowed bg */
+        /* the top of this rect will goes under the main menu bar, so the top line won't be seen */
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
+        let dropdownBg = grpItems.getEl(menuRoot.id + '##dropdownBg');
+        dropdownBg.setDimensions(
             rect[0],
             rect[1] - 1,
             rect[2],
             rect[3] + 1 + MenuConsts.ShadowSizeBottom /* for the shadow*/
         );
 
-        // draw items
+        /* draw items */
         for (let i = 0; i < items.length; i++) {
             items[i].setDimensions(
                 rect[0] + MenuConsts.ShadowSizeLeft,
@@ -126,76 +119,108 @@ export class MenuPositioning {
         }
     }
 
-    static setMenubarPositionsForRender(
-
+    /**
+     * set positions of a menu dropdown.
+     */
+    static setMenuDropdownPosition(
         app: UI512Application,
-        menuroot: UI512MenuRoot,
+        menuRoot: UI512MenuRoot,
+        header: UI512MenuDropdown,
+        curX: number,
+        isExpanded: boolean,
         complete: RenderComplete
     ) {
-        if (!menuroot || !menuroot.visible || !menuroot.get_s('childids') || !isMenuDirty(app, menuroot)) {
+        /* measure width of the header to draw */
+        let drawText = getRoot().getDrawText() as UI512DrawText;
+        let curwidth = header.get_n('fixedwidth');
+        if (curwidth === -1) {
+            let measured = drawText.measureString(header.get_s('labeltext'));
+            if (!measured) {
+                complete.complete = false;
+                return curX;
+            }
+
+            curwidth = measured.newLogicalX + MenuConsts.XSpacing;
+        }
+
+        /* x position is overridden, e.g. menus on the right. */
+        if (header.get_n('fixedoffset') !== -1) {
+            curX = header.get_n('fixedoffset');
+        }
+
+        /* the emulator has a 1 pixel margin between top of screen and menu, */
+        /* but we'll not do that because it doesn't look good against black background */
+        header.setDimensions(curX - 4, app.bounds[1], curwidth + 5, MenuConsts.BarHeight - 1);
+        curX += curwidth;
+
+        /* draw active one */
+        header.set('highlightactive', false);
+        if (isExpanded) {
+            MenuPositioning.setMenuItemPositions(app, menuRoot, header, complete);
+
+            let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
+            grpItems.setVisible(true);
+        } else {
+            for (let item of header.getChildren(app)) {
+                item.set('visible', false);
+            }
+        }
+
+        return curX;
+    }
+
+    /**
+     * set all menu positions
+     */
+    static setMenuPositions(app: UI512Application, menuRoot: UI512MenuRoot, complete: RenderComplete) {
+        if (!menuRoot || !menuRoot.visible || !menuRoot.get_s('childids')) {
             return;
         }
 
-        // top bar
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(app);
-        menuroot.setDimensions(app.bounds[0], app.bounds[1], app.bounds[2], MenuConsts.BarHeight - 1);
-        assertTrueWarn(grpitems.findEl(menuroot.id + '##dropdownbg'), 'forgot to call createMenuHelperObjects?');
+        /* top bar */
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
+        menuRoot.setDimensions(app.bounds[0], app.bounds[1], app.bounds[2], MenuConsts.BarHeight - 1);
+        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'forgot to call createMenuHelperEls?');
 
-        // draw menu headers
-        // following emulator, they actually overlap.
+        /* draw menu headers */
+        /* interesting fact: the headers overlap each other. confirmed in emulator */
         let curX = app.bounds[0] + MenuConsts.TopHeaderMargin1;
-        let curwidth = 0;
-        let fontmanager = getRoot().getDrawText() as UI512DrawText;
         let counticonsdrawn = 0;
-        let dropdns = menuroot.getchildren(app);
-        grpitems.setVisible(false);
+        let dropdns = menuRoot.getchildren(app);
+        grpItems.setVisible(false);
         for (let i = 0; i < dropdns.length; i++) {
             let header = dropdns[i];
-            curwidth = header.get_n('fixedwidth');
-            if (curwidth === -1) {
-                let measured = fontmanager.measureString(header.get_s('labeltext'));
-                if (!measured) {
-                    complete.complete = false;
-                    return;
-                }
-
-                curwidth = measured.newLogicalX + MenuConsts.XSpacing;
-            }
-
-            if (header.get_n('fixedoffset') !== -1) {
-                curX = header.get_n('fixedoffset');
-            }
-
-            // the emulator has a 1 pixel margin between top of screen and menu,
-            // but we'll not do that because it doesn't look good against black background
-            header.setDimensions(curX - 4, app.bounds[1], curwidth + 5, MenuConsts.BarHeight - 1);
-            curX += curwidth;
-
-            // draw active one
-            header.set('highlightactive', false);
-            if (menuroot.get_n('whichIsExpanded') === i) {
-                MenuPositioning.setMenubarPositionsForRenderItems(
-                    app,
-                    grpbar,
-                    grpitems,
-                    menuroot,
-                    header,
-                    complete
-                );
-                grpitems.setVisible(true);
-            } else {
-                for (let item of header.getchildren(app)) {
-                    item.set('visible', false);
-                }
-            }
+            let open = menuRoot.get_n('whichIsExpanded') === i;
+            curX = MenuPositioning.setMenuDropdownPosition(app, menuRoot, header, curX, open, complete);
         }
     }
 
-    private static buildDropdnFromStruct(
+    /**
+     * measure the widest label
+     */
+    protected static getWidestString(items: UI512MenuItem[]): O<number> {
+        let drawText = getRoot().getDrawText() as UI512DrawText;
+        let widest = 0;
+        for (let item of items) {
+            let width = drawText.measureString(item.get_s('labeltext'));
+            if (!width) {
+                return undefined;
+            }
+
+            widest = Math.max(widest, width.newLogicalX + MenuConsts.AddToWidth);
+        }
+
+        return widest;
+    }
+
+    /**
+     * uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu
+     */
+    private static buildDropdnFromArray(
         app: UI512Application,
-        grpbar: UI512ElGroup,
-        grpitems: UI512ElGroup,
-        menuroot: UI512MenuRoot,
+        grpBar: UI512ElGroup,
+        grpItems: UI512ElGroup,
+        menuRoot: UI512MenuRoot,
         dropdowns: string[],
         childids: string[],
         ar: any
@@ -212,7 +237,7 @@ export class MenuPositioning {
         let [headerid, headerlabeluntranslated] = armenuheader.split('|');
         let dropdn = new UI512MenuDropdown(headerid);
         dropdowns.push(headerid);
-        grpbar.addElementAfter(app, dropdn, menuroot.id);
+        grpBar.addElementAfter(app, dropdn, menuRoot.id);
         dropdn.set('fixedoffset', fixedoffset);
         if (headerlabeluntranslated.startsWith('icon:')) {
             let [_, icongroupid, iconnumber, fixwidth] = headerlabeluntranslated.split(':');
@@ -224,13 +249,13 @@ export class MenuPositioning {
             dropdn.set('labeltext', lng(headerlabeluntranslated));
         }
 
-        assertTrueWarn(grpitems.findEl(menuroot.id + '##dropdownbg'), 'forgot to call createMenuHelperObjects?');
+        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'forgot to call createMenuHelperEls?');
         for (let menustring of armenu) {
             let [itemid, itemuntranslated, hotkey] = menustring.split('|');
             itemid = slength(itemid) ? itemid : 'unnamedmenu' + Math.random();
             let item = new UI512MenuItem(itemid);
 
-            grpitems.addElement(app, item);
+            grpItems.addElement(app, item);
             childids.push(itemid);
             item.set('labeltext', itemuntranslated === '---' ? itemuntranslated : lng(itemuntranslated));
             item.set('labelhotkey', hotkey.replace(/ /g, ''));
@@ -240,63 +265,81 @@ export class MenuPositioning {
         return dropdn;
     }
 
-    static buildFromStruct(c: UI512PresenterWithMenuInterface, st: any[]) {
-        let menuroot = MenuPositioning.getMenuRoot(c.app);
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(c.app);
+    /**
+     * you can build a menu in code,
+     * but for convenience we have a way to build meny from an array
+     * see example in uiDemoMenus
+     */
+    static buildFromArray(pr: UI512PresenterWithMenuInterface, st: UI512MenuDefn[]) {
+        let menuRoot = MenuPositioning.getMenuRoot(pr.app);
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(pr.app);
 
-        // ensures background items are created first, because they should be behind foreground
-        MenuPositioning.createMenuHelperObjects(c.app, grpitems, menuroot);
+        /* ensures background items are created first, because they should be behind foreground */
+        MenuPositioning.createMenuHelperEls(pr.app, grpItems, menuRoot);
 
         let dropdowns: string[] = [];
         for (let ar of st) {
             let childids: string[] = [];
-            let dropdn = MenuPositioning.buildDropdnFromStruct(
-                c.app,
-                grpbar,
-                grpitems,
-                menuroot,
+            let dropdn = MenuPositioning.buildDropdnFromArray(
+                pr.app,
+                grpBar,
+                grpItems,
+                menuRoot,
                 dropdowns,
                 childids,
                 ar
             );
+
             dropdn.set('childids', childids.join('|'));
         }
 
-        menuroot.set('childids', dropdowns.join('|'));
+        menuRoot.set('childids', dropdowns.join('|'));
     }
 
+    /**
+     * get groups for menus
+     */
     static getMenuGroups(app: UI512Application, createIfNeeded = true): [UI512ElGroup, UI512ElGroup] {
         return [
-            MenuPositioning.getMenuGroupImpl(app, '$$grpmenubar', createIfNeeded),
-            MenuPositioning.getMenuGroupImpl(app, '$$grpmenuitems', createIfNeeded),
+            MenuPositioning.getOrCreateGrp(app, '$$grpmenubar', createIfNeeded),
+            MenuPositioning.getOrCreateGrp(app, '$$grpmenuitems', createIfNeeded)
         ];
     }
 
-    static getMenuGroupImpl(app: UI512Application, s: string, createIfNeeded: boolean): UI512ElGroup {
+    /**
+     * get or create a group
+     */
+    static getOrCreateGrp(app: UI512Application, s: string, createIfNeeded: boolean) {
         let grp = app.findGroup(s);
         if (grp) {
             return grp;
         } else {
             checkThrowUI512(createIfNeeded, '2[|menubar group expected but not found');
-            let addedgrp = new UI512ElGroup(s, app.observer);
-            app.addGroup(addedgrp);
-            return addedgrp;
+            let addedGrp = new UI512ElGroup(s, app.observer);
+            app.addGroup(addedGrp);
+            return addedGrp;
         }
     }
 
+    /**
+     * by default we'll give the menuRoot a hard-coded id so it can always be found by id
+     */
     static getMenuRoot(app: UI512Application, createIfNeeded = true): UI512MenuRoot {
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(app, createIfNeeded);
-        let elem = grpbar.findEl('$$menubarforapp');
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app, createIfNeeded);
+        let elem = grpBar.findEl('$$menubarforapp');
         if (elem) {
             return cast(elem, UI512MenuRoot);
         } else {
             checkThrowUI512(createIfNeeded, '2[|menubar group expected but not found');
             let mb = new UI512MenuRoot('$$menubarforapp', app.observer);
-            grpbar.addElement(app, mb);
+            grpBar.addElement(app, mb);
             return mb;
         }
     }
 
+    /**
+     * dynamically change a property on the menu item.
+     */
     static setItemStatus(
         app: UI512Application,
         id: string,
@@ -304,8 +347,8 @@ export class MenuPositioning {
         enabled: O<boolean>,
         translatedLabel?: string
     ) {
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(app, true);
-        let elem = grpitems.findEl(id);
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app, true);
+        let elem = grpItems.findEl(id);
         if (elem) {
             if (checked !== undefined) {
                 elem.set('checkmark', checked);

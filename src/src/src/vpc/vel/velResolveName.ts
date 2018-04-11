@@ -226,15 +226,15 @@ export class VelResolveName {
 
 function matchesType(vel: VpcElBase, type: VpcElType): boolean {
     if (type === VpcElType.Bg) {
-        return ((vel as any) as VpcElBg).isVpcElBg;
+        return (vel as VpcElBg).isVpcElBg;
     } else if (type === VpcElType.Btn) {
-        return ((vel as any) as VpcElButton).isVpcElButton;
+        return (vel as VpcElButton).isVpcElButton;
     } else if (type === VpcElType.Fld) {
-        return ((vel as any) as VpcElField).isVpcElField;
+        return (vel as VpcElField).isVpcElField;
     } else if (type === VpcElType.Card) {
-        return ((vel as any) as VpcElCard).isVpcElCard;
+        return (vel as VpcElCard).isVpcElCard;
     } else if (type === VpcElType.Stack) {
-        return ((vel as any) as VpcElStack).isVpcElStack;
+        return (vel as VpcElStack).isVpcElStack;
     } else {
         return false;
     }

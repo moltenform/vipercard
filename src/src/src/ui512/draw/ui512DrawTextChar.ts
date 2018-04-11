@@ -64,7 +64,7 @@ export class UI512DrawChar {
         destW: number,
         destH: number,
         canvas?: O<CanvasWrapper>
-        ): DrawCharResult {
+    ): DrawCharResult {
         /* these decorations are flags on the TextRendererFont rather than part of the grid. */
         assertTrue((font.grid.spec.style & TextFontStyling.Underline) === 0, '3S|style should have been removed');
         assertTrue((font.grid.spec.style & TextFontStyling.Condensed) === 0, '3R|style should have been removed');
@@ -103,19 +103,7 @@ export class UI512DrawChar {
         }
 
         if (canvas) {
-            canvas.drawFromImage(
-                font.grid.image,
-                srcX,
-                srcY,
-                srcW,
-                srcH,
-                destX,
-                destY,
-                destX0,
-                destY0,
-                destW,
-                destH
-            );
+            canvas.drawFromImage(font.grid.image, srcX, srcY, srcW, srcH, destX, destY, destX0, destY0, destW, destH);
 
             /* following original os, underline follows the drawn width if longer than the logical width */
             if (font.underline) {

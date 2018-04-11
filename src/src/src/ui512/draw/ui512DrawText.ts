@@ -191,17 +191,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             let c = s.charAt(i);
             let font = s.fontAt(i);
             let fontobj = this.cache.getFont(font);
-            measurements[i] = UI512DrawChar.draw(
-                fontobj,
-                c,
-                0,
-                largeArea / 2,
-                0,
-                0,
-                largeArea,
-                largeArea,
-                undefined
-            );
+            measurements[i] = UI512DrawChar.draw(fontobj, c, 0, largeArea / 2, 0, 0, largeArea, largeArea, undefined);
 
             /* 2) split by words */
             if (i > 0) {
@@ -215,7 +205,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             words[words.length - 1].push(c, font);
         }
 
-        /* 3) placeholder for the end of the string, 
+        /* 3) placeholder for the end of the string,
         for convenience drawing the selection when end of string is selected */
         let fontLast = s.len() === 0 ? args.defaultFont : s.fontAt(s.len() - 1);
         words.push(new FormattedText());
@@ -242,7 +232,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             }
 
             /* measure the text, unless it's the placeholder at the end */
-            let wordMeasured = 0
+            let wordMeasured = 0;
             if (nWord < words.length - 1) {
                 wordMeasured = this.measureSpanOfText(measurements, wordStarts[nWord], wordStarts[nWord + 1]);
             }
@@ -379,7 +369,10 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             /* the "logical" bounds is the full area surrounding the character,
             the area that is highlighted when char is selected */
             let cbounds = [prevXForBounds, curY, curXForBounds - prevXForBounds, line.tallestLineHeight];
-            if (this.callPerChar(args, canvas, line.charIndices[i], CharRectType.Char, cbounds) === ShouldContinueDrawing.No) {
+            if (
+                this.callPerChar(args, canvas, line.charIndices[i], CharRectType.Char, cbounds) ===
+                ShouldContinueDrawing.No
+            ) {
                 return ret;
             }
 
@@ -387,7 +380,10 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             if (i === 0) {
                 let bounds = [args.boxX, curY, prevXForBounds - args.boxX, line.tallestLineHeight];
                 if (bounds[2] >= 0 && bounds[3] >= 0) {
-                    if (this.callPerChar(args, canvas, line.charIndices[i], CharRectType.SpaceToLeft, bounds)=== ShouldContinueDrawing.No) {
+                    if (
+                        this.callPerChar(args, canvas, line.charIndices[i], CharRectType.SpaceToLeft, bounds) ===
+                        ShouldContinueDrawing.No
+                    ) {
                         return ret;
                     }
                 }
@@ -397,7 +393,10 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             if (i === text.len() - 1) {
                 let bounds = [curXForBounds, curY, args.boxX + args.boxW - curXForBounds, line.tallestLineHeight];
                 if (bounds[2] >= 0 && bounds[3] >= 0) {
-                    if (this.callPerChar(args, canvas, line.charIndices[i], CharRectType.SpaceToRight, bounds)=== ShouldContinueDrawing.No) {
+                    if (
+                        this.callPerChar(args, canvas, line.charIndices[i], CharRectType.SpaceToRight, bounds) ===
+                        ShouldContinueDrawing.No
+                    ) {
                         return ret;
                     }
                 }
@@ -521,7 +520,9 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             /* there are only 2 fonts where we support a disabled style,
             if it's one of these we will make it disabled,
             otherwise, leave formatting as is. */
-            return s.replace(new RegExp(Util512.escapeForRegex(search1), 'ig'), repl1).replace(new RegExp(Util512.escapeForRegex(search2), 'ig'), repl2);
+            return s
+                .replace(new RegExp(Util512.escapeForRegex(search1), 'ig'), repl1)
+                .replace(new RegExp(Util512.escapeForRegex(search2), 'ig'), repl2);
         }
     }
 }

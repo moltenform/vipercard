@@ -1,6 +1,6 @@
 
 /* auto */ import { O, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { MapKeyToObject, cast } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ElementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
@@ -23,21 +23,13 @@ export class VpcModel {
     }
 
     findById<T extends VpcElBase>(id: O<string>, ctor: { new (...args: any[]): T }): O<T> {
-        let vel = this.elements.find(id) as any;
-        if (vel && !(vel instanceof ctor)) {
-            checkThrow(false, '7B|wrong type', vel.id);
-        }
-
-        return vel;
+        let vel = this.elements.find(id);
+        return cast(vel, ctor, id);
     }
 
     getById<T extends VpcElBase>(id: string, ctor: { new (...args: any[]): T }): T {
-        let vel = this.elements.get(id) as any;
-        if (!(vel instanceof ctor)) {
-            checkThrow(false, '7A|wrong type', vel.id);
-        }
-
-        return vel;
+        let vel = this.elements.get(id);
+        return cast(vel, ctor, id);
     }
 
     addIdToMapOfElements(vel: VpcElBase) {
@@ -83,8 +75,8 @@ export class VpcModel {
         }
 
         this.productOpts.observer = new ElementObserverDefault();
-        this.elements = undefined as any;
-        this.productOpts = undefined as any;
-        this.stack = undefined as any;
+        this.elements = undefined as any; /* destroy() */
+        this.productOpts = undefined as any; /* destroy() */
+        this.stack = undefined as any; /* destroy() */
     }
 }

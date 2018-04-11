@@ -2,7 +2,7 @@
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { PaintOntoCanvas } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcBuiltinMsg, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
@@ -83,5 +83,5 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
 
     GoCardRelative(pos: OrdinalOrPosition, id?: string): void;
     SimulateClick(argsGiven: number[], mods: ModifierKeys): void;
-    CommitSimulatedClicks(queue: PaintOntoCanvas[]): void;
+    CommitSimulatedClicks(queue: UI512PaintDispatch[]): void;
 }

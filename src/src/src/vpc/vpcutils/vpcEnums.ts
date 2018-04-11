@@ -3,7 +3,7 @@
 /* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { PaintOntoCanvasShapes } from '../../ui512/draw/ui512ImageSerialize.js';
+/* auto */ import { UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 
 export enum RequestedChunkType {
     __isUI512Enum = 1,
@@ -20,7 +20,7 @@ export enum RequestedChunkType {
     alternateforms_item = Items,
     alternateforms_items = Items,
     alternateforms_line = Lines,
-    alternateforms_lines = Lines,
+    alternateforms_lines = Lines
 }
 
 /**
@@ -33,7 +33,7 @@ export enum PropAdjective {
     long,
     short,
     alternateforms_abbreviated = abbrev,
-    alternateforms_abbr = abbrev,
+    alternateforms_abbr = abbrev
 }
 
 /**
@@ -43,7 +43,7 @@ export enum SortStyle {
     __isUI512Enum = 1,
     text,
     numeric,
-    international,
+    international
 }
 
 /**
@@ -68,7 +68,7 @@ export enum OrdinalOrPosition {
     previous,
     this,
     alternateforms_mid = middle,
-    alternateforms_prev = previous,
+    alternateforms_prev = previous
 }
 
 /**
@@ -78,7 +78,7 @@ export enum RequestedChunkTextPreposition {
     __isUI512Enum = 1,
     into,
     before,
-    after,
+    after
 }
 
 export enum VpcElType {
@@ -89,7 +89,7 @@ export enum VpcElType {
     Card,
     Bg,
     Stack,
-    Product,
+    Product
 }
 
 export function vpcElTypeToString(type: VpcElType, veryshort: boolean) {
@@ -153,33 +153,7 @@ export enum VpcTool {
     alternateforms_Spray_can = Spray,
     alternateforms_Round_rect = Roundrect,
     __first = Browse,
-    __last = Spray,
-}
-
-export function toolToPaintOntoCanvasShapes(tl: VpcTool) {
-    if (tl === VpcTool.Line) {
-        return PaintOntoCanvasShapes.ShapeLine;
-    } else if (tl === VpcTool.Rect) {
-        return PaintOntoCanvasShapes.ShapeRectangle;
-    } else if (tl === VpcTool.Oval) {
-        return PaintOntoCanvasShapes.ShapeElipse;
-    } else if (tl === VpcTool.Roundrect) {
-        return PaintOntoCanvasShapes.ShapeRoundRect;
-    } else if (tl === VpcTool.Brush) {
-        return PaintOntoCanvasShapes.SmearSmallBrush;
-    } else if (tl === VpcTool.Pencil) {
-        return PaintOntoCanvasShapes.SmearPencil;
-    } else if (tl === VpcTool.Eraser) {
-        return PaintOntoCanvasShapes.SmearRectangle;
-    } else if (tl === VpcTool.Spray) {
-        return PaintOntoCanvasShapes.SmearSpraycan;
-    } else if (tl === VpcTool.Curve) {
-        return PaintOntoCanvasShapes.ShapeCurve;
-    } else if (tl === VpcTool.Bucket) {
-        return PaintOntoCanvasShapes.Bucket;
-    } else {
-        throw makeUI512Error('toPaintOntoCanvasShapes unsupported tool ' + tl);
-    }
+    __last = Spray
 }
 
 export enum VpcToolCtg {
@@ -193,7 +167,7 @@ export enum VpcToolCtg {
     CtgBucket,
     CtgCurve,
     CtgStamp,
-    CtgNyi,
+    CtgNyi
 }
 
 export function getToolCategory(tl: VpcTool): VpcToolCtg {
@@ -235,6 +209,32 @@ export function getToolCategory(tl: VpcTool): VpcToolCtg {
     }
 }
 
+export function toolToDispatchShapes(tl: VpcTool) {
+    if (tl === VpcTool.Line) {
+        return UI512PaintDispatchShapes.ShapeLine;
+    } else if (tl === VpcTool.Rect) {
+        return UI512PaintDispatchShapes.ShapeRectangle;
+    } else if (tl === VpcTool.Oval) {
+        return UI512PaintDispatchShapes.ShapeElipse;
+    } else if (tl === VpcTool.Roundrect) {
+        return UI512PaintDispatchShapes.ShapeRoundRect;
+    } else if (tl === VpcTool.Brush) {
+        return UI512PaintDispatchShapes.SmearSmallBrush;
+    } else if (tl === VpcTool.Pencil) {
+        return UI512PaintDispatchShapes.SmearPencil;
+    } else if (tl === VpcTool.Eraser) {
+        return UI512PaintDispatchShapes.SmearRectangle;
+    } else if (tl === VpcTool.Spray) {
+        return UI512PaintDispatchShapes.SmearSpraycan;
+    } else if (tl === VpcTool.Curve) {
+        return UI512PaintDispatchShapes.ShapeCurve;
+    } else if (tl === VpcTool.Bucket) {
+        return UI512PaintDispatchShapes.Bucket;
+    } else {
+        throw makeUI512Error('toPaintOntoCanvasShapes unsupported tool ' + tl);
+    }
+}
+
 /**
  * values here are intentionally lowercase, this enum is used when running a script.
  */
@@ -254,7 +254,7 @@ export enum VpcBuiltinMsg {
     idle,
     afterkeydown,
     afterkeyup,
-    __custom,
+    __custom
 }
 
 /**
@@ -267,7 +267,7 @@ export enum MapTermToMilliseconds {
     milliseconds = 1,
     ms = 1,
     second = 1000,
-    seconds = 1000,
+    seconds = 1000
 }
 
 export function getMsgNameFromType(tp: UI512EventType) {
@@ -300,7 +300,7 @@ export enum VpcOpCtg {
     OpStringWithin,
     OpEqualityGreaterLessOrContains,
     OpPlusMinus,
-    OpMultDivideExpDivMod,
+    OpMultDivideExpDivMod
 }
 
 export function getPositionFromOrdinalOrPosition(

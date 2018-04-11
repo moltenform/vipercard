@@ -85,6 +85,7 @@ export interface VisitingVisitor {
 }
 
 export interface VisitingContext {
+    [index: string]: any;
     RuleHOrdinal: any[];
     RuleHPosition: any[];
     RuleHSimpleContainer: any[];
