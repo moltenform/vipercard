@@ -171,7 +171,7 @@ def doSomeAutomaticFormatting(lines):
         lines[i] = stripped
     
 if __name__ == '__main__':
-    srcdirectory = '../src/src'
+    srcdirectory = '../vipercard/src'
     layers = readLayers(srcdirectory)
     autoAddImports(srcdirectory)
     enforceLayering(srcdirectory)

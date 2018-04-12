@@ -1,0 +1,824 @@
+
+=====
+btn: width
+=====
+
+Examples:
+
+put the width of cd btn "myBtn" into z
+
+
+=====
+btn: height
+=====
+
+Examples:
+
+put the height of cd btn "myBtn" into z
+
+
+=====
+btn: left
+=====
+
+Examples:
+
+put the left of cd btn "myBtn" into z
+
+
+=====
+btn: top
+=====
+
+Examples:
+
+put the top of cd btn "myBtn" into z
+
+
+=====
+btn: right
+=====
+
+Examples:
+
+put the right of cd btn "myBtn" into z
+
+
+=====
+btn: bottom
+=====
+
+Examples:
+
+put the bottom of cd btn "myBtn" into z
+
+
+=====
+btn: topleft
+=====
+
+Examples:
+
+put the topleft of cd btn "myBtn" into z
+
+
+=====
+btn: botright
+=====
+
+Examples:
+
+put the botright of cd btn "myBtn" into z
+
+
+=====
+btn: rect
+=====
+
+Examples:
+
+put the rect of cd btn "myBtn" into z
+
+
+=====
+btn: loc
+=====
+
+Examples:
+
+put the loc of cd btn "myBtn" into z
+
+
+=====
+btn: bottomright
+=====
+
+Examples:
+
+put the bottomright of cd btn "myBtn" into z
+
+
+=====
+btn: rectangle
+=====
+
+Examples:
+
+put the rectangle of cd btn "myBtn" into z
+
+
+=====
+btn: location
+=====
+
+Examples:
+
+put the location of cd btn "myBtn" into z
+
+
+=====
+btn: autohilite
+=====
+
+Examples:
+
+put the autohilite of cd btn "myBtn" into z
+
+
+=====
+btn: enabled
+=====
+
+Examples:
+
+put the enabled of cd btn "myBtn" into z
+
+
+=====
+btn: hilite
+=====
+
+Examples:
+
+put the hilite of cd btn "myBtn" into z
+
+
+=====
+btn: checkmark
+=====
+
+Examples:
+
+put the checkmark of cd btn "myBtn" into z
+
+
+=====
+btn: icon
+=====
+
+Examples:
+
+put the icon of cd btn "myBtn" into z
+
+
+=====
+btn: label
+=====
+
+Examples:
+
+put the label of cd btn "myBtn" into z
+
+
+=====
+btn: showlabel
+=====
+
+Examples:
+
+put the showlabel of cd btn "myBtn" into z
+
+
+=====
+btn: visible
+=====
+
+Examples:
+
+put the visible of cd btn "myBtn" into z
+
+
+=====
+btn: textfont
+=====
+
+Examples:
+
+put the textfont of cd btn "myBtn" into z
+
+
+=====
+btn: textsize
+=====
+
+Examples:
+
+put the textsize of cd btn "myBtn" into z
+
+
+=====
+btn: textalign
+=====
+
+Examples:
+
+put the textalign of cd btn "myBtn" into z
+
+
+=====
+btn: script
+=====
+
+Examples:
+
+put the script of cd btn "myBtn" into z
+
+
+=====
+btn: textstyle
+=====
+
+Examples:
+
+put the textstyle of cd btn "myBtn" into z
+
+
+=====
+btn: style
+=====
+
+Examples:
+
+put the style of cd btn "myBtn" into z
+
+
+=====
+btn: id
+=====
+
+Examples:
+
+put the id of cd btn "myBtn" into z
+
+
+=====
+btn: long id
+=====
+
+Examples:
+
+put the long id of cd btn "myBtn" into z
+
+
+=====
+btn: abbrev id
+=====
+
+Examples:
+
+put the abbrev id of cd btn "myBtn" into z
+
+
+=====
+btn: short id
+=====
+
+Examples:
+
+put the short id of cd btn "myBtn" into z
+
+
+=====
+btn: name
+=====
+
+Examples:
+
+put the name of cd btn "myBtn" into z
+
+
+=====
+btn: long name
+=====
+
+Examples:
+
+put the long name of cd btn "myBtn" into z
+
+
+=====
+btn: abbrev name
+=====
+
+Examples:
+
+put the abbrev name of cd btn "myBtn" into z
+
+
+=====
+btn: short name
+=====
+
+Examples:
+
+put the short name of cd btn "myBtn" into z
+
+=====
+fld: width
+=====
+
+Examples:
+
+put the width of cd fld "myFld" into z
+
+
+=====
+fld: height
+=====
+
+Examples:
+
+put the height of cd fld "myFld" into z
+
+
+=====
+fld: left
+=====
+
+Examples:
+
+put the left of cd fld "myFld" into z
+
+
+=====
+fld: top
+=====
+
+Examples:
+
+put the top of cd fld "myFld" into z
+
+
+=====
+fld: right
+=====
+
+Examples:
+
+put the right of cd fld "myFld" into z
+
+
+=====
+fld: bottom
+=====
+
+Examples:
+
+put the bottom of cd fld "myFld" into z
+
+
+=====
+fld: topleft
+=====
+
+Examples:
+
+put the topleft of cd fld "myFld" into z
+
+
+=====
+fld: botright
+=====
+
+Examples:
+
+put the botright of cd fld "myFld" into z
+
+
+=====
+fld: rect
+=====
+
+Examples:
+
+put the rect of cd fld "myFld" into z
+
+
+=====
+fld: loc
+=====
+
+Examples:
+
+put the loc of cd fld "myFld" into z
+
+
+=====
+fld: bottomright
+=====
+
+Examples:
+
+put the bottomright of cd fld "myFld" into z
+
+
+=====
+fld: rectangle
+=====
+
+Examples:
+
+put the rectangle of cd fld "myFld" into z
+
+
+=====
+fld: location
+=====
+
+Examples:
+
+put the location of cd fld "myFld" into z
+
+
+=====
+fld: dontwrap
+=====
+
+Examples:
+
+put the dontwrap of cd fld "myFld" into z
+
+
+=====
+fld: enabled
+=====
+
+Examples:
+
+put the enabled of cd fld "myFld" into z
+
+
+=====
+fld: locktext
+=====
+
+Examples:
+
+put the locktext of cd fld "myFld" into z
+
+
+=====
+fld: singleline
+=====
+
+Examples:
+
+put the singleline of cd fld "myFld" into z
+
+
+=====
+fld: scroll
+=====
+
+Examples:
+
+put the scroll of cd fld "myFld" into z
+
+
+=====
+fld: defaulttextfont
+=====
+
+If the user deletes all text in a field and then types a letter, the font of this letter will be determined by the defaulttextfont.
+
+Examples:
+
+put the defaulttextfont of cd fld "myFld" into z
+
+
+=====
+fld: defaulttextsize
+=====
+
+If the user deletes all text in a field and then types a letter, the size of this letter will be determined by the defaulttextsize.
+
+Examples:
+
+put the defaulttextsize of cd fld "myFld" into z
+
+
+=====
+fld: visible
+=====
+
+Examples:
+
+put the visible of cd fld "myFld" into z
+
+
+=====
+fld: textalign
+=====
+
+Examples:
+
+put the textalign of cd fld "myFld" into z
+
+
+=====
+fld: alltext
+=====
+
+Examples:
+
+put the alltext of cd fld "myFld" into z
+
+
+=====
+fld: defaulttextstyle
+=====
+
+If the user deletes all text in a field and then types a letter, the style of this letter will be determined by the defaulttextstyle.
+
+Examples:
+
+put the defaulttextstyle of cd fld "myFld" into z
+
+
+=====
+fld: style
+=====
+
+Examples:
+
+put the style of cd fld "myFld" into z
+
+
+=====
+fld: textstyle
+=====
+
+By default, applies the property to the entire field.
+`set the textstyle of cd fld "myFld" to "bold"
+set the textstyle of cd fld "myFld" to "bold,italic"
+set the textstyle of cd fld "myFld" to "plain"
+put the textstyle of cd fld "myFld" into z`
+
+We now support getting and setting by chunk!
+`set the textstyle of char 3 to 4 of cd fld "myFld" to "bold"
+put the textstyle of char 3 to 4 of cd fld "myFld" into z`
+
+When querying for a property and there are multiple values,
+returns the string "mixed".
+
+
+=====
+fld: textfont
+=====
+
+By default, applies the property to the entire field.
+`set the textfont of cd fld "myFld" to "chicago"
+put the textfont of cd fld "myFld" into z`
+
+We now support getting and setting by chunk!
+`set the textfont of char 3 to 4 of cd fld "myFld" to "geneva"
+put the textfont of char 3 to 4 of cd fld "myFld" into z`
+
+When querying for a property and there are multiple values,
+returns the string "mixed".
+
+
+=====
+fld: textsize
+=====
+
+By default, applies the property to the entire field.
+`set the textsize of cd fld "myFld" to "chicago"
+put the textsize of cd fld "myFld" into z`
+
+We now support getting and setting by chunk!
+`set the textsize of char 3 to 4 of cd fld "myFld" to "geneva"
+put the textsize of char 3 to 4 of cd fld "myFld" into z`
+
+When querying for a property and there are multiple values,
+returns the string "mixed".
+
+=====
+fld: id
+=====
+
+Examples:
+
+put the id of cd fld "myFld" into z
+
+
+=====
+fld: long id
+=====
+
+Examples:
+
+put the long id of cd fld "myFld" into z
+
+
+=====
+fld: abbrev id
+=====
+
+Examples:
+
+put the abbrev id of cd fld "myFld" into z
+
+
+=====
+fld: short id
+=====
+
+Examples:
+
+put the short id of cd fld "myFld" into z
+
+
+=====
+fld: name
+=====
+
+Examples:
+
+put the name of cd fld "myFld" into z
+
+
+=====
+fld: long name
+=====
+
+Examples:
+
+put the long name of cd fld "myFld" into z
+
+
+=====
+fld: abbrev name
+=====
+
+Examples:
+
+put the abbrev name of cd fld "myFld" into z
+
+
+=====
+fld: short name
+=====
+
+Examples:
+
+put the short name of cd fld "myFld" into z
+
+=====
+card: id
+=====
+
+Examples:
+
+put the id of card id 1011 into z
+
+
+=====
+card: long id
+=====
+
+Examples:
+
+put the long id of card id 1011 into z
+
+
+=====
+card: abbrev id
+=====
+
+Examples:
+
+put the abbrev id of card id 1011 into z
+
+
+=====
+card: short id
+=====
+
+Examples:
+
+put the short id of card id 1011 into z
+
+
+=====
+card: name
+=====
+
+Examples:
+
+put the name of card id 1011 into z
+
+
+=====
+card: long name
+=====
+
+Examples:
+
+put the long name of card id 1011 into z
+
+
+=====
+card: abbrev name
+=====
+
+Examples:
+
+put the abbrev name of card id 1011 into z
+
+
+=====
+card: short name
+=====
+
+Examples:
+
+put the short name of card id 1011 into z
+
+=====
+global: version
+=====
+
+Examples:
+
+put the version into z
+
+
+=====
+global: long version
+=====
+
+Examples:
+
+put the long version into z
+
+
+=====
+global: itemdelimiter
+=====
+
+Examples:
+
+put the itemdelimiter into z
+
+
+=====
+global: idlerate
+=====
+
+Examples:
+
+set the idlerate to "default"
+set the idlerate to "faster"
+
+
+
+=====
+global: environment
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the environment into z
+
+
+=====
+global: freesize
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the freesize into z
+
+
+=====
+global: size
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the size into z
+
+
+=====
+global: stacksinuse
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the stacksinuse into z
+
+
+=====
+global: suspended
+=====
+(Deprecated and hard-coded, for backwards compatibility only)
+
+Examples:
+
+put the suspended into z
+

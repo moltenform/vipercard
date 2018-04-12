@@ -1,0 +1,564 @@
+
+
+=====
+add {number} to [chunk of] {container}
+=====
+Adds the value of number to the number in a container.
+
+Examples:
+
+put 2 into x
+add 3 to x
+answer x -- will display "5"
+
+put "1,2,3" into x
+add 3 to item 2 of x
+answer x -- will display "1,5,3"
+
+=====
+answer {text}
+answer {text} with {option1} or {option2} [or {option3}]
+=====
+Displays a dialog box.
+
+Examples:
+
+answer "abc" -- will display "abc"
+
+answer "are you sure?" with "OK" or "cancel" 
+-- user can choose OK or cancel
+put it into whichChosen
+if whichChosen is 1 then
+    answer "clicked OK"
+else if whichChosen is 2 then
+    answer "clicked cancel"
+end if
+
+=====
+ask {text}
+ask {text} with {defaulttext}
+=====
+Displays a dialog box allowing the user to type in a response.
+If the user clicks Cancel, the result will be an empty string "".
+
+Examples:
+
+ask "what is your favorite color?" with "blue"
+put it into favColor
+answer ("you chose" && favColor)
+
+=====
+beep
+=====
+
+Play the system beep sound.
+
+=====
+play
+=====
+
+Play a sound effect.
+
+For example, to play a chime sound,
+
+`play "glider_1_Extra" load
+play "glider_1_Extra"`
+
+You should load the sounds you will use in advance,
+such as in a game initialize() routine,
+so that when you play them, there will not be a delay.
+
+ViperCard can play the following sounds:
+
+`glider_1_Aww
+glider_1_Bass
+glider_1_BeamIn
+glider_1_BlowerOn
+glider_1_Bounce
+glider_1_Clock
+glider_1_Crunch
+glider_1_Drip
+glider_1_Energize
+glider_1_Extra
+glider_1_FireBand
+glider_1_GetBand
+glider_1_GoodMove
+glider_1_GreaseFall
+glider_1_Guitar
+glider_1_Hey!
+glider_1_Lightning
+glider_1_LightsOn
+glider_1_Pop
+glider_1_Push
+glider_1_Shredder
+glider_1_Tick
+glider_1_ToastDrop
+glider_1_ToastJump
+glider_1_Yow!
+glider_1_Zap`
+
+=====
+choose {toolname} tool
+=====
+
+Use the choose command for programmatically drawing pictures.
+See the example.
+Doesn't set the actual tool, which is always Browse when scripts 
+are running.
+See also: click, drag.
+
+Examples:
+
+choose "pencil" tool
+click at 10,20
+-- this draws a black pixel at the coordinates x=10, y=20
+
+-- Currently supported tools include:
+brush
+bucket
+pencil
+line
+rect
+oval
+roundrect
+curve
+spray
+
+=====
+click at {x}, {y}
+=====
+Use the click command for programmatically drawing pictures.
+Remember to first use the choose command to indicate what to 
+draw.
+
+Examples:
+
+choose "pencil" tool
+click at 10,20
+-- this draws a pixel at the coordinates x=10, y=20
+
+=====
+drag from {x1}, {y1} to {x2}, {y2}
+=====
+Use the drag command for programmatically drawing pictures.
+Remember to first use the choose command to indicate what to 
+draw.
+
+Examples:
+
+choose "line" tool
+drag from 10,20 to 30,40
+-- this draws a line starting at the coordinates (10,20) 
+-- ending at (30,40)
+
+=====
+create btn|fld
+=====
+This feature will arrive in a future version...
+
+=====
+lock___screen
+=====
+This feature will arrive in a future version...
+
+=====
+unlock___screen
+=====
+This feature will arrive in a future version...
+
+=====
+delete char {i} of {container}
+delete char {i} to {j} of {container}
+delete btn|fld
+=====
+
+Examples:
+
+put "abcde" into x
+delete char 2 of x
+answer x -- shows "acde"
+
+put "abcde" into x
+delete char 2 to 4 of x
+answer x -- shows "ae"
+
+As far as deleting a button or field, this feature will arrive in a 
+future version...
+
+=====
+disable {button}
+=====
+Disables a button (sets the "enabled" property to true, so that the
+button no longer responds to clicks).
+
+=====
+enable {button}
+=====
+Enables a button (sets the "enabled" property to false, so that the
+button is no longer disabled).
+
+=====
+hide {button|field}
+=====
+Hides a button or field.
+
+=====
+show {button|field}
+=====
+Shows a button or field.
+
+
+=====
+get {expression}
+=====
+Evaluates any expression and saves the result to the variable "it".
+
+Not very useful compared with the 'put' command, but it is here
+for tradition's sake.
+
+Examples:
+
+get 2+3
+put it into x
+answer x -- shows 5
+
+get the width of cd btn "myBtn"
+put it into x
+answer x -- shows the width of the specified button
+
+=====
+put {expression} into {container}
+=====
+Evaluates any expression and saves the result to a variable or 
+container.
+
+Examples:
+
+put "hello" into cd fld "message"
+
+put 2+3 into x
+answer x -- shows 5
+
+put "aa,bb,cc" into x
+put "11" into item 2 of x
+answer x -- shows "aa,11,cc"
+
+put "abc" into x
+put "q" into char 2 of x
+answer x -- shows "aqc"
+
+put "appended text" after x
+put "prepended text" before x
+
+=====
+divide [chunk of] {container} by {number}
+=====
+Divides the number in a container by a number.
+
+Examples:
+
+put 12 into x
+divide x by 3
+answer x -- will display "4"
+
+put "1,12,3" into x
+divide item 2 of x by 3
+answer x -- will display "1,4,3"
+
+=====
+multiply [chunk of] {container} by {number}
+=====
+Multiplies the number in a container by a number.
+
+Examples:
+
+put 12 into x
+multiply x by 3
+answer x -- will display "36"
+
+put "1,12,3" into x
+multiply item 2 of x by 3
+answer x -- will display "1,36,3"
+
+=====
+subtract [chunk of] {container} from {number}
+=====
+Subtracts a number from the number in a container.
+
+Examples:
+
+put 12 into x
+subtract 3 from x
+answer x -- will display "9"
+
+put "1,12,3" into x
+subtract 3 from item 2 of x
+answer x -- will display "1,9,3"
+
+=====
+go {number}
+go {ordinal}
+go {relativePosition}
+=====
+Go to a different card.
+
+Examples:
+
+go to card 1 -- goes to first card
+go first -- goes to first card
+go last -- goes to last card
+go next -- goes to the next card
+go prev -- goes to the previous card
+
+The following are supported:
+last
+middle
+any
+first
+second
+third
+fourth
+fifth
+sixth
+seventh
+eigth
+ninth
+tenth
+next
+previous
+this
+mid
+prev
+
+=====
+set the {property} of {button|field} to {value}
+set the {property} to {value}
+set the {chunkproperty} of {chunk} of {field} to {value}
+=====
+Use the set command to change a property.
+
+Some example properties:
+
+`set the width of cd btn "myButton" to 100
+set the topLeft of cd btn "myButton" to 24, 25
+put the long name of btn "myButton" into x
+set the textsize of char 2 to 4 of cd fld "myFld" to 18 
+set the itemdelimiter to "|"`
+
+See the "Properties" section of documentation for more.
+
+=====
+sort [lines|items|chars] of {container}
+sort descending [lines|items|chars] of {container}
+sort [lines|items|chars] of {container} [numeric|text|international]
+=====
+
+Sort styles:
+For text sorting (default), compares text, not case sensitive.
+For numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
+For international sorting, compares text using current locale.
+
+Examples:
+
+put "aa,cc,bb" into x
+sort items of x
+answer x -- displays "aa,bb,cc"
+
+=====
+wait {number} [seconds|milliseconds|ms|ticks]
+=====
+Pauses the script.
+
+Examples:
+
+wait 500 ms -- pauses for half a second.
+
+(A paused script can be terminated by clicking the Stop icon in the
+navigation palette, or by changing to the button or field tool.)
+
+=====
+global {variableName}
+=====
+Indicates that a variable is a global.
+1) it can be accessed from any other script
+2) the contents are saved even after the function is complete.
+The contents are lost when the stack is exited, however, and are not saved to disk.
+
+Examples:
+
+global currentData1, currentData2
+put "stored 1" into currentData1
+put "stored 2" into currentData2
+
+=====
+return {expression}
+=====
+return a value from the current function.
+Note: no lines of code after the return statement will be run.
+
+Examples:
+
+function myAddition p1, p2
+    return p1 + p2
+    answer "this line will never be reached"
+end myAddition
+on mouseUp
+    put myAddition(1,2) into x
+end mouseUp
+
+=====
+next___repeat
+=====
+Inside a loop, go back to the top of the loop, skipping the next 
+line(s) of code. Equivalent to "continue" in C.
+
+Examples:
+
+repeat with x = 1 to 3
+    if x == 2 then
+        next repeat
+    end if
+    answer x
+end repeat
+-- displays 1
+-- displays 3
+-- and does not display 2
+
+=====
+exit___repeat
+=====
+Exit the current loop.
+Equivalent to "break" in C.
+
+Examples:
+
+repeat with x = 1 to 3
+    if x == 2 then
+        break
+    end if
+    answer x
+end repeat
+-- displays 1
+-- and does not display 2 or 3
+
+=====
+if/then
+=====
+
+Like in C, if a branch can be taken, all other else branches
+will be skipped, as in the third example below.
+
+Examples:
+
+if x > 0 then
+    answer "x is greater than 0"
+end if
+
+if x > 0 then
+    answer "x is greater than 0"
+else
+    answer "x is not greater than 0"
+end if
+
+if 3+3 is 6 then
+    answer "yes"
+else if 2+2 is 4 then
+    answer "not run, even though it is true"
+end if
+
+if x > 50 then
+    answer "x is greater than 50"
+else if x > 40 then
+    answer "x is greater than 40"
+else
+    answer "x is not greater than 40"
+end if
+
+=====
+repeat
+=====
+Use to create a loop.
+
+Examples:
+
+repeat with x = 1 to 5
+    answer ("x is now" & x)
+end repeat
+
+repeat with x = 5 down to 1
+    answer ("x is now" & x)
+end repeat
+
+repeat 3 times
+    answer "hi"
+end repeat
+
+repeat forever
+    answer "this is an infinite loop"
+end repeat
+
+put 0 into counter
+repeat forever
+    answer "but not this"
+    add 1 to counter
+    if counter > 3 then
+        exit repeat
+    end if
+end repeat
+
+put 0 into counter
+repeat until counter > 3
+    add 1 to counter
+end repeat
+
+put 0 into counter
+repeat while counter <= 3
+    add 1 to counter
+end repeat
+
+=====
+exit
+=====
+Exits the current function, skipping over any subsequent lines 
+of code. Similar to return, but does not return a value.
+
+Examples:
+
+on mouseUp
+    put cd fld "fld1" into x
+    if x is not a number then
+        answer "you did not type a number"
+        exit mouseUp
+    end if
+    put x * 2 into cd fld "fld1"
+end mouseUp
+
+
+=====
+pass
+=====
+Exits the current function and calls a function higher in the
+message hierarchy. For example, if a button has the script
+`on mouseUp
+    answer "button handling the event"
+end mouseUp
+and the current card has the script
+on mouseUp
+    answer "card handling the event"
+end mouseUp`
+and the button is clicked,
+only the button's code will be run.
+
+If you want both to be run, you can use the pass command.
+If a button has the script
+`on mouseUp
+    answer "button handling the event"
+    pass mouseUp
+    -- any code here will be skipped
+end mouseUp`
+and the current card has the script
+`on mouseUp
+    answer "card handling the event"
+end mouseUp`
+and the button is clicked,
+both will be run.

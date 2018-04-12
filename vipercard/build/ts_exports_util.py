@@ -143,3 +143,14 @@ def runProcess(listArgs, shell=False, createNoWindow=True,
     
     return retcode, stdout, stderr
 
+def takeBatchOnArbitraryIterable(iterable, size):
+    import itertools
+    it = iter(iterable)
+    item = list(itertools.islice(it, size))
+    while item:
+        yield item
+        item = list(itertools.islice(it, size))
+
+def takeBatch(l, n):
+    """ Yield successive n-sized chunks from l."""
+    return list(takeBatchOnArbitraryIterable(l, n))
