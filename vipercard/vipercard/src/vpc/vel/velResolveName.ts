@@ -2,7 +2,7 @@
 /* auto */ import { O, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { checkThrowEq, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { PropAdjective, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';

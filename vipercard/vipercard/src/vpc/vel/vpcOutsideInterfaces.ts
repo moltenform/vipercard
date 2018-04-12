@@ -4,11 +4,11 @@
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcBuiltinMsg, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcBuiltinMsg, VpcChunkPreposition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 
@@ -71,7 +71,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     SetSpecialVar(varname: string, v: VpcVal): void;
     ResolveContainerWritable(container: RequestedContainerRef): WritableContainer;
 
-    ContainerWrite(contref: RequestedContainerRef, newcontent: string, prep: RequestedChunkTextPreposition): void;
+    ContainerWrite(contref: RequestedContainerRef, newcontent: string, prep: VpcChunkPreposition): void;
     ContainerModify(contref: RequestedContainerRef, fn: (s: string) => string): void;
     SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void;
     ElementById(id: O<string>): O<VpcElBase>;

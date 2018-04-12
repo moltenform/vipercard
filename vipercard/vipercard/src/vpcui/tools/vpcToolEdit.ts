@@ -31,13 +31,13 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
             this.appli.setOption('selectedVelId', '');
         } else if (d.el && d.el.id.startsWith('VpcModelRender$$')) {
             // click on an item to select it
-            let velid = this.cbModelRender().elIdToVelId(d.el.id) || '';
-            if (velid.length && d.el.typename === 'UI512ElTextField') {
+            let velId = this.cbModelRender().elIdToVelId(d.el.id) || '';
+            if (velId.length && d.el.typename === 'UI512ElTextField') {
                 this.appli.setTool(VpcTool.Field);
-                this.appli.setOption('selectedVelId', velid);
-            } else if (velid.length && d.el.typename === 'UI512ElementButtonBase') {
+                this.appli.setOption('selectedVelId', velId);
+            } else if (velId.length && d.el.typename === 'UI512ElementButtonBase') {
                 this.appli.setTool(VpcTool.Button);
-                this.appli.setOption('selectedVelId', velid);
+                this.appli.setOption('selectedVelId', velId);
             } else {
                 this.appli.setOption('selectedVelId', '');
             }

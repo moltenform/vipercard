@@ -27,8 +27,8 @@ export class VpcPresenter extends VpcPresenterInit {
         this.appli.getCodeExec().forceStopRunning();
 
         this.appli.undoableAction(() => {
-            // use current card if velid is unknown
-            let velId = scriptErr.velid;
+            /* use current card if velId is unknown */
+            let velId = scriptErr.velId;
             velId = velId || this.appli.getModel().getCurrentCard().id;
             let vel = this.appli.getModel().findByIdUntyped(velId);
             vel = vel || this.appli.getModel().getCurrentCard();
@@ -44,9 +44,9 @@ export class VpcPresenter extends VpcPresenterInit {
                 return;
             }
 
-            // move to the right card if necessary.
-            // for example "send myevent to btn 4 of cd 5"
-            // if there is an error in that script, we need to be on cd 5 to edit that script
+            /* move to the right card if necessary. */
+            /* for example "send myevent to btn 4 of cd 5" */
+            /* if there is an error in that script, we need to be on cd 5 to edit that script */
             if (vel.getType() === VpcElType.Card) {
                 this.appli.setOption('currentCardId', vel.id);
             } else if (vel.getType() === VpcElType.Bg) {
@@ -60,12 +60,12 @@ export class VpcPresenter extends VpcPresenterInit {
 
             this.setTool(VpcTool.Button);
 
-            // set the runtime flags
+            /* set the runtime flags */
             this.appli.getCodeExec().lastEncounteredScriptErr = scriptErr;
             this.appli.setOption('selectedVelId', vel.id);
             this.appli.setOption('viewingScriptVelId', vel.id);
 
-            // open the code editor at the offending line
+            /* open the code editor at the offending line */
             this.lyrPropPanel.updateUI512Els();
             this.lyrPropPanel.editor.refreshFromModel(this.app);
             this.lyrPropPanel.editor.scrollToErrorPosition(this);
@@ -90,19 +90,19 @@ export class VpcPresenter extends VpcPresenterInit {
 
             this.lyrPaintRender.deleteTempPaintEls();
             this.setCurrentFocus(undefined);
-            // especially important when going from edit to browse,
-            // let's say you've set the enabled of a button to false,
-            // need to redo modelRender so that it is actually enabled==false not just enabledstyle
+            /* especially important when going from edit to browse, */
+            /* let's say you've set the enabled of a button to false, */
+            /* need to redo modelRender so that it is actually enabled==false not just enabledstyle */
             this.lyrModelRender.fullRedrawNeeded();
 
             this.appli.getModel().productOpts.allowSetCurrentTool = true;
             this.appli.setOption('currentTool', next);
             this.appli.getModel().productOpts.allowSetCurrentTool = false;
 
-            // don't do this here, do this in the tool pallette mouseup instead
-            // so when you are going through undo states, you'll see the script window and btn props window
-            // this.appli.setOption('viewingScriptVelId', '')
-            // this.appli.setOption("selectedVelId", '');
+            /* don't do this here, do this in the tool pallette mouseup instead */
+            /* so when you are going through undo states, you'll see the script window and btn props window */
+            /* this.appli.setOption('viewingScriptVelId', '') */
+            /* this.appli.setOption("selectedVelId", ''); */
             this.refreshCursor();
         }
     }
@@ -127,8 +127,8 @@ export class VpcPresenter extends VpcPresenterInit {
         return modalDlg;
     }
 
-    // after calling this, you should exit the current handler and not run any other code,
-    // because if other code is run that shows a dialog box, we'll throw an exception
+    /* after calling this, you should exit the current handler and not run any other code, */
+    /* because if other code is run that shows a dialog box, we'll throw an exception */
     answerMsg(prompt: string, fnOnResult?: (n: number) => void, choice1?: string, choice2?: string, choice3?: string) {
         let resp = this.getToolResponse(this.getTool());
         resp.cancelCurrentToolAction();
@@ -137,8 +137,8 @@ export class VpcPresenter extends VpcPresenterInit {
         assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'expect to have been created');
     }
 
-    // after calling this, you should exit the current handler and not run any other code,
-    // because if other code is run that shows a dialog box, we'll throw an exception
+    /* after calling this, you should exit the current handler and not run any other code, */
+    /* because if other code is run that shows a dialog box, we'll throw an exception */
     askMsg(prompt: string, defText: string, fnOnResult: (ret: O<string>, n: number) => void) {
         let resp = this.getToolResponse(this.getTool());
         resp.cancelCurrentToolAction();
@@ -223,8 +223,8 @@ export class VpcPresenter extends VpcPresenterInit {
                 this.lyrModelRender.needUIToolsRedraw = false;
                 this.refreshCursor();
             } catch (e) {
-                // we'll throw the error afterwards
-                // otherwise if there's an assert we'd get an unpleasant loop of asserts
+                /* we'll throw the error afterwards */
+                /* otherwise if there's an assert we'd get an unpleasant loop of asserts */
                 er = e;
             }
         }
@@ -263,7 +263,7 @@ export class VpcPresenter extends VpcPresenterInit {
     exit(s: string) {
         let doExit = (n = 0) => {
             if (n === 0) {
-                // scribble over everything to make sure no-one reuses it.
+                /* scribble over everything to make sure no-one reuses it. */
                 this.listeners = [];
                 this.appli.destroy();
                 this.appli = undefined as any; /* destroy() */
@@ -306,7 +306,7 @@ export class VpcPresenter extends VpcPresenterInit {
 
     makePart(type: VpcElType) {
         const defaultBtnW = 100;
-        const defaultBtnH = 58; // tall enough to show an icon
+        const defaultBtnH = 58; /* tall enough to show an icon */
         const defaultFldW = 100;
         const defaultFldH = 100;
         let w = 0;
@@ -343,12 +343,12 @@ export class VpcPresenter extends VpcPresenterInit {
             elfld.setProp('style', VpcValS('scrolling'));
         }
 
-        // save *before* setting selectedVelId
+        /* save *before* setting selectedVelId */
         this.lyrPropPanel.saveChangesToModel(false);
         this.lyrPropPanel.updateUI512Els();
         this.appli.setOption('selectedVelId', vel.id);
         this.appli.setOption('viewingScriptVelId', '');
-        // update before tool is set
+        /* update before tool is set */
         this.lyrPropPanel.updateUI512Els();
         this.setTool(type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field);
         return vel;
@@ -361,7 +361,7 @@ export class VpcPresenter extends VpcPresenterInit {
             let dupeSizable = dupe as VpcElSizable;
             checkThrow(dupeSizable && dupeSizable.isVpcElSizable, '');
             VpcUI512Serialization.copyAttrsOver(orig, dupe, orig.getAttributesList());
-            // move it a bit
+            /* move it a bit */
             let amtToMove = Util512.getRandIntInclusiveWeak(10, 50);
             dupeSizable.setDimensions(
                 Math.min(ScreenConsts.xAreaWidth, dupe.get_n('x') + amtToMove),
@@ -369,7 +369,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 dupe.get_n('w'),
                 dupe.get_n('h')
             );
-            // and compile its script too...
+            /* and compile its script too... */
             this.appli.getCodeExec().updateChangedCode(dupe, dupe.get_s('script'));
         } else {
             throw makeVpcInternalErr(msgNotification + lng("lngCan't paste this."));
@@ -377,8 +377,8 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     protected runUndoOrRedo(fn: () => boolean, msgIfFalse: string, isUndo: boolean) {
-        // if we selected/moved something, it "feels" like we moved it even though we
-        // haven't committed anything. so calling undo in this case should just cancel selection and not step backwards.
+        /* if we selected/moved something, it "feels" like we moved it even though we */
+        /* haven't committed anything. so calling undo in this case should just cancel selection and not step backwards. */
         let resp = this.getToolResponse(this.getTool());
         if (
             isUndo &&
@@ -393,8 +393,8 @@ export class VpcPresenter extends VpcPresenterInit {
             return;
         }
 
-        // did we just type something into properties...
-        // if so it feels more intuitive to not actually undo, but just erase the recent change.
+        /* did we just type something into properties... */
+        /* if so it feels more intuitive to not actually undo, but just erase the recent change. */
         if (isUndo && getToolCategory(this.getTool()) === VpcToolCtg.CtgEdit) {
             let areThereUnsavedChanges = false;
             this.appli.doWithoutAbilityToUndoExpectingNoChanges(() => {
@@ -416,14 +416,14 @@ export class VpcPresenter extends VpcPresenterInit {
         let done = fn();
         if (done) {
             this.appli.doWithoutAbilityToUndo(() => {
-                // check that the current card still exists, otherwise go to first card
+                /* check that the current card still exists, otherwise go to first card */
                 let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
                 let currentCard = this.appli.getModel().findById(currentCardId, VpcElCard);
                 if (!currentCard) {
                     this.appli.getModel().goCardRelative(OrdinalOrPosition.first);
                 }
 
-                // refresh everything
+                /* refresh everything */
                 this.lyrModelRender.fullRedrawNeeded();
             });
         } else {

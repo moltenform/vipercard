@@ -9,10 +9,10 @@
 /**
  * if isExclusive, a group of mutually exclusive radio buttons
  * if not isExclusive, a group of checkboxes
- * to use this composite, 
- * create an onMouseUp listener in your presenter 
+ * to use this composite,
+ * create an onMouseUp listener in your presenter
  * that forwards the event to this object's listenMouseUp
- * 
+ *
  * see uiDemoComposites for an example.
  */
 export class UI512CompRadioButtonGroup extends UI512CompBase {

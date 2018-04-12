@@ -1,6 +1,4 @@
 
-/* auto */ import { O, assertTrueWarn, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
@@ -13,10 +11,10 @@
 
 /**
  * a code editor
- * to use this composite, 
- * create an onKeyDown listener in your presenter 
+ * to use this composite,
+ * create an onKeyDown listener in your presenter
  * that forwards the event to this object's respondKeydown
- * 
+ *
  * see uiDemoComposites for an example.
  */
 export class UI512CompCodeEditor extends UI512CompBase {

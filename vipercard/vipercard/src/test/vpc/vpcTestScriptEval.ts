@@ -26,13 +26,13 @@ export class TestScriptEval extends TestVpcScriptRun {
         },
         'test_evalRuleExpr,RuleLvl1',
         () => {
-            // does the test infrastructure work
+            /* does the test infrastructure work */
             let batch: [string, string][];
             batch = [['123', '123'], ['1+2', '3'], ['"abc"', 'abc'], ['1+xyz', 'ERR:no variable found with this name']];
             this.testBatchEvaluate(batch);
 
             batch = [
-                // RuleExpr and/or with data types
+                /* RuleExpr and/or with data types */
                 ['true _and_ "true"', 'true'],
                 ['true _and_ "true "', 'true'],
                 ['true _and_ "true    "', 'true'],
@@ -40,7 +40,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['true _and_ 1', 'ERR:expected true or false'],
                 ['1 _and_ true', 'ERR:expected true or false'],
                 ['1 _and_ 1', 'ERR:expected true or false'],
-                // RuleExpr and /or
+                /* RuleExpr and /or */
                 ['true _and_ true', 'true'],
                 ['true _and_ false', 'false'],
                 ['false _and_ false', 'false'],
@@ -51,7 +51,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             this.testBatchEvalCommutative(batch);
 
             batch = [
-                // Lvl1Expression greater less, strings
+                /* Lvl1Expression greater less, strings */
                 ['"abc" _>=_ "abc"', 'true'],
                 ['"abc" _>=_ "abb"', 'true'],
                 ['"abc" _>=_ "abd"', 'false'],
@@ -68,7 +68,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['"abc" _>_ "abcd"', 'false'],
                 ['"abc" _>_ "abc "', 'false'],
                 ['"abc" _>_ " abc"', 'true'],
-                // Lvl1Expression eq, strings
+                /* Lvl1Expression eq, strings */
                 ['"abc" _=_ "abc"', 'true'],
                 ['"abc" _=_ "abb"', 'false'],
                 ['"abc" _=_ "abc "', 'false'],
@@ -82,7 +82,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             this.testBatchEvalInvertAndCommute(batch);
 
             batch = [
-                // Lvl1Expression string/number differences
+                /* Lvl1Expression string/number differences */
                 ['"z11" _>_ "z2"', 'false'],
                 ['"z11" _>_ "z2 "', 'false'],
                 ['"z 11" _>_ "z 2"', 'false'],
@@ -105,7 +105,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['"11" _>=_ "2 "', 'true'],
                 ['"11 " _>=_ "2 "', 'true'],
                 ['" 11 " _>=_ " 2 "', 'true'],
-                // Lvl1Expression greater less, numbers
+                /* Lvl1Expression greater less, numbers */
                 ['4 _>=_ 4', 'true'],
                 ['4.1 _>=_ 4', 'true'],
                 ['3.9 _>=_ 4', 'false'],
@@ -124,7 +124,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['-4 _>_ -4', 'false'],
                 ['-4 _>_ "-4"', 'false'],
                 ['-4 _>_ " -0004.000 "', 'false'],
-                // Lvl1Expression equality and inequality, see also vpcutils test of VpcEvalHelpers
+                /* Lvl1Expression equality and inequality, see also vpcutils test of VpcEvalHelpers */
                 ['456 _=_ 456', 'true'],
                 ['456 _=_ " 456 "', 'true'],
                 ['456 _=_ " 456"', 'true'],
@@ -139,12 +139,12 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['456 _=_ " 00456.000. "', 'false'],
                 ['456 _=_ "  456.0000000001 "', 'true'],
                 ['456 _=_ "  455.9999999999 "', 'true'],
-                // prefix, suffix
+                /* prefix, suffix */
                 ['123 _=_ 123', 'true'],
                 ['123 _=_ 1234', 'false'],
                 ['123 _=_ 12', 'false'],
                 ['123 _=_ -123', 'false'],
-                // different tokens with same meaning
+                /* different tokens with same meaning */
                 ['123 _=_ 123', 'true'],
                 ['123 _=_ 124', 'false'],
                 ['123 _=_ " 123 "', 'true'],
@@ -160,12 +160,12 @@ export class TestScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvalInvertAndCommute(batch);
 
-            // test chaining or any other that can't easily be unverted
+            /* test chaining or any other that can't easily be unverted */
             batch = [
                 ['true and true and true', 'true'],
                 ['true and true and true and true', 'true'],
                 ['true and true and false', 'false'],
-                // Lvl1Expression contains, strings
+                /* Lvl1Expression contains, strings */
                 ['"abc" contains "abc"', 'true'],
                 ['"abc" contains "abd"', 'false'],
                 ['"abc" contains "ab"', 'true'],
@@ -176,7 +176,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['"c" contains "abc"', 'false'],
                 ['"d" contains "abc"', 'false'],
                 ['"" contains "abc"', 'false'],
-                // can be chained, although this is weird
+                /* can be chained, although this is weird */
                 ['12 == 13 == 14', 'false'],
                 ['12 == 12 == true', 'true'],
                 ['12 == 12 == "true"', 'true'],
@@ -189,7 +189,7 @@ export class TestScriptEval extends TestVpcScriptRun {
         () => {
             let batch: [string, string][];
             batch = [
-                // Lvl2Expression, type check, invalid keywords
+                /* Lvl2Expression, type check, invalid keywords */
                 ['1 is a number1', 'ERR:needs one of {number|'],
                 ['1 is a numbe', 'ERR:needs one of {number|'],
                 ['1 is a abcdef', 'ERR:needs one of {number|'],
@@ -198,7 +198,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             this.testBatchEvaluate(batch);
 
             batch = [
-                // Lvl2Expression, type check
+                /* Lvl2Expression, type check */
                 ['12 _is_ a number', 'true'],
                 ['12.0 _is_ a number', 'true'],
                 ['12.01 _is_ a number', 'true'],
@@ -224,7 +224,10 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['"true" _is_ a logical', 'true'],
                 ['"false" _is_ a logical', 'true'],
                 ['" true" _is_ a logical', 'false'],
-                ['"true " _is_ a logical', 'true'], // weird, but confirmed in emulator
+
+                /* a bit weird, but confirmed in original product */
+                ['"true " _is_ a logical', 'true'],
+
                 ['("true" & cr) _is_ a logical', 'true'],
                 ['("true" & tab) _is_ a logical', 'true'],
                 ['("true   " & cr & cr & cr & tab & tab & tab) _is_ a logical', 'true'],
@@ -284,7 +287,7 @@ export class TestScriptEval extends TestVpcScriptRun {
 
             this.testBatchEvalInvert(batch);
             batch = [
-                // Lvl2Expression, is within
+                /* Lvl2Expression, is within */
                 ['"" _is_ in "abc"', 'true'],
                 ['"a" _is_ in "abc"', 'true'],
                 ['"c" _is_ in "abc"', 'true'],
@@ -332,7 +335,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['"abc" && 1', 'abc 1'],
                 ['1 && true', '1 true'],
                 ['true && 1', 'true 1'],
-                // chained
+                /* chained */
                 ['"a" & "b" & "c" & "d"', 'abcd'],
                 ['"a" & "b" && "c" & "d"', 'ab cd'],
                 ['"a" && "b" && "c" && "d"', 'a b c d'],
@@ -342,7 +345,7 @@ export class TestScriptEval extends TestVpcScriptRun {
         },
         'test_evalArithmetic',
         () => {
-            // the communitative ones, integer
+            /* the communitative ones, integer */
             let batch: [string, string][];
             batch = [
                 ['12 _+_ 34', '46'],
@@ -364,7 +367,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvalCommutative(batch, false);
 
-            // the communitative ones, floating point
+            /* the communitative ones, floating point */
             batch = [
                 ['12 _+_ 34.1', '46.1'],
                 ['12 _+_ " 34.1 "', '46.1'],
@@ -385,7 +388,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvalCommutative(batch, true);
 
-            // the non-communitative ones integer
+            /* the non-communitative ones integer */
             batch = [
                 ['12 - 34', '-22'],
                 ['12 - " 34 "', '-22'],
@@ -424,7 +427,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvaluate(batch, false);
 
-            // the non-communitative ones floating point
+            /* the non-communitative ones floating point */
             batch = [
                 ['12.1 - 3.4', '8.7'],
                 ['12.1 - 34', '-21.9'],
@@ -463,7 +466,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvaluate(batch, true);
 
-            // test chained
+            /* test chained */
             batch = [
                 ['12 + 34 + 56 + 78', '180'],
                 ['12 + 34 + 56', '102'],
@@ -476,7 +479,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvaluate(batch, true);
 
-            // test wrong types given (communitative works)
+            /* test wrong types given (communitative works) */
             batch = [
                 ['12 _+_ "12a"', 'ERR:expected a number'],
                 ['12 _+_ "12 a"', 'ERR:expected a number'],
@@ -506,12 +509,12 @@ export class TestScriptEval extends TestVpcScriptRun {
         () => {
             let batch: [string, string][];
             batch = [
-                // parens
+                /* parens */
                 ['12', '12'],
                 ['(12)', '12'],
                 ['((12))', '12'],
                 ['((12.123))', '12.123'],
-                // negative
+                /* negative */
                 ['-12', '-12'],
                 ['-(-12)', '12'],
                 ['-(-(-12))', '-12'],
@@ -521,7 +524,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['- " 12 "', '-12'],
                 ['- " 12a "', 'ERR:expected a number'],
                 ['- " a12 "', 'ERR:expected a number'],
-                // positive (intentionally disabled)
+                /* positive (intentionally disabled) */
                 ['+12', 'ERR:"+" in the wrong place'],
                 ['+(+12)', 'ERR:"+" in the wrong place'],
                 ['+(+(+12))', 'ERR:"+" in the wrong place'],
@@ -531,7 +534,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['+ " 12 "', 'ERR:"+" in the wrong place'],
                 ['+ " 12a "', 'ERR:"+" in the wrong place'],
                 ['+ " a12 "', 'ERR:"+" in the wrong place'],
-                // logical not
+                /* logical not */
                 ['not true', 'false'],
                 ['not (not true)', 'true'],
                 ['not (not (not true))', 'false'],
@@ -546,7 +549,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvaluate(batch);
             batch = [
-                // chunk
+                /* chunk */
                 ['set the itemdelimiter to "," \\ "abc"', 'abc'],
                 ['char 1 of "abc"', 'a'],
                 ['char 3 of "abc"', 'c'],
@@ -565,12 +568,12 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['word 3 of "a b c"', 'c'],
                 ['word 1 to 3 of "a b c d"', 'a b c'],
                 ['word 2 to 4 of "a b c d"', 'b c d'],
-                // chunk on non strings
+                /* chunk on non strings */
                 ['char 1 of true', 't'],
                 ['char 3 of true', 'u'],
                 ['char 1 of 1234', '1'],
                 ['char 3 of 1234', '3'],
-                // everything
+                /* everything */
                 ['not word 2 of "a true b"', 'false'],
                 ['not word 2 of ("a true b")', 'false'],
                 ['not (word 2 of ("a true b"))', 'false'],
@@ -580,14 +583,14 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['- char 2 to 3 of "1234"', '-23'],
                 ['- char 2 to 3 of ("1234")', '-23'],
                 ['- (char 2 to 3 of ("1234"))', '-23'],
-                // composite chunks, currently needs parens
+                /* composite chunks, currently needs parens */
                 ['char 2 of (item 2 of "abc,def,ghi")', 'e'],
                 ['char 2 of (word 2 of (item 2 of "abc,d1 e2 f3,ghi"))', '2'],
                 ['char 2 of (word 2 of (item 2 of (line 2 of ("abc def" & newline & "abc,d1 e2 f3,ghi"))))', '2']
             ];
             this.testBatchEvaluate(batch);
             batch = [
-                // different chunk types
+                /* different chunk types */
                 ['char 1 to 3 of "abcd"', 'abc'],
                 ['first char of "abcd"', 'a'],
                 ['the first char of "abcd"', 'a'],
@@ -595,7 +598,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['the second char of "abcd"', 'b'],
                 ['("|" & any char of "abcd" & "|") is in "|a|b|c|d|"', 'true'],
 
-                // all OrdinalOrPosition on short
+                /* all OrdinalOrPosition on short */
                 ['first char of "abcd"', 'a'],
                 ['second char of "abcd"', 'b'],
                 ['third char of "abcd"', 'c'],
@@ -609,7 +612,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['middle char of "abcd"', 'c'],
                 ['last char of "abcd"', 'd'],
 
-                // all OrdinalOrPosition on long
+                /* all OrdinalOrPosition on long */
                 ['first char of "abcdefghijk"', 'a'],
                 ['second char of "abcdefghijk"', 'b'],
                 ['third char of "abcdefghijk"', 'c'],
@@ -623,7 +626,7 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['middle char of "abcdefghijk"', 'f'],
                 ['last char of "abcdefghijk"', 'k'],
 
-                // item and word OrdinalOrPosition
+                /* item and word OrdinalOrPosition */
                 ['first item of "ab,cd,ef,gh"', 'ab'],
                 ['second item of "ab,cd,ef,gh"', 'cd'],
                 ['middle item of "ab,cd,ef,gh"', 'ef'],
@@ -636,7 +639,7 @@ export class TestScriptEval extends TestVpcScriptRun {
             this.testBatchEvaluate(batch);
 
             batch = [
-                // chunk expressions
+                /* chunk expressions */
                 ['put 2 into x\\char x of "abcd"', 'b'],
                 ['put 2 into x\nput 3 into y\\char x to y of "abcd"', 'bc'],
                 ['put 2 into x\\char (x) of "abcd"', 'b'],
@@ -655,7 +658,7 @@ export class TestScriptEval extends TestVpcScriptRun {
 
             this.setCurrentCard(this.elIds.card_b_c);
             batch = [
-                // order of operations
+                /* order of operations */
                 ['2 * 3 + 4', '10'],
                 ['2 + 3 * 4', '14'],
                 ['2 * (3 + 4)', '14'],
@@ -671,13 +674,13 @@ export class TestScriptEval extends TestVpcScriptRun {
                 ['(false and true) is within "false"', 'true'],
                 ['false and (true is within "false")', 'false'],
 
-                // cycling through all expression levels
+                /* cycling through all expression levels */
                 ['false and false and false', 'false'],
                 ['false and false and (false)', 'false'],
                 ['false and (false and (false and (false)))', 'false'],
                 ['false or (false or (false or (true)))', 'true'],
 
-                // no short-circuit evaluation
+                /* no short-circuit evaluation */
                 ['the autohilite of cd btn "p1"', 'true'],
                 ['the autohilite of cd btn "notexist"', 'ERR:find the specified element'],
                 [
@@ -708,24 +711,24 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         () => {
             let batch: [string, string][];
 
-            // object resolution
+            /* object resolution */
             this.setCurrentCard(this.elIds.card_b_c);
             batch = [
-                // invalid
+                /* invalid */
                 [`the short id of xyz`, `ERR:We did not recognize`],
                 [`the short id of the xyz`, `ERR:We did not recognize`],
-                // target, me, productOpts
+                /* target, me, productOpts */
                 [`the short id of target`, `${this.elIds.btn_go}`],
                 [`the short id of the target`, `${this.elIds.btn_go}`],
                 [`the short id of me`, `${this.elIds.btn_go}`],
                 [`the short id of the me`, `${this.elIds.btn_go}`],
                 [`the short id of ${cProductName}`, `WILD`],
                 [`the short id of the ${cProductName}`, `WILD`],
-                // stack
+                /* stack */
                 [`the short id of this stack`, `this stack`],
                 [`the short id of next stack`, 'ERR:only accept referring to a stack'],
                 [`the short id of xyz stack`, 'ERR:only accept referring to a stack'],
-                // bg absolute
+                /* bg absolute */
                 [`the short id of bg id ${this.elIds.bg_a}`, `${this.elIds.bg_a}`],
                 [`the short id of bg id ${this.elIds.bg_c}`, `${this.elIds.bg_c}`],
                 [`the short id of bg id (${this.elIds.bg_c})`, `${this.elIds.bg_c}`],
@@ -740,7 +743,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of bg (3)`, `${this.elIds.bg_c}`],
                 [`the short id of bg -1`, `ERR:could not find the specified`],
                 [`the short id of bg 5`, `ERR:could not find the specified`],
-                // bg relative
+                /* bg relative */
                 [`the short id of this bg`, `${this.elIds.bg_b}`],
                 [`the short id of next bg`, `${this.elIds.bg_c}`],
                 [`the short id of first bg`, `${this.elIds.bg_a}`],
@@ -750,12 +753,12 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of the next bg`, `${this.elIds.bg_c}`],
                 [`the short id of xyz bg`, `ERR:Not a valid choice of OrdinalOrPosition`],
                 [`the short id of the xyz bg`, `ERR:Not a valid choice of OrdinalOrPosition`],
-                // bg with parent
+                /* bg with parent */
                 [`the short id of bg id ${this.elIds.bg_a} of this stack`, `${this.elIds.bg_a}`],
                 [`the short id of bg 1 of this stack`, `${this.elIds.bg_a}`],
                 [`the short id of bg "a" of this stack`, `${this.elIds.bg_a}`],
                 [`the short id of this bg of this stack`, `${this.elIds.bg_b}`],
-                // card absolute
+                /* card absolute */
                 [`the short id of card id ${this.elIds.card_a_a}`, `${this.elIds.card_a_a}`],
                 [`the short id of card id ${this.elIds.card_c_d}`, `${this.elIds.card_c_d}`],
                 [`the short id of card id (${this.elIds.card_c_d})`, `${this.elIds.card_c_d}`],
@@ -770,7 +773,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of card (3)`, `${this.elIds.card_b_c}`],
                 [`the short id of card -1`, `ERR:could not find`],
                 [`the short id of card 99`, `ERR:could not find`],
-                // card relative
+                /* card relative */
                 [`the short id of this card`, `${this.elIds.card_b_c}`],
                 [`the short id of next card`, `${this.elIds.card_b_d}`],
                 [`the short id of first card`, `${this.elIds.card_a_a}`],
@@ -780,7 +783,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of the next card`, `${this.elIds.card_b_d}`],
                 [`the short id of xyz card`, `ERR:Not a valid choice of OrdinalOrPosition`],
                 [`the short id of the xyz card`, `ERR:Not a valid choice of OrdinalOrPosition`],
-                // card with parent
+                /* card with parent */
                 [`the short id of card "d" of this bg`, `${this.elIds.card_b_d}`],
                 [`the short id of card "d" of bg "c"`, `${this.elIds.card_c_d}`],
                 [`the short id of card "d" of bg 3`, `${this.elIds.card_c_d}`],
@@ -790,7 +793,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of card 2 of bg 2`, `${this.elIds.card_b_c}`],
                 [`the short id of card 2 of bg 1`, `ERR: could not find the specified`],
                 [`the short id of card "d" of this bg of this stack`, `${this.elIds.card_b_d}`],
-                // field
+                /* field */
                 [`the short id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
                 [`the short id of cd fld id ${this.elIds.fld_c_d_1}`, `${this.elIds.fld_c_d_1}`],
                 [`the short id of cd fld id (${this.elIds.fld_c_d_1})`, `${this.elIds.fld_c_d_1}`],
@@ -800,7 +803,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of cd fld ("p2")`, `${this.elIds.fld_b_c_2}`],
                 [`the short id of cd fld "notfound"`, `ERR:could not find the specified`],
                 [`the short id of cd fld 1`, `ERR:we no longer support referring`],
-                // field with parent
+                /* field with parent */
                 [`the short id of cd fld id ${this.elIds.fld_b_c_1} of this cd`, `${this.elIds.fld_b_c_1}`],
                 [`the short id of cd fld id ${this.elIds.fld_c_d_1} of this cd`, `${this.elIds.fld_c_d_1}`],
                 [`the short id of cd fld "p1" of cd 1`, `ERR:could not find the specified`],
@@ -810,7 +813,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of cd fld "p1" of cd "d"`, `${this.elIds.fld_b_d_1}`],
                 [`the short id of cd fld "p1" of cd "d" of bg 3`, `${this.elIds.fld_c_d_1}`],
                 [`the short id of cd fld "p1" of cd "d" of bg 3 of this stack`, `${this.elIds.fld_c_d_1}`],
-                // button
+                /* button */
                 [`the short id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
                 [`the short id of cd btn id ${this.elIds.btn_c_d_1}`, `${this.elIds.btn_c_d_1}`],
                 [`the short id of cd btn id (${this.elIds.btn_c_d_1})`, `${this.elIds.btn_c_d_1}`],
@@ -820,7 +823,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of cd btn ("p2")`, `${this.elIds.btn_b_c_2}`],
                 [`the short id of cd btn "notfound"`, `ERR:could not find the specified`],
                 [`the short id of cd btn 1`, `ERR:we no longer support referring`],
-                // button with parent
+                /* button with parent */
                 [`the short id of cd btn id ${this.elIds.btn_b_c_1} of this cd`, `${this.elIds.btn_b_c_1}`],
                 [`the short id of cd btn id ${this.elIds.btn_c_d_1} of this cd`, `${this.elIds.btn_c_d_1}`],
                 [`the short id of cd btn "p1" of cd 1`, `ERR:could not find the specified`],
@@ -838,7 +841,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             let batch: [string, string][];
 
             batch = [
-                // basic type checking
+                /* basic type checking */
                 ['set the scroll of cd fld "p1" to ""\\0', 'ERR:expected an integer'],
                 ['set the scroll of cd fld "p1" to "10a"\\0', 'ERR:expected an integer'],
                 ['set the scroll of cd fld "p1" to "a10"\\0', 'ERR:expected an integer'],
@@ -848,7 +851,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the dontwrap of cd fld "p1" to "truea"\\0', 'ERR:expected true or false'],
                 ['set the dontwrap of cd fld "p1" to "tru"\\0', 'ERR:expected true or false'],
 
-                // get nonexistent props
+                /* get nonexistent props */
                 ['the notexist of cd fld "p1"', 'ERR:unknown property'],
                 ['the scrolla of cd fld "p1"', 'ERR:unknown property'],
                 ['the scrol of cd fld "p1"', 'ERR:unknown property'],
@@ -866,7 +869,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short cursor', 'ERR:does not take an adjective'],
                 ['the long cursor', 'ERR:does not take an adjective'],
 
-                // set nonexistent props
+                /* set nonexistent props */
                 ['set the notexist of cd fld "p1" to "abc"\\0', 'ERR:unknown property'],
                 ['set the scrolla of cd fld "p1" to 10\\0', 'ERR:unknown property'],
                 ['set the scrol of cd fld "p1" to 10\\0', 'ERR:unknown property'],
@@ -874,14 +877,14 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the selcaret of cd btn "p1" to 100\\0', 'ERR:unknown property'],
                 ['set the autohilite of cd fld "p1" to true\\0', 'ERR:unknown property'],
 
-                // nonsettable props
+                /* nonsettable props */
                 ['set the id of cd fld "p1" to 100\\0', 'ERR:unknown property'],
                 ['set the script of cd fld "p1" to "abc"\\0', 'ERR:unknown property']
             ];
             this.testBatchEvaluate(batch);
 
             batch = [
-                // product opts get
+                /* product opts get */
                 ['the xyz', "ERR:use 'sin(4)' instead"],
                 ['the long xyz', "ERR:use 'sin(4)' instead"],
                 ['the short xyz', "ERR:use 'sin(4)' instead"],
@@ -893,12 +896,12 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the long version', `${vpcversion}`],
                 ['the version', `${vpcversion[0]}.${vpcversion[1]}`],
 
-                // product opts set
+                /* product opts set */
                 ['set the itemdelimiter to "|" \\ the itemdelimiter', '|'],
                 ['item 2 of "a|b|c"', 'b'],
                 ['set the itemdelimiter to "," \\ the itemdelimiter', ','],
-                ['set the itemdelimiter to "" \\ 0', 'ERR:length of itemdel must be 1'],
-                ['set the itemdelimiter to ",," \\ 0', 'ERR:length of itemdel must be 1'],
+                ['set the itemdelimiter to "" \\ 0', 'ERR:length of itemDel must be 1'],
+                ['set the itemdelimiter to ",," \\ 0', 'ERR:length of itemDel must be 1'],
                 ['set the cursor to "plus" \\ the cursor', 'plus'],
                 ['set the cursor to "arrow" \\ the cursor', 'arrow']
             ];
@@ -908,12 +911,12 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.updateObjectScript(this.appl.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
             this.updateObjectScript(this.appl.model.stack.bgs[1].cards[1].id, 'on cdscript\nend cdscript');
             batch = [
-                // stack get and set
+                /* stack get and set */
                 ['length(the script of this stack) > 1', `true`],
                 ['the script of this stack', `${this.appl.model.stack.get_s('script')}`],
                 ['set the name of this stack to "newname" \\ the short name of this stack', 'newname'],
                 ['set the name of this stack to "teststack" \\ the short name of this stack', 'teststack'],
-                // bg get and set
+                /* bg get and set */
                 ['length(the script of bg 1) == 0', `true`],
                 ['the script of bg 1', ``],
                 ['length(the script of bg 2) > 1', `true`],
@@ -921,7 +924,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short name of bg 2', 'b'],
                 ['set the name of bg 2 to "newname" \\ the short name of bg 2', 'newname'],
                 ['set the name of bg 2 to "b" \\ the short name of bg 2', 'b'],
-                // card get and set
+                /* card get and set */
                 ['length(the script of cd 1) == 0', `true`],
                 ['the script of cd 1', ``],
                 ['length(the script of cd 3) > 1', `true`],
@@ -934,7 +937,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             this.setCurrentCard(this.elIds.card_b_c);
             batch = [
-                // size properties
+                /* size properties */
                 ['the left of cd btn "p1"', '0'],
                 ['the top of cd btn "p1"', '0'],
                 ['the width of cd btn "p1"', '0'],
@@ -966,25 +969,25 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the botright of cd btn "p1" to 40,60\\0', '0'],
                 ['the rect of cd btn "p1"', '10,20,40,60'],
 
-                // test loc with even widths
+                /* test loc with even widths */
                 ['set the rect of cd btn "p1" to 10,20,40,60\\0', '0'],
                 ['the loc of cd btn "p1"', '25,40'],
                 ['set the loc of cd btn "p1" to 26,41\\0', '0'],
                 ['the rect of cd btn "p1"', '11,21,41,61'],
 
-                // test loc with odd widths
+                /* test loc with odd widths */
                 ['set the rect of cd btn "p1" to 10,20,41,61\\0', '0'],
                 ['the loc of cd btn "p1"', '25,40'],
                 ['set the loc of cd btn "p1" to 26,41\\0', '0'],
                 ['the rect of cd btn "p1"', '11,21,42,62'],
 
-                // test loc with even widths
+                /* test loc with even widths */
                 ['set the rect of cd btn "p1" to 10,20,42,62\\0', '0'],
                 ['the loc of cd btn "p1"', '26,41'],
                 ['set the loc of cd btn "p1" to 26,41\\0', '0'],
                 ['the rect of cd btn "p1"', '10,20,42,62'],
 
-                // set name
+                /* set name */
                 [`the short name of cd btn id ${this.elIds.btn_b_c_1}`, 'p1'],
                 [
                     `set the name of cd btn id ${this.elIds.btn_b_c_1} to "newname" \\ the short name of cd btn id ${
@@ -999,7 +1002,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                     'p1'
                 ],
 
-                // type checking, coords
+                /* type checking, coords */
                 ['set the rect of cd btn "p1" to "10,20,30,40"\\0', '0'],
                 ['the rect of cd btn "p1"', '10,20,30,40'],
                 ['set the rect of cd btn "p1" to " 10 , 20 , 30 , 40 "\\0', '0'],
@@ -1022,7 +1025,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the topleft of cd btn "p1" to "10,20a"\\0', 'ERR:not an integer'],
                 ['set the topleft of cd btn "p1" to "10a,20"\\0', 'ERR:not an integer'],
 
-                // type checking, single values
+                /* type checking, single values */
                 ['set the left of cd btn "p1" to "-30"\\0', '0'],
                 ['the left of cd btn "p1"', '-30'],
                 ['set the left of cd btn "p1" to " 10 "\\0', '0'],
@@ -1042,7 +1045,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batchWithFld);
 
             batch = [
-                // btn simple get/set
+                /* btn simple get/set */
                 ['the autohilite of cd btn "p1"', 'true'],
                 ['set the autohilite of cd btn "p1" to false\\the autohilite of cd btn "p1"', 'false'],
                 ['the enabled of cd btn "p1"', 'true'],
@@ -1062,7 +1065,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the textsize of cd btn "p1"', '12'],
                 ['set the textsize of cd btn "p1" to 16\\the textsize of cd btn "p1"', '16'],
 
-                // btn validated get/set
+                /* btn validated get/set */
                 ['the style of cd btn "p1"', 'rectangle'],
                 ['set the style of cd btn "p1" to "xyz"\\0', 'ERR:Button style'],
                 ['set the style of cd btn "p1" to "radio"\\the style of cd btn "p1"', 'radio'],
@@ -1091,7 +1094,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
 
             batch = [
-                // field simple get/set
+                /* field simple get/set */
                 ['the dontwrap of cd fld "p1"', 'false'],
                 ['set the dontwrap of cd fld "p1" to true\\the dontwrap of cd fld "p1"', 'true'],
                 ['the enabled of cd fld "p1"', 'true'],
@@ -1112,7 +1115,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                     'helvetica'
                 ],
 
-                // validated get/set
+                /* validated get/set */
                 ['the defaulttextstyle of cd fld "p1"', 'plain'],
                 [
                     'set the defaulttextstyle of cd fld "p1" to "outline"\\the defaulttextstyle of cd fld "p1"',
@@ -1151,7 +1154,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             ];
             this.testBatchEvaluate(batch);
 
-            // setting style
+            /* setting style */
             const fld = this.appl.model.getById(this.elIds.fld_b_c_1, VpcElField);
             assertEq(UI512FldStyle.Rectangle, fld.get_n('style'), '1 |');
             batch = [
@@ -1164,8 +1167,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
             assertEq(UI512FldStyle.Transparent, fld.get_n('style'), '1z|');
 
-            // reading per-character formatting
-            // here's what we'll set it to: Courier/Bold/24"ab"Courier/ItalicShadow/18"cd"Times/Plain/18ef
+            /* reading per-character formatting */
+            /* here's what we'll set it to: Courier/Bold/24"ab"Courier/ItalicShadow/18"cd"Times/Plain/18ef */
             const fldPerChar = this.appl.model.getById(this.elIds.fld_b_c_2, VpcElField);
             let sfmt = '';
             sfmt += UI512DrawText.setFont('ab', new TextFontSpec('Courier', TextFontStyling.Bold, 24).toSpecString());
@@ -1176,7 +1179,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             sfmt += UI512DrawText.setFont('ef', new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString());
             this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
             batch = [
-                // non per-character properties
+                /* non per-character properties */
                 ['the defaulttextfont of cd fld "p2"', 'geneva'],
                 ['the defaulttextstyle of cd fld "p2"', 'plain'],
                 ['the defaulttextsize of cd fld "p2"', '12'],
@@ -1186,7 +1189,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the alltext of cd fld "p2"', 'abcdef'],
                 ['cd fld "p2"', 'abcdef'],
 
-                // read per-character!
+                /* read per-character! */
                 ['the textfont of char 1 to 4 of cd fld "p2"', 'Courier'],
                 ['the textfont of char 3 to 4 of cd fld "p2"', 'Courier'],
                 ['the textfont of char 3 to 5 of cd fld "p2"', 'mixed'],
@@ -1197,7 +1200,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the textsize of char 3 to 6 of cd fld "p2"', '18'],
                 ['the textsize of char 2 to 6 of cd fld "p2"', 'mixed'],
 
-                // getting most properties aren't supported for per-character
+                /* getting most properties aren't supported for per-character */
                 ['the textfont of char 1 to 2 of cd btn "p2"', 'ERR:NoViableAltException'],
                 ['the textfont of char 1 to 2 of cd 1', 'ERR:NoViableAltException'],
                 ['the textfont of char 1 to 2 of bg 1', 'ERR:NoViableAltException'],
@@ -1207,12 +1210,12 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             ];
             this.testBatchEvaluate(batch);
 
-            // formatting should have been preserved
+            /* formatting should have been preserved */
             let contents = fldPerChar.get_ftxt().toSerialized();
             assertEqWarn(sfmt, contents, '1y|');
 
             batch = [
-                // setting per-character formatting
+                /* setting per-character formatting */
                 [
                     'set the textfont of char 2 to 3 of cd fld "p2" to "geneva"\\the textfont of char 2 to 3 of cd fld "p2"',
                     'geneva'
@@ -1226,7 +1229,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                     '14'
                 ],
 
-                // confirm what was set
+                /* confirm what was set */
                 ['the textfont of char 1 to 1 of cd fld "p2"', 'Courier'],
                 ['the textfont of char 2 to 2 of cd fld "p2"', 'geneva'],
                 ['the textfont of char 3 to 3 of cd fld "p2"', 'geneva'],
@@ -1246,7 +1249,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the textsize of char 5 to 5 of cd fld "p2"', '18'],
                 ['the textsize of char 6 to 6 of cd fld "p2"', '14'],
 
-                // setting most properties aren't supported for per-character
+                /* setting most properties aren't supported for per-character */
                 ['set the textfont of char 1 to 2 of cd btn "p2" to "Geneva"\\0', 'ERR:NoViableAltException'],
                 ['set the textfont of char 1 to 2 of cd 1 to "Geneva"\\0', 'ERR:NoViableAltException'],
                 ['set the textfont of char 1 to 2 of bg 1 to "Geneva"\\0', 'ERR:NoViableAltException'],
@@ -1256,7 +1259,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             ];
             this.testBatchEvaluate(batch);
 
-            // confirm formatting
+            /* confirm formatting */
             contents = fldPerChar.get_ftxt().toSerialized();
             assertEqWarn(
                 '|Courier_24_+biuosdce|a|geneva_24_+biuosdce|b|geneva_18_b+iuo+sdce|c|Courier_18_bi+uosdce|d|Times_18_bi+uosdce|e|Times_14_biuosdce|f',
@@ -1264,7 +1267,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 '1x|'
             );
 
-            // all of these actions nuke formatting
+            /* all of these actions nuke formatting */
             let actions: [string, TextFontSpec][] = [
                 ['put "abcdef" into cd fld "p2"', new TextFontSpec('geneva', 0, 12)],
                 ['set the alltext of cd fld "p2" to "abcdef"', new TextFontSpec('geneva', 0, 12)],
@@ -1288,7 +1291,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ];
                 this.testBatchEvaluate(batch);
 
-                // formatting should have been lost
+                /* formatting should have been lost */
                 contents = fldPerChar.get_ftxt().toSerialized();
                 let expected = UI512DrawText.setFont('abcdef', expectedFont.toSpecString());
                 assertEq(expected, contents, '1v|');
@@ -1296,7 +1299,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             this.setCurrentCard(this.elIds.card_b_c);
             batch = [
-                // productopts
+                /* productopts */
                 [`the name of the ${cProductName}`, `${cProductName}`],
                 [`the abbr name of ${cProductName}`, `${cProductName}`],
                 [`the short name of ${cProductName}`, `${cProductName}`],
@@ -1306,7 +1309,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of ${cProductName}`, `WILD`],
                 [`the long id of ${cProductName}`, `WILD`],
 
-                // stack
+                /* stack */
                 ['the name of this stack', 'this stack'],
                 ['the abbr name of this stack', 'this stack'],
                 ['the short name of this stack', 'teststack'],
@@ -1316,7 +1319,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short id of this stack', 'this stack'],
                 ['the long id of this stack', 'this stack'],
 
-                // bkgnd
+                /* bkgnd */
                 ['the name of bg 2', 'bkgnd "b"'],
                 ['the abbr name of bg 2', 'bkgnd "b"'],
                 ['the short name of bg 2', 'b'],
@@ -1326,7 +1329,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short id of bg 2', `${this.elIds.bg_b}`],
                 ['the long id of bg 2', `bkgnd id ${this.elIds.bg_b} of this stack`],
 
-                // card
+                /* card */
                 ['the name of cd 4', 'card "d"'],
                 ['the abbr name of cd 4', 'card "d"'],
                 ['the short name of cd 4', 'd'],
@@ -1336,17 +1339,17 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short id of cd 4', `${this.elIds.card_b_d}`],
                 ['the long id of cd 4', `card id ${this.elIds.card_b_d} of this stack`],
 
-                // button
+                /* button */
                 ['the name of cd btn "p1"', 'card button "p1"'],
                 ['the abbr name of cd btn "p1"', 'card button "p1"'],
                 ['the short name of cd btn "p1"', 'p1'],
                 ['the long name of cd btn "p1"', 'card button "p1" of card "c" of this stack'],
-                ['the id of cd btn "p1"', `${this.elIds.btn_b_c_1}`], // confirmed in emulator, short/long has no effect
+                ['the id of cd btn "p1"', `${this.elIds.btn_b_c_1}`], /* confirmed in emulator, short/long has no effect */
                 ['the abbr id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
                 ['the short id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
                 ['the long id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
 
-                // field
+                /* field */
                 ['the name of cd fld "p1"', 'card field "p1"'],
                 ['the abbr name of cd fld "p1"', 'card field "p1"'],
                 ['the short name of cd fld "p1"', 'p1'],
@@ -1356,7 +1359,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short id of cd fld "p1"', `${this.elIds.fld_b_c_1}`],
                 ['the long id of cd fld "p1"', `${this.elIds.fld_b_c_1}`],
 
-                // when nothing has names, we get different output
+                /* when nothing has names, we get different output */
                 ['set the name of this stack to ""\\0', '0'],
                 ['set the name of this bg to ""\\0', '0'],
                 ['set the name of this card to ""\\0', '0'],
@@ -1389,20 +1392,20 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                     `card field id ${this.elIds.fld_b_c_1} of card id ${this.elIds.card_b_c} of this stack`
                 ],
 
-                // restore names
+                /* restore names */
                 ['set the name of this stack to "teststack"\\0', '0'],
                 ['set the name of this bg to "b"\\0', '0'],
                 ['set the name of this card to "c"\\0', '0'],
                 [`set the name of cd btn id ${this.elIds.btn_b_c_1} to "p1"\\0`, '0'],
                 [`set the name of cd fld id ${this.elIds.fld_b_c_1} to "p1"\\0`, '0'],
 
-                // the target (this.objids.btn_go)
+                /* the target (this.objids.btn_go) */
                 ['the target', 'card button "go"'],
                 ['the abbr target', 'card button "go"'],
                 ['the short target', 'go'],
                 ['the long target', 'card button "go" of card "a" of this stack'],
 
-                // owner
+                /* owner */
                 ['the owner of this stack', 'ERR:only get the owner'],
                 ['the owner of bg 1', 'ERR:only get the owner'],
                 ['the owner of cd fld "p1"', 'ERR:only get the owner'],
@@ -1428,7 +1431,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.assertThrows('', '> 1e18', () => VpcValN(3 % 0));
             let batch: [string, string][];
             batch = [
-                // scientific notation applied for num literals
+                /* scientific notation applied for num literals */
                 ['12', '12'],
                 ['12.', '12'],
                 ['12.e0', '12'],
@@ -1442,9 +1445,9 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['12.0e2', '1200'],
                 ['12.0e-2', '0.12'],
 
-                // arithmetic can't be done with large numbers
-                // because most JS engines kick out to scientific notation
-                // for large numbers and I don't really want to support those as valid numbers.
+                /* arithmetic can't be done with large numbers */
+                /* because most JS engines kick out to scientific notation */
+                /* for large numbers and I don't really want to support those as valid numbers. */
                 ['2e10', '20000000000'],
                 ['2e17', '200000000000000000'],
                 ['2e18', 'ERR:> 1e18'],
@@ -1463,13 +1466,13 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch, true);
 
             batch = [
-                // scientific notation not applied for strings
+                /* scientific notation not applied for strings */
                 ['"12.e0"', '12.e0'],
                 ['"12.0e0"', '12.0e0'],
                 ['"12.0e+1"', '12.0e+1'],
                 ['"12.0e-1"', '12.0e-1'],
 
-                // number way too large
+                /* number way too large */
                 ['"3e99" is a number', 'false'],
                 ['3e99 is a number', 'ERR:> 1e18'],
                 ['"3e99" is a integer', 'false'],
@@ -1479,7 +1482,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['1 + 3e99', 'ERR:expected a number'],
                 ['strToNumber("3e99")', 'false'],
                 ['set the left of cd btn "p1" to 3e99\\0', 'ERR:> 1e18'],
-                // number possible w most js engines, but we disallow to be conservative
+                /* number possible w most js engines, but we disallow to be conservative */
                 ['"2e19" is a number', 'false'],
                 ['2e19 is a number', 'ERR:> 1e18'],
                 ['"2e19" is a integer', 'false'],
@@ -1489,7 +1492,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['1 + 2e19', 'ERR:expected a number'],
                 ['strToNumber("2e19")', 'false'],
                 ['set the left of cd btn "p1" to 2e19\\0', 'ERR:> 1e18'],
-                // number possible w most js engines, but we disallow to be conservative
+                /* number possible w most js engines, but we disallow to be conservative */
                 ['"20000000000000000000" is a number', 'false'],
                 ['20000000000000000000 is a number', 'ERR:> 1e18'],
                 ['"20000000000000000000" is a integer', 'false'],
@@ -1499,27 +1502,27 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['1 + 20000000000000000000', 'ERR:expected a number'],
                 ['strToNumber("20000000000000000000")', 'false'],
                 ['set the left of cd btn "p1" to 20000000000000000000\\0', 'ERR:> 1e18'],
-                // number that we support as numeric, but not as an integer
+                /* number that we support as numeric, but not as an integer */
                 ['"200000000000000000" is a number', 'true'],
                 ['200000000000000000 is a number', 'true'],
                 ['"200000000000000000" is a integer', 'false'],
                 ['200000000000000000 is a integer', 'false'],
                 ['200000000000000000', '200000000000000000'],
-                ['1 + "200000000000000000"', '200000000000000000'], // that's why it's not an int lol
-                ['1 + 200000000000000000', '200000000000000000'], // that's why it's not an int lol
+                ['1 + "200000000000000000"', '200000000000000000'], /* that's why it's not an int lol */
+                ['1 + 200000000000000000', '200000000000000000'], /* that's why it's not an int lol */
                 ['strToNumber("200000000000000000")', '200000000000000000'],
                 ['set the left of cd btn "p1" to 200000000000000000\\0', 'ERR:expected an integer'],
-                // number that we support as numeric, but not as an integer
+                /* number that we support as numeric, but not as an integer */
                 ['"2e17" is a number', 'false'],
                 ['2e17 is a number', 'true'],
                 ['"2e17" is a integer', 'false'],
                 ['2e17 is a integer', 'false'],
                 ['2e17', '200000000000000000'],
                 ['1 + "2e17"', 'ERR:expected a number'],
-                ['1 + 2e17', '200000000000000000'], // that's why it's not an int lol
+                ['1 + 2e17', '200000000000000000'], /* that's why it's not an int lol */
                 ['strToNumber("2e17")', '200000000000000000'],
                 ['set the left of cd btn "p1" to 2e17\\0', 'ERR:expected an integer'],
-                // number that we support as numeric, but not as an integer
+                /* number that we support as numeric, but not as an integer */
                 ['"2147483649" is a number', 'true'],
                 ['2147483649 is a number', 'true'],
                 ['"2147483649" is a integer', 'false'],
@@ -1529,7 +1532,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['1 + 2147483649', '2147483650'],
                 ['strToNumber("2147483649")', '2147483649'],
                 ['set the left of cd btn "p1" to 2147483649\\0', 'ERR:expected an integer'],
-                // number that we support as an integer
+                /* number that we support as an integer */
                 ['"2147483640" is a number', 'true'],
                 ['2147483640 is a number', 'true'],
                 ['"2147483640" is a integer', 'true'],
@@ -1538,7 +1541,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['1 + 2147483640', '2147483641'],
                 ['strToNumber("2147483640")', '2147483640'],
                 ['set the left of cd btn "p1" to 2147483640\\0', '0'],
-                // number that we support as an integer
+                /* number that we support as an integer */
                 ['"3.3e2" is a number', 'false'],
                 ['3.3e2 is a number', 'true'],
                 ['"3.3e2" is a integer', 'false'],
@@ -1548,7 +1551,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['strToNumber("3.3e2")', '330'],
                 ['set the left of cd btn "p1" to 3.3e2\\0', '0'],
 
-                // small scientitific notation
+                /* small scientitific notation */
                 ['"3.3e2" = "330"', 'false'],
                 ['3.3e2 = "330"', 'true'],
                 ['"334.56" = "3.3456e2"', 'false'],
@@ -1567,7 +1570,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.setCurrentCard(this.elIds.card_b_c);
             let batch: [string, string][];
             batch = [
-                // RuleExprSource and RuleHSimpleContainer
+                /* RuleExprSource and RuleHSimpleContainer */
                 ['12', '12'],
                 ['"abc"', 'abc'],
                 ['put "qwerty" into cd fld "p3"\\cd fld "p3"', 'qwerty'],
@@ -1576,12 +1579,12 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['cd btn "p1"', 'ERR:we do not currently allow placing text'],
                 ['cd btn "p4"', 'ERR:we do not currently allow placing text'],
 
-                // casing
+                /* casing */
                 ['PUT 5 Into myVar\\myVar', '5'],
                 ['3 * MYVAR', '15'],
                 ['SUM(MYVAR, Myvar, myvar)', '15'],
 
-                // constants
+                /* constants */
                 ['one', '1'],
                 ['up', 'up'],
                 ['cr', '\n'],
@@ -1591,7 +1594,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             this.setCurrentCard(this.elIds.card_b_c);
             batch = [
-                // length
+                /* length */
                 ['the length of ""', '0'],
                 ['the length of "abc"', '3'],
                 ['the length of ("abc" & cr & cr & cr)', '6'],
@@ -1603,7 +1606,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['length(12)', '2'],
                 ['length(true)', '4'],
 
-                // counting chunks
+                /* counting chunks */
                 ['the number of chars in ""', '0'],
                 ['the number of chars in "  "', '2'],
                 ['the number of chars in "abc"', '3'],
@@ -1622,7 +1625,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the number of words in "a"', '1'],
                 ['the number of words in "a b c"', '3'],
 
-                // counting objects
+                /* counting objects */
                 ['the number of bgs', '3'],
                 ['the number of bgs of this stack', '3'],
                 ['the number of bgs of next stack', 'ERR:only accept referring to a stack'],
@@ -1639,7 +1642,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the number of cards of bg 1', '1'],
                 ['the number of cards of bg 2', '3'],
                 ['the number of cards of bg 3', '1'],
-                ['the number of cards of bg 4', 'ERR:Cannot find this element'], // confirmed in emulator that it should throw
+                ['the number of cards of bg 4', 'ERR:Cannot find this element'], /* confirmed in emulator that it should throw */
                 ['the number of bgs', '3'],
                 ['the number of bgs of this stack', '3'],
                 ['selectedtext()', ''] /* use as breakpoint */
@@ -1647,7 +1650,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
 
             batch = [
-                // existence of objects
+                /* existence of objects */
                 [`there _is_ a ${cProductName}`, 'true'],
                 [`there _is_ a target`, 'true'],
                 [`there _is_ a the target`, 'true'],
@@ -1658,7 +1661,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a second stack`, 'ERR:NoViableAltException'],
                 [`there _is_ a xyz stack`, 'ERR:we only accept referring to a stack'],
 
-                // bg
+                /* bg */
                 [`there _is_ a bg 1`, 'true'],
                 [`there _is_ a bg 2`, 'true'],
                 [`there _is_ a bg 4`, 'false'],
@@ -1669,9 +1672,9 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a this bg`, 'true'],
                 [`there _is_ a next bg`, 'true'],
                 [`there _is_ a first bg`, 'true'],
-                [`there _is_ a tenth bg`, 'true'], // todo: not really right?
+                [`there _is_ a tenth bg`, 'true'], /* todo: not really right? */
 
-                // card
+                /* card */
                 [`there _is_ a card 1`, 'true'],
                 [`there _is_ a card 4`, 'true'],
 
@@ -1683,7 +1686,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a this card`, 'true'],
                 [`there _is_ a next card`, 'true'],
                 [`there _is_ a first card`, 'true'],
-                [`there _is_ a tenth card`, 'true'], // todo: not really right?
+                [`there _is_ a tenth card`, 'true'], /* todo: not really right? */
                 [`there _is_ a card 2 of this bg`, 'true'],
                 [`there _is_ a card 2 of bg 2`, 'true'],
                 [`there _is_ a card 2 of bg 1`, 'false'],
@@ -1691,8 +1694,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a card "d" of bg 2`, 'true'],
                 [`there _is_ a card "d" of bg 3`, 'true'],
 
-                // btn
-                [`there _is_ a cd btn 1`, 'ERR:we no longer support'], // because we turned this off
+                /* btn */
+                [`there _is_ a cd btn 1`, 'ERR:we no longer support'], /* because we turned this off */
                 [`there _is_ a cd btn 70`, 'ERR:we no longer support'],
                 [`there _is_ a cd btn "p1"`, 'true'],
                 [`there _is_ a cd btn "p"`, 'false'],
@@ -1706,8 +1709,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a cd btn "p1" of cd "d" of bg 2`, 'true'],
                 [`there _is_ a cd btn "p1" of cd "d" of bg 3`, 'true'],
 
-                // fld
-                [`there _is_ a cd fld 1`, 'ERR:we no longer support'], // because we turned this off
+                /* fld */
+                [`there _is_ a cd fld 1`, 'ERR:we no longer support'], /* because we turned this off */
                 [`there _is_ a cd fld 70`, 'ERR:we no longer support'],
                 [`there _is_ a cd fld "p1"`, 'true'],
                 [`there _is_ a cd fld "p"`, 'false'],
@@ -1724,13 +1727,13 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvalInvert(batch);
 
             batch = [
-                // fn calls without parens
+                /* fn calls without parens */
                 ['the paramcount', '0'],
                 ['the ParamCount', '0'],
                 ['the params', ''],
                 ['the result', ''],
 
-                // we require parens for basically everything else though.
+                /* we require parens for basically everything else though. */
                 ['the ticks', "ERR:you can't say something"],
                 ['the screenrect', "ERR:you can't say something"],
                 ['the sin', "ERR:you can't say something"],
@@ -1743,7 +1746,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
 
             batch = [
-                // isolated
+                /* isolated */
                 ['diskspace()', `${100 * 1024 * 1024}`],
                 ['heapspace()', `${100 * 1024 * 1024}`],
                 ['stackspace()', `${100 * 1024 * 1024}`],
@@ -1771,7 +1774,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['offset("abd", "abc")', `0`],
                 ['offset("bcd", "abc")', `0`],
 
-                // math variadic
+                /* math variadic */
                 ['max()', 'ERR:requires at least one'],
                 ['min()', 'ERR:requires at least one'],
                 ['sum()', 'ERR:requires at least one'],
@@ -1782,7 +1785,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['sum(4,5,6)', '15'],
                 ['sum(1,2,3)', '6'],
                 ['min("1,2,3")', '1'],
-                ['min("1,2,3,")', '1'], // a bit odd, but confirmed in emulator
+                ['min("1,2,3,")', '1'], /* a bit odd, but confirmed in emulator */
                 ['min(",1,2,3")', '0'],
                 ['min(",1,2,3,")', '0'],
                 ['min("1,2,3,,")', '0'],
@@ -1808,13 +1811,13 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['sum(" ,1,2,,")', '3'],
                 ['sum(" , 1 , 2 , , ")', '3'],
 
-                // with "the"
+                /* with "the" */
                 ['the diskspace', `ERR:you can't say something`],
                 ['the diskspace()', `${100 * 1024 * 1024}`],
                 ['the abs(123)', '123'],
                 ['the offset("c", "abc")', '3'],
 
-                // reading the time
+                /* reading the time */
                 ['the ticks() - the ticks() >= 0', 'true'],
                 [
                     `put the seconds() into x
@@ -1829,13 +1832,13 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
 
             batch = [
-                // isolated, math
-                // abs
+                /* isolated, math */
+                /* abs */
                 ['abs(0)', '0'],
                 ['abs(-123)', '123'],
                 ['abs(123)', '123'],
 
-                // round
+                /* round */
                 ['round(3.9)', '4'],
                 ['round(4)', '4'],
                 ['round(4.4)', '4'],
@@ -1851,7 +1854,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['round(-2.5)', '-2'],
                 ['round(-3.5)', '-4'],
 
-                // trunc
+                /* trunc */
                 ['trunc(4.5)', '4'],
                 ['trunc(4.6)', '4'],
                 ['trunc(4.4)', '4'],
@@ -1861,7 +1864,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['trunc(-0.3)', '0'],
                 ['trunc(-1.7)', '-1'],
 
-                // unlike the emulator, we throw errors
+                /* unlike the emulator, we throw errors */
                 ['4/0', 'ERR:> 1e18'],
                 ['0/0', 'ERR:> 1e18'],
                 ['"1.0"/"0.0"', 'ERR:> 1e18'],
@@ -1870,7 +1873,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['ln1(-400)', 'ERR:> 1e18'],
                 ['log2(-400)', 'ERR:> 1e18'],
 
-                // isolated, needs floating point compare
+                /* isolated, needs floating point compare */
                 ['atan(5)', '1.373400766945016'],
                 ['atan(6)', '1.4056476493802699'],
                 ['sin(5)', '-0.9589242746631385'],
@@ -1894,7 +1897,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['sqrt(5)', '2.23606797749979'],
                 ['sqrt(6)', '2.449489742783178'],
 
-                // round trip
+                /* round trip */
                 ['ln(6)', '1.791759469228055'],
                 ['exp(1.791759469228055)', '6'],
                 ['ln1(6)', '1.9459101490553132'],
@@ -1906,12 +1909,12 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             let userBounds = this.ctrller.userBounds;
             batch = [
-                // unknown
+                /* unknown */
                 ['xyz()', 'ERR:no handler'],
                 ['xyz(1)', 'ERR:no handler'],
                 ['xyz(1,2)', 'ERR:no handler'],
 
-                // uses outside world
+                /* uses outside world */
                 ['cmdkey()', 'ERR:not a key event'],
                 ['commandkey()', 'ERR:not a key event'],
                 ['optionkey()', 'ERR:not a key event'],
@@ -1932,7 +1935,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['result()', ``],
                 ['tool()', `browse`],
 
-                // casing
+                /* casing */
                 ['CLICKLOC()', `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`],
                 ['clIcKloC()', `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`],
                 ['ClickLoc()', `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`]

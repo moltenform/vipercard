@@ -4,7 +4,14 @@
 /* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 
+/**
+ * tools for dealing with formatted substrings, e.g.
+ * set the textstyle of char 2 to 4 of cd fld "fld1" to bold
+ */
 export class FormattedSubstringUtil {
+    /**
+     * parse a list ["bold", "italic"] into bitfield bold|italic
+     */
     static vpcstyleToInt(list: string[]): TextFontStyling {
         let ret = TextFontStyling.Default;
         for (let s of list) {
@@ -41,6 +48,9 @@ export class FormattedSubstringUtil {
         return ret;
     }
 
+    /**
+     * from bitfield bold|italic to ["bold", "italic"]
+     */
     static vpcstyleFromInt(style: TextFontStyling) {
         let ret: string[] = [];
         if (style === 0) {
@@ -71,40 +81,54 @@ export class FormattedSubstringUtil {
         return ret.join(',');
     }
 
-    static ui512styleFromvpcStyleList(vpcstyles: string[]) {
-        let n = FormattedSubstringUtil.vpcstyleToInt(vpcstyles);
+    /**
+     * ['italic', 'outline'] to "b+iu+osdce"
+     */
+    static ui512styleFromVpcStyleList(vpcStyles: string[]) {
+        let n = FormattedSubstringUtil.vpcstyleToInt(vpcStyles);
         return textFontStylingToString(n);
     }
 
-    static ui512styleTovpcStyleList(sstyle: string) {
-        let style = stringToTextFontStyling(sstyle);
-        return FormattedSubstringUtil.vpcstyleFromInt(style).split(',');
+    /**
+     * "b+iu+osdce" to ['italic', 'outline']
+     */
+    static ui512styleToVpcStyleList(style: string) {
+        let enumStyle = stringToTextFontStyling(style);
+        return FormattedSubstringUtil.vpcstyleFromInt(enumStyle).split(',');
     }
 
-    static fitBounds(txtlen: number, instart: number, inlen: number, isGet: boolean) {
-        if (isGet && inlen === 0) {
-            inlen = 1;
+    /**
+     * when you say set the textstyle of char 999 of cd fld "fld1",
+     * adjust to fit into what's actually there
+     */
+    static fitBounds(txtlen: number, inStart: number, inLen: number, isGet: boolean) {
+        if (isGet && inLen === 0) {
+            inLen = 1;
         }
 
-        let end = instart + inlen;
-        let start = fitIntoInclusive(instart, 0, txtlen - 1);
+        let end = inStart + inLen;
+        let start = fitIntoInclusive(inStart, 0, txtlen - 1);
         end = fitIntoInclusive(end, start, txtlen);
         return [start, end];
     }
 
+    /**
+     * get attribute of a chunk of text
+     * note that if it varies, we'll return "mixed".
+     */
     protected static getChunkTextAttribute(
         txt: FormattedText,
         defaultFont: string,
-        instart: number,
-        inlen: number,
-        fn: Function
+        inStart: number,
+        inLen: number,
+        fn: (s:string)=>string
     ) {
-        if (txt.len() === 0 || instart >= txt.len()) {
+        if (txt.len() === 0 || inStart >= txt.len()) {
             return fn(defaultFont);
         }
 
         let seenAttr = '';
-        let [start, end] = FormattedSubstringUtil.fitBounds(txt.len(), instart, inlen, true);
+        let [start, end] = FormattedSubstringUtil.fitBounds(txt.len(), inStart, inLen, true);
         for (let i = start; i < end; i++) {
             let attr = fn(txt.fontAt(i));
             if (seenAttr !== '' && seenAttr !== attr) {
@@ -117,55 +141,76 @@ export class FormattedSubstringUtil {
         return seenAttr ? seenAttr : fn(defaultFont);
     }
 
+    /**
+     * set attribute of a chunk of text
+     */
     protected static setChunkTextAttribute(
         txt: FormattedText,
         defaultFont: string,
-        instart: number,
-        inlen: number,
-        fn: Function
+        inStart: number,
+        inLen: number,
+        fn: (s:string)=>string
     ) {
-        if (txt.len() === 0 || instart >= txt.len()) {
+        if (txt.len() === 0 || inStart >= txt.len()) {
             return;
         }
 
-        let [start, end] = FormattedSubstringUtil.fitBounds(txt.len(), instart, inlen, false);
+        let [start, end] = FormattedSubstringUtil.fitBounds(txt.len(), inStart, inLen, false);
         for (let i = start; i < end; i++) {
             txt.setFontAt(i, fn(txt.fontAt(i)));
         }
     }
 
-    static getChunkTextFace(txt: FormattedText, defaultFont: string, instart: number, inlen: number): string {
+    /**
+     * get typeface of chunk, or "mixed" if there's more than one typeface
+     */
+    static getChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string {
         let fn = (s: string) => TextFontSpec.getTypeface(s);
-        return FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
+        return FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     }
 
-    static setChunkTextFace(txt: FormattedText, defaultFont: string, instart: number, inlen: number, snext: string) {
+    /**
+     * set typeface of chunk
+     */
+    static setChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, snext: string) {
         let fn = (scurrent: string) => TextFontSpec.setTypeface(scurrent, snext);
-        return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
+        return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     }
 
-    static getChunkTextSize(txt: FormattedText, defaultFont: string, instart: number, inlen: number): number | string {
+    /**
+     * get point size of chunk, or "varied" if it varies
+     */
+    static getChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): number | string {
         let fn = (s: string) => TextFontSpec.getFontSize(s);
-        let ret = FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
+        let ret = FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
         let n = parseInt(ret, base10);
         return ret === 'mixed' ? ret : isFinite(n) ? n : 0;
     }
 
-    static setChunkTextSize(txt: FormattedText, defaultFont: string, instart: number, inlen: number, next: number) {
+    /**
+     * set point size of chunk
+     */
+    static setChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, next: number) {
         let ssize = next.toString();
         let fn = (scurrent: string) => TextFontSpec.setFontSize(scurrent, ssize);
-        return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
+        return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     }
 
-    static getChunkTextStyle(txt: FormattedText, defaultFont: string, instart: number, inlen: number): string[] {
+    /**
+     * get font style of chunk, or "varied" if it varies
+     */
+    static getChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string[] {
         let fn = (s: string) => TextFontSpec.getFontStyle(s);
-        let ret = FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
-        return ret === 'mixed' ? ['mixed'] : FormattedSubstringUtil.ui512styleTovpcStyleList(ret);
+        let ret = FormattedSubstringUtil.getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
+        return ret === 'mixed' ? ['mixed'] : FormattedSubstringUtil.ui512styleToVpcStyleList(ret);
     }
 
-    static setChunkTextStyle(txt: FormattedText, defaultFont: string, instart: number, inlen: number, list: string[]) {
-        let snext = FormattedSubstringUtil.ui512styleFromvpcStyleList(list);
+    /**
+     * set font style of chunk
+     */
+    static setChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, list: string[]) {
+        let snext = FormattedSubstringUtil.ui512styleFromVpcStyleList(list);
         let fn = (scurrent: string) => TextFontSpec.setFontStyle(scurrent, snext);
-        return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, instart, inlen, fn);
+        return FormattedSubstringUtil.setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     }
 }

@@ -7,10 +7,10 @@
 
 /**
  * a "toolbox"/tool pallete
- * to use this composite, 
- * create an onMouseUp listener in your presenter 
+ * to use this composite,
+ * create an onMouseUp listener in your presenter
  * that forwards the event to this object's respondMouseUp
- * 
+ *
  * see uiDemoComposites for an example.
  */
 export class UI512CompToolbox extends UI512CompBase {

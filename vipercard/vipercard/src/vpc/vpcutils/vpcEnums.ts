@@ -1,30 +1,29 @@
 
 /* auto */ import { makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 
-export enum RequestedChunkType {
-    __isUI512Enum = 1,
-    Chars,
-    Words,
-    Items,
-    Lines,
-    alternateforms_char = Chars,
-    alternateforms_character = Chars,
-    alternateforms_chars = Chars,
-    alternateforms_characters = Chars,
-    alternateforms_word = Words,
-    alternateforms_words = Words,
-    alternateforms_item = Items,
-    alternateforms_items = Items,
-    alternateforms_line = Lines,
-    alternateforms_lines = Lines
-}
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * SortType for the "sort" command
+ * text sorting (default), compares text, not case sensitive.
+ * numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
+ * international sorting, compares text using current locale.
+ * values here are lowercase, because they are used by the interpreter.
+ */
+export enum SortType {
+    __isUI512Enum = 1,
+    text,
+    numeric,
+    international
+}
+
+
+/**
+ * PropAdjective for properties, e.g.
+ * get the long id of cd btn "btn1"
+ * values here are lowercase, because they are used by the interpreter.
  */
 export enum PropAdjective {
     __isUI512Enum = 1,
@@ -37,17 +36,8 @@ export enum PropAdjective {
 }
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
- */
-export enum SortStyle {
-    __isUI512Enum = 1,
-    text,
-    numeric,
-    international
-}
-
-/**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * ordinal or position, i.e. "go to third card"
+ * values here are lowercase, because they are used by the interpreter.
  */
 export enum OrdinalOrPosition {
     __isUI512Enum = 1,
@@ -72,15 +62,43 @@ export enum OrdinalOrPosition {
 }
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * a 'chunk' is a way to specify a contiguous span of text, e.g.
+ * word 3 to 4 of "a b c d e"
+ * these are the types of chunks currently supported.
+ * some values here are lowercase, because they are used by the interpreter.
  */
-export enum RequestedChunkTextPreposition {
+export enum VpcChunkType {
+    __isUI512Enum = 1,
+    Chars,
+    Words,
+    Items,
+    Lines,
+    alternateforms_char = Chars,
+    alternateforms_character = Chars,
+    alternateforms_chars = Chars,
+    alternateforms_characters = Chars,
+    alternateforms_word = Words,
+    alternateforms_words = Words,
+    alternateforms_item = Items,
+    alternateforms_items = Items,
+    alternateforms_line = Lines,
+    alternateforms_lines = Lines
+}
+
+/**
+ * preposition, e.g. put "a" after cd fld "fld1"
+ * values here are lowercase, because they are used by the interpreter.
+ */
+export enum VpcChunkPreposition {
     __isUI512Enum = 1,
     into,
     before,
     after
 }
 
+/**
+ * type of vpc element
+ */
 export enum VpcElType {
     __isUI512Enum = 1,
     Unknown,
@@ -92,8 +110,11 @@ export enum VpcElType {
     Product
 }
 
-export function vpcElTypeToString(type: VpcElType, veryshort: boolean) {
-    if (veryshort) {
+/**
+ * string name of the type, to show in UI
+ */
+export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
+    if (veryShort) {
         if (type === VpcElType.Unknown) {
             return '';
         } else if (type === VpcElType.Btn) {
@@ -115,15 +136,15 @@ export function vpcElTypeToString(type: VpcElType, veryshort: boolean) {
         if (type === VpcElType.Unknown) {
             return '';
         } else if (type === VpcElType.Btn) {
-            return lng('lngbutton');
+            return 'button';
         } else if (type === VpcElType.Fld) {
-            return lng('lngfield');
+            return 'field';
         } else if (type === VpcElType.Card) {
-            return lng('lngcard');
+            return 'card';
         } else if (type === VpcElType.Bg) {
-            return lng('lngbackground');
+            return 'background';
         } else if (type === VpcElType.Stack) {
-            return lng('lngstack');
+            return 'stack';
         } else if (type === VpcElType.Product) {
             return '';
         } else {
@@ -132,6 +153,10 @@ export function vpcElTypeToString(type: VpcElType, veryshort: boolean) {
     }
 }
 
+/**
+ * a tool
+ * you can use __first and __last to iterate all tools
+ */
 export enum VpcTool {
     __isUI512Enum = 1,
     Browse,
@@ -150,12 +175,18 @@ export enum VpcTool {
     Roundrect,
     Curve,
     Spray,
+    __first = Browse,
+    __last = Spray,
     alternateforms_Spray_can = Spray,
     alternateforms_Round_rect = Roundrect,
-    __first = Browse,
-    __last = Spray
 }
 
+/**
+ * a tool category
+ * not used by scripts, but used by UI implementation,
+ * since say the "pencil" tool and "brush" tool do basically the same thing,
+ * they can share the same code
+ */
 export enum VpcToolCtg {
     __isUI512Enum = 1,
     CtgBrowse,
@@ -170,6 +201,9 @@ export enum VpcToolCtg {
     CtgNyi
 }
 
+/**
+ * from tool to tool category
+ */
 export function getToolCategory(tl: VpcTool): VpcToolCtg {
     switch (tl) {
         case VpcTool.Browse:
@@ -209,6 +243,9 @@ export function getToolCategory(tl: VpcTool): VpcToolCtg {
     }
 }
 
+/**
+ * from tool to UI512PaintDispatchShapes
+ */
 export function toolToDispatchShapes(tl: VpcTool) {
     if (tl === VpcTool.Line) {
         return UI512PaintDispatchShapes.ShapeLine;
@@ -236,7 +273,8 @@ export function toolToDispatchShapes(tl: VpcTool) {
 }
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * built-in messages sent to scripts.
+ * values here are lowercase, because they are used by the interpreter.
  */
 export enum VpcBuiltinMsg {
     __isUI512Enum = 1,
@@ -258,7 +296,8 @@ export enum VpcBuiltinMsg {
 }
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * what we support for the wait command, e.g. "wait 100 ms"
+ * values here are lowercase, because they are used by the interpreter.
  */
 export enum MapTermToMilliseconds {
     __isUI512Enum = 1,
@@ -270,6 +309,10 @@ export enum MapTermToMilliseconds {
     seconds = 1000
 }
 
+/**
+ * event details type tp message type
+ * note that Idle can become either on mousewithin or on idle depending on context
+ */
 export function getMsgNameFromType(tp: UI512EventType) {
     switch (tp) {
         case UI512EventType.KeyUp:
@@ -293,6 +336,9 @@ export function getMsgNameFromType(tp: UI512EventType) {
     }
 }
 
+/**
+ * levels of operations when evaluating an expression
+ */
 export enum VpcOpCtg {
     __isUI512Enum = 1,
     OpLogicalOrAnd,
@@ -303,6 +349,9 @@ export enum VpcOpCtg {
     OpMultDivideExpDivMod
 }
 
+/**
+ * evaulate an OrdinalOrPosition
+ */
 export function getPositionFromOrdinalOrPosition(
     rel: OrdinalOrPosition,
     current: number,
@@ -314,7 +363,7 @@ export function getPositionFromOrdinalOrPosition(
             case OrdinalOrPosition.last:
                 return max;
             case OrdinalOrPosition.middle:
-                // confirmed in emulator that this rounds to highest
+                /* confirmed in emulator that this rounds to highest */
                 return Math.ceil((min + max) / 2);
             case OrdinalOrPosition.any:
                 return Util512.getRandIntInclusiveWeak(min, max);

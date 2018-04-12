@@ -62,16 +62,16 @@ export class SyntaxRewriter {
     }
 
     rewrite_answer(line: ChvIToken[]) {
-        // real syntax: answer <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]]
-        // turn the 'with' into TkSyntaxMarker for easier parsing later
-        // safe because there won't ever be a real variable/function called "with".
+        /* real syntax: answer <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]] */
+        /* turn the 'with' into TkSyntaxMarker for easier parsing later */
+        /* safe because there won't ever be a real variable/function called "with". */
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1);
     }
 
     rewrite_ask(line: ChvIToken[]) {
-        // real syntax: ask [password] <Expr> [with <Expr>]
-        // turn the 'with' into TkSyntaxMarker for easier parsing later
-        // turn the 'password' into TkSyntaxComma for easier parsing later
+        /* real syntax: ask [password] <Expr> [with <Expr>] */
+        /* turn the 'with' into TkSyntaxMarker for easier parsing later */
+        /* turn the 'password' into TkSyntaxComma for easier parsing later */
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1);
         if (line.length > 0 && isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'password') {
             line[1] = this.buildFake.makeSyntaxMarker(line[1], ',');
@@ -79,8 +79,8 @@ export class SyntaxRewriter {
     }
 
     rewrite_choose(line: ChvIToken[]) {
-        // original syntax: choose browse tool, choose round rect tool, choose tool 3
-        // my syntax (much simpler): choose "browse" tool, choose "round rect" tool
+        /* original syntax: choose browse tool, choose round rect tool, choose tool 3 */
+        /* my syntax (much simpler): choose "browse" tool, choose "round rect" tool */
         checkThrow(
             line.length > 2,
             `8l|not enough args given for choose, expected 'choose tool 3' or 'choose line tool'`
@@ -113,7 +113,7 @@ export class SyntaxRewriter {
     }
 
     rewrite_pass(line: ChvIToken[]) {
-        // add a return statement afterwards, solely to make code exec simpler.
+        /* add a return statement afterwards, solely to make code exec simpler. */
         let newline: ChvIToken[] = [];
         newline.push(this.buildFake.makeIdentifier(line[0], 'return'));
         newline.push(this.buildFake.makeNumLiteral(line[0], 0));
@@ -121,8 +121,8 @@ export class SyntaxRewriter {
     }
 
     rewrite_go(line: ChvIToken[]) {
-        // we no longer support "go back" and "go forth".
-        // they'd be wrongly parsed (eaten by NtDest / Position) anyways
+        /* we no longer support "go back" and "go forth". */
+        /* they'd be wrongly parsed (eaten by NtDest / Position) anyways */
         checkThrow(line.length > 1, "8k|can't have just 'go' on its own. try 'go next' or 'go prev' ");
         checkThrow(
             line[1].image !== 'back',
@@ -135,9 +135,9 @@ export class SyntaxRewriter {
     }
 
     rewrite_put(line: ChvIToken[]) {
-        // transform put "abc" into x
-        // into
-        // put "abc" (marker) into (marker) x
+        /* transform put "abc" into x */
+        /* into */
+        /* put "abc" (marker) into (marker) x */
         let findwhere = (s: string) => line.findIndex(tk => isTkType(tk, tks.TokenTkidentifier) && tk.image === s);
         let findInto = findwhere('into');
         let findBefore = findwhere('before');
@@ -160,8 +160,8 @@ export class SyntaxRewriter {
     }
 
     rewrite_exit(line: ChvIToken[]) {
-        // simplifies logic later.
-        // rewrite "exit to vpc" to "exit vpc"
+        /* simplifies logic later. */
+        /* rewrite "exit to vpc" to "exit vpc" */
         if (line.length > 1 && line[1].image === 'to') {
             line.splice(1, 1);
         }
@@ -173,18 +173,18 @@ export class SyntaxRewriter {
 
     rewrite_repeat(line: ChvIToken[]) {
         if (line.length > 1 && isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'forever') {
-            // from 'repeat forever' to 'repeat'
+            /* from 'repeat forever' to 'repeat' */
             checkThrowEq(2, line.length, `8g|bad syntax, use 'repeat forever' not 'repeat forever xyz'`);
             line.splice(1, 1);
         } else if (line.length > 1 && isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'with') {
-            // transform 'repeat with' into 'repeat while'
+            /* transform 'repeat with' into 'repeat while' */
             return this.rewriteRepeatWith(line);
         } else if (
             line.length > 1 &&
             !(isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'until') &&
             !(isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'while')
         ) {
-            // transform 'repeat for' into 'repeat while'
+            /* transform 'repeat for' into 'repeat while' */
             return this.rewriteRepeatFor(line);
         }
     }
@@ -209,8 +209,8 @@ export class SyntaxRewriter {
 
         checkThrow(line.length >= 2, msg + 'no expression found', '8Z|');
 
-        // use a number relative to this script -- otherwise it would change on
-        // every re-compile, it'd be a bit slower because wouldn't be found in the cache
+        /* use a number relative to this script -- otherwise it would change on */
+        /* every re-compile, it'd be a bit slower because wouldn't be found in the cache */
         let newvarname = `tmploopvar^^${this.idgenThisScript.next()}`;
         let repeatWith = [
             this.buildFake.makeIdentifier(line[0], 'repeat'),

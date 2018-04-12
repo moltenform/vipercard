@@ -6,12 +6,12 @@
 /* auto */ import { PropAdjective, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
-/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { OutsideWorldRead, VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
 
 export class VpcBuiltinFunctions {
     // confirmed in emulator that this is not tied to itemdelimeter.
-    // max(1,2,3) and max("1,2,3") have same results, even if itemdel set to .
+    // max(1,2,3) and max("1,2,3") have same results, even if itemDel is not ",""
     protected tmpArr: [boolean, any] = [false, false];
     protected static readonly sep = ',';
     protected static readonly hardcodedMemoryAvailable = 100 * 1024 * 1024;

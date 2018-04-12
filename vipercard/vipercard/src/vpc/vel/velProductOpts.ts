@@ -87,7 +87,7 @@ export class VpcElProductOpts extends VpcElBase {
         setters['itemdelimiter'] = [
             PrpTyp.Str,
             (me: VpcElProductOpts, s: string) => {
-                checkThrowEq(1, s.length, `7C|length of itemdel must be 1`);
+                checkThrowEq(1, s.length, `7C|length of itemDel must be 1`);
                 me.set('itemDel', s);
             }
         ];
@@ -167,7 +167,7 @@ export class VpcElProductOpts extends VpcElBase {
 }
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * values here are lowercase, because they are used by the interpreter.
  */
 export enum VpcCursors {
     __isUI512Enum = 1,

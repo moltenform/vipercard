@@ -4,14 +4,14 @@
 /* auto */ import { TextFontSpec, specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
-/* auto */ import { RequestedChunkType, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcChunkType, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * values here are lowercase, because they are used by the interpreter.
  */
 export enum VpcFldStyleInclScroll {
     __isUI512Enum = 1,
@@ -292,22 +292,22 @@ export class VpcElField extends VpcElSizable {
     }
 
     protected resolveChunkBounds(chunk: RequestedChunk, itemDel: string) {
-        let newchunk = chunk.getClone();
+        let newChunk = chunk.getClone();
         if (
-            newchunk.type === RequestedChunkType.Chars &&
-            !newchunk.ordinal &&
-            newchunk.last !== undefined &&
-            newchunk.last < newchunk.first
+            newChunk.type === VpcChunkType.Chars &&
+            !newChunk.ordinal &&
+            newChunk.last !== undefined &&
+            newChunk.last < newChunk.first
         ) {
             // for consistency with emulator, interesting behavior for negative intervals
-            newchunk.first = newchunk.first - 1;
-            newchunk.last = newchunk.first + 1;
+            newChunk.first = newChunk.first - 1;
+            newChunk.last = newChunk.first + 1;
         }
 
         // we handle the formattedText.len() === 0 case in getChunkTextAttribute
         let unformatted = this.get_ftxt().toUnformatted();
-        newchunk.first = fitIntoInclusive(newchunk.first, 1, unformatted.length);
-        let bounds = ChunkResolution.resolveBoundsForGet(unformatted, itemDel, newchunk);
+        newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
+        let bounds = ChunkResolution.resolveBoundsForGet(unformatted, itemDel, newChunk);
         bounds = bounds === undefined ? [0, 0] : bounds;
         return bounds;
     }

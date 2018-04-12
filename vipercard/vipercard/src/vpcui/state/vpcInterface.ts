@@ -27,7 +27,7 @@ export interface VpcStateInterface {
     getModel(): VpcModel;
     isCodeRunning(): boolean;
     rawRevive(vel: VpcElBase): void;
-    rawCreate<T extends VpcElBase>(velid: string, parentid: string, ctr: { new (...args: any[]): T }): T;
+    rawCreate<T extends VpcElBase>(velId: string, parentid: string, ctr: { new (...args: any[]): T }): T;
     createElem(parent_id: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase;
     removeElem(vel: VpcElBase): void;
     doWithoutAbilityToUndoExpectingNoChanges(fn: () => void): void;

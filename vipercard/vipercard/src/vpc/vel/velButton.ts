@@ -8,7 +8,7 @@
 /* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
 /**
- * values here are intentionally lowercase, this enum is used when running a script.
+ * values here are lowercase, because they are used by the interpreter.
  */
 export enum VpcBtnStyle {
     __isUI512Enum = 1,

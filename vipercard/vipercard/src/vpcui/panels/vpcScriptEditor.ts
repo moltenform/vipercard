@@ -5,7 +5,6 @@
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
@@ -60,33 +59,33 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
     }
 
     createSpecific(app: UI512Application) {
-        // occurs because apparent discrepency between 'screenwidth' and bounds[2], not sure why those don't match
+        /* occurs because apparent discrepency between 'screenwidth' and bounds[2], not sure why those don't match */
         this.logicalWidth -= 46;
         if (!isRelease) {
             console.log('maybe fix this...');
         }
 
-        // constants
+        /* constants */
         const spacerHeight = 6;
         const footerHeight = 65;
 
-        // draw a 1px border around the panel
+        /* draw a 1px border around the panel */
         let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
 
-        // draw window decoration
+        /* draw window decoration */
         let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 
-        // draw spacer
+        /* draw spacer */
         let curY = this.y + headerheight - 1;
         let spacer = this.genBtn(app, grp, 'spacer');
         spacer.set('autohighlight', false);
         spacer.setDimensions(this.x, curY, this.logicalWidth, spacerHeight);
         curY += spacerHeight - 1;
 
-        // draw the code editor field
+        /* draw the code editor field */
         this.el = this.genChild(app, grp, 'editor', UI512ElTextField);
         this.el.set('style', UI512FldStyle.Rectangle);
         this.el.set('labelwrap', false);
@@ -95,17 +94,17 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         this.el.set('nudgey', 2);
         this.el.setDimensions(this.x, curY, this.logicalWidth, this.y + this.logicalHeight - curY - footerHeight);
 
-        // draw status text row 1
+        /* draw status text row 1 */
         this.status1a = this.genChild(app, grp, 'status1a', UI512ElLabel);
         this.status1a.setDimensions(this.el.x + 5, this.el.bottom, this.el.w - 10, 20);
 
-        // draw status text row 2
+        /* draw status text row 2 */
         this.status2a = this.genChild(app, grp, 'status2a', UI512ElLabel);
         this.status2a.setDimensions(this.el.x + 5, this.el.bottom + 22, 90, 20);
         this.status2b = this.genChild(app, grp, 'status2b', UI512ElLabel);
         this.status2b.setDimensions(this.el.x + 60, this.el.bottom + 22, 224, 20);
 
-        // draw Save buttton
+        /* draw Save buttton */
         const spaceFromRight = 9;
         const spaceFromBottom = 17;
         const btnW = 68 + 15;
@@ -150,8 +149,8 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
     protected refreshStatusLabels(app: UI512Application, vel: VpcElBase) {
         let lastScriptErr = this.appli ? this.appli.getCodeExec().lastEncounteredScriptErr : undefined;
         this.status2a.set('labeltext', '');
-        if (lastScriptErr && lastScriptErr.velid === vel.id) {
-            // check for "encountered" err
+        if (lastScriptErr && lastScriptErr.velId === vel.id) {
+            /* check for "encountered" err */
             this.setStatusLabeltext(
                 'lngEncountered a script error:',
                 lastScriptErr.lineNumber,
@@ -159,7 +158,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
                 cleanExceptionMsg(lastScriptErr.details)
             );
         } else {
-            // check for syntax err
+            /* check for syntax err */
             let codeStatus = this.appli.getCodeExec().findCode(vel.id);
             if (codeStatus instanceof VpcScriptErrorBase) {
                 this.setStatusLabeltext(
@@ -202,20 +201,20 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             return;
         }
 
-        // run compilation
+        /* run compilation */
         this.saveChangesToModel(this.appli.UI512App(), false);
         let code = vel.get_s('script');
         this.appli.getCodeExec().updateChangedCode(vel, code);
 
-        // hide the "just encountered" message.
-        // seems ok to do -- also might be possible for user to click hide.
+        /* hide the "just encountered" message. */
+        /* seems ok to do -- also might be possible for user to click hide. */
         let lastScriptErr = this.appli ? this.appli.getCodeExec().lastEncounteredScriptErr : undefined;
-        if (lastScriptErr && lastScriptErr.velid === vel.id) {
+        if (lastScriptErr && lastScriptErr.velId === vel.id) {
             this.appli.getCodeExec().lastEncounteredScriptErr = undefined;
         }
 
-        // refresh. setting script does trigger uiredraw, but script has already been updated
-        // because saveChangesToModel was called in mousedown. so need to manually cause update
+        /* refresh. setting script does trigger uiredraw, but script has already been updated */
+        /* because saveChangesToModel was called in mousedown. so need to manually cause update */
         this.needsCompilation.remove(vel.id);
         this.appli.causeUIRedraw();
     }
@@ -226,7 +225,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             let thenums = linenotxt.split(' ')[1].replace(/,/g, '');
             let thenum = parseInt(thenums, 10);
             if (Number.isFinite(thenum)) {
-                thenum = Math.max(0, thenum - 1); // from 1-based to 0-based
+                thenum = Math.max(0, thenum - 1); /* from 1-based to 0-based */
                 let gel = new UI512ElTextFieldAsGeneric(this.el);
                 SelAndEntry.selectLineInField(gel, thenum);
 
@@ -257,9 +256,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
 
         super.respondKeydown(d);
 
-        // proactively save changes to model, even more aggressively than every mousedown,
-        // so that some other bug won't delete what you typed.
-        // needs to go *after* respondKeydown because we want to include any indentation/text insertion changes
+        /* proactively save changes to model, even more aggressively than every mousedown, */
+        /* so that some other bug won't delete what you typed. */
+        /* needs to go *after* respondKeydown because we want to include any indentation/text insertion changes */
         if (d.readableShortcut.search(/\bEnter\b/) !== -1) {
             this.saveChangesToModel(this.appli.UI512App(), false);
         }
@@ -275,7 +274,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         } else {
             let short = this.fromFullId(clicked);
             if (short === 'caption') {
-                // clicked the close box
+                /* clicked the close box */
                 this.saveChangesToModel(app, false);
                 this.appli.setOption('viewingScriptVelId', '');
             } else if (short === 'btnScriptEditorCompile') {
@@ -286,7 +285,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
                 if (this.statusErrMoreDetails.trim().length) {
                     this.cbAnswerMsg(this.statusErrMoreDetails, () => {});
                 }
-                // remember to not run other code after showing modal dialog
+                /* remember to not run other code after showing modal dialog */
             }
         }
     }
@@ -294,10 +293,10 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
     static readonly thereArePendingChanges = 'There are pending changes.';
 
     saveChangesToModel(app: UI512Application, onlyCheckIfDirty: boolean) {
-        // note: here we will only save the script text to 'script'
-        // it's only when user clicks Compile that the compiled script changes.
-        // so it's kind of an inconsistent state
-        // design open to future improvements (autocompile?)
+        /* note: here we will only save the script text to 'script' */
+        /* it's only when user clicks Compile that the compiled script changes. */
+        /* so it's kind of an inconsistent state */
+        /* design open to future improvements (autocompile?) */
 
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
         if (!vel || !this.el) {

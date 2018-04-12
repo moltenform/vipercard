@@ -107,10 +107,10 @@ export class CodeExecFrameStack {
                     return false;
                 } catch (e) {
                     let scriptErr = new VpcScriptRuntimeError();
-                    scriptErr.callstack = []; // not yet implemented
+                    scriptErr.callstack = []; /* not yet implemented */
                     scriptErr.details = e.message;
                     scriptErr.lineNumber = curline.firstToken.startLine || -1;
-                    scriptErr.velid = curframe.codeSection.ownerId;
+                    scriptErr.velId = curframe.codeSection.ownerId;
                     scriptErr.lineData = curline;
                     scriptErr.isScriptException = e.isVpcError;
                     scriptErr.isExternalException = !e.isUi512Error;
@@ -124,7 +124,7 @@ export class CodeExecFrameStack {
                 );
             }
         } else {
-            // there's no current stack, looks like we are done!
+            /* there's no current stack, looks like we are done! */
             return true;
         }
     }
@@ -140,7 +140,7 @@ export class CodeExecFrameStack {
             false
         );
 
-        // make sure we're not stuck on the same line again
+        /* make sure we're not stuck on the same line again */
         if (this.stack[this.stack.length - 1] === curframe && !blocked.val) {
             checkThrow(curframe.offset !== curline.offset, '7x|stuck on the same line', curline.offset.toString());
         }
@@ -202,7 +202,7 @@ export class CodeExecFrameStack {
             checkThrow(varname !== 'it' && this.check.okLocalVar(varname), '7s|reserved word', varname);
             curframe.declaredGlobals[varname] = true;
             if (!this.outside.IsVarDefined(varname)) {
-                // not-yet-used globals default to ""
+                /* not-yet-used globals default to "" */
                 this.outside.SetVarContents(varname, VpcValS(''));
             }
         }
@@ -211,11 +211,11 @@ export class CodeExecFrameStack {
     }
 
     visitHandlerStart(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        // confirm handler name
+        /* confirm handler name */
         assertTrue(curline.excerptToParse.length > 1, '5X|wrong readyToParse length');
         assertEqWarn(curframe.handlerName.toLowerCase(), curline.excerptToParse[1].image.toLowerCase(), '5W|');
 
-        // set locals for the params
+        /* set locals for the params */
         for (let i = 2; i < curline.excerptToParse.length; i++) {
             let paramname = curline.excerptToParse[i].image;
             let val = curframe.args[i - 2] || VpcVal.Empty;
@@ -236,13 +236,13 @@ export class CodeExecFrameStack {
     }
 
     visitHandlerExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        // we've validated curline.readyToParse[1] in the BranchTracking class
+        /* we've validated curline.readyToParse[1] in the BranchTracking class */
         this.stack.pop();
     }
 
     visitHandlerPass(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        // we've validated curline.readyToParse[1] in the BranchTracking class
-        // in the rewriting stage we've added a "return" after this line, for simplicity
+        /* we've validated curline.readyToParse[1] in the BranchTracking class */
+        /* in the rewriting stage we've added a "return" after this line, for simplicity */
         curframe.next();
         let found = this.findHandlerUpwards(curframe.codeSection.ownerId, curframe.handlerName, true);
         if (found) {
@@ -252,7 +252,7 @@ export class CodeExecFrameStack {
 
     visitReturnExpr(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         let evald = this.evalRequestedExpression(parsed, curline);
-        // set the result as a local variable in the frame beneath
+        /* set the result as a local variable in the frame beneath */
         let frameBeneath = this.stack[this.stack.length - 2];
         if (frameBeneath !== undefined) {
             frameBeneath.locals.set('$result', evald);
@@ -270,14 +270,14 @@ export class CodeExecFrameStack {
     }
 
     visitIfStart(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        // if blocks must start with "if" and end with an "end if"
+        /* if blocks must start with "if" and end with an "end if" */
         let blockInfo = this.getBlockInfo(curline, 2);
         let blockEnd = blockInfo[blockInfo.length - 1];
         assertEq(curline.offset, blockInfo[0].offset, '5U|');
         assertEq(curline.lineId, blockInfo[0].lineid, '5T|');
         assertEq(VpcLineCategory.IfEnd, curframe.codeSection.lines[blockEnd.offset].ctg, '5S|');
 
-        // mark all of the child branches as untried.
+        /* mark all of the child branches as untried. */
         for (let i = 0; i < blockInfo.length; i++) {
             curframe.offsetsMarked[blockInfo[i].offset] = false;
             assertEq(blockInfo[i].lineid, curframe.codeSection.lines[blockInfo[i].offset].lineId, '5R|');
@@ -289,7 +289,7 @@ export class CodeExecFrameStack {
             curframe.offsetsMarked[blockInfo[0].offset] = true;
             curframe.next();
         } else {
-            // skip to the next branch
+            /* skip to the next branch */
             this.validatedGoto(curframe, blockInfo[1]);
         }
     }
@@ -298,11 +298,11 @@ export class CodeExecFrameStack {
         let blockInfo = this.getBlockInfo(curline, 3);
         let anyTaken = blockInfo.some(ln => curframe.offsetsMarked[ln.offset]);
         if (anyTaken) {
-            // we've already taken a branch - skip to one past the end of the block
+            /* we've already taken a branch - skip to one past the end of the block */
             this.validatedGoto(curframe, blockInfo[blockInfo.length - 1]);
             curframe.next();
         } else {
-            // enter the branch
+            /* enter the branch */
             curframe.offsetsMarked[curline.offset] = true;
             curframe.next();
         }
@@ -312,18 +312,18 @@ export class CodeExecFrameStack {
         let blockInfo = this.getBlockInfo(curline, 3);
         let anyTaken = blockInfo.some(ln => curframe.offsetsMarked[ln.offset]);
         if (anyTaken) {
-            // we've already taken a branch - skip to one past the end of the block
+            /* we've already taken a branch - skip to one past the end of the block */
             this.validatedGoto(curframe, blockInfo[blockInfo.length - 1]);
             curframe.next();
         } else {
             let evald = this.evalRequestedExpression(parsed, curline);
             let got = evald.readAsStrictBoolean();
             if (got) {
-                // enter the branch
+                /* enter the branch */
                 curframe.offsetsMarked[curline.offset] = true;
                 curframe.next();
             } else {
-                // go to the next branch
+                /* go to the next branch */
                 let curindex = blockInfo.findIndex(v => v.offset === curline.offset);
                 checkThrow(curindex !== -1, '7r|not found in blockinfo');
                 checkThrow(curindex !== 0, "7q|it doesn't make sense that we are at the first");
@@ -338,14 +338,14 @@ export class CodeExecFrameStack {
     }
 
     visitRepeatExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        // advance to one line past the end of the loop
+        /* advance to one line past the end of the loop */
         let blockInfo = this.getBlockInfo(curline, 2);
         this.validatedGoto(curframe, blockInfo[blockInfo.length - 1]);
         curframe.next();
     }
 
     visitRepeatEnd(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        // go back to the top of the loop
+        /* go back to the top of the loop */
         let blockInfo = this.getBlockInfo(curline, 2);
         this.validatedGoto(curframe, blockInfo[0]);
     }
@@ -363,10 +363,10 @@ export class CodeExecFrameStack {
         let got = evald.readAsStrictBoolean();
         got = invert ? !got : got;
         if (got) {
-            // continue in the loop
+            /* continue in the loop */
             curframe.next();
         } else {
-            // advance to one line past the end of the loop
+            /* advance to one line past the end of the loop */
             let blockInfo = this.getBlockInfo(curline, 2);
             this.validatedGoto(curframe, blockInfo[blockInfo.length - 1]);
             curframe.next();
@@ -395,7 +395,7 @@ export class CodeExecFrameStack {
     }
 
     visitCallHandler(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        // reset the result, in case the callee doesn't return anything
+        /* reset the result, in case the callee doesn't return anything */
         curframe.locals.set('$result', VpcVal.Empty);
         let newhandlername = curline.excerptToParse[1].image;
         curframe.next();

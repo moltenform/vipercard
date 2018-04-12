@@ -1,3 +1,4 @@
+
 /* auto */ import { O, assertTrue, makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
@@ -21,10 +22,10 @@
  * a modal dialog
  * "answer", like an alert() box
  * "ask", like an input() box
- * 
- * becuse all of the Presenter's events, including the onIdle event, 
+ *
+ * becuse all of the Presenter's events, including the onIdle event,
  * are redirected when the dialog is open, it basically pauses everything.
- * 
+ *
  * see uiDemoComposites for an example
  */
 export class UI512CompModalDialog extends UI512CompBase {
@@ -181,7 +182,7 @@ export class UI512CompModalDialog extends UI512CompBase {
 
     /**
      * show the modal dialog, and cancel all outgoing events until it is closed.
-     * 
+     *
      * we'll temporarily replace *all* current listeners with the default UI512Presenter listeners.
      * because we replaced the idle event listener, we've basically frozen the app in its place.
      */
@@ -189,7 +190,7 @@ export class UI512CompModalDialog extends UI512CompBase {
         /* record the state, to be restored after dialog closes */
         let savedFocus = pr.getCurrentFocus();
         let savedCursor = UI512CursorAccess.getCursor();
-        
+
         pr.mouseDragStatus = MouseDragStatus.None;
         pr.setCurrentFocus(this.dlgType === UI512CompStdDialogType.Ask ? this.getElId(`inputfld`) : undefined);
         UI512CursorAccess.setCursor(UI512Cursors.Arrow);

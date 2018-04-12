@@ -4,11 +4,11 @@
 /* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, RequestedChunkTextPreposition, RequestedChunkType, SortStyle, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, SortType, VpcChunkPreposition, VpcChunkType, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
 /* auto */ import { VpcAudio } from '../../vpc/vpcutils/vpcAudio.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
@@ -334,10 +334,10 @@ export class ExecuteStatements {
             // it's not as simple as 'put "" into item 2 of x' because
             // delete item 2 of "a,b,c" should be "a,c" not "a,,c"
             checkThrow(
-                chunk.type === RequestedChunkType.Chars,
+                chunk.type === VpcChunkType.Chars,
                 "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
             );
-            this.outside.ContainerWrite(contref, '', RequestedChunkTextPreposition.into);
+            this.outside.ContainerWrite(contref, '', VpcChunkPreposition.into);
         }
     }
 
@@ -412,9 +412,9 @@ export class ExecuteStatements {
             terms.length === 2,
             "7M|we don't support 'put \"abc\"' to use the message box (missing into, before, or after)."
         );
-        let prep = getStrToEnum<RequestedChunkTextPreposition>(
-            RequestedChunkTextPreposition,
-            'RequestedChunkTextPreposition',
+        let prep = getStrToEnum<VpcChunkPreposition>(
+            VpcChunkPreposition,
+            'VpcChunkPreposition',
             terms[1]
         );
         let val = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '54|');
@@ -423,8 +423,8 @@ export class ExecuteStatements {
             '53|'
         );
         let cont = this.outside.ResolveContainerWritable(contref);
-        let itemdel = this.outside.GetItemDelim();
-        ChunkResolution.applyPut(cont, contref.chunk, itemdel, val.readAsString(), prep);
+        let itemDel = this.outside.GetItemDelim();
+        ChunkResolution.applyPut(cont, contref.chunk, itemDel, val.readAsString(), prep);
     }
 
     go_reset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
@@ -510,26 +510,26 @@ export class ExecuteStatements {
     go_sort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let ascend = true;
-        let sorttype = SortStyle.text;
+        let sortType = SortType.text;
         for (let i = 1; i < terms.length; i++) {
             if (terms[i] === 'ascending') {
                 ascend = true;
             } else if (terms[i] === 'descending') {
                 ascend = false;
             } else {
-                sorttype = getStrToEnum<SortStyle>(SortStyle, 'SortStyle or "ascending" or "descending"', terms[i]);
+                sortType = getStrToEnum<SortType>(SortType, 'SortType or "ascending" or "descending"', terms[i]);
             }
         }
 
         let schunktype = throwIfUndefined(this.findChildStr(vals, 'TokenTkcharorwordoritemorlineorplural'), '4]|');
-        let chunktype = getStrToEnum<RequestedChunkType>(RequestedChunkType, 'RequestedChunkType', schunktype);
+        let chunktype = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', schunktype);
         let contref = throwIfUndefined(
             this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
             '4[|'
         );
         let cont = this.outside.ResolveContainerWritable(contref);
-        let itemdel = this.outside.GetItemDelim();
-        ChunkResolution.applySort(cont, itemdel, chunktype, sorttype, ascend);
+        let itemDel = this.outside.GetItemDelim();
+        ChunkResolution.applySort(cont, itemDel, chunktype, sortType, ascend);
     }
 
     go_lock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {

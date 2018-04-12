@@ -1,9 +1,8 @@
 
 import { isRelease } from './config.js';
 
-/* vipercard code is strictly organized into layers, */
+/* code is separated into strict layers, */
 /* to promote good design and eliminate circular references. */
-
 /* a module can only import from modules below it on this list. */
 /* enforced by ts_exports_autoimport.py */
 
@@ -172,7 +171,7 @@ velSerialize
 velBase
 
 /vpc/vpcutils/
-vpcOutsideClasses
+vpcRequestedReference
 vpcInitIcons
 vpcAudio
 vpcChunk

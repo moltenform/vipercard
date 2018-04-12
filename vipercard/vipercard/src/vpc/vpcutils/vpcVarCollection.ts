@@ -3,6 +3,9 @@
 /* auto */ import { MapKeyToObjectCanSet, Util512 } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 
+/**
+ * a collection of variables
+ */
 export class VarCollection extends MapKeyToObjectCanSet<VpcVal> {
     protected length = 0;
     protected readonly limitReason: string;
@@ -11,6 +14,9 @@ export class VarCollection extends MapKeyToObjectCanSet<VpcVal> {
         this.limitReason = `exceeded max ${nameOfCollection} vars ${limit}`;
     }
 
+    /**
+     * assign a value to the variable
+     */
     set(key: string, v: VpcVal) {
         if (this.objects[key] === undefined) {
             this.length += 1;
@@ -20,6 +26,9 @@ export class VarCollection extends MapKeyToObjectCanSet<VpcVal> {
         super.set(key, v);
     }
 
+    /**
+     * add a new value to the collection
+     */
     add(key: string, v: VpcVal) {
         if (this.objects[key] === undefined) {
             this.length += 1;
@@ -30,6 +39,9 @@ export class VarCollection extends MapKeyToObjectCanSet<VpcVal> {
     }
 }
 
+/**
+ * built-in VPC constants
+ */
 export class VariableCollectionConstants extends VarCollection {
     constructor() {
         super(256, 'constants');
@@ -60,7 +72,7 @@ export class VariableCollectionConstants extends VarCollection {
         this.add('formfeed', VpcValS('\x0C'));
         this.add('linefeed', VpcValS('\n'));
 
-        // text style
+        /* text style */
         this.add('plain', VpcValS('plain'));
         this.add('bold', VpcValS('bold'));
         this.add('italic', VpcValS('italic'));
@@ -69,7 +81,8 @@ export class VariableCollectionConstants extends VarCollection {
         this.add('shadow', VpcValS('shadow'));
         this.add('condense', VpcValS('condense'));
         this.add('extend', VpcValS('extend'));
-        // button style
+
+        /* button style */
         this.add('transparent', VpcValS('transparent'));
         this.add('rect', VpcValS('rect'));
         this.add('opaque', VpcValS('opaque'));
@@ -80,15 +93,18 @@ export class VariableCollectionConstants extends VarCollection {
         this.add('checkbox', VpcValS('checkbox'));
         this.add('radio', VpcValS('radio'));
         this.add('rectangle', VpcValS('rectangle'));
-        // textalign
+
+        /* textalign */
         this.add('left', VpcValS('left'));
         this.add('center', VpcValS('center'));
         this.add('right', VpcValS('right'));
-        // field style
+
+        /* field style */
         this.add('scrolling', VpcValS('scrolling'));
 
         Util512.freezeRecurse(this);
     }
+
     set(varname: string, val: VpcVal) {
         throw makeVpcInternalErr("5~|we don't support creating a new constant " + varname);
     }

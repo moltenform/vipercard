@@ -4,11 +4,11 @@
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkTextPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
@@ -196,7 +196,7 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         return ChunkResolution.applyRead(cont, contref.chunk, this.GetItemDelim());
     }
 
-    ContainerWrite(contref: RequestedContainerRef, newcontent: string, prep: RequestedChunkTextPreposition) {
+    ContainerWrite(contref: RequestedContainerRef, newcontent: string, prep: VpcChunkPreposition) {
         let cont = this.ResolveContainerWritable(contref);
         return ChunkResolution.applyPut(cont, contref.chunk, this.GetItemDelim(), newcontent, prep);
     }

@@ -2,7 +2,7 @@
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { OrderedHash, assertEq, defaultSort, findEnumToStr, findStrToEnum, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { RequestedChunkType } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcChunkType } from '../../vpc/vpcutils/vpcEnums.js';
 
 
 
@@ -12,70 +12,70 @@ export class TestUI512Utils extends UI512TestBase {
         'test_strToEnum',
         () => {
             /* no item should be 0 */
-            assertTrue(RequestedChunkType.Chars !== 0, '0m|no item should be 0');
+            assertTrue(VpcChunkType.Chars !== 0, '0m|no item should be 0');
             /* alternates have same val */
-            assertEq(RequestedChunkType.alternateforms_word, RequestedChunkType.Words, '0l|');
+            assertEq(VpcChunkType.alternateforms_word, VpcChunkType.Words, '0l|');
             /* alternates have same val */
-            assertEq(RequestedChunkType.alternateforms_words, RequestedChunkType.Words, '0k|');
+            assertEq(VpcChunkType.alternateforms_words, VpcChunkType.Words, '0k|');
             /* we disallow this even though it's in the enum */
-            assertEq(undefined, findStrToEnum<RequestedChunkType>(RequestedChunkType, 'alternateforms_word'), '0j|');
+            assertEq(undefined, findStrToEnum<VpcChunkType>(VpcChunkType, 'alternateforms_word'), '0j|');
             /* or this */
-            assertEq(undefined, findStrToEnum<RequestedChunkType>(RequestedChunkType, '__isUI512Enum'), '0i|');
+            assertEq(undefined, findStrToEnum<VpcChunkType>(VpcChunkType, '__isUI512Enum'), '0i|');
             /* can't find empty string */
-            assertEq(undefined, findStrToEnum<RequestedChunkType>(RequestedChunkType, ''), '0h|');
+            assertEq(undefined, findStrToEnum<VpcChunkType>(VpcChunkType, ''), '0h|');
             /* can't find non-existant */
-            assertEq(undefined, findStrToEnum<RequestedChunkType>(RequestedChunkType, 'abc'), '0g|');
+            assertEq(undefined, findStrToEnum<VpcChunkType>(VpcChunkType, 'abc'), '0g|');
             /* can't find non-existant that is close 1 */
-            assertEq(undefined, findStrToEnum<RequestedChunkType>(RequestedChunkType, 'words '), '0f|');
+            assertEq(undefined, findStrToEnum<VpcChunkType>(VpcChunkType, 'words '), '0f|');
             /* can't find non-existant that is close 2 */
-            assertEq(undefined, findStrToEnum<RequestedChunkType>(RequestedChunkType, '_words'), '0e|');
+            assertEq(undefined, findStrToEnum<VpcChunkType>(VpcChunkType, '_words'), '0e|');
             /* look up by canonical form */
-            assertEq(RequestedChunkType.Words, findStrToEnum<RequestedChunkType>(RequestedChunkType, 'Words'), '0d|');
+            assertEq(VpcChunkType.Words, findStrToEnum<VpcChunkType>(VpcChunkType, 'Words'), '0d|');
             /* look up by alt form */
-            assertEq(RequestedChunkType.Words, findStrToEnum<RequestedChunkType>(RequestedChunkType, 'word'), '0c|');
+            assertEq(VpcChunkType.Words, findStrToEnum<VpcChunkType>(VpcChunkType, 'word'), '0c|');
             /* look up by another alt form */
-            assertEq(RequestedChunkType.Words, findStrToEnum<RequestedChunkType>(RequestedChunkType, 'words'), '0b|');
+            assertEq(VpcChunkType.Words, findStrToEnum<VpcChunkType>(VpcChunkType, 'words'), '0b|');
             /* look up by another alt form */
             assertEq(
-                RequestedChunkType.Chars,
-                findStrToEnum<RequestedChunkType>(RequestedChunkType, 'characters'),
+                VpcChunkType.Chars,
+                findStrToEnum<VpcChunkType>(VpcChunkType, 'characters'),
                 '0a|'
             );
         },
         'test_enumToStr',
         () => {
             /* can't find 0 */
-            assertEq(undefined, findEnumToStr<RequestedChunkType>(RequestedChunkType, 0), '0Z|');
+            assertEq(undefined, findEnumToStr<VpcChunkType>(VpcChunkType, 0), '0Z|');
             /* can't find non-existant */
-            assertEq(undefined, findEnumToStr<RequestedChunkType>(RequestedChunkType, 99), '0Y|');
+            assertEq(undefined, findEnumToStr<VpcChunkType>(VpcChunkType, 99), '0Y|');
             /* don't allow lookup on marker */
             assertEq(
                 undefined,
-                findEnumToStr<RequestedChunkType>(RequestedChunkType, RequestedChunkType.__isUI512Enum),
+                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.__isUI512Enum),
                 '0X|'
             );
             /* get canonical string for lines */
             assertEq(
                 'Lines',
-                findEnumToStr<RequestedChunkType>(RequestedChunkType, RequestedChunkType.alternateforms_lines),
+                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_lines),
                 '0W|'
             );
             /* get canonical string for items */
             assertEq(
                 'Items',
-                findEnumToStr<RequestedChunkType>(RequestedChunkType, RequestedChunkType.alternateforms_items),
+                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_items),
                 '0V|'
             );
             /* get canonical string for words */
             assertEq(
                 'Words',
-                findEnumToStr<RequestedChunkType>(RequestedChunkType, RequestedChunkType.alternateforms_words),
+                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_words),
                 '0U|'
             );
             /* get canonical string for chars */
             assertEq(
                 'Chars',
-                findEnumToStr<RequestedChunkType>(RequestedChunkType, RequestedChunkType.alternateforms_chars),
+                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_chars),
                 '0T|'
             );
         },

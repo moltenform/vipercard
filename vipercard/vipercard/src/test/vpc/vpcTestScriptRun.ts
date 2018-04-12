@@ -39,7 +39,7 @@ export class TestVpcScriptRun extends UI512TestBase {
             this.appl.appli.doWithoutAbilityToUndo(() => this.populateModel());
             this.appl.appli.doWithoutAbilityToUndo(() => this.ctrller.setTool(VpcTool.Browse));
 
-            // make showError a no-op instead of opening the script.
+            /* make showError a no-op instead of opening the script. */
             this.ctrller.showError = a => {};
         }
 
@@ -64,15 +64,15 @@ export class TestVpcScriptRun extends UI512TestBase {
     }
 
     populateModel() {
-        // 1st bg "a" has 1 card named "a"
-        // 2nd bg "b" has 3 cards named "b", "c", "d"
-        //       card "c" has 3 flds "p1", "p2", "p3"
-        //               and 2 btns "p1", "p2"
-        //       card "d" has 2 flds "p1", "p2"
-        //               and 1 btn "p1"
-        // 3rd bg "c" has 1 card named "d"
-        //       card "d" has 1 fld "p1"
-        //               and 1 btn "p1"
+        /* 1st bg "a" has 1 card named "a" */
+        /* 2nd bg "b" has 3 cards named "b", "c", "d" */
+        /*       card "c" has 3 flds "p1", "p2", "p3" */
+        /*               and 2 btns "p1", "p2" */
+        /*       card "d" has 2 flds "p1", "p2" */
+        /*               and 1 btn "p1" */
+        /* 3rd bg "c" has 1 card named "d" */
+        /*       card "d" has 1 fld "p1" */
+        /*               and 1 btn "p1" */
 
         let model = this.appl.model;
         assertEq(1, model.stack.bgs.length, '2f|');
@@ -148,7 +148,7 @@ export class TestVpcScriptRun extends UI512TestBase {
         let b = btn_go as VpcElButton;
         assertTrue(b && b.isVpcElButton, '2c|not a button');
         let userBounds = this.ctrller.userBounds;
-        // make the button location more realistic, it should be within userBounds
+        /* make the button location more realistic, it should be within userBounds */
         b.setDimensions(userBounds[0] + 1, userBounds[1] + 1, 30, 30);
         this.simMouseX = b.get_n('x') + 5;
         this.simMouseY = b.get_n('y') + 6;
@@ -166,7 +166,7 @@ export class TestVpcScriptRun extends UI512TestBase {
 
     protected updateObjectScript(id: string, code: string) {
         this.appl.runtime.codeExec.cbOnScriptError = errFromScript => {
-            let idScriptErr = errFromScript.velid;
+            let idScriptErr = errFromScript.velId;
             let n = errFromScript.lineNumber;
             let isUs = !errFromScript.isExternalException;
             let msg = errFromScript.details;
@@ -192,7 +192,7 @@ export class TestVpcScriptRun extends UI512TestBase {
         let caughtErr = false;
         let isCompilationStage = true;
         this.appl.runtime.codeExec.cbOnScriptError = errFromScript => {
-            let id = errFromScript.velid;
+            let id = errFromScript.velId;
             let n = errFromScript.lineNumber;
             let isUs = !errFromScript.isExternalException;
             let msg = errFromScript.details;
@@ -241,13 +241,13 @@ export class TestVpcScriptRun extends UI512TestBase {
             assertTrueWarn(false, '2W|error not seen', codeBefore, codeIn);
         }
 
-        // fake a click inside btnGo
+        /* fake a click inside btnGo */
         assertEq(VpcTool.Browse, this.ctrller.getTool(), '');
         this.ctrller.trackMouse = [this.simMouseX, this.simMouseY];
         let fakeEvent = new MouseUpEventDetails(1, this.simClickX, this.simClickY, 0, ModifierKeys.None);
         VpcPresenterEvents.scheduleScriptMsgImpl(this.ctrller, fakeEvent, btnGo.id, false);
 
-        // message should now be in the queue
+        /* message should now be in the queue */
         assertTrue(this.appl.runtime.codeExec.workQueue.length > 0, '2V|should be in queue');
         isCompilationStage = false;
         this.appl.appli.doWithoutAbilityToUndo(() => this.appl.runtime.codeExec.runTimeslice(Infinity));
@@ -321,7 +321,7 @@ put ${s} into testresult`;
                     console.error(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
-                    // assertTrue(false, '2N|')
+                    /* assertTrue(false, '2N|') */
                 }
             } else {
                 let gt = got.readAsString();
@@ -330,7 +330,7 @@ put ${s} into testresult`;
                     console.error(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
-                    // assertTrue(false, '2M|')
+                    /* assertTrue(false, '2M|') */
                 }
             }
         }
@@ -408,8 +408,8 @@ put ${s} into testresult`;
 
     testBatchEvalInvertAndCommute(tests: [string, string][]) {
         let flipOperation = (op: string): [string, string] => {
-            // first is the op when order is reversed
-            // second is the op that is logical inverse
+            /* first is the op when order is reversed */
+            /* second is the op that is logical inverse */
             if (op === '==') {
                 return ['==', '!='];
             } else if (op === '=') {
@@ -492,34 +492,34 @@ put ${s} into testresult`;
         () => {
             let batch: [string, string][];
             batch = [
-                // empty lines don't interfere with scripts
+                /* empty lines don't interfere with scripts */
                 ['\n\n\n\nput 1 into t1\n\n\n\\t1', '1'],
-                // wrong indentation doesn't interfere with scripts
+                /* wrong indentation doesn't interfere with scripts */
                 ['\n         put 1 into t2\n\\t2', '1'],
                 ['\n\t\t\t\t\tput 1 into t3\n\\t3', '1'],
-                // trailing whitespace doesn't interfere with scripts
+                /* trailing whitespace doesn't interfere with scripts */
                 ['\nput 1 into t4           \n\\t4', '1'],
                 ['\nput 1 into t5\t\t\t\t\t\n\\t5', '1'],
-                // continued lines
+                /* continued lines */
                 ['put 1 {BSLASH}\n into t6\\t6', '1'],
                 ['put {BSLASH}\n 1 {BSLASH}\n into {BSLASH}\n t7\\t7', '1'],
                 ['put 8 into t8{BSLASH}\n{BSLASH}\n{BSLASH}\n\\t8', '8'],
                 ['{BSLASH}\n{BSLASH}\n{BSLASH}\nput 9 into t9\\t9', '9'],
-                // continued lines with whitespace after the backslash
+                /* continued lines with whitespace after the backslash */
                 ['put 1 {BSLASH} \n into t6\\t6', '1'],
                 ['put {BSLASH}\t  \n 1 {BSLASH}\t  \n into {BSLASH}\t  \n t7\\t7', '1'],
-                // continued lines should still show errors on the expected line
+                /* continued lines should still show errors on the expected line */
                 ['put {BSLASH}\n xyz into tnot\\tnot', 'ERR:no variable found with this name'],
                 ['1 {BSLASH}\n + {BSLASH}\n xyz', 'ERR:no variable found with this name'],
-                // continue a across a line
+                /* continue a across a line */
                 ['put "a" & {BSLASH}\n "b" into test\\test', 'ab'],
                 ['put 2 + {BSLASH}\n 3 into test\\test', '5'],
-                // string literal can contain comment symbols
+                /* string literal can contain comment symbols */
                 ['put "--thetest" into test\\test', '--thetest'],
                 ['put "  --thetest" into test\\test', '  --thetest'],
                 ['put "aa--thetest" into test\\test', 'aa--thetest'],
                 ['put "aa--thetest--test" into test\\test', 'aa--thetest--test'],
-                // lexing: most but not all constructs need whitespace
+                /* lexing: most but not all constructs need whitespace */
                 ['2*3*4', '24'],
                 ['2 * 3 * 4', '24'],
                 ['put 2 into myvar\\myvar', '2'],
@@ -528,15 +528,15 @@ put ${s} into testresult`;
                 ['7 div 3', '2'],
                 ['7 mod3', 'ERR:MismatchedTokenException'],
                 ['7 div3', 'ERR:MismatchedTokenException'],
-                // lexing: strings don't need space
+                /* lexing: strings don't need space */
                 ['"a"&"b"', 'ab'],
                 ['"a"&&"b"', 'a b'],
                 ['"single\'quotes ok"', "single'quotes ok"],
                 ['"single\'quotes\'ok"', "single'quotes'ok"],
-                // it is ok if identifiers contain a keyword. ("of" is a keyword)
-                // if "of" is a keyword, "of_" is still an ok variable name
-                // this is why it's important that the lexer regex is
-                // /of(?![a-zA-Z0-9_])/ and not just /of/
+                /* it is ok if identifiers contain a keyword. ("of" is a keyword) */
+                /* if "of" is a keyword, "of_" is still an ok variable name */
+                /* this is why it's important that the lexer regex is */
+                /* /of(?![a-zA-Z0-9_])/ and not just /of/ */
                 ['put 4 into put4into\\put4into', '4'],
                 ['put 4 into ofa\\ofa', '4'],
                 ['put 4 into ofcards\\ofcards', '4'],
@@ -551,7 +551,7 @@ put ${s} into testresult`;
                 ['put 4 into Zof\\Zof', '4'],
                 ['put 4 into a\\a', '4'],
                 ['put 4 into aa\\aa', '4'],
-                // dest needs to be a token of type TkIdentifier
+                /* dest needs to be a token of type TkIdentifier */
                 ['put 4 into short\\0', 'ERR:NotAllInputParsedException'],
                 ['put 4 into long\\0', 'ERR:NotAllInputParsedException'],
                 ['put 4 into number\\0', 'ERR:NotAllInputParsedException'],
@@ -562,7 +562,7 @@ put ${s} into testresult`;
             ];
             this.testBatchEvaluate(batch);
 
-            // string literal cannot contain contline symbol since it has a newline
+            /* string literal cannot contain contline symbol since it has a newline */
             this.assertCompileErrorIn('put "a{BSLASH}\nb" into test', 'unexpected character: ->"<-', 3);
             this.assertCompileErrorIn('put "{BSLASH}\n" into test', 'unexpected character: ->"<-', 3);
             this.assertCompileErrorIn('put "{BSLASH}\n{BSLASH}\n" into test', 'unexpected character: ->"<-', 3);
@@ -572,7 +572,7 @@ put ${s} into testresult`;
                 4
             );
 
-            // we changed lexer to disallow this, since it is clearly wrong
+            /* we changed lexer to disallow this, since it is clearly wrong */
             this.assertCompileErrorIn('put 3into test', 'unexpected character', 3);
             this.assertCompileErrorIn('put 3into into test', 'unexpected character', 3);
             this.assertCompileErrorIn('put 3sin into test', 'unexpected character', 3);
@@ -584,13 +584,13 @@ put ${s} into testresult`;
             this.assertCompileErrorIn('put 7div3 into test', 'unexpected character', 3);
             this.assertCompileErrorIn('put 7div 3 into test', 'unexpected character', 3);
 
-            // for keywords/semikeywords that would be a common variable name, check
+            /* for keywords/semikeywords that would be a common variable name, check */
             this.assertCompileErrorIn('x = 4', "this isn't C", 3);
             this.assertCompileErrorIn('xyz(4)', "this isn't C", 3);
             this.assertCompileErrorIn('sin(4)', "this isn't C", 3);
 
             batch = [
-                // comments
+                /* comments */
                 [
                     `get 1 + 2 -- + 3 -- + 4
 put it into x\\x`,
@@ -670,12 +670,12 @@ put x into x\\x`,
             ];
             this.testBatchEvaluate(batch);
 
-            // lexing: baseline for runGeneralCode
+            /* lexing: baseline for runGeneralCode */
             this.appl.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
             this.runGeneralCode('', 'global testresult \n put 123.0 into testresult');
             assertEq('123', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '24|');
 
-            // lexing: invalid num literals
+            /* lexing: invalid num literals */
             this.assertCompileErrorIn('put . into x', 'unexpected character', 3);
             this.assertCompileErrorIn('put .5 into x', 'unexpected character', 3);
             this.assertCompileErrorIn('put x.5 into x', 'unexpected character', 3);
@@ -692,7 +692,7 @@ put x into x\\x`,
             this.assertCompileErrorIn('put 0..1 into x', 'unexpected character', 3);
             this.assertCompileErrorIn('put 4.. into x', 'unexpected character', 3);
 
-            // lexing: invalid string literals
+            /* lexing: invalid string literals */
             this.assertCompileErrorIn('put "abc into x', 'unexpected character', 3);
             this.assertCompileErrorIn('put "abc\ndef" into x', 'unexpected character', 3);
             this.assertCompileErrorIn('put "\n" into x', 'unexpected character', 3);
@@ -708,7 +708,7 @@ put x into x\\x`,
             this.assertLineError('put "a""b" into x', 'MismatchedToken', 3);
             this.assertLineError('put "a" "b" into x', 'MismatchedToken', 3);
 
-            // invalid identifiers
+            /* invalid identifiers */
             this.assertLineError('put "abc" into 1', 'NotAllInputParsedException', 3);
             this.assertLineError('put "abc" into 1 x', 'NotAllInputParsedException', 3);
             this.assertLineError('put "abc" into b c', 'NotAllInputParsedException', 3);
@@ -718,33 +718,33 @@ put x into x\\x`,
             this.assertCompileErrorIn('put "abc" into \xf1', 'unexpected character', 3);
             this.assertCompileErrorIn('put "abc" into b\xf1', 'unexpected character', 3);
 
-            // not valid because it's something else
+            /* not valid because it's something else */
             let notvalid = `pi,it,one,true,cr,autohilite,style,cursor,dontwrap,
                 script,owner,name,target,sin,result,params,
                 mouse,screenrect,from,into,after,before,at,with,on,
                 end,exit,pass,return,if,else,while,until,global`;
-            // not 'id' 'of' 'length' 'first' because they are different tokens
+            /* not 'id' 'of' 'length' 'first' because they are different tokens */
             let disallowedAsHandler = notvalid.replace(/\s/g, '').split(',');
             let disallowedAsVar = disallowedAsHandler
                 .concat(['mouseup'])
                 .filter(s => s !== 'before' && s !== 'into' && s !== 'after');
 
-            // can't use this as a name for variables
+            /* can't use this as a name for variables */
             for (let reserved of disallowedAsVar) {
                 this.assertLineError(`put "abc" into ${reserved}`, 'name not allowed', 3);
             }
 
-            // can't use this as a name for loop variables
+            /* can't use this as a name for loop variables */
             for (let reserved of disallowedAsVar) {
                 this.assertCompileErrorIn(`repeat with ${reserved} = 1 to 3\nend repeat`, 'reserved word', 3);
             }
 
-            // can't use this as a name for globals
+            /* can't use this as a name for globals */
             for (let reserved of disallowedAsVar.concat(['before', 'after', 'into'])) {
                 this.assertCompileErrorIn(`global ${reserved}`, 'reserved word', 3);
             }
 
-            // can't use this as a name for params
+            /* can't use this as a name for params */
             for (let reserved of disallowedAsVar.concat(['before', 'after', 'into'])) {
                 this.assertCompileError(
                     `on myhandler p1, ${reserved}` + '\nglobal x\n' + `end myhandler`,
@@ -753,12 +753,12 @@ put x into x\\x`,
                 );
             }
 
-            // can't use this as a name for handlers
+            /* can't use this as a name for handlers */
             for (let reserved of disallowedAsHandler) {
                 this.assertCompileError(`on ${reserved}` + '\nglobal x\n' + `end ${reserved}`, 'reserved word', 1);
             }
 
-            // can't use this as a name for calling a handler
+            /* can't use this as a name for calling a handler */
             for (let reserved of disallowedAsHandler) {
                 let expectErr = 'reserved word';
                 if (reserved === 'on') {
@@ -776,7 +776,7 @@ put x into x\\x`,
         },
         'test_execCommands',
         () => {
-            // choose tool
+            /* choose tool */
             this.assertCompileErrorIn('choose', 'not enough args', 3);
             this.assertCompileErrorIn('choose tool', 'not enough args', 3);
             this.assertCompileErrorIn('choose 3', 'not enough args', 3);
@@ -812,7 +812,7 @@ put x into x\\x`,
 
             this.testBatchEvaluate(batch);
 
-            // add, subtract, divide, multiply
+            /* add, subtract, divide, multiply */
             this.setCurrentCard(this.elIds.card_b_c);
             this.runGeneralCode('', 'put "0" into cd fld "p1"');
             this.assertLineError('add 4 with cd fld "p1"', 'MismatchedTokenException', 3);
@@ -841,21 +841,21 @@ put x into x\\x`,
             this.assertLineError('multiply cd fld "p1" by', 'NoViableAltException', 3);
 
             batch = [
-                // operations
+                /* operations */
                 ['put 4 into x\\x', '4'],
                 ['add (1+2) to x\\x', '7'],
                 ['subtract (1+2) from x\\x', '4'],
                 ['multiply x by (1+2)\\x', '12'],
                 ['divide x by (1+3)\\x', '3'],
 
-                // operations, field
+                /* operations, field */
                 ['put "4" into cd fld "p1"\\0', '0'],
                 ['add (1+2) to cd fld "p1"\\cd fld "p1"', '7'],
                 ['subtract (1+2) from cd fld "p1"\\cd fld "p1"', '4'],
                 ['multiply cd fld "p1" by (1+2)\\cd fld "p1"', '12'],
                 ['divide cd fld "p1" by (1+3)\\cd fld "p1"', '3'],
 
-                // by item
+                /* by item */
                 ['put "3,4,5" into x\\0', '0'],
                 ['add (1+2) to item 2 of x\\item 2 of x', '7'],
                 ['subtract (1+2) from item 2 of x\\item 2 of x', '4'],
@@ -863,7 +863,7 @@ put x into x\\x`,
                 ['divide item 2 of x by (1+3)\\item 2 of x', '3'],
                 ['chartonum(x=="3,3,5")', '116'],
 
-                // by word
+                /* by word */
                 ['put "3  4  5" into x\\0', '0'],
                 ['add (1+2) to word 2 of x\\word 2 of x', '7'],
                 ['subtract (1+2) from word 2 of x\\word 2 of x', '4'],
@@ -871,14 +871,14 @@ put x into x\\x`,
                 ['divide word 2 of x by (1+3)\\word 2 of x', '3'],
                 ['chartonum(x=="3  3  5")', '116'],
 
-                // by char
+                /* by char */
                 ['put "345" into x\\0', '0'],
                 ['add (1+2) to char 2 to 2 of x\\x', '375'],
                 ['subtract (1+2) from char 2 to 2 of x\\x', '345'],
                 ['multiply char 2 to 2 of x by (1+2)\\x', '3125'],
                 ['divide char 2 to 3 of x by (1+3)\\x', '335'],
 
-                // not a number
+                /* not a number */
                 ['put "4a" into cd fld "p2"\\0', '0'],
                 ['add (1+2) to cd fld "p2"\\cd fld "p2"', 'ERR:expected a number'],
                 ['subtract (1+2) from cd fld "p2"\\cd fld "p2"', 'ERR:expected a number'],
@@ -888,7 +888,7 @@ put x into x\\x`,
 
             this.testBatchEvaluate(batch, true);
 
-            // changing current card
+            /* changing current card */
             this.setCurrentCard(this.elIds.card_b_c);
             this.assertCompileErrorIn('go', 'on its own', 3);
             this.assertCompileErrorIn('go back', "don't support", 3);
@@ -899,7 +899,7 @@ put x into x\\x`,
             this.assertLineError('go to cd btn "p1"', 'NoViableAltException', 3);
             this.assertLineError('go xyz', 'Not a valid choice', 3);
             batch = [
-                // ord/position
+                /* ord/position */
                 ['the short id of this cd', `${this.elIds.card_b_c}`],
                 ['go next\\the short id of this cd', `${this.elIds.card_b_d}`],
                 ['go prev\\the short id of this cd', `${this.elIds.card_b_c}`],
@@ -909,7 +909,7 @@ put x into x\\x`,
                 ['go last\\the short id of this cd', `${this.elIds.card_c_d}`],
                 ['go third\\the short id of this cd', `${this.elIds.card_b_c}`],
 
-                // object reference
+                /* object reference */
                 ['go to this stack\\the short id of this cd', `${this.elIds.card_b_c}`],
                 ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
                 ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
@@ -930,7 +930,7 @@ put x into x\\x`,
 
             this.setCurrentCard(this.elIds.card_b_c);
             batch = [
-                // not valid
+                /* not valid */
                 ['enable cd 1', `ERR:MismatchedTokenException`],
                 ['enable bg 1', `ERR:MismatchedTokenException`],
                 ['enable cd fld "p1"', `ERR:MismatchedTokenException`],
@@ -938,7 +938,7 @@ put x into x\\x`,
                 ['disable bg 1', `ERR:MismatchedTokenException`],
                 ['disable cd fld "p1"', `ERR:MismatchedTokenException`],
 
-                // valid
+                /* valid */
                 ['disable cd btn "p1"\\the enabled of cd btn "p1"', `false`],
                 ['disable cd btn "p1"\\the enabled of cd btn "p1"', `false`],
                 ['enable cd btn "p1"\\the enabled of cd btn "p1"', `true`],
@@ -948,7 +948,7 @@ put x into x\\x`,
 
             this.setCurrentCard(this.elIds.card_b_c);
             batch = [
-                // not valid
+                /* not valid */
                 ['hide\\0', `ERR:NoViableAltException`],
                 ['hide cd 1\\0', `ERR:NoViableAltException`],
                 ['hide bg 1\\0', `ERR:NoViableAltException`],
@@ -967,7 +967,7 @@ put x into x\\x`,
                 ['show cd btn "p1" at "12", "23", "34"\\0', `ERR:NotAllInputParsedException`],
                 ['show cd btn "p1" at "12, 23, 34"\\0', `ERR:MismatchedTokenException`],
 
-                // valid
+                /* valid */
                 ['hide cd btn "p1"\\the visible of cd btn "p1"', `false`],
                 ['hide cd btn "p1"\\the visible of cd btn "p1"', `false`],
                 ['show cd btn "p1"\\the visible of cd btn "p1"', `true`],
@@ -977,7 +977,7 @@ put x into x\\x`,
                 ['show cd fld "p1"\\the visible of cd fld "p1"', `true`],
                 ['show cd fld "p1"\\the visible of cd fld "p1"', `true`],
 
-                // set locations
+                /* set locations */
                 ['set the rect of cd btn "p1" to 10, 20, 40, 60\\0', `0`],
                 ['show cd btn "p1" at 123, 234\\the loc of cd btn "p1"', `123,234`],
                 ['show cd btn "p1" at 12, 23\\the loc of cd btn "p1"', `12,23`],
@@ -1025,7 +1025,7 @@ put x into x\\x`,
             this.testBatchEvaluate(batch);
 
             batch = [
-                // not yet supported
+                /* not yet supported */
                 ['put "abcdef,123,456" into initlist\\0', '0'],
                 ['put initlist into x\\0', '0'],
                 ['delete cd btn "a1"\\0', 'ERR:not yet supported'],
@@ -1040,7 +1040,7 @@ put x into x\\x`,
                 ['put "abcdef,123,456" into x\ndelete item 1 to 999 of x\\x', 'ERR:5:not yet supported'],
                 ['put "abcdef,123,456" into x\ndelete item 2 to 999 of x\\x', 'ERR:5:not yet supported'],
 
-                // normal chunks
+                /* normal chunks */
                 ['put "abcdef,123,456" into initlist\\0', '0'],
                 ['put initlist into x\\0', '0'],
                 ['delete first char of x\\x', 'bcdef,123,456'],
@@ -1049,7 +1049,7 @@ put x into x\\x`,
                 ['put initlist into x\\0', '0'],
                 ['delete char 2 to 5 of x\\x', 'af,123,456'],
 
-                // big numbers
+                /* big numbers */
                 ['put initlist into x\\0', '0'],
                 ['delete char 999 of x\\x', 'abcdef,123,456'],
                 ['put initlist into x\\0', '0'],
@@ -1088,7 +1088,7 @@ put x into x\\x`,
                 ['put "ab,cd,ef,12,34,56,78" into inititms\\0', '0'],
                 ['put "abcdef,123,456" into initlist\\0', '0'],
 
-                // empty string into
+                /* empty string into */
                 ['put initlist into x\\0', '0'],
                 ['put "" into char 2 of x\\x', 'acdef,123,456'],
                 ['put initlist into x\\0', '0'],
@@ -1100,7 +1100,7 @@ put x into x\\x`,
                 ['put initlist into x\\0', '0'],
                 ['put "" into char 2 to 999 of x\\x', 'a'],
 
-                // empty string before/after
+                /* empty string before/after */
                 ['put initlist into x\\0', '0'],
                 ['put "" before char 2 of x\\x', 'abcdef,123,456'],
                 ['put "" after char 2 of x\\x', 'abcdef,123,456'],
@@ -1111,7 +1111,7 @@ put x into x\\x`,
                 ['put "" before char 888 to 999 of x\\x', 'abcdef,123,456'],
                 ['put "" after char 888 to 999 of x\\x', 'abcdef,123,456'],
 
-                // medium sized string into
+                /* medium sized string into */
                 ['put initlist into x\\0', '0'],
                 ['put "qwertyqwerty" into char 2 of x\\x', 'aqwertyqwertycdef,123,456'],
                 ['put initlist into x\\0', '0'],
@@ -1123,7 +1123,7 @@ put x into x\\x`,
                 ['put initlist into x\\0', '0'],
                 ['put "qwertyqwerty" into char 2 to 999 of x\\x', 'aqwertyqwerty'],
 
-                // medium sized string before/after
+                /* medium sized string before/after */
                 ['put initlist into x\\0', '0'],
                 ['put "qwertyqwerty" before char 2 of x\\x', 'aqwertyqwertybcdef,123,456'],
                 ['put initlist into x\\0', '0'],
@@ -1141,7 +1141,7 @@ put x into x\\x`,
                 ['put initlist into x\\0', '0'],
                 ['put "qwertyqwerty" after char 888 to 999 of x\\x', 'abcdef,123,456qwertyqwerty'],
 
-                // items
+                /* items */
                 ['put inititms into x\\0', '0'],
                 ['put "" into item 2 of x\\x', 'ab,,ef,12,34,56,78'],
                 ['put inititms into x\\0', '0'],
@@ -1153,7 +1153,7 @@ put x into x\\x`,
                 ['put inititms into x\\0', '0'],
                 ['put "" into item 2 to 999 of x\\x', 'ab,'],
 
-                // empty string before/after
+                /* empty string before/after */
                 ['put inititms into x\\0', '0'],
                 ['put "" before item 2 of x\\x', 'ab,cd,ef,12,34,56,78'],
                 ['put inititms into x\\0', '0'],
@@ -1175,7 +1175,7 @@ put x into x\\x`,
                 ['put inititms into x\\0', '0'],
                 ['put "" after item 2 to 12 of x\\x', 'ab,cd,ef,12,34,56,78'],
 
-                // medium sized string into
+                /* medium sized string into */
                 ['put inititms into x\\0', '0'],
                 ['put "qwerty" into item 2 of x\\x', 'ab,qwerty,ef,12,34,56,78'],
                 ['put inititms into x\\0', '0'],
@@ -1187,7 +1187,7 @@ put x into x\\x`,
                 ['put inititms into x\\0', '0'],
                 ['put "qwerty" into item 2 to 12 of x\\x', 'ab,qwerty'],
 
-                // medium sized string before/after
+                /* medium sized string before/after */
                 ['put inititms into x\\0', '0'],
                 ['put "qwerty" before item 2 of x\\x', 'ab,qwertycd,ef,12,34,56,78'],
                 ['put inititms into x\\0', '0'],
@@ -1209,8 +1209,8 @@ put x into x\\x`,
                 ['put inititms into x\\0', '0'],
                 ['put "qwerty" after item 2 to 12 of x\\x', 'ab,cd,ef,12,34,56,78qwerty'],
 
-                // with variables that aren't yet defined
-                // we'll treat it as an empty string, unless you are trying to use with a chunk
+                /* with variables that aren't yet defined */
+                /* we'll treat it as an empty string, unless you are trying to use with a chunk */
                 ['put "abc" into newvar1\\newvar1', 'abc'],
                 ['put "abc" before newvar2\\newvar2', 'abc'],
                 ['put "abc" after newvar3\\newvar3', 'abc'],
@@ -1332,7 +1332,7 @@ put 101 into x
 end if` + '\\x',
                     '100'
                 ],
-                // use counter to see which loop conditions have been evald
+                /* use counter to see which loop conditions have been evald */
                 [
                     `put counting() into cfirst
 if char 1 of counting() is "z" or 2+3 is 5 then
@@ -1385,7 +1385,7 @@ put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
                     '1003 4'
                 ],
-                // order matters
+                /* order matters */
                 [
                     `if char 1 of "abc" is "b" then
 put 20 into x
@@ -1396,7 +1396,7 @@ put 22 into x
 end if\\x`,
                     '21'
                 ],
-                // nested if
+                /* nested if */
                 [
                     `if 4 > 3 then
 if 4 > 2 then
@@ -1410,9 +1410,9 @@ end if\\x`,
             ];
             this.testBatchEvaluate(batch);
 
-            // repeats
+            /* repeats */
             batch = [
-                // simple loop
+                /* simple loop */
                 [
                     `put "a" into s
 put 0 into i
@@ -1422,7 +1422,7 @@ put i+1 into i
 end repeat\\s`,
                     `a 0 1 2`
                 ],
-                // condition never true
+                /* condition never true */
                 [
                     `put "a" into s
 put 0 into i
@@ -1432,7 +1432,7 @@ put i+1 into i
 end repeat\\s`,
                     `a`
                 ],
-                // simple loop
+                /* simple loop */
                 [
                     `put "b" into s
 put 0 into i
@@ -1442,7 +1442,7 @@ put i+1 into i
 end repeat\\s`,
                     `b 0 1 2`
                 ],
-                // condition never true
+                /* condition never true */
                 [
                     `put "b" into s
 put 0 into i
@@ -1452,7 +1452,7 @@ put i+1 into i
 end repeat\\s`,
                     `b`
                 ],
-                // nested loop, and a second loop right after the first
+                /* nested loop, and a second loop right after the first */
                 [
                     `put "a" into s
 put 0 into i
@@ -1471,7 +1471,7 @@ put j+1 into j
 end repeat\\s`,
                     `a j0 j1 0 j0 j1 1 j0 j1 2 j2 j3`
                 ],
-                // inner loop changes iteration count
+                /* inner loop changes iteration count */
                 [
                     `put "a" into s
 put 0 into i
@@ -1485,7 +1485,7 @@ end repeat
 end repeat\\s`,
                     `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
-                // condition must be checked every iteration
+                /* condition must be checked every iteration */
                 [
                     `put "b" into s
 put 0 into i
@@ -1496,8 +1496,8 @@ put i+1 into i
 end repeat\\s && (counting() - firstc)`,
                     `b 0 1 2 5`
                 ],
-                // "times" syntax rewriting, simplest form.
-                // currently, the condition is evald every time.
+                /* "times" syntax rewriting, simplest form. */
+                /* currently, the condition is evald every time. */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1506,7 +1506,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a a a a 5`
                 ],
-                // "times" syntax rewriting, loop never done
+                /* "times" syntax rewriting, loop never done */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1515,7 +1515,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a 2`
                 ],
-                // "times" syntax rewriting, loop never done
+                /* "times" syntax rewriting, loop never done */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1524,7 +1524,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a 2`
                 ],
-                // "with" syntax rewriting, simplest form.
+                /* "with" syntax rewriting, simplest form. */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1533,7 +1533,7 @@ put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
                     `a a1 a2 a3 5`
                 ],
-                // "with" syntax rewriting, loop never done
+                /* "with" syntax rewriting, loop never done */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1542,7 +1542,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a 2`
                 ],
-                // "with" syntax rewriting, loop never done
+                /* "with" syntax rewriting, loop never done */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1551,7 +1551,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a 2`
                 ],
-                // "with down" syntax rewriting, simplest form.
+                /* "with down" syntax rewriting, simplest form. */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1560,7 +1560,7 @@ put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
                     `a a3 a2 a1 a0 6`
                 ],
-                // "with down" syntax rewriting, loop never done
+                /* "with down" syntax rewriting, loop never done */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1569,7 +1569,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a 2`
                 ],
-                // "with down" syntax rewriting, loop never done
+                /* "with down" syntax rewriting, loop never done */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1578,7 +1578,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a 2`
                 ],
-                // "with" syntax rewriting, expect start only eval'd once
+                /* "with" syntax rewriting, expect start only eval'd once */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1587,7 +1587,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
                     `a a a a 2`
                 ],
-                // "with" syntax rewriting, nested loop
+                /* "with" syntax rewriting, nested loop */
                 [
                     `put "a" into s
 repeat with i = 0 to 2
@@ -1601,7 +1601,7 @@ put s && "k" & k into s
 end repeat\\s`,
                     `a j0 j1 0 j0 j1 1 j0 j1 2 k1 k2 k3 k4`
                 ],
-                // "with" syntax rewriting, inner loop count changes
+                /* "with" syntax rewriting, inner loop count changes */
                 [
                     `put "a" into s
 repeat with i = 0 + 0 to 2 + 0
@@ -1611,7 +1611,7 @@ end repeat
 end repeat\\s`,
                     `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
-                // simple test next repeat
+                /* simple test next repeat */
                 [
                     `put "a" into s
 repeat with x = 1 to 3
@@ -1621,7 +1621,7 @@ put "_" into s
 end repeat\\s`,
                     `a 1 2 3`
                 ],
-                // simple test exit repeat
+                /* simple test exit repeat */
                 [
                     `put "a" into s
 repeat with x = 1 to 3
@@ -1631,7 +1631,7 @@ put "_" into s
 end repeat\\s`,
                     `a 1`
                 ],
-                // next repeat in the nested loop
+                /* next repeat in the nested loop */
                 [
                     `put "a" into s
 repeat with i = 0 to 2
@@ -1643,7 +1643,7 @@ end repeat
 end repeat\\s`,
                     `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
-                // next repeat out of the nested loop
+                /* next repeat out of the nested loop */
                 [
                     `put "a" into s
 repeat with i = 0 to 2
@@ -1656,7 +1656,7 @@ put "_" into s
 end repeat\\s`,
                     `a 1,0 2,0 2,1 3,0 3,1 3,2`
                 ],
-                // exit repeat in the nested loop
+                /* exit repeat in the nested loop */
                 [
                     `put "a" into s
 repeat with i = 0 to 2
@@ -1668,7 +1668,7 @@ end repeat
 end repeat\\s`,
                     `a 1,0 2,0 3,0`
                 ],
-                // exit repeat out of the nested loop
+                /* exit repeat out of the nested loop */
                 [
                     `put "a" into s
 repeat with i = 0 to 2
@@ -1685,9 +1685,9 @@ end repeat\\s`,
 
             this.testBatchEvaluate(batch);
 
-            // repeats and if statements
+            /* repeats and if statements */
             batch = [
-                // if statement inside a loop
+                /* if statement inside a loop */
                 [
                     `put "a" into s
 repeat with x = 1 to 4
@@ -1697,7 +1697,7 @@ end if
 end repeat\\s`,
                     `a 2 4`
                 ],
-                // nested if statement inside a loop
+                /* nested if statement inside a loop */
                 [
                     `put "a" into s
 repeat with x = 1 to 5
@@ -1725,7 +1725,7 @@ end if
 end repeat\\s`,
                     `agot1got2got3got4got5`
                 ],
-                // if statement and exit repeat
+                /* if statement and exit repeat */
                 [
                     `put "a" into s
 repeat with x = 1 to 4
@@ -1736,7 +1736,7 @@ end if
 end repeat\\s`,
                     `a 1 2`
                 ],
-                // if statement and next repeat
+                /* if statement and next repeat */
                 [
                     `put "a" into s
 repeat with x = 1 to 4
@@ -1748,7 +1748,7 @@ put s & "-" into s
 end repeat\\s`,
                     `a 1- 2 3- 4-`
                 ],
-                // nested if statement and exit repeat
+                /* nested if statement and exit repeat */
                 [
                     `put "a" into s
 repeat with x = 1 to 6
@@ -1761,7 +1761,7 @@ end if
 end repeat\\s`,
                     `a 1 2 3 4`
                 ],
-                // nested if statement and next repeat
+                /* nested if statement and next repeat */
                 [
                     `put "a" into s
 repeat with x = 1 to 6
@@ -1775,7 +1775,7 @@ put s & "-" into s
 end repeat\\s`,
                     `a 1- 2- 3- 4 5- 6`
                 ],
-                // exit repeat out of infinite loop
+                /* exit repeat out of infinite loop */
                 [
                     `put "a" into s
 repeat
@@ -1786,7 +1786,7 @@ end if
 end repeat\\s`,
                     `aaaaa`
                 ],
-                // if statements *must* be reset
+                /* if statements *must* be reset */
                 [
                     `put "a" into s
 repeat with x = 1 to 4
@@ -1803,7 +1803,7 @@ repeat with x = 1 to 4
 end repeat\\s`,
                     `a a- b- z-`
                 ],
-                // loop inside of an if
+                /* loop inside of an if */
                 [
                     `put "a" into s
 if char 1 of "abc" is "a" then
@@ -1818,30 +1818,30 @@ end if\\s`,
             ];
             this.testBatchEvaluate(batch);
 
-            // locals, globals, and variable scopes
+            /* locals, globals, and variable scopes */
             this.appl.runtime.codeExec.globals.set('testvar', VpcValS('1'));
             batch = [
-                // simple locals read/write
+                /* simple locals read/write */
                 ['put 3 into x\\x', '3'],
                 ['3 * x', '9'],
                 ['put 4 into x\\x', '4'],
                 ['3 * x', '12'],
 
-                // simple globals read/write
+                /* simple globals read/write */
                 ['global gx\\0', '0'],
                 ['put 3 into gx\\gx', '3'],
                 ['3 * gx', '9'],
                 ['put 4 into gx\\gx', '4'],
                 ['3 * gx', '12'],
 
-                // variable not defined
+                /* variable not defined */
                 ['3 * undefinedlocal', 'ERR:no variable found'],
 
-                // declaring a global gives it ""
+                /* declaring a global gives it "" */
                 ['global newlydefinedglobal\\"a" & newlydefinedglobal', 'a'],
                 ['global newlydefinedglobal\\newlydefinedglobal is ""', 'true'],
 
-                // if you don't declare it as a global, it is treated as a local
+                /* if you don't declare it as a global, it is treated as a local */
                 ['3 * testvar', 'ERR:no variable found'],
                 ['put "z" into testvar\\testvar', 'z'],
                 ['put "z" into testvar\nglobal testvar\\testvar', '1']
@@ -1852,7 +1852,7 @@ end if\\s`,
         () => {
             let batch: [string, string][];
             batch = [
-                // attempt to call something that isn't a valid custom handler
+                /* attempt to call something that isn't a valid custom handler */
                 ['3 + abs(4)', '7'],
                 ['3 + xyz(4)', 'ERR:no handler'],
                 ['3 + mousewithin(4)', 'ERR:no such function'],
@@ -1866,14 +1866,14 @@ end if\\s`,
                 ['3 + one(4)', 'ERR:no such function'],
                 ['3 + pi(4)', 'ERR:no such function'],
 
-                // the result before anything is called
+                /* the result before anything is called */
                 ['put 3 into result\\0', 'ERR:name not allowed'],
                 ['result()', ''],
                 ['the result()', '']
             ];
             this.testBatchEvaluate(batch);
 
-            // call a custom handler
+            /* call a custom handler */
             this.appl.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
             this.runGeneralCode(
                 `on myhandler
@@ -1887,7 +1887,7 @@ put x into testresult`
             );
             assertEqWarn('4', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '23|');
 
-            // wrong name for the handler
+            /* wrong name for the handler */
             this.runGeneralCode(
                 `on myhandler
 global x
@@ -1901,7 +1901,7 @@ put x into testresult`,
                 8
             );
 
-            // longer call stack
+            /* longer call stack */
             this.runGeneralCode(
                 `on myhandler1
 global x
@@ -1935,7 +1935,7 @@ put x into testresult`
                 this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
                 '22|'
             );
-            // return value from one must not bleed down into the rest
+            /* return value from one must not bleed down into the rest */
             this.runGeneralCode(
                 `on myhandler1
     return 4
@@ -1948,7 +1948,7 @@ myhandler2
 put "a" & the result into testresult`
             );
             assertEqWarn('a', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '21|');
-            // handler with arguments
+            /* handler with arguments */
             this.runGeneralCode(
                 `on myhandler arg1
 global x
@@ -1976,7 +1976,7 @@ put x into testresult`
                 this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
                 '20|'
             );
-            // expect arguments eval'd from left to right
+            /* expect arguments eval'd from left to right */
             this.runGeneralCode(
                 `on myhandler a1, a2, a3
 global x, testresult
@@ -1990,7 +1990,7 @@ put "" into testresult
 myhandler counting(), counting(), counting()`
             );
             assertEqWarn(' 1 2 3', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1~|');
-            // variadic handlers / giving a handler the wrong number of args
+            /* variadic handlers / giving a handler the wrong number of args */
             this.runGeneralCode(
                 `on printargs a1, a2
 global x
@@ -2026,7 +2026,7 @@ put x into testresult`
                 '1}|'
             );
 
-            // handler with return value
+            /* handler with return value */
             this.runGeneralCode(
                 `on myhandler arg1
 global x
@@ -2042,7 +2042,7 @@ put the result into ret
 put ret & x into testresult`
             );
             assertEqWarn('20', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1||');
-            // exit handler and exit product
+            /* exit handler and exit product */
             this.runGeneralCode(
                 `on myhandler arg1
 global testresult
@@ -2068,7 +2068,7 @@ myhandler 14`
                 this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
                 '1{|'
             );
-            // recursion in a handler
+            /* recursion in a handler */
             this.runGeneralCode(
                 `on myhandler p
 if p is 1 then
@@ -2085,7 +2085,7 @@ myhandler 4
 put the result into testresult`
             );
             assertEqWarn('24', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1`|');
-            // a simple custom function!
+            /* a simple custom function! */
             this.runGeneralCode(
                 `${this.customFunc} myfn p
 return p * (p + 1)
@@ -2095,8 +2095,8 @@ end myfn
 put myfn(2+myfn(3)) into testresult`
             );
             assertEqWarn('210', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1_|');
-            // recursion. use g to 1) verify number of recursive calls and
-            // 2) run a real statement like "put" that can't be part of an eval'd expression
+            /* recursion. use g to 1) verify number of recursive calls and */
+            /* 2) run a real statement like "put" that can't be part of an eval'd expression */
             this.runGeneralCode(
                 `${this.customFunc} recurse p
 global g
@@ -2114,7 +2114,7 @@ put recurse(5) into testresult
 put testresult && g into testresult`
             );
             assertEqWarn('120 5', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1^|');
-            // mutual recursion
+            /* mutual recursion */
             this.runGeneralCode(
                 `${this.customFunc} is_even n
 if n is 0 then
@@ -2136,8 +2136,8 @@ end is_odd
 put is_even(8) && is_even(9) && is_even(10) into testresult`
             );
             assertEqWarn('true false true', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1]|');
-            // nesting/interesting custom function calls
-            // we *manually* parse custom fn calls by counting parenthesis levels so this needs to be tested
+            /* nesting/interesting custom function calls */
+            /* we *manually* parse custom fn calls by counting parenthesis levels so this needs to be tested */
             this.setCurrentCard(this.elIds.card_a_a);
             this.updateObjectScript(
                 this.elIds.card_a_a,
@@ -2148,17 +2148,17 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
         end mm`
             );
             batch = [
-                // simple calls
+                /* simple calls */
                 ['global g\nput 0 into g\\0', '0'],
                 ['put mm() into ret\\ret', 'm1(,,)'],
                 ['put mm(1) into ret\\ret', 'm2(1,,)'],
                 ['put mm(1,2) into ret\\ret', 'm3(1,2,)'],
                 ['put mm(1,2,3) into ret\\ret', 'm4(1,2,3)'],
-                // expect to be called left to right
+                /* expect to be called left to right */
                 ['global g\nput 0 into g\\0', '0'],
                 ['put mm(10) && mm(11) into ret\\ret', 'm1(10,,) m2(11,,)'],
                 ['put (char 2 to 4 of mm(10)) && (char 2 to 4 of mm(11)) into ret\\ret', '3(1 4(1'],
-                // custom nested within builtin
+                /* custom nested within builtin */
                 ['global g\nput 0 into g\\0', '0'],
                 ['put length(mm(1)) into ret\\ret', '7'],
                 ['put max(0,1,max(1,2,length(mm(1)))) into ret\\ret', '7'],
@@ -2167,7 +2167,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                 ['put offset(mm(1),3) into ret\\ret', '0'],
                 ['put offset(mm(1,2),3) into ret\\ret', '0'],
                 ['put offset(mm(1,")"),3) into ret\\ret', '0'],
-                // builtin nested within custom
+                /* builtin nested within custom */
                 ['global g\nput 0 into g\\0', '0'],
                 ['mm(max(1))', 'm1(1,,)'],
                 ['mm(max(1,2))', 'm2(2,,)'],
@@ -2177,14 +2177,14 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                 ['mm(max(1,2,3),max(1,2,4))', 'm6(3,4,)'],
                 ['mm(max(1,2,3),max(max(min(1,2),2),2,4),5)', 'm7(3,4,5)'],
                 ['char (2) to (999) of (mm(max(1,2,3),max(max(min(1,2),2),2,4),5)) & (abs(-1))', '8(3,4,5)1'],
-                // custom inside custom
+                /* custom inside custom */
                 ['global g\nput 0 into g\\0', '0'],
                 ['abs(1) && mm(mm()) && abs(1)', '1 m2(m1(,,),,) 1'],
                 ['abs(1) && mm(mm(1)) && abs(1)', '1 m4(m3(1,,),,) 1'],
                 ['abs(1) && mm(mm(1,max(2))) && abs(1)', '1 m6(m5(1,2,),,) 1'],
                 ['abs(1) && mm(mm(1,max(2),max(3)),max(4)) && abs(1)', '1 m8(m7(1,2,3),4,) 1'],
                 ['abs(1) && mm(max(1),mm(2),max(3)) && abs(1)', '1 m10(1,m9(2,,),3) 1'],
-                // even more nesting
+                /* even more nesting */
                 ['global g\nput 0 into g\\0', '0'],
                 ['abs(1) && mm(mm(mm(1))) && abs(1)', '1 m3(m2(m1(1,,),,),,) 1'],
                 ['abs(1) && mm(mm(1),abs(2),mm(3)) && abs(1)', '1 m6(m4(1,,),2,m5(3,,)) 1'],
@@ -2193,11 +2193,11 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                     'abs(1) && mm(90+(1),90+(2),"" & mm(90+(3),90+(4),"" & mm(90+(5),90+(6)))) && abs(1)',
                     '1 m12(91,92,m11(93,94,m10(95,96,))) 1'
                 ],
-                // currently allow the call on the other side as well
+                /* currently allow the call on the other side as well */
                 ['global g\nput 0 into g\\0', '0'],
                 ['put "" into ret\nput "abc" into item (the length of mm(1)) of ret\\ret', ',,,,,,abc'],
                 ['mm 2\nput the result into ret\\ret', 'm2(2,,)'],
-                // we can now call it from some other types of statements!
+                /* we can now call it from some other types of statements! */
                 ['global g\nput 0 into g\\0', '0'],
                 ['get mm(1)\\it', 'm1(1,,)'],
                 ['put 0 into ret\nadd (the length of mm(1)) to ret\\ret', '7'],
@@ -2211,7 +2211,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
                 ['there is a cd btn mm(1)', 'false'],
                 ['show cd btn mm(1)\\0', 'ERR:could not find the specified element'],
                 ['enable cd btn mm(1)\\0', 'ERR:could not find the specified element'],
-                // currently can expand for initial if, but not else
+                /* currently can expand for initial if, but not else */
                 [
                     `if char 1 of mm(1) is "m" then
             get 1
@@ -2228,10 +2228,10 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
             end if\\it`,
                     'ERR:6:support custom fn calls'
                 ],
-                // custom fn error reporting
+                /* custom fn error reporting */
                 ['get mm(1\\it', 'ERR:missing )'],
                 ['get mm(abs(1\\it', 'ERR:missing )'],
-                // using blank lines, line number reporting should be affected
+                /* using blank lines, line number reporting should be affected */
                 [
                     `put "abc" into x
 
@@ -2245,7 +2245,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
             show cd btn "notfound"\\0`,
                     'ERR:7:could not find the specified'
                 ],
-                // using continued lines, line number reporting should be affected
+                /* using continued lines, line number reporting should be affected */
                 [
                     `put "abc" {BSLASH}\n into x
             show cd btn "notfound"\\0`,
@@ -2261,7 +2261,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
             show cd btn "notfound"\\0`,
                     'ERR:8:could not find the specified'
                 ],
-                // but using put-expansion, line number reporting should not be affected, even though we're adding calls
+                /* but using put-expansion, line number reporting should not be affected, even though we're adding calls */
                 [
                     `put mm(1) into x
             show cd btn "notfound"\\0`,
@@ -2277,7 +2277,7 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
             show cd btn "notfound"\\0`,
                     'ERR:5:could not find the specified'
                 ],
-                // difference between what is allowed and what is not
+                /* difference between what is allowed and what is not */
                 ['global g\nput 0 into g\\0', '0'],
                 ['mm()\\0', `ERR:isn't C`],
                 ['mm ("")\\the result', 'm1(,,)'],
@@ -2289,8 +2289,8 @@ put is_even(8) && is_even(9) && is_even(10) into testresult`
             this.testBatchEvaluate(batch);
             this.updateObjectScript(this.elIds.card_a_a, ``);
 
-            // disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess)
-            // but not printargs("a")
+            /* disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess) */
+            /* but not printargs("a") */
             this.assertCompileErrorIn(
                 `put 1 into x
 sin(3)
@@ -2306,7 +2306,7 @@ put 1 into x`,
                 4
             );
 
-            // only block starts outside of scope
+            /* only block starts outside of scope */
             this.assertCompileError(
                 `put 1 into x
 on myhandler
@@ -2322,7 +2322,7 @@ put 1 into x`,
                 'can exist at this scope',
                 4
             );
-            // cannot start handler inside handler
+            /* cannot start handler inside handler */
             this.assertCompileError(
                 `
 on myhandler
@@ -2332,7 +2332,7 @@ end myhandler`,
                 'inside an existing handler',
                 3
             );
-            // cannot start handler inside handler
+            /* cannot start handler inside handler */
             this.assertCompileError(
                 `
         ${this.customFunc} myhandler
@@ -2342,7 +2342,7 @@ end myhandler`,
                 'inside an existing handler',
                 3
             );
-            // cannot start handler inside handler
+            /* cannot start handler inside handler */
             this.assertCompileError(
                 `
 on myhandler
@@ -2352,7 +2352,7 @@ end myhandler`,
                 'inside an existing handler',
                 3
             );
-            // mismatched handler name
+            /* mismatched handler name */
             this.assertCompileError(
                 `
 on myhandler1
@@ -2360,7 +2360,7 @@ end myhandler2`,
                 'names mismatch',
                 3
             );
-            // doesn't make sense to end here
+            /* doesn't make sense to end here */
             this.assertCompileError(
                 `
 on myhandler1
@@ -2369,7 +2369,7 @@ end myhandler1`,
                 'can exist at this scope',
                 4
             );
-            // mismatched handler name in exit
+            /* mismatched handler name in exit */
             this.assertCompileError(
                 `
 on myhandler1
@@ -2378,7 +2378,7 @@ end myhandler1`,
                 'but got exit',
                 3
             );
-            // mismatched handler name in pass
+            /* mismatched handler name in pass */
             this.assertCompileError(
                 `
 on myhandler1
@@ -2387,7 +2387,7 @@ end myhandler1`,
                 'but got exit',
                 3
             );
-            // mismatched handler name in end
+            /* mismatched handler name in end */
             this.assertCompileError(
                 `
 on myhandler1
@@ -2396,7 +2396,7 @@ end myhandler1`,
                 'names mismatch',
                 3
             );
-            // no handler name
+            /* no handler name */
             this.assertCompileError(
                 `
 on
@@ -2405,7 +2405,7 @@ end myhandler1`,
                 'cannot have a line',
                 2
             );
-            // no valid handler name
+            /* no valid handler name */
             this.assertCompileError(
                 `
 on ,
@@ -2414,7 +2414,7 @@ end myhandler1`,
                 'expected "on myhandler" but got',
                 2
             );
-            // handler params invalid 1
+            /* handler params invalid 1 */
             this.assertCompileError(
                 `
 on myhandler1 x y
@@ -2423,7 +2423,7 @@ end myhandler1`,
                 'required comma',
                 2
             );
-            // handler params invalid 2
+            /* handler params invalid 2 */
             this.assertCompileError(
                 `
 on myhandler1 x , ,
@@ -2432,7 +2432,7 @@ end myhandler1`,
                 'not a valid variable name',
                 2
             );
-            // no handler end name
+            /* no handler end name */
             this.assertCompileError(
                 `
 on myhandler1
@@ -2441,7 +2441,7 @@ end`,
                 'cannot have a line',
                 4
             );
-            // duplicate handler name
+            /* duplicate handler name */
             this.assertCompileError(
                 `
 on myhandler
@@ -2453,7 +2453,7 @@ end myhandler`,
                 'already exists',
                 7
             );
-            // cannot exit repeat when no loop
+            /* cannot exit repeat when no loop */
             this.assertCompileErrorIn(`exit repeat`, 'outside of a loop', 3);
             this.assertCompileErrorIn(
                 `repeat while false
@@ -2462,7 +2462,7 @@ exit repeat`,
                 'outside of a loop',
                 5
             );
-            // cannot next repeat when no loop
+            /* cannot next repeat when no loop */
             this.assertCompileErrorIn(`next repeat`, 'outside of a loop', 3);
             this.assertCompileErrorIn(
                 `repeat while false
@@ -2471,7 +2471,7 @@ next repeat`,
                 'outside of a loop',
                 5
             );
-            // cannot end repeat when no loop
+            /* cannot end repeat when no loop */
             this.assertCompileError(
                 `
         on myhandler
@@ -2480,7 +2480,7 @@ next repeat`,
                 'interleaved within',
                 3
             );
-            // cannot else when no if
+            /* cannot else when no if */
             this.assertCompileError(
                 `
         on myhandler
@@ -2490,7 +2490,7 @@ next repeat`,
                 'interleaved within',
                 3
             );
-            // cannot else if when no if
+            /* cannot else if when no if */
             this.assertCompileError(
                 `
         on myhandler
@@ -2500,7 +2500,7 @@ next repeat`,
                 'interleaved within',
                 3
             );
-            // cannot else when after the if
+            /* cannot else when after the if */
             this.assertCompileError(
                 `
         on myhandler
@@ -2512,7 +2512,7 @@ next repeat`,
                 'interleaved within',
                 5
             );
-            // cannot else if when after the if
+            /* cannot else if when after the if */
             this.assertCompileError(
                 `
         on myhandler
@@ -2524,71 +2524,71 @@ next repeat`,
                 'interleaved within',
                 5
             );
-            // cannot end if when no if
+            /* cannot end if when no if */
             this.assertCompileErrorIn(`end if`, 'interleaved within', 3);
-            // cannot say "else then"
+            /* cannot say "else then" */
             this.assertCompileErrorIn(
                 `if false then
         else then`,
                 'cannot have a line',
                 4
             );
-            // cannot say just "if"
+            /* cannot say just "if" */
             this.assertCompileErrorIn(
                 `if
         end if`,
                 'expected line to end with',
                 3
             );
-            // cannot ommit the "then"
+            /* cannot ommit the "then" */
             this.assertCompileErrorIn(
                 `if true
         end if`,
                 'expected line to end with',
                 3
             );
-            // cannot just say "return"
+            /* cannot just say "return" */
             this.assertCompileErrorIn(`return`, 'cannot have a line that is just', 3);
-            // cannot just say "end"
+            /* cannot just say "end" */
             this.assertCompileErrorIn(`end`, 'cannot have a line', 3);
-            // cannot just say "exit"
+            /* cannot just say "exit" */
             this.assertCompileErrorIn(`exit`, 'cannot have a line', 3);
-            // cannot just say "repeat while"
+            /* cannot just say "repeat while" */
             this.assertCompileErrorIn(
                 `repeat while
         end repeat`,
                 'without an expression',
                 3
             );
-            // cannot just say "repeat until"
+            /* cannot just say "repeat until" */
             this.assertCompileErrorIn(
                 `repeat until
         end repeat`,
                 'without an expression',
                 3
             );
-            // invalid repeat part 1
+            /* invalid repeat part 1 */
             this.assertLineError(
                 `repeat xyz
         end repeat`,
                 'no variable found with this name',
                 3
             );
-            // invalid repeat part 2
+            /* invalid repeat part 2 */
             this.assertLineError(
                 `repeat to
         end repeat`,
                 'NoViableAltException',
                 3
             );
-            // invalid repeat part 3, not quite enough tokens
+            /* invalid repeat part 3, not quite enough tokens */
             this.assertCompileErrorIn(
                 `repeat with x = 1 to
         end repeat`,
                 'wrong length',
                 3
             );
-            // invalid repeat part 4, not quite enough tokens
+            /* invalid repeat part 4, not quite enough tokens */
             this.assertCompileErrorIn(
                 `repeat with x = 1 down to
         end repeat`,
@@ -2596,7 +2596,7 @@ next repeat`,
                 3
             );
 
-            // interleaved blocks
+            /* interleaved blocks */
             this.assertCompileErrorIn(
                 `repeat while false
 if false then
@@ -2633,7 +2633,7 @@ end repeat`,
                 'interleaved within',
                 5
             );
-            // forgot to close the block
+            /* forgot to close the block */
             this.assertCompileError(
                 `
 on myhandler
@@ -2675,7 +2675,7 @@ put 3 into x`,
             this.setCurrentCard(this.elIds.card_a_a);
             let parents = [this.appl.model.stack.id, this.elIds.bg_a, this.elIds.card_a_a];
             for (let parent of parents) {
-                // reset all scripts
+                /* reset all scripts */
                 parents.map(id => this.updateObjectScript(id, ''));
                 this.updateObjectScript(this.elIds.btn_go, '');
 
@@ -2686,7 +2686,7 @@ put 3 into x`,
                 put " target=" & the short id of the target after testresult
                 end mouseup`;
 
-                // if there is nothing in the button script but something in a parent script, the parent script should be called instead
+                /* if there is nothing in the button script but something in a parent script, the parent script should be called instead */
                 this.updateObjectScript(this.elIds.btn_go, '');
                 this.updateObjectScript(parent, script);
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
@@ -2698,7 +2698,7 @@ put 3 into x`,
                     '1[|'
                 );
 
-                // if there is something in the button script and something in a parent script, the parent script is not called
+                /* if there is something in the button script and something in a parent script, the parent script is not called */
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.runGeneralCode(
                     '',
@@ -2711,8 +2711,8 @@ put 3 into x`,
                     '1@|'
                 );
 
-                // if the button script calls exit to product, the parent script also isn't called
-                // (currently has the same effect has just exiting with no call to pass)
+                /* if the button script calls exit to product, the parent script also isn't called */
+                /* (currently has the same effect has just exiting with no call to pass) */
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.runGeneralCode(
                     '',
@@ -2723,7 +2723,7 @@ put 3 into x`,
                 );
                 assertEqWarn(`a`, this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1?|');
 
-                // pass upwards from the button script to the parent script
+                /* pass upwards from the button script to the parent script */
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.runGeneralCode(
                     '',
@@ -2738,7 +2738,7 @@ put 3 into x`,
                     '1>|'
                 );
 
-                // local variables should not bleed over into another scope (upwards)
+                /* local variables should not bleed over into another scope (upwards) */
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,
@@ -2754,7 +2754,7 @@ put 3 into x`,
                     2
                 );
 
-                // local variables should not bleed over into another scope (downwards)
+                /* local variables should not bleed over into another scope (downwards) */
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,
@@ -2771,7 +2771,7 @@ put 3 into x`,
                     3
                 );
 
-                // child can call a function in the parent script
+                /* child can call a function in the parent script */
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,
@@ -2790,7 +2790,7 @@ put 3 into x`,
                     '1=|'
                 );
 
-                // the parent script can't access function down in the button script though
+                /* the parent script can't access function down in the button script though */
                 this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,

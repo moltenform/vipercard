@@ -107,7 +107,7 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
         let evtNumber = d.type().valueOf();
         let ar = this.listeners[evtNumber];
         if (ar) {
-            /* don't use a for/of loop here, because it has a try/catch that 
+            /* don't use a for/of loop here, because it has a try/catch that
             sometimes makes debugging inconvenient */
             for (let i = 0; i < ar.length; i++) {
                 let cb = ar[i];

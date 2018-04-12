@@ -1,3 +1,4 @@
+
 /* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { ChangeContext, MouseDragStatus } from '../../ui512/draw/ui512Interfaces.js';

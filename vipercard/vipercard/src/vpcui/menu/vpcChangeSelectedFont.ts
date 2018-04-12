@@ -2,10 +2,10 @@
 /* auto */ import { O, assertTrueWarn, checkThrow, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { PropAdjective, RequestedChunkType, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { PropAdjective, VpcChunkType, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
-/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
@@ -135,7 +135,7 @@ export class VpcChangeSelectedFont {
                 // adjust the range because vpc is both 1-based and inclusive
                 chunk.first += 1;
 
-                chunk.type = RequestedChunkType.Chars;
+                chunk.type = VpcChunkType.Chars;
                 let velref = new RequestedVelRef(VpcElType.Fld);
                 let idn = parseInt(vel.id, 10);
                 checkThrow(isFinite(idn), 'non numeric id?', vel.id);
@@ -152,7 +152,7 @@ export class VpcChangeSelectedFont {
                         let subchunk = new RequestedChunk(i);
                         subchunk.first = i;
                         subchunk.last = i;
-                        subchunk.type = RequestedChunkType.Chars;
+                        subchunk.type = VpcChunkType.Chars;
                         let curstyle = this.appli
                             .getOutside()
                             .GetProp(velref, forSel, PropAdjective.empty, subchunk)

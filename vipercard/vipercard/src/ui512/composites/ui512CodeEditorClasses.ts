@@ -17,7 +17,7 @@
 export class UI512AutoIndent {
     /* ending a line with one of these characters will continue statement onto next line */
     lineContinuation = ['\\'];
-    
+
     /* pattern matching. start pattern, end pattern, and end-to-automatically-insert */
     linesCauseIndent: [RegExp, RegExp, string][] = [
         [/^start1\b/, /^end1\b/, 'end1'],

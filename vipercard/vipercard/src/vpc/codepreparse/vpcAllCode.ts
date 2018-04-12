@@ -85,7 +85,7 @@ export class VpcAllCode {
             syntaxError.isScriptException = e.isVpcError;
             syntaxError.isExternalException = !e.isUi512Error;
             syntaxError.lineNumber = latestSrcLineSeen.val;
-            syntaxError.velid = owner.id;
+            syntaxError.velId = owner.id;
             syntaxError.lineData = latestDestLineSeen.val;
             syntaxError.details = e.message;
         }

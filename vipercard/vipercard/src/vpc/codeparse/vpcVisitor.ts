@@ -1,11 +1,11 @@
 
 /* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcInternalErr, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, checkThrowEq, getStrToEnum, isString, slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, RequestedChunkType, VpcElType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcOutsideClasses.js';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { OutsideWorldRead } from '../../vpc/vel/vpcOutsideInterfaces.js';
 /* auto */ import { ReadableContainerStr } from '../../vpc/vel/velResolveReference.js';
 /* auto */ import { ChvIToken, ChvLexer } from '../../vpc/codeparse/bridgeChv.js';
@@ -145,7 +145,7 @@ export function createVisitor(parser: ChvParserClass): object {
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
             let chunktype = ctx.TokenTkcharorwordoritemorlineorplural[0].image;
-            ret.type = getStrToEnum<RequestedChunkType>(RequestedChunkType, 'RequestedChunkType', chunktype);
+            ret.type = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', chunktype);
             if (ctx.RuleHOrdinal[0]) {
                 ret.ordinal = getStrToEnum<OrdinalOrPosition>(
                     OrdinalOrPosition,
@@ -321,7 +321,7 @@ export function createVisitor(parser: ChvParserClass): object {
             let evaledvpc = this.Helper$ReadVpcVal(ctx, 'FACTOR', true);
             let str = evaledvpc.readAsString();
             let stype = ctx.TokenTkcharorwordoritemorlineorplural[0].image;
-            let type = getStrToEnum<RequestedChunkType>(RequestedChunkType, 'RequestedChunkType', stype);
+            let type = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', stype);
             let result = ChunkResolution.applyCount(str, this.outside.GetItemDelim(), type, true);
             return VpcValN(result);
         }

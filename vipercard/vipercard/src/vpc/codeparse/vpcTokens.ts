@@ -83,9 +83,9 @@ export class BuildFakeTokens {
     }
 }
 
-// not necessarily tokens, but still not valid variable names
+/* not necessarily tokens, but still not valid variable names */
 export const alsoReservedWordsList: { [key: string]: boolean } = {
-    // current tokens that aren't in the list below (not OneOfWords or SAME)
+    /* current tokens that aren't in the list below (not OneOfWords or SAME) */
     div: true,
     mod: true,
     a: true,
@@ -93,7 +93,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
     owner: true,
     name: true,
 
-    // processed at an early stage
+    /* processed at an early stage */
     on: true,
     end: true,
     exit: true,
@@ -105,7 +105,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
     until: true,
     global: true,
 
-    // tokens from real_vpc000 that aren't OneOfWords or SAME
+    /* tokens from real_vpc000 that aren't OneOfWords or SAME */
     commandchar: true,
     cmdchar: true,
     message: true,
@@ -116,7 +116,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
     in: true,
     it: true,
 
-    // tokens from real_vpc000, includes all built-in commands
+    /* tokens from real_vpc000, includes all built-in commands */
     the: true,
     put: true,
     set: true,
@@ -251,7 +251,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
 alsoReservedWordsList[cProductName.toLowerCase()] = true;
 Object.freeze(alsoReservedWordsList);
 
-// generated code, any changes past this point will be lost:
+/* generated code, any changes past this point will be lost: */
 class TokenTkcomment extends ChvToken {
     static PATTERN = /--[^\n]*/;
     static GROUP = ChvLexer.SKIPPED;
@@ -362,7 +362,7 @@ class TokenTkidentifier extends ChvToken {
     static PATTERN = new RegExp('[a-zA-Z][0-9a-zA-Z_]*');
 }
 export const listTokens = [
-    // note: order matters here
+    /* note: order matters here */
     TokenTkcomment,
     TokenTkcontinuedlineorwhitespace,
     TokenTknewline,

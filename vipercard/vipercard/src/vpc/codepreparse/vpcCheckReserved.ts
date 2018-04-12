@@ -15,27 +15,27 @@ export enum CodeSymbols {
 export class CheckReservedWords {
     constants = new VariableCollectionConstants();
     isBuiltinHandler(s: string): boolean {
-        // "mouseup", "arrowkey"
+        /* "mouseup", "arrowkey" */
         return findStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, s) !== undefined;
     }
 
     isBuiltinVarOrConstant(s: string): boolean {
-        // "pi", "result"
+        /* "pi", "result" */
         return !!this.constants.find(s) || s === 'result' || s === '$result';
     }
 
     isPropertyName(s: string): boolean {
-        // "autohilite", "style"
+        /* "autohilite", "style" */
         return VpcElProductOpts.isAnyProp(s);
     }
 
     isBuiltinFunction(s: string): boolean {
-        // "sin", "length", "result"
+        /* "sin", "length", "result" */
         return VpcBuiltinFunctions.isFunction(s);
     }
 
     isKeyword(s: string): boolean {
-        // "from", "with", "to", "end"
+        /* "from", "with", "to", "end" */
         return partialReservedWordsList[s] || alsoReservedWordsList[s];
     }
 

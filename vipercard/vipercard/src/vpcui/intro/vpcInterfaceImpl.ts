@@ -94,9 +94,9 @@ export class VpcStateInterfaceCompleted implements VpcStateInterface {
         this.getCodeExec().updateChangedCode(readded, readded.get_s('script'));
     }
 
-    rawCreate<T extends VpcElBase>(velid: string, parentid: string, ctr: { new (...args: any[]): T }): T {
+    rawCreate<T extends VpcElBase>(velId: string, parentid: string, ctr: { new (...args: any[]): T }): T {
         this.causeFullRedraw();
-        let vel = new ctr(velid, parentid);
+        let vel = new ctr(velId, parentid);
         checkThrow(vel && vel.isVpcElBase, `8*|must be a VpcElBase`);
         vel.observer = this.appl.runtime.useThisObserverForVpcEls;
         this.appl.model.addIdToMapOfElements(vel);
