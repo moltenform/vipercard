@@ -8,21 +8,12 @@
 /* auto */ import { VpcVal, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
+/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
 /**
- * values here are lowercase, because they are used by the interpreter.
+ * vpc text field class.
  */
-export enum VpcFldStyleInclScroll {
-    __isUI512Enum = 1,
-    opaque = UI512FldStyle.Opaque,
-    transparent = UI512FldStyle.Transparent,
-    rectangle = UI512FldStyle.Rectangle,
-    shadow = UI512FldStyle.Shadow,
-    alternateforms_rect = UI512FldStyle.Rectangle,
-    scrolling = 200
-}
-
 export class VpcElField extends VpcElSizable {
     isVpcElField = true;
     protected _dontwrap = false;
@@ -37,17 +28,29 @@ export class VpcElField extends VpcElSizable {
     protected _script = '';
     protected _textalign = 'left';
     protected _name = '';
+    protected _ftxt = new FormattedText();
+    constructor(id: string, parentId: string) {
+        super(id, parentId);
+        this._ftxt.lock();
+    }
 
-    // confirmed in emulator that there really does seem to be a separate
-    // browse tool, select all, font menu->symbol, put "abc" into cd fld 1 -- setting the font to symbol does not stick
-    // field tool, select the field, font menu->symbol, put "abc" into cd fld 1 -- setting the font does stick
+    /* cached getters */
+    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
+
+    /* cached setters */
+    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+
+    /* confirmed that there is a separate 'defaultfont' property
+    try this in an emulator:
+    create a new field, by default it has geneva text.
+    browse tool, select all, font menu->symbol, put "abc" into cd fld 1, text is still geneva
+    field tool, select the field, font menu->symbol, put "abc" into cd fld 1, text is now symbol */
     protected _defaulttextfont = 'geneva';
     protected _defaulttextsize = 12;
     protected _defaulttextstyle = 0;
 
-    protected _ftxt = new FormattedText();
-
-    static readonly attributesList = [
+    /* verified in tests */
+    static readonly keyPropertiesList = [
         'x',
         'y',
         'w',
@@ -70,25 +73,40 @@ export class VpcElField extends VpcElSizable {
         'ftxt'
     ];
 
-    getAttributesList() {
-        return VpcElField.attributesList;
+    /**
+     * get the properties that need to be serialized
+     */
+    getKeyPropertiesList() {
+        return VpcElField.keyPropertiesList;
     }
 
+    /**
+     * type of element
+     */
     getType() {
         return VpcElType.Fld;
     }
 
+    /**
+     * re-use cached getters and setter callback functions for better perf
+     */
     startGettersSetters() {
         VpcElField.fldInit();
         this.getters = VpcElField.cachedGetters;
         this.setters = VpcElField.cachedSetters;
     }
 
+    /**
+     * for convenience, get the default font as ui512
+     */
     getDefaultFontAsUi512() {
         let spec = new TextFontSpec(this._defaulttextfont, this._defaulttextstyle, this._defaulttextsize);
         return spec.toSpecString();
     }
 
+    /**
+     * for convenience, set entire font
+     */
     protected setEntireFontFromDefaultFont() {
         let font = this.getDefaultFontAsUi512();
         let newtxt = this.get_ftxt().getUnlockedCopy();
@@ -96,11 +114,9 @@ export class VpcElField extends VpcElSizable {
         this.setftxt(newtxt);
     }
 
-    constructor(id: string, parentid: string) {
-        super(id, parentid);
-        this._ftxt.lock();
-    }
-
+    /**
+     * define getters
+     */
     static fldGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['singleline'] = [PrpTyp.Bool, 'singleline'];
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
@@ -116,13 +132,16 @@ export class VpcElField extends VpcElSizable {
             }
         ];
 
-        // interestingly, when calling these without providing a chunk, they act on the default font
-        // confirmed in emulator that it won't even say 'mixed', it will return default font even if no chars have it.
+        /* interestingly, when calling these without providing a chunk, they always act on the default font */
+        /* confirmed in emulator that it won't even say 'mixed', and it will return default font even if no chars have it. */
         getters['textstyle'] = getters['defaulttextstyle'];
         getters['textfont'] = getters['defaulttextfont'];
         getters['textsize'] = getters['defaulttextsize'];
     }
 
+    /**
+     * define setters
+     */
     static fldSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['style'] = [
@@ -131,7 +150,7 @@ export class VpcElField extends VpcElSizable {
                 let styl = getStrToEnum<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, 'Field style or "scrolling"', s);
                 me.set('style', styl);
 
-                // changing style resets scroll amount
+                /* changing style resets scroll amount */
                 me.setProp('scroll', VpcValN(0));
             }
         ];
@@ -160,7 +179,8 @@ export class VpcElField extends VpcElSizable {
             }
         ];
 
-        // as done by ui when the field tool is selected, or when saying put "abc" into cd fld 1 with no chunk qualifications
+        /* as done by ui when the field tool is selected,
+        or when saying put "abc" into cd fld 1 with no chunk qualifications */
         setters['alltext'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string) => {
@@ -197,20 +217,20 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, b: boolean) => {
                 me.set('singleline', b);
                 if (b) {
-                    for (let i = 0; i < me.get_ftxt().len(); i++) {
-                        let c = me.get_ftxt().charAt(i);
-                        if (c === specialCharNumNewline) {
-                            let newtxt = new FormattedText();
-                            newtxt.appendSubstring(me.get_ftxt(), 0, i);
-                            me.setftxt(newtxt);
-                            break;
-                        }
+                    let hasNewLine = me.get_ftxt().indexOf(specialCharNumNewline);
+                    if (hasNewLine !== -1) {
+                        let newtxt = new FormattedText();
+                        newtxt.appendSubstring(me.get_ftxt(), 0, hasNewLine);
+                        me.setftxt(newtxt);
                     }
                 }
             }
         ];
     }
 
+    /**
+     * define getters+setters that simply get/set a value
+     */
     static simpleFldGetSet(): [string, PrpTyp][] {
         return [
             ['dontwrap', PrpTyp.Bool],
@@ -223,22 +243,26 @@ export class VpcElField extends VpcElSizable {
         ];
     }
 
-    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
-    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+    /**
+     * define getters and setters
+     */
     static fldInit() {
         if (!VpcElField.cachedGetters || !VpcElField.cachedSetters) {
             VpcElField.cachedGetters = {};
             VpcElField.cachedSetters = {};
             VpcElBase.simpleGetSet(VpcElField.cachedGetters, VpcElField.cachedSetters, VpcElField.simpleFldGetSet());
             VpcElField.fldGetters(VpcElField.cachedGetters);
-            VpcElSizable.szGetters(VpcElField.cachedGetters);
+            VpcElSizable.initSizeGetters(VpcElField.cachedGetters);
             VpcElField.fldSetters(VpcElField.cachedSetters);
-            VpcElSizable.szSetters(VpcElField.cachedSetters);
+            VpcElSizable.initSizeSetters(VpcElField.cachedSetters);
             Util512.freezeRecurse(VpcElField.cachedGetters);
             Util512.freezeRecurse(VpcElField.cachedSetters);
         }
     }
 
+    /**
+     * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
+     */
     specialSetPropChunkImpl(prop: string, s: string, charstart: number, charend: number): void {
         let newtxt = this.get_ftxt().getUnlockedCopy();
         let len = charend - charstart;
@@ -259,9 +283,13 @@ export class VpcElField extends VpcElSizable {
         this.setftxt(newtxt);
     }
 
+    /**
+     * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
+     */
     specialGetPropChunkImpl(prop: string, charstart: number, charend: number): string {
         let len = charend - charstart;
         if (prop === 'textstyle') {
+            /* returns comma-delimited styles, or the string 'mixed' */
             let list = FormattedSubstringUtil.getChunkTextStyle(
                 this.get_ftxt(),
                 this.getDefaultFontAsUi512(),
@@ -270,6 +298,7 @@ export class VpcElField extends VpcElSizable {
             );
             return list.join(',');
         } else if (prop === 'textfont') {
+            /* returns typeface name or the string 'mixed' */
             return FormattedSubstringUtil.getChunkTextFace(
                 this.get_ftxt(),
                 this.getDefaultFontAsUi512(),
@@ -277,7 +306,7 @@ export class VpcElField extends VpcElSizable {
                 len
             );
         } else if (prop === 'textsize') {
-            // as per spec this can return either an integer or the string 'mixed'
+            /* as per spec this can return either an integer or the string 'mixed' */
             return FormattedSubstringUtil.getChunkTextSize(
                 this.get_ftxt(),
                 this.getDefaultFontAsUi512(),
@@ -291,6 +320,9 @@ export class VpcElField extends VpcElSizable {
         }
     }
 
+    /**
+     * when you say set the textstyle of char 999 to 1000... how do we respond when outside content length
+     */
     protected resolveChunkBounds(chunk: RequestedChunk, itemDel: string) {
         let newChunk = chunk.getClone();
         if (
@@ -299,12 +331,12 @@ export class VpcElField extends VpcElSizable {
             newChunk.last !== undefined &&
             newChunk.last < newChunk.first
         ) {
-            // for consistency with emulator, interesting behavior for negative intervals
+            /* for consistency with emulator, interesting behavior for negative intervals */
             newChunk.first = newChunk.first - 1;
             newChunk.last = newChunk.first + 1;
         }
 
-        // we handle the formattedText.len() === 0 case in getChunkTextAttribute
+        /* we handle the formattedText.len() === 0 case in getChunkTextAttribute */
         let unformatted = this.get_ftxt().toUnformatted();
         newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
         let bounds = ChunkResolution.resolveBoundsForGet(unformatted, itemDel, newChunk);
@@ -312,13 +344,32 @@ export class VpcElField extends VpcElSizable {
         return bounds;
     }
 
+    /**
+     * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
+     */
     specialSetPropChunk(prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
         let [start, end] = this.resolveChunkBounds(chunk, itemDel);
         return this.specialSetPropChunkImpl(prop, val.readAsString(), start, end);
     }
 
+    /**
+     * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
+     */
     specialGetPropChunk(prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
         let [start, end] = this.resolveChunkBounds(chunk, itemDel);
         return VpcValS(this.specialGetPropChunkImpl(prop, start, end));
     }
+}
+
+/**
+ * values here are lowercase, because they are used by the interpreter.
+ */
+export enum VpcFldStyleInclScroll {
+    __isUI512Enum = 1,
+    opaque = UI512FldStyle.Opaque,
+    transparent = UI512FldStyle.Transparent,
+    rectangle = UI512FldStyle.Rectangle,
+    shadow = UI512FldStyle.Shadow,
+    alternateforms_rect = UI512FldStyle.Rectangle,
+    scrolling = 200
 }

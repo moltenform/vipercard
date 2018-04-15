@@ -6,6 +6,8 @@
 /* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
 
+/* see comment at the top of _vpcAllCode_.ts for an overview */
+
 export class MakeLowerCase {
     go(tk: ChvIToken) {
         if (!isTkType(tk, tks.TokenTkstringliteral)) {
@@ -16,7 +18,7 @@ export class MakeLowerCase {
 
 export class SplitIntoLinesProducer {
     index = 0;
-    constructor(protected instream: ChvIToken[], protected idgen: CountNumericId, protected makeLower: MakeLowerCase) {}
+    constructor(protected instream: ChvIToken[], protected idGen: CountNumericId, protected makeLower: MakeLowerCase) {}
 
     nextWithnewlines(): O<ChvIToken[]> {
         let currentLine: ChvIToken[] = [];
@@ -25,7 +27,7 @@ export class SplitIntoLinesProducer {
             let tk = this.instream[this.index];
             this.index += 1;
 
-            // have we reached the end of the stream?
+            /* have we reached the end of the stream? */
             if (tk === undefined) {
                 return currentLine.length ? currentLine : undefined;
             }
@@ -45,9 +47,9 @@ export class SplitIntoLinesProducer {
             if (next === undefined) {
                 return undefined;
             } else if (next && next.length === 0) {
-                continue; // skip empty lines
+                continue; /* skip empty lines */
             } else if (next && next.length === 1 && isTkType(next[0], tks.TokenTknewline)) {
-                continue; // skip only newlines
+                continue; /* skip only newlines */
             } else {
                 return next;
             }

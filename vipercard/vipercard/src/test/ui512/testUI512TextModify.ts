@@ -303,7 +303,6 @@ export class TestUI512SelAndEntry extends TestUI512TextSelectEvents {
                 'ABC',
                 defFont
             );
-        },
+        }
     ];
 }
-

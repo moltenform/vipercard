@@ -9,65 +9,95 @@
 /* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
 /* auto */ import { DetermineCategory } from '../../vpc/codepreparse/vpcDetermineCategory.js';
 /* auto */ import { SyntaxRewriter } from '../../vpc/codepreparse/vpcRewrite.js';
-/* auto */ import { BranchTracking } from '../../vpc/codepreparse/vpcBranchProcessing.js';
+/* auto */ import { BranchProcessing } from '../../vpc/codepreparse/vpcBranchProcessing.js';
 
 /*
-code compilation/execution strategy
---------------------------------
+==========================================================
+How Code Compilation + Execution Works In ViperCard
+==========================================================
 
-Phase One: Before runtime
-    Run lexing on all input
-    SplitIntoLinesProducer splits into logical lines (aware of \ continuation)
-    MakeLowerCase makes identifiers lowercase
+Part 1: codepreparse
+    Run lexer on all input, getting a list of tokens
+    SplitIntoLinesProducer splits into lines (and is aware of \ line continuation)
+    MakeLowerCase makes identifiers lowercase, since the language is case insensitive
     SyntaxRewriter rewrites syntax for some lines:
-        1) To make parsing easier for some commands
-            (because we've minimized the number of tokens so extensively (for faster lexing))
-        2) Transforming "repeat with x=1 to 5" into a "repeat while" loop
-        3) Transforming custom function calls in a statement
-            A custom function call can be blocking/arbitrarily slow,
-            so it *can't* be evaluated in an expression.
-            so, we look for and extract custom function calls and evaluate them separately
-            put 2 * mycustomfunc(5 + mycustomfunc(7 + sin(x))) into x
-            -->
-            requestCall mycustomfunc(7 + sin(x)) placed into tmp001
-            put 2 * mycustomfunc(5 + tmp001) into x
-            -->
-            requestCall mycustomfunc(7 + sin(x)) placed into tmp001
-            requestCall mycustomfunc(5 + tmp001) placed into tmp002
-            put 2 * tmp002 into x
+    1) To minimize number of tokens needed in the lexer (for faster lexing)
+        for example:
+        ask line 2 of x with "defaultText"
+        we could make 'with' a token so that it wouldn't get lumped into the expression line 2 of x.
+        but we want to minimze number of tokens.
+        so instead, during codepreparse, if the command is ask, replace any tokens that are exactly 'with'.
+        ask line 2 of x $syntaxmarker$ "defaultText"
+        a $syntaxmarker$ is never part of an expression, and so the parser has no difficulty.
+    2) To transform "repeat with x=1 to 5" into a "repeat while" loop with the same functionality
+    3) To simplify parsing for a few commands
+    4) To expand custom function calls in an expression
+        We don't want a custom function call inside an expression, because the custom fn call could take
+        an arbitrarily long time to run, and we can't pause execution halfway through evaling an expression.
+        We also want evalling an expression to be a pure function with no side effects.
+        So, if a function call occurs inside an expression, we pull it outside:
 
-            (note, I'm now using the same requestCall for custom handlers and custom functions,
-            since they basically do the same thing)
-    DetermineCategory determines if a line is a syntax element like "end repeat"
+        put 2 * mycustomfunc(5 + mycustomfunc(7 + sin(x))) into x
+            -->
+        mycustomfunc(7 + sin(x))
+        put the result into tmp001
+        put 2 * mycustomfunc(5 + tmp001) into x
+            -->
+        mycustomfunc(7 + sin(x))
+        put the result into tmp001
+        mycustomfunc(5 + tmp001)
+        put the result into tmp002
+        put 2 * tmp002 into x
+
+    Next, DetermineCategory determines if a line is a syntax element like "end repeat"
     If the syntax element has an expression to evaluate, put the expression into the line's readyToParse
-    BranchTracking lets syntax elements like "end repeat" see where to jump to the corresponding "repeat"
-    Confirm hierarchical structure: an "else" must appear in a valid "if", "end myHandler" must follow "on myHandler"
+    Otherwise, we can skip running the parser entirely on the line, for better perf
+    Run BranchProcessing so that syntax elements like "end repeat" see where to jump to the corresponding "repeat"
+    Run BranchProcessing to confirm hierarchical structure: an "else" must appear in a valid "if", "end myHandler" must follow "on myHandler"
 
-Phase Two: Runtime
-    Walk through the lines
-        Some control flow keywords like 'end repeat' were already completely determined in lexing, we don't need to parse them at all
-        If it is a line that needs parsing, like 'return 4+5+6',
-            Parse the line syntax at runtime if it hasn't already been parsed
-            Evaluate the expression
-        We can easily pause and resume execution because we save the instruction offset + all state
-        So we can implement async functions like dialog boxes and calling out to another handler
-        When the stack of frames is empty, all execution has been completed.
-        Easier to go from line to line than traverse some type of tree structure; offset is just a number from current handler.
+    The preparsed code is a list, loops work by telling the interpreter to jump to a different offset in the list.
+    The code is then stored in the VpcAllCode instance.
 
+Part 2: execution
+    Code execution walks line-by-line through the list, running one line at a time
+    It checks the type of the line:
+        If there is no expression to be parsed, run the line and continue (such as onMouseUp or end repeat)
+        Else if there is an expression to be parsed, see if it is in the _VpcParsingCache_, and use that if possible
+        Otherwise, run the parser
+            (we run the chevrotain parser at runtime right when the code is being executed)
+            the parser creates a CST object, save the results to the _VpcParsingCache_
+        Use the _visitor_ class to recurse through the CST object and evaluate the result
+    Check how long we've been running the script, so that we're not stuck in a tight loop. if it's been too long,
+        save the instruction offset and all state
+        exit, the scheduler will call into us again in a few ms
+    If the stack of execution frames is empty, we've completed the script.
 */
 
+/**
+ * stores all pre-parsed code
+ */
 export class VpcAllCode {
-    protected code = new MapKeyToObjectCanSet<O<VpcCodeOfOneVel | VpcScriptSyntaxError>>();
-    processor = new VpcCodeProcessor();
-    readonly idgen: CountNumericId;
-    constructor(idgen: CountNumericId) {
-        this.idgen = idgen;
+    constructor(idGen: CountNumericId) {
+        this.idGen = idGen;
     }
 
-    updateCode(s: string, owner: VpcElBase) {
+    /* map vel id to code or syntax error*/
+    protected code = new MapKeyToObjectCanSet<O<VpcCodeOfOneVel | VpcScriptSyntaxError>>();
+
+    /* processes code */
+    protected processor = new VpcCodeProcessor();
+
+    /* generates an id */
+    readonly idGen: CountNumericId;
+
+    /**
+     * update the code of a vel.
+     */
+    updateCode(code: string, owner: VpcElBase) {
         assertTrue(owner && slength(owner.id), '5*|invalid owner id');
         this.code.set(owner.id, undefined);
-        if (!s || s.match(/^\s*$/)) {
+        if (!code || code.match(/^\s*$/)) {
+            /* there is no code, so exit early */
             this.code.set(owner.id, undefined);
             return;
         }
@@ -78,7 +108,7 @@ export class VpcAllCode {
         let syntaxError: O<VpcScriptSyntaxError>;
         try {
             codeOfElem.setHandlers(
-                this.processor.processCode(s, codeOfElem.lines, this.idgen, latestSrcLineSeen, latestDestLineSeen)
+                this.processor.go(code, codeOfElem.lines, this.idGen, latestSrcLineSeen, latestDestLineSeen)
             );
         } catch (e) {
             syntaxError = new VpcScriptSyntaxError();
@@ -98,25 +128,37 @@ export class VpcAllCode {
         }
     }
 
+    /**
+     * retrieve code for a vel
+     * if code could not compile, returns a VpcScriptSyntaxError instance
+     * returns undefined if the object has no script
+     */
     findCode(id: O<string>): O<VpcCodeOfOneVel | VpcScriptSyntaxError> {
-        // returns undefined if the object has no script
         return this.code.find(id);
     }
 
+    /**
+     * remove code for a vel
+     */
     remove(id: string) {
         this.code.remove(id);
     }
 
+    /**
+     * find a handler in a script
+     */
     findHandlerInScript(id: O<string>, handlername: string): O<[VpcCodeOfOneVel, VpcCodeLineReference]> {
         if (id) {
             let ret = this.findCode(id);
             let retAsCode = ret as VpcCodeOfOneVel;
             if (retAsCode && retAsCode.isVpcCodeOfOneVel) {
+                /* check in the cached map of handlers */
                 let handler = retAsCode.handlers.find(handlername);
                 if (handler) {
                     return [retAsCode, handler];
                 }
             } else if (ret) {
+                /* a syntax error occurred */
                 let retAsErr = ret as VpcScriptErrorBase;
                 if (retAsErr && retAsErr.isVpcScriptErrorBase) {
                     let err = makeVpcScriptErr('$compilation error$');
@@ -125,20 +167,25 @@ export class VpcAllCode {
                 } else {
                     throw makeVpcScriptErr('VpcCodeOfOneVel did not return expected type ' + ret);
                 }
+            } else {
+                /* it's fine, this vel has no code */
             }
         }
     }
 }
 
+/**
+ * top-level code processing
+ */
 class VpcCodeProcessor {
-    processCode(
+    go(
         code: string,
         output: VpcCodeLine[],
-        idgen: CountNumericId,
+        idGen: CountNumericId,
         latestSrcLineSeen: ValHolder<number>,
         latestDestLineSeen: ValHolder<VpcCodeLine>
     ) {
-        // lex the input
+        /* lex the input */
         let [lexer, parser, visitor] = getParsingObjects();
         let lexed = lexer.tokenize(code);
         if (lexed.errors.length) {
@@ -147,37 +194,37 @@ class VpcCodeProcessor {
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
 
-        // create a pipeline
-        let linenumber = 0;
+        /* create a pipeline */
+        let lineNumber = 0;
         let idGenThisScript = new CountNumericIdNormal();
         let makeLowercase = new MakeLowerCase();
         let checkReserved = new CheckReservedWords();
         let mapBuiltinCmds = new MapBuiltinCmds(parser);
-        let determineCategory = new DetermineCategory(idgen, parser, mapBuiltinCmds, checkReserved);
-        let splitter = new SplitIntoLinesProducer(lexed.tokens, idgen, makeLowercase);
-        let syntaxRewriter = new SyntaxRewriter(idgen, idGenThisScript, mapBuiltinCmds, checkReserved);
-        let branchTracking = new BranchTracking(idgen);
-        let limit = new LoopLimit(CodeLimits.MaxLinesInScript, 'maxLinesInScript');
-        while (limit.next()) {
-            let tokenList = splitter.next();
+        let determineCategory = new DetermineCategory(idGen, parser, mapBuiltinCmds, checkReserved);
+        let lineSplitter = new SplitIntoLinesProducer(lexed.tokens, idGen, makeLowercase);
+        let syntaxRewriter = new SyntaxRewriter(idGen, idGenThisScript, mapBuiltinCmds, checkReserved);
+        let branchProcessor = new BranchProcessing(idGen);
+        let loop = new LoopLimit(CodeLimits.MaxLinesInScript, 'maxLinesInScript');
+        while (loop.next()) {
+            let tokenList = lineSplitter.next();
             if (tokenList) {
                 let latest = tokenList[0];
                 if (latest.startLine) {
                     latestSrcLineSeen.val = latest.startLine;
                 }
 
-                // syntax rewriting might split a line into two lines
+                /* syntax rewriting might split a line into two lines */
                 let tokenLists = syntaxRewriter.go(tokenList);
                 for (let i = 0; i < tokenLists.length; i++) {
                     let list = tokenLists[i];
                     let line = determineCategory.go(list);
                     latestDestLineSeen.val = line;
-                    line.offset = linenumber;
-                    branchTracking.go(line);
-                    output[linenumber] = line;
-                    linenumber += 1;
+                    line.offset = lineNumber;
+                    branchProcessor.go(line);
+                    output[lineNumber] = line;
+                    lineNumber += 1;
 
-                    // save a bit of memory, we don't need this anymore
+                    /* save memory, we don't need this anymore */
                     line.tmpEntireLine = undefined;
                 }
             } else {
@@ -185,11 +232,15 @@ class VpcCodeProcessor {
             }
         }
 
-        branchTracking.ensureComplete();
-        return branchTracking.handlers;
+        /* ensure that all blocks are closed */
+        branchProcessor.ensureComplete();
+        return branchProcessor.handlers;
     }
 }
 
+/**
+ * store the code in a vel
+ */
 export class VpcCodeOfOneVel {
     isVpcCodeOfOneVel = true;
     lines: VpcCodeLine[] = [];
@@ -200,14 +251,23 @@ export class VpcCodeOfOneVel {
         this.ownerId = owner.id;
     }
 
+    /**
+     * cache information about each handler (like on mouseUp)
+     */
     get handlers() {
         return this._handlers;
     }
 
+    /**
+     * cache where each handler (like on mouseUp) begins
+     */
     get handlerStarts() {
         return this._handlerStarts;
     }
 
+    /**
+     * store handlers
+     */
     setHandlers(map: MapKeyToObject<VpcCodeLineReference>) {
         this._handlers = map;
         this._handlerStarts = map.getVals().map(h => h.offset);
@@ -215,25 +275,23 @@ export class VpcCodeOfOneVel {
         Object.freeze(this._handlerStarts);
     }
 
+    /**
+     * given a code offset, which handler is it in?
+     */
     determineHandlerFromOffset(offset: number): number {
-        // declare var nodebinarysearch:any
-        // return nodebinarysearch.first(this._handlerStarts,offset,(value:number,find:number) => {
-        //    // find the first greater-than-or-equal-to
-        //    if (find > value) return 0;
-        //    else if (find < value) return 1;
-        //    return 0;
-        //  })
-
         if (this._handlerStarts.length && offset < this._handlerStarts[0]) {
+            /* line is before any handlers */
             return -1;
         }
 
         for (let i = 0; i < this._handlerStarts.length; i++) {
             if (offset >= this._handlerStarts[i]) {
+                /* line is in this handler */
                 return i;
             }
         }
 
+        /* line is after all handlers */
         return -1;
     }
 }

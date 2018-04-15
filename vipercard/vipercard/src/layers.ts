@@ -151,6 +151,7 @@ vpcPreparseCommon
 
 /vpc/codeparse/
 vpcVisitor
+vpcVisitorMixin
 vpcVisitorMethods
 vpcRules
 vpcTokens
@@ -159,8 +160,8 @@ bridgeChv
 /vpc/vel/
 velResolveName
 velResolveReference
-velModel
-vpcOutsideInterfaces
+velOutsideInterfaces
+velModelTop
 velProductOpts
 velStack
 velBg

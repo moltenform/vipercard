@@ -13,9 +13,9 @@
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
-/* auto */ import { fromNickname } from '../../vpc/codeparse/vpcVisitor.js';
+/* auto */ import { fromNickname } from '../../vpc/codeparse/vpcVisitorMixin.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpcCodeLine.js';
 /* auto */ import { ScriptAsyncOperations, VpcScriptExecAsync } from '../../vpc/codeexec/vpcScriptExecAsync.js';
@@ -170,10 +170,10 @@ export class ExecuteStatements {
     }
 
     go_answer(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        // we'll call go_answer() many times.
-        // first time it is called, opens the dialog
-        // second through nth time it is called, does nothing because dialog still open, sets blocked=true
-        // last time it is called, returns normally
+        /* we'll call go_answer() many times. */
+        /* first time it is called, opens the dialog */
+        /* second through nth time it is called, does nothing because dialog still open, sets blocked=true */
+        /* last time it is called, returns normally */
         let nm = fromNickname('FACTOR');
         let argsVals = this.getAllChildVpcVals(vals, nm, true);
         let args = argsVals.map(item => item.readAsString());
@@ -195,10 +195,10 @@ export class ExecuteStatements {
     }
 
     go_ask(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        // we'll call go_ask() many times.
-        // first time it is called, opens the dialog
-        // second through nth time it is called, does nothing because dialog still open, sets blocked=true
-        // last time it is called, returns normally
+        /* we'll call go_ask() many times. */
+        /* first time it is called, opens the dialog */
+        /* second through nth time it is called, does nothing because dialog still open, sets blocked=true */
+        /* last time it is called, returns normally */
 
         let argsVals = this.getAllChildVpcVals(vals, 'RuleExpr', true);
         let args = argsVals.map(item => item.readAsString());
@@ -250,8 +250,8 @@ export class ExecuteStatements {
     }
 
     go_choose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        // note: this won't actually change the real tool, it's
-        // used for setting up mimicking drawing with the click/drag commands
+        /* note: this won't actually change the real tool, it's */
+        /* used for setting up mimicking drawing with the click/drag commands */
         let nm = fromNickname('FACTOR');
         let factor = throwIfUndefined(this.findChildVal(vals, nm), '5G|');
 
@@ -320,7 +320,7 @@ export class ExecuteStatements {
         if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
             throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
-            let contref = throwIfUndefined(
+            let contRef = throwIfUndefined(
                 this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHSimpleContainer'),
                 '5B|'
             );
@@ -329,15 +329,15 @@ export class ExecuteStatements {
                 '5A|'
             );
 
-            contref.chunk = chunk;
+            contRef.chunk = chunk;
 
-            // it's not as simple as 'put "" into item 2 of x' because
-            // delete item 2 of "a,b,c" should be "a,c" not "a,,c"
+            /* it's not as simple as 'put "" into item 2 of x' because */
+            /* delete item 2 of "a,b,c" should be "a,c" not "a,,c" */
             checkThrow(
                 chunk.type === VpcChunkType.Chars,
                 "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
             );
-            this.outside.ContainerWrite(contref, '', VpcChunkPreposition.into);
+            this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.into);
         }
     }
 
@@ -382,7 +382,7 @@ export class ExecuteStatements {
                     if (velAsStack.id !== stack.id) {
                         throw makeVpcScriptErr("57|we don't support going to other stacks");
                     } else {
-                        // nothing to do, we're already on this stack
+                        /* nothing to do, we're already on this stack */
                     }
                 } else if (velAsBg && velAsBg.isVpcElBg && velAsBg.cards.length) {
                     this.outside.GoCardRelative(OrdinalOrPosition.this, velAsBg.cards[0].id);
@@ -412,19 +412,15 @@ export class ExecuteStatements {
             terms.length === 2,
             "7M|we don't support 'put \"abc\"' to use the message box (missing into, before, or after)."
         );
-        let prep = getStrToEnum<VpcChunkPreposition>(
-            VpcChunkPreposition,
-            'VpcChunkPreposition',
-            terms[1]
-        );
+        let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[1]);
         let val = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '54|');
-        let contref = throwIfUndefined(
+        let contRef = throwIfUndefined(
             this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
             '53|'
         );
-        let cont = this.outside.ResolveContainerWritable(contref);
+        let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
-        ChunkResolution.applyPut(cont, contref.chunk, itemDel, val.readAsString(), prep);
+        ChunkResolution.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);
     }
 
     go_reset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
@@ -435,10 +431,10 @@ export class ExecuteStatements {
         let velRef = this.findChildVelRef(vals, 'RuleObject');
         let velRefFld = this.findChildVelRef(vals, 'RuleObjectFld');
         let velRefChunk = this.findChildOther<RequestedChunk>('RequestedChunk', vals, 'RuleHChunk');
-        let propname = throwIfUndefined(this.findChildStr(vals, 'RuleAnyPropertyName'), '51|');
+        let propName = throwIfUndefined(this.findChildStr(vals, 'RuleAnyPropertyName'), '51|');
 
-        // let's concat all of the values together into one string separated by commas
-        // that way we'll support coordinates "1,2" and text styles "plain, bold"
+        /* let's concat all of the values together into one string separated by commas */
+        /* that way we'll support coordinates "1,2" and text styles "plain, bold" */
         let strs: string[] = [];
         let newv = this.findChildMap(vals, 'RuleAnyPropertyVal');
         let nm = fromNickname('MAYBE_ALLOW_ARITH');
@@ -454,9 +450,9 @@ export class ExecuteStatements {
         let combined = VpcValS(strs.join(','));
         if (velRefChunk) {
             throwIfUndefined(velRefFld, '4~|');
-            this.outside.SetProp(velRefFld, propname, combined, velRefChunk);
+            this.outside.SetProp(velRefFld, propName, combined, velRefChunk);
         } else {
-            this.outside.SetProp(velRef, propname, combined, undefined);
+            this.outside.SetProp(velRef, propName, combined, undefined);
         }
     }
 
@@ -523,11 +519,11 @@ export class ExecuteStatements {
 
         let schunktype = throwIfUndefined(this.findChildStr(vals, 'TokenTkcharorwordoritemorlineorplural'), '4]|');
         let chunktype = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', schunktype);
-        let contref = throwIfUndefined(
+        let contRef = throwIfUndefined(
             this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
             '4[|'
         );
-        let cont = this.outside.ResolveContainerWritable(contref);
+        let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
         ChunkResolution.applySort(cont, itemDel, chunktype, sortType, ascend);
     }
@@ -572,7 +568,7 @@ export class ExecuteStatements {
 
         let asyncOpId = 'single_thread_asyncOpId';
 
-        // use an enum because we'll automatically show a list of valid alternatives on error
+        /* use an enum because we'll automatically show a list of valid alternatives on error */
         let multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, '', unitRaw as string);
         let milliseconds = Math.max(0, Math.round(n * multiply));
         VpcScriptExecAsync.go_wait(this.asyncOps, blocked, asyncOpId, milliseconds);

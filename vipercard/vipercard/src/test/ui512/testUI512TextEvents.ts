@@ -60,7 +60,7 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
         let grp = pr.app.getGroup('grp');
         for (let el of grp.iterEls()) {
             if (el instanceof UI512ElTextField) {
-                el.set('scrollbar', !el.get_b('scrollbar'));
+                el.set('scrollbar', !el.getB('scrollbar'));
             }
         }
 
@@ -490,4 +490,3 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
 }
 
 const loremText = `Lorem ipsum dolor sit amet, dolore pericula ne mel, erat feugait placerat ut sit, id vel persecuti constituam. Nibh probo et pro, ei quo case deterruisset. Nibh impetus per at. Oporteat scripserit has te, sea te nostrud pertinacia. Per deleniti deseruisse an, et usu singulis necessitatibus. Antiopam efficiendi an mei.\nCum cu ignota timeam consequat, salutandi contentiones nam an, ut apeirian deserunt conclusionemque eum. Eu singulis deterruisset vix, sed in sumo suas facete. Qui reprimique dissentiunt te, nam ne habeo officiis argumentum, cu pri homero democritum. No illum moderatius sea, vim no equidem nusquam complectitur.\nAutem dolor principes ea duo. In sea suas tation regione, cum ei maiorum volumus reformidans. Ei mei noluisse oportere iudicabit, ex ius summo officiis, feugait blandit nominavi id vel. Purto accusamus eu ius, an posse probatus similique qui.\nUt nibh maiestatis ius, sea dolorum facilisi ei. Cu cum tritani quaeque pertinacia, causae delectus delicata pro te, graeco scribentur reprehendunt pri eu. Corpora iracundia adolescens sit ei, in duo commune reprimique. In aliquam graecis eum, fugit utamur et sea. In molestie platonem conceptam mel. Ea hinc sensibus eam, aeque expetendis reprimique et vim.\nSumo saepe sit ne. Ex facilisi pericula constituam pri, et pro habemus definiebas, aliquam electram ex nam. Magna nostro moderatius ei sea, cu quo nostro theophrastus. Tation blandit ei per, odio dolorem has at. At brute alterum vituperatoribus nec, ad vix idque vocent. An porro ullum euripidis his, an graecis nostrum eligendi nec. Eos saepe aeterno accommodare ei.`;
-

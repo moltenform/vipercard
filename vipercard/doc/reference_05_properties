@@ -314,6 +314,15 @@ Examples:
 put the short name of cd btn "myBtn" into z
 
 =====
+btn: owner
+=====
+Gets the name of the parent of the button (a card or background).
+
+Examples:
+
+put the owner of cd btn "myBtn" into z
+
+=====
 fld: width
 =====
 
@@ -665,6 +674,15 @@ Examples:
 put the short name of cd fld "myFld" into z
 
 =====
+fld: owner
+=====
+Gets the name of the parent of the field (a card or background).
+
+Examples:
+
+put the owner of cd fld "myFld" into z
+
+=====
 card: id
 =====
 
@@ -734,6 +752,15 @@ card: short name
 Examples:
 
 put the short name of card id 1011 into z
+
+=====
+card: owner
+=====
+Gets the name of the parent of the card (its background).
+
+Examples:
+
+put the owner of card id 1011 into z
 
 =====
 global: version

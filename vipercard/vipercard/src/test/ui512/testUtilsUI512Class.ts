@@ -258,8 +258,8 @@ export class TestUtil512Class extends UI512TestBase {
             assertEq('123', Util512.padStart(123, 3, '0'), '');
             assertEq('0123', Util512.padStart(123, 4, '0'), '');
             assertEq('00123', Util512.padStart(123, 5, '0'), '');
-        },
-    ]
+        }
+    ];
 
     protected getMapKeysString<T>(map: { [key: string]: T }) {
         let keys = Util512.getMapKeys(map);

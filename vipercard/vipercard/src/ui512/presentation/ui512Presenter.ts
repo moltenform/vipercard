@@ -69,7 +69,7 @@ export abstract class UI512Presenter extends UI512PresenterBase {
             let builder = new ScrollbarImpl();
             for (let el of els) {
                 if (el instanceof UI512ElTextField) {
-                    if (el.get_b('scrollbar')) {
+                    if (el.getB('scrollbar')) {
                         builder.buildScrollbar(this.app, grp, el);
                     } else {
                         builder.removeScrollbar(this.app, grp, el);

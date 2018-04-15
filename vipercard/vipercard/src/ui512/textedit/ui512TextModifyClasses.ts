@@ -198,16 +198,16 @@ export class SelAndEntryImpl {
         }
 
         let lines = new UI512Lines(t);
-        let linenumber = lines.indexToLineNumber(nCaret);
+        let lineNumber = lines.indexToLineNumber(nCaret);
         assertTrue(lines.lns.length > 0, '2<|lines.lns is empty');
-        if (linenumber >= lines.lns.length - 1) {
+        if (lineNumber >= lines.lns.length - 1) {
             /* be careful, it's the last line */
-            lines.lns.splice(linenumber, 1);
+            lines.lns.splice(lineNumber, 1);
             let tnew = lines.flatten();
             return [tnew, tnew.len(), tnew.len()];
         } else {
-            lines.lns.splice(linenumber, 1);
-            let nextCaret = lines.lineNumberToIndex(linenumber);
+            lines.lns.splice(lineNumber, 1);
+            let nextCaret = lines.lineNumberToIndex(lineNumber);
             return [lines.flatten(), nextCaret, nextCaret];
         }
     }

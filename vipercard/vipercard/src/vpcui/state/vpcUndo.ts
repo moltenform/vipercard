@@ -8,7 +8,7 @@
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VelResolveName } from '../../vpc/vel/velResolveName.js';
+/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { UndoableActionCreateOrDelVelement } from '../../vpcui/state/vpcRawCreate.js';
 /* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
@@ -54,7 +54,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
         }
 
         this.childcount = 0;
-        for (let arr of VelResolveName.getChildrenArrays(vel)) {
+        for (let arr of VpcModelTop.getChildArrays(vel)) {
             this.childcount += arr.length;
         }
 
@@ -63,7 +63,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
     }
 
     static checkIfCanDelete(vel: VpcElBase, appli: VpcStateInterface) {
-        let currentCard = appli.getModel().getByIdUntyped(appli.getModel().productOpts.get_s('currentCardId'));
+        let currentCard = appli.getModel().getByIdUntyped(appli.getModel().productOpts.getS('currentCardId'));
         let velAsCard = vel as VpcElCard;
         let velAsBg = vel as VpcElBg;
         assertTrue(!!appli.getModel().findByIdUntyped(vel.id), "6Z|deleting element that doesn't exist?", vel.id);
@@ -105,10 +105,10 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
 
 class UndoableActionModifyVelement implements UndoableAction {
     velId: string;
-    propname: string;
+    propName: string;
     prevVal: ElementObserverVal;
     newVal: ElementObserverVal;
-    constructor(velId: string, propname: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
+    constructor(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
         if (prevVal instanceof FormattedText) {
             prevVal.lock();
         }
@@ -117,24 +117,24 @@ class UndoableActionModifyVelement implements UndoableAction {
             newVal.lock();
         }
 
-        if (isString(prevVal) && propname !== 'paint') {
+        if (isString(prevVal) && propName !== 'paint') {
             if (isString(newVal)) {
                 prevVal = '$' + UI512Compress.compressString(prevVal.toString());
                 newVal = '$' + UI512Compress.compressString(newVal.toString());
             } else {
-                throw makeVpcInternalErr('both must be strings ' + propname + ' ' + velId);
+                throw makeVpcInternalErr('both must be strings ' + propName + ' ' + velId);
             }
         } else if (prevVal instanceof FormattedText) {
             if (newVal instanceof FormattedText) {
                 prevVal = '@' + UI512Compress.compressString(prevVal.toSerialized());
                 newVal = '@' + UI512Compress.compressString(newVal.toSerialized());
             } else {
-                throw makeVpcInternalErr('both must be FormattedText ' + propname + ' ' + velId);
+                throw makeVpcInternalErr('both must be FormattedText ' + propName + ' ' + velId);
             }
         }
 
         this.velId = velId;
-        this.propname = propname;
+        this.propName = propName;
         this.prevVal = prevVal;
         this.newVal = newVal;
     }
@@ -149,10 +149,10 @@ class UndoableActionModifyVelement implements UndoableAction {
             newVal = FormattedText.newFromSerialized(newValPs);
         }
 
-        if (this.propname === 'currentTool' && typeof newVal === 'number') {
+        if (this.propName === 'currentTool' && typeof newVal === 'number') {
             appli.setTool(newVal);
         } else {
-            el.set(this.propname, newVal);
+            el.set(this.propName, newVal);
         }
     }
 
@@ -166,10 +166,10 @@ class UndoableActionModifyVelement implements UndoableAction {
             prevVal = FormattedText.newFromSerialized(prevValPs);
         }
 
-        if (this.propname === 'currentTool' && typeof prevVal === 'number') {
+        if (this.propName === 'currentTool' && typeof prevVal === 'number') {
             appli.setTool(prevVal);
         } else {
-            el.set(this.propname, prevVal);
+            el.set(this.propName, prevVal);
         }
     }
 }
@@ -186,19 +186,19 @@ class UndoableChangeSet {
         this.list.push(action);
     }
 
-    notifyPropChange(velId: string, propname: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
+    notifyPropChange(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
         // ignore selection and scroll changes.
         if (
-            propname === 'selcaret' ||
-            propname === 'selend' ||
-            propname === 'scroll' ||
-            propname.startsWith('increasingnumber') ||
-            propname === 'stacklineage'
+            propName === 'selcaret' ||
+            propName === 'selend' ||
+            propName === 'scroll' ||
+            propName.startsWith('increasingnumber') ||
+            propName === 'stacklineage'
         ) {
             return;
         }
 
-        this.list.push(new UndoableActionModifyVelement(velId, propname, prevVal, newVal));
+        this.list.push(new UndoableActionModifyVelement(velId, propName, prevVal, newVal));
     }
 
     hasContent() {
@@ -346,7 +346,7 @@ export class UndoManager implements ElementObserver {
     changeSeen(
         context: ChangeContext,
         elid: string,
-        propname: string,
+        propName: string,
         prev: ElementObserverVal,
         newv: ElementObserverVal
     ) {
@@ -354,19 +354,19 @@ export class UndoManager implements ElementObserver {
         if (this.doWithoutAbilityToUndoActive) {
             return;
         } else if (
-            propname === 'selcaret' ||
-            propname === 'selend' ||
-            propname === 'scroll' ||
-            propname.startsWith('increasingnumber') ||
-            propname === 'stacklineage'
+            propName === 'selcaret' ||
+            propName === 'selend' ||
+            propName === 'scroll' ||
+            propName.startsWith('increasingnumber') ||
+            propName === 'stacklineage'
         ) {
             return;
         }
 
         if (this.activeChangeSet) {
-            this.activeChangeSet.notifyPropChange(elid, propname, prev, newv);
+            this.activeChangeSet.notifyPropChange(elid, propName, prev, newv);
         } else {
-            assertTrueWarn(false, '6O|must be done inside an undoable block ' + elid + ' ' + propname, prev, newv);
+            assertTrueWarn(false, '6O|must be done inside an undoable block ' + elid + ' ' + propName, prev, newv);
         }
     }
 

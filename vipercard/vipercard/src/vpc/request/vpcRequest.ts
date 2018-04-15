@@ -109,12 +109,12 @@ export async function vpcUsersEnterEmailVerifyCode(
 }
 
 export async function vpcStacksFlagContent(
-    stackowner: string,
-    stackid: string,
+    stackOwner: string,
+    stackId: string,
     currentusername: string,
     simulateRemoteIp?: string
 ) {
-    let fullid = VpcSession.getFullStackId(stackowner, stackid);
+    let fullid = VpcSession.getFullStackId(stackOwner, stackId);
     let params: any = {
         stackfullid: fullid,
         FlagContentcurrentusername: currentusername,
@@ -145,12 +145,12 @@ export async function vpcStacksGetData(stackfullid: string): Promise<{ [key: str
 }
 
 export class VpcSession implements UI512IsSessionInterface {
-    static getUrlForOpeningStack(loc: string, stackowner: string, stackid: string, stackname: string): string {
-        let shorterstackid = stackid;
+    static getUrlForOpeningStack(loc: string, stackOwner: string, stackId: string, stackName: string): string {
+        let shorterstackid = stackId;
         if (shorterstackid.startsWith('S')) {
             shorterstackid = shorterstackid.substr(1);
         }
-        return loc + '?s=' + Util512.toBase64UrlSafe(stackowner) + '|' + shorterstackid;
+        return loc + '?s=' + Util512.toBase64UrlSafe(stackOwner) + '|' + shorterstackid;
     }
 
     readonly username: string;
@@ -238,7 +238,7 @@ export class VpcSession implements UI512IsSessionInterface {
             username: this.username,
             ownerusername: this.username,
             stacknewpartialid: stacknewpartialid,
-            stackname: newname,
+            stackName: newname,
             stackdata: newstackdata,
             simulatemaxstacks: setFakeMaxStacks
         };
@@ -293,8 +293,8 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
-    static async vpcStacksCountJsonSaves(stackowner: string, stackid: string, currentusername: string) {
-        let stackfullid = VpcSession.getFullStackId(stackowner, stackid);
+    static async vpcStacksCountJsonSaves(stackOwner: string, stackId: string, currentusername: string) {
+        let stackfullid = VpcSession.getFullStackId(stackOwner, stackId);
         let params = {
             stackfullid: stackfullid
         };

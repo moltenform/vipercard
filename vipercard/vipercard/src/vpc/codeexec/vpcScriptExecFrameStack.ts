@@ -3,25 +3,27 @@
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CodeLimits, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { CodeLimits, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
-/* auto */ import { OutsideWorldReadWrite, VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
-/* auto */ import { BranchTracking } from '../../vpc/codepreparse/vpcBranchProcessing.js';
+/* auto */ import { BranchProcessing } from '../../vpc/codepreparse/vpcBranchProcessing.js';
 /* auto */ import { VpcAllCode, VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcAllCode.js';
 /* auto */ import { VpcParsingCache } from '../../vpc/codeexec/vpcScriptCacheParsed.js';
 /* auto */ import { ScriptAsyncOperations } from '../../vpc/codeexec/vpcScriptExecAsync.js';
 /* auto */ import { ExecuteStatements } from '../../vpc/codeexec/vpcScriptExecStatement.js';
 /* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 
+/**
+ * frame stack for the vipercard code-interpreter
+ * like C, entering a function pushes a frame onto this stack,
+ * returning from a function pops a frame from this stack
+ */
 export class CodeExecFrameStack {
     stack: O<CodeExecFrame>[] = [undefined];
-    paintQueue: UI512PaintDispatch[] = [];
-    hasRunCode = false;
-    static staticAsyncOps = new ScriptAsyncOperations();
     constructor(
         protected code: VpcAllCode,
         protected outside: OutsideWorldReadWrite,
@@ -35,6 +37,20 @@ export class CodeExecFrameStack {
         this.execStatements.asyncOps = CodeExecFrameStack.staticAsyncOps;
     }
 
+    /* if you are drawing paint on the screen with a script,
+    we cache the commands sent to the screen to coalesce later for better performance */
+    paintQueue: UI512PaintDispatch[] = [];
+
+    /* is this a completely new framestack? */
+    hasRunCode = false;
+
+    /* keep track of state for an async script action (like "wait 4 seconds") */
+    static staticAsyncOps = new ScriptAsyncOperations();
+
+    /**
+     * send a message, like "on mouseUp", and see if anything in the message hierarchy responds
+     * if something responds, push it onto the stack so that it's ready to execute
+     */
     findHandlerToExec() {
         let handler = this.findHandlerUpwards(this.originalMsg.targetId, this.originalMsg.msgName, false);
         if (handler) {
@@ -42,47 +58,63 @@ export class CodeExecFrameStack {
         }
     }
 
+    /**
+     * push frame onto the stack so that it is ready to execute
+     */
     protected pushStackFrame(
         msgName: string,
         msg: VpcScriptMessage,
         code: VpcCodeOfOneVel,
-        codeline: VpcCodeLineReference
+        codeLine: VpcCodeLineReference
     ) {
         checkThrowEq(VpcTool.Browse, this.outside.GetCurrentTool(true), 'not browse tool?');
-        let newframe = new CodeExecFrame(msgName, msg);
-        newframe.codeSection = code;
-        this.validatedGoto(newframe, codeline, true);
-        this.stack.push(newframe);
-        return newframe;
+        let newFrame = new CodeExecFrame(msgName, msg);
+        newFrame.codeSection = code;
+        this.validatedGoto(newFrame, codeLine, true);
+        this.stack.push(newFrame);
+        assertTrue(this.stack.length < CodeLimits.MaxCodeFrames, '5e|stack overflow... unbounded recursion?');
+        return newFrame;
     }
 
+    /**
+     * when jumping to a line, ensure the expected line id matches line line we get.
+     */
     protected validatedGoto(frm: CodeExecFrame, ref: VpcCodeLineReference, okToStartHandler?: boolean) {
         frm.jumpToOffset(ref.offset, okToStartHandler);
-        assertEq(ref.lineid, frm.codeSection.lines[frm.offset].lineId, '5h|');
+        assertEq(ref.lineId, frm.codeSection.lines[frm.offset].lineId, '5h|');
         assertEq(ref.offset, frm.codeSection.lines[frm.offset].offset, '5g|');
     }
 
+    /**
+     * continue running code until _ms_ milliseconds have passed
+     */
     runTimeslice(ms: number) {
         if (!this.hasRunCode) {
             CodeExecFrameStack.staticAsyncOps = new ScriptAsyncOperations();
             this.execStatements.asyncOps = CodeExecFrameStack.staticAsyncOps;
         }
 
-        this.hasRunCode = true;
+        /* we should never have exited from more fns than we've entered. */
+        assertTrue(this.stack.length >= 1 && this.stack[0] === undefined, '5f|popped too many off the stack');
+
+        /* code will set this to true if we're blocked on an async op
+        there's no sense in spin-waiting if the code says "wait 4 seconds" */
         let blocked = new ValHolder<number>(0);
 
+        this.hasRunCode = true;
         let started = performance.now();
-        assertTrue(this.stack.length >= 1 && this.stack[0] === undefined, '5f|popped too many off the stack');
-        assertTrue(this.stack.length < CodeLimits.MaxCodeFrames, '5e|stack overflow... unbounded recursion?');
         let count = 0;
         while (this.stack.length > 1) {
+            /* run one line of code */
             let isComplete = this.runOneLine(blocked);
             if (isComplete || blocked.val) {
                 break;
             }
 
             count += 1;
-            if (count % 4 === 0) {
+            if (count > 4) {
+                /* see if our timeslice has expired */
+                count = 0;
                 let now = performance.now();
                 if (now - started >= ms) {
                     break;
@@ -96,6 +128,10 @@ export class CodeExecFrameStack {
         }
     }
 
+    /**
+     *
+     * @param blocked
+     */
     protected runOneLine(blocked: ValHolder<number>): boolean {
         let curframe = this.stack[this.stack.length - 1];
         if (curframe) {
@@ -131,11 +167,11 @@ export class CodeExecFrameStack {
 
     protected runOneLineImpl(curframe: CodeExecFrame, curline: VpcCodeLine, blocked: ValHolder<number>) {
         let parsed = this.parsingCache.getParsedLine(curline);
-        let methodname = 'visit' + getEnumToStrOrUnknown<VpcLineCategory>(VpcLineCategory, curline.ctg);
+        let methodName = 'visit' + getEnumToStrOrUnknown<VpcLineCategory>(VpcLineCategory, curline.ctg);
         Util512.callAsMethodOnClass(
             'CodeExecFrameStack',
             this,
-            methodname,
+            methodName,
             [curframe, curline, parsed, blocked],
             false
         );
@@ -198,12 +234,12 @@ export class CodeExecFrameStack {
 
     visitDeclareGlobal(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
         for (let i = 0; i < curline.excerptToParse.length; i++) {
-            let varname = curline.excerptToParse[i].image;
-            checkThrow(varname !== 'it' && this.check.okLocalVar(varname), '7s|reserved word', varname);
-            curframe.declaredGlobals[varname] = true;
-            if (!this.outside.IsVarDefined(varname)) {
+            let varName = curline.excerptToParse[i].image;
+            checkThrow(varName !== 'it' && this.check.okLocalVar(varName), '7s|reserved word', varName);
+            curframe.declaredGlobals[varName] = true;
+            if (!this.outside.IsVarDefined(varName)) {
                 /* not-yet-used globals default to "" */
-                this.outside.SetVarContents(varname, VpcValS(''));
+                this.outside.SetVarContents(varName, VpcValS(''));
             }
         }
 
@@ -236,12 +272,12 @@ export class CodeExecFrameStack {
     }
 
     visitHandlerExit(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        /* we've validated curline.readyToParse[1] in the BranchTracking class */
+        /* we've validated curline.readyToParse[1] in the BranchProcessing class */
         this.stack.pop();
     }
 
     visitHandlerPass(curframe: CodeExecFrame, curline: VpcCodeLine, parsed: any) {
-        /* we've validated curline.readyToParse[1] in the BranchTracking class */
+        /* we've validated curline.readyToParse[1] in the BranchProcessing class */
         /* in the rewriting stage we've added a "return" after this line, for simplicity */
         curframe.next();
         let found = this.findHandlerUpwards(curframe.codeSection.ownerId, curframe.handlerName, true);
@@ -274,13 +310,13 @@ export class CodeExecFrameStack {
         let blockInfo = this.getBlockInfo(curline, 2);
         let blockEnd = blockInfo[blockInfo.length - 1];
         assertEq(curline.offset, blockInfo[0].offset, '5U|');
-        assertEq(curline.lineId, blockInfo[0].lineid, '5T|');
+        assertEq(curline.lineId, blockInfo[0].lineId, '5T|');
         assertEq(VpcLineCategory.IfEnd, curframe.codeSection.lines[blockEnd.offset].ctg, '5S|');
 
         /* mark all of the child branches as untried. */
         for (let i = 0; i < blockInfo.length; i++) {
             curframe.offsetsMarked[blockInfo[i].offset] = false;
-            assertEq(blockInfo[i].lineid, curframe.codeSection.lines[blockInfo[i].offset].lineId, '5R|');
+            assertEq(blockInfo[i].lineId, curframe.codeSection.lines[blockInfo[i].offset].lineId, '5R|');
         }
 
         let evald = this.evalRequestedExpression(parsed, curline);

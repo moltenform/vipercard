@@ -173,4 +173,3 @@ export class TestDrawUI512Buttons extends UI512TestBase {
         );
     }
 }
-

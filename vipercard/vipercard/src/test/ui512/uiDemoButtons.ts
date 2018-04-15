@@ -79,18 +79,17 @@ export class UI512DemoButtons extends UI512Presenter {
     private static respondMouseMove(pr: UI512DemoButtons, d: MouseMoveEventDetails) {
         if (pr.isCurrentlyResizingButton) {
             let clientrect = getUI512WindowBounds();
-            let neww = d.mouseX - clientrect[0];
-            let newh = d.mouseY - clientrect[1];
-            neww = Math.max(1, neww);
-            newh = Math.max(1, newh);
+            let newW = d.mouseX - clientrect[0];
+            let newH = d.mouseY - clientrect[1];
+            newW = Math.max(1, newW);
+            newH = Math.max(1, newH);
 
             let grp = pr.app.getGroup('grpmain');
             for (let el of grp.iterEls()) {
                 if (el.id.startsWith('btntest')) {
-                    el.setDimensions(el.x, el.y, neww, newh);
+                    el.setDimensions(el.x, el.y, newW, newH);
                 }
             }
         }
     }
 }
-

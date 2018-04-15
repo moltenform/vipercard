@@ -4,32 +4,41 @@
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
 
+/**
+ * serialization of VPC objects, preparing them for JSON.serialize
+ */
 export class VpcUI512Serialization {
-    static serializeUiGettable(vel: UI512Gettable, attrlist: string[]) {
+    /**
+     * serialize a UI512Gettable to a JS object
+     */
+    static serializeGettable(vel: UI512Gettable, propList: string[]) {
         let ret: { [key: string]: ElementObserverVal } = {};
-        for (let attrname of attrlist) {
-            let v = vel.get_generic(attrname);
-            assertTrueWarn(v !== undefined, attrname);
-            if (attrname === UI512Settable.formattedTextField) {
+        for (let propName of propList) {
+            let v = vel.get_generic(propName);
+            assertTrueWarn(v !== undefined, propName);
+            if (propName === UI512Settable.formattedTextField) {
                 let vAsText = v as FormattedText;
                 assertTrue(vAsText && vAsText.isFormattedText, 'invalid ftxt');
-                ret[attrname] = vAsText.toSerialized();
+                ret[propName] = vAsText.toSerialized();
             } else {
-                ret[attrname] = v;
+                ret[propName] = v;
             }
         }
 
         return ret;
     }
 
-    static deserializeUiSettable(vel: UI512Settable, attrlist: string[], vals: any) {
-        let svdObserver = vel.observer;
+    /**
+     * deserialize a JS object to a UI512Settable
+     */
+    static deserializeSettable(vel: UI512Settable, propList: string[], vals: any) {
+        let savedObserver = vel.observer;
         try {
             vel.observer = new ElementObserverNoOp();
-            for (let attrname of attrlist) {
-                let v = vals[attrname];
+            for (let propName of propList) {
+                let v = vals[propName];
                 if (v !== null && v !== undefined) {
-                    if (attrname === UI512Settable.formattedTextField) {
+                    if (propName === UI512Settable.formattedTextField) {
                         if (isString(v)) {
                             let vAsText = FormattedText.newFromSerialized(v);
                             vel.setftxt(vAsText);
@@ -38,22 +47,25 @@ export class VpcUI512Serialization {
                             vel.setftxt(v as FormattedText);
                         }
                     } else {
-                        vel.set(attrname, v);
+                        vel.set(propName, v);
                     }
                 } else {
-                    assertTrueWarn(false, 'missing or null attr', attrname);
+                    assertTrueWarn(false, 'missing or null attr', propName);
                 }
             }
         } finally {
-            vel.observer = svdObserver;
+            vel.observer = savedObserver;
         }
     }
 
-    static copyAttrsOver(getter: UI512Gettable, setter: UI512Settable, attrlist: string[]) {
-        for (let attrname of attrlist) {
-            let v = getter.get_generic(attrname);
+    /**
+     * copy over the prop values of one object onto another object
+     */
+    static copyPropsOver(getter: UI512Gettable, setter: UI512Settable, propList: string[]) {
+        for (let propName of propList) {
+            let v = getter.get_generic(propName);
             if (v !== null && v !== undefined) {
-                if (attrname === UI512Settable.formattedTextField) {
+                if (propName === UI512Settable.formattedTextField) {
                     if (isString(v)) {
                         let vAsText = FormattedText.newFromSerialized(v as string);
                         setter.setftxt(vAsText);
@@ -62,10 +74,10 @@ export class VpcUI512Serialization {
                         setter.setftxt(v as FormattedText);
                     }
                 } else {
-                    setter.set(attrname, v);
+                    setter.set(propName, v);
                 }
             } else {
-                assertTrueWarn(false, 'missing or null attr', attrname);
+                assertTrueWarn(false, 'missing or null attr', propName);
             }
         }
     }

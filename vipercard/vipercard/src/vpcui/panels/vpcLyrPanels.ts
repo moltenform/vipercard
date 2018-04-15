@@ -6,7 +6,7 @@
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
+/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
 /* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
 /* auto */ import { VpcPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
@@ -26,7 +26,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
     active: O<VpcPropPanel> = this.blank;
 
     // set in initLayers
-    model: VpcModel;
+    model: VpcModelTop;
     handles: VpcAppResizeHandles;
     init(pr: UI512PresenterBase) {
         this.editor.appli = this.appli;
@@ -57,9 +57,9 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
         }
     }
 
-    getAndValidateSelectedVel(propname: string) {
+    getAndValidateSelectedVel(propName: string) {
         // the selectedVelId could be out of date.
-        let selVel = this.appli.getOption_s(propname);
+        let selVel = this.appli.getOption_s(propName);
         let vel = this.appli.getModel().findByIdUntyped(selVel);
         let currentCard = this.appli.getModel().getCurrentCard().id;
         if (vel && getToolCategory(this.appli.getTool()) === VpcToolCtg.CtgEdit) {
@@ -143,7 +143,7 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
         if (short && short.startsWith('toggle##')) {
             let vel = this.getAndValidateSelectedVel('selectedVelId');
             if (vel) {
-                el.set('checkmark', !el.get_b('checkmark'));
+                el.set('checkmark', !el.getB('checkmark'));
             }
         }
     }

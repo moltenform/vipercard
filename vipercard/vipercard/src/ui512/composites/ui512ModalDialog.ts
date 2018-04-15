@@ -215,7 +215,7 @@ export class UI512CompModalDialog extends UI512CompBase {
         addDefaultListeners(pr.listeners);
 
         /* if you clicked on a special 'cancel' rect, close the dialog */
-        pr.listenEvent(UI512EventType.MouseDown, (pr: UI512Presenter, d: MouseDownEventDetails) => {
+        pr.listenEvent(UI512EventType.MouseDown, (_, d:MouseDownEventDetails) => {
             if (this.isCancelRect(d.mouseX, d.mouseY)) {
                 nChosen = 3;
                 eventRedirect.completed = true;
@@ -223,7 +223,7 @@ export class UI512CompModalDialog extends UI512CompBase {
         });
 
         /* if you clicked in a button, run the callback and close the dialog */
-        pr.listenEvent(UI512EventType.MouseUp, (pr: UI512Presenter, d: MouseUpEventDetails) => {
+        pr.listenEvent(UI512EventType.MouseUp, (_, d:MouseUpEventDetails) => {
             nChosen = this.getWhichBtnFromClick(d);
             if (nChosen !== -1) {
                 if (this.cbOnMouseUp) {
@@ -246,7 +246,7 @@ export class UI512CompModalDialog extends UI512CompBase {
     /**
      * did you click on a special 'cancel' rect
      */
-    protected isCancelRect(x:number, y:number) {
+    protected isCancelRect(x: number, y: number) {
         for (let cancelBtnBound of this.cancelBtnBounds) {
             if (
                 RectUtils.hasPoint(
@@ -258,7 +258,7 @@ export class UI512CompModalDialog extends UI512CompBase {
                     cancelBtnBound[3]
                 )
             ) {
-                return true
+                return true;
             }
         }
     }

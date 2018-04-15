@@ -51,7 +51,7 @@ export class UI512CompRadioButtonGroup extends UI512CompBase {
         for (let item of this.items) {
             let el = grp.getEl(this.getElId(item[0]));
             let btn = cast(el, UI512ElButton);
-            if (btn.get_b('checkmark')) {
+            if (btn.getB('checkmark')) {
                 ret.push(item[0]);
             }
         }
@@ -87,7 +87,7 @@ export class UI512CompRadioButtonGroup extends UI512CompBase {
         } else if (d.elClick) {
             let userId = this.fromFullId(d.elClick.id);
             if (userId) {
-                d.elClick.set('checkmark', !d.elClick.get_b('checkmark'));
+                d.elClick.set('checkmark', !d.elClick.getB('checkmark'));
             }
         }
     }

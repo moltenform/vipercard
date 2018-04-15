@@ -152,7 +152,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
             let transformed = VpcAppNonModalDialogReplBox.transformText(scr);
             let fakeVel = this.getOrMakeFakeButton();
             fakeVel.set('script', transformed);
-            let code = fakeVel.get_s('script');
+            let code = fakeVel.getS('script');
             this.appli.getCodeExec().updateChangedCode(fakeVel, code);
 
             this.historyTyped.push(scr);
@@ -161,10 +161,10 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
 
             let fakeEl: any = new Object();
             fakeEl.id = 'VpcModelRender$$' + fakeVel.id;
-            fakeEl.x = fakeVel.get_n('x');
-            fakeEl.y = fakeVel.get_n('y');
-            fakeEl.w = fakeVel.get_n('w');
-            fakeEl.h = fakeVel.get_n('h');
+            fakeEl.x = fakeVel.getN('x');
+            fakeEl.y = fakeVel.getN('y');
+            fakeEl.w = fakeVel.getN('w');
+            fakeEl.h = fakeVel.getN('h');
 
             this.rememberedTool = this.appli.getTool();
             this.appli.setTool(VpcTool.Browse);
@@ -172,8 +172,8 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
             this.appli.getCodeExec().lastEncounteredScriptErr = undefined;
             let simEvent = new MouseUpEventDetails(
                 0,
-                fakeVel.get_n('x') + 1,
-                fakeVel.get_n('y') + 1,
+                fakeVel.getN('x') + 1,
+                fakeVel.getN('y') + 1,
                 0,
                 ModifierKeys.None
             );

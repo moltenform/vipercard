@@ -1,9 +1,8 @@
 
-/* auto */ import { makeUI512Error } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-
 
 /**
  * SortType for the "sort" command
@@ -18,7 +17,6 @@ export enum SortType {
     numeric,
     international
 }
-
 
 /**
  * PropAdjective for properties, e.g.
@@ -111,6 +109,28 @@ export enum VpcElType {
 }
 
 /**
+ * show type in UI
+ */
+export function vpcElTypeShowInUI(tp: VpcElType) {
+    switch (tp) {
+        case VpcElType.Btn:
+            return 'button';
+        case VpcElType.Fld:
+            return 'field';
+        case VpcElType.Card:
+            return 'card';
+        case VpcElType.Bg:
+            return 'bkgnd';
+        case VpcElType.Stack:
+            return 'stack';
+        case VpcElType.Product:
+            return '';
+        default:
+            throw makeVpcScriptErr(`4k|can't get name of el type ${tp}`);
+    }
+}
+
+/**
  * string name of the type, to show in UI
  */
 export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
@@ -130,7 +150,7 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
         } else if (type === VpcElType.Product) {
             return '';
         } else {
-            throw makeUI512Error('unknown VpcElType' + type);
+            throw makeVpcScriptErr('unknown VpcElType' + type);
         }
     } else {
         if (type === VpcElType.Unknown) {
@@ -148,7 +168,7 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
         } else if (type === VpcElType.Product) {
             return '';
         } else {
-            throw makeUI512Error('unknown VpcElType' + type);
+            throw makeVpcScriptErr('unknown VpcElType' + type);
         }
     }
 }
@@ -178,7 +198,7 @@ export enum VpcTool {
     __first = Browse,
     __last = Spray,
     alternateforms_Spray_can = Spray,
-    alternateforms_Round_rect = Roundrect,
+    alternateforms_Round_rect = Roundrect
 }
 
 /**
@@ -239,7 +259,7 @@ export function getToolCategory(tl: VpcTool): VpcToolCtg {
         case VpcTool.Curve:
             return VpcToolCtg.CtgCurve;
         default:
-            throw makeUI512Error(`4/|unknown tool ${tl}`);
+            throw makeVpcScriptErr(`4/|unknown tool ${tl}`);
     }
 }
 
@@ -268,7 +288,7 @@ export function toolToDispatchShapes(tl: VpcTool) {
     } else if (tl === VpcTool.Bucket) {
         return UI512PaintDispatchShapes.Bucket;
     } else {
-        throw makeUI512Error('toPaintOntoCanvasShapes unsupported tool ' + tl);
+        throw makeVpcScriptErr('toPaintOntoCanvasShapes unsupported tool ' + tl);
     }
 }
 
@@ -332,7 +352,7 @@ export function getMsgNameFromType(tp: UI512EventType) {
         case UI512EventType.MouseLeave:
             return VpcBuiltinMsg.mouseleave;
         default:
-            throw makeUI512Error(`4.|unknown event type ${tp}`);
+            throw makeVpcScriptErr(`4.|unknown event type ${tp}`);
     }
 }
 
@@ -394,7 +414,7 @@ export function getPositionFromOrdinalOrPosition(
             case OrdinalOrPosition.this:
                 return current;
             default:
-                throw makeUI512Error(`4-|unknown ordinal ${rel}`);
+                throw makeVpcScriptErr(`4-|unknown ordinal ${rel}`);
         }
     };
 

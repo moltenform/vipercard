@@ -105,7 +105,7 @@ export class VariableCollectionConstants extends VarCollection {
         Util512.freezeRecurse(this);
     }
 
-    set(varname: string, val: VpcVal) {
-        throw makeVpcInternalErr("5~|we don't support creating a new constant " + varname);
+    set(varName: string, val: VpcVal) {
+        throw makeVpcInternalErr("5~|we don't support creating a new constant " + varName);
     }
 }

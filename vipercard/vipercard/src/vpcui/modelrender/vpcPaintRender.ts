@@ -48,7 +48,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
 
     updateUI512ElsImpl(): void {
         let mainPaint = cast(this.appli.UI512App().getEl('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
-        let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+        let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
         let [currentlyCachedV, currentlyCachedIm] = this.refreshCachedPaintForCard(currentCardId);
         mainPaint.setCanvas(currentlyCachedIm);
         this.doMaintenance();
@@ -66,7 +66,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
 
     refreshCachedPaintForCard(cdid: string) {
         let cd = this.appli.getModel().getById(cdid, VpcElCard);
-        let currentVersion = cd.get_s('paint');
+        let currentVersion = cd.getS('paint');
         let currentlyCached = this.canvasesByCardid.find(cdid);
 
         if (!currentlyCached) {
@@ -77,7 +77,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         if (currentlyCached[0] !== currentVersion) {
             let worker = new UI512ImageSerialization();
             currentlyCached[0] = currentVersion;
-            worker.loadFromString(currentlyCached[1], cd.get_s('paint'));
+            worker.loadFromString(currentlyCached[1], cd.getS('paint'));
         }
 
         return currentlyCached;
@@ -256,7 +256,7 @@ export class VpcPaintRender extends VpcAppInterfaceLayer {
         let painter = new UI512PainterCvCanvas(mainCanvas, mainCanvas.canvas.width, mainCanvas.canvas.height);
         fn(mainCanvas, painter);
         let serialized = new UI512ImageSerialization().writeToString(mainCanvas);
-        let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+        let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
         let currentCard = this.appli.getModel().getById(currentCardId, VpcElCard);
         currentCard.set('paint', serialized);
     }

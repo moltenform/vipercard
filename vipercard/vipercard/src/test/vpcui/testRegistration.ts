@@ -16,7 +16,7 @@
 /* auto */ import { TestDrawUI512Text } from '../../test/ui512/testUI512DrawText.js';
 /* auto */ import { TestDrawUI512Composites } from '../../test/ui512/testUI512Composites.js';
 /* auto */ import { TestCodeEditorHelpers } from '../../test/ui512/testUI512CodeEditor.js';
-/* auto */ import { TestVpcUtils } from '../../test/vpc/vpcTestUtils.js';
+/* auto */ import { TestVpcUtils, TestVpcVels } from '../../test/vpc/vpcTestUtils.js';
 /* auto */ import { TestVpcParsing } from '../../test/vpc/vpcTestScriptParse.js';
 /* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpcTestScriptRun.js';
 /* auto */ import { TestScriptEval } from '../../test/vpc/vpcTestScriptEval.js';
@@ -26,6 +26,9 @@
 export function runTestsImpl(all = true) {
     let registeredTests = [
         [() => new TestCodeEditorHelpers()],
+        [() => new TestVpcParsing()],
+        [() => new TestScriptEval()],
+        [() => new TestVpcScriptRun()],
         [() => new TestDrawUI512Composites()],
         [() => new TestDrawUI512Text()],
         [() => new TestUI512Elements()],
@@ -41,11 +44,10 @@ export function runTestsImpl(all = true) {
         [() => new TestUI512CanvasWrapper()],
         [() => new TestUtil512Class()],
         [() => new TestUI512Utils()],
-        [() => new TestScriptEval()],
-        [() => new TestVpcParsing()],
-        [() => new TestVpcScriptRun()],
-        //[() => new TestVpcBasicServerTests()],
-        //[() => new TestVpcServerTests()],
+
+        [() => new TestVpcVels()],
+        // [() => new TestVpcBasicServerTests()],
+        // [() => new TestVpcServerTests()],
         [() => new TestVpcUtils()],
     ];
 

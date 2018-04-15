@@ -99,8 +99,8 @@ export class VpcChangeSelectedFont {
         if (vel) {
             // note: get from focused, not vel, since it's more up to date?
             // no, since we're acting on the vel, get everything from one for consistency
-            let selcaret = fitIntoInclusive(vel.get_n('selcaret'), 0, vel.get_ftxt().len());
-            let selend = fitIntoInclusive(vel.get_n('selend'), 0, vel.get_ftxt().len());
+            let selcaret = fitIntoInclusive(vel.getN('selcaret'), 0, vel.get_ftxt().len());
+            let selend = fitIntoInclusive(vel.getN('selend'), 0, vel.get_ftxt().len());
             if (selcaret !== selend) {
                 return [vel, Math.min(selcaret, selend), Math.max(selcaret, selend)];
             }

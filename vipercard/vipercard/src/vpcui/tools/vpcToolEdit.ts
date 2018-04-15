@@ -52,19 +52,19 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
                         // distance from initial click to center of handle
                         let distanceFromHandleCenterX =
                             d.mouseX -
-                            this.propPanel.handles.sizeHandles[handle].get_n('x') -
+                            this.propPanel.handles.sizeHandles[handle].getN('x') -
                             this.propPanel.handles.sizeHandles[0].w / 2;
                         let distanceFromHandleCenterY =
                             d.mouseY -
-                            this.propPanel.handles.sizeHandles[handle].get_n('y') -
+                            this.propPanel.handles.sizeHandles[handle].getN('y') -
                             this.propPanel.handles.sizeHandles[0].h / 2;
                         let distanceFromFirstHandleCenterX =
                             d.mouseX -
-                            this.propPanel.handles.sizeHandles[0].get_n('x') -
+                            this.propPanel.handles.sizeHandles[0].getN('x') -
                             this.propPanel.handles.sizeHandles[0].w / 2;
                         let distanceFromFirstHandleCenterY =
                             d.mouseY -
-                            this.propPanel.handles.sizeHandles[0].get_n('y') -
+                            this.propPanel.handles.sizeHandles[0].getN('y') -
                             this.propPanel.handles.sizeHandles[0].h / 2;
                         this.dragStatus = new EditToolDragStatus(
                             handle,

@@ -507,21 +507,21 @@ async function getStacksTests(tst: TestVpcServerTests, callback: Function) {
     let row = await vpcStacksGetData(VpcSession.getFullStackId('test2', tst.stackId1));
     let fakeStackName = 'My stack acc\u00e9nt';
     assertEq('test2', row.ownerusername, '');
-    assertEq(fakeStackName + '1', row.stackname, '');
+    assertEq(fakeStackName + '1', row.stackName, '');
     assertEq(tst.fakeStackData1, row.stackdata, '');
     assertEq(null, row.flagged, '');
 
     // open stackid2
     row = await vpcStacksGetData(VpcSession.getFullStackId('test2', tst.stackId2));
     assertEq('test2', row.ownerusername, '');
-    assertEq(fakeStackName + '2', row.stackname, '');
+    assertEq(fakeStackName + '2', row.stackName, '');
     assertEq(tst.fakeStackData2, row.stackdata, '');
     assertEq(null, row.flagged, '');
 
     // open stackid3
     row = await vpcStacksGetData(VpcSession.getFullStackId('test3', tst.stackId3));
     assertEq('test3', row.ownerusername, '');
-    assertEq(fakeStackName + '3', row.stackname, '');
+    assertEq(fakeStackName + '3', row.stackName, '');
     assertEq(tst.fakeStackData3, row.stackdata, '');
     assertEq(null, row.flagged, '');
 
@@ -546,9 +546,9 @@ async function getStacksTests(tst: TestVpcServerTests, callback: Function) {
     let expectedfullid2 = VpcSession.getFullStackId('test2', tst.stackId2);
     assertEq(2, got.length, '');
     assertEq(expectedfullid1, got[0].fullstackid, '');
-    assertEq(fakeStackName + '1', got[0].stackname, '');
+    assertEq(fakeStackName + '1', got[0].stackName, '');
     assertEq(expectedfullid2, got[1].fullstackid, '');
-    assertEq(fakeStackName + '2', got[1].stackname, '');
+    assertEq(fakeStackName + '2', got[1].stackName, '');
 
     // open session for test3
     sess = new VpcSession('test3', strToArrBuffer(atob('G25GDNGhJ2vkC01E7u5tBicpKmLfeUqzwsnqusMzqV8=')));
@@ -564,7 +564,7 @@ async function getStacksTests(tst: TestVpcServerTests, callback: Function) {
     expectedfullid1 = VpcSession.getFullStackId('test3', tst.stackId3);
     assertEq(1, got.length, '');
     assertEq(expectedfullid1, got[0].fullstackid, '');
-    assertEq(fakeStackName + '3', got[0].stackname, '');
+    assertEq(fakeStackName + '3', got[0].stackName, '');
 
     nexttest(callback);
 }
@@ -619,13 +619,13 @@ async function updateStacksTests(tst: TestVpcServerTests, callback: Function) {
     await sleep(4000);
     let row = await vpcStacksGetData(VpcSession.getFullStackId('test3', tst.stackId3));
     assertEq('test3', row.ownerusername, '');
-    assertEq('My stack acc\u00e9nt3', row.stackname, '');
+    assertEq('My stack acc\u00e9nt3', row.stackName, '');
     assertEq(fakeStackData + '3changed', row.stackdata, '');
 
     // data from id2 should be unaffected
     row = await vpcStacksGetData(VpcSession.getFullStackId('test2', tst.stackId2));
     assertEq('test2', row.ownerusername, '');
-    assertEq('My stack acc\u00e9nt2', row.stackname, '');
+    assertEq('My stack acc\u00e9nt2', row.stackName, '');
     assertEq(tst.fakeStackData2, row.stackdata, '');
 
     // update the stack again
@@ -635,7 +635,7 @@ async function updateStacksTests(tst: TestVpcServerTests, callback: Function) {
     await sleep(4000);
     row = await vpcStacksGetData(VpcSession.getFullStackId('test3', tst.stackId3));
     assertEq('test3', row.ownerusername, '');
-    assertEq('My stack acc\u00e9nt3', row.stackname, '');
+    assertEq('My stack acc\u00e9nt3', row.stackName, '');
     assertEq(fakeStackData + '3changedmore', row.stackdata, '');
 
     // flag content, first time, unique ip

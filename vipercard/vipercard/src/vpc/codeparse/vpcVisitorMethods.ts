@@ -2,7 +2,11 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 
-export interface VisitingVisitor {
+/* see comment at the top of _vpcAllCode_.ts for an overview */
+
+/* generated code, any changes past this point will be lost: --------------- */
+
+export interface VpcCompleteVisitor {
     RuleHOrdinal(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHPosition(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHSimpleContainer(ctx: VisitingContext): string | VpcIntermedValBase;

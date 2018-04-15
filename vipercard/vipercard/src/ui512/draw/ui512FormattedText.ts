@@ -123,8 +123,8 @@ export class FormattedText {
             !scontains(font, specialCharFontChange),
             `3g|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
         );
-        assertTrue(n >= 0, 'invalid n', n)
-        assertTrue(nDelete >= 0, 'invalid nDelete', nDelete)
+        assertTrue(n >= 0, 'invalid n', n);
+        assertTrue(nDelete >= 0, 'invalid nDelete', nDelete);
 
         tnew.charArray = t.charArray.slice(0, n);
         for (let i = 0; i < insert.length; i++) {

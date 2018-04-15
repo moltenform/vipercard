@@ -124,7 +124,7 @@ export class IntroOpenFromDiskPage extends IntroPageBase {
     }
 
     onOpenFileErrorCallback(reader: FileReader) {
-        alert('error reading the file contents. ' + reader.error ? reader.error.toString() : '');
+        alert('error reading the file contents. ' + reader.error);
     }
 
     onOpenFileCallback(reader: FileReader) {

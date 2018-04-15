@@ -3,7 +3,7 @@
 /* auto */ import { RenderComplete, RepeatingTimer, UI512IsPresenterInterface, Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
+/* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType, UI512PresenterInterface } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
@@ -82,8 +82,8 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
             let nextFocus = this.app.findEl(next);
             if (nextFocus && nextFocus instanceof UI512ElTextField) {
                 let txt = nextFocus.get_ftxt();
-                nextFocus.set('selcaret', fitIntoInclusive(nextFocus.get_n('selcaret'), 0, txt.len()));
-                nextFocus.set('selend', fitIntoInclusive(nextFocus.get_n('selend'), 0, txt.len()));
+                nextFocus.set('selcaret', fitIntoInclusive(nextFocus.getN('selcaret'), 0, txt.len()));
+                nextFocus.set('selend', fitIntoInclusive(nextFocus.getN('selend'), 0, txt.len()));
             }
         }
     }
@@ -91,7 +91,7 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     /**
      * register to listen for an event
      */
-    listenEvent(type: UI512EventType, fn: Function) {
+    listenEvent(type: UI512EventType, fn: (pr:UI512PresenterInterface, d:EventDetails)=>void) {
         let ar = this.listeners[type.valueOf()];
         if (ar !== undefined) {
             ar.push(fn);

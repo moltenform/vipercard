@@ -4,9 +4,6 @@
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { VpcChunkType } from '../../vpc/vpcutils/vpcEnums.js';
 
-
-
-
 export class TestUI512Utils extends UI512TestBase {
     tests = [
         'test_strToEnum',
@@ -36,11 +33,7 @@ export class TestUI512Utils extends UI512TestBase {
             /* look up by another alt form */
             assertEq(VpcChunkType.Words, findStrToEnum<VpcChunkType>(VpcChunkType, 'words'), '0b|');
             /* look up by another alt form */
-            assertEq(
-                VpcChunkType.Chars,
-                findStrToEnum<VpcChunkType>(VpcChunkType, 'characters'),
-                '0a|'
-            );
+            assertEq(VpcChunkType.Chars, findStrToEnum<VpcChunkType>(VpcChunkType, 'characters'), '0a|');
         },
         'test_enumToStr',
         () => {
@@ -49,35 +42,15 @@ export class TestUI512Utils extends UI512TestBase {
             /* can't find non-existant */
             assertEq(undefined, findEnumToStr<VpcChunkType>(VpcChunkType, 99), '0Y|');
             /* don't allow lookup on marker */
-            assertEq(
-                undefined,
-                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.__isUI512Enum),
-                '0X|'
-            );
+            assertEq(undefined, findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.__isUI512Enum), '0X|');
             /* get canonical string for lines */
-            assertEq(
-                'Lines',
-                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_lines),
-                '0W|'
-            );
+            assertEq('Lines', findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_lines), '0W|');
             /* get canonical string for items */
-            assertEq(
-                'Items',
-                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_items),
-                '0V|'
-            );
+            assertEq('Items', findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_items), '0V|');
             /* get canonical string for words */
-            assertEq(
-                'Words',
-                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_words),
-                '0U|'
-            );
+            assertEq('Words', findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_words), '0U|');
             /* get canonical string for chars */
-            assertEq(
-                'Chars',
-                findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_chars),
-                '0T|'
-            );
+            assertEq('Chars', findEnumToStr<VpcChunkType>(VpcChunkType, VpcChunkType.alternateforms_chars), '0T|');
         },
         'test_fitIntoInclusive',
         () => {
@@ -252,7 +225,6 @@ export class TestUI512Utils extends UI512TestBase {
                 }
             }
             assertEq([777, 444], result, '0n|');
-        },
-
-    ]
+        }
+    ];
 }

@@ -1,81 +1,131 @@
 
-/* auto */ import { assertTrue, makeVpcInternalErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, assertEq, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { checkThrow, makeVpcInternalErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { Util512, checkThrowEq, slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { CountNumericIdNormal } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 
+/**
+ * a vipercard "stack"
+ */
 export class VpcElStack extends VpcElBase {
     isVpcElStack = true;
     protected _script = '';
     protected _name = '';
+    constructor(id: string, parentId: string) {
+        super(id, parentId);
+    }
 
-    // settings that are persisted, but not undoable
-    protected _increasingnumberforelemname = 1;
-    protected _increasingnumberforid = 1000;
+    /* cached getters */
+    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
+
+    /* cached setters */
+    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+
+    /* stacks are always given this id. */
     static readonly initStackId = '900';
+
+    /* productopts are always given this id. */
     static readonly initProductOptsId = '901';
+
+    /* initial value for counter used for internal script line numbers. */
     static readonly initIncreasingNumberId = 50000;
-    public increasingnumber: CountNumericIdNormal;
-    protected _stacklineage = ''; // "author|1b2v123c|stack name||author|1b2v123c|stack name"
+
+    /* counter for when you create a button in the ui and it's called "my button 3"
+    (persisted, but not undoable) */
+    protected _increasingnumberforelemname = 1;
+
+    /* counter for creating numeric ids for elements
+    (persisted, but not undoable) */
+    protected _increasingnumberforid = 1000;
+
+    /* original author of the stack. when you hit save as, we remember the original stack info.
+    in the form author|1b2v123c|stack name||author|1b2v123c|stack name */
+    protected _stacklineage = '';
+
+    /* child backgrounds */
+    bgs: VpcElBg[] = [];
+
+    /* counter used for internal script line numbers. */
+    increasingnumber: CountNumericIdNormal;
+
+    /**
+     * get next id for created element
+     */
     getNextId() {
         let ret = this._increasingnumberforid;
         this.set('increasingnumberforid', ret + 1);
         return ret.toString();
     }
+
+    /**
+     * get next number, when you create a button in the ui and it's called "my button 3"
+     */
     getNextNumberForElemName() {
         let ret = this._increasingnumberforelemname;
         this.set('increasingnumberforelemname', ret + 1);
         return ret.toString();
     }
 
-    bgs: VpcElBg[] = [];
-    constructor(id: string, parentid: string) {
-        super(id, parentid);
-    }
-
-    getAttributesList() {
+    /**
+     * get the properties that need to be serialized
+     */
+    getKeyPropertiesList() {
         return ['script', 'name', 'increasingnumberforelemname', 'increasingnumberforid', 'stacklineage'];
     }
+
+    /**
+     * re-use cached getters and setter callback functions for better perf
+     */
     startGettersSetters() {
         VpcElStack.stackInit();
         this.getters = VpcElStack.cachedGetters;
         this.setters = VpcElStack.cachedSetters;
     }
 
+    /**
+     * use this username if you create a new stack and aren't signed in.
+     */
     lineageUsernameNull() {
         return 'null';
     }
-    getLatestStackLineage(): [string, string, string] {
+
+    /**
+     * get latest stack info (server id, username)
+     */
+    getLatestStackLineage(): VpcElStackLineageEntry {
         let lin = this.get('stacklineage');
         if (slength(lin)) {
             let linparts = lin.split('||');
             let last = linparts[linparts.length - 1];
-            let lastparts = last.split('|');
-            assertEq(3, lastparts.length, '');
-            return lastparts;
+            return VpcElStackLineageEntry.fromSerialized(last);
         } else {
             throw makeVpcInternalErr('stacklineage should never be empty');
         }
     }
 
-    appendToStackLineage(item: [string, string, string]) {
-        assertEq(3, item.length, '');
-        assertTrue(item[0].length && item[1].length && item[2].length, '');
+    /**
+     * set latest stack info (server id, username)
+     */
+    appendToStackLineage(entryIn: VpcElStackLineageEntry) {
+        /* round-trip to validate it */
+        let entry = VpcElStackLineageEntry.fromSerialized(entryIn.serialize());
         let lin = this.get('stacklineage');
         if (slength(lin)) {
-            lin += '||' + item.join('|');
+            lin += '||' + entry.serialize();
         } else {
-            lin += item.join('|');
+            lin += entry.serialize();
         }
 
         this.set('stacklineage', lin);
     }
 
-    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
-    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+    /**
+     * define getters and setters
+     */
     static stackInit() {
         if (!VpcElStack.cachedGetters || !VpcElStack.cachedSetters) {
             VpcElStack.cachedGetters = {};
@@ -87,10 +137,16 @@ export class VpcElStack extends VpcElBase {
         }
     }
 
+    /**
+     * type of element
+     */
     getType() {
         return VpcElType.Stack;
     }
 
+    /**
+     * find card by name
+     */
     findCardByName(name: string) {
         for (let bg of this.bgs) {
             let found = VpcElBase.findByName(bg.cards, name, VpcElType.Card);
@@ -102,11 +158,14 @@ export class VpcElStack extends VpcElBase {
         return undefined;
     }
 
-    findCardStackPosition(cardid: string) {
+    /**
+     * position of card within the stack. return undefined if card not found
+     */
+    findCardStackPosition(cardId: string) {
         let count = 0;
         for (let bg of this.bgs) {
             for (let cd of bg.cards) {
-                if (cd.id === cardid) {
+                if (cd.id === cardId) {
                     return count;
                 }
 
@@ -117,10 +176,16 @@ export class VpcElStack extends VpcElBase {
         return undefined;
     }
 
-    getCardStackPosition(cardid: string) {
-        return throwIfUndefined(this.findCardStackPosition(cardid), '4v|card id not found', cardid);
+    /**
+     * position of card within the stack. throw if card not found
+     */
+    getCardStackPosition(cardId: string) {
+        return throwIfUndefined(this.findCardStackPosition(cardId), '4v|card id not found', cardId);
     }
 
+    /**
+     * position of card within the stack, to card. "go to card 6", which card is it?
+     */
     findFromCardStackPosition(pos: number) {
         let count = 0;
         for (let bg of this.bgs) {
@@ -134,32 +199,40 @@ export class VpcElStack extends VpcElBase {
         }
     }
 
+    /**
+     * position of card within the stack, to card. "go to card 6", which card is it? throws if not exist
+     */
     getFromCardStackPosition(pos: number) {
         return throwIfUndefined(this.findFromCardStackPosition(pos), '4u|card number not found', pos);
     }
 
+    /**
+     * ordinal of card within the stack, to card. "go next card", which card is it?
+     */
     getCardByOrdinal(currentCardId: string, pos: OrdinalOrPosition): VpcElCard {
         if (pos === OrdinalOrPosition.first) {
             return this.bgs[0].cards[0];
         }
 
-        let totalcards = this.bgs.map(bg => bg.cards.length).reduce(Util512.add);
-        let lastcdposition = totalcards - 1;
+        let totalCards = this.bgs.map(bg => bg.cards.length).reduce(Util512.add);
+        let lastCdPosition = totalCards - 1;
         if (pos === OrdinalOrPosition.last) {
-            return this.getFromCardStackPosition(lastcdposition);
+            return this.getFromCardStackPosition(lastCdPosition);
         }
 
-        let currentcdposition = this.getCardStackPosition(currentCardId);
-        let nextcdposition = getPositionFromOrdinalOrPosition(pos, currentcdposition, 0, lastcdposition);
-        return this.getFromCardStackPosition(nextcdposition);
+        let currentCdPosition = this.getCardStackPosition(currentCardId);
+        let nextCdPosition = getPositionFromOrdinalOrPosition(pos, currentCdPosition, 0, lastCdPosition);
+        return this.getFromCardStackPosition(nextCdPosition);
     }
 
+    /**
+     * iterate through a stack
+     */
     *iterEntireStack(): IterableIterator<VpcElBase> {
-        // important:
-        // must process parents before children, as we
-        // use this ordering during deserialization
         yield this;
         for (let bg of this.bgs) {
+            /* must process parents before children, as we */
+            /* use this ordering during deserialization */
             yield bg;
             for (let cd of bg.cards) {
                 yield cd;
@@ -168,5 +241,29 @@ export class VpcElStack extends VpcElBase {
                 }
             }
         }
+    }
+}
+
+/**
+ * stack info, like original author of the stack. when you hit save as, we remember the original stack info.
+ */
+export class VpcElStackLineageEntry {
+    constructor(public stackOwner: string, public stackGuid: string, public stackName: string) {
+        checkThrow(slength(stackOwner) > 0, 'author is empty');
+        checkThrow(slength(stackGuid) > 0, 'guid is empty');
+        checkThrow(slength(stackName) > 0, 'name is empty');
+        checkThrow(!scontains(stackOwner, '|'), 'author must not contain |', stackOwner);
+        checkThrow(!scontains(stackGuid, '|'), 'guid must not contain |', stackGuid);
+        checkThrow(!scontains(stackName, '|'), 'name must not contain |', stackName);
+    }
+
+    serialize() {
+        return this.stackOwner + '|' + this.stackGuid + '|' + this.stackName;
+    }
+
+    static fromSerialized(s: string) {
+        let pts = s.split('|');
+        checkThrowEq(3, pts.length, 'invalid lineage', s);
+        return new VpcElStackLineageEntry(pts[0], pts[1], pts[2]);
     }
 }

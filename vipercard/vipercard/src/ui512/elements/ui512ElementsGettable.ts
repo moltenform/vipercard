@@ -52,19 +52,19 @@ export const elementObserverDefault = new ElementObserverDefault();
  * types are checked at runtime, since we've forfeited TS's compile time checking.
  */
 export abstract class UI512Gettable {
-    get_n(s: string): number {
+    getN(s: string): number {
         let v = this.get(s);
         assertEq(typeof 0, typeof v, `2+|${s} expected type ${typeof 0}`);
         return v;
     }
 
-    get_s(s: string): string {
+    getS(s: string): string {
         let v = this.get(s);
         assertEq(typeof '', typeof v, `2*|${s} expected type ${typeof ''}`);
         return v;
     }
 
-    get_b(s: string): boolean {
+    getB(s: string): boolean {
         let v = this.get(s);
         assertEq('boolean', typeof v, `2)|${s} expected type 'boolean'}`);
         return v;

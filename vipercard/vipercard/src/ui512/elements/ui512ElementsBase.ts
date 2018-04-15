@@ -18,13 +18,13 @@ export abstract class UI512Element extends UI512Settable {
     protected _h = 0;
 
     /* simply a quick way to set x, y, w, and h in one line */
-    setDimensions(newX: number, newY: number, neww: number, newh: number, context = ChangeContext.Default) {
-        assertTrue(neww >= 0, `2 |width must be >= 0 but got ${neww}`);
-        assertTrue(newh >= 0, `2z|height must be >= 0 but got ${newh}`);
+    setDimensions(newX: number, newY: number, newW: number, newH: number, context = ChangeContext.Default) {
+        assertTrue(newW >= 0, `2 |width must be >= 0 but got ${newW}`);
+        assertTrue(newH >= 0, `2z|height must be >= 0 but got ${newH}`);
         this.set('x', newX, context);
         this.set('y', newY, context);
-        this.set('w', neww, context);
-        this.set('h', newh, context);
+        this.set('w', newW, context);
+        this.set('h', newH, context);
     }
 
     /* instead of setting by width and height, set by x1 and y1. */
@@ -40,16 +40,16 @@ export abstract class UI512Element extends UI512Settable {
         return this._visible;
     }
     get x() {
-        return this.get_n('x');
+        return this.getN('x');
     }
     get y() {
-        return this.get_n('y');
+        return this.getN('y');
     }
     get w() {
-        return this.get_n('w');
+        return this.getN('w');
     }
     get h() {
-        return this.get_n('h');
+        return this.getN('h');
     }
     get bottom() {
         return this.y + this.h;

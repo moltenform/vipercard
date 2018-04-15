@@ -184,7 +184,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
                     FormattedText.newFromUnformatted('To edit text, use the Browse\ntool and click on the field.')
                 );
             } else {
-                let s = PropPanelCompositeBase.numeric[inid] ? vel.get_n(inid).toString() : vel.get_s(inid);
+                let s = PropPanelCompositeBase.numeric[inid] ? vel.getN(inid).toString() : vel.getS(inid);
                 el.setftxt(FormattedText.newFromUnformatted(s));
             }
         }
@@ -194,7 +194,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
             let el = grp.getEl(this.getElId(`leftchoice`));
             let found = this.leftChoices.findIndex(item => item[1].toLowerCase() === styl.toLowerCase());
             if (found !== -1) {
-                let wasScroll = el.get_n('scrollamt');
+                let wasScroll = el.getN('scrollamt');
                 let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
                 SelAndEntry.selectLineInField(gel, found);
                 el.set('scrollamt', wasScroll);
@@ -212,17 +212,17 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
     }
 
     fillInValuesTip(app: UI512Application, vel: VpcElBase) {
-        this.refreshTip(vel.get_s('name'), vel.id);
+        this.refreshTip(vel.getS('name'), vel.id);
     }
 
-    protected saveChangesToModelSetProp(vel: VpcElBase, propname: string, newval: VpcVal, onlyCheckIfDirty: boolean) {
+    protected saveChangesToModelSetProp(vel: VpcElBase, propName: string, newval: VpcVal, onlyCheckIfDirty: boolean) {
         if (onlyCheckIfDirty) {
-            let current = propname === 'name' ? VpcValS(vel.get_s('name')) : vel.getProp(propname);
+            let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName);
             if (current.readAsString() !== newval.readAsString()) {
                 throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
-            vel.setProp(propname, newval);
+            vel.setProp(propName, newval);
         }
     }
 
@@ -239,7 +239,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
             let typed = elIcon.get_ftxt().toUnformatted();
             let n = parseInt(typed, 10);
             let nextIcon = isFinite(n) && n >= 0 ? n : 0;
-            let curIcon = vel.get_n('icon') || 0;
+            let curIcon = vel.getN('icon') || 0;
             if (nextIcon === 0 && curIcon !== 0) {
                 vel.set('textfont', 'chicago');
                 vel.set('textstyle', 0);
@@ -278,7 +278,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
 
         for (let [lbltxt, inid] of this.rightOptions) {
             let el = grp.getEl(this.getElId(`toggle##${inid}`));
-            let checked = el.get_b('checkmark');
+            let checked = el.getB('checkmark');
             vel.setProp(inid, VpcValBool(checked));
             this.saveChangesToModelSetProp(vel, inid, VpcValBool(checked), onlyCheckIfDirty);
         }

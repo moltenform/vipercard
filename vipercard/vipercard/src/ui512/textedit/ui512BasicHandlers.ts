@@ -81,7 +81,7 @@ export class BasicHandlers {
      */
     static trackHighlightedButtonMouseDown(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
         if (d.button === 0 && pr.canInteract(d.el) && d.el instanceof UI512ElementWithHighlight) {
-            if (d.el.get_b('autohighlight')) {
+            if (d.el.getB('autohighlight')) {
                 d.el.set('highlightactive', true);
             }
         }
@@ -92,7 +92,7 @@ export class BasicHandlers {
      */
     static trackHighlightedButtonMouseUp(pr: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
         if (d.button === 0 && d.elClick && d.elClick instanceof UI512ElementWithHighlight) {
-            if (d.elClick.get_b('autohighlight')) {
+            if (d.elClick.getB('autohighlight')) {
                 d.elClick.set('highlightactive', false);
             }
         }
@@ -103,7 +103,7 @@ export class BasicHandlers {
      */
     static trackHighlightedButtonMouseEnter(pr: UI512PresenterWithMenuInterface, d: MouseEnterDetails) {
         if (pr.trackClickedIds[0] === d.el.id && pr.canInteract(d.el) && d.el instanceof UI512ElementWithHighlight) {
-            if (d.el.get_b('autohighlight')) {
+            if (d.el.getB('autohighlight')) {
                 d.el.set('highlightactive', true);
             }
         }
@@ -114,7 +114,7 @@ export class BasicHandlers {
      */
     static trackHighlightedButtonMouseLeave(pr: UI512PresenterWithMenuInterface, d: MouseLeaveDetails) {
         if (d.el && d.el instanceof UI512ElementWithHighlight) {
-            if (d.el.get_b('autohighlight')) {
+            if (d.el.getB('autohighlight')) {
                 d.el.set('highlightactive', false);
             }
         }

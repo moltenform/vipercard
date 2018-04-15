@@ -28,7 +28,7 @@ export class SelAndEntry {
         }
 
         let el = pr.app.findEl(pr.getCurrentFocus());
-        if (!(el && el instanceof UI512ElTextField && el.get_b('canselecttext'))) {
+        if (!(el && el instanceof UI512ElTextField && el.getB('canselecttext'))) {
             return undefined;
         }
 
@@ -85,7 +85,7 @@ export class SelAndEntry {
         let t = el.getFmtTxt();
 
         /* lock the text, so it can't be accidentally modified */
-        t.lock()
+        t.lock();
         if (t.len() && el.canSelectText()) {
             let [ncaretBefore, nEndBefore] = el.getSel();
             let [nextCaret, nextEnd] = fn(t, ncaretBefore, nEndBefore);
@@ -265,10 +265,10 @@ export class SelAndEntry {
         SelAndEntry.changeSelInField(el, (t, nCaret, nEnd) => {
             if (el.getFmtTxt().len() > 0 && (nCaret !== selcaretBefore || nEnd !== selendBefore)) {
                 let lines = new UI512Lines(el.getFmtTxt());
-                let linenumber = lines.indexToLineNumber(nCaret);
+                let lineNumber = lines.indexToLineNumber(nCaret);
                 let [newncaret, newnend] = [
-                    lines.lineNumberToIndex(linenumber),
-                    lines.lineNumberToLineEndIndex(linenumber) + 1
+                    lines.lineNumberToIndex(lineNumber),
+                    lines.lineNumberToLineEndIndex(lineNumber) + 1
                 ];
                 if (newnend - newncaret > 1) {
                     /* only allow a line to be selected if it's not empty. */

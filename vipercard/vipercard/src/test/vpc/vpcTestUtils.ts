@@ -1,20 +1,28 @@
 
 /* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { VpcChunkPreposition, VpcChunkType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcVal, VpcValBool, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { ReadableContainerVar, WritableContainerVar } from '../../vpc/vel/velResolveReference.js';
 
 class MockWorld {
     result = '_';
-    SetVarContents(varname: string, v: VpcVal) {
+    SetVarContents(varName: string, v: VpcVal) {
         this.result = v.readAsString();
     }
 
-    ReadVarContents(varname: string): VpcVal {
+    ReadVarContents(varName: string): VpcVal {
         return VpcValS(this.result);
     }
 
@@ -26,12 +34,9 @@ class MockWorld {
 export class TestVpcUtils extends UI512TestBase {
     readonly itemDel = ',';
     mockReadVar = new MockWorld();
-    constructor() {
-        super();
-    }
 
     testGetChunk(sExpected: string, s: string, type: VpcChunkType, first: number, last: number | undefined) {
-        let reader = new ReadableContainerVar(this.mockReadVar.getMock(), 'varname');
+        let reader = new ReadableContainerVar(this.mockReadVar.getMock(), 'varName');
         this.mockReadVar.result = s;
         let ch = new RequestedChunk(first);
         ch.last = last;
@@ -42,7 +47,7 @@ export class TestVpcUtils extends UI512TestBase {
     }
 
     testSetChunk(sExpected: string, s: string, type: VpcChunkType, first: number, last: number | undefined) {
-        let writer = new WritableContainerVar(this.mockReadVar.getMock(), 'varname');
+        let writer = new WritableContainerVar(this.mockReadVar.getMock(), 'varName');
         this.mockReadVar.result = s;
         const itemDel = ',';
         const sReplace = '123';
@@ -525,4 +530,63 @@ export class TestVpcUtils extends UI512TestBase {
             this.testSetChunk(',,cd,,123', ',,cd,', VpcChunkType.Items, 5, 7);
         }
     ];
+}
+
+export class TestVpcVels extends UI512TestBase {
+    tests = [
+        'test_keyProperties',
+        () => {
+            this.testKeyProperties(VpcElButton);
+            this.testKeyProperties(VpcElField);
+            this.testKeyProperties(VpcElCard);
+            this.testKeyProperties(VpcElBg);
+            this.testKeyProperties(VpcElStack);
+        },
+        'test_makeSingleLine',
+        () => {
+            // should preserve normal text
+            let vel = new VpcElField('id1', 'parentid1');
+            vel.observer = new ElementObserverNoOp();
+            vel.setftxt(FormattedText.newFromUnformatted('abc'));
+            vel.setProp('singleline', VpcValBool(false));
+            assertEq('abc', vel.get_ftxt().toUnformatted(), '');
+            vel.setProp('singleline', VpcValBool(true));
+            assertEq('abc', vel.get_ftxt().toUnformatted(), '');
+
+            // making something single line should kill other line
+            vel = new VpcElField('id1', 'parentid1');
+            vel.observer = new ElementObserverNoOp();
+            vel.setftxt(FormattedText.newFromUnformatted('abcd\ndef'));
+            vel.setProp('singleline', VpcValBool(false));
+            assertEq('abcd\ndef', vel.get_ftxt().toUnformatted(), '');
+            vel.setProp('singleline', VpcValBool(true));
+            assertEq('abcd', vel.get_ftxt().toUnformatted(), '');
+
+            // making something single line should kill all existing newlines
+            vel = new VpcElField('id1', 'parentid1');
+            vel.observer = new ElementObserverNoOp();
+            vel.setftxt(FormattedText.newFromUnformatted('a\nb\nc\nd'));
+            vel.setProp('singleline', VpcValBool(false));
+            assertEq('a\nb\nc\nd', vel.get_ftxt().toUnformatted(), '');
+            vel.setProp('singleline', VpcValBool(true));
+            assertEq('a', vel.get_ftxt().toUnformatted(), '');
+        }
+    ];
+
+    protected testKeyProperties<T extends VpcElBase>(ctor: { new (...args: any[]): T }) {
+        let inst = new ctor('id1', 'parentid1');
+        let expected = inst.getKeyPropertiesList();
+        let got: string[] = [];
+        for (let key in inst) {
+            if (Object.prototype.hasOwnProperty.call(inst, key)) {
+                if (key.startsWith('_') && !key.startsWith('__')) {
+                    got.push(key.substr(1));
+                }
+            }
+        }
+
+        expected.sort();
+        got.sort();
+        assertEq(expected, got, '');
+    }
 }

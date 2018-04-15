@@ -9,8 +9,8 @@
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
-/* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
+/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
 /* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
@@ -24,10 +24,10 @@ export interface VpcStateInterface {
     performRedo(): boolean;
     getCurrentStateId(): string;
     findExecFrameStack(): [O<CodeExecFrameStack>, O<CodeExecFrame>];
-    getModel(): VpcModel;
+    getModel(): VpcModelTop;
     isCodeRunning(): boolean;
     rawRevive(vel: VpcElBase): void;
-    rawCreate<T extends VpcElBase>(velId: string, parentid: string, ctr: { new (...args: any[]): T }): T;
+    rawCreate<T extends VpcElBase>(velId: string, parentId: string, ctr: { new (...args: any[]): T }): T;
     createElem(parent_id: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase;
     removeElem(vel: VpcElBase): void;
     doWithoutAbilityToUndoExpectingNoChanges(fn: () => void): void;

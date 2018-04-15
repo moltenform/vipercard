@@ -5,29 +5,12 @@
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
+/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
 /**
- * values here are lowercase, because they are used by the interpreter.
+ * a vipercard "button"
  */
-export enum VpcBtnStyle {
-    __isUI512Enum = 1,
-    transparent = UI512BtnStyle.Transparent,
-    rectangle = UI512BtnStyle.Rectangle,
-    opaque = UI512BtnStyle.Opaque,
-    roundrect = UI512BtnStyle.RoundRect,
-    plain = UI512BtnStyle.Plain,
-    shadow = UI512BtnStyle.Shadow,
-    osstandard = UI512BtnStyle.OSStandard,
-    osdefault = UI512BtnStyle.OSDefault,
-    osboxmodal = UI512BtnStyle.OSBoxModal,
-    checkbox = UI512BtnStyle.Checkbox,
-    radio = UI512BtnStyle.Radio,
-    alternateforms_standard = UI512BtnStyle.OSStandard,
-    alternateforms_default = UI512BtnStyle.OSDefault,
-    alternateforms_rect = UI512BtnStyle.Rectangle
-}
-
 export class VpcElButton extends VpcElSizable {
     isVpcElButton = true;
     protected _autohilite = true;
@@ -45,8 +28,18 @@ export class VpcElButton extends VpcElSizable {
     protected _visible = true;
     protected _script = '';
     protected _name = '';
+    constructor(id: string, parentId: string) {
+        super(id, parentId);
+    }
 
-    static readonly attributesList = [
+    /* cached getters */
+    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
+
+    /* cached setters */
+    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+
+    /* the properties that need to be serialized (verified in tests) */
+    static readonly keyPropertiesList = [
         'x',
         'y',
         'w',
@@ -68,29 +61,40 @@ export class VpcElButton extends VpcElSizable {
         'name'
     ];
 
-    getAttributesList() {
-        return VpcElButton.attributesList;
+    /**
+     * get the properties that need to be serialized
+     */
+    getKeyPropertiesList() {
+        return VpcElButton.keyPropertiesList;
     }
 
+    /**
+     * type of element
+     */
     getType() {
         return VpcElType.Btn;
     }
 
-    constructor(id: string, parentid: string) {
-        super(id, parentid);
-    }
-
+    /**
+     * re-use cached getters and setter callback functions for better perf
+     */
     startGettersSetters() {
         VpcElButton.btnInit();
         this.getters = VpcElButton.cachedGetters;
         this.setters = VpcElButton.cachedSetters;
     }
 
-    getFontAsUi512() {
+    /**
+     * from internal textfont to "geneva_12_biuosdce"
+     */
+    getFontAsUI512() {
         let spec = new TextFontSpec(this._textfont, this._textstyle, this._textsize);
         return spec.toSpecString();
     }
 
+    /**
+     * define getters
+     */
     static btnGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
         getters['script'] = [PrpTyp.Str, 'script'];
@@ -104,6 +108,9 @@ export class VpcElButton extends VpcElSizable {
         ];
     }
 
+    /**
+     * define setters
+     */
     static btnSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['textstyle'] = [
@@ -153,19 +160,41 @@ export class VpcElButton extends VpcElSizable {
         ];
     }
 
-    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
-    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+    /**
+     * define getters and setters
+     */
     static btnInit() {
         if (!VpcElButton.cachedGetters || !VpcElButton.cachedSetters) {
             VpcElButton.cachedGetters = {};
             VpcElButton.cachedSetters = {};
             VpcElBase.simpleGetSet(VpcElButton.cachedGetters, VpcElButton.cachedSetters, VpcElButton.simpleBtnGetSet());
             VpcElButton.btnGetters(VpcElButton.cachedGetters);
-            VpcElSizable.szGetters(VpcElButton.cachedGetters);
+            VpcElSizable.initSizeGetters(VpcElButton.cachedGetters);
             VpcElButton.btnSetters(VpcElButton.cachedSetters);
-            VpcElSizable.szSetters(VpcElButton.cachedSetters);
+            VpcElSizable.initSizeSetters(VpcElButton.cachedSetters);
             Util512.freezeRecurse(VpcElButton.cachedGetters);
             Util512.freezeRecurse(VpcElButton.cachedSetters);
         }
     }
+}
+
+/**
+ * values here are lowercase, because they are used by the interpreter.
+ */
+export enum VpcBtnStyle {
+    __isUI512Enum = 1,
+    transparent = UI512BtnStyle.Transparent,
+    rectangle = UI512BtnStyle.Rectangle,
+    opaque = UI512BtnStyle.Opaque,
+    roundrect = UI512BtnStyle.RoundRect,
+    plain = UI512BtnStyle.Plain,
+    shadow = UI512BtnStyle.Shadow,
+    osstandard = UI512BtnStyle.OSStandard,
+    osdefault = UI512BtnStyle.OSDefault,
+    osboxmodal = UI512BtnStyle.OSBoxModal,
+    checkbox = UI512BtnStyle.Checkbox,
+    radio = UI512BtnStyle.Radio,
+    alternateforms_standard = UI512BtnStyle.OSStandard,
+    alternateforms_default = UI512BtnStyle.OSDefault,
+    alternateforms_rect = UI512BtnStyle.Rectangle
 }

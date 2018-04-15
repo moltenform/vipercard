@@ -815,7 +815,7 @@ export class GetCharClass {
      * returns the next caret position.
      */
     static getLeftRight(
-        charCodeAt: (pos:number)=>number,
+        charCodeAt: (pos: number) => number,
         len: number,
         n: number,
         isLeft: boolean,

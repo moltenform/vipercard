@@ -85,7 +85,7 @@ export class MenuPositioning {
 
         let totalHeight = MenuConsts.ItemHeight * items.length;
         let rect = [header.x, header.bottom, widest, totalHeight];
-        let isRightSide = header.get_n('fixedoffset') !== -1;
+        let isRightSide = header.getN('fixedoffset') !== -1;
         if (isRightSide) {
             /* drawing a menu on the right side, it is right-justified */
             const farRight = app.bounds[0] + app.bounds[2];
@@ -132,9 +132,9 @@ export class MenuPositioning {
     ) {
         /* measure width of the header to draw */
         let drawText = getRoot().getDrawText() as UI512DrawText;
-        let curwidth = header.get_n('fixedwidth');
+        let curwidth = header.getN('fixedwidth');
         if (curwidth === -1) {
-            let measured = drawText.measureString(header.get_s('labeltext'));
+            let measured = drawText.measureString(header.getS('labeltext'));
             if (!measured) {
                 complete.complete = false;
                 return curX;
@@ -144,8 +144,8 @@ export class MenuPositioning {
         }
 
         /* x position is overridden, e.g. menus on the right. */
-        if (header.get_n('fixedoffset') !== -1) {
-            curX = header.get_n('fixedoffset');
+        if (header.getN('fixedoffset') !== -1) {
+            curX = header.getN('fixedoffset');
         }
 
         /* the emulator has a 1 pixel margin between top of screen and menu, */
@@ -173,7 +173,7 @@ export class MenuPositioning {
      * set all menu positions
      */
     static setMenuPositions(app: UI512Application, menuRoot: UI512MenuRoot, complete: RenderComplete) {
-        if (!menuRoot || !menuRoot.visible || !menuRoot.get_s('childids')) {
+        if (!menuRoot || !menuRoot.visible || !menuRoot.getS('childids')) {
             return;
         }
 
@@ -190,7 +190,7 @@ export class MenuPositioning {
         grpItems.setVisible(false);
         for (let i = 0; i < dropdns.length; i++) {
             let header = dropdns[i];
-            let open = menuRoot.get_n('whichIsExpanded') === i;
+            let open = menuRoot.getN('whichIsExpanded') === i;
             curX = MenuPositioning.setMenuDropdownPosition(app, menuRoot, header, curX, open, complete);
         }
     }
@@ -202,7 +202,7 @@ export class MenuPositioning {
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let widest = 0;
         for (let item of items) {
-            let width = drawText.measureString(item.get_s('labeltext'));
+            let width = drawText.measureString(item.getS('labeltext'));
             if (!width) {
                 return undefined;
             }

@@ -2,7 +2,7 @@
 /* auto */ import { O, makeVpcInternalErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 
 export class VpcScriptExecAsync {
     static go_wait(
@@ -46,7 +46,7 @@ export class VpcScriptExecAsync {
                 opt2,
                 opt3
             );
-            // remember to not run other code after showing modal dialog
+            /* remember to not run other code after showing modal dialog */
         };
 
         let retrieved = new ValHolder<any>([0]);
@@ -60,7 +60,7 @@ export class VpcScriptExecAsync {
                     throw makeVpcInternalErr('cbStopCodeRunning');
                 }
 
-                blocked.val = 1; // needed, or else we'll continue to run code in a zombie state and hit an error looking for parent stack frame which doesn't exist
+                blocked.val = 1; /* needed, or else we'll continue to run code in a zombie state and hit an error looking for parent stack frame which doesn't exist */
             } else {
                 outside.SetSpecialVar('it', VpcValN(btnPressed + 1));
             }
@@ -83,7 +83,7 @@ export class VpcScriptExecAsync {
             dlg(prmpt, defval, (s: string, n: number) => {
                 closureGetAsyncOps.markCompleted(asyncOpId, [s, n]);
             });
-            // remember to not run other code after showing modal dialog
+            /* remember to not run other code after showing modal dialog */
         };
 
         let retrieved = new ValHolder<any>(['', 0]);
@@ -97,7 +97,7 @@ export class VpcScriptExecAsync {
                     throw makeVpcInternalErr('cbStopCodeRunning');
                 }
 
-                blocked.val = 1; // needed, or else we'll continue to run code in a zombie state and hit an error looking for parent stack frame which doesn't exist
+                blocked.val = 1; /* needed, or else we'll continue to run code in a zombie state and hit an error looking for parent stack frame which doesn't exist */
             } else {
                 let s = (typedText || '').toString();
                 outside.SetSpecialVar('it', VpcValS(s));

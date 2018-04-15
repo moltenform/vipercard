@@ -7,11 +7,10 @@
 /* auto */ import { alsoReservedWordsList, partialReservedWordsList } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcScriptFunctions.js';
 
-export enum CodeSymbols {
-    RequestHandlerCall = '$requesthandlercall',
-    RequestEval = '$requesteval'
-}
-
+/**
+ * provides ways to see if a certain term is ok to use as a variable name,
+ * or if it is a reserved term that is disallowed
+ */
 export class CheckReservedWords {
     constants = new VariableCollectionConstants();
     isBuiltinHandler(s: string): boolean {

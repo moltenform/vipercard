@@ -5,7 +5,7 @@
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
@@ -15,9 +15,9 @@
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 /* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite, VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from '../../vpc/vel/velResolveReference.js';
-/* auto */ import { VelResolveName } from '../../vpc/vel/velResolveName.js';
+/* auto */ import { VelResolveId, VelResolveName, VelResolveReference } from '../../vpc/vel/velResolveName.js';
 /* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcScriptFunctions.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
@@ -65,10 +65,10 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
             me = this.appli.getModel().findByIdUntyped(frame.codeSection.ownerId);
         }
 
-        let resolver = new VelResolveName(this.appli.getModel());
-        let ret = resolver.resolveReference(ref, me, target);
+        let resolver = new VelResolveReference(this.appli.getModel());
+        let ret = resolver.go(ref, me, target);
         checkThrow(
-            !ret || !scontains(ret.get_s('name'), '$$'),
+            !ret || !scontains(ret.getS('name'), '$$'),
             `names with $$ are reserved for internal ViperCard objects.`
         );
         return ret;
@@ -78,8 +78,8 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         return this.ResolveElRef(vel) !== undefined;
     }
 
-    CountElements(type: VpcElType, parentref: RequestedVelRef): number {
-        let parent = throwIfUndefined(this.ResolveElRef(parentref), '6t|Cannot find this element');
+    CountElements(type: VpcElType, parentRef: RequestedVelRef): number {
+        let parent = throwIfUndefined(this.ResolveElRef(parentRef), '6t|Cannot find this element');
         let parentAsCard = parent as VpcElCard;
         let parentAsBg = parent as VpcElBg;
         let parentAsStack = parent as VpcElStack;
@@ -108,62 +108,62 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         return ret;
     }
 
-    DeclareGlobal(varname: string) {
-        assertTrue(slength(varname), '6q|bad varname', varname);
+    DeclareGlobal(varName: string) {
+        assertTrue(slength(varName), '6q|bad varName', varName);
         let [frstack, frame] = this.getExecFrameStack();
-        frame.declaredGlobals[varname] = true;
+        frame.declaredGlobals[varName] = true;
     }
 
-    IsVarDefined(varname: string) {
+    IsVarDefined(varName: string) {
         let [frstack, frame] = this.getExecFrameStack();
         return !!(
-            frstack.constants.find(varname) ||
-            (frame.declaredGlobals[varname] && frstack.globals.find(varname)) ||
-            frame.locals.find(varname)
+            frstack.constants.find(varName) ||
+            (frame.declaredGlobals[varName] && frstack.globals.find(varName)) ||
+            frame.locals.find(varName)
         );
     }
 
-    ReadVarContents(varname: string): VpcVal {
-        assertTrue(slength(varname), '6p|bad varname', varname);
+    ReadVarContents(varName: string): VpcVal {
+        assertTrue(slength(varName), '6p|bad varName', varName);
         let [frstack, frame] = this.getExecFrameStack();
-        let found = frstack.constants.find(varname);
+        let found = frstack.constants.find(varName);
         if (found) {
             return found;
         }
 
-        found = frstack.globals.find(varname);
-        if (found && frame.declaredGlobals[varname] !== undefined) {
+        found = frstack.globals.find(varName);
+        if (found && frame.declaredGlobals[varName] !== undefined) {
             return found;
         }
 
-        found = frame.locals.find(varname);
+        found = frame.locals.find(varName);
         return throwIfUndefined(
             found,
             '6o|no variable found with this name. please put contents into before reading from it.',
-            varname
+            varName
         );
     }
 
-    SetVarContents(varname: string, v: VpcVal): void {
-        assertTrue(slength(varname), '6n|bad varname', varname);
+    SetVarContents(varName: string, v: VpcVal): void {
+        assertTrue(slength(varName), '6n|bad varName', varName);
         let [frstack, frame] = this.getExecFrameStack();
-        let found = frstack.constants.find(varname);
+        let found = frstack.constants.find(varName);
         if (found) {
-            throw makeVpcScriptErr(`6m|name not allowed ${varname}, it is a constant`);
+            throw makeVpcScriptErr(`6m|name not allowed ${varName}, it is a constant`);
         }
 
-        checkThrow(this.check.okLocalVar(varname), '8>|variable name not allowed', varname);
-        if (frame.declaredGlobals[varname] !== undefined) {
-            frstack.globals.set(varname, v);
+        checkThrow(this.check.okLocalVar(varName), '8>|variable name not allowed', varName);
+        if (frame.declaredGlobals[varName] !== undefined) {
+            frstack.globals.set(varName, v);
         } else {
-            frame.locals.set(varname, v);
+            frame.locals.set(varName, v);
         }
     }
 
-    SetSpecialVar(varname: string, v: VpcVal): void {
-        checkThrow(varname === 'it', '8=|only supported for it');
+    SetSpecialVar(varName: string, v: VpcVal): void {
+        checkThrow(varName === 'it', '8=|only supported for it');
         let [frstack, frame] = this.getExecFrameStack();
-        frame.locals.set(varname, v);
+        frame.locals.set(varName, v);
     }
 
     ResolveContainerReadable(container: RequestedContainerRef): ReadableContainer {
@@ -191,19 +191,19 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         }
     }
 
-    ContainerRead(contref: RequestedContainerRef): string {
-        let cont = this.ResolveContainerReadable(contref);
-        return ChunkResolution.applyRead(cont, contref.chunk, this.GetItemDelim());
+    ContainerRead(contRef: RequestedContainerRef): string {
+        let cont = this.ResolveContainerReadable(contRef);
+        return ChunkResolution.applyRead(cont, contRef.chunk, this.GetItemDelim());
     }
 
-    ContainerWrite(contref: RequestedContainerRef, newcontent: string, prep: VpcChunkPreposition) {
-        let cont = this.ResolveContainerWritable(contref);
-        return ChunkResolution.applyPut(cont, contref.chunk, this.GetItemDelim(), newcontent, prep);
+    ContainerWrite(contRef: RequestedContainerRef, newContent: string, prep: VpcChunkPreposition) {
+        let cont = this.ResolveContainerWritable(contRef);
+        return ChunkResolution.applyPut(cont, contRef.chunk, this.GetItemDelim(), newContent, prep);
     }
 
-    ContainerModify(contref: RequestedContainerRef, fn: (s: string) => string) {
-        let cont = this.ResolveContainerWritable(contref);
-        return ChunkResolution.applyModify(cont, contref.chunk, this.GetItemDelim(), fn);
+    ContainerModify(contRef: RequestedContainerRef, fn: (s: string) => string) {
+        let cont = this.ResolveContainerWritable(contRef);
+        return ChunkResolution.applyModify(cont, contRef.chunk, this.GetItemDelim(), fn);
     }
 
     GetSelectedField(): O<VpcElField> {
@@ -233,9 +233,10 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
         } else if (prop === 'owner') {
             return VpcValS(resolver.getOwnerName(vel, adjective));
         } else if (prop === 'name') {
-            return VpcValS(resolver.getUserFormattedName(vel, adjective));
+            return VpcValS(resolver.go(vel, adjective));
         } else if (prop === 'id') {
-            return VpcValS(resolver.getUserFormattedId(vel, adjective));
+            let resId = new VelResolveId(this.appli.getModel());
+            return VpcValS(resId.go(vel, adjective));
         } else if (prop === 'target') {
             // target should use prop not function since it takes an adjective
             checkThrow(!ref, "8+|must say 'get the target' and not 'get the target of cd btn 1");
@@ -243,7 +244,7 @@ export class VpcOutsideWorld implements OutsideWorldReadWrite {
             newref.isReferenceToTarget = true;
             let velTarget = this.ResolveElRef(newref);
             if (velTarget) {
-                return VpcValS(resolver.getUserFormattedName(velTarget, adjective));
+                return VpcValS(resolver.go(velTarget, adjective));
             } else {
                 return VpcVal.Empty;
             }

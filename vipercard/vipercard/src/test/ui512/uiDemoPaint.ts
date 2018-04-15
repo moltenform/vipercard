@@ -95,5 +95,3 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         }
     }
 }
-
-

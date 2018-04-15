@@ -74,7 +74,7 @@ export class UI512CompCodeEditor extends UI512CompBase {
      * see if any shortcut keys were pressed, and respond accordingly
      */
     respondKeydown(d: KeyDownEventDetails) {
-        if (!this.el.get_b('canselecttext') || !this.el.get_b('canedit')) {
+        if (!this.el.getB('canselecttext') || !this.el.getB('canedit')) {
             return;
         }
 

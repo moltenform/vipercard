@@ -43,15 +43,15 @@ export class UI512ElTextFieldAsGeneric implements GenericTextField {
     }
 
     canEdit() {
-        return this.el.get_b('canedit');
+        return this.el.getB('canedit');
     }
 
     canSelectText(): boolean {
-        return this.el.get_b('canselecttext');
+        return this.el.getB('canselecttext');
     }
 
     isMultiline(): boolean {
-        return this.el.get_b('multiline');
+        return this.el.getB('multiline');
     }
 
     setSel(a: number, b: number): void {
@@ -60,7 +60,7 @@ export class UI512ElTextFieldAsGeneric implements GenericTextField {
     }
 
     getSel(): [number, number] {
-        return [this.el.get_n('selcaret'), this.el.get_n('selend')];
+        return [this.el.getN('selcaret'), this.el.getN('selend')];
     }
 
     getID(): string {
@@ -72,7 +72,7 @@ export class UI512ElTextFieldAsGeneric implements GenericTextField {
     }
 
     getDefaultFont(): string {
-        return this.el.get_s('defaultFont');
+        return this.el.getS('defaultFont');
     }
 
     getReadOnlyUI512(): UI512ElTextField {
@@ -80,7 +80,7 @@ export class UI512ElTextFieldAsGeneric implements GenericTextField {
     }
 
     getScrollAmt(): number {
-        return this.el.get_n('scrollamt');
+        return this.el.getN('scrollamt');
     }
 
     setScrollAmt(n: O<number>): void {

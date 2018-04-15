@@ -9,14 +9,13 @@
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialize.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { vpcElTypeAsSeenInName } from '../../vpc/vel/velResolveReference.js';
 /* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
 /* auto */ import { SelectToolMode, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
 /* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
@@ -182,7 +181,7 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     getCurrentCardNum() {
-        let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+        let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
         return this.appli.getModel().stack.getCardStackPosition(currentCardId);
     }
 
@@ -326,14 +325,14 @@ export class VpcPresenter extends VpcPresenterInit {
         let vel = this.appli.getOutside().CreatePart(type, newX, newY, w, h);
         vel.set(
             'name',
-            `my ${vpcElTypeAsSeenInName(vel.getType())} ${this.appli.getModel().stack.getNextNumberForElemName()}`
+            `my ${vpcElTypeShowInUI(vel.getType())} ${this.appli.getModel().stack.getNextNumberForElemName()}`
         );
         if (type === VpcElType.Btn) {
             vel.setProp('style', VpcValS('roundrect'));
             vel.set('label', lng('lngNew Button'));
             vel.set('showlabel', true);
             vel.set('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp');
-            this.appli.getCodeExec().updateChangedCode(vel, vel.get_s('script'));
+            this.appli.getCodeExec().updateChangedCode(vel, vel.getS('script'));
         } else {
             let elfld = vel as VpcElField;
             let newtxt = FormattedText.newFromSerialized(
@@ -348,6 +347,7 @@ export class VpcPresenter extends VpcPresenterInit {
         this.lyrPropPanel.updateUI512Els();
         this.appli.setOption('selectedVelId', vel.id);
         this.appli.setOption('viewingScriptVelId', '');
+
         /* update before tool is set */
         this.lyrPropPanel.updateUI512Els();
         this.setTool(type === VpcElType.Btn ? VpcTool.Button : VpcTool.Field);
@@ -360,17 +360,17 @@ export class VpcPresenter extends VpcPresenterInit {
             let dupe = this.makePart(orig.getType());
             let dupeSizable = dupe as VpcElSizable;
             checkThrow(dupeSizable && dupeSizable.isVpcElSizable, '');
-            VpcUI512Serialization.copyAttrsOver(orig, dupe, orig.getAttributesList());
+            VpcUI512Serialization.copyPropsOver(orig, dupe, orig.getKeyPropertiesList());
             /* move it a bit */
             let amtToMove = Util512.getRandIntInclusiveWeak(10, 50);
             dupeSizable.setDimensions(
-                Math.min(ScreenConsts.xAreaWidth, dupe.get_n('x') + amtToMove),
-                Math.min(ScreenConsts.yAreaHeight, dupe.get_n('y') + amtToMove),
-                dupe.get_n('w'),
-                dupe.get_n('h')
+                Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove),
+                Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove),
+                dupe.getN('w'),
+                dupe.getN('h')
             );
             /* and compile its script too... */
-            this.appli.getCodeExec().updateChangedCode(dupe, dupe.get_s('script'));
+            this.appli.getCodeExec().updateChangedCode(dupe, dupe.getS('script'));
         } else {
             throw makeVpcInternalErr(msgNotification + lng("lngCan't paste this."));
         }
@@ -417,7 +417,7 @@ export class VpcPresenter extends VpcPresenterInit {
         if (done) {
             this.appli.doWithoutAbilityToUndo(() => {
                 /* check that the current card still exists, otherwise go to first card */
-                let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+                let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
                 let currentCard = this.appli.getModel().findById(currentCardId, VpcElCard);
                 if (!currentCard) {
                     this.appli.getModel().goCardRelative(OrdinalOrPosition.first);

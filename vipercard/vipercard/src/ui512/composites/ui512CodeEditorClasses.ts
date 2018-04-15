@@ -139,8 +139,8 @@ export class UI512AutoIndent {
         let len = el.get_ftxt().len();
         let [outLns, outSelCaret, outSelEnd] = this.runAutoIndentImpl(
             lns,
-            el.get_n('selcaret'),
-            el.get_n('selend'),
+            el.getN('selcaret'),
+            el.getN('selend'),
             len,
             true
         );

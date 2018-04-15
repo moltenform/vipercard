@@ -7,17 +7,38 @@
 /* auto */ import { LoopLimit, MapBuiltinCmds } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 
+/**
+ * if a function call occurs inside an expression, we pull it outside:
+
+    put 2 * mycustomfunc(5 + mycustomfunc(7 + sin(x))) into x
+
+        -->
+
+    mycustomfunc(7 + sin(x))
+    put the result into tmp001
+    put 2 * mycustomfunc(5 + tmp001) into x
+
+        -->
+
+    mycustomfunc(7 + sin(x))
+    put the result into tmp001
+    mycustomfunc(5 + tmp001)
+    put the result into tmp002
+    put 2 * tmp002 into x
+ */
 export class ExpandCustomFunctions {
-    protected readonly buildFake = new BuildFakeTokens();
+    protected buildToken = new BuildFakeTokens();
     constructor(
         protected idgenThisScript: CountNumericId,
         protected mapBuiltinCmds: MapBuiltinCmds,
         protected check: CheckReservedWords
     ) {}
 
+    /* expand function call in this line
+    returns a list of resulting lines, since the result could be many lines */
     go(line: ChvIToken[]): ChvIToken[][] {
         if (this.supportsCustomFnExpansion(line)) {
-            return this.rewriteToAllowCustomFns(line);
+            return this.goImpl(line);
         } else {
             let isPotentialUserFn = (n: number, s: string) => this.check.potentialUserFn(s);
             let found = this.findAFunctionCall(line, 1, line.length, isPotentialUserFn);
@@ -26,10 +47,14 @@ export class ExpandCustomFunctions {
                 but we don't yet support custom fn calls in this type of line.
                 try putting into another variable first.`);
             }
+
             return [line];
         }
     }
 
+    /**
+     * does this line support expansion?
+     */
     protected supportsCustomFnExpansion(line: ChvIToken[]) {
         return (
             line.length > 0 &&
@@ -38,14 +63,17 @@ export class ExpandCustomFunctions {
         );
     }
 
+    /**
+     * find a function call within interval [start, end)
+     */
     findAFunctionCall(
         ln: ChvIToken[],
         start: number,
         end: number,
         filterCalls: (n: number, s: string) => boolean
     ): O<[number, number]> {
-        // function call has TkIdentifier, LParen, then a RParen at the same level
-        // find a TkIdentifier next to a LParen
+        /* function call has TkIdentifier, LParen, then a RParen at the same level */
+        /* find a TkIdentifier next to a LParen */
         let foundCall = -1;
         for (let i = start; i < end - 1; i++) {
             if (
@@ -61,7 +89,7 @@ export class ExpandCustomFunctions {
         }
 
         if (foundCall !== -1) {
-            // find the closing paren
+            /* find the closing paren */
             let level = 0;
             let foundEnd = -1;
             for (let i = foundCall; i < end; i++) {
@@ -81,29 +109,32 @@ export class ExpandCustomFunctions {
         }
     }
 
-    rewriteToAllowCustomFns(line: ChvIToken[]) {
+    /**
+     * find all the custom function calls and put them on separate lines!
+     */
+    protected goImpl(line: ChvIToken[]) {
         let ret: ChvIToken[][] = [];
         let limit = new LoopLimit(CodeLimits.MaxCustomFnCallsAllowedInLine, 'maxCustomFnCallsAllowedInLine');
         let cantUseYetAr = new ValHolder<{ [key: number]: boolean }>({});
         while (limit.next()) {
-            // look for a custom function call
+            /* look for a custom function call */
             let isPotentialUserFn = (n: number, s: string) => !cantUseYetAr.val[n] && this.check.potentialUserFn(s);
             let found = this.findAFunctionCall(line, 1, line.length, isPotentialUserFn);
             if (!found) {
                 break;
             }
 
-            // is there a custom function call *within* this call?
+            /* is there a custom function call *within* this call? */
             let [callstart, callend] = found;
             let foundInside = this.findAFunctionCall(line, callstart + 1, callend, isPotentialUserFn);
             if (foundInside) {
-                // there is a custom fn inside, can't process it yet
+                /* there is a custom fn inside, can't process it yet */
                 cantUseYetAr.val[callstart] = true;
             } else {
-                // let's process this one
+                /* let's process this one */
                 this.expandAFnCall(ret, line, callstart, callend);
 
-                // reset, since one we couldn't do before we might be able to do now
+                /* reset, since one we couldn't do before we might be able to do now */
                 cantUseYetAr.val = {};
             }
         }
@@ -112,6 +143,9 @@ export class ExpandCustomFunctions {
         return ret;
     }
 
+    /**
+     * create new line calling the function and putting the result in a temp var
+     */
     expandAFnCall(ret: ChvIToken[][], line: ChvIToken[], start: number, end: number) {
         assertTrue(isTkType(line[start], tks.TokenTkidentifier), '5 |line did not start w identifier');
         assertTrue(isTkType(line[start + 1], tks.TokenTklparen), '5z|line did not start w identifier(');
@@ -120,7 +154,7 @@ export class ExpandCustomFunctions {
         let stmtPut: ChvIToken[] = [];
         let newvarname = `tmpvar^^${this.idgenThisScript.next()}`;
 
-        // create new line of code calling this fn
+        /* create new line of code calling this fn */
         checkThrow(this.check.potentialUserFn(line[start].image), '8P|must be valid userfn', line[start].image);
         stmtCall.push(line[start]);
         assertEq(line[start + 1].image, '(', '5x|expected to start with lparen');
@@ -129,16 +163,16 @@ export class ExpandCustomFunctions {
         stmtCall = stmtCall.concat(argsNoParens);
         ret.push(stmtCall);
 
-        // rewrite the syntax, replacing the function call with the new variable!
-        line.splice(start, end - start, this.buildFake.makeIdentifier(line[0], newvarname));
+        /* rewrite the syntax, replacing the function call with the new variable! */
+        line.splice(start, end - start, this.buildToken.makeIdentifier(line[0], newvarname));
 
-        // put results of the call into the temporary variable
-        stmtPut.push(this.buildFake.makeIdentifier(line[0], 'put'));
-        stmtPut.push(this.buildFake.makeIdentifier(line[0], 'result'));
-        stmtPut.push(this.buildFake.make(line[0], tks.TokenTklparen));
-        stmtPut.push(this.buildFake.make(line[0], tks.TokenTkrparen));
-        stmtPut.push(this.buildFake.makeIdentifier(line[0], 'into'));
-        stmtPut.push(this.buildFake.makeIdentifier(line[0], newvarname));
+        /* put results of the call into the temporary variable */
+        stmtPut.push(this.buildToken.makeIdentifier(line[0], 'put'));
+        stmtPut.push(this.buildToken.makeIdentifier(line[0], 'result'));
+        stmtPut.push(this.buildToken.make(line[0], tks.TokenTklparen));
+        stmtPut.push(this.buildToken.make(line[0], tks.TokenTkrparen));
+        stmtPut.push(this.buildToken.makeIdentifier(line[0], 'into'));
+        stmtPut.push(this.buildToken.makeIdentifier(line[0], newvarname));
         ret.push(stmtPut);
     }
 }

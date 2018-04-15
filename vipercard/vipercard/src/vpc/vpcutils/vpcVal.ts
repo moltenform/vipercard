@@ -10,7 +10,7 @@ const minint32 = -2147483648;
 
 /* we don't want code outside this module to directly create a VpcVal
 you should use the VpcValN or VpcValS functions. */
-let allowUsingVpcValConstructor = {}
+let allowUsingVpcValConstructor = {};
 
 /**
  * for the interpreter, when interpreting a script,

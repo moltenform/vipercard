@@ -14,6 +14,9 @@
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpcTestScriptRun.js';
 
+import { VelResolveName, VelResolveReference } from '../../vpc/vel/velResolveName.js';
+import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
+
 export class TestScriptEval extends TestVpcScriptRun {
     constructor() {
         super();
@@ -725,7 +728,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of ${cProductName}`, `WILD`],
                 [`the short id of the ${cProductName}`, `WILD`],
                 /* stack */
-                [`the short id of this stack`, `this stack`],
+                [`the short id of this stack`, `901`],
                 [`the short id of next stack`, 'ERR:only accept referring to a stack'],
                 [`the short id of xyz stack`, 'ERR:only accept referring to a stack'],
                 /* bg absolute */
@@ -802,7 +805,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of cd fld "p2"`, `${this.elIds.fld_b_c_2}`],
                 [`the short id of cd fld ("p2")`, `${this.elIds.fld_b_c_2}`],
                 [`the short id of cd fld "notfound"`, `ERR:could not find the specified`],
-                [`the short id of cd fld 1`, `ERR:we no longer support referring`],
+                [`the short id of cd fld 1`, `${this.elIds.fld_b_c_1}`],
                 /* field with parent */
                 [`the short id of cd fld id ${this.elIds.fld_b_c_1} of this cd`, `${this.elIds.fld_b_c_1}`],
                 [`the short id of cd fld id ${this.elIds.fld_c_d_1} of this cd`, `${this.elIds.fld_c_d_1}`],
@@ -822,7 +825,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the short id of cd btn "p2"`, `${this.elIds.btn_b_c_2}`],
                 [`the short id of cd btn ("p2")`, `${this.elIds.btn_b_c_2}`],
                 [`the short id of cd btn "notfound"`, `ERR:could not find the specified`],
-                [`the short id of cd btn 1`, `ERR:we no longer support referring`],
+                [`the short id of cd btn 1`, `${this.elIds.btn_b_c_1}`],
                 /* button with parent */
                 [`the short id of cd btn id ${this.elIds.btn_b_c_1} of this cd`, `${this.elIds.btn_b_c_1}`],
                 [`the short id of cd btn id ${this.elIds.btn_c_d_1} of this cd`, `${this.elIds.btn_c_d_1}`],
@@ -913,14 +916,14 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             batch = [
                 /* stack get and set */
                 ['length(the script of this stack) > 1', `true`],
-                ['the script of this stack', `${this.appl.model.stack.get_s('script')}`],
+                ['the script of this stack', `${this.appl.model.stack.getS('script')}`],
                 ['set the name of this stack to "newname" \\ the short name of this stack', 'newname'],
                 ['set the name of this stack to "teststack" \\ the short name of this stack', 'teststack'],
                 /* bg get and set */
                 ['length(the script of bg 1) == 0', `true`],
                 ['the script of bg 1', ``],
                 ['length(the script of bg 2) > 1', `true`],
-                ['the script of bg 2', `${this.appl.model.stack.bgs[1].get_s('script')}`],
+                ['the script of bg 2', `${this.appl.model.stack.bgs[1].getS('script')}`],
                 ['the short name of bg 2', 'b'],
                 ['set the name of bg 2 to "newname" \\ the short name of bg 2', 'newname'],
                 ['set the name of bg 2 to "b" \\ the short name of bg 2', 'b'],
@@ -928,7 +931,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['length(the script of cd 1) == 0', `true`],
                 ['the script of cd 1', ``],
                 ['length(the script of cd 3) > 1', `true`],
-                ['the script of cd 3', `${this.appl.model.stack.bgs[1].cards[1].get_s('script')}`],
+                ['the script of cd 3', `${this.appl.model.stack.bgs[1].cards[1].getS('script')}`],
                 ['the short name of cd 3', 'c'],
                 ['set the name of cd 3 to "newname" \\ the short name of cd 3', 'newname'],
                 ['set the name of cd 3 to "c" \\ the short name of cd 3', 'c']
@@ -1156,7 +1159,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             /* setting style */
             const fld = this.appl.model.getById(this.elIds.fld_b_c_1, VpcElField);
-            assertEq(UI512FldStyle.Rectangle, fld.get_n('style'), '1 |');
+            assertEq(UI512FldStyle.Rectangle, fld.getN('style'), '1 |');
             batch = [
                 ['the style of cd fld "p1"', 'rectangle'],
                 ['set the style of cd fld "p1" to "xyz"\\0', 'ERR:Field style or'],
@@ -1165,7 +1168,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['set the style of cd fld "p1" to "transparent"\\the style of cd fld "p1"', 'transparent']
             ];
             this.testBatchEvaluate(batch);
-            assertEq(UI512FldStyle.Transparent, fld.get_n('style'), '1z|');
+            assertEq(UI512FldStyle.Transparent, fld.getN('style'), '1z|');
 
             /* reading per-character formatting */
             /* here's what we'll set it to: Courier/Bold/24"ab"Courier/ItalicShadow/18"cd"Times/Plain/18ef */
@@ -1303,7 +1306,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`the name of the ${cProductName}`, `${cProductName}`],
                 [`the abbr name of ${cProductName}`, `${cProductName}`],
                 [`the short name of ${cProductName}`, `${cProductName}`],
-                [`the long name of ${cProductName}`, `Applications:${cProductName} Folder:${cProductName}`],
+                [`the long name of ${cProductName}`, `${cProductName}`],
                 [`the id of the ${cProductName}`, `WILD`],
                 [`the abbr id of ${cProductName}`, `WILD`],
                 [`the short id of ${cProductName}`, `WILD`],
@@ -1314,22 +1317,34 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the abbr name of this stack', 'this stack'],
                 ['the short name of this stack', 'teststack'],
                 ['the long name of this stack', 'this stack'],
-                ['the id of this stack', 'this stack'],
-                ['the abbr id of this stack', 'this stack'],
-                ['the short id of this stack', 'this stack'],
-                ['the long id of this stack', 'this stack'],
+                ['the id of this stack', '901'],
+                ['the abbr id of this stack', '901'],
+                ['the short id of this stack', '901'],
+                ['the long id of this stack', '901'],
 
-                /* bkgnd */
+                /* bkgnd with a name */
                 ['the name of bg 2', 'bkgnd "b"'],
                 ['the abbr name of bg 2', 'bkgnd "b"'],
                 ['the short name of bg 2', 'b'],
                 ['the long name of bg 2', 'bkgnd "b" of this stack'],
-                ['the id of bg 2', `bkgnd id ${this.elIds.bg_b}`],
-                ['the abbr id of bg 2', `bkgnd id ${this.elIds.bg_b}`],
+                ['the id of bg 2', `${this.elIds.bg_b}`],
+                ['the abbr id of bg 2', `${this.elIds.bg_b}`],
                 ['the short id of bg 2', `${this.elIds.bg_b}`],
-                ['the long id of bg 2', `bkgnd id ${this.elIds.bg_b} of this stack`],
+                ['the long id of bg 2', `${this.elIds.bg_b}`],
 
-                /* card */
+                // /* bkgnd with no name */
+                ['set the name of bg 2 to ""\\0', '0'],
+                ['the name of bg 2', `bkgnd id ${this.elIds.bg_b}`],
+                ['the abbr name of bg 2', `bkgnd id ${this.elIds.bg_b}`],
+                ['the short name of bg 2', `bkgnd id ${this.elIds.bg_b}`],
+                ['the long name of bg 2', `bkgnd id ${this.elIds.bg_b} of this stack`],
+                ['the id of bg 2', `${this.elIds.bg_b}`],
+                ['the abbr id of bg 2', `${this.elIds.bg_b}`],
+                ['the short id of bg 2', `${this.elIds.bg_b}`],
+                ['the long id of bg 2', `${this.elIds.bg_b}`],
+                ['set the name of bg 2 to "b"\\0', '0'],
+
+                /* card with a name */
                 ['the name of cd 4', 'card "d"'],
                 ['the abbr name of cd 4', 'card "d"'],
                 ['the short name of cd 4', 'd'],
@@ -1339,17 +1354,44 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short id of cd 4', `${this.elIds.card_b_d}`],
                 ['the long id of cd 4', `card id ${this.elIds.card_b_d} of this stack`],
 
-                /* button */
+                /* card with no name */
+                ['set the name of cd 4 to ""\\0', '0'],
+                ['the name of cd 4', `card id ${this.elIds.card_b_d}`],
+                ['the abbr name of cd 4', `card id ${this.elIds.card_b_d}`],
+                ['the short name of cd 4', `card id ${this.elIds.card_b_d}`],
+                ['the long name of cd 4', `card id ${this.elIds.card_b_d} of this stack`],
+                ['the id of cd 4', `card id ${this.elIds.card_b_d}`],
+                ['the abbr id of cd 4', `card id ${this.elIds.card_b_d}`],
+                ['the short id of cd 4', `${this.elIds.card_b_d}`],
+                ['the long id of cd 4', `card id ${this.elIds.card_b_d} of this stack`],
+                ['set the name of cd 4 to "d"\\0', '0'],
+
+                /* button with a name */
                 ['the name of cd btn "p1"', 'card button "p1"'],
                 ['the abbr name of cd btn "p1"', 'card button "p1"'],
                 ['the short name of cd btn "p1"', 'p1'],
                 ['the long name of cd btn "p1"', 'card button "p1" of card "c" of this stack'],
-                ['the id of cd btn "p1"', `${this.elIds.btn_b_c_1}`], /* confirmed in emulator, short/long has no effect */
+                ['the id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
                 ['the abbr id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
                 ['the short id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
                 ['the long id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
 
-                /* field */
+                /* button with no name */
+                [`set the name of cd btn id ${this.elIds.btn_b_c_1} to ""\\0`, '0'],
+                [`the name of cd btn id ${this.elIds.btn_b_c_1}`, `card button id ${this.elIds.btn_b_c_1}`],
+                [`the abbr name of cd btn id ${this.elIds.btn_b_c_1}`, `card button id ${this.elIds.btn_b_c_1}`],
+                [`the short name of cd btn id ${this.elIds.btn_b_c_1}`, `card button id ${this.elIds.btn_b_c_1}`],
+                [
+                    `the long name of cd btn id ${this.elIds.btn_b_c_1}`,
+                    `card button id ${this.elIds.btn_b_c_1} of card "c" of this stack`
+                ],
+                [`the id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
+                [`the abbr id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
+                [`the short id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
+                [`the long id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
+                [`set the name of cd btn id ${this.elIds.btn_b_c_1} to "p1"\\0`, '0'],
+
+                /* field with a name */
                 ['the name of cd fld "p1"', 'card field "p1"'],
                 ['the abbr name of cd fld "p1"', 'card field "p1"'],
                 ['the short name of cd fld "p1"', 'p1'],
@@ -1359,24 +1401,26 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the short id of cd fld "p1"', `${this.elIds.fld_b_c_1}`],
                 ['the long id of cd fld "p1"', `${this.elIds.fld_b_c_1}`],
 
+                /* field with no name */
+                [`set the name of cd fld id ${this.elIds.fld_b_c_1} to ""\\0`, '0'],
+                [`the name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
+                [`the abbr name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
+                [`the short name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
+                [
+                    `the long name of cd fld id ${this.elIds.fld_b_c_1}`,
+                    `card field id ${this.elIds.fld_b_c_1} of card "c" of this stack`
+                ],
+                [`the id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
+                [`the abbr id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
+                [`the short id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
+                [`the long id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
+                [`set the name of cd fld id ${this.elIds.fld_b_c_1} to "p1"\\0`, '0'],
+
                 /* when nothing has names, we get different output */
                 ['set the name of this stack to ""\\0', '0'],
                 ['set the name of this bg to ""\\0', '0'],
                 ['set the name of this card to ""\\0', '0'],
                 [`set the name of cd btn id ${this.elIds.btn_b_c_1} to ""\\0`, '0'],
-                [`set the name of cd fld id ${this.elIds.fld_b_c_1} to ""\\0`, '0'],
-                ['the name of this stack', 'this stack'],
-                ['the abbr name of this stack', 'this stack'],
-                ['the short name of this stack', 'this stack'],
-                ['the long name of this stack', 'this stack'],
-                ['the name of this bg', `bkgnd id ${this.elIds.bg_b}`],
-                ['the abbr name of this bg', `bkgnd id ${this.elIds.bg_b}`],
-                ['the short name of this bg', `bkgnd id ${this.elIds.bg_b}`],
-                ['the long name of this bg', `bkgnd id ${this.elIds.bg_b} of this stack`],
-                ['the name of this cd', `card id ${this.elIds.card_b_c}`],
-                ['the abbr name of this cd', `card id ${this.elIds.card_b_c}`],
-                ['the short name of this cd', `card id ${this.elIds.card_b_c}`],
-                ['the long name of this cd', `card id ${this.elIds.card_b_c} of this stack`],
                 [`the name of cd btn id ${this.elIds.btn_b_c_1}`, `card button id ${this.elIds.btn_b_c_1}`],
                 [`the abbr name of cd btn id ${this.elIds.btn_b_c_1}`, `card button id ${this.elIds.btn_b_c_1}`],
                 [`the short name of cd btn id ${this.elIds.btn_b_c_1}`, `card button id ${this.elIds.btn_b_c_1}`],
@@ -1384,20 +1428,10 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                     `the long name of cd btn id ${this.elIds.btn_b_c_1}`,
                     `card button id ${this.elIds.btn_b_c_1} of card id ${this.elIds.card_b_c} of this stack`
                 ],
-                [`the name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
-                [`the abbr name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
-                [`the short name of cd fld id ${this.elIds.fld_b_c_1}`, `card field id ${this.elIds.fld_b_c_1}`],
-                [
-                    `the long name of cd fld id ${this.elIds.fld_b_c_1}`,
-                    `card field id ${this.elIds.fld_b_c_1} of card id ${this.elIds.card_b_c} of this stack`
-                ],
-
-                /* restore names */
                 ['set the name of this stack to "teststack"\\0', '0'],
                 ['set the name of this bg to "b"\\0', '0'],
                 ['set the name of this card to "c"\\0', '0'],
                 [`set the name of cd btn id ${this.elIds.btn_b_c_1} to "p1"\\0`, '0'],
-                [`set the name of cd fld id ${this.elIds.fld_b_c_1} to "p1"\\0`, '0'],
 
                 /* the target (this.objids.btn_go) */
                 ['the target', 'card button "go"'],
@@ -1406,10 +1440,11 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the long target', 'card button "go" of card "a" of this stack'],
 
                 /* owner */
-                ['the owner of this stack', 'ERR:only get the owner'],
-                ['the owner of bg 1', 'ERR:only get the owner'],
-                ['the owner of cd fld "p1"', 'ERR:only get the owner'],
-                ['the owner of cd btn "p1"', 'ERR:only get the owner'],
+                ['the owner of vipercard', 'ERR:get the owner'],
+                ['the owner of this stack', 'ERR:get owner'],
+                ['the owner of bg 1', 'this stack'],
+                ['the owner of cd fld "p1"', 'card "c"'],
+                ['the owner of cd btn "p1"', 'card "c"'],
                 ['the owner of cd btn "xyz"', 'ERR:could not find'],
                 ['the owner of cd fld "xyz"', 'ERR:could not find'],
                 ['the owner of cd 1', 'bkgnd "a"'],
@@ -1508,8 +1543,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['"200000000000000000" is a integer', 'false'],
                 ['200000000000000000 is a integer', 'false'],
                 ['200000000000000000', '200000000000000000'],
-                ['1 + "200000000000000000"', '200000000000000000'], /* that's why it's not an int lol */
-                ['1 + 200000000000000000', '200000000000000000'], /* that's why it's not an int lol */
+                ['1 + "200000000000000000"', '200000000000000000'] /* that's why it's not an int lol */,
+                ['1 + 200000000000000000', '200000000000000000'] /* that's why it's not an int lol */,
                 ['strToNumber("200000000000000000")', '200000000000000000'],
                 ['set the left of cd btn "p1" to 200000000000000000\\0', 'ERR:expected an integer'],
                 /* number that we support as numeric, but not as an integer */
@@ -1519,7 +1554,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['2e17 is a integer', 'false'],
                 ['2e17', '200000000000000000'],
                 ['1 + "2e17"', 'ERR:expected a number'],
-                ['1 + 2e17', '200000000000000000'], /* that's why it's not an int lol */
+                ['1 + 2e17', '200000000000000000'] /* that's why it's not an int lol */,
                 ['strToNumber("2e17")', '200000000000000000'],
                 ['set the left of cd btn "p1" to 2e17\\0', 'ERR:expected an integer'],
                 /* number that we support as numeric, but not as an integer */
@@ -1642,7 +1677,10 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['the number of cards of bg 1', '1'],
                 ['the number of cards of bg 2', '3'],
                 ['the number of cards of bg 3', '1'],
-                ['the number of cards of bg 4', 'ERR:Cannot find this element'], /* confirmed in emulator that it should throw */
+                [
+                    'the number of cards of bg 4',
+                    'ERR:Cannot find this element'
+                ] /* confirmed in emulator that it should throw */,
                 ['the number of bgs', '3'],
                 ['the number of bgs of this stack', '3'],
                 ['selectedtext()', ''] /* use as breakpoint */
@@ -1672,7 +1710,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a this bg`, 'true'],
                 [`there _is_ a next bg`, 'true'],
                 [`there _is_ a first bg`, 'true'],
-                [`there _is_ a tenth bg`, 'true'], /* todo: not really right? */
+                [`there _is_ a tenth bg`, 'true'] /* todo: not really right? */,
 
                 /* card */
                 [`there _is_ a card 1`, 'true'],
@@ -1686,7 +1724,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a this card`, 'true'],
                 [`there _is_ a next card`, 'true'],
                 [`there _is_ a first card`, 'true'],
-                [`there _is_ a tenth card`, 'true'], /* todo: not really right? */
+                [`there _is_ a tenth card`, 'true'] /* todo: not really right? */,
                 [`there _is_ a card 2 of this bg`, 'true'],
                 [`there _is_ a card 2 of bg 2`, 'true'],
                 [`there _is_ a card 2 of bg 1`, 'false'],
@@ -1695,8 +1733,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a card "d" of bg 3`, 'true'],
 
                 /* btn */
-                [`there _is_ a cd btn 1`, 'ERR:we no longer support'], /* because we turned this off */
-                [`there _is_ a cd btn 70`, 'ERR:we no longer support'],
+                [`there _is_ a cd btn 1`, 'true'],
+                [`there _is_ a cd btn 70`, 'false'],
                 [`there _is_ a cd btn "p1"`, 'true'],
                 [`there _is_ a cd btn "p"`, 'false'],
                 [`there _is_ a cd btn id ${this.elIds.btn_b_c_1}`, 'true'],
@@ -1710,8 +1748,8 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 [`there _is_ a cd btn "p1" of cd "d" of bg 3`, 'true'],
 
                 /* fld */
-                [`there _is_ a cd fld 1`, 'ERR:we no longer support'], /* because we turned this off */
-                [`there _is_ a cd fld 70`, 'ERR:we no longer support'],
+                [`there _is_ a cd fld 1`, 'true'],
+                [`there _is_ a cd fld 70`, 'false'],
                 [`there _is_ a cd fld "p1"`, 'true'],
                 [`there _is_ a cd fld "p"`, 'false'],
                 [`there _is_ a cd fld id ${this.elIds.fld_b_c_1}`, 'true'],
@@ -1785,7 +1823,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['sum(4,5,6)', '15'],
                 ['sum(1,2,3)', '6'],
                 ['min("1,2,3")', '1'],
-                ['min("1,2,3,")', '1'], /* a bit odd, but confirmed in emulator */
+                ['min("1,2,3,")', '1'] /* a bit odd, but confirmed in emulator */,
                 ['min(",1,2,3")', '0'],
                 ['min(",1,2,3,")', '0'],
                 ['min("1,2,3,,")', '0'],

@@ -88,7 +88,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         this.directMapProperty[VpcElType.Fld + '/selend'] = 'selend';
         this.directMapProperty[VpcElType.Fld + '/scroll'] = 'scrollamt';
         this.indirectProperty[VpcElType.Fld + '/style'] = (vel, el, newv) => {
-            let wasScroll = el.get_b('scrollbar');
+            let wasScroll = el.getB('scrollbar');
             if (newv === VpcFldStyleInclScroll.scrolling) {
                 el.set('style', UI512FldStyle.Rectangle);
                 el.set('scrollbar', true);
@@ -97,7 +97,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
                 el.set('scrollbar', false);
             }
 
-            if (wasScroll !== el.get_b('scrollbar')) {
+            if (wasScroll !== el.getB('scrollbar')) {
                 this.appli.getPresenter().rebuildFieldScrollbars();
             }
         };
@@ -165,43 +165,43 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
     changeSeen(
         context: ChangeContext,
         velId: string,
-        propname: string,
+        propName: string,
         prev: ElementObserverVal,
         newv: ElementObserverVal
     ) {
-        if (propname.startsWith('increasingnumber')) {
+        if (propName.startsWith('increasingnumber')) {
             return;
         }
 
         let vel = this.appli.getModel().findByIdUntyped(velId);
         if (vel) {
-            this.aboutToApplyOneChange(vel, propname, newv, false);
+            this.aboutToApplyOneChange(vel, propName, newv, false);
         }
     }
 
-    protected aboutToApplyOneChange(vel: VpcElBase, propname: string, newv: ElementObserverVal, fromScratch: boolean) {
+    protected aboutToApplyOneChange(vel: VpcElBase, propName: string, newv: ElementObserverVal, fromScratch: boolean) {
         let currentCardId = this.appli.getOption_s('currentCardId');
         let screenlocked = this.appli.getOption_b('screenLocked');
-        if (vel.getType() === VpcElType.Product && propname === 'suggestedIdleRate') {
+        if (vel.getType() === VpcElType.Product && propName === 'suggestedIdleRate') {
             this.changeIdleRate(newv);
         } else if (screenlocked) {
             this.needFullRedrawBecauseScreenWasLocked = true;
         } else {
             let type = vel.getType();
-            if (propname === 'script') {
+            if (propName === 'script') {
                 this.needUIToolsRedraw = true;
             } else if (type === VpcElType.Fld || type === VpcElType.Btn) {
                 if (vel.parentId === currentCardId) {
-                    this.applyOneChange(vel, propname, newv, fromScratch);
+                    this.applyOneChange(vel, propName, newv, fromScratch);
                 }
             } else if (type === VpcElType.Card && vel.id === currentCardId) {
-                if (propname === 'paint') {
+                if (propName === 'paint') {
                     // vpcmodelrenderpaint will take care of the rest
                     this.needUIToolsRedraw = true;
                 }
             } else if (type === VpcElType.Product) {
                 this.needUIToolsRedraw = true;
-                if (propname === 'currentCardId') {
+                if (propName === 'currentCardId') {
                     this.fullRedrawNeeded();
                 }
             }
@@ -210,7 +210,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
 
     protected refreshLabelWithFont(elv: VpcElBase, target: UI512Element) {
         if (elv instanceof VpcElButton) {
-            let lbl = elv.get_b('showlabel') ? UI512DrawText.setFont(elv.get_s('label'), elv.getFontAsUi512()) : '';
+            let lbl = elv.getB('showlabel') ? UI512DrawText.setFont(elv.getS('label'), elv.getFontAsUI512()) : '';
             target.set('labeltext', lbl);
         } else {
             throw makeVpcInternalErr(`6+|expected button`);
@@ -241,8 +241,8 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             // make sure to edit something!!
             let target = this.findVpcToUi512(currentCard.parts[0].id);
             if (target) {
-                target.set('x', target.get_n('x') + 1);
-                target.set('x', target.get_n('x') - 1);
+                target.set('x', target.getN('x') + 1);
+                target.set('x', target.getN('x') - 1);
             }
         }
     }
@@ -284,7 +284,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
     protected buildBtnFromScratch(vpcel: VpcElButton) {
         let target = new UI512ElButton(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.appli.UI512App(), target);
-        for (let prop of VpcElButton.attributesList) {
+        for (let prop of VpcElButton.keyPropertiesList) {
             let newv = vpcel.get_generic(prop);
             this.applyOneChange(vpcel, prop, newv, true);
         }
@@ -293,7 +293,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
     protected buildFldFromScratch(vpcel: VpcElField) {
         let target = new UI512ElTextField(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.appli.UI512App(), target);
-        for (let prop of VpcElField.attributesList) {
+        for (let prop of VpcElField.keyPropertiesList) {
             let newv = vpcel.get_generic(prop);
             this.applyOneChange(vpcel, prop, newv, true);
         }
@@ -301,9 +301,9 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
         target.setftxt(vpcel.get_ftxt());
     }
 
-    protected applyOneChange(vel: VpcElBase, propname: string, newv: ElementObserverVal, fromScratch: boolean) {
+    protected applyOneChange(vel: VpcElBase, propName: string, newv: ElementObserverVal, fromScratch: boolean) {
         assertTrue(vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn, '');
-        let key = vel.getType().toString() + '/' + propname;
+        let key = vel.getType().toString() + '/' + propName;
         let fnSetProperty = this.indirectProperty[key];
         let ui512propname = this.directMapProperty[key];
         let target = this.findVpcToUi512(vel.id);
@@ -312,7 +312,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
                 fnSetProperty(vel, target, newv);
             } else if (ui512propname !== undefined) {
                 target.set(ui512propname, newv);
-            } else if (propname === UI512Settable.formattedTextField) {
+            } else if (propName === UI512Settable.formattedTextField) {
                 let newvAsText = newv as FormattedText;
                 assertTrue(newvAsText && newvAsText.isFormattedText, '6)|bad formatted text', vel.id);
                 target.setftxt(newvAsText);
@@ -354,7 +354,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
     }
 
     static fieldPropsCompatibleWithFocus(vel: VpcElField) {
-        return vel.get_b('enabled') && !vel.get_b('locktext') && vel.get_b('visible');
+        return vel.getB('enabled') && !vel.getB('locktext') && vel.getB('visible');
     }
 
     seeIfCurrentFocusMakesSense() {
@@ -374,7 +374,7 @@ export class VpcModelRender extends VpcAppInterfaceLayer implements ElementObser
             this.appli.setCurrentFocus(undefined);
         } else {
             let parent = this.appli.getModel().getById(focusvpc.parentId, VpcElCard);
-            let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+            let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
             if (parent.getType() === VpcElType.Card && parent.id !== currentCardId) {
                 // field not on the current card
                 this.appli.setCurrentFocus(undefined);
@@ -398,26 +398,26 @@ export class VpcElTextFieldAsGeneric implements GenericTextField {
         return this.impl.get_ftxt();
     }
     canEdit() {
-        return !this.impl.get_b('locktext');
+        return !this.impl.getB('locktext');
     }
     canSelectText(): boolean {
-        return !this.impl.get_b('locktext');
+        return !this.impl.getB('locktext');
     }
     isMultiline(): boolean {
-        return !this.impl.get_b('singleline');
+        return !this.impl.getB('singleline');
     }
     setSel(a: number, b: number): void {
         this.impl.set('selcaret', a);
         this.impl.set('selend', b);
     }
     getSel(): [number, number] {
-        return [this.impl.get_n('selcaret'), this.impl.get_n('selend')];
+        return [this.impl.getN('selcaret'), this.impl.getN('selend')];
     }
     getID(): string {
         return this.impl.id;
     }
     getHeight(): number {
-        return this.impl.get_n('h');
+        return this.impl.getN('h');
     }
     getDefaultFont(): string {
         return this.impl.getDefaultFontAsUi512();
@@ -426,7 +426,7 @@ export class VpcElTextFieldAsGeneric implements GenericTextField {
         return this.el512;
     }
     getScrollAmt(): number {
-        return this.impl.get_n('scroll');
+        return this.impl.getN('scroll');
     }
     setScrollAmt(n: O<number>): void {
         if (n !== undefined && n !== null) {
@@ -438,11 +438,11 @@ export class VpcElTextFieldAsGeneric implements GenericTextField {
 function getIconGroupId(vel: VpcElBase, el: UI512Element, newv: ElementObserverVal) {
     if (!newv) {
         return '';
-    } else if (vel.get_s('name').startsWith('glider_sprites')) {
+    } else if (vel.getS('name').startsWith('glider_sprites')) {
         return 'glider_sprites';
-    } else if (vel.get_s('name').startsWith('glider_bg')) {
+    } else if (vel.getS('name').startsWith('glider_bg')) {
         return 'glider_bg';
-    } else if (vel.get_s('name').startsWith('spacegame_sprites')) {
+    } else if (vel.getS('name').startsWith('spacegame_sprites')) {
         return 'spacegame';
     } else {
         return '002';

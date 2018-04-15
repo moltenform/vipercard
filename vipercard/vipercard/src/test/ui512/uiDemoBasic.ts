@@ -52,7 +52,7 @@ export class UI512DemoBasic extends UI512Presenter {
             if (this.timer.isDue()) {
                 this.timer.reset();
                 let getbtn2 = cast(this.app.getEl('btn2'), UI512ElButton);
-                getbtn2.set('labeltext', getbtn2.get_s('labeltext') === 'pulsating' ? 'pulsating...' : 'pulsating');
+                getbtn2.set('labeltext', getbtn2.getS('labeltext') === 'pulsating' ? 'pulsating...' : 'pulsating');
             }
         });
 

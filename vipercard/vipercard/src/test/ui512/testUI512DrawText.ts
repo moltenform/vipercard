@@ -252,4 +252,3 @@ export class TestDrawUI512Text extends UI512TestBase {
         testUtilCompareCanvasWithExpected(dldimage, testToRun, callback);
     }
 }
-

@@ -14,7 +14,7 @@ export class VpcSerialization {
         ret.fileformatmajor = 2;
         ret.fileformatminor = 0;
         ret.buildnumber = vpcversion;
-        ret.uuid = appli.getModel().modelUuid;
+        ret.uuid = appli.getModel().uuid;
         ret.elements = [];
         let stack = appli.getModel().stack;
         for (let vel of stack.iterEntireStack()) {
@@ -32,7 +32,7 @@ export class VpcSerialization {
         ret.type = vel.getType();
         ret.id = vel.id;
         ret.parent_id = vel.parentId;
-        ret.attrs = VpcUI512Serialization.serializeUiGettable(vel, vel.getAttributesList());
+        ret.attrs = VpcUI512Serialization.serializeGettable(vel, vel.getKeyPropertiesList());
         return ret;
     }
 
@@ -46,7 +46,7 @@ export class VpcSerialization {
             console.log(
                 `opening a document made by buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`
             );
-            building.getModel().modelUuid = incoming.uuid;
+            building.getModel().uuid = incoming.uuid;
             checkThrow(incoming.elements && incoming.elements.length > 0, 'elements missing or empty');
             for (let i = 0; i < incoming.elements.length; i++) {
                 this.deserializeVel(building, incoming.elements[i]);
@@ -57,9 +57,9 @@ export class VpcSerialization {
     deserializeVel(building: VpcStateInterface, incoming: any) {
         if (incoming.type === VpcElType.Stack) {
             // we don't need to create a new element, just copy over the attrs
-            VpcUI512Serialization.deserializeUiSettable(
+            VpcUI512Serialization.deserializeSettable(
                 building.getModel().stack,
-                building.getModel().stack.getAttributesList(),
+                building.getModel().stack.getKeyPropertiesList(),
                 incoming.attrs
             );
         } else if (
@@ -69,7 +69,7 @@ export class VpcSerialization {
             incoming.type === VpcElType.Fld
         ) {
             let created = building.createElem(incoming.parent_id, incoming.type, -1, incoming.id);
-            VpcUI512Serialization.deserializeUiSettable(created, created.getAttributesList(), incoming.attrs);
+            VpcUI512Serialization.deserializeSettable(created, created.getKeyPropertiesList(), incoming.attrs);
         } else {
             assertTrueWarn(false, 'unsupported type', incoming.type);
         }
@@ -99,7 +99,7 @@ export class VpcSerialization {
                 incoming.type
             );
             created = building.createElem(incoming.parent_id, incoming.type, incoming.insertIndex, incoming.id);
-            VpcUI512Serialization.deserializeUiSettable(created, created.getAttributesList(), incoming.attrs);
+            VpcUI512Serialization.deserializeSettable(created, created.getKeyPropertiesList(), incoming.attrs);
         });
 
         return throwIfUndefined(created, '');

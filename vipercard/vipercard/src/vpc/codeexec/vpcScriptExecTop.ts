@@ -2,10 +2,10 @@
 /* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { slength } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VarCollection, VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite, VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcAllCode } from '../../vpc/codepreparse/vpcAllCode.js';
 /* auto */ import { VpcParsingCache } from '../../vpc/codeexec/vpcScriptCacheParsed.js';
@@ -25,8 +25,8 @@ export class CodeExecTop {
 
     protected readonly code: VpcAllCode;
     protected readonly outside: OutsideWorldReadWrite;
-    constructor(idgen: CountNumericId, outside: OutsideWorldReadWrite) {
-        this.code = new VpcAllCode(idgen);
+    constructor(idGen: CountNumericId, outside: OutsideWorldReadWrite) {
+        this.code = new VpcAllCode(idGen);
         this.outside = outside;
         this.runStatements.outside = outside;
         this.parsingCache.visitor.outside = outside as OutsideWorldRead;
@@ -45,20 +45,20 @@ export class CodeExecTop {
             msg
         );
 
-        let isRepeatedKeydown = newWork.originalMsg.msgName === 'afterkeydown' && newWork.originalMsg.keyrepeated;
+        let isRepeatedKeydown = newWork.originalMsg.msgName === 'afterkeydown' && newWork.originalMsg.keyRepeated;
 
         if (isRepeatedKeydown && this.workQueue.length > 2) {
-            // don't queue up a key that is held down at least beyond 3 evts
+            /* don't queue up a key that is held down at least beyond 3 evts */
             return;
         } else if (
             (newWork.originalMsg.msgName === 'idle' || newWork.originalMsg.msgName === 'mousewithin') &&
             this.workQueue.length > 0
         ) {
-            // don't queue up an onidle
+            /* don't queue up an onidle */
             return;
         }
 
-        // don't let keydowns swamp everything else!
+        /* don't let keydowns swamp everything else! */
         if (isRepeatedKeydown) {
             if (this.justSawRepeatedMousedown) {
                 return;
@@ -88,14 +88,14 @@ export class CodeExecTop {
     }
 
     removeScript(id: string) {
-        // disabled because this hasn't been tested, but actually this probably "works"
-        // since the framecontext holds a reference to the codesection.
+        /* disabled because this hasn't been tested, but actually this probably "works" */
+        /* since the framecontext holds a reference to the codesection. */
         checkThrow(!this.isCodeRunning(), "7z|we don't currently support deleting an element while code is running");
         this.code.remove(id);
     }
 
     isCodeRunning() {
-        // check hasRunCode to make ui less gummed up
+        /* check hasRunCode to make ui less gummed up */
         return this.workQueue.length > 0 && this.workQueue[0].hasRunCode;
     }
 
@@ -120,8 +120,8 @@ export class CodeExecTop {
         let currentcardid = this.outside.GetOption_s('currentCardId');
 
         if (!this.workQueue.length || !first) {
-            // no code is running.
-            // make sure screen is unlocked, just in case
+            /* no code is running. */
+            /* make sure screen is unlocked, just in case */
             this.outside.SetOption('screenLocked', false);
             return;
         }
@@ -132,13 +132,13 @@ export class CodeExecTop {
             first.originalMsg.causedByUserAction &&
             first.originalMsg.cardWhenFired !== currentcardid
         ) {
-            // important: don't run queued messages that were created on a different card
+            /* important: don't run queued messages that were created on a different card */
             this.workQueue.splice(0, 1);
             return;
         }
 
         if (first.stack.length <= 1) {
-            // we just finished a handler
+            /* we just finished a handler */
             this.workQueue.splice(0, 1);
             this.outside.SetOption('screenLocked', false);
             this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
@@ -155,7 +155,7 @@ export class CodeExecTop {
         }
 
         if (first.stack.length <= 1) {
-            // we just finished a handler
+            /* we just finished a handler */
             this.workQueue.splice(0, 1);
             this.outside.SetOption('screenLocked', false);
             this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);

@@ -5,7 +5,6 @@
 /* auto */ import { ModifierKeys, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
 
-
 export class TestUI512CanvasWrapper extends UI512TestBase {
     tests = [
         'test_getRectClippedFullyContained',
@@ -256,59 +255,59 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
         },
         'test_getSubRectRaw',
         () => {
-            assertEq([105, 206, 290, 388], RectUtils.getSubRectRaw(100, 200, 300, 400, 5, 6), "")
-            assertEq([110, 211, 280, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 11), "")
-            assertEq([249, 211, 2, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 11), "")
-            assertEq([249, 399, 2, 2], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 199), "")
-            assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 11), "")
-            assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 200), "")
-            assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 200), "")
+            assertEq([105, 206, 290, 388], RectUtils.getSubRectRaw(100, 200, 300, 400, 5, 6), '');
+            assertEq([110, 211, 280, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 11), '');
+            assertEq([249, 211, 2, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 11), '');
+            assertEq([249, 399, 2, 2], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 199), '');
+            assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 11), '');
+            assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 200), '');
+            assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 200), '');
         },
         'test_ui512TranslateModifiers',
         () => {
-            let shift:number = ModifierKeys.Shift
-            let cmd:number = ModifierKeys.Cmd
-            let opt:number = ModifierKeys.Opt
-            assertEq(0, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, false, false), "")
-            assertEq(shift, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, false, false), "")
-            assertEq(shift + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, true, false), "")
-            assertEq(shift + cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, true, true, false), "")
-            assertEq(cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, false, true, false), "")
-            assertEq(opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, true, false), "")
+            let shift: number = ModifierKeys.Shift;
+            let cmd: number = ModifierKeys.Cmd;
+            let opt: number = ModifierKeys.Opt;
+            assertEq(0, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, false, false), '');
+            assertEq(shift, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, false, false), '');
+            assertEq(shift + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, true, false), '');
+            assertEq(shift + cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, true, true, false), '');
+            assertEq(cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, false, true, false), '');
+            assertEq(opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, true, false), '');
         },
         'test_toShortcutString',
         () => {
-            let shift:number = ModifierKeys.Shift
-            let cmd:number = ModifierKeys.Cmd
-            let opt:number = ModifierKeys.Opt
-            assertEq('a', toShortcutString(ModifierKeys.None, 'a'), "")
-            assertEq('Shift+a', toShortcutString(shift, 'a'), "")
-            assertEq('Opt+Shift+a', toShortcutString(shift + opt, 'a'), "")
-            assertEq('Cmd+Opt+Shift+a', toShortcutString(shift + cmd + opt, 'a'), "")
-            assertEq('Cmd+Opt+a', toShortcutString(cmd + opt, 'a'), "")
-            assertEq('Opt+a', toShortcutString(opt, 'a'), "")
+            let shift: number = ModifierKeys.Shift;
+            let cmd: number = ModifierKeys.Cmd;
+            let opt: number = ModifierKeys.Opt;
+            assertEq('a', toShortcutString(ModifierKeys.None, 'a'), '');
+            assertEq('Shift+a', toShortcutString(shift, 'a'), '');
+            assertEq('Opt+Shift+a', toShortcutString(shift + opt, 'a'), '');
+            assertEq('Cmd+Opt+Shift+a', toShortcutString(shift + cmd + opt, 'a'), '');
+            assertEq('Cmd+Opt+a', toShortcutString(cmd + opt, 'a'), '');
+            assertEq('Opt+a', toShortcutString(opt, 'a'), '');
 
             /* truncate key */
-            assertEq('Cmd+A', toShortcutString(cmd, 'KeyA'), "")
-            assertEq('Cmd+Keya', toShortcutString(cmd, 'Keya'), "")
-            assertEq('Cmd+A', toShortcutString(cmd, 'keyA'), "")
-            assertEq('Cmd+keya', toShortcutString(cmd, 'keya'), "")
-            assertEq('Cmd+Z', toShortcutString(cmd, 'keyZ'), "")
-            assertEq('Cmd+keyz', toShortcutString(cmd, 'keyz'), "")
-            assertEq('Cmd+Key ', toShortcutString(cmd, 'Key '), "")
-            assertEq('Cmd+Key@', toShortcutString(cmd, 'Key@'), "")
-            assertEq('Cmd+Key', toShortcutString(cmd, 'Key'), "")
-            assertEq('Cmd+KeyAA', toShortcutString(cmd, 'KeyAA'), "")
+            assertEq('Cmd+A', toShortcutString(cmd, 'KeyA'), '');
+            assertEq('Cmd+Keya', toShortcutString(cmd, 'Keya'), '');
+            assertEq('Cmd+A', toShortcutString(cmd, 'keyA'), '');
+            assertEq('Cmd+keya', toShortcutString(cmd, 'keya'), '');
+            assertEq('Cmd+Z', toShortcutString(cmd, 'keyZ'), '');
+            assertEq('Cmd+keyz', toShortcutString(cmd, 'keyz'), '');
+            assertEq('Cmd+Key ', toShortcutString(cmd, 'Key '), '');
+            assertEq('Cmd+Key@', toShortcutString(cmd, 'Key@'), '');
+            assertEq('Cmd+Key', toShortcutString(cmd, 'Key'), '');
+            assertEq('Cmd+KeyAA', toShortcutString(cmd, 'KeyAA'), '');
 
             /* truncate digit */
-            assertEq('Cmd+1', toShortcutString(cmd, 'Digit1'), "")
-            assertEq('Cmd+1', toShortcutString(cmd, 'digit1'), "")
-            assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), "")
-            assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), "")
-            assertEq('Cmd+Digit ', toShortcutString(cmd, 'Digit '), "")
-            assertEq('Cmd+Digit@', toShortcutString(cmd, 'Digit@'), "")
-            assertEq('Cmd+Digit', toShortcutString(cmd, 'Digit'), "")
-            assertEq('Cmd+Digit11', toShortcutString(cmd, 'Digit11'), "")
+            assertEq('Cmd+1', toShortcutString(cmd, 'Digit1'), '');
+            assertEq('Cmd+1', toShortcutString(cmd, 'digit1'), '');
+            assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), '');
+            assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), '');
+            assertEq('Cmd+Digit ', toShortcutString(cmd, 'Digit '), '');
+            assertEq('Cmd+Digit@', toShortcutString(cmd, 'Digit@'), '');
+            assertEq('Cmd+Digit', toShortcutString(cmd, 'Digit'), '');
+            assertEq('Cmd+Digit11', toShortcutString(cmd, 'Digit11'), '');
         },
         'test_utils_osTranslateModifiers',
         () => {
@@ -354,4 +353,3 @@ export class TestUI512CanvasWrapper extends UI512TestBase {
         }
     ];
 }
-

@@ -121,7 +121,7 @@ export class FormattedSubstringUtil {
         defaultFont: string,
         inStart: number,
         inLen: number,
-        fn: (s:string)=>string
+        fn: (s: string) => string
     ) {
         if (txt.len() === 0 || inStart >= txt.len()) {
             return fn(defaultFont);
@@ -149,7 +149,7 @@ export class FormattedSubstringUtil {
         defaultFont: string,
         inStart: number,
         inLen: number,
-        fn: (s:string)=>string
+        fn: (s: string) => string
     ) {
         if (txt.len() === 0 || inStart >= txt.len()) {
             return;

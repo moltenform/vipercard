@@ -1,18 +1,33 @@
 
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { assertTrue, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
-/* auto */ import { BuildFakeTokens, isTkType, tks, typeGreaterLessThanEqual } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { BuildFakeTokens, TypeGreaterLessThanEqual, isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { MapBuiltinCmds } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { ExpandCustomFunctions } from '../../vpc/codepreparse/vpcExpandFnCalls.js';
 
+/* see comment at the top of _vpcAllCode_.ts for an overview */
+
+/**
+ * SyntaxRewriter rewrites syntax for some lines:
+    1) To minimize number of tokens needed in the lexer (for faster lexing)
+        for example:
+        ask line 2 of x with "defaultText"
+        we could make 'with' a token so that it wouldn't get lumped into the expression line 2 of x.
+        but we want to minimze number of tokens.
+        so instead, during codepreparse, if the command is ask, replace any tokens that are exactly 'with'.
+        ask line 2 of x $syntaxmarker$ "defaultText"
+        a $syntaxmarker$ is never part of an expression, and so the parser has no difficulty.
+    2) To transform "repeat with x=1 to 5" into a "repeat while" loop with the same functionality
+    3) To simplify parsing for a few commands
+ */
 export class SyntaxRewriter {
     protected readonly buildFake = new BuildFakeTokens();
     protected readonly expandCustomFns: ExpandCustomFunctions;
     constructor(
-        protected idgen: CountNumericId,
+        protected idGen: CountNumericId,
         protected idgenThisScript: CountNumericId,
         protected mapBuiltinCmds: MapBuiltinCmds,
         protected check: CheckReservedWords
@@ -20,15 +35,19 @@ export class SyntaxRewriter {
         this.expandCustomFns = new ExpandCustomFunctions(idgenThisScript, mapBuiltinCmds, check);
     }
 
+    /**
+     * rewrite syntax for a line,
+     * return the resulting list of lines
+     */
     go(totalLine: ChvIToken[]): ChvIToken[][] {
         assertTrue(totalLine.length > 0, '5&|line is empty');
         let ret: ChvIToken[][] = [];
         let expanded = this.expandCustomFns.go(totalLine);
         for (let i = 0; i < expanded.length; i++) {
             let line = expanded[i];
-            let firsttoken = line[0].image;
-            let methodname = 'rewrite_' + firsttoken;
-            let rewritten = Util512.callAsMethodOnClass('SyntaxRewriter', this, methodname, [line], true);
+            let firstToken = line[0].image;
+            let methodName = 'rewrite_' + firstToken;
+            let rewritten = Util512.callAsMethodOnClass('SyntaxRewriter', this, methodName, [line], true);
             rewritten = !rewritten ? [line] : rewritten;
             ret = ret.concat(rewritten);
         }
@@ -36,90 +55,81 @@ export class SyntaxRewriter {
         return ret;
     }
 
-    protected replaceIdentifierWithSyntaxMarker(
-        line: ChvIToken[],
-        search: string,
-        maxTimes: number,
-        needed: '' | 'required' = '',
-        whichMarker = ''
-    ) {
-        let count = 0;
-        for (let i = 0; i < line.length; i++) {
-            if (isTkType(line[i], tks.TokenTkidentifier) && line[i].image === search) {
-                line[i] = this.buildFake.makeSyntaxMarker(line[i], whichMarker);
-                count += 1;
-                if (count >= maxTimes) {
-                    break;
-                }
-            }
-        }
-
-        if (needed === 'required' && count !== maxTimes) {
-            throw makeVpcScriptErr(`5%|syntax error, did not see the keyword "${search}"`);
-        }
-
-        return count;
-    }
-
+    /* input was: answer <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]] */
+    /* turn the 'with' into TkSyntaxMarker for easier parsing later */
+    /* safe because there won't ever be a real variable/function called "with". */
     rewrite_answer(line: ChvIToken[]) {
-        /* real syntax: answer <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]] */
-        /* turn the 'with' into TkSyntaxMarker for easier parsing later */
-        /* safe because there won't ever be a real variable/function called "with". */
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1);
     }
 
+    /* input was: ask [password] <Expr> [with <Expr>] */
+    /* turn the 'with' into TkSyntaxMarker for easier parsing later */
+    /* turn the 'password' into TkSyntaxComma for easier parsing later */
     rewrite_ask(line: ChvIToken[]) {
-        /* real syntax: ask [password] <Expr> [with <Expr>] */
-        /* turn the 'with' into TkSyntaxMarker for easier parsing later */
-        /* turn the 'password' into TkSyntaxComma for easier parsing later */
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1);
         if (line.length > 0 && isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'password') {
             line[1] = this.buildFake.makeSyntaxMarker(line[1], ',');
         }
     }
 
+    /* original syntax: choose browse tool, choose round rect tool, choose tool 3 */
+    /* my syntax (much simpler): choose "browse" tool, choose "round rect" tool */
     rewrite_choose(line: ChvIToken[]) {
-        /* original syntax: choose browse tool, choose round rect tool, choose tool 3 */
-        /* my syntax (much simpler): choose "browse" tool, choose "round rect" tool */
         checkThrow(
             line.length > 2,
             `8l|not enough args given for choose, expected 'choose tool 3' or 'choose line tool'`
         );
-        this.replaceIdentifierWithSyntaxMarker(line, 'tool', 1, 'required');
+
+        this.replaceIdentifierWithSyntaxMarker(line, 'tool', 1, IsNeeded.Required);
     }
 
+    /* input was: click at x,y with shiftkey */
+    /* turn the 'with' into TkSyntaxMarker for easier parsing later */
     rewrite_click(line: ChvIToken[]) {
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1);
     }
 
+    /* input was: click at x1,y1 to x2,y2 with shiftkey */
+    /* turn the 'with' into TkSyntaxMarker for easier parsing later */
     rewrite_drag(line: ChvIToken[]) {
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1);
     }
 
+    /* input was: wait for 2 seconds */
+    /* turn the 'for' into TkSyntaxMarker for easier parsing later */
     rewrite_wait(line: ChvIToken[]) {
         this.replaceIdentifierWithSyntaxMarker(line, 'for', 1);
     }
 
+    /* input was: divide x by 5 */
+    /* turn the 'by' into TkSyntaxMarker for easier parsing later */
     rewrite_divide(line: ChvIToken[]) {
-        this.replaceIdentifierWithSyntaxMarker(line, 'by', 1, 'required');
+        this.replaceIdentifierWithSyntaxMarker(line, 'by', 1, IsNeeded.Required);
     }
 
+    /* input was: multiply x by 5 */
+    /* turn the 'by' into TkSyntaxMarker for easier parsing later */
     rewrite_multiply(line: ChvIToken[]) {
-        this.replaceIdentifierWithSyntaxMarker(line, 'by', 1, 'required');
+        this.replaceIdentifierWithSyntaxMarker(line, 'by', 1, IsNeeded.Required);
     }
 
+    /* input was: subtract 5 from x */
+    /* turn the 'from' into TkSyntaxMarker for easier parsing later */
     rewrite_subtract(line: ChvIToken[]) {
-        this.replaceIdentifierWithSyntaxMarker(line, 'from', 1, 'required');
+        this.replaceIdentifierWithSyntaxMarker(line, 'from', 1, IsNeeded.Required);
     }
 
+    /* for a line like pass mouseUp, */
+    /* add a return statement afterwards, solely to make code exec simpler. */
     rewrite_pass(line: ChvIToken[]) {
-        /* add a return statement afterwards, solely to make code exec simpler. */
-        let newline: ChvIToken[] = [];
-        newline.push(this.buildFake.makeIdentifier(line[0], 'return'));
-        newline.push(this.buildFake.makeNumLiteral(line[0], 0));
-        return [line, newline];
+        let addedLine: ChvIToken[] = [];
+        addedLine.push(this.buildFake.makeIdentifier(line[0], 'return'));
+        addedLine.push(this.buildFake.makeNumLiteral(line[0], 0));
+        return [line, addedLine];
     }
 
+    /* for a line like go back, */
+    /* we don't support this construct */
     rewrite_go(line: ChvIToken[]) {
         /* we no longer support "go back" and "go forth". */
         /* they'd be wrongly parsed (eaten by NtDest / Position) anyways */
@@ -134,43 +144,49 @@ export class SyntaxRewriter {
         );
     }
 
+    /* input was: put "abc" into x */
+    /* transform to put "abc" (TkSyntaxMarker) into (TkSyntaxMarker) x */
     rewrite_put(line: ChvIToken[]) {
-        /* transform put "abc" into x */
-        /* into */
-        /* put "abc" (marker) into (marker) x */
-        let findwhere = (s: string) => line.findIndex(tk => isTkType(tk, tks.TokenTkidentifier) && tk.image === s);
-        let findInto = findwhere('into');
-        let findBefore = findwhere('before');
-        let findAfter = findwhere('after');
-        let sum = [findInto === -1, findBefore === -1, findAfter === -1].filter(x => !x).length;
-        if (sum === 0) {
-            throw makeVpcScriptErr(
-                "5$|missing into, before, or after. we don't support 'put \"abc\"' to use the message box."
-            );
-        } else if (sum > 1) {
-            throw makeVpcScriptErr('5#|expected to only see one of into, before, or after...');
-        } else {
-            let newmarker1 = this.buildFake.makeSyntaxMarker(line[0]);
-            let newmarker2 = this.buildFake.makeSyntaxMarker(line[0]);
-            let pos = [findInto, findBefore, findAfter].filter(x => x !== -1)[0];
-            checkThrow(line.length > 1 && pos && pos > 0, '8h|line should not start with into,before,or after');
-            line.splice(pos + 1, 0, newmarker1);
-            line.splice(pos, 0, newmarker2);
+        let foundPreposition = -1;
+        for (let i = 0; i < line.length; i++) {
+            let tk = line[i];
+            if (isTkType(tk, tks.TokenTkidentifier)) {
+                if (tk.image === 'into' || tk.image === 'before' || tk.image === 'after') {
+                    checkThrowEq(-1, foundPreposition, '5#|expected to only see one of into, before, or after...');
+                    foundPreposition = i;
+                }
+            }
         }
+
+        checkThrow(
+            foundPreposition !== -1,
+            "5$|missing into, before, or after. we don't support 'put \"abc\"' to use the message box."
+        );
+        let newMarker1 = this.buildFake.makeSyntaxMarker(line[0]);
+        let newMarker2 = this.buildFake.makeSyntaxMarker(line[0]);
+        checkThrow(
+            line.length > 1 && foundPreposition && foundPreposition > 0,
+            '8h|line should not start with into,before,or after'
+        );
+        line.splice(foundPreposition + 1, 0, newMarker1);
+        line.splice(foundPreposition, 0, newMarker2);
     }
 
+    /* input was: exit to %cProductName */
+    /* remove the 'to' for easier parsing later */
     rewrite_exit(line: ChvIToken[]) {
-        /* simplifies logic later. */
-        /* rewrite "exit to vpc" to "exit vpc" */
         if (line.length > 1 && line[1].image === 'to') {
             line.splice(1, 1);
         }
     }
 
+    /* input was: show cd btn "myBtn" at 3,4 */
+    /* turn the 'at' into TkSyntaxMarker for easier parsing later */
     rewrite_show(line: ChvIToken[]) {
         this.replaceIdentifierWithSyntaxMarker(line, 'at', 1);
     }
 
+    /* rewrite repeat */
     rewrite_repeat(line: ChvIToken[]) {
         if (line.length > 1 && isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'forever') {
             /* from 'repeat forever' to 'repeat' */
@@ -189,14 +205,19 @@ export class SyntaxRewriter {
         }
     }
 
+    /*
+    Transform:
+        repeat 5 times
+            answer x
+        end repeat
+    into
+        repeat with tmpvar = 1 to 5
+            answer x
+        end repeat
+
+    (and then we'll transform it again, by calling rewriteRepeatWith)
+    */
     rewriteRepeatFor(line: ChvIToken[]) {
-        /*
-        Transform:
-            repeat 5 times
-                print x
-            end repeat
-        into a 'repeat with' that will then be transformed by rewriteRepeatWith
-        */
         let ret: ChvIToken[][] = [];
         let msg = `bad repeat statement. needed 'repeat 5' or 'repeat for 5 times'`;
         checkThrow(line.length >= 2, msg + 'wrong length', '8a|');
@@ -211,11 +232,11 @@ export class SyntaxRewriter {
 
         /* use a number relative to this script -- otherwise it would change on */
         /* every re-compile, it'd be a bit slower because wouldn't be found in the cache */
-        let newvarname = `tmploopvar^^${this.idgenThisScript.next()}`;
+        let newVarName = `tmploopvar^^${this.idgenThisScript.next()}`;
         let repeatWith = [
             this.buildFake.makeIdentifier(line[0], 'repeat'),
             this.buildFake.makeIdentifier(line[0], 'with'),
-            this.buildFake.makeIdentifier(line[0], newvarname),
+            this.buildFake.makeIdentifier(line[0], newVarName),
             this.buildFake.makeGreaterLessThanEqual(line[0], '='),
             this.buildFake.makeNumLiteral(line[0], 1),
             this.buildFake.make(line[0], tks.TokenTo)
@@ -225,22 +246,21 @@ export class SyntaxRewriter {
         return this.rewriteRepeatWith(repeatWith);
     }
 
-    rewriteRepeatWith(line: ChvIToken[]) {
-        /*
-        Transform:
-                repeat with x = 3+got1() to 7+needthis()
-                    print x
-                end repeat
-        Into:
-                put (3+got1()) into tmpvar
+    /*
+    Transform:
+            repeat with x = 3+got1() to 7+getUpperBound()
+                answer x
+            end repeat
+    Into:
+            put (3+got1()) into tmpvar
+            put tmpvar into x
+            repeat while tmpvar <= (7+getUpperBound())
                 put tmpvar into x
-                repeat while tmpvar <= (7+needthis())
-                    put tmpvar into x
-                    put tmpvar+1 into tmpvar
-                    print x
-                end repeat
-        */
-
+                put tmpvar+1 into tmpvar
+                answer x
+            end repeat
+    */
+    rewriteRepeatWith(line: ChvIToken[]) {
         let ret: ChvIToken[][] = [];
         let msg = `bad repeat with statement. needed 'repeat with x = 1 to 3' : `;
         checkThrow(line.length >= 7, msg + 'wrong length', '8Y|');
@@ -250,6 +270,7 @@ export class SyntaxRewriter {
             isTkType(line[2], tks.TokenTkidentifier) && this.check.okLocalVar(line[2].image),
             `8V|missing "x" or "x" is a reserved word like "a" or "sin"`
         );
+
         checkThrow(isTkType(line[3], tks.TokenTkgreaterorlessequalorequal) && line[3].image === '=', `8U|missing "="`);
         let indexOfTo = -1;
         for (let i = 0; i < line.length; i++) {
@@ -261,7 +282,7 @@ export class SyntaxRewriter {
 
         checkThrow(indexOfTo !== -1, msg + 'missing "to"', '8T|');
         let isCountDown = isTkType(line[indexOfTo - 1], tks.TokenTkidentifier) && line[indexOfTo - 1].image === 'down';
-        let visiblecountvar = line[2].image;
+        let visibleCountVar = line[2].image;
         let initExprStart = 4;
         let initExprEnd = isCountDown ? indexOfTo - 1 : indexOfTo;
         let limitExprStart = indexOfTo + 1;
@@ -274,49 +295,88 @@ export class SyntaxRewriter {
         ];
 
         ret.push(this.buildPutIntoStatement(newvarname, line, initExprStart, initExprEnd));
-        ret.push(this.buildPutIntoStatement(visiblecountvar, [this.buildFake.makeIdentifier(line[0], newvarname)]));
+        ret.push(this.buildPutIntoStatement(visibleCountVar, [this.buildFake.makeIdentifier(line[0], newvarname)]));
         ret.push(this.buildRepeatWhile(newvarname, isCountDown ? '>=' : '<=', line, limitExprStart, limitExprEnd));
-        ret.push(this.buildPutIntoStatement(visiblecountvar, [this.buildFake.makeIdentifier(line[0], newvarname)]));
+        ret.push(this.buildPutIntoStatement(visibleCountVar, [this.buildFake.makeIdentifier(line[0], newvarname)]));
         ret.push(this.buildPutIntoStatement(newvarname, incOrDec));
         return ret;
     }
 
-    buildPutIntoStatement(
-        destination: string,
-        expr: ChvIToken[],
-        exprstart: O<number> = undefined,
-        exprend: O<number> = undefined
-    ) {
-        let newcode: ChvIToken[] = [];
-        newcode.push(this.buildFake.makeIdentifier(expr[0], 'put'));
-        newcode.push(this.buildFake.make(expr[0], tks.TokenTklparen));
-        let slice = expr.slice(exprstart, exprend);
+    /**
+     * build fake tokens to make "put (expr) into tmpvar"
+     */
+    buildPutIntoStatement(destination: string, expr: ChvIToken[], exprStart?: number, exprEnd?: number) {
+        let newCode: ChvIToken[] = [];
+        newCode.push(this.buildFake.makeIdentifier(expr[0], 'put'));
+        newCode.push(this.buildFake.make(expr[0], tks.TokenTklparen));
+        let slice = expr.slice(exprStart, exprEnd);
         checkThrow(slice.length > 0, '8S|wrong length, not enough tokens');
-        newcode = newcode.concat(slice);
-        newcode.push(this.buildFake.make(expr[0], tks.TokenTkrparen));
-        newcode.push(this.buildFake.makeIdentifier(expr[0], 'into'));
-        newcode.push(this.buildFake.makeIdentifier(expr[0], destination));
-        this.rewrite_put(newcode);
-        return newcode;
+        newCode = newCode.concat(slice);
+        newCode.push(this.buildFake.make(expr[0], tks.TokenTkrparen));
+        newCode.push(this.buildFake.makeIdentifier(expr[0], 'into'));
+        newCode.push(this.buildFake.makeIdentifier(expr[0], destination));
+        this.rewrite_put(newCode);
+        return newCode;
     }
 
+    /**
+     * build a construct "repeat while (expr)"
+     */
     buildRepeatWhile(
         counter: string,
-        direction: typeGreaterLessThanEqual,
+        direction: TypeGreaterLessThanEqual,
         expr: ChvIToken[],
-        exprstart: number,
-        exprend: number
+        exprStart: number,
+        exprEnd: number
     ) {
-        let newcode: ChvIToken[] = [];
-        newcode.push(this.buildFake.makeIdentifier(expr[0], 'repeat'));
-        newcode.push(this.buildFake.makeIdentifier(expr[0], 'while'));
-        newcode.push(this.buildFake.makeIdentifier(expr[0], counter));
-        newcode.push(this.buildFake.makeGreaterLessThanEqual(expr[0], direction));
-        newcode.push(this.buildFake.make(expr[0], tks.TokenTklparen));
-        let slice = expr.slice(exprstart, exprend);
+        let newCode: ChvIToken[] = [];
+        newCode.push(this.buildFake.makeIdentifier(expr[0], 'repeat'));
+        newCode.push(this.buildFake.makeIdentifier(expr[0], 'while'));
+        newCode.push(this.buildFake.makeIdentifier(expr[0], counter));
+        newCode.push(this.buildFake.makeGreaterLessThanEqual(expr[0], direction));
+        newCode.push(this.buildFake.make(expr[0], tks.TokenTklparen));
+        let slice = expr.slice(exprStart, exprEnd);
         checkThrow(slice.length > 0, '8R|wrong length, not enough tokens');
-        newcode = newcode.concat(slice);
-        newcode.push(this.buildFake.make(expr[0], tks.TokenTkrparen));
-        return newcode;
+        newCode = newCode.concat(slice);
+        newCode.push(this.buildFake.make(expr[0], tks.TokenTkrparen));
+        return newCode;
     }
+
+    /**
+     * replace an identifier with a 'syntax marker'
+     * a $syntaxmarker$ is never part of an expression, and so the parser
+     * has no difficulty knowing where the expression stops.
+     */
+    protected replaceIdentifierWithSyntaxMarker(
+        line: ChvIToken[],
+        search: string,
+        maxTimes: number,
+        needed: IsNeeded = IsNeeded.Optional,
+        whichMarker = ''
+    ) {
+        let count = 0;
+        for (let i = 0; i < line.length; i++) {
+            if (isTkType(line[i], tks.TokenTkidentifier) && line[i].image === search) {
+                line[i] = this.buildFake.makeSyntaxMarker(line[i], whichMarker);
+                count += 1;
+                if (count >= maxTimes) {
+                    break;
+                }
+            }
+        }
+
+        if (needed === IsNeeded.Required && count !== maxTimes) {
+            throw makeVpcScriptErr(`5%|syntax error, did not see the keyword "${search}"`);
+        }
+
+        return count;
+    }
+}
+
+/**
+ * indicate if the term should always be present
+ */
+const enum IsNeeded {
+    Optional = 1,
+    Required
 }

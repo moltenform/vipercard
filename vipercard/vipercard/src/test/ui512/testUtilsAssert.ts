@@ -18,53 +18,53 @@ export class TestUtilsAssert extends UI512TestBase {
         'testCheckThrow',
         () => {
             /* these should not throw */
-            checkThrowUI512(1, 'should not throw')
-            checkThrowUI512(true, 'should not throw')
+            checkThrowUI512(1, 'should not throw');
+            checkThrowUI512(true, 'should not throw');
 
             /* false should throw */
             this.assertThrows('', 'mymessage s1 s2', () => {
-                checkThrowUI512(false, 'mymessage', 's1', 's2')
+                checkThrowUI512(false, 'mymessage', 's1', 's2');
             });
 
             /* null should throw */
             this.assertThrows('', 'mymessage s1 s2', () => {
-                checkThrowUI512(null, 'mymessage', 's1', 's2')
+                checkThrowUI512(null, 'mymessage', 's1', 's2');
             });
 
             /* undefined should throw */
             this.assertThrows('', 'mymessage s1 s2', () => {
-                checkThrowUI512(undefined, 'mymessage', 's1', 's2')
+                checkThrowUI512(undefined, 'mymessage', 's1', 's2');
             });
         },
         'testThrowIfUndefined',
         () => {
             /* these should not throw */
             let n = throwIfUndefined(1, 'should not throw');
-            assertEq(1, n, "")
+            assertEq(1, n, '');
 
             let n0 = throwIfUndefined(0, 'should not throw');
-            assertEq(0, n0, "")
+            assertEq(0, n0, '');
 
-            let s = throwIfUndefined("abc", 'should not throw');
-            assertEq("abc", s, "")
+            let s = throwIfUndefined('abc', 'should not throw');
+            assertEq('abc', s, '');
 
-            let s0 = throwIfUndefined("", 'should not throw');
-            assertEq("", s0, "")
+            let s0 = throwIfUndefined('', 'should not throw');
+            assertEq('', s0, '');
 
             let b = throwIfUndefined(true, 'should not throw');
-            assertEq(b, true, "")
+            assertEq(b, true, '');
 
             let b0 = throwIfUndefined(false, 'should not throw');
-            assertEq(b0, false, "")
+            assertEq(b0, false, '');
 
             /* null should throw */
             this.assertThrows('', 'mymessage, s1, s2', () => {
-                throwIfUndefined(null, 'mymessage', 's1', 's2')
+                throwIfUndefined(null, 'mymessage', 's1', 's2');
             });
 
             /* undefined should throw */
             this.assertThrows('', 'mymessage, s1, s2', () => {
-                throwIfUndefined(undefined, 'mymessage', 's1', 's2')
+                throwIfUndefined(undefined, 'mymessage', 's1', 's2');
             });
         },
         'testJoinIntoMessage',
@@ -113,9 +113,8 @@ export class TestUtilsAssert extends UI512TestBase {
             assertEq(['f', 'e'], buf.retrieve(2), '');
             buf.append('g');
             assertEq(['g', 'f'], buf.retrieve(2), '');
-        },
-
-    ]
+        }
+    ];
 }
 
 /**

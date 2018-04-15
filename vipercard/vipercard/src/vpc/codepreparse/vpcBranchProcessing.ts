@@ -5,80 +5,89 @@
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
 
-// remember the entrance/exit points of a block.
-// we'll use this to set the blockInformation for these lines,
-// so that e.g. a loop knows which offset to go back up to.
-class BranchTrackingBlock {
-    constructor(public readonly cat: VpcLineCategory, firstline?: VpcCodeLine) {
-        if (firstline) {
-            this.add(firstline);
-        }
-    }
+/* see comment at the top of _vpcAllCode_.ts for an overview */
 
-    add(line: VpcCodeLine) {
-        this.relevantLines.push(line);
-    }
+/**
+ * in BranchProcessing we collect and validate the hierarchical structure of code,
+ * e.g. collecting all of the if/else lines so that goto points can be set,
+ * and making sure that every opening 'if' has a matching 'end if' at the same hierarchical level.
+ *
+ * we'll create a BranchBlockInfo for each block to track related lines in the block
+ * and we'll fill out a handlers object marking where all the handlers are
+ */
+export class BranchProcessing {
+    constructor(protected idGen: CountNumericId) {}
 
-    relevantLines: VpcCodeLine[] = [];
-}
-
-// create a BranchTrackingBlock for each block,
-// also makes sure the opening/closing of a block is correct.
-export class BranchTracking {
+    /* marking where all the handlers are */
     handlers = new MapKeyToObject<VpcCodeLineReference>();
-    stackBlocks: BranchTrackingBlock[] = [];
 
-    constructor(protected idgen: CountNumericId) {}
+    /* current hierarchical level stored in a stack; push onto and pop off from */
+    stack: BranchBlockInfo[] = [];
 
-    findCurrentLoop() {
-        for (let i = this.stackBlocks.length - 1; i >= 0; i--) {
-            if (this.stackBlocks[i].cat === VpcLineCategory.RepeatForever) {
-                return this.stackBlocks[i];
+    /**
+     * you typed 'exit repeat', walk up the stack to find which loop this is exiting from
+     */
+    protected findCurrentLoop() {
+        for (let i = this.stack.length - 1; i >= 0; i--) {
+            if (this.stack[i].cat === VpcLineCategory.RepeatForever) {
+                return this.stack[i];
             }
         }
 
         throw makeVpcScriptErr(`5r|cannot call 'exit repeat' or 'next repeat' outside of a loop`);
     }
 
-    findCurrentHandler(): BranchTrackingBlock {
-        checkThrowEq(VpcLineCategory.HandlerStart, this.stackBlocks[0].cat, `7>|could not find current handler`);
-        return this.stackBlocks[0];
+    /**
+     * you typed 'exit mouseUp', the handler must always be at the bottom of the stack
+     */
+    protected findCurrentHandler(): BranchBlockInfo {
+        checkThrowEq(VpcLineCategory.HandlerStart, this.stack[0].cat, `7>|could not find current handler`);
+        return this.stack[0];
     }
 
-    finalizeBlock() {
-        let topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
+    /**
+     * call this when finished with a block, like after an 'end if'
+     */
+    protected finalizeBlock() {
+        let topOfStack = this.stack[this.stack.length - 1];
         let references = topOfStack.relevantLines.map(ln => new VpcCodeLineReference(ln));
         for (let line of topOfStack.relevantLines) {
             line.blockInfo = references;
         }
 
-        this.stackBlocks.pop();
+        this.stack.pop();
     }
 
+    /**
+     * hierarchical level should be down to 0 at the end.
+     */
     ensureComplete() {
-        checkThrowEq(0, this.stackBlocks.length, `7=|missing 'end myHandler' at end of script.`);
+        checkThrowEq(0, this.stack.length, `7=|missing 'end myHandler' at end of script.`);
     }
 
+    /**
+     * process one line.
+     */
     go(line: VpcCodeLine) {
-        if (this.stackBlocks.length === 0 && line.ctg !== VpcLineCategory.HandlerStart) {
+        if (this.stack.length === 0 && line.ctg !== VpcLineCategory.HandlerStart) {
             throw makeVpcScriptErr(`5q|only 'on mouseup' and 'function myfunction' can exist at this scope`);
-        } else if (this.stackBlocks.length > 0 && line.ctg === VpcLineCategory.HandlerStart) {
+        } else if (this.stack.length > 0 && line.ctg === VpcLineCategory.HandlerStart) {
             throw makeVpcScriptErr(`5p|cannot begin a handler inside an existing handler`);
         }
 
         switch (line.ctg) {
-            case VpcLineCategory.RepeatForever: // fall-through
-            case VpcLineCategory.RepeatWhile: // fall-through
+            case VpcLineCategory.RepeatForever: /* fall-through */
+            case VpcLineCategory.RepeatWhile: /* fall-through */
             case VpcLineCategory.RepeatUntil:
-                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.RepeatForever, line));
+                this.stack.push(new BranchBlockInfo(VpcLineCategory.RepeatForever, line));
                 break;
-            case VpcLineCategory.RepeatNext: // fall-through
+            case VpcLineCategory.RepeatNext: /* fall-through */
             case VpcLineCategory.RepeatExit:
                 let tracking = this.findCurrentLoop();
                 tracking.add(line);
                 break;
             case VpcLineCategory.RepeatEnd:
-                let topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
+                let topOfStack = this.stack[this.stack.length - 1];
                 checkThrowEq(
                     VpcLineCategory.RepeatForever,
                     topOfStack.cat,
@@ -88,11 +97,11 @@ export class BranchTracking {
                 this.finalizeBlock();
                 break;
             case VpcLineCategory.IfStart:
-                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.IfStart, line));
+                this.stack.push(new BranchBlockInfo(VpcLineCategory.IfStart, line));
                 break;
-            case VpcLineCategory.IfElse: // fall-through
+            case VpcLineCategory.IfElse: /* fall-through */
             case VpcLineCategory.IfElsePlain:
-                topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
+                topOfStack = this.stack[this.stack.length - 1];
                 checkThrowEq(
                     VpcLineCategory.IfStart,
                     topOfStack.cat,
@@ -101,7 +110,7 @@ export class BranchTracking {
                 topOfStack.add(line);
                 break;
             case VpcLineCategory.IfEnd:
-                topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
+                topOfStack = this.stack[this.stack.length - 1];
                 checkThrowEq(
                     VpcLineCategory.IfStart,
                     topOfStack.cat,
@@ -111,10 +120,10 @@ export class BranchTracking {
                 this.finalizeBlock();
                 break;
             case VpcLineCategory.HandlerStart:
-                this.stackBlocks.push(new BranchTrackingBlock(VpcLineCategory.HandlerStart, line));
+                this.stack.push(new BranchBlockInfo(VpcLineCategory.HandlerStart, line));
                 break;
             case VpcLineCategory.HandlerEnd:
-                topOfStack = this.stackBlocks[this.stackBlocks.length - 1];
+                topOfStack = this.stack[this.stack.length - 1];
                 checkThrowEq(
                     VpcLineCategory.HandlerStart,
                     topOfStack.cat,
@@ -122,15 +131,15 @@ export class BranchTracking {
                 );
                 topOfStack.add(line);
                 this.checkStartAndEndMatch(topOfStack.relevantLines);
-                let firstname = topOfStack.relevantLines[0].excerptToParse[1].image;
+                let firstName = topOfStack.relevantLines[0].excerptToParse[1].image;
 
-                // call add() so that we'll throw if there is a duplicate
-                this.handlers.add(firstname, new VpcCodeLineReference(topOfStack.relevantLines[0]));
+                /* call add() so that we'll throw if there is a duplicate */
+                this.handlers.add(firstName, new VpcCodeLineReference(topOfStack.relevantLines[0]));
                 this.finalizeBlock();
                 break;
-            case VpcLineCategory.HandlerExit: // fall-through
+            case VpcLineCategory.HandlerExit: /* fall-through */
             case VpcLineCategory.HandlerPass:
-                // if we're in "on mouseup", it's illegal to say "exit otherHandler"
+                /* if we're in "on mouseup", it's illegal to say "exit otherHandler" */
                 let currentHandlerStart = this.findCurrentHandler().relevantLines[0];
                 checkThrow(currentHandlerStart.excerptToParse.length > 1, '7.|expected on myHandler, not found');
                 let currentHandlerName = currentHandlerStart.excerptToParse[1].image;
@@ -150,6 +159,9 @@ export class BranchTracking {
         }
     }
 
+    /**
+     * on mouseUp must end with end mouseUp, and so on.
+     */
     checkStartAndEndMatch(lines: VpcCodeLine[]) {
         checkThrow(lines[0].excerptToParse.length > 1, '7,|on myHandler, missing name of handler');
         let firstname = lines[0].excerptToParse[1].image;
@@ -162,4 +174,23 @@ export class BranchTracking {
             `7*|handler names mismatch. start with with "on ${firstname}" ended with "end ${lastname}"`
         );
     }
+}
+
+/**
+ * remember the entrance/exit points of a block
+ * we'll use this to set the blockInformation for these lines,
+ * so that e.g. a loop knows which offset to go back up to.
+ */
+class BranchBlockInfo {
+    constructor(public readonly cat: VpcLineCategory, firstline?: VpcCodeLine) {
+        if (firstline) {
+            this.add(firstline);
+        }
+    }
+
+    add(line: VpcCodeLine) {
+        this.relevantLines.push(line);
+    }
+
+    relevantLines: VpcCodeLine[] = [];
 }

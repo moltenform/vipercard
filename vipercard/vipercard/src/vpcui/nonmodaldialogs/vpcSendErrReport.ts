@@ -95,8 +95,8 @@ export class VpcAppNonModalDialogSendReport extends VpcFormNonModalDialogFormBas
         // get the last 30 logged errors, which might be useful.
         let lastClientLogs = vpcversion;
         lastClientLogs += '\n' + UI512ErrorHandling.getLatestErrLogs(30).join('\n\n\n\n');
-        let [stackowner, stackid, stackname] = this.appli.getModel().stack.getLatestStackLineage();
-        let fullstackid = VpcSession.getFullStackId(stackowner, stackid);
+        let lin = this.appli.getModel().stack.getLatestStackLineage();
+        let fullstackid = VpcSession.getFullStackId(lin.stackOwner, lin.stackGuid);
 
         // ok to set props on lblStatus, since we have a firm reference, if form has been closed is a no-op
         this.setStatus('lngSending report...');

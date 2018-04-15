@@ -40,7 +40,7 @@ export class VpcParsingCache {
     protected callParser(ln: VpcCodeLine, firstRule: Function) {
         let parsed: any;
         try {
-            // setting input safely resets the parser state
+            /* setting input safely resets the parser state */
             this.parser.input = ln.excerptToParse;
             this.parser.errors.length = 0;
             parsed = firstRule.apply(this.parser, []);

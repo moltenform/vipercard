@@ -3,6 +3,7 @@
 /* auto */ import { BrowserOSInfo, Util512, getRoot } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
+/* auto */ import { VpcElStackLineageEntry } from '../../vpc/vel/velStack.js';
 /* auto */ import { VpcSession, vpcStacksFlagContent } from '../../vpc/request/vpcRequest.js';
 /* auto */ import { VpcSaveUtilsInterface } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
 /* auto */ import { VpcAppNonModalDialogSendReport } from '../../vpcui/nonmodaldialogs/vpcSendErrReport.js';
@@ -66,8 +67,8 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
         let didsave = false;
         try {
             let newstackdata = this.pr.getSerializedStack();
-            let [stackowner, stackid, stackname] = this.pr.appli.getModel().stack.getLatestStackLineage();
-            didsave = !!await this.goSaveAsWithNewName(ses, stackname, newstackdata);
+            let lin = this.pr.appli.getModel().stack.getLatestStackLineage();
+            didsave = !!await this.goSaveAsWithNewName(ses, lin.stackName, newstackdata);
         } catch (e) {
             caught = true;
             this.busy = false;
@@ -94,11 +95,11 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
         let didsave = false;
         try {
             let newstackdata = this.pr.getSerializedStack();
-            let [stackowner, stackid, stackname] = this.pr.appli.getModel().stack.getLatestStackLineage();
-            if (stackowner === ses.username) {
-                didsave = !!await this.goSaveAlreadyExists(ses, stackid, stackname, newstackdata);
+            let lin = this.pr.appli.getModel().stack.getLatestStackLineage();
+            if (lin.stackOwner === ses.username) {
+                didsave = !!await this.goSaveAlreadyExists(ses, lin.stackGuid, lin.stackName, newstackdata);
             } else {
-                didsave = !!await this.goSaveAsWithNewName(ses, stackname, newstackdata);
+                didsave = !!await this.goSaveAsWithNewName(ses, lin.stackName, newstackdata);
             }
         } catch (e) {
             caught = true;
@@ -120,8 +121,8 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
         this.busy = false;
     }
 
-    protected async goSaveAlreadyExists(ses: VpcSession, stackid: string, stackname: string, newstackdata: string) {
-        await ses.vpcStacksSave(stackid, newstackdata);
+    protected async goSaveAlreadyExists(ses: VpcSession, stackId: string, stackName: string, newstackdata: string) {
+        await ses.vpcStacksSave(stackId, newstackdata);
         this.pr.appli.setOption('lastSavedStateId', this.pr.appli.getCurrentStateId());
         return true;
     }
@@ -135,12 +136,13 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
         let [newname, n] = await this.pr.askMsgAsync('Save as:', prevstacknameToShow);
         if (newname && newname.trim().length) {
             newname = newname.trim();
-            let lineageBeforeChanges = this.pr.appli.getModel().stack.get_s('stacklineage');
+            let lineageBeforeChanges = this.pr.appli.getModel().stack.getS('stacklineage');
             try {
                 // add new part to stack lineage!
                 let stack = this.pr.appli.getModel().stack;
                 let newpartialid = VpcSession.generateStackPartialId();
-                stack.appendToStackLineage([ses.username, newpartialid, newname]);
+                let en = new VpcElStackLineageEntry(ses.username, newpartialid, newname);
+                stack.appendToStackLineage(en);
                 newstackdata = this.pr.getSerializedStack(); // serialize it with the new lineage
                 await ses.vpcStacksSaveAs(newpartialid, newname, newstackdata);
                 this.pr.appli.setOption('lastSavedStateId', this.pr.appli.getCurrentStateId());
@@ -176,19 +178,19 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
         this.pr.appli.setOption('lastSavedStateId', this.pr.appli.getCurrentStateId());
 
         // count json saves
-        let [stackowner, stackid, stackname] = this.pr.appli.getModel().stack.getLatestStackLineage();
+        let lin = this.pr.appli.getModel().stack.getLatestStackLineage();
         let ses = VpcSession.fromRoot();
         let currentusername = ses ? ses.username : '';
-        UI512BeginAsync(() => this.goCountJsonSaves(currentusername, stackowner, stackid), undefined, false);
+        UI512BeginAsync(() => this.goCountJsonSaves(currentusername, lin.stackOwner, lin.stackGuid), undefined, false);
         // no need to synchronously block on it
         if (eThrown) {
             throw eThrown;
         }
     }
 
-    async goCountJsonSaves(currentusername: string, stackowner: string, stackid: string) {
+    async goCountJsonSaves(currentusername: string, stackOwner: string, stackId: string) {
         try {
-            await VpcSession.vpcStacksCountJsonSaves(stackowner, stackid, currentusername);
+            await VpcSession.vpcStacksCountJsonSaves(stackOwner, stackId, currentusername);
         } catch (e) {
             console.error('could not count json saves ' + e.toString());
         }
@@ -217,14 +219,14 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
             try {
                 let ses = VpcSession.fromRoot();
                 let currentusername = ses ? ses.username : '';
-                let [stackowner, stackid, stackname] = this.pr.appli.getModel().stack.getLatestStackLineage();
+                let lin = this.pr.appli.getModel().stack.getLatestStackLineage();
                 if (
-                    stackowner &&
-                    stackowner.length &&
-                    stackowner !== this.pr.appli.getModel().stack.lineageUsernameNull() &&
-                    stackowner !== currentusername
+                    lin.stackOwner &&
+                    lin.stackOwner.length &&
+                    lin.stackOwner !== this.pr.appli.getModel().stack.lineageUsernameNull() &&
+                    lin.stackOwner !== currentusername
                 ) {
-                    await vpcStacksFlagContent(stackowner, stackid, currentusername);
+                    await vpcStacksFlagContent(lin.stackOwner, lin.stackGuid, currentusername);
                 } else {
                     let e = new Error('');
                     e.toString = () => '';
@@ -252,12 +254,12 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
             let url = loc + '?s=' + Util512.toBase64UrlSafe(this.pr.cameFromDemoSoNeverPromptSave);
             return url;
         } else {
-            let [stackowner, stackid, stackname] = this.pr.appli.getModel().stack.getLatestStackLineage();
+            let lin = this.pr.appli.getModel().stack.getLatestStackLineage();
             // case 2) from a stack not saved online
             if (
-                !stackowner ||
-                !stackowner.length ||
-                stackowner === this.pr.appli.getModel().stack.lineageUsernameNull()
+                !lin.stackOwner ||
+                !lin.stackOwner.length ||
+                lin.stackOwner === this.pr.appli.getModel().stack.lineageUsernameNull()
             ) {
                 throw makeVpcInternalErr(msgNotification + lng('lngFirst, go to File->Save to upload the stack.'));
             }
@@ -265,9 +267,9 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
             let ses = VpcSession.fromRoot();
             let currentusername = ses ? ses.username : '';
 
-            if (stackowner !== currentusername) {
+            if (lin.stackOwner !== currentusername) {
                 // case 3) from a stack we don't own -- don't check if changes need to be saved
-                return VpcSession.getUrlForOpeningStack(loc, stackowner, stackid, stackname);
+                return VpcSession.getUrlForOpeningStack(loc, lin.stackOwner, lin.stackGuid, lin.stackName);
             } else {
                 // case 4) from a stack we do own
                 if (this.pr.isDocDirty()) {
@@ -276,7 +278,7 @@ export class VpcSaveUtils implements VpcSaveUtilsInterface {
                             lng("lngIt looks like you have unsaved changes, we're reminding you to hit Save first.")
                     );
                 }
-                return VpcSession.getUrlForOpeningStack(loc, stackowner, stackid, stackname);
+                return VpcSession.getUrlForOpeningStack(loc, lin.stackOwner, lin.stackGuid, lin.stackName);
             }
         }
     }

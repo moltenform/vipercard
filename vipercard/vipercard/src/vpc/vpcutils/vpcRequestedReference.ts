@@ -1,14 +1,15 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { UI512Gettable, UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcIntermedValBase } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
 
 /**
  * a script is requesting a reference to a vel element.
- * e.g. cd fld id 1234, or 
+ * e.g. cd fld id 1234, or
  * cd btn "c" of second cd of bg "myBg"
- * 
+ *
  * the vel might or might not exist, it hasn't been
  * "resolved", by _velResolveReference_.
  */
@@ -56,3 +57,30 @@ export class RequestedContainerRef extends VpcIntermedValBase {
     variable: O<string>;
     chunk: O<RequestedChunk>;
 }
+
+/**
+ * type of property.
+ * string, numeric (integer), or boolean
+ */
+export enum PrpTyp {
+    __isUI512Enum = 1,
+    Str,
+    Num,
+    Bool
+}
+
+/**
+ * a vel prop-getter can be either a
+ * string (1-1 map from vel property to ui512el property)
+ * or a
+ * function (dynamic code to retrieve the property)
+ */
+export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T) => string | number | boolean)];
+
+/**
+ * a vel prop-setter can be either a
+ * string (1-1 map from vel property to ui512el property)
+ * or a
+ * function (dynamic code to set the property)
+ */
+export type PropSetter<T extends UI512Settable> = [PrpTyp, string | ((me: T, v: string | number | boolean) => void)];

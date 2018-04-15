@@ -7,7 +7,7 @@
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcModel } from '../../vpc/vel/velModel.js';
+/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
 /* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from '../../vpcui/state/vpcUndo.js';
@@ -60,7 +60,7 @@ export class VpcApplication {
     runtime = new VpcRuntime();
     // put any undoable state here. you can use model.productOpts if not persisted
     // (started by _VpcDocLoader_)
-    model: VpcModel;
+    model: VpcModelTop;
     // (started by _VpcDocLoader_)
     undoManager: UndoManager;
     // (started in _VpcPresenter_ constructor)
@@ -68,7 +68,7 @@ export class VpcApplication {
 
     createElem(parent_id: string, type: VpcElType, insertIndex = -1, newid?: string) {
         if (!newid) {
-            let nextid = this.model.stack.get_n('increasingnumberforid');
+            let nextid = this.model.stack.getN('increasingnumberforid');
             this.model.stack.set('increasingnumberforid', nextid + 1);
             newid = nextid.toString();
         }

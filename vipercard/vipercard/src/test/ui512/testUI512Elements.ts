@@ -15,19 +15,19 @@ export class TestUI512Elements extends UI512TestBase {
             let [app, grp] = this.makeFakeGroup();
 
             /* find existing */
-            let el = grp.findEl('btn1')
-            assertEq('btn1', el!.id, '')
+            let el = grp.findEl('btn1');
+            assertEq('btn1', el!.id, '');
 
             /* find not existing */
-            el = grp.findEl('btn9')
-            assertEq(undefined, el, '')
+            el = grp.findEl('btn9');
+            assertEq(undefined, el, '');
 
             /* get existing */
-            el = grp.getEl('btn1')
-            assertEq('btn1', el!.id, '')
+            el = grp.getEl('btn1');
+            assertEq('btn1', el.id, '');
 
             /* get not existing */
-            this.assertThrows('', 'not find', ()=>grp.getEl('btn9'))
+            this.assertThrows('', 'not find', () => grp.getEl('btn9'));
         },
         'testAppFindById',
         () => {
@@ -38,56 +38,56 @@ export class TestUI512Elements extends UI512TestBase {
             fakeGrp2.addElement(app, btn4);
             let btn5 = new UI512ElButton('btn5');
             fakeGrp2.addElement(app, btn5);
-            btn4.set('labeltext', 'fromnewgroup')
-            btn5.set('labeltext', 'fromnewgroup')
+            btn4.set('labeltext', 'fromnewgroup');
+            btn5.set('labeltext', 'fromnewgroup');
 
             /* find existing */
-            let el = app.findEl('btn1')
-            assertEq('btn1', el!.id, '')
-            assertEq('', el!.get_s('labeltext'), '')
+            let el = app.findEl('btn1');
+            assertEq('btn1', el!.id, '');
+            assertEq('', el!.getS('labeltext'), '');
 
             /* find not existing */
-            el = app.findEl('btn9')
-            assertEq(undefined, el, '')
+            el = app.findEl('btn9');
+            assertEq(undefined, el, '');
 
             /* get existing */
-            el = app.getEl('btn1')
-            assertEq('btn1', el!.id, '')
-            assertEq('', el!.get_s('labeltext'), '')
+            el = app.getEl('btn1');
+            assertEq('btn1', el.id, '');
+            assertEq('', el.getS('labeltext'), '');
 
             /* get not existing */
-            this.assertThrows('', 'not found', ()=>app.getEl('btn9'))
+            this.assertThrows('', 'not found', () => app.getEl('btn9'));
 
             /* from other group */
-            el = app.getEl('btn4')
-            assertEq('btn4', el!.id, '')
-            assertEq('fromnewgroup', el!.get_s('labeltext'), '')
+            el = app.getEl('btn4');
+            assertEq('btn4', el.id, '');
+            assertEq('fromnewgroup', el.getS('labeltext'), '');
         },
         'testCoordsToElement',
         () => {
             let [app, grp] = this.makeFakeGroup();
-            grp.getEl('btn1').setDimensionsX1Y1(10, 20, 100, 200)
-            grp.getEl('btn2').setDimensionsX1Y1(20, 30, 110, 210)
+            grp.getEl('btn1').setDimensionsX1Y1(10, 20, 100, 200);
+            grp.getEl('btn2').setDimensionsX1Y1(20, 30, 110, 210);
 
             /* where no element is */
-            let el = app.coordsToElement(5, 15)
-            assertEq(undefined, el, '')
+            let el = app.coordsToElement(5, 15);
+            assertEq(undefined, el, '');
 
             /* where only first element is */
-            el = app.coordsToElement(15, 25)
-            assertEq('btn1', el!.id, '')
+            el = app.coordsToElement(15, 25);
+            assertEq('btn1', el!.id, '');
 
             /* where both elements are (highest gets priority) */
-            el = app.coordsToElement(70, 80)
-            assertEq('btn2', el!.id, '')
+            el = app.coordsToElement(70, 80);
+            assertEq('btn2', el!.id, '');
 
             /* where only second element is */
-            el = app.coordsToElement(105, 205)
-            assertEq('btn2', el!.id, '')
+            el = app.coordsToElement(105, 205);
+            assertEq('btn2', el!.id, '');
 
             /* where no element is */
-            el = app.coordsToElement(115, 215)
-            assertEq(undefined, el, '')
+            el = app.coordsToElement(115, 215);
+            assertEq(undefined, el, '');
         },
         'test_updateBoundsBasedOnChildren',
         () => {
@@ -159,7 +159,7 @@ export class TestUI512Elements extends UI512TestBase {
                 results,
                 ''
             );
-        },
+        }
     ];
 
     protected makeFakeGroup(): [UI512Application, UI512ElGroup] {
@@ -185,4 +185,3 @@ export class TestUI512Elements extends UI512TestBase {
         return s;
     }
 }
-

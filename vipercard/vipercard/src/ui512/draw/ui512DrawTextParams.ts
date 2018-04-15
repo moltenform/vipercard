@@ -18,26 +18,26 @@ export function renderTextArgsFromEl(
         subRect[1],
         subRect[2],
         subRect[3],
-        el.get_b('labelhalign'),
-        el.get_b('labelvalign'),
-        el.get_b('labelwrap')
+        el.getB('labelhalign'),
+        el.getB('labelvalign'),
+        el.getB('labelwrap')
     );
 
     /* adjust positions */
-    args.boxX += el.get_n('nudgex');
-    args.boxY += el.get_n('nudgey');
-    args.boxW -= el.get_n('nudgex');
-    args.boxH -= el.get_n('nudgey');
+    args.boxX += el.getN('nudgex');
+    args.boxY += el.getN('nudgey');
+    args.boxW -= el.getN('nudgex');
+    args.boxH -= el.getN('nudgey');
 
     /* we currently don't support v-aligned text fields. can be used in a label. */
     args.vAlign = false;
-    args.addVSpacing = el.get_n('addvspacing');
+    args.addVSpacing = el.getN('addvspacing');
     args.hScrollAmt = 0;
-    args.vScrollAmt = el.get_n('scrollamt');
-    args.defaultFont = el.get_s('defaultFont');
-    args.asteriskOnly = el.get_b('asteriskonly');
+    args.vScrollAmt = el.getN('scrollamt');
+    args.defaultFont = el.getS('defaultFont');
+    args.asteriskOnly = el.getB('asteriskonly');
 
-    if (el.get_b('selectbylines')) {
+    if (el.getB('selectbylines')) {
         /* always show the highlight, even when text in another field is being edited. */
         hasFocus = true;
 
@@ -46,13 +46,13 @@ export function renderTextArgsFromEl(
         args.boxW += 4;
     }
 
-    if (hasFocus && el.get_b('canselecttext')) {
-        args.selCaret = el.get_n('selcaret');
-        args.selEnd = el.get_n('selend');
-        args.showCaret = el.get_b('showcaret');
+    if (hasFocus && el.getB('canselecttext')) {
+        args.selCaret = el.getN('selcaret');
+        args.selEnd = el.getN('selend');
+        args.showCaret = el.getB('showcaret');
     }
 
-    if (el.get_b('selectbylines') && args.selCaret === args.selEnd) {
+    if (el.getB('selectbylines') && args.selCaret === args.selEnd) {
         /* when selecting by lines, don't show the normal blinking caret */
         args.showCaret = false;
     }
@@ -91,8 +91,8 @@ export class RenderTextArgs {
  * rough structure of a _UI512Gettable_
  */
 interface CanGetValue {
-    get_b(s: string): boolean;
-    get_n(s: string): number;
-    get_s(s: string): string;
+    getB(s: string): boolean;
+    getN(s: string): number;
+    getS(s: string): string;
     get_ftxt(): FormattedText;
 }

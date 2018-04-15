@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, scontains, throwIfUndefined, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq } from '../../ui512/utils/utilsUI512.js';
 /* auto */ import { ExpTextEncoder } from '../../vpc/request/bridgeTextEncoding.js';
 
@@ -46,7 +46,9 @@ export async function pbkdf2(
             saltUint8[i] = decoded.charCodeAt(i);
         }
     } else {
-        saltUint8 = crypto.getRandomValues(new Uint8Array(16)); // get random salt
+        let saltOrNull = crypto.getRandomValues(new Uint8Array(16)); // get random salt
+        checkThrow(saltOrNull, "getRandomValues returned null");
+        saltUint8 = saltOrNull as Uint8Array;
     }
 
     const pwUtf8 = new ExpTextEncoder('utf-8').encode(password); // encode pw as UTF-8

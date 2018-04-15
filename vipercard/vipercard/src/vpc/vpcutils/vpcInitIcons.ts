@@ -319,4 +319,3 @@ export class VpcInitIcons {
         grpGlider.customDims[71] = [16, 342];
     }
 }
-

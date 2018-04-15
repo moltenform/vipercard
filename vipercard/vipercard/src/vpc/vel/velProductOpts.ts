@@ -7,26 +7,38 @@
 /* auto */ import { UI512Patterns } from '../../ui512/draw/ui512DrawPattern.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 
+/**
+ * a product options class
+ * when you say 'set the cursor to watch', you are setting a property on this object
+ * runtime settings here are undoable, since they are vel object properties
+ * runtime settings in vpcruntimesettings, on the other hand, are not undoable
+ *
+ * note: this class is runtime-only settings -- nothing here is persisted during save.
+ */
 export class VpcElProductOpts extends VpcElBase {
-    // unlike other elements, nothing here is persisted during save.
     isVpcElProduct = true;
+    allowSetCurrentTool = false;
     protected _itemDel = ',';
     protected _script = '';
     protected _name = `${cProductName}`;
     protected _longname = `Applications:${cProductName} Folder:${cProductName}`;
+    constructor(id: string, parentId: string) {
+        super(id, parentId);
+        VpcElProductOpts.prodInit();
+    }
 
-    // settings that shouldn't be touched directly
+    /* settings that shouldn't be touched directly */
     protected _currentTool = VpcTool.Pencil;
-    allowSetCurrentTool = false;
 
-    // settings stored here to get an undoable setting
+    /* settings stored here to get an undoable setting */
     protected _currentCardId = '';
     protected _optWideLines = false;
     protected _optPaintDrawMult = false;
@@ -38,32 +50,51 @@ export class VpcElProductOpts extends VpcElBase {
     protected _selectedVelId = '';
     protected _suggestedIdleRate = '';
 
-    getAttributesList() {
-        // none of these attributes are persisted
+    /* cached getters */
+    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
+
+    /* cached setters */
+    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+
+    /**
+     * get the properties that need to be serialized
+     * none, because these settings are runtime-only
+     */
+    getKeyPropertiesList() {
         return [];
     }
 
+    /**
+     * type of element
+     */
     getType() {
         return VpcElType.Product;
     }
 
-    constructor(id: string, parentid: string) {
-        super(id, parentid);
-    }
-
+    /**
+     * set a property
+     * add a check allowSetCurrentTool -- the only place that can set currentTool
+     * is the _vpcpresenter_ object, since it has special tool clean-up logic
+     */
     set(s: string, newval: ElementObserverVal, context = ChangeContext.Default) {
         assertTrueWarn(s !== 'currentTool' || this.allowSetCurrentTool, '');
         return super.set(s, newval, context);
     }
 
+    /**
+     * re-use cached getters and setter callback functions for better perf
+     */
     startGettersSetters() {
         VpcElProductOpts.prodInit();
         this.getters = VpcElProductOpts.cachedGetters;
         this.setters = VpcElProductOpts.cachedSetters;
     }
 
+    /**
+     * define getters
+     */
     static prodGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
-        // hard-coded responses to properties
+        /* many 'properties' here are hard-coded values for backwards-compat only */
         getters['environment'] = [PrpTyp.Str, () => 'development'];
         getters['freesize'] = [PrpTyp.Num, () => 0];
         getters['size'] = [PrpTyp.Num, () => 0];
@@ -71,7 +102,6 @@ export class VpcElProductOpts extends VpcElBase {
         getters['suspended'] = [PrpTyp.Bool, () => false];
         getters['version/long'] = [PrpTyp.Str, () => vpcversion];
         getters['version'] = [PrpTyp.Str, () => vpcversion[0] + '.' + vpcversion[1]];
-
         getters['itemdelimiter'] = [PrpTyp.Str, 'itemDel'];
         getters['cursor'] = [
             PrpTyp.Str,
@@ -83,6 +113,9 @@ export class VpcElProductOpts extends VpcElBase {
         ];
     }
 
+    /**
+     * define setters
+     */
     static prodSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
         setters['itemdelimiter'] = [
             PrpTyp.Str,
@@ -124,8 +157,9 @@ export class VpcElProductOpts extends VpcElBase {
         ];
     }
 
-    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
-    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+    /**
+     * define getters and setters
+     */
     static prodInit() {
         if (!VpcElProductOpts.cachedGetters || !VpcElProductOpts.cachedSetters) {
             VpcElProductOpts.cachedGetters = {};
@@ -137,11 +171,17 @@ export class VpcElProductOpts extends VpcElBase {
         }
     }
 
+    /**
+     * is this the name of a property?
+     */
     static canGetProductProp(propName: string) {
         VpcElProductOpts.prodInit();
         return !!VpcElProductOpts.cachedGetters[propName] || !!VpcElProductOpts.cachedSetters[propName];
     }
 
+    /**
+     * is this the name of any property on any type of object?
+     */
     static isAnyProp(propName: string) {
         VpcElButton.btnInit();
         VpcElField.fldInit();

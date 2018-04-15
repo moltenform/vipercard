@@ -224,5 +224,3 @@ export class TestUI512CanvasComparison extends UI512TestBase {
         }
     ];
 }
-
-

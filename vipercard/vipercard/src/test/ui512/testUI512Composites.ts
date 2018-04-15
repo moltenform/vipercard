@@ -262,7 +262,7 @@ export class UI512TestCompositesPresenter extends UI512Presenter {
         let editTextBehavior = new UI512TextEvents();
         this.listeners[UI512EventType.KeyDown.valueOf()] = [
             BasicHandlers.basicKeyShortcuts,
-            UI512TestCompositesPresenter.respondKeyDown, /* inserted before editTextBehavior so that we can recieve the "Enter" keystroke */
+            UI512TestCompositesPresenter.respondKeyDown /* inserted before editTextBehavior so that we can recieve the "Enter" keystroke */,
             editTextBehavior.onKeyDown.bind(editTextBehavior)
         ];
     }

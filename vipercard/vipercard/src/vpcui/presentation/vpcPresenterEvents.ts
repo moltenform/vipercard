@@ -12,8 +12,8 @@
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 /* auto */ import { UI512TextEvents } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgNameFromType, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcScriptMessage } from '../../vpc/vel/vpcOutsideInterfaces.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcElTextFieldAsGeneric, VpcModelRender } from '../../vpcui/modelrender/vpcModelRender.js';
 /* auto */ import { VpcAppUIToolSmear } from '../../vpcui/tools/vpcToolSmear.js';
@@ -408,7 +408,7 @@ export class VpcPresenterEvents {
         let grpmenubar = pr.app.findGroup('$$grpmenubar');
         if (grpmenubar) {
             let menubar = grpmenubar.findEl('$$menubarforapp');
-            if (menubar && menubar.get_n('whichIsExpanded') >= 0) {
+            if (menubar && menubar.getN('whichIsExpanded') >= 0) {
                 return true;
             }
         }
@@ -436,9 +436,9 @@ export class VpcPresenterEvents {
             msg.cmdKey = (d.mods & ModifierKeys.Cmd) !== 0;
             msg.shiftKey = (d.mods & ModifierKeys.Shift) !== 0;
             msg.optionKey = (d.mods & ModifierKeys.Opt) !== 0;
-            msg.keychar = d.keyChar;
-            msg.keymods = d.mods;
-            msg.keyrepeated = d.repeated;
+            msg.keyChar = d.keyChar;
+            msg.keyMods = d.mods;
+            msg.keyRepeated = d.repeated;
         } else if (
             d instanceof MouseDownEventDetails ||
             d instanceof MouseUpEventDetails ||

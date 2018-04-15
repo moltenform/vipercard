@@ -14,7 +14,7 @@
 
 export abstract class UndoableActionCreateOrDelVelement {
     isUndoableActionCreateOrDelVel = true;
-    constructor(public velId: string, public parentid: string, public type: VpcElType, public insertindex: number) {}
+    constructor(public velId: string, public parentId: string, public type: VpcElType, public insertindex: number) {}
 
     protected static getconstructor(type: VpcElType): { new (...args: any[]): any } {
         if (type === VpcElType.Btn) {
@@ -50,7 +50,7 @@ export abstract class UndoableActionCreateOrDelVelement {
     }
 
     protected determineIndexInAr(vel: VpcElBase, appli: VpcStateInterface) {
-        let ar = UndoableActionCreateOrDelVelement.getparentarray(this.parentid, appli, vel.getType());
+        let ar = UndoableActionCreateOrDelVelement.getparentarray(this.parentId, appli, vel.getType());
         for (let i = 0; i < ar.length; i++) {
             if (ar[i].id === vel.id) {
                 return i;
@@ -62,14 +62,14 @@ export abstract class UndoableActionCreateOrDelVelement {
 
     protected create(appli: VpcStateInterface) {
         let ctr = UndoableActionCreateOrDelVelement.getconstructor(this.type);
-        let el = appli.rawCreate(this.velId, this.parentid, ctr);
-        let ar = UndoableActionCreateOrDelVelement.getparentarray(this.parentid, appli, el.getType());
+        let el = appli.rawCreate(this.velId, this.parentId, ctr);
+        let ar = UndoableActionCreateOrDelVelement.getparentarray(this.parentId, appli, el.getType());
         if (this.insertindex === -1) {
-            // note, save this for undo posterity
+            /* note, save this for undo posterity */
             this.insertindex = ar.length;
         }
 
-        // check bounds, note that it is ok to insert one past the end.
+        /* check bounds, note that it is ok to insert one past the end. */
         assertTrueWarn(this.insertindex >= 0 && this.insertindex <= ar.length, '6c|incorrect insertion point');
         checkThrow(
             ar.length < CodeLimits.MaxVelChildren,
@@ -87,7 +87,6 @@ export abstract class UndoableActionCreateOrDelVelement {
         ar.splice(this.insertindex, 1);
         appli.getModel().removeIdFromMapOfElements(el.id);
         appli.getCodeExec().removeScript(this.velId);
-        el.makeDormant();
     }
 
     static ensureDocumentNotEmpty(appli: VpcStateInterface, createFirstCard: boolean) {
@@ -104,7 +103,7 @@ export abstract class UndoableActionCreateOrDelVelement {
 
         if (!model.stack) {
             appli.doWithoutAbilityToUndo(() => {
-                // create a new stack
+                /* create a new stack */
                 model.stack = appli.rawCreate(VpcElStack.initProductOptsId, model.productOpts.id, VpcElStack);
 
                 if (createFirstCard) {

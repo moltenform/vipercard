@@ -290,65 +290,65 @@ export class TestUI512TextSelectEvents extends UI512TestBase {
             let gel = new UI512ElTextFieldAsGeneric(el);
             el.setftxt(FormattedText.newFromUnformatted(''));
             SelAndEntry.selectLineInField(gel, 0);
-            assertEq(0, el.get_n('selcaret'), '');
-            assertEq(0, el.get_n('selend'), '');
+            assertEq(0, el.getN('selcaret'), '');
+            assertEq(0, el.getN('selend'), '');
             assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 2);
-            assertEq(0, el.get_n('selcaret'), '');
-            assertEq(0, el.get_n('selend'), '');
+            assertEq(0, el.getN('selcaret'), '');
+            assertEq(0, el.getN('selend'), '');
             assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
 
             /* field with no empty lines */
             el.setftxt(FormattedText.newFromUnformatted('abc\ndef\nghi'));
             SelAndEntry.selectLineInField(gel, 0);
-            assertEq(0, el.get_n('selcaret'), '');
-            assertEq(4, el.get_n('selend'), '');
+            assertEq(0, el.getN('selcaret'), '');
+            assertEq(4, el.getN('selend'), '');
             assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 1);
-            assertEq(4, el.get_n('selcaret'), '');
-            assertEq(8, el.get_n('selend'), '');
+            assertEq(4, el.getN('selcaret'), '');
+            assertEq(8, el.getN('selend'), '');
             assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 2);
-            assertEq(8, el.get_n('selcaret'), '');
-            assertEq(11, el.get_n('selend'), '');
+            assertEq(8, el.getN('selcaret'), '');
+            assertEq(11, el.getN('selend'), '');
             assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 3);
-            assertEq(11, el.get_n('selcaret'), '');
-            assertEq(11, el.get_n('selend'), '');
+            assertEq(11, el.getN('selcaret'), '');
+            assertEq(11, el.getN('selend'), '');
             assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 4);
-            assertEq(11, el.get_n('selcaret'), '');
-            assertEq(11, el.get_n('selend'), '');
+            assertEq(11, el.getN('selcaret'), '');
+            assertEq(11, el.getN('selend'), '');
             assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
 
             /* field with some empty lines */
             el.setftxt(FormattedText.newFromUnformatted('\nabc\n\ndef\n'));
             SelAndEntry.selectLineInField(gel, 0);
-            assertEq(0, el.get_n('selcaret'), '');
-            assertEq(1, el.get_n('selend'), '');
+            assertEq(0, el.getN('selcaret'), '');
+            assertEq(1, el.getN('selend'), '');
             assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 1);
-            assertEq(1, el.get_n('selcaret'), '');
-            assertEq(5, el.get_n('selend'), '');
+            assertEq(1, el.getN('selcaret'), '');
+            assertEq(5, el.getN('selend'), '');
             assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 2);
-            assertEq(5, el.get_n('selcaret'), '');
-            assertEq(6, el.get_n('selend'), '');
+            assertEq(5, el.getN('selcaret'), '');
+            assertEq(6, el.getN('selend'), '');
             assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 3);
-            assertEq(6, el.get_n('selcaret'), '');
-            assertEq(10, el.get_n('selend'), '');
+            assertEq(6, el.getN('selcaret'), '');
+            assertEq(10, el.getN('selend'), '');
             assertEq(3, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 4);
-            assertEq(10, el.get_n('selcaret'), '');
-            assertEq(10, el.get_n('selend'), '');
+            assertEq(10, el.getN('selcaret'), '');
+            assertEq(10, el.getN('selend'), '');
             assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
             SelAndEntry.selectLineInField(gel, 5);
-            assertEq(10, el.get_n('selcaret'), '');
-            assertEq(10, el.get_n('selend'), '');
+            assertEq(10, el.getN('selcaret'), '');
+            assertEq(10, el.getN('selend'), '');
             assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
         }
-    ]
+    ];
 
     /* ^ is caret, # is end, | is newline */
     testChangeSel(expected: string, input: string, fn: Function, ...moreargs: any[]) {

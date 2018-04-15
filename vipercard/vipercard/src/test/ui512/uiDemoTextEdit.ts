@@ -80,7 +80,7 @@ export class UI512DemoTextEdit extends UI512Presenter {
 
     private static respondKeyDown(pr: UI512DemoTextEdit, d: KeyDownEventDetails) {
         let el = SelAndEntry.getSelectedField(pr);
-        if (el && el.get_b('selectbylines')) {
+        if (el && el.getB('selectbylines')) {
             return;
         } else if (el && d.readableShortcut === 'Tab') {
             pr.onTabKeyDown(el, d, false);
@@ -90,13 +90,13 @@ export class UI512DemoTextEdit extends UI512Presenter {
     }
 
     onTabKeyDown(el: O<UI512ElTextField>, d: KeyDownEventDetails, hasShift: boolean) {
-        if (el && el.get_b('multiline') && el.get_n('selcaret') === el.get_n('selend')) {
+        if (el && el.getB('multiline') && el.getN('selcaret') === el.getN('selend')) {
             /* simply insert a \t */
             if (!hasShift) {
                 let gel = new UI512ElTextFieldAsGeneric(el);
                 SelAndEntry.changeTextInsert(gel, '\t');
             }
-        } else if (el && el.get_b('multiline')) {
+        } else if (el && el.getB('multiline')) {
             /* indent or dedent */
             let gel = new UI512ElTextFieldAsGeneric(el);
             SelAndEntry.changeTextIndentation(gel, hasShift);
@@ -105,4 +105,3 @@ export class UI512DemoTextEdit extends UI512Presenter {
         d.setHandled();
     }
 }
-

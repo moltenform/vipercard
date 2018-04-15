@@ -129,15 +129,15 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         } else {
             let caption = grp.getEl(this.getElId('caption'));
             let captionMsg = lng('lngScript of %c');
-            let velName = vpcElTypeToString(vel.getType(), true) + ` "${vel.get_s('name')}"`;
+            let velName = vpcElTypeToString(vel.getType(), true) + ` "${vel.getS('name')}"`;
             captionMsg = captionMsg.replace(/%c/g, velName);
             captionMsg = captionMsg.substr(0, 36);
             caption.set('labeltext', captionMsg);
 
-            let selcaret = this.el.get_n('selcaret');
-            let selend = this.el.get_n('selend');
-            let scrl = this.el.get_n('scrollamt');
-            this.setContent(vel.get_s('script'));
+            let selcaret = this.el.getN('selcaret');
+            let selend = this.el.getN('selend');
+            let scrl = this.el.getN('scrollamt');
+            this.setContent(vel.getS('script'));
             this.el.set('selcaret', selcaret);
             this.el.set('selend', selend);
             this.el.set('scrollamt', scrl);
@@ -174,7 +174,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
 
         let grp = app.getGroup(this.grpId);
         let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
-        if (slength(this.status2a.get_s('labeltext')) || this.needsCompilation.find(vel.id)) {
+        if (slength(this.status2a.getS('labeltext')) || this.needsCompilation.find(vel.id)) {
             btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
         } else {
             btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
@@ -203,7 +203,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
 
         /* run compilation */
         this.saveChangesToModel(this.appli.UI512App(), false);
-        let code = vel.get_s('script');
+        let code = vel.getS('script');
         this.appli.getCodeExec().updateChangedCode(vel, code);
 
         /* hide the "just encountered" message. */
@@ -220,7 +220,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
     }
 
     scrollToErrorPosition(pr: O<UI512PresenterBase>) {
-        let linenotxt = this.status2a.get_s('labeltext');
+        let linenotxt = this.status2a.getS('labeltext');
         if (this.el && linenotxt.length > 0) {
             let thenums = linenotxt.split(' ')[1].replace(/,/g, '');
             let thenum = parseInt(thenums, 10);
@@ -237,7 +237,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
     }
 
     respondKeydown(d: KeyDownEventDetails) {
-        if (!this.el || !this.el.get_b('canselecttext') || !this.el.get_b('canedit')) {
+        if (!this.el || !this.el.getB('canselecttext') || !this.el.getB('canedit')) {
             return;
         }
 
@@ -305,7 +305,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
 
         let newscript = this.el.get_ftxt().toUnformatted();
         if (onlyCheckIfDirty) {
-            let current = vel.get_s('script');
+            let current = vel.getS('script');
             if (current !== newscript) {
                 throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
             }

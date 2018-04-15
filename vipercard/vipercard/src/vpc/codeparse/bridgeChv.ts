@@ -1,6 +1,51 @@
 
 /*! chevrotain - v0.34.0 */
 
+/*
+This file is essentially chevrotain.d.ts wrapped in a namespace
+when typescript is built with modules=es6 ,
+it apparently assumes that all import {} statements are importing es6 modules
+and as such should be left as-is in the generated JavaScript.
+
+So if I had chevrotain.d.ts and wrote import { Token } from 'chevrotain',
+everything compiles cleanly,
+but at runtime it fails because Chrome tries to execute "import { Token } from 'chevrotain'"
+and there is no such file, since the .d.ts does not become javascript.
+
+This file is a workaround I invented,
+at runtime this file becomes a valid JavaScript file because it's not a .d.ts,
+and so the line "import {} ChvToken from './bridgeChv.js'" succeeds.
+*/
+
+/*
+changes to chevrotain added by Ben Fisher, 2017
+function buildInitDefFunc(childrenNames) {
+    var oneOfTheseObjects = {}
+    utils_1.map(childrenNames, function (currName) {
+        oneOfTheseObjects[currName] = []
+    })
+
+    // ben fisher, 2017:
+    // I don't want to use new Function() because it's basically eval
+    // this workaround should provide the same behavior.
+    // is it really true that it needs to create a new object every time?
+    // if so, it's correct that I am creating an entirely new object.
+    // I'm using JSON to make a clone.
+    var serialized = JSON.stringify(oneOfTheseObjects)
+
+    return function() {
+        return JSON.parse(serialized)
+    }
+
+    // var funcString = "return {\n";
+    // funcString += utils_1.map(childrenNames, function (currName) { return "\"" + currName + "\" : []"; }).join(",\n");
+    // funcString += "}";
+    // major performance optimization, faster to create the children dictionary this way
+    // versus iterating over the childrenNames each time.
+    // return Function(funcString);
+}
+*/
+
 declare namespace chevrotain {
     class HashTable<V> {}
     /**

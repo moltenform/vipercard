@@ -23,7 +23,7 @@ export class MenuBehavior {
         which: number,
         context = ChangeContext.Default
     ) {
-        if (menuRoot.get_n('whichIsExpanded') !== which) {
+        if (menuRoot.getN('whichIsExpanded') !== which) {
             menuRoot.set('whichIsExpanded', which);
 
             /* make all the items unhighlighted */
@@ -58,7 +58,7 @@ export class MenuBehavior {
      */
     static canHighlightMenuItem(el: UI512Element) {
         if (el instanceof UI512MenuItem) {
-            return el.enabled && el.get_s('labeltext') !== '---';
+            return el.enabled && el.getS('labeltext') !== '---';
         }
 
         return false;
@@ -77,7 +77,7 @@ export class MenuBehavior {
      */
     static isAnyMenuActive(pr: UI512PresenterWithMenuInterface) {
         let menuRoot = MenuPositioning.getMenuRoot(pr.app);
-        return menuRoot.get_n('whichIsExpanded') >= 0;
+        return menuRoot.getN('whichIsExpanded') >= 0;
     }
 
     /**

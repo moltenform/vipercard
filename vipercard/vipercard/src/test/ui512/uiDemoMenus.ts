@@ -68,4 +68,3 @@ export class UI512DemoMenus extends UI512Presenter {
         }
     }
 }
-

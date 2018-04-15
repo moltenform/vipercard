@@ -83,12 +83,12 @@ export class ScrollbarImpl {
         }
 
         assertEqWarn(
-            el.get_b('scrollbar'),
+            el.getB('scrollbar'),
             !!grp.findEl(fldIdToScrollbarPartId(el.id, 'arrowUp')),
             'forgot to call rebuildFieldScrollbars? ' + el.id
         );
 
-        if (!el || !el.visible || !el.getDirty() || !el.get_b('scrollbar')) {
+        if (!el || !el.visible || !el.getDirty() || !el.getB('scrollbar')) {
             return;
         }
 
@@ -323,12 +323,12 @@ export class ScrollbarImpl {
      */
     getScrollPosThatWouldMakeStartCaretVisible(el: UI512ElTextField): O<number> {
         el.set('showcaret', true);
-        if (!el.get_n('scrollamt') && !el.get_b('scrollbar')) {
+        if (!el.getN('scrollamt') && !el.getB('scrollbar')) {
             /* perf optimization; we don't care about scrolling for non-scrollbar fields. */
             return undefined;
         }
 
-        let index = el.get_n('selcaret');
+        let index = el.getN('selcaret');
         let contentHeightInPixels = this.getCachedHeightOfField(el);
         if (!contentHeightInPixels) {
             /* font not yet loaded */
@@ -356,7 +356,7 @@ export class ScrollbarImpl {
             }
 
             if (chgScroll !== 0) {
-                let scroll = el.get_n('scrollamt') + chgScroll;
+                let scroll = el.getN('scrollamt') + chgScroll;
                 scroll = fitIntoInclusive(scroll, 0, maxScroll);
                 return scroll;
             }
@@ -367,7 +367,7 @@ export class ScrollbarImpl {
      * get the height of content in the field, for better perf use cached height if available
      */
     getCachedHeightOfField(el: UI512ElTextField) {
-        let cachedHeight = el.get_n('contentHeightInPixels');
+        let cachedHeight = el.getN('contentHeightInPixels');
         if (cachedHeight && cachedHeight !== -1) {
             return cachedHeight;
         } else {
@@ -396,7 +396,7 @@ export class ScrollbarImpl {
             return -1;
         }
 
-        let scrollRatio = el.get_n('scrollamt') / (maxScroll + 0.0);
+        let scrollRatio = el.getN('scrollamt') / (maxScroll + 0.0);
         scrollRatio = fitIntoInclusive(scrollRatio, 0.0, 1.0);
         return scrollRatio;
     }
@@ -409,7 +409,7 @@ export class ScrollbarImpl {
         let el = pr.app.findEl(fldid);
         let gel = this.gelFromEl(el);
         if (el && gel) {
-            let contentHeightInPixels = el.get_n('contentHeightInPixels');
+            let contentHeightInPixels = el.getN('contentHeightInPixels');
             if (!contentHeightInPixels || contentHeightInPixels === -1) {
                 /* looks like the font hasn't loaded yet. */
                 /* for simplicity, let's just ignore this click */
@@ -445,7 +445,7 @@ export class ScrollbarImpl {
 
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let args = new RenderTextArgs(0, 0, largeArea, largeArea, false, false, false);
-        args.addVSpacing = el.get_n('addvspacing');
+        args.addVSpacing = el.getN('addvspacing');
         let drawn = drawText.drawFormattedStringIntoBox(textGetHeight, undefined, args);
         if (drawn) {
             return drawn.lowestPixelDrawn;

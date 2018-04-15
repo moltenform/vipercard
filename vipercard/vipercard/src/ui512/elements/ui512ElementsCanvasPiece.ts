@@ -20,7 +20,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     setCanvas(cv: CanvasWrapper) {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded') + 1);
+        this.set('incrementUntilLoaded', this.getN('incrementUntilLoaded') + 1);
         this.canvas = cv;
     }
 
@@ -29,7 +29,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     getCanvasForWrite() {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded') + 1);
+        this.set('incrementUntilLoaded', this.getN('incrementUntilLoaded') + 1);
         return this.canvas;
     }
 
@@ -59,7 +59,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     setCachedPainter(pnter: UI512Painter) {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded') + 1);
+        this.set('incrementUntilLoaded', this.getN('incrementUntilLoaded') + 1);
         this.cachedPainter = pnter;
     }
 
@@ -69,7 +69,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     getCachedPainterForWrite() {
-        this.set('incrementUntilLoaded', this.get_n('incrementUntilLoaded') + 1);
+        this.set('incrementUntilLoaded', this.getN('incrementUntilLoaded') + 1);
         return this.cachedPainter;
     }
 }

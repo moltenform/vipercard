@@ -121,11 +121,11 @@ export class UI512DemoText extends UI512Presenter {
             if (attr === 'mixsizes') {
                 pr.mixSizes = !pr.mixSizes;
             } else if (attr === 'wrap') {
-                mainfield.set('labelwrap', !mainfield.get_b('labelwrap'));
+                mainfield.set('labelwrap', !mainfield.getB('labelwrap'));
             } else if (attr === 'halign') {
-                mainfield.set('labelhalign', !mainfield.get_b('labelhalign'));
+                mainfield.set('labelhalign', !mainfield.getB('labelhalign'));
             } else if (attr === 'valign') {
-                mainfield.set('labelvalign', !mainfield.get_b('labelvalign'));
+                mainfield.set('labelvalign', !mainfield.getB('labelvalign'));
             } else if (attr === 'narrow') {
                 let newwidth = mainfield.w === 400 ? 100 : 400;
                 mainfield.setDimensions(mainfield.x, mainfield.y, newwidth, mainfield.h);
@@ -146,4 +146,3 @@ export class UI512DemoText extends UI512Presenter {
         }
     }
 }
-

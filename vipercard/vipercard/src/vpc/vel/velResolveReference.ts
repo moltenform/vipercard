@@ -1,32 +1,16 @@
 
-/* auto */ import { checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/vpcOutsideInterfaces.js';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 
-export function vpcElTypeAsSeenInName(tp: VpcElType) {
-    switch (tp) {
-        case VpcElType.Btn:
-            return 'button';
-        case VpcElType.Fld:
-            return 'field';
-        case VpcElType.Card:
-            return 'card';
-        case VpcElType.Bg:
-            return 'bkgnd';
-        case VpcElType.Stack:
-            return 'stack';
-        case VpcElType.Product:
-            return '';
-        default:
-            throw makeVpcScriptErr(`4k|can't get name of el type ${tp}`);
-    }
-}
-
+/**
+ * a readable container for a simple string.
+ * (some readable containers are more complex, like a field that has formatted text)
+ */
 export class ReadableContainerStr implements ReadableContainer {
     constructor(protected s: string) {}
     isDefined() {
@@ -42,14 +26,17 @@ export class ReadableContainerStr implements ReadableContainer {
     }
 }
 
+/**
+ * a readable container for a script variable
+ */
 export class ReadableContainerVar implements ReadableContainer {
-    constructor(protected outside: OutsideWorldRead, public varname: string) {}
+    constructor(protected outside: OutsideWorldRead, public varName: string) {}
     isDefined() {
-        return this.outside.IsVarDefined(this.varname);
+        return this.outside.IsVarDefined(this.varName);
     }
 
     getRawString() {
-        return this.outside.ReadVarContents(this.varname).readAsString();
+        return this.outside.ReadVarContents(this.varName).readAsString();
     }
 
     len() {
@@ -57,25 +44,32 @@ export class ReadableContainerVar implements ReadableContainer {
     }
 }
 
+/**
+ * a writable container
+ */
 export class WritableContainerVar extends ReadableContainerVar implements WritableContainer {
-    constructor(protected outsideWritable: OutsideWorldReadWrite, varname: string) {
-        super(outsideWritable, varname);
+    constructor(protected outsideWritable: OutsideWorldReadWrite, varName: string) {
+        super(outsideWritable, varName);
     }
 
-    splice(insertion: number, lenToDelete: number, newtext: string) {
+    splice(insertion: number, lenToDelete: number, newText: string) {
+        /* mimic Array.splice */
         let current = this.getRawString();
         let ret = '';
         ret += current.substring(0, insertion);
-        ret += newtext;
+        ret += newText;
         ret += current.substring(insertion + lenToDelete);
-        this.outsideWritable.SetVarContents(this.varname, VpcValS(ret));
+        this.outsideWritable.SetVarContents(this.varName, VpcValS(ret));
     }
 
-    setAll(newtext: string) {
-        this.outsideWritable.SetVarContents(this.varname, VpcValS(newtext));
+    setAll(newText: string) {
+        this.outsideWritable.SetVarContents(this.varName, VpcValS(newText));
     }
 }
 
+/**
+ * reading content from a field
+ */
 export class ReadableContainerField implements ReadableContainer {
     protected fld: VpcElField;
     constructor(vel: VpcElBase) {
@@ -91,6 +85,7 @@ export class ReadableContainerField implements ReadableContainer {
     }
 
     len() {
+        /* this is fast, it's the reason we have a len() and not just getRawString().length */
         return this.fld.get_ftxt().len();
     }
 
@@ -99,11 +94,14 @@ export class ReadableContainerField implements ReadableContainer {
     }
 }
 
+/**
+ * writing content to a field
+ */
 export class WritableContainerField extends ReadableContainerField implements WritableContainer {
     splice(insertion: number, lenToDelete: number, newstring: string) {
         let txt = this.fld.get_ftxt();
         if (insertion === 0 && lenToDelete >= txt.len()) {
-            // follow emulator, different behavior (lose formatting) when replacing all text
+            /* follow emulator, there is different behavior (lose formatting) when replacing all text */
             this.fld.setProp('alltext', VpcValS(newstring));
         } else {
             let font =
@@ -113,8 +111,8 @@ export class WritableContainerField extends ReadableContainerField implements Wr
         }
     }
 
-    setAll(newtext: string) {
-        // follow emulator, different behavior (lose formatting) when replacing all text
-        this.fld.setProp('alltext', VpcValS(newtext));
+    setAll(newText: string) {
+        /* follow emulator, there is different behavior (lose formatting) when replacing all text */
+        this.fld.setProp('alltext', VpcValS(newText));
     }
 }

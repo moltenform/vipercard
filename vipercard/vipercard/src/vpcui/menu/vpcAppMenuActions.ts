@@ -144,7 +144,7 @@ export class VpcMenuActions {
     }
 
     go_mnuNewCard() {
-        let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+        let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
         let currentCard = this.appli.getModel().getById(currentCardId, VpcElCard);
         let currentBg = this.appli.getModel().getById(currentCard.parentId, VpcElBg);
         let currentIndex = VpcElBase.findIndexById(currentBg.cards, currentCardId);
@@ -157,7 +157,7 @@ export class VpcMenuActions {
         // use this workaround instead (only copies the paint)
         let currentCardId = this.appli.getOption_s('currentCardId');
         let currentCard = this.appli.getModel().getById(currentCardId, VpcElCard);
-        let paint = currentCard.get_s('paint');
+        let paint = currentCard.getS('paint');
         this.appli.setOption('selectedVelId', '');
         this.go_mnuNewCard();
         currentCardId = this.appli.getOption_s('currentCardId');
@@ -186,7 +186,7 @@ export class VpcMenuActions {
     }
 
     go_mnuCreateManyButtons() {
-        let currentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+        let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
         let first = this.appli.createElem(currentCardId, VpcElType.Btn, 0, undefined);
         first.set('showlabel', false);
         first.set('autohilite', false);
@@ -206,10 +206,10 @@ export class VpcMenuActions {
     }
 
     go_mnuDelCard() {
-        let wasCurrentCardId = this.appli.getModel().productOpts.get_s('currentCardId');
+        let wasCurrentCardId = this.appli.getModel().productOpts.getS('currentCardId');
         let wasCurrentCard = this.appli.getModel().getById(wasCurrentCardId, VpcElCard);
         this.appli.getModel().goCardRelative(OrdinalOrPosition.previous);
-        if (this.appli.getModel().productOpts.get_s('currentCardId') === wasCurrentCardId) {
+        if (this.appli.getModel().productOpts.getS('currentCardId') === wasCurrentCardId) {
             this.appli.getModel().goCardRelative(OrdinalOrPosition.next);
         }
 

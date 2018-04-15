@@ -58,7 +58,7 @@ export class UI512TextEvents {
         if (
             d.button === 0 &&
             d.el instanceof UI512ElTextField &&
-            d.el.get_b('canselecttext') &&
+            d.el.getB('canselecttext') &&
             pr.canSelectTextInField(d.el)
         ) {
             let gel = this.gelFromEl(d.el);
@@ -71,7 +71,7 @@ export class UI512TextEvents {
             }
 
             pr.setCurrentFocus(d.el.id);
-            if (d.el.get_b('selectbylines')) {
+            if (d.el.getB('selectbylines')) {
                 SelAndEntry.mouseClickSelectByLines(gel, d.mouseX, d.mouseY);
             } else {
                 let isShift = (d.mods & ModifierKeys.Shift) !== 0;
@@ -92,9 +92,9 @@ export class UI512TextEvents {
             if (
                 el &&
                 el instanceof UI512ElTextField &&
-                el.get_b('canselecttext') &&
+                el.getB('canselecttext') &&
                 pr.canSelectTextInField(el) &&
-                !el.get_b('selectbylines')
+                !el.getB('selectbylines')
             ) {
                 let gel = this.gelFromEl(el);
                 if (gel) {
@@ -114,9 +114,9 @@ export class UI512TextEvents {
             if (
                 d.el &&
                 d.el instanceof UI512ElTextField &&
-                d.el.get_b('canselecttext') &&
+                d.el.getB('canselecttext') &&
                 pr.canSelectTextInField(d.el) &&
-                !d.el.get_b('selectbylines')
+                !d.el.getB('selectbylines')
             ) {
                 let gel = this.gelFromEl(d.el);
                 if (gel) {
@@ -140,7 +140,7 @@ export class UI512TextEvents {
      */
     onKeyDown(pr: UI512PresenterWithMenuInterface, d: KeyDownEventDetails) {
         let el = SelAndEntry.getSelectedField(pr);
-        if (el && el.get_b('selectbylines')) {
+        if (el && el.getB('selectbylines')) {
             return;
         } else if (!el || d.handled()) {
             return;
@@ -314,7 +314,7 @@ export class UI512TextEvents {
                 return;
             }
 
-            if (el.get_b('asteriskonly')) {
+            if (el.getB('asteriskonly')) {
                 /* this is a password "asteriskonly" field so don't allow cut/copy */
                 return;
             }
@@ -341,8 +341,8 @@ export class UI512TextEvents {
             /* blink the caret for this field */
             if (pr.getCurrentFocus()) {
                 let el = pr.app.findEl(pr.getCurrentFocus());
-                if (el && el instanceof UI512ElTextField && el.get_b('canselecttext')) {
-                    el.set('showcaret', !el.get_b('showcaret'));
+                if (el && el instanceof UI512ElTextField && el.getB('canselecttext')) {
+                    el.set('showcaret', !el.getB('showcaret'));
                 }
             }
         }
