@@ -1,11 +1,11 @@
 
 /* auto */ import { checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { findStrToEnum, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { findStrToEnum, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcBuiltinMsg } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
 /* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
 /* auto */ import { alsoReservedWordsList, partialReservedWordsList } from '../../vpc/codeparse/vpcTokens.js';
-/* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcScriptFunctions.js';
+/* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcBuiltinFunctions.js';
 
 /**
  * provides ways to see if a certain term is ok to use as a variable name,

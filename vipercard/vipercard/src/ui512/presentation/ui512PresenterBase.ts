@@ -1,16 +1,16 @@
 
 /* auto */ import { O, respondUI512Error } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, RepeatingTimer, UI512IsPresenterInterface, Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, RepeatingTimer, UI512IsPresenterInterface, Util512, fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType, UI512PresenterInterface } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
-/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementsView.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
+/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementView.js';
 /* auto */ import { EventDetails, FocusChangedEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
-/* auto */ import { TemporarilyIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
+/* auto */ import { TemporarilySuspendEvents } from '../../ui512/menu/ui512SuspendEvents.js';
 
 /**
  * a Presenter receives Events,
@@ -35,7 +35,7 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     inited = false;
     openState = MenuOpenState.MenusClosed;
     view = new UI512ViewDraw();
-    tmpIgnore: O<TemporarilyIgnoreEvents>;
+    tmpIgnore: O<TemporarilySuspendEvents>;
     mouseDragStatus: number;
     useOSClipboard: boolean;
     clipManager: ClipManagerInterface;
@@ -91,7 +91,7 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     /**
      * register to listen for an event
      */
-    listenEvent(type: UI512EventType, fn: (pr:UI512PresenterInterface, d:EventDetails)=>void) {
+    listenEvent(type: UI512EventType, fn: (pr: UI512PresenterInterface, d: EventDetails) => void) {
         let ar = this.listeners[type.valueOf()];
         if (ar !== undefined) {
             ar.push(fn);
@@ -205,8 +205,7 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
      */
     queueRefreshCursor(): void {}
 
-    abstract removeEl(gpid: string, elid: string, context: ChangeContext): void;
+    abstract removeEl(gpid: string, elId: string, context: ChangeContext): void;
     protected abstract setPositionsForRender(cmpTotal: RenderComplete): void;
     abstract rebuildFieldScrollbars(): void;
 }
-

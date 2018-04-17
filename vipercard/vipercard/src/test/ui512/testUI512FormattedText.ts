@@ -1,11 +1,11 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { TextFontSpec, TextFontStyling, largeArea, specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512FontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
+/* auto */ import { UI512FontRequest } from '../../ui512/draw/ui512DrawTextFontRequest.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512DrawTextParams.js';
+/* auto */ import { DrawTextArgs } from '../../ui512/draw/ui512DrawTextArgs.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 
 export class TestFormattedText extends UI512TestBase {
@@ -17,9 +17,9 @@ export class TestFormattedText extends UI512TestBase {
             assertEq('abc'.charCodeAt(1), txt.charAt(1), '');
             assertEq('abc'.charCodeAt(2), txt.charAt(2), '');
             assertEq(undefined, txt.charAt(3), '');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(0), '');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(1), '');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(2), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(1), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(2), '');
             assertEq(undefined, txt.fontAt(3), '');
 
             txt.setCharAt(1, 'y'.charCodeAt(0));
@@ -30,7 +30,7 @@ export class TestFormattedText extends UI512TestBase {
 
             txt.setFontAt(1, 'otherfont1');
             txt.setFontAt(2, 'otherfont2');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(0), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), '');
             assertEq('otherfont1', txt.fontAt(1), '');
             assertEq('otherfont2', txt.fontAt(2), '');
 
@@ -68,7 +68,7 @@ export class TestFormattedText extends UI512TestBase {
             assertEq('a', txt.toUnformatted(), '');
             assertEq(1, txt.len(), '');
             assertEq('a'.charCodeAt(0), txt.charAt(0), '');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(0), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), '');
         },
         'test_FormattedTextSerialization',
         () => {
@@ -94,7 +94,7 @@ export class TestFormattedText extends UI512TestBase {
             ser = `a${specialCharFontChange}font1${specialCharFontChange}${specialCharFontChange}font2${specialCharFontChange}bcd${specialCharFontChange}font3${specialCharFontChange}`;
             txt = FormattedText.newFromSerialized(ser);
             assertEq(4, txt.len(), '');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(0), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), '');
             assertEq('font2', txt.fontAt(1), '');
             assertEq('font2', txt.fontAt(2), '');
             assertEq('font2', txt.fontAt(3), '');
@@ -104,7 +104,7 @@ export class TestFormattedText extends UI512TestBase {
             assertEq('abcd'.charCodeAt(3), txt.charAt(3), '');
 
             let expected = `${specialCharFontChange}${
-                UI512FontCache.defaultFont
+                UI512FontRequest.defaultFont
             }${specialCharFontChange}a${specialCharFontChange}font2${specialCharFontChange}bcd`;
             assertEq(expected, txt.toSerialized(), '');
         },
@@ -116,7 +116,7 @@ export class TestFormattedText extends UI512TestBase {
             assertEq(4, txt.len(), '');
             assertEq('abcd'.charCodeAt(2), txt.charAt(2), '');
             assertEq('abcd'.charCodeAt(3), txt.charAt(3), '');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(2), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(2), '');
             assertEq('font2', txt.fontAt(3), '');
 
             /* append */
@@ -157,7 +157,7 @@ export class TestFormattedText extends UI512TestBase {
             assertEq(2, txt.len(), '');
             assertEq('ad'.charCodeAt(0), txt.charAt(0), '');
             assertEq('ad'.charCodeAt(1), txt.charAt(1), '');
-            assertEq(UI512FontCache.defaultFont, txt.fontAt(0), '');
+            assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), '');
             assertEq('font3', txt.fontAt(1), '');
 
             /* splice to delete no characters */
@@ -287,7 +287,7 @@ export class TestFormattedText extends UI512TestBase {
         },
         'test_asteriskOnly',
         () => {
-            let args = new RenderTextArgs(0, 0, largeArea, largeArea);
+            let args = new DrawTextArgs(0, 0, largeArea, largeArea);
             args.asteriskOnly = true;
 
             /* zero-length string */

@@ -6,14 +6,17 @@
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcAllCode.js';
 
-export class CodeExecFrame {
+/**
+ * an "execution frame"
+ * holding local variables and the offset to the current line of code
+ */
+export class VpcExecFrame {
     locals = new VarCollection(CodeLimits.MaxLocalVars, 'local');
     codeSection: VpcCodeOfOneVel;
-    protected _offset: number;
-    offsetsMarked: { [offset: number]: boolean } = {};
     declaredGlobals: { [varName: string]: boolean } = {};
     args: VpcVal[] = [];
     currentHandler: O<number>;
+    protected offset: number;
     constructor(public handlerName: string, public message: VpcScriptMessage) {
         /* make special locals */
         this.locals.set('$result', VpcVal.Empty);
@@ -21,37 +24,46 @@ export class CodeExecFrame {
         assertTrue(!!this.message, '5N|message is null');
     }
 
-    get offset() {
-        return this._offset;
+    /* use to mark when a branch has been taken */
+    offsetsMarked: { [offset: number]: boolean } = {};
+
+    /**
+     * get offset (index within codeSection of the current line of code)
+     */
+    getOffset() {
+        return this.offset;
     }
 
+    /**
+     * advance to the next line of code
+     */
     next() {
-        this._offset += 1;
-        checkThrow(this._offset < this.codeSection.lines.length, '7n|went past end of code');
+        this.offset += 1;
+        checkThrow(this.offset < this.codeSection.lines.length, '7n|went past end of code');
         checkThrow(
             this.codeSection.lines[this.offset].ctg !== VpcLineCategory.HandlerStart,
             '7m|we should never walk onto a handler start'
         );
     }
 
-    /* in the past, I checked if we were jumping backwards, */
-    /* and if so, reset all of the offsetsMarkedAsComplete. */
-    /* I think it is safe to instead reset during the first if statement, though. */
+    /**
+     * set the instruction pointer, jumping to another line of code
+     */
     jumpToOffset(newOffset: number, okToStartHandler?: boolean) {
-        this._offset = newOffset;
-        checkThrow(this._offset < this.codeSection.lines.length, '7l|went past end of code');
+        this.offset = newOffset;
+        checkThrow(this.offset < this.codeSection.lines.length, '7l|went past end of code');
         checkThrow(
             okToStartHandler || this.codeSection.lines[this.offset].ctg !== VpcLineCategory.HandlerStart,
             '7k|we should never walk onto a handler start'
         );
 
         /* make sure we did not jump into a different handler */
-        let next = this.codeSection.determineHandlerFromOffset(this._offset);
+        let next = this.codeSection.determineHandlerFromOffset(this.offset);
         checkThrow(next !== -1, '7j|could not determine handler', next);
         if (this.currentHandler === undefined) {
             this.currentHandler = next;
         } else {
-            checkThrow(next === this.currentHandler, '7i|we somehow jumped into an entirely different handler', next);
+            checkThrow(next === this.currentHandler, '7i|jumping into a different handler is not allowed', next);
             this.currentHandler = next;
         }
     }

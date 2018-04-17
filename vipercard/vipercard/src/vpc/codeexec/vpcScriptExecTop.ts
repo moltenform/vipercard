@@ -1,6 +1,6 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VarCollection, VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
@@ -8,36 +8,45 @@
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcAllCode } from '../../vpc/codepreparse/vpcAllCode.js';
-/* auto */ import { VpcParsingCache } from '../../vpc/codeexec/vpcScriptCacheParsed.js';
-/* auto */ import { ExecuteStatements } from '../../vpc/codeexec/vpcScriptExecStatement.js';
-/* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
+/* auto */ import { VpcCacheParsed } from '../../vpc/codeexec/vpcScriptCacheParsed.js';
+/* auto */ import { ExecuteStatement } from '../../vpc/codeexec/vpcScriptExecStatement.js';
+/* auto */ import { VpcExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
 
-export class CodeExecTop {
+/**
+ * script execution in ViperCard
+ *
+ * user actions will schedule code execution by adding to the workQueue
+ * periodically the Presenter within onIdle will call runTimeslice
+ * and we'll start running code
+ */
+export class VpcExecTop {
+    globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
     constants = new VariableCollectionConstants();
     check = new CheckReservedWords();
-    globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
-    runStatements = new ExecuteStatements();
-    parsingCache = new VpcParsingCache();
-    workQueue: CodeExecFrameStack[] = [];
+    runStatements = new ExecuteStatement();
+    cacheParsed = new VpcCacheParsed();
+    workQueue: VpcExecFrameStack[] = [];
     cbOnScriptError: O<(err: VpcScriptErrorBase) => void>;
     cbCauseUIRedraw: O<() => void>;
     lastEncounteredScriptErr: O<VpcScriptErrorBase>;
-
+    protected justSawRepeatedMousedown = false;
     protected readonly code: VpcAllCode;
     protected readonly outside: OutsideWorldReadWrite;
     constructor(idGen: CountNumericId, outside: OutsideWorldReadWrite) {
         this.code = new VpcAllCode(idGen);
         this.outside = outside;
         this.runStatements.outside = outside;
-        this.parsingCache.visitor.outside = outside as OutsideWorldRead;
+        this.cacheParsed.visitor.outside = outside as OutsideWorldRead;
     }
 
-    protected justSawRepeatedMousedown = false;
+    /**
+     * add an entry to the queue, scheduling code execution
+     */
     scheduleCodeExec(msg: VpcScriptMessage) {
-        let newWork = new CodeExecFrameStack(
+        let newWork = new VpcExecFrameStack(
             this.code,
             this.outside,
-            this.parsingCache,
+            this.cacheParsed,
             this.runStatements,
             this.constants,
             this.globals,
@@ -46,7 +55,6 @@ export class CodeExecTop {
         );
 
         let isRepeatedKeydown = newWork.originalMsg.msgName === 'afterkeydown' && newWork.originalMsg.keyRepeated;
-
         if (isRepeatedKeydown && this.workQueue.length > 2) {
             /* don't queue up a key that is held down at least beyond 3 evts */
             return;
@@ -58,17 +66,19 @@ export class CodeExecTop {
             return;
         }
 
-        /* don't let keydowns swamp everything else! */
+        /* don't let keydowns starve everyone else! */
         if (isRepeatedKeydown) {
             if (this.justSawRepeatedMousedown) {
                 return;
             }
+
             this.justSawRepeatedMousedown = true;
         } else {
             this.justSawRepeatedMousedown = false;
         }
 
         try {
+            /* an error might be thrown, like if there if the script causes a lexer error  */
             UI512ErrorHandling.breakOnThrow = false;
             newWork.findHandlerToExec();
             if (newWork.stack.length > 1) {
@@ -83,22 +93,35 @@ export class CodeExecTop {
         }
     }
 
+    /**
+     * retrieve code for a vel
+     */
     findCode(id: string) {
         return this.code.findCode(id);
     }
 
+    /**
+     * remove code from a vel
+     */
     removeScript(id: string) {
-        /* disabled because this hasn't been tested, but actually this probably "works" */
-        /* since the framecontext holds a reference to the codesection. */
-        checkThrow(!this.isCodeRunning(), "7z|we don't currently support deleting an element while code is running");
+        checkThrow(
+            !this.isCodeRunning(),
+            "7z|deleting an element while code is running... we haven't tested this, so we don't support it"
+        );
         this.code.remove(id);
     }
 
+    /**
+     * is code currently running?
+     */
     isCodeRunning() {
         /* check hasRunCode to make ui less gummed up */
         return this.workQueue.length > 0 && this.workQueue[0].hasRunCode;
     }
 
+    /**
+     * force code to stop running
+     */
     forceStopRunning() {
         this.workQueue.length = 0;
         if (this.cbCauseUIRedraw) {
@@ -106,6 +129,9 @@ export class CodeExecTop {
         }
     }
 
+    /**
+     * run code, and trigger UI refresh
+     */
     runTimeslice(ms: number) {
         let codeRunningBefore = this.isCodeRunning();
         this.runTimesliceImpl(ms);
@@ -115,9 +141,12 @@ export class CodeExecTop {
         }
     }
 
+    /**
+     * run code
+     */
     protected runTimesliceImpl(ms: number) {
         let first = this.workQueue[0];
-        let currentcardid = this.outside.GetOption_s('currentCardId');
+        let currentCardId = this.outside.GetOptionS('currentCardId');
 
         if (!this.workQueue.length || !first) {
             /* no code is running. */
@@ -130,7 +159,7 @@ export class CodeExecTop {
             !first.hasRunCode &&
             slength(first.originalMsg.cardWhenFired) > 0 &&
             first.originalMsg.causedByUserAction &&
-            first.originalMsg.cardWhenFired !== currentcardid
+            first.originalMsg.cardWhenFired !== currentCardId
         ) {
             /* important: don't run queued messages that were created on a different card */
             this.workQueue.splice(0, 1);
@@ -146,6 +175,7 @@ export class CodeExecTop {
         }
 
         try {
+            /* allow exceptions, because we will catch them here */
             UI512ErrorHandling.breakOnThrow = false;
             first.runTimeslice(ms);
         } catch (e) {
@@ -163,6 +193,9 @@ export class CodeExecTop {
         }
     }
 
+    /**
+     * update a vel's code
+     */
     updateChangedCode(owner: VpcElBase, code: string) {
         checkThrow(!this.isCodeRunning(), "7y|we don't currently support changing code while code is running");
         UI512ErrorHandling.breakOnThrow = false;
@@ -173,6 +206,9 @@ export class CodeExecTop {
         }
     }
 
+    /**
+     * add context information to the error and call cbOnScriptError
+     */
     protected respondScriptError(e: any) {
         this.forceStopRunning();
         let vpcScriptErr = e.vpcScriptErr as VpcScriptErrorBase;

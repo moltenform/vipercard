@@ -1,14 +1,14 @@
 
-/* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { MenuPositioning, UI512MenuDefn } from '../../ui512/menu/ui512MenuRender.js';
-/* auto */ import { MenuBehavior } from '../../ui512/menu/ui512MenuListeners.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { MenuPositioning, UI512MenuDefn } from '../../ui512/menu/ui512MenuPositioning.js';
+/* auto */ import { MenuListeners } from '../../ui512/menu/ui512MenuListeners.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 
 export class UI512TestMenusPresenter extends UI512Presenter {}
@@ -136,7 +136,7 @@ export class TestDrawUI512Menus extends UI512TestBase {
         if (expanded[0] !== -1) {
             let menuroot = MenuPositioning.getMenuRoot(testc.app);
             let dropdns = menuroot.getchildren(testc.app);
-            MenuBehavior.setActiveMenu(testc, dropdns[expanded[0]].id);
+            MenuListeners.setActiveMenu(testc, dropdns[expanded[0]].id);
             menuroot.setDirty(true);
 
             if (expanded[1] !== -1) {

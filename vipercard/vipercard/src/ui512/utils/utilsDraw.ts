@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, checkThrowUI512 } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512 } from '../../ui512/utils/utils512.js';
 
 export type DrawableImage = HTMLCanvasElement | HTMLImageElement;
 

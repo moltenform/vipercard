@@ -1,13 +1,13 @@
 
 /* auto */ import { vpcversion } from '../../config.js';
 /* auto */ import { cProductName } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, assertEqWarn } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq, assertEqWarn } from '../../ui512/utils/utils512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { OrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcValN } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
@@ -910,20 +910,20 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             ];
             this.testBatchEvaluate(batch);
 
-            this.updateObjectScript(this.appl.model.stack.id, 'on stackscript\nend stackscript');
-            this.updateObjectScript(this.appl.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
-            this.updateObjectScript(this.appl.model.stack.bgs[1].cards[1].id, 'on cdscript\nend cdscript');
+            this.updateObjectScript(this.vcstate.model.stack.id, 'on stackscript\nend stackscript');
+            this.updateObjectScript(this.vcstate.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
+            this.updateObjectScript(this.vcstate.model.stack.bgs[1].cards[1].id, 'on cdscript\nend cdscript');
             batch = [
                 /* stack get and set */
                 ['length(the script of this stack) > 1', `true`],
-                ['the script of this stack', `${this.appl.model.stack.getS('script')}`],
+                ['the script of this stack', `${this.vcstate.model.stack.getS('script')}`],
                 ['set the name of this stack to "newname" \\ the short name of this stack', 'newname'],
                 ['set the name of this stack to "teststack" \\ the short name of this stack', 'teststack'],
                 /* bg get and set */
                 ['length(the script of bg 1) == 0', `true`],
                 ['the script of bg 1', ``],
                 ['length(the script of bg 2) > 1', `true`],
-                ['the script of bg 2', `${this.appl.model.stack.bgs[1].getS('script')}`],
+                ['the script of bg 2', `${this.vcstate.model.stack.bgs[1].getS('script')}`],
                 ['the short name of bg 2', 'b'],
                 ['set the name of bg 2 to "newname" \\ the short name of bg 2', 'newname'],
                 ['set the name of bg 2 to "b" \\ the short name of bg 2', 'b'],
@@ -931,7 +931,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 ['length(the script of cd 1) == 0', `true`],
                 ['the script of cd 1', ``],
                 ['length(the script of cd 3) > 1', `true`],
-                ['the script of cd 3', `${this.appl.model.stack.bgs[1].cards[1].getS('script')}`],
+                ['the script of cd 3', `${this.vcstate.model.stack.bgs[1].cards[1].getS('script')}`],
                 ['the short name of cd 3', 'c'],
                 ['set the name of cd 3 to "newname" \\ the short name of cd 3', 'newname'],
                 ['set the name of cd 3 to "c" \\ the short name of cd 3', 'c']
@@ -1158,7 +1158,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testBatchEvaluate(batch);
 
             /* setting style */
-            const fld = this.appl.model.getById(this.elIds.fld_b_c_1, VpcElField);
+            const fld = this.vcstate.model.getById(this.elIds.fld_b_c_1, VpcElField);
             assertEq(UI512FldStyle.Rectangle, fld.getN('style'), '1 |');
             batch = [
                 ['the style of cd fld "p1"', 'rectangle'],
@@ -1172,7 +1172,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             /* reading per-character formatting */
             /* here's what we'll set it to: Courier/Bold/24"ab"Courier/ItalicShadow/18"cd"Times/Plain/18ef */
-            const fldPerChar = this.appl.model.getById(this.elIds.fld_b_c_2, VpcElField);
+            const fldPerChar = this.vcstate.model.getById(this.elIds.fld_b_c_2, VpcElField);
             let sfmt = '';
             sfmt += UI512DrawText.setFont('ab', new TextFontSpec('Courier', TextFontStyling.Bold, 24).toSpecString());
             sfmt += UI512DrawText.setFont(
@@ -1180,7 +1180,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 new TextFontSpec('Courier', TextFontStyling.Italic | TextFontStyling.Shadow, 18).toSpecString()
             );
             sfmt += UI512DrawText.setFont('ef', new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString());
-            this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
+            this.vcstate.vci.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
             batch = [
                 /* non per-character properties */
                 ['the defaulttextfont of cd fld "p2"', 'geneva'],
@@ -1284,7 +1284,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             ];
 
             for (let [action, expectedFont] of actions) {
-                this.appl.appli.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
+                this.vcstate.vci.undoableAction(() => fldPerChar.setftxt(FormattedText.newFromSerialized(sfmt)));
                 assertEq(sfmt, fldPerChar.get_ftxt().toSerialized(), '1w|');
                 batch = [
                     ['set the defaulttextfont of cd fld "p2" to "geneva"\\0', '0'],

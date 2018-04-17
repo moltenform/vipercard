@@ -1,20 +1,20 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys, ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { ClipManager } from '../../ui512/textedit/ui512Clipboard.js';
+/* auto */ import { ClipManager } from '../../ui512/textedit/ui512ClipManager.js';
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 /* auto */ import { UI512TextEvents, addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
-/* auto */ import { UI512CompRadioButtonGroup } from '../../ui512/composites/ui512ButtonGroup.js';
+/* auto */ import { UI512CompButtonGroup } from '../../ui512/composites/ui512ButtonGroup.js';
 /* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512CodeEditor.js';
@@ -251,8 +251,8 @@ end1`.replace(/\r\n/g, '\n')
 }
 
 export class UI512TestCompositesPresenter extends UI512Presenter {
-    testrbExclusive = new UI512CompRadioButtonGroup('testrbExclusive');
-    testrbInclusive = new UI512CompRadioButtonGroup('testrbInclusive');
+    testrbExclusive = new UI512CompButtonGroup('testrbExclusive');
+    testrbInclusive = new UI512CompButtonGroup('testrbInclusive');
     testToolbox = new UI512CompToolbox('testToolbox');
     testEditor = new UI512CompCodeEditor('testCodeEditor');
     testModalDlg = new UI512CompModalDialog('testModalDlg');

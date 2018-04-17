@@ -1,7 +1,10 @@
 
-// Type definitions for text-encoding
-// Project: https://github.com/inexorabletash/text-encoding
-// Forked from https://github.com/DefinitelyTyped/DefinitelyTyped/blob/types-2.0/text-encoding/text-encoding.d.ts
+/*
+    Type definitions for text-encoding
+    https://www.npmjs.com/package/@types/text-encoding
+    released under the MIT license
+*/
+
 declare class TextEncoder {
     constructor(label?: string, options?: TextEncoding.TextEncoderOptions);
     encoding: string;
@@ -41,6 +44,5 @@ declare namespace TextEncoding {
 }
 
 declare var TextEncoding: TextEncoding.TextEncodingStatic;
-
 export const ExpTextEncoder = TextEncoder;
 export type ExpTextEncoder = TextEncoder;

@@ -1,6 +1,6 @@
 
 /* auto */ import { checkThrow, makeVpcInternalErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, checkThrowEq, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { CountNumericIdNormal } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';

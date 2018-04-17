@@ -1,8 +1,8 @@
 
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { isString } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
@@ -317,6 +317,9 @@ function coord(me: VpcElBase, s: string, whichCoord: number): number {
     let pts = s.split(',');
     checkThrow(whichCoord < pts.length, `7F|could not get coord ${whichCoord + 1} of ${s}`);
     VpcValS(pts[whichCoord]).isItAStrictIntegerImpl(me.tmpArray);
-    checkThrow(me.tmpArray[0] && typeof me.tmpArray[1] === 'number', `7E|coord ${whichCoord + 1} of ${s} is not an integer`);
+    checkThrow(
+        me.tmpArray[0] && typeof me.tmpArray[1] === 'number',
+        `7E|coord ${whichCoord + 1} of ${s} is not an integer`
+    );
     return me.tmpArray[1];
 }

@@ -1,5 +1,5 @@
 
-/* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';

@@ -1,14 +1,14 @@
 
-/* auto */ import { RenderComplete, cast, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, cast, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { IconInfo } from '../../ui512/draw/ui512DrawIconClasses.js';
-/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIconManager.js';
 
 /**
  * dissolve from one image to another
  * we can cleverly use composition modes to do this very efficiently.
  */
-export class DissolveImages {
+export class UI512ImageDissolve {
     readonly iconGroup = 'fordissolvet';
     readonly countstages = 12;
     blendAtStage(c1: CanvasWrapper, c2: CanvasWrapper, stage: number, comp: RenderComplete) {

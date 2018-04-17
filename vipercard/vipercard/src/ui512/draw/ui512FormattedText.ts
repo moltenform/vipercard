@@ -1,9 +1,9 @@
 
 /* auto */ import { O, assertTrue, assertTrueWarn, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { BrowserOSInfo, assertEq, assertEqWarn } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { CharsetTranslation } from '../../ui512/draw/ui512DrawTextTransCharset.js';
+/* auto */ import { BrowserOSInfo, assertEq, assertEqWarn } from '../../ui512/utils/utils512.js';
+/* auto */ import { TranslateCharset } from '../../ui512/draw/ui512TranslateCharset.js';
 /* auto */ import { specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512FontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
+/* auto */ import { UI512FontRequest } from '../../ui512/draw/ui512DrawTextFontRequest.js';
 
 /**
  * the formatted text class for UI512.
@@ -169,7 +169,7 @@ export class FormattedText {
         s = s.replace(new RegExp('\x00', 'g'), '');
         s = s.replace(new RegExp('\r\n', 'g'), '\n');
         s = s.replace(new RegExp('\r', 'g'), '\n');
-        s = CharsetTranslation.translateUnToRoman(s, fallback);
+        s = TranslateCharset.translateUnToRoman(s, fallback);
         return s;
     }
 
@@ -181,7 +181,7 @@ export class FormattedText {
         s = s.replace(new RegExp('\x00', 'g'), '');
         s = s.replace(new RegExp('\r\n', 'g'), '\n');
         s = s.replace(new RegExp('\r', 'g'), '\n');
-        s = CharsetTranslation.translateRomanToUn(s, fallback);
+        s = TranslateCharset.translateRomanToUn(s, fallback);
         if (info === BrowserOSInfo.Windows) {
             s = s.replace(new RegExp('\n', 'g'), '\r\n');
         }
@@ -242,12 +242,12 @@ export class FormattedText {
 
         /* add a default font if no font was specified. */
         if (!s.startsWith(specialCharFontChange)) {
-            s = specialCharFontChange + UI512FontCache.defaultFont + specialCharFontChange + s;
+            s = specialCharFontChange + UI512FontRequest.defaultFont + specialCharFontChange + s;
         }
 
         let parts = s.split(new RegExp(specialCharFontChange, 'g'));
         assertTrue(parts.length % 2 === 1, '3b|parts length must be odd');
-        let currentFont = UI512FontCache.defaultFont;
+        let currentFont = UI512FontRequest.defaultFont;
         for (let i = 0; i < parts.length; i++) {
             if (i % 2 === 0) {
                 let content = parts[i];

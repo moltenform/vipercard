@@ -1,19 +1,19 @@
 
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512, assertEqWarn, cast, fitIntoInclusive, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, Util512, assertEqWarn, cast, fitIntoInclusive, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CharRectType, FoundCharByLocation, largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { RenderTextArgs, renderTextArgsFromEl } from '../../ui512/draw/ui512DrawTextParams.js';
+/* auto */ import { DrawTextArgs, drawTextArgsFromEl } from '../../ui512/draw/ui512DrawTextArgs.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512ViewDrawBorders } from '../../ui512/draw/ui512DrawBorders.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
-/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementsView.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
+/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementView.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 
@@ -93,7 +93,7 @@ export class ScrollbarImpl {
         }
 
         let pieces = this.getScrollbarPieces(app, el);
-        if (this.isThereSpaceToShowScrollbar(el, pieces)) {
+        if (this.isThereSpaceToShowScrollbar(el)) {
             for (let piece of Util512.getMapVals(pieces)) {
                 piece.set('visible', true);
             }
@@ -202,7 +202,7 @@ export class ScrollbarImpl {
      * if there isn't enough space to show the full scrollbar
      * we currently just hide everything. doesn't match original, but simpler.
      */
-    isThereSpaceToShowScrollbar(el: UI512Element, pieces: any) {
+    isThereSpaceToShowScrollbar(el: UI512Element) {
         return el.w > ScrollConsts.BarWidth + 1 && el.h > 3 * ScrollConsts.BoxHeight + 1;
     }
 
@@ -227,7 +227,7 @@ export class ScrollbarImpl {
         /* drawBeyondVisible is a perf optimization, telling text render to stop looping
         once it leaves visible area. */
         let drawText = cast(getRoot().getDrawText(), UI512DrawText);
-        let [args, fmtText] = renderTextArgsFromEl(el, subRect, false);
+        let [args, fmtText] = drawTextArgsFromEl(el, subRect, false);
         args.callbackPerChar = callbackPerChar;
         args.drawBeyondVisible = drawBeyondVisible;
 
@@ -444,7 +444,7 @@ export class ScrollbarImpl {
         textGetHeight.push('|'.charCodeAt(0), font);
 
         let drawText = getRoot().getDrawText() as UI512DrawText;
-        let args = new RenderTextArgs(0, 0, largeArea, largeArea, false, false, false);
+        let args = new DrawTextArgs(0, 0, largeArea, largeArea, false, false, false);
         args.addVSpacing = el.getN('addvspacing');
         let drawn = drawText.drawFormattedStringIntoBox(textGetHeight, undefined, args);
         if (drawn) {

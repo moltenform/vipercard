@@ -1,9 +1,9 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, assertEq, sleep } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, assertEq, cast, sleep } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { sendSignedRequestJson, sendWebRequestGetJson } from '../../vpc/request/vpcSigned.js';
+/* auto */ import { sendSignedRequestJson, vpcSendRequestForJson } from '../../vpc/request/vpcSigned.js';
 /* auto */ import { VpcSession, vpcStacksFlagContent, vpcStacksGetData, vpcUsersCheckLogin, vpcUsersCreate, vpcUsersEnterEmailVerifyCode } from '../../vpc/request/vpcRequest.js';
 
 function nexttest(callback: Function) {
@@ -16,7 +16,7 @@ async function doBasicTest(callback: Function) {
     for (let method of ['GET', 'POST']) {
         let got: any;
         try {
-            got = await sendWebRequestGetJson(`/ping_valid${method.toLowerCase()}`, method, {});
+            got = await vpcSendRequestForJson(`/ping_valid${method.toLowerCase()}`, method, {});
         } catch (e) {
             assertTrue(false, 'FAIL: got ' + e.toString());
         }
@@ -28,7 +28,7 @@ async function doBasicTest(callback: Function) {
     for (let method of ['GET', 'POST']) {
         let got: any;
         let cb = async () => {
-            got = await sendWebRequestGetJson(`/ping_notvalid${method.toLowerCase()}`, method, {});
+            got = await vpcSendRequestForJson(`/ping_notvalid${method.toLowerCase()}`, method, {});
         };
         await assertThrowsAsync('', 'err details here', cb);
     }
@@ -36,7 +36,7 @@ async function doBasicTest(callback: Function) {
     for (let method of ['GET', 'POST']) {
         let got: any;
         let cb = async () => {
-            got = await sendWebRequestGetJson(`/pagedoesnotexist${method.toLowerCase()}`, method, {});
+            got = await vpcSendRequestForJson(`/pagedoesnotexist${method.toLowerCase()}`, method, {});
         };
         await assertThrowsAsync('', '404', cb);
     }
@@ -298,32 +298,42 @@ async function checkLoginAndEmailVerifyTests(callback: Function) {
     await assertThrowsAsync('', 'wrong pass', cb);
 
     // pending user, right password, needs to be verified
-    let got = await vpcUsersCheckLogin('test4', '123abcdefg', fakeIp());
+    let gotRaw = await vpcUsersCheckLogin('test4', '123abcdefg', fakeIp());
+    let got:(string | ArrayBuffer)[];
+    if (gotRaw instanceof VpcSession) {
+        assertTrue(false, 'should not have gotten complete session');
+        return;
+    } else {
+        got = gotRaw;
+    }
+
+    // ensure that we got the 'you-need-verification' message
     assertEq(4, got.length, '');
     assertEq('need_email_verify', got[0], '');
-    let verifcode = got[3];
+    let verifcode = got[3].toString();
+    let key = cast(got[2], ArrayBuffer);
 
     // send in verify code, not a user
     cb = async () => {
-        await vpcUsersEnterEmailVerifyCode('notexistingb5v4s4', got[2], 'wrongcode');
+        await vpcUsersEnterEmailVerifyCode('notexistingb5v4s4', key, 'wrongcode');
     };
     await assertThrowsAsync('', 'no user found', cb);
 
     // send in wrong verify code
     cb = async () => {
-        await vpcUsersEnterEmailVerifyCode('test4', got[2], 'wrongcode');
+        await vpcUsersEnterEmailVerifyCode('test4', key, 'wrongcode');
     };
     await assertThrowsAsync('', 'incorrect code', cb);
 
     // try to do actions when still pending
     cb = async () => {
-        let sess = new VpcSession('test4', got[2]);
+        let sess = new VpcSession('test4', key);
         await sess.vpcUsersUpdateEmail('test4_changed@test.com');
     };
     await assertThrowsAsync('', 'not yet verified', cb);
 
     // send in right verify code
-    let gotRightVerify = await vpcUsersEnterEmailVerifyCode('test4', got[2], verifcode);
+    let gotRightVerify = await vpcUsersEnterEmailVerifyCode('test4', key, verifcode);
     assertTrue(gotRightVerify && gotRightVerify instanceof VpcSession, '');
     assertEq(gotRightVerify.username, 'test4', '');
 
@@ -337,8 +347,8 @@ async function checkLoginAndEmailVerifyTests(callback: Function) {
     await assertThrowsAsync('', 'wrong pass', cb);
 
     // complete user, got right password!
-    let gotRightSession = await vpcUsersCheckLogin('test4', '123abcdefg', fakeIp());
-    assertTrue(gotRightSession && gotRightVerify instanceof VpcSession, '');
+    let gotRightSessionRaw = await vpcUsersCheckLogin('test4', '123abcdefg', fakeIp());
+    let gotRightSession = cast(gotRightSessionRaw, VpcSession);
     assertEq(gotRightSession.username, 'test4', '');
 
     // changing should now work with this session.
@@ -353,7 +363,7 @@ async function createLogEntryTests(callback: Function) {
     let badSession = new VpcSession('test3', strToArrBuffer(atob('XXXXXXGhJ2vkC01E7u5tBicpKmLfeUqzwsnqusMzqV8=')));
 
     let cb = async () => {
-        await badSession.vpLogEntriesCreate('usertypeddesc', 'lastclientlogs', 'stackserverguid', fakeIp());
+        await badSession.vpcLogEntriesCreate('usertypeddesc', 'lastclientlogs', 'stackserverguid', fakeIp());
     };
     await assertThrowsAsync('createLogEntryTests not logged in correctly', 'wrong pass', cb);
 
@@ -366,7 +376,7 @@ async function createLogEntryTests(callback: Function) {
     // don't allow an ip address to send too many
     // first should go through
     let faketime = '1000';
-    let got = await sess.vpLogEntriesCreate(
+    let got = await sess.vpcLogEntriesCreate(
         fakeusertypeddesc + '1',
         fakelastclientlogs,
         fakeserverguid,
@@ -380,13 +390,13 @@ async function createLogEntryTests(callback: Function) {
     // second should fail, since it is too soon
     cb = async () => {
         faketime = '1001';
-        await sess.vpLogEntriesCreate(fakeusertypeddesc + '2', fakelastclientlogs, fakeserverguid, firstIp, faketime);
+        await sess.vpcLogEntriesCreate(fakeusertypeddesc + '2', fakelastclientlogs, fakeserverguid, firstIp, faketime);
     };
     await assertThrowsAsync('ip address to send too many', 'not create log entry', cb);
 
     // third should go through, since we have waited long enough
     faketime = '1500';
-    got = await sess.vpLogEntriesCreate(fakeusertypeddesc + '3', fakelastclientlogs, fakeserverguid, firstIp, faketime);
+    got = await sess.vpcLogEntriesCreate(fakeusertypeddesc + '3', fakelastclientlogs, fakeserverguid, firstIp, faketime);
     assertEq(true, got, '');
 
     nexttest(callback);
@@ -665,8 +675,8 @@ async function updateStacksTests(tst: TestVpcServerTests, callback: Function) {
 
 async function clearDataForServerTests(callback: Function) {
     let params = { from_tests: 'true' };
-    await sendWebRequestGetJson('/config/vpcInsertInitialAccounts', 'POST', params);
-    await sendWebRequestGetJson('/config/vpcClearDataForServerTests', 'POST', params);
+    await vpcSendRequestForJson('/config/vpcInsertInitialAccounts', 'POST', params);
+    await vpcSendRequestForJson('/config/vpcClearDataForServerTests', 'POST', params);
     nexttest(callback);
 }
 

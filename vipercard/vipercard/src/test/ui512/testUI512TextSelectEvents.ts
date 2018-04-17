@@ -1,13 +1,13 @@
 
 /* auto */ import { assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementGettable.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntryImpl } from '../../ui512/textedit/ui512TextModifyClasses.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { TextSelModifyImpl } from '../../ui512/textedit/ui512TextSelModifyImpl.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 
 export class TestUI512TextSelectEvents extends UI512TestBase {
     constructor() {
@@ -18,219 +18,219 @@ export class TestUI512TextSelectEvents extends UI512TestBase {
         'testchangeSelSelectAll',
         () => {
             /* no current selection */
-            this.testChangeSel('^abc#', '^#abc', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^abc#', 'a^#bc', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^abc#', 'abc^#', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^a#', 'a^#', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^\n#', '\n^#', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^\n#', '^#\n', SelAndEntryImpl.changeSelSelectAll);
+            this.testChangeSel('^abc#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^abc#', 'a^#bc', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^abc#', 'abc^#', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^a#', 'a^#', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^\n#', '\n^#', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^\n#', '^#\n', TextSelModifyImpl.changeSelSelectAll);
             /* with current selection */
-            this.testChangeSel('^abc#', '^abc#', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^abc#', '#abc^', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^abc#', 'a^b#c', SelAndEntryImpl.changeSelSelectAll);
-            this.testChangeSel('^ab\nc#', 'a^#b\nc', SelAndEntryImpl.changeSelSelectAll);
+            this.testChangeSel('^abc#', '^abc#', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^abc#', '#abc^', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^abc#', 'a^b#c', TextSelModifyImpl.changeSelSelectAll);
+            this.testChangeSel('^ab\nc#', 'a^#b\nc', TextSelModifyImpl.changeSelSelectAll);
         },
         'testchangeSelGoDocHomeEnd',
         () => {
             /* go to start, no extend */
-            this.testChangeSel('^#abc', '^#abc', SelAndEntryImpl.changeSelGoDocHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'a^#bc', SelAndEntryImpl.changeSelGoDocHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'a^b#c', SelAndEntryImpl.changeSelGoDocHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'a#b^c', SelAndEntryImpl.changeSelGoDocHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'abc^#', SelAndEntryImpl.changeSelGoDocHomeEnd, true, false);
+            this.testChangeSel('^#abc', '^#abc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'a^#bc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'a^b#c', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'a#b^c', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'abc^#', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
             /* go to start, extend */
-            this.testChangeSel('^#abc', '^#abc', SelAndEntryImpl.changeSelGoDocHomeEnd, true, true);
-            this.testChangeSel('^a#bc', 'a^#bc', SelAndEntryImpl.changeSelGoDocHomeEnd, true, true);
-            this.testChangeSel('^ab#c', 'a^b#c', SelAndEntryImpl.changeSelGoDocHomeEnd, true, true);
-            this.testChangeSel('^a#bc', 'a#b^c', SelAndEntryImpl.changeSelGoDocHomeEnd, true, true);
-            this.testChangeSel('^abc#', 'abc^#', SelAndEntryImpl.changeSelGoDocHomeEnd, true, true);
+            this.testChangeSel('^#abc', '^#abc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, true);
+            this.testChangeSel('^a#bc', 'a^#bc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, true);
+            this.testChangeSel('^ab#c', 'a^b#c', TextSelModifyImpl.changeSelGoDocHomeEnd, true, true);
+            this.testChangeSel('^a#bc', 'a#b^c', TextSelModifyImpl.changeSelGoDocHomeEnd, true, true);
+            this.testChangeSel('^abc#', 'abc^#', TextSelModifyImpl.changeSelGoDocHomeEnd, true, true);
             /* go to end, no extend */
-            this.testChangeSel('abc#^', '^#abc', SelAndEntryImpl.changeSelGoDocHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'a^#bc', SelAndEntryImpl.changeSelGoDocHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'a^b#c', SelAndEntryImpl.changeSelGoDocHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'a#b^c', SelAndEntryImpl.changeSelGoDocHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'abc^#', SelAndEntryImpl.changeSelGoDocHomeEnd, false, false);
+            this.testChangeSel('abc#^', '^#abc', TextSelModifyImpl.changeSelGoDocHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'a^#bc', TextSelModifyImpl.changeSelGoDocHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'a^b#c', TextSelModifyImpl.changeSelGoDocHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'a#b^c', TextSelModifyImpl.changeSelGoDocHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'abc^#', TextSelModifyImpl.changeSelGoDocHomeEnd, false, false);
             /* go to end, extend */
-            this.testChangeSel('#abc^', '^#abc', SelAndEntryImpl.changeSelGoDocHomeEnd, false, true);
-            this.testChangeSel('a#bc^', 'a^#bc', SelAndEntryImpl.changeSelGoDocHomeEnd, false, true);
-            this.testChangeSel('ab#c^', 'a^b#c', SelAndEntryImpl.changeSelGoDocHomeEnd, false, true);
-            this.testChangeSel('a#bc^', 'a#b^c', SelAndEntryImpl.changeSelGoDocHomeEnd, false, true);
-            this.testChangeSel('abc#^', 'abc^#', SelAndEntryImpl.changeSelGoDocHomeEnd, false, true);
+            this.testChangeSel('#abc^', '^#abc', TextSelModifyImpl.changeSelGoDocHomeEnd, false, true);
+            this.testChangeSel('a#bc^', 'a^#bc', TextSelModifyImpl.changeSelGoDocHomeEnd, false, true);
+            this.testChangeSel('ab#c^', 'a^b#c', TextSelModifyImpl.changeSelGoDocHomeEnd, false, true);
+            this.testChangeSel('a#bc^', 'a#b^c', TextSelModifyImpl.changeSelGoDocHomeEnd, false, true);
+            this.testChangeSel('abc#^', 'abc^#', TextSelModifyImpl.changeSelGoDocHomeEnd, false, true);
         },
         'testchangeSelLeftRight',
         () => {
             /* move left, no extend */
-            this.testChangeSel('^#abcd', '^#abcd', SelAndEntryImpl.changeSelLeftRight, true, false, false);
-            this.testChangeSel('^#abcd', 'a^#bcd', SelAndEntryImpl.changeSelLeftRight, true, false, false);
-            this.testChangeSel('a^#bcd', 'ab^#cd', SelAndEntryImpl.changeSelLeftRight, true, false, false);
-            this.testChangeSel('ab^#cd', 'abc^#d', SelAndEntryImpl.changeSelLeftRight, true, false, false);
-            this.testChangeSel('abc^#d', 'abcd^#', SelAndEntryImpl.changeSelLeftRight, true, false, false);
+            this.testChangeSel('^#abcd', '^#abcd', TextSelModifyImpl.changeSelLeftRight, true, false, false);
+            this.testChangeSel('^#abcd', 'a^#bcd', TextSelModifyImpl.changeSelLeftRight, true, false, false);
+            this.testChangeSel('a^#bcd', 'ab^#cd', TextSelModifyImpl.changeSelLeftRight, true, false, false);
+            this.testChangeSel('ab^#cd', 'abc^#d', TextSelModifyImpl.changeSelLeftRight, true, false, false);
+            this.testChangeSel('abc^#d', 'abcd^#', TextSelModifyImpl.changeSelLeftRight, true, false, false);
             /* move left, extend */
-            this.testChangeSel('^#abcd', '^#abcd', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('^a#bcd', 'a^#bcd', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('a^b#cd', 'ab^#cd', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('ab^c#d', 'abc^#d', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('abc^d#', 'abcd^#', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('^abc#d', '^abc#d', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('^abc#d', 'a^bc#d', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('#ab^cd', '#abc^d', SelAndEntryImpl.changeSelLeftRight, true, true, false);
-            this.testChangeSel('a#b^cd', 'a#bc^d', SelAndEntryImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('^#abcd', '^#abcd', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('^a#bcd', 'a^#bcd', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('a^b#cd', 'ab^#cd', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('ab^c#d', 'abc^#d', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('abc^d#', 'abcd^#', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('^abc#d', '^abc#d', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('^abc#d', 'a^bc#d', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('#ab^cd', '#abc^d', TextSelModifyImpl.changeSelLeftRight, true, true, false);
+            this.testChangeSel('a#b^cd', 'a#bc^d', TextSelModifyImpl.changeSelLeftRight, true, true, false);
             /* move right, no extend */
-            this.testChangeSel('a^#bcd', '^#abcd', SelAndEntryImpl.changeSelLeftRight, false, false, false);
-            this.testChangeSel('ab^#cd', 'a^#bcd', SelAndEntryImpl.changeSelLeftRight, false, false, false);
-            this.testChangeSel('abc^#d', 'ab^#cd', SelAndEntryImpl.changeSelLeftRight, false, false, false);
-            this.testChangeSel('abcd^#', 'abc^#d', SelAndEntryImpl.changeSelLeftRight, false, false, false);
-            this.testChangeSel('abcd^#', 'abcd^#', SelAndEntryImpl.changeSelLeftRight, false, false, false);
+            this.testChangeSel('a^#bcd', '^#abcd', TextSelModifyImpl.changeSelLeftRight, false, false, false);
+            this.testChangeSel('ab^#cd', 'a^#bcd', TextSelModifyImpl.changeSelLeftRight, false, false, false);
+            this.testChangeSel('abc^#d', 'ab^#cd', TextSelModifyImpl.changeSelLeftRight, false, false, false);
+            this.testChangeSel('abcd^#', 'abc^#d', TextSelModifyImpl.changeSelLeftRight, false, false, false);
+            this.testChangeSel('abcd^#', 'abcd^#', TextSelModifyImpl.changeSelLeftRight, false, false, false);
             /* move right, extend */
-            this.testChangeSel('#a^bcd', '^#abcd', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('a#b^cd', 'a^#bcd', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('ab#c^d', 'ab^#cd', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('abc#d^', 'abc^#d', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('abcd#^', 'abcd^#', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('a^bc#d', '^abc#d', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('ab^c#d', 'a^bc#d', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('#abcd^', '#abc^d', SelAndEntryImpl.changeSelLeftRight, false, true, false);
-            this.testChangeSel('a#bcd^', 'a#bc^d', SelAndEntryImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('#a^bcd', '^#abcd', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('a#b^cd', 'a^#bcd', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('ab#c^d', 'ab^#cd', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('abc#d^', 'abc^#d', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('abcd#^', 'abcd^#', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('a^bc#d', '^abc#d', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('ab^c#d', 'a^bc#d', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('#abcd^', '#abc^d', TextSelModifyImpl.changeSelLeftRight, false, true, false);
+            this.testChangeSel('a#bcd^', 'a#bc^d', TextSelModifyImpl.changeSelLeftRight, false, true, false);
         },
         'testchangeSelGoLineHomeEnd',
         () => {
             /* middle line, go to start, no extend */
-            this.testChangeSel('qr|^#abc|st', 'qr|^#abc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('qr|^#abc|st', 'qr|a^#bc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('qr|^#abc|st', 'qr|a^b#c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('qr|^#abc|st', 'qr|a#b^c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('qr|^#abc|st', 'qr|abc^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('qr|^#abc|st', 'qr|^#abc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('qr|^#abc|st', 'qr|a^#bc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('qr|^#abc|st', 'qr|a^b#c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('qr|^#abc|st', 'qr|a#b^c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('qr|^#abc|st', 'qr|abc^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
             /* middle line, go to start, extend */
-            this.testChangeSel('qr|^#abc|st', 'qr|^#abc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('qr|^a#bc|st', 'qr|a^#bc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('qr|^ab#c|st', 'qr|a^b#c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('qr|^a#bc|st', 'qr|a#b^c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('qr|^abc#|st', 'qr|abc^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('qr|^#abc|st', 'qr|^#abc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('qr|^a#bc|st', 'qr|a^#bc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('qr|^ab#c|st', 'qr|a^b#c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('qr|^a#bc|st', 'qr|a#b^c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('qr|^abc#|st', 'qr|abc^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
             /* middle line, go to end, no extend */
-            this.testChangeSel('qr|abc#^|st', 'qr|^#abc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('qr|abc#^|st', 'qr|a^#bc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('qr|abc#^|st', 'qr|a^b#c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('qr|abc#^|st', 'qr|a#b^c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('qr|abc#^|st', 'qr|abc^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('qr|abc#^|st', 'qr|^#abc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('qr|abc#^|st', 'qr|a^#bc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('qr|abc#^|st', 'qr|a^b#c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('qr|abc#^|st', 'qr|a#b^c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('qr|abc#^|st', 'qr|abc^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
             /* middle line, go to end, extend */
-            this.testChangeSel('qr|#abc^|st', 'qr|^#abc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('qr|a#bc^|st', 'qr|a^#bc|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('qr|ab#c^|st', 'qr|a^b#c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('qr|a#bc^|st', 'qr|a#b^c|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('qr|abc#^|st', 'qr|abc^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('qr|#abc^|st', 'qr|^#abc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('qr|a#bc^|st', 'qr|a^#bc|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('qr|ab#c^|st', 'qr|a^b#c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('qr|a#bc^|st', 'qr|a#b^c|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('qr|abc#^|st', 'qr|abc^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
             /* one line, go to start, no extend */
-            this.testChangeSel('^#abc', '^#abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'a^#bc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'a^b#c', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'a#b^c', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#abc', 'abc^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#abc', '^#abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'a^#bc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'a^b#c', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'a#b^c', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#abc', 'abc^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
             /* one line, go to start, extend */
-            this.testChangeSel('^#abc', '^#abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^a#bc', 'a^#bc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^ab#c', 'a^b#c', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^a#bc', 'a#b^c', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^abc#', 'abc^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^#abc', '^#abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^a#bc', 'a^#bc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^ab#c', 'a^b#c', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^a#bc', 'a#b^c', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^abc#', 'abc^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
             /* one line, go to end, no extend */
-            this.testChangeSel('abc#^', '^#abc', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'a^#bc', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'a^b#c', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'a#b^c', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
-            this.testChangeSel('abc#^', 'abc^#', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('abc#^', '^#abc', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'a^#bc', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'a^b#c', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'a#b^c', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('abc#^', 'abc^#', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
             /* one line, go to end, extend */
-            this.testChangeSel('#abc^', '^#abc', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('a#bc^', 'a^#bc', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('ab#c^', 'a^b#c', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('a#bc^', 'a#b^c', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('abc#^', 'abc^#', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('#abc^', '^#abc', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('a#bc^', 'a^#bc', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('ab#c^', 'a^b#c', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('a#bc^', 'a#b^c', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('abc#^', 'abc^#', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
             /* empty line in middle */
-            this.testChangeSel('qr|#^|st', 'qr|^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('qr|#^|st', 'qr|^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('qr|#^|st', 'qr|^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('qr|#^|st', 'qr|^#|st', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('qr|#^|st', 'qr|^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('qr|#^|st', 'qr|^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('qr|#^|st', 'qr|^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('qr|#^|st', 'qr|^#|st', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
             /* empty line at end */
-            this.testChangeSel('qr|#^', 'qr|^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('qr|#^', 'qr|^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('qr|#^', 'qr|^#', SelAndEntryImpl.changeSelGoLineHomeEnd, false, true);
-            this.testChangeSel('qr|#^', 'qr|^#', SelAndEntryImpl.changeSelGoLineHomeEnd, false, false);
+            this.testChangeSel('qr|#^', 'qr|^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('qr|#^', 'qr|^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('qr|#^', 'qr|^#', TextSelModifyImpl.changeSelGoLineHomeEnd, false, true);
+            this.testChangeSel('qr|#^', 'qr|^#', TextSelModifyImpl.changeSelGoLineHomeEnd, false, false);
             /* go to whitespace start, no extend */
-            this.testChangeSel('   ^#abc', '   abc^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('   ^#abc   def', '   abc   def^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('\t^#abc\tdef', '\tabc\tdef^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('   ^#abc', '   abc^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('   ^#abc   def', '   abc   def^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('\t^#abc\tdef', '\tabc\tdef^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
             this.testChangeSel(
                 '\t\t\t^#abc\t\t\tdef',
                 '\t\t\tabc\t\t\tdef^#',
-                SelAndEntryImpl.changeSelGoLineHomeEnd,
+                TextSelModifyImpl.changeSelGoLineHomeEnd,
                 true,
                 false
             );
-            this.testChangeSel('   ^#abc', '   ab^#c', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('   ^#abc', '   a^#bc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#   abc', '   ^#abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#   abc', '  ^# abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#   abc', ' ^#  abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#   abc', '^#   abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#   ', '   ^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#   ', '  ^# ', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^# ', ' ^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#\t\t\t', '\t\t\t^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
-            this.testChangeSel('^#\t', '\t^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('   ^#abc', '   ab^#c', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('   ^#abc', '   a^#bc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#   abc', '   ^#abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#   abc', '  ^# abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#   abc', ' ^#  abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#   abc', '^#   abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#   ', '   ^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#   ', '  ^# ', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^# ', ' ^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#\t\t\t', '\t\t\t^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
+            this.testChangeSel('^#\t', '\t^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, false);
             /* go to whitespace start, extend */
-            this.testChangeSel('   ^abc#', '   abc^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('   ^abc   def#', '   abc   def^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('\t^abc\tdef#', '\tabc\tdef^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('   ^abc#', '   abc^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('   ^abc   def#', '   abc   def^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('\t^abc\tdef#', '\tabc\tdef^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
             this.testChangeSel(
                 '\t\t\t^abc\t\t\tdef#',
                 '\t\t\tabc\t\t\tdef^#',
-                SelAndEntryImpl.changeSelGoLineHomeEnd,
+                TextSelModifyImpl.changeSelGoLineHomeEnd,
                 true,
                 true
             );
-            this.testChangeSel('   ^ab#c', '   ab^#c', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('   ^a#bc', '   a^#bc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^   #abc', '   ^#abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^  # abc', '  ^# abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^ #  abc', ' ^#  abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^#   abc', '^#   abc', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^   #', '   ^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^  # ', '  ^# ', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^ #', ' ^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^\t\t\t#', '\t\t\t^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
-            this.testChangeSel('^\t#', '\t^#', SelAndEntryImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('   ^ab#c', '   ab^#c', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('   ^a#bc', '   a^#bc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^   #abc', '   ^#abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^  # abc', '  ^# abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^ #  abc', ' ^#  abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^#   abc', '^#   abc', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^   #', '   ^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^  # ', '  ^# ', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^ #', ' ^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^\t\t\t#', '\t\t\t^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
+            this.testChangeSel('^\t#', '\t^#', TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
         },
         'testchangeSelLeftRightUntilWord',
         () => {
             /* move left by words */
-            this.testChangeSel('#^abcd', '^#abcd', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('#^abcd', 'ab^#cd', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('#^abcd', 'abcd^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('#^abcd ', 'abcd ^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('#^abcd  ', 'abcd  ^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('#^abcd\t', 'abcd\t^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('abcd ^#d', 'abcd d^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('abcd ^#de', 'abcd de^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('abcd ^#\n', 'abcd \n^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('abcd \n^#d', 'abcd \nd^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('abc ^#123 abc', 'abc 123^# abc', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('^#abc 123 abc', 'abc^# 123 abc', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('abc.123.^#abc', 'abc.123.abc^#', SelAndEntryImpl.changeSelLeftRight, true, false, true);
-            this.testChangeSel('abc.123^#.abc', 'abc.123.^#abc', SelAndEntryImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('#^abcd', '^#abcd', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('#^abcd', 'ab^#cd', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('#^abcd', 'abcd^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('#^abcd ', 'abcd ^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('#^abcd  ', 'abcd  ^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('#^abcd\t', 'abcd\t^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('abcd ^#d', 'abcd d^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('abcd ^#de', 'abcd de^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('abcd ^#\n', 'abcd \n^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('abcd \n^#d', 'abcd \nd^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('abc ^#123 abc', 'abc 123^# abc', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('^#abc 123 abc', 'abc^# 123 abc', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('abc.123.^#abc', 'abc.123.abc^#', TextSelModifyImpl.changeSelLeftRight, true, false, true);
+            this.testChangeSel('abc.123^#.abc', 'abc.123.^#abc', TextSelModifyImpl.changeSelLeftRight, true, false, true);
 
             /* move right by words */
-            this.testChangeSel('abcd^#', '^#abcd', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd^#', 'ab^#cd', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd^#', 'abcd^#', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd #^', 'abcd ^#', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel(' #^abcd', '^# abcd', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd  #^', '^#abcd  ', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd\t#^', '^#abcd\t', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd ^#d', '^#abcd d', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd ^#de', '^#abcd de', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd ^#\n', '^#abcd \n', SelAndEntryImpl.changeSelLeftRight, false, false, true);
-            this.testChangeSel('abcd ^#\nd', '^#abcd \nd', SelAndEntryImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd^#', '^#abcd', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd^#', 'ab^#cd', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd^#', 'abcd^#', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd #^', 'abcd ^#', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel(' #^abcd', '^# abcd', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd  #^', '^#abcd  ', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd\t#^', '^#abcd\t', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd ^#d', '^#abcd d', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd ^#de', '^#abcd de', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd ^#\n', '^#abcd \n', TextSelModifyImpl.changeSelLeftRight, false, false, true);
+            this.testChangeSel('abcd ^#\nd', '^#abcd \nd', TextSelModifyImpl.changeSelLeftRight, false, false, true);
             this.testChangeSel(
                 'abc 123 ^#abc',
                 'abc ^#123 abc',
-                SelAndEntryImpl.changeSelLeftRight,
+                TextSelModifyImpl.changeSelLeftRight,
                 false,
                 false,
                 true
@@ -238,7 +238,7 @@ export class TestUI512TextSelectEvents extends UI512TestBase {
             this.testChangeSel(
                 'abc 123 abc^#',
                 'abc 123 ^#abc',
-                SelAndEntryImpl.changeSelLeftRight,
+                TextSelModifyImpl.changeSelLeftRight,
                 false,
                 false,
                 true
@@ -246,7 +246,7 @@ export class TestUI512TextSelectEvents extends UI512TestBase {
             this.testChangeSel(
                 'abc^#.123.abc',
                 '^#abc.123.abc',
-                SelAndEntryImpl.changeSelLeftRight,
+                TextSelModifyImpl.changeSelLeftRight,
                 false,
                 false,
                 true
@@ -254,7 +254,7 @@ export class TestUI512TextSelectEvents extends UI512TestBase {
             this.testChangeSel(
                 'abc.^#123.abc',
                 'abc^#.123.abc',
-                SelAndEntryImpl.changeSelLeftRight,
+                TextSelModifyImpl.changeSelLeftRight,
                 false,
                 false,
                 true
@@ -262,26 +262,26 @@ export class TestUI512TextSelectEvents extends UI512TestBase {
         },
         'testchangeSelCurrentWord',
         () => {
-            this.testChangeSel('^#', '^#', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('^a#', '^#a', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('^abc#', '^#abc', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel(' ^abc#', ' ^#abc', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('^abc# ', '^#abc ', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('test1 test2^ #test3', 'test1 test2^# test3', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('test1 ^test2# test3', 'test1 test^#2 test3', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('test1 ^test2# test3', 'test1 tes^#t2 test3', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('test1 ^test2# test3', 'test1 te^#st2 test3', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('test1 ^test2# test3', 'test1 ^#test2 test3', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('test1^ #test2 test3', 'test1^# test2 test3', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('.^a#.', '.^#a.', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('.a^.#', '.a^#.', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('.^abc#.', '.ab^#c.', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('1 ^a# 2', '1 ^#a 2', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('1 ^abc# 2', '1 ab^#c 2', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('1 abc ^2#', '1 abc ^#2', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('1 abc^ #2', '1 abc^# 2', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('1 abc^  #2', '1 abc^#  2', SelAndEntryImpl.changeSelCurrentWord);
-            this.testChangeSel('1 abc^  #2', '1 abc ^# 2', SelAndEntryImpl.changeSelCurrentWord);
+            this.testChangeSel('^#', '^#', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('^a#', '^#a', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('^abc#', '^#abc', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel(' ^abc#', ' ^#abc', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('^abc# ', '^#abc ', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('test1 test2^ #test3', 'test1 test2^# test3', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('test1 ^test2# test3', 'test1 test^#2 test3', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('test1 ^test2# test3', 'test1 tes^#t2 test3', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('test1 ^test2# test3', 'test1 te^#st2 test3', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('test1 ^test2# test3', 'test1 ^#test2 test3', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('test1^ #test2 test3', 'test1^# test2 test3', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('.^a#.', '.^#a.', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('.a^.#', '.a^#.', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('.^abc#.', '.ab^#c.', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('1 ^a# 2', '1 ^#a 2', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('1 ^abc# 2', '1 ab^#c 2', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('1 abc ^2#', '1 abc ^#2', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('1 abc^ #2', '1 abc^# 2', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('1 abc^  #2', '1 abc^#  2', TextSelModifyImpl.changeSelCurrentWord);
+            this.testChangeSel('1 abc^  #2', '1 abc ^# 2', TextSelModifyImpl.changeSelCurrentWord);
         },
         'test_selectLineInField,selectByLinesWhichLine',
         () => {
@@ -289,64 +289,64 @@ export class TestUI512TextSelectEvents extends UI512TestBase {
             let el = new UI512ElTextField('test', new ElementObserverNoOp());
             let gel = new UI512ElTextFieldAsGeneric(el);
             el.setftxt(FormattedText.newFromUnformatted(''));
-            SelAndEntry.selectLineInField(gel, 0);
+            TextSelModify.selectLineInField(gel, 0);
             assertEq(0, el.getN('selcaret'), '');
             assertEq(0, el.getN('selend'), '');
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 2);
+            assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 2);
             assertEq(0, el.getN('selcaret'), '');
             assertEq(0, el.getN('selend'), '');
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
+            assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
 
             /* field with no empty lines */
             el.setftxt(FormattedText.newFromUnformatted('abc\ndef\nghi'));
-            SelAndEntry.selectLineInField(gel, 0);
+            TextSelModify.selectLineInField(gel, 0);
             assertEq(0, el.getN('selcaret'), '');
             assertEq(4, el.getN('selend'), '');
-            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 1);
+            assertEq(0, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 1);
             assertEq(4, el.getN('selcaret'), '');
             assertEq(8, el.getN('selend'), '');
-            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 2);
+            assertEq(1, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 2);
             assertEq(8, el.getN('selcaret'), '');
             assertEq(11, el.getN('selend'), '');
-            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 3);
+            assertEq(2, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 3);
             assertEq(11, el.getN('selcaret'), '');
             assertEq(11, el.getN('selend'), '');
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 4);
+            assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 4);
             assertEq(11, el.getN('selcaret'), '');
             assertEq(11, el.getN('selend'), '');
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
+            assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
 
             /* field with some empty lines */
             el.setftxt(FormattedText.newFromUnformatted('\nabc\n\ndef\n'));
-            SelAndEntry.selectLineInField(gel, 0);
+            TextSelModify.selectLineInField(gel, 0);
             assertEq(0, el.getN('selcaret'), '');
             assertEq(1, el.getN('selend'), '');
-            assertEq(0, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 1);
+            assertEq(0, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 1);
             assertEq(1, el.getN('selcaret'), '');
             assertEq(5, el.getN('selend'), '');
-            assertEq(1, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 2);
+            assertEq(1, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 2);
             assertEq(5, el.getN('selcaret'), '');
             assertEq(6, el.getN('selend'), '');
-            assertEq(2, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 3);
+            assertEq(2, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 3);
             assertEq(6, el.getN('selcaret'), '');
             assertEq(10, el.getN('selend'), '');
-            assertEq(3, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 4);
+            assertEq(3, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 4);
             assertEq(10, el.getN('selcaret'), '');
             assertEq(10, el.getN('selend'), '');
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
-            SelAndEntry.selectLineInField(gel, 5);
+            assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
+            TextSelModify.selectLineInField(gel, 5);
             assertEq(10, el.getN('selcaret'), '');
             assertEq(10, el.getN('selend'), '');
-            assertEq(undefined, SelAndEntry.selectByLinesWhichLine(gel), '');
+            assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
         }
     ];
 

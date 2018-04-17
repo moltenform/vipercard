@@ -6,9 +6,9 @@
 /* auto */ import { OutsideWorldRead } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { ChvLexer } from '../../vpc/codeparse/bridgeChv.js';
 /* auto */ import { listTokens } from '../../vpc/codeparse/vpcTokens.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
+/* auto */ import { VpcChvParser } from '../../vpc/codeparse/vpcParser.js';
 /* auto */ import { VisitingContext } from '../../vpc/codeparse/vpcVisitorMethods.js';
-/* auto */ import { VpcVisitorAddMixinMethods } from '../../vpc/codeparse/vpcVisitorMixin.js';
+/* auto */ import { VpcVisitorAddMixinMethods, VpcVisitorInterface } from '../../vpc/codeparse/vpcVisitorMixin.js';
 
 /* see comment at the top of _vpcAllCode_.ts for an overview */
 
@@ -16,7 +16,7 @@
  * create a Visitor class instance
  * a Visitor can recurse through a CST to produce a single value.
  */
-export function createVisitor(parser: ChvParserClass): object {
+export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
     let BaseVisitor = parser.getBaseCstVisitorConstructor();
     class VPCCustomVisitor extends BaseVisitor {
         evalAllExpressions = true;
@@ -509,8 +509,8 @@ export function createVisitor(parser: ChvParserClass): object {
  */
 class CachedObjects {
     lexer: O<ChvLexer> = undefined;
-    parser: O<ChvParserClass> = undefined;
-    visitor: O<Object> = undefined;
+    parser: O<VpcChvParser> = undefined;
+    visitor: O<VpcVisitorInterface> = undefined;
 
     static staticCache = new CachedObjects();
 }
@@ -518,13 +518,13 @@ class CachedObjects {
 /**
  * retrieve cached objects, creating if needed
  */
-export function getParsingObjects(): [ChvLexer, ChvParserClass, any] {
+export function getParsingObjects(): [ChvLexer, VpcChvParser, VpcVisitorInterface] {
     if (!CachedObjects.staticCache.lexer) {
         CachedObjects.staticCache.lexer = new ChvLexer(listTokens);
     }
 
     if (!CachedObjects.staticCache.parser) {
-        CachedObjects.staticCache.parser = new ChvParserClass([], listTokens);
+        CachedObjects.staticCache.parser = new VpcChvParser([], listTokens);
     }
 
     if (!CachedObjects.staticCache.visitor) {

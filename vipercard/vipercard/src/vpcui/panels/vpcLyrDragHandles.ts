@@ -1,48 +1,41 @@
 
-/* auto */ import { slength } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { slength } from '../../ui512/utils/utils512.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
+/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
 
-export class VpcAppResizeHandles extends VpcAppInterfaceLayer {
+/**
+ * resize handles, for moving and resizing a vel
+ */
+export class VpcAppLyrDragHandles extends VpcUILayer {
     readonly resizeBoxSize = 8;
-    sizeHandles: UI512Element[] = [];
-    whichHandle(id: string) {
-        if (id === 'grpAppHelperElemsHandle0') {
-            return 0;
-        } else if (id === 'grpAppHelperElemsHandle1') {
-            return 1;
-        }
-        if (id === 'grpAppHelperElemsHandle2') {
-            return 2;
-        }
-        if (id === 'grpAppHelperElemsHandle3') {
-            return 3;
-        } else {
-            return undefined;
-        }
-    }
+    readonly sizeHandles: UI512Element[] = [];
 
+    /**
+     * get group containing the handles
+     */
     static getGrpHelperElems(app: UI512Application) {
-        let fnd = app.findGroup('grpAppHelperElems');
+        let fnd = app.findGroup('grpAppResizeHandles');
         if (fnd) {
             return fnd;
         } else {
-            let grp = new UI512ElGroup('grpAppHelperElems');
+            let grp = new UI512ElGroup('grpAppResizeHandles');
             app.addGroup(grp);
             return grp;
         }
     }
 
+    /**
+     * initialize and create resize handles
+     */
     init() {
-        // create resize handles
-        let grpHelperElems = VpcAppResizeHandles.getGrpHelperElems(this.appli.UI512App());
+        let grpHelperElems = VpcAppLyrDragHandles.getGrpHelperElems(this.vci.UI512App());
         for (let i = 0; i < 4; i++) {
-            let handle = new UI512ElButton(`grpAppHelperElemsHandle${i}`);
-            grpHelperElems.addElement(this.appli.UI512App(), handle);
+            let handle = new UI512ElButton(`grpAppResizeHandlesHandle${i}`);
+            grpHelperElems.addElement(this.vci.UI512App(), handle);
             handle.set('style', UI512BtnStyle.Rectangle);
             handle.set('visible', true);
             handle.set('autohighlight', false);
@@ -52,43 +45,53 @@ export class VpcAppResizeHandles extends VpcAppInterfaceLayer {
         }
     }
 
-    getSelectedUiElForHandles(currentTool: VpcTool) {
-        let selectedVelId = this.appli.getOption_s('selectedVelId');
+    /**
+     * get the target UI512 element, or undefined if none ot present
+     */
+    getSelectedUIElForHandles(currentTool: VpcTool) {
+        let selectedVelId = this.vci.getOptionS('selectedVelId');
         if (getToolCategory(currentTool) === VpcToolCtg.CtgEdit && slength(selectedVelId)) {
-            // if the current card / stack is selected,
-            // we won't find an element, that's ok.
-            let uigrp = this.appli.UI512App().getGroup('VpcModelRender');
-            return uigrp.findEl('VpcModelRender$$' + selectedVelId);
+            /* if the current card / stack is selected, */
+            /* we won't find an element, that's ok, it will return undefined. */
+            let grp = this.vci.UI512App().getGroup('VpcModelRender');
+            return grp.findEl('VpcModelRender$$' + selectedVelId);
         } else {
             return undefined;
         }
     }
 
+    /**
+     * set the handle positions
+     * one box is centered on each corner of the element
+     */
     updateUI512Els() {
-        let currentTool = this.appli.getOption_n('currentTool');
-        let uiel = this.getSelectedUiElForHandles(currentTool);
-        if (uiel) {
+        let currentTool = this.vci.getOptionN('currentTool');
+        let el = this.getSelectedUIElForHandles(currentTool);
+        if (el) {
             this.sizeHandles[0].setDimensions(
-                uiel.x - this.sizeHandles[0].w / 2,
-                uiel.y - this.sizeHandles[0].h / 2,
+                el.x - this.sizeHandles[0].w / 2,
+                el.y - this.sizeHandles[0].h / 2,
                 this.sizeHandles[0].w,
                 this.sizeHandles[0].h
             );
+
             this.sizeHandles[1].setDimensions(
-                uiel.x + uiel.w - this.sizeHandles[0].w / 2,
-                uiel.y - this.sizeHandles[0].h / 2,
+                el.x + el.w - this.sizeHandles[0].w / 2,
+                el.y - this.sizeHandles[0].h / 2,
                 this.sizeHandles[0].w,
                 this.sizeHandles[0].h
             );
+
             this.sizeHandles[2].setDimensions(
-                uiel.x - this.sizeHandles[0].w / 2,
-                uiel.y + uiel.h - this.sizeHandles[0].h / 2,
+                el.x - this.sizeHandles[0].w / 2,
+                el.y + el.h - this.sizeHandles[0].h / 2,
                 this.sizeHandles[0].w,
                 this.sizeHandles[0].h
             );
+
             this.sizeHandles[3].setDimensions(
-                uiel.x + uiel.w - this.sizeHandles[0].w / 2,
-                uiel.y + uiel.h - this.sizeHandles[0].h / 2,
+                el.x + el.w - this.sizeHandles[0].w / 2,
+                el.y + el.h - this.sizeHandles[0].h / 2,
                 this.sizeHandles[0].w,
                 this.sizeHandles[0].h
             );
@@ -96,6 +99,23 @@ export class VpcAppResizeHandles extends VpcAppInterfaceLayer {
             for (let handle of this.sizeHandles) {
                 handle.setDimensions(-400, -400, handle.w, handle.h);
             }
+        }
+    }
+
+    /**
+     * from handle id to number
+     */
+    whichHandle(id: string) {
+        if (id === 'grpAppResizeHandlesHandle0') {
+            return 0;
+        } else if (id === 'grpAppResizeHandlesHandle1') {
+            return 1;
+        } else if (id === 'grpAppResizeHandlesHandle2') {
+            return 2;
+        } else if (id === 'grpAppResizeHandlesHandle3') {
+            return 3;
+        } else {
+            return undefined;
         }
     }
 }

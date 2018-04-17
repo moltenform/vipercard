@@ -1,10 +1,13 @@
 
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
+/* auto */ import { VpcEditPanelsBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
 
-export class PropPanelCompositeBtn extends PropPanelCompositeBase {
-    isPropPanelCompositeBtn = true;
-    compositeType = 'PropPanelCompositeBtn';
+/**
+ * properties panel, for editing a button's properties
+ */
+export class VpcEditPanelsBtn extends VpcEditPanelsBase {
+    isVpcEditPanelsBtn = true;
+    compositeType = 'VpcEditPanelsBtn';
     readonly velTypeShortName = 'cd btn';
     readonly velTypeLongName = 'lngbutton';
     readonly velType = VpcElType.Btn;

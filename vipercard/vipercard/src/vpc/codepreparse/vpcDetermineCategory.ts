@@ -1,10 +1,10 @@
 
 /* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 /* auto */ import { BuildFakeTokens, isTkType, tks, tokenType } from '../../vpc/codeparse/vpcTokens.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
+/* auto */ import { VpcChvParser } from '../../vpc/codeparse/vpcParser.js';
 /* auto */ import { MapBuiltinCmds, VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { CodeSymbols, VpcCodeLine } from '../../vpc/codepreparse/vpcCodeLine.js';
@@ -20,7 +20,7 @@ export class DetermineCategory {
     reusableRequestUserHandler: ChvIToken;
     constructor(
         protected idGen: CountNumericId,
-        protected parser: ChvParserClass,
+        protected parser: VpcChvParser,
         protected mapBuiltinCmds: MapBuiltinCmds,
         protected check: CheckReservedWords
     ) {

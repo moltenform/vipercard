@@ -1,66 +1,75 @@
 
 /* auto */ import { O, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, base10, cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { VpcElType, vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcEditPanels } from '../../vpcui/panels/vpcPanelsInterface.js';
 /* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
 
-export abstract class PropPanelCompositeBase extends UI512CompBase implements VpcPropPanel {
-    isPropPanelCompositeBase = true;
-    isBlank = false;
-    appli: VpcStateInterface;
+/**
+ * base class for property panels,
+ * for example, editing button and field properties
+ */
+export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEditPanels {
+    isVpcEditPanelsBase = true;
+    vci: VpcStateInterface;
     isExclusive = false;
-    compositeType = 'PropPanelCompositeBase';
-    firstSectionH = 100;
-    secondSectionH = 162;
-    thirdSectionH = 100;
-    cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
+    compositeType = 'VpcEditPanelsBase';
+    readonly firstSectionH = 100;
+    readonly secondSectionH = 162;
+    readonly thirdSectionH = 100;
     protected static numeric: { [key: string]: boolean } = { icon: true };
     topInputs: [string, string, number][] = [];
 
     leftChoices: [string, string][] = [];
-    leftChoicesX = 20;
-    leftChoicesW = 130;
-    leftChoicesH = 117;
+    readonly leftChoicesX = 20;
+    readonly leftChoicesW = 130;
+    readonly leftChoicesH = 117;
+    readonly rightOptionsX = 216;
     rightOptions: [string, string][] = [];
-    rightOptionsX = 216;
     abstract readonly velType: VpcElType;
-
+    cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
     lblNamingTip: UI512ElLabel;
+
+    /**
+     * helpful text in the lower left, by default showing how to refer to object in a script
+     */
     protected refreshTip(name: string, id: string) {
-        let shortname = vpcElTypeToString(this.velType, true);
-        let longname = vpcElTypeToString(this.velType, false);
-        let txt = lng('lngRefer to this %typ in a script as');
-        txt = txt.replace(/%typ/g, longname);
-        txt += `\n${shortname} id ${id}`;
+        let shortName = vpcElTypeToString(this.velType, true);
+        let longName = vpcElTypeToString(this.velType, false);
+        let s = lng('lngRefer to this %typ in a script as');
+        s = s.replace(/%typ/g, longName);
+        s += `\n${shortName} id ${id}`;
         if (name.length) {
-            txt += `\nor\n${shortname} "${name}"`;
+            s += `\nor\n${shortName} "${name}"`;
         }
 
-        txt = UI512DrawText.setFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
-        this.lblNamingTip.set('labeltext', txt);
+        s = UI512DrawText.setFont(s, new TextFontSpec('monaco', 0, 9).toSpecString());
+        this.lblNamingTip.set('labeltext', s);
     }
 
+    /**
+     * initialize layout
+     */
     createSpecific(app: UI512Application) {
         Util512.freezeProperty(this, 'topInputs');
         Util512.freezeProperty(this, 'leftChoices');
         Util512.freezeProperty(this, 'rightOptions');
 
-        // draw a 1px border around the panel
+        /* draw a 1px border around the panel */
         let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
@@ -71,6 +80,9 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         this.createLowerSection(app);
     }
 
+    /**
+     * draw top inputs, usually to get name of vel
+     */
     createTopInputs(app: UI512Application) {
         const lblX = 16;
         const inputX = 170;
@@ -80,13 +92,14 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         let startY = this.y + Math.floor((this.firstSectionH - totalUsedH) / 2);
         let curY = startY;
         let grp = app.getGroup(this.grpId);
-        for (let [lbltxt, inid, inputW] of this.topInputs) {
-            let lbl = this.genChild<UI512ElLabel>(app, grp, `lbl##${inid}`, UI512ElLabel);
-            lbl.set('labeltext', lng(lbltxt));
+        for (let [lblTxt, inId, inputW] of this.topInputs) {
+            let lbl = this.genChild<UI512ElLabel>(app, grp, `lbl##${inId}`, UI512ElLabel);
+            lbl.set('labeltext', lng(lblTxt));
             lbl.set('labelhalign', false);
             lbl.set('labelvalign', true);
             lbl.setDimensions(this.x + lblX, curY, inputX - lblX, inputH);
-            let inp = this.genChild<UI512ElTextField>(app, grp, `inp##${inid}`, UI512ElTextField);
+
+            let inp = this.genChild<UI512ElTextField>(app, grp, `inp##${inId}`, UI512ElTextField);
             inp.set('multiline', false);
             inp.set('labelwrap', false);
             inp.set('nudgey', 2);
@@ -95,6 +108,9 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         }
     }
 
+    /**
+     * draw left choicebox, usually to get style of vel
+     */
     createLeftChoices(app: UI512Application) {
         if (!this.leftChoices.length) {
             return;
@@ -113,6 +129,9 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         fld.setDimensions(this.x + this.leftChoicesX, startY, this.leftChoicesW, this.leftChoicesH);
     }
 
+    /**
+     * draw right options, usually to set boolean options of vel
+     */
     createRightOptions(app: UI512Application) {
         const inputH = 15;
         const inputMargin = 3;
@@ -120,10 +139,10 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         let startY = this.y + this.firstSectionH + Math.floor((this.secondSectionH - totalUsedH) / 2);
         let curY = startY;
         let grp = app.getGroup(this.grpId);
-        for (let [lbltxt, inid] of this.rightOptions) {
-            let inp = this.genBtn(app, grp, `toggle##${inid}`);
+        for (let [lblTxt, inId] of this.rightOptions) {
+            let inp = this.genBtn(app, grp, `toggle##${inId}`);
             inp.set('style', UI512BtnStyle.Checkbox);
-            inp.set('labeltext', lng(lbltxt));
+            inp.set('labeltext', lng(lblTxt));
             inp.set('labelhalign', false);
             inp.set('labelvalign', true);
             inp.setDimensions(this.x + this.rightOptionsX, curY, this.logicalWidth - this.rightOptionsX, inputH);
@@ -131,6 +150,9 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         }
     }
 
+    /**
+     * initialize layout for lower part of panel
+     */
     createLowerSection(app: UI512Application) {
         let tipsX = this.leftChoicesX + 0;
         let tipsY = this.firstSectionH + this.secondSectionH - 9;
@@ -149,7 +171,8 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
         const spaceFromBottom = 17;
         const btnW = 68;
         const btnH = 23;
-        let scriptBtn = this.genBtn(app, grp, this.isBlank ? 'btnGenPart' : 'btnScript');
+        let isEmpty = (this as any).isVpcEditPanelsEmpty;
+        let scriptBtn = this.genBtn(app, grp, isEmpty ? 'btnGenPart' : 'btnScript');
         scriptBtn.set('labeltext', lng('lngScript...'));
         scriptBtn.set('style', UI512BtnStyle.OSStandard);
         scriptBtn.setDimensions(
@@ -159,11 +182,14 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
             btnH
         );
 
-        if (this.isBlank) {
+        if (isEmpty) {
             scriptBtn.setDimensions(scriptBtn.x - 75, scriptBtn.y, scriptBtn.w + 75, scriptBtn.h);
         }
     }
 
+    /**
+     * refresh ui
+     */
     refreshFromModel(app: UI512Application) {
         let vel = this.cbGetAndValidateSelectedVel('selectedVelId');
         if (!vel) {
@@ -172,9 +198,9 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
 
         this.fillInValuesTip(app, vel);
         let grp = app.getGroup(this.grpId);
-        for (let [lbltxt, inid, inputW] of this.topInputs) {
-            let el = grp.getEl(this.getElId(`inp##${inid}`));
-            if (inid === 'fldcontent') {
+        for (let [lblTxt, inId, inputW] of this.topInputs) {
+            let el = grp.getEl(this.getElId(`inp##${inId}`));
+            if (inId === 'fldcontent') {
                 el.set('style', UI512FldStyle.Transparent);
                 el.set('canedit', false);
                 el.set('canselecttext', false);
@@ -184,7 +210,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
                     FormattedText.newFromUnformatted('To edit text, use the Browse\ntool and click on the field.')
                 );
             } else {
-                let s = PropPanelCompositeBase.numeric[inid] ? vel.getN(inid).toString() : vel.getS(inid);
+                let s = VpcEditPanelsBase.numeric[inId] ? vel.getN(inId).toString() : vel.getS(inId);
                 el.setftxt(FormattedText.newFromUnformatted(s));
             }
         }
@@ -196,7 +222,7 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
             if (found !== -1) {
                 let wasScroll = el.getN('scrollamt');
                 let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
-                SelAndEntry.selectLineInField(gel, found);
+                TextSelModify.selectLineInField(gel, found);
                 el.set('scrollamt', wasScroll);
             } else {
                 el.set('selcaret', 0);
@@ -204,83 +230,94 @@ export abstract class PropPanelCompositeBase extends UI512CompBase implements Vp
             }
         }
 
-        for (let [lbltxt, inid] of this.rightOptions) {
-            let el = grp.getEl(this.getElId(`toggle##${inid}`));
-            let val = vel.getProp(inid);
+        for (let [lblTxt, inId] of this.rightOptions) {
+            let el = grp.getEl(this.getElId(`toggle##${inId}`));
+            let val = vel.getProp(inId);
             el.set('checkmark', val.readAsStrictBoolean());
         }
     }
 
+    /**
+     * refresh the tip saying how to refer to an object in a script
+     */
     fillInValuesTip(app: UI512Application, vel: VpcElBase) {
         this.refreshTip(vel.getS('name'), vel.id);
     }
 
-    protected saveChangesToModelSetProp(vel: VpcElBase, propName: string, newval: VpcVal, onlyCheckIfDirty: boolean) {
+    /**
+     * save changes for one property
+     */
+    protected saveChangesToModelSetProp(vel: VpcElBase, propName: string, newVal: VpcVal, onlyCheckIfDirty: boolean) {
         if (onlyCheckIfDirty) {
             let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName);
-            if (current.readAsString() !== newval.readAsString()) {
+            if (current.readAsString() !== newVal.readAsString()) {
                 throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
-            vel.setProp(propName, newval);
+            vel.setProp(propName, newVal);
         }
     }
 
+    /**
+     * save changes for all properties
+     * if onlyCheckIfDirty is set, skip saving anything and only check if there are unsaved changes
+     */
     saveChangesToModel(app: UI512Application, onlyCheckIfDirty: boolean) {
         let vel = this.cbGetAndValidateSelectedVel('selectedVelId');
         if (!vel) {
             return;
         }
 
-        // if you are adding/removing a button's icon, set font as appropriate
         let grp = app.getGroup(this.grpId);
         let elIcon = grp.findEl(this.getElId(`inp##icon`));
         if (elIcon && vel.getType() === VpcElType.Btn && !onlyCheckIfDirty) {
             let typed = elIcon.get_ftxt().toUnformatted();
-            let n = parseInt(typed, 10);
+            let n = parseInt(typed, base10);
             let nextIcon = isFinite(n) && n >= 0 ? n : 0;
             let curIcon = vel.getN('icon') || 0;
             if (nextIcon === 0 && curIcon !== 0) {
+                /* if you are adding/removing a button's icon, set font as appropriate */
                 vel.set('textfont', 'chicago');
                 vel.set('textstyle', 0);
                 vel.set('textsize', 12);
             } else if (nextIcon !== 0 && curIcon === 0) {
+                /* if you are adding/removing a button's icon, set font as appropriate */
                 vel.set('textfont', 'geneva');
                 vel.set('textstyle', 0);
                 vel.set('textsize', 9);
             }
         }
 
-        for (let [lbltxt, inid, inputW] of this.topInputs) {
-            if (inid === 'fldcontent') {
+        for (let [lblTxt, inId, inputW] of this.topInputs) {
+            if (inId === 'fldcontent') {
                 continue;
             }
 
-            let el = grp.getEl(this.getElId(`inp##${inid}`));
+            let el = grp.getEl(this.getElId(`inp##${inId}`));
             let typed = el.get_ftxt().toUnformatted();
-            if (PropPanelCompositeBase.numeric[inid]) {
-                let n = parseInt(typed, 10);
+            if (VpcEditPanelsBase.numeric[inId]) {
+                let n = parseInt(typed, base10);
                 n = isFinite(n) && n >= 0 ? n : 0;
-                this.saveChangesToModelSetProp(vel, inid, VpcValN(n), onlyCheckIfDirty);
+                this.saveChangesToModelSetProp(vel, inId, VpcValN(n), onlyCheckIfDirty);
             } else {
-                this.saveChangesToModelSetProp(vel, inid, VpcValS(typed), onlyCheckIfDirty);
+                this.saveChangesToModelSetProp(vel, inId, VpcValS(typed), onlyCheckIfDirty);
             }
         }
 
         if (this.leftChoices.length) {
             let el = grp.getEl(this.getElId(`leftchoice`));
             let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
-            let ln = SelAndEntry.selectByLinesWhichLine(gel);
+            let ln = TextSelModify.selectByLinesWhichLine(gel);
             if (ln !== undefined && ln >= 0 && ln < this.leftChoices.length) {
                 this.saveChangesToModelSetProp(vel, 'style', VpcValS(this.leftChoices[ln][1]), onlyCheckIfDirty);
             }
         }
 
-        for (let [lbltxt, inid] of this.rightOptions) {
-            let el = grp.getEl(this.getElId(`toggle##${inid}`));
+        for (let [lblTxt, inId] of this.rightOptions) {
+            let el = grp.getEl(this.getElId(`toggle##${inId}`));
             let checked = el.getB('checkmark');
-            vel.setProp(inid, VpcValBool(checked));
-            this.saveChangesToModelSetProp(vel, inid, VpcValBool(checked), onlyCheckIfDirty);
+            vel.setProp(inId, VpcValBool(checked));
+            this.saveChangesToModelSetProp(vel, inId, VpcValBool(checked), onlyCheckIfDirty);
         }
     }
 }

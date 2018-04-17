@@ -1,18 +1,19 @@
 
 /* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcInternalErr, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, checkThrowEq, getStrToEnum, isString, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq, checkThrowEq, getStrToEnum, isString, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { OutsideWorldRead } from '../../vpc/vel/velOutsideInterfaces.js';
-/* auto */ import { ReadableContainerStr } from '../../vpc/vel/velResolveReference.js';
+/* auto */ import { ReadableContainerStr } from '../../vpc/vel/velResolveContainer.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 /* auto */ import { VisitingContext } from '../../vpc/codeparse/vpcVisitorMethods.js';
 
 /**
- * interface of what is needed for VpcVisitorAddMixinMethods
+ * a Visitor object can recurse through a syntax tree to evaluate an expression
+ * this interface provides what is needed for VpcVisitorAddMixinMethods
  */
 export interface VpcVisitorInterface {
     visit(rule: any): any;

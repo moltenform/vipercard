@@ -1,14 +1,14 @@
 
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { elementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementsView.js';
+/* auto */ import { elementObserverNoOp } from '../../ui512/elements/ui512ElementGettable.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementView.js';
 
 enum BtnPropsToTest {
     /* note: needs to begin with 0. */

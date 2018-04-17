@@ -1,10 +1,10 @@
 
-/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys, getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { KeyDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';

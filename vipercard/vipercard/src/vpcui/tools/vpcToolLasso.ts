@@ -1,12 +1,12 @@
 
-/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrBlack } from '../../ui512/draw/ui512DrawPattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
+/* auto */ import { clrBlack } from '../../ui512/draw/ui512DrawPatterns.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { SelectToolState, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
+/* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 
-export class VpcAppUILasso extends VpcAppUIGeneralSelect {
+export class VpcAppUILasso extends VpcAppUIToolSelectBase {
     protected selectingDrawTheBorder(
         st: SelectToolState,
         cv: CanvasWrapper,

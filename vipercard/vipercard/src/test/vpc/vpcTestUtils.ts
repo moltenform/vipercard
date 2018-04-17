@@ -1,12 +1,12 @@
 
-/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { VpcChunkPreposition, VpcChunkType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
@@ -14,7 +14,7 @@
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
-/* auto */ import { ReadableContainerVar, WritableContainerVar } from '../../vpc/vel/velResolveReference.js';
+/* auto */ import { ReadableContainerVar, WritableContainerVar } from '../../vpc/vel/velResolveContainer.js';
 
 class MockWorld {
     result = '_';

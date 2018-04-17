@@ -1,19 +1,19 @@
 
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512, assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, Util512, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
-/* auto */ import { UI512PainterCvCanvas, UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPaint.js';
+/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
+/* auto */ import { UI512PainterCvCanvas, UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPainter.js';
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialize.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialization.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementCanvasPiece.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { FloodFillTest } from '../../test/ui512/testUI512PaintFlood.js';

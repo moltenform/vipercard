@@ -1,13 +1,13 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { KeyDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { TestDrawUI512TextEdit } from '../../test/ui512/testUI512TextEvents.js';
@@ -72,14 +72,14 @@ export class UI512DemoTextEdit extends UI512Presenter {
                 let grp = pr.app.getGroup('grp');
                 let el = cast(grp.getEl('testSelByLines'), UI512ElTextField);
                 let gel = new UI512ElTextFieldAsGeneric(el);
-                let whichLine = SelAndEntry.selectByLinesWhichLine(gel);
+                let whichLine = TextSelModify.selectByLinesWhichLine(gel);
                 console.log(`the chosen line is: ${whichLine} `);
             }
         }
     }
 
     private static respondKeyDown(pr: UI512DemoTextEdit, d: KeyDownEventDetails) {
-        let el = SelAndEntry.getSelectedField(pr);
+        let el = TextSelModify.getSelectedField(pr);
         if (el && el.getB('selectbylines')) {
             return;
         } else if (el && d.readableShortcut === 'Tab') {
@@ -94,12 +94,12 @@ export class UI512DemoTextEdit extends UI512Presenter {
             /* simply insert a \t */
             if (!hasShift) {
                 let gel = new UI512ElTextFieldAsGeneric(el);
-                SelAndEntry.changeTextInsert(gel, '\t');
+                TextSelModify.changeTextInsert(gel, '\t');
             }
         } else if (el && el.getB('multiline')) {
             /* indent or dedent */
             let gel = new UI512ElTextFieldAsGeneric(el);
-            SelAndEntry.changeTextIndentation(gel, hasShift);
+            TextSelModify.changeTextIndentation(gel, hasShift);
         }
 
         d.setHandled();

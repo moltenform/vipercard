@@ -1,27 +1,16 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPaint.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
+/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPainter.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementCanvasPiece.js';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
 
-enum SmearToolMode {
-    Inited,
-    Dragging
-}
-
-class SmearToolState {
-    mode: SmearToolMode;
-    elStage: UI512ElCanvasPiece;
-    paStage: UI512Painter;
-}
-
-export class VpcAppUIToolSmear extends VpcAppUIToolResponseBase {
+export class VpcAppUIToolSmear extends VpcAppUIToolBase {
     state: O<SmearToolState> = undefined;
     respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
         if (!isVelOrBg) {
@@ -55,27 +44,27 @@ export class VpcAppUIToolSmear extends VpcAppUIToolResponseBase {
             let tmousepx =
                 fitIntoInclusive(
                     d.prevMouseX,
-                    this.appli.userBounds()[0],
-                    this.appli.userBounds()[0] + this.appli.userBounds()[2] - 1
-                ) - this.appli.userBounds()[0];
+                    this.vci.userBounds()[0],
+                    this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
+                ) - this.vci.userBounds()[0];
             let tmousepy =
                 fitIntoInclusive(
                     d.prevMouseY,
-                    this.appli.userBounds()[1],
-                    this.appli.userBounds()[1] + this.appli.userBounds()[3] - 1
-                ) - this.appli.userBounds()[1];
+                    this.vci.userBounds()[1],
+                    this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
+                ) - this.vci.userBounds()[1];
             let tmousenx =
                 fitIntoInclusive(
                     d.mouseX,
-                    this.appli.userBounds()[0],
-                    this.appli.userBounds()[0] + this.appli.userBounds()[2] - 1
-                ) - this.appli.userBounds()[0];
+                    this.vci.userBounds()[0],
+                    this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
+                ) - this.vci.userBounds()[0];
             let tmouseny =
                 fitIntoInclusive(
                     d.mouseY,
-                    this.appli.userBounds()[1],
-                    this.appli.userBounds()[1] + this.appli.userBounds()[3] - 1
-                ) - this.appli.userBounds()[1];
+                    this.vci.userBounds()[1],
+                    this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
+                ) - this.vci.userBounds()[1];
             this.cbPaintRender().drawPartialSmear(
                 [tmousepx, tmousenx],
                 [tmousepy, tmouseny],
@@ -138,4 +127,15 @@ export class VpcAppUIToolSmear extends VpcAppUIToolResponseBase {
         );
         this.cbPaintRender().commitImageOntoImage([canvas], 0, 0);
     }
+}
+
+enum SmearToolMode {
+    Inited,
+    Dragging
+}
+
+class SmearToolState {
+    mode: SmearToolMode;
+    elStage: UI512ElCanvasPiece;
+    paStage: UI512Painter;
 }

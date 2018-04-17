@@ -1,12 +1,12 @@
 
 /* auto */ import { assertTrue, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 /* auto */ import { BuildFakeTokens, TypeGreaterLessThanEqual, isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { MapBuiltinCmds } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
-/* auto */ import { ExpandCustomFunctions } from '../../vpc/codepreparse/vpcExpandFnCalls.js';
+/* auto */ import { ExpandCustomFunctions } from '../../vpc/codepreparse/vpcExpandCustomFns.js';
 
 /* see comment at the top of _vpcAllCode_.ts for an overview */
 

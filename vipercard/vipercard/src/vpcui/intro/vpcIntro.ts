@@ -1,22 +1,22 @@
 
-/* auto */ import { Util512, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
-/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
-/* auto */ import { VpcIntroPresenterInterface } from '../../vpcui/intro/vpcIntroInterface.js';
-/* auto */ import { IntroOpenFromDiskPage } from '../../vpcui/intro/vpcIntroPickFile.js';
-/* auto */ import { IntroWaitWhileLoadingPage } from '../../vpcui/intro/vpcIntroLoading.js';
-/* auto */ import { IntroOpenPage } from '../../vpcui/intro/vpcIntroOpen.js';
-/* auto */ import { IntroFirstPage } from '../../vpcui/intro/vpcIntroFirst.js';
+/* auto */ import { OpenFromLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { VpcIntroInterface } from '../../vpcui/intro/vpcIntroInterface.js';
+/* auto */ import { IntroPagePickFile } from '../../vpcui/intro/vpcIntroPagePickFile.js';
+/* auto */ import { IntroPageLoading } from '../../vpcui/intro/vpcIntroPageLoading.js';
+/* auto */ import { IntroPageOpen } from '../../vpcui/intro/vpcIntroPageOpen.js';
+/* auto */ import { IntroPageFirst } from '../../vpcui/intro/vpcIntroPageFirst.js';
 
-export class VpcUiIntro extends VpcIntroPresenterInterface {
+export class VpcUiIntro extends VpcIntroInterface {
     counter = 0;
     init() {
         super.init();
@@ -52,7 +52,7 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
             el.set('autohighlight', false);
         });
 
-        this.activePage = new IntroFirstPage('introFirstPage', this.bounds);
+        this.activePage = new IntroPageFirst('introFirstPage', this.bounds);
         this.activePage.create(this, this.app);
         this.rebuildFieldScrollbars();
 
@@ -69,12 +69,12 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
     goBackToFirstScreen() {
         let [x, y] = [this.activePage.x, this.activePage.y];
         this.activePage.destroy(this, this.app);
-        this.activePage = new IntroFirstPage('introFirstPage', this.bounds, x, y);
+        this.activePage = new IntroPageFirst('introFirstPage', this.bounds, x, y);
         this.activePage.create(this, this.app);
     }
 
     newDocument() {
-        let loader = new VpcDocLoader('', lng('lngnew stack'), OpenFromLocation.NewDoc);
+        let loader = new VpcIntroProvider('', lng('lngnew stack'), OpenFromLocation.NewDoc);
         this.beginLoadDocument(loader);
     }
 
@@ -93,24 +93,24 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
             pr.activePage.respondMouseUp(pr, d);
         }
 
-        if (d.elClick && pr.activePage instanceof IntroFirstPage) {
-            IntroFirstPage.respondBtnClick(pr, pr.activePage, d.elClick);
-        } else if (d.elClick && pr.activePage instanceof IntroOpenPage) {
-            IntroOpenPage.respondBtnClick(pr, pr.activePage, d.elClick);
-        } else if (d.elClick && pr.activePage instanceof IntroWaitWhileLoadingPage) {
-            IntroWaitWhileLoadingPage.respondBtnClick(pr, pr.activePage, d.elClick);
-        } else if (d.elClick && pr.activePage instanceof IntroOpenFromDiskPage) {
-            IntroOpenFromDiskPage.respondBtnClick(pr, pr.activePage, d.elClick);
+        if (d.elClick && pr.activePage instanceof IntroPageFirst) {
+            IntroPageFirst.respondBtnClick(pr, pr.activePage, d.elClick);
+        } else if (d.elClick && pr.activePage instanceof IntroPageOpen) {
+            IntroPageOpen.respondBtnClick(pr, pr.activePage, d.elClick);
+        } else if (d.elClick && pr.activePage instanceof IntroPageLoading) {
+            IntroPageLoading.respondBtnClick(pr, pr.activePage, d.elClick);
+        } else if (d.elClick && pr.activePage instanceof IntroPagePickFile) {
+            IntroPagePickFile.respondBtnClick(pr, pr.activePage, d.elClick);
         }
     }
 
-    beginLoadDocument(loader: VpcDocLoader) {
+    beginLoadDocument(loader: VpcIntroProvider) {
         this.provideExitCallbacks(loader);
         let translatedLoadMessage = lng('lngLoading %docname');
         translatedLoadMessage = translatedLoadMessage.replace(/%docname/g, loader.docname);
         let [x, y] = [this.activePage.x, this.activePage.y];
         this.activePage.destroy(this, this.app);
-        this.activePage = new IntroWaitWhileLoadingPage(
+        this.activePage = new IntroPageLoading(
             'introWaitWhileLoadingPage',
             this.bounds,
             x,
@@ -120,10 +120,10 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         );
         this.activePage.create(this, this.app);
         this.rebuildFieldScrollbars();
-        (this.activePage as IntroWaitWhileLoadingPage).go(this);
+        (this.activePage as IntroPageLoading).go(this);
     }
 
-    protected provideExitCallbacks(loader: VpcDocLoader) {
+    protected provideExitCallbacks(loader: VpcIntroProvider) {
         let exitToMainMenu = () => {
             let ctrller = new VpcUiIntro();
             ctrller.init();
@@ -143,10 +143,10 @@ export class VpcUiIntro extends VpcIntroPresenterInterface {
         loader.cbExitToOpen = mineOnly => {
             let ctrller = exitToMainMenu();
             if (mineOnly) {
-                IntroFirstPage.showOpenPage(ctrller, OpenFromLocation.ShowLoginForm);
+                IntroPageFirst.showOpenPage(ctrller, OpenFromLocation.ShowLoginForm);
             } else {
                 let fakebtn = new UI512ElButton('_choice_openStack');
-                IntroFirstPage.respondBtnClick(ctrller, undefined, fakebtn);
+                IntroPageFirst.respondBtnClick(ctrller, undefined, fakebtn);
             }
         };
     }

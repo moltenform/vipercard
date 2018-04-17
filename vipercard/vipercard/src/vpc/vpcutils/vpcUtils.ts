@@ -1,6 +1,6 @@
 
 /* auto */ import { O, UI512AttachableErr, assertTrue, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { VpcBuiltinMsg } from '../../vpc/vpcutils/vpcEnums.js';
 
@@ -44,6 +44,8 @@ export class VpcScriptErrorBase implements UI512AttachableErr {
  */
 export class VpcScriptRuntimeError extends VpcScriptErrorBase {
     isVpcScriptRuntimeError = true;
+
+    /* planned, but not yet implemented */
     callstack = [];
 }
 

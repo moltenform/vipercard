@@ -1,9 +1,9 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Gettable, UI512Settable } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512Gettable, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcIntermedValBase } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 
 /**
  * a script is requesting a reference to a vel element.

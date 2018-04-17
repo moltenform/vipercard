@@ -1,11 +1,11 @@
 
 /* auto */ import { vpcversion } from '../../config.js';
 /* auto */ import { assertTrueWarn, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Patterns } from '../../ui512/draw/ui512DrawPattern.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { UI512Patterns } from '../../ui512/draw/ui512DrawPatterns.js';
+/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
@@ -76,9 +76,9 @@ export class VpcElProductOpts extends VpcElBase {
      * add a check allowSetCurrentTool -- the only place that can set currentTool
      * is the _vpcpresenter_ object, since it has special tool clean-up logic
      */
-    set(s: string, newval: ElementObserverVal, context = ChangeContext.Default) {
+    set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         assertTrueWarn(s !== 'currentTool' || this.allowSetCurrentTool, '');
-        return super.set(s, newval, context);
+        return super.set(s, newVal, context);
     }
 
     /**

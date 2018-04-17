@@ -1,10 +1,13 @@
 
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
+/* auto */ import { VpcEditPanelsBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
 
-export class PropPanelCompositeCard extends PropPanelCompositeBase {
-    isPropPanelCompositeCard = true;
-    compositeType = 'PropPanelCompositeCard';
+/**
+ * properties panel, for editing a card's properties
+ */
+export class VpcEditPanelsCard extends VpcEditPanelsBase {
+    isVpcEditPanelsCard = true;
+    compositeType = 'VpcEditPanelsCard';
     readonly velTypeShortName = 'card';
     readonly velTypeLongName = 'lngcard';
     readonly velType = VpcElType.Card;

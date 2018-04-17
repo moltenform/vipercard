@@ -1,5 +1,5 @@
 
-/* auto */ import { RenderComplete } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';

@@ -1,88 +1,23 @@
 
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512IsDrawTextInterface, Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { UI512IsDrawTextInterface, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CharRectType, DrawCharResult, TextRendererFont, largeArea, specialCharFontChange, specialCharNumNewline, specialCharNumZeroPixelChar, typefacenameToTypefaceIdFull } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512FontCache } from '../../ui512/draw/ui512DrawTextRequestData.js';
+/* auto */ import { UI512FontRequest } from '../../ui512/draw/ui512DrawTextFontRequest.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512DrawTextParams.js';
+/* auto */ import { DrawTextArgs } from '../../ui512/draw/ui512DrawTextArgs.js';
 /* auto */ import { UI512DrawChar } from '../../ui512/draw/ui512DrawTextChar.js';
 
 const space = ' '.charCodeAt(0);
 const dash = '-'.charCodeAt(0);
 
 /**
- * we draw text one line at a time
- * this helps for computing horizontal alignment
- */
-class LineTextToRender {
-    text = new FormattedText();
-    tallestLineHeight = -1;
-    tallestCapHeight = -1;
-    width = -1;
-    charIndices: number[] = [];
-
-    /**
-     * get total height of the line (in pixels). need to check every character,
-     * because there could be one very tall character in a different font
-     */
-    measureHeight(
-        cache: UI512FontCache,
-        addVSpacing: number,
-        lastHeightMeasured: number,
-        lastCapHeightMeasured: number
-    ) {
-        if (this.text.len() === 0) {
-            this.tallestLineHeight = lastHeightMeasured;
-            this.tallestCapHeight = lastCapHeightMeasured;
-            return;
-        }
-
-        this.tallestLineHeight = 0;
-        this.tallestCapHeight = 0;
-        let currentFont: TextRendererFont;
-
-        for (let i = 0; i < this.text.len(); i++) {
-            currentFont = cache.getFont(this.text.fontAt(i));
-            this.tallestLineHeight = Math.max(this.tallestLineHeight, currentFont.grid.getLineHeight());
-            this.tallestCapHeight = Math.max(this.tallestCapHeight, currentFont.grid.getCapHeight());
-        }
-
-        this.tallestLineHeight += addVSpacing;
-    }
-
-    /**
-     * get total width of this line (in pixels)
-     */
-    measureWidth(cache: UI512FontCache, measurements: DrawCharResult[]) {
-        let curX = 0;
-        for (let i = 0; i < this.text.len(); i++) {
-            if (this.text.charAt(i) !== specialCharNumZeroPixelChar) {
-                let drawn = this.measureChar(i, measurements);
-                assertTrue(drawn !== undefined, '');
-                curX += drawn.newLogicalX;
-            }
-        }
-
-        this.width = curX;
-    }
-
-    /**
-     * get measurements of a character
-     */
-    measureChar(i: number, measurements: DrawCharResult[]) {
-        let totalNumber = this.charIndices[i];
-        return measurements[totalNumber];
-    }
-}
-
-/**
  * main class to draw text.
  */
 export class UI512DrawText implements UI512IsDrawTextInterface {
-    cache = new UI512FontCache();
-    static readonly defaultFont = UI512FontCache.defaultFont;
-    static readonly smallestFont = UI512FontCache.smallestFont;
+    cache = new UI512FontRequest();
+    static readonly defaultFont = UI512FontRequest.defaultFont;
+    static readonly smallestFont = UI512FontRequest.smallestFont;
 
     /**
      * check if font is supported
@@ -97,14 +32,14 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
      * measure dimensions of text without drawing onto a canvas
      */
     measureString(s: string) {
-        let args = new RenderTextArgs(0, 0, largeArea, largeArea, false, false, false);
+        let args = new DrawTextArgs(0, 0, largeArea, largeArea, false, false, false);
         return this.drawStringIntoBox(s, undefined, args);
     }
 
     /**
      * draws a (plain text) string, returns undefined if still waiting for the font to load.
      */
-    drawStringIntoBox(s: string, canvas: O<CanvasWrapper>, args: RenderTextArgs): O<DrawCharResult> {
+    drawStringIntoBox(s: string, canvas: O<CanvasWrapper>, args: DrawTextArgs): O<DrawCharResult> {
         if (s === null || s === undefined) {
             assertTrue(false, '3M|tried to draw null string...');
             return new DrawCharResult(args.boxX, args.boxX + 1, args.boxY + 1);
@@ -118,7 +53,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     /**
      * draws a (formatted) string, returns undefined if still waiting for the font to load.
      */
-    drawFormattedStringIntoBox(text: FormattedText, canvas: O<CanvasWrapper>, args: RenderTextArgs): O<DrawCharResult> {
+    drawFormattedStringIntoBox(text: FormattedText, canvas: O<CanvasWrapper>, args: DrawTextArgs): O<DrawCharResult> {
         if (!text) {
             return new DrawCharResult(args.boxX, args.boxX + 1, args.boxY + 1);
         }
@@ -181,7 +116,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
      * 3) add placeholder at end of string
      * 4) place words into LineTextToRender
      */
-    protected wrapTextIntoLines(s: FormattedText, args: RenderTextArgs): [LineTextToRender[], DrawCharResult[]] {
+    protected wrapTextIntoLines(s: FormattedText, args: DrawTextArgs): [LineTextToRender[], DrawCharResult[]] {
         let measurements: DrawCharResult[] = [];
         let words: FormattedText[] = [new FormattedText()];
         let wordStarts: number[] = [0];
@@ -288,14 +223,14 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     /**
      * draw the caret, a vertical line
      */
-    protected drawCaret(args: RenderTextArgs, canvas: CanvasWrapper, bounds: number[]) {
+    protected drawCaret(args: DrawTextArgs, canvas: CanvasWrapper, bounds: number[]) {
         canvas.fillRect(bounds[0], bounds[1], 1, bounds[3], args.boxX, args.boxY, args.boxW, args.boxH, 'black');
     }
 
     /**
      * show text as selected by inverting the colors
      */
-    protected drawSelected(args: RenderTextArgs, canvas: CanvasWrapper, bounds: number[], type: CharRectType) {
+    protected drawSelected(args: DrawTextArgs, canvas: CanvasWrapper, bounds: number[], type: CharRectType) {
         canvas.invertColorsRect(bounds[0], bounds[1], bounds[2], bounds[3], args.boxX, args.boxY, args.boxW, args.boxH);
     }
 
@@ -303,7 +238,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
      * for each character, run the callback, draw the caret, highlight the letter if it should be selected
      */
     protected callPerChar(
-        args: RenderTextArgs,
+        args: DrawTextArgs,
         canvas: O<CanvasWrapper>,
         charIndex: number,
         type: CharRectType,
@@ -340,7 +275,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         baseline: number,
         text: FormattedText,
         canvas: O<CanvasWrapper>,
-        args: RenderTextArgs,
+        args: DrawTextArgs,
         line: LineTextToRender,
         ret: DrawCharResult
     ) {
@@ -410,7 +345,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
      * draw as asterisk (or solid dot to mimic original os)
      * "ask password"
      */
-    static makeAsteriskOnlyIfApplicable(textin: FormattedText, args: RenderTextArgs) {
+    static makeAsteriskOnlyIfApplicable(textin: FormattedText, args: DrawTextArgs) {
         if (!args.asteriskOnly) {
             return textin;
         }
@@ -431,7 +366,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     protected drawStringIntoBoxImpl(
         textIn: FormattedText,
         canvas: O<CanvasWrapper>,
-        args: RenderTextArgs
+        args: DrawTextArgs
     ): DrawCharResult {
         /* divide into lines */
         textIn = UI512DrawText.makeAsteriskOnlyIfApplicable(textIn, args);
@@ -524,6 +459,71 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
                 .replace(new RegExp(Util512.escapeForRegex(search1), 'ig'), repl1)
                 .replace(new RegExp(Util512.escapeForRegex(search2), 'ig'), repl2);
         }
+    }
+}
+
+/**
+ * we draw text one line at a time
+ * this helps for computing horizontal alignment
+ */
+class LineTextToRender {
+    text = new FormattedText();
+    tallestLineHeight = -1;
+    tallestCapHeight = -1;
+    width = -1;
+    charIndices: number[] = [];
+
+    /**
+     * get total height of the line (in pixels). need to check every character,
+     * because there could be one very tall character in a different font
+     */
+    measureHeight(
+        cache: UI512FontRequest,
+        addVSpacing: number,
+        lastHeightMeasured: number,
+        lastCapHeightMeasured: number
+    ) {
+        if (this.text.len() === 0) {
+            this.tallestLineHeight = lastHeightMeasured;
+            this.tallestCapHeight = lastCapHeightMeasured;
+            return;
+        }
+
+        this.tallestLineHeight = 0;
+        this.tallestCapHeight = 0;
+        let currentFont: TextRendererFont;
+
+        for (let i = 0; i < this.text.len(); i++) {
+            currentFont = cache.getFont(this.text.fontAt(i));
+            this.tallestLineHeight = Math.max(this.tallestLineHeight, currentFont.grid.getLineHeight());
+            this.tallestCapHeight = Math.max(this.tallestCapHeight, currentFont.grid.getCapHeight());
+        }
+
+        this.tallestLineHeight += addVSpacing;
+    }
+
+    /**
+     * get total width of this line (in pixels)
+     */
+    measureWidth(cache: UI512FontRequest, measurements: DrawCharResult[]) {
+        let curX = 0;
+        for (let i = 0; i < this.text.len(); i++) {
+            if (this.text.charAt(i) !== specialCharNumZeroPixelChar) {
+                let drawn = this.measureChar(i, measurements);
+                assertTrue(drawn !== undefined, '');
+                curX += drawn.newLogicalX;
+            }
+        }
+
+        this.width = curX;
+    }
+
+    /**
+     * get measurements of a character
+     */
+    measureChar(i: number, measurements: DrawCharResult[]) {
+        let totalNumber = this.charIndices[i];
+        return measurements[totalNumber];
     }
 }
 

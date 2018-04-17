@@ -1,8 +1,8 @@
 
-/* auto */ import { Util512, cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 
@@ -15,7 +15,7 @@
  *
  * see uiDemoComposites for an example.
  */
-export class UI512CompRadioButtonGroup extends UI512CompBase {
+export class UI512CompButtonGroup extends UI512CompBase {
     items: [string, string][] = [];
     isExclusive = false;
     itemMargin = 5;

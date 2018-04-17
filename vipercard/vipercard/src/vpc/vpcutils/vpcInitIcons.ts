@@ -1,5 +1,5 @@
 
-/* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { IconGroupInfo, RenderIconGroup } from '../../ui512/draw/ui512DrawIconClasses.js';
 
 export class VpcInitIcons {

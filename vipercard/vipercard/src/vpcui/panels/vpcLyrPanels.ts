@@ -1,55 +1,42 @@
 
 /* auto */ import { O, msgNotification, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { MapKeyToObject, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
+/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
-/* auto */ import { VpcPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcEditPanels } from '../../vpcui/panels/vpcPanelsInterface.js';
 /* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
-/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
-/* auto */ import { PropPanelCompositeBlank } from '../../vpcui/panels/vpcEditPanelsEmpty.js';
-/* auto */ import { PropPanelCompositeField } from '../../vpcui/panels/vpcEditPanelsFld.js';
-/* auto */ import { PropPanelCompositeBtn } from '../../vpcui/panels/vpcEditPanelsBtn.js';
-/* auto */ import { PropPanelCompositeCard } from '../../vpcui/panels/vpcEditPanelsCard.js';
-/* auto */ import { PropPanelCompositeStack } from '../../vpcui/panels/vpcEditPanelsStack.js';
-/* auto */ import { VpcAppResizeHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
+/* auto */ import { VpcEditPanelsBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
+/* auto */ import { VpcEditPanelsEmpty } from '../../vpcui/panels/vpcEditPanelsEmpty.js';
+/* auto */ import { VpcEditPanelsField } from '../../vpcui/panels/vpcEditPanelsFld.js';
+/* auto */ import { VpcEditPanelsBtn } from '../../vpcui/panels/vpcEditPanelsBtn.js';
+/* auto */ import { VpcEditPanelsCard } from '../../vpcui/panels/vpcEditPanelsCard.js';
+/* auto */ import { VpcEditPanelsStack } from '../../vpcui/panels/vpcEditPanelsStack.js';
+/* auto */ import { VpcAppLyrDragHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
 
-export class VpcAppPropPanel extends VpcAppInterfaceLayer {
-    blank = new PropPanelCompositeBlank('editPanelBlank');
-    panels = new MapKeyToObject<VpcPropPanel>();
+/**
+ * layer that holds the property panels
+ */
+export class VpcAppLyrPanels extends VpcUILayer {
+    panelEmpty = new VpcEditPanelsEmpty('editPanelEmpty');
+    panels = new MapKeyToObject<VpcEditPanels>();
     editor = new VpcPanelScriptEditor('editPanelScript');
-    active: O<VpcPropPanel> = this.blank;
+    active: O<VpcEditPanels> = this.panelEmpty;
+    handles: VpcAppLyrDragHandles;
 
-    // set in initLayers
+    /* set in initLayers */
     model: VpcModelTop;
-    handles: VpcAppResizeHandles;
-    init(pr: UI512PresenterBase) {
-        this.editor.appli = this.appli;
-        this.panels.add(VpcElType.Btn.toString(), new PropPanelCompositeBtn('editPanelBtn'));
-        this.panels.add(VpcElType.Card.toString(), new PropPanelCompositeCard('editPanelCd'));
-        this.panels.add(VpcElType.Fld.toString(), new PropPanelCompositeField('editPanelFld'));
-        this.panels.add(VpcElType.Stack.toString(), new PropPanelCompositeStack('editPanelStack'));
-        this.panels.add(VpcElType.Unknown.toString(), throwIfUndefined(this.blank, '6v|'));
-        this.panels.add(VpcElType.Product.toString(), this.editor);
-        for (let panel of this.panels.getVals()) {
-            panel.appli = this.appli;
-            panel.x = this.appli.bounds()[0] + ScreenConsts.xAreaWidth + 1;
-            panel.y = this.appli.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
-            panel.logicalWidth = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
-            panel.logicalHeight = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
-            panel.create(pr, this.appli.UI512App());
-            panel.setVisible(this.appli.UI512App(), false);
-            panel.cbGetAndValidateSelectedVel = b => this.getAndValidateSelectedVel(b);
-        }
-    }
 
-    getEditToolSelectedFldOrBtn() {
-        let vel = this.getAndValidateSelectedVel('selectedVelId');
+    /**
+     * return the currently selected button or field, or undefined
+     */
+    selectedFldOrBtn() {
+        let vel = this.selectedVel('selectedVelId');
         if (vel && (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld)) {
             return vel;
         } else {
@@ -57,19 +44,24 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
         }
     }
 
-    getAndValidateSelectedVel(propName: string) {
-        // the selectedVelId could be out of date.
-        let selVel = this.appli.getOption_s(propName);
-        let vel = this.appli.getModel().findByIdUntyped(selVel);
-        let currentCard = this.appli.getModel().getCurrentCard().id;
-        if (vel && getToolCategory(this.appli.getTool()) === VpcToolCtg.CtgEdit) {
-            // make sure the parent makes sense
+    /**
+     * return the selected vel, or undefined
+     * can be e.g. the stack if user did Object->Stack Info...
+     */
+    selectedVel(propName: string) {
+        /* the selectedVelId could be out of date. */
+        let selVel = this.vci.getOptionS(propName);
+        let vel = this.vci.getModel().findByIdUntyped(selVel);
+        let currentCardId = this.vci.getModel().getCurrentCard().id;
+        if (vel && getToolCategory(this.vci.getTool()) === VpcToolCtg.CtgEdit) {
+            /* make sure the parent makes sense */
             if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-                if (vel.parentId === currentCard) {
+                if (vel.parentId === currentCardId) {
                     return vel;
                 }
             } else if (vel.getType() === VpcElType.Card) {
-                if (vel.id === currentCard) {
+                /* make sure it's on the right card */
+                if (vel.id === currentCardId) {
                     return vel;
                 }
             } else if (vel.getType() === VpcElType.Stack) {
@@ -80,40 +72,50 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
         return undefined;
     }
 
+    /**
+     * update UI
+     */
     updateUI512Els() {
-        let selected = this.getAndValidateSelectedVel('selectedVelId');
-        let shouldBeActive: O<VpcPropPanel>;
-        if (getToolCategory(this.appli.getOption_n('currentTool')) !== VpcToolCtg.CtgEdit) {
+        let selected = this.selectedVel('selectedVelId');
+        let shouldBeActive: O<VpcEditPanels>;
+        if (getToolCategory(this.vci.getOptionN('currentTool')) !== VpcToolCtg.CtgEdit) {
             shouldBeActive = undefined;
-        } else if (slength(this.appli.getOption_s('viewingScriptVelId'))) {
+        } else if (slength(this.vci.getOptionS('viewingScriptVelId'))) {
             shouldBeActive = this.editor;
         } else if (!selected) {
-            shouldBeActive = this.blank;
+            shouldBeActive = this.panelEmpty;
         } else {
-            shouldBeActive = this.panels.find(selected.getType().toString()) || this.blank;
+            shouldBeActive = this.panels.find(selected.getType().toString()) || this.panelEmpty;
         }
 
         for (let panel of this.panels.getVals()) {
-            panel.setVisible(this.appli.UI512App(), false);
+            panel.setVisible(this.vci.UI512App(), false);
         }
 
         if (shouldBeActive) {
-            shouldBeActive.setVisible(this.appli.UI512App(), true);
+            shouldBeActive.setVisible(this.vci.UI512App(), true);
         }
 
         this.active = shouldBeActive;
         if (this.active) {
-            this.active.refreshFromModel(this.appli.UI512App());
+            this.active.refreshFromModel(this.vci.UI512App());
         }
     }
 
+    /**
+     * save changes
+     */
     saveChangesToModel(onlyCheckIfDirty: boolean) {
-        if (this.active && getToolCategory(this.appli.getTool()) === VpcToolCtg.CtgEdit) {
-            this.active.saveChangesToModel(this.appli.UI512App(), onlyCheckIfDirty);
+        if (this.active && getToolCategory(this.vci.getTool()) === VpcToolCtg.CtgEdit) {
+            this.active.saveChangesToModel(this.vci.UI512App(), onlyCheckIfDirty);
             this.updateUI512Els();
         }
     }
 
+    /**
+     * by calling saveChangesToModel with onlyCheckIfDirty flag, we can
+     * compare what is typed in the ui with the current actual state
+     */
     areThereUnsavedChanges() {
         try {
             this.saveChangesToModel(true);
@@ -132,29 +134,41 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
         return false;
     }
 
+    /**
+     * respond to keydown
+     */
     respondKeydown(d: KeyDownEventDetails) {
-        if (this.active && this.active instanceof PropPanelCompositeBase && d.readableShortcut === 'Enter') {
+        if (this.active && this.active instanceof VpcEditPanelsBase && d.readableShortcut === 'Enter') {
             this.saveChangesToModel(false);
             d.setHandled();
         }
     }
 
+    /**
+     * respond to clicking a checkbox
+     */
     protected toggleIfClickedCheckbox(short: string, el: UI512Element) {
         if (short && short.startsWith('toggle##')) {
-            let vel = this.getAndValidateSelectedVel('selectedVelId');
+            let vel = this.selectedVel('selectedVelId');
             if (vel) {
                 el.set('checkmark', !el.getB('checkmark'));
             }
         }
     }
 
+    /**
+     * respond to mouse down, we'll save changes
+     */
     respondMouseDown(d: MouseDownEventDetails) {
         if (this.active) {
-            // any click, no matter where, saves changes
-            this.active.saveChangesToModel(this.appli.UI512App(), false);
+            /* any click, no matter where, saves changes */
+            this.active.saveChangesToModel(this.vci.UI512App(), false);
         }
     }
 
+    /**
+     * respond to mouseup, and pass to the panel
+     */
     respondMouseUp(d: MouseUpEventDetails) {
         if (this.active && d.elClick) {
             let isOnPanel = this.active.fromFullId(d.elClick.id);
@@ -163,17 +177,38 @@ export class VpcAppPropPanel extends VpcAppInterfaceLayer {
                 this.saveChangesToModel(false);
 
                 if (d.elClick.id && d.elClick.id.endsWith('##btnScript')) {
-                    this.editor.respondToClick(this.appli.UI512App(), d.elClick.id);
+                    this.editor.respondToClick(this.vci.UI512App(), d.elClick.id);
                 } else if (d.elClick.id && this.active instanceof VpcPanelScriptEditor) {
-                    this.editor.respondToClick(this.appli.UI512App(), d.elClick.id);
+                    this.editor.respondToClick(this.vci.UI512App(), d.elClick.id);
                 } else if (d.elClick.id && d.elClick.id.endsWith('##btnGenPart')) {
                     let action =
-                        this.appli.getOption_n('currentTool') === VpcTool.Button
-                            ? 'mnuObjectsNewBtn'
-                            : 'mnuObjectsNewFld';
-                    this.appli.performMenuAction(action);
+                        this.vci.getOptionN('currentTool') === VpcTool.Button ? 'mnuObjectsNewBtn' : 'mnuObjectsNewFld';
+                    this.vci.performMenuAction(action);
                 }
             }
+        }
+    }
+
+    /**
+     * initialize layout
+     */
+    init(pr: UI512PresenterBase) {
+        this.editor.vci = this.vci;
+        this.panels.add(VpcElType.Btn.toString(), new VpcEditPanelsBtn('editPanelBtn'));
+        this.panels.add(VpcElType.Card.toString(), new VpcEditPanelsCard('editPanelCd'));
+        this.panels.add(VpcElType.Fld.toString(), new VpcEditPanelsField('editPanelFld'));
+        this.panels.add(VpcElType.Stack.toString(), new VpcEditPanelsStack('editPanelStack'));
+        this.panels.add(VpcElType.Unknown.toString(), throwIfUndefined(this.panelEmpty, '6v|'));
+        this.panels.add(VpcElType.Product.toString(), this.editor);
+        for (let panel of this.panels.getVals()) {
+            panel.vci = this.vci;
+            panel.x = this.vci.bounds()[0] + ScreenConsts.xAreaWidth + 1;
+            panel.y = this.vci.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
+            panel.logicalWidth = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
+            panel.logicalHeight = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
+            panel.create(pr, this.vci.UI512App());
+            panel.setVisible(this.vci.UI512App(), false);
+            panel.cbGetAndValidateSelectedVel = b => this.selectedVel(b);
         }
     }
 }

@@ -1,13 +1,16 @@
 
 /* auto */ import { O, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { MapKeyToObject } from '../../ui512/utils/utils512.js';
 /* auto */ import { CodeLimits, CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 /* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
-/* auto */ import { ChvParserClass } from '../../vpc/codeparse/vpcRules.js';
+/* auto */ import { VpcChvParser } from '../../vpc/codeparse/vpcParser.js';
 
 /* see comment at the top of _vpcAllCode_.ts for an overview */
 
+/**
+ * make every symbol lowercase, because the language is case insensitive
+ */
 export class MakeLowerCase {
     go(tk: ChvIToken) {
         if (!isTkType(tk, tks.TokenTkstringliteral)) {
@@ -16,11 +19,15 @@ export class MakeLowerCase {
     }
 }
 
+/**
+ * efficiently splits an array of tokens by line,
+ * producing an iterator
+ */
 export class SplitIntoLinesProducer {
     index = 0;
     constructor(protected instream: ChvIToken[], protected idGen: CountNumericId, protected makeLower: MakeLowerCase) {}
 
-    nextWithnewlines(): O<ChvIToken[]> {
+    nextWithNewlines(): O<ChvIToken[]> {
         let currentLine: ChvIToken[] = [];
         let limit = new LoopLimit(CodeLimits.MaxTokensInLine, 'maxTokensInLine');
         while (limit.next()) {
@@ -43,7 +50,7 @@ export class SplitIntoLinesProducer {
 
     next(): O<ChvIToken[]> {
         while (true) {
-            let next = this.nextWithnewlines();
+            let next = this.nextWithNewlines();
             if (next === undefined) {
                 return undefined;
             } else if (next && next.length === 0) {
@@ -57,6 +64,9 @@ export class SplitIntoLinesProducer {
     }
 }
 
+/**
+ * every line of code is assigned a category
+ */
 export enum VpcLineCategory {
     __isUI512Enum = 1,
     Invalid,
@@ -81,8 +91,11 @@ export enum VpcLineCategory {
     CallHandler
 }
 
+/**
+ * map a builtin command to an initial parser rule
+ */
 export class MapBuiltinCmds extends MapKeyToObject<Function> {
-    constructor(parser: ChvParserClass) {
+    constructor(parser: VpcChvParser) {
         super();
         this.add('add', parser.RuleBuiltinCmdAdd);
         this.add('answer', parser.RuleBuiltinCmdAnswer);
@@ -115,6 +128,9 @@ export class MapBuiltinCmds extends MapKeyToObject<Function> {
     }
 }
 
+/**
+ * enforce an upper bound on the number of iterations in a loop
+ */
 export class LoopLimit {
     count: number;
     constructor(protected maxcount: number, protected msg = '') {

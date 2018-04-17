@@ -2,16 +2,6 @@
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcUtils.js';
 
-/* largest positive 32bit signed integer */
-const maxint32 = 2147483647;
-
-/* largest negative 32bit signed integer */
-const minint32 = -2147483648;
-
-/* we don't want code outside this module to directly create a VpcVal
-you should use the VpcValN or VpcValS functions. */
-let allowUsingVpcValConstructor = {};
-
 /**
  * for the interpreter, when interpreting a script,
  * an "intermedval" is the result of part of an expression
@@ -19,6 +9,13 @@ let allowUsingVpcValConstructor = {};
 export class VpcIntermedValBase {
     isIntermedValBase = true;
 }
+
+/**
+ * this token allows access for directly creating a VpcVal,
+ * and since we haven't made this token public, we've
+ * guided other code towards using VpcValN or VpcValS instead.
+ */
+let allowUsingVpcValConstructor = new Object();
 
 /**
  * VpcVal, a ViperCard script value
@@ -249,6 +246,12 @@ export function VpcValN(f: number) {
 export function VpcValBool(b: boolean) {
     return b ? VpcVal.True : VpcVal.False;
 }
+
+/* largest positive 32bit signed integer */
+const maxint32 = 2147483647;
+
+/* largest negative 32bit signed integer */
+const minint32 = -2147483648;
 
 /**
  * map of keys to intermediate values

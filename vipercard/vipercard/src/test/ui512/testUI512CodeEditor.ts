@@ -1,12 +1,12 @@
 
 /* auto */ import { assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys, getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementGettable.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512CodeEditor.js';
 /* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
@@ -512,7 +512,7 @@ y
         ed.refreshFromModel = a => {};
         ed.saveChangesToModel = (a, b) => {};
         ed.cbGetAndValidateSelectedVel = s => undefined;
-        ed.appli = { UI512App: () => {} } as any; /* test code */
+        ed.vci = { UI512App: () => {} } as any; /* test code */
         ed.create(fakeCtrller, fakeApp);
         return ed;
     }

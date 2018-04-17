@@ -1,13 +1,13 @@
 
 /* auto */ import { makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utils512.js';
 /* auto */ import { TextFontSpec, specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { VpcChunkType, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { SubstringStyleComplex } from '../../vpc/vpcutils/vpcStyleComplex.js';
+/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
@@ -123,7 +123,7 @@ export class VpcElField extends VpcElSizable {
         getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.get_ftxt().toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField) => FormattedSubstringUtil.vpcstyleFromInt(me._defaulttextstyle)
+            (me: VpcElField) => SubstringStyleComplex.vpcstyleFromInt(me._defaulttextstyle)
         ];
         getters['style'] = [
             PrpTyp.Str,
@@ -194,7 +194,7 @@ export class VpcElField extends VpcElSizable {
             PrpTyp.Str,
             (me: VpcElField, s: string) => {
                 let list = s.split(',').map(item => item.trim());
-                me.set('defaulttextstyle', FormattedSubstringUtil.vpcstyleToInt(list));
+                me.set('defaulttextstyle', SubstringStyleComplex.vpcstyleToInt(list));
             }
         ];
 
@@ -268,12 +268,12 @@ export class VpcElField extends VpcElSizable {
         let len = charend - charstart;
         if (prop === 'textstyle') {
             let list = s.split(',').map(item => item.trim());
-            FormattedSubstringUtil.setChunkTextStyle(newtxt, this.getDefaultFontAsUi512(), charstart, len, list);
+            SubstringStyleComplex.setChunkTextStyle(newtxt, this.getDefaultFontAsUi512(), charstart, len, list);
         } else if (prop === 'textfont') {
-            FormattedSubstringUtil.setChunkTextFace(newtxt, this.getDefaultFontAsUi512(), charstart, len, s);
+            SubstringStyleComplex.setChunkTextFace(newtxt, this.getDefaultFontAsUi512(), charstart, len, s);
         } else if (prop === 'textsize') {
             let n = VpcValS(s).readAsStrictInteger();
-            FormattedSubstringUtil.setChunkTextSize(newtxt, this.getDefaultFontAsUi512(), charstart, len, n);
+            SubstringStyleComplex.setChunkTextSize(newtxt, this.getDefaultFontAsUi512(), charstart, len, n);
         } else {
             throw makeVpcScriptErr(
                 `4x|can only say 'set the (prop) of char 1 to 2' for textstyle, textfont, or textsize`
@@ -290,7 +290,7 @@ export class VpcElField extends VpcElSizable {
         let len = charend - charstart;
         if (prop === 'textstyle') {
             /* returns comma-delimited styles, or the string 'mixed' */
-            let list = FormattedSubstringUtil.getChunkTextStyle(
+            let list = SubstringStyleComplex.getChunkTextStyle(
                 this.get_ftxt(),
                 this.getDefaultFontAsUi512(),
                 charstart,
@@ -299,7 +299,7 @@ export class VpcElField extends VpcElSizable {
             return list.join(',');
         } else if (prop === 'textfont') {
             /* returns typeface name or the string 'mixed' */
-            return FormattedSubstringUtil.getChunkTextFace(
+            return SubstringStyleComplex.getChunkTextFace(
                 this.get_ftxt(),
                 this.getDefaultFontAsUi512(),
                 charstart,
@@ -307,7 +307,7 @@ export class VpcElField extends VpcElSizable {
             );
         } else if (prop === 'textsize') {
             /* as per spec this can return either an integer or the string 'mixed' */
-            return FormattedSubstringUtil.getChunkTextSize(
+            return SubstringStyleComplex.getChunkTextSize(
                 this.get_ftxt(),
                 this.getDefaultFontAsUi512(),
                 charstart,

@@ -1,13 +1,12 @@
 
 /* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 
 /**
  * used by the interpreter to evaluate operations
- *
- * tests in vpcTestScriptEval
+ * tested in vpcTestScriptEval
  */
 export class VpcEvalHelpers {
     /* re-use temporary arrays instead of re-allocating */
@@ -76,13 +75,12 @@ export class VpcEvalHelpers {
      * evaluate binary operation
      */
     evalOp(aIn: any, bIn: any, opClass: VpcOpCtg, op: string): VpcVal {
-        if (!aIn || !bIn || !aIn.isVpcVal || !bIn.isVpcVal) {
-            throw makeVpcInternalErr(`5_|can't compute, not VpcVal. ${aIn} ${bIn} ${opClass} ${op}`);
-        }
-
-        /* cast is safe, we've confirmed isVpcVal */
         let a = aIn as VpcVal;
         let b = bIn as VpcVal;
+        if (!a || !b || !a.isVpcVal || !b.isVpcVal) {
+            throw makeVpcInternalErr(`5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`);
+        }
+
         if (opClass === VpcOpCtg.OpLogicalOrAnd) {
             return this.evalOpLogicalOrAnd(a, b, op, opClass);
         } else if (opClass === VpcOpCtg.OpEqualityGreaterLessOrContains && op !== 'contains') {

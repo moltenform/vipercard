@@ -50,20 +50,20 @@ testUtilsAssert
 
 /vpcui/intro/
 vpcIntro
-vpcIntroFirst
-vpcIntroOpen
-vpcIntroLoading
-vpcIntroPickFile
+vpcIntroPageFirst
+vpcIntroPageOpen
+vpcIntroPageLoading
+vpcIntroPagePickFile
 vpcIntroInterface
 vpcIntroProvider
-vpcIntroBase
+vpcIntroPageBase
 vpcInterfaceImpl
 
 /vpcui/presentation/
 vpcPresenter
 vpcPresenterInit
 vpcPresenterEvents
-vpcPresenterSave
+vpcSave
 vpcPresenterInterface
 
 /vpcui/menu/
@@ -77,9 +77,9 @@ vpcMenuStructure
 vpcFormLogin
 vpcFormNewUser
 vpcReplMessageBox
-vpcSendErrReport
+vpcFormSendReport
 vpcDocViewer
-vpcNonModalCommon
+vpcLyrNonModalHolder
 
 /vpcui/tools/
 vpcToolBrowse
@@ -96,7 +96,7 @@ vpcToolBase
 
 /vpcui/panels/
 vpcLyrPanels
-vpcLyrNotifications
+vpcLyrNotification
 vpcLyrDragHandles
 vpcLyrToolbox
 vpcEditPanelsStack
@@ -106,8 +106,8 @@ vpcEditPanelsFld
 vpcEditPanelsEmpty
 vpcEditPanelsBase
 vpcScriptEditor
-vpcPanelsBase
-vpcToolboxTools
+vpcPanelsInterface
+vpcToolboxMain
 vpcToolboxNav
 vpcToolboxPatterns
 
@@ -118,10 +118,10 @@ vpcGifExport
 
 /vpcui/state/
 vpcState
-vpcFullOutside
+vpcOutsideImpl
 vpcUndo
 vpcStateSerialize
-vpcRawCreate
+vpcCreateOrDelVel
 vpcInterface
 
 /vpc/request/
@@ -142,24 +142,24 @@ bridgeJSLru
 vpcAllCode
 vpcBranchProcessing
 vpcRewrite
-vpcExpandFnCalls
+vpcExpandCustomFns
 vpcDetermineCategory
 vpcCodeLine
 vpcCheckReserved
-vpcScriptFunctions
+vpcBuiltinFunctions
 vpcPreparseCommon
 
 /vpc/codeparse/
 vpcVisitor
 vpcVisitorMixin
 vpcVisitorMethods
-vpcRules
+vpcParser
 vpcTokens
 bridgeChv
 
 /vpc/vel/
 velResolveName
-velResolveReference
+velResolveContainer
 velOutsideInterfaces
 velModelTop
 velProductOpts
@@ -168,14 +168,14 @@ velBg
 velCard
 velButton
 velField
-velSerialize
+velSerialization
 velBase
 
 /vpc/vpcutils/
 vpcRequestedReference
 vpcInitIcons
 vpcAudio
-vpcChunk
+vpcChunkResolution
 vpcStyleComplex
 vpcVarCollection
 vpcValEval
@@ -185,7 +185,7 @@ vpcEnums
 
 /ui512/composites/
 ui512CodeEditor
-ui512CodeEditorClasses
+ui512CodeEditorAutoIndent
 ui512ModalDialog
 ui512Toolbox
 ui512ButtonGroup
@@ -198,49 +198,50 @@ ui512PresenterBase
 /ui512/textedit/
 ui512TextEvents
 ui512BasicHandlers
-ui512TextModify
-ui512TextModifyClasses
+ui512TextSelModify
+ui512TextSelModifyImpl
 ui512Scrollbar
-ui512Clipboard
+ui512ClipManager
 ui512GenericField
 ui512TextLines
 
 /ui512/menu/
 ui512MenuListeners
 ui512MenuAnimation
-ui512MenuRender
+ui512MenuPositioning
+ui512SuspendEvents
 ui512PresenterWithMenu
 ui512Events
 
 /ui512/elements/
-ui512ElementsView
-ui512ElementsMenu
-ui512ElementsCanvasPiece
-ui512ElementsTextField
-ui512ElementsButton
-ui512ElementsLabel
-ui512ElementsApp
-ui512ElementsGroup
-ui512ElementsBase
-ui512ElementsGettable
+ui512ElementView
+ui512ElementMenu
+ui512ElementCanvasPiece
+ui512ElementTextField
+ui512ElementButton
+ui512ElementLabel
+ui512ElementApp
+ui512ElementGroup
+ui512Element
+ui512ElementGettable
 
 /ui512/draw/
 ui512ImageDissolve
-ui512ImageSerialize
+ui512ImageSerialization
 ui512DrawBorders
-ui512DrawIcon
+ui512DrawIconManager
 ui512DrawIconClasses
 ui512DrawPaintDispatch
-ui512DrawPaint
-ui512DrawPaintClasses
-ui512DrawPattern
+ui512DrawPainter
+ui512DrawPainterClasses
+ui512DrawPatterns
 ui512DrawText
 ui512DrawTextChar
-ui512DrawTextParams
+ui512DrawTextArgs
 ui512FormattedText
-ui512DrawTextRequestData
+ui512DrawTextFontRequest
 ui512DrawTextClasses
-ui512DrawTextTransCharset
+ui512TranslateCharset
 ui512ImageCollection
 ui512Interfaces
 
@@ -253,7 +254,7 @@ utilsDraw
 utilsDrawConstants
 utilsTest
 utilsCursors
-utilsUI512
+utils512
 utilsAssert
 
 /

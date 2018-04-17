@@ -1,12 +1,12 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { isString } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512MenuDefn } from '../../ui512/menu/ui512MenuRender.js';
+/* auto */ import { UI512MenuDefn } from '../../ui512/menu/ui512MenuPositioning.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcAppInterfaceLayer } from '../../vpcui/modelrender/vpcPaintRender.js';
+/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
 
-export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
+export abstract class VpcAppMenuStructure extends VpcUILayer {
     constructor() {
         super();
         this.initkeymappings();
@@ -184,12 +184,12 @@ export abstract class VpcAppMenuStructure extends VpcAppInterfaceLayer {
 
     initkeymappings() {
         this.keymappings['ArrowLeft'] = (self: VpcAppMenuStructure) => {
-            if (self.appli.getTool() !== VpcTool.Browse) {
+            if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardPrev';
             }
         };
         this.keymappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
-            if (self.appli.getTool() !== VpcTool.Browse) {
+            if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardNext';
             }
         };

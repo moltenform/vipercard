@@ -1,84 +1,84 @@
 
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
+/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
+/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuPositioning.js';
 /* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcAppMenuStructure } from '../../vpcui/menu/vpcMenuStructure.js';
 
-export class VpcAppMenus extends VpcAppMenuStructure {
+export class VpcAppMenu extends VpcAppMenuStructure {
     init() {
-        MenuPositioning.buildFromArray(this.appli.getPresenter(), this.getMenuStruct());
-        MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsHideProduct', undefined, false);
-        MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsHideOthers', undefined, false);
-        MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsShowAll', undefined, false);
-        MenuPositioning.setItemStatus(this.appli.UI512App(), 'mnuSysAppsCheckProduct', true, true);
+        MenuPositioning.buildFromArray(this.vci.getPresenter(), this.getMenuStruct());
+        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsHideProduct', undefined, false);
+        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsHideOthers', undefined, false);
+        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsShowAll', undefined, false);
+        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsCheckProduct', true, true);
     }
 
     updateUI512Els() {
         // called whenever selected vel changes
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuPaintWideLines',
-            this.appli.getOption_b('optWideLines'),
+            this.vci.getOptionB('optWideLines'),
             true
         );
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuPaintDrawMult',
-            this.appli.getOption_b('optPaintDrawMult'),
+            this.vci.getOptionB('optPaintDrawMult'),
             true
         );
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuPaintBlackLines',
-            this.appli.getOption_n('optPaintLineColor') === clrBlack,
+            this.vci.getOptionN('optPaintLineColor') === clrBlack,
             true
         );
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuPaintWhiteLines',
-            this.appli.getOption_n('optPaintLineColor') === clrWhite,
+            this.vci.getOptionN('optPaintLineColor') === clrWhite,
             true
         );
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuPaintBlackFill',
-            this.appli.getOption_n('optPaintFillColor') === clrBlack,
+            this.vci.getOptionN('optPaintFillColor') === clrBlack,
             true
         );
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuPaintWhiteFill',
-            this.appli.getOption_n('optPaintFillColor') === clrWhite,
+            this.vci.getOptionN('optPaintFillColor') === clrWhite,
             true
         );
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuPaintNoFill',
-            this.appli.getOption_n('optPaintFillColor') === -1,
+            this.vci.getOptionN('optPaintFillColor') === -1,
             true
         );
 
         MenuPositioning.setItemStatus(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             'mnuUseHostClipboard',
-            this.appli.getOption_b('optUseHostClipboard'),
+            this.vci.getOptionB('optUseHostClipboard'),
             true
         );
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(this.appli.UI512App());
+        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(this.vci.UI512App());
         let topClock = grpbar.getEl('topClock');
         topClock.set('labeltext', this.getDayOfYear());
 
-        let currentTool = this.appli.getOption_n('currentTool');
+        let currentTool = this.vci.getOptionN('currentTool');
         let toolCtg = getToolCategory(currentTool);
         for (let i = VpcTool.__first; i <= VpcTool.__last; i++) {
             let check = i === currentTool;
-            MenuPositioning.setItemStatus(this.appli.UI512App(), `mnuItemTool${i}`, check, true);
+            MenuPositioning.setItemStatus(this.vci.UI512App(), `mnuItemTool${i}`, check, true);
         }
 
-        let selectedId = toolCtg === VpcToolCtg.CtgEdit ? this.appli.getOption_s('selectedVelId') : '';
+        let selectedId = toolCtg === VpcToolCtg.CtgEdit ? this.vci.getOptionS('selectedVelId') : '';
         this.refreshCopyPasteMnuItem(selectedId, 'mnuCopyCardOrVel', 'lngCopy Card', 'lngCopy Button', 'lngCopy Field');
-        let copiedId = this.appli.getOption_s('copiedVelId');
+        let copiedId = this.vci.getOptionS('copiedVelId');
         this.refreshCopyPasteMnuItem(
             copiedId,
             'mnuPasteCardOrVel',
@@ -89,12 +89,12 @@ export class VpcAppMenus extends VpcAppMenuStructure {
     }
 
     refreshCopyPasteMnuItem(id: string, menuId: string, fallback: string, txtBtn: string, txtFld: string) {
-        let found = this.appli.getModel().findByIdUntyped(id);
+        let found = this.vci.getModel().findByIdUntyped(id);
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             let txt = found.getType() === VpcElType.Btn ? txtBtn : txtFld;
-            MenuPositioning.setItemStatus(this.appli.UI512App(), menuId, undefined, undefined, lng(txt));
+            MenuPositioning.setItemStatus(this.vci.UI512App(), menuId, undefined, undefined, lng(txt));
         } else {
-            MenuPositioning.setItemStatus(this.appli.UI512App(), menuId, undefined, undefined, lng(fallback));
+            MenuPositioning.setItemStatus(this.vci.UI512App(), menuId, undefined, undefined, lng(fallback));
         }
     }
 

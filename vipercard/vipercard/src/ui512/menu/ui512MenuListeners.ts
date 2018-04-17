@@ -1,18 +1,18 @@
 
 /* auto */ import { respondUI512Error } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChangeContext, MenuOpenState } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementsMenu.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementMenu.js';
 /* auto */ import { MenuItemClickedDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
-/* auto */ import { IgnoreEventsForMenuBlinkAnimation } from '../../ui512/menu/ui512MenuAnimation.js';
+/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuPositioning.js';
+/* auto */ import { SuspendEventsForMenuBlinkAnimation } from '../../ui512/menu/ui512MenuAnimation.js';
 
 /**
- * menu behaviors, opening the menu when you click on it and so on.
+ * menu listeners+behaviors, opening the menu when you click on it and so on.
  */
-export class MenuBehavior {
+export class MenuListeners {
     /**
      * open this menu and make all items unhighlighted
      * it is wrong if you'd open a window and one of the items is still highlighted from earlier
@@ -46,8 +46,8 @@ export class MenuBehavior {
         for (let i = 0; i < dropDns.length; i++) {
             let menu = dropDns[i];
             if (chosenid === menu.id) {
-                MenuBehavior.closeAllActiveMenus(pr);
-                MenuBehavior.setwhichIsExpanded(pr, menuRoot, i);
+                MenuListeners.closeAllActiveMenus(pr);
+                MenuListeners.setwhichIsExpanded(pr, menuRoot, i);
                 return;
             }
         }
@@ -86,7 +86,7 @@ export class MenuBehavior {
      */
     static respondToMenuItemClick(pr: UI512PresenterWithMenuInterface, item: UI512MenuItem, d: MouseUpEventDetails) {
         let cbAfterAnim = () => {
-            MenuBehavior.closeAllActiveMenus(pr);
+            MenuListeners.closeAllActiveMenus(pr);
             pr.openState = MenuOpenState.MenusClosed;
 
             try {
@@ -98,7 +98,7 @@ export class MenuBehavior {
         };
 
         /* ignore all events during the animation */
-        let playAnim = new IgnoreEventsForMenuBlinkAnimation(item, cbAfterAnim);
+        let playAnim = new SuspendEventsForMenuBlinkAnimation(item, cbAfterAnim);
         pr.tmpIgnore = playAnim;
         playAnim.start(pr);
 
@@ -117,7 +117,7 @@ export class MenuBehavior {
         if (d.el && d.el instanceof UI512MenuDropdown) {
             if (pr.openState === MenuOpenState.MenusClosed) {
                 if (d.el.id !== 'topClock') {
-                    MenuBehavior.setActiveMenu(pr, d.el.id);
+                    MenuListeners.setActiveMenu(pr, d.el.id);
                     pr.openState = MenuOpenState.MenusOpenInitialMouseDown;
                 }
             }
@@ -135,8 +135,8 @@ export class MenuBehavior {
         /* for normal buttons, a full click needs mouseDown and mouseUp on the same element
            for menu items, it only matters where the mouseUp is, i.e. use elRaw instead of elFullClick */
 
-        if (d.elRaw && MenuBehavior.canHighlightMenuItem(d.elRaw)) {
-            MenuBehavior.respondToMenuItemClick(pr, cast(d.elRaw, UI512MenuItem), d);
+        if (d.elRaw && MenuListeners.canHighlightMenuItem(d.elRaw)) {
+            MenuListeners.respondToMenuItemClick(pr, cast(d.elRaw, UI512MenuItem), d);
         } else if (d.elRaw && d.elRaw instanceof UI512MenuDropdown) {
             if (pr.openState === MenuOpenState.MenusClosed) {
                 /* do nothing, the menu is closed */
@@ -146,12 +146,12 @@ export class MenuBehavior {
                 pr.openState = MenuOpenState.MenusOpen;
             } else if (pr.openState === MenuOpenState.MenusOpen) {
                 /* the menus were open, so clicking closes them */
-                MenuBehavior.closeAllActiveMenus(pr);
+                MenuListeners.closeAllActiveMenus(pr);
                 pr.openState = MenuOpenState.MenusClosed;
             }
         } else {
             /* clicking away from the menu closes all menus */
-            MenuBehavior.closeAllActiveMenus(pr);
+            MenuListeners.closeAllActiveMenus(pr);
             pr.openState = MenuOpenState.MenusClosed;
         }
     }
@@ -166,18 +166,18 @@ export class MenuBehavior {
 
         if (d.el && d.el instanceof UI512MenuDropdown && pr.openState !== MenuOpenState.MenusClosed) {
             if (d.el.id === 'topClock') {
-                MenuBehavior.closeAllActiveMenus(pr);
+                MenuListeners.closeAllActiveMenus(pr);
             } else {
-                MenuBehavior.setActiveMenu(pr, d.el.id);
+                MenuListeners.setActiveMenu(pr, d.el.id);
             }
         }
 
         if (d.el && d.el instanceof UI512MenuRoot) {
-            MenuBehavior.closeAllActiveMenus(pr);
+            MenuListeners.closeAllActiveMenus(pr);
         }
 
         if (!d.el) {
-            MenuBehavior.closeAllActiveMenus(pr);
+            MenuListeners.closeAllActiveMenus(pr);
         }
     }
 

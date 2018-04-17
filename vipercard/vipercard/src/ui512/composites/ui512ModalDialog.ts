@@ -6,13 +6,13 @@
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { MouseDragStatus, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { TemporarilyIgnoreEvents } from '../../ui512/menu/ui512MenuAnimation.js';
+/* auto */ import { TemporarilySuspendEvents } from '../../ui512/menu/ui512SuspendEvents.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
@@ -194,7 +194,7 @@ export class UI512CompModalDialog extends UI512CompBase {
         pr.mouseDragStatus = MouseDragStatus.None;
         pr.setCurrentFocus(this.dlgType === UI512CompStdDialogType.Ask ? this.getElId(`inputfld`) : undefined);
         UI512CursorAccess.setCursor(UI512Cursors.Arrow);
-        let nChosen = -1;
+        let nChosen = UI512CompStdDialogResult.NotChosen;
         let whenComplete = () => {
             /* restore listeners and run the callback */
             eventRedirect.restoreInteraction(app, this.grpId);
@@ -215,17 +215,17 @@ export class UI512CompModalDialog extends UI512CompBase {
         addDefaultListeners(pr.listeners);
 
         /* if you clicked on a special 'cancel' rect, close the dialog */
-        pr.listenEvent(UI512EventType.MouseDown, (_, d:MouseDownEventDetails) => {
+        pr.listenEvent(UI512EventType.MouseDown, (_, d: MouseDownEventDetails) => {
             if (this.isCancelRect(d.mouseX, d.mouseY)) {
-                nChosen = 3;
+                nChosen = UI512CompStdDialogResult.Exit;
                 eventRedirect.completed = true;
             }
         });
 
         /* if you clicked in a button, run the callback and close the dialog */
-        pr.listenEvent(UI512EventType.MouseUp, (_, d:MouseUpEventDetails) => {
+        pr.listenEvent(UI512EventType.MouseUp, (_, d: MouseUpEventDetails) => {
             nChosen = this.getWhichBtnFromClick(d);
-            if (nChosen !== -1) {
+            if (nChosen !== UI512CompStdDialogResult.NotChosen) {
                 if (this.cbOnMouseUp) {
                     this.cbOnMouseUp(nChosen);
                 }
@@ -248,16 +248,7 @@ export class UI512CompModalDialog extends UI512CompBase {
      */
     protected isCancelRect(x: number, y: number) {
         for (let cancelBtnBound of this.cancelBtnBounds) {
-            if (
-                RectUtils.hasPoint(
-                    x,
-                    y,
-                    cancelBtnBound[0],
-                    cancelBtnBound[1],
-                    cancelBtnBound[2],
-                    cancelBtnBound[3]
-                )
-            ) {
+            if (RectUtils.hasPoint(x, y, cancelBtnBound[0], cancelBtnBound[1], cancelBtnBound[2], cancelBtnBound[3])) {
                 return true;
             }
         }
@@ -270,13 +261,13 @@ export class UI512CompModalDialog extends UI512CompBase {
         let theId = d.elClick ? d.elClick.id : '';
         let userId = this.fromFullId(theId);
         if (userId === 'choicebtn0') {
-            return 0;
+            return UI512CompStdDialogResult.Btn1;
         } else if (userId === 'choicebtn1') {
-            return 1;
+            return UI512CompStdDialogResult.Btn2;
         } else if (userId === 'choicebtn2') {
-            return 2;
+            return UI512CompStdDialogResult.Btn3;
         } else {
-            return -1;
+            return UI512CompStdDialogResult.NotChosen;
         }
     }
 
@@ -314,7 +305,7 @@ export class UI512CompModalDialog extends UI512CompBase {
 /**
  * redirect all events, including the onIdle event, in effect pausing everything
  */
-class TemporarilyRedirectForModal extends TemporarilyIgnoreEvents {
+class TemporarilyRedirectForModal extends TemporarilySuspendEvents {
     completed = false;
     savedMouseInteraction: { [key: string]: boolean } = {};
     constructor(public callback: () => void) {
@@ -368,3 +359,13 @@ export enum UI512CompStdDialogType {
     Answer
 }
 
+/**
+ * what button was clicked on
+ */
+export enum UI512CompStdDialogResult {
+    NotChosen = -1,
+    Btn1 = 0,
+    Btn2 = 1,
+    Btn3 = 2,
+    Exit = 3
+}

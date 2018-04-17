@@ -1,7 +1,7 @@
 
-/* auto */ import { getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512ElementWithHighlight } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512ElementWithHighlight } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
 

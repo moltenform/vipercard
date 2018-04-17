@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, assertTrueWarn, cProductName, makeVpcInternalErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, assertEq, assertEqWarn, base10, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, assertEq, assertEqWarn, base10, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
@@ -13,14 +13,14 @@
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgeJSLru.js';
-/* auto */ import { VpcApplication } from '../../vpcui/state/vpcState.js';
+/* auto */ import { VpcState } from '../../vpcui/state/vpcState.js';
 /* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcPresenter } from '../../vpcui/presentation/vpcPresenter.js';
-/* auto */ import { OpenFromLocation, VpcDocLoader } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { OpenFromLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
 
 export class TestVpcScriptRun extends UI512TestBase {
     ctrller: VpcPresenter;
-    appl: VpcApplication;
+    vcstate: VpcState;
     elIds: { [key: string]: string } = {};
     evalHelpers = new VpcEvalHelpers();
     initedAppl = false;
@@ -35,9 +35,9 @@ export class TestVpcScriptRun extends UI512TestBase {
 
     async initEnvironment(callback: Function) {
         if (!this.initedAppl) {
-            [this.ctrller, this.appl] = await this.startEnvironment();
-            this.appl.appli.doWithoutAbilityToUndo(() => this.populateModel());
-            this.appl.appli.doWithoutAbilityToUndo(() => this.ctrller.setTool(VpcTool.Browse));
+            [this.ctrller, this.vcstate] = await this.startEnvironment();
+            this.vcstate.vci.doWithoutAbilityToUndo(() => this.populateModel());
+            this.vcstate.vci.doWithoutAbilityToUndo(() => this.ctrller.setTool(VpcTool.Browse));
 
             /* make showError a no-op instead of opening the script. */
             this.ctrller.showError = a => {};
@@ -49,18 +49,18 @@ export class TestVpcScriptRun extends UI512TestBase {
         }
     }
 
-    async startEnvironment(): Promise<[VpcPresenter, VpcApplication]> {
-        let loader = new VpcDocLoader('', '', OpenFromLocation.NewDoc);
+    async startEnvironment(): Promise<[VpcPresenter, VpcState]> {
+        let loader = new VpcIntroProvider('', '', OpenFromLocation.NewDoc);
         await loader.loadDocumentTop();
-        if (loader.ctrller && loader.appl) {
-            return [loader.ctrller, loader.appl];
+        if (loader.ctrller && loader.vcstate) {
+            return [loader.ctrller, loader.vcstate];
         } else {
             throw makeVpcInternalErr('2g|did not load');
         }
     }
 
     setCurrentCard(id: string) {
-        this.appl.appli.undoableAction(() => this.appl.model.productOpts.set('currentCardId', id));
+        this.vcstate.vci.undoableAction(() => this.vcstate.model.productOpts.set('currentCardId', id));
     }
 
     populateModel() {
@@ -74,29 +74,29 @@ export class TestVpcScriptRun extends UI512TestBase {
         /*       card "d" has 1 fld "p1" */
         /*               and 1 btn "p1" */
 
-        let model = this.appl.model;
+        let model = this.vcstate.model;
         assertEq(1, model.stack.bgs.length, '2f|');
         assertEq(1, model.stack.bgs[0].cards.length, '2e|');
 
         let bg_a = model.stack.bgs[0];
-        let bg_b = this.appl.createElem(model.stack.id, VpcElType.Bg, -1);
-        let bg_c = this.appl.createElem(model.stack.id, VpcElType.Bg, -1);
+        let bg_b = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
+        let bg_c = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
         let card_a_a = bg_a.cards[0];
-        let card_b_b = this.appl.createElem(bg_b.id, VpcElType.Card, -1);
-        let card_b_c = this.appl.createElem(bg_b.id, VpcElType.Card, -1);
-        let card_b_d = this.appl.createElem(bg_b.id, VpcElType.Card, -1);
-        let card_c_d = this.appl.createElem(bg_c.id, VpcElType.Card, -1);
-        let fld_b_c_1 = this.appl.createElem(card_b_c.id, VpcElType.Fld, -1);
-        let fld_b_c_2 = this.appl.createElem(card_b_c.id, VpcElType.Fld, -1);
-        let fld_b_c_3 = this.appl.createElem(card_b_c.id, VpcElType.Fld, -1);
-        let btn_b_c_1 = this.appl.createElem(card_b_c.id, VpcElType.Btn, -1);
-        let btn_b_c_2 = this.appl.createElem(card_b_c.id, VpcElType.Btn, -1);
-        let fld_b_d_1 = this.appl.createElem(card_b_d.id, VpcElType.Fld, -1);
-        let fld_b_d_2 = this.appl.createElem(card_b_d.id, VpcElType.Fld, -1);
-        let btn_b_d_1 = this.appl.createElem(card_b_d.id, VpcElType.Btn, -1);
-        let fld_c_d_1 = this.appl.createElem(card_c_d.id, VpcElType.Fld, -1);
-        let btn_c_d_1 = this.appl.createElem(card_c_d.id, VpcElType.Btn, -1);
-        let btn_go = this.appl.createElem(card_a_a.id, VpcElType.Btn, -1);
+        let card_b_b = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
+        let card_b_c = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
+        let card_b_d = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
+        let card_c_d = this.vcstate.createVel(bg_c.id, VpcElType.Card, -1);
+        let fld_b_c_1 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
+        let fld_b_c_2 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
+        let fld_b_c_3 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
+        let btn_b_c_1 = this.vcstate.createVel(card_b_c.id, VpcElType.Btn, -1);
+        let btn_b_c_2 = this.vcstate.createVel(card_b_c.id, VpcElType.Btn, -1);
+        let fld_b_d_1 = this.vcstate.createVel(card_b_d.id, VpcElType.Fld, -1);
+        let fld_b_d_2 = this.vcstate.createVel(card_b_d.id, VpcElType.Fld, -1);
+        let btn_b_d_1 = this.vcstate.createVel(card_b_d.id, VpcElType.Btn, -1);
+        let fld_c_d_1 = this.vcstate.createVel(card_c_d.id, VpcElType.Fld, -1);
+        let btn_c_d_1 = this.vcstate.createVel(card_c_d.id, VpcElType.Btn, -1);
+        let btn_go = this.vcstate.createVel(card_a_a.id, VpcElType.Btn, -1);
 
         model.stack.set('name', 'teststack');
         bg_a.set('name', 'a');
@@ -157,15 +157,15 @@ export class TestVpcScriptRun extends UI512TestBase {
     }
 
     protected updateChangedCodeAndCheckForSyntaxError(owner: VpcElBase, code: string) {
-        this.appl.runtime.codeExec.updateChangedCode(owner, code);
-        let fnd = this.appl.runtime.codeExec.findCode(owner.id);
+        this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
+        let fnd = this.vcstate.runtime.codeExec.findCode(owner.id);
         if (fnd && fnd instanceof VpcScriptSyntaxError) {
-            throwIfUndefined(this.appl.runtime.codeExec.cbOnScriptError, '')(fnd);
+            throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, '')(fnd);
         }
     }
 
     protected updateObjectScript(id: string, code: string) {
-        this.appl.runtime.codeExec.cbOnScriptError = errFromScript => {
+        this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
             let idScriptErr = errFromScript.velId;
             let n = errFromScript.lineNumber;
             let isUs = !errFromScript.isExternalException;
@@ -176,8 +176,8 @@ export class TestVpcScriptRun extends UI512TestBase {
         };
 
         let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
-        let obj = this.appl.model.getByIdUntyped(id);
-        this.appl.appli.doWithoutAbilityToUndo(() => obj.set('script', built));
+        let obj = this.vcstate.model.getByIdUntyped(id);
+        this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
         this.updateChangedCodeAndCheckForSyntaxError(obj, obj.getS('script'));
     }
 
@@ -191,7 +191,7 @@ export class TestVpcScriptRun extends UI512TestBase {
     ) {
         let caughtErr = false;
         let isCompilationStage = true;
-        this.appl.runtime.codeExec.cbOnScriptError = errFromScript => {
+        this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
             let id = errFromScript.velId;
             let n = errFromScript.lineNumber;
             let isUs = !errFromScript.isExternalException;
@@ -232,8 +232,8 @@ export class TestVpcScriptRun extends UI512TestBase {
         built = built.replace(/{BSLASH}/g, '\\');
         built = FormattedText.fromExternalCharset(built, getRoot().getBrowserInfo());
 
-        let btnGo = this.appl.model.getById(this.elIds.btn_go, VpcElButton);
-        this.appl.appli.doWithoutAbilityToUndo(() => btnGo.set('script', built));
+        let btnGo = this.vcstate.model.getById(this.elIds.btn_go, VpcElButton);
+        this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));
         this.updateChangedCodeAndCheckForSyntaxError(btnGo, btnGo.getS('script'));
         if (caughtErr) {
             return;
@@ -248,9 +248,9 @@ export class TestVpcScriptRun extends UI512TestBase {
         VpcPresenterEvents.scheduleScriptMsgImpl(this.ctrller, fakeEvent, btnGo.id, false);
 
         /* message should now be in the queue */
-        assertTrue(this.appl.runtime.codeExec.workQueue.length > 0, '2V|should be in queue');
+        assertTrue(this.vcstate.runtime.codeExec.workQueue.length > 0, '2V|should be in queue');
         isCompilationStage = false;
-        this.appl.appli.doWithoutAbilityToUndo(() => this.appl.runtime.codeExec.runTimeslice(Infinity));
+        this.vcstate.vci.doWithoutAbilityToUndo(() => this.vcstate.runtime.codeExec.runTimeslice(Infinity));
 
         if (caughtErr) {
             return;
@@ -258,7 +258,7 @@ export class TestVpcScriptRun extends UI512TestBase {
             assertTrueWarn(false, '2U|error not seen', codeBefore, codeIn);
         }
 
-        assertTrue(this.appl.runtime.codeExec.workQueue.length === 0, '2T|script took too long to execute');
+        assertTrue(this.vcstate.runtime.codeExec.workQueue.length === 0, '2T|script took too long to execute');
     }
 
     assertCompileError(s: string, expectErrMsg?: string, expectErrLine?: number) {
@@ -274,12 +274,12 @@ export class TestVpcScriptRun extends UI512TestBase {
     }
 
     testOneEvaluate(beforeLine: string, s: string, expectErrMsg?: string, expectErrLine?: number) {
-        this.appl.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
+        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
         let codeIn = `global testresult
 ${beforeLine}
 put ${s} into testresult`;
         this.runGeneralCode('', codeIn, expectErrMsg, expectErrLine);
-        return this.appl.runtime.codeExec.globals.get('testresult');
+        return this.vcstate.runtime.codeExec.globals.get('testresult');
     }
 
     testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
@@ -291,10 +291,10 @@ put ${s} into testresult`;
 
         let testsErr = tests.filter(item => item[1].startsWith('ERR:'));
         let testsNoErr = tests.filter(item => !item[1].startsWith('ERR:'));
-        this.appl.runtime.codeExec.globals.set('donewithbatch', VpcValS('0'));
+        this.vcstate.runtime.codeExec.globals.set('donewithbatch', VpcValS('0'));
         let codeIn = `global donewithbatch\nput 0 into donewithbatch\n`;
         for (let i = 0; i < testsNoErr.length; i++) {
-            this.appl.runtime.codeExec.globals.set(`testresult${i}`, VpcValS('(placeholder)'));
+            this.vcstate.runtime.codeExec.globals.set(`testresult${i}`, VpcValS('(placeholder)'));
             let [beforeLine, expr] = getBeforeLine(testsNoErr[i][0]);
             codeIn += `global testresult${i}\n`;
             codeIn += `${beforeLine}\n`;
@@ -304,10 +304,10 @@ put ${s} into testresult`;
         codeIn += `put 1 into donewithbatch\n`;
         this.runGeneralCode('', codeIn);
         for (let i = 0; i < testsNoErr.length; i++) {
-            let isdone = this.appl.runtime.codeExec.globals.get(`donewithbatch`);
+            let isdone = this.vcstate.runtime.codeExec.globals.get(`donewithbatch`);
             assertEq('1', isdone.readAsString(), '2R|did not complete every test?');
 
-            let got = this.appl.runtime.codeExec.globals.get(`testresult${i}`);
+            let got = this.vcstate.runtime.codeExec.globals.get(`testresult${i}`);
             if (floatingPoint) {
                 assertTrue(got.isItNumeric(), '2Q|not numeric', got.readAsString());
                 assertEq(got.readAsString().trim(), got.readAsString(), '2P|why does it have whitespace');
@@ -671,9 +671,9 @@ put x into x\\x`,
             this.testBatchEvaluate(batch);
 
             /* lexing: baseline for runGeneralCode */
-            this.appl.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
+            this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
             this.runGeneralCode('', 'global testresult \n put 123.0 into testresult');
-            assertEq('123', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '24|');
+            assertEq('123', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '24|');
 
             /* lexing: invalid num literals */
             this.assertCompileErrorIn('put . into x', 'unexpected character', 3);
@@ -913,7 +913,7 @@ put x into x\\x`,
                 ['go to this stack\\the short id of this cd', `${this.elIds.card_b_c}`],
                 ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
                 ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
-                [`go to stack id ${this.appl.model.stack.id}\\the short id of this cd`, `ERR:NoViableAltException`],
+                [`go to stack id ${this.vcstate.model.stack.id}\\the short id of this cd`, `ERR:NoViableAltException`],
                 ['go to bg 1\\the short id of this cd', `${this.elIds.card_a_a}`],
                 ['go to bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
                 ['go to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
@@ -1332,7 +1332,7 @@ put 101 into x
 end if` + '\\x',
                     '100'
                 ],
-                /* use counter to see which loop conditions have been evald */
+                /* use counter to see which loop conditions have been evaluated */
                 [
                     `put counting() into cfirst
 if char 1 of counting() is "z" or 2+3 is 5 then
@@ -1497,7 +1497,7 @@ end repeat\\s && (counting() - firstc)`,
                     `b 0 1 2 5`
                 ],
                 /* "times" syntax rewriting, simplest form. */
-                /* currently, the condition is evald every time. */
+                /* currently, the condition is evaluated every time. */
                 [
                     `put "a" into s
 put counting() into firstc
@@ -1819,7 +1819,7 @@ end if\\s`,
             this.testBatchEvaluate(batch);
 
             /* locals, globals, and variable scopes */
-            this.appl.runtime.codeExec.globals.set('testvar', VpcValS('1'));
+            this.vcstate.runtime.codeExec.globals.set('testvar', VpcValS('1'));
             batch = [
                 /* simple locals read/write */
                 ['put 3 into x\\x', '3'],
@@ -1874,7 +1874,7 @@ end if\\s`,
             this.testBatchEvaluate(batch);
 
             /* call a custom handler */
-            this.appl.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
+            this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
             this.runGeneralCode(
                 `on myhandler
 global x
@@ -1885,7 +1885,7 @@ put 3 into x
 myhandler
 put x into testresult`
             );
-            assertEqWarn('4', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '23|');
+            assertEqWarn('4', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '23|');
 
             /* wrong name for the handler */
             this.runGeneralCode(
@@ -1932,7 +1932,7 @@ put x into testresult`
             );
             assertEqWarn(
                 ' myhandler4 myhandler3 myhandler2 myhandler1 j i h',
-                this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                 '22|'
             );
             /* return value from one must not bleed down into the rest */
@@ -1947,7 +1947,7 @@ end myhandler2`,
 myhandler2
 put "a" & the result into testresult`
             );
-            assertEqWarn('a', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '21|');
+            assertEqWarn('a', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '21|');
             /* handler with arguments */
             this.runGeneralCode(
                 `on myhandler arg1
@@ -1973,7 +1973,7 @@ put x into testresult`
             );
             assertEqWarn(
                 'a myhandlerhi myhandlermanyh1h2h3 myhandlerhi',
-                this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                 '20|'
             );
             /* expect arguments eval'd from left to right */
@@ -1989,7 +1989,7 @@ put counting() into x
 put "" into testresult
 myhandler counting(), counting(), counting()`
             );
-            assertEqWarn(' 1 2 3', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1~|');
+            assertEqWarn(' 1 2 3', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '1~|');
             /* variadic handlers / giving a handler the wrong number of args */
             this.runGeneralCode(
                 `on printargs a1, a2
@@ -2022,7 +2022,7 @@ put x into testresult`
 #args=2 alla1=a alla2=b alla3= alla=a,b a1=a a2=b
 #args=2 alla1=a alla2=b alla3= alla=a,b a1=a a2=b
 #args=3 alla1=a alla2=b alla3=c alla=a,b,c a1=a a2=b`,
-                this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                 '1}|'
             );
 
@@ -2041,7 +2041,7 @@ myhandler 4
 put the result into ret
 put ret & x into testresult`
             );
-            assertEqWarn('20', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1||');
+            assertEqWarn('20', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '1||');
             /* exit handler and exit product */
             this.runGeneralCode(
                 `on myhandler arg1
@@ -2065,7 +2065,7 @@ myhandler 14`
             );
             assertEqWarn(
                 ' called 9 called 11',
-                this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                 '1{|'
             );
             /* recursion in a handler */
@@ -2084,7 +2084,7 @@ end myhandler
 myhandler 4
 put the result into testresult`
             );
-            assertEqWarn('24', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1`|');
+            assertEqWarn('24', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '1`|');
             /* a simple custom function! */
             this.runGeneralCode(
                 `${this.customFunc} myfn p
@@ -2094,7 +2094,7 @@ end myfn
                 `global testresult
 put myfn(2+myfn(3)) into testresult`
             );
-            assertEqWarn('210', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1_|');
+            assertEqWarn('210', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '1_|');
             /* recursion. use g to 1) verify number of recursive calls and */
             /* 2) run a real statement like "put" that can't be part of an eval'd expression */
             this.runGeneralCode(
@@ -2113,7 +2113,7 @@ put 0 into g
 put recurse(5) into testresult
 put testresult && g into testresult`
             );
-            assertEqWarn('120 5', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1^|');
+            assertEqWarn('120 5', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '1^|');
             /* mutual recursion */
             this.runGeneralCode(
                 `${this.customFunc} is_even n
@@ -2135,7 +2135,7 @@ end is_odd
                 `global testresult
 put is_even(8) && is_even(9) && is_even(10) into testresult`
             );
-            assertEqWarn('true false true', this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1]|');
+            assertEqWarn('true false true', this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '1]|');
             /* nesting/interesting custom function calls */
             /* we *manually* parse custom fn calls by counting parenthesis levels so this needs to be tested */
             this.setCurrentCard(this.elIds.card_a_a);
@@ -2673,7 +2673,7 @@ put 3 into x`,
         'test_scriptMessagePassing',
         () => {
             this.setCurrentCard(this.elIds.card_a_a);
-            let parents = [this.appl.model.stack.id, this.elIds.bg_a, this.elIds.card_a_a];
+            let parents = [this.vcstate.model.stack.id, this.elIds.bg_a, this.elIds.card_a_a];
             for (let parent of parents) {
                 /* reset all scripts */
                 parents.map(id => this.updateObjectScript(id, ''));
@@ -2689,17 +2689,17 @@ put 3 into x`,
                 /* if there is nothing in the button script but something in a parent script, the parent script should be called instead */
                 this.updateObjectScript(this.elIds.btn_go, '');
                 this.updateObjectScript(parent, script);
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.runGeneralCode('', '', undefined, undefined, undefined, true);
                 let expectedMe = parent;
                 assertEqWarn(
                     ` me=${expectedMe} target=${this.elIds.btn_go}`,
-                    this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                    this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                     '1[|'
                 );
 
                 /* if there is something in the button script and something in a parent script, the parent script is not called */
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.runGeneralCode(
                     '',
                     `global testresult
@@ -2707,13 +2707,13 @@ put 3 into x`,
                 );
                 assertEqWarn(
                     `button script instead`,
-                    this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                    this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                     '1@|'
                 );
 
                 /* if the button script calls exit to product, the parent script also isn't called */
                 /* (currently has the same effect has just exiting with no call to pass) */
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.runGeneralCode(
                     '',
                     `global testresult
@@ -2721,10 +2721,10 @@ put 3 into x`,
                 exit to ${cProductName}
                 put "b" after testresult`
                 );
-                assertEqWarn(`a`, this.appl.runtime.codeExec.globals.get('testresult').readAsString(), '1?|');
+                assertEqWarn(`a`, this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(), '1?|');
 
                 /* pass upwards from the button script to the parent script */
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.runGeneralCode(
                     '',
                     `global testresult
@@ -2734,12 +2734,12 @@ put 3 into x`,
                 );
                 assertEqWarn(
                     `a me=${expectedMe} target=${this.elIds.btn_go}`,
-                    this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                    this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                     '1>|'
                 );
 
                 /* local variables should not bleed over into another scope (upwards) */
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,
                     `${this.customFunc} parentfn p1
@@ -2755,7 +2755,7 @@ put 3 into x`,
                 );
 
                 /* local variables should not bleed over into another scope (downwards) */
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,
                     `${this.customFunc} parentfn p1
@@ -2772,7 +2772,7 @@ put 3 into x`,
                 );
 
                 /* child can call a function in the parent script */
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,
                     `${this.customFunc} parentfn p1
@@ -2786,12 +2786,12 @@ put 3 into x`,
                 );
                 assertEqWarn(
                     `got abc ${expectedMe}`,
-                    this.appl.runtime.codeExec.globals.get('testresult').readAsString(),
+                    this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
                     '1=|'
                 );
 
                 /* the parent script can't access function down in the button script though */
-                this.appl.runtime.codeExec.globals.set('testresult', VpcValS(''));
+                this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
                 this.updateObjectScript(
                     parent,
                     `on mouseup

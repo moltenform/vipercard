@@ -1,5 +1,5 @@
 
-/* auto */ import { Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';

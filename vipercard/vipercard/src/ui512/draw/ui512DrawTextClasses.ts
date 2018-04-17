@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue, makeUI512Error, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { base10 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { base10 } from '../../ui512/utils/utils512.js';
 
 /* Bitmap-font-drawing
 Extraction and rendering by Ben Fisher, 2017 */

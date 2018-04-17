@@ -1,13 +1,13 @@
 
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { UI512CompBase, WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
-/* auto */ import { UI512AutoIndent, UI512CompCodeEditorFont } from '../../ui512/composites/ui512CodeEditorClasses.js';
+/* auto */ import { UI512AutoIndent, UI512CompCodeEditorFont } from '../../ui512/composites/ui512CodeEditorAutoIndent.js';
 
 /**
  * a code editor
@@ -82,10 +82,10 @@ export class UI512CompCodeEditor extends UI512CompBase {
         let wasShortcut = true;
         switch (d.readableShortcut) {
             case 'Cmd+D':
-                SelAndEntry.changeTextDuplicate(gel);
+                TextSelModify.changeTextDuplicate(gel);
                 break;
             case 'Cmd+L':
-                SelAndEntry.changeTextDeleteLine(gel);
+                TextSelModify.changeTextDeleteLine(gel);
                 break;
             case 'Cmd+Q':
                 /* would use Ctrl Q to add comment, Ctrl Shift Q to uncomment */
@@ -94,13 +94,13 @@ export class UI512CompCodeEditor extends UI512CompBase {
                 /* and Ctrl - is about setting zoom level, so don't use it */
                 /* so I guess I'll just follow SciTE's model where */
                 /* Ctrl Q adds or removes based on what is there */
-                SelAndEntry.changeTextToggleLinePrefix(gel, this.lineCommentPrefix);
+                TextSelModify.changeTextToggleLinePrefix(gel, this.lineCommentPrefix);
                 break;
             case 'NumpadEnter':
-                /* falls through */
+            /* falls through */
             case 'Enter':
                 /* run auto-indent when you hit Enter */
-                SelAndEntry.changeTextInsert(gel, '\n');
+                TextSelModify.changeTextInsert(gel, '\n');
                 this.autoIndent.runAutoIndentAll(this.el);
                 break;
             case 'Tab':

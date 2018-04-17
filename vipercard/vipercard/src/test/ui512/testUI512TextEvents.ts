@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512, assertEq, cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, Util512, assertEq, cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys, ScreenConsts, ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
@@ -8,11 +8,11 @@
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange, specialCharNonBreakingSpace, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';

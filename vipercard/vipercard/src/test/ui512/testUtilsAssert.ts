@@ -1,6 +1,6 @@
 
 /* auto */ import { RingBuffer, UI512Compress, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 
 export class TestUtilsAssert extends UI512TestBase {

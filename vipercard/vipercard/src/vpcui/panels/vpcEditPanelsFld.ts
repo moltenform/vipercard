@@ -1,10 +1,13 @@
 
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { PropPanelCompositeBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
+/* auto */ import { VpcEditPanelsBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
 
-export class PropPanelCompositeField extends PropPanelCompositeBase {
-    isPropPanelCompositeField = true;
-    compositeType = 'PropPanelCompositeField';
+/**
+ * properties panel, for editing a field's properties
+ */
+export class VpcEditPanelsField extends VpcEditPanelsBase {
+    isVpcEditPanelsField = true;
+    compositeType = 'VpcEditPanelsField';
     readonly velTypeShortName = 'cd fld';
     readonly velTypeLongName = 'lngfield';
     readonly velType = VpcElType.Fld;

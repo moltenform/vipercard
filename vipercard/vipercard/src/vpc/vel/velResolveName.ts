@@ -1,6 +1,6 @@
 
 /* auto */ import { O, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { PropAdjective, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
@@ -11,55 +11,6 @@
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 /* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
 /* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
-
-/**
- * when a script asks for the id of an object
- * put the long id of cd btn "myBtn" into x
- */
-export class VelResolveId {
-    constructor(protected model: VpcModelTop) {}
-
-    /**
-     * get the id
-     */
-    go(vel: VpcElBase, adjective: PropAdjective) {
-        if (vel instanceof VpcElCard) {
-            return this.goCard(vel, adjective);
-        } else if (vel instanceof VpcElProductOpts) {
-            return this.goProduct(vel, adjective);
-        } else {
-            return this.goOtherTypes(vel, adjective);
-        }
-    }
-
-    /**
-     * matching the emulator's behavior. interesting.
-     */
-    protected goProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
-        return 'WILD';
-    }
-
-    /**
-     * the long id of a cd btn is the same as the short id of a cd btn
-     */
-    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective) {
-        return vel.id;
-    }
-
-    /**
-     * confirmed in emulator that id of card is inconsistent,
-     * and more verbose than other objects
-     */
-    protected goCard(vel: VpcElCard, adjective: PropAdjective) {
-        if (adjective === PropAdjective.short) {
-            return vel.id;
-        } else if (adjective === PropAdjective.long) {
-            return `card id ${vel.id} of this stack`;
-        } else {
-            return `card id ${vel.id}`;
-        }
-    }
-}
 
 /**
  * when a script asks for the name of an object
@@ -217,6 +168,55 @@ export class VelResolveName {
     getOwnerName(vel: VpcElBase, adjective: PropAdjective) {
         checkThrow(!(vel as VpcElStack).isVpcElStack, 'cannot get owner of stack');
         return this.go(this.model.getOwner(vel), adjective);
+    }
+}
+
+/**
+ * when a script asks for the id of an object
+ * put the long id of cd btn "myBtn" into x
+ */
+export class VelResolveId {
+    constructor(protected model: VpcModelTop) {}
+
+    /**
+     * get the id
+     */
+    go(vel: VpcElBase, adjective: PropAdjective) {
+        if (vel instanceof VpcElCard) {
+            return this.goCard(vel, adjective);
+        } else if (vel instanceof VpcElProductOpts) {
+            return this.goProduct(vel, adjective);
+        } else {
+            return this.goOtherTypes(vel, adjective);
+        }
+    }
+
+    /**
+     * matching the emulator's behavior. interesting.
+     */
+    protected goProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
+        return 'WILD';
+    }
+
+    /**
+     * the long id of a cd btn is the same as the short id of a cd btn
+     */
+    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective) {
+        return vel.id;
+    }
+
+    /**
+     * confirmed in emulator that id of card is inconsistent,
+     * and more verbose than other objects
+     */
+    protected goCard(vel: VpcElCard, adjective: PropAdjective) {
+        if (adjective === PropAdjective.short) {
+            return vel.id;
+        } else if (adjective === PropAdjective.long) {
+            return `card id ${vel.id} of this stack`;
+        } else {
+            return `card id ${vel.id}`;
+        }
     }
 }
 

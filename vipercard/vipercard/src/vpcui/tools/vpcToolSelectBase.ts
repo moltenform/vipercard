@@ -1,54 +1,19 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPaint.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementsCanvasPiece.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
+/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPainter.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementCanvasPiece.js';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
 
-export enum SelectToolMode {
-    SelectingRegion,
-    SelectedRegion,
-    MovingRegion
-}
-
-export class SelectToolState {
-    mode: SelectToolMode;
-    isCopy = false;
-    isCopyMult = false;
-    rawstartX = -1;
-    rawstartY = -1;
-    startX = -1;
-    startY = -1;
-    minX = largeArea;
-    minY = largeArea;
-    maxX = -largeArea;
-    maxY = -largeArea;
-    topPtX = 0;
-    topPtY = largeArea;
-    rectx = 0;
-    recty = 0;
-    recordxpts: number[];
-    recordypts: number[];
-
-    offsetForMoveX = 0;
-    offsetForMoveY = 0;
-    cvPiece: CanvasWrapper; // the piece being pasted
-
-    elMask: UI512ElCanvasPiece;
-    elStage: UI512ElCanvasPiece;
-    elBorder: UI512ElCanvasPiece;
-    elPlaceholderForCursor: UI512ElCanvasPiece;
-}
-
-export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
+export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
     state: O<SelectToolState>;
     respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
         if (!isVelOrBg && !(d.el && d.el.id.endsWith('UiSelectElPlaceholderForCursor'))) {
@@ -57,15 +22,15 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
         let tmousex =
             fitIntoInclusive(
                 d.mouseX,
-                this.appli.userBounds()[0],
-                this.appli.userBounds()[0] + this.appli.userBounds()[2] - 1
-            ) - this.appli.userBounds()[0];
+                this.vci.userBounds()[0],
+                this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
+            ) - this.vci.userBounds()[0];
         let tmousey =
             fitIntoInclusive(
                 d.mouseY,
-                this.appli.userBounds()[1],
-                this.appli.userBounds()[1] + this.appli.userBounds()[3] - 1
-            ) - this.appli.userBounds()[1];
+                this.vci.userBounds()[1],
+                this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
+            ) - this.vci.userBounds()[1];
         if (!this.state) {
             this.cbPaintRender().deleteTempPaintEls();
             let state = new SelectToolState();
@@ -126,27 +91,27 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
         let tmousepx =
             fitIntoInclusive(
                 d.prevMouseX,
-                this.appli.userBounds()[0],
-                this.appli.userBounds()[0] + this.appli.userBounds()[2] - 1
-            ) - this.appli.userBounds()[0];
+                this.vci.userBounds()[0],
+                this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
+            ) - this.vci.userBounds()[0];
         let tmousepy =
             fitIntoInclusive(
                 d.prevMouseY,
-                this.appli.userBounds()[1],
-                this.appli.userBounds()[1] + this.appli.userBounds()[3] - 1
-            ) - this.appli.userBounds()[1];
+                this.vci.userBounds()[1],
+                this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
+            ) - this.vci.userBounds()[1];
         let tmousenx =
             fitIntoInclusive(
                 d.mouseX,
-                this.appli.userBounds()[0],
-                this.appli.userBounds()[0] + this.appli.userBounds()[2] - 1
-            ) - this.appli.userBounds()[0];
+                this.vci.userBounds()[0],
+                this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
+            ) - this.vci.userBounds()[0];
         let tmouseny =
             fitIntoInclusive(
                 d.mouseY,
-                this.appli.userBounds()[1],
-                this.appli.userBounds()[1] + this.appli.userBounds()[3] - 1
-            ) - this.appli.userBounds()[1];
+                this.vci.userBounds()[1],
+                this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
+            ) - this.vci.userBounds()[1];
 
         if (this.state && this.state.mode === SelectToolMode.SelectingRegion) {
             if (!isVelOrBg && !(d.elNext && d.elNext.id.endsWith('UiSelectElPlaceholderForCursor'))) {
@@ -170,8 +135,8 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
                 this.state.topPtY = tmouseny;
             }
         } else if (this.state && this.state.mode === SelectToolMode.MovingRegion) {
-            /*let rawRectx = this.state.rectx + this.appli.userBounds()[0]
-            let rawRecty = this.state.recty + this.appli.userBounds()[1]
+            /*let rawRectx = this.state.rectx + this.vci.userBounds()[0]
+            let rawRecty = this.state.recty + this.vci.userBounds()[1]
             let dx = tmousenx - this.state.offsetForMoveX
             let dy = tmouseny - this.state.offsetForMoveY*/
             if (!this.state.isCopyMult) {
@@ -196,8 +161,8 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
                     this.state.elStage.getCvWidth(),
                     this.state.elStage.getCvHeight()
                 );
-            this.state.elBorder.set('x', newX + this.state.rectx + this.appli.userBounds()[0]);
-            this.state.elBorder.set('y', newY + this.state.recty + this.appli.userBounds()[1]);
+            this.state.elBorder.set('x', newX + this.state.rectx + this.vci.userBounds()[0]);
+            this.state.elBorder.set('y', newY + this.state.recty + this.vci.userBounds()[1]);
             this.state.elPlaceholderForCursor.set('x', this.state.elBorder.x);
             this.state.elPlaceholderForCursor.set('y', this.state.elBorder.y);
         }
@@ -207,15 +172,15 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
         let tmousex =
             fitIntoInclusive(
                 d.mouseX,
-                this.appli.userBounds()[0],
-                this.appli.userBounds()[0] + this.appli.userBounds()[2] - 1
-            ) - this.appli.userBounds()[0];
+                this.vci.userBounds()[0],
+                this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
+            ) - this.vci.userBounds()[0];
         let tmousey =
             fitIntoInclusive(
                 d.mouseY,
-                this.appli.userBounds()[1],
-                this.appli.userBounds()[1] + this.appli.userBounds()[3] - 1
-            ) - this.appli.userBounds()[1];
+                this.vci.userBounds()[1],
+                this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
+            ) - this.vci.userBounds()[1];
         if (this.state && this.state.mode === SelectToolMode.SelectingRegion) {
             // if lasso, close the loop
             if (tl === VpcTool.Lasso) {
@@ -243,8 +208,8 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
 
             // copy what we have sketched as the border to "border". note that elBorder is smaller than the page.
             this.state.elBorder.setDimensions(
-                rectx + this.appli.userBounds()[0],
-                recty + this.appli.userBounds()[1],
+                rectx + this.vci.userBounds()[0],
+                recty + this.vci.userBounds()[1],
                 rectw,
                 recth
             );
@@ -362,7 +327,7 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
             this.state.mode = SelectToolMode.SelectedRegion;
         }
 
-        this.appli.causeUIRedraw(); // will refresh cursor
+        this.vci.causeUIRedraw(); // will refresh cursor
     }
 
     onDeleteSelection() {
@@ -418,7 +383,7 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
 
     blinkSelection() {
         if (
-            (this.appli.getTool() === VpcTool.Select || this.appli.getTool() === VpcTool.Lasso) &&
+            (this.vci.getTool() === VpcTool.Select || this.vci.getTool() === VpcTool.Lasso) &&
             this.state &&
             this.state.mode === SelectToolMode.SelectedRegion
         ) {
@@ -437,4 +402,39 @@ export abstract class VpcAppUIGeneralSelect extends VpcAppUIToolResponseBase {
     ): void;
     protected abstract checkTooSmall(): boolean;
     protected abstract makeBlack(): void;
+}
+
+export class SelectToolState {
+    mode: SelectToolMode;
+    isCopy = false;
+    isCopyMult = false;
+    rawstartX = -1;
+    rawstartY = -1;
+    startX = -1;
+    startY = -1;
+    minX = largeArea;
+    minY = largeArea;
+    maxX = -largeArea;
+    maxY = -largeArea;
+    topPtX = 0;
+    topPtY = largeArea;
+    rectx = 0;
+    recty = 0;
+    recordxpts: number[];
+    recordypts: number[];
+
+    offsetForMoveX = 0;
+    offsetForMoveY = 0;
+    cvPiece: CanvasWrapper; // the piece being pasted
+
+    elMask: UI512ElCanvasPiece;
+    elStage: UI512ElCanvasPiece;
+    elBorder: UI512ElCanvasPiece;
+    elPlaceholderForCursor: UI512ElCanvasPiece;
+}
+
+export enum SelectToolMode {
+    SelectingRegion,
+    SelectedRegion,
+    MovingRegion
 }

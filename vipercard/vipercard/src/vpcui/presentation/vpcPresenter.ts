@@ -1,41 +1,41 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialize.js';
+/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
-/* auto */ import { SelectToolMode, VpcAppUIGeneralSelect } from '../../vpcui/tools/vpcToolSelectBase.js';
-/* auto */ import { VpcAppNonModalDialogReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
+/* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
+/* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
+/* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
 /* auto */ import { VpcPresenterInit } from '../../vpcui/presentation/vpcPresenterInit.js';
 
 export class VpcPresenter extends VpcPresenterInit {
     showError(scriptErr: VpcScriptErrorBase) {
-        this.appli.getCodeExec().forceStopRunning();
+        this.vci.getCodeExec().forceStopRunning();
 
-        this.appli.undoableAction(() => {
+        this.vci.undoableAction(() => {
             /* use current card if velId is unknown */
             let velId = scriptErr.velId;
-            velId = velId || this.appli.getModel().getCurrentCard().id;
-            let vel = this.appli.getModel().findByIdUntyped(velId);
-            vel = vel || this.appli.getModel().getCurrentCard();
+            velId = velId || this.vci.getModel().getCurrentCard().id;
+            let vel = this.vci.getModel().findByIdUntyped(velId);
+            vel = vel || this.vci.getModel().getCurrentCard();
             if (VpcElBase.isActuallyMsgRepl(vel)) {
                 this.setTool(VpcTool.Button);
                 if (
                     this.lyrNonModalDlgHolder.current &&
-                    this.lyrNonModalDlgHolder.current instanceof VpcAppNonModalDialogReplBox
+                    this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
                 ) {
                     this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
                 }
@@ -47,22 +47,22 @@ export class VpcPresenter extends VpcPresenterInit {
             /* for example "send myevent to btn 4 of cd 5" */
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
             if (vel.getType() === VpcElType.Card) {
-                this.appli.setOption('currentCardId', vel.id);
+                this.vci.setOption('currentCardId', vel.id);
             } else if (vel.getType() === VpcElType.Bg) {
                 assertTrue(false, 'nyi');
             } else if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-                let parent = this.appli.getModel().findByIdUntyped(vel.parentId);
+                let parent = this.vci.getModel().findByIdUntyped(vel.parentId);
                 if (parent && parent.getType() === VpcElType.Card) {
-                    this.appli.setOption('currentCardId', parent.id);
+                    this.vci.setOption('currentCardId', parent.id);
                 }
             }
 
             this.setTool(VpcTool.Button);
 
             /* set the runtime flags */
-            this.appli.getCodeExec().lastEncounteredScriptErr = scriptErr;
-            this.appli.setOption('selectedVelId', vel.id);
-            this.appli.setOption('viewingScriptVelId', vel.id);
+            this.vci.getCodeExec().lastEncounteredScriptErr = scriptErr;
+            this.vci.setOption('selectedVelId', vel.id);
+            this.vci.setOption('viewingScriptVelId', vel.id);
 
             /* open the code editor at the offending line */
             this.lyrPropPanel.updateUI512Els();
@@ -79,10 +79,10 @@ export class VpcPresenter extends VpcPresenterInit {
         let was = this.getTool();
         if (next !== was) {
             let prevResp = this.getToolResponse(was);
-            this.appli.undoableAction(() => prevResp.onLeaveTool());
+            this.vci.undoableAction(() => prevResp.onLeaveTool());
 
             let nextResp = this.getToolResponse(next);
-            this.appli.undoableAction(() => nextResp.onOpenTool());
+            this.vci.undoableAction(() => nextResp.onOpenTool());
             if (next === VpcTool.Stamp || was === VpcTool.Stamp) {
                 this.rebuildFieldScrollbars();
             }
@@ -94,14 +94,14 @@ export class VpcPresenter extends VpcPresenterInit {
             /* need to redo modelRender so that it is actually enabled==false not just enabledstyle */
             this.lyrModelRender.fullRedrawNeeded();
 
-            this.appli.getModel().productOpts.allowSetCurrentTool = true;
-            this.appli.setOption('currentTool', next);
-            this.appli.getModel().productOpts.allowSetCurrentTool = false;
+            this.vci.getModel().productOpts.allowSetCurrentTool = true;
+            this.vci.setOption('currentTool', next);
+            this.vci.getModel().productOpts.allowSetCurrentTool = false;
 
-            /* don't do this here, do this in the tool pallette mouseup instead */
+            /* don't do this here, do this in the tool palette mouseup instead */
             /* so when you are going through undo states, you'll see the script window and btn props window */
-            /* this.appli.setOption('viewingScriptVelId', '') */
-            /* this.appli.setOption("selectedVelId", ''); */
+            /* this.vci.setOption('viewingScriptVelId', '') */
+            /* this.vci.setOption("selectedVelId", ''); */
             this.refreshCursor();
         }
     }
@@ -112,15 +112,15 @@ export class VpcPresenter extends VpcPresenterInit {
             'internal error, dialog box already shown'
         );
         let modalDlg = new UI512CompModalDialog('mainModalDlg');
-        let stopelid = this.lyrToolboxes.toolsnav.getElId('choice##cardNumOrStop');
+        let stopelid = this.lyrToolboxes.toolsNav.getElId('choice##cardNumOrStop');
         let stopel = this.app.getEl(stopelid);
         modalDlg.cancelBtnBounds = [
             [stopel.x, stopel.y, stopel.w, stopel.h],
             [
-                this.lyrToolboxes.toolsmain.x,
-                this.lyrToolboxes.toolsmain.y,
-                this.lyrToolboxes.toolsmain.logicalWidth,
-                this.lyrToolboxes.toolsmain.logicalHeight
+                this.lyrToolboxes.toolsMain.x,
+                this.lyrToolboxes.toolsMain.y,
+                this.lyrToolboxes.toolsMain.logicalWidth,
+                this.lyrToolboxes.toolsMain.logicalHeight
             ]
         ];
         return modalDlg;
@@ -177,38 +177,34 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     getTool(): VpcTool {
-        return this.appli.getOption_n('currentTool');
+        return this.vci.getOptionN('currentTool');
     }
 
     getCurrentCardNum() {
-        let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
-        return this.appli.getModel().stack.getCardStackPosition(currentCardId);
+        let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
+        return this.vci.getModel().stack.getCardStackPosition(currentCardId);
     }
 
     setCurrentCardNum(ord: OrdinalOrPosition) {
-        this.appli.undoableAction(() => this.appli.getModel().goCardRelative(ord));
+        this.vci.undoableAction(() => this.vci.getModel().goCardRelative(ord));
     }
 
     updateUI512ElsAllLayers() {
         try {
             this.runtime.opts.lock(true);
-            this.appli.getModel().productOpts.lock(true);
+            this.vci.getModel().productOpts.lock(true);
             for (let layer of this.layers) {
                 layer.updateUI512Els();
             }
         } finally {
             this.runtime.opts.lock(false);
-            this.appli.getModel().productOpts.lock(false);
+            this.vci.getModel().productOpts.lock(false);
         }
     }
 
     isCodeRunning() {
         return (
-            this &&
-            this.appli &&
-            this.appli.getCodeExec &&
-            this.appli.getCodeExec() &&
-            this.appli.getCodeExec().isCodeRunning()
+            this && this.vci && this.vci.getCodeExec && this.vci.getCodeExec() && this.vci.getCodeExec().isCodeRunning()
         );
     }
 
@@ -253,9 +249,9 @@ export class VpcPresenter extends VpcPresenterInit {
     isDocDirty() {
         return (
             this &&
-            this.appli &&
-            this.appli.getCurrentStateId() !== '(justopened)' &&
-            this.appli.getCurrentStateId() !== this.appli.getOption_s('lastSavedStateId')
+            this.vci &&
+            this.vci.getCurrentStateId() !== '(justOpened)' &&
+            this.vci.getCurrentStateId() !== this.vci.getOptionS('lastSavedStateId')
         );
     }
 
@@ -264,8 +260,8 @@ export class VpcPresenter extends VpcPresenterInit {
             if (n === 0) {
                 /* scribble over everything to make sure no-one reuses it. */
                 this.listeners = [];
-                this.appli.destroy();
-                this.appli = undefined as any; /* destroy() */
+                this.vci.destroy();
+                this.vci = undefined as any; /* destroy() */
                 this.runtime = undefined as any; /* destroy() */
                 if (s === 'mnuNewStack') {
                     this.cbExitToNewDocument();
@@ -292,8 +288,8 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     pasteCardVel() {
-        let id = this.appli.getOption_s('copiedVelId');
-        let found = this.appli.getModel().findByIdUntyped(id);
+        let id = this.vci.getOptionS('copiedVelId');
+        let found = this.vci.getModel().findByIdUntyped(id);
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             this.makePasteVel(id);
         } else if (id && id.length) {
@@ -322,17 +318,17 @@ export class VpcPresenter extends VpcPresenterInit {
 
         let newX = this.userBounds[0] + Util512.getRandIntInclusiveWeak(20, 200);
         let newY = this.userBounds[1] + Util512.getRandIntInclusiveWeak(20, 200);
-        let vel = this.appli.getOutside().CreatePart(type, newX, newY, w, h);
+        let vel = this.vci.getOutside().CreatePart(type, newX, newY, w, h);
         vel.set(
             'name',
-            `my ${vpcElTypeShowInUI(vel.getType())} ${this.appli.getModel().stack.getNextNumberForElemName()}`
+            `my ${vpcElTypeShowInUI(vel.getType())} ${this.vci.getModel().stack.getNextNumberForElemName()}`
         );
         if (type === VpcElType.Btn) {
             vel.setProp('style', VpcValS('roundrect'));
             vel.set('label', lng('lngNew Button'));
             vel.set('showlabel', true);
             vel.set('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp');
-            this.appli.getCodeExec().updateChangedCode(vel, vel.getS('script'));
+            this.vci.getCodeExec().updateChangedCode(vel, vel.getS('script'));
         } else {
             let elfld = vel as VpcElField;
             let newtxt = FormattedText.newFromSerialized(
@@ -345,8 +341,8 @@ export class VpcPresenter extends VpcPresenterInit {
         /* save *before* setting selectedVelId */
         this.lyrPropPanel.saveChangesToModel(false);
         this.lyrPropPanel.updateUI512Els();
-        this.appli.setOption('selectedVelId', vel.id);
-        this.appli.setOption('viewingScriptVelId', '');
+        this.vci.setOption('selectedVelId', vel.id);
+        this.vci.setOption('viewingScriptVelId', '');
 
         /* update before tool is set */
         this.lyrPropPanel.updateUI512Els();
@@ -355,7 +351,7 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     makePasteVel(originalid: string) {
-        let orig = this.appli.getModel().findByIdUntyped(originalid);
+        let orig = this.vci.getModel().findByIdUntyped(originalid);
         if (orig && (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)) {
             let dupe = this.makePart(orig.getType());
             let dupeSizable = dupe as VpcElSizable;
@@ -370,7 +366,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 dupe.getN('h')
             );
             /* and compile its script too... */
-            this.appli.getCodeExec().updateChangedCode(dupe, dupe.getS('script'));
+            this.vci.getCodeExec().updateChangedCode(dupe, dupe.getS('script'));
         } else {
             throw makeVpcInternalErr(msgNotification + lng("lngCan't paste this."));
         }
@@ -382,11 +378,11 @@ export class VpcPresenter extends VpcPresenterInit {
         let resp = this.getToolResponse(this.getTool());
         if (
             isUndo &&
-            resp instanceof VpcAppUIGeneralSelect &&
+            resp instanceof VpcAppUIToolSelectBase &&
             resp.state &&
             resp.state.mode !== SelectToolMode.SelectingRegion
         ) {
-            this.appli.doWithoutAbilityToUndoExpectingNoChanges(() => {
+            this.vci.doWithoutAbilityToUndoExpectingNoChanges(() => {
                 resp.cancelCurrentToolAction();
                 this.lyrModelRender.uiRedrawNeeded();
             });
@@ -397,7 +393,7 @@ export class VpcPresenter extends VpcPresenterInit {
         /* if so it feels more intuitive to not actually undo, but just erase the recent change. */
         if (isUndo && getToolCategory(this.getTool()) === VpcToolCtg.CtgEdit) {
             let areThereUnsavedChanges = false;
-            this.appli.doWithoutAbilityToUndoExpectingNoChanges(() => {
+            this.vci.doWithoutAbilityToUndoExpectingNoChanges(() => {
                 areThereUnsavedChanges = this.lyrPropPanel.areThereUnsavedChanges();
             });
 
@@ -408,19 +404,19 @@ export class VpcPresenter extends VpcPresenterInit {
             }
         }
 
-        this.appli.doWithoutAbilityToUndoExpectingNoChanges(() => {
+        this.vci.doWithoutAbilityToUndoExpectingNoChanges(() => {
             resp.cancelCurrentToolAction();
             this.lyrModelRender.fullRedrawNeeded();
             this.lyrNonModalDlgHolder.setNonModalDialog(undefined);
         });
         let done = fn();
         if (done) {
-            this.appli.doWithoutAbilityToUndo(() => {
+            this.vci.doWithoutAbilityToUndo(() => {
                 /* check that the current card still exists, otherwise go to first card */
-                let currentCardId = this.appli.getModel().productOpts.getS('currentCardId');
-                let currentCard = this.appli.getModel().findById(currentCardId, VpcElCard);
+                let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
+                let currentCard = this.vci.getModel().findById(currentCardId, VpcElCard);
                 if (!currentCard) {
-                    this.appli.getModel().goCardRelative(OrdinalOrPosition.first);
+                    this.vci.getModel().goCardRelative(OrdinalOrPosition.first);
                 }
 
                 /* refresh everything */
@@ -439,16 +435,16 @@ export class VpcPresenter extends VpcPresenterInit {
         try {
             UI512ErrorHandling.breakOnThrow = false;
             if (s === 'mnuUndo') {
-                this.runUndoOrRedo(() => this.appli.performUndo(), 'lngNothing to undo.', true);
+                this.runUndoOrRedo(() => this.vci.performUndo(), 'lngNothing to undo.', true);
             } else if (s === 'mnuRedo') {
-                this.runUndoOrRedo(() => this.appli.performRedo(), 'lngNothing to redo.', false);
+                this.runUndoOrRedo(() => this.vci.performRedo(), 'lngNothing to redo.', false);
             } else {
                 if (s !== 'mnuClear') {
                     let resp = this.getToolResponse(this.getTool());
                     resp.cancelCurrentToolAction();
                 }
 
-                this.appli.undoableAction(() => this.performMenuActionImpl(s));
+                this.vci.undoableAction(() => this.performMenuActionImpl(s));
             }
         } catch (e) {
             this.answerMsg(cleanExceptionMsg(e.message));
@@ -462,7 +458,7 @@ export class VpcPresenter extends VpcPresenterInit {
     performMenuActionImpl(s: string) {
         let method = Util512.isMethodOnClass(this.menuActions, 'go_' + s);
         if (method !== undefined) {
-            method.apply(this.menuActions, [this.appli]);
+            method.apply(this.menuActions, [this.vci]);
         } else if (s === 'mnuObjectsNewBtn') {
             this.makePart(VpcElType.Btn);
         } else if (s === 'mnuObjectsNewFld') {
@@ -477,8 +473,8 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     getSerializedStack() {
-        let serializer = new VpcSerialization();
-        let serialized = serializer.serializeAll(this.appli);
+        let serializer = new VpcStateSerialize();
+        let serialized = serializer.serializeAll(this.vci);
         return JSON.stringify(serialized);
     }
 

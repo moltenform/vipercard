@@ -1,11 +1,11 @@
 
-/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 
 /**
@@ -46,8 +46,8 @@ export abstract class UI512CompBase {
     /**
      * get our internal id of the element, or return undefined if we don't own it
      */
-    fromFullId(fullid: string) {
-        let parts = fullid.split(this.compositeId + '##' + this.compositeType + '##');
+    fromFullId(fullId: string) {
+        let parts = fullId.split(this.compositeId + '##' + this.compositeType + '##');
         if (parts.length !== 2) {
             return undefined;
         } else {
@@ -199,7 +199,6 @@ export abstract class UI512CompBase {
     }
 }
 
-
 /**
  * base class for border decoration constants
  */
@@ -220,7 +219,7 @@ export class BorderDecorationConsts {
 }
 
 /**
- * a "pallette" style window border
+ * a "palette" style window border
  */
 export class PalBorderDecorationConsts extends BorderDecorationConsts {
     readonly headHeight = 11;

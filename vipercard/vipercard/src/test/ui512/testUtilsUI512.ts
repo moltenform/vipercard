@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { OrderedHash, assertEq, defaultSort, findEnumToStr, findStrToEnum, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { OrderedHash, assertEq, defaultSort, findEnumToStr, findStrToEnum, fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { VpcChunkType } from '../../vpc/vpcutils/vpcEnums.js';
 

@@ -1,23 +1,23 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast, fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512ImageCollection, UI512ImageCollectionCollection, UI512ImageCollectionImage } from '../../ui512/draw/ui512ImageCollection.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
 
-export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
+export class VpcAppUIToolStamp extends VpcAppUIToolBase {
     currentImg: O<UI512ImageCollectionImage>;
     images = new UI512ImageCollectionCollection();
     readonly directories: [string, string, number][] = [
@@ -51,15 +51,15 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
                 let tmousex =
                     fitIntoInclusive(
                         d.mouseX,
-                        this.appli.userBounds()[0],
-                        this.appli.userBounds()[0] + this.appli.userBounds()[2] - 1
-                    ) - this.appli.userBounds()[0];
+                        this.vci.userBounds()[0],
+                        this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
+                    ) - this.vci.userBounds()[0];
                 let tmousey =
                     fitIntoInclusive(
                         d.mouseY,
-                        this.appli.userBounds()[1],
-                        this.appli.userBounds()[1] + this.appli.userBounds()[3] - 1
-                    ) - this.appli.userBounds()[1];
+                        this.vci.userBounds()[1],
+                        this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
+                    ) - this.vci.userBounds()[1];
                 let [srcw, srch] = theimg.getSize();
                 tmousex -= Math.round(srcw / 2);
                 tmousey -= Math.round(srch / 2);
@@ -75,10 +75,10 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     cancelCurrentToolAction(): void {}
 
     protected getChosenCategory() {
-        let el = this.appli.UI512App().findEl('grpVpcAppUIToolStampChoiceLeft');
+        let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceLeft');
         if (el) {
             let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
-            let ln = SelAndEntry.selectByLinesWhichLine(gel);
+            let ln = TextSelModify.selectByLinesWhichLine(gel);
             if (ln !== undefined && ln >= 0 && ln < this.directories.length) {
                 let ctg = this.images.children[ln];
                 if (ctg) {
@@ -93,10 +93,10 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     protected getChosenImage() {
         let ctg = this.getChosenCategory();
         if (ctg) {
-            let el = this.appli.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
+            let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
             if (el && el.get_ftxt().len() > 0) {
                 let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
-                let ln = SelAndEntry.selectByLinesWhichLine(gel);
+                let ln = TextSelModify.selectByLinesWhichLine(gel);
                 if (ln !== undefined && ln >= 0) {
                     let img = ctg.children[ln];
                     if (img) {
@@ -113,7 +113,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         let ctg = this.getChosenCategory();
         if (ctg) {
             let lns = ctg.children.map(ch => lng(ch.name));
-            let el = this.appli.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
+            let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
             if (el) {
                 UI512ElTextField.setListChoices(cast(el, UI512ElTextField), lns);
                 el.set('selcaret', 0);
@@ -122,7 +122,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
                 if (el.get_ftxt().len() > 0) {
                     // auto-choose the first one
                     let rghtgel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
-                    SelAndEntry.selectLineInField(rghtgel, 0);
+                    TextSelModify.selectLineInField(rghtgel, 0);
                     this.onChoosePicture();
                 }
             }
@@ -135,7 +135,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
         if (img && !img.loaded) {
             // we used to use the mouse-move event to check if it loaded instead, but this is better.
             img.startLoad(() => {
-                this.appli.placeCallbackInQueue(() => this.checkIfLoaded());
+                this.vci.placeCallbackInQueue(() => this.checkIfLoaded());
             });
         }
 
@@ -143,7 +143,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
     }
 
     protected updateStatusIcon() {
-        let grp = this.appli.UI512App().findGroup('grpVpcAppUIToolStamp');
+        let grp = this.vci.UI512App().findGroup('grpVpcAppUIToolStamp');
         if (grp) {
             let el = grp.findEl('grpVpcAppUIToolStampStatus');
             if (el && this.currentImg && this.currentImg.loaded) {
@@ -165,32 +165,32 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
             this.images.children.push(cl);
         }
 
-        this.appli.UI512App().removeGroup('grpVpcAppUIToolStamp');
+        this.vci.UI512App().removeGroup('grpVpcAppUIToolStamp');
         let grp = new UI512ElGroup('grpVpcAppUIToolStamp');
-        this.appli.UI512App().addGroup(grp);
+        this.vci.UI512App().addGroup(grp);
 
-        let px = this.appli.bounds()[0] + ScreenConsts.xAreaWidth + 1;
-        let py = this.appli.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
+        let px = this.vci.bounds()[0] + ScreenConsts.xAreaWidth + 1;
+        let py = this.vci.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
         let pw = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
         let ph = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
 
         // draw background rectangle
         let bg = new UI512ElButton('grpVpcAppUIToolStampBg');
-        grp.addElement(this.appli.UI512App(), bg);
+        grp.addElement(this.vci.UI512App(), bg);
         bg.set('autohighlight', false);
         bg.set('style', UI512BtnStyle.Rectangle);
         bg.setDimensions(px, py, pw, ph);
 
         // draw category choices
         let lft = UI512ElTextField.makeChoiceBox(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             grp,
             'grpVpcAppUIToolStampChoiceLeft',
             px + 15,
             py + 15
         );
         let rght = UI512ElTextField.makeChoiceBox(
-            this.appli.UI512App(),
+            this.vci.UI512App(),
             grp,
             'grpVpcAppUIToolStampChoiceRight',
             px + 170,
@@ -199,7 +199,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
 
         // draw status icon
         let statusicon = new UI512ElButton('grpVpcAppUIToolStampStatus');
-        grp.addElement(this.appli.UI512App(), statusicon);
+        grp.addElement(this.vci.UI512App(), statusicon);
         statusicon.set('style', UI512BtnStyle.Opaque);
         statusicon.set('icongroupid', '001');
         statusicon.set('iconnumber', 76); // white
@@ -207,7 +207,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
 
         // draw bottom-left label
         let lbl2 = new UI512ElLabel('grpVpcAppUIToolStampLbl2');
-        grp.addElement(this.appli.UI512App(), lbl2);
+        grp.addElement(this.vci.UI512App(), lbl2);
         lbl2.set('labeltext', lng('lng"Art Bits" (1987)'));
         lbl2.setDimensions(px + 13, py + 280, 200, 20);
 
@@ -219,18 +219,18 @@ export class VpcAppUIToolStamp extends VpcAppUIToolResponseBase {
 
         // auto-choose the first entry in the list
         let lftgel = new UI512ElTextFieldAsGeneric(cast(lft, UI512ElTextField));
-        SelAndEntry.selectLineInField(lftgel, 0);
+        TextSelModify.selectLineInField(lftgel, 0);
         this.onChooseCategory();
         if (rght.get_ftxt().len() > 0) {
             let rghtgel = new UI512ElTextFieldAsGeneric(cast(rght, UI512ElTextField));
-            SelAndEntry.selectLineInField(rghtgel, 0);
+            TextSelModify.selectLineInField(rghtgel, 0);
             this.onChoosePicture();
         }
     }
 
     onLeaveTool() {
         // free memory by unreferencing everything
-        this.appli.UI512App().removeGroup('grpVpcAppUIToolStamp');
+        this.vci.UI512App().removeGroup('grpVpcAppUIToolStamp');
         this.images = new UI512ImageCollectionCollection();
         this.currentImg = undefined;
         this.cancelCurrentToolAction();

@@ -1,9 +1,9 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Root, UI512IsEventInterface } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Root, UI512IsEventInterface } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys, toShortcutString } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 
 /**
  * event details base class

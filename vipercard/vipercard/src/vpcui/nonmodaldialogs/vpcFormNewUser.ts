@@ -1,20 +1,20 @@
 
 /* auto */ import { O, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { NullaryFn, UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { vpcUsersCreate } from '../../vpc/request/vpcRequest.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
 
-export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase {
+export class VpcNonModalFormNewUser extends VpcFormNonModalDialogFormBase {
     fnCbWhenSignedIn: NullaryFn = () => {};
     showHeader = true;
     captionText = 'lngNew User';
     hasCloseBtn = true;
-    compositeType = 'VpcFormNonModalDialogNewUser';
+    compositeType = 'VpcNonModalFormNewUser';
     fields: [string, string, number][] = [
         ['username', 'lngUsername:', 1],
         ['pw', 'lngPassword:', 1],
@@ -29,9 +29,9 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
     btns: [string, string][] = [['ok', 'lngOK'], ['cancel', 'lngCancel']];
     fieldsThatAreLabels: { [key: string]: boolean } = { descr_email: true };
 
-    constructor(protected appli: VpcStateInterface, protected formLoginClass: VpcFormNonModalDialogLogInConstructor) {
-        super('vpcAppNonModalDialogSendReport' + Math.random());
-        VpcFormNonModalDialogFormBase.standardWindowBounds(this, appli);
+    constructor(protected vci: VpcStateInterface, protected formLoginClass: VpcFormNonModalDialogLogInConstructor) {
+        super('VpcNonModalFormNewUser' + Math.random());
+        VpcFormNonModalDialogFormBase.standardWindowBounds(this, vci);
     }
 
     createSpecific(app: UI512Application) {
@@ -43,24 +43,24 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
         fldPwAgain.set('asteriskonly', true);
         fldPwAgain.set('h', fldPw.h);
 
-        // nudge things up a few pixels
+        /* nudge things up a few pixels */
         for (let id of ['btnok', 'btncancel', 'lblStatusOfForm']) {
             let el = grp.getEl(this.getElId(id));
             el.set('y', el.y - 3);
         }
     }
 
-    onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void {
+    onClickBtn(short: string, el: UI512Element, vci: VpcStateInterface): void {
         if (short === 'btnok') {
             this.setStatus('lngCreating user...');
-            this.doCreateUser(appli);
+            this.doCreateUser(vci);
         } else if (short === 'btncancel') {
             this.goBackToLogin();
         }
     }
 
-    doCreateUser(appli: VpcStateInterface) {
-        let paramFields = this.readFields(appli.UI512App());
+    doCreateUser(vci: VpcStateInterface) {
+        let paramFields = this.readFields(vci.UI512App());
         if (paramFields['pw'] !== paramFields['pwagain']) {
             this.setStatus('lngPasswords do not match.');
             return;
@@ -68,13 +68,13 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
 
         UI512BeginAsync(
             () => vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email']),
-            (result: Error | string) => {
+            (result: Error | boolean) => {
                 if (this.children.length === 0) {
-                    // someone hit cancel
+                    /* someone hit cancel */
                     return;
-                } else if (result === 'succeeded') {
-                    // create user was successful!
-                    // it sent an email to the place, now get recovery code
+                } else if (result === true) {
+                    /* create user was successful! */
+                    /* it sent an email to the place, now get recovery code */
                     this.goBackToLogin(paramFields['username']);
                 } else if (result instanceof Error) {
                     this.setStatus('lng ' + result.toString());
@@ -86,25 +86,25 @@ export class VpcFormNonModalDialogNewUser extends VpcFormNonModalDialogFormBase 
     }
 
     protected goBackToLogin(autoFillUsername?: string) {
-        this.appli.setNonModalDialog(undefined);
+        this.vci.setNonModalDialog(undefined);
         this.children = [];
-        let newForm = new this.formLoginClass(this.appli, true);
+        let newForm = new this.formLoginClass(this.vci, true);
         let formAsComp = (newForm as any) as UI512CompBase; /* cast verified */
         checkThrow(formAsComp && formAsComp.isUI512CompBase, '');
 
-        VpcFormNonModalDialogFormBase.standardWindowBounds(formAsComp, this.appli);
+        VpcFormNonModalDialogFormBase.standardWindowBounds(formAsComp, this.vci);
         newForm.fnCbWhenSignedIn = this.fnCbWhenSignedIn;
         newForm.autoFillUsername = autoFillUsername;
         newForm.autoShowNeedEmailCode = !!autoFillUsername;
-        this.appli.setNonModalDialog(formAsComp);
+        this.vci.setNonModalDialog(formAsComp);
     }
 }
 
 export interface VpcFormNonModalDialogLogInConstructor {
-    new (appli: VpcStateInterface, newUserOk: boolean): VpcFormNonModalDialogLogInInterface;
+    new (vci: VpcStateInterface, newUserOk: boolean): VpcNonModalFormLoginInterface;
 }
 
-export interface VpcFormNonModalDialogLogInInterface {
+export interface VpcNonModalFormLoginInterface {
     fnCbWhenSignedIn: () => void;
     showHeader: boolean;
     captionText: string;

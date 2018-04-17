@@ -1,12 +1,12 @@
 
-/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementsGettable.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementGettable.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 
 export class TestUI512Elements extends UI512TestBase {
     tests = [

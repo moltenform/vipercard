@@ -1,6 +1,6 @@
 
 /* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject, checkThrowEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { MapKeyToObject, checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';

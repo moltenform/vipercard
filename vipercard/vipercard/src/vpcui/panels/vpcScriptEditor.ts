@@ -1,36 +1,37 @@
 
-/* auto */ import { isRelease } from '../../config.js';
 /* auto */ import { O, cleanExceptionMsg, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObjectCanSet, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { MapKeyToObjectCanSet, base10, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementsLabel.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
-/* auto */ import { UI512CompCodeEditorFont } from '../../ui512/composites/ui512CodeEditorClasses.js';
+/* auto */ import { UI512CompCodeEditorFont } from '../../ui512/composites/ui512CodeEditorAutoIndent.js';
 /* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512CodeEditor.js';
 /* auto */ import { vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcPropPanel } from '../../vpcui/panels/vpcPanelsBase.js';
+/* auto */ import { VpcEditPanels } from '../../vpcui/panels/vpcPanelsInterface.js';
 
-export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcPropPanel {
+/**
+ * the ViperCard script editor
+ */
+export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEditPanels {
     isVpcPanelScriptEditor = true;
     hasCloseBtn = true;
     autoCreateBlock = true;
     compositeType = 'VpcPanelScriptEditor';
     lineCommentPrefix = '--~ ';
-    appli: VpcStateInterface;
-
+    vci: VpcStateInterface;
     needsCompilation = new MapKeyToObjectCanSet<boolean>();
     cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
     cbAnswerMsg: (s: string, cb: () => void) => void;
@@ -58,16 +59,17 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         this.autoIndent.useAutoCreateBlock = true;
     }
 
+    /**
+     * initialize layout
+     */
     createSpecific(app: UI512Application) {
-        /* occurs because apparent discrepency between 'screenwidth' and bounds[2], not sure why those don't match */
-        this.logicalWidth -= 46;
-        if (!isRelease) {
-            console.log('maybe fix this...');
-        }
-
         /* constants */
         const spacerHeight = 6;
         const footerHeight = 65;
+
+        /* occurs because apparent discrepency between
+        'screenwidth' and bounds[2] */
+        this.logicalWidth -= 46;
 
         /* draw a 1px border around the panel */
         let grp = app.getGroup(this.grpId);
@@ -120,6 +122,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         );
     }
 
+    /**
+     * refresh
+     */
     refreshFromModel(app: UI512Application) {
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
         let grp = app.getGroup(this.grpId);
@@ -146,8 +151,12 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         }
     }
 
+    /**
+     * refresh status labels,
+     * shows the last error encountered by the codeExec object
+     */
     protected refreshStatusLabels(app: UI512Application, vel: VpcElBase) {
-        let lastScriptErr = this.appli ? this.appli.getCodeExec().lastEncounteredScriptErr : undefined;
+        let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
         this.status2a.set('labeltext', '');
         if (lastScriptErr && lastScriptErr.velId === vel.id) {
             /* check for "encountered" err */
@@ -159,7 +168,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             );
         } else {
             /* check for syntax err */
-            let codeStatus = this.appli.getCodeExec().findCode(vel.id);
+            let codeStatus = this.vci.getCodeExec().findCode(vel.id);
             if (codeStatus instanceof VpcScriptErrorBase) {
                 this.setStatusLabeltext(
                     'lngSyntax error:',
@@ -181,6 +190,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         }
     }
 
+    /**
+     * set status label,
+     * sType is untranslated,
+     * sMsg and sMsgMore are already translated
+     */
     protected setStatusLabeltext(sType: string, n: O<number>, sMsg: string, sMsgMore: string) {
         this.status1a.set('labeltext', lng(sType));
         this.status2b.set('labeltext', UI512DrawText.setFont(sMsg, this.monaco));
@@ -195,6 +209,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         }
     }
 
+    /**
+     * user has clicked 'Save Script'
+     */
     protected onBtnCompile() {
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
         if (!vel) {
@@ -202,32 +219,36 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         }
 
         /* run compilation */
-        this.saveChangesToModel(this.appli.UI512App(), false);
+        this.saveChangesToModel(this.vci.UI512App(), false);
         let code = vel.getS('script');
-        this.appli.getCodeExec().updateChangedCode(vel, code);
+        this.vci.getCodeExec().updateChangedCode(vel, code);
 
         /* hide the "just encountered" message. */
         /* seems ok to do -- also might be possible for user to click hide. */
-        let lastScriptErr = this.appli ? this.appli.getCodeExec().lastEncounteredScriptErr : undefined;
+        let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
         if (lastScriptErr && lastScriptErr.velId === vel.id) {
-            this.appli.getCodeExec().lastEncounteredScriptErr = undefined;
+            this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
         }
 
         /* refresh. setting script does trigger uiredraw, but script has already been updated */
         /* because saveChangesToModel was called in mousedown. so need to manually cause update */
         this.needsCompilation.remove(vel.id);
-        this.appli.causeUIRedraw();
+        this.vci.causeUIRedraw();
     }
 
+    /**
+     * scroll to and highlight the target line
+     */
     scrollToErrorPosition(pr: O<UI512PresenterBase>) {
-        let linenotxt = this.status2a.getS('labeltext');
-        if (this.el && linenotxt.length > 0) {
-            let thenums = linenotxt.split(' ')[1].replace(/,/g, '');
-            let thenum = parseInt(thenums, 10);
-            if (Number.isFinite(thenum)) {
-                thenum = Math.max(0, thenum - 1); /* from 1-based to 0-based */
+        /* parse the line number out of the label text */
+        let lineNumberText = this.status2a.getS('labeltext');
+        if (this.el && lineNumberText.length > 0) {
+            lineNumberText = lineNumberText.split(' ')[1].replace(/,/g, '');
+            let lineNumber = parseInt(lineNumberText, base10);
+            if (Number.isFinite(lineNumber)) {
+                lineNumber = Math.max(0, lineNumber - 1); /* from 1-based to 0-based */
                 let gel = new UI512ElTextFieldAsGeneric(this.el);
-                SelAndEntry.selectLineInField(gel, thenum);
+                TextSelModify.selectLineInField(gel, lineNumber);
 
                 if (pr) {
                     pr.setCurrentFocus(this.el.id);
@@ -236,6 +257,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
         }
     }
 
+    /**
+     * respond to keydown
+     */
     respondKeydown(d: KeyDownEventDetails) {
         if (!this.el || !this.el.getB('canselecttext') || !this.el.getB('canedit')) {
             return;
@@ -247,28 +271,36 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             d.readableShortcut.search(/\bEnter\b/) !== -1 ||
             ((d.mods === 0 || d.mods === ModifierKeys.Shift) && d.keyChar.length === 1 && d.keyChar.charCodeAt(0) >= 32)
         ) {
+            /* make the 'save' button bold since we have unsaved changes */
             let vel = this.cbGetAndValidateSelectedVel('selectedVelId');
             if (vel) {
                 this.needsCompilation.set(vel.id, true);
-                this.refreshStatusLabels(this.appli.UI512App(), vel);
+                this.refreshStatusLabels(this.vci.UI512App(), vel);
             }
         }
 
         super.respondKeydown(d);
 
-        /* proactively save changes to model, even more aggressively than every mousedown, */
-        /* so that some other bug won't delete what you typed. */
-        /* needs to go *after* respondKeydown because we want to include any indentation/text insertion changes */
+        /* typically changes are saved to model after every keypress,
+        but let's save even more often, after every Enter key is pressed.
+        this way, when you hit undo, it won't take you back too far.
+        note that we call saveChangesToModel after super.respondKeydown
+        in order to include any indentation/text insertion changes.*/
         if (d.readableShortcut.search(/\bEnter\b/) !== -1) {
-            this.saveChangesToModel(this.appli.UI512App(), false);
+            this.saveChangesToModel(this.vci.UI512App(), false);
         }
     }
 
-    respondToClick(app: UI512Application, clicked: string): any {
+    /**
+     * respond to mouse click
+     */
+    respondToClick(app: UI512Application, clicked: string) {
         if (clicked.endsWith('##btnScript')) {
+            /* user clicked on 'edit script' in the lower right of the panel, so
+            open the script editor */
             let validVel = this.cbGetAndValidateSelectedVel('selectedVelId');
             if (validVel) {
-                this.appli.setOption('viewingScriptVelId', validVel.id);
+                this.vci.setOption('viewingScriptVelId', validVel.id);
                 this.refreshFromModel(app);
             }
         } else {
@@ -276,28 +308,36 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcProp
             if (short === 'caption') {
                 /* clicked the close box */
                 this.saveChangesToModel(app, false);
-                this.appli.setOption('viewingScriptVelId', '');
+                this.vci.setOption('viewingScriptVelId', '');
             } else if (short === 'btnScriptEditorCompile') {
+                /* user clicked 'save script' */
                 this.onBtnCompile();
             } else if (short === 'status2a') {
+                /* user clicked the line number, scroll to that line */
                 this.scrollToErrorPosition(undefined);
             } else if (short === 'status2b') {
+                /* user clicked the error message, show the details */
                 if (this.statusErrMoreDetails.trim().length) {
                     this.cbAnswerMsg(this.statusErrMoreDetails, () => {});
+                    /* remember to not run other code after showing modal dialog */
                 }
-                /* remember to not run other code after showing modal dialog */
             }
         }
     }
 
+    /**
+     * message that there are pending changes
+     */
     static readonly thereArePendingChanges = 'There are pending changes.';
 
+    /**
+     * save the script to the script property on the vel
+     * if onlyCheckIfDirty is set, skip saving the script and only check if there are unsaved changes
+     */
     saveChangesToModel(app: UI512Application, onlyCheckIfDirty: boolean) {
-        /* note: here we will only save the script text to 'script' */
-        /* it's only when user clicks Compile that the compiled script changes. */
-        /* so it's kind of an inconsistent state */
-        /* design open to future improvements (autocompile?) */
-
+        /* note: here we will save the script text to the 'script' property */
+        /* it is not until the user clicks Compile that the compiled script changes. */
+        /* using this design because previously the compilation errors would often pop up. */
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
         if (!vel || !this.el) {
             return;

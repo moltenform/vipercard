@@ -1,12 +1,12 @@
 
 /* auto */ import { scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { base10, cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementsGroup.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
@@ -139,7 +139,7 @@ export class UI512DemoText extends UI512Presenter {
 
     runtest(params: string) {
         if (params.startsWith('testdld')) {
-            let testNumber = parseInt(params.substr('testdld'.length), 10);
+            let testNumber = parseInt(params.substr('testdld'.length), base10);
             this.testrunner.runtest(testNumber, true);
         } else {
             this.testrunner.runtest(-1 /* all tests */, false);

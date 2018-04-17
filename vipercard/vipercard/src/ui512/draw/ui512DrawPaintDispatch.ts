@@ -1,11 +1,11 @@
 
 /* auto */ import { O, assertTrue, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, base10 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { assertEq, base10 } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrWhite, needsPatternSupport, simplifyPattern } from '../../ui512/draw/ui512DrawPattern.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPaintClasses.js';
-/* auto */ import { UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPaint.js';
+/* auto */ import { clrWhite, needsPatternSupport, simplifyPattern } from '../../ui512/draw/ui512DrawPatterns.js';
+/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
+/* auto */ import { UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPainter.js';
 
 /**
  * painted shapes supported
@@ -171,4 +171,3 @@ export class UI512PaintDispatch {
         }
     }
 }
-

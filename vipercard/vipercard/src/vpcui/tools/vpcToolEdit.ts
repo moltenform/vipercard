@@ -1,71 +1,59 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcAppPropPanel } from '../../vpcui/panels/vpcLyrPanels.js';
-/* auto */ import { VpcAppUIToolResponseBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppLyrPanels } from '../../vpcui/panels/vpcLyrPanels.js';
+/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
 
-class EditToolDragStatus {
-    constructor(
-        public whichHandle: number,
-        public vel: VpcElBase,
-        public el: UI512Element,
-        public distanceFromHandleCenterX: number,
-        public distanceFromHandleCenterY: number,
-        public distanceFromFirstHandleCenterX: number,
-        public distanceFromFirstHandleCenterY: number
-    ) {}
-}
-
-export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
+export class VpcAppUIToolEdit extends VpcAppUIToolBase {
     dragStatus: O<EditToolDragStatus>;
-    propPanel: VpcAppPropPanel;
+    lyrPanels: VpcAppLyrPanels;
 
     respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
-        this.propPanel.respondMouseDown(d);
+        this.lyrPanels.respondMouseDown(d);
         if (d.el && d.el.id === 'VpcModelRender$$renderbg') {
             // click on the screen but on no item: deselect all
-            this.appli.setOption('selectedVelId', '');
+            this.vci.setOption('selectedVelId', '');
         } else if (d.el && d.el.id.startsWith('VpcModelRender$$')) {
             // click on an item to select it
             let velId = this.cbModelRender().elIdToVelId(d.el.id) || '';
             if (velId.length && d.el.typename === 'UI512ElTextField') {
-                this.appli.setTool(VpcTool.Field);
-                this.appli.setOption('selectedVelId', velId);
+                this.vci.setTool(VpcTool.Field);
+                this.vci.setOption('selectedVelId', velId);
             } else if (velId.length && d.el.typename === 'UI512ElementButtonBase') {
-                this.appli.setTool(VpcTool.Button);
-                this.appli.setOption('selectedVelId', velId);
+                this.vci.setTool(VpcTool.Button);
+                this.vci.setOption('selectedVelId', velId);
             } else {
-                this.appli.setOption('selectedVelId', '');
+                this.vci.setOption('selectedVelId', '');
             }
         } else {
             // drag a handle to resize a vel
-            let handle = this.propPanel.handles.whichHandle(d.el ? d.el.id : '');
+            let handle = this.lyrPanels.handles.whichHandle(d.el ? d.el.id : '');
             if (handle !== undefined && !this.dragStatus) {
-                let vel = this.propPanel.getAndValidateSelectedVel('selectedVelId');
+                let vel = this.lyrPanels.selectedVel('selectedVelId');
                 if (vel && (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld)) {
-                    let targetEl = this.appli.UI512App().findEl('VpcModelRender$$' + vel.id);
+                    let targetEl = this.vci.UI512App().findEl('VpcModelRender$$' + vel.id);
                     if (targetEl) {
                         // distance from initial click to center of handle
                         let distanceFromHandleCenterX =
                             d.mouseX -
-                            this.propPanel.handles.sizeHandles[handle].getN('x') -
-                            this.propPanel.handles.sizeHandles[0].w / 2;
+                            this.lyrPanels.handles.sizeHandles[handle].getN('x') -
+                            this.lyrPanels.handles.sizeHandles[0].w / 2;
                         let distanceFromHandleCenterY =
                             d.mouseY -
-                            this.propPanel.handles.sizeHandles[handle].getN('y') -
-                            this.propPanel.handles.sizeHandles[0].h / 2;
+                            this.lyrPanels.handles.sizeHandles[handle].getN('y') -
+                            this.lyrPanels.handles.sizeHandles[0].h / 2;
                         let distanceFromFirstHandleCenterX =
                             d.mouseX -
-                            this.propPanel.handles.sizeHandles[0].getN('x') -
-                            this.propPanel.handles.sizeHandles[0].w / 2;
+                            this.lyrPanels.handles.sizeHandles[0].getN('x') -
+                            this.lyrPanels.handles.sizeHandles[0].w / 2;
                         let distanceFromFirstHandleCenterY =
                             d.mouseY -
-                            this.propPanel.handles.sizeHandles[0].getN('y') -
-                            this.propPanel.handles.sizeHandles[0].h / 2;
+                            this.lyrPanels.handles.sizeHandles[0].getN('y') -
+                            this.lyrPanels.handles.sizeHandles[0].h / 2;
                         this.dragStatus = new EditToolDragStatus(
                             handle,
                             vel,
@@ -100,23 +88,23 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
                 this.dragStatus.el.setDimensions(newX, newY, this.dragStatus.el.w, this.dragStatus.el.h);
             }
 
-            this.propPanel.handles.updateUI512Els();
+            this.lyrPanels.handles.updateUI512Els();
         }
     }
 
     respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
-        this.propPanel.respondMouseUp(d);
+        this.lyrPanels.respondMouseUp(d);
         if (this.dragStatus) {
             // cancel the resize if we're on a different card now or if selected vel was changed
-            let validatedVel = this.propPanel.getAndValidateSelectedVel('selectedVelId');
+            let validatedVel = this.lyrPanels.selectedVel('selectedVelId');
             if (
                 validatedVel &&
                 validatedVel.id === this.dragStatus.vel.id &&
                 (validatedVel.getType() === VpcElType.Btn || validatedVel.getType() === VpcElType.Fld)
             ) {
                 let targetVel = this.dragStatus.vel;
-                targetVel.set('x', this.dragStatus.el.x - this.appli.userBounds()[0]);
-                targetVel.set('y', this.dragStatus.el.y - this.appli.userBounds()[1]);
+                targetVel.set('x', this.dragStatus.el.x - this.vci.userBounds()[0]);
+                targetVel.set('y', this.dragStatus.el.y - this.vci.userBounds()[1]);
                 targetVel.set('w', this.dragStatus.el.w);
                 targetVel.set('h', this.dragStatus.el.h);
             }
@@ -139,17 +127,29 @@ export class VpcAppUIToolEdit extends VpcAppUIToolResponseBase {
 
     onLeaveTool() {
         this.cancelCurrentToolAction();
-        this.propPanel.editor.saveChangesToModel(this.appli.UI512App(), false);
-        if (this.propPanel.active) {
-            this.propPanel.active.saveChangesToModel(this.appli.UI512App(), false);
+        this.lyrPanels.editor.saveChangesToModel(this.vci.UI512App(), false);
+        if (this.lyrPanels.active) {
+            this.lyrPanels.active.saveChangesToModel(this.vci.UI512App(), false);
         }
     }
 
     onDeleteSelection() {
-        let seled = this.propPanel.getEditToolSelectedFldOrBtn();
+        let seled = this.lyrPanels.selectedFldOrBtn();
         if (seled) {
-            this.appli.setOption('selectedVelId', '');
-            this.appli.removeElem(seled);
+            this.vci.setOption('selectedVelId', '');
+            this.vci.removeVel(seled);
         }
     }
+}
+
+class EditToolDragStatus {
+    constructor(
+        public whichHandle: number,
+        public vel: VpcElBase,
+        public el: UI512Element,
+        public distanceFromHandleCenterX: number,
+        public distanceFromHandleCenterY: number,
+        public distanceFromFirstHandleCenterX: number,
+        public distanceFromFirstHandleCenterY: number
+    ) {}
 }

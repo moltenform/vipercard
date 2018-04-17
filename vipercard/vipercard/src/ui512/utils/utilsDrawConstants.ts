@@ -1,5 +1,5 @@
 
-/* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utils512.js';
 
 export enum MenuConsts {
     AddToWidth = 45 + 6,

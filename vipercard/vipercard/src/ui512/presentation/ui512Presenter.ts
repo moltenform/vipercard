@@ -1,12 +1,12 @@
 
-/* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utils512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { ChangeContext, MouseDragStatus } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementsTextField.js';
-/* auto */ import { UI512MenuRoot } from '../../ui512/elements/ui512ElementsMenu.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
-/* auto */ import { ClipManager } from '../../ui512/textedit/ui512Clipboard.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
+/* auto */ import { UI512MenuRoot } from '../../ui512/elements/ui512ElementMenu.js';
+/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuPositioning.js';
+/* auto */ import { ClipManager } from '../../ui512/textedit/ui512ClipManager.js';
 /* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 
@@ -16,8 +16,9 @@
  * and sends Models to ElementsView to be drawn.
  */
 export abstract class UI512Presenter extends UI512PresenterBase {
-    readonly timerblinkperiod = 500;
-    timerSlowIdle = new RepeatingTimer(this.timerblinkperiod);
+    isUI512Presenter = true;
+    timerSlowIdlePeriod = 500;
+    timerSlowIdle = new RepeatingTimer(this.timerSlowIdlePeriod);
     useOSClipboard = false;
     mouseDragStatus: number = MouseDragStatus.None;
 
@@ -32,16 +33,16 @@ export abstract class UI512Presenter extends UI512PresenterBase {
     /**
      * remove an element
      */
-    removeEl(gpid: string, elid: string, context = ChangeContext.Default) {
+    removeEl(gpid: string, elId: string, context = ChangeContext.Default) {
         let grp = this.app.getGroup(gpid);
-        let el = grp.findEl(elid);
+        let el = grp.findEl(elId);
 
         if (el && el instanceof UI512ElTextField) {
             new ScrollbarImpl().removeScrollbarField(this.app, grp, el);
         } else if (el && el instanceof UI512MenuRoot) {
             MenuPositioning.removeMenuRoot(this.app, grp, el);
         } else if (el) {
-            grp.removeElement(elid, context);
+            grp.removeElement(elId, context);
         }
     }
 
@@ -112,4 +113,3 @@ export abstract class UI512Presenter extends UI512PresenterBase {
         }
     }
 }
-

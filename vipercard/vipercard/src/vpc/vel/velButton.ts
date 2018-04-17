@@ -1,10 +1,10 @@
 
 /* auto */ import { checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utils512.js';
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { FormattedSubstringUtil } from '../../vpc/vpcutils/vpcStyleComplex.js';
+/* auto */ import { SubstringStyleComplex } from '../../vpc/vpcutils/vpcStyleComplex.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 
@@ -98,7 +98,7 @@ export class VpcElButton extends VpcElSizable {
     static btnGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
         getters['script'] = [PrpTyp.Str, 'script'];
-        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => FormattedSubstringUtil.vpcstyleFromInt(me._textstyle)];
+        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => SubstringStyleComplex.vpcstyleFromInt(me._textstyle)];
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElButton) => {
@@ -117,7 +117,7 @@ export class VpcElButton extends VpcElSizable {
             PrpTyp.Str,
             (me: VpcElButton, s: string) => {
                 let list = s.split(',').map(item => item.trim());
-                me.set('textstyle', FormattedSubstringUtil.vpcstyleToInt(list));
+                me.set('textstyle', SubstringStyleComplex.vpcstyleToInt(list));
             }
         ];
 

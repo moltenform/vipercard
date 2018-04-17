@@ -1,6 +1,6 @@
 
 /* auto */ import { UI512ErrorHandling, assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512, assertEq, sleep } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, Util512, assertEq, sleep } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper, DrawableImage } from '../../ui512/utils/utilsDraw.js';
 
 /**

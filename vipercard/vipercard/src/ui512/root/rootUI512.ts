@@ -1,11 +1,11 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, respondUI512Error } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { BrowserOSInfo, RenderComplete, RepeatingTimer, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { O, assertTrueWarn, checkThrow, respondUI512Error } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { BrowserOSInfo, RenderComplete, RepeatingTimer, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512CursorAccess } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIcon.js';
+/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIconManager.js';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcInitIcons } from '../../vpc/vpcutils/vpcInitIcons.js';
@@ -19,7 +19,7 @@
 /* auto */ import { UI512DemoBasic } from '../../test/ui512/uiDemoBasic.js';
 /* auto */ import { runTestsImpl } from '../../test/vpcui/testRegistration.js';
 
-export class UI512FullRoot implements Root {
+export class FullRootUI512 implements Root {
     domCanvas: CanvasWrapper;
     presenter: UI512Presenter;
     drawText: UI512DrawText;
@@ -87,8 +87,9 @@ export class UI512FullRoot implements Root {
         return this.browserOSInfo;
     }
 
-    replaceCurrentPresenter(newPr: any) {
-        assertTrue(newPr && newPr instanceof UI512Presenter, '3@|not a presenter');
+    replaceCurrentPresenter(newPrIn: any) {
+        let newPr = newPrIn as UI512Presenter;
+        checkThrow(newPr.isUI512Presenter, '');
         if (newPr.importMouseTracking) {
             newPr.importMouseTracking(this.presenter);
         }

@@ -1,14 +1,18 @@
 
 /* auto */ import { O, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512IsSessionInterface, Util512, base10, checkThrowEq, getRoot } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { getUnixTimeSeconds, makeNonce, pbkdf2, sendSignedRequestJson, sendWebRequestGetJson } from '../../vpc/request/vpcSigned.js';
+/* auto */ import { Root, UI512IsSessionInterface, Util512, anyJson, base10, checkThrowEq, getRoot } from '../../ui512/utils/utils512.js';
+/* auto */ import { getUnixTimeSeconds, makeNonce, pbkdf2, sendSignedRequestJson, vpcSendRequestForJson } from '../../vpc/request/vpcSigned.js';
 
-export async function vpcUsersCreate(username: string, pw: string, email: string): Promise<string> {
-    if (pw.length <= 3) {
+/**
+ * create a new user account
+ * returns true upon success
+ */
+export async function vpcUsersCreate(username: string, pw: string, email: string): Promise<boolean> {
+    if (pw.length <= RequestHelpers.minPwLength) {
         throw new Error('password is too short');
     }
 
-    let [iterations, keyBuffer, saltB64, keyB64] = await pbkdf2(pw);
+    let [iterations, keyBuffer, keyB64, saltB64] = await pbkdf2(pw);
     let nonce = makeNonce();
     let now = getUnixTimeSeconds().toString();
     let params = {
@@ -24,28 +28,40 @@ export async function vpcUsersCreate(username: string, pw: string, email: string
     let url = '/vpusers/create';
     let response = await sendSignedRequestJson(url, 'POST', params, keyBuffer);
     if (response && response.retcode === 0) {
-        return 'succeeded';
+        return true;
     } else {
         throw new Error(response ? 'response.retcode was not 0:' + response.retcode : 'response was null');
     }
 }
 
-export async function vpcUsersCheckLogin(username: string, pw: string, fakeIp?: string): Promise<any | VpcSession> {
-    if (pw.length <= 3) {
+/**
+ * check login credentials
+ * - if incorrect creds, throws exception
+ * - if correct creds but email has not been verified, returns a tuple
+ * - if correct creds, returns a VpcSession
+ */
+export async function vpcUsersCheckLogin(
+    username: string,
+    pw: string,
+    fakeIp?: string
+): Promise<(string | ArrayBuffer)[] | VpcSession> {
+    if (pw.length <= RequestHelpers.minPwLength) {
         throw new Error('password is too short');
     }
 
     let nonce = makeNonce();
     let now = getUnixTimeSeconds().toString();
-    let paramsGetSalt: any = {
+    let paramsGetSalt: anyJson = {
         nonce: nonce,
         now: now,
         username: username
     };
+
     if (fakeIp) {
         paramsGetSalt.simulateRemoteIp = fakeIp;
     }
-    let responseGetSalt = await sendWebRequestGetJson('/vpusers/get_public_info', 'POST', paramsGetSalt);
+
+    let responseGetSalt = await vpcSendRequestForJson('/vpusers/get_public_info', 'POST', paramsGetSalt);
     checkThrowEq(0, responseGetSalt.retcode, '');
     if (!responseGetSalt.user_found) {
         throw Error('user not found');
@@ -53,14 +69,15 @@ export async function vpcUsersCheckLogin(username: string, pw: string, fakeIp?: 
 
     let saltB64Input = responseGetSalt.salt;
     let iterationsInput = parseInt(responseGetSalt.iterations, base10);
-    let [iterations, keyBuffer, saltB64, keyB64] = await pbkdf2(pw, iterationsInput, saltB64Input);
+    let [iterations, keyBuffer, keyB64, saltB64] = await pbkdf2(pw, iterationsInput, saltB64Input);
     nonce = makeNonce();
     now = getUnixTimeSeconds().toString();
-    let params: any = {
+    let params: anyJson = {
         nonce: nonce,
         now: now,
         username: username
     };
+
     if (fakeIp) {
         params.simulateRemoteIp = fakeIp;
     }
@@ -69,21 +86,25 @@ export async function vpcUsersCheckLogin(username: string, pw: string, fakeIp?: 
     let response = await sendSignedRequestJson(url, 'POST', params, keyBuffer);
     if (response && response.retcode === 0) {
         if (response.need_email_verify) {
+            /* creds are right, but email not yet verified */
             let result = ['need_email_verify', username, keyBuffer];
-            if (username === 'test4') {
-                result.push(response.test4_email_verify);
-            }
-
+            RequestHelpers.loginTestHook(username, response, result);
             return result;
         } else {
+            /* creds are right */
             let sess = new VpcSession(username, keyBuffer);
             return sess;
         }
     } else {
+        /* creds are not right, or an error occurred */
         throw new Error(response ? 'response.retcode was not 0:' + response.retcode : 'response was null');
     }
 }
 
+/**
+ * enter the email verification code
+ * returns a VpcSession upon success
+ */
 export async function vpcUsersEnterEmailVerifyCode(
     username: string,
     keyBuffer: ArrayBuffer,
@@ -108,21 +129,24 @@ export async function vpcUsersEnterEmailVerifyCode(
     }
 }
 
+/**
+ * flag inappropriate content
+ */
 export async function vpcStacksFlagContent(
     stackOwner: string,
     stackId: string,
-    currentusername: string,
+    currentUsername: string,
     simulateRemoteIp?: string
 ) {
-    let fullid = VpcSession.getFullStackId(stackOwner, stackId);
-    let params: any = {
-        stackfullid: fullid,
-        FlagContentcurrentusername: currentusername,
+    let fullId = VpcSession.getFullStackId(stackOwner, stackId);
+    let params: anyJson = {
+        stackfullid: fullId,
+        flagcontentcurrentusername: currentUsername,
         simulateRemoteIp: simulateRemoteIp || ''
     };
 
     let url = '/vpstacks/flag_content';
-    let response = await sendWebRequestGetJson(url, 'POST', params);
+    let response = await vpcSendRequestForJson(url, 'POST', params);
     if (response && response.retcode === 0) {
         return true;
     } else {
@@ -130,13 +154,16 @@ export async function vpcStacksFlagContent(
     }
 }
 
-export async function vpcStacksGetData(stackfullid: string): Promise<{ [key: string]: string }> {
+/**
+ * get stack content
+ */
+export async function vpcStacksGetData(stackFullId: string): Promise<{ [key: string]: string }> {
     let params = {
-        stackfullid: stackfullid
+        stackfullid: stackFullId
     };
 
     let url = '/vpstacks/get_data';
-    let response = await sendWebRequestGetJson(url, 'GET', params);
+    let response = await vpcSendRequestForJson(url, 'GET', params);
     if (response && response.retcode === 0) {
         return response;
     } else {
@@ -144,15 +171,12 @@ export async function vpcStacksGetData(stackfullid: string): Promise<{ [key: str
     }
 }
 
+/**
+ * holds credentials,
+ * currently just kept in memory without being serialized in any type of cookie or storage
+ * request methods on this class are signed by hmac, and are protected against tampering and later replay.
+ */
 export class VpcSession implements UI512IsSessionInterface {
-    static getUrlForOpeningStack(loc: string, stackOwner: string, stackId: string, stackName: string): string {
-        let shorterstackid = stackId;
-        if (shorterstackid.startsWith('S')) {
-            shorterstackid = shorterstackid.substr(1);
-        }
-        return loc + '?s=' + Util512.toBase64UrlSafe(stackOwner) + '|' + shorterstackid;
-    }
-
     readonly username: string;
     readonly keyBuffer: ArrayBuffer;
     constructor(username: string, keyBuffer: ArrayBuffer) {
@@ -160,6 +184,9 @@ export class VpcSession implements UI512IsSessionInterface {
         this.keyBuffer = keyBuffer;
     }
 
+    /**
+     * get a VpcSession from a Root object
+     */
     static fromRoot(): O<VpcSession> {
         let got = getRoot().getSession();
         if (got && got instanceof VpcSession) {
@@ -169,6 +196,21 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
+    /**
+     * stack id to url
+     */
+    static getUrlForOpeningStack(loc: string, stackOwner: string, stackId: string, stackName: string): string {
+        let shorterstackid = stackId;
+        if (shorterstackid.startsWith('S')) {
+            shorterstackid = shorterstackid.substr(1);
+        }
+
+        return loc + '?s=' + Util512.toBase64UrlSafe(stackOwner) + '|' + shorterstackid;
+    }
+
+    /**
+     * update account email
+     */
     async vpcUsersUpdateEmail(newEmail: string): Promise<boolean> {
         let nonce = makeNonce();
         let now = getUnixTimeSeconds().toString();
@@ -188,7 +230,11 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
-    async vpLogEntriesCreate(
+    /**
+     * user clicked "send error report"
+     * returns true upon success
+     */
+    async vpcLogEntriesCreate(
         logentries_user_typed_desc: string,
         logentries_last_client_logs: string,
         logentries_stackserverguid: string,
@@ -200,7 +246,7 @@ export class VpcSession implements UI512IsSessionInterface {
         checkThrow(logentries_stackserverguid && logentries_stackserverguid.length > 1, '');
         let nonce = makeNonce();
         let now = setServerAndClientTime || getUnixTimeSeconds().toString();
-        let params: any = {
+        let params: anyJson = {
             nonce: nonce,
             now: now,
             username: this.username,
@@ -208,9 +254,12 @@ export class VpcSession implements UI512IsSessionInterface {
             logentries_last_client_logs: logentries_last_client_logs,
             logentries_stackserverguid: logentries_stackserverguid
         };
+
+        /* test hooks */
         if (setfakeIp) {
             params.simulateRemoteIp = setfakeIp;
         }
+
         if (setServerAndClientTime) {
             params.simulateCurrentServerTime = setServerAndClientTime;
         }
@@ -224,21 +273,24 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
+    /**
+     * save stack as
+     */
     async vpcStacksSaveAs(
-        stacknewpartialid: string,
+        stackNewPartialId: string,
         newname: string,
         newstackdata: string,
         setFakeMaxStacks = ''
     ): Promise<boolean> {
         let nonce = makeNonce();
         let now = getUnixTimeSeconds().toString();
-        let params: any = {
+        let params: anyJson = {
             nonce: nonce,
             now: now,
             username: this.username,
             ownerusername: this.username,
-            stacknewpartialid: stacknewpartialid,
-            stackName: newname,
+            stacknewpartialid: stackNewPartialId,
+            stackname: newname,
             stackdata: newstackdata,
             simulatemaxstacks: setFakeMaxStacks
         };
@@ -252,6 +304,9 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
+    /**
+     * save stack
+     */
     async vpcStacksSave(stackpartialid: string, newstackdata: string): Promise<boolean> {
         let nonce = makeNonce();
         let now = getUnixTimeSeconds().toString();
@@ -273,6 +328,10 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
+    /**
+     * list my stacks
+     * returns map of stackid to stack information
+     */
     async vpcListMyStacks(testOverrideUsername?: string): Promise<{ [key: string]: string }[]> {
         let nonce = makeNonce();
         let now = getUnixTimeSeconds().toString();
@@ -293,14 +352,17 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
-    static async vpcStacksCountJsonSaves(stackOwner: string, stackId: string, currentusername: string) {
-        let stackfullid = VpcSession.getFullStackId(stackOwner, stackId);
+    /**
+     * count number of saves to json
+     */
+    static async vpcStacksCountJsonSaves(stackOwner: string, stackId: string, currentUsername: string) {
+        let stackFullId = VpcSession.getFullStackId(stackOwner, stackId);
         let params = {
-            stackfullid: stackfullid
+            stackfullid: stackFullId
         };
 
         let url = '/vpstacks/count_json_saves';
-        let response = await sendWebRequestGetJson(url, 'POST', params);
+        let response = await vpcSendRequestForJson(url, 'POST', params);
         if (response && response.retcode === 0) {
             return response;
         } else {
@@ -308,15 +370,34 @@ export class VpcSession implements UI512IsSessionInterface {
         }
     }
 
+    /**
+     * generate a stack partial id
+     * S and then 15 random bytes, then b64encode it
+     * roughly as much entropy as guid, but looks shorter in a url
+     */
     static generateStackPartialId() {
-        // S and then 15 random bytes, then b64encode it
         return 'S' + Util512.generateUniqueBase64UrlSafe(15, 'S');
     }
 
-    static getFullStackId(ownerusername: string, partialStackid: string) {
+    /**
+     * get full stack id (username+stackid)
+     */
+    static getFullStackId(ownerUsername: string, partialStackid: string) {
         checkThrow(partialStackid.startsWith('S'), '');
         partialStackid = partialStackid.substr(1);
-        let ownerusernameEncoded = Util512.toBase64UrlSafe(ownerusername);
-        return ownerusernameEncoded + '|' + partialStackid;
+        let ownerUsernameEncoded = Util512.toBase64UrlSafe(ownerUsername);
+        return ownerUsernameEncoded + '|' + partialStackid;
+    }
+}
+
+/**
+ * request helpers
+ */
+class RequestHelpers {
+    static readonly minPwLength = 3;
+    static loginTestHook(username: string, response: any, result: (string | ArrayBuffer)[]) {
+        if (username === 'test4') {
+            result.push(response.test4_email_verify);
+        }
     }
 }

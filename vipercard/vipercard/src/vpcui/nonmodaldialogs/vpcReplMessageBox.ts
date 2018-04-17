@@ -1,17 +1,17 @@
 
 /* auto */ import { O, cleanExceptionMsg, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { TextFontSpec, TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementsButton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementsTextField.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { KeyDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { SelAndEntry } from '../../ui512/textedit/ui512TextModify.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { PalBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
@@ -19,46 +19,21 @@
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcFormNonModalDialogBase, VpcFormNonModalDialogFormBase } from '../../vpcui/nonmodaldialogs/vpcNonModalCommon.js';
+/* auto */ import { VpcFormNonModalDialogFormBase, VpcNonModalFormBase } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
 
-export class StackHistory {
-    pointer = 0;
-    stack: string[] = [];
-    protected getAt() {
-        this.pointer = fitIntoInclusive(this.pointer, 0, this.stack.length);
-        if (this.pointer === this.stack.length) {
-            return '';
-        } else {
-            return this.stack[this.pointer];
-        }
-    }
-    getUp() {
-        this.pointer -= 1;
-        return this.getAt();
-    }
-    getDown() {
-        this.pointer += 1;
-        return this.getAt();
-    }
-    push(s: string) {
-        this.stack.push(s);
-        this.pointer = this.stack.length;
-    }
-}
-
-export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
-    isVpcAppNonModalDialogReplBox = true;
+export class VpcNonModalReplBox extends VpcNonModalFormBase {
+    isVpcNonModalReplBox = true;
     showHeader = true;
     captionText = '';
     hasCloseBtn = true;
     entry: UI512ElTextField;
     scrollGot: UI512ElTextField;
     historyTyped = new StackHistory();
-    constructor(protected appli: VpcStateInterface) {
-        super('VpcAppNonModalDialogReplBox' + Math.random());
-        let app = this.appli.UI512App();
+    constructor(protected vci: VpcStateInterface) {
+        super('VpcNonModalReplBox' + Math.random());
+        let app = this.vci.UI512App();
 
-        VpcFormNonModalDialogFormBase.standardWindowBounds(this, appli);
+        VpcFormNonModalDialogFormBase.standardWindowBounds(this, vci);
         this.x -= 1;
         this.y += 188;
         this.logicalHeight -= 188;
@@ -96,7 +71,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         this.entry.set('style', UI512FldStyle.Transparent);
 
         this.entry.set('multiline', false);
-        this.appli.getPresenter().setCurrentFocus(this.entry.id);
+        this.vci.getPresenter().setCurrentFocus(this.entry.id);
         this.entry.set('defaultFont', 'geneva');
         let msg = 'put "abc"';
         this.setFontAndText(this.entry, msg, 'geneva', 12);
@@ -112,15 +87,15 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         el.setftxt(t);
     }
 
-    onClickBtn(short: string, el: UI512Element, appli: VpcStateInterface): void {
+    onClickBtn(short: string, el: UI512Element, vci: VpcStateInterface): void {
         if (short && short === 'closebtn') {
-            this.appli.setNonModalDialog(undefined);
+            this.vci.setNonModalDialog(undefined);
         }
     }
 
-    onMouseDown(short: string, el: UI512Element, appli: VpcStateInterface): void {}
+    onMouseDown(short: string, el: UI512Element, vci: VpcStateInterface): void {}
 
-    onKeyDown(elid: O<string>, short: O<string>, d: KeyDownEventDetails): void {
+    onKeyDown(elId: O<string>, short: O<string>, d: KeyDownEventDetails): void {
         if (short === 'entry' && (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')) {
             this.launchScript(this.entry.get_ftxt().toUnformatted());
             d.setHandled();
@@ -149,11 +124,11 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
 
         if (!this.busy) {
             this.busy = true;
-            let transformed = VpcAppNonModalDialogReplBox.transformText(scr);
+            let transformed = VpcNonModalReplBox.transformText(scr);
             let fakeVel = this.getOrMakeFakeButton();
             fakeVel.set('script', transformed);
             let code = fakeVel.getS('script');
-            this.appli.getCodeExec().updateChangedCode(fakeVel, code);
+            this.vci.getCodeExec().updateChangedCode(fakeVel, code);
 
             this.historyTyped.push(scr);
             this.appendToOutput('> ' + scr + ' ...', false);
@@ -166,10 +141,10 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
             fakeEl.w = fakeVel.getN('w');
             fakeEl.h = fakeVel.getN('h');
 
-            this.rememberedTool = this.appli.getTool();
-            this.appli.setTool(VpcTool.Browse);
+            this.rememberedTool = this.vci.getTool();
+            this.vci.setTool(VpcTool.Browse);
             // inject fake event
-            this.appli.getCodeExec().lastEncounteredScriptErr = undefined;
+            this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
             let simEvent = new MouseUpEventDetails(
                 0,
                 fakeVel.getN('x') + 1,
@@ -181,7 +156,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
             simEvent.elRaw = fakeEl;
 
             // do this last because it could throw synchronously and call onScriptErr right away
-            this.appli.scheduleScriptEventSend(simEvent);
+            this.vci.scheduleScriptEventSend(simEvent);
         }
     }
 
@@ -202,12 +177,12 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         alltxt += '\n'; // hack, looks better
         this.setFontAndText(this.scrollGot, alltxt, 'monaco', 9);
         let gel = new UI512ElTextFieldAsGeneric(this.scrollGot);
-        SelAndEntry.changeSelGoDocHomeEnd(gel, false /* isLeft*/, false /* isExtend*/);
+        TextSelModify.changeSelGoDocHomeEnd(gel, false /* isLeft*/, false /* isExtend*/);
     }
 
     getOrMakeFakeButton() {
-        let currentCardId = this.appli.getOption_s('currentCardId');
-        let currentCard = this.appli.getModel().getById(currentCardId, VpcElCard);
+        let currentCardId = this.vci.getOptionS('currentCardId');
+        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
         for (let part of currentCard.parts) {
             if (VpcElBase.isActuallyMsgRepl(part)) {
                 return part;
@@ -215,7 +190,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         }
 
         // we'll have to generate it
-        let newPart = this.appli.createElem(currentCardId, VpcElType.Btn, 0);
+        let newPart = this.vci.createVel(currentCardId, VpcElType.Btn, 0);
         newPart.set('name', VpcElBase.nameForMsgRepl());
         newPart.set('x', -100);
         newPart.set('y', -100);
@@ -227,14 +202,14 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
     onScriptErr(scriptErr: VpcScriptErrorBase) {
         // note that script errors are to be expected -- it's how we get the signal back after running a script
         this.busy = false;
-        this.appli.setTool(this.rememberedTool);
+        this.vci.setTool(this.rememberedTool);
 
         if (
             scriptErr &&
             scriptErr.details &&
             scontains(scriptErr.details, 'intentional_cause_script_error_leaving_repl_box')
         ) {
-            let vGot = this.appli.getCodeExec().globals.find('g_msg_repl_box_contents');
+            let vGot = this.vci.getCodeExec().globals.find('g_msg_repl_box_contents');
             this.appendToOutput(vGot ? vGot.readAsString().trim() : 'Unknown (not set)', true);
         } else if (scriptErr) {
             this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);
@@ -243,7 +218,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
         }
 
         // set focus back
-        this.appli.getPresenter().setCurrentFocus(this.entry.id);
+        this.vci.getPresenter().setCurrentFocus(this.entry.id);
     }
 
     static makeAllVarsGlobals(linesImproved: string[], lineWithNoStringLiterals: string) {
@@ -267,7 +242,7 @@ export class VpcAppNonModalDialogReplBox extends VpcFormNonModalDialogBase {
             line = line.trim();
 
             let lineWithNoStringLiterals = line.replace(/".*?"/g, '');
-            VpcAppNonModalDialogReplBox.makeAllVarsGlobals(linesImproved, lineWithNoStringLiterals);
+            VpcNonModalReplBox.makeAllVarsGlobals(linesImproved, lineWithNoStringLiterals);
             if (
                 lineWithNoStringLiterals.startsWith('put ') &&
                 !scontains(lineWithNoStringLiterals, ' into ') &&
@@ -293,5 +268,30 @@ put "" into g_msg_repl_box_contents
         total += '\nintentional_cause_script_error_leaving_repl_box';
         total += '\nend mouseUp';
         return total;
+    }
+}
+
+export class StackHistory {
+    pointer = 0;
+    stack: string[] = [];
+    protected getAt() {
+        this.pointer = fitIntoInclusive(this.pointer, 0, this.stack.length);
+        if (this.pointer === this.stack.length) {
+            return '';
+        } else {
+            return this.stack[this.pointer];
+        }
+    }
+    getUp() {
+        this.pointer -= 1;
+        return this.getAt();
+    }
+    getDown() {
+        this.pointer += 1;
+        return this.getAt();
+    }
+    push(s: string) {
+        this.stack.push(s);
+        this.pointer = this.stack.length;
     }
 }

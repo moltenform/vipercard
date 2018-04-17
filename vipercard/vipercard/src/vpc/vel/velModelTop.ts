@@ -1,7 +1,7 @@
 
 /* auto */ import { O, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject, cast } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { ElementObserverDefault } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { MapKeyToObject, cast } from '../../ui512/utils/utils512.js';
+/* auto */ import { ElementObserverDefault } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
@@ -13,10 +13,10 @@
  * owner of the stack model and productopts model
  */
 export class VpcModelTop {
-    /* initialized by _VpcDocLoader_ which calls ensureDocumentNotEmpty() */
+    /* initialized by _VpcDocLoader_ which calls ensureModelNotEmpty() */
     stack: VpcElStack;
 
-    /* initialized by _VpcDocLoader_ which calls ensureDocumentNotEmpty() */
+    /* initialized by _VpcDocLoader_ which calls ensureModelNotEmpty() */
     productOpts: VpcElProductOpts;
 
     /* a unique id for the entire project, as distinct from the stack's stackLineage */

@@ -1,23 +1,23 @@
 
 /* auto */ import { O, assertTrueWarn, checkThrow, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { base10, fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { PropAdjective, VpcChunkType, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunk.js';
+/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 export class VpcChangeSelectedFont {
     cbGetEditToolSelectedFldOrBtn: () => O<VpcElBase>;
-    constructor(protected appli: VpcStateInterface) {}
+    constructor(protected vci: VpcStateInterface) {}
 
     runFontMenuActionsIfApplicable(s: string) {
         if (s.startsWith('mnuItemTool')) {
-            let toolNumber = parseInt(s.substr('mnuItemTool'.length), 10);
+            let toolNumber = parseInt(s.substr('mnuItemTool'.length), base10);
             toolNumber = isFinite(toolNumber) ? toolNumber : VpcTool.Browse;
-            this.appli.setTool(toolNumber);
+            this.vci.setTool(toolNumber);
             return true;
         } else if (s.startsWith('mnuItemSetFontFace')) {
             let v = s.substr('mnuItemSetFontFace'.length);
@@ -95,7 +95,7 @@ export class VpcChangeSelectedFont {
     }
 
     getActiveChunkSel(): O<[VpcElBase, number, number]> {
-        let vel = this.appli.getCurrentFocusVelField();
+        let vel = this.vci.getCurrentFocusVelField();
         if (vel) {
             // note: get from focused, not vel, since it's more up to date?
             // no, since we're acting on the vel, get everything from one for consistency
@@ -137,11 +137,11 @@ export class VpcChangeSelectedFont {
 
                 chunk.type = VpcChunkType.Chars;
                 let velref = new RequestedVelRef(VpcElType.Fld);
-                let idn = parseInt(vel.id, 10);
+                let idn = parseInt(vel.id, base10);
                 checkThrow(isFinite(idn), 'non numeric id?', vel.id);
                 velref.lookById = idn;
                 if (forSel !== 'textstyle') {
-                    this.appli.getOutside().SetProp(velref, forSel, VpcValS(v), chunk);
+                    this.vci.getOutside().SetProp(velref, forSel, VpcValS(v), chunk);
                     return true;
                 } else {
                     // do this character by character, because styles can differ
@@ -153,12 +153,12 @@ export class VpcChangeSelectedFont {
                         subchunk.first = i;
                         subchunk.last = i;
                         subchunk.type = VpcChunkType.Chars;
-                        let curstyle = this.appli
+                        let curstyle = this.vci
                             .getOutside()
                             .GetProp(velref, forSel, PropAdjective.empty, subchunk)
                             .readAsString();
                         curstyle = this.toggleStyle(curstyle, v);
-                        this.appli.getOutside().SetProp(velref, forSel, VpcValS(curstyle), subchunk);
+                        this.vci.getOutside().SetProp(velref, forSel, VpcValS(curstyle), subchunk);
                     }
 
                     return true;

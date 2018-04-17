@@ -1,202 +1,339 @@
 
 /* auto */ import { O, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { EventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
-/* auto */ import { CodeExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
-/* auto */ import { CodeExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
-/* auto */ import { CodeExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
+/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
+/* auto */ import { VpcExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
+/* auto */ import { VpcExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcApplication } from '../../vpcui/state/vpcState.js';
+/* auto */ import { VpcState } from '../../vpcui/state/vpcState.js';
 /* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcPresenter } from '../../vpcui/presentation/vpcPresenter.js';
 
-export class VpcStateInterfaceCompleted implements VpcStateInterface {
-    protected appl: VpcApplication;
+/**
+ * fulfill the VpcStateInterface interface
+ */
+export class VpcStateInterfaceImpl implements VpcStateInterface {
+    protected vcstate: VpcState;
     protected ctrller: VpcPresenter;
-    init(appl: VpcApplication, ctrller: VpcPresenter) {
-        this.appl = appl;
+    init(vcstate: VpcState, ctrller: VpcPresenter) {
+        this.vcstate = vcstate;
         this.ctrller = ctrller;
     }
 
-    getOption_s(prop: string) {
-        if (this.appl.runtime.opts.isARuntimeOpt[prop]) {
-            return this.appl.runtime.opts.getS(prop);
+    /**
+     * get a string runtime (not-persisted) option
+     */
+    getOptionS(prop: string) {
+        if (this.vcstate.runtime.opts.isARuntimeOpt[prop]) {
+            return this.vcstate.runtime.opts.getS(prop);
         } else {
-            return this.appl.model.productOpts.getS(prop);
-        }
-    }
-    getOption_n(prop: string) {
-        if (this.appl.runtime.opts.isARuntimeOpt[prop]) {
-            return this.appl.runtime.opts.getN(prop);
-        } else {
-            return this.appl.model.productOpts.getN(prop);
+            return this.vcstate.model.productOpts.getS(prop);
         }
     }
 
-    getOption_b(prop: string) {
-        if (this.appl.runtime.opts.isARuntimeOpt[prop]) {
-            return this.appl.runtime.opts.getB(prop);
+    /**
+     * get a numeric runtime (not-persisted) option
+     */
+    getOptionN(prop: string) {
+        if (this.vcstate.runtime.opts.isARuntimeOpt[prop]) {
+            return this.vcstate.runtime.opts.getN(prop);
         } else {
-            return this.appl.model.productOpts.getB(prop);
+            return this.vcstate.model.productOpts.getN(prop);
         }
     }
 
-    setOption<T extends ElementObserverVal>(prop: string, newval: T) {
-        if (this.appl.runtime.opts.isARuntimeOpt[prop]) {
-            return this.appl.runtime.opts.set(prop, newval);
+    /**
+     * get a boolean runtime (not-persisted) option
+     */
+    getOptionB(prop: string) {
+        if (this.vcstate.runtime.opts.isARuntimeOpt[prop]) {
+            return this.vcstate.runtime.opts.getB(prop);
         } else {
-            return this.appl.model.productOpts.set(prop, newval);
+            return this.vcstate.model.productOpts.getB(prop);
         }
     }
 
+    /**
+     * set a boolean runtime (not-persisted) option
+     */
+    setOption<T extends ElementObserverVal>(prop: string, newVal: T) {
+        if (this.vcstate.runtime.opts.isARuntimeOpt[prop]) {
+            return this.vcstate.runtime.opts.set(prop, newVal);
+        } else {
+            return this.vcstate.model.productOpts.set(prop, newVal);
+        }
+    }
+
+    /**
+     * perform undo
+     */
     performUndo(): boolean {
-        return this.appl.undoManager.performUndo(this);
+        return this.vcstate.undoManager.performUndo(this);
     }
 
+    /**
+     * perform redo
+     */
     performRedo(): boolean {
-        return this.appl.undoManager.performRedo(this);
+        return this.vcstate.undoManager.performRedo(this);
     }
 
+    /**
+     * get state id, for undo/redo and seeing if a stack is dirty/needs to be saved
+     */
     getCurrentStateId(): string {
-        return this.appl && this.appl.undoManager && this.appl.undoManager.getCurrentStateId();
+        return this.vcstate && this.vcstate.undoManager && this.vcstate.undoManager.getCurrentStateId();
     }
 
-    findExecFrameStack(): [O<CodeExecFrameStack>, O<CodeExecFrame>] {
-        let frstack = this.appl.runtime.codeExec.workQueue[0];
-        if (frstack) {
-            return [frstack, frstack.stack[frstack.stack.length - 1]];
+    /**
+     * get current execution context, or undefined if script not running
+     */
+    findExecFrameStack(): [O<VpcExecFrameStack>, O<VpcExecFrame>] {
+        let frStack = this.vcstate.runtime.codeExec.workQueue[0];
+        if (frStack) {
+            return [frStack, frStack.stack[frStack.stack.length - 1]];
         } else {
             return [undefined, undefined];
         }
     }
 
+    /**
+     * get vel model structure
+     */
     getModel(): VpcModelTop {
-        return this.appl.model;
-    }
-    isCodeRunning(): boolean {
-        return this.appl.runtime.codeExec.isCodeRunning();
+        return this.vcstate.model;
     }
 
+    /**
+     * is code currently running
+     */
+    isCodeRunning(): boolean {
+        return this.vcstate.runtime.codeExec.isCodeRunning();
+    }
+
+    /**
+     * re-add a vel to the model
+     */
     rawRevive(readded: VpcElBase) {
         checkThrow(
             !this.getCodeExec().isCodeRunning(),
             "8#|currently can't add or remove an element while code is running"
         );
+
         this.causeFullRedraw();
-        readded.observer = this.appl.runtime.useThisObserverForVpcEls;
+        readded.observer = this.vcstate.runtime.useThisObserverForVpcEls;
         this.getModel().addIdToMapOfElements(readded);
         this.getCodeExec().updateChangedCode(readded, readded.getS('script'));
     }
 
+    /**
+     * create a new vel on its own
+     */
     rawCreate<T extends VpcElBase>(velId: string, parentId: string, ctr: { new (...args: any[]): T }): T {
         this.causeFullRedraw();
         let vel = new ctr(velId, parentId);
         checkThrow(vel && vel.isVpcElBase, `8*|must be a VpcElBase`);
-        vel.observer = this.appl.runtime.useThisObserverForVpcEls;
-        this.appl.model.addIdToMapOfElements(vel);
+        vel.observer = this.vcstate.runtime.useThisObserverForVpcEls;
+        this.vcstate.model.addIdToMapOfElements(vel);
         return vel;
     }
 
-    createElem(parent_id: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase {
-        return this.appl.createElem(parent_id, type, insertIndex, specifyId);
+    /**
+     * create a new vel and add it to the model
+     */
+    createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase {
+        return this.vcstate.createVel(parentId, type, insertIndex, specifyId);
     }
 
-    removeElem(vel: VpcElBase) {
-        this.appl.removeElem(vel);
+    /**
+     * remove vel from the model
+     */
+    removeVel(vel: VpcElBase) {
+        this.vcstate.removeVel(vel);
     }
 
-    doWithoutAbilityToUndo(fn: () => void) {
-        this.appl.undoManager.doWithoutAbilityToUndo(fn);
-    }
-
+    /**
+     * don't record changes made for undo, and assert that no changes were made
+     */
     doWithoutAbilityToUndoExpectingNoChanges(fn: () => void) {
-        this.appl.undoManager.doWithoutAbilityToUndoExpectingNoChanges(fn);
+        this.vcstate.undoManager.doWithoutAbilityToUndoExpectingNoChanges(fn);
     }
 
+    /**
+     * don't record changes made for undo
+     */
+    doWithoutAbilityToUndo(fn: () => void) {
+        this.vcstate.undoManager.doWithoutAbilityToUndo(fn);
+    }
+
+    /**
+     * record changes made for undo
+     */
     undoableAction(fn: () => void, typ?: TypeOfUndoAction) {
-        this.appl.undoManager.undoableAction(fn, typ || TypeOfUndoAction.StartNewAction);
+        this.vcstate.undoManager.undoableAction(fn, typ || TypeOfUndoAction.StartNewAction);
     }
 
+    /**
+     * schedule event to be sent
+     */
     scheduleScriptEventSend(d: EventDetails) {
         return VpcPresenterEvents.scheduleScriptMsg(this.ctrller, this, d);
     }
 
+    /**
+     * get the UI512 app for the Presenter
+     */
     UI512App() {
         return this.ctrller.app;
     }
 
+    /**
+     * get the Presenter
+     */
     getPresenter() {
         return this.ctrller;
     }
 
+    /**
+     * a way to call a function asynchronously and get the error handling and typical callstack
+     * the function will be called soon via onIdle
+     */
     placeCallbackInQueue(cb: () => void) {
         return this.ctrller.placeCallbackInQueue(cb);
     }
+
+    /**
+     * get bounds of the UI512Presenter
+     */
     bounds() {
         return this.ctrller.bounds;
     }
+
+    /**
+     * get user-bounds of the UI512Presenter
+     */
     userBounds() {
         return this.ctrller.userBounds;
     }
+
+    /**
+     * get current card number
+     */
     getCurrentCardNum() {
         return this.ctrller.getCurrentCardNum();
     }
+
+    /**
+     * go to a card
+     */
     setCurrentCardNum(pos: OrdinalOrPosition) {
         return this.ctrller.setCurrentCardNum(pos);
     }
+
+    /**
+     * get the current tool
+     */
     getTool() {
         return this.ctrller.getTool();
     }
+
+    /**
+     * set the current tool
+     */
     setTool(n: VpcTool) {
         return this.ctrller.setTool(n);
     }
-    setNonModalDialog(frm: O<UI512CompBase>) {
-        return this.ctrller.lyrNonModalDlgHolder.setNonModalDialog(frm);
+
+    /**
+     * show a non-modal form, closing any other active form
+     */
+    setNonModalDialog(form: O<UI512CompBase>) {
+        return this.ctrller.lyrNonModalDlgHolder.setNonModalDialog(form);
     }
+
+    /**
+     * get the currently focused vel
+     */
     getCurrentFocusVelField() {
         return this.ctrller.getSelectedFieldVel();
     }
+
+    /**
+     * set the currently focused element
+     */
     setCurrentFocus(s: O<string>) {
         return this.ctrller.setCurrentFocus(s);
     }
+
+    /**
+     * get the currently focused element, either an element of the stack or part of vpc ui
+     */
     getCurrentFocus() {
         return this.ctrller.getCurrentFocus();
     }
-    performMenuAction(s: string) {
-        return this.ctrller.performMenuAction(s);
-    }
+
+    /**
+     * flush queue of paint actions
+     */
     commitSimulatedClicks(queue: UI512PaintDispatch[]) {
         return this.ctrller.lyrPaintRender.commitSimulatedClicks(queue);
     }
+
+    /**
+     * perform a menu action.
+     * might not be synchronous; the menu action could show a modal dialog
+     */
+    performMenuAction(s: string) {
+        return this.ctrller.performMenuAction(s);
+    }
+
+    /**
+     * cause VPC UI to be redrawn
+     */
     causeUIRedraw() {
         return this.ctrller.lyrModelRender.uiRedrawNeeded();
     }
+
+    /**
+     * cause VPC UI and also every vel to be redrawn
+     */
     causeFullRedraw() {
         return this.ctrller.lyrModelRender.fullRedrawNeeded();
     }
 
+    /**
+     * get top code execution object
+     */
+    getCodeExec(): VpcExecTop {
+        return this.vcstate.runtime.codeExec;
+    }
+
+    /**
+     * get "outside world" interface
+     */
     getOutside(): OutsideWorldReadWrite {
-        return this.appl.runtime.outside;
+        return this.vcstate.runtime.outside;
     }
 
-    getCodeExec(): CodeExecTop {
-        return this.appl.runtime.codeExec;
-    }
-
+    /**
+     * releases memory by nulling out everything owned by the class
+     */
     destroy(): void {
-        this.appl.appli = undefined as any; /* destroy() */
-        this.appl.model.destroy();
-        this.appl.model = undefined as any; /* destroy() */
-        this.appl.runtime.destroy();
-        this.appl.runtime = undefined as any; /* destroy() */
-        this.appl.undoManager = undefined as any; /* destroy() */
-        this.appl = undefined as any; /* destroy() */
+        this.vcstate.vci = undefined as any; /* destroy() */
+        this.vcstate.model.destroy();
+        this.vcstate.model = undefined as any; /* destroy() */
+        this.vcstate.runtime.destroy();
+        this.vcstate.runtime = undefined as any; /* destroy() */
+        this.vcstate.undoManager = undefined as any; /* destroy() */
+        this.vcstate = undefined as any; /* destroy() */
         this.ctrller = undefined as any; /* destroy() */
     }
 }

@@ -1,16 +1,16 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512ElementsBase.js';
+/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { EventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcPaintRender } from '../../vpcui/modelrender/vpcPaintRender.js';
 /* auto */ import { VpcModelRender } from '../../vpcui/modelrender/vpcModelRender.js';
 
-export abstract class VpcAppUIToolResponseBase {
+export abstract class VpcAppUIToolBase {
     isVpcAppUIToolResponseBase = true;
-    appli: VpcStateInterface;
+    vci: VpcStateInterface;
     cbModelRender: () => VpcModelRender;
     cbPaintRender: () => VpcPaintRender;
     cbScheduleScriptEventSend: (d: EventDetails) => void;
@@ -26,7 +26,7 @@ export abstract class VpcAppUIToolResponseBase {
     onDeleteSelection() {}
 }
 
-export class VpcAppUIToolNyi extends VpcAppUIToolResponseBase {
+export class VpcAppUIToolNyi extends VpcAppUIToolBase {
     respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {}
 
     respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {}

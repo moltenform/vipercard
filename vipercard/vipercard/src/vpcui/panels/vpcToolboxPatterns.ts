@@ -1,28 +1,38 @@
 
-/* auto */ import { assertEq } from '../../ui512/utils/utilsUI512.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
-export class PatternsToolbox extends UI512CompToolbox {
-    // instead of hiliting the current item, draw a box around it
+/**
+ * a tool palette showing the available fill patterns
+ */
+export class VpcToolboxPatterns extends UI512CompToolbox {
     compositeType = 'toolbox_patterns';
-    borders: UI512ElButton[] = [];
+    hiliteSelected: UI512ElButton[] = [];
     createSpecific(app: UI512Application) {
         super.createSpecific(app);
         let grp = app.getGroup(this.grpId);
         for (let i = 0; i < 4; i++) {
-            this.borders[i] = this.genBtn(app, grp, 'selectwithbox' + i);
-            this.borders[i].set('autohighlight', false);
+            /* create elements for the hilite */
+            this.hiliteSelected[i] = this.genBtn(app, grp, 'selection' + i);
+            this.hiliteSelected[i].set('autohighlight', false);
         }
 
-        let choiceblack = grp.getEl(this.getElId('choice##pattern105'));
-        choiceblack.set('iconadjustwidth', 17 - 32);
-        choiceblack.set('iconadjustheight', 12 - 32);
+        /* adjust the icon size for black */
+        let choiceBlack = grp.getEl(this.getElId('choice##pattern105'));
+        choiceBlack.set('iconadjustwidth', 17 - 32);
+        choiceBlack.set('iconadjustheight', 12 - 32);
     }
 
+    /**
+     * override the refreshHighlight method,
+     * instead of inverting colors of the selected tool,
+     * draw a box around it
+     */
     protected refreshHighlight(app: UI512Application) {
+        const shrink = 2;
         let grp = app.getGroup(this.grpId);
         let lookfor = this.whichChosen;
         for (let item of this.items) {
@@ -31,28 +41,31 @@ export class PatternsToolbox extends UI512CompToolbox {
             el.set('highlightactive', false);
             el.set('autohighlight', item[0] !== lookfor);
             if (item[0] === lookfor) {
-                let shrink = 2;
-                let subr = [el.x, el.y, el.w - 2, el.h - 2];
-                if (this.borders.length) {
-                    this.borders[0].setDimensions(subr[0], subr[1], subr[2], 2);
-                    this.borders[1].setDimensions(subr[0], subr[1], 2, subr[3]);
-                    this.borders[2].setDimensions(subr[0] + subr[2], subr[1], 2, subr[3]);
-                    this.borders[3].setDimensions(subr[0], subr[1] + subr[3], subr[2], 2);
+                let subr = [el.x, el.y, el.w - shrink, el.h - shrink];
+                if (this.hiliteSelected.length) {
+                    this.hiliteSelected[0].setDimensions(subr[0], subr[1], subr[2], 2);
+                    this.hiliteSelected[1].setDimensions(subr[0], subr[1], 2, subr[3]);
+                    this.hiliteSelected[2].setDimensions(subr[0] + subr[2], subr[1], 2, subr[3]);
+                    this.hiliteSelected[3].setDimensions(subr[0], subr[1] + subr[3], subr[2], 2);
                 }
             }
         }
     }
 
-    static layout(toolspatterns: PatternsToolbox, appli: VpcStateInterface) {
-        toolspatterns.iconH = ToolboxDims.IconH;
-        toolspatterns.widthOfIcon = (id: string) => {
+    /**
+     * initialize the layout
+     */
+    static layout(toolsPatterns: VpcToolboxPatterns, vci: VpcStateInterface) {
+        toolsPatterns.iconH = ToolboxDims.IconH;
+        toolsPatterns.widthOfIcon = (id: string) => {
             return ToolboxDims.PatternsW;
         };
 
-        toolspatterns.logicalWidth =
+        toolsPatterns.logicalHeight = 1;
+        toolsPatterns.logicalWidth =
             ToolboxDims.PatternsPerRow * ToolboxDims.PatternsW - (ToolboxDims.PatternsPerRow - 1);
-        toolspatterns.logicalHeight = 1;
-        toolspatterns.items = [
+
+        toolsPatterns.items = [
             ['pattern100', 76],
             ['pattern148', 74],
             ['pattern101', 36],
@@ -102,15 +115,19 @@ export class PatternsToolbox extends UI512CompToolbox {
             ['pattern146', 88],
             ['pattern105', 77]
         ];
-        assertEq(48, toolspatterns.items.length, '6x|');
-        toolspatterns.hasCloseBtn = false;
-        toolspatterns.create(appli.getPresenter(), appli.UI512App());
-        toolspatterns.setWhich(appli.UI512App(), appli.getOption_s('currentPattern'));
-        toolspatterns.logicalHeight = ToolboxDims.ToolbarHeight * 3;
-        return [toolspatterns.x, toolspatterns.y];
+
+        assertEq(48, toolsPatterns.items.length, '6x|');
+        toolsPatterns.hasCloseBtn = false;
+        toolsPatterns.create(vci.getPresenter(), vci.UI512App());
+        toolsPatterns.setWhich(vci.UI512App(), vci.getOptionS('currentPattern'));
+        toolsPatterns.logicalHeight = ToolboxDims.ToolbarHeight * 3;
+        return [toolsPatterns.x, toolsPatterns.y];
     }
 }
 
+/**
+ * constants for tool dimensions
+ */
 export enum ToolboxDims {
     IconH = 24,
     MainW = 24,

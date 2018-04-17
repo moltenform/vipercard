@@ -25,6 +25,30 @@ export function isTkType(tk: ChvIToken, ctr: { new (...args: any[]): any }) {
 export type TypeGreaterLessThanEqual = '=' | '==' | '<' | '>' | '<=' | '>=';
 
 /**
+ * a plain-JS object from the parser, the CST
+ */
+export type VpcParsed = any;
+
+/**
+ * create an object cloning the token,
+ * a test will verify that no properties were missed
+ */
+function cloneToken(tk: ChvIToken): ChvIToken {
+    return {
+        image: tk.image,
+        startOffset: tk.startOffset,
+        startLine: tk.startLine,
+        startColumn: tk.startColumn,
+        endOffset: tk.endOffset,
+        endLine: tk.endLine,
+        endColumn: tk.endColumn,
+        isInsertedInRecovery: tk.isInsertedInRecovery,
+        tokenType: tk.tokenType,
+        tokenClassName: tk.tokenClassName
+    };
+}
+
+/**
  * when re-writing syntax, sometimes we need to construct a token, and make it
  * look as if it had come from the lexer.
  * use this class to build a fake token based on a real token
@@ -104,25 +128,6 @@ export class BuildFakeTokens {
         cloned.endOffset = cloned.startOffset + image.length;
         return cloned;
     }
-}
-
-/**
- * create an object cloning the token,
- * a test will verify that no properties were missed
- */
-function cloneToken(tk: ChvIToken): ChvIToken {
-    return {
-        image: tk.image,
-        startOffset: tk.startOffset,
-        startLine: tk.startLine,
-        startColumn: tk.startColumn,
-        endOffset: tk.endOffset,
-        endLine: tk.endLine,
-        endColumn: tk.endColumn,
-        isInsertedInRecovery: tk.isInsertedInRecovery,
-        tokenType: tk.tokenType,
-        tokenClassName: tk.tokenClassName
-    };
 }
 
 /**

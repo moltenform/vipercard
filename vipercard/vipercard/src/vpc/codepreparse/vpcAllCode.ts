@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, makeVpcScriptErr, markUI512Err } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject, MapKeyToObjectCanSet, Util512, ValHolder, slength } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { MapKeyToObject, MapKeyToObjectCanSet, Util512, ValHolder, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, VpcScriptErrorBase, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor.js';
@@ -62,10 +62,10 @@ Part 2: execution
     Code execution walks line-by-line through the list, running one line at a time
     It checks the type of the line:
         If there is no expression to be parsed, run the line and continue (such as onMouseUp or end repeat)
-        Else if there is an expression to be parsed, see if it is in the _VpcParsingCache_, and use that if possible
+        Else if there is an expression to be parsed, see if it is in the _VpcCacheParsedLines_, and use that if possible
         Otherwise, run the parser
             (we run the chevrotain parser at runtime right when the code is being executed)
-            the parser creates a CST object, save the results to the _VpcParsingCache_
+            the parser creates a CST object, save the results to the _VpcCacheParsedLines_
         Use the _visitor_ class to recurse through the CST object and evaluate the result
     Check how long we've been running the script, so that we're not stuck in a tight loop. if it's been too long,
         save the instruction offset and all state

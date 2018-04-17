@@ -1,11 +1,11 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { RenderTextArgs } from '../../ui512/draw/ui512DrawTextParams.js';
+/* auto */ import { DrawTextArgs } from '../../ui512/draw/ui512DrawTextArgs.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 
 export class TestDrawUI512Text extends UI512TestBase {
@@ -65,7 +65,7 @@ export class TestDrawUI512Text extends UI512TestBase {
             complete.complete = !!drawText.drawStringIntoBox(
                 this.getFormattedText(list, true),
                 canvas,
-                new RenderTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5)
+                new DrawTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5)
             );
         };
 
@@ -99,7 +99,7 @@ export class TestDrawUI512Text extends UI512TestBase {
             complete.complete = !!drawText.drawStringIntoBox(
                 this.getFormattedText(list, true),
                 canvas,
-                new RenderTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5)
+                new DrawTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5)
             );
         };
 
@@ -124,7 +124,7 @@ export class TestDrawUI512Text extends UI512TestBase {
             complete.complete = !!drawText.drawStringIntoBox(
                 this.getFormattedText(list, false),
                 canvas,
-                new RenderTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5, true, true, true)
+                new DrawTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5, true, true, true)
             );
         };
 
@@ -144,14 +144,14 @@ export class TestDrawUI512Text extends UI512TestBase {
         const imheight = 200;
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            let draws = (s: string, args: RenderTextArgs) => {
+            let draws = (s: string, args: DrawTextArgs) => {
                 canvas.fillRect(args.boxX, args.boxY, args.boxW, args.boxH, 0, 0, imwidth, imheight, '#dddddd');
                 complete.and_b(!!drawText.drawStringIntoBox(s, canvas, args));
             };
 
             let margin = 10;
             for (let i = 0; i < 6; i++) {
-                let args = new RenderTextArgs(margin + i * (margin + 100), margin, 100, 200, false, false, true);
+                let args = new DrawTextArgs(margin + i * (margin + 100), margin, 100, 200, false, false, true);
                 let s = '';
                 if (i === 0) {
                     /* consecutive newlines */

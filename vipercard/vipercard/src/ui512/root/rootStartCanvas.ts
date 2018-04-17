@@ -1,9 +1,9 @@
 
 /* auto */ import { assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, setRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, setRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { ScreenConsts, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512FullRoot } from '../../ui512/root/rootUI512.js';
+/* auto */ import { FullRootUI512 } from '../../ui512/root/rootUI512.js';
 
 let mainVPCStartCanvasStarted = false;
 
@@ -23,7 +23,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
     };
 
     let browserOSInfo = Util512.getBrowserOS(window.navigator.userAgent);
-    let root = new UI512FullRoot();
+    let root = new FullRootUI512();
     let gly: any = fnMakeGolly(gollyParams);
     gly.desiredFrameTime = 60;
     root.init(gly.domElement);
@@ -132,7 +132,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
     mainOnResize(root, gly);
 }
 
-function mainOnResize(root: UI512FullRoot, gly: any) {
+function mainOnResize(root: FullRootUI512, gly: any) {
     // on high-dpi screens, automatically show bigger pixels, with no blurring
 
     let availW = window.innerWidth;

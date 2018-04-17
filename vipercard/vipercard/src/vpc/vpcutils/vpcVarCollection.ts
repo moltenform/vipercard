@@ -1,6 +1,6 @@
 
 /* auto */ import { checkThrow, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObjectCanSet, Util512 } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { MapKeyToObjectCanSet, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 
 /**

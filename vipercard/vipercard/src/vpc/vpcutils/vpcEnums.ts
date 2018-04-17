@@ -1,6 +1,6 @@
 
 /* auto */ import { makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 

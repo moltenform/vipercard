@@ -1,7 +1,7 @@
 
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512CompStdDialogType } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { TestDrawUI512Composites, UI512TestCompositesPresenter } from '../../test/ui512/testUI512Composites.js';

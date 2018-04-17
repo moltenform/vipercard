@@ -1,11 +1,11 @@
 
-/* auto */ import { cast, getRoot } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPattern.js';
-/* auto */ import { UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPaint.js';
+/* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
+/* auto */ import { UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPainter.js';
 /* auto */ import { IconInfo } from '../../ui512/draw/ui512DrawIconClasses.js';
-/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIcon.js';
-/* auto */ import { GridLayout } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512IconManager } from '../../ui512/draw/ui512DrawIconManager.js';
+/* auto */ import { GridLayout } from '../../ui512/elements/ui512ElementApp.js';
 
 export class FloodFillTest {
     readonly columns = [true, true, true, true, true];

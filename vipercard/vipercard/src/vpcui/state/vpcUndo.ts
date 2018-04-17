@@ -1,72 +1,98 @@
 
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEqWarn, isString } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { checkThrowEq, isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ElementObserver, ElementObserverVal } from '../../ui512/elements/ui512ElementsGettable.js';
+/* auto */ import { ElementObserver, ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { UndoableActionCreateOrDelVelement } from '../../vpcui/state/vpcRawCreate.js';
-/* auto */ import { VpcSerialization } from '../../vpcui/state/vpcStateSerialize.js';
+/* auto */ import { UndoableActionCreateOrDelVel } from '../../vpcui/state/vpcCreateOrDelVel.js';
+/* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
 
+/**
+ * we put undoable options into _ProductOpts_, and non-undoable options into _VpcRuntimeOpts_
+ *
+ * trade-off between how much state is recorded for undo --
+ * for example, when you choose a different tool, should this be undoable?
+ *
+ * 1) if many options are undoable:
+ *      you have to be very careful after hitting Undo() a few times,
+ *      because if you accidentally change the state, you'll lose the ability to Redo()
+ *
+ * 2) if few options are undoable:
+ *      then it would resolve this, it would but safer to hit Undo() a few times
+ *      and, we could 'associate' commonly-used state even if it couldn't be
+ *      directly undone. for example, the current tool could be attached to the
+ *      undo state, so you could see the context when Undo()ing through history
+ *
+ * we've decided to use approach 1) and make most options undoable.
+ * testing using with both approaches, approach 2 was frustrating because
+ * you could not see the context of what you were changing (which object was selected,
+ * or which script you were editing, etc.)
+ * you might need to hit undo() a few more times than you thought, but there is clarity.
+ * if you need to go back between different versions, Save As can be used as a workaround
+ */
+
+/**
+ * interface for undoable actions
+ *
+ * this is essentially the Command Pattern
+ */
 export interface UndoableAction {
-    do(appli: VpcStateInterface): void;
-    undo(appli: VpcStateInterface): void;
+    do(vci: VpcStateInterface): void;
+    undo(vci: VpcStateInterface): void;
 }
 
-export class UndoableActionCreateVel extends UndoableActionCreateOrDelVelement implements UndoableAction {
+/**
+ * an action creating a vel, thin wrapper around UndoableActionCreateOrDelVel
+ */
+export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implements UndoableAction {
     isUndoableActionCreateVel = true;
-    constructor(id: string, parent_id: string, type: VpcElType, insertIndex = -1 /* default to add-to-end */) {
-        super(id, parent_id, type, insertIndex);
+    constructor(id: string, parentId: string, type: VpcElType, insertIndex = -1 /* default to add-to-end */) {
+        super(id, parentId, type, insertIndex);
     }
 
-    do(appli: VpcStateInterface) {
-        checkThrow(
-            !appli.getCodeExec().isCodeRunning(),
-            "8(|currently can't add or remove an element while code is running"
-        );
-        this.create(appli);
+    /**
+     * create the vel
+     */
+    do(vci: VpcStateInterface) {
+        this.create(vci);
     }
 
-    undo(appli: VpcStateInterface) {
-        checkThrow(
-            !appli.getCodeExec().isCodeRunning(),
-            "8&|currently can't add or remove an element while code is running"
-        );
-        this.remove(appli);
+    /**
+     * un-create the vel
+     */
+    undo(vci: VpcStateInterface) {
+        this.remove(vci);
     }
 }
 
-export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement implements UndoableAction {
+/**
+ * an action removing a vel
+ * stores the removed vel in a string
+ */
+export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implements UndoableAction {
     isUndoableActionDeleteVel = true;
-    data = '';
-    childcount: number;
-    constructor(vel: VpcElBase, appli: VpcStateInterface) {
+    storedVelData = '';
+    constructor(vel: VpcElBase, vci: VpcStateInterface) {
         super(vel.id, vel.parentId, vel.getType(), -1);
-        UndoableActionDeleteVel.checkIfCanDelete(vel, appli);
-        let velAsCard = vel as VpcElCard;
-        if (velAsCard && velAsCard.isVpcElCard && velAsCard.parts.length > 0) {
-            throw makeVpcScriptErr('6U|To delete a card, first delete all of its parts.');
-        }
-
-        this.childcount = 0;
-        for (let arr of VpcModelTop.getChildArrays(vel)) {
-            this.childcount += arr.length;
-        }
-
-        this.insertindex = this.determineIndexInAr(vel, appli);
-        this.data = new VpcSerialization().serializeVelCompressed(appli, vel, this.insertindex);
+        UndoableActionDeleteVel.checkIfCanDelete(vel, vci);
+        this.insertIndex = this.determineIndexInAr(vel, vci);
+        this.storedVelData = new VpcStateSerialize().serializeVelCompressed(vci, vel, this.insertIndex);
     }
 
-    static checkIfCanDelete(vel: VpcElBase, appli: VpcStateInterface) {
-        let currentCard = appli.getModel().getByIdUntyped(appli.getModel().productOpts.getS('currentCardId'));
+    /**
+     * can this vel be deleted?
+     */
+    static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
+        let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
         let velAsCard = vel as VpcElCard;
         let velAsBg = vel as VpcElBg;
-        assertTrue(!!appli.getModel().findByIdUntyped(vel.id), "6Z|deleting element that doesn't exist?", vel.id);
+        assertTrue(!!vci.getModel().findByIdUntyped(vel.id), "6Z|deleting element that doesn't exist?", vel.id);
         if (
             vel.getType() === VpcElType.Stack ||
             vel.getType() === VpcElType.Product ||
@@ -74,49 +100,51 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVelement i
         ) {
             throw makeVpcScriptErr('6Y|Cannot delete this type of element');
         } else if (velAsCard && velAsCard.isVpcElCard) {
-            let ar = UndoableActionCreateOrDelVelement.getparentarray(vel.parentId, appli, vel.getType());
+            let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
             checkThrow(ar.length > 1, '8%|Cannot delete the only card of a stack');
         } else if (vel.id === currentCard.id) {
             throw makeVpcScriptErr('6X|Cannot delete the current card');
         } else if (vel.id === currentCard.parentId) {
             throw makeVpcScriptErr('6W|Cannot delete the current background');
-        } else if (velAsBg && velAsBg.isVpcElBg && velAsBg.cards.length > 0) {
-            throw makeVpcScriptErr('6V|The only way to delete a bg is to delete all of its cards.');
         }
+
+        let childCount = 0;
+        for (let arr of VpcModelTop.getChildArrays(vel)) {
+            /* I used to automatically delete the children here in this loop,
+            but it is better overall to enforce that all children must be separately deleted before deleting a parent */
+            childCount += arr.length;
+        }
+
+        checkThrowEq(0, childCount, `you must delete all children before deleting this object`);
     }
 
-    do(appli: VpcStateInterface) {
-        checkThrow(
-            !appli.getCodeExec().isCodeRunning(),
-            "8$|currently can't add or remove an element while code is running"
-        );
-        // I used to automatically delete the children here in this loop.
-        // more convienient because you can just say 'delete card' w/o deleting children first.
-        // but if I did that, they wouldn't be registered by onesJustDeleted
-        assertEqWarn(0, this.childcount, '6T|');
-        this.remove(appli);
+    /**
+     * remove the vel
+     */
+    do(vci: VpcStateInterface) {
+        this.remove(vci);
     }
 
-    undo(appli: VpcStateInterface) {
-        let readded = new VpcSerialization().deserializeVelCompressed(appli, this.data);
-        appli.rawRevive(readded);
+    /**
+     * revive and re-add the vel
+     */
+    undo(vci: VpcStateInterface) {
+        checkThrow(!vci.getCodeExec().isCodeRunning(), "8$|currently can't do this while code is running");
+
+        let vel = new VpcStateSerialize().deserializeVelCompressed(vci, this.storedVelData);
+        vci.rawRevive(vel);
     }
 }
 
+/**
+ * records all alterations made to vel properties
+ */
 class UndoableActionModifyVelement implements UndoableAction {
     velId: string;
     propName: string;
     prevVal: ElementObserverVal;
     newVal: ElementObserverVal;
     constructor(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
-        if (prevVal instanceof FormattedText) {
-            prevVal.lock();
-        }
-
-        if (newVal instanceof FormattedText) {
-            newVal.lock();
-        }
-
         if (isString(prevVal) && propName !== 'paint') {
             if (isString(newVal)) {
                 prevVal = '$' + UI512Compress.compressString(prevVal.toString());
@@ -124,10 +152,12 @@ class UndoableActionModifyVelement implements UndoableAction {
             } else {
                 throw makeVpcInternalErr('both must be strings ' + propName + ' ' + velId);
             }
-        } else if (prevVal instanceof FormattedText) {
-            if (newVal instanceof FormattedText) {
-                prevVal = '@' + UI512Compress.compressString(prevVal.toSerialized());
-                newVal = '@' + UI512Compress.compressString(newVal.toSerialized());
+        } else if ((prevVal as FormattedText).isFormattedText) {
+            if ((newVal as FormattedText).isFormattedText) {
+                (prevVal as FormattedText).lock();
+                (newVal as FormattedText).lock();
+                prevVal = '@' + UI512Compress.compressString((prevVal as FormattedText).toSerialized());
+                newVal = '@' + UI512Compress.compressString((newVal as FormattedText).toSerialized());
             } else {
                 throw makeVpcInternalErr('both must be FormattedText ' + propName + ' ' + velId);
             }
@@ -139,8 +169,11 @@ class UndoableActionModifyVelement implements UndoableAction {
         this.newVal = newVal;
     }
 
-    do(appli: VpcStateInterface) {
-        let el = appli.getModel().getByIdUntyped(this.velId);
+    /**
+     * set the vel property from prevVal to newVal
+     */
+    do(vci: VpcStateInterface) {
+        let el = vci.getModel().getByIdUntyped(this.velId);
         let newVal = this.newVal;
         if (typeof newVal === 'string' && newVal.charAt(0) === '$') {
             newVal = UI512Compress.decompressString(newVal.substr(1));
@@ -150,14 +183,17 @@ class UndoableActionModifyVelement implements UndoableAction {
         }
 
         if (this.propName === 'currentTool' && typeof newVal === 'number') {
-            appli.setTool(newVal);
+            vci.setTool(newVal);
         } else {
             el.set(this.propName, newVal);
         }
     }
 
-    undo(appli: VpcStateInterface) {
-        let el = appli.getModel().getByIdUntyped(this.velId);
+    /**
+     * set the vel property back to prevVal
+     */
+    undo(vci: VpcStateInterface) {
+        let el = vci.getModel().getByIdUntyped(this.velId);
         let prevVal = this.prevVal;
         if (typeof prevVal === 'string' && prevVal.charAt(0) === '$') {
             prevVal = UI512Compress.decompressString(prevVal.substr(1));
@@ -167,27 +203,36 @@ class UndoableActionModifyVelement implements UndoableAction {
         }
 
         if (this.propName === 'currentTool' && typeof prevVal === 'number') {
-            appli.setTool(prevVal);
+            vci.setTool(prevVal);
         } else {
             el.set(this.propName, prevVal);
         }
     }
 }
 
+/**
+ * a set of undoable changes,
+ * when the user hits "Undo" all changes in this set will be undone at once
+ */
 class UndoableChangeSet {
     stateId: string;
     protected list: UndoableAction[] = [];
-
     constructor(public readonly type: TypeOfUndoAction) {
         this.stateId = 'stateId' + Math.random();
     }
 
+    /**
+     * add an action to the list
+     */
     notifyAction(action: UndoableAction) {
         this.list.push(action);
     }
 
+    /**
+     * record an action and add it to the list
+     */
     notifyPropChange(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
-        // ignore selection and scroll changes.
+        /* ignore selection and scroll changes. */
         if (
             propName === 'selcaret' ||
             propName === 'selend' ||
@@ -201,34 +246,44 @@ class UndoableChangeSet {
         this.list.push(new UndoableActionModifyVelement(velId, propName, prevVal, newVal));
     }
 
+    /**
+     * does the list have content
+     */
     hasContent() {
         return this.list.length > 0;
     }
 
-    do(appli: VpcStateInterface) {
+    /**
+     * do() every action in the list, user has said to "Redo"
+     */
+    do(vci: VpcStateInterface) {
         for (let i = 0; i < this.list.length; i++) {
-            this.list[i].do(appli);
+            this.list[i].do(vci);
         }
     }
 
-    undo(appli: VpcStateInterface) {
+    /**
+     * undo() every action in the list, user has said to "Undo"
+     */
+    undo(vci: VpcStateInterface) {
         for (let i = this.list.length - 1; i >= 0; i--) {
-            this.list[i].undo(appli);
+            this.list[i].undo(vci);
         }
     }
 
+    /**
+     * join with another list
+     */
     combineWithChangelist(other: UndoableChangeSet) {
         this.stateId += other.stateId;
         this.list = this.list.concat(other.list);
     }
 }
 
-// best undo: revisions, simply rollback or roll forward, no historic state is ever dropped
-// flattened branch undo: when you are looking at a historic state and make a change, new state added to top of stack.
-// so, no historic state is ever dropped. however, can look confusing to the user.
-// classical undo: when you are looking at a historic state and make a change, everything in front is lost.
-// paradoxically, might be better add *more* things to persisted/undoable state so that when you hit undo you see exactly what you were working on.
-
+/**
+ * manage undo state
+ * can also detect when a stack has unsaved changes
+ */
 export class UndoManager implements ElementObserver {
     protected history: UndoableChangeSet[] = [];
     protected activeChangeSet: O<UndoableChangeSet>;
@@ -237,6 +292,9 @@ export class UndoManager implements ElementObserver {
     protected expectNoChanges = false;
     constructor(protected cbGetCurrentCard: () => string) {}
 
+    /**
+     * don't record changes made for undo
+     */
     doWithoutAbilityToUndo(fn: () => void) {
         try {
             this.doWithoutAbilityToUndoActive = true;
@@ -246,6 +304,9 @@ export class UndoManager implements ElementObserver {
         }
     }
 
+    /**
+     * don't record changes made for undo, and assert that no changes were made
+     */
     doWithoutAbilityToUndoExpectingNoChanges(fn: () => void) {
         try {
             this.doWithoutAbilityToUndoActive = true;
@@ -257,8 +318,12 @@ export class UndoManager implements ElementObserver {
         }
     }
 
+    /**
+     * record changes made for undo
+     */
     undoableAction(fn: () => void, type = TypeOfUndoAction.StartNewAction) {
-        // allow re-entrancy by checking if this.activeList already exists
+        /* note: use needToAddToList,
+        be aware of re-entrancy into this method */
         assertTrueWarn(!this.expectNoChanges, 'expected no changes');
         let needToAddToList = false;
         if (!this.activeChangeSet) {
@@ -270,25 +335,30 @@ export class UndoManager implements ElementObserver {
             fn();
         } finally {
             if (needToAddToList) {
-                this.pushUndoableChangeList(this.activeChangeSet);
+                this.pushUndoableChanges(this.activeChangeSet);
                 this.activeChangeSet = undefined;
             }
         }
     }
 
-    protected pushUndoableChangeList(list: UndoableChangeSet) {
+    /**
+     * record changes
+     */
+    protected pushUndoableChanges(list: UndoableChangeSet) {
         assertTrueWarn(!this.expectNoChanges, 'expected no changes');
         if (this.doWithoutAbilityToUndoActive) {
+            /* we've been told not to record any changes */
             return;
         }
 
         if (!list.hasContent()) {
-            // do nothing if no undoable events were recorded.
-            // important because if user has been running undo() we would lose their ability to redo()
+            /* do nothing if no undoable events were recorded. */
+            /* important because if user has been running undo() we would lose their ability to redo() */
             return;
         }
 
         if (this.history.length <= 0) {
+            /* adding first entry to list */
             this.history.push(list);
             this.pos = this.history.length - 1;
         } else if (this.pos === this.history.length - 1) {
@@ -296,59 +366,77 @@ export class UndoManager implements ElementObserver {
                 list.type === TypeOfUndoAction.StartReusableAction &&
                 this.history[this.pos].type === TypeOfUndoAction.StartReusableAction
             ) {
-                // if latest action is also StartReusableAction, glue it together
+                /* if latest action is also StartReusableAction, glue it together
+
+                it seems more intuitive if all modifications cause by a script are wrapped together into
+                one undoable block, even though the script is run in separate timeslices.
+                without this coalescing of undo events, user would have to hit Undo multiple times for no apparent reason */
                 this.history[this.pos].combineWithChangelist(list);
             } else {
                 this.history.push(list);
                 this.pos = this.history.length - 1;
             }
         } else {
-            // kill everything after this point!
+            /* user changed some state when they had gone back in time with Undo() */
+            /* kill everything after this point! */
             this.history.splice(this.pos + 1, this.history.length, list);
             this.pos = this.history.length - 1;
         }
     }
 
-    performUndo(appli: VpcStateInterface) {
-        if (appli.getCodeExec().isCodeRunning()) {
+    /**
+     * perform undo
+     */
+    performUndo(vci: VpcStateInterface) {
+        if (vci.getCodeExec().isCodeRunning()) {
             return false;
         }
 
         assertTrue(!this.doWithoutAbilityToUndoActive, "6S|can't call this during doWithoutAbilityToUndoActive");
         assertTrue(!this.activeChangeSet, "6R|can't call this during undoable action");
         if (this.pos < 0) {
+            /* you've hit undo() so many times you're at the beginning */
             return false;
         } else {
+            /* apply the undo */
             let cmd = this.history[this.pos];
-            appli.doWithoutAbilityToUndo(() => cmd.undo(appli));
+            vci.doWithoutAbilityToUndo(() => cmd.undo(vci));
             this.pos--;
             return true;
         }
     }
 
-    performRedo(appli: VpcStateInterface) {
-        if (appli.getCodeExec().isCodeRunning()) {
+    /**
+     * perform redo
+     */
+    performRedo(vci: VpcStateInterface) {
+        if (vci.getCodeExec().isCodeRunning()) {
             return false;
         }
 
         assertTrue(!this.doWithoutAbilityToUndoActive, "6Q|can't call this during doWithoutAbilityToUndoActive");
+        assertTrue(!this.activeChangeSet, "6P|can't call this during undoable action");
         if (this.pos >= this.history.length - 1) {
+            /* you can't redo() if you are already at the most recent state */
             return false;
         } else {
-            assertTrue(!this.activeChangeSet, "6P|can't call this during undoable action");
+            /* apply the redo */
             let cmd = this.history[this.pos + 1];
-            appli.doWithoutAbilityToUndo(() => cmd.do(appli));
+            vci.doWithoutAbilityToUndo(() => cmd.do(vci));
             this.pos++;
             return true;
         }
     }
 
+    /**
+     * respond to an incoming change of state
+     */
     changeSeen(
         context: ChangeContext,
-        elid: string,
+        elId: string,
         propName: string,
-        prev: ElementObserverVal,
-        newv: ElementObserverVal
+        prevVal: ElementObserverVal,
+        newVal: ElementObserverVal
     ) {
         assertTrueWarn(!this.expectNoChanges, 'expected no changes');
         if (this.doWithoutAbilityToUndoActive) {
@@ -364,18 +452,21 @@ export class UndoManager implements ElementObserver {
         }
 
         if (this.activeChangeSet) {
-            this.activeChangeSet.notifyPropChange(elid, propName, prev, newv);
+            this.activeChangeSet.notifyPropChange(elId, propName, prevVal, newVal);
         } else {
-            assertTrueWarn(false, '6O|must be done inside an undoable block ' + elid + ' ' + propName, prev, newv);
+            assertTrueWarn(false, '6O|must be done inside an undoable block ' + elId + ' ' + propName, prevVal, newVal);
         }
     }
 
+    /**
+     * respond to an incoming change of state, a new or deleted vel
+     */
     changeSeenCreationDeletion(action: UndoableAction) {
         if (this.doWithoutAbilityToUndoActive) {
             return;
         }
 
-        if (action instanceof UndoableActionCreateOrDelVelement) {
+        if (action instanceof UndoableActionCreateOrDelVel) {
             if (this.activeChangeSet) {
                 this.activeChangeSet.notifyAction(action);
             } else {
@@ -386,13 +477,16 @@ export class UndoManager implements ElementObserver {
         }
     }
 
+    /**
+     * get state id, can be used to see if project has unsaved changes
+     */
     getCurrentStateId() {
         if (this.history.length === 0) {
-            return '(justopened)';
+            return '(justOpened)';
         } else if (this.pos !== this.history.length - 1) {
-            // if you're in the middle of undoing,
-            // intentionally say state needs to be saved before closing
-            return 'viewinghistory' + Math.random().toString();
+            /* if you're in the middle of undoing, */
+            /* this is a transient state */
+            return 'viewingHistory' + Math.random().toString();
         } else {
             return this.history[this.history.length - 1].stateId;
         }

@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';

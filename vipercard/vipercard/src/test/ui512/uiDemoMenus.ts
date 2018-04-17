@@ -1,10 +1,10 @@
 
-/* auto */ import { cast } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementsButton.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
+/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { MenuItemClickedDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuRender.js';
+/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuPositioning.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { TestDrawUI512Menus } from '../../test/ui512/testUI512MenuRender.js';

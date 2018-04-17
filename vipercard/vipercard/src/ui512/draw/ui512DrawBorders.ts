@@ -1,5 +1,5 @@
 
-/* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 
 /* go straight to these, which are passed to the Canvas context object */

@@ -1,12 +1,15 @@
 
 /* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementsApp.js';
+/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 /* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
 
-export class NavToolbox extends UI512CompToolbox {
+/**
+ * a tool palette for moving from card to card
+ */
+export class VpcToolboxNav extends UI512CompToolbox {
     compositeType = 'toolbox_nav';
     readonly geneva: string;
     constructor(id: string) {
@@ -15,10 +18,16 @@ export class NavToolbox extends UI512CompToolbox {
         this.geneva = font.toSpecString();
     }
 
-    protected refreshHighlight(app: UI512Application) {
-        // don't set the highlight or autohighlight of anything
-    }
+    /**
+     * override refreshHighlight to do nothing,
+     * don't highlight any button at all
+     */
+    protected refreshHighlight(app: UI512Application) {}
 
+    /**
+     * when a script is running, we'll show a Stop icon
+     * when a script isn't running, show the current card number
+     */
     refreshNavIcons(app: UI512Application, coderunning: boolean, cardnum: number) {
         this.setWhich(app, undefined);
         let grpnav = app.getGroup(this.grpId);
@@ -32,30 +41,33 @@ export class NavToolbox extends UI512CompToolbox {
             btnCardNumOrStop.set('iconnumber', 90);
             btnCardNumOrStop.set('labeltext', '');
             btnCardNumOrStop.set('autohighlight', true);
-            btnDupeCardOrStatus.set('iconnumber', 91); // waiting
+            btnDupeCardOrStatus.set('iconnumber', 91); /* waiting */
             btnDupeCardOrStatus.set('autohighlight', false);
-            btnMakeAnimOrStatus.set('iconnumber', 76); // white
+            btnMakeAnimOrStatus.set('iconnumber', 76); /* white */
             btnMakeAnimOrStatus.set('autohighlight', false);
         } else {
             btnCardNumOrStop.set('icongroupid', '');
             btnCardNumOrStop.set('iconnumber', -1);
             btnCardNumOrStop.set('labeltext', UI512DrawText.setFont((cardnum + 1).toString(), this.geneva));
             btnCardNumOrStop.set('autohighlight', false);
-            btnDupeCardOrStatus.set('iconnumber', 98); // dupecard
+            btnDupeCardOrStatus.set('iconnumber', 98); /* dupecard */
             btnDupeCardOrStatus.set('autohighlight', true);
-            btnMakeAnimOrStatus.set('iconnumber', 96); // anim
+            btnMakeAnimOrStatus.set('iconnumber', 96); /* anim */
             btnMakeAnimOrStatus.set('autohighlight', true);
         }
     }
 
-    static layout(toolsnav: NavToolbox, appli: VpcStateInterface) {
-        toolsnav.iconH = 24;
-        toolsnav.widthOfIcon = (id: string) => {
+    /**
+     * initialize layout
+     */
+    static layout(toolsNav: VpcToolboxNav, vci: VpcStateInterface) {
+        toolsNav.iconH = 24;
+        toolsNav.widthOfIcon = (id: string) => {
             return ToolboxDims.NavW;
         };
 
         const black = 77;
-        toolsnav.items = [
+        toolsNav.items = [
             ['cardNumOrStop', black],
             ['cardPrev', 94],
             ['cardNext', 95],
@@ -63,12 +75,12 @@ export class NavToolbox extends UI512CompToolbox {
             ['makeAnimOrStatus', black]
         ];
 
-        toolsnav.logicalWidth = toolsnav.items.length * ToolboxDims.NavW - (toolsnav.items.length - 1);
-        toolsnav.logicalHeight = 1;
-        toolsnav.hasCloseBtn = false;
-        toolsnav.create(appli.getPresenter(), appli.UI512App());
-        toolsnav.setWhich(appli.UI512App(), undefined);
-        toolsnav.logicalHeight = ToolboxDims.ToolbarHeight;
-        return [toolsnav.x, toolsnav.y];
+        toolsNav.logicalWidth = toolsNav.items.length * ToolboxDims.NavW - (toolsNav.items.length - 1);
+        toolsNav.logicalHeight = 1;
+        toolsNav.hasCloseBtn = false;
+        toolsNav.create(vci.getPresenter(), vci.UI512App());
+        toolsNav.setWhich(vci.UI512App(), undefined);
+        toolsNav.logicalHeight = ToolboxDims.ToolbarHeight;
+        return [toolsNav.x, toolsNav.y];
     }
 }

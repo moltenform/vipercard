@@ -1,17 +1,8 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utilsUI512.js';
+/* auto */ import { RenderComplete, RepeatingTimer } from '../../ui512/utils/utils512.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
-
-/**
- * clipboard for copying/pasting text
- */
-export interface ClipManagerInterface {
-    ensureReadyForPaste(milliseconds: number): void;
-    paste(useOSClipboard: boolean): void;
-    copy(s: string, useOSClipboard: boolean): boolean;
-}
 
 /**
  * in original os, you had to hold mouse down on the menus the entire time
@@ -45,6 +36,15 @@ export enum UI512EventType {
 }
 
 /**
+ * clipboard for copying/pasting text
+ */
+export interface ClipManagerInterface {
+    ensureReadyForPaste(milliseconds: number): void;
+    paste(useOSClipboard: boolean): void;
+    copy(s: string, useOSClipboard: boolean): boolean;
+}
+
+/**
  * context of change
  * e.g., changes from renderModel could hypothetically use a different value here,
  * since it's a different type of change than one coming directly from user.
@@ -70,9 +70,9 @@ export enum MouseDragStatus {
 }
 
 /**
- * a _TemporaryIgnoreEvents_ temporarily replaces all event listeners in a presenter.
+ * a _TemporarySuspendEvents_ temporarily replaces all event listeners in a presenter.
  */
-export interface TemporarilyIgnoreEventsInterface {
+export interface TemporarilySuspendEventsInterface {
     whenComplete(): void;
     shouldRestore(ms: number): boolean;
 }
@@ -98,7 +98,7 @@ export interface UI512PresenterInterface {
     needRedraw: boolean;
     inited: boolean;
     openState: MenuOpenState;
-    tmpIgnore: O<TemporarilyIgnoreEventsInterface>;
+    tmpIgnore: O<TemporarilySuspendEventsInterface>;
     importMouseTracking(other: UI512PresenterInterface): void;
     getCurrentFocus(): O<string>;
     setCurrentFocus(next: O<string>): void;

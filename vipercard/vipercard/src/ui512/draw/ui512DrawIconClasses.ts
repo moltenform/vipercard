@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
+/* auto */ import { CanvasWrapper, DrawableImage } from '../../ui512/utils/utilsDraw.js';
 
 /**
  * arguments for drawing icon into a box
@@ -73,7 +73,7 @@ export class RenderIcon {
  * each group is one .png file on the server.
  */
 export class RenderIconGroup {
-    image: any;
+    image: DrawableImage;
     loadedImage = false;
     customDims: { [key: number]: number[] } = {};
     customOffsets: { [key: number]: number[] } = {};
