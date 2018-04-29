@@ -10,6 +10,17 @@
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { TestDrawUI512Buttons } from '../../test/ui512/testUI512ElementsViewButtons.js';
 
+/**
+ * UI512DemoButtons
+ *
+ * A "demo" project showing several buttons with different properties and
+ * icons. There are vertical lines in the background to verify transparency.
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ to confirm that manually
+ * interacting with the buttons has the expected behavior
+ */
 export class UI512DemoButtons extends UI512Presenter {
     counter = 0;
     isCurrentlyResizingButton = false;
@@ -18,20 +29,20 @@ export class UI512DemoButtons extends UI512Presenter {
     drawEnabledStyle = true;
     testrunner: TestDrawUI512Buttons;
 
-    public init() {
+    init() {
         super.init();
         addDefaultListeners(this.listeners);
-        let clientrect = this.getStandardWindowBounds();
-        this.app = new UI512Application(clientrect, this);
+        let clientRect = this.getStandardWindowBounds();
+        this.app = new UI512Application(clientRect, this);
         let grp = new UI512ElGroup('grpmain');
         this.app.addGroup(grp);
         this.inited = true;
 
         this.testrunner = new TestDrawUI512Buttons();
-        this.testrunner.uicontext = true;
+        this.testrunner.uiContext = true;
         let list: UI512ElButton[] = [];
-        this.testrunner.addBackgroundButtons(this.app, grp, list, clientrect[0], clientrect[1]);
-        this.testrunner.addButtons(this.app, grp, list, clientrect[0], clientrect[1], false, false, 'btns');
+        this.testrunner.addBackgroundButtons(this.app, grp, list, clientRect[0], clientRect[1]);
+        this.testrunner.addButtons(this.app, grp, list, clientRect[0], clientRect[1], false, false, 'btns');
 
         let testBtns = ['DldImage', 'RunTest', 'Disable'];
         let layoutTestBtns = new GridLayout(710, 378, 65, 15, testBtns, [1], 5, 5);
@@ -44,7 +55,7 @@ export class UI512DemoButtons extends UI512Presenter {
         this.rebuildFieldScrollbars();
     }
 
-    private static respondMouseUp(pr: UI512DemoButtons, d: MouseUpEventDetails) {
+    protected static respondMouseUp(pr: UI512DemoButtons, d: MouseUpEventDetails) {
         if (d.button !== 0) {
             return;
         }
@@ -54,9 +65,9 @@ export class UI512DemoButtons extends UI512Presenter {
 
         console.log('clicked on ' + d.elClick.id);
         if (d.elClick.id === 'btnDldImage') {
-            pr.testrunner.runtest(true);
+            pr.testrunner.runTest(true);
         } else if (d.elClick.id === 'btnRunTest') {
-            pr.testrunner.runtest(false);
+            pr.testrunner.runTest(false);
         } else if (d.elClick.id === 'btnDisable') {
             pr.drawEnabledStyle = !pr.drawEnabledStyle;
             let grp = pr.app.getGroup('grpmain');
@@ -69,18 +80,18 @@ export class UI512DemoButtons extends UI512Presenter {
         }
     }
 
-    private static respondKeyUp(pr: UI512DemoButtons, d: KeyDownEventDetails) {
+    protected static respondKeyUp(pr: UI512DemoButtons, d: KeyDownEventDetails) {
         if (d.keyChar === 'k' && d.mods === ModifierKeys.Cmd) {
             pr.isCurrentlyResizingButton = !pr.isCurrentlyResizingButton;
             console.log('Resizing is ' + (pr.isCurrentlyResizingButton ? 'on' : 'off'));
         }
     }
 
-    private static respondMouseMove(pr: UI512DemoButtons, d: MouseMoveEventDetails) {
+    protected static respondMouseMove(pr: UI512DemoButtons, d: MouseMoveEventDetails) {
         if (pr.isCurrentlyResizingButton) {
-            let clientrect = getUI512WindowBounds();
-            let newW = d.mouseX - clientrect[0];
-            let newH = d.mouseY - clientrect[1];
+            let clientRect = getUI512WindowBounds();
+            let newW = d.mouseX - clientRect[0];
+            let newH = d.mouseY - clientRect[1];
             newW = Math.max(1, newW);
             newH = Math.max(1, newH);
 

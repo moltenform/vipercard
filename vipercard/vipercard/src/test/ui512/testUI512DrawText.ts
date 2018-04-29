@@ -1,63 +1,73 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, getRoot } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { CanvasTestParams, NullaryFn, UI512RenderAndCompareImages, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { DrawTextArgs } from '../../ui512/draw/ui512DrawTextArgs.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 
+/**
+ * TestDrawUI512Text
+ *
+ * A "demo" project showing text drawn in many fonts and alignments
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ (uncomment the line referencing _UI512DemoText_) to test combinations
+ * of styles and fonts, by clicking the buttons like Bold and Italic
+ */
 export class TestDrawUI512Text extends UI512TestBase {
-    uicontext = false;
+    uiContext = false;
     readonly margin = 1;
     tests = [
-        'callback/Text Core Fonts',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.draw1(), callback);
+        'async/Text Core Fonts',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.draw1());
         },
-        'callback/Text All Fonts',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.draw2(), callback);
+        'async/Text All Fonts',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.draw2());
         },
-        'callback/Text Wrap, align, underlign',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.draw3(), callback);
+        'async/Text Wrap, align, underlign',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.draw3());
         },
-        'callback/Text corner cases',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.draw4(), callback);
+        'async/Text corner cases',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.draw4());
         }
     ];
 
-    addFonts(listFonts: string[], sfaces: string, ssizes: string, sstyles: string) {
-        let faces = sfaces.split(',');
-        let sizes = ssizes.split(',');
-        let styles = sstyles.split(',');
+    addFonts(listFonts: string[], sFaces: string, sSizes: string, sStyles: string) {
+        let faces = sFaces.split(',');
+        let sizes = sSizes.split(',');
+        let styles = sStyles.split(',');
         for (let fnt of faces) {
             for (let style of styles) {
                 for (let sz of sizes) {
-                    let keyname = `${fnt}_${sz}_${style}`;
-                    listFonts.push(keyname);
+                    listFonts.push(`${fnt}_${sz}_${style}`);
                 }
             }
         }
     }
 
     getFormattedText(list: string[], addNewlines: boolean) {
-        let demotextformatted = '';
+        let demoTextFormatted = '';
         for (let i = 0; i < list.length; i++) {
-            let demotext = 'File Edit Tools #123 Draw! :) ^^ {omnivore}';
-            demotext += addNewlines ? '\n' : '';
-            demotextformatted += UI512DrawText.setFont(demotext, list[i]);
+            let demoText = 'File Edit Tools #123 Draw! :) ^^ {omnivore}';
+            demoText += addNewlines ? '\n' : '';
+            demoTextFormatted += UI512DrawText.setFont(demoText, list[i]);
         }
-        return demotextformatted;
+
+        return demoTextFormatted;
     }
 
-    /* these we have confirmed in the emulator as pixel-perfect */
     draw1() {
-        const imwidth = 504;
-        const imheight = 556;
+        /* these we have confirmed in an emulator as pixel-perfect */
+        const imWidth = 504;
+        const imHeight = 556;
         let list: string[] = [];
         this.addFonts(list, 'chicago,courier,geneva', '10,12,14,18,24', 'biuosdce,+biuosdce');
         let drawText = getRoot().getDrawText() as UI512DrawText;
@@ -65,7 +75,7 @@ export class TestDrawUI512Text extends UI512TestBase {
             complete.complete = !!drawText.drawStringIntoBox(
                 this.getFormattedText(list, true),
                 canvas,
-                new DrawTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5)
+                new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
             );
         };
 
@@ -73,16 +83,16 @@ export class TestDrawUI512Text extends UI512TestBase {
             'drawtext1',
             '/resources/test/drawtextexpected1.png',
             draw,
-            imwidth,
-            imheight,
-            this.uicontext
+            imWidth,
+            imHeight,
+            this.uiContext
         );
     }
 
-    /* not yet confirmed as pixel-perfect */
     draw2() {
-        const imwidth = 540;
-        const imheight = 2450;
+        /* not yet confirmed as pixel-perfect */
+        const imWidth = 540;
+        const imHeight = 2450;
         let list: string[] = [];
         this.addFonts(list, 'chicago,courier,geneva', '10,12,14,18,24', 'b+iuosdce,biu+osdce,+b+iuosdce,b+iu+osdce');
         this.addFonts(
@@ -91,6 +101,7 @@ export class TestDrawUI512Text extends UI512TestBase {
             '10,12,14,18,24',
             'biuosdce,+biuosdce,b+iuosdce,biu+osdce,+b+iuosdce,b+iu+osdce'
         );
+
         this.addFonts(list, 'helvetica', '12', 'biuosdce');
         this.addFonts(list, 'monaco', '9,12', 'biuosdce');
         this.addFonts(list, 'symbol', '12', 'biuosdce');
@@ -99,7 +110,7 @@ export class TestDrawUI512Text extends UI512TestBase {
             complete.complete = !!drawText.drawStringIntoBox(
                 this.getFormattedText(list, true),
                 canvas,
-                new DrawTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5)
+                new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
             );
         };
 
@@ -107,16 +118,16 @@ export class TestDrawUI512Text extends UI512TestBase {
             'drawtext2',
             '/resources/test/drawtextexpected2.png',
             draw,
-            imwidth,
-            imheight,
-            this.uicontext
+            imWidth,
+            imHeight,
+            this.uiContext
         );
     }
 
     draw3() {
-        /* tests wrap, halign, valign, mixsize, underline and condense+extend */
-        const imwidth = 300;
-        const imheight = 556;
+        /* test wrap, halign, valign, mixsize, underline and condense+extend */
+        const imWidth = 300;
+        const imHeight = 556;
         let list: string[] = [];
         this.addFonts(list, 'geneva', '10,24,12', 'biuosdce,b+i+uosdce,biuosd+ce,bi+uosdc+e');
         let drawText = getRoot().getDrawText() as UI512DrawText;
@@ -124,7 +135,7 @@ export class TestDrawUI512Text extends UI512TestBase {
             complete.complete = !!drawText.drawStringIntoBox(
                 this.getFormattedText(list, false),
                 canvas,
-                new DrawTextArgs(this.margin, this.margin, imwidth - 5, imheight - 5, true, true, true)
+                new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5, true, true, true)
             );
         };
 
@@ -132,21 +143,21 @@ export class TestDrawUI512Text extends UI512TestBase {
             'drawtext3',
             '/resources/test/drawtextexpected3.png',
             draw,
-            imwidth,
-            imheight,
-            this.uicontext
+            imWidth,
+            imHeight,
+            this.uiContext
         );
     }
 
     draw4() {
-        /* tests corner cases */
-        const imwidth = 700;
-        const imheight = 200;
+        /* test corner cases */
+        const imWidth = 700;
+        const imHeight = 200;
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             let draws = (s: string, args: DrawTextArgs) => {
-                canvas.fillRect(args.boxX, args.boxY, args.boxW, args.boxH, 0, 0, imwidth, imheight, '#dddddd');
-                complete.and_b(!!drawText.drawStringIntoBox(s, canvas, args));
+                canvas.fillRect(args.boxX, args.boxY, args.boxW, args.boxH, 0, 0, imWidth, imHeight, '#dddddd');
+                complete.andB(!!drawText.drawStringIntoBox(s, canvas, args));
             };
 
             let margin = 10;
@@ -169,6 +180,7 @@ export class TestDrawUI512Text extends UI512TestBase {
                         'abcd\nef\n\n\ngh',
                         `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
                     );
+
                     args.boxW = 3;
                     args.wrap = true;
                 } else if (i === 3) {
@@ -177,6 +189,7 @@ export class TestDrawUI512Text extends UI512TestBase {
                         'abcd\nef\n\n\ngh',
                         `geneva_18_${textFontStylingToString(TextFontStyling.Default)}`
                     );
+
                     args.boxW = 3;
                     args.wrap = false;
                 } else if (i === 4) {
@@ -240,13 +253,13 @@ export class TestDrawUI512Text extends UI512TestBase {
             'drawtext4',
             '/resources/test/drawtextexpected4.png',
             draw,
-            imwidth,
-            imheight,
-            this.uicontext
+            imWidth,
+            imHeight,
+            this.uiContext
         );
     }
 
-    runtest(testnum: number, dldimage: boolean, callback?: NullaryFn) {
+    runTest(testnum: number, dldimage: boolean, callback?: NullaryFn) {
         let tests = [() => this.draw1(), () => this.draw2(), () => this.draw3(), () => this.draw4()];
         let testToRun = testnum === -1 ? tests : tests[testnum - 1];
         testUtilCompareCanvasWithExpected(dldimage, testToRun, callback);

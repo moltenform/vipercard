@@ -1,9 +1,9 @@
 
 /* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { CanvasTestParams, UI512RenderAndCompareImages, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
@@ -11,22 +11,26 @@
 /* auto */ import { MenuListeners } from '../../ui512/menu/ui512MenuListeners.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 
-export class UI512TestMenusPresenter extends UI512Presenter {}
-
+/**
+ * TestDrawUI512Menus
+ *
+ * A "demo" project showing a menubar.
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ (uncomment the line referencing _UI512DemoMenus_) to confirm that manually
+ * interacting with the menus has the expected behavior
+ */
 export class TestDrawUI512Menus extends UI512TestBase {
-    uicontext = false;
+    uiContext = false;
     tests = [
-        'callback/Test Drawing Menus',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.testDrawMenus(), callback);
+        'async/Test Drawing Menus',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.testDrawMenus());
         }
     ];
 
-    runtest(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawMenus());
-    }
-
-    getMenuStruct(): UI512MenuDefn[] {
+    getDefn(): UI512MenuDefn[] {
         return [
             ['mnuHeaderOS|icon:001:80:26', ['|lngPlaceholder|']],
             ['mnuHeaderFile|lngFile', ['|lngPlaceholder|']],
@@ -106,20 +110,21 @@ export class TestDrawUI512Menus extends UI512TestBase {
         testTransparency.setDimensions(bounds[0] + 100, bounds[1] + 100, 5, 1);
 
         /* add the menu */
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(pr.app);
-        MenuPositioning.buildFromArray(pr, this.getMenuStruct());
-        grpitems.getEl('mnuOptSecond').set('checkmark', true);
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(pr.app);
+        MenuPositioning.buildFromArray(pr, this.getDefn());
+        grpItems.getEl('mnuOptSecond').set('checkmark', true);
         let toDisable = ['mnuCut', 'mnuCopy', 'mnuClear', 'mnuTextStyle'];
         for (let shortId of toDisable) {
             for (let number of ['1', '2']) {
-                grpitems.getEl(shortId + number).set('enabled', false);
-                grpitems.getEl(shortId + number).set('enabledstyle', false);
+                grpItems.getEl(shortId + number).set('enabled', false);
+                grpItems.getEl(shortId + number).set('enabledstyle', false);
             }
         }
     }
 
     drawTestCase(
-        expanded: number[],
+        whichMnuExpanded: number,
+        whichItemSeled: number,
         tmpCanvas: CanvasWrapper,
         w: number,
         h: number,
@@ -127,33 +132,33 @@ export class TestDrawUI512Menus extends UI512TestBase {
         complete: RenderComplete
     ) {
         tmpCanvas.clear();
-        let testc = new UI512TestMenusPresenter();
-        testc.inited = true;
-        testc.app = new UI512Application([0, 0, w, h], testc);
-        this.addElements(testc, '(background)', testc.app.bounds);
+        let testPr = new UI512TestMenusPresenter();
+        testPr.inited = true;
+        testPr.app = new UI512Application([0, 0, w, h], testPr);
+        this.addElements(testPr, '(background)', testPr.app.bounds);
 
         /* mimic the user clicking on a menu */
-        if (expanded[0] !== -1) {
-            let menuroot = MenuPositioning.getMenuRoot(testc.app);
-            let dropdns = menuroot.getchildren(testc.app);
-            MenuListeners.setActiveMenu(testc, dropdns[expanded[0]].id);
-            menuroot.setDirty(true);
+        if (whichMnuExpanded !== -1) {
+            let menuRoot = MenuPositioning.getMenuRoot(testPr.app);
+            let dropDowns = menuRoot.getchildren(testPr.app);
+            MenuListeners.setActiveMenu(testPr, dropDowns[whichMnuExpanded].id);
+            menuRoot.setDirty(true);
 
-            if (expanded[1] !== -1) {
-                let items = dropdns[expanded[0]].getChildren(testc.app);
-                items[expanded[1]].set('highlightactive', true);
+            if (whichItemSeled !== -1) {
+                let items = dropDowns[whichMnuExpanded].getChildren(testPr.app);
+                items[whichItemSeled].set('highlightactive', true);
             }
         }
 
         /* test different clock times */
         if (i < 2) {
-            let [grpbar, grpitems] = MenuPositioning.getMenuGroups(testc.app);
-            grpbar.getEl('topClock').set('labeltext', i === 0 ? '1/1/17' : '1/18/18');
+            let [grpBar, grpItems] = MenuPositioning.getMenuGroups(testPr.app);
+            grpBar.getEl('topClock').set('labeltext', i === 0 ? '1/1/17' : '1/18/18');
         }
 
         /* don't show any borders */
-        testc.view.renderBorders = () => {};
-        testc.render(tmpCanvas, 1, complete);
+        testPr.view.renderBorders = () => {};
+        testPr.render(tmpCanvas, 1, complete);
     }
 
     testDrawMenus() {
@@ -165,6 +170,7 @@ export class TestDrawUI512Menus extends UI512TestBase {
         tmpCanvasDom.height = h;
         let tmpCanvas = new CanvasWrapper(tmpCanvasDom);
 
+        /* [which menu is open, which item is selected]  */
         const drawMenuTestCases = [
             [-1, -1],
             [0, -1],
@@ -179,10 +185,13 @@ export class TestDrawUI512Menus extends UI512TestBase {
             [6, 1]
         ];
 
+        /* draw the menubar many times, each time with a different menu open
+        or a different item selected */
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = true;
             for (let i = 0; i < drawMenuTestCases.length; i++) {
-                this.drawTestCase(drawMenuTestCases[i], tmpCanvas, w, h, i, complete);
+                let [whichMnuExpanded, whichItemSeled] = drawMenuTestCases[i];
+                this.drawTestCase(whichMnuExpanded, whichItemSeled, tmpCanvas, w, h, i, complete);
                 let dest = [0, i * h, w, h];
                 canvas.drawFromImage(
                     tmpCanvas.canvas,
@@ -200,14 +209,23 @@ export class TestDrawUI512Menus extends UI512TestBase {
             }
         };
 
-        const totalh = h * drawMenuTestCases.length;
+        const totalH = h * drawMenuTestCases.length;
         return new CanvasTestParams(
             'drawMenus',
             '/resources/test/drawmenusexpected.png',
             draw,
             w,
-            totalh,
-            this.uicontext
+            totalH,
+            this.uiContext
         );
     }
+
+    runTest(dldimage: boolean) {
+        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawMenus());
+    }
 }
+
+/**
+ * presenter, driven by tests to take a screenshot of rendered elements
+ */
+export class UI512TestMenusPresenter extends UI512Presenter {}

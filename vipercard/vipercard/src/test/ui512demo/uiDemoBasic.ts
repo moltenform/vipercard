@@ -10,6 +10,11 @@
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 
+/**
+ * UI512DemoBasic
+ *
+ * A "demo" project showing how to use UI512
+ */
 export class UI512DemoBasic extends UI512Presenter {
     timer = new RepeatingTimer(2000);
     counter = 0;
@@ -17,8 +22,8 @@ export class UI512DemoBasic extends UI512Presenter {
         super.init();
         addDefaultListeners(this.listeners);
 
-        let clientrect = getUI512WindowBounds();
-        this.app = new UI512Application(clientrect, this);
+        let clientRect = getUI512WindowBounds();
+        this.app = new UI512Application(clientRect, this);
         let grp = new UI512ElGroup('grpmain');
         this.app.addGroup(grp);
         this.inited = true;
@@ -60,7 +65,7 @@ export class UI512DemoBasic extends UI512Presenter {
         this.rebuildFieldScrollbars();
     }
 
-    private static respondMouseUp(pr: UI512DemoBasic, d: MouseUpEventDetails) {
+    protected static respondMouseUp(pr: UI512DemoBasic, d: MouseUpEventDetails) {
         if (d.button !== 0) {
             return;
         }

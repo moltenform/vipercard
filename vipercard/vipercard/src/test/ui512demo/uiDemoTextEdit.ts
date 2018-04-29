@@ -10,19 +10,29 @@
 /* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { addDefaultListeners } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
-/* auto */ import { TestDrawUI512TextEdit } from '../../test/ui512/testUI512TextEvents.js';
+/* auto */ import { TestDrawUI512TextEdit } from '../../test/ui512/testUI512TextEdit.js';
 
+/**
+ * UI512DemoTextEdit
+ *
+ * A "demo" project showing several text fields with different properties,
+ * and containing different amounts of content.
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ to confirm that manually
+ * interacting with the text fields has the expected behavior
+ */
 export class UI512DemoTextEdit extends UI512Presenter {
     test = new TestDrawUI512TextEdit();
-    public init() {
+    init() {
         super.init();
         addDefaultListeners(this.listeners);
 
-        let clientrect = this.getStandardWindowBounds();
-        this.app = new UI512Application(clientrect, this);
+        let clientRect = this.getStandardWindowBounds();
+        this.app = new UI512Application(clientRect, this);
         this.inited = true;
-        this.test.addElements(this, clientrect);
-        this.test.uicontext = true;
+        this.test.addElements(this, clientRect);
+        this.test.uiContext = true;
 
         let curX = 10;
         let grp = this.app.getGroup('grp');
@@ -30,7 +40,7 @@ export class UI512DemoTextEdit extends UI512Presenter {
         /* run this after hitting toggle scroll a couple times to make sure we're not leaking elements */
         /* i.e. if this number is continually increasing we are leaking elements somewhere */
         let testBtns = ['RunTest', 'DldImage', 'ToggleScroll', 'Count Elems', 'WhichChoice'];
-        let layoutTestBtns = new GridLayout(clientrect[0] + 10, clientrect[1] + 330, 85, 15, testBtns, [1], 5, 5);
+        let layoutTestBtns = new GridLayout(clientRect[0] + 10, clientRect[1] + 330, 85, 15, testBtns, [1], 5, 5);
         layoutTestBtns.createElems(this.app, grp, 'btn', UI512ElButton, () => {}, true, true);
 
         let testSelByLines = new UI512ElTextField('testSelByLines');
@@ -58,12 +68,12 @@ export class UI512DemoTextEdit extends UI512Presenter {
         this.rebuildFieldScrollbars();
     }
 
-    private static respondMouseUp(pr: UI512DemoTextEdit, d: MouseUpEventDetails) {
+    protected static respondMouseUp(pr: UI512DemoTextEdit, d: MouseUpEventDetails) {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-                pr.test.runtest(true);
+                pr.test.runTest(true);
             } else if (d.elClick.id === 'btnRunTest') {
-                pr.test.runtest(false);
+                pr.test.runTest(false);
             } else if (d.elClick.id === 'btnToggleScroll') {
                 pr.test.toggleScroll(pr);
             } else if (d.elClick.id === 'btnCount Elems') {
@@ -78,7 +88,7 @@ export class UI512DemoTextEdit extends UI512Presenter {
         }
     }
 
-    private static respondKeyDown(pr: UI512DemoTextEdit, d: KeyDownEventDetails) {
+    protected static respondKeyDown(pr: UI512DemoTextEdit, d: KeyDownEventDetails) {
         let el = TextSelModify.getSelectedField(pr);
         if (el && el.getB('selectbylines')) {
             return;

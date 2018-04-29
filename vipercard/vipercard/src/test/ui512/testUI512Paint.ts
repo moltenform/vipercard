@@ -1,10 +1,10 @@
 
 /* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, Util512, assertEq } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { CanvasTestParams, UI512RenderAndCompareImages, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
 /* auto */ import { UI512PainterCvCanvas, UI512PainterCvData, UI512PainterCvDataAndPatterns } from '../../ui512/draw/ui512DrawPainter.js';
@@ -18,32 +18,28 @@
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { FloodFillTest } from '../../test/ui512/testUI512PaintFlood.js';
 
+/**
+ * TestDrawUI512Paint
+ *
+ * A "demo" project showing several painted shapes.
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ (uncomment the line referencing _UI512DemoPaint_), and test drag/drop,
+ * and click Download Image to update the test
+ */
 export class TestDrawUI512Paint extends UI512TestBase {
-    uicontext = false;
+    uiContext = false;
     tests = [
-        'callback/Test Shape',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.testDrawShape(), callback);
+        'async/Test Shape',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.testDrawShape());
         },
-        'callback/Test Flood Fill',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.testDrawFloodFill(), callback);
+        'async/Test Flood Fill',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.testDrawFloodFill());
         }
     ];
-
-    runtestFloodFill(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawFloodFill());
-    }
-
-    runtestShape(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawShape());
-    }
-
-    protected drawShapes(painter: UI512Painter, w: number, h: number) {
-        painter.publicPlotEllipse(0, 0, w - 5, h - 5, clrBlack, undefined, 1);
-        painter.publicRoundRect(0, 0, w / 2, h / 2, clrBlack, clrWhite, 1);
-        painter.publicRectangle(w / 2, h / 2, w / 2 + w / 2, h / 2 + h / 2, clrBlack, undefined, 1);
-    }
 
     protected testSetPixelAndSerialize(
         app: UI512Application,
@@ -82,8 +78,8 @@ export class TestDrawUI512Paint extends UI512TestBase {
         let deserialized = worker.loadFromString(testDeserialize, serialized);
 
         /* show these on the screen */
-        let layoutshapes = new GridLayout(610, 50, w, h, [0], canvases, 5, 5);
-        layoutshapes.combinations((n, unused, whichCanvas, bnds) => {
+        let layout = new GridLayout(610, 50, w, h, [0], canvases, 5, 5);
+        layout.combinations((n, unused, whichCanvas, bnds) => {
             let el = new UI512ElCanvasPiece(`setPixelAndSerialize${n}`);
             grp.addElement(app, el);
             el.setDimensions(bnds[0], bnds[1], bnds[2], bnds[3]);
@@ -106,6 +102,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
             clrBlack,
             true
         );
+
         UI512PaintDispatch.go(pnt, mainPainter);
     }
 
@@ -125,6 +122,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
             clrBlack,
             true
         );
+
         UI512PaintDispatch.go(pnt, mainPainter);
     }
 
@@ -142,8 +140,8 @@ export class TestDrawUI512Paint extends UI512TestBase {
             UI512PaintDispatchShapes.SmearSpraycan
         ];
 
-        let layoutshapes = new GridLayout(50, 50, 90, 70, colors, types, 5, 5);
-        layoutshapes.combinations((n, color, type, bnds) => {
+        let layout = new GridLayout(50, 50, 90, 70, colors, types, 5, 5);
+        layout.combinations((n, color, type, bnds) => {
             if (color === clrWhite) {
                 this.drawBlackRectangle(mainPaint, mainPainter, bnds[0], bnds[1], bnds[2], bnds[3]);
             }
@@ -163,30 +161,36 @@ export class TestDrawUI512Paint extends UI512TestBase {
         });
     }
 
+    protected drawShapes(painter: UI512Painter, w: number, h: number) {
+        painter.publicPlotEllipse(0, 0, w - 5, h - 5, clrBlack, undefined, 1);
+        painter.publicRoundRect(0, 0, w / 2, h / 2, clrBlack, clrWhite, 1);
+        painter.publicRectangle(w / 2, h / 2, w / 2 + w / 2, h / 2 + h / 2, clrBlack, undefined, 1);
+    }
+
     protected testShapes(
         app: UI512Application,
         grp: UI512ElGroup,
         mainPaint: CanvasWrapper,
         mainPainter: UI512Painter
     ) {
-        let linecolors = [clrWhite, clrBlack, clrBlack, clrBlack];
-        let fillcolors: O<number>[] = [clrBlack, clrBlack, undefined, clrWhite];
-        let linesizes = [1, 1, 1, 5];
+        let lineColors = [clrWhite, clrBlack, clrBlack, clrBlack];
+        let fillColors: O<number>[] = [clrBlack, clrBlack, undefined, clrWhite];
+        let lineSizes = [1, 1, 1, 5];
 
         let types = [
             UI512PaintDispatchShapes.ShapeLine,
             UI512PaintDispatchShapes.ShapeRectangle,
-            UI512PaintDispatchShapes.ShapeElipse,
+            UI512PaintDispatchShapes.ShapeEllipse,
             UI512PaintDispatchShapes.ShapeRoundRect,
             UI512PaintDispatchShapes.ShapeCurve
         ];
 
-        let layoutshapes = new GridLayout(270, 50, 80, 60, Util512.range(linecolors.length), types, 5, 5);
-        layoutshapes.combinations((n, column, type, bnds) => {
-            let linecolor = linecolors[column];
-            let fillcolor = fillcolors[column];
-            let linesize = linesizes[column];
-            if (linecolor === clrWhite) {
+        let layout = new GridLayout(270, 50, 80, 60, Util512.range(lineColors.length), types, 5, 5);
+        layout.combinations((n, column, type, bnds) => {
+            let lineColor = lineColors[column];
+            let fillColor = fillColors[column];
+            let lineSize = lineSizes[column];
+            if (lineColor === clrWhite) {
                 this.drawBlackRectangle(mainPaint, mainPainter, bnds[0] - 5, bnds[1] - 5, bnds[2] + 10, bnds[3] + 10);
             }
 
@@ -194,10 +198,10 @@ export class TestDrawUI512Paint extends UI512TestBase {
                 type,
                 [],
                 [],
-                linecolor,
-                fillcolor !== undefined ? fillcolor : 0,
-                fillcolor !== undefined,
-                linesize
+                lineColor,
+                fillColor !== undefined ? fillColor : 0,
+                fillColor !== undefined,
+                lineSize
             );
             if (type === UI512PaintDispatchShapes.ShapeCurve) {
                 pnt.xPts = [bnds[0], bnds[0] + Math.floor(bnds[2] / 2), bnds[0] + bnds[2]];
@@ -230,6 +234,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
         bg.set('autohighlight', false);
         layoutPatternBg.createElems(pr.app, grp, 'bgGrid', UI512ElButton, () => {});
 
+        /* draw a 'canvaspiece' element that shows a piece of the canvas */
         let canvasMainPaint = new UI512ElCanvasPiece('canvasMainPaint');
         grp.addElement(pr.app, canvasMainPaint);
         let cvmain = CanvasWrapper.createMemoryCanvas(bounds[2], bounds[3]);
@@ -238,6 +243,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
         cvmain.clear();
         let canvasMainPainter = new UI512PainterCvCanvas(cvmain, cvmain.canvas.width, cvmain.canvas.height);
 
+        /* run tests; drawing shapes onto the canvas */
         this.testSmears(pr.app, grp, cvmain, canvasMainPainter);
         this.testShapes(pr.app, grp, cvmain, canvasMainPainter);
         this.testSetPixelAndSerialize(pr.app, grp, cvmain, canvasMainPainter);
@@ -246,7 +252,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
     }
 
     drawTestCase(
-        testnumber: number,
+        testNumber: number,
         tmpCanvas: CanvasWrapper,
         w: number,
         h: number,
@@ -254,11 +260,11 @@ export class TestDrawUI512Paint extends UI512TestBase {
         complete: RenderComplete
     ) {
         tmpCanvas.clear();
-        let testc = new UI512TestPaintPresenter();
-        testc.init();
-        testc.inited = true;
-        testc.app = new UI512Application([0, 0, w, h], testc);
-        this.addElements(testc, testc.app.bounds);
+        let testPr = new UI512TestPaintPresenter();
+        testPr.init();
+        testPr.inited = true;
+        testPr.app = new UI512Application([0, 0, w, h], testPr);
+        this.addElements(testPr, testPr.app.bounds);
         tmpCanvas.clear();
 
         if (!complete.complete) {
@@ -266,8 +272,8 @@ export class TestDrawUI512Paint extends UI512TestBase {
             return;
         }
 
-        testc.needRedraw = true;
-        testc.render(tmpCanvas, 1, complete);
+        testPr.needRedraw = true;
+        testPr.render(tmpCanvas, 1, complete);
     }
 
     testDrawShape() {
@@ -301,14 +307,14 @@ export class TestDrawUI512Paint extends UI512TestBase {
             }
         };
 
-        const totalh = h * screensToDraw;
+        const totalH = h * screensToDraw;
         return new CanvasTestParams(
             'drawpaintshape',
             '/resources/test/drawpaintshapeexpected.png',
             draw,
             w,
-            totalh,
-            this.uicontext
+            totalH,
+            this.uiContext
         );
     }
 
@@ -317,7 +323,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
         let canvasUnused = floodfilltest.start();
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             floodfilltest.floodFillTest(canvas);
-            complete.complete = floodfilltest.isdone;
+            complete.complete = floodfilltest.isDone;
         };
 
         return new CanvasTestParams(
@@ -326,20 +332,29 @@ export class TestDrawUI512Paint extends UI512TestBase {
             draw,
             floodfilltest.layout.getTotalWidth(),
             floodfilltest.layout.getTotalHeight(),
-            this.uicontext
+            this.uiContext
         );
+    }
+
+    runtestFloodFill(dldimage: boolean) {
+        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawFloodFill());
+    }
+
+    runtestShape(dldimage: boolean) {
+        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawShape());
     }
 }
 
+/**
+ * nearly-empty presenter, driven by tests to take a screenshot of rendered elements
+ */
 export class UI512TestPaintPresenter extends UI512Presenter {
     testFillRect: CanvasWrapper;
     testSetPixel: CanvasWrapper;
     testSetPixelSupportingPattern: CanvasWrapper;
     testDeserialize: CanvasWrapper;
-    public init() {
+    init() {
         super.init();
         addDefaultListeners(this.listeners);
     }
-
-    runTest() {}
 }

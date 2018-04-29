@@ -10,25 +10,35 @@
 /* auto */ import { FloodFillTest } from '../../test/ui512/testUI512PaintFlood.js';
 /* auto */ import { TestDrawUI512Paint, UI512TestPaintPresenter } from '../../test/ui512/testUI512Paint.js';
 
+/**
+ * UI512DemoPaint
+ *
+ * A "demo" project showing several painted shapes.
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_, and test drag/drop,
+ * and click Download Image to update the test
+ */
 export class UI512DemoPaint extends UI512TestPaintPresenter {
     test = new TestDrawUI512Paint();
     fltest = new FloodFillTest();
     mouseDragDropOffset: [number, number] = [0, 0];
 
-    public init() {
+    init() {
         super.init();
         addDefaultListeners(this.listeners);
 
-        let clientrect = this.getStandardWindowBounds();
-        this.app = new UI512Application(clientrect, this);
+        let clientRect = this.getStandardWindowBounds();
+        this.app = new UI512Application(clientRect, this);
         this.inited = true;
-        this.test.addElements(this, clientrect);
-        this.test.uicontext = true;
+        this.test.addElements(this, clientRect);
+        this.test.uiContext = true;
 
         let grp = this.app.getGroup('grp');
 
         let testBtns = ['RunTest', 'DldImage', 'RunTestFill', 'DldImageFill', 'TestDrag'];
-        let layoutTestBtns = new GridLayout(clientrect[0] + 10, clientrect[1] + 330, 100, 15, testBtns, [1], 5, 5);
+        let layoutTestBtns = new GridLayout(clientRect[0] + 10, clientRect[1] + 330, 100, 15, testBtns, [1], 5, 5);
         layoutTestBtns.createElems(this.app, grp, 'btn', UI512ElButton, () => {}, true, true);
 
         let elfloodtest = new UI512ElCanvasPiece('elfloodtest');
@@ -44,7 +54,7 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         this.rebuildFieldScrollbars();
     }
 
-    private static respondMouseDown(pr: UI512DemoPaint, d: MouseDownEventDetails) {
+    protected static respondMouseDown(pr: UI512DemoPaint, d: MouseDownEventDetails) {
         if (d.el && d.button === 0) {
             if (d.el.id === 'btnTestDrag') {
                 assertEq('btnTestDrag', pr.trackClickedIds[0], '1U|');
@@ -53,7 +63,7 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         }
     }
 
-    private static respondMouseUp(pr: UI512DemoPaint, d: MouseUpEventDetails) {
+    protected static respondMouseUp(pr: UI512DemoPaint, d: MouseUpEventDetails) {
         pr.isDragging = false;
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
@@ -70,8 +80,8 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         pr.mouseDragDropOffset = [0, 0];
     }
 
-    private static respondOnIdle(pr: UI512DemoPaint, d: IdleEventDetails) {
-        if (!pr.fltest.isdone) {
+    protected static respondOnIdle(pr: UI512DemoPaint, d: IdleEventDetails) {
+        if (!pr.fltest.isDone) {
             let grp = pr.app.getGroup('grp');
             let elfloodtest = cast(grp.getEl('elfloodtest'), UI512ElCanvasPiece);
             pr.fltest.floodFillTest(elfloodtest.getCanvasForWrite());

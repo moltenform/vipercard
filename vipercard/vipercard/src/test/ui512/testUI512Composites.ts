@@ -1,10 +1,10 @@
 
 /* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, assertEq } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ModifierKeys, ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CanvasTestParams, NullaryFn, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { CanvasTestParams, UI512RenderAndCompareImages, testUtilCompareCanvasWithExpected } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
@@ -19,18 +19,25 @@
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { UI512CompCodeEditor } from '../../ui512/composites/ui512CodeEditor.js';
 
+/**
+ * TestDrawUI512Composites
+ *
+ * A "demo" project showing several composites. (A composite is a
+ * group of ui512 elements that are closely related, like a dialog box).
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ (uncomment the line referencing _UI512DemoComposites_) to confirm that manually
+ * interacting with the buttons has the expected behavior
+ */
 export class TestDrawUI512Composites extends UI512TestBase {
-    uicontext = false;
+    uiContext = false;
     tests = [
-        'callback/Test Drawing Composites',
-        (callback: NullaryFn) => {
-            testUtilCompareCanvasWithExpected(false, () => this.testDrawComposites(), callback);
+        'async/Test Drawing Composites',
+        async () => {
+            await UI512RenderAndCompareImages(false, () => this.testDrawComposites());
         }
     ];
-
-    runtest(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawComposites());
-    }
 
     addElements(pr: UI512TestCompositesPresenter, bounds: number[]) {
         let grp = new UI512ElGroup('grp');
@@ -46,50 +53,18 @@ export class TestDrawUI512Composites extends UI512TestBase {
         bg.set('autohighlight', false);
 
         /* add choice groups */
-        pr.testrbExclusive.items = [['apple', 'lngApple'], ['cherry', 'lngCherry'], ['strawberry', 'lngStrawberry']];
-        pr.testrbExclusive.isExclusive = true;
-        pr.testrbExclusive.logicalWidth = 100;
-        pr.testrbExclusive.logicalHeight = 1;
-        pr.testrbExclusive.x = 50;
-        pr.testrbExclusive.y = 50;
-        pr.testrbExclusive.create(pr, pr.app);
-        pr.testrbInclusive.items = [
-            ['fries', 'lngFries'],
-            ['hamburger', 'lngHamburger'],
-            ['soda', 'lngSoda'],
-            ['hot dog', 'lngHot Dog']
-        ];
-        pr.testrbInclusive.isExclusive = false;
-        pr.testrbInclusive.logicalWidth = 100;
-        pr.testrbInclusive.logicalHeight = 1;
-        pr.testrbInclusive.x = 50;
-        pr.testrbInclusive.y = 130;
-        pr.testrbInclusive.create(pr, pr.app);
+        this.addElementsChoiceGroups(pr);
 
         /* add toolbox */
-        const iconw = 20;
-        pr.testToolbox.iconGroupId = '001';
-        pr.testToolbox.x = 50;
-        pr.testToolbox.y = 300;
-        pr.testToolbox.iconH = 22;
-        pr.testToolbox.widthOfIcon = (id: string) => {
-            return iconw;
-        };
-        pr.testToolbox.logicalWidth = 3 * iconw - 2;
-        pr.testToolbox.logicalHeight = 1;
-        pr.testToolbox.items = [
-            ['rectangle', 9],
-            ['roundrect', 10],
-            ['bucket', 11],
-            ['cirle', 12],
-            ['heart', 13],
-            ['letter', 14]
-        ];
-        pr.testToolbox.create(pr, pr.app);
+        this.addElementsToolbox(pr);
 
         /* add code editor */
+        this.addElementsCodeEditor(pr);
+    }
+
+    protected addElementsCodeEditor(pr: UI512TestCompositesPresenter) {
         pr.testEditor.x = 200;
-        pr.testEditor.y = pr.testrbExclusive.y;
+        pr.testEditor.y = pr.testRadioBtns.y;
         pr.testEditor.logicalWidth = 200;
         pr.testEditor.logicalHeight = 200;
         pr.testEditor.autoIndent.caseSensitive = false;
@@ -114,8 +89,52 @@ end1`.replace(/\r\n/g, '\n')
         );
     }
 
+    protected addElementsToolbox(pr: UI512TestCompositesPresenter) {
+        const iconW = 20;
+        pr.testToolbox.iconGroupId = '001';
+        pr.testToolbox.x = 50;
+        pr.testToolbox.y = 300;
+        pr.testToolbox.iconH = 22;
+        pr.testToolbox.widthOfIcon = (id: string) => {
+            return iconW;
+        };
+        pr.testToolbox.logicalWidth = 3 * iconW - 2;
+        pr.testToolbox.logicalHeight = 1;
+        pr.testToolbox.items = [
+            ['rectangle', 9],
+            ['roundrect', 10],
+            ['bucket', 11],
+            ['cirle', 12],
+            ['heart', 13],
+            ['letter', 14]
+        ];
+        pr.testToolbox.create(pr, pr.app);
+    }
+
+    protected addElementsChoiceGroups(pr: UI512TestCompositesPresenter) {
+        pr.testRadioBtns.items = [['apple', 'lngApple'], ['cherry', 'lngCherry'], ['strawberry', 'lngStrawberry']];
+        pr.testRadioBtns.isExclusive = true;
+        pr.testRadioBtns.logicalWidth = 100;
+        pr.testRadioBtns.logicalHeight = 1;
+        pr.testRadioBtns.x = 50;
+        pr.testRadioBtns.y = 50;
+        pr.testRadioBtns.create(pr, pr.app);
+        pr.testCheckBtns.items = [
+            ['fries', 'lngFries'],
+            ['hamburger', 'lngHamburger'],
+            ['soda', 'lngSoda'],
+            ['hot dog', 'lngHot Dog']
+        ];
+        pr.testCheckBtns.isExclusive = false;
+        pr.testCheckBtns.logicalWidth = 100;
+        pr.testCheckBtns.logicalHeight = 1;
+        pr.testCheckBtns.x = 50;
+        pr.testCheckBtns.y = 130;
+        pr.testCheckBtns.create(pr, pr.app);
+    }
+
     drawTestCase(
-        testnumber: number,
+        testNumber: number,
         tmpCanvas: CanvasWrapper,
         w: number,
         h: number,
@@ -123,18 +142,18 @@ end1`.replace(/\r\n/g, '\n')
         complete: RenderComplete
     ) {
         tmpCanvas.clear();
-        let testc = new UI512TestCompositesPresenter();
-        testc.init();
-        testc.inited = true;
-        testc.app = new UI512Application([0, 0, w, h], testc);
-        this.addElements(testc, testc.app.bounds);
-        testc.rebuildFieldScrollbars();
+        let testPr = new UI512TestCompositesPresenter();
+        testPr.init();
+        testPr.inited = true;
+        testPr.app = new UI512Application([0, 0, w, h], testPr);
+        this.addElements(testPr, testPr.app.bounds);
+        testPr.rebuildFieldScrollbars();
 
         /* first pass rendering adds the scrollbars */
         /* don't show any borders */
-        testc.view.renderBorders = () => {};
-        testc.needRedraw = true;
-        testc.render(tmpCanvas, 1, complete);
+        testPr.view.renderBorders = () => {};
+        testPr.needRedraw = true;
+        testPr.render(tmpCanvas, 1, complete);
         tmpCanvas.clear();
 
         if (!complete.complete) {
@@ -142,21 +161,21 @@ end1`.replace(/\r\n/g, '\n')
             return;
         }
 
-        if (testnumber === 0) {
-            this.drawTestCaseComposites1(testc);
+        if (testNumber === 0) {
+            this.drawTestCaseComposites1(testPr);
         } else {
-            this.drawTestCaseComposites2(testc);
+            this.drawTestCaseComposites2(testPr);
         }
 
         /* second pass rendering */
-        testc.view.renderBorders = () => {};
-        testc.needRedraw = true;
-        testc.render(tmpCanvas, 1, complete);
+        testPr.view.renderBorders = () => {};
+        testPr.needRedraw = true;
+        testPr.render(tmpCanvas, 1, complete);
     }
 
     drawTestCaseComposites1(pr: UI512TestCompositesPresenter) {
-        pr.testrbExclusive.setWhichChecked(pr.app, ['apple']);
-        pr.testrbInclusive.setWhichChecked(pr.app, ['fries', 'hamburger', 'soda']);
+        pr.testRadioBtns.setWhichChecked(pr.app, ['apple']);
+        pr.testCheckBtns.setWhichChecked(pr.app, ['fries', 'hamburger', 'soda']);
         pr.setCurrentFocus(pr.testEditor.el.id);
         this.simulateKey(pr, 'Home', '', false, true);
         this.simulateKey(pr, 'Enter', '', false, false);
@@ -171,10 +190,10 @@ end1`.replace(/\r\n/g, '\n')
     }
 
     drawTestCaseComposites2(pr: UI512TestCompositesPresenter) {
-        pr.testrbExclusive.setWhichChecked(pr.app, ['apple']);
-        pr.testrbExclusive.setWhichChecked(pr.app, ['cherry']);
-        pr.testrbInclusive.setWhichChecked(pr.app, ['fries', 'hamburger', 'soda']);
-        pr.testrbInclusive.setWhichChecked(pr.app, ['hot dog']);
+        pr.testRadioBtns.setWhichChecked(pr.app, ['apple']);
+        pr.testRadioBtns.setWhichChecked(pr.app, ['cherry']);
+        pr.testCheckBtns.setWhichChecked(pr.app, ['fries', 'hamburger', 'soda']);
+        pr.testCheckBtns.setWhichChecked(pr.app, ['hot dog']);
         pr.testToolbox.setWhich(pr.app, 'letter');
         pr.setCurrentFocus(pr.testEditor.el.id);
         this.simulateKey(pr, 'Home', '', false, true);
@@ -224,14 +243,14 @@ end1`.replace(/\r\n/g, '\n')
             }
         };
 
-        const totalh = h * screensToDraw;
+        const totalH = h * screensToDraw;
         return new CanvasTestParams(
             'drawComposites',
             '/resources/test/drawcompositesexpected.png',
             draw,
             w,
-            totalh,
-            this.uicontext
+            totalH,
+            this.uiContext
         );
     }
 
@@ -248,15 +267,22 @@ end1`.replace(/\r\n/g, '\n')
             this.simulateKey(pr, chr, chr, false, false);
         }
     }
+
+    runTest(dldimage: boolean) {
+        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawComposites());
+    }
 }
 
+/**
+ * presenter that will be driven by tests to take a screenshot of rendered elements
+ */
 export class UI512TestCompositesPresenter extends UI512Presenter {
-    testrbExclusive = new UI512CompButtonGroup('testrbExclusive');
-    testrbInclusive = new UI512CompButtonGroup('testrbInclusive');
+    testRadioBtns = new UI512CompButtonGroup('testRadioBtns');
+    testCheckBtns = new UI512CompButtonGroup('testCheckBtns');
     testToolbox = new UI512CompToolbox('testToolbox');
     testEditor = new UI512CompCodeEditor('testCodeEditor');
     testModalDlg = new UI512CompModalDialog('testModalDlg');
-    public init() {
+    init() {
         super.init();
         addDefaultListeners(this.listeners);
         let editTextBehavior = new UI512TextEvents();
@@ -267,7 +293,7 @@ export class UI512TestCompositesPresenter extends UI512Presenter {
         ];
     }
 
-    private static respondKeyDown(pr: UI512TestCompositesPresenter, d: KeyDownEventDetails) {
+    protected static respondKeyDown(pr: UI512TestCompositesPresenter, d: KeyDownEventDetails) {
         let focus = pr.getCurrentFocus();
         if (pr.testEditor.children.length && focus && pr.testEditor.el && focus === pr.testEditor.el.id) {
             pr.testEditor.respondKeydown(d);

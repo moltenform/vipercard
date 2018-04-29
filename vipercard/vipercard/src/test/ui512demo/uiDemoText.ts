@@ -12,20 +12,30 @@
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { TestDrawUI512Text } from '../../test/ui512/testUI512DrawText.js';
 
+/**
+ * UI512DemoText
+ *
+ * A "demo" project showing text drawn in many fonts and alignments
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ to test combinations
+ * of styles and fonts, by clicking the buttons like Bold and Italic
+ */
 export class UI512DemoText extends UI512Presenter {
     typeface = 'geneva';
     style: TextFontStyling = TextFontStyling.Default;
     demoText = 'File Edit Tools\n123 This is really good, it looks right to me! :) ^^ ### mniv';
     mixSizes = false;
     testrunner: TestDrawUI512Text;
-    public init() {
+    init() {
         super.init();
         addDefaultListeners(this.listeners);
         this.testrunner = new TestDrawUI512Text();
-        this.testrunner.uicontext = true;
+        this.testrunner.uiContext = true;
 
-        let clientrect = this.getStandardWindowBounds();
-        this.app = new UI512Application(clientrect, this);
+        let clientRect = this.getStandardWindowBounds();
+        this.app = new UI512Application(clientRect, this);
         let grp = new UI512ElGroup('grpmain');
         this.app.addGroup(grp);
         this.inited = true;
@@ -95,7 +105,7 @@ export class UI512DemoText extends UI512Presenter {
         mainfield.set('labeltext', demo);
     }
 
-    private static respondMouseUp(pr: UI512DemoText, d: MouseUpEventDetails) {
+    protected static respondMouseUp(pr: UI512DemoText, d: MouseUpEventDetails) {
         if (d.button !== 0) {
             return;
         }
@@ -130,19 +140,19 @@ export class UI512DemoText extends UI512Presenter {
                 let newwidth = mainfield.w === 400 ? 100 : 400;
                 mainfield.setDimensions(mainfield.x, mainfield.y, newwidth, mainfield.h);
             } else if (attr.startsWith('test')) {
-                pr.runtest(attr);
+                pr.runTest(attr);
             }
         }
 
         pr.drawTextDemo();
     }
 
-    runtest(params: string) {
+    runTest(params: string) {
         if (params.startsWith('testdld')) {
             let testNumber = parseInt(params.substr('testdld'.length), base10);
-            this.testrunner.runtest(testNumber, true);
+            this.testrunner.runTest(testNumber, true);
         } else {
-            this.testrunner.runtest(-1 /* all tests */, false);
+            this.testrunner.runTest(-1 /* all tests */, false);
         }
     }
 }

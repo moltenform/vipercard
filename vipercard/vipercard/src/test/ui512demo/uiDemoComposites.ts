@@ -6,21 +6,32 @@
 /* auto */ import { UI512CompStdDialogType } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { TestDrawUI512Composites, UI512TestCompositesPresenter } from '../../test/ui512/testUI512Composites.js';
 
+/**
+ * UI512DemoComposites
+ *
+ * A "demo" project showing several composites. (A composite is a
+ * group of ui512 elements that are closely related, like a dialog box).
+ *
+ * 1) tests use this project to compare against a known good screenshot,
+ * to make sure rendering has not changed
+ * 2) you can start this project in _rootUI512.ts_ to confirm that manually
+ * interacting with the buttons has the expected behavior
+ */
 export class UI512DemoComposites extends UI512TestCompositesPresenter {
     test = new TestDrawUI512Composites();
 
-    public init() {
+    init() {
         super.init();
 
-        let clientrect = this.getStandardWindowBounds();
-        this.app = new UI512Application(clientrect, this);
+        let clientRect = this.getStandardWindowBounds();
+        this.app = new UI512Application(clientRect, this);
         this.inited = true;
-        this.test.addElements(this, clientrect);
-        this.test.uicontext = true;
+        this.test.addElements(this, clientRect);
+        this.test.uiContext = true;
         let grp = this.app.getGroup('grp');
 
         let testBtns = ['WhichChecked', 'RunTest', 'DldImage', 'Dlg1', 'Dlg2', 'DlgAsk'];
-        let layoutTestBtns = new GridLayout(clientrect[0] + 10, clientrect[1] + 330, 100, 15, testBtns, [1], 5, 5);
+        let layoutTestBtns = new GridLayout(clientRect[0] + 10, clientRect[1] + 330, 100, 15, testBtns, [1], 5, 5);
         layoutTestBtns.createElems(this.app, grp, 'btn', UI512ElButton, () => {}, true, true);
 
         this.invalidateAll();
@@ -28,15 +39,15 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
         this.rebuildFieldScrollbars();
     }
 
-    private static respondMouseUp(pr: UI512DemoComposites, d: MouseUpEventDetails) {
+    protected static respondMouseUp(pr: UI512DemoComposites, d: MouseUpEventDetails) {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-                pr.test.runtest(true);
+                pr.test.runTest(true);
             } else if (d.elClick.id === 'btnRunTest') {
-                pr.test.runtest(false);
+                pr.test.runTest(false);
             } else if (d.elClick.id === 'btnWhichChecked') {
-                console.log('Fruit: ' + pr.testrbExclusive.getWhichChecked(pr.app));
-                console.log('Food: ' + pr.testrbInclusive.getWhichChecked(pr.app));
+                console.log('Fruit: ' + pr.testRadioBtns.getWhichChecked(pr.app));
+                console.log('Food: ' + pr.testCheckBtns.getWhichChecked(pr.app));
                 console.log('Tool: ' + pr.testToolbox.getWhich());
             } else if (d.elClick.id === 'btnDlg1') {
                 pr.testModalDlg.dlgType = UI512CompStdDialogType.Answer;
@@ -55,8 +66,8 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
                 pr.testModalDlg.showStandardModalDialog(pr, pr.app, n => pr.gotFromDlg(n));
             }
 
-            pr.testrbInclusive.respondMouseUp(pr.app, d);
-            pr.testrbExclusive.respondMouseUp(pr.app, d);
+            pr.testCheckBtns.respondMouseUp(pr.app, d);
+            pr.testRadioBtns.respondMouseUp(pr.app, d);
             pr.testToolbox.respondMouseUp(pr.app, d);
         }
     }
