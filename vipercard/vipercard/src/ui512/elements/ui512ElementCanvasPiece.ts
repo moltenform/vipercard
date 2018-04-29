@@ -11,8 +11,8 @@ export class UI512ElCanvasPiece extends UI512Element {
     readonly typename: string = 'UI512ElCanvasPiece';
     protected canvas: CanvasWrapper;
     protected cachedPainter: UI512Painter;
-    protected _srcx = 0;
-    protected _srcy = 0;
+    protected _srcX = 0;
+    protected _srcY = 0;
     protected _incrementUntilLoaded = 0;
 
     /**

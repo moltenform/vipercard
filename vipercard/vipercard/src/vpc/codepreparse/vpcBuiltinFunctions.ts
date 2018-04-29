@@ -137,7 +137,8 @@ export class VpcBuiltinFunctions {
                 checkThrowEq(asSimpleFns, args.length, '7#|function recieved incorrect # of args', name, asSimpleFns);
             }
 
-            let ret = Util512.callAsMethodOnClass('VpcBuiltinFunctions', this, 'call_' + name, [args], false);
+            let method = 'call' + Util512.capitalizeFirst(name);
+            let ret = Util512.callAsMethodOnClass('VpcBuiltinFunctions', this, method, [args], false);
             assertTrue(ret.isVpcVal, '5m|did not return a vpcval');
             return ret;
         }
@@ -154,10 +155,11 @@ export class VpcBuiltinFunctions {
             );
 
             let [frameMsg, frameParams] = this.readoutside.GetFrameInfo();
+            let method = 'call' + Util512.capitalizeFirst(name);
             let ret = Util512.callAsMethodOnClass(
                 'VpcBuiltinFunctions',
                 this,
-                'call_' + name,
+                method,
                 [args, frameMsg, frameParams],
                 false
             );
@@ -172,56 +174,56 @@ export class VpcBuiltinFunctions {
     /**
      * returns the largest of all arguments given
      */
-    call_max(args: VpcVal[]) {
+    callMax(args: VpcVal[]) {
         return this.mathVariadic(args, 'max', ar => Math.max.apply(null, ar));
     }
 
     /**
      * returns the smallest of all arguments given
      */
-    call_min(args: VpcVal[]) {
+    callMin(args: VpcVal[]) {
         return this.mathVariadic(args, 'min', ar => Math.min.apply(null, ar));
     }
 
     /**
      * returns the sum of all arguments given
      */
-    call_sum(args: VpcVal[]) {
+    callSum(args: VpcVal[]) {
         return this.mathVariadic(args, 'sum', ar => ar.reduce(Util512.add));
     }
 
     /**
      * disk space (Deprecated and hard-coded)
      */
-    call_diskspace(args: VpcVal[]) {
+    callDiskspace(args: VpcVal[]) {
         return VpcValN(VpcBuiltinFunctions.hardcodedMemoryAvailable);
     }
 
     /**
      * heap space (Deprecated and hard-coded)
      */
-    call_heapspace(args: VpcVal[]) {
+    callHeapspace(args: VpcVal[]) {
         return VpcValN(VpcBuiltinFunctions.hardcodedMemoryAvailable);
     }
 
     /**
      * stack space (Deprecated and hard-coded)
      */
-    call_stackspace(args: VpcVal[]) {
+    callStackspace(args: VpcVal[]) {
         return VpcValN(VpcBuiltinFunctions.hardcodedMemoryAvailable);
     }
 
     /**
      * system version (Deprecated and hard-coded)
      */
-    call_systemversion(args: VpcVal[]) {
+    callSystemversion(args: VpcVal[]) {
         return VpcValN(VpcBuiltinFunctions.hardcodedSysVersion);
     }
 
     /**
      * Seconds since January 1, 1904.
      */
-    call_seconds(args: VpcVal[]) {
+    callSeconds(args: VpcVal[]) {
         let unixNow = Date.now() / 1000.0;
         return VpcValN(Math.trunc(unixNow - VpcBuiltinFunctions.time1904));
     }
@@ -229,7 +231,7 @@ export class VpcBuiltinFunctions {
     /**
      * Ticks (60th of a second) since January 1, 1904.
      */
-    call_ticks(args: VpcVal[]) {
+    callTicks(args: VpcVal[]) {
         if (VpcBuiltinFunctions.basisTicks === 0) {
             VpcBuiltinFunctions.basisTicks = Date.now();
         }
@@ -242,7 +244,7 @@ export class VpcBuiltinFunctions {
      * n must be an integer.
      * Returns random value between 1 and n.
      */
-    call_random(args: VpcVal[]) {
+    callRandom(args: VpcVal[]) {
         let f = args[0].readAsStrictNumeric(this.tmpArr);
         let max = Math.trunc(f);
         if (max < 1) {
@@ -256,7 +258,7 @@ export class VpcBuiltinFunctions {
      * Returns integer nearest to number. Odd integers plus 0.5
      * round up, even integers plus 0.5 round down.
      */
-    call_round(args: VpcVal[]) {
+    callRound(args: VpcVal[]) {
         /* credit: @warby on jsfiddle */
         let f = args[0].readAsStrictNumeric(this.tmpArr);
         if (f % 0.5 === 0) {
@@ -270,7 +272,7 @@ export class VpcBuiltinFunctions {
     /**
      * screen dimensions
      */
-    call_screenrect(args: VpcVal[]) {
+    callScreenrect(args: VpcVal[]) {
         return VpcValS(`0,0,${ScreenConsts.ScreenWidth},${ScreenConsts.ScreenHeight}`);
     }
 
@@ -280,7 +282,7 @@ export class VpcBuiltinFunctions {
      * every other function here is basically idempotent,
      * this is intentionally a non-idempotent function, for testing, to detect if it has been called
      */
-    call_counting(args: VpcVal[]) {
+    callCounting(args: VpcVal[]) {
         VpcBuiltinFunctions.count += 1;
         return VpcValN(VpcBuiltinFunctions.count);
     }
@@ -290,7 +292,7 @@ export class VpcBuiltinFunctions {
      * Note that characters in a field are displayed in Mac OS Roman
      * encoding.
      */
-    call_chartonum(args: VpcVal[]) {
+    callChartonum(args: VpcVal[]) {
         let s = args[0].readAsString();
         return VpcValN(s.length ? s.charCodeAt(0) : 0);
     }
@@ -300,7 +302,7 @@ export class VpcBuiltinFunctions {
      * Note that characters in a field are displayed in Mac OS Roman
      * encoding.
      */
-    call_numtochar(args: VpcVal[]) {
+    callNumtochar(args: VpcVal[]) {
         let n = args[0].readAsStrictInteger(this.tmpArr);
         checkThrow(n >= 1, `7 |numToChar must be given a number >= 1`);
         return VpcValS(String.fromCharCode(n));
@@ -311,21 +313,21 @@ export class VpcBuiltinFunctions {
      * Supports scientific notation.
      * If cannot be parsed, returns "false"
      */
-    call_strtonumber(args: VpcVal[]) {
+    callStrtonumber(args: VpcVal[]) {
         return VpcVal.readScientificNotation(args[0].readAsString()) || VpcVal.False;
     }
 
     /**
      * Convert number to string.
      */
-    call_numbertostr(args: VpcVal[]) {
+    callNumbertostr(args: VpcVal[]) {
         return VpcValS(args[0].readAsString());
     }
 
     /**
      * Returns the length of a string, in characters.
      */
-    call_length(args: VpcVal[]) {
+    callLength(args: VpcVal[]) {
         return VpcValN(args[0].readAsString().length);
     }
 
@@ -334,7 +336,7 @@ export class VpcBuiltinFunctions {
      * If not found, returns 0.
      * (one-based indexing).
      */
-    call_offset(args: VpcVal[]) {
+    callOffset(args: VpcVal[]) {
         let needle = args[0].readAsString();
         let haystack = args[1].readAsString();
         let index = haystack.indexOf(needle);
@@ -345,15 +347,15 @@ export class VpcBuiltinFunctions {
      * In an afterkeydown or afterkeyup handler, check if this modifier
         key is pressed.
      */
-    call_commandkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return this.call_cmdkey(args, frmMsg, frmParams);
+    callCommandkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+        return this.callCmdkey(args, frmMsg, frmParams);
     }
 
     /**
      * In an afterkeydown or afterkeyup handler, check if this modifier
         key is pressed.
      */
-    call_cmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.cmdKey === undefined) {
             throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
         } else {
@@ -365,7 +367,7 @@ export class VpcBuiltinFunctions {
      * In an afterkeydown or afterkeyup handler, check if this modifier
         key is pressed.
      */
-    call_optionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.optionKey === undefined) {
             throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
         } else {
@@ -377,7 +379,7 @@ export class VpcBuiltinFunctions {
      * In an afterkeydown or afterkeyup handler, check if this modifier
         key is pressed.
      */
-    call_shiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.shiftKey === undefined) {
             throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
         } else {
@@ -389,7 +391,7 @@ export class VpcBuiltinFunctions {
      * In an afterkeydown or afterkeyup handler, check the character.
         Is affected by shift.
      */
-    call_keychar(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callKeychar(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyChar === undefined) {
             throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
         } else {
@@ -400,7 +402,7 @@ export class VpcBuiltinFunctions {
     /**
      * In an afterkeydown handler, did this event come from the user holding the key down?
      */
-    call_keyrepeated(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callKeyrepeated(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyRepeated === undefined) {
             throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
         } else {
@@ -411,21 +413,21 @@ export class VpcBuiltinFunctions {
     /**
      * In a mousedown or mouseup handler, get click x coordinate.
      */
-    call_clickh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callClickh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[0]) : VpcVal.Empty;
     }
 
     /**
      * In a mousedown or mouseup handler, get click y coordinate.
      */
-    call_clickv(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callClickv(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[1]) : VpcVal.Empty;
     }
 
     /**
      * In a mousedown or mouseup handler, get click x,y coordinates.
      */
-    call_clickloc(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callClickloc(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1
             ? VpcValS(`${frmMsg.clickLoc[0]},${frmMsg.clickLoc[1]}`)
             : VpcVal.Empty;
@@ -434,35 +436,35 @@ export class VpcBuiltinFunctions {
     /**
      * Is the mouse button currently down.
      */
-    call_mouse(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callMouse(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return frmMsg && frmMsg.mouseIsDown ? VpcValS('down') : VpcValS('up');
     }
 
     /**
      * Are we currently handling a mousedown or mouseup event.
      */
-    call_mouseclick(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callMouseclick(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return VpcValBool(frmMsg && !!frmMsg.clickLoc && frmMsg.clickLoc.length > 1);
     }
 
     /**
      * The x coordinate of mouse location.
      */
-    call_mouseh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callMouseh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return VpcValN(frmMsg.mouseLoc[0]);
     }
 
     /**
      * The y coordinate of mouse location.
      */
-    call_mousev(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callMousev(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return VpcValN(frmMsg.mouseLoc[1]);
     }
 
     /**
      * The coordinates of mouse location.
      */
-    call_mouseloc(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callMouseloc(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return VpcValS(`${frmMsg.mouseLoc[0]},${frmMsg.mouseLoc[1]}`);
     }
 
@@ -470,7 +472,7 @@ export class VpcBuiltinFunctions {
      * Get the number of values passed into the current procedure.
     Can be used to build a function that takes any number of arguments
      */
-    call_paramcount(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callParamcount(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return VpcValN(frmParams.length);
     }
 
@@ -478,7 +480,7 @@ export class VpcBuiltinFunctions {
      * Get the nth value passed into the current procedure. Can be used
     to build a function that takes any number of arguments
      */
-    call_param(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callParam(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let n = args[0].readAsStrictInteger(this.tmpArr);
         let ret = frmParams[this.fromOneBased(n)];
         return ret === undefined ? VpcVal.Empty : ret;
@@ -487,7 +489,7 @@ export class VpcBuiltinFunctions {
     /**
      * Get all of the values passed into the current procedure.
      */
-    call_params(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callParams(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let s = frmParams.map(v => v.readAsString()).join(',');
         return VpcValS(s);
     }
@@ -495,7 +497,7 @@ export class VpcBuiltinFunctions {
     /**
      * The return value of the last called function or procedure.
      */
-    call_result(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callResult(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         return this.readoutside.ReadVarContents('$result');
     }
 
@@ -503,10 +505,10 @@ export class VpcBuiltinFunctions {
      * The field that contains current selected text, looks something
         like 'cd fld id 1234'.
      */
-    call_selectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callSelectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
-            let container = this.getFullNameById(fld.id, PropAdjective.abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(container);
         } else {
             return VpcVal.Empty;
@@ -517,12 +519,12 @@ export class VpcBuiltinFunctions {
      * Current selection, looks something like 'char 2 to 4 of cd fld id
         1234'.
      */
-    call_selectedchunk(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callSelectedchunk(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = this.toOneBased(fld.getN('selcaret'));
             let end = this.toOneBased(fld.getN('selend'));
-            let container = this.getFullNameById(fld.id, PropAdjective.abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(`char ${start} to ${end} of ${container}`);
         } else {
             return VpcVal.Empty;
@@ -532,12 +534,12 @@ export class VpcBuiltinFunctions {
     /**
      * The value of the current selected text.
      */
-    call_selectedtext(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callSelectedtext(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = fld.getN('selcaret');
             let end = fld.getN('selend');
-            let s = fld.get_ftxt().toUnformattedSubstr(start, end - start);
+            let s = fld.getFmTxt().toUnformattedSubstr(start, end - start);
             return VpcValS(s);
         } else {
             return VpcVal.Empty;
@@ -547,11 +549,11 @@ export class VpcBuiltinFunctions {
     /**
      * The number of the line of the current selected text.
      */
-    call_selectedline(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callSelectedline(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = fld.getN('selcaret');
-            let lines = new UI512Lines(fld.get_ftxt());
+            let lines = new UI512Lines(fld.getFmTxt());
             return VpcValN(lines.indexToLineNumber(start));
         } else {
             return VpcVal.Empty;
@@ -562,7 +564,7 @@ export class VpcBuiltinFunctions {
      * The tool to be used when programmatically drawing shapes.
         (Not the actual tool, which would always be Browse)
      */
-    call_tool(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callTool(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let nTool = this.readoutside.GetCurrentTool(false);
         let s = findEnumToStr<VpcTool>(VpcTool, nTool);
         return VpcValS(s ? s.toLowerCase() : '');

@@ -254,7 +254,7 @@ export class ScrollbarImpl {
                 /* if you clicked on the right side of the letter, go right. */
                 let midpoint = found.x + Math.floor(found.w / 2);
                 let ret = x > midpoint ? found.charIndex + 1 : found.charIndex;
-                ret = fitIntoInclusive(ret, 0, el.get_ftxt().len());
+                ret = fitIntoInclusive(ret, 0, el.getFmTxt().len());
                 return ret;
             } else {
                 /* padding area always belongs to its adjacent character */
@@ -262,7 +262,7 @@ export class ScrollbarImpl {
             }
         } else if (RectUtils.hasPoint(x, y, el.x, el.y, el.w, el.h) && lowest !== undefined && y >= lowest) {
             /* user clicked below all of the text */
-            return el.get_ftxt().len();
+            return el.getFmTxt().len();
         } else {
             return undefined;
         }
@@ -433,13 +433,13 @@ export class ScrollbarImpl {
      * how tall in pixels is a line of text in this field?
      */
     getApproxLineHeight(el: UI512ElTextField, index: number) {
-        if (el.get_ftxt().len() === 0) {
+        if (el.getFmTxt().len() === 0) {
             /* field has no content */
             return undefined;
         }
 
-        index = fitIntoInclusive(index, 0, el.get_ftxt().len() - 1);
-        let font = el.get_ftxt().fontAt(index);
+        index = fitIntoInclusive(index, 0, el.getFmTxt().len() - 1);
+        let font = el.getFmTxt().fontAt(index);
         let textGetHeight = new FormattedText();
         textGetHeight.push('|'.charCodeAt(0), font);
 

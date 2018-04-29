@@ -10,16 +10,11 @@ export class VpcChvParser extends ChvParser {
     constructor(input: any[], inlistTokens: any) {
         /* if needed, we can adjust the "maxLookahead" here
         with arguments like { outputCst: true, maxLookahead:8 }
-        if that warning appears, though, 99% of the time it means you
-        should fix something wrong in the grammar
-        rather than to actually increase the maxLookahead. */
+        if that warning appears, though, in my experience 99.9% of
+        the time it means you should fix something wrong in the
+        grammar rather than to actually increase the maxLookahead. */
         super(input, inlistTokens, { outputCst: true });
         ChvParser.performSelfAnalysis(this);
-    }
-
-    TopBegin() {
-        /* chevrotain documentation says calling any top-level rule will suffice here */
-        return this.RuleBuiltinCmdAdd();
     }
 
     /* generated code, any changes past this point will be lost: --------------- */
@@ -740,7 +735,7 @@ export class VpcChvParser extends ChvParser {
         this.OR1([
             {
                 ALT: () => {
-                    this.SUBRULE1(this.RuleFnCall_Length);
+                    this.SUBRULE1(this.RuleFnCallLength);
                 }
             },
             {
@@ -766,7 +761,7 @@ export class VpcChvParser extends ChvParser {
         ]);
     });
 
-    RuleFnCall_Length = this.RULE('RuleFnCall_Length', () => {
+    RuleFnCallLength = this.RULE('RuleFnCallLength', () => {
         this.CONSUME1(tks.TokenThe);
         this.CONSUME1(tks.TokenLength);
         this.CONSUME1(tks.TokenTkofonly);

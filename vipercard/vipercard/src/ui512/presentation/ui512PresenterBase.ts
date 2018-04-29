@@ -30,12 +30,11 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
     listeners: { [t: number]: Function[] } = {};
     callbackQueueFromAsyncs: (O<NullaryFn>)[] = [];
-    continueEventAfterError = true;
     needRedraw = true;
     inited = false;
     openState = MenuOpenState.MenusClosed;
     view = new UI512ViewDraw();
-    tmpIgnore: O<TemporarilySuspendEvents>;
+    tmpSuspend: O<TemporarilySuspendEvents>;
     mouseDragStatus: number;
     useOSClipboard: boolean;
     clipManager: ClipManagerInterface;
@@ -81,7 +80,7 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
             /* adjust focus to be appropriate to length of content */
             let nextFocus = this.app.findEl(next);
             if (nextFocus && nextFocus instanceof UI512ElTextField) {
-                let txt = nextFocus.get_ftxt();
+                let txt = nextFocus.getFmTxt();
                 nextFocus.set('selcaret', fitIntoInclusive(nextFocus.getN('selcaret'), 0, txt.len()));
                 nextFocus.set('selend', fitIntoInclusive(nextFocus.getN('selend'), 0, txt.len()));
             }
@@ -106,24 +105,25 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     rawEvent(d: EventDetails) {
         let evtNumber = d.type().valueOf();
         let ar = this.listeners[evtNumber];
-        if (ar) {
-            /* don't use a for/of loop here, because it has a try/catch that
-            sometimes makes debugging inconvenient */
-            for (let i = 0; i < ar.length; i++) {
-                let cb = ar[i];
-                if (!d.handled()) {
-                    try {
-                        cb(this, d);
-                    } catch (e) {
-                        respondUI512Error(e, 'event ' + d.type());
-                        if (!this.continueEventAfterError) {
-                            break;
-                        }
+        try {
+            if (ar) {
+                /* use a plain JS loop and not a for/of loop here, this area
+                benefits from perf micro-optimizations */
+                for (let i = 0, len = ar.length; i < len; i++) {
+                    if (d.handled()) {
+                        break;
                     }
+
+                    let cb = ar[i];
+                    cb(this, d);
                 }
             }
+        } catch (e) {
+            respondUI512Error(e, 'event ' + d.type());
+            return;
         }
 
+        /* construct mouseleave and mouseenter events */
         if (d instanceof MouseMoveEventDetails) {
             if (d.elNext !== d.elPrev) {
                 if (d.elPrev) {
@@ -188,8 +188,8 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
             this.needRedraw = false;
         }
 
-        if (this.tmpIgnore) {
-            this.tmpIgnore.pulse(this, ms);
+        if (this.tmpSuspend) {
+            this.tmpSuspend.pulse(this, ms);
         }
     }
 

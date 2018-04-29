@@ -116,7 +116,7 @@ async function getHmacSignature(msg: string, keyBuffer: ArrayBuffer) {
             name: 'HMAC',
             hash: { name: 'SHA-256' }
         },
-        false /* use_for_export */,
+        false /* useForExport */,
         ['sign', 'verify']
     );
 

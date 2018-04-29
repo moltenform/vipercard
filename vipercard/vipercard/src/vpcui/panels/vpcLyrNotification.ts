@@ -7,7 +7,6 @@
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcAppLyrDragHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
 
@@ -22,8 +21,7 @@ export class VpcAppLyrNotification extends VpcUILayer {
      */
     updateUI512Els() {
         let currentTool = this.vci.getOptionN('currentTool');
-        let showNyi = getToolCategory(currentTool) === VpcToolCtg.CtgNyi;
-        this.elems.nyiMsg.set('visible', showNyi);
+        this.elems.nyiMsg.set('visible', false);
     }
 
     /**
@@ -61,7 +59,7 @@ export class VpcAppLyrNotification extends VpcUILayer {
                     if (this.vci.bounds()[0] + this.vci.bounds()[2] - d.mouseX < 55) {
                         lbl.set('visible', false);
                     } else {
-                        this.vci.performMenuAction('mnuDlgHelpScreenshots');
+                        this.vci.performMenuAction('mnuDlgHelpExamples');
                     }
                 }
             }

@@ -1,6 +1,5 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
 /* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPainter.js';
@@ -10,12 +9,24 @@
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
 
+/**
+ * smear tool (pencil, brush, eraser, etc)
+ *
+ * when you click and drag, we are drawing onto a separate "elStage" layer,
+ * that floats above the real card paint.
+ * when you release the mouse, we actually commit onto the card paint.
+ */
 export class VpcAppUIToolSmear extends VpcAppUIToolBase {
     state: O<SmearToolState> = undefined;
+
+    /**
+     * respond to mouse down event
+     */
     respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
         if (!isVelOrBg) {
             return;
         }
+
         if (!this.state) {
             let state = new SmearToolState();
             let elStage = this.cbPaintRender().makeAndAddFullsizeEl('VpcAppUIToolSmearSelectStage');
@@ -30,50 +41,30 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
             this.state = state;
         }
 
-        // also draw where the user clicked.
+        /* also draw where the user clicked. */
         this.state.mode = SmearToolMode.Dragging;
         this.respondMouseMove(tl, new MouseMoveEventDetails(0, d.mouseX, d.mouseY, d.mouseX, d.mouseY), true);
     }
 
+    /**
+     * respond to mouse move event
+     */
     respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {
         if (!isVelOrBg) {
             return;
         }
 
         if (this.state && this.state.mode === SmearToolMode.Dragging) {
-            let tmousepx =
-                fitIntoInclusive(
-                    d.prevMouseX,
-                    this.vci.userBounds()[0],
-                    this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
-                ) - this.vci.userBounds()[0];
-            let tmousepy =
-                fitIntoInclusive(
-                    d.prevMouseY,
-                    this.vci.userBounds()[1],
-                    this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
-                ) - this.vci.userBounds()[1];
-            let tmousenx =
-                fitIntoInclusive(
-                    d.mouseX,
-                    this.vci.userBounds()[0],
-                    this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
-                ) - this.vci.userBounds()[0];
-            let tmouseny =
-                fitIntoInclusive(
-                    d.mouseY,
-                    this.vci.userBounds()[1],
-                    this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
-                ) - this.vci.userBounds()[1];
-            this.cbPaintRender().drawPartialSmear(
-                [tmousepx, tmousenx],
-                [tmousepy, tmouseny],
-                this.state.elStage,
-                this.state.paStage
-            );
+            let [tprevX, tprevY] = this.getTranslatedCoords(d.prevMouseX, d.prevMouseY);
+            let [tnX, tnY] = this.getTranslatedCoords(d.mouseX, d.mouseY);
+
+            this.cbPaintRender().drawPartialSmear([tprevX, tnX], [tprevY, tnY], this.state.elStage, this.state.paStage);
         }
     }
 
+    /**
+     * respond to mouse up event
+     */
     respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
         if (this.state && this.state.mode === SmearToolMode.Dragging) {
             this.cbPaintRender().commitImageOntoImage([this.state.elStage.getCanvasForWrite()], 0, 0);
@@ -82,21 +73,33 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
         }
     }
 
-    cancelCurrentToolAction(): void {
+    /**
+     * erase any uncommitted partial changes, called by Undo() etc
+     */
+    cancelCurrentToolAction() {
         this.state = undefined;
         this.cbPaintRender().deleteTempPaintEls();
     }
 
+    /**
+     * reset state when opening tool
+     */
     onOpenTool() {
         this.state = undefined;
         this.cbPaintRender().deleteTempPaintEls();
     }
 
+    /**
+     * commit changes when leaving tool
+     */
     onLeaveTool() {
         this.state = undefined;
         this.cancelCurrentToolAction();
     }
 
+    /**
+     * which cursor should be shown if the mouse is over el.
+     */
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
         switch (tl) {
             case VpcTool.Pencil:
@@ -112,6 +115,9 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
         }
     }
 
+    /**
+     * make everything opaque white
+     */
     clearAllPaint() {
         let canvas = this.cbPaintRender().getTemporaryCanvas(1);
         canvas.fillRect(
@@ -125,17 +131,24 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
             canvas.canvas.height,
             'white'
         );
+
         this.cbPaintRender().commitImageOntoImage([canvas], 0, 0);
     }
 }
 
-enum SmearToolMode {
-    Inited,
-    Dragging
-}
-
+/**
+ * state of the smear tool
+ */
 class SmearToolState {
     mode: SmearToolMode;
     elStage: UI512ElCanvasPiece;
     paStage: UI512Painter;
+}
+
+/**
+ * stage of the drawing lifecycle
+ */
+enum SmearToolMode {
+    Inited,
+    Dragging
 }

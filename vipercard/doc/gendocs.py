@@ -134,7 +134,7 @@ def loadSections():
     sections = OrderedDict()
     sections['fundamentals'] = ['reference_01_fundamentals', myfilesreadall('reference_01_fundamentals')]
     sections['functions'] = ['reference_02_functions', myfilesreadall('reference_02_functions')]
-    sections['event_handlers'] = ['reference_03_events', myfilesreadall('reference_03_events')]
+    sections['eventhandlers'] = ['reference_03_events', myfilesreadall('reference_03_events')]
     sections['commands'] = ['reference_04_commands', myfilesreadall('reference_04_commands')]
     sections['properties'] = ['reference_05_properties', myfilesreadall('reference_05_properties')]
     return sections
@@ -142,7 +142,7 @@ def loadSections():
 def goMakeJson(sections, sectionname):
     s = sections[sectionname][1]
     sectionVpc = goSection(s, sectionname, addFormatting, addFormattingFinish)
-    path = f'{outloc}ref_{sectionname}.json'
+    path = f'{outloc}ref{sectionname}.json'
     
     f = open(path, 'w', encoding='utf-8')
     f.write(json.dumps(sectionVpc))
@@ -182,7 +182,7 @@ def goMakeJsonIndexEntries(sections, sectionname):
     mapIt = dict(fundamentals='lngFundamentals',
         commands='lngCommands',
         functions='lngFunctions',
-        event_handlers='lngEvent Handlers',
+        eventhandlers='lngEvent Handlers',
         properties='lngProperties')
     
     print('// prettier-ignore')

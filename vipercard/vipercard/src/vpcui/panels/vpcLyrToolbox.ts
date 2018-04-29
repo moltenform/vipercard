@@ -87,12 +87,9 @@ export class VpcAppLyrToolbox extends VpcUILayer {
      * user clicked on main palette
      */
     toolsMainRespondClicked(sTool: O<string>) {
-        let toolParsed: VpcTool;
         if (sTool) {
             checkThrow(sTool.length > 1, 'not a valid tool name.');
-            /* the vals in the enum start with a capital letter */
-            sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase();
-            toolParsed = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
+            let toolParsed = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
             this.vci.setTool(toolParsed);
             this.vci.setOption('viewingScriptVelId', '');
             this.vci.setOption('selectedVelId', '');
@@ -111,10 +108,10 @@ export class VpcAppLyrToolbox extends VpcUILayer {
         if (id === 'cardNumOrStop') {
             this.cbStopCodeRunning();
         } else if (id === 'cardPrev') {
-            this.nav(OrdinalOrPosition.previous, 'lngYou are already at the first card.');
+            this.nav(OrdinalOrPosition.Previous, 'lngYou are already at the first card.');
         } else if (id === 'cardNext') {
             this.nav(
-                OrdinalOrPosition.next,
+                OrdinalOrPosition.Next,
                 "lngYou are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
             );
         } else if (id === 'dupeCardOrStatus') {

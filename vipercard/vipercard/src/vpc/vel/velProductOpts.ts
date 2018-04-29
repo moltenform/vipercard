@@ -207,21 +207,22 @@ export class VpcElProductOpts extends VpcElBase {
 }
 
 /**
- * values here are lowercase, because they are used by the interpreter.
+ * vipercard cursors
  */
 export enum VpcCursors {
     __isUI512Enum = 1,
-    arrow = UI512Cursors.Arrow,
-    beam = UI512Cursors.Beam,
-    crosshair = UI512Cursors.Crosshair,
-    hand = UI512Cursors.Hand,
-    pencil = UI512Cursors.Pencil,
-    plus = UI512Cursors.Plus,
-    watch = UI512Cursors.Watch,
-    paintbrush = UI512Cursors.PaintBrush,
-    paintbucket = UI512Cursors.PaintBucket,
-    painttext = UI512Cursors.PaintText,
-    paintlasso = UI512Cursors.PaintLasso,
-    painteraser = UI512Cursors.PaintEraser,
-    paintspray = UI512Cursors.PaintSpray
+    __UI512EnumCapitalize = -1,
+    Arrow = UI512Cursors.Arrow,
+    Beam = UI512Cursors.Beam,
+    Crosshair = UI512Cursors.Crosshair,
+    Hand = UI512Cursors.Hand,
+    Pencil = UI512Cursors.Pencil,
+    Plus = UI512Cursors.Plus,
+    Watch = UI512Cursors.Watch,
+    Paintbrush = UI512Cursors.PaintBrush,
+    Paintbucket = UI512Cursors.PaintBucket,
+    Painttext = UI512Cursors.PaintText,
+    Paintlasso = UI512Cursors.PaintLasso,
+    Painteraser = UI512Cursors.PaintEraser,
+    Paintspray = UI512Cursors.PaintSpray
 }

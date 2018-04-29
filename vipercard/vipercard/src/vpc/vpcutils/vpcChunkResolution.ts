@@ -262,7 +262,7 @@ export class ChunkResolution {
 
         let split = cont.getRawString().split(splitBy);
         let sorter: (a: string, b: string) => number;
-        if (sortType === SortType.numeric) {
+        if (sortType === SortType.Numeric) {
             sorter = (a, b) => {
                 /* don't use a different comparison if both inputs are numbers */
                 /* that would be an inconsistent comparison */
@@ -273,13 +273,13 @@ export class ChunkResolution {
                 nb = isFinite(nb) ? nb : Infinity;
                 return defaultSort([na, a.toLowerCase()], [nb, b.toLowerCase()]);
             };
-        } else if (sortType === SortType.text) {
+        } else if (sortType === SortType.Text) {
             sorter = (a, b) => {
                 a = a.toLowerCase();
                 b = b.toLowerCase();
                 return a < b ? -1 : a > b ? 1 : 0;
             };
-        } else if (sortType === SortType.international) {
+        } else if (sortType === SortType.International) {
             sorter = (a, b) => {
                 return a.localeCompare(b);
             };
@@ -381,26 +381,26 @@ export class ChunkResolution {
             let s = cont.getRawString();
             let me = new ChunkResolution();
             let bounds = me.getBoundsForSet(s, itemDel, chunk);
-            if (prep === VpcChunkPreposition.into || (bounds[2] && bounds[2].length)) {
+            if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
                 /* it's a brand new item, adding 'before' or 'after' isn't applicable */
                 let result = bounds[2] + news;
                 cont.splice(bounds[0], bounds[1] - bounds[0], result);
-            } else if (prep === VpcChunkPreposition.after) {
+            } else if (prep === VpcChunkPreposition.After) {
                 cont.splice(bounds[1], 0, news);
-            } else if (prep === VpcChunkPreposition.before) {
+            } else if (prep === VpcChunkPreposition.Before) {
                 cont.splice(bounds[0], 0, news);
             } else {
                 throw makeVpcScriptErr(`5,|unknown preposition ${prep}`);
             }
         } else {
             let result: string;
-            if (prep === VpcChunkPreposition.after) {
+            if (prep === VpcChunkPreposition.After) {
                 let prevs = cont.isDefined() ? cont.getRawString() : '';
                 result = prevs + news;
-            } else if (prep === VpcChunkPreposition.before) {
+            } else if (prep === VpcChunkPreposition.Before) {
                 let prevs = cont.isDefined() ? cont.getRawString() : '';
                 result = news + prevs;
-            } else if (prep === VpcChunkPreposition.into) {
+            } else if (prep === VpcChunkPreposition.Into) {
                 result = news;
             } else {
                 throw makeVpcScriptErr(`5+|unknown preposition ${prep}`);

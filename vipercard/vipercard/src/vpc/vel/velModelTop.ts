@@ -44,7 +44,7 @@ export class VpcModelTop {
      */
     findById<T extends VpcElBase>(id: O<string>, ctor: { new (...args: any[]): T }): O<T> {
         let vel = this.elements.find(id);
-        return cast(vel, ctor, id);
+        return vel ? cast(vel, ctor, id) : undefined;
     }
 
     /**
@@ -102,7 +102,7 @@ export class VpcModelTop {
      */
     goCardRelative(pos: OrdinalOrPosition) {
         let curcardid =
-            pos === OrdinalOrPosition.first || pos === OrdinalOrPosition.last ? '' : this.getCurrentCard().id;
+            pos === OrdinalOrPosition.First || pos === OrdinalOrPosition.Last ? '' : this.getCurrentCard().id;
         let found = this.stack.getCardByOrdinal(curcardid, pos);
         this.productOpts.set('currentCardId', found.id);
     }

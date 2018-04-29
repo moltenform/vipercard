@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, makeVpcInternalErr, scontains, checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { getRoot, isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
@@ -250,7 +250,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let target = new UI512ElButton(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.vci.UI512App(), target);
         for (let prop of VpcElButton.keyPropertiesList) {
-            let newVal = vpcel.get_generic(prop);
+            let newVal = vpcel.getGeneric(prop);
             this.applyOneChange(vpcel, prop, newVal, true);
         }
     }
@@ -262,11 +262,11 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let target = new UI512ElTextField(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.vci.UI512App(), target);
         for (let prop of VpcElField.keyPropertiesList) {
-            let newVal = vpcel.get_generic(prop);
+            let newVal = vpcel.getGeneric(prop);
             this.applyOneChange(vpcel, prop, newVal, true);
         }
 
-        target.setftxt(vpcel.get_ftxt());
+        target.setFmTxt(vpcel.getFmTxt());
     }
 
     /**
@@ -284,10 +284,10 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 fnSetProperty(vel, target, newVal);
             } else if (ui512propname !== undefined) {
                 target.set(ui512propname, newVal);
-            } else if (propName === UI512Settable.formattedTextField) {
+            } else if (propName === UI512Settable.fmtTxtVarName) {
                 let newvAsText = newVal as FormattedText;
                 assertTrue(newvAsText && newvAsText.isFormattedText, '6)|bad formatted text', vel.id);
-                target.setftxt(newvAsText);
+                target.setFmTxt(newvAsText);
             } else {
                 /* it's a property that doesn't impact rendering. that's ok. */
             }
@@ -396,7 +396,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         this.directMapProperty[VpcElType.Fld + '/scroll'] = 'scrollamt';
         this.indirectProperty[VpcElType.Fld + '/style'] = (vel, el, newVal) => {
             let wasScroll = el.getB('scrollbar');
-            if (newVal === VpcFldStyleInclScroll.scrolling) {
+            if (newVal === VpcFldStyleInclScroll.Scrolling) {
                 el.set('style', UI512FldStyle.Rectangle);
                 el.set('scrollbar', true);
             } else {
@@ -486,12 +486,12 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
 export class VpcTextFieldAsGeneric implements GenericTextField {
     constructor(protected el512: UI512ElTextField, protected impl: VpcElField) {}
 
-    setFmtTxt(newtxt: FormattedText, context: ChangeContext) {
-        this.impl.setftxt(newtxt, context);
+    setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
+        this.impl.setFmTxt(newTxt, context);
     }
 
     getFmtTxt(): FormattedText {
-        return this.impl.get_ftxt();
+        return this.impl.getFmTxt();
     }
 
     canEdit() {
@@ -548,11 +548,11 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
 function getIconGroupId(vel: VpcElBase, el: UI512Element, newVal: ElementObserverVal) {
     if (!newVal) {
         return '';
-    } else if (vel.getS('name').startsWith('glider_sprites')) {
-        return 'glider_sprites';
-    } else if (vel.getS('name').startsWith('glider_bg')) {
-        return 'glider_bg';
-    } else if (vel.getS('name').startsWith('spacegame_sprites')) {
+    } else if (vel.getS('name').startsWith('gliderSprites')) {
+        return 'gliderSprites';
+    } else if (vel.getS('name').startsWith('gliderBg')) {
+        return 'gliderBg';
+    } else if (vel.getS('name').startsWith('spacegameSprites')) {
         return 'spacegame';
     } else {
         return '002';

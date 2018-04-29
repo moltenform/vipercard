@@ -23,7 +23,7 @@ export class VpcElField extends VpcElSizable {
     protected _selcaret = 0;
     protected _selend = 0;
     protected _scroll = 0;
-    protected _style: number = VpcFldStyleInclScroll.rectangle;
+    protected _style: number = VpcFldStyleInclScroll.Rectangle;
     protected _visible = true;
     protected _script = '';
     protected _textalign = 'left';
@@ -109,9 +109,9 @@ export class VpcElField extends VpcElSizable {
      */
     protected setEntireFontFromDefaultFont() {
         let font = this.getDefaultFontAsUi512();
-        let newtxt = this.get_ftxt().getUnlockedCopy();
-        newtxt.setFontEverywhere(font);
-        this.setftxt(newtxt);
+        let newTxt = this.getFmTxt().getUnlockedCopy();
+        newTxt.setFontEverywhere(font);
+        this.setFmTxt(newTxt);
     }
 
     /**
@@ -120,10 +120,10 @@ export class VpcElField extends VpcElSizable {
     static fldGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['singleline'] = [PrpTyp.Bool, 'singleline'];
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
-        getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.get_ftxt().toUnformatted()];
+        getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.getFmTxt().toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField) => SubstringStyleComplex.vpcstyleFromInt(me._defaulttextstyle)
+            (me: VpcElField) => SubstringStyleComplex.vpcStyleFromInt(me._defaulttextstyle)
         ];
         getters['style'] = [
             PrpTyp.Str,
@@ -184,9 +184,9 @@ export class VpcElField extends VpcElSizable {
         setters['alltext'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string) => {
-                let newtxt = FormattedText.newFromUnformatted(s);
-                newtxt.setFontEverywhere(me.getDefaultFontAsUi512());
-                me.setftxt(newtxt);
+                let newTxt = FormattedText.newFromUnformatted(s);
+                newTxt.setFontEverywhere(me.getDefaultFontAsUi512());
+                me.setFmTxt(newTxt);
             }
         ];
 
@@ -194,7 +194,7 @@ export class VpcElField extends VpcElSizable {
             PrpTyp.Str,
             (me: VpcElField, s: string) => {
                 let list = s.split(',').map(item => item.trim());
-                me.set('defaulttextstyle', SubstringStyleComplex.vpcstyleToInt(list));
+                me.set('defaulttextstyle', SubstringStyleComplex.vpcStyleToInt(list));
             }
         ];
 
@@ -217,11 +217,11 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, b: boolean) => {
                 me.set('singleline', b);
                 if (b) {
-                    let hasNewLine = me.get_ftxt().indexOf(specialCharNumNewline);
+                    let hasNewLine = me.getFmTxt().indexOf(specialCharNumNewline);
                     if (hasNewLine !== -1) {
-                        let newtxt = new FormattedText();
-                        newtxt.appendSubstring(me.get_ftxt(), 0, hasNewLine);
-                        me.setftxt(newtxt);
+                        let newTxt = new FormattedText();
+                        newTxt.appendSubstring(me.getFmTxt(), 0, hasNewLine);
+                        me.setFmTxt(newTxt);
                     }
                 }
             }
@@ -264,23 +264,23 @@ export class VpcElField extends VpcElSizable {
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
     specialSetPropChunkImpl(prop: string, s: string, charstart: number, charend: number): void {
-        let newtxt = this.get_ftxt().getUnlockedCopy();
+        let newTxt = this.getFmTxt().getUnlockedCopy();
         let len = charend - charstart;
         if (prop === 'textstyle') {
             let list = s.split(',').map(item => item.trim());
-            SubstringStyleComplex.setChunkTextStyle(newtxt, this.getDefaultFontAsUi512(), charstart, len, list);
+            SubstringStyleComplex.setChunkTextStyle(newTxt, this.getDefaultFontAsUi512(), charstart, len, list);
         } else if (prop === 'textfont') {
-            SubstringStyleComplex.setChunkTextFace(newtxt, this.getDefaultFontAsUi512(), charstart, len, s);
+            SubstringStyleComplex.setChunkTextFace(newTxt, this.getDefaultFontAsUi512(), charstart, len, s);
         } else if (prop === 'textsize') {
             let n = VpcValS(s).readAsStrictInteger();
-            SubstringStyleComplex.setChunkTextSize(newtxt, this.getDefaultFontAsUi512(), charstart, len, n);
+            SubstringStyleComplex.setChunkTextSize(newTxt, this.getDefaultFontAsUi512(), charstart, len, n);
         } else {
             throw makeVpcScriptErr(
                 `4x|can only say 'set the (prop) of char 1 to 2' for textstyle, textfont, or textsize`
             );
         }
 
-        this.setftxt(newtxt);
+        this.setFmTxt(newTxt);
     }
 
     /**
@@ -291,16 +291,17 @@ export class VpcElField extends VpcElSizable {
         if (prop === 'textstyle') {
             /* returns comma-delimited styles, or the string 'mixed' */
             let list = SubstringStyleComplex.getChunkTextStyle(
-                this.get_ftxt(),
+                this.getFmTxt(),
                 this.getDefaultFontAsUi512(),
                 charstart,
                 len
             );
+
             return list.join(',');
         } else if (prop === 'textfont') {
             /* returns typeface name or the string 'mixed' */
             return SubstringStyleComplex.getChunkTextFace(
-                this.get_ftxt(),
+                this.getFmTxt(),
                 this.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -308,7 +309,7 @@ export class VpcElField extends VpcElSizable {
         } else if (prop === 'textsize') {
             /* as per spec this can return either an integer or the string 'mixed' */
             return SubstringStyleComplex.getChunkTextSize(
-                this.get_ftxt(),
+                this.getFmTxt(),
                 this.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -337,7 +338,7 @@ export class VpcElField extends VpcElSizable {
         }
 
         /* we handle the formattedText.len() === 0 case in getChunkTextAttribute */
-        let unformatted = this.get_ftxt().toUnformatted();
+        let unformatted = this.getFmTxt().toUnformatted();
         newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
         let bounds = ChunkResolution.resolveBoundsForGet(unformatted, itemDel, newChunk);
         bounds = bounds === undefined ? [0, 0] : bounds;
@@ -362,14 +363,15 @@ export class VpcElField extends VpcElSizable {
 }
 
 /**
- * values here are lowercase, because they are used by the interpreter.
+ * field styles.
  */
 export enum VpcFldStyleInclScroll {
     __isUI512Enum = 1,
-    opaque = UI512FldStyle.Opaque,
-    transparent = UI512FldStyle.Transparent,
-    rectangle = UI512FldStyle.Rectangle,
-    shadow = UI512FldStyle.Shadow,
-    alternateforms_rect = UI512FldStyle.Rectangle,
-    scrolling = 200
+    __UI512EnumCapitalize,
+    Opaque = UI512FldStyle.Opaque,
+    Transparent = UI512FldStyle.Transparent,
+    Rectangle = UI512FldStyle.Rectangle,
+    Shadow = UI512FldStyle.Shadow,
+    AlternateFormsRect = UI512FldStyle.Rectangle,
+    Scrolling = 200
 }

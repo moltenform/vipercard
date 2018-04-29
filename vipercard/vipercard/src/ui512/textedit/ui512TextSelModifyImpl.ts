@@ -203,8 +203,8 @@ export class TextSelModifyImpl {
         if (lineNumber >= lines.lns.length - 1) {
             /* be careful, it's the last line */
             lines.lns.splice(lineNumber, 1);
-            let tnew = lines.flatten();
-            return [tnew, tnew.len(), tnew.len()];
+            let tNew = lines.flatten();
+            return [tNew, tNew.len(), tNew.len()];
         } else {
             lines.lns.splice(lineNumber, 1);
             let nextCaret = lines.lineNumberToIndex(lineNumber);
@@ -224,8 +224,8 @@ export class TextSelModifyImpl {
         /* 2) add spaces */
         assertTrue(level >= 0, '2;|negative level');
         let added = Util512.repeat(level, space).join('');
-        let [tnew, p1, p2] = TextSelModifyImpl.changeTextInsert(t, 0, 0, added, defaultFont);
-        return tnew;
+        let [tNew, p1, p2] = TextSelModifyImpl.changeTextInsert(t, 0, 0, added, defaultFont);
+        return tNew;
     }
 
     /**
@@ -282,7 +282,7 @@ export class TextSelModifyImpl {
                 TextSelModifyImpl.changeTextDeleteSelection(line, lineStart, lineStart + prefix.length);
             } else {
                 /* no prefix, add it */
-                let [tnew, p1, p2] = TextSelModifyImpl.changeTextInsert(
+                let [tNew, p1, p2] = TextSelModifyImpl.changeTextInsert(
                     line,
                     lineStart,
                     lineStart,
@@ -290,7 +290,7 @@ export class TextSelModifyImpl {
                     defaultFont
                 );
                 line.deleteAll();
-                line.append(tnew);
+                line.append(tNew);
             }
         };
 

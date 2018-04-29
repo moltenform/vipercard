@@ -29,7 +29,7 @@ export class VpcScriptExecAsync {
      * e.g. 'wait 5 seconds'
      * when the script can continue, blocked will be set to 0
      */
-    static go_wait(
+    static goAsyncWait(
         pendingOps: VpcPendingAsyncOps,
         blocked: ValHolder<number>,
         asyncOpId: string,
@@ -48,7 +48,7 @@ export class VpcScriptExecAsync {
      * e.g. 'answer "abc"'
      * when the script can continue, blocked will be set to 0
      */
-    static go_answer(
+    static goAsyncAnswer(
         pendingOps: VpcPendingAsyncOps,
         blocked: ValHolder<number>,
         outside: OutsideWorldReadWrite,
@@ -94,7 +94,7 @@ export class VpcScriptExecAsync {
      * e.g. 'ask "abc"'
      * when the script can continue, blocked will be set to 0
      */
-    static go_ask(
+    static goAsyncAsk(
         pendingOps: VpcPendingAsyncOps,
         blocked: ValHolder<number>,
         outside: OutsideWorldReadWrite,

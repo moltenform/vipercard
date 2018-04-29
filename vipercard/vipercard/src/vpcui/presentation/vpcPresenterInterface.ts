@@ -13,41 +13,25 @@
 /* auto */ import { VpcAppLyrNotification } from '../../vpcui/panels/vpcLyrNotification.js';
 /* auto */ import { VpcAppLyrPanels } from '../../vpcui/panels/vpcLyrPanels.js';
 /* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
-/* auto */ import { VpcAppUIRectSelect } from '../../vpcui/tools/vpcToolSelect.js';
-/* auto */ import { VpcAppUILasso } from '../../vpcui/tools/vpcToolLasso.js';
+/* auto */ import { VpcAppUIToolSelect } from '../../vpcui/tools/vpcToolSelect.js';
+/* auto */ import { VpcAppUIToolLasso } from '../../vpcui/tools/vpcToolLasso.js';
 /* auto */ import { VpcLyrNonModalHolder } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
 /* auto */ import { VpcAppMenu } from '../../vpcui/menu/vpcMenu.js';
 
+/**
+ * forward-declare methods on the presenter class, solely
+ * to break circular dependencies
+ */
 export abstract class VpcPresenterInterface extends UI512Presenter {
-    abstract answerMsg(
-        prompt: string,
-        fnOnResult?: (n: number) => void,
-        choice1?: string,
-        choice2?: string,
-        choice3?: string
-    ): void;
-    abstract askMsg(prompt: string, defText: string, fnOnResult: (ret: O<string>, n: number) => void): void;
-    abstract exit(s: string): void;
-
-    abstract askMsgAsync(prompt: string, defText: string): Promise<[O<string>, number]>;
-    abstract answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number>;
-    abstract isDocDirty(): boolean;
-    abstract showError(scriptErr: VpcScriptErrorBase): void;
-    abstract getSerializedStack(): string;
-
-    abstract getToolResponse(t: VpcTool): VpcAppUIToolBase;
-    abstract refreshCursor(): void;
-    abstract refreshCursorElemKnown(el: O<UI512Element>, isDocumentEl: boolean): void;
-
+    vci: VpcStateInterface;
     timerSendMouseWithin: RepeatingTimer;
     timerRunScript: RepeatingTimer;
     timerBlinkMarquee: RepeatingTimer;
     userBounds: number[];
     cursorRefreshPending: boolean;
     runScriptTimeslice: number;
-    tlctgRectSelect: VpcAppUIRectSelect;
-    tlctgLasso: VpcAppUILasso;
-
+    tlctgRectSelect: VpcAppUIToolSelect;
+    tlctgLasso: VpcAppUIToolLasso;
     lyrPaintRender: VpcPaintRender;
     lyrModelRender: VpcModelRender;
     lyrResizeHandles: VpcAppLyrDragHandles;
@@ -56,6 +40,23 @@ export abstract class VpcPresenterInterface extends UI512Presenter {
     lyrPropPanel: VpcAppLyrPanels;
     lyrMenus: VpcAppMenu;
     lyrNonModalDlgHolder: VpcLyrNonModalHolder;
-    vci: VpcStateInterface;
     cameFromDemoSoNeverPromptSave: string;
+
+    abstract askMsg(prompt: string, defText: string, fnOnResult: (ret: O<string>, n: number) => void): void;
+    abstract exit(s: string): void;
+    abstract askMsgAsync(prompt: string, defText: string): Promise<[O<string>, number]>;
+    abstract answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number>;
+    abstract isDocDirty(): boolean;
+    abstract showError(scriptErr: VpcScriptErrorBase): void;
+    abstract getSerializedStack(): string;
+    abstract getToolResponse(t: VpcTool): VpcAppUIToolBase;
+    abstract refreshCursor(): void;
+    abstract refreshCursorElemKnown(el: O<UI512Element>, isDocumentEl: boolean): void;
+    abstract answerMsg(
+        prompt: string,
+        fnOnResult?: (n: number) => void,
+        choice1?: string,
+        choice2?: string,
+        choice3?: string
+    ): void;
 }

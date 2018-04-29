@@ -161,7 +161,7 @@ export abstract class RingBuffer {
      * retrieve the latest entries.
      */
     retrieve(howMany: number) {
-        assertTrue(howMany < this.size, '');
+        howMany = Math.min(howMany, this.size - 1);
         let ptrLatest = this.getLatestIndex();
         let ret: string[] = [];
         for (let i = 0; i < howMany; i++) {
@@ -187,24 +187,24 @@ export abstract class RingBuffer {
 
 /**
  * use localstorage to store, so that logs persist when page is refreshed.
- * vpc_log_ptr should be in local storage, vpc could be running in 2 browser windows.
+ * vpcLogPtr should be in local storage, vpc could be running in 2 browser windows.
  */
 class RingBufferLocalStorage extends RingBuffer {
     getAt(index: number): string {
-        return window.localStorage['vpc_log_' + index] || '';
+        return window.localStorage['vpcLog_' + index] || '';
     }
 
     setAt(index: number, s: string) {
-        window.localStorage['vpc_log_' + index] = s;
+        window.localStorage['vpcLog_' + index] = s;
     }
 
     getLatestIndex() {
-        let ptrLatest = parseInt(window.localStorage['vpc_log_ptr'] || '0', 10);
+        let ptrLatest = parseInt(window.localStorage['vpcLogPtr'] || '0', 10);
         return Number.isFinite(ptrLatest) ? ptrLatest : 0;
     }
 
     setLatestIndex(index: number) {
-        window.localStorage['vpc_log_ptr'] = index.toString();
+        window.localStorage['vpcLogPtr'] = index.toString();
     }
 }
 

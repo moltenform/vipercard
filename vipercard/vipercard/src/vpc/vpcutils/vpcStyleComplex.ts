@@ -12,7 +12,7 @@ export class SubstringStyleComplex {
     /**
      * parse a list ["bold", "italic"] into bitfield bold|italic
      */
-    static vpcstyleToInt(list: string[]): TextFontStyling {
+    static vpcStyleToInt(list: string[]): TextFontStyling {
         let ret = TextFontStyling.Default;
         for (let s of list) {
             s = s.toLowerCase().trim();
@@ -35,7 +35,7 @@ export class SubstringStyleComplex {
                     ret |= TextFontStyling.Shadow;
                     break;
                 case 'condense':
-                    ret |= TextFontStyling.Condensed;
+                    ret |= TextFontStyling.Condense;
                     break;
                 case 'extend':
                     ret |= TextFontStyling.Extend;
@@ -51,29 +51,36 @@ export class SubstringStyleComplex {
     /**
      * from bitfield bold|italic to ["bold", "italic"]
      */
-    static vpcstyleFromInt(style: TextFontStyling) {
+    static vpcStyleFromInt(style: TextFontStyling) {
         let ret: string[] = [];
         if (style === 0) {
             ret.push('plain');
         }
+
         if ((style & TextFontStyling.Bold) !== 0) {
             ret.push('bold');
         }
+
         if ((style & TextFontStyling.Italic) !== 0) {
             ret.push('italic');
         }
+
         if ((style & TextFontStyling.Underline) !== 0) {
             ret.push('underline');
         }
+
         if ((style & TextFontStyling.Outline) !== 0) {
             ret.push('outline');
         }
+
         if ((style & TextFontStyling.Shadow) !== 0) {
             ret.push('shadow');
         }
-        if ((style & TextFontStyling.Condensed) !== 0) {
+
+        if ((style & TextFontStyling.Condense) !== 0) {
             ret.push('condense');
         }
+
         if ((style & TextFontStyling.Extend) !== 0) {
             ret.push('extend');
         }
@@ -85,7 +92,7 @@ export class SubstringStyleComplex {
      * ['italic', 'outline'] to "b+iu+osdce"
      */
     static ui512styleFromVpcStyleList(vpcStyles: string[]) {
-        let n = SubstringStyleComplex.vpcstyleToInt(vpcStyles);
+        let n = SubstringStyleComplex.vpcStyleToInt(vpcStyles);
         return textFontStylingToString(n);
     }
 
@@ -94,7 +101,7 @@ export class SubstringStyleComplex {
      */
     static ui512styleToVpcStyleList(style: string) {
         let enumStyle = stringToTextFontStyling(style);
-        return SubstringStyleComplex.vpcstyleFromInt(enumStyle).split(',');
+        return SubstringStyleComplex.vpcStyleFromInt(enumStyle).split(',');
     }
 
     /**
@@ -178,7 +185,7 @@ export class SubstringStyleComplex {
     }
 
     /**
-     * get point size of chunk, or "varied" if it varies
+     * get point size of chunk, or "mixed" if it varies
      */
     static getChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): number | string {
         let fn = (s: string) => TextFontSpec.getFontSize(s);
@@ -197,7 +204,7 @@ export class SubstringStyleComplex {
     }
 
     /**
-     * get font style of chunk, or "varied" if it varies
+     * get font style of chunk, or "mixed" if it varies
      */
     static getChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string[] {
         let fn = (s: string) => TextFontSpec.getFontStyle(s);

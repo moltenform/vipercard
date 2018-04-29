@@ -94,11 +94,10 @@ export interface UI512PresenterInterface {
     trackClickedIds: O<string>[];
     listeners: { [t: number]: Function[] };
     callbackQueueFromAsyncs: (O<NullaryFn>)[];
-    continueEventAfterError: boolean;
     needRedraw: boolean;
     inited: boolean;
     openState: MenuOpenState;
-    tmpIgnore: O<TemporarilySuspendEventsInterface>;
+    tmpSuspend: O<TemporarilySuspendEventsInterface>;
     importMouseTracking(other: UI512PresenterInterface): void;
     getCurrentFocus(): O<string>;
     setCurrentFocus(next: O<string>): void;

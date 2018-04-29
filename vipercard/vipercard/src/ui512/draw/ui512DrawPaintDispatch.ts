@@ -18,7 +18,7 @@ export enum UI512PaintDispatchShapes {
     SmearSpraycan,
     ShapeLine,
     ShapeRectangle,
-    ShapeElipse,
+    ShapeEllipse,
     ShapeRoundRect,
     ShapeCurve,
     Bucket,
@@ -123,9 +123,9 @@ export class UI512PaintDispatch {
                 assertEq(2, yPts.length, 'ShapeRectangle');
                 return painter.publicRectangle(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
             }
-            case UI512PaintDispatchShapes.ShapeElipse: {
-                assertEq(2, xPts.length, 'ShapeElipse');
-                assertEq(2, yPts.length, 'ShapeElipse');
+            case UI512PaintDispatchShapes.ShapeEllipse: {
+                assertEq(2, xPts.length, 'ShapeEllipse');
+                assertEq(2, yPts.length, 'ShapeEllipse');
                 return painter.publicPlotEllipse(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
             }
             case UI512PaintDispatchShapes.ShapeRoundRect: {

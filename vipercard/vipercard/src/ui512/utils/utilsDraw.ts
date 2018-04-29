@@ -42,14 +42,14 @@ export class CanvasWrapper {
     /**
      * set pixel, ignored if out of bounds
      */
-    public fillPixelUnchecked(x: number, y: number, fillStyle: string) {
+    fillPixelUnchecked(x: number, y: number, fillStyle: string) {
         return this.fillRectUnchecked(x, y, 1, 1, fillStyle);
     }
 
     /**
      * set pixel, asserts if out of bounds
      */
-    public fillPixel(
+    fillPixel(
         x: number,
         y: number,
         boxX0: number,
@@ -100,7 +100,7 @@ export class CanvasWrapper {
      * the "box" is the region of the canvas we are allowed to write to,
      * any writes outside of this region will be clipped
      */
-    public fillRect(
+    fillRect(
         x0: number,
         y0: number,
         width: number,
@@ -127,7 +127,7 @@ export class CanvasWrapper {
     /**
      * rectangle outline.
      */
-    public outlineRect(
+    outlineRect(
         x0: number,
         y0: number,
         width: number,
@@ -148,7 +148,7 @@ export class CanvasWrapper {
      * invert colors in a rectangle.
      * it's so nice to have globalCompositeOperations
      */
-    private invertColorsRectUnchecked(x0: number, y0: number, width: number, height: number) {
+    protected invertColorsRectUnchecked(x0: number, y0: number, width: number, height: number) {
         assertTrue(width >= 0, '3-|invalid width ' + width.toString());
         assertTrue(height >= 0, '3,|invalid height ' + height.toString());
         assertTrue(
@@ -174,7 +174,7 @@ export class CanvasWrapper {
      * the "box" is the region of the canvas we are allowed to write to,
      * any writes outside of this region will be clipped
      */
-    public invertColorsRect(
+    invertColorsRect(
         x0: number,
         y0: number,
         width: number,
@@ -200,7 +200,7 @@ export class CanvasWrapper {
     /**
      * draw an image, or a piece of another canvas, onto the canvas
      */
-    private drawFromImageUnchecked(
+    protected drawFromImageUnchecked(
         img: DrawableImage,
         srcX: number,
         srcY: number,
@@ -233,7 +233,7 @@ export class CanvasWrapper {
      * the "box" is the region of the canvas we are allowed to write to,
      * any writes outside of this region will be clipped
      */
-    public drawFromImage(
+    drawFromImage(
         img: DrawableImage,
         srcX: number,
         srcY: number,
@@ -268,7 +268,7 @@ export class CanvasWrapper {
     /**
      * draw image centered in the box.
      */
-    public drawFromImageCentered(
+    drawFromImageCentered(
         img: DrawableImage,
         sx: number,
         sy: number,
@@ -289,7 +289,7 @@ export class CanvasWrapper {
     /**
      * use a try/finally block to ensure that the mode is reset, even if an exception is thrown.
      */
-    public temporarilyChangeCompositeMode(s: string, fn: () => void) {
+    temporarilyChangeCompositeMode(s: string, fn: () => void) {
         try {
             this.context.globalCompositeOperation = s;
             fn();
@@ -301,7 +301,7 @@ export class CanvasWrapper {
     /**
      * clear everything on the canvas. note that transparent != white.
      */
-    public clear() {
+    clear() {
         this.resetTransform();
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
@@ -309,7 +309,7 @@ export class CanvasWrapper {
     /**
      * resizing a canvas implicitly clears all contents, so name method likewise
      */
-    public resizeAndClear(newWidth: number, newHeight: number) {
+    resizeAndClear(newWidth: number, newHeight: number) {
         assertTrue(newWidth >= 0, '3%|invalid newWidth ' + newWidth.toString());
         assertTrue(newHeight >= 0, '3$|invalid newHeight ' + newHeight.toString());
         this.canvas.width = newWidth;
@@ -319,7 +319,7 @@ export class CanvasWrapper {
     /**
      * reset any current scaling/transformations
      */
-    public resetTransform() {
+    resetTransform() {
         this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
 

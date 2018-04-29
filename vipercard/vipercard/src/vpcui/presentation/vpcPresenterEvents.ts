@@ -11,7 +11,7 @@
 /* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 /* auto */ import { UI512TextEvents } from '../../ui512/textedit/ui512TextEvents.js';
-/* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgNameFromType, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
@@ -20,19 +20,25 @@
 /* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
 /* auto */ import { VpcPresenterInterface } from '../../vpcui/presentation/vpcPresenterInterface.js';
 
+/**
+ * ViperCard event handling
+ */
 export class VpcPresenterEvents {
-    editTextBehavior: EditTextBehaviorSendToVel;
-    constructor(protected pr: VpcPresenterInterface) {
-        pr.continueEventAfterError = false;
-        this.editTextBehavior = new EditTextBehaviorSendToVel(this.pr);
-    }
+    /**
+     * register event handlers
+     */
+    static initEvents(pr: VpcPresenterInterface) {
+        /* Currently, a running script can't cancel default behavior
+        by handling an event and not running "exit to product",
+        that's why I call it 'on afterkeydown' instead of 'on keydown'
 
-    initEvents() {
-        // When code is running, new key messages are queued, but not new mouse msgs
-        // A running script cannot cancel default behavior by handling the event and not running "exit to product"
-        // A running script can pass the event upwards (say to the current card) with "pass mouseUp"
+        A running script can pass the event upwards (say to the current card) with "pass mouseUp"
+        */
 
-        this.pr.listeners[UI512EventType.MouseDown.valueOf()] = [
+        /* we must route text changes to a vel instead of directly setting the UI512 element */
+        let editTextBehavior = new EditTextBehaviorSendToVel(pr);
+
+        pr.listeners[UI512EventType.MouseDown.valueOf()] = [
             BasicHandlers.trackMouseStatusMouseDown,
             BasicHandlers.trackCurrentElMouseDown,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
@@ -40,11 +46,11 @@ export class VpcPresenterEvents {
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
             BasicHandlers.trackHighlightedButtonMouseDown,
             MenuListeners.onMouseDown,
-            this.editTextBehavior.onMouseDownScroll.bind(this.editTextBehavior),
-            this.editTextBehavior.onMouseDownSelect.bind(this.editTextBehavior)
+            editTextBehavior.onMouseDownScroll.bind(editTextBehavior),
+            editTextBehavior.onMouseDownSelect.bind(editTextBehavior)
         ];
 
-        this.pr.listeners[UI512EventType.MouseUp.valueOf()] = [
+        pr.listeners[UI512EventType.MouseUp.valueOf()] = [
             BasicHandlers.trackMouseStatusMouseUp,
             BasicHandlers.trackCurrentElMouseUp,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
@@ -52,18 +58,18 @@ export class VpcPresenterEvents {
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
             BasicHandlers.trackHighlightedButtonMouseUp,
             MenuListeners.onMouseUp,
-            this.editTextBehavior.onMouseUp.bind(this.editTextBehavior)
+            editTextBehavior.onMouseUp.bind(editTextBehavior)
         ];
 
-        this.pr.listeners[UI512EventType.MouseMove.valueOf()] = [
+        pr.listeners[UI512EventType.MouseMove.valueOf()] = [
             BasicHandlers.trackCurrentElMouseMove,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondMouseMove,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
-            this.editTextBehavior.onMouseMoveSelect.bind(this.editTextBehavior)
+            editTextBehavior.onMouseMoveSelect.bind(editTextBehavior)
         ];
 
-        this.pr.listeners[UI512EventType.MouseEnter.valueOf()] = [
+        pr.listeners[UI512EventType.MouseEnter.valueOf()] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.scheduleScriptEvent,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
@@ -71,7 +77,7 @@ export class VpcPresenterEvents {
             MenuListeners.onMouseEnter
         ];
 
-        this.pr.listeners[UI512EventType.MouseLeave.valueOf()] = [
+        pr.listeners[UI512EventType.MouseLeave.valueOf()] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.scheduleScriptEvent,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
@@ -79,50 +85,53 @@ export class VpcPresenterEvents {
             MenuListeners.onMouseLeave
         ];
 
-        this.pr.listeners[UI512EventType.MouseDownDouble.valueOf()] = [
+        pr.listeners[UI512EventType.MouseDownDouble.valueOf()] = [
             BasicHandlers.trackMouseDoubleDown,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.scheduleScriptEvent,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
-            this.editTextBehavior.onMouseDoubleDown.bind(this.editTextBehavior),
+            editTextBehavior.onMouseDoubleDown.bind(editTextBehavior),
             VpcPresenterEvents.respondMouseDoubleDown
         ];
 
-        this.pr.listeners[UI512EventType.KeyUp.valueOf()] = [
+        pr.listeners[UI512EventType.KeyUp.valueOf()] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondKeyUp,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool
         ];
 
-        this.pr.listeners[UI512EventType.KeyDown.valueOf()] = [
+        pr.listeners[UI512EventType.KeyDown.valueOf()] = [
             BasicHandlers.basicKeyShortcuts,
-            (a1: VpcPresenterInterface, a3: KeyDownEventDetails) =>
-                VpcPresenterEvents.respondKeyDown(a1, a3, this.editTextBehavior),
+            (_pr: VpcPresenterInterface, d: KeyDownEventDetails) =>
+                VpcPresenterEvents.respondKeyDown(_pr, d, editTextBehavior),
             VpcPresenterEvents.cancelEvtIfNotBrowseTool
         ];
 
-        this.pr.listeners[UI512EventType.PasteText.valueOf()] = [
-            (a1: VpcPresenterInterface, a3: PasteTextEventDetails) => {
-                this.pr.vci.undoableAction(() => {
-                    this.editTextBehavior.onPasteText(a1, a3);
+        pr.listeners[UI512EventType.PasteText.valueOf()] = [
+            (_pr: VpcPresenterInterface, d: PasteTextEventDetails) => {
+                _pr.vci.undoableAction(() => {
+                    editTextBehavior.onPasteText(_pr, d);
                 });
             }
         ];
 
-        this.pr.listeners[UI512EventType.MenuItemClicked.valueOf()] = [
+        pr.listeners[UI512EventType.MenuItemClicked.valueOf()] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondMenuItemClicked
         ];
 
-        this.pr.listeners[UI512EventType.FocusChanged.valueOf()] = [VpcPresenterEvents.cancelEvtIfCodeRunning];
+        pr.listeners[UI512EventType.FocusChanged.valueOf()] = [VpcPresenterEvents.cancelEvtIfCodeRunning];
 
-        this.pr.listeners[UI512EventType.Idle.valueOf()] = [
+        pr.listeners[UI512EventType.Idle.valueOf()] = [
             VpcPresenterEvents.respondIdle,
             BasicHandlers.onIdleRunCallbackQueueFromAsyncs,
-            this.editTextBehavior.onIdle.bind(this.editTextBehavior)
+            editTextBehavior.onIdle.bind(editTextBehavior)
         ];
     }
 
+    /**
+     * by calling setHandled, this stops event propagation
+     */
     static cancelEvtIfCodeRunning(pr: VpcPresenterInterface, d: EventDetails) {
         if (pr.vci.isCodeRunning()) {
             let isElemStopRunning = d.getAffectedElements().some(el => pr.lyrToolboxes.isElemStopRunning(el));
@@ -132,28 +141,38 @@ export class VpcPresenterEvents {
         }
     }
 
+    /**
+     * if we're not in the browse tool,
+     * when you click on a vel button it shouldn't have any response
+     * without this check here, you'd be able to click on a vel button even when
+     * you are in the pencil tool
+     */
     static cancelEvtIfNotBrowseTool(pr: VpcPresenterInterface, d: EventDetails) {
-        // if we're not in the browse tool,
-        // stop all behavior like highlighting a button or selecting text in field
         let isVel = d.getAffectedElements().some(item => !!pr.lyrModelRender.elIdToVelId(item.id));
         if (isVel && pr.vci.getTool() !== VpcTool.Browse) {
             d.setHandled();
         }
     }
 
+    /**
+     * double-click the eraser tool to erase all paint on the screen
+     */
     static respondMouseDoubleDown(pr: VpcPresenterInterface, d: MouseDownDoubleEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.el && d.el.id) {
                 let short = pr.lyrToolboxes.toolsMain.fromFullId(d.el.id);
                 if (short && short.endsWith('##eraser')) {
                     pr.vci.setTool(VpcTool.Eraser);
-                    let resp = cast(pr.getToolResponse(VpcTool.Eraser), VpcAppUIToolSmear);
-                    resp.clearAllPaint();
+                    let tl = cast(pr.getToolResponse(VpcTool.Eraser), VpcAppUIToolSmear);
+                    tl.clearAllPaint();
                 }
             }
         });
     }
 
+    /**
+     * send mousedown event to the current tool
+     */
     static respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
@@ -161,7 +180,7 @@ export class VpcPresenterEvents {
                 pr.getToolResponse(pr.vci.getTool()).respondMouseDown(pr.vci.getTool(), d, isUserElOrBg);
                 pr.lyrNonModalDlgHolder.respondMouseDown(d);
 
-                // change focus on click, to make the property panel commit
+                /* change focus on click, to make the property panel commit */
                 let wasFocused = pr.getCurrentFocus();
                 pr.setCurrentFocus(undefined);
                 pr.setCurrentFocus(wasFocused);
@@ -169,6 +188,9 @@ export class VpcPresenterEvents {
         });
     }
 
+    /**
+     * send mouseup event to the current tool, and any layers that need to respond to it
+     */
     static respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
@@ -183,6 +205,9 @@ export class VpcPresenterEvents {
         });
     }
 
+    /**
+     * send mousemove event t ocurrent tool
+     */
     static respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
         let isUserElOrBg = d.getAffectedElements().some(item => !!pr.lyrModelRender.isVelOrBg(item.id));
         pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBg);
@@ -192,10 +217,11 @@ export class VpcPresenterEvents {
         }
     }
 
-    static respondSchedMessage() {}
-
-    static checkIfUndoRedo(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
-        // these must be done outside of a undoableAction() block
+    /**
+     * respond to keyboard shortcuts for undo and redo
+     */
+    protected static checkIfUndoRedo(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
+        /* these must be done outside of a undoableAction() block */
         if (!d.handled() && !pr.vci.isCodeRunning() && !d.repeated) {
             if (d.readableShortcut === 'Cmd+Z') {
                 pr.vci.performMenuAction('mnuUndo');
@@ -207,6 +233,9 @@ export class VpcPresenterEvents {
         }
     }
 
+    /**
+     * respond to keydown event
+     */
     static respondKeyDown(pr: VpcPresenterInterface, d: KeyDownEventDetails, ed: EditTextBehaviorSendToVel) {
         VpcPresenterEvents.checkIfUndoRedo(pr, d);
         if (d.handled()) {
@@ -216,7 +245,7 @@ export class VpcPresenterEvents {
         pr.vci.undoableAction(() => {
             let currentFocus = pr.getCurrentFocus();
 
-            // menu action
+            /* menu action */
             let translated = pr.lyrMenus.translateHotkey(d);
             if (!pr.vci.isCodeRunning() && !d.handled() && translated) {
                 if (translated.startsWith('onlyIfNotInTextField/')) {
@@ -241,17 +270,17 @@ export class VpcPresenterEvents {
                 getToolCategory(pr.vci.getTool()) === VpcToolCtg.CtgEdit &&
                 slength(pr.vci.getOptionS('viewingScriptVelId'))
             ) {
-                // code editor keyboard shortcuts
+                /* code editor keyboard shortcuts */
                 pr.lyrPropPanel.editor.respondKeydown(d);
             }
 
             if (!pr.vci.isCodeRunning() && !d.handled()) {
-                // non-modal dialog keyboard shortcuts
+                /* non-modal dialog keyboard shortcuts */
                 pr.lyrNonModalDlgHolder.respondKeyDown(d);
             }
 
             if (!pr.vci.isCodeRunning() && !d.handled() && getToolCategory(pr.vci.getTool()) === VpcToolCtg.CtgEdit) {
-                // prop panel keyboard shortcuts
+                /* prop panel keyboard shortcuts */
                 pr.lyrPropPanel.respondKeydown(d);
             }
 
@@ -269,10 +298,16 @@ export class VpcPresenterEvents {
         });
     }
 
+    /**
+     * schedule a script event
+     */
     static scheduleScriptEvent(pr: VpcPresenterInterface, d: EventDetails) {
         VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d);
     }
 
+    /**
+     * send keyup to current script
+     */
     static respondKeyUp(pr: VpcPresenterInterface, d: EventDetails) {
         if (!d.handled() && pr.vci.getTool() === VpcTool.Browse) {
             VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d);
@@ -283,10 +318,16 @@ export class VpcPresenterEvents {
         }
     }
 
+    /**
+     * respond to menu item
+     */
     static respondMenuItemClicked(pr: VpcPresenterInterface, d: MenuItemClickedDetails) {
         pr.vci.performMenuAction(d.id);
     }
 
+    /**
+     * on idle (this event is continuously sent)
+     */
     static respondIdle(pr: VpcPresenterInterface, d: IdleEventDetails) {
         let curtool = pr.vci.getTool();
         let codeRunning = pr.vci.isCodeRunning();
@@ -300,7 +341,7 @@ export class VpcPresenterEvents {
         }
 
         if (!d.handled() && curtool === VpcTool.Browse) {
-            // run scripts. note that anything a script does is undoable.
+            /* run scripts. note that anything a script does is undoable. */
             pr.timerRunScript.update(d.milliseconds);
             if (pr.timerRunScript.isDue()) {
                 pr.timerRunScript.reset();
@@ -316,27 +357,27 @@ export class VpcPresenterEvents {
         }
 
         if (!d.handled()) {
-            // mousewithin events are currently only sent a few times a second to not overwhelm system with events
+            /* mousewithin events are currently only sent a few times a second to not overwhelm system with events */
             pr.timerSendMouseWithin.update(d.milliseconds);
             if (pr.timerSendMouseWithin.isDue()) {
                 pr.timerSendMouseWithin.reset();
                 if (curtool === VpcTool.Browse) {
-                    // send mousewithin
+                    /* send mousewithin */
                     VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d, pr.trackMouse[0], pr.trackMouse[1]);
                 }
             }
         }
 
         if (!d.handled()) {
-            // should be fairly fast, not adding anything to a queue, if there is no handler.
-            // send onidle event to script
+            /* should be fairly fast, not adding anything to a queue, if there is no handler. */
+            /* send onidle event to script */
             if (curtool === VpcTool.Browse) {
                 VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d, -1, -1);
             }
         }
 
         if (!d.handled()) {
-            // good, the caret won't be blinking in a text field when script is running
+            /* good, the caret won't be blinking in a text field when script is running */
             pr.timerBlinkMarquee.update(d.milliseconds);
             if (pr.timerBlinkMarquee.isDue()) {
                 pr.timerBlinkMarquee.reset();
@@ -346,6 +387,23 @@ export class VpcPresenterEvents {
         }
     }
 
+    /**
+     * is the menubar open
+     */
+    protected static menuIsOpen(pr: VpcPresenterInterface) {
+        let grpmenubar = pr.app.findGroup('$$grpmenubar');
+        if (grpmenubar) {
+            let menubar = grpmenubar.findEl('$$menubarforapp');
+            if (menubar && menubar.getN('whichIsExpanded') >= 0) {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * finds target vel id and
+     * schedules a script message (only if browse tool is active)
+     */
     static scheduleScriptMsg(
         pr: VpcPresenterInterface,
         vci: VpcStateInterface,
@@ -358,7 +416,7 @@ export class VpcPresenterEvents {
         }
 
         if (pr.lyrNonModalDlgHolder.current) {
-            // don't let 'on idle' run when you are running a msg box command
+            /* don't let 'on idle' run when you are running a msg box command */
             let cur = pr.lyrNonModalDlgHolder.current as VpcNonModalReplBox;
             if (cur.isVpcNonModalReplBox && cur.busy && !(d instanceof MouseUpEventDetails)) {
                 return;
@@ -366,7 +424,6 @@ export class VpcPresenterEvents {
         }
 
         let target: O<string>;
-        let msgname = getMsgNameFromType(d.type());
         let isOnIdleEvent = false;
         if (d instanceof MouseUpEventDetails) {
             if (d.elClick) {
@@ -386,13 +443,13 @@ export class VpcPresenterEvents {
             }
         } else if (d instanceof IdleEventDetails) {
             if (mouseX !== -1 && mouseY !== -1) {
-                // mousewithin event
+                /* mousewithin event */
                 let el = pr.vci.UI512App().coordsToElement(mouseX, mouseY);
                 if (el) {
                     target = el.id;
                 }
             } else {
-                // idle event
+                /* idle event */
                 target = '<use-current-card>';
                 isOnIdleEvent = true;
             }
@@ -404,29 +461,22 @@ export class VpcPresenterEvents {
         }
     }
 
-    protected static menuIsOpen(pr: VpcPresenterInterface) {
-        let grpmenubar = pr.app.findGroup('$$grpmenubar');
-        if (grpmenubar) {
-            let menubar = grpmenubar.findEl('$$menubarforapp');
-            if (menubar && menubar.getN('whichIsExpanded') >= 0) {
-                return true;
-            }
-        }
-    }
-
+    /**
+     * schedule a script message (only if browse tool is active)
+     */
     static scheduleScriptMsgImpl(
         pr: VpcPresenterInterface,
         d: EventDetails,
         targetVelId: string,
         isOnIdleEvent: boolean
     ) {
-        // don't start scripts if menu is open
+        /* don't start scripts if menu is open */
         if (VpcPresenterEvents.menuIsOpen(pr)) {
             return;
         }
 
-        let msgtype = isOnIdleEvent ? VpcBuiltinMsg.idle : getMsgNameFromType(d.type());
-        let msg = new VpcScriptMessage(targetVelId, msgtype);
+        let whichMsg = isOnIdleEvent ? VpcBuiltinMsg.Idle : getMsgFromEvtType(d.type());
+        let msg = new VpcScriptMessage(targetVelId, whichMsg);
         msg.mouseLoc = [pr.trackMouse[0] - pr.userBounds[0], pr.trackMouse[1] - pr.userBounds[1]];
         msg.mouseIsDown = pr.trackPressedBtns[0];
         msg.cardWhenFired = pr.vci.getOptionS('currentCardId');
@@ -451,19 +501,35 @@ export class VpcPresenterEvents {
     }
 }
 
+/**
+ * we must route text changes to a vel instead of directly setting the UI512 element
+ */
 export class EditTextBehaviorSendToVel extends UI512TextEvents {
-    protected scrollbarImplSendToVel: ScrollbarImplSendToVel;
-
     constructor(protected pr: VpcPresenterInterface) {
         super();
-        this.scrollbarImplSendToVel = new ScrollbarImplSendToVel(pr);
     }
+
+    /**
+     * override the UI512TextEvents method to get our own scrollbarImpl
+     */
     protected getScrollbarImpl() {
-        return this.scrollbarImplSendToVel;
+        return new ScrollbarImplSendToVel(this.pr);
     }
+
+    /**
+     * if this is a vel, we should send to the vel
+     * otherwise, send to the ui512el
+     */
     protected gelFromEl(el: O<UI512ElTextField>): O<GenericTextField> {
+        return EditTextBehaviorSendToVel.gelFromEl(this.pr, el);
+    }
+
+    /**
+     * get the vel, if it exists, else return the el
+     */
+    static gelFromEl(pr: VpcPresenterInterface, el: O<UI512ElTextField>): O<GenericTextField> {
         if (el) {
-            let vel = this.pr.lyrModelRender.findElIdToVel(el.id);
+            let vel = pr.lyrModelRender.findElIdToVel(el.id);
             if (vel) {
                 let velFld = cast(vel, VpcElField);
                 return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld) : undefined;
@@ -476,20 +542,22 @@ export class EditTextBehaviorSendToVel extends UI512TextEvents {
     }
 }
 
+/**
+ * a modified version of ScrollbarImpl that, when applicable,
+ * routes text changes to a vel instead of directly setting the UI512 element
+ */
 export class ScrollbarImplSendToVel extends ScrollbarImpl {
     constructor(protected pr: VpcPresenterInterface) {
         super();
     }
 
+    /**
+     * if this is a vel, we should send to the vel
+     * otherwise, send to the ui512el
+     */
     protected gelFromEl(el: O<UI512Element>): O<GenericTextField> {
-        if (el && el instanceof UI512ElTextField) {
-            let vel = this.pr.lyrModelRender.findElIdToVel(el.id);
-            if (vel) {
-                let velFld = cast(vel, VpcElField);
-                return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld) : undefined;
-            } else {
-                return new UI512ElTextFieldAsGeneric(el);
-            }
+        if (el instanceof UI512ElTextField) {
+            return EditTextBehaviorSendToVel.gelFromEl(this.pr, el);
         } else {
             return undefined;
         }

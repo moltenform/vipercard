@@ -20,6 +20,9 @@ export class UI512ImageSerialization {
     readonly asciiNumWhite = clrWhite.toString().charCodeAt(0);
     readonly asciiNumTransp = clrTransp.toString().charCodeAt(0);
 
+    /**
+     * uncompress the string and paint the image onto the canvas
+     */
     loadFromString(canvas: CanvasWrapper, compressed: string) {
         const w = canvas.canvas.width;
         const h = canvas.canvas.height;
@@ -61,6 +64,9 @@ export class UI512ImageSerialization {
         canvas.context.putImageData(data, 0, 0);
     }
 
+    /**
+     * convert the image on the canvas to a compressed string
+     */
     writeToString(canvas: CanvasWrapper) {
         const w = canvas.canvas.width;
         const h = canvas.canvas.height;
@@ -68,6 +74,9 @@ export class UI512ImageSerialization {
         return this.writeToStringFromData(data.data, w, h);
     }
 
+    /**
+     * convert the given imagedata to a compressed string
+     */
     writeToStringFromData(data: Uint8ClampedArray, w: number, h: number) {
         assertEq(data.length, 4 * w * h, '2`|');
         let reader = new UI512PainterCvData(data, w, h);

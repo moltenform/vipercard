@@ -21,14 +21,7 @@ export class IconInfo {
  */
 export class RenderIcon {
     constructor(public set: RenderIconGroup, public srcRect: number[]) {}
-    public drawIntoBox(
-        canvas: CanvasWrapper,
-        info: IconInfo,
-        boxX0: number,
-        boxY0: number,
-        boxW: number,
-        boxH: number
-    ) {
+    drawIntoBox(canvas: CanvasWrapper, info: IconInfo, boxX0: number, boxY0: number, boxW: number, boxH: number) {
         let srcRect = [
             this.srcRect[0] + info.adjustSrcX,
             this.srcRect[1] + info.adjustSrcY,
@@ -105,7 +98,7 @@ export class RenderIconGroup {
             return undefined;
         }
 
-        /* srcx and srcy can either be manually set in customOffsets,
+        /* srcX and srcY can either be manually set in customOffsets,
         or computed assuming that icons are laid out in a grid */
         let offsets = this.customOffsets[iconNumber];
         if (offsets === undefined) {

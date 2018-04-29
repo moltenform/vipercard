@@ -10,14 +10,14 @@
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcInitIcons } from '../../vpc/vpcutils/vpcInitIcons.js';
 /* auto */ import { VpcUiIntro } from '../../vpcui/intro/vpcIntro.js';
-/* auto */ import { UI512DemoTextEdit } from '../../test/ui512/uiDemoTextEdit.js';
-/* auto */ import { UI512DemoText } from '../../test/ui512/uiDemoText.js';
-/* auto */ import { UI512DemoPaint } from '../../test/ui512/uiDemoPaint.js';
-/* auto */ import { UI512DemoMenus } from '../../test/ui512/uiDemoMenus.js';
-/* auto */ import { UI512DemoComposites } from '../../test/ui512/uiDemoComposites.js';
-/* auto */ import { UI512DemoButtons } from '../../test/ui512/uiDemoButtons.js';
-/* auto */ import { UI512DemoBasic } from '../../test/ui512/uiDemoBasic.js';
-/* auto */ import { runTestsImpl } from '../../test/vpcui/testRegistration.js';
+/* auto */ import { UI512DemoTextEdit } from '../../test/ui512demo/uiDemoTextEdit.js';
+/* auto */ import { UI512DemoText } from '../../test/ui512demo/uiDemoText.js';
+/* auto */ import { UI512DemoPaint } from '../../test/ui512demo/uiDemoPaint.js';
+/* auto */ import { UI512DemoMenus } from '../../test/ui512demo/uiDemoMenus.js';
+/* auto */ import { UI512DemoComposites } from '../../test/ui512demo/uiDemoComposites.js';
+/* auto */ import { UI512DemoButtons } from '../../test/ui512demo/uiDemoButtons.js';
+/* auto */ import { UI512DemoBasic } from '../../test/ui512demo/uiDemoBasic.js';
+/* auto */ import { runTestsImpl } from '../../test/vpc/testRegistration.js';
 
 export class FullRootUI512 implements Root {
     domCanvas: CanvasWrapper;
@@ -59,7 +59,7 @@ export class FullRootUI512 implements Root {
         }
     }
 
-    public invalidateAll() {
+    invalidateAll() {
         try {
             this.presenter.invalidateAll();
         } catch (e) {
@@ -67,23 +67,23 @@ export class FullRootUI512 implements Root {
         }
     }
 
-    public getDrawText() {
+    getDrawText() {
         return this.drawText;
     }
 
-    public getDrawIcon() {
+    getDrawIcon() {
         return this.iconManager;
     }
 
-    public getSession() {
+    getSession() {
         return this.session;
     }
 
-    public setSession(ss: O<UI512IsSessionInterface>) {
+    setSession(ss: O<UI512IsSessionInterface>) {
         this.session = ss;
     }
 
-    public getBrowserInfo() {
+    getBrowserInfo() {
         return this.browserOSInfo;
     }
 
@@ -206,7 +206,7 @@ export class FullRootUI512 implements Root {
         this.timerSendIdleEvent = new RepeatingTimer(rate);
     }
 
-    public runTests(all: boolean) {
+    runTests(all: boolean) {
         runTestsImpl(all);
     }
 }

@@ -6,12 +6,20 @@
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
 
+/**
+ * provide menu structure and keybindings
+ */
 export abstract class VpcAppMenuStructure extends VpcUILayer {
     constructor() {
         super();
         this.initkeymappings();
     }
 
+    /**
+     * provide menu structure
+     * with syntax
+     * itemId|lngLabel|shortcutKey
+     */
     protected getMenuStruct(): UI512MenuDefn[] {
         return [
             [
@@ -60,7 +68,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                     '|---|',
                     'mnuNewCard|lngNew Card|',
                     'mnuDelCard|lngDelete Card|'
-                    // "mnuDupeCard|lngDuplicate Card|",
+                    /* "mnuDupeCard|lngDuplicate Card|", */
                 ]
             ],
             [
@@ -77,22 +85,22 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
             [
                 'mnuHeaderTools|lngTools',
                 [
-                    'mnuItemTool2|lngBrowse|',
-                    'mnuItemTool3|lngButton|',
-                    'mnuItemTool4|lngField|',
-                    'mnuItemTool5|lngSelect|',
-                    'mnuItemTool6|lngBrush|',
-                    'mnuItemTool7|lngBucket|',
-                    'mnuItemTool8|lngStamp|',
-                    'mnuItemTool9|lngPencil|',
-                    'mnuItemTool10|lngLine|',
-                    'mnuItemTool11|lngLasso|',
-                    'mnuItemTool12|lngEraser|',
-                    'mnuItemTool13|lngRect|',
-                    'mnuItemTool14|lngOval|',
-                    'mnuItemTool15|lngRoundrect|',
-                    'mnuItemTool16|lngCurve|',
-                    'mnuItemTool17|lngSpray|'
+                    'mnuItemTool3|lngBrowse|',
+                    'mnuItemTool4|lngButton|',
+                    'mnuItemTool5|lngField|',
+                    'mnuItemTool6|lngSelect|',
+                    'mnuItemTool7|lngBrush|',
+                    'mnuItemTool8|lngBucket|',
+                    'mnuItemTool9|lngStamp|',
+                    'mnuItemTool10|lngPencil|',
+                    'mnuItemTool11|lngLine|',
+                    'mnuItemTool12|lngLasso|',
+                    'mnuItemTool13|lngEraser|',
+                    'mnuItemTool14|lngRect|',
+                    'mnuItemTool15|lngOval|',
+                    'mnuItemTool16|lngRoundrect|',
+                    'mnuItemTool17|lngCurve|',
+                    'mnuItemTool18|lngSpray|'
                 ]
             ],
             [
@@ -180,46 +188,56 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
         ];
     }
 
-    keymappings: { [key: string]: ((self: VpcAppMenuStructure) => O<string>) | string } = {};
+    /* map key to either a menu id, or a custom function */
+    keyMappings: { [key: string]: ((self: VpcAppMenuStructure) => O<string>) | string } = {};
 
+    /**
+     * populate keyMappings
+     */
     initkeymappings() {
-        this.keymappings['ArrowLeft'] = (self: VpcAppMenuStructure) => {
+        /*
+            Non-catchable chrome shortcuts :( include
+                Ctrl-T
+                Ctrl-W
+                Ctrl-N
+                Ctrl-Shift-Q
+        */
+
+        this.keyMappings['ArrowLeft'] = (self: VpcAppMenuStructure) => {
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardPrev';
             }
         };
-        this.keymappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
+
+        this.keyMappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardNext';
             }
         };
 
-        /*
-            Non-catchable chrome shortcuts :(
-                Ctrl-T
-                Ctrl-W
-                Ctrl-N
-                Ctrl-Shift-Q
-            */
-        this.keymappings['Home'] = 'onlyIfNotInTextField/mnuGoCardFirst';
-        this.keymappings['End'] = 'onlyIfNotInTextField/mnuGoCardLast';
-        this.keymappings['Backspace'] = 'onlyIfNotInTextField/mnuClear';
-        this.keymappings['Delete'] = 'onlyIfNotInTextField/mnuClear';
-        this.keymappings['Cmd+E'] = 'mnuExportStack';
-        this.keymappings['Cmd+S'] = 'mnuSave';
-        this.keymappings['Cmd+Shift+S'] = 'mnuSaveAs';
-        this.keymappings['Cmd+U'] = 'mnuQuit';
-        this.keymappings['Cmd+1'] = 'mnuGoCardFirst';
-        this.keymappings['Cmd+2'] = 'mnuGoCardPrev';
-        this.keymappings['Cmd+3'] = 'mnuGoCardNext';
-        this.keymappings['Cmd+4'] = 'mnuGoCardLast';
-        this.keymappings['Cmd+M'] = 'mnuMsgBox';
-        this.keymappings['Cmd+Shift+J'] = 'mnuCreateManyButtons';
+        this.keyMappings['Home'] = 'onlyIfNotInTextField/mnuGoCardFirst';
+        this.keyMappings['End'] = 'onlyIfNotInTextField/mnuGoCardLast';
+        this.keyMappings['Backspace'] = 'onlyIfNotInTextField/mnuClear';
+        this.keyMappings['Delete'] = 'onlyIfNotInTextField/mnuClear';
+        this.keyMappings['Cmd+E'] = 'mnuExportStack';
+        this.keyMappings['Cmd+S'] = 'mnuSave';
+        this.keyMappings['Cmd+Shift+S'] = 'mnuSaveAs';
+        this.keyMappings['Cmd+U'] = 'mnuQuit';
+        this.keyMappings['Cmd+1'] = 'mnuGoCardFirst';
+        this.keyMappings['Cmd+2'] = 'mnuGoCardPrev';
+        this.keyMappings['Cmd+3'] = 'mnuGoCardNext';
+        this.keyMappings['Cmd+4'] = 'mnuGoCardLast';
+        this.keyMappings['Cmd+M'] = 'mnuMsgBox';
+        this.keyMappings['Cmd+Shift+J'] = 'mnuCreateManyButtons';
     }
 
+    /**
+     * from key event, to menu id
+     * returns menu id, or undefined if none found
+     */
     translateHotkey(d: KeyDownEventDetails): O<string> {
         if (!d.repeated) {
-            let mapped = this.keymappings[d.readableShortcut];
+            let mapped = this.keyMappings[d.readableShortcut];
             if (isString(mapped)) {
                 return mapped as string;
             } else if (typeof mapped === 'function') {

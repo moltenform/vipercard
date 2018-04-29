@@ -58,7 +58,7 @@ export interface VpcCompleteVisitor {
     RuleAnyPropertyVal(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleOf(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCall(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCall_Length(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallLength(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallWithParens(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallWithoutParensOrGlobalGetPropOrTarget(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf(ctx: VisitingContext): string | VpcIntermedValBase;
@@ -114,7 +114,7 @@ export interface VisitingContext {
     RuleAnyPropertyVal: any[];
     RuleOf: any[];
     RuleFnCall: any[];
-    RuleFnCall_Length: any[];
+    RuleFnCallLength: any[];
     RuleFnCallWithParens: any[];
     RuleFnCallWithoutParensOrGlobalGetPropOrTarget: any[];
     RuleFnCallNumberOf: any[];

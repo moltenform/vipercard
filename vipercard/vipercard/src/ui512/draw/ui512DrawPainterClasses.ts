@@ -100,13 +100,13 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     /**
      * draw a straight line
      */
-    publicStraightLine(x0: number, y0: number, x1in: number, y1in: number, clr: number, linesize: number) {
+    publicStraightLine(x0: number, y0: number, x1in: number, y1in: number, clr: number, lineSize: number) {
         let w = x1in - x0;
         let h = y1in - y0;
-        return this.drawShapeAdjustableBorderImpl(0, linesize, (fillcolorinput, ofx, ofy) => {
-            let x1 = x0 + ofx + w;
-            let y1 = y0 + ofy + h;
-            this.plotLine(x0 + ofx, y0 + ofy, x1, y1, clr);
+        return this.drawShapeAdjustableBorderImpl(0, lineSize, (fillColorInput, ofX, ofY) => {
+            let x1 = x0 + ofX + w;
+            let y1 = y0 + ofY + h;
+            this.plotLine(x0 + ofX, y0 + ofY, x1, y1, clr);
         });
     }
 
@@ -119,13 +119,13 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         x1: number,
         y1: number,
         color: number,
-        fillcolor: O<number>,
-        linesize: number
+        fillColor: O<number>,
+        lineSize: number
     ) {
         let w = x1 - x0;
         let h = y1 - y0;
-        return this.drawShapeAdjustableBorderImpl(fillcolor, linesize, (fillcolorinput, ofx, ofy) => {
-            this.drawvpcroundrectPorted(x0 + ofx, y0 + ofy, w, h, color, fillcolorinput);
+        return this.drawShapeAdjustableBorderImpl(fillColor, lineSize, (fillColorInput, ofX, ofY) => {
+            this.drawvpcroundrectPorted(x0 + ofX, y0 + ofY, w, h, color, fillColorInput);
         });
     }
 
@@ -135,13 +135,13 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         x1: number,
         y1: number,
         color: number,
-        fillcolor: O<number>,
-        linesize: number
+        fillColor: O<number>,
+        lineSize: number
     ) {
         let w = x1 - x0;
         let h = y1 - y0;
-        return this.drawShapeAdjustableBorderImpl(fillcolor, linesize, (fillcolorinput, ofx, ofy) => {
-            this.drawboxthinborderPorted(x0 + ofx, y0 + ofy, w, h, color, fillcolorinput);
+        return this.drawShapeAdjustableBorderImpl(fillColor, lineSize, (fillColorInput, ofX, ofY) => {
+            this.drawboxthinborderPorted(x0 + ofX, y0 + ofY, w, h, color, fillColorInput);
         });
     }
 
@@ -153,10 +153,10 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         x2: number,
         y2: number,
         color: number,
-        linesize: number
+        lineSize: number
     ) {
-        return this.drawShapeAdjustableBorderImpl(0, linesize, (fillcolorinput, ofx, ofy) => {
-            this.plotQuadBezier(x0 + ofx, y0 + ofy, x1 + ofx, y1 + ofy, x2 + ofx, y2 + ofy, color);
+        return this.drawShapeAdjustableBorderImpl(0, lineSize, (fillColorInput, ofX, ofY) => {
+            this.plotQuadBezier(x0 + ofX, y0 + ofY, x1 + ofX, y1 + ofY, x2 + ofX, y2 + ofY, color);
         });
     }
 
@@ -166,8 +166,8 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         x1: number,
         y1: number,
         color: number,
-        fillcolor: O<number>,
-        linesize: number
+        fillColor: O<number>,
+        lineSize: number
     ) {
         let w = x1 - xm;
         let h = y1 - ym;
@@ -176,8 +176,8 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         let a = Math.floor(w / 2);
         let b = Math.floor(h / 2);
 
-        return this.drawShapeAdjustableBorderImpl(fillcolor, linesize, (fillcolorinput, ofx, ofy) => {
-            this.plotEllipseAxis(centerx + ofx, centery + ofy, a, b, color, fillcolorinput);
+        return this.drawShapeAdjustableBorderImpl(fillColor, lineSize, (fillColorInput, ofX, ofY) => {
+            this.plotEllipseAxis(centerx + ofX, centery + ofY, a, b, color, fillColorInput);
         });
     }
 
@@ -217,12 +217,12 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
      * optionally draw a "thicker" line by drawing the same shape 5 times, once in the center and all around it.
      */
     protected drawShapeAdjustableBorderImpl(
-        fillcolor: O<number>,
-        linesize: number,
+        fillColor: O<number>,
+        lineSize: number,
         fn: (fill: O<number>, offsetX: number, ofsetfY: number) => void
     ) {
-        fn(fillcolor, 0, 0);
-        if (linesize > 1) {
+        fn(fillColor, 0, 0);
+        if (lineSize > 1) {
             /* draw the shape again (with transparent fill) to make border thicker */
             fn(undefined, 0, 1);
             fn(undefined, 0, -1);
@@ -305,14 +305,14 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     /**
      * plot ellipse fitting the rectangle, rather than with center+radius
      */
-    plotEllipse(xm: number, ym: number, w: number, h: number, color: number, fillcolor: O<number>) {
+    plotEllipse(xm: number, ym: number, w: number, h: number, color: number, fillColor: O<number>) {
         this.plotEllipseAxis(
             xm + Math.floor(w / 2),
             ym + Math.floor(h / 2),
             Math.floor(w / 2),
             Math.floor(h / 2),
             color,
-            fillcolor
+            fillColor
         );
     }
 
@@ -334,7 +334,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         let dy = -Math.abs(y1 - y0);
         let sy = y0 < y1 ? 1 : -1;
         let err = dx + dy;
-        let e2; /* error value e_xy */
+        let e2; /* error value exy */
 
         for (;;) {
             /* loop */
@@ -355,7 +355,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         }
     }
 
-    protected plotEllipseAxis(xm: number, ym: number, a: number, b: number, color: number, fillcolor: O<number>) {
+    protected plotEllipseAxis(xm: number, ym: number, a: number, b: number, color: number, fillColor: O<number>) {
         xm = Math.floor(xm);
         ym = Math.floor(ym);
         a = Math.floor(a);
@@ -373,7 +373,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
                 ym - Math.abs(y),
                 Math.abs(x) * 2 + 1,
                 Math.abs(y) * 2 + 1,
-                fillcolor
+                fillColor
             );
             this.setPixel(xm - x, ym + y, color); /*   I. Quadrant */
             this.setPixel(xm + x, ym + y, color); /*  II. Quadrant */
@@ -392,13 +392,13 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
         while (y++ < b) {
             /* too early stop for flat ellipses with a=1, */
-            this.fillRectMightBeClear(xm, ym - Math.abs(y), 1, Math.abs(y) * 2, fillcolor);
+            this.fillRectMightBeClear(xm, ym - Math.abs(y), 1, Math.abs(y) * 2, fillColor);
             this.setPixel(xm, ym - y, color); /* -> finish tip of ellipse */
             this.setPixel(xm, ym + y, color);
         }
     }
 
-    plotCircle(xm: number, ym: number, r: number, color: number, fillcolor: number) {
+    plotCircle(xm: number, ym: number, r: number, color: number, fillColor: number) {
         xm = Math.floor(xm);
         ym = Math.floor(ym);
         r = Math.floor(r);

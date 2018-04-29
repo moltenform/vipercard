@@ -6,65 +6,79 @@
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 
-export class VpcAppUILasso extends VpcAppUIToolSelectBase {
+/**
+ * lasso tool, for free-form selection
+ * see VpcAppUIToolSelectBase for more information
+ */
+export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
+    /**
+     * draw the blinking border around the selection
+     */
     protected selectingDrawTheBorder(
         st: SelectToolState,
         cv: CanvasWrapper,
         painter: UI512Painter,
-        tmousepx: number,
-        tmousepy: number,
-        tmousenx: number,
-        tmouseny: number
+        prevTX: number,
+        prevTY: number,
+        tx: number,
+        ty: number
     ) {
-        /* lasso select. */
-        if (this.state) {
+        if (this.st) {
             let args = new UI512PaintDispatch(
                 UI512PaintDispatchShapes.SmearPencil,
-                [tmousepx, tmousenx],
-                [tmousepy, tmouseny],
+                [prevTX, tx],
+                [prevTY, ty],
                 clrBlack,
                 clrBlack,
                 false,
                 1
             );
+
             UI512PaintDispatch.go(args, painter);
             if (
-                tmousepx !== this.state.recordxpts[this.state.recordxpts.length - 1] ||
-                tmousepy !== this.state.recordypts[this.state.recordypts.length - 1]
+                prevTX !== this.st.recordXpts[this.st.recordXpts.length - 1] ||
+                prevTY !== this.st.recordYpts[this.st.recordYpts.length - 1]
             ) {
-                this.state.recordxpts.push(tmousepx);
-                this.state.recordypts.push(tmousepy);
+                this.st.recordXpts.push(prevTX);
+                this.st.recordYpts.push(prevTY);
             }
 
-            this.state.recordxpts.push(tmousenx);
-            this.state.recordypts.push(tmouseny);
+            this.st.recordXpts.push(tx);
+            this.st.recordYpts.push(ty);
         }
     }
 
+    /**
+     * draw the shape we want to select as a filled-in black shape
+     */
     protected makeBlack() {
-        if (this.state) {
-            let cv = cast(this.state.elStage.getCachedPainterForWrite().getBackingSurface(), CanvasWrapper);
+        if (this.st) {
+            let cv = cast(this.st.elStage.getCachedPainterForWrite().getBackingSurface(), CanvasWrapper);
             cv.clear();
 
             let args = new UI512PaintDispatch(
                 UI512PaintDispatchShapes.IrregularPolygon,
-                this.state.recordxpts,
-                this.state.recordypts,
+                this.st.recordXpts,
+                this.st.recordYpts,
                 clrBlack,
                 clrBlack,
                 true
             );
 
-            UI512PaintDispatch.go(args, this.state.elStage.getCachedPainterForWrite());
+            UI512PaintDispatch.go(args, this.st.elStage.getCachedPainterForWrite());
         }
     }
 
+    /**
+     * we'll cancel selection if the region is too small
+     */
     protected checkTooSmall() {
+        const minSize = 2;
         return (
-            !!this.state &&
-            (this.state.maxX - this.state.minX <= 2 || this.state.maxY - this.state.minY <= 2) &&
-            this.state.recordxpts.length > 2 &&
-            this.state.recordypts.length > 2
+            !!this.st &&
+            (this.st.maxX - this.st.minX <= minSize || this.st.maxY - this.st.minY <= minSize) &&
+            this.st.recordXpts.length > minSize &&
+            this.st.recordYpts.length > minSize
         );
     }
 }

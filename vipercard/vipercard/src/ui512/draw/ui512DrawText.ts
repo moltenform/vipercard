@@ -125,8 +125,8 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             /* 1) measure the size of characters */
             let c = s.charAt(i);
             let font = s.fontAt(i);
-            let fontobj = this.cache.getFont(font);
-            measurements[i] = UI512DrawChar.draw(fontobj, c, 0, largeArea / 2, 0, 0, largeArea, largeArea, undefined);
+            let fontObj = this.cache.getFont(font);
+            measurements[i] = UI512DrawChar.draw(fontObj, c, 0, largeArea / 2, 0, 0, largeArea, largeArea, undefined);
 
             /* 2) split by words */
             if (i > 0) {
@@ -172,11 +172,11 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
                 wordMeasured = this.measureSpanOfText(measurements, wordStarts[nWord], wordStarts[nWord + 1]);
             }
 
-            let nextx = curX + wordMeasured;
-            if (nextx < boxW) {
+            let nextX = curX + wordMeasured;
+            if (nextX < boxW) {
                 /* it fits on the line */
                 ret[ret.length - 1].text.append(word);
-                curX = nextx;
+                curX = nextX;
             } else if (wordMeasured < boxW) {
                 /* it would fit on *a* line, just not this line */
                 if (ret[ret.length - 1].text.len()) {
@@ -185,9 +185,9 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
                     curX = 0;
                 }
 
-                nextx = curX + wordMeasured;
+                nextX = curX + wordMeasured;
                 ret[ret.length - 1].text.append(word);
-                curX = nextx;
+                curX = nextX;
             } else {
                 /* it won't fit on any line at all... */
                 /* first go down to the next line if we're not at the start of a line */

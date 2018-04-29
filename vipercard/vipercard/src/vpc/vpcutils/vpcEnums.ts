@@ -9,89 +9,85 @@
  * text sorting (default), compares text, not case sensitive.
  * numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
  * international sorting, compares text using current locale.
- * values here are lowercase, because they are used by the interpreter.
  */
 export enum SortType {
     __isUI512Enum = 1,
-    text,
-    numeric,
-    international
+    __UI512EnumCapitalize,
+    Text,
+    Numeric,
+    International
 }
 
 /**
  * PropAdjective for properties, e.g.
  * get the long id of cd btn "btn1"
- * values here are lowercase, because they are used by the interpreter.
  */
 export enum PropAdjective {
     __isUI512Enum = 1,
-    empty,
-    abbrev,
-    long,
-    short,
-    alternateforms_abbreviated = abbrev,
-    alternateforms_abbr = abbrev
+    __UI512EnumCapitalize,
+    Empty,
+    Abbrev,
+    Long,
+    Short,
+    AlternateFormAbbreviated = Abbrev,
+    AlternateFormAbbr = Abbrev
 }
 
 /**
  * ordinal or position, i.e. "go to third card"
- * values here are lowercase, because they are used by the interpreter.
  */
 export enum OrdinalOrPosition {
     __isUI512Enum = 1,
-    last,
-    middle,
-    any,
-    first,
-    second,
-    third,
-    fourth,
-    fifth,
-    sixth,
-    seventh,
-    eighth,
-    ninth,
-    tenth,
-    next,
-    previous,
-    this,
-    alternateforms_mid = middle,
-    alternateforms_prev = previous
+    __UI512EnumCapitalize,
+    Last,
+    Middle,
+    Any,
+    First,
+    Second,
+    Third,
+    Fourth,
+    Fifth,
+    Sixth,
+    Seventh,
+    Eighth,
+    Ninth,
+    Tenth,
+    Next,
+    Previous,
+    This,
+    AlternateFormMid = Middle,
+    AlternateFormPrev = Previous
 }
 
 /**
  * a 'chunk' is a way to specify a contiguous span of text, e.g.
  * word 3 to 4 of "a b c d e"
  * these are the types of chunks currently supported.
- * some values here are lowercase, because they are used by the interpreter.
  */
 export enum VpcChunkType {
     __isUI512Enum = 1,
+    __UI512EnumCapitalize,
     Chars,
     Words,
     Items,
     Lines,
-    alternateforms_char = Chars,
-    alternateforms_character = Chars,
-    alternateforms_chars = Chars,
-    alternateforms_characters = Chars,
-    alternateforms_word = Words,
-    alternateforms_words = Words,
-    alternateforms_item = Items,
-    alternateforms_items = Items,
-    alternateforms_line = Lines,
-    alternateforms_lines = Lines
+    AlternateFormChar = Chars,
+    AlternateFormCharacter = Chars,
+    AlternateFormCharacters = Chars,
+    AlternateFormWord = Words,
+    AlternateFormItem = Items,
+    AlternateFormLine = Lines
 }
 
 /**
  * preposition, e.g. put "a" after cd fld "fld1"
- * values here are lowercase, because they are used by the interpreter.
  */
 export enum VpcChunkPreposition {
     __isUI512Enum = 1,
-    into,
-    before,
-    after
+    __UI512EnumCapitalize,
+    Into,
+    Before,
+    After
 }
 
 /**
@@ -179,6 +175,7 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
  */
 export enum VpcTool {
     __isUI512Enum = 1,
+    __UI512EnumCapitalize,
     Browse,
     Button,
     Field,
@@ -197,8 +194,8 @@ export enum VpcTool {
     Spray,
     __first = Browse,
     __last = Spray,
-    alternateforms_Spray_can = Spray,
-    alternateforms_Round_rect = Roundrect
+    AlternateFormSpray_can = Spray,
+    AlternateFormRound_rect = Roundrect
 }
 
 /**
@@ -217,8 +214,7 @@ export enum VpcToolCtg {
     CtgSmear,
     CtgBucket,
     CtgCurve,
-    CtgStamp,
-    CtgNyi
+    CtgStamp
 }
 
 /**
@@ -272,7 +268,7 @@ export function toolToDispatchShapes(tl: VpcTool) {
     } else if (tl === VpcTool.Rect) {
         return UI512PaintDispatchShapes.ShapeRectangle;
     } else if (tl === VpcTool.Oval) {
-        return UI512PaintDispatchShapes.ShapeElipse;
+        return UI512PaintDispatchShapes.ShapeEllipse;
     } else if (tl === VpcTool.Roundrect) {
         return UI512PaintDispatchShapes.ShapeRoundRect;
     } else if (tl === VpcTool.Brush) {
@@ -294,63 +290,63 @@ export function toolToDispatchShapes(tl: VpcTool) {
 
 /**
  * built-in messages sent to scripts.
- * values here are lowercase, because they are used by the interpreter.
  */
 export enum VpcBuiltinMsg {
     __isUI512Enum = 1,
-    openbackground,
-    opencard,
-    openstack,
-    closebackground,
-    closecard,
-    mousedoubleclick,
-    mousedown,
-    mouseenter,
-    mouseleave,
-    mouseup,
-    mousewithin,
-    idle,
-    afterkeydown,
-    afterkeyup,
-    __custom
+    __UI512EnumCapitalize,
+    Openbackground,
+    Opencard,
+    Openstack,
+    Closebackground,
+    Closecard,
+    Mousedoubleclick,
+    Mousedown,
+    Mouseenter,
+    Mouseleave,
+    Mouseup,
+    Mousewithin,
+    Idle,
+    Afterkeydown,
+    Afterkeyup,
+    __Custom
 }
 
 /**
  * what we support for the wait command, e.g. "wait 100 ms"
- * values here are lowercase, because they are used by the interpreter.
  */
 export enum MapTermToMilliseconds {
     __isUI512Enum = 1,
-    tick = 16,
-    ticks = 16,
-    milliseconds = 1,
-    ms = 1,
-    second = 1000,
-    seconds = 1000
+    __UI512EnumCapitalize,
+    Tick = 16,
+    Ticks = 16,
+    Milliseconds = 1,
+    Ms = 1,
+    Second = 1000,
+    Seconds = 1000
 }
 
 /**
  * event details type tp message type
  * note that Idle can become either on mousewithin or on idle depending on context
  */
-export function getMsgNameFromType(tp: UI512EventType) {
+export function getMsgFromEvtType(tp: UI512EventType) {
     switch (tp) {
         case UI512EventType.KeyUp:
-            return VpcBuiltinMsg.afterkeyup;
+            return VpcBuiltinMsg.Afterkeyup;
         case UI512EventType.KeyDown:
-            return VpcBuiltinMsg.afterkeydown;
+            return VpcBuiltinMsg.Afterkeydown;
         case UI512EventType.MouseDown:
-            return VpcBuiltinMsg.mousedown;
+            return VpcBuiltinMsg.Mousedown;
         case UI512EventType.MouseDownDouble:
-            return VpcBuiltinMsg.mousedoubleclick;
+            return VpcBuiltinMsg.Mousedoubleclick;
         case UI512EventType.MouseUp:
-            return VpcBuiltinMsg.mouseup;
+            return VpcBuiltinMsg.Mouseup;
         case UI512EventType.Idle:
-            return VpcBuiltinMsg.mousewithin;
+            return VpcBuiltinMsg.Mousewithin;
         case UI512EventType.MouseEnter:
-            return VpcBuiltinMsg.mouseenter;
+            return VpcBuiltinMsg.Mouseenter;
         case UI512EventType.MouseLeave:
-            return VpcBuiltinMsg.mouseleave;
+            return VpcBuiltinMsg.Mouseleave;
         default:
             throw makeVpcScriptErr(`4.|unknown event type ${tp}`);
     }
@@ -380,38 +376,38 @@ export function getPositionFromOrdinalOrPosition(
 ): number {
     let getPositionUnbounded = () => {
         switch (rel) {
-            case OrdinalOrPosition.last:
+            case OrdinalOrPosition.Last:
                 return max;
-            case OrdinalOrPosition.middle:
+            case OrdinalOrPosition.Middle:
                 /* confirmed in emulator that this rounds to highest */
                 return Math.ceil((min + max) / 2);
-            case OrdinalOrPosition.any:
+            case OrdinalOrPosition.Any:
                 return Util512.getRandIntInclusiveWeak(min, max);
-            case OrdinalOrPosition.first:
+            case OrdinalOrPosition.First:
                 return min;
-            case OrdinalOrPosition.second:
+            case OrdinalOrPosition.Second:
                 return min + 1;
-            case OrdinalOrPosition.third:
+            case OrdinalOrPosition.Third:
                 return min + 2;
-            case OrdinalOrPosition.fourth:
+            case OrdinalOrPosition.Fourth:
                 return min + 3;
-            case OrdinalOrPosition.fifth:
+            case OrdinalOrPosition.Fifth:
                 return min + 4;
-            case OrdinalOrPosition.sixth:
+            case OrdinalOrPosition.Sixth:
                 return min + 5;
-            case OrdinalOrPosition.seventh:
+            case OrdinalOrPosition.Seventh:
                 return min + 6;
-            case OrdinalOrPosition.eighth:
+            case OrdinalOrPosition.Eighth:
                 return min + 7;
-            case OrdinalOrPosition.ninth:
+            case OrdinalOrPosition.Ninth:
                 return min + 8;
-            case OrdinalOrPosition.tenth:
+            case OrdinalOrPosition.Tenth:
                 return min + 9;
-            case OrdinalOrPosition.next:
+            case OrdinalOrPosition.Next:
                 return current + 1;
-            case OrdinalOrPosition.previous:
+            case OrdinalOrPosition.Previous:
                 return current - 1;
-            case OrdinalOrPosition.this:
+            case OrdinalOrPosition.This:
                 return current;
             default:
                 throw makeVpcScriptErr(`4-|unknown ordinal ${rel}`);

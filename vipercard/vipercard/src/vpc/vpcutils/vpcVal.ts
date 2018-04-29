@@ -4,7 +4,7 @@
 
 /**
  * for the interpreter, when interpreting a script,
- * an "intermedval" is the result of part of an expression
+ * an "intermedVal" is the result of part of an expression
  */
 export class VpcIntermedValBase {
     isIntermedValBase = true;
@@ -166,7 +166,7 @@ export class VpcVal extends VpcIntermedValBase {
     isItAStrictIntegerImpl(output: [boolean, any]) {
         this.isItNumericImpl(output);
         let rounded = Math.round(output[1]);
-        if (output[0] && (output[1] > maxint32 || output[1] < minint32)) {
+        if (output[0] && (output[1] > maxInt32 || output[1] < minInt32)) {
             output[0] = false;
             output[1] = undefined;
         } else if (output[0] && Math.abs(output[1] - rounded) < VpcVal.epsilon) {
@@ -248,10 +248,10 @@ export function VpcValBool(b: boolean) {
 }
 
 /* largest positive 32bit signed integer */
-const maxint32 = 2147483647;
+const maxInt32 = 2147483647;
 
 /* largest negative 32bit signed integer */
-const minint32 = -2147483648;
+const minInt32 = -2147483648;
 
 /**
  * map of keys to intermediate values

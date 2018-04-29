@@ -91,6 +91,7 @@ export abstract class UI512BasePainterUtils {
         /* loop through the rows of the image */
         for (let pixelY = y0; pixelY < y0 + h; pixelY++) {
             nodeX.length = 0;
+
             /* build a list of nodes */
             let nodes = 0;
             let j = xPts.length - 1;
@@ -109,20 +110,20 @@ export abstract class UI512BasePainterUtils {
             nodeX.sort(sortByNumber);
 
             /* fill the pixels between node pairs. */
-            const IMAGE_LEFT = x0;
-            const IMAGE_RIGHT = x0 + w;
+            const imageLeft = x0;
+            const imageRight = x0 + w;
             for (i = 0; i < nodes; i += 2) {
-                if (nodeX[i] >= IMAGE_RIGHT) {
+                if (nodeX[i] >= imageRight) {
                     break;
                 }
 
-                if (nodeX[i + 1] > IMAGE_LEFT) {
-                    if (nodeX[i] < IMAGE_LEFT) {
-                        nodeX[i] = IMAGE_LEFT;
+                if (nodeX[i + 1] > imageLeft) {
+                    if (nodeX[i] < imageLeft) {
+                        nodeX[i] = imageLeft;
                     }
 
-                    if (nodeX[i + 1] > IMAGE_RIGHT) {
-                        nodeX[i + 1] = IMAGE_RIGHT;
+                    if (nodeX[i + 1] > imageRight) {
+                        nodeX[i + 1] = imageRight;
                     }
 
                     for (j = nodeX[i]; j < nodeX[i + 1]; j++) {
@@ -402,8 +403,8 @@ export abstract class UI512BasePainterUtils {
  * test if the color represents a pattern.
  * if clr is 100 and above, it represents a pattern
  */
-export function needsPatternSupport(fillcolor: O<number>) {
-    return fillcolor !== undefined && fillcolor >= 100;
+export function needsPatternSupport(fillColor: O<number>) {
+    return fillColor !== undefined && fillColor >= 100;
 }
 
 /**

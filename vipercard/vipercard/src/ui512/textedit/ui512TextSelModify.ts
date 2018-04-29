@@ -291,8 +291,8 @@ export class TextSelModify {
         TextSelModify.changeSelInField(el, (t, nCaret, nEnd) => {
             let txt = el.getFmtTxt();
             if (txt.len() > 0) {
-                let [linestart, lineend] = UI512Lines.fastLineNumberAndEndToIndex(txt, n);
-                return [linestart, lineend];
+                let [lineStart, lineEnd] = UI512Lines.fastLineNumberAndEndToIndex(txt, n);
+                return [lineStart, lineEnd];
             } else {
                 return [nCaret, nEnd];
             }

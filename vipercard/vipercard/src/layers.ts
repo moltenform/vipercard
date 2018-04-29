@@ -4,7 +4,7 @@ import { isRelease } from './config.js';
 /* code is separated into strict layers, */
 /* to promote good design and eliminate circular references. */
 /* a module can only import from modules below it on this list. */
-/* enforced by ts_exports_autoimport.py */
+/* enforced by autoimport.py */
 
 /*
 
@@ -12,17 +12,23 @@ import { isRelease } from './config.js';
 rootStartCanvas
 rootUI512
 
-/test/vpcui/
-testRegistration
-
 /test/vpc/
+testRegistrationRelease
+testRegistration
 vpcTestServer
+vpcTestIntroProvider
+vpcTestMsgBox
 vpcTestScriptEval
+vpcTestScriptExprLvl
 vpcTestScriptRun
-vpcTestScriptParse
+vpcTestScriptRunBase
+vpcTestScriptParseExpr
+vpcTestScriptParseCmd
+vpcTestElements
+vpcTestChunkResolution
 vpcTestUtils
 
-/test/ui512/
+/test/ui512demo/
 uiDemoBasic
 uiDemoButtons
 uiDemoComposites
@@ -30,6 +36,8 @@ uiDemoMenus
 uiDemoPaint
 uiDemoText
 uiDemoTextEdit
+
+/test/ui512/
 testUI512CodeEditor
 testUI512Composites
 testUI512DrawText
@@ -38,7 +46,8 @@ testUI512ElementsViewButtons
 testUI512Elements
 testUI512Paint
 testUI512PaintFlood
-testUI512TextEvents
+testUI512TextEdit
+testUI512TextEditInteractions
 testUI512TextModify
 testUI512TextSelectEvents
 testUI512FormattedText
@@ -249,10 +258,10 @@ ui512Interfaces
 langBase
 
 /ui512/utils/
+utilsTest
 utilsTestCanvas
 utilsDraw
 utilsDrawConstants
-utilsTest
 utilsCursors
 utils512
 utilsAssert

@@ -25,7 +25,7 @@
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 /**
- * OutsideWorldReadWrite:
+ * OutsideWorldReadWrite
  * provides scripts with access to the outside "world".
  */
 export class VpcOutsideImpl implements OutsideWorldReadWrite {
@@ -312,10 +312,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             checkThrow(!ref, "8+|must say 'get the target' and not 'get the target of cd btn 1");
             return VpcValS(this.getTargetName(resolver, adjective));
         } else {
-            if (prop === 'version' && adjective === PropAdjective.long) {
+            if (prop === 'version' && adjective === PropAdjective.Long) {
                 /* the only other prop that accepts an adjective is version. */
                 prop = 'version/long';
-            } else if (adjective !== PropAdjective.empty) {
+            } else if (adjective !== PropAdjective.Empty) {
                 throw makeVpcScriptErr(
                     `6j|this property does not take an adjective like long (the long name of cd btn 1)`
                 );
@@ -403,7 +403,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     GoCardRelative(pos: OrdinalOrPosition, id?: string) {
         if (id) {
-            assertEq(OrdinalOrPosition.this, pos, '6i|');
+            assertEq(OrdinalOrPosition.This, pos, '6i|');
             this.vci.getModel().productOpts.set('currentCardId', id);
         } else {
             this.vci.getModel().goCardRelative(pos);

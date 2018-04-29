@@ -460,8 +460,8 @@ export class UI512ViewDraw {
         if (el.getCanvasForRead()) {
             b.canvas.drawFromImage(
                 el.getCanvasForRead().canvas,
-                el.getN('srcx'),
-                el.getN('srcy'),
+                el.getN('srcX'),
+                el.getN('srcY'),
                 el.w,
                 el.h,
                 el.x,

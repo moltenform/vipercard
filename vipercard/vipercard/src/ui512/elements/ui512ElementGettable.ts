@@ -31,7 +31,7 @@ export abstract class UI512Gettable {
         return v;
     }
 
-    get_generic(s: string): ElementObserverVal {
+    getGeneric(s: string): ElementObserverVal {
         let v = this.get(s);
         assertTrue(v !== null && v !== undefined, `2(|${s} undefined`);
         return v;
@@ -42,15 +42,15 @@ export abstract class UI512Gettable {
         return v;
     }
 
-    get_ftxt(): FormattedText {
-        let v = this.get(UI512Settable.formattedTextField);
-        let ftxt = v as FormattedText;
-        assertTrue(ftxt && ftxt.isFormattedText, `2&|did not get formatted text as expected`);
+    getFmTxt(): FormattedText {
+        let v = this.get(UI512Settable.fmtTxtVarName);
+        let fmTxt = v as FormattedText;
+        assertTrue(fmTxt && fmTxt.isFormattedText, `2&|did not get formatted text as expected`);
 
         /* ensure the "lock" bit has been set before we allow access
         otherwise, you could make changes to the object and we'd never recieve any change notification */
-        ftxt.lock();
-        return ftxt;
+        fmTxt.lock();
+        return fmTxt;
     }
 }
 
@@ -62,7 +62,7 @@ export abstract class UI512Gettable {
  * currently has no effect anywhere.
  */
 export abstract class UI512Settable extends UI512Gettable {
-    static readonly formattedTextField = 'ftxt';
+    static readonly fmtTxtVarName = 'ftxt';
     readonly id: string;
     protected dirty = true;
     protected locked = false;
@@ -92,15 +92,15 @@ export abstract class UI512Settable extends UI512Gettable {
         }
     }
 
-    setftxt(newTxt: FormattedText, context = ChangeContext.Default) {
+    setFmTxt(newTxt: FormattedText, context = ChangeContext.Default) {
         checkThrowUI512(!this.locked, 'tried to set value when locked. setting during refresh()?');
-        let prevVal = this.get_ftxt();
-        assertTrue(!!newTxt, '2!|invalid newtxt', this.id);
-        (this as any)['_' + UI512Settable.formattedTextField] = newTxt; /* gettable */
+        let prevVal = this.getFmTxt();
+        assertTrue(!!newTxt, '2!|invalid newTxt', this.id);
+        (this as any)['_' + UI512Settable.fmtTxtVarName] = newTxt; /* gettable */
         if (prevVal !== newTxt) {
             this.dirty = true;
             newTxt.lock();
-            this.observer.changeSeen(context, this.id, UI512Settable.formattedTextField, prevVal, newTxt);
+            this.observer.changeSeen(context, this.id, UI512Settable.fmtTxtVarName, prevVal, newTxt);
         }
     }
 

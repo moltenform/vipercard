@@ -78,10 +78,10 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
 
         /* draw window decoration */
-        let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
+        let headerHeight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 
         /* draw spacer */
-        let curY = this.y + headerheight - 1;
+        let curY = this.y + headerHeight - 1;
         let spacer = this.genBtn(app, grp, 'spacer');
         spacer.set('autohighlight', false);
         spacer.setDimensions(this.x, curY, this.logicalWidth, spacerHeight);
@@ -343,7 +343,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             return;
         }
 
-        let newscript = this.el.get_ftxt().toUnformatted();
+        let newscript = this.el.getFmTxt().toUnformatted();
         if (onlyCheckIfDirty) {
             let current = vel.getS('script');
             if (current !== newscript) {

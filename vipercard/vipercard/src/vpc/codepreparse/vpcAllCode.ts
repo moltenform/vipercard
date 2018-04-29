@@ -247,7 +247,7 @@ export class VpcCodeOfOneVel {
     protected _handlers = new MapKeyToObject<VpcCodeLineReference>();
     protected _handlerStarts: number[] = [];
     readonly ownerId: string;
-    public constructor(owner: VpcElBase) {
+    constructor(owner: VpcElBase) {
         this.ownerId = owner.id;
     }
 

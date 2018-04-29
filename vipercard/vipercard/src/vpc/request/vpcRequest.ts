@@ -87,7 +87,7 @@ export async function vpcUsersCheckLogin(
     if (response && response.retcode === 0) {
         if (response.need_email_verify) {
             /* creds are right, but email not yet verified */
-            let result = ['need_email_verify', username, keyBuffer];
+            let result = ['needEmailVerify', username, keyBuffer];
             RequestHelpers.loginTestHook(username, response, result);
             return result;
         } else {
@@ -108,7 +108,7 @@ export async function vpcUsersCheckLogin(
 export async function vpcUsersEnterEmailVerifyCode(
     username: string,
     keyBuffer: ArrayBuffer,
-    code_email_verify: string
+    codeEmailVerify: string
 ): Promise<VpcSession> {
     let nonce = makeNonce();
     let now = getUnixTimeSeconds().toString();
@@ -116,7 +116,7 @@ export async function vpcUsersEnterEmailVerifyCode(
         nonce: nonce,
         now: now,
         username: username,
-        code_email_verify: code_email_verify
+        code_email_verify: codeEmailVerify
     };
 
     let url = '/vpusers/verify_email';
@@ -235,24 +235,24 @@ export class VpcSession implements UI512IsSessionInterface {
      * returns true upon success
      */
     async vpcLogEntriesCreate(
-        logentries_user_typed_desc: string,
-        logentries_last_client_logs: string,
-        logentries_stackserverguid: string,
+        logentriesUserTypedDesc: string,
+        logentriesLastClientLogs: string,
+        logentriesStackServerGuid: string,
         setfakeIp?: string,
         setServerAndClientTime?: string
     ): Promise<boolean> {
-        checkThrow(logentries_user_typed_desc && logentries_user_typed_desc.length > 1, '');
-        checkThrow(logentries_last_client_logs && logentries_last_client_logs.length > 1, '');
-        checkThrow(logentries_stackserverguid && logentries_stackserverguid.length > 1, '');
+        checkThrow(logentriesUserTypedDesc && logentriesUserTypedDesc.length > 1, '');
+        checkThrow(logentriesLastClientLogs && logentriesLastClientLogs.length > 1, '');
+        checkThrow(logentriesStackServerGuid && logentriesStackServerGuid.length > 1, '');
         let nonce = makeNonce();
         let now = setServerAndClientTime || getUnixTimeSeconds().toString();
         let params: anyJson = {
             nonce: nonce,
             now: now,
             username: this.username,
-            logentries_user_typed_desc: logentries_user_typed_desc,
-            logentries_last_client_logs: logentries_last_client_logs,
-            logentries_stackserverguid: logentries_stackserverguid
+            logentries_user_typed_desc: logentriesUserTypedDesc,
+            logentries_last_client_logs: logentriesLastClientLogs,
+            logentries_stackserverguid: logentriesStackServerGuid
         };
 
         /* test hooks */
@@ -278,7 +278,7 @@ export class VpcSession implements UI512IsSessionInterface {
      */
     async vpcStacksSaveAs(
         stackNewPartialId: string,
-        newname: string,
+        newName: string,
         newstackdata: string,
         setFakeMaxStacks = ''
     ): Promise<boolean> {
@@ -290,7 +290,7 @@ export class VpcSession implements UI512IsSessionInterface {
             username: this.username,
             ownerusername: this.username,
             stacknewpartialid: stackNewPartialId,
-            stackname: newname,
+            stackname: newName,
             stackdata: newstackdata,
             simulatemaxstacks: setFakeMaxStacks
         };

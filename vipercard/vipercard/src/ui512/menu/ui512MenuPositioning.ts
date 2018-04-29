@@ -186,10 +186,10 @@ export class MenuPositioning {
         /* interesting fact: the headers overlap each other. confirmed in emulator */
         let curX = app.bounds[0] + MenuConsts.TopHeaderMargin1;
         let counticonsdrawn = 0;
-        let dropdns = menuRoot.getchildren(app);
+        let dropDowns = menuRoot.getchildren(app);
         grpItems.setVisible(false);
-        for (let i = 0; i < dropdns.length; i++) {
-            let header = dropdns[i];
+        for (let i = 0; i < dropDowns.length; i++) {
+            let header = dropDowns[i];
             let open = menuRoot.getN('whichIsExpanded') === i;
             curX = MenuPositioning.setMenuDropdownPosition(app, menuRoot, header, curX, open, complete);
         }
@@ -248,7 +248,7 @@ export class MenuPositioning {
      * you can build a menu in code,
      * but for convenience we have a way to build menu from an array
      */
-    private static buildDropdnFromArray(
+    protected static buildDropdnFromArray(
         app: UI512Application,
         grpBar: UI512ElGroup,
         grpItems: UI512ElGroup,

@@ -19,52 +19,61 @@
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcFormNonModalDialogFormBase, VpcNonModalFormBase } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
+/* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
 
-export class VpcNonModalReplBox extends VpcNonModalFormBase {
+/**
+ * a "message box" where you can type in code and evaluate it
+ * redesigned by Ben Fisher, you can now see previous entries,
+ * much closer to a traditional REPL than the original.
+ *
+ * we currently run what you type in a message box by
+ * making a hidden button on the card and running a handler there.
+ * this way you can call card/bg/stack handlers.
+ */
+export class VpcNonModalReplBox extends VpcNonModalBase {
     isVpcNonModalReplBox = true;
     showHeader = true;
     captionText = '';
     hasCloseBtn = true;
     entry: UI512ElTextField;
-    scrollGot: UI512ElTextField;
-    historyTyped = new StackHistory();
+    showResults: UI512ElTextField;
+    history = new RememberHistory();
+    busy = false;
+    rememberedTool = VpcTool.Button;
     constructor(protected vci: VpcStateInterface) {
         super('VpcNonModalReplBox' + Math.random());
         let app = this.vci.UI512App();
-
-        VpcFormNonModalDialogFormBase.standardWindowBounds(this, vci);
-        this.x -= 1;
-        this.y += 188;
-        this.logicalHeight -= 188;
+        this.adjustDimensions(vci);
     }
 
+    /**
+     * initialize layout
+     */
     createSpecific(app: UI512Application) {
-        let grp = app.getGroup(this.grpId);
-
         let headheight = 0;
         if (this.showHeader) {
             headheight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasCloseBtn) - 1;
         }
 
+        let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.set('style', this.showHeader ? UI512BtnStyle.Rectangle : UI512BtnStyle.Opaque);
         bg.setDimensions(this.x, this.y + headheight, this.logicalWidth, this.logicalHeight - headheight);
 
-        this.scrollGot = this.genChild(app, grp, 'scrollGot', UI512ElTextField);
-        this.scrollGot.setDimensions(this.x + 14 + 5, this.y + 50 + 5, 460 + 15, 50);
-        this.scrollGot.set('style', UI512FldStyle.Rectangle);
-        this.scrollGot.set('scrollbar', true);
-        this.scrollGot.set('canedit', false);
+        this.showResults = this.genChild(app, grp, 'scrollGot', UI512ElTextField);
+        this.showResults.setDimensions(this.x + 14 + 5, this.y + 50 + 5, 460 + 15, 50);
+        this.showResults.set('style', UI512FldStyle.Rectangle);
+        this.showResults.set('scrollbar', true);
+        this.showResults.set('canedit', false);
 
-        let dasheline = this.genBtn(app, grp, 'dasheline');
-        dasheline.setDimensions(this.x + 14 - 1, this.y + 30 + 9 + 1, 490, 8);
-        dasheline.set('icongroupid', '000');
-        dasheline.set('iconnumber', 1);
-        dasheline.set('iconadjustheight', -47);
-        dasheline.set('autohighlight', false);
-        dasheline.set('style', UI512BtnStyle.Opaque);
+        let dashedLine = this.genBtn(app, grp, 'dashedLine');
+        dashedLine.setDimensions(this.x + 14 - 1, this.y + 30 + 9 + 1, 490, 8);
+        dashedLine.set('icongroupid', '000');
+        dashedLine.set('iconnumber', 1);
+        dashedLine.set('iconadjustheight', -47);
+        dashedLine.set('autohighlight', false);
+        dashedLine.set('style', UI512BtnStyle.Opaque);
 
         this.entry = this.genChild(app, grp, 'entry', UI512ElTextField);
         this.entry.setDimensions(this.x + 18 - 1, this.y + 15 + 9 + 1, 478, 30);
@@ -75,29 +84,51 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
         this.entry.set('defaultFont', 'geneva');
         let msg = 'put "abc"';
         this.setFontAndText(this.entry, msg, 'geneva', 12);
-        this.setFontAndText(this.scrollGot, '', 'monaco', 9);
+        this.setFontAndText(this.showResults, '', 'monaco', 9);
         this.entry.set('selcaret', msg.length);
         this.entry.set('selend', msg.length);
     }
 
-    setFontAndText(el: UI512ElTextField, s: string, typfacename: string, siz: number) {
-        let spec = new TextFontSpec(typfacename, TextFontStyling.Default, siz);
-        el.set('defaultFont', spec.toSpecString());
-        let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
-        el.setftxt(t);
+    /**
+     * make the window smaller
+     */
+    protected adjustDimensions(vci: VpcStateInterface) {
+        VpcNonModalFormBase.standardWindowBounds(this, vci);
+        this.x -= 1;
+        this.y += 188;
+        this.logicalHeight -= 188;
     }
 
+    /**
+     * set the font and text fo a field
+     */
+    setFontAndText(el: UI512ElTextField, s: string, typfacename: string, pts: number) {
+        let spec = new TextFontSpec(typfacename, TextFontStyling.Default, pts);
+        el.set('defaultFont', spec.toSpecString());
+        let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
+        el.setFmTxt(t);
+    }
+
+    /**
+     * respond to button click
+     */
     onClickBtn(short: string, el: UI512Element, vci: VpcStateInterface): void {
         if (short && short === 'closebtn') {
             this.vci.setNonModalDialog(undefined);
         }
     }
 
+    /**
+     * respond to button down
+     */
     onMouseDown(short: string, el: UI512Element, vci: VpcStateInterface): void {}
 
+    /**
+     * use the arrow keys up and down to view history
+     */
     onKeyDown(elId: O<string>, short: O<string>, d: KeyDownEventDetails): void {
         if (short === 'entry' && (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')) {
-            this.launchScript(this.entry.get_ftxt().toUnformatted());
+            this.launchScript(this.entry.getFmTxt().toUnformatted());
             d.setHandled();
         } else if (short === 'entry' && d.readableShortcut === 'ArrowUp') {
             this.replHistory(true);
@@ -106,16 +137,22 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
         }
     }
 
+    /**
+     * user is viewing what they've previously entered,
+     * like pressing arrow key up/down in bash
+     */
     replHistory(upwards: boolean) {
-        let retrieved = upwards ? this.historyTyped.getUp() : this.historyTyped.getDown();
+        let retrieved = upwards ? this.history.walkPrevious() : this.history.walkNext();
         this.setFontAndText(this.entry, retrieved, 'geneva', 12);
-        // set caret to the end
+
+        /* set caret to the end */
         this.entry.set('selcaret', retrieved.length);
         this.entry.set('selend', retrieved.length);
     }
 
-    busy = false;
-    rememberedTool = VpcTool.Button;
+    /**
+     * launch the script
+     */
     launchScript(scr: string) {
         scr = scr.trim();
         if (!scr || !scr.length) {
@@ -130,7 +167,7 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
             let code = fakeVel.getS('script');
             this.vci.getCodeExec().updateChangedCode(fakeVel, code);
 
-            this.historyTyped.push(scr);
+            this.history.append(scr);
             this.appendToOutput('> ' + scr + ' ...', false);
             this.setFontAndText(this.entry, '', 'geneva', 12);
 
@@ -143,7 +180,8 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
 
             this.rememberedTool = this.vci.getTool();
             this.vci.setTool(VpcTool.Browse);
-            // inject fake event
+
+            /* inject fake event */
             this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
             let simEvent = new MouseUpEventDetails(
                 0,
@@ -152,34 +190,45 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
                 0,
                 ModifierKeys.None
             );
+
             simEvent.elClick = fakeEl;
             simEvent.elRaw = fakeEl;
 
-            // do this last because it could throw synchronously and call onScriptErr right away
+            /* do this last because it could throw synchronously and call onScriptErr right away */
             this.vci.scheduleScriptEventSend(simEvent);
         }
     }
 
-    appendToOutput(s: string, truncElipses: boolean) {
-        let alltxt = this.scrollGot.get_ftxt().toUnformatted();
-        if (truncElipses && alltxt.endsWith(' ...')) {
-            alltxt = alltxt.slice(0, -1 * ' ...'.length);
-        }
-        if (truncElipses && alltxt.endsWith(' ...\n')) {
-            alltxt = alltxt.slice(0, -1 * ' ...\n'.length);
-        }
-        alltxt = alltxt.trim();
-        if (alltxt.length) {
-            alltxt += '\n';
+    /**
+     * append the results
+     */
+    appendToOutput(sToAdd: string, truncEllipses: boolean) {
+        let results = this.showResults.getFmTxt().toUnformatted();
+        if (truncEllipses && results.endsWith(' ...')) {
+            results = results.slice(0, -1 * ' ...'.length);
         }
 
-        alltxt += s;
-        alltxt += '\n'; // hack, looks better
-        this.setFontAndText(this.scrollGot, alltxt, 'monaco', 9);
-        let gel = new UI512ElTextFieldAsGeneric(this.scrollGot);
+        if (truncEllipses && results.endsWith(' ...\n')) {
+            results = results.slice(0, -1 * ' ...\n'.length);
+        }
+
+        results = results.trim();
+        if (results.length) {
+            results += '\n';
+        }
+
+        results += sToAdd;
+        results += '\n'; /* looks better */
+        this.setFontAndText(this.showResults, results, 'monaco', 9);
+
+        /* scroll down to the end */
+        let gel = new UI512ElTextFieldAsGeneric(this.showResults);
         TextSelModify.changeSelGoDocHomeEnd(gel, false /* isLeft*/, false /* isExtend*/);
     }
 
+    /**
+     * make the fake button to run our script in
+     */
     getOrMakeFakeButton() {
         let currentCardId = this.vci.getOptionS('currentCardId');
         let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
@@ -189,7 +238,7 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
             }
         }
 
-        // we'll have to generate it
+        /* we'll have to generate it */
         let newPart = this.vci.createVel(currentCardId, VpcElType.Btn, 0);
         newPart.set('name', VpcElBase.nameForMsgRepl());
         newPart.set('x', -100);
@@ -199,17 +248,19 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
         return newPart;
     }
 
+    /**
+     * respond to a script error
+     * sometimes it's a script error we intentionally made!
+     */
     onScriptErr(scriptErr: VpcScriptErrorBase) {
-        // note that script errors are to be expected -- it's how we get the signal back after running a script
+        /* note that script errors are to be expected --
+        it's how we get the signal back after running a script,
+        we intentionally try to call a handler that doesn't exist. */
         this.busy = false;
         this.vci.setTool(this.rememberedTool);
 
-        if (
-            scriptErr &&
-            scriptErr.details &&
-            scontains(scriptErr.details, 'intentional_cause_script_error_leaving_repl_box')
-        ) {
-            let vGot = this.vci.getCodeExec().globals.find('g_msg_repl_box_contents');
+        if (scriptErr && scriptErr.details && scontains(scriptErr.details, VpcNonModalReplBox.markIntentionalErr)) {
+            let vGot = this.vci.getCodeExec().globals.find(' g_msgreplboxcontents');
             this.appendToOutput(vGot ? vGot.readAsString().trim() : 'Unknown (not set)', true);
         } else if (scriptErr) {
             this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);
@@ -217,16 +268,20 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
             this.appendToOutput('Unknown', true);
         }
 
-        // set focus back
+        /* set focus back */
         this.vci.getPresenter().setCurrentFocus(this.entry.id);
     }
 
+    /**
+     * add declare 'global x' to the script if you refer to a variable 'x'
+     */
     static makeAllVarsGlobals(linesImproved: string[], lineWithNoStringLiterals: string) {
-        let splitter = /[a-zA-Z][0-9a-zA-Z_]*(?!\()/g;
+        let splitter = /[a-zA-Z_][0-9a-zA-Z_]*(?![0-9a-zA-Z_(])/g;
         let allMatches = lineWithNoStringLiterals.match(splitter);
         let reserved = new CheckReservedWords();
         if (allMatches) {
-            allMatches.shift(); // we don't want the first match
+            /* we don't want the first match, which is the command name like 'put' */
+            allMatches.shift();
             for (let match of allMatches) {
                 if (reserved.okLocalVar(match)) {
                     linesImproved.push(`global ${match}`);
@@ -235,63 +290,98 @@ export class VpcNonModalReplBox extends VpcNonModalFormBase {
         }
     }
 
+    /**
+     * transform the script,
+     * letting us use the short syntax put "abc"
+     * and redirecting the output here
+     */
     static transformText(scr: string) {
         let lines = scr.split(';');
-        let linesImproved: string[] = [];
+        let linesOut: string[] = [];
         lines.map(line => {
             line = line.trim();
-
-            let lineWithNoStringLiterals = line.replace(/".*?"/g, '');
-            VpcNonModalReplBox.makeAllVarsGlobals(linesImproved, lineWithNoStringLiterals);
+            let lineWithNoStringLiterals = VpcNonModalReplBox.removeStringLiterals(line);
+            VpcNonModalReplBox.makeAllVarsGlobals(linesOut, lineWithNoStringLiterals);
             if (
                 lineWithNoStringLiterals.startsWith('put ') &&
                 !scontains(lineWithNoStringLiterals, ' into ') &&
                 !scontains(lineWithNoStringLiterals, ' after ') &&
                 !scontains(lineWithNoStringLiterals, ' before ')
             ) {
-                line += ' after g_msg_repl_box_contents';
-                linesImproved.push(line);
-                linesImproved.push('put newline after g_msg_repl_box_contents');
+                line += ' after  g_msgreplboxcontents';
+                linesOut.push(line);
+                linesOut.push('put newline after  g_msgreplboxcontents');
             } else {
-                linesImproved.push(line);
+                linesOut.push(line);
             }
         });
 
         let total = `-- this is not a real object script, it is a temporary
--- script for the message repl box. any code
--- written here will not be saved.
-on mouseUp
-global g_msg_repl_box_contents
-put "" into g_msg_repl_box_contents
-`;
-        total += linesImproved.join('\n');
-        total += '\nintentional_cause_script_error_leaving_repl_box';
+    -- script for the message repl box. any code
+    -- written here will not be saved.
+    on mouseUp
+    global  g_msgreplboxcontents
+    put "" into  g_msgreplboxcontents
+    `;
+        total += linesOut.join('\n');
+        total += '\n' + VpcNonModalReplBox.markIntentionalErr;
         total += '\nend mouseUp';
         return total;
     }
+
+    /**
+     * disregard string literals when looking for variable names
+     */
+    static removeStringLiterals(s: string) {
+        return s.replace(/".*?"/g, '');
+    }
+
+    /**
+     * use this unique marker to know if the error was intentional
+     */
+    static readonly markIntentionalErr = 'intentionalcausescripterrorleavingreplbox';
 }
 
-export class StackHistory {
+/**
+ * record what you submit to the repl, for history
+ */
+export class RememberHistory {
     pointer = 0;
-    stack: string[] = [];
+    list: string[] = [];
+
+    /**
+     * get the history at the current point
+     */
     protected getAt() {
-        this.pointer = fitIntoInclusive(this.pointer, 0, this.stack.length);
-        if (this.pointer === this.stack.length) {
+        this.pointer = fitIntoInclusive(this.pointer, 0, this.list.length);
+        if (this.pointer >= this.list.length) {
             return '';
         } else {
-            return this.stack[this.pointer];
+            return this.list[this.pointer];
         }
     }
-    getUp() {
+
+    /**
+     * user pressed up, like pressing arrow key up in bash
+     */
+    walkPrevious() {
         this.pointer -= 1;
         return this.getAt();
     }
-    getDown() {
+
+    /**
+     * user pressed down, like pressing arrow key up in bash
+     */
+    walkNext() {
         this.pointer += 1;
         return this.getAt();
     }
-    push(s: string) {
-        this.stack.push(s);
-        this.pointer = this.stack.length;
+
+    /**
+     * add to the list
+     */
+    append(s: string) {
+        this.list.push(s);
+        this.pointer = this.list.length;
     }
 }

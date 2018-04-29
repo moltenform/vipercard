@@ -42,7 +42,7 @@ export abstract class TemporarilySuspendEvents implements TemporarilySuspendEven
             pr.listeners = this.savedListeners;
             this.savedListeners = {};
             this.isStarted = false;
-            pr.tmpIgnore = undefined;
+            pr.tmpSuspend = undefined;
             this.whenComplete();
         }
     }

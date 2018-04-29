@@ -147,7 +147,7 @@ export abstract class VpcElBase extends UI512Settable {
         this.getters = undefined as any; /* destroy() */
         this.setters = undefined as any; /* destroy() */
         this.set = undefined as any; /* destroy() */
-        this.setftxt = undefined as any; /* destroy() */
+        this.setFmTxt = undefined as any; /* destroy() */
     }
 
     /**

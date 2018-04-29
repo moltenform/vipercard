@@ -5,70 +5,70 @@
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { VpcElStackLineageEntry } from '../../vpc/vel/velStack.js';
 /* auto */ import { VpcSession, vpcStacksFlagContent } from '../../vpc/request/vpcRequest.js';
-/* auto */ import { VpcSaveInterface } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
 /* auto */ import { VpcNonModalFormSendReport } from '../../vpcui/nonmodaldialogs/vpcFormSendReport.js';
 /* auto */ import { VpcNonModalFormLogin } from '../../vpcui/nonmodaldialogs/vpcFormLogin.js';
+/* auto */ import { VpcSaveInterface } from '../../vpcui/menu/vpcAppMenuActions.js';
 /* auto */ import { VpcPresenterInterface } from '../../vpcui/presentation/vpcPresenterInterface.js';
 
-declare var saveAs: any;
-
+/**
+ * saving stacks
+ * we limit to one async operation running at a time, so that the UI isn't confusing.
+ * overlapping saves would be OK functionally but confusing to the user.
+ */
 export class VpcSave implements VpcSaveInterface {
     busy = false;
     constructor(protected pr: VpcPresenterInterface) {}
 
-    mnuGoSave_As(): void {
+    /**
+     * save to server with a new name
+     */
+    beginSaveAs() {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            UI512BeginAsync(() => this.goSave_AsAsync(throwIfUndefined(ses, '')), undefined, false);
+            UI512BeginAsync(() => this.goSaveAsAsync(throwIfUndefined(ses, '')), undefined, false);
         } else {
+            /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
             VpcNonModalFormSendReport.standardWindowBounds(form, this.pr.vci);
             form.fnCbWhenSignedIn = () => {
-                this.mnuGoSave_As();
+                this.beginSaveAs();
             };
+
             this.pr.vci.setNonModalDialog(form);
         }
     }
 
-    mnuGoSave(): void {
+    /**
+     * save to server
+     */
+    beginSave() {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
             UI512BeginAsync(() => this.goSaveAsync(throwIfUndefined(ses, '')), undefined, false);
         } else {
+            /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
             VpcNonModalFormSendReport.standardWindowBounds(form, this.pr.vci);
             form.fnCbWhenSignedIn = () => {
-                this.mnuGoSave();
+                this.beginSave();
             };
+
             this.pr.vci.setNonModalDialog(form);
         }
     }
 
-    protected async goSave_AsAsync(ses: VpcSession) {
-        try {
-            await this.goSave_AsAsyncImpl(ses);
-        } finally {
-            this.busy = false;
-        }
-    }
-
-    protected async goSaveAsync(ses: VpcSession) {
-        try {
-            await this.goSaveAsyncImpl(ses);
-        } finally {
-            this.busy = false;
-        }
-    }
-
-    protected async goSave_AsAsyncImpl(ses: VpcSession) {
+    /**
+     * save as, show dialog upon failure
+     */
+    protected async goSaveAsAsyncImpl(ses: VpcSession) {
         let caught = false;
-        let didsave = false;
+        let didSave = false;
         try {
-            let newstackdata = this.pr.getSerializedStack();
-            let lin = this.pr.vci.getModel().stack.getLatestStackLineage();
-            didsave = !!await this.goSaveAsWithNewName(ses, lin.stackName, newstackdata);
+            let newStackData = this.pr.getSerializedStack();
+            let info = this.pr.vci.getModel().stack.getLatestStackLineage();
+            didSave = !!await this.goSaveAsWithNewName(ses, info.stackName, newStackData);
         } catch (e) {
             caught = true;
             this.busy = false;
@@ -79,7 +79,7 @@ export class VpcSave implements VpcSaveInterface {
             );
         }
 
-        if (didsave) {
+        if (didSave) {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
             window.setTimeout(() => {
                 this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
@@ -90,16 +90,19 @@ export class VpcSave implements VpcSaveInterface {
         this.busy = false;
     }
 
+    /**
+     * save, show dialog upon failure
+     */
     protected async goSaveAsyncImpl(ses: VpcSession) {
         let caught = false;
-        let didsave = false;
+        let didSave = false;
         try {
-            let newstackdata = this.pr.getSerializedStack();
-            let lin = this.pr.vci.getModel().stack.getLatestStackLineage();
-            if (lin.stackOwner === ses.username) {
-                didsave = !!await this.goSaveAlreadyExists(ses, lin.stackGuid, lin.stackName, newstackdata);
+            let newStackData = this.pr.getSerializedStack();
+            let info = this.pr.vci.getModel().stack.getLatestStackLineage();
+            if (info.stackOwner === ses.username) {
+                didSave = !!await this.goSaveQuietUpdate(ses, info.stackGuid, info.stackName, newStackData);
             } else {
-                didsave = !!await this.goSaveAsWithNewName(ses, lin.stackName, newstackdata);
+                didSave = !!await this.goSaveAsWithNewName(ses, info.stackName, newStackData);
             }
         } catch (e) {
             caught = true;
@@ -110,7 +113,7 @@ export class VpcSave implements VpcSaveInterface {
             );
         }
 
-        if (didsave) {
+        if (didSave) {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
             window.setTimeout(() => {
                 this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
@@ -121,54 +124,94 @@ export class VpcSave implements VpcSaveInterface {
         this.busy = false;
     }
 
-    protected async goSaveAlreadyExists(ses: VpcSession, stackId: string, stackName: string, newstackdata: string) {
-        await ses.vpcStacksSave(stackId, newstackdata);
+    /**
+     * stack was already saved, so we can quietly send our updated version
+     */
+    protected async goSaveQuietUpdate(ses: VpcSession, stackId: string, stackName: string, newStackData: string) {
+        await ses.vpcStacksSave(stackId, newStackData);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
         return true;
     }
 
-    protected async goSaveAsWithNewName(ses: VpcSession, prevstackname: string, newstackdata: string) {
-        let prevstacknameToShow = prevstackname || 'untitled';
-        if (prevstacknameToShow === 'untitled') {
-            prevstacknameToShow = 'Untitled ' + Util512.getRandIntInclusiveWeak(1, 100);
+    /**
+     * ensures 'busy' flag reset
+     */
+    protected async goSaveAsAsync(ses: VpcSession) {
+        try {
+            await this.goSaveAsAsyncImpl(ses);
+        } finally {
+            this.busy = false;
+        }
+    }
+
+    /**
+     * ensures 'busy' flag reset
+     */
+    protected async goSaveAsync(ses: VpcSession) {
+        try {
+            await this.goSaveAsyncImpl(ses);
+        } finally {
+            this.busy = false;
+        }
+    }
+
+    /**
+     * ask the user to choose a new name
+     */
+    protected async goSaveAsWithNewName(ses: VpcSession, prevStackName: string, newStackData: string) {
+        let prevStackNameToShow = prevStackName || 'untitled';
+        if (prevStackNameToShow === 'untitled') {
+            prevStackNameToShow = 'Untitled ' + Util512.getRandIntInclusiveWeak(1, 100);
         }
 
-        let [newname, n] = await this.pr.askMsgAsync('Save as:', prevstacknameToShow);
-        if (newname && newname.trim().length) {
-            newname = newname.trim();
+        let [newName, n] = await this.pr.askMsgAsync('Save as:', prevStackNameToShow);
+        if (newName && newName.trim().length) {
+            newName = newName.trim();
             let lineageBeforeChanges = this.pr.vci.getModel().stack.getS('stacklineage');
             try {
-                // add new part to stack lineage!
+                /* add new part to stack lineage! */
                 let stack = this.pr.vci.getModel().stack;
-                let newpartialid = VpcSession.generateStackPartialId();
-                let en = new VpcElStackLineageEntry(ses.username, newpartialid, newname);
+                let newPartialId = VpcSession.generateStackPartialId();
+                let en = new VpcElStackLineageEntry(ses.username, newPartialId, newName);
                 stack.appendToStackLineage(en);
-                newstackdata = this.pr.getSerializedStack(); // serialize it with the new lineage
-                await ses.vpcStacksSaveAs(newpartialid, newname, newstackdata);
+
+                /* a serialized stack -- with the new lineage */
+                newStackData = this.pr.getSerializedStack();
+                await ses.vpcStacksSaveAs(newPartialId, newName, newStackData);
                 this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
                 return true;
             } catch (e) {
-                // something went wrong - revert the changes!
+                /* something went wrong - revert the changes! */
                 this.pr.vci.getModel().stack.set('stacklineage', lineageBeforeChanges);
                 throw e;
             }
         }
     }
 
-    mnuGoShareLink(): void {
-        let gotlink = this.getShareLink();
+    /**
+     * show a dialog where user can copy link
+     * might be able to set clipboard, but this is simpler to implement
+     */
+    beginShareLink() {
+        let gotLink = this.getShareLink();
         let br = getRoot().getBrowserInfo();
         let key = BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
-        this.pr.askMsg(lng(`lngPress ${key}+C to copy this link!`), gotlink, () => {});
+        this.pr.askMsg(lng(`lngPress ${key}+C to copy this link!`), gotLink, () => {});
     }
 
-    mnuGoExportJson(): void {
-        // *don't* use this.busy with this. need a way to recover if save() hangs for some reason.
+    /**
+     * export stack to json
+     */
+    beginExportJson() {
+        /* *don't* use this.busy with this.
+        this isn't async so it isn't really needed,
+        but more importantly we don't want a malfunctioning server save
+        to stop us from saving as json, which is our fallback if server fails. */
         let eThrown: O<Error>;
         try {
             this.pr.lyrPropPanel.saveChangesToModel(false);
         } catch (e) {
-            // shouldn't happen, but let the save continue.
+            /* shouldn't happen, but let the save continue. */
             eThrown = e;
         }
 
@@ -177,17 +220,25 @@ export class VpcSave implements VpcSaveInterface {
         saveAs(blob, defaultFilename);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
 
-        // count json saves
-        let lin = this.pr.vci.getModel().stack.getLatestStackLineage();
+        /* count json saves */
+        let info = this.pr.vci.getModel().stack.getLatestStackLineage();
         let ses = VpcSession.fromRoot();
         let currentUsername = ses ? ses.username : '';
-        UI512BeginAsync(() => this.goCountJsonSaves(currentUsername, lin.stackOwner, lin.stackGuid), undefined, false);
-        // no need to synchronously block on it
+        UI512BeginAsync(
+            () => this.goCountJsonSaves(currentUsername, info.stackOwner, info.stackGuid),
+            undefined,
+            false
+        );
+
+        /* now rethrow if we got an error */
         if (eThrown) {
             throw eThrown;
         }
     }
 
+    /**
+     * telemetry on how often people save stacks
+     */
     async goCountJsonSaves(currentUsername: string, stackOwner: string, stackId: string) {
         try {
             await VpcSession.vpcStacksCountJsonSaves(stackOwner, stackId, currentUsername);
@@ -196,7 +247,10 @@ export class VpcSave implements VpcSaveInterface {
         }
     }
 
-    mnuGoExportGif(): void {
+    /**
+     * export to gif
+     */
+    beginExportGif() {
         this.pr.askMsg('Animation speed (1-10, where 10 is fastest):', '5', (typed, btnPressed) => {
             let speed = parseFloat(typed === undefined ? '' : typed);
             speed = Number.isFinite(speed) ? speed : -1;
@@ -204,29 +258,36 @@ export class VpcSave implements VpcSaveInterface {
         });
     }
 
-    mnuGoFlagContent(): void {
+    /**
+     * send mark to server to flag content
+     */
+    beginFlagContent() {
         UI512BeginAsync(() => this.mnuGoFlagContentAsync(), undefined, false);
     }
 
+    /**
+     * ask for confirmation and send content flag
+     */
     async mnuGoFlagContentAsync() {
         let choice = await this.pr.answerMsgAsync(
             'We do not allow the hosting of malware, spam, phishing, obscene, libelous, defamatory, pornographic, or hateful content. Submit a report?',
             'Submit',
             'Cancel'
         );
+
         if (choice === 0) {
             let caught = false;
             try {
                 let ses = VpcSession.fromRoot();
                 let currentUsername = ses ? ses.username : '';
-                let lin = this.pr.vci.getModel().stack.getLatestStackLineage();
+                let info = this.pr.vci.getModel().stack.getLatestStackLineage();
                 if (
-                    lin.stackOwner &&
-                    lin.stackOwner.length &&
-                    lin.stackOwner !== this.pr.vci.getModel().stack.lineageUsernameNull() &&
-                    lin.stackOwner !== currentUsername
+                    info.stackOwner &&
+                    info.stackOwner.length &&
+                    info.stackOwner !== this.pr.vci.getModel().stack.lineageUsernameNull() &&
+                    info.stackOwner !== currentUsername
                 ) {
-                    await vpcStacksFlagContent(lin.stackOwner, lin.stackGuid, currentUsername);
+                    await vpcStacksFlagContent(info.stackOwner, info.stackGuid, currentUsername);
                 } else {
                     let e = new Error('');
                     e.toString = () => '';
@@ -243,23 +304,29 @@ export class VpcSave implements VpcSaveInterface {
         }
     }
 
-    mnuGoExit(destination: string): void {
+    /**
+     * exit the stack
+     */
+    beginGoExit(destination: string) {
         this.pr.exit(destination);
     }
 
+    /**
+     * get url for this stack
+     */
     protected getShareLink(): string {
         let loc = location.href.split('?')[0];
-        // case 1) from a demo stack (perf optimization, 0 db hits)
+        /* case 1) from a demo stack (perf optimization, 0 db hits) */
         if (this.pr.cameFromDemoSoNeverPromptSave.length) {
             let url = loc + '?s=' + Util512.toBase64UrlSafe(this.pr.cameFromDemoSoNeverPromptSave);
             return url;
         } else {
-            let lin = this.pr.vci.getModel().stack.getLatestStackLineage();
-            // case 2) from a stack not saved online
+            let info = this.pr.vci.getModel().stack.getLatestStackLineage();
+            /* case 2) from a stack not saved online */
             if (
-                !lin.stackOwner ||
-                !lin.stackOwner.length ||
-                lin.stackOwner === this.pr.vci.getModel().stack.lineageUsernameNull()
+                !info.stackOwner ||
+                !info.stackOwner.length ||
+                info.stackOwner === this.pr.vci.getModel().stack.lineageUsernameNull()
             ) {
                 throw makeVpcInternalErr(msgNotification + lng('lngFirst, go to File->Save to upload the stack.'));
             }
@@ -267,25 +334,34 @@ export class VpcSave implements VpcSaveInterface {
             let ses = VpcSession.fromRoot();
             let currentUsername = ses ? ses.username : '';
 
-            if (lin.stackOwner !== currentUsername) {
-                // case 3) from a stack we don't own -- don't check if changes need to be saved
-                return VpcSession.getUrlForOpeningStack(loc, lin.stackOwner, lin.stackGuid, lin.stackName);
+            if (info.stackOwner !== currentUsername) {
+                /* case 3) from a stack we don't own -- don't check if changes need to be saved */
+                return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
             } else {
-                // case 4) from a stack we do own
+                /* case 4) from a stack we do own */
                 if (this.pr.isDocDirty()) {
                     throw makeVpcInternalErr(
                         msgNotification +
                             lng("lngIt looks like you have unsaved changes, we're reminding you to hit Save first.")
                     );
                 }
-                return VpcSession.getUrlForOpeningStack(loc, lin.stackOwner, lin.stackGuid, lin.stackName);
+
+                return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
             }
         }
     }
 
+    /**
+     * helper method to show the login form and set its dimensions
+     */
     protected showLoginForm(newUserOk: boolean) {
         let form = new VpcNonModalFormLogin(this.pr.vci, newUserOk);
         VpcNonModalFormSendReport.standardWindowBounds(form, this.pr.vci);
         this.pr.vci.setNonModalDialog(form);
     }
 }
+
+/**
+ * reference to filesaver.js
+ */
+declare var saveAs: any;

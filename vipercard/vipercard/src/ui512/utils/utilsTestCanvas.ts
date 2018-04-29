@@ -74,11 +74,6 @@ export class CanvasTestParams {
 }
 
 /**
- * from filesaver.js, lets user download a blob to disk
- */
-declare var saveAs: any;
-
-/**
  * run the callback repeatedly until both imExpected loads and imGot's RenderComplete is done.
  */
 async function callDrawUntilRenderComplete(p: CanvasTestParams, imExpected: HTMLImageElement) {
@@ -145,7 +140,7 @@ async function UI512RenderAndCompareImage(download: boolean, fnGetDrawParams: Ge
 /**
  * run UI512RenderAndCompareImage on an array
  */
-async function UI512RenderAndCompareImages(
+export async function UI512RenderAndCompareImages(
     download: boolean,
     fnGetDrawParams: GetDrawParams | GetDrawParams[],
     callbackWhenComplete?: NullaryFn
@@ -196,7 +191,8 @@ export function UI512BeginAsync<T>(
     onComplete?: (r: T | Error) => void,
     alertOnError = false
 ) {
-    // tslint:disable-next-line
+    /* tslint is warning us that we are dropping the Promise; this is intentional */
+    /* tslint:disable-next-line */
     UI512BeginAsyncImpl(asyncFn, onComplete, alertOnError);
 }
 
@@ -205,7 +201,7 @@ export function UI512BeginAsync<T>(
  * intentionally will not start if another async fn is already in progress.
  * logs any failures encountered
  */
-let g_callVpAsyncFnBusy = false;
+let gCallVpAsyncFnBusy = false;
 async function UI512BeginAsyncImpl<T>(
     asyncFn: () => Promise<T>,
     onComplete?: (r: T | Error) => void,
@@ -213,7 +209,7 @@ async function UI512BeginAsyncImpl<T>(
 ) {
     let alreadyWaiting = 'Already waiting...';
     try {
-        if (g_callVpAsyncFnBusy) {
+        if (gCallVpAsyncFnBusy) {
             let e = new Error('');
             e.toString = () => alreadyWaiting;
             throw e;
@@ -236,7 +232,7 @@ async function UI512BeginAsyncImpl<T>(
             onComplete(e);
         }
     } finally {
-        g_callVpAsyncFnBusy = false;
+        gCallVpAsyncFnBusy = false;
     }
 }
 
@@ -267,3 +263,8 @@ function getColorFromCanvasData(data: Uint8ClampedArray, i: number) {
         return `other(${data[i]},${data[i + 1]},${data[i + 2]},${data[i + 3]})`;
     }
 }
+
+/**
+ * from filesaver.js, lets user download a blob to disk
+ */
+declare var saveAs: any;

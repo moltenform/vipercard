@@ -41,7 +41,7 @@ export class RequestedVelRef extends VpcIntermedValBase {
             this.lookById === undefined &&
             this.lookByName === undefined &&
             this.lookByAbsolute === undefined &&
-            (!this.lookByRelative || this.lookByRelative === OrdinalOrPosition.this)
+            (!this.lookByRelative || this.lookByRelative === OrdinalOrPosition.This)
         );
     }
 }

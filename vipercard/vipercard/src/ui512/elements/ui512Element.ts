@@ -8,7 +8,7 @@
  */
 export abstract class UI512Element extends UI512Settable {
     readonly typename: string = 'UI512Element';
-    public transparentToClicks = false;
+    transparentToClicks = false;
     protected _visible = true;
     protected _enabled = true;
     protected _enabledstyle = true;

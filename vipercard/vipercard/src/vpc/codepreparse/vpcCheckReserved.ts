@@ -15,6 +15,7 @@ export class CheckReservedWords {
     constants = new VariableCollectionConstants();
     isBuiltinHandler(s: string): boolean {
         /* "mouseup", "arrowkey" */
+        s = s.toLowerCase();
         return findStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, s) !== undefined;
     }
 

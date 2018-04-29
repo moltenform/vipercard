@@ -174,8 +174,8 @@ def shorten(s):
     s = re_replacewholeword(s, 'basex', 'bx')
     s = re_replacewholeword(s, 'basey', 'by')
     s = re_replacewholeword(s, 'drawRect', 'dr')
-    s = re_replacewholeword(s, 'amountToStretch', 'stre_y')
-    s = re_replacewholeword(s, 'amountToStretchHoriz', 'stre_x')
+    s = re_replacewholeword(s, 'amountToStretch', 'streY')
+    s = re_replacewholeword(s, 'amountToStretchHoriz', 'streX')
     lines = s.replace('\r\n', '\n').split('\n')
     for i, line in enumerate(lines):
         lstr = line.strip()
@@ -197,7 +197,7 @@ def writeCodelines(codelines):
     for line in codelines.lines:
         line = line.replace('%checkdims%', codelines.checkdims)
         if line.startswith('public ') or line == '}':
-            allLines.append(line)
+            allLines.append(line.replace('public ', ''))
         else:
             allLines.append('\t'+line)
     return allLines

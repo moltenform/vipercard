@@ -56,17 +56,17 @@ export class VelResolveName {
         let name = vel.getS('name');
         if (name.length) {
             /* name exists, show the name */
-            if (adjective === PropAdjective.long) {
+            if (adjective === PropAdjective.Long) {
                 let parent = this.model.getById(vel.parentId, VpcElCard);
                 return `card ${typ} "${name}" of ${this.goResolveNameCard(parent, adjective)}`;
-            } else if (adjective === PropAdjective.short) {
+            } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
             } else {
                 return `card ${typ} "${name}"`;
             }
         } else {
             /* no name, fall back to showing the id */
-            if (adjective === PropAdjective.long) {
+            if (adjective === PropAdjective.Long) {
                 let parent = this.model.getById(vel.parentId, VpcElCard);
                 return `card ${typ} id ${vel.id} of ${this.goResolveNameCard(parent, adjective)}`;
             } else {
@@ -90,16 +90,16 @@ export class VelResolveName {
         let name = vel.getS('name');
         if (name.length) {
             /* name exists, show the name */
-            if (adjective === PropAdjective.long) {
+            if (adjective === PropAdjective.Long) {
                 return `card "${name}" of this stack`;
-            } else if (adjective === PropAdjective.short) {
+            } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
             } else {
                 return `card "${name}"`;
             }
         } else {
             /* no name, fall back to showing the id */
-            if (adjective === PropAdjective.long) {
+            if (adjective === PropAdjective.Long) {
                 return `card id ${vel.id} of this stack`;
             } else {
                 return `card id ${vel.id}`;
@@ -115,16 +115,16 @@ export class VelResolveName {
         let name = vel.getS('name');
         if (name.length) {
             /* name exists, show the name */
-            if (adjective === PropAdjective.long) {
+            if (adjective === PropAdjective.Long) {
                 return `bkgnd "${name}" of this stack`;
-            } else if (adjective === PropAdjective.short) {
+            } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
             } else {
                 return `bkgnd "${name}"`;
             }
         } else {
             /* no name, fall back to showing the id */
-            if (adjective === PropAdjective.long) {
+            if (adjective === PropAdjective.Long) {
                 return `bkgnd id ${vel.id} of this stack`;
             } else {
                 return `bkgnd id ${vel.id}`;
@@ -138,7 +138,7 @@ export class VelResolveName {
      */
     protected goResolveNameStack(vel: VpcElStack, adjective: PropAdjective) {
         checkThrow(vel.isVpcElStack, '');
-        if (adjective === PropAdjective.short) {
+        if (adjective === PropAdjective.Short) {
             return vel.getS('name');
         } else {
             return 'this stack';
@@ -210,9 +210,9 @@ export class VelResolveId {
      * and more verbose than other objects
      */
     protected goCard(vel: VpcElCard, adjective: PropAdjective) {
-        if (adjective === PropAdjective.short) {
+        if (adjective === PropAdjective.Short) {
             return vel.id;
-        } else if (adjective === PropAdjective.long) {
+        } else if (adjective === PropAdjective.Long) {
             return `card id ${vel.id} of this stack`;
         } else {
             return `card id ${vel.id}`;

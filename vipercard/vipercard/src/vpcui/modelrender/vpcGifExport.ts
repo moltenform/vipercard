@@ -9,12 +9,6 @@
 /* auto */ import { TemporarilySuspendEvents } from '../../ui512/menu/ui512SuspendEvents.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
-/* js-gif library */
-declare var GIFEncoder: any;
-
-/* filesaver.js library */
-declare var saveAs: any;
-
 /**
  * export paint to GIF
  */
@@ -115,7 +109,7 @@ export class PaintGifExport {
     /**
      * get encoder and set the gif speed
      */
-    private getEncoder(speed: number) {
+    protected getEncoder(speed: number) {
         /* 1-> 0.5 fps, 10-> 20fps */
         let fpsDesired = 0.5 + (speed - 1) * (19.5 / 9);
         let delay = Math.round(1000 / fpsDesired);
@@ -141,3 +135,9 @@ export class PaintGifExport {
         this.teardown();
     }
 }
+
+/* js-gif library */
+declare var GIFEncoder: any;
+
+/* filesaver.js library */
+declare var saveAs: any;

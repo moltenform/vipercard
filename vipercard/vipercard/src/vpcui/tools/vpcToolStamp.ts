@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast, fitIntoInclusive } from '../../ui512/utils/utils512.js';
+/* auto */ import { cast } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
@@ -10,13 +10,17 @@
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
 /* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
 
+/**
+ * stamp tool, draw clip art stamps onto the card
+ * images are loaded asynchronously
+ */
 export class VpcAppUIToolStamp extends VpcAppUIToolBase {
     currentImg: O<UI512ImageCollectionImage>;
     images = new UI512ImageCollectionCollection();
@@ -32,38 +36,31 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         ['transport', 'lngtransport', 24]
     ];
 
-    respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {
-        // check if picture finished loading :)
-        this.checkIfLoaded();
-    }
-
+    /**
+     * hide the watch icon, once loaded from server
+     */
     protected checkIfLoaded() {
         this.updateStatusIcon();
     }
 
+    /**
+     * respond to mouse down event
+     */
     respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {}
 
+    /**
+     * draw the clipart onto the page
+     */
     respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
         if (isVelOrBg) {
             let theimg = this.currentImg;
             if (theimg && theimg.loaded && theimg.image) {
-                // paint the image, centered on the mouse position
-                let tmousex =
-                    fitIntoInclusive(
-                        d.mouseX,
-                        this.vci.userBounds()[0],
-                        this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
-                    ) - this.vci.userBounds()[0];
-                let tmousey =
-                    fitIntoInclusive(
-                        d.mouseY,
-                        this.vci.userBounds()[1],
-                        this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
-                    ) - this.vci.userBounds()[1];
+                /* paint the image, centered on the mouse position */
+                let [tx, ty] = this.getTranslatedCoords(d.mouseX, d.mouseY);
                 let [srcw, srch] = theimg.getSize();
-                tmousex -= Math.round(srcw / 2);
-                tmousey -= Math.round(srch / 2);
-                this.cbPaintRender().commitHtmlImageOntoImage(theimg.image, tmousex, tmousey, srcw, srch);
+                tx -= Math.round(srcw / 2);
+                ty -= Math.round(srch / 2);
+                this.cbPaintRender().commitHtmlImageOntoImage(theimg.image, tx, ty, srcw, srch);
             }
         } else if (!isVelOrBg && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceLeft')) {
             this.onChooseCategory();
@@ -72,8 +69,14 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         }
     }
 
-    cancelCurrentToolAction(): void {}
+    /**
+     * erase any uncommitted partial changes, called by Undo() etc
+     */
+    cancelCurrentToolAction() {}
 
+    /**
+     * get category from the listbox
+     */
     protected getChosenCategory() {
         let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceLeft');
         if (el) {
@@ -90,11 +93,14 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         return undefined;
     }
 
+    /**
+     * get image from the listbox
+     */
     protected getChosenImage() {
         let ctg = this.getChosenCategory();
         if (ctg) {
             let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
-            if (el && el.get_ftxt().len() > 0) {
+            if (el && el.getFmTxt().len() > 0) {
                 let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
                 let ln = TextSelModify.selectByLinesWhichLine(gel);
                 if (ln !== undefined && ln >= 0) {
@@ -109,6 +115,11 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         return undefined;
     }
 
+    /**
+     * when you choose a category,
+     * update the list of stamps, and
+     * begin loading the first one
+     */
     protected onChooseCategory() {
         let ctg = this.getChosenCategory();
         if (ctg) {
@@ -119,8 +130,8 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
                 el.set('selcaret', 0);
                 el.set('selend', 0);
                 this.currentImg = undefined;
-                if (el.get_ftxt().len() > 0) {
-                    // auto-choose the first one
+                if (el.getFmTxt().len() > 0) {
+                    /* auto-choose the first one */
                     let rghtgel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
                     TextSelModify.selectLineInField(rghtgel, 0);
                     this.onChoosePicture();
@@ -129,11 +140,16 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         }
     }
 
+    /**
+     * when you choose a stamp,
+     * request that it loads from the server
+     */
     protected onChoosePicture() {
         let img = this.getChosenImage();
         this.currentImg = img;
         if (img && !img.loaded) {
-            // we used to use the mouse-move event to check if it loaded instead, but this is better.
+            /* we used to use the mouse-move event to check if it
+            loaded instead, but this is better. */
             img.startLoad(() => {
                 this.vci.placeCallbackInQueue(() => this.checkIfLoaded());
             });
@@ -142,20 +158,27 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         this.checkIfLoaded();
     }
 
+    /**
+     * show a watch if still waiting for image to load from server
+     */
     protected updateStatusIcon() {
         let grp = this.vci.UI512App().findGroup('grpVpcAppUIToolStamp');
         if (grp) {
             let el = grp.findEl('grpVpcAppUIToolStampStatus');
             if (el && this.currentImg && this.currentImg.loaded) {
-                el.set('iconnumber', 76); // white
+                el.set('iconnumber', 76); /* white */
             } else if (el && this.currentImg) {
-                el.set('iconnumber', 91); // watch
+                el.set('iconnumber', 91); /* watch */
             } else if (el) {
-                el.set('iconnumber', 76); // white
+                el.set('iconnumber', 76); /* white */
             }
         }
     }
 
+    /**
+     * reset state when opening tool,
+     * and initialize layout for a form on the right
+     */
     onOpenTool() {
         this.images = new UI512ImageCollectionCollection();
         this.currentImg = undefined;
@@ -174,14 +197,14 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         let pw = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
         let ph = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
 
-        // draw background rectangle
+        /* draw background rectangle */
         let bg = new UI512ElButton('grpVpcAppUIToolStampBg');
         grp.addElement(this.vci.UI512App(), bg);
         bg.set('autohighlight', false);
         bg.set('style', UI512BtnStyle.Rectangle);
         bg.setDimensions(px, py, pw, ph);
 
-        // draw category choices
+        /* draw category choices */
         let lft = UI512ElTextField.makeChoiceBox(
             this.vci.UI512App(),
             grp,
@@ -197,45 +220,51 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
             py + 15
         );
 
-        // draw status icon
+        /* draw status icon */
         let statusicon = new UI512ElButton('grpVpcAppUIToolStampStatus');
         grp.addElement(this.vci.UI512App(), statusicon);
         statusicon.set('style', UI512BtnStyle.Opaque);
         statusicon.set('icongroupid', '001');
-        statusicon.set('iconnumber', 76); // white
+        statusicon.set('iconnumber', 76); /* white */
         statusicon.setDimensions(px + 312, py + 15, 30, 30);
 
-        // draw bottom-left label
+        /* draw bottom-left label */
         let lbl2 = new UI512ElLabel('grpVpcAppUIToolStampLbl2');
         grp.addElement(this.vci.UI512App(), lbl2);
         lbl2.set('labeltext', lng('lng"Art Bits" (1987)'));
         lbl2.setDimensions(px + 13, py + 280, 200, 20);
 
-        // optimize group
+        /* optimize group */
         grp.updateBoundsBasedOnChildren();
 
-        // set left choices
+        /* set left choices */
         UI512ElTextField.setListChoices(lft, this.directories.map(item => lng(item[1])));
 
-        // auto-choose the first entry in the list
+        /* auto-choose the first entry in the list */
         let lftgel = new UI512ElTextFieldAsGeneric(cast(lft, UI512ElTextField));
         TextSelModify.selectLineInField(lftgel, 0);
         this.onChooseCategory();
-        if (rght.get_ftxt().len() > 0) {
+        if (rght.getFmTxt().len() > 0) {
             let rghtgel = new UI512ElTextFieldAsGeneric(cast(rght, UI512ElTextField));
             TextSelModify.selectLineInField(rghtgel, 0);
             this.onChoosePicture();
         }
     }
 
+    /**
+     * commit changes when leaving tool
+     */
     onLeaveTool() {
-        // free memory by unreferencing everything
+        /* free memory by unreferencing everything */
         this.vci.UI512App().removeGroup('grpVpcAppUIToolStamp');
         this.images = new UI512ImageCollectionCollection();
         this.currentImg = undefined;
         this.cancelCurrentToolAction();
     }
 
+    /**
+     * which cursor should be shown if the mouse is over el.
+     */
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
         return UI512Cursors.Crosshair;
     }

@@ -226,7 +226,7 @@ export class GridLayout<RowType, ColType> {
     createElems<T extends UI512Element>(
         app: UI512Application,
         grp: UI512ElGroup,
-        idprefix: string,
+        idPrefix: string,
         ctor: { new (...args: any[]): T },
         fn: (a: ColType, b: RowType, el: T) => void,
         idBasedOnCol = false,
@@ -235,7 +235,7 @@ export class GridLayout<RowType, ColType> {
         this.combinations((n, a, b, bnds) => {
             /* use either row data or col data, whichever is a string we can use as part of the id. */
             let cellIdSuffix = typeof a === 'string' ? a : b;
-            let id = idBasedOnCol ? `${idprefix}${cellIdSuffix}` : `${idprefix}_${n}`;
+            let id = idBasedOnCol ? `${idPrefix}${cellIdSuffix}` : `${idPrefix}_${n}`;
             let el = new ctor(id);
             grp.addElement(app, el);
             el.setDimensions(bnds[0], bnds[1], bnds[2], bnds[3]);

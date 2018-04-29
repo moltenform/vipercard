@@ -33,14 +33,14 @@ export class UI512CompCodeEditor extends UI512CompBase {
      */
     createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpId);
-        let headerheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
+        let headerHeight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 
-        let curY = this.y + headerheight - 1;
-        const spacerheight = headerheight;
+        let curY = this.y + headerHeight - 1;
+        const spacerHeight = headerHeight;
         let spacer = this.genBtn(app, grp, 'spacer');
         spacer.set('autohighlight', false);
-        spacer.setDimensions(this.x, curY, this.logicalWidth, spacerheight);
-        curY += spacerheight - 1;
+        spacer.setDimensions(this.x, curY, this.logicalWidth, spacerHeight);
+        curY += spacerHeight - 1;
 
         this.el = this.genChild(app, grp, 'editor', UI512ElTextField);
         this.el.set('style', UI512FldStyle.Rectangle);
@@ -56,7 +56,7 @@ export class UI512CompCodeEditor extends UI512CompBase {
     setContent(s: string) {
         s = UI512DrawText.setFont(s, UI512CompCodeEditorFont.font);
         let txt = FormattedText.newFromSerialized(s);
-        this.el.setftxt(txt);
+        this.el.setFmTxt(txt);
     }
 
     /**

@@ -100,7 +100,9 @@ export class VpcRuntimeOpts extends UI512Settable {
     }
 
     /**
-     * high-performing way to see if we are the owner of this option
+     * an option with getOptionS('foo') might either be on model.productOpts (so it's undoable)
+     * or put here under VpcRuntimeOpts (so it's not undoable)
+     * is this a VpcRuntimeOpts option?
      */
     isARuntimeOpt: { [key: string]: boolean } = {
         mimicCurrentTool: true,
@@ -118,6 +120,9 @@ export class VpcRuntimeOpts extends UI512Settable {
     }
 }
 
+/**
+ * holds runtime state, not persisted
+ */
 export class VpcRuntime {
     /* set by _VpcDocLoader_, _VpcPresenter_::init */
     codeExec: VpcExecTop;

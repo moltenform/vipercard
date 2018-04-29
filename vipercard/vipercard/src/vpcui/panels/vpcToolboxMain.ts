@@ -8,7 +8,7 @@
  * the main tool palette
  */
 export class VpcToolboxMain extends UI512CompToolbox {
-    compositeType = 'toolbox_main';
+    compositeType = 'ToolboxMain';
 
     /**
      * initialize layout
@@ -20,22 +20,22 @@ export class VpcToolboxMain extends UI512CompToolbox {
         };
 
         toolsMain.items = [
-            ['Browse', 0],
-            ['Button', 1],
-            ['Field', 17],
-            ['Select', 2],
-            ['Brush', 5],
-            ['Bucket', 11],
-            ['Pencil', 4],
-            ['Line', 7],
-            ['Lasso', 3],
-            ['Eraser', 6],
-            ['Rect', 9],
-            ['Oval', 12],
-            ['Roundrect', 10],
-            ['Curve', 13],
-            ['Stamp', 97],
-            ['Spray', 8]
+            ['browse', 0],
+            ['button', 1],
+            ['field', 17],
+            ['select', 2],
+            ['brush', 5],
+            ['bucket', 11],
+            ['pencil', 4],
+            ['line', 7],
+            ['lasso', 3],
+            ['eraser', 6],
+            ['rect', 9],
+            ['oval', 12],
+            ['roundrect', 10],
+            ['curve', 13],
+            ['stamp', 97],
+            ['spray', 8]
         ];
 
         assertEq(16, toolsMain.items.length, '6y|');
@@ -43,7 +43,7 @@ export class VpcToolboxMain extends UI512CompToolbox {
         toolsMain.logicalHeight = 1;
         toolsMain.hasCloseBtn = false;
         toolsMain.create(vci.getPresenter(), vci.UI512App());
-        toolsMain.setWhich(vci.UI512App(), 'Browse');
+        toolsMain.setWhich(vci.UI512App(), 'browse');
 
         toolsMain.logicalHeight = ToolboxDims.ToolbarHeight;
         return [toolsMain.x, toolsMain.y];

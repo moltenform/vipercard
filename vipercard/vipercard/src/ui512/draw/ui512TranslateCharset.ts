@@ -9,12 +9,15 @@
  * use this mapping to translate character sets.
  */
 export class TranslateCharset {
-    /* for faster load times, we don't populate the map until it is needed. */
+    /* for faster load times, don't populate the map until it is requested. */
     static romanToUn: O<{ [key: number]: string }>;
     static unToRoman: O<{ [key: number]: string }>;
 
+    /**
+     * roman to unicode
+     * https://en.wikipedia.org/wiki/Mac_OS_Roman
+     */
     protected static getRomanToUn() {
-        /* wikipedia, https://en.wikipedia.org/wiki/Mac_OS_Roman  */
         if (TranslateCharset.romanToUn === undefined) {
             TranslateCharset.romanToUn = {
                 9: '\u0009',
@@ -240,6 +243,9 @@ export class TranslateCharset {
         return TranslateCharset.romanToUn;
     }
 
+    /**
+     * get unicode to roman
+     */
     protected static getUnToRoman() {
         if (TranslateCharset.unToRoman === undefined) {
             TranslateCharset.unToRoman = {
@@ -466,13 +472,23 @@ export class TranslateCharset {
         return TranslateCharset.unToRoman;
     }
 
+    /**
+     * translate entire string, roman to unicode
+     */
     static translateRomanToUn(s: string, fallback = '?') {
         return TranslateCharset.translate(s, TranslateCharset.getRomanToUn(), fallback);
     }
+
+    /**
+     * translate entire string, unicode to roman
+     */
     static translateUnToRoman(s: string, fallback = '?') {
         return TranslateCharset.translate(s, TranslateCharset.getUnToRoman(), fallback);
     }
 
+    /**
+     * translate a string to different character set
+     */
     protected static translate(s: string, map: { [key: number]: string }, fallback: string) {
         let ret = '';
         for (let i = 0; i < s.length; i++) {

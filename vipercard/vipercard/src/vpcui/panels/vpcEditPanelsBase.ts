@@ -206,12 +206,12 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
                 el.set('canselecttext', false);
                 el.set('h', 50);
                 el.set('x', grp.getEl(this.getElId(`inp##name`)).x - 3);
-                el.setftxt(
+                el.setFmTxt(
                     FormattedText.newFromUnformatted('To edit text, use the Browse\ntool and click on the field.')
                 );
             } else {
                 let s = VpcEditPanelsBase.numeric[inId] ? vel.getN(inId).toString() : vel.getS(inId);
-                el.setftxt(FormattedText.newFromUnformatted(s));
+                el.setFmTxt(FormattedText.newFromUnformatted(s));
             }
         }
 
@@ -271,7 +271,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         let grp = app.getGroup(this.grpId);
         let elIcon = grp.findEl(this.getElId(`inp##icon`));
         if (elIcon && vel.getType() === VpcElType.Btn && !onlyCheckIfDirty) {
-            let typed = elIcon.get_ftxt().toUnformatted();
+            let typed = elIcon.getFmTxt().toUnformatted();
             let n = parseInt(typed, base10);
             let nextIcon = isFinite(n) && n >= 0 ? n : 0;
             let curIcon = vel.getN('icon') || 0;
@@ -294,7 +294,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             }
 
             let el = grp.getEl(this.getElId(`inp##${inId}`));
-            let typed = el.get_ftxt().toUnformatted();
+            let typed = el.getFmTxt().toUnformatted();
             if (VpcEditPanelsBase.numeric[inId]) {
                 let n = parseInt(typed, base10);
                 n = isFinite(n) && n >= 0 ? n : 0;

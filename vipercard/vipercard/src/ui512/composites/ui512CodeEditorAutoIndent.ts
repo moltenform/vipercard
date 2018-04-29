@@ -123,12 +123,12 @@ export class UI512AutoIndent {
             return;
         }
 
-        let lns = new UI512Lines(el.get_ftxt());
+        let lns = new UI512Lines(el.getFmTxt());
         let lnsAfterIndent = this.runAutoIndent(lns, el);
         let next = lnsAfterIndent.flatten();
-        let flattxtcurrent = el.get_ftxt().toUnformatted();
+        let flattxtcurrent = el.getFmTxt().toUnformatted();
         if (flattxtcurrent !== next.toUnformatted()) {
-            el.setftxt(next);
+            el.setFmTxt(next);
         }
     }
 
@@ -136,7 +136,7 @@ export class UI512AutoIndent {
      * run autoIndent for a set of lines of code
      */
     protected runAutoIndent(lns: UI512Lines, el: UI512ElTextField): UI512Lines {
-        let len = el.get_ftxt().len();
+        let len = el.getFmTxt().len();
         let [outLns, outSelCaret, outSelEnd] = this.runAutoIndentImpl(
             lns,
             el.getN('selcaret'),

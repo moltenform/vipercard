@@ -45,45 +45,46 @@ export class ExecuteStatement {
             `7f|command ${firstToken.image} did not return IntermedMapOfIntermedVals`
         );
 
-        Util512.callAsMethodOnClass('ExecuteStatement', this, 'go_' + firstToken.image, [line, vals, blocked], false);
+        let method = 'go' + Util512.capitalizeFirst(firstToken.image);
+        Util512.callAsMethodOnClass('ExecuteStatement', this, method, [line, vals, blocked], false);
     }
 
     /**
      * add {number} to [chunk of] {container}
      * Adds the value of number to the number in a container.
      */
-    go_add(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        this.go_math_alter(line, vals, (a: number, b: number) => a + b);
+    goAdd(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+        this.goMathAlter(line, vals, (a: number, b: number) => a + b);
     }
 
     /**
      * subtract [chunk of] {container} from {number}
      * Subtracts a number from the number in a container.
      */
-    go_subtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        this.go_math_alter(line, vals, (a: number, b: number) => a - b);
+    goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+        this.goMathAlter(line, vals, (a: number, b: number) => a - b);
     }
 
     /**
      * multiply [chunk of] {container} by {number}
      * Multiplies the number in a container by a number.
      */
-    go_multiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        this.go_math_alter(line, vals, (a: number, b: number) => a * b);
+    goMultiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+        this.goMathAlter(line, vals, (a: number, b: number) => a * b);
     }
 
     /**
      * divide [chunk of] {container} by {number}
      * Divides the number in a container by a number.
      */
-    go_divide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        this.go_math_alter(line, vals, (a: number, b: number) => a / b);
+    goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+        this.goMathAlter(line, vals, (a: number, b: number) => a / b);
     }
 
     /**
      * implementation of add, subtract, etc
      */
-    protected go_math_alter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
+    protected goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
         let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl4Expression'), '5M|');
         let container = throwIfUndefined(
             this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
@@ -225,14 +226,14 @@ export class ExecuteStatement {
      * Displays a dialog box.
      * The button that is pressed (1, 2, or 3) will be assigned to the variable "it".
      */
-    go_answer(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goAnswer(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let nm = fromNickname('FACTOR');
         let argsVals = this.getAllChildVpcVals(vals, nm, true);
         let args = argsVals.map(item => item.readAsString());
 
         /* because there is only 1 script execution thread, don't need to assign a unique id. */
-        let asyncOpId = 'single_thread_asyncOpId';
-        VpcScriptExecAsync.go_answer(
+        let asyncOpId = 'singleThreadAsyncOpId';
+        VpcScriptExecAsync.goAsyncAnswer(
             this.pendingOps,
             blocked,
             this.outside,
@@ -251,14 +252,14 @@ export class ExecuteStatement {
      * The text typed will be assigned to the variable "it".
      * If the user clicks Cancel, the result will be an empty string "".
      */
-    go_ask(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goAsk(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let argsVals = this.getAllChildVpcVals(vals, 'RuleExpr', true);
         let args = argsVals.map(item => item.readAsString());
         let closureGetAsyncOps = this.pendingOps;
 
         /* because there is only 1 script execution thread, don't need to assign a unique id. */
-        let asyncOpId = 'single_thread_asyncOpId';
-        VpcScriptExecAsync.go_ask(
+        let asyncOpId = 'singleThreadAsyncOpId';
+        VpcScriptExecAsync.goAsyncAsk(
             this.pendingOps,
             blocked,
             this.outside,
@@ -273,7 +274,7 @@ export class ExecuteStatement {
     /**
      * Play the system beep sound.
      */
-    go_beep(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goBeep(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         VpcAudio.beep();
     }
 
@@ -284,7 +285,7 @@ export class ExecuteStatement {
      * first, and then
      *      play "mySound"
      */
-    go_play(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goPlay(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
         let whichSound = args[0].readAsString();
         let isJustLoadIdentifier =
@@ -317,14 +318,13 @@ export class ExecuteStatement {
      * Use the choose command for programmatically drawing pictures.
      * Doesn't set the actual tool, which is always Browse when scripts are running.
      */
-    go_choose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goChoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let nm = fromNickname('FACTOR');
         let factor = throwIfUndefined(this.findChildVal(vals, nm), '5G|');
         let sTool = factor.readAsString().replace(/ +/, '_');
         checkThrow(sTool.length > 1, 'not a valid tool name.');
 
-        /* the vals in the enum start with a capital letter */
-        sTool = sTool.slice(0, 1).toUpperCase() + sTool.slice(1).toLowerCase();
+        /* from string to enum entry */
         let tl = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
         let ctg = getToolCategory(tl);
         if (
@@ -346,7 +346,7 @@ export class ExecuteStatement {
      * click at {x}, {y}
      * Use the click command for programmatically drawing pictures.
      */
-    go_click(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         return this.clickOrDrag(line, vals, 'at');
     }
 
@@ -354,7 +354,7 @@ export class ExecuteStatement {
      * drag from {x1}, {y1} to {x2}, {y2}
      * Use the drag command for programmatically drawing pictures.
      */
-    go_drag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         return this.clickOrDrag(line, vals, 'from');
     }
 
@@ -395,7 +395,7 @@ export class ExecuteStatement {
     /**
      * delete char {i} of {container}
      */
-    go_delete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goDelete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
             throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
@@ -416,14 +416,14 @@ export class ExecuteStatement {
                 chunk.type === VpcChunkType.Chars,
                 "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
             );
-            this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.into);
+            this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.Into);
         }
     }
 
     /**
      * This feature will arrive in a future version...
      */
-    go_create(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goCreate(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         throw makeVpcScriptErr("the 'create' command is not yet supported.");
     }
 
@@ -438,14 +438,14 @@ export class ExecuteStatement {
     /**
      * enable a vel
      */
-    go_enable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goEnable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         this.setEnabled(line, vals, true);
     }
 
     /**
      * disable a vel
      */
-    go_disable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goDisable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         this.setEnabled(line, vals, false);
     }
 
@@ -453,7 +453,7 @@ export class ExecuteStatement {
      * get {expression}
      * Evaluates any expression and saves the result to the variable "it".
      */
-    go_get(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goGet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let expr = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '58|');
         this.outside.SetSpecialVar('it', expr);
     }
@@ -461,7 +461,7 @@ export class ExecuteStatement {
     /**
      * Go to a different card.
      */
-    go_go(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goGo(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let ref = this.findChildVelRef(vals, 'RuleNtDest');
         if (ref) {
             let vel = this.getResolveChildVel(vals, 'RuleNtDest');
@@ -470,10 +470,10 @@ export class ExecuteStatement {
             let velAsCard = vel as VpcElCard;
             if (velAsCard && velAsCard.isVpcElCard) {
                 /* e.g. go card 2 */
-                this.outside.GoCardRelative(OrdinalOrPosition.this, velAsCard.id);
+                this.outside.GoCardRelative(OrdinalOrPosition.This, velAsCard.id);
             } else {
                 let requestStack = new RequestedVelRef(VpcElType.Stack);
-                requestStack.lookByRelative = OrdinalOrPosition.this;
+                requestStack.lookByRelative = OrdinalOrPosition.This;
                 let stack = this.outside.ResolveVelRef(requestStack) as VpcElStack;
                 checkThrow(stack && stack.isVpcElStack, '7P|');
 
@@ -486,7 +486,7 @@ export class ExecuteStatement {
                     }
                 } else if (velAsBg && velAsBg.isVpcElBg && velAsBg.cards.length) {
                     /* e.g. go to bg 2 */
-                    this.outside.GoCardRelative(OrdinalOrPosition.this, velAsBg.cards[0].id);
+                    this.outside.GoCardRelative(OrdinalOrPosition.This, velAsBg.cards[0].id);
                 } else {
                     /* e.g. go to cd btn 2 */
                     throw makeVpcScriptErr('56|we only support going to a card or a bg');
@@ -514,7 +514,7 @@ export class ExecuteStatement {
      * put {expression} into {container}
      * Evaluates any expression and saves the result to a variable or container.
      */
-    go_put(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         checkThrow(
             terms.length === 2,
@@ -536,14 +536,14 @@ export class ExecuteStatement {
     /**
      * reset menubar
      */
-    go_reset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         throw makeVpcScriptErr("52|the 'reset' command is not yet implemented.");
     }
 
     /**
      * set the {property} of {button|field} to {value}
      */
-    go_set(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let velRef = this.findChildVelRef(vals, 'RuleObject');
         let velRefFld = this.findChildVelRef(vals, 'RuleObjectFld');
         let velRefChunk = this.findChildOther<RequestedChunk>('RequestedChunk', vals, 'RuleHChunk');
@@ -575,7 +575,7 @@ export class ExecuteStatement {
     /**
      * show {button|field}
      */
-    go_show(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goShow(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let strs = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let rule1 = this.findChildMap(vals, 'RuleShow_1');
         let rule2 = this.findChildMap(vals, 'RuleShow_1');
@@ -608,7 +608,7 @@ export class ExecuteStatement {
     /**
      * hide {button|field}
      */
-    go_hide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goHide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let ref = this.findChildVelRef(vals, 'RuleObjectPart');
         let identifier = this.findChildStr(vals, 'Tokentkidentifier');
         if (ref) {
@@ -627,10 +627,10 @@ export class ExecuteStatement {
     /**
      * sort [lines|items|chars] of {container}
      */
-    go_sort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let ascend = true;
-        let sortType = SortType.text;
+        let sortType = SortType.Text;
         for (let i = 1; i < terms.length; i++) {
             if (terms[i] === 'ascending') {
                 ascend = true;
@@ -656,7 +656,7 @@ export class ExecuteStatement {
     /**
      * lock screen
      */
-    go_lock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         checkThrow(
             terms.length === 2 && terms[0] === 'lock' && terms[1] === 'screen',
@@ -669,7 +669,7 @@ export class ExecuteStatement {
     /**
      * unlock screen
      */
-    go_unlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goUnlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         checkThrow(
             terms.length === 2 && terms[0] === 'unlock' && terms[1] === 'screen',
@@ -682,7 +682,7 @@ export class ExecuteStatement {
     /**
      * visual effect
      */
-    go_visual(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goVisual(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         throw makeVpcScriptErr("4@|the 'visual' command is not yet implemented.");
     }
 
@@ -690,7 +690,7 @@ export class ExecuteStatement {
      * wait {number} [seconds|milliseconds|ms|ticks]
      * Pauses the script.
      */
-    go_wait(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+    goWait(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
         let number = args[0].readAsStrictNumeric();
         let unitRawOrdinal =
@@ -705,11 +705,11 @@ export class ExecuteStatement {
         checkThrow(isString(unitRaw), '');
 
         /* because there is only 1 script execution thread, don't need to assign a unique id. */
-        let asyncOpId = 'single_thread_asyncOpId';
+        let asyncOpId = 'singleThreadAsyncOpId';
 
         /* getStrToEnum will conveniently show a list of valid alternatives on error */
         let multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, '', unitRaw as string);
         let milliseconds = Math.max(0, Math.round(number * multiply));
-        VpcScriptExecAsync.go_wait(this.pendingOps, blocked, asyncOpId, milliseconds);
+        VpcScriptExecAsync.goAsyncWait(this.pendingOps, blocked, asyncOpId, milliseconds);
     }
 }

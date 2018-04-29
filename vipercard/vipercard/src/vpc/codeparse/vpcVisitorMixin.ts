@@ -108,7 +108,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleObject_1(ctx: VisitingContext): RequestedVelRef {
             checkThrow(ctx.TokenTkidentifier[0], '9U|RuleObject_1. all choices null.');
             let ret = new RequestedVelRef(VpcElType.Unknown);
-            ret.lookByRelative = OrdinalOrPosition.this;
+            ret.lookByRelative = OrdinalOrPosition.This;
             if (ctx.TokenTkidentifier[0].image === 'target') {
                 /* example: put the name of the target into x */
                 ret.isReferenceToTarget = true;
@@ -145,7 +145,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
             /* example: put the name of this stack into x */
             let ret = new RequestedVelRef(VpcElType.Stack);
-            ret.lookByRelative = OrdinalOrPosition.this;
+            ret.lookByRelative = OrdinalOrPosition.This;
             return ret;
         }
 
@@ -265,7 +265,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             );
         }
 
-        RuleFnCall_Length(ctx: VisitingContext): VpcVal {
+        RuleFnCallLength(ctx: VisitingContext): VpcVal {
             /* put the length of "abc" into x */
             let evaledvpc = this.Helper$ReadVpcVal(ctx, 'FACTOR', true);
             let len = evaledvpc.readAsString().length;
@@ -306,7 +306,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
 
             let parentRef = new RequestedVelRef(parentType);
-            parentRef.lookByRelative = OrdinalOrPosition.this;
+            parentRef.lookByRelative = OrdinalOrPosition.This;
             let count = this.outside.CountElements(type, parentRef);
             return VpcValN(count);
         }
@@ -323,7 +323,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 } else {
                     /* if nothing was specified, default to looking at current stack */
                     parentRef = new RequestedVelRef(VpcElType.Stack);
-                    parentRef.lookByRelative = OrdinalOrPosition.this;
+                    parentRef.lookByRelative = OrdinalOrPosition.This;
                 }
             }
 
@@ -339,7 +339,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else {
                 /* number of bgs */
                 parentRef = new RequestedVelRef(VpcElType.Stack);
-                parentRef.lookByRelative = OrdinalOrPosition.this;
+                parentRef.lookByRelative = OrdinalOrPosition.This;
             }
 
             let count = this.outside.CountElements(VpcElType.Bg, parentRef);
@@ -377,7 +377,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let sAdjective = ctx.TokenTkadjective[0] ? ctx.TokenTkadjective[0].image : '';
             let adjective = slength(sAdjective)
                 ? getStrToEnum<PropAdjective>(PropAdjective, "adjective (the 'long' target)", sAdjective)
-                : PropAdjective.empty;
+                : PropAdjective.Empty;
 
             let fnOrPropName = ctx.TokenTkidentifier[0].image;
             switch (fnOrPropName) {
@@ -387,7 +387,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 case 'paramcount': /* fallthrough */
                 case 'params':
                     checkThrow(
-                        adjective === PropAdjective.empty,
+                        adjective === PropAdjective.Empty,
                         "9G|we don't support an adjective (the 'long' target) here."
                     );
 
@@ -396,7 +396,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     /* maybe it's a property? */
                     if (this.outside.IsProductProp(fnOrPropName)) {
                         let refProductOps = new RequestedVelRef(VpcElType.Product);
-                        refProductOps.lookByRelative = OrdinalOrPosition.this;
+                        refProductOps.lookByRelative = OrdinalOrPosition.This;
                         return this.outside.GetProp(refProductOps, fnOrPropName, adjective, undefined);
                     } else {
                         throw makeVpcScriptErr(
@@ -437,7 +437,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let sadjective = ctx.TokenTkadjective[0] ? ctx.TokenTkadjective[0].image : '';
             let adjective = slength(sadjective)
                 ? getStrToEnum<PropAdjective>(PropAdjective, 'adjective (the "long" name of cd btn 1)', sadjective)
-                : PropAdjective.empty;
+                : PropAdjective.Empty;
 
             let propName = this.visit(ctx.RuleAnyPropertyName[0]) as string;
             checkThrow(isString(propName), `9C|internal error, expected AnyPropertyName to be a string`);

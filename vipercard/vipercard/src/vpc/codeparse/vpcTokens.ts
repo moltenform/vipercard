@@ -3,23 +3,6 @@
 /* auto */ import { ChvIToken, ChvLexer, ChvToken } from '../../vpc/codeparse/bridgeChv.js';
 
 /**
- * get the type number from a token class
- */
-export function tokenType(ctr: { new (...args: any[]): any }): number {
-    /* tokenType is added by chevrotain at runtime */
-    let tk = (ctr as any).tokenType;
-    assertTrue(tk !== undefined && tk !== null, '8^|tk is null');
-    return tk;
-}
-
-/**
- * is this token an instance of this token class?
- */
-export function isTkType(tk: ChvIToken, ctr: { new (...args: any[]): any }) {
-    return tk && tk.tokenType === tokenType(ctr);
-}
-
-/**
  * allowed symbols fpr makeGreaterLessThanEqual
  */
 export type TypeGreaterLessThanEqual = '=' | '==' | '<' | '>' | '<=' | '>=';
@@ -28,25 +11,6 @@ export type TypeGreaterLessThanEqual = '=' | '==' | '<' | '>' | '<=' | '>=';
  * a plain-JS object from the parser, the CST
  */
 export type VpcParsed = any;
-
-/**
- * create an object cloning the token,
- * a test will verify that no properties were missed
- */
-function cloneToken(tk: ChvIToken): ChvIToken {
-    return {
-        image: tk.image,
-        startOffset: tk.startOffset,
-        startLine: tk.startLine,
-        startColumn: tk.startColumn,
-        endOffset: tk.endOffset,
-        endLine: tk.endLine,
-        endColumn: tk.endColumn,
-        isInsertedInRecovery: tk.isInsertedInRecovery,
-        tokenType: tk.tokenType,
-        tokenClassName: tk.tokenClassName
-    };
-}
 
 /**
  * when re-writing syntax, sometimes we need to construct a token, and make it
@@ -131,6 +95,42 @@ export class BuildFakeTokens {
 }
 
 /**
+ * get the type number from a token class
+ */
+export function tokenType(ctr: { new (...args: any[]): any }): number {
+    /* tokenType is added by chevrotain at runtime */
+    let tk = (ctr as any).tokenType;
+    assertTrue(tk !== undefined && tk !== null, '8^|tk is null');
+    return tk;
+}
+
+/**
+ * is this token an instance of this token class?
+ */
+export function isTkType(tk: ChvIToken, ctr: { new (...args: any[]): any }) {
+    return tk && tk.tokenType === tokenType(ctr);
+}
+
+/**
+ * create an object cloning the token,
+ * TestCloneToken will verify that no properties were missed
+ */
+export function cloneToken(tk: ChvIToken): ChvIToken {
+    return {
+        image: tk.image,
+        startOffset: tk.startOffset,
+        startLine: tk.startLine,
+        startColumn: tk.startColumn,
+        endOffset: tk.endOffset,
+        endLine: tk.endLine,
+        endColumn: tk.endColumn,
+        isInsertedInRecovery: tk.isInsertedInRecovery,
+        tokenType: tk.tokenType,
+        tokenClassName: tk.tokenClassName
+    };
+}
+
+/**
  * a list of disallowed variable names.
  * includes both actual tokens in the grammar and
  * tkidentifiers that we just don't want to be used as variable names
@@ -156,7 +156,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
     until: true,
     global: true,
 
-    /* tokens from real_vpc000 that aren't OneOfWords or SAME */
+    /* tokens from realVpc000 that aren't OneOfWords or SAME */
     commandchar: true,
     cmdchar: true,
     message: true,
@@ -167,7 +167,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
     in: true,
     it: true,
 
-    /* tokens from real_vpc000, includes all built-in commands */
+    /* tokens from realVpc000, includes all built-in commands */
     the: true,
     put: true,
     set: true,

@@ -5,49 +5,65 @@
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 
-export class VpcAppUIRectSelect extends VpcAppUIToolSelectBase {
+/**
+ * rectangular selection
+ * see ToolSelectBase for more information
+ */
+export class VpcAppUIToolSelect extends VpcAppUIToolSelectBase {
+    /**
+     * draw the blinking border around the selection
+     */
     protected selectingDrawTheBorder(
         st: SelectToolState,
         cv: CanvasWrapper,
         painter: UI512Painter,
-        tmousepx: number,
-        tmousepy: number,
-        tmousenx: number,
-        tmouseny: number
+        prevTX: number,
+        prevTY: number,
+        tx: number,
+        ty: number
     ) {
-        // rect select.
         cv.clear();
         let args = new UI512PaintDispatch(
             UI512PaintDispatchShapes.ShapeRectangle,
-            [st.startX, tmousenx],
-            [st.startY, tmouseny],
+            [st.startX, tx],
+            [st.startY, ty],
             clrBlack,
             clrWhite,
             false,
             1
         );
+
         UI512PaintDispatch.go(args, painter);
     }
 
+    /**
+     * draw the shape we want to select as a filled-in black shape
+     * currently uses a floodfill, should use a fillRect though...
+     */
     protected makeBlack() {
-        if (this.state) {
-            // make a floodfill. ideally we'd check inner and outer but this might be "good enough"
-            // fails for cases where the top of the shape is a sharp spike 1pixel wide
-            let floodfillx = this.state.topPtX + 1;
-            let floodfilly = this.state.topPtY + 1;
+        if (this.st) {
+            /* make a floodfill. ideally we'd check inner and outer but this might be good enough */
+            /* fails for cases where the top of the shape is a sharp spike 1pixel wide */
+            let floodfillX = this.st.topPtX + 1;
+            let floodfillY = this.st.topPtY + 1;
             let args = new UI512PaintDispatch(
                 UI512PaintDispatchShapes.Bucket,
-                [floodfillx],
-                [floodfilly],
+                [floodfillX],
+                [floodfillY],
                 clrBlack,
                 clrBlack,
                 true
             );
-            UI512PaintDispatch.go(args, this.state.elStage.getCachedPainterForWrite());
+
+            UI512PaintDispatch.go(args, this.st.elStage.getCachedPainterForWrite());
         }
     }
 
+    /**
+     * we'll cancel selection if the region is too small
+     */
     protected checkTooSmall() {
-        return !!this.state && (this.state.maxX - this.state.minX <= 2 || this.state.maxY - this.state.minY <= 2);
+        const minSize = 2;
+        return !!this.st && (this.st.maxX - this.st.minX <= minSize || this.st.maxY - this.st.minY <= minSize);
     }
 }

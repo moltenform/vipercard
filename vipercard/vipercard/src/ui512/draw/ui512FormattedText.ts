@@ -118,7 +118,7 @@ export class FormattedText {
     static byInsertion(t: FormattedText, n: number, nDelete: number, insert: string, font: string) {
         /* previously used splice() and fn.apply() to do this in a few lines,
         but if done with long strings might hit the javascript engine's argument count limit */
-        let tnew = new FormattedText();
+        let tNew = new FormattedText();
         assertTrue(
             !scontains(font, specialCharFontChange),
             `3g|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
@@ -126,38 +126,46 @@ export class FormattedText {
         assertTrue(n >= 0, 'invalid n', n);
         assertTrue(nDelete >= 0, 'invalid nDelete', nDelete);
 
-        tnew.charArray = t.charArray.slice(0, n);
+        tNew.charArray = t.charArray.slice(0, n);
         for (let i = 0; i < insert.length; i++) {
-            tnew.charArray.push(insert.charCodeAt(i));
+            tNew.charArray.push(insert.charCodeAt(i));
         }
 
-        tnew.fontArray = t.fontArray.slice(0, n);
+        tNew.fontArray = t.fontArray.slice(0, n);
         for (let i = 0; i < insert.length; i++) {
-            tnew.fontArray.push(font);
+            tNew.fontArray.push(font);
         }
 
-        tnew.charArray = tnew.charArray.concat(t.charArray.slice(n + nDelete));
-        tnew.fontArray = tnew.fontArray.concat(t.fontArray.slice(n + nDelete));
-        return tnew;
+        tNew.charArray = tNew.charArray.concat(t.charArray.slice(n + nDelete));
+        tNew.fontArray = tNew.fontArray.concat(t.fontArray.slice(n + nDelete));
+        return tNew;
     }
 
     /**
      * deserialize from string
      */
     static newFromSerialized(s: string) {
-        let tnew = new FormattedText();
-        tnew.fromSerialized(s);
-        return tnew;
+        let tNew = new FormattedText();
+        tNew.fromSerialized(s);
+        return tNew;
+    }
+
+    /**
+     * erase special characters and always use unix newlines
+     */
+    static filterAndConvertNewlines(s: string) {
+        s = s.replace(new RegExp(specialCharFontChange, 'g'), '');
+        s = s.replace(new RegExp('\x00', 'g'), '');
+        s = s.replace(new RegExp('\r\n', 'g'), '\n');
+        s = s.replace(new RegExp('\r', 'g'), '\n');
+        return s;
     }
 
     /**
      * from a plain-text string to formattedtext.
      */
     static newFromUnformatted(s: string) {
-        s = s.replace(new RegExp(specialCharFontChange, 'g'), '');
-        s = s.replace(new RegExp('\x00', 'g'), '');
-        s = s.replace(new RegExp('\r\n', 'g'), '\n');
-        s = s.replace(new RegExp('\r', 'g'), '\n');
+        s = FormattedText.filterAndConvertNewlines(s);
         return FormattedText.newFromSerialized(s);
     }
 
@@ -165,10 +173,7 @@ export class FormattedText {
      * when reading text input by user, translate from utf16 to os-roman
      */
     static fromExternalCharset(s: string, info: BrowserOSInfo, fallback = '?') {
-        s = s.replace(new RegExp(specialCharFontChange, 'g'), '');
-        s = s.replace(new RegExp('\x00', 'g'), '');
-        s = s.replace(new RegExp('\r\n', 'g'), '\n');
-        s = s.replace(new RegExp('\r', 'g'), '\n');
+        s = FormattedText.filterAndConvertNewlines(s);
         s = TranslateCharset.translateUnToRoman(s, fallback);
         return s;
     }
@@ -177,10 +182,7 @@ export class FormattedText {
      * when outputting our text to external os (Edit->Paste), translate from os-roman to utf16
      */
     static toExternalCharset(s: string, info: BrowserOSInfo, fallback = '?') {
-        s = s.replace(new RegExp(specialCharFontChange, 'g'), '');
-        s = s.replace(new RegExp('\x00', 'g'), '');
-        s = s.replace(new RegExp('\r\n', 'g'), '\n');
-        s = s.replace(new RegExp('\r', 'g'), '\n');
+        s = FormattedText.filterAndConvertNewlines(s);
         s = TranslateCharset.translateRomanToUn(s, fallback);
         if (info === BrowserOSInfo.Windows) {
             s = s.replace(new RegExp('\n', 'g'), '\r\n');
@@ -198,11 +200,17 @@ export class FormattedText {
         return try1 !== try2 ? undefined : try1;
     }
 
+    /**
+     * append slice of another FormattedText, the interval [b1, b2)
+     */
     appendSubstring(other: FormattedText, b1: number, b2: number) {
         this.charArray = this.charArray.concat(other.charArray.slice(b1, b2));
         this.fontArray = this.fontArray.concat(other.fontArray.slice(b1, b2));
     }
 
+    /**
+     * length of our string
+     */
     len() {
         assertEqWarn(this.charArray.length, this.fontArray.length, '3f|');
         return this.charArray.length;

@@ -226,17 +226,27 @@ export class Util512 {
     }
 
     /**
+     * make the first character uppercase.
+     */
+    static capitalizeFirst(s: string) {
+        return s.substr(0, 1).toLocaleUpperCase() + s.substr(1);
+    }
+
+    /**
      * instead of a switch() or a map string->Function,
-     * use the class itself. note that we'll need to tell js minifiers not to minify method names.
+     * use the class itself. (we'll need to tell js minifiers not to minify method names).
      * example:
      * class MyClass {
-     *      go_abc() {
+     *      goAbc() {
      *      }
-     *      go_def() {
+     *
+     *      goDef() {
      *      }
      * }
+     *
      * let inst = new MyClass()
-     * callAsMethodOnClass('MyClass', inst, 'go_abc', [], true)
+     * let method = 'goAbc'
+     * callAsMethodOnClass('MyClass', inst, method, [], true)
      */
     static callAsMethodOnClass(clsname: string, me: any, s: string, args: any[], okIfNotExists: boolean) {
         checkThrowUI512(s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/), 'callAsMethodOnClass requires alphanumeric no spaces', s);
@@ -293,22 +303,6 @@ export class Util512 {
     }
 
     /**
-     * filter a list, keeping only unique values.
-     */
-    static listUnique(ar: string[]) {
-        let ret: string[] = [];
-        let values: { [key: string]: boolean } = {};
-        for (let i = 0; i < ar.length; i++) {
-            if (!values[ar[i]]) {
-                values[ar[i]] = true;
-                ret.push(ar[i]);
-            }
-        }
-
-        return ret;
-    }
-
-    /**
      * load and run script. must be on same domain.
      */
     static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
@@ -345,7 +339,7 @@ export class Util512 {
     }
 
     /**
-     * padStart, copied from reference implementation on mozilla.org
+     * padStart, from reference implementation on mozilla.org
      */
     static padStart(sIn: string | number, targetLength: number, padString: string) {
         let s = '' + sIn;
@@ -433,16 +427,20 @@ export type anyJson = any;
  */
 export function findStrToEnum<T>(enm: any, s: string): O<T> {
     assertTrue(enm['__isUI512Enum'] !== undefined, '4F|must provide an enum type with __isUI512Enum defined.');
-    if (s === '__isUI512Enum') {
+    if (s.startsWith('__')) {
         return undefined;
-    } else if (s.startsWith('alternateforms_')) {
+    } else if (s.startsWith('AlternateForm')) {
         return undefined;
     } else {
+        if (enm['__UI512EnumCapitalize'] !== undefined) {
+            s = Util512.capitalizeFirst(s);
+        }
+
         let found = enm[s];
         if (found) {
             return found;
         } else {
-            return enm['alternateforms_' + s];
+            return enm['AlternateForm' + s];
         }
     }
 }
@@ -457,16 +455,17 @@ export function getStrToEnum<T>(enm: any, msgContext: string, s: string): T {
     } else {
         msgContext = msgContext ? `Not a valid choice of ${msgContext} ` : `Not a valid choice for this value. `;
         if (enm['__isUI512Enum'] !== undefined) {
+            let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
             msgContext += ' try one of';
             for (let enumMember in enm) {
                 /* show possible values */
                 if (
                     typeof enumMember === 'string' &&
                     !enumMember.startsWith('__') &&
-                    !enumMember.startsWith('alternateform') &&
+                    !enumMember.startsWith('AlternateForm') &&
                     !scontains('0123456789', enumMember[0].toString())
                 ) {
-                    msgContext += ', ' + enumMember;
+                    msgContext += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
                 }
             }
         }
@@ -486,8 +485,9 @@ export function findEnumToStr<T>(enm: any, n: number): O<string> {
 
     /* using simply e[n] would work, but fragile if enum implementation changes. */
     for (let enumMember in enm) {
-        if (enm[enumMember] === n && !enumMember.startsWith('__') && !enumMember.startsWith('alternateform')) {
-            return enumMember.toString();
+        if (enm[enumMember] === n && !enumMember.startsWith('__') && !enumMember.startsWith('AlternateForm')) {
+            let makeLowercase = enm['__UI512EnumCapitalize'] !== undefined;
+            return makeLowercase ? enumMember.toString().toLowerCase() : enumMember.toString();
         }
     }
 
@@ -547,7 +547,7 @@ export class RenderComplete {
         this.complete = this.complete && other.complete;
     }
 
-    and_b(other: boolean) {
+    andB(other: boolean) {
         this.complete = this.complete && other;
     }
 }
@@ -655,8 +655,8 @@ export function setRoot(r: Root) {
  * like Python's OrderedDict
  */
 export class OrderedHash<TValue> {
-    private keys: string[] = [];
-    private vals: { [key: string]: TValue } = Object.create(null);
+    protected keys: string[] = [];
+    protected vals: { [key: string]: TValue } = Object.create(null);
 
     deleteAll() {
         this.keys = [];

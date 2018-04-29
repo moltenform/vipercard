@@ -293,8 +293,8 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         }
 
         RuleFnCall(ctx: VisitingContext): string | VpcIntermedValBase {
-            if (ctx.RuleFnCall_Length[0]) {
-                return this.visit(ctx.RuleFnCall_Length[0]);
+            if (ctx.RuleFnCallLength[0]) {
+                return this.visit(ctx.RuleFnCallLength[0]);
             } else if (ctx.RuleFnCallWithParens[0]) {
                 return this.visit(ctx.RuleFnCallWithParens[0]);
             } else if (ctx.RuleFnCallWithoutParensOrGlobalGetPropOrTarget[0]) {

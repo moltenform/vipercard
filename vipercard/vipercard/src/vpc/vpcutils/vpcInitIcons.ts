@@ -154,12 +154,12 @@ export class VpcInitIcons {
      * icon set for glider game
      */
     protected static defineGroupGlider() {
-        let glider_bg = new IconGroupInfo();
-        RenderIconGroup.cachedGridInfo['glider_bg'] = glider_bg;
-        glider_bg.totalIcons = 43;
-        for (let i = 0; i < glider_bg.totalIcons; i++) {
-            glider_bg.customOffsets[i] = [0, i * 343];
-            glider_bg.customDims[i] = [512, 343];
+        let gliderBg = new IconGroupInfo();
+        RenderIconGroup.cachedGridInfo['gliderBg'] = gliderBg;
+        gliderBg.totalIcons = 43;
+        for (let i = 0; i < gliderBg.totalIcons; i++) {
+            gliderBg.customOffsets[i] = [0, i * 343];
+            gliderBg.customDims[i] = [512, 343];
         }
     }
 
@@ -169,7 +169,7 @@ export class VpcInitIcons {
      */
     protected static setGliderSprites() {
         let grpGlider = new IconGroupInfo();
-        RenderIconGroup.cachedGridInfo['glider_sprites'] = grpGlider;
+        RenderIconGroup.cachedGridInfo['gliderSprites'] = grpGlider;
         grpGlider.totalIcons = 80;
         grpGlider.customOffsets[0] = [0, 0];
         grpGlider.customDims[0] = [1, 1];

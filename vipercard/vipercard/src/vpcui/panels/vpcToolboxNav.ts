@@ -10,7 +10,7 @@
  * a tool palette for moving from card to card
  */
 export class VpcToolboxNav extends UI512CompToolbox {
-    compositeType = 'toolbox_nav';
+    compositeType = 'ToolboxNav';
     readonly geneva: string;
     constructor(id: string) {
         super(id);

@@ -83,7 +83,7 @@ export function drawTextArgsFromEl(
         args.showCaret = false;
     }
 
-    let ret: FormattedText = el.get_ftxt();
+    let ret: FormattedText = el.getFmTxt();
     return [args, ret];
 }
 
@@ -94,5 +94,5 @@ interface CanGetValue {
     getB(s: string): boolean;
     getN(s: string): number;
     getS(s: string): string;
-    get_ftxt(): FormattedText;
+    getFmTxt(): FormattedText;
 }

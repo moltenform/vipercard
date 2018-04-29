@@ -48,7 +48,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         let details = new KeyDownEventDetails(gly.milliseconds, keyCode, keyChar, repeated, mods);
         root.event(details);
 
-        // let "paste" through, stop everything else
+        /* let "paste" through, stop everything else */
         if (details.readableShortcut !== 'Cmd+V') {
             details.setHandled();
         }
@@ -68,7 +68,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         let details = new KeyUpEventDetails(gly.milliseconds, keyCode, keyChar, false, mods);
         root.event(details);
 
-        // let "paste" through, stop everything else
+        /* let "paste" through, stop everything else */
         let readableShortcut = toShortcutString(details.mods, details.keyCode);
         if (readableShortcut !== 'Cmd+V') {
             details.setHandled();
@@ -133,7 +133,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
 }
 
 function mainOnResize(root: FullRootUI512, gly: any) {
-    // on high-dpi screens, automatically show bigger pixels, with no blurring
+    /* on high-dpi screens, automatically show bigger pixels, with no blurring */
 
     let availW = window.innerWidth;
     let availH = window.innerHeight;
@@ -155,9 +155,13 @@ function mainOnResize(root: FullRootUI512, gly: any) {
     }
 
     if (canFitTotal !== root.scaleMouseCoords) {
+        /* sets both priv['domElement']['width'] and priv['width'] */
+        gly.width = ScreenConsts.ScreenWidth;
+
+        /* sets both priv['domElement']['height'] and priv['height'] */
+        gly.height = ScreenConsts.ScreenHeight;
+
         let domElement = gly.domElement;
-        gly.width = ScreenConsts.ScreenWidth; // sets both priv['domElement']['width'] and priv['width']
-        gly.height = ScreenConsts.ScreenHeight; // sets both priv['domElement']['height'] and priv['height']
         domElement.style.width = ScreenConsts.ScreenWidth * canFitTotal + 'px';
         domElement.style.height = ScreenConsts.ScreenHeight * canFitTotal + 'px';
         root.scaleMouseCoords = canFitTotal;

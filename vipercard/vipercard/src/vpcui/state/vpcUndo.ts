@@ -111,7 +111,9 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
         let childCount = 0;
         for (let arr of VpcModelTop.getChildArrays(vel)) {
             /* I used to automatically delete the children here in this loop,
-            but it is better overall to enforce that all children must be separately deleted before deleting a parent */
+            but it is better overall to enforce that all children
+            must be separately deleted before deleting a parent,
+            since it is easier to implement undo */
             childCount += arr.length;
         }
 

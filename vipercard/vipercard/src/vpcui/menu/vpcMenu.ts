@@ -5,7 +5,13 @@
 /* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcAppMenuStructure } from '../../vpcui/menu/vpcMenuStructure.js';
 
+/**
+ * the Vpc menu
+ */
 export class VpcAppMenu extends VpcAppMenuStructure {
+    /**
+     * initialize the menu
+     */
     init() {
         MenuPositioning.buildFromArray(this.vci.getPresenter(), this.getMenuStruct());
         MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsHideProduct', undefined, false);
@@ -14,44 +20,56 @@ export class VpcAppMenu extends VpcAppMenuStructure {
         MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsCheckProduct', true, true);
     }
 
+    /**
+     * update according to productopts options,
+     * e.g. if you've set WideLines to true,
+     * Wide Lines should be checked on in the Draw menu.
+     * also called whenever selected vel changes,
+     * so that Copy {Button/Field} shows the right text.
+     */
     updateUI512Els() {
-        // called whenever selected vel changes
         MenuPositioning.setItemStatus(
             this.vci.UI512App(),
             'mnuPaintWideLines',
             this.vci.getOptionB('optWideLines'),
             true
         );
+
         MenuPositioning.setItemStatus(
             this.vci.UI512App(),
             'mnuPaintDrawMult',
             this.vci.getOptionB('optPaintDrawMult'),
             true
         );
+
         MenuPositioning.setItemStatus(
             this.vci.UI512App(),
             'mnuPaintBlackLines',
             this.vci.getOptionN('optPaintLineColor') === clrBlack,
             true
         );
+
         MenuPositioning.setItemStatus(
             this.vci.UI512App(),
             'mnuPaintWhiteLines',
             this.vci.getOptionN('optPaintLineColor') === clrWhite,
             true
         );
+
         MenuPositioning.setItemStatus(
             this.vci.UI512App(),
             'mnuPaintBlackFill',
             this.vci.getOptionN('optPaintFillColor') === clrBlack,
             true
         );
+
         MenuPositioning.setItemStatus(
             this.vci.UI512App(),
             'mnuPaintWhiteFill',
             this.vci.getOptionN('optPaintFillColor') === clrWhite,
             true
         );
+
         MenuPositioning.setItemStatus(
             this.vci.UI512App(),
             'mnuPaintNoFill',
@@ -65,8 +83,11 @@ export class VpcAppMenu extends VpcAppMenuStructure {
             this.vci.getOptionB('optUseHostClipboard'),
             true
         );
-        let [grpbar, grpitems] = MenuPositioning.getMenuGroups(this.vci.UI512App());
-        let topClock = grpbar.getEl('topClock');
+
+        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(this.vci.UI512App());
+
+        /* update day of year */
+        let topClock = grpBar.getEl('topClock');
         topClock.set('labeltext', this.getDayOfYear());
 
         let currentTool = this.vci.getOptionN('currentTool');
@@ -88,6 +109,9 @@ export class VpcAppMenu extends VpcAppMenuStructure {
         );
     }
 
+    /**
+     * should we show 'copy button' or 'copy field'?
+     */
     refreshCopyPasteMnuItem(id: string, menuId: string, fallback: string, txtBtn: string, txtFld: string) {
         let found = this.vci.getModel().findByIdUntyped(id);
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
@@ -98,8 +122,11 @@ export class VpcAppMenu extends VpcAppMenuStructure {
         }
     }
 
+    /**
+     * gets day of year,
+     * uses a locale-appropriate format.
+     */
     protected getDayOfYear() {
-        // uses a locale-appropriate format.
         let d = new Date();
         return d.toLocaleDateString();
     }

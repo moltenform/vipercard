@@ -9,7 +9,7 @@
  * a tool palette showing the available fill patterns
  */
 export class VpcToolboxPatterns extends UI512CompToolbox {
-    compositeType = 'toolbox_patterns';
+    compositeType = 'ToolboxPatterns';
     hiliteSelected: UI512ElButton[] = [];
     createSpecific(app: UI512Application) {
         super.createSpecific(app);

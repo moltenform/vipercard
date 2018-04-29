@@ -145,7 +145,7 @@ export enum TextFontStyling {
     Outline = 1 << 3,
     Shadow = 1 << 4,
     Disabled = 1 << 5,
-    Condensed = 1 << 6,
+    Condense = 1 << 6,
     Extend = 1 << 7
 }
 
@@ -160,7 +160,7 @@ export function textFontStylingToString(e: TextFontStyling): string {
     ret += e & TextFontStyling.Outline ? '+o' : 'o';
     ret += e & TextFontStyling.Shadow ? '+s' : 's';
     ret += e & TextFontStyling.Disabled ? '+d' : 'd';
-    ret += e & TextFontStyling.Condensed ? '+c' : 'c';
+    ret += e & TextFontStyling.Condense ? '+c' : 'c';
     ret += e & TextFontStyling.Extend ? '+e' : 'e';
     return ret;
 }
@@ -192,7 +192,7 @@ export function stringToTextFontStyling(s: string): TextFontStyling {
                     ret |= TextFontStyling.Disabled;
                     break;
                 case 'c':
-                    ret |= TextFontStyling.Condensed;
+                    ret |= TextFontStyling.Condense;
                     break;
                 case 'e':
                     ret |= TextFontStyling.Extend;
@@ -234,7 +234,7 @@ function typefacenameToTypefaceId(s: string): string {
 }
 
 /**
- * from geneva_x_y to 02_x_y
+ * from geneva/x/y to 02/x/y
  */
 export function typefacenameToTypefaceIdFull(s: string): string {
     let face = TextFontSpec.getTypeface(s);

@@ -1,30 +1,32 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 /* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
-/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
+/* auto */ import { UI512CompStdDialogResult } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { VpcSession } from '../../vpc/request/vpcRequest.js';
-/* auto */ import { VpcNonModalFormBase } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroPageBase.js';
-/* auto */ import { OpenFromLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { VpcDocumentLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
 /* auto */ import { VpcIntroInterface } from '../../vpcui/intro/vpcIntroInterface.js';
 
+/**
+ * open a saved project
+ * if the openType is FromStaticDemo, shows a list of demos,
+ * otherwise, shows the user's saved online stacks
+ */
 export class IntroPageOpen extends IntroPageBase {
     compositeType = 'IntroPageOpen';
-    chooser: O<UI512ElTextField>;
-    signInForm: O<VpcNonModalFormBase>;
-    newUserForm: O<VpcNonModalFormBase>;
+    listBox: O<UI512ElTextField>;
+    loadedFromOnline: [string, string][] = [];
     hardCodedFeatured: [string, string][] = [
         ['demo_graphics.json', 'Interactive art'],
         ['demo_game.json', 'Make a game'],
@@ -32,74 +34,73 @@ export class IntroPageOpen extends IntroPageBase {
         ['demo_glider.json', 'GLIDER 4.0'],
         ['demo_spacegame.json', 'Spaceman Gamma']
     ];
-    loadedFromOnline: [string, string][] = [];
 
-    constructor(compid: string, bounds: number[], x: number, y: number, protected openType: OpenFromLocation) {
-        super(compid, bounds, x, y);
+    constructor(compId: string, bounds: number[], x: number, y: number, protected openType: VpcDocumentLocation) {
+        super(compId, bounds, x, y);
     }
 
+    /**
+     * initialize layout
+     */
     createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpId);
-        let headerheight = this.drawCommonFirst(app, grp);
+        let headerHeight = this.drawCommonFirst(app, grp);
 
-        // draw the OK and cancel buttons
-        let wndbg = grp.getEl(this.getElId('wndbg'));
+        /* draw the OK and cancel buttons */
+        let windowBg = grp.getEl(this.getElId('windowBg'));
         this.drawBtn(app, grp, 1, this.x + 180, this.y + 287, 68, 21);
         this.drawBtn(app, grp, 0, this.x + 180 - (252 - 174), this.y + 287 - 4, 69, 29);
 
-        // draw the logo
+        /* get logo dimensions (centered within the area) */
+        const footerHeight = 70;
+        const logoMargin = 20;
         let half = Math.floor(this.logicalWidth / 2);
-        let footerheight = 70;
-        let yspace = this.logicalHeight - (footerheight + headerheight);
-        let aroundLogo = [this.x + half, this.y + headerheight, half, yspace];
-        const logomargin = 20;
-        let logobounds = RectUtils.getSubRectRaw(
+        let spaceY = this.logicalHeight - (footerHeight + headerHeight);
+        let aroundLogo = [this.x + half, this.y + headerHeight, half, spaceY];
+        let logoBounds = RectUtils.getSubRectRaw(
             aroundLogo[0],
             aroundLogo[1],
             aroundLogo[2],
             aroundLogo[3],
-            logomargin,
-            logomargin
+            logoMargin,
+            logoMargin
         );
-        logobounds = logobounds ? logobounds : [0, 0, 0, 0];
+
+        /* draw the logo */
+        logoBounds = logoBounds ? logoBounds : [0, 0, 0, 0];
         let logo = this.genBtn(app, grp, 'logo');
         logo.set('style', UI512BtnStyle.Opaque);
         logo.set('autohighlight', false);
         logo.set('icongroupid', 'logo');
         logo.set('iconnumber', 0);
-        logo.setDimensions(logobounds[0], logobounds[1], logobounds[2], logobounds[3]);
+        logo.setDimensions(logoBounds[0], logoBounds[1], logoBounds[2], logoBounds[3]);
 
-        // draw the prompt
+        /* draw the prompt */
         let prompt = this.genChild(app, grp, 'prompt', UI512ElLabel);
         let caption = lng('lngFeatured stacks...');
         prompt.set('labeltext', caption);
         prompt.setDimensions(this.x + 20, this.y + 50, 200, 50);
 
-        // draw the list of choices
+        /* draw the list of choices */
         let chooserWidth = 218;
         let chooserX = this.x + Math.floor(half - chooserWidth);
-        this.chooser = this.genChild(app, grp, 'chooser', UI512ElTextField);
-        this.chooser.set('scrollbar', true);
-        this.chooser.set('selectbylines', true);
-        this.chooser.set('multiline', true);
-        this.chooser.set('canselecttext', true);
-        this.chooser.set('canedit', false);
-        this.chooser.set('labelwrap', false);
-        this.chooser.setDimensions(this.x + 26, this.y + 84, 190, 140);
+        this.listBox = this.genChild(app, grp, 'chooser', UI512ElTextField);
+        this.listBox.set('scrollbar', true);
+        this.listBox.set('selectbylines', true);
+        this.listBox.set('multiline', true);
+        this.listBox.set('canselecttext', true);
+        this.listBox.set('canedit', false);
+        this.listBox.set('labelwrap', false);
+        this.listBox.setDimensions(this.x + 26, this.y + 84, 190, 140);
         grp.getEl(this.getElId('footerText')).set('visible', false);
 
-        // let btnOpenFromAccount = this.drawBtn(app, grp, 3, this.x + 311, this.y + 240, 149, 31);
-        // btnOpenFromAccount.set('labeltext', lng("lngMy stacks..."))
-        // let btnDelete = this.drawBtn(app, grp, 4, btnOpenFromAccount.x, btnOpenFromAccount.bottom + 10, 149, 31);
-        // btnDelete.set('labeltext', lng("lngDelete..."))
-
-        if (this.openType === OpenFromLocation.FromStaticDemo) {
+        if (this.openType === VpcDocumentLocation.FromStaticDemo) {
             let sDocs: string[] = [];
             sDocs = this.hardCodedFeatured.map(item => item[1]);
-            UI512ElTextField.setListChoices(this.chooser, sDocs);
+            UI512ElTextField.setListChoices(this.listBox, sDocs);
 
             if (sDocs.length) {
-                TextSelModify.selectLineInField(new UI512ElTextFieldAsGeneric(this.chooser), 0);
+                TextSelModify.selectLineInField(new UI512ElTextFieldAsGeneric(this.listBox), 0);
             }
         } else {
             prompt.set('labeltext', 'Loading...');
@@ -109,18 +110,30 @@ export class IntroPageOpen extends IntroPageBase {
         this.drawCommonLast(app, grp);
     }
 
+    /**
+     * draw a delete button, the functionality isn't yet implemented
+     */
+    protected drawDeleteBtn(app: UI512Application, grp: UI512ElGroup) {
+        let btnDelete = this.drawBtn(app, grp, 3, this.x + 311, this.y + 240, 149, 31);
+        btnDelete.set('labeltext', lng('lngDelete...'));
+    }
+
+    /**
+     * get a list of stacks from the server
+     */
     async getListChoicesAsync(prompt: UI512Element) {
         let ses = VpcSession.fromRoot();
-        if (!this.chooser) {
+        if (!this.listBox) {
             return;
         }
+
         if (ses) {
             try {
                 let stacks = await ses.vpcListMyStacks();
                 this.loadedFromOnline = stacks.map(item => [item.fullstackid, item.stackName] as [string, string]);
-                UI512ElTextField.setListChoices(this.chooser, this.loadedFromOnline.map(item => item[1]));
+                UI512ElTextField.setListChoices(this.listBox, this.loadedFromOnline.map(item => item[1]));
                 if (this.loadedFromOnline.length) {
-                    TextSelModify.selectLineInField(new UI512ElTextFieldAsGeneric(this.chooser), 0);
+                    TextSelModify.selectLineInField(new UI512ElTextFieldAsGeneric(this.listBox), 0);
                 }
 
                 prompt.set('labeltext', 'Open from online stacks:');
@@ -130,11 +143,14 @@ export class IntroPageOpen extends IntroPageBase {
         }
     }
 
+    /**
+     * which line was chosen in the listbox?
+     */
     static getChosen(self: IntroPageOpen): O<string> {
-        if (self.chooser) {
-            let whichLine = TextSelModify.selectByLinesWhichLine(new UI512ElTextFieldAsGeneric(self.chooser));
+        if (self.listBox) {
+            let whichLine = TextSelModify.selectByLinesWhichLine(new UI512ElTextFieldAsGeneric(self.listBox));
             if (whichLine !== undefined) {
-                if (self.openType === OpenFromLocation.FromStaticDemo) {
+                if (self.openType === VpcDocumentLocation.FromStaticDemo) {
                     let entry = self.hardCodedFeatured[whichLine];
                     if (entry !== undefined) {
                         return entry[0];
@@ -149,11 +165,14 @@ export class IntroPageOpen extends IntroPageBase {
         }
     }
 
+    /**
+     * user clicked OK or cancel
+     */
     static respondBtnClick(pr: VpcIntroInterface, self: IntroPageOpen, el: UI512Element) {
         if (el.id.endsWith('choicebtn0')) {
             let chosenId = IntroPageOpen.getChosen(self);
             if (chosenId && slength(chosenId)) {
-                // open the document
+                /* open the document */
                 let loader = new VpcIntroProvider(chosenId, lng('lngstack'), self.openType);
                 pr.beginLoadDocument(loader);
             }
@@ -162,37 +181,41 @@ export class IntroPageOpen extends IntroPageBase {
         }
     }
 
-    destroy(pr: UI512PresenterBase, app: UI512Application) {
-        if (this.signInForm) {
-            this.signInForm.destroy(pr, app);
-        }
-
-        super.destroy(pr, app);
-    }
-
+    /**
+     * delete a project
+     */
     deleteSelected(pr: VpcIntroInterface) {
+        assertTrue(false, 'not yet implemented.');
         let whichData = IntroPageOpen.getChosen(this);
-        if (true) {
+        if (whichData) {
             pr.getModal().standardAnswer(
                 pr,
                 pr.app,
-                'Item removed',
+                'Confirm deletion?',
                 n => {
-                    pr.goBackToFirstScreen();
+                    if (whichData && n === UI512CompStdDialogResult.Btn1) {
+                        this.deleteSelectedImpl(pr, whichData);
+                    }
                 },
-                lng('lngOK')
+                lng('lngOK'),
+                lng('lngCancel')
             );
         }
     }
 
-    respondKeyDown(pr: UI512Presenter, d: KeyDownEventDetails) {
-        /*
-        if (d.readableShortcut === 'Delete' || d.readableShortcut === 'Backspace') {
-            c.getModal().standardAnswer(c, c.app, 'Confirm deletion?', (n)=>{
-                if (n===0) {
-                    this.deleteSelected(c)
-                }
-            }, lng('lngOK'), lng('lngCancel'))
-        }*/
+    /**
+     * delete a project, not yet implemented
+     */
+    protected deleteSelectedImpl(pr: VpcIntroInterface, whichData: string) {
+        assertTrue(false, 'not yet implemented.');
+        pr.getModal().standardAnswer(
+            pr,
+            pr.app,
+            'Item removed',
+            n => {
+                pr.goBackToFirstScreen();
+            },
+            lng('lngOK')
+        );
     }
 }

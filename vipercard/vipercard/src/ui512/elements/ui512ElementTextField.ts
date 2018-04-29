@@ -10,17 +10,6 @@
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 
 /**
- * style of a text field, e.g. type of border decoration
- */
-export enum UI512FldStyle {
-    __isUI512Enum = 1,
-    Opaque,
-    Transparent,
-    Rectangle,
-    Shadow
-}
-
-/**
  * the model for a UI text field element
  */
 export class UI512ElTextField extends UI512Element {
@@ -101,12 +90,12 @@ export class UI512ElTextField extends UI512Element {
     /**
      * change the content of the text field
      */
-    setftxt(newtxt: FormattedText, context = ChangeContext.Default) {
-        if (newtxt !== this._ftxt) {
+    setFmTxt(newTxt: FormattedText, context = ChangeContext.Default) {
+        if (newTxt !== this._ftxt) {
             this.set('contentHeightInPixels', -1, context);
         }
 
-        return super.setftxt(newtxt, context);
+        return super.setFmTxt(newTxt, context);
     }
 
     /**
@@ -122,9 +111,9 @@ export class UI512ElTextField extends UI512Element {
             logic elsewhere prevents this last ending line from being actually chosen/selected.
             we'll add the ending newline in a small font so it won't affect the scrollbar much. */
             ftxt.push(specialCharNumNewline, UI512DrawText.smallestFont);
-            el.setftxt(ftxt);
+            el.setFmTxt(ftxt);
         } else {
-            el.setftxt(FormattedText.newFromUnformatted(''));
+            el.setFmTxt(FormattedText.newFromUnformatted(''));
         }
     }
 
@@ -143,4 +132,15 @@ export class UI512ElTextField extends UI512Element {
         fld.setDimensions(x, y, ScrollConsts.ChoiceListDefaultWidth, ScrollConsts.ChoiceListDefaultHeight);
         return fld;
     }
+}
+
+/**
+ * style of a text field, e.g. type of border decoration
+ */
+export enum UI512FldStyle {
+    __isUI512Enum = 1,
+    Opaque,
+    Transparent,
+    Rectangle,
+    Shadow
 }

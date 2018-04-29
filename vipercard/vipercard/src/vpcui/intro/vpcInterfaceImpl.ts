@@ -22,10 +22,10 @@
  */
 export class VpcStateInterfaceImpl implements VpcStateInterface {
     protected vcstate: VpcState;
-    protected ctrller: VpcPresenter;
-    init(vcstate: VpcState, ctrller: VpcPresenter) {
+    protected pr: VpcPresenter;
+    init(vcstate: VpcState, pr: VpcPresenter) {
         this.vcstate = vcstate;
-        this.ctrller = ctrller;
+        this.pr = pr;
     }
 
     /**
@@ -185,21 +185,21 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * schedule event to be sent
      */
     scheduleScriptEventSend(d: EventDetails) {
-        return VpcPresenterEvents.scheduleScriptMsg(this.ctrller, this, d);
+        return VpcPresenterEvents.scheduleScriptMsg(this.pr, this, d);
     }
 
     /**
      * get the UI512 app for the Presenter
      */
     UI512App() {
-        return this.ctrller.app;
+        return this.pr.app;
     }
 
     /**
      * get the Presenter
      */
     getPresenter() {
-        return this.ctrller;
+        return this.pr;
     }
 
     /**
@@ -207,84 +207,84 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * the function will be called soon via onIdle
      */
     placeCallbackInQueue(cb: () => void) {
-        return this.ctrller.placeCallbackInQueue(cb);
+        return this.pr.placeCallbackInQueue(cb);
     }
 
     /**
      * get bounds of the UI512Presenter
      */
     bounds() {
-        return this.ctrller.bounds;
+        return this.pr.bounds;
     }
 
     /**
      * get user-bounds of the UI512Presenter
      */
     userBounds() {
-        return this.ctrller.userBounds;
+        return this.pr.userBounds;
     }
 
     /**
      * get current card number
      */
     getCurrentCardNum() {
-        return this.ctrller.getCurrentCardNum();
+        return this.pr.getCurrentCardNum();
     }
 
     /**
      * go to a card
      */
     setCurrentCardNum(pos: OrdinalOrPosition) {
-        return this.ctrller.setCurrentCardNum(pos);
+        return this.pr.setCurrentCardNum(pos);
     }
 
     /**
      * get the current tool
      */
     getTool() {
-        return this.ctrller.getTool();
+        return this.pr.getTool();
     }
 
     /**
      * set the current tool
      */
     setTool(n: VpcTool) {
-        return this.ctrller.setTool(n);
+        return this.pr.setTool(n);
     }
 
     /**
      * show a non-modal form, closing any other active form
      */
     setNonModalDialog(form: O<UI512CompBase>) {
-        return this.ctrller.lyrNonModalDlgHolder.setNonModalDialog(form);
+        return this.pr.lyrNonModalDlgHolder.setNonModalDialog(form);
     }
 
     /**
      * get the currently focused vel
      */
     getCurrentFocusVelField() {
-        return this.ctrller.getSelectedFieldVel();
+        return this.pr.getSelectedFieldVel();
     }
 
     /**
      * set the currently focused element
      */
     setCurrentFocus(s: O<string>) {
-        return this.ctrller.setCurrentFocus(s);
+        return this.pr.setCurrentFocus(s);
     }
 
     /**
      * get the currently focused element, either an element of the stack or part of vpc ui
      */
     getCurrentFocus() {
-        return this.ctrller.getCurrentFocus();
+        return this.pr.getCurrentFocus();
     }
 
     /**
      * flush queue of paint actions
      */
     commitSimulatedClicks(queue: UI512PaintDispatch[]) {
-        return this.ctrller.lyrPaintRender.commitSimulatedClicks(queue);
+        return this.pr.lyrPaintRender.commitSimulatedClicks(queue);
     }
 
     /**
@@ -292,21 +292,21 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * might not be synchronous; the menu action could show a modal dialog
      */
     performMenuAction(s: string) {
-        return this.ctrller.performMenuAction(s);
+        return this.pr.performMenuAction(s);
     }
 
     /**
      * cause VPC UI to be redrawn
      */
     causeUIRedraw() {
-        return this.ctrller.lyrModelRender.uiRedrawNeeded();
+        return this.pr.lyrModelRender.uiRedrawNeeded();
     }
 
     /**
      * cause VPC UI and also every vel to be redrawn
      */
     causeFullRedraw() {
-        return this.ctrller.lyrModelRender.fullRedrawNeeded();
+        return this.pr.lyrModelRender.fullRedrawNeeded();
     }
 
     /**
@@ -334,6 +334,6 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
         this.vcstate.runtime = undefined as any; /* destroy() */
         this.vcstate.undoManager = undefined as any; /* destroy() */
         this.vcstate = undefined as any; /* destroy() */
-        this.ctrller = undefined as any; /* destroy() */
+        this.pr = undefined as any; /* destroy() */
     }
 }

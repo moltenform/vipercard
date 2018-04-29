@@ -14,7 +14,7 @@
  * and let modelrender insert the letter into the field.
  */
 export interface GenericTextField {
-    setFmtTxt(newtxt: FormattedText, context: ChangeContext): void;
+    setFmtTxt(newTxt: FormattedText, context: ChangeContext): void;
     getFmtTxt(): FormattedText;
     canEdit(): boolean;
     canSelectText(): boolean;
@@ -34,12 +34,12 @@ export interface GenericTextField {
  */
 export class UI512ElTextFieldAsGeneric implements GenericTextField {
     constructor(protected el: UI512ElTextField) {}
-    setFmtTxt(newtxt: FormattedText, context: ChangeContext) {
-        this.el.setftxt(newtxt, context);
+    setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
+        this.el.setFmTxt(newTxt, context);
     }
 
     getFmtTxt(): FormattedText {
-        return this.el.get_ftxt();
+        return this.el.getFmTxt();
     }
 
     canEdit() {

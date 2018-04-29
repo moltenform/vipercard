@@ -42,10 +42,36 @@ export class DetermineCategory {
 
         checkThrow(!tk || !isTkType(tk, tks.TokenNumber), `8e|we don't support variables named "number"`);
         checkThrow(!tk || !isTkType(tk, tks.TokenLength), `8d|we don't support variables named "length"`);
+        checkThrow(!tk || !isTkType(tk, tks.TokenContains), `8d|we don't support variables named "contains"`);
+        checkThrow(!tk || !isTkType(tk, tks.TokenWithin), `8d|we don't support variables named "within"`);
         checkThrow(!tk || !isTkType(tk, tks.TokenId), `8c|we don't support variables named "id"`);
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkordinal),
-            `8b|we don't support variables named "first", "last", "second", "middle", "any"`
+            `8b|we don't support variables with names like "first", "last", "second", "middle", "any"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenTkcharorwordoritemorlineorplural),
+            `8b|we don't support variables with names like "char", "word", "item", "line"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenTkmultdivideexpdivmod),
+            `8b|we don't support variables with names like "div", "mod"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenTkbkgndorpluralsyn),
+            `8b|we don't support variables with names like "bgs", "bkgnds", "backgrounds"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenTkcardorpluralsyn),
+            `8b|we don't support variables with names like "cds", "cards"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenTkbtnorpluralsyn),
+            `8b|we don't support variables with names like "btns", "buttons"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenTkfldorpluralsyn),
+            `8b|we don't support variables with names like "flds", "fields"`
         );
     }
 
@@ -64,13 +90,14 @@ export class DetermineCategory {
         let output = new VpcCodeLine(this.idGen.next(), line);
         if (this.mapBuiltinCmds.find(firstImage)) {
             /* this is a built in command */
-            this.go_builtincmd(firstImage, line, output);
+            this.goBuiltinCmd(firstImage, line, output);
             return output;
         } else {
             /* this is either a syntax structure (like end repeat) or a custom handler call */
-            let methodName = `go_${firstImage.replace(/\^/g, '')}`;
-            methodName = Util512.isMethodOnClass(this, methodName) ? methodName : 'go_customhandler';
-            let ret = Util512.callAsMethodOnClass('DetermineCategory', this, methodName, [line, output], false);
+            let cmd = firstImage.replace(/\^/g, '');
+            let method = `go` + Util512.capitalizeFirst(cmd);
+            method = Util512.isMethodOnClass(this, method) ? method : 'goCustomHandler';
+            let ret = Util512.callAsMethodOnClass('DetermineCategory', this, method, [line, output], false);
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {
                 if (this.isParsingNeeded(output.ctg)) {
@@ -111,7 +138,7 @@ export class DetermineCategory {
     /**
      * this line is a call to a built in command like "put"
      */
-    go_builtincmd(firstImage: string, line: ChvIToken[], output: VpcCodeLine) {
+    goBuiltinCmd(firstImage: string, line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.Statement;
         output.excerptToParse = line;
         output.setParseRule(this.mapBuiltinCmds.get(firstImage));
@@ -120,7 +147,7 @@ export class DetermineCategory {
     /**
      * this line is a call to a custom handler "myHandler 1,2,3"
      */
-    go_customhandler(line: ChvIToken[], output: VpcCodeLine) {
+    goCustomHandler(line: ChvIToken[], output: VpcCodeLine) {
         if (line.length > 1) {
             /* kind reminders to the user */
             let firstToken = line[0];
@@ -143,7 +170,7 @@ export class DetermineCategory {
     /**
      * requestEvals are only added later
      */
-    go_requesteval(line: ChvIToken[], output: VpcCodeLine) {
+    goRequestEval(line: ChvIToken[], output: VpcCodeLine) {
         checkThrow(false, `8J|we shouldn't reach this yet, we don't add them until after this step.`);
     }
 
@@ -169,21 +196,21 @@ export class DetermineCategory {
     /**
      * this line is a handler start like "on mouseUp"
      */
-    go_on(line: ChvIToken[], output: VpcCodeLine) {
+    goOn(line: ChvIToken[], output: VpcCodeLine) {
         return this.goHandlerStart(line, output, line[0]);
     }
 
     /**
      * this line is a function start like "function myFunc"
      */
-    go_function(line: ChvIToken[], output: VpcCodeLine) {
+    goFunction(line: ChvIToken[], output: VpcCodeLine) {
         return this.goHandlerStart(line, output, line[0]);
     }
 
     /**
      * this line is declaring global variable(s)
      */
-    go_global(line: ChvIToken[], output: VpcCodeLine) {
+    goGlobal(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.DeclareGlobal;
         checkThrow(line.length > 1, `8C|cannot have a line that is just "global"`);
         this.getListOfValidIdentifiers(line, output, 1);
@@ -212,7 +239,7 @@ export class DetermineCategory {
     /**
      * this line is ending a handler
      */
-    go_end_handler(line: ChvIToken[], output: VpcCodeLine) {
+    goEndHandler(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.HandlerEnd;
         this.endStatementCommon(line, output, 'end');
     }
@@ -220,7 +247,7 @@ export class DetermineCategory {
     /**
      * this line is exiting a handler
      */
-    go_exit_handler(line: ChvIToken[], output: VpcCodeLine) {
+    goExitHandler(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.HandlerExit;
         this.endStatementCommon(line, output, 'exit');
     }
@@ -228,7 +255,7 @@ export class DetermineCategory {
     /**
      * this line is like "pass mouseUp"
      */
-    go_pass(line: ChvIToken[], output: VpcCodeLine) {
+    goPass(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.HandlerPass;
         this.endStatementCommon(line, output, 'pass');
     }
@@ -236,14 +263,14 @@ export class DetermineCategory {
     /**
      * this line is like "exit to ViperCard"
      */
-    go_exit_product(line: ChvIToken[], output: VpcCodeLine) {
+    goExitProduct(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.ProductExit;
     }
 
     /**
      * this line is like "return x"
      */
-    go_return(line: ChvIToken[], output: VpcCodeLine) {
+    goReturn(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.ReturnExpr;
         checkThrow(
             line.length > 1,
@@ -255,7 +282,7 @@ export class DetermineCategory {
     /**
      * this line is opening an if block
      */
-    go_if(line: ChvIToken[], output: VpcCodeLine) {
+    goIf(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.IfStart;
         let lastToken = line[line.length - 1];
         checkThrow(
@@ -270,7 +297,7 @@ export class DetermineCategory {
     /**
      * this line is like "else if x > y then"
      */
-    go_else_if_cond(line: ChvIToken[], output: VpcCodeLine) {
+    goElseIfCond(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.IfElse;
         let lastToken = line[line.length - 1];
         checkThrow(
@@ -289,7 +316,7 @@ export class DetermineCategory {
     /**
      * this line is like "else"
      */
-    go_else_if_plain(line: ChvIToken[], output: VpcCodeLine) {
+    goElseIfPlain(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.IfElsePlain;
         checkThrowEq(1, line.length, `82|line should be just 'else'`);
     }
@@ -297,7 +324,7 @@ export class DetermineCategory {
     /**
      * this line is like "end if"
      */
-    go_end_if(line: ChvIToken[], output: VpcCodeLine) {
+    goEndIf(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.IfEnd;
         checkThrowEq(2, line.length, `81|line should be just 'end if'`);
     }
@@ -305,18 +332,18 @@ export class DetermineCategory {
     /**
      * this line begins with "else"
      */
-    go_else(line: ChvIToken[], output: VpcCodeLine) {
+    goElse(line: ChvIToken[], output: VpcCodeLine) {
         if (line.length > 1) {
-            this.go_else_if_cond(line, output);
+            this.goElseIfCond(line, output);
         } else {
-            this.go_else_if_plain(line, output);
+            this.goElseIfPlain(line, output);
         }
     }
 
     /**
      * this line is like "exit repeat"
      */
-    go_exit_repeat(line: ChvIToken[], output: VpcCodeLine) {
+    goExitRepeat(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.RepeatExit;
         checkThrowEq(2, line.length, `80|line should be just 'exit repeat'`);
     }
@@ -324,7 +351,7 @@ export class DetermineCategory {
     /**
      * this line is like "end repeat"
      */
-    go_end_repeat(line: ChvIToken[], output: VpcCodeLine) {
+    goEndRepeat(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.RepeatEnd;
         checkThrowEq(2, line.length, `7~|line should be just 'end repeat'`);
     }
@@ -332,7 +359,7 @@ export class DetermineCategory {
     /**
      * this line is like "next repeat"
      */
-    go_next(line: ChvIToken[], output: VpcCodeLine) {
+    goNext(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.RepeatNext;
         checkThrowEq(2, line.length, `7}|line should be just 'next repeat'`);
         checkThrow(
@@ -345,7 +372,7 @@ export class DetermineCategory {
      * this line is beginning a repeat
      * note that the structure repeat with x = 1 to 5 is handled elsewhere
      */
-    go_repeat(line: ChvIToken[], output: VpcCodeLine) {
+    goRepeat(line: ChvIToken[], output: VpcCodeLine) {
         if (line.length === 1) {
             output.ctg = VpcLineCategory.RepeatForever;
         } else if (isTkType(line[1], tks.TokenTkidentifier) && line[1].image === 'while') {
@@ -366,7 +393,7 @@ export class DetermineCategory {
     /**
      * the line begins with "end"
      */
-    go_end(line: ChvIToken[], output: VpcCodeLine) {
+    goEnd(line: ChvIToken[], output: VpcCodeLine) {
         checkThrow(line.length > 1, `7_|cannot have a line that is just "end"`);
         checkThrowEq(2, line.length, `7^|wrong line length. expected "end if", "end repeat", "end handler"`);
         checkThrowEq(
@@ -376,18 +403,18 @@ export class DetermineCategory {
         );
 
         if (line[1].image === 'if') {
-            return this.go_end_if(line, output);
+            return this.goEndIf(line, output);
         } else if (line[1].image === 'repeat') {
-            return this.go_end_repeat(line, output);
+            return this.goEndRepeat(line, output);
         } else {
-            return this.go_end_handler(line, output);
+            return this.goEndHandler(line, output);
         }
     }
 
     /**
      * the line begins with "exit"
      */
-    go_exit(line: ChvIToken[], output: VpcCodeLine) {
+    goExit(line: ChvIToken[], output: VpcCodeLine) {
         checkThrow(line.length > 1, `7[|cannot have a line that is just "exit"`);
         checkThrow(
             line.length === 2,
@@ -400,11 +427,11 @@ export class DetermineCategory {
         );
 
         if (line[1].image === 'repeat') {
-            return this.go_exit_repeat(line, output);
+            return this.goExitRepeat(line, output);
         } else if (line[1].image === cProductName.toLowerCase()) {
-            return this.go_exit_product(line, output);
+            return this.goExitProduct(line, output);
         } else {
-            return this.go_exit_handler(line, output);
+            return this.goExitHandler(line, output);
         }
     }
 
@@ -441,7 +468,7 @@ export class DetermineCategory {
     /**
      * make re-usable fake tokens to be sent to the parser
      */
-    private initFakeTokens() {
+    protected initFakeTokens() {
         /* re-usable fake token, to tell the parser to evaluate an expression */
         this.reusableRequestEval = {
             image: CodeSymbols.RequestEval,

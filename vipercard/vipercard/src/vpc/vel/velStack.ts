@@ -97,10 +97,10 @@ export class VpcElStack extends VpcElBase {
      * get latest stack info (server id, username)
      */
     getLatestStackLineage(): VpcElStackLineageEntry {
-        let lin = this.get('stacklineage');
+        let lin = this.getS('stacklineage');
         if (slength(lin)) {
-            let linparts = lin.split('||');
-            let last = linparts[linparts.length - 1];
+            let linParts = lin.split('||');
+            let last = linParts[linParts.length - 1];
             return VpcElStackLineageEntry.fromSerialized(last);
         } else {
             throw makeVpcInternalErr('stacklineage should never be empty');
@@ -113,7 +113,7 @@ export class VpcElStack extends VpcElBase {
     appendToStackLineage(entryIn: VpcElStackLineageEntry) {
         /* round-trip to validate it */
         let entry = VpcElStackLineageEntry.fromSerialized(entryIn.serialize());
-        let lin = this.get('stacklineage');
+        let lin = this.getS('stacklineage');
         if (slength(lin)) {
             lin += '||' + entry.serialize();
         } else {
@@ -210,13 +210,13 @@ export class VpcElStack extends VpcElBase {
      * ordinal of card within the stack, to card. "go next card", which card is it?
      */
     getCardByOrdinal(currentCardId: string, pos: OrdinalOrPosition): VpcElCard {
-        if (pos === OrdinalOrPosition.first) {
+        if (pos === OrdinalOrPosition.First) {
             return this.bgs[0].cards[0];
         }
 
         let totalCards = this.bgs.map(bg => bg.cards.length).reduce(Util512.add);
         let lastCdPosition = totalCards - 1;
-        if (pos === OrdinalOrPosition.last) {
+        if (pos === OrdinalOrPosition.Last) {
             return this.getFromCardStackPosition(lastCdPosition);
         }
 

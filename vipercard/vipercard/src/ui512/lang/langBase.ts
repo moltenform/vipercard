@@ -5,7 +5,7 @@ const lngPrefix = 'lng';
 const lngPrefixLength = 'lng'.length;
 
 /**
- * for internationalization + globalization
+ * for future internationalization + globalization
  * */
 export function lng(s: string) {
     if (!s.length) {

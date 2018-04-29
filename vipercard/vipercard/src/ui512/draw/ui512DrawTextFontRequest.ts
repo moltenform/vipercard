@@ -140,12 +140,12 @@ export class UI512FontRequest {
         let grid = this.findGrid(font);
         if (grid) {
             let spec = TextFontSpec.fromString(font);
-            let fontobj = new TextRendererFont(grid);
-            fontobj.underline = (spec.style & TextFontStyling.Underline) !== 0;
-            fontobj.condense = (spec.style & TextFontStyling.Condensed) !== 0;
-            fontobj.extend = (spec.style & TextFontStyling.Extend) !== 0;
-            this.cachedFonts[font] = fontobj;
-            return fontobj;
+            let fontObj = new TextRendererFont(grid);
+            fontObj.underline = (spec.style & TextFontStyling.Underline) !== 0;
+            fontObj.condense = (spec.style & TextFontStyling.Condense) !== 0;
+            fontObj.extend = (spec.style & TextFontStyling.Extend) !== 0;
+            this.cachedFonts[font] = fontObj;
+            return fontObj;
         } else {
             return undefined;
         }

@@ -25,24 +25,24 @@ function buildInitDefFunc(childrenNames) {
         oneOfTheseObjects[currName] = []
     })
 
-    // ben fisher, 2017:
-    // I don't want to use new Function() because it's basically eval
-    // this workaround should provide the same behavior.
-    // is it really true that it needs to create a new object every time?
-    // if so, it's correct that I am creating an entirely new object.
-    // I'm using JSON to make a clone.
+    /* ben fisher, 2017: */
+/* I don't want to use new Function() because it's basically eval */
+/* this workaround should provide the same behavior. */
+/* is it really true that it needs to create a new object every time? */
+/* if so, it's correct that I am creating an entirely new object. */
+/* I'm using JSON to make a clone.
     var serialized = JSON.stringify(oneOfTheseObjects)
 
     return function() {
         return JSON.parse(serialized)
     }
 
-    // var funcString = "return {\n";
-    // funcString += utils_1.map(childrenNames, function (currName) { return "\"" + currName + "\" : []"; }).join(",\n");
-    // funcString += "}";
-    // major performance optimization, faster to create the children dictionary this way
-    // versus iterating over the childrenNames each time.
-    // return Function(funcString);
+    /* var funcString = "return {\n"; */
+/* funcString += utils_1.map(childrenNames, function (currName) { return "\"" + currName + "\" : []"; }).join(",\n"); */
+/* funcString += "}"; */
+/* major performance optimization, faster to create the children dictionary this way */
+/* versus iterating over the childrenNames each time. */
+/* return Function(funcString);
 }
 */
 
@@ -704,7 +704,7 @@ declare namespace chevrotain {
      *        this.CONSUME1(TwoTok)
      *        return "2"
      *      }},
-     *      {ALT: () => { // implicitly empty because there are no invoked grammar rules (OR/MANY/CONSUME...) inside this alternative.
+     *      {ALT: () => { /* implicitly empty because there are no invoked grammar rules (OR/MANY/CONSUME...) inside this alternative.
      *        return "666"
      *      }},
      *    ])
@@ -721,7 +721,7 @@ declare namespace chevrotain {
      *        this.CONSUME1(TwoTok)
      *        return "2"
      *      }},
-     *      {ALT: EMPTY_ALT("666")}, // explicitly empty, clearer intent
+     *      {ALT: EMPTY_ALT("666")}, /* explicitly empty, clearer intent
      *    ])
      *
      */
@@ -822,9 +822,9 @@ declare namespace chevrotain {
          *    this.CONSUME1(Identifier);
          *    this.MANY(()=> {
          *       this.CONSUME1(Dot);
-         *       this.CONSUME2(Identifier); // <-- here we use CONSUME2 because the terminal
-         *    });                           //     'Identifier' has already appeared previously in the
-         *                                  //     the rule 'parseQualifiedName'
+         *       this.CONSUME2(Identifier); /* <-- here we use CONSUME2 because the terminal
+         *    });                           /*     'Identifier' has already appeared previously in the
+         *                                  /*     the rule 'parseQualifiedName'
          * }
          *
          * @param {Function} tokClass - A constructor function specifying the type of token to be consumed.
@@ -977,7 +977,7 @@ declare namespace chevrotain {
          *            {ALT:()=>{this.CONSUME(Two)}},
          *            {ALT:()=>{this.CONSUME(Three)}}
          *          ],
-         *          // OPTIONAL property
+         *          /* OPTIONAL property
          *          ERR_MSG: "A Number"
          *        })
          *

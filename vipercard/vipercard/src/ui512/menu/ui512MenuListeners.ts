@@ -99,7 +99,7 @@ export class MenuListeners {
 
         /* ignore all events during the animation */
         let playAnim = new SuspendEventsForMenuBlinkAnimation(item, cbAfterAnim);
-        pr.tmpIgnore = playAnim;
+        pr.tmpSuspend = playAnim;
         playAnim.start(pr);
 
         /* don't send the mouse-up event. playAnim will send the MenuItemClicked after animation */

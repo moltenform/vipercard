@@ -1,5 +1,5 @@
 
-/* auto */ import { Util512 } from '../../ui512/utils/utils512.js';
+/* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
@@ -78,6 +78,7 @@ export class UI512Lines {
      * this != start(n+1) - 1, consider the last line.
      */
     lineNumberToLineEndIndex(lineNum: number) {
+        lineNum = fitIntoInclusive(lineNum, 0, this.lns.length - 1);
         let ln = this.lns[lineNum];
         let startLine = this.lineNumberToIndex(lineNum);
         if (ln.len() === 0) {
@@ -94,15 +95,17 @@ export class UI512Lines {
      */
     static fastLineNumberToIndex(txt: FormattedText, lineNum: number) {
         let count = 0;
+        let mostRecentLineStart = 0;
         for (let i = 0; i < txt.len(); i++) {
             if (count === lineNum) {
                 return i;
             } else if (txt.charAt(i) === specialCharNumNewline) {
                 count += 1;
+                mostRecentLineStart = i + 1;
             }
         }
 
-        return txt.len();
+        return mostRecentLineStart;
     }
 
     /**
@@ -111,7 +114,7 @@ export class UI512Lines {
     static fastLineNumberAndEndToIndex(txt: FormattedText, lineNum: number) {
         let startIndex = UI512Lines.fastLineNumberToIndex(txt, lineNum);
         let i = startIndex;
-        for (i = startIndex; i < txt.len(); i++) {
+        for (; i < txt.len(); i++) {
             if (txt.charAt(i) === specialCharNumNewline) {
                 break;
             }
@@ -184,9 +187,9 @@ export class UI512Lines {
      * count indentation level
      */
     static getIndentLevel(txt: FormattedText) {
+        const maxIndents = 1024;
         let spaces = Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         let s = txt.toUnformatted();
-        const maxIndents = 1024;
         let count = 0;
         for (let i = 0; i < maxIndents; i++) {
             if (s.startsWith('\t')) {

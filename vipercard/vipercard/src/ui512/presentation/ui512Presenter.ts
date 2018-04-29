@@ -92,7 +92,7 @@ export abstract class UI512Presenter extends UI512PresenterBase {
             }
 
             /* now we can modify safely */
-            let stilldirty: { [key: string]: boolean } = {};
+            let stillDirty: { [key: string]: boolean } = {};
             for (let el of els) {
                 let cmpthis = new RenderComplete();
                 if (el instanceof UI512ElTextField) {
@@ -102,13 +102,13 @@ export abstract class UI512Presenter extends UI512PresenterBase {
                 }
 
                 if (!cmpthis.complete) {
-                    stilldirty[el.id] = true;
+                    stillDirty[el.id] = true;
                     cmpTotal.complete = false;
                 }
             }
 
             for (let el of grp.iterEls()) {
-                el.setDirty(stilldirty[el.id] === true);
+                el.setDirty(stillDirty[el.id] === true);
             }
         }
     }

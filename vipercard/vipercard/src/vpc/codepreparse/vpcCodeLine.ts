@@ -41,7 +41,7 @@ export class VpcCodeLine {
     /**
      * make an instance
      */
-    public constructor(lineId: number, line: ChvIToken[]) {
+    constructor(lineId: number, line: ChvIToken[]) {
         this.lineId = lineId;
         this.firstToken = line[0];
         this.tmpEntireLine = line;
@@ -66,8 +66,8 @@ export class VpcCodeLine {
         assertTrue(this.tmpEntireLine && this.tmpEntireLine.length, `5)|invalid line`);
         if (fn && this.tmpEntireLine) {
             this.allImages = '';
-            for (let tk of this.tmpEntireLine) {
-                this.allImages += tk.image;
+            for (let i = 0, len = this.tmpEntireLine.length; i < len; i++) {
+                this.allImages += this.tmpEntireLine[i].image;
                 this.allImages += '~';
             }
         }

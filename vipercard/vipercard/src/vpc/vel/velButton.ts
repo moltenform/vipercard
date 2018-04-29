@@ -19,7 +19,7 @@ export class VpcElButton extends VpcElSizable {
     protected _checkmark = false;
     protected _icon = 0;
     protected _showlabel = true;
-    protected _style: number = VpcBtnStyle.rectangle;
+    protected _style: number = VpcBtnStyle.Rectangle;
     protected _label = '';
     protected _textalign = 'center';
     protected _textfont = 'chicago';
@@ -98,7 +98,7 @@ export class VpcElButton extends VpcElSizable {
     static btnGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
         getters['script'] = [PrpTyp.Str, 'script'];
-        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => SubstringStyleComplex.vpcstyleFromInt(me._textstyle)];
+        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => SubstringStyleComplex.vpcStyleFromInt(me._textstyle)];
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElButton) => {
@@ -117,7 +117,7 @@ export class VpcElButton extends VpcElSizable {
             PrpTyp.Str,
             (me: VpcElButton, s: string) => {
                 let list = s.split(',').map(item => item.trim());
-                me.set('textstyle', SubstringStyleComplex.vpcstyleToInt(list));
+                me.set('textstyle', SubstringStyleComplex.vpcStyleToInt(list));
             }
         ];
 
@@ -125,7 +125,7 @@ export class VpcElButton extends VpcElSizable {
             PrpTyp.Str,
             (me: VpcElButton, s: string) => {
                 let styl = getStrToEnum<VpcBtnStyle>(VpcBtnStyle, 'Button style', s);
-                checkThrow(styl !== VpcBtnStyle.osboxmodal, '7D|this style is only supported internally');
+                checkThrow(styl !== VpcBtnStyle.Osboxmodal, '7D|this style is only supported internally');
                 me.set('style', styl);
             }
         ];
@@ -179,22 +179,23 @@ export class VpcElButton extends VpcElSizable {
 }
 
 /**
- * values here are lowercase, because they are used by the interpreter.
+ * button styles
  */
 export enum VpcBtnStyle {
     __isUI512Enum = 1,
-    transparent = UI512BtnStyle.Transparent,
-    rectangle = UI512BtnStyle.Rectangle,
-    opaque = UI512BtnStyle.Opaque,
-    roundrect = UI512BtnStyle.RoundRect,
-    plain = UI512BtnStyle.Plain,
-    shadow = UI512BtnStyle.Shadow,
-    osstandard = UI512BtnStyle.OSStandard,
-    osdefault = UI512BtnStyle.OSDefault,
-    osboxmodal = UI512BtnStyle.OSBoxModal,
-    checkbox = UI512BtnStyle.Checkbox,
-    radio = UI512BtnStyle.Radio,
-    alternateforms_standard = UI512BtnStyle.OSStandard,
-    alternateforms_default = UI512BtnStyle.OSDefault,
-    alternateforms_rect = UI512BtnStyle.Rectangle
+    __UI512EnumCapitalize,
+    Transparent = UI512BtnStyle.Transparent,
+    Rectangle = UI512BtnStyle.Rectangle,
+    Opaque = UI512BtnStyle.Opaque,
+    Roundrect = UI512BtnStyle.RoundRect,
+    Plain = UI512BtnStyle.Plain,
+    Shadow = UI512BtnStyle.Shadow,
+    Osstandard = UI512BtnStyle.OSStandard,
+    Osdefault = UI512BtnStyle.OSDefault,
+    Osboxmodal = UI512BtnStyle.OSBoxModal,
+    Checkbox = UI512BtnStyle.Checkbox,
+    Radio = UI512BtnStyle.Radio,
+    AlternateFormStandard = UI512BtnStyle.OSStandard,
+    AlternateFormDefault = UI512BtnStyle.OSDefault,
+    AlternateFormRect = UI512BtnStyle.Rectangle
 }

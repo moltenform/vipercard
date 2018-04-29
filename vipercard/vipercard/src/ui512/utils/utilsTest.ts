@@ -1,5 +1,6 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeVpcScriptErr, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 
 /**
  * base class for tests
@@ -13,34 +14,6 @@ export class UI512TestBase {
      */
     init() {
         this.inited = true;
-    }
-
-    /**
-     * assert that an exception is thrown, with a certain message
-     */
-    assertThrows(tagmsg: string, expectederr: string, fn: Function) {
-        return UI512TestBase.assertThrows(tagmsg, expectederr, fn);
-    }
-
-    /**
-     * assert that an exception is thrown, with a certain message
-     */
-    static assertThrows(tagmsg: string, expectederr: string, fn: Function) {
-        let msg: O<string>;
-        try {
-            UI512ErrorHandling.breakOnThrow = false;
-            fn();
-        } catch (e) {
-            msg = e.message ? e.message : '';
-        } finally {
-            UI512ErrorHandling.breakOnThrow = true;
-        }
-
-        assertTrue(msg !== undefined, `3{|did not throw ${tagmsg}`);
-        assertTrue(
-            msg !== undefined && scontains(msg, expectederr),
-            `9d|message "${msg}" did not contain "${expectederr}" ${tagmsg}`
-        );
     }
 
     /**
@@ -70,9 +43,17 @@ export class UI512TestBase {
      * press cmd-shift-alt-t to include these tests, see 'all' parameter.
      */
     static slowTests: { [key: string]: boolean } = {
-        'callback/Text Core Fonts': true,
-        'callback/Text All Fonts': true
+        'async/Text Core Fonts': true,
+        'async/Text All Fonts': true
     };
+
+    /**
+     * run fnCb after fnAsync has completed
+     */
+    protected static async runAsyncThenCallback(fnAsync: () => Promise<void>, fnCb: () => void) {
+        await fnAsync();
+        fnCb();
+    }
 
     /**
      * tests are run in a chain of functions,
@@ -99,11 +80,14 @@ export class UI512TestBase {
             console.log(`${index + 1}/${listTests.length + 1} starting ${listNames[index]}`);
             let nextTest = index + 1;
             listInstances[index].init();
-            if (listNames[index].startsWith('callback/')) {
-                /* it's an async test, and so provide a "callback" parameter, it's up to the test to remember to call it. */
-                listTests[index](() => {
+            if (listNames[index].startsWith('async/')) {
+                /* it's an async test */
+                let runNextTest = () => {
                     UI512TestBase.runNextTest(listNames, listTests, listInstances, runAllTests, nextTest);
-                });
+                };
+
+                let beginTest = () => UI512TestBase.runAsyncThenCallback(listTests[index] as any, runNextTest);
+                UI512BeginAsync(beginTest);
             } else {
                 listTests[index]();
 
@@ -136,12 +120,13 @@ export class UI512TestBase {
     /**
      * run all registered tests.
      */
-    static runTestsArray(registeredTests: any[], runAllTests = true) {
+    static runTestsArray(registeredTests: (() => UI512TestBase)[], runAllTests = true) {
         console.log('gathering tests...');
+        UI512TestBase.notifyUserIfDebuggerIsSetToAllExceptions();
         let listNames: string[] = [];
         let listTests: Function[] = [];
         let listInstances: UI512TestBase[] = [];
-        for (let [fn] of registeredTests) {
+        for (let fn of registeredTests) {
             let testInstance = fn();
             if (testInstance && testInstance instanceof UI512TestBase) {
                 testInstance.getAllTests(listNames, listTests, listInstances);
@@ -151,4 +136,57 @@ export class UI512TestBase {
         console.log('starting tests...');
         UI512TestBase.runNextTest(listNames, listTests, listInstances, runAllTests, 0);
     }
+
+    /**
+     * if the debugger is set to All Exceptions,
+     * you will see a lot of false positives
+     */
+    static notifyUserIfDebuggerIsSetToAllExceptions() {
+        assertThrows('', 'intentionally throw', () => {
+            throw makeVpcScriptErr(`1!|It looks like the debugger is set to break on 'All Exceptions'...
+                you probably want to turn this off because many tests intentionally throw exceptions.`);
+        });
+    }
+}
+
+/**
+ * assert that an exception is thrown, with a certain message
+ */
+export async function assertThrowsAsync<T>(tagMsg: string, expectedErr: string, fn: () => Promise<T>) {
+    let msg: O<string>;
+    try {
+        UI512ErrorHandling.breakOnThrow = false;
+        await fn();
+    } catch (e) {
+        msg = e.message ? e.message : '';
+    } finally {
+        UI512ErrorHandling.breakOnThrow = true;
+    }
+
+    assertTrue(msg !== undefined, `did not throw ${tagMsg}`);
+    assertTrue(
+        msg !== undefined && scontains(msg, expectedErr),
+        `message "${msg}" did not contain "${expectedErr}" ${tagMsg}`
+    );
+}
+
+/**
+ * assert that an exception is thrown, with a certain message
+ */
+export function assertThrows(tagMsg: string, expectedErr: string, fn: Function) {
+    let msg: O<string>;
+    try {
+        UI512ErrorHandling.breakOnThrow = false;
+        fn();
+    } catch (e) {
+        msg = e.message ? e.message : '';
+    } finally {
+        UI512ErrorHandling.breakOnThrow = true;
+    }
+
+    assertTrue(msg !== undefined, `3{|did not throw ${tagMsg}`);
+    assertTrue(
+        msg !== undefined && scontains(msg, expectedErr),
+        `9d|message "${msg}" did not contain "${expectedErr}" ${tagMsg}`
+    );
 }

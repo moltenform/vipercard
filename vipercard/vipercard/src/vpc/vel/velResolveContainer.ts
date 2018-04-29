@@ -86,11 +86,11 @@ export class ReadableContainerField implements ReadableContainer {
 
     len() {
         /* this is fast, it's the reason we have a len() and not just getRawString().length */
-        return this.fld.get_ftxt().len();
+        return this.fld.getFmTxt().len();
     }
 
     getRawString(): string {
-        return this.fld.get_ftxt().toUnformatted();
+        return this.fld.getFmTxt().toUnformatted();
     }
 }
 
@@ -99,15 +99,15 @@ export class ReadableContainerField implements ReadableContainer {
  */
 export class WritableContainerField extends ReadableContainerField implements WritableContainer {
     splice(insertion: number, lenToDelete: number, newstring: string) {
-        let txt = this.fld.get_ftxt();
+        let txt = this.fld.getFmTxt();
         if (insertion === 0 && lenToDelete >= txt.len()) {
             /* follow emulator, there is different behavior (lose formatting) when replacing all text */
             this.fld.setProp('alltext', VpcValS(newstring));
         } else {
             let font =
                 insertion >= 0 && insertion < txt.len() ? txt.fontAt(insertion) : this.fld.getDefaultFontAsUi512();
-            let newtxt = FormattedText.byInsertion(txt, insertion, lenToDelete, newstring, font);
-            this.fld.setftxt(newtxt);
+            let newTxt = FormattedText.byInsertion(txt, insertion, lenToDelete, newstring, font);
+            this.fld.setFmTxt(newTxt);
         }
     }
 

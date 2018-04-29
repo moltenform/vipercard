@@ -4,10 +4,14 @@
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroPageBase.js';
 /* auto */ import { VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
 
+/**
+ * forward-declare methods on the VpcIntroInterface presenter, solely
+ * to break circular dependencies
+ */
 export abstract class VpcIntroInterface extends UI512Presenter {
     abstract beginLoadDocument(loader: VpcIntroProvider): void;
     abstract getModal(): UI512CompModalDialog;
-    abstract newDocument(): void;
+    abstract beginNewDocument(): void;
     abstract goBackToFirstScreen(): void;
 
     activePage: IntroPageBase;

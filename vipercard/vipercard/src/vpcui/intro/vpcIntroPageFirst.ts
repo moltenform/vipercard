@@ -4,23 +4,102 @@
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
 /* auto */ import { GridLayout, UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { IdleEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { VpcAboutDialog } from '../../vpcui/menu/vpcAboutDialog.js';
 /* auto */ import { IntroPageBase } from '../../vpcui/intro/vpcIntroPageBase.js';
-/* auto */ import { OpenFromLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { VpcDocumentLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
 /* auto */ import { VpcIntroInterface } from '../../vpcui/intro/vpcIntroInterface.js';
 /* auto */ import { IntroPagePickFile } from '../../vpcui/intro/vpcIntroPagePickFile.js';
 /* auto */ import { IntroPageOpen } from '../../vpcui/intro/vpcIntroPageOpen.js';
 
+/**
+ * first page shown when you open ViperCard
+ */
 export class IntroPageFirst extends IntroPageBase {
     compositeType = 'IntroPageFirst';
+    static haveCheckedPageURLParams = false;
 
+    /**
+     * initialize layout
+     */
     createSpecific(app: UI512Application) {
+        const cellWidth = 66;
+        const cellHeight = 110;
+        const iconW = 24;
+        const iconH = 24;
+        const footerHeight = 45;
+        const numBtns = 4;
+        const btnWidth = 200;
+        const btnHeight = 24;
+        const btnMargin = 22;
+        const increaseHForLargerBtn = 10;
+        const increaseYForLargerBtn = 2;
+        const adjustYCentered = 1;
+
+        /* draw group and window decoration */
         let grp = app.getGroup(this.grpId);
-        let headerheight = this.drawCommonFirst(app, grp);
-        // draw weird hands
+        let headerHeight = this.drawCommonFirst(app, grp);
+
+        /* draw background decoration (lots of hands) */
+        this.drawHandCursors(iconW, iconH, cellWidth, cellHeight, app, grp);
+
+        /* compute dimensions for the initial buttons */
+        let ySpacebtns = numBtns * btnHeight + (numBtns - 1) * btnMargin;
+        const spaceY = this.logicalHeight - (headerHeight + footerHeight);
+        const centeredY = this.y + headerHeight + Math.trunc((spaceY - ySpacebtns) / 2);
+        const btnX = this.x + Math.trunc((this.logicalWidth - btnWidth) / 2);
+
+        /* cover up the background and make it white beneath the initial buttons */
+        let opaqueWhiteBehindBtns = this.genBtn(app, grp, 'opaqueWhiteBehindBtns');
+        opaqueWhiteBehindBtns.set('style', UI512BtnStyle.Opaque);
+        opaqueWhiteBehindBtns.set('autohighlight', false);
+        opaqueWhiteBehindBtns.setDimensions(btnX, centeredY, btnWidth, ySpacebtns);
+
+        const btnKeywords = ['openStack', 'showFeatured', 'newStack', 'showAbout'];
+        const btnLabels = ['lngOpen stack...', 'lngShow featured stacks...', 'lngNew stack', 'lngAbout...', ''];
+        let layout = new GridLayout(
+            btnX,
+            centeredY + adjustYCentered,
+            btnWidth,
+            btnHeight,
+            Util512.range(1) /* cols */,
+            Util512.range(numBtns) /* rows */,
+            btnMargin,
+            btnMargin
+        );
+
+        /* create the initial buttons */
+        layout.combinations((n, a, b, bnds) => {
+            let id = 'choice' + Util512.capitalizeFirst(btnKeywords[b]);
+            let el = this.genBtn(app, grp, id);
+            el.setDimensions(bnds[0], bnds[1], bnds[2], bnds[3]);
+            el.set('style', btnKeywords[b] === 'showFeatured' ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
+            el.set('labeltext', lng(btnLabels[b]));
+            if (btnKeywords[b] === 'showFeatured') {
+                el.setDimensions(el.x, el.y - increaseYForLargerBtn, el.w, el.h + increaseHForLargerBtn);
+            } else if (btnKeywords[b] === 'showAbout') {
+                el.setDimensions(el.x, el.y + increaseYForLargerBtn, el.w, el.h);
+            }
+        });
+
+        this.drawCommonLast(app, grp);
+    }
+
+    /**
+     * draw the 'hands' background decoration
+     * draw 2 grids, staggered, like a fleur de lis wallpaper
+     */
+    protected drawHandCursors(
+        iconW: number,
+        iconH: number,
+        cellWidth: number,
+        cellHeight: number,
+        app: UI512Application,
+        grp: UI512ElGroup
+    ) {
         let cbHands = (a: number, b: number, el: UI512ElButton) => {
             el.set('icongroupid', 'logo');
             el.set('iconnumber', 2);
@@ -28,122 +107,89 @@ export class IntroPageFirst extends IntroPageBase {
             el.set('autohighlight', false);
             this.children.push(el);
         };
-        const ptwidth = 66;
-        const ptheight = 110;
-        const iconw = 24;
-        const iconh = 24;
-        let layoutIconPattern = new GridLayout(
+
+        let pattern = new GridLayout(
             this.x + 26,
             this.y + 39,
-            iconw,
-            iconh,
+            iconW,
+            iconH,
             Util512.range(7),
             Util512.range(3),
-            ptwidth - iconw,
-            ptheight - iconh
+            cellWidth - iconW,
+            cellHeight - iconH
         );
-        layoutIconPattern.createElems(app, grp, this.getElId('wallpaper1'), UI512ElButton, cbHands);
-        layoutIconPattern = new GridLayout(
-            this.x + 26 + ptwidth / 2,
-            this.y + 39 + ptheight / 2,
-            iconw,
-            iconh,
+        pattern.createElems(app, grp, this.getElId('wallpaper1'), UI512ElButton, cbHands);
+        pattern = new GridLayout(
+            this.x + 26 + cellWidth / 2,
+            this.y + 39 + cellHeight / 2,
+            iconW,
+            iconH,
             Util512.range(7),
             Util512.range(2),
-            ptwidth - iconw,
-            ptheight - iconh
+            cellWidth - iconW,
+            cellHeight - iconH
         );
-        layoutIconPattern.createElems(app, grp, this.getElId('wallpaper2'), UI512ElButton, cbHands);
-
-        const footerheight = 45;
-        const numbtns = 4;
-        const btnwidth = 200;
-        const btnheight = 24;
-        const btnmargin = 22;
-        let yspacebtns = numbtns * btnheight + (numbtns - 1) * btnmargin;
-        const yspace = this.logicalHeight - (headerheight + footerheight);
-        const ycentered = this.y + headerheight + Math.trunc((yspace - yspacebtns) / 2);
-        const btnx = this.x + Math.trunc((this.logicalWidth - btnwidth) / 2);
-
-        let coverbgforbtns = this.genBtn(app, grp, 'coverbgforbtns');
-        coverbgforbtns.set('style', UI512BtnStyle.Opaque);
-        coverbgforbtns.set('autohighlight', false);
-        coverbgforbtns.setDimensions(btnx, ycentered, btnwidth, yspacebtns);
-
-        const btnKeywords = ['openStack', 'showFeatured', 'newStack', 'showAbout'];
-        const btnLabels = ['lngOpen stack...', 'lngShow featured stacks...', 'lngNew stack', 'lngAbout...', ''];
-        let layoutgrid = new GridLayout(
-            btnx,
-            ycentered + 5,
-            btnwidth,
-            btnheight,
-            [0],
-            Util512.range(numbtns),
-            btnmargin,
-            btnmargin
-        );
-        layoutgrid.combinations((n, a, b, bnds) => {
-            if (btnKeywords[b] !== 'unused') {
-                let id = 'choice_' + btnKeywords[b];
-                let el = this.genBtn(app, grp, id);
-                el.setDimensions(bnds[0], bnds[1] - 4, bnds[2], bnds[3]);
-                el.set('style', btnKeywords[b] === 'showFeatured' ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
-                el.set('labeltext', lng(btnLabels[b]));
-                if (btnKeywords[b] === 'showFeatured') {
-                    el.setDimensions(el.x, el.y - 6, el.w, el.h + 10);
-                } else if (btnKeywords[b] === 'showAbout') {
-                    el.setDimensions(el.x, el.y - 2, el.w, el.h);
-                }
-            }
-        });
-
-        this.drawCommonLast(app, grp);
+        pattern.createElems(app, grp, this.getElId('wallpaper2'), UI512ElButton, cbHands);
     }
 
-    static haveCheckedUrl = false;
+    /**
+     * check url if we haven't already
+     *
+     * haveCheckedPageURLParams is a stack, since when you click "exit to main menu"
+     * we don't want to run checkPageUrlParams again and accidentally get taken back into the stack.
+     */
     respondIdle(pr: VpcIntroInterface, d: IdleEventDetails) {
-        if (!IntroPageFirst.haveCheckedUrl) {
-            IntroPageFirst.haveCheckedUrl = true;
-            UI512BeginAsync(() => this.checkIfGivenStackInUrl(pr), undefined, false);
+        if (!IntroPageFirst.haveCheckedPageURLParams) {
+            IntroPageFirst.haveCheckedPageURLParams = true;
+            UI512BeginAsync(() => this.checkPageUrlParams(pr), undefined, false);
         }
 
         super.respondIdle(pr, d);
     }
 
-    async checkIfGivenStackInUrl(pr: VpcIntroInterface) {
-        let id = this.parseStackIdFromParams(location.href);
+    /**
+     * see if the url is taking to us to a stack, and load the stack if so
+     */
+    async checkPageUrlParams(pr: VpcIntroInterface) {
+        let provider = IntroPageFirst.checkPageUrlParamsGetProvider(window.location.href);
+        if (provider) {
+            pr.beginLoadDocument(provider);
+        }
+    }
+
+    /**
+     * parse the page's url parameters and see if it refers to a stack
+     */
+    static checkPageUrlParamsGetProvider(fullLocation: string): O<VpcIntroProvider> {
+        let id = IntroPageFirst.parseStackIdFromParams(fullLocation);
         if (id && slength(id)) {
             id = id.replace(/%7C/g, '|').replace(/%7c/g, '|');
             let pts = id.split('|');
             if (pts.length === 1) {
-                // why base64 encoded demo feature? saves server costs
-                // check if it's a base64 encoded demo
-                let demoname = Util512.fromBase64UrlSafe(pts[0]);
-                if (demoname.startsWith('demo_') && demoname.match(/^[a-zA-Z0-9_-]{1,100}$/)) {
-                    // open the document
-                    let demoid = demoname + '.json';
-                    let loader = new VpcIntroProvider(
-                        demoid,
-                        lng('lngfeatured stack'),
-                        OpenFromLocation.FromStaticDemo
-                    );
-                    pr.beginLoadDocument(loader);
-                    return;
+                /* sending reference to a demo stack is different */
+                /* saves some $ since no server code or even db hits need to be run */
+                let demoName = Util512.fromBase64UrlSafe(pts[0]);
+                if (demoName.startsWith('demo_') && demoName.match(/^[a-zA-Z0-9_-]{1,100}$/)) {
+                    /* open the document */
+                    let demoId = demoName + '.json';
+                    return new VpcIntroProvider(demoId, lng('lngfeatured stack'), VpcDocumentLocation.FromStaticDemo);
                 }
             } else if (pts.length === 2) {
-                let loader = new VpcIntroProvider(id, lng('lngstack'), OpenFromLocation.FromStackIdOnline);
-                pr.beginLoadDocument(loader);
-                return;
+                /* we're opening someone's online stack */
+                return new VpcIntroProvider(id, lng('lngstack'), VpcDocumentLocation.FromStackIdOnline);
             }
         }
     }
 
-    protected parseStackIdFromParams(s: string): O<string> {
+    /**
+     * if the url contains something like s=xxxxx, return the xxxxx
+     */
+    protected static parseStackIdFromParams(s: string): O<string> {
         let spl = s.split('?');
         if (spl.length === 2) {
-            let splparams = spl[1].split('&');
-            for (let splparam of splparams) {
-                let pair = splparam.split('=');
+            let splParams = spl[1].split('&');
+            for (let splParam of splParams) {
+                let pair = splParam.split('=');
                 if (pair.length === 2) {
                     if (pair[0] === 's') {
                         return pair[1];
@@ -153,54 +199,66 @@ export class IntroPageFirst extends IntroPageBase {
         }
     }
 
-    static showOpenPage(pr: VpcIntroInterface, openType: OpenFromLocation) {
-        let [x, y] = [pr.activePage.x, pr.activePage.y];
-        pr.activePage.destroy(pr, pr.app);
-        pr.activePage = new IntroPageOpen('introOpenPage', pr.bounds, x, y, openType);
-        pr.activePage.create(pr, pr.app);
-
-        if (openType === OpenFromLocation.FromJsonFile) {
-            // user clicked 'open from json'
-            let [x1, y1] = [pr.activePage.x, pr.activePage.y];
-            pr.activePage.destroy(pr, pr.app);
-            pr.activePage = new IntroPagePickFile('IntroPagePickFile', pr.bounds, x1, y1, pr);
-            pr.activePage.create(pr, pr.app);
-        } else if (openType === OpenFromLocation.ShowLoginForm) {
-            if (!getRoot().getSession()) {
-                // we have to load the full ui, just to get the dialog to get then to log in
-                let loader = new VpcIntroProvider('', '', OpenFromLocation.ShowLoginForm);
-                pr.beginLoadDocument(loader);
-            } else {
-                pr.activePage.destroy(pr, pr.app);
-                pr.activePage = new IntroPageOpen('introOpenPage', pr.bounds, x, y, OpenFromLocation.FromStackIdOnline);
-                pr.activePage.create(pr, pr.app);
-            }
-        }
-    }
-
+    /**
+     * respond to button click
+     */
     static respondBtnClick(pr: VpcIntroInterface, self: O<IntroPageFirst>, el: UI512Element) {
-        if (el.id.endsWith('choice_newStack')) {
-            pr.newDocument();
-        } else if (el.id.endsWith('choice_showAbout')) {
+        if (el.id.endsWith('choiceNewStack')) {
+            pr.beginNewDocument();
+        } else if (el.id.endsWith('choiceShowAbout')) {
             VpcAboutDialog.show(pr, pr.getModal());
-        } else if (el.id.endsWith('choice_showFeatured')) {
-            IntroPageFirst.showOpenPage(pr, OpenFromLocation.FromStaticDemo);
-        } else if (el.id.endsWith('choice_openStack')) {
+        } else if (el.id.endsWith('choiceShowFeatured')) {
+            IntroPageFirst.goPage(pr, VpcDocumentLocation.FromStaticDemo);
+        } else if (el.id.endsWith('choiceOpenStack')) {
             pr.getModal().standardAnswer(
                 pr,
                 pr.app,
                 'From which location would you like to open?',
                 n => {
                     if (n === 0) {
-                        IntroPageFirst.showOpenPage(pr, OpenFromLocation.ShowLoginForm);
+                        IntroPageFirst.goPage(pr, VpcDocumentLocation.ShowLoginForm);
                     } else if (n === 1) {
-                        IntroPageFirst.showOpenPage(pr, OpenFromLocation.FromJsonFile);
+                        IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
                     }
                 },
                 'Online',
                 'Json file',
                 'Cancel'
             );
+        }
+    }
+
+    /**
+     * destroy the active page, and go to another page
+     */
+    static goPage(pr: VpcIntroInterface, openType: VpcDocumentLocation) {
+        let [x, y] = [pr.activePage.x, pr.activePage.y];
+        pr.activePage.destroy(pr, pr.app);
+        pr.activePage = new IntroPageOpen('introOpenPage', pr.bounds, x, y, openType);
+        pr.activePage.create(pr, pr.app);
+
+        if (openType === VpcDocumentLocation.FromJsonFile) {
+            /* user clicked 'open from json' */
+            let [x1, y1] = [pr.activePage.x, pr.activePage.y];
+            pr.activePage.destroy(pr, pr.app);
+            pr.activePage = new IntroPagePickFile('IntroPagePickFile', pr.bounds, x1, y1, pr);
+            pr.activePage.create(pr, pr.app);
+        } else if (openType === VpcDocumentLocation.ShowLoginForm) {
+            if (!getRoot().getSession()) {
+                /* we have to load the full ui, just to get the dialog to get then to log in */
+                let loader = new VpcIntroProvider('', '', VpcDocumentLocation.ShowLoginForm);
+                pr.beginLoadDocument(loader);
+            } else {
+                pr.activePage.destroy(pr, pr.app);
+                pr.activePage = new IntroPageOpen(
+                    'introOpenPage',
+                    pr.bounds,
+                    x,
+                    y,
+                    VpcDocumentLocation.FromStackIdOnline
+                );
+                pr.activePage.create(pr, pr.app);
+            }
         }
     }
 }

@@ -13,6 +13,10 @@ const dash = '-'.charCodeAt(0);
  * returns metadata/dimensions of the character drawn
  */
 export class UI512DrawChar {
+    /**
+     * draw a character, does some redirection like unknown -> ?
+     * and tab -> spaces
+     */
     static draw(
         font: TextRendererFont,
         n: number,
@@ -54,7 +58,10 @@ export class UI512DrawChar {
         return UI512DrawChar.drawImpl(font, n, x, baseline, destX0, destY0, destW, destH, canvas);
     }
 
-    static drawImpl(
+    /**
+     * draws a character
+     */
+    protected static drawImpl(
         font: TextRendererFont,
         n: number,
         x: number,
@@ -67,7 +74,7 @@ export class UI512DrawChar {
     ): DrawCharResult {
         /* these decorations are flags on the TextRendererFont rather than part of the grid. */
         assertTrue((font.grid.spec.style & TextFontStyling.Underline) === 0, '3S|style should have been removed');
-        assertTrue((font.grid.spec.style & TextFontStyling.Condensed) === 0, '3R|style should have been removed');
+        assertTrue((font.grid.spec.style & TextFontStyling.Condense) === 0, '3R|style should have been removed');
         assertTrue((font.grid.spec.style & TextFontStyling.Extend) === 0, '3Q|style should have been removed');
 
         /* get dimensions of the subset from source image */

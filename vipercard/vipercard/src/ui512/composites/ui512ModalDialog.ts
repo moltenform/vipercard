@@ -128,11 +128,11 @@ export class UI512CompModalDialog extends UI512CompBase {
         fld.set('multiline', false);
         fld.set('labelwrap', false);
         fld.setDimensions(x + dims[0], y + dims[1], w, h);
-        fld.setftxt(FormattedText.newFromUnformatted(this.providedText));
+        fld.setFmTxt(FormattedText.newFromUnformatted(this.providedText));
 
         /* select all */
         fld.set('selcaret', 0);
-        fld.set('selend', fld.get_ftxt().len());
+        fld.set('selend', fld.getFmTxt().len());
 
         /* without this adjustment, the text appears too high. */
         /* the real fix is to have vertically-aligned text, but since the product doesn't support */
@@ -201,7 +201,7 @@ export class UI512CompModalDialog extends UI512CompBase {
             pr.setCurrentFocus(savedFocus);
             let grp = app.getGroup(this.grpId);
             let inputfld = grp.findEl(this.getElId(`inputfld`)) as UI512ElTextField;
-            this.resultText = inputfld ? inputfld.get_ftxt().toUnformatted() : undefined;
+            this.resultText = inputfld ? inputfld.getFmTxt().toUnformatted() : undefined;
             this.destroy(pr, app);
             fnGetResult(nChosen);
             UI512CursorAccess.setCursor(savedCursor);
@@ -209,7 +209,7 @@ export class UI512CompModalDialog extends UI512CompBase {
 
         /* redirect events */
         let eventRedirect = new TemporarilyRedirectForModal(whenComplete);
-        pr.tmpIgnore = eventRedirect;
+        pr.tmpSuspend = eventRedirect;
         eventRedirect.saveInteraction(app, this.grpId);
         eventRedirect.start(pr);
         addDefaultListeners(pr.listeners);

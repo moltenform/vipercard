@@ -133,6 +133,7 @@ export class UI512ElGroup {
             checkThrowUI512(!grp.findEl(elemIn.id), `2x|dup ${elemIn.id} found in grp ${grp.id}`);
         }
 
+        /* for convenience, copy our observer onto the new element */
         if (elemIn.observer === elementObserverDefault) {
             elemIn.observer = this.observer;
         }
@@ -141,15 +142,15 @@ export class UI512ElGroup {
             /* if we are adding "elemC##test" and elToAddAfter=="elemC", and
             already existing are "elemA", "elemB", "elemC", "elemC##1", "elemC##2", "elemD"
             we want the order to be "elemA", "elemB", "elemC", "elemC##1", "elemC##2", "elemC##test", "elemD"
-            validated in test_utils_addElementAfter */
+            validated in testAddElementAfter */
             let index = this.elements.getIndex(elToAddAfter);
             let first = this.elements.atIndex(index);
             if (first) {
-                let firstid = first.id;
+                let firstId = first.id;
                 while (true) {
                     index += 1;
                     let cur = this.elements.atIndex(index);
-                    if (!cur || !cur.id.startsWith(firstid + '##')) {
+                    if (!cur || !cur.id.startsWith(firstId + '##')) {
                         break;
                     }
                 }

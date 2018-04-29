@@ -77,7 +77,7 @@ export class VpcScriptMessage {
     constructor(public targetId: string, handler: VpcBuiltinMsg, msgName?: string) {
         /* parse the message name to see if it is a built-in like mouseUp */
         if (msgName) {
-            assertEq(VpcBuiltinMsg.__custom, handler, '4j|');
+            assertEq(VpcBuiltinMsg.__Custom, handler, '4j|');
             this.msg = handler;
             this.msgName = msgName;
         } else {

@@ -28,10 +28,10 @@ export class VpcAudio {
     static preload(key: string) {
         if (!VpcAudio.isLoaded[key]) {
             let span = window.document.createElement('span');
-            span.setAttribute('id', 'vpc_audio_span_' + key);
+            span.setAttribute('id', 'vpcaudiospan' + key);
             let url = VpcAudio.urlFromKey(key);
 
-            span.innerHTML = `<audio class="notvisible" preload="auto" volume="0.2" id="vpc_audio_${key}">
+            span.innerHTML = `<audio class="notvisible" preload="auto" volume="0.2" id="vpcaudiohtmlel${key}">
             <source src="${url}" type="audio/mpeg" autoplay="0" autostart="0" volume="0.2" preload="auto"></audio>`;
             window.document.body.appendChild(span);
             VpcAudio.isLoaded[key] = true;
@@ -44,7 +44,7 @@ export class VpcAudio {
      * will interrupt a sound that is currently playing
      */
     static play(key: string) {
-        let aud = window.document.getElementById('vpc_audio_' + key) as HTMLAudioElement;
+        let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
         if (aud) {
             aud.currentTime = 0;
             UI512BeginAsyncIgnoreFailures(() => aud.play());
@@ -58,7 +58,7 @@ export class VpcAudio {
      * play system beep sound
      */
     static beep() {
-        let aud = window.document.getElementById('vpc_initial_audio') as HTMLAudioElement;
+        let aud = window.document.getElementById('vpcinitialaudio') as HTMLAudioElement;
         if (aud) {
             aud.currentTime = 0;
             UI512BeginAsyncIgnoreFailures(() => aud.play());
