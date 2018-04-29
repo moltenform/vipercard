@@ -87,7 +87,7 @@ export class UI512TestBase {
                 };
 
                 let beginTest = () => UI512TestBase.runAsyncThenCallback(listTests[index] as any, runNextTest);
-                UI512BeginAsync(beginTest);
+                UI512BeginAsync(beginTest, undefined, true);
             } else {
                 listTests[index]();
 
