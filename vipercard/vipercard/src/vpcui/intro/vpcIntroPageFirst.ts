@@ -36,8 +36,10 @@ export class IntroPageFirst extends IntroPageBase {
         const btnHeight = 24;
         const btnMargin = 22;
         const increaseHForLargerBtn = 10;
-        const increaseYForLargerBtn = 2;
-        const adjustYCentered = 1;
+
+        /* set button positions manually, using an even grid doesn't */
+        /* look right since the default button is slightly taller than the rest. */
+        const btnY = [78, 118, 170, 214]
 
         /* draw group and window decoration */
         let grp = app.getGroup(this.grpId);
@@ -62,7 +64,7 @@ export class IntroPageFirst extends IntroPageBase {
         const btnLabels = ['lngOpen stack...', 'lngShow featured stacks...', 'lngNew stack', 'lngAbout...', ''];
         let layout = new GridLayout(
             btnX,
-            centeredY + adjustYCentered,
+            centeredY,
             btnWidth,
             btnHeight,
             Util512.range(1) /* cols */,
@@ -72,16 +74,16 @@ export class IntroPageFirst extends IntroPageBase {
         );
 
         /* create the initial buttons */
-        layout.combinations((n, a, b, bnds) => {
-            let id = 'choice' + Util512.capitalizeFirst(btnKeywords[b]);
+        layout.combinations((n, nCol, nRow, bnds) => {
+            let id = 'choice' + Util512.capitalizeFirst(btnKeywords[nRow]);
             let el = this.genBtn(app, grp, id);
-            el.setDimensions(bnds[0], bnds[1], bnds[2], bnds[3]);
-            el.set('style', btnKeywords[b] === 'showFeatured' ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
-            el.set('labeltext', lng(btnLabels[b]));
-            if (btnKeywords[b] === 'showFeatured') {
-                el.setDimensions(el.x, el.y - increaseYForLargerBtn, el.w, el.h + increaseHForLargerBtn);
-            } else if (btnKeywords[b] === 'showAbout') {
-                el.setDimensions(el.x, el.y + increaseYForLargerBtn, el.w, el.h);
+            el.setDimensions(bnds[0], this.y + btnY[nRow], bnds[2], bnds[3]);
+            el.set('style', btnKeywords[nRow] === 'showFeatured' ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
+            el.set('labeltext', lng(btnLabels[nRow]));
+            if (btnKeywords[nRow] === 'showFeatured') {
+                el.setDimensions(el.x, el.y, el.w, el.h + increaseHForLargerBtn);
+            } else if (btnKeywords[nRow] === 'showAbout') {
+                el.setDimensions(el.x, el.y, el.w, el.h);
             }
         });
 
