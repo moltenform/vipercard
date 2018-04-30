@@ -13,6 +13,10 @@
 
 - (there should now be a directory ./node_modules)
 
+- copy tsconfig.debug.json to tsconfig.json
+
+- copy src/config.debug.ts to src/config.ts
+
 - run the typescript compiler, by running ./node_modules/.bin/tsc
 
 - (there should now be a directory ./build)
@@ -31,7 +35,9 @@
 
 - do the following:
 
-    - select the release version of config.js, tsconfig.json, and index.html
+    - copy tsconfig.release.json to tsconfig.json
+    
+    - copy src/config.release.ts to src/config.ts
     
     - tools/replace_module_level_this.py can be used to eliminate "module level this" in the typescript-emitted code
     

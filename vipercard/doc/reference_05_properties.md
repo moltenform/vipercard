@@ -269,6 +269,21 @@ put the name of cd btn "myBtn" into z
 
 
 
+## owner
+
+Gets the name of the parent of the button (a card or background).
+
+
+Examples:
+
+```
+put the owner of cd btn "myBtn" into z
+```
+
+
+
+
+
 ## rect
 
 
@@ -571,6 +586,21 @@ Examples:
 
 ```
 put the name of card id 1011 into z
+```
+
+
+
+
+
+## owner
+
+Gets the name of the parent of the card (its background).
+
+
+Examples:
+
+```
+put the owner of card id 1011 into z
 ```
 
 
@@ -882,6 +912,21 @@ Examples:
 
 ```
 put the name of cd fld "myFld" into z
+```
+
+
+
+
+
+## owner
+
+Gets the name of the parent of the field (a card or background).
+
+
+Examples:
+
+```
+put the owner of cd fld "myFld" into z
 ```
 
 

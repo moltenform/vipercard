@@ -677,6 +677,7 @@ General tips
 -   Double-click the eraser tool to clear paint on the current card
 -   Use the message box (from the Go menu, choose Message Box) to quickly try running code
 -   If your script is caught in an infinite loop, click the Stop button (black rectangle) to stop the script
+-   See more error details, when in the Script Editor, by clicking on the error excerpt
 
 Keyboard shortcuts when editing text,
 
@@ -708,6 +709,23 @@ Some of the main differences between ViperCard and HyperCard:
 -  you can export stacks as a modern json format
 -  art-stamps feature for adding clip art
 -  new animation features like save-to-gif
+-  in ViperCard you have to hit Save to save changes (regretably)
+-  in ViperCard you have an extensive undo history and can even undo changes made by a script
+
+Scripting differences between ViperCard and HyperCard:
+- You can write `exit to ViperCard` instead of `exit to HyperCard`
+- You must specify `cd` or `bg` when referring to a button or field
+- No one-line `if x>3 then answer x` if statements
+- Currently: message chain for key events is different, on afterkeydown to indicate cannot prevent default action.
+- Currently: wait until the mouseclick is not supported
+- Scripts only run when browse tool is active; you can exit an infinite loop by changing the tool
+- while globals that aren't set default to "", variables that aren't set get a runtime error if accessed
+- hilite and checkmark are separate properties
+- There are places custom function calls can't occur: as an argument to custom handler call, as an argument to repeat while, and as an argument to else if.
+- Can't have a variable named id, length, short, long, first, second
+
+Differences in specific commands/functions:
+- choose "browse" tool, not choose browse tool
 
 
 
@@ -741,15 +759,24 @@ JSGIF
     
 js-lru
     https://github.com/rsms/js-lru
-    MIT license
+    MIT License
     
 Clipboard.js
     https://github.com/zenorocha/clipboard.js/
     MIT License
     
+types-text-encoding 
+    https://www.npmjs.com/package/@types/text-encoding
+    MIT License
+    
 Bresenham easy.filter
     http://members.chello.at/easyfilter/bresenham.html
     written permission of author
+
+description of Mac OS Roman character set
+    https://en.wikipedia.org/wiki/Mac_OS_Roman
+    http://creativecommons.org/licenses/by-sa/3.0/
+    Creative Commons Attribution-ShareAlike
 
 and a small excerpt from the SciTE code editor,
 ported from C++ to TypeScript by Ben Fisher

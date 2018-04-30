@@ -28,6 +28,7 @@ answer x -- will display "1,5,3"
 answer {text} with {option1} or {option2} [or {option3}]
 
 Displays a dialog box.
+The button that is pressed (1, 2, or 3) will be assigned to the variable "it".
 
 
 Examples:
@@ -36,7 +37,6 @@ Examples:
 answer "abc" -- will display "abc"
 
 answer "are you sure?" with "OK" or "cancel" 
--- user can choose OK or cancel
 put it into whichChosen
 if whichChosen is 1 then
     answer "clicked OK"
@@ -53,6 +53,7 @@ end if
 ask {text} with {defaulttext}
 
 Displays a dialog box allowing the user to type in a response.
+The text typed will be assigned to the variable "it".
 If the user clicks Cancel, the result will be an empty string "".
 
 
@@ -488,6 +489,7 @@ For example, to play a chime sound,
 
 ```
 play "glider_1_Extra" load
+wait 4 seconds
 play "glider_1_Extra"
 ```
 

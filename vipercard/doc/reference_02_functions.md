@@ -66,7 +66,7 @@ put clickh() into x
 
 ## clickloc()
 
-In a mousedown or mouseup handler, get click coordinates.
+In a mousedown or mouseup handler, get click x,y coordinates.
 
 
 Examples:
@@ -555,13 +555,15 @@ put numberToStr(0.5) into x
 
 ## offset(needle, haystack)
 
-Note: one-based indexing.
-If needle is not found, returns 0.
+Search for a string within a string, and return the position where found.
+If not found, returns 0.
+(one-based indexing).
 
 Examples:
 
 ```
 put offset("b", "abc") into x
+-- x is now 2.
 ```
 
 

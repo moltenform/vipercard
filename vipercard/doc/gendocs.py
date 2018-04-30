@@ -7,7 +7,7 @@ import json
 import sys
 from collections import OrderedDict
 
-sys.path.append('../build')
+sys.path.append('../tools')
 from ts_exports_util import *
 
 outloc = '../vipercard/resources/docs/'
@@ -159,8 +159,6 @@ this is a generated file, changes will be lost.
     markd = ''
     markd += header + '\n'
     for se in sectionMd['entries']:
-        #~ markd += '##' + se['title'] + '\n'+ '\n'
-        #~ markd += se['body'] + '\n'+ '\n'
         body = se['body']
         body = body.replace(changeFontTitle, '## ')
         body = body.replace(changeFontBody, '')
@@ -185,7 +183,7 @@ def goMakeJsonIndexEntries(sections, sectionname):
         eventhandlers='lngEvent Handlers',
         properties='lngProperties')
     
-    print('// prettier-ignore')
+    print('/* prettier-ignore */')
     print(f"['{sectionname}', '{mapIt[sectionname]}', {theArrS}],")
 
 def go():
