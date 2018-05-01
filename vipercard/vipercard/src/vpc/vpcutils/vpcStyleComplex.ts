@@ -14,7 +14,8 @@ export class SubstringStyleComplex {
      */
     static vpcStyleToInt(list: string[]): TextFontStyling {
         let ret = TextFontStyling.Default;
-        for (let s of list) {
+        for (let i = 0, len = list.length; i < len; i++) {
+            let s = list[i];
             s = s.toLowerCase().trim();
             switch (s) {
                 case 'plain':

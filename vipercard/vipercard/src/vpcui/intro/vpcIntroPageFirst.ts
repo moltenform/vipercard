@@ -39,7 +39,7 @@ export class IntroPageFirst extends IntroPageBase {
 
         /* set button positions manually, using an even grid doesn't */
         /* look right since the default button is slightly taller than the rest. */
-        const btnY = [78, 118, 170, 214]
+        const btnY = [78, 118, 170, 214];
 
         /* draw group and window decoration */
         let grp = app.getGroup(this.grpId);

@@ -35,7 +35,8 @@ export class UI512AutoIndent {
      * in many languages you can continue a long statement to the next line with a backslash
      */
     protected lineIsContinuation(s: string) {
-        for (let cont of this.lineContinuation) {
+        for (let i = 0, len = this.lineContinuation.length; i < len; i++) {
+            let cont = this.lineContinuation[i];
             if (s.endsWith(cont) || s.endsWith(cont + '\n')) {
                 return true;
             }

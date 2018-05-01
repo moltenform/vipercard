@@ -240,8 +240,8 @@ export class VpcPresenter extends VpcPresenterInit {
         try {
             this.runtime.opts.lock(true);
             this.vci.getModel().productOpts.lock(true);
-            for (let layer of this.layers) {
-                layer.updateUI512Els();
+            for (let i = 0, len = this.layers.length; i < len; i++) {
+                this.layers[i].updateUI512Els();
             }
         } finally {
             this.runtime.opts.lock(false);

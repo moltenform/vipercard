@@ -51,7 +51,8 @@ export class BranchProcessing {
     protected finalizeBlock() {
         let topOfStack = this.stack[this.stack.length - 1];
         let references = topOfStack.relevantLines.map(ln => new VpcCodeLineReference(ln));
-        for (let line of topOfStack.relevantLines) {
+        for (let i = 0, len = topOfStack.relevantLines.length; i < len; i++) {
+            let line = topOfStack.relevantLines[i];
             line.blockInfo = references;
         }
 

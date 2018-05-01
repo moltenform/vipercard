@@ -718,14 +718,15 @@ export class OrderedHash<TValue> {
     }
 
     *iterKeys() {
-        for (let k of this.keys) {
-            yield k;
+        for (let i = 0, len = this.keys.length; i < len; i++) {
+            yield this.keys[i];
         }
     }
 
     *iter() {
-        for (let k of this.keys) {
-            yield this.vals[k];
+        for (let i = 0, len = this.keys.length; i < len; i++) {
+            let key = this.keys[i];
+            yield this.vals[key];
         }
     }
 

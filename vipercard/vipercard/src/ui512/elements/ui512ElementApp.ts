@@ -38,19 +38,15 @@ export class UI512Application implements UI512ApplicationInterface {
     /**
      * loop over groups. in z-order from background to foreground.
      */
-    *iterGrps() {
-        for (let o of this.groups.iter()) {
-            yield o;
-        }
+    iterGrps() {
+        return this.groups.iter();
     }
 
     /**
      * loop over groups. in z-order from foreground to background.
      */
-    *iterGrpsReversed() {
-        for (let o of this.groups.iterReversed()) {
-            yield o;
-        }
+    iterGrpsReversed() {
+        return this.groups.iterReversed();
     }
 
     /**

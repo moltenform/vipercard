@@ -161,8 +161,9 @@ export class MenuPositioning {
             let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
             grpItems.setVisible(true);
         } else {
-            for (let item of header.getChildren(app)) {
-                item.set('visible', false);
+            let children = header.getChildren(app);
+            for (let i = 0, len = children.length; i < len; i++) {
+                children[i].set('visible', false);
             }
         }
 
@@ -201,7 +202,8 @@ export class MenuPositioning {
     protected static getWidestString(items: UI512MenuItem[]): O<number> {
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let widest = 0;
-        for (let item of items) {
+        for (let i = 0, len = items.length; i < len; i++) {
+            let item = items[i];
             let width = drawText.measureString(item.getS('labeltext'));
             if (!width) {
                 return undefined;
@@ -226,7 +228,7 @@ export class MenuPositioning {
         MenuPositioning.createMenuHelperEls(pr.app, grpItems, menuRoot);
 
         let dropdowns: string[] = [];
-        for (let ar of st) {
+        for (let mnuDef of st) {
             let childIds: string[] = [];
             let dropdown = MenuPositioning.buildDropdnFromArray(
                 pr.app,
@@ -235,7 +237,7 @@ export class MenuPositioning {
                 menuRoot,
                 dropdowns,
                 childIds,
-                ar
+                mnuDef
             );
 
             dropdown.set('childids', childIds.join('|'));

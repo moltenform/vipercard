@@ -176,7 +176,8 @@ export abstract class VpcElBase extends UI512Settable {
      * find a child element by name
      */
     static findByName<T extends VpcElBase>(list: VpcElBase[], name: string, type: VpcElType) {
-        for (let item of list) {
+        for (let i = 0, len = list.length; i < len; i++) {
+            let item = list[i];
             if (item._name === name) {
                 if (item.getType() === type) {
                     return item as T;

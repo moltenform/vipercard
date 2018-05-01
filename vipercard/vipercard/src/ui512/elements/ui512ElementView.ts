@@ -658,10 +658,11 @@ export class UI512ViewDraw {
         );
 
         /* draw the rounded corners */
-        for (let corner of ['nw', 'ne', 'sw', 'se']) {
+        let corners = ['nw', 'ne', 'sw', 'se'];
+        for (let i = 0, len = corners.length; i < len; i++) {
             this.renderCurvedCorner(
                 canvas,
-                corner,
+                corners[i],
                 ScreenConsts.xLeftMargin,
                 ScreenConsts.yTopMargin,
                 0,

@@ -199,7 +199,8 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         if (ln !== undefined) {
             let entryTitle = entryTitles[ln];
             if (entryTitle) {
-                for (let jsonEntry of jsonData.entries) {
+                for (let i = 0, len = jsonData.entries.length; i < len; i++) {
+                    let jsonEntry = jsonData.entries[i];
                     if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
                         let txt = FormattedText.newFromSerialized(jsonEntry.body);
                         let rghtFld = grp.findEl(this.getElId('rghtFld'));

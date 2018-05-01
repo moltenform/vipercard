@@ -96,7 +96,8 @@ export class VpcAppLyrDragHandles extends VpcUILayer {
                 this.sizeHandles[0].h
             );
         } else {
-            for (let handle of this.sizeHandles) {
+            for (let i = 0, len = this.sizeHandles.length; i < len; i++) {
+                let handle = this.sizeHandles[i];
                 handle.setDimensions(-400, -400, handle.w, handle.h);
             }
         }

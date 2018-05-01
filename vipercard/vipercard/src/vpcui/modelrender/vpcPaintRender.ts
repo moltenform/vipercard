@@ -214,7 +214,8 @@ export class VpcPaintRender extends VpcUILayer {
      */
     commitImageOntoImage(incoming: CanvasWrapper[], offsetX: number, offsetY: number) {
         this.commitPaintOps((mainCanvas, painter) => {
-            for (let im of incoming) {
+            for (let i = 0, len = incoming.length; i < len; i++) {
+                let im = incoming[i];
                 mainCanvas.drawFromImage(
                     im.canvas,
                     0,

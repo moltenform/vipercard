@@ -94,16 +94,18 @@ export class ScrollbarImpl {
 
         let pieces = this.getScrollbarPieces(app, el);
         if (this.isThereSpaceToShowScrollbar(el)) {
-            for (let piece of Util512.getMapVals(pieces)) {
-                piece.set('visible', true);
+            let pieceEls = Util512.getMapVals(pieces);
+            for (let i = 0, len = pieceEls.length; i < len; i++) {
+                pieceEls[i].set('visible', true);
             }
 
             /* set positions */
             this.setPositionsImpl(el, pieces, complete);
         } else {
             /* hide everything if field dimensions are too small to show a scrollbar */
-            for (let piece of Util512.getMapVals(pieces)) {
-                piece.set('visible', false);
+            let pieceEls = Util512.getMapVals(pieces);
+            for (let i = 0, len = pieceEls.length; i < len; i++) {
+                pieceEls[i].set('visible', false);
             }
         }
     }

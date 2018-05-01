@@ -109,12 +109,13 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
         }
 
         let childCount = 0;
-        for (let arr of VpcModelTop.getChildArrays(vel)) {
+        let arrs = VpcModelTop.getChildArrays(vel);
+        for (let i = 0, len = arrs.length; i < len; i++) {
             /* I used to automatically delete the children here in this loop,
             but it is better overall to enforce that all children
             must be separately deleted before deleting a parent,
             since it is easier to implement undo */
-            childCount += arr.length;
+            childCount += arrs[i].length;
         }
 
         checkThrowEq(0, childCount, `you must delete all children before deleting this object`);

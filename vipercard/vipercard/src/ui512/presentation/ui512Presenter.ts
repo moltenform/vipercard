@@ -93,15 +93,16 @@ export abstract class UI512Presenter extends UI512PresenterBase {
 
             /* now we can modify safely */
             let stillDirty: { [key: string]: boolean } = {};
-            for (let el of els) {
-                let cmpthis = new RenderComplete();
+            for (let i = 0, len = els.length; i < len; i++) {
+                let el = els[i];
+                let cmp = new RenderComplete();
                 if (el instanceof UI512ElTextField) {
-                    new ScrollbarImpl().setPositions(this.app, grp, el, cmpthis);
+                    new ScrollbarImpl().setPositions(this.app, grp, el, cmp);
                 } else if (el instanceof UI512MenuRoot) {
-                    MenuPositioning.setMenuPositions(this.app, el, cmpthis);
+                    MenuPositioning.setMenuPositions(this.app, el, cmp);
                 }
 
-                if (!cmpthis.complete) {
+                if (!cmp.complete) {
                     stillDirty[el.id] = true;
                     cmpTotal.complete = false;
                 }

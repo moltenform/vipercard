@@ -49,10 +49,7 @@ export function respondUI512Error(e: Error, context: string) {
     } else {
         console.error(e.message);
         console.error(e.stack);
-        if (!isRelease) {
-            debugger;
-        }
-
+        breakIntoDebugger();
         window.alert(e.message);
     }
 }
@@ -131,12 +128,12 @@ export class UI512Compress {
     protected static stringEscapeNewline = '##Newline##';
     protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
     protected static reNewline = new RegExp('\n', 'g');
-    static compressString(s: string):string {
+    static compressString(s: string): string {
         let compressed = LZString.compressToUTF16(s);
         return compressed;
     }
 
-    static decompressString(s: string):string {
+    static decompressString(s: string): string {
         return LZString.decompressFromUTF16(s);
     }
 }

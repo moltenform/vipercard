@@ -88,7 +88,9 @@ export class VpcAppLyrPanels extends VpcUILayer {
             shouldBeActive = this.panels.find(selected.getType().toString()) || this.panelEmpty;
         }
 
-        for (let panel of this.panels.getVals()) {
+        let arPanels = this.panels.getVals();
+        for (let i = 0, len = arPanels.length; i < len; i++) {
+            let panel = arPanels[i];
             panel.setVisible(this.vci.UI512App(), false);
         }
 

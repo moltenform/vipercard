@@ -194,7 +194,8 @@ export class ExecuteStatement {
     protected getAllChildStrs(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): string[] {
         let ret: string[] = [];
         if (vals.vals[nm]) {
-            for (let child of vals.vals[nm]) {
+            for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
+                let child = vals.vals[nm][i];
                 checkThrow(isString(child), '7T|');
                 ret.push(child as string);
             }
@@ -211,7 +212,8 @@ export class ExecuteStatement {
     protected getAllChildVpcVals(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): VpcVal[] {
         let ret: VpcVal[] = [];
         if (vals.vals[nm]) {
-            for (let child of vals.vals[nm]) {
+            for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
+                let child = vals.vals[nm][i];
                 checkThrow(child instanceof VpcVal, '');
                 ret.push(child as VpcVal);
             }
@@ -366,7 +368,9 @@ export class ExecuteStatement {
         let argsGiven: number[] = [];
         let ar = vals.vals[nm];
         if (ar && ar.length) {
-            for (let item of ar as VpcVal[]) {
+            let arVals = ar as VpcVal[];
+            for (let i = 0, len = arVals.length; i < len; i++) {
+                let item = arVals[i];
                 assertTrue(item && item.isVpcVal, '50|every item must be a vpcval');
                 argsGiven.push(item.readAsStrictInteger());
             }
@@ -376,7 +380,8 @@ export class ExecuteStatement {
         let mods = ModifierKeys.None;
         let allIdentifiers = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let sawExpected = false;
-        for (let id of allIdentifiers) {
+        for (let i = 0, len = allIdentifiers.length; i < len; i++) {
+            let id = allIdentifiers[i];
             if (id === 'shiftkey') {
                 mods |= ModifierKeys.Shift;
             } else if (id === 'optionkey') {
@@ -556,7 +561,9 @@ export class ExecuteStatement {
         let nm = fromNickname('MAYBE_ALLOW_ARITH');
         let ar = val ? val.vals[nm] : undefined;
         if (ar && ar.length) {
-            for (let item of ar as VpcVal[]) {
+            let arVals = ar as VpcVal[];
+            for (let i = 0, len = arVals.length; i < len; i++) {
+                let item = arVals[i];
                 assertTrue(item && item.isVpcVal, '50|every item must be a vpcval');
                 strings.push(item.readAsString());
             }

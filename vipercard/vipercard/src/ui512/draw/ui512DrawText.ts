@@ -377,7 +377,8 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         let totalHeight = 0;
         let lastHeightMeasured = 0;
         let lastCapHeightMeasured = 0;
-        for (let line of lines) {
+        for (let i = 0, len = lines.length; i < len; i++) {
+            let line = lines[i];
             line.measureWidth(this.cache, measurements);
             line.measureHeight(this.cache, args.addVSpacing, lastHeightMeasured, lastCapHeightMeasured);
             totalWidth += line.width;

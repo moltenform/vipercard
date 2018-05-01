@@ -161,7 +161,8 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let currentCardId = this.vci.getOptionS('currentCardId');
         let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
         this.grp.removeAllEls();
-        for (let part of currentCard.parts) {
+        for (let i = 0, len = currentCard.parts.length; i < len; i++) {
+            let part = currentCard.parts[i];
             let partAsBtn = part as VpcElButton;
             let partAsField = part as VpcElField;
             if (partAsBtn && partAsBtn.isVpcElButton) {
@@ -175,8 +176,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
 
         this.seeIfCurrentFocusMakesSense();
 
-        for (let part of currentCard.parts) {
+        for (let i = 0, len = currentCard.parts.length; i < len; i++) {
             /* change something on an ui512el to trigger redraw */
+            let part = currentCard.parts[i];
             let target = this.findVelIdToEl(currentCard.parts[0].id);
             if (target) {
                 target.set('x', target.getN('x') + 1);
@@ -249,7 +251,8 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected buildBtnFromScratch(vpcel: VpcElButton) {
         let target = new UI512ElButton(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        for (let prop of VpcElButton.keyPropertiesList) {
+        for (let i = 0, len = VpcElButton.keyPropertiesList.length; i < len; i++) {
+            let prop = VpcElButton.keyPropertiesList[i];
             let newVal = vpcel.getGeneric(prop);
             this.applyOneChange(vpcel, prop, newVal, true);
         }
@@ -261,7 +264,8 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected buildFldFromScratch(vpcel: VpcElField) {
         let target = new UI512ElTextField(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        for (let prop of VpcElField.keyPropertiesList) {
+        for (let i = 0, len = VpcElField.keyPropertiesList.length; i < len; i++) {
+            let prop = VpcElField.keyPropertiesList[i];
             let newVal = vpcel.getGeneric(prop);
             this.applyOneChange(vpcel, prop, newVal, true);
         }

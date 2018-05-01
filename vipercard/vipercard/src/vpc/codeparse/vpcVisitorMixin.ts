@@ -471,7 +471,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             checkThrow(total.isVpcVal, `96|visit of Lvl3Expression did not result in value`);
             checkThrowEq(ctx.TokenIs.length, ctx.RuleLvl2Sub.length, '95|not equal');
 
-            for (let sub of ctx.RuleLvl2Sub) {
+            for (let i = 0, len = ctx.RuleLvl2Sub.length; i < len; i++) {
+                let sub = ctx.RuleLvl2Sub[i];
                 if (sub.children.RuleLvl2TypeCheck.length) {
                     /* type check expression "is a number" */
                     let nameOfType = this.visit(sub.children.RuleLvl2TypeCheck[0]) as string;
