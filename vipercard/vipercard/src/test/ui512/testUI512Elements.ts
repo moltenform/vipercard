@@ -1,5 +1,5 @@
 
-/* auto */ import { assertEq, Util512 } from '../../ui512/utils/utils512.js';
+/* auto */ import { Util512, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { getUI512WindowBounds } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512TestBase, assertThrows } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';

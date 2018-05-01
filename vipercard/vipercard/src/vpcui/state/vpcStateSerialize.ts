@@ -11,14 +11,21 @@
  * from a stack to a plain JSON object, and vice-versa
  */
 export class VpcStateSerialize {
+    readonly latestMajor = 3;
+    readonly latestMinor = 0;
+
     /**
      * serialize an entire project, to a plain JSON object
+     *
+     * fileformatmajor 1, not released to public
+     * fileformatmajor 2, initial March release
+     * fileformatmajor 3, supports base64
      */
     serializeAll(vci: VpcStateInterface) {
         let ret: anyJson = {};
         ret.product = 'vpc';
-        ret.fileformatmajor = 2;
-        ret.fileformatminor = 0;
+        ret.fileformatmajor = this.latestMajor;
+        ret.fileformatminor = this.latestMinor;
         ret.buildnumber = vpcversion;
         ret.uuid = vci.getModel().uuid;
         ret.elements = [];
@@ -51,9 +58,10 @@ export class VpcStateSerialize {
     deserializeAll(building: VpcStateInterface, incoming: anyJson) {
         building.doWithoutAbilityToUndo(() => {
             checkThrowEq('vpc', incoming.product, '');
-            checkThrowEq(2, incoming.fileformatmajor, 'file comes from a future version, cannot open');
+            checkThrow(incoming.fileformatmajor <= this.latestMajor, 'file comes from a future version, cannot open');
             console.log(
-                `opening a document format ${incoming.fileformatmajor}.${incoming.fileformatminor}, my version is 2.0`
+                `opening a document format ${incoming.fileformatmajor}.${incoming.fileformatminor},
+                my version is ${this.latestMajor}.${this.latestMinor}`
             );
             console.log(
                 `opening a document made by buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`

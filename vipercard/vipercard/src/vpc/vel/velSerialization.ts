@@ -1,6 +1,7 @@
 
 /* auto */ import { assertTrue, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { anyJson, isString } from '../../ui512/utils/utils512.js';
+/* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
 
@@ -21,7 +22,7 @@ export class VpcUI512Serialization {
                 assertTrue(vAsText && vAsText.isFormattedText, 'invalid ftxt');
                 ret[propName] = vAsText.toSerialized();
             } else {
-                ret[propName] = v;
+                ret[propName] = VpcUI512Serialization.serializePlain(v);
             }
         }
 
@@ -47,7 +48,7 @@ export class VpcUI512Serialization {
                             vel.setFmTxt(v as FormattedText);
                         }
                     } else {
-                        vel.set(propName, v);
+                        vel.set(propName, VpcUI512Serialization.deserializePlain(v));
                     }
                 } else {
                     assertTrueWarn(false, 'missing or null attr', propName);
@@ -81,4 +82,80 @@ export class VpcUI512Serialization {
             }
         }
     }
+
+    /**
+     * use base64 if the string contains nonprintable or nonascii chars
+     */
+    static serializePlain(v: ElementObserverVal): ElementObserverVal {
+        if (isString(v) && VpcUI512Serialization.containsNonSimpleAscii(v.toString())) {
+            return 'b64``' + VpcUI512Serialization.jsBinaryStringToUtf16Base64(v.toString());
+        } else {
+            return v;
+        }
+    }
+
+    /**
+     * decode a string encoded by serializePlain
+     */
+    static deserializePlain(v: ElementObserverVal): ElementObserverVal {
+        if (isString(v) && v.toString().startsWith('b64``')) {
+            let s = v.toString();
+            return VpcUI512Serialization.Base64Utf16ToJsBinaryString(s.substr('b64``'.length));
+        } else {
+            return v;
+        }
+    }
+
+    /**
+     * does the string contain nonprintable or nonascii chars?
+     */
+    static containsNonSimpleAscii(s: string) {
+        for (let i = 0, len = s.length; i < len; i++) {
+            let c = s.charCodeAt(i);
+            if (
+                (c < 32 && c !== specialCharNumTab && c !== specialCharNumNewline && c !== specialCharNumFontChange) ||
+                c >= 128
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * to base64
+     * btoa does not support unicode characters and so we must use
+     * an intermediate step.
+     *
+     * use utf16le instead of utf8 because it was measured to be 40% more
+     * space-efficient for dense unicode data like this.
+     */
+    static jsBinaryStringToUtf16Base64(str: string) {
+        let bytes: number[] = [];
+        for (let i = 0, len = str.length; i < len; i++) {
+            let n = str.charCodeAt(i) | 0;
+            bytes.push(n % 256);
+            bytes.push(n >> 8);
+        }
+
+        return base64js.fromByteArray(bytes);
+    }
+
+    /**
+     * decode a string encoded by jsBinaryStringToUtf16Base64
+     */
+    static Base64Utf16ToJsBinaryString(str: string) {
+        let bytes = base64js.toByteArray(str);
+        let s = '';
+        for (let i = 0, len = bytes.length; i < len; i += 2) {
+            let n = bytes[i] + (bytes[i + 1] << 8);
+            s += String.fromCharCode(n);
+        }
+
+        return s;
+    }
 }
+
+/* the 3rd party base64js library */
+declare var base64js: any;

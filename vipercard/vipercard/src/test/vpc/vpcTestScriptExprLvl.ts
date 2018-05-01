@@ -5,7 +5,7 @@
 /* auto */ import { assertThrows } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcValN } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
@@ -957,7 +957,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             /* test raw json */
             assertEq('vpc', restoredJson.product, '');
-            assertEq(2, restoredJson.fileformatmajor, '');
+            assertEq(3, restoredJson.fileformatmajor, '');
             assertEq(0, restoredJson.fileformatminor, '');
             assertEq(vpcversion, restoredJson.buildnumber, '');
             assertEq(this.vcstate.vci.getModel().uuid, restoredJson.uuid, '');

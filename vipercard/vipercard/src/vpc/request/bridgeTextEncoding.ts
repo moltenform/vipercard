@@ -46,3 +46,6 @@ declare namespace TextEncoding {
 declare var TextEncoding: TextEncoding.TextEncodingStatic;
 export const ExpTextEncoder = TextEncoder;
 export type ExpTextEncoder = TextEncoder;
+
+export const ExpTextDecoder = TextDecoder;
+export type ExpTextDecoder = TextDecoder;

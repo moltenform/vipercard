@@ -1,9 +1,8 @@
 
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
+/* auto */ import { VpcDocumentLocation } from '../../vpcui/intro/vpcIntroProvider.js';
 /* auto */ import { IntroPageFirst } from '../../vpcui/intro/vpcIntroPageFirst.js';
-import { assertEq } from '../../ui512/utils/utils512.js';
-import { throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-import { VpcDocumentLocation } from '../../vpcui/intro/vpcIntroProvider.js';
 
 /**
  * tests related to the intro provider, for loading ViperCard documents

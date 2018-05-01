@@ -592,9 +592,13 @@ js-lru
     MIT License
     
 Clipboard.js
-    https://github.com/zenorocha/clipboard.js/
+    https://github.com/zenorocha/clipboard.js
     MIT License
     
+base64js
+    https://github.com/beatgammit/base64-js
+    MIT License
+
 types-text-encoding 
     https://www.npmjs.com/package/@types/text-encoding
     MIT License
