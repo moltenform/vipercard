@@ -304,6 +304,7 @@ alsoReservedWordsList[cAltProductName.toLowerCase()] = true;
 Object.freeze(alsoReservedWordsList);
 
 /* generated code, any changes past this point will be lost: --------------- */
+
 class TokenTkcomment extends ChvToken {
     static PATTERN = /--[^\n]*/;
     static GROUP = ChvLexer.SKIPPED;
@@ -594,3 +595,5 @@ export const partialReservedWordsList: { [key: string]: boolean } = {
 };
 
 Object.freeze(partialReservedWordsList);
+
+/* generated code, any changes above this point will be lost: --------------- */

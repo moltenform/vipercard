@@ -1141,4 +1141,6 @@ export class VpcChvParser extends ChvParser {
             }
         });
     });
+
+    /* generated code, any changes above this point will be lost: --------------- */
 }

@@ -177,6 +177,8 @@ export interface VisitingContext {
     TokenTkidentifier: ChvIToken[];
 }
 
+/* generated code, any changes above this point will be lost: --------------- */
+
 interface VisitingContextWithin {
     name: string;
     children: VisitingContext;

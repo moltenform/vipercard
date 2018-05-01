@@ -199,54 +199,54 @@ let mTests: (string | Function)[] = [
     },
     'serializePlain with nonascii characters',
     () => {
-        let txt = FormattedText.newFromUnformatted('abc')
-        txt.setFontEverywhere('f1')
-        let sAllAscii = 'abc'
-        let sWithTab = 'abc\t'
-        let sWithGreater = 'abc\u3667'
-        let sWithSmaller = 'abc\x00'
-        let sWithNewline = 'abc\n'
-        let sWithSerialized = txt.toSerialized()
-        assertTrue(scontains(sWithSerialized, specialCharFontChange), '')
-        let sAllAsciiSer = VpcUI512Serialization.serializePlain(sAllAscii)
-        let sWithTabSer = VpcUI512Serialization.serializePlain(sWithTab)
-        let sWithGreaterSer = VpcUI512Serialization.serializePlain(sWithGreater)
-        let sWithSmallerSer = VpcUI512Serialization.serializePlain(sWithSmaller)
-        let sWithNewlineSer = VpcUI512Serialization.serializePlain(sWithNewline)
-        let sWithSerializedSer = VpcUI512Serialization.serializePlain(sWithSerialized)
-        assertTrue(!scontains(sAllAsciiSer.toString(), 'b64'), '')
-        assertTrue(!scontains(sWithTabSer.toString(), 'b64'), '')
-        assertTrue(scontains(sWithGreaterSer.toString(), 'b64'), '')
-        assertTrue(scontains(sWithSmallerSer.toString(), 'b64'), '')
-        assertTrue(!scontains(sWithNewlineSer.toString(), 'b64'), '')
-        assertTrue(!scontains(sWithSerializedSer.toString(), 'b64'), '')
-        assertEq(sAllAscii, VpcUI512Serialization.deserializePlain(sAllAsciiSer), '')
-        assertEq(sWithTab, VpcUI512Serialization.deserializePlain(sWithTabSer), '')
-        assertEq(sWithGreater, VpcUI512Serialization.deserializePlain(sWithGreaterSer), '')
-        assertEq(sWithSmaller, VpcUI512Serialization.deserializePlain(sWithSmallerSer), '')
-        assertEq(sWithNewline, VpcUI512Serialization.deserializePlain(sWithNewlineSer), '')
-        assertEq(sWithSerialized, VpcUI512Serialization.deserializePlain(sWithSerializedSer), '')
+        let txt = FormattedText.newFromUnformatted('abc');
+        txt.setFontEverywhere('f1');
+        let sAllAscii = 'abc';
+        let sWithTab = 'abc\t';
+        let sWithGreater = 'abc\u3667';
+        let sWithSmaller = 'abc\x00';
+        let sWithNewline = 'abc\n';
+        let sWithSerialized = txt.toSerialized();
+        assertTrue(scontains(sWithSerialized, specialCharFontChange), '');
+        let sAllAsciiSer = VpcUI512Serialization.serializePlain(sAllAscii);
+        let sWithTabSer = VpcUI512Serialization.serializePlain(sWithTab);
+        let sWithGreaterSer = VpcUI512Serialization.serializePlain(sWithGreater);
+        let sWithSmallerSer = VpcUI512Serialization.serializePlain(sWithSmaller);
+        let sWithNewlineSer = VpcUI512Serialization.serializePlain(sWithNewline);
+        let sWithSerializedSer = VpcUI512Serialization.serializePlain(sWithSerialized);
+        assertTrue(!scontains(sAllAsciiSer.toString(), 'b64'), '');
+        assertTrue(!scontains(sWithTabSer.toString(), 'b64'), '');
+        assertTrue(scontains(sWithGreaterSer.toString(), 'b64'), '');
+        assertTrue(scontains(sWithSmallerSer.toString(), 'b64'), '');
+        assertTrue(!scontains(sWithNewlineSer.toString(), 'b64'), '');
+        assertTrue(!scontains(sWithSerializedSer.toString(), 'b64'), '');
+        assertEq(sAllAscii, VpcUI512Serialization.deserializePlain(sAllAsciiSer), '');
+        assertEq(sWithTab, VpcUI512Serialization.deserializePlain(sWithTabSer), '');
+        assertEq(sWithGreater, VpcUI512Serialization.deserializePlain(sWithGreaterSer), '');
+        assertEq(sWithSmaller, VpcUI512Serialization.deserializePlain(sWithSmallerSer), '');
+        assertEq(sWithNewline, VpcUI512Serialization.deserializePlain(sWithNewlineSer), '');
+        assertEq(sWithSerialized, VpcUI512Serialization.deserializePlain(sWithSerializedSer), '');
     },
     'testSerializeGettable with nonascii characters',
     () => {
         let vel = new VpcElField('id1', 'parentid1');
         vel.observer = new ElementObserverNoOp();
-        let sBinX01 = 'def\x01binary'
-        let sBinXbb = 'ghi\xbbnonascii'
-        let sBinMany = 'u\u2667c\u3667c\u4667c\u5667c\ud667c\ue667c\uf667c\u0301d\u00e9e\u0065'
+        let sBinX01 = 'def\x01binary';
+        let sBinXbb = 'ghi\xbbnonascii';
+        let sBinMany = 'u\u2667c\u3667c\u4667c\u5667c\ud667c\ue667c\uf667c\u0301d\u00e9e\u0065';
         vel.set('script', sBinX01);
         vel.set('textalign', sBinXbb);
         vel.set('name', sBinMany);
-        assertTrue(scontains(vel.getS('script'), '\x01'), '')
-        assertTrue(scontains(vel.getS('textalign'), '\xbb'), '')
+        assertTrue(scontains(vel.getS('script'), '\x01'), '');
+        assertTrue(scontains(vel.getS('textalign'), '\xbb'), '');
         let serialized = VpcUI512Serialization.serializeGettable(vel, vel.getKeyPropertiesList());
-        assertTrue(scontains(serialized['script'].toString(), 'b64'), '')
-        assertTrue(scontains(serialized['textalign'].toString(), 'b64'), '')
-        assertTrue(!scontains(serialized['script'].toString(), '\x01'), '')
-        assertTrue(!scontains(serialized['textalign'].toString(), '\xbb'), '')
+        assertTrue(scontains(serialized['script'].toString(), 'b64'), '');
+        assertTrue(scontains(serialized['textalign'].toString(), 'b64'), '');
+        assertTrue(!scontains(serialized['script'].toString(), '\x01'), '');
+        assertTrue(!scontains(serialized['textalign'].toString(), '\xbb'), '');
         let s = JSON.stringify(serialized);
-        assertTrue(!scontains(s, '\x01'), '')
-        assertTrue(!scontains(s, '\xbb'), '')
+        assertTrue(!scontains(s, '\x01'), '');
+        assertTrue(!scontains(s, '\xbb'), '');
 
         let restoredJson = JSON.parse(s);
         let restored = new VpcElField('id1', 'parentid1');
