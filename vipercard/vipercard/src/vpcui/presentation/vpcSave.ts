@@ -251,10 +251,12 @@ export class VpcSave implements VpcSaveInterface {
      * export to gif
      */
     beginExportGif() {
-        this.pr.askMsg('Animation speed (1-10, where 10 is fastest):', '5', (typed, btnPressed) => {
-            let speed = parseFloat(typed === undefined ? '' : typed);
-            speed = Number.isFinite(speed) ? speed : -1;
-            this.pr.lyrPaintRender.paintExportToGif(this.pr, speed);
+        this.pr.askMsg('Animation speed (1-10, where 10 is fastest):', '4', (typed, btnPressed) => {
+            if (btnPressed === 0) {
+                let speed = parseFloat(typed === undefined ? '' : typed);
+                speed = Number.isFinite(speed) ? speed : -1;
+                this.pr.lyrPaintRender.paintExportToGif(this.pr, speed);
+            }
         });
     }
 

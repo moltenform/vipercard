@@ -260,7 +260,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         this.vci.setTool(this.rememberedTool);
 
         if (scriptErr && scriptErr.details && scontains(scriptErr.details, VpcNonModalReplBox.markIntentionalErr)) {
-            let vGot = this.vci.getCodeExec().globals.find(' g_msgreplboxcontents');
+            let vGot = this.vci.getCodeExec().globals.find('g_msgreplboxcontents');
             this.appendToOutput(vGot ? vGot.readAsString().trim() : 'Unknown (not set)', true);
         } else if (scriptErr) {
             this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);

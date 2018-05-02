@@ -24,7 +24,7 @@ export class VpcEditPanelsStack extends VpcEditPanelsBase {
      * you should refer to a stack as 'this stack' rather than by name or id
      */
     fillInValuesTip(app: UI512Application, vel: VpcElBase) {
-        let txt = lng('lngRefer to this element in a script as\nthis stack');
+        let txt = lng('lngRefer to the current stack in a script as\nthis stack');
         txt = UI512DrawText.setFont(txt, new TextFontSpec('monaco', 0, 9).toSpecString());
         this.lblNamingTip.set('labeltext', txt);
     }
