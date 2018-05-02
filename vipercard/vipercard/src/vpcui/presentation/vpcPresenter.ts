@@ -268,13 +268,15 @@ export class VpcPresenter extends VpcPresenterInit {
         /* set flags saying we don't need to render again -- even if render() fails.
         so we don't get stuck in any annoying assert loops.
         (otherwise if something in updateUI512ElsAllLayers failed,
-        needUIToolsRedraw would never get set, and we'd hit the failure repeatedly)
-        a try/catch would also work, but is slow in some js engines */
-        this.lyrModelRender.needUIToolsRedraw = false;
-        this.lyrModelRender.needFullRedraw = false;
-        if (shouldUpdate) {
-            this.updateUI512ElsAllLayers();
-            this.refreshCursor();
+        needUIToolsRedraw would never get set, and we'd hit the failure repeatedly) */
+        try {
+            if (shouldUpdate) {
+                this.updateUI512ElsAllLayers();
+                this.refreshCursor();
+            }
+        } finally {
+            this.lyrModelRender.needUIToolsRedraw = false;
+            this.lyrModelRender.needFullRedraw = false;
         }
 
         super.render(canvas, ms, cmpTotal);
@@ -534,12 +536,11 @@ export class VpcPresenter extends VpcPresenterInit {
                 this.runUndoOrRedo(() => this.vci.performUndo(), 'lngNothing to undo.', true);
             } else if (s === 'mnuRedo') {
                 this.runUndoOrRedo(() => this.vci.performRedo(), 'lngNothing to redo.', false);
+            } else if (s === 'mnuClear') {
+                this.vci.undoableAction(() => this.performMenuActionImpl(s));
             } else {
-                if (s !== 'mnuClear') {
-                    let tl = this.getToolResponse(this.getTool());
-                    tl.cancelCurrentToolAction();
-                }
-
+                let tl = this.getToolResponse(this.getTool());
+                tl.cancelCurrentToolAction();
                 this.vci.undoableAction(() => this.performMenuActionImpl(s));
             }
         } catch (e) {
