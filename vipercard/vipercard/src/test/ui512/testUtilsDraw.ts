@@ -257,117 +257,117 @@ let mTests: (string | Function)[] = [
     },
     'testUtilsDrawGetSubRectRaw.EnoughSpace',
     () => {
-        assertEq([105, 206, 290, 388], RectUtils.getSubRectRaw(100, 200, 300, 400, 5, 6), '');
-        assertEq([110, 211, 280, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 11), '');
-        assertEq([249, 211, 2, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 11), '');
-        assertEq([249, 399, 2, 2], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 199), '');
+        assertEq([105, 206, 290, 388], RectUtils.getSubRectRaw(100, 200, 300, 400, 5, 6), 'DC|');
+        assertEq([110, 211, 280, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 11), 'DB|');
+        assertEq([249, 211, 2, 378], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 11), 'DA|');
+        assertEq([249, 399, 2, 2], RectUtils.getSubRectRaw(100, 200, 300, 400, 149, 199), 'D9|');
     },
     'testUtilsDrawGetSubRectRaw.NotEnoughSpace',
     () => {
-        assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 11), '');
-        assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 200), '');
-        assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 200), '');
+        assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 11), 'D8|');
+        assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 200), 'D7|');
+        assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 200), 'D6|');
     },
     'testUtilsTranslateModifiers',
     () => {
         let shift: number = ModifierKeys.Shift;
         let cmd: number = ModifierKeys.Cmd;
         let opt: number = ModifierKeys.Opt;
-        assertEq(0, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, false, false), '');
-        assertEq(shift, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, false, false), '');
-        assertEq(shift + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, true, false), '');
-        assertEq(shift + cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, true, true, false), '');
-        assertEq(cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, false, true, false), '');
-        assertEq(opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, true, false), '');
+        assertEq(0, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, false, false), 'D5|');
+        assertEq(shift, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, false, false), 'D4|');
+        assertEq(shift + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, true, true, false), 'D3|');
+        assertEq(shift + cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, true, true, false), 'D2|');
+        assertEq(cmd + opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, true, false, true, false), 'D1|');
+        assertEq(opt, ui512TranslateModifiers(BrowserOSInfo.Unknown, false, false, true, false), 'D0|');
     },
     'testUtilsToShortcutString.TypicalShortcut',
     () => {
         let shift: number = ModifierKeys.Shift;
         let cmd: number = ModifierKeys.Cmd;
         let opt: number = ModifierKeys.Opt;
-        assertEq('a', toShortcutString(ModifierKeys.None, 'a'), '');
-        assertEq('Shift+a', toShortcutString(shift, 'a'), '');
-        assertEq('Opt+Shift+a', toShortcutString(shift + opt, 'a'), '');
-        assertEq('Cmd+Opt+Shift+a', toShortcutString(shift + cmd + opt, 'a'), '');
-        assertEq('Cmd+Opt+a', toShortcutString(cmd + opt, 'a'), '');
-        assertEq('Opt+a', toShortcutString(opt, 'a'), '');
+        assertEq('a', toShortcutString(ModifierKeys.None, 'a'), 'C~|');
+        assertEq('Shift+a', toShortcutString(shift, 'a'), 'C}|');
+        assertEq('Opt+Shift+a', toShortcutString(shift + opt, 'a'), 'C||');
+        assertEq('Cmd+Opt+Shift+a', toShortcutString(shift + cmd + opt, 'a'), 'C{|');
+        assertEq('Cmd+Opt+a', toShortcutString(cmd + opt, 'a'), 'C`|');
+        assertEq('Opt+a', toShortcutString(opt, 'a'), 'C_|');
     },
     'testUtilsToShortcutString.TruncateKey',
     () => {
         let shift: number = ModifierKeys.Shift;
         let cmd: number = ModifierKeys.Cmd;
         let opt: number = ModifierKeys.Opt;
-        assertEq('Cmd+A', toShortcutString(cmd, 'KeyA'), '');
-        assertEq('Cmd+Keya', toShortcutString(cmd, 'Keya'), '');
-        assertEq('Cmd+A', toShortcutString(cmd, 'keyA'), '');
-        assertEq('Cmd+keya', toShortcutString(cmd, 'keya'), '');
-        assertEq('Cmd+Z', toShortcutString(cmd, 'keyZ'), '');
-        assertEq('Cmd+keyz', toShortcutString(cmd, 'keyz'), '');
-        assertEq('Cmd+Key ', toShortcutString(cmd, 'Key '), '');
-        assertEq('Cmd+Key@', toShortcutString(cmd, 'Key@'), '');
-        assertEq('Cmd+Key', toShortcutString(cmd, 'Key'), '');
-        assertEq('Cmd+KeyAA', toShortcutString(cmd, 'KeyAA'), '');
+        assertEq('Cmd+A', toShortcutString(cmd, 'KeyA'), 'C^|');
+        assertEq('Cmd+Keya', toShortcutString(cmd, 'Keya'), 'C]|');
+        assertEq('Cmd+A', toShortcutString(cmd, 'keyA'), 'C[|');
+        assertEq('Cmd+keya', toShortcutString(cmd, 'keya'), 'C@|');
+        assertEq('Cmd+Z', toShortcutString(cmd, 'keyZ'), 'C?|');
+        assertEq('Cmd+keyz', toShortcutString(cmd, 'keyz'), 'C>|');
+        assertEq('Cmd+Key ', toShortcutString(cmd, 'Key '), 'C=|');
+        assertEq('Cmd+Key@', toShortcutString(cmd, 'Key@'), 'C<|');
+        assertEq('Cmd+Key', toShortcutString(cmd, 'Key'), 'C;|');
+        assertEq('Cmd+KeyAA', toShortcutString(cmd, 'KeyAA'), 'C:|');
     },
     'testUtilsToShortcutString.TruncateDigit',
     () => {
         let shift: number = ModifierKeys.Shift;
         let cmd: number = ModifierKeys.Cmd;
         let opt: number = ModifierKeys.Opt;
-        assertEq('Cmd+1', toShortcutString(cmd, 'Digit1'), '');
-        assertEq('Cmd+1', toShortcutString(cmd, 'digit1'), '');
-        assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), '');
-        assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), '');
-        assertEq('Cmd+Digit ', toShortcutString(cmd, 'Digit '), '');
-        assertEq('Cmd+Digit@', toShortcutString(cmd, 'Digit@'), '');
-        assertEq('Cmd+Digit', toShortcutString(cmd, 'Digit'), '');
-        assertEq('Cmd+Digit11', toShortcutString(cmd, 'Digit11'), '');
+        assertEq('Cmd+1', toShortcutString(cmd, 'Digit1'), 'C/|');
+        assertEq('Cmd+1', toShortcutString(cmd, 'digit1'), 'C.|');
+        assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), 'C-|');
+        assertEq('Cmd+9', toShortcutString(cmd, 'digit9'), 'C,|');
+        assertEq('Cmd+Digit ', toShortcutString(cmd, 'Digit '), 'C+|');
+        assertEq('Cmd+Digit@', toShortcutString(cmd, 'Digit@'), 'C*|');
+        assertEq('Cmd+Digit', toShortcutString(cmd, 'Digit'), 'C)|');
+        assertEq('Cmd+Digit11', toShortcutString(cmd, 'Digit11'), 'C(|');
     },
     'testUtilsTranslateModifiers.Windows',
     () => {
-        assertEq(ModifierKeys.None, ui512TranslateModifiers(BrowserOSInfo.Windows, false, false, false, false), '');
-        assertEq(ModifierKeys.Shift, ui512TranslateModifiers(BrowserOSInfo.Windows, false, true, false, false), '');
-        assertEq(ModifierKeys.Opt, ui512TranslateModifiers(BrowserOSInfo.Windows, false, false, true, false), '');
+        assertEq(ModifierKeys.None, ui512TranslateModifiers(BrowserOSInfo.Windows, false, false, false, false), 'C&|');
+        assertEq(ModifierKeys.Shift, ui512TranslateModifiers(BrowserOSInfo.Windows, false, true, false, false), 'C%|');
+        assertEq(ModifierKeys.Opt, ui512TranslateModifiers(BrowserOSInfo.Windows, false, false, true, false), 'C$|');
         assertEq(
             ModifierKeys.Shift | ModifierKeys.Cmd | ModifierKeys.Opt,
             ui512TranslateModifiers(BrowserOSInfo.Windows, true, true, true, true),
-            ''
+            'C#|'
         );
         assertEq(
             ModifierKeys.Shift | ModifierKeys.Opt,
             ui512TranslateModifiers(BrowserOSInfo.Windows, false, true, true, true),
-            ''
+            'C!|'
         );
     },
     'testUtilsTranslateModifiers.Linux',
     () => {
-        assertEq(ModifierKeys.None, ui512TranslateModifiers(BrowserOSInfo.Linux, false, false, false, false), '');
-        assertEq(ModifierKeys.Shift, ui512TranslateModifiers(BrowserOSInfo.Linux, false, true, false, false), '');
-        assertEq(ModifierKeys.Opt, ui512TranslateModifiers(BrowserOSInfo.Linux, false, false, true, false), '');
+        assertEq(ModifierKeys.None, ui512TranslateModifiers(BrowserOSInfo.Linux, false, false, false, false), 'C |');
+        assertEq(ModifierKeys.Shift, ui512TranslateModifiers(BrowserOSInfo.Linux, false, true, false, false), 'Cz|');
+        assertEq(ModifierKeys.Opt, ui512TranslateModifiers(BrowserOSInfo.Linux, false, false, true, false), 'Cy|');
         assertEq(
             ModifierKeys.Shift | ModifierKeys.Cmd | ModifierKeys.Opt,
             ui512TranslateModifiers(BrowserOSInfo.Linux, true, true, true, true),
-            ''
+            'Cx|'
         );
         assertEq(
             ModifierKeys.Shift | ModifierKeys.Opt,
             ui512TranslateModifiers(BrowserOSInfo.Linux, false, true, true, true),
-            ''
+            'Cw|'
         );
     },
     'testUtilsTranslateModifiers.Mac',
     () => {
-        assertEq(ModifierKeys.None, ui512TranslateModifiers(BrowserOSInfo.Mac, false, false, false, false), '');
-        assertEq(ModifierKeys.Shift, ui512TranslateModifiers(BrowserOSInfo.Mac, false, true, false, false), '');
-        assertEq(ModifierKeys.Opt, ui512TranslateModifiers(BrowserOSInfo.Mac, false, false, true, false), '');
+        assertEq(ModifierKeys.None, ui512TranslateModifiers(BrowserOSInfo.Mac, false, false, false, false), 'Cv|');
+        assertEq(ModifierKeys.Shift, ui512TranslateModifiers(BrowserOSInfo.Mac, false, true, false, false), 'Cu|');
+        assertEq(ModifierKeys.Opt, ui512TranslateModifiers(BrowserOSInfo.Mac, false, false, true, false), 'Ct|');
         assertEq(
             ModifierKeys.Shift | ModifierKeys.Cmd | ModifierKeys.Opt,
             ui512TranslateModifiers(BrowserOSInfo.Mac, true, true, true, true),
-            ''
+            'Cs|'
         );
         assertEq(
             ModifierKeys.Shift | ModifierKeys.Cmd | ModifierKeys.Opt,
             ui512TranslateModifiers(BrowserOSInfo.Mac, false, true, true, true),
-            ''
+            'Cr|'
         );
     }
 ];

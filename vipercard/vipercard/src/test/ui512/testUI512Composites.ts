@@ -183,7 +183,7 @@ end1`.replace(/\r\n/g, '\n')
 
         pr.useOSClipboard = false;
         let clipManager = pr.clipManager as ClipManager;
-        assertTrue(clipManager.isClipManager, '');
+        assertTrue(clipManager.isClipManager, '9p|');
         clipManager.simClipboard = '';
         this.simulateKey(pr, 'C', 'c', false, true);
         assertEq('\n', clipManager.simClipboard, '1R|');

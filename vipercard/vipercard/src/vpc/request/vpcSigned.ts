@@ -177,18 +177,18 @@ export async function pbkdf2(
         iterations = 1e6;
     }
 
-    assertTrue(iterations >= 1e6, 'not enough iterations');
+    assertTrue(iterations >= 1e6, 'Jr|not enough iterations');
     let saltUint8 = new Uint8Array(16);
     if (saltB64) {
         let decoded = atob(saltB64);
-        assertEq(saltUint8.length, decoded.length, '');
+        assertEq(saltUint8.length, decoded.length, 'Jq|');
         for (let i = 0; i < saltUint8.length; i++) {
             saltUint8[i] = decoded.charCodeAt(i);
         }
     } else {
         /* get random salt */
         let saltOrNull = crypto.getRandomValues(new Uint8Array(16));
-        checkThrow(saltOrNull, 'getRandomValues returned null');
+        checkThrow(saltOrNull, 'Jp|getRandomValues returned null');
         saltUint8 = saltOrNull as Uint8Array;
     }
 

@@ -77,7 +77,7 @@ export class VpcElProductOpts extends VpcElBase {
      * is the _vpcpresenter_ object, since it has special tool clean-up logic
      */
     set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
-        assertTrueWarn(s !== 'currentTool' || this.allowSetCurrentTool, '');
+        assertTrueWarn(s !== 'currentTool' || this.allowSetCurrentTool, 'Jt|');
         return super.set(s, newVal, context);
     }
 
@@ -151,7 +151,7 @@ export class VpcElProductOpts extends VpcElBase {
                 } else if (!s || s === 'default') {
                     me.set('suggestedIdleRate', 'default');
                 } else {
-                    checkThrow(false, `unsupported idlerate, try "faster" or "default"`);
+                    checkThrow(false, `Js|unsupported idlerate, try "faster" or "default"`);
                 }
             }
         ];

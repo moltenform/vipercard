@@ -493,7 +493,7 @@ y
     'testCodeEditorFeatures.SetIndentation.Continued Lines',
     () => {
         let ed = createFakeEd();
-        assertEq(2, ed.autoIndent.lineContinuation.length, '');
+        assertEq(2, ed.autoIndent.lineContinuation.length, '9o|');
         for (let c of ed.autoIndent.lineContinuation) {
             testAutoFormat(ed, `put 2 into x^`, `put 2 into x\n^`);
             testAutoFormat(ed, `put 2 into "${c}"^`, `put 2 into "${c}"\n^`);
@@ -539,10 +539,10 @@ function testAutoFormat(ed: UI512CompCodeEditor, initial: string, expected: stri
     initial = initial.replace(/\r\n/g, '\n').replace(/    /g, '\t');
     expected = expected.replace(/\r\n/g, '\n').replace(/    /g, '\t');
 
-    assertTrue(!scontains(initial, '#'), "don't need to mark selend");
-    assertTrue(!scontains(expected, '#'), "don't need to mark selend");
-    assertEq(2, initial.split('^').length, 'require precisely one ^');
-    assertEq(2, expected.split('^').length, 'require precisely one ^');
+    assertTrue(!scontains(initial, '#'), "9n|don't need to mark selend");
+    assertTrue(!scontains(expected, '#'), "9m|don't need to mark selend");
+    assertEq(2, initial.split('^').length, '9l|require precisely one ^');
+    assertEq(2, expected.split('^').length, '9k|require precisely one ^');
     let caretInit = initial.indexOf('^');
     let initialtext = initial.replace(/\^/g, '');
     ed.el.setFmTxt(FormattedText.newFromUnformatted(initialtext));
@@ -552,9 +552,9 @@ function testAutoFormat(ed: UI512CompCodeEditor, initial: string, expected: stri
     ed.respondKeydown(d);
     let textGot = ed.el.getFmTxt().toUnformatted();
     let caretGot = ed.el.getN('selcaret');
-    assertEq(ed.el.getN('selcaret'), ed.el.getN('selend'), '');
+    assertEq(ed.el.getN('selcaret'), ed.el.getN('selend'), '9j|');
     let caretExpected = expected.indexOf('^');
     let textExpected = expected.replace(/\^/g, '');
-    assertEq(textExpected, textGot, '');
-    assertEq(caretExpected, caretGot, '');
+    assertEq(textExpected, textGot, '9i|');
+    assertEq(caretExpected, caretGot, '9h|');
 }

@@ -80,7 +80,7 @@ export abstract class UndoableActionCreateOrDelVel {
     protected create(vci: VpcStateInterface) {
         checkThrow(
             !vci.getCodeExec().isCodeRunning(),
-            "8(|currently can't add or remove an element while code is running"
+            "Ks|currently can't add or remove an element while code is running"
         );
 
         let ctr = UndoableActionCreateOrDelVel.getConstructor(this.type);

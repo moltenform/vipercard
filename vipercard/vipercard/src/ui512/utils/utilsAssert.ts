@@ -17,7 +17,7 @@ export const cAltProductName = 'HyperCard';
  * make an error object, record the error, and depending on severity, show alert box
  * you can pass in arguments to indicate context of when/why error occurred
  */
-export function makeUI512ErrorGeneric(firstMsg: string, prefix: string, s1?: any, s2?: any, s3?: any) {
+function makeUI512ErrorGeneric(firstMsg: string, prefix: string, s1?: any, s2?: any, s3?: any) {
     let msg = joinIntoMessage(firstMsg, prefix, s1, s2, s3);
     let err = new Error(msg);
     try {

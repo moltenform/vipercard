@@ -88,7 +88,7 @@ export class VpcAppLyrToolbox extends VpcUILayer {
      */
     toolsMainRespondClicked(sTool: O<string>) {
         if (sTool) {
-            checkThrow(sTool.length > 1, 'not a valid tool name.');
+            checkThrow(sTool.length > 1, 'Ka|not a valid tool name.');
             let toolParsed = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
             this.vci.setTool(toolParsed);
             this.vci.setOption('viewingScriptVelId', '');

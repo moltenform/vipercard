@@ -45,7 +45,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * from tool to the corresponding tool response object
      */
     getToolResponse(t: VpcTool) {
-        return throwIfUndefined(this.tlNumToResponse[t.valueOf()], 'not found', t);
+        return throwIfUndefined(this.tlNumToResponse[t.valueOf()], 'Kl|not found', t);
     }
 
     /**
@@ -121,7 +121,7 @@ export class VpcPresenter extends VpcPresenterInit {
             if (vel.getType() === VpcElType.Card) {
                 this.vci.setOption('currentCardId', vel.id);
             } else if (vel.getType() === VpcElType.Bg) {
-                assertTrue(false, 'nyi');
+                assertTrue(false, 'Kk|nyi');
             } else if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
                 let parent = this.vci.getModel().findByIdUntyped(vel.parentId);
                 if (parent && parent.getType() === VpcElType.Card) {
@@ -147,7 +147,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * create modal dialog instance
      */
     protected getModalDlg() {
-        checkThrow(!this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'dialog box already shown');
+        checkThrow(!this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Kj|dialog box already shown');
 
         let modalDlg = new UI512CompModalDialog('mainModalDlg');
         let stopBtnElId = this.lyrToolboxes.toolsNav.getElId('choice##cardNumOrStop');
@@ -179,7 +179,7 @@ export class VpcPresenter extends VpcPresenterInit {
         tl.cancelCurrentToolAction();
         let dlg = this.getModalDlg();
         dlg.standardAnswer(this, this.app, prompt, fnOnResult, choice1 || '', choice2 || '', choice3 || '');
-        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'expect to have been created');
+        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Ki|expect to have been created');
     }
 
     /**
@@ -194,7 +194,7 @@ export class VpcPresenter extends VpcPresenterInit {
         tl.cancelCurrentToolAction();
         let dlg = this.getModalDlg();
         dlg.standardAsk(this, this.app, prompt, defText, fnOnResult);
-        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'expect to have been created');
+        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Kh|expect to have been created');
     }
 
     /**
@@ -441,7 +441,7 @@ export class VpcPresenter extends VpcPresenterInit {
         if (orig && (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)) {
             let dupe = this.makePart(orig.getType());
             let dupeSizable = dupe as VpcElSizable;
-            checkThrow(dupeSizable && dupeSizable.isVpcElSizable, '');
+            checkThrow(dupeSizable && dupeSizable.isVpcElSizable, 'Ke|');
             VpcUI512Serialization.copyPropsOver(orig, dupe, orig.getKeyPropertiesList());
 
             /* move it a bit */

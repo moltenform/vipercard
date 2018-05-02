@@ -194,7 +194,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         let savedFillRect = this.fillRect;
         try {
             this.fillRect = () => {
-                throw makeUI512Error("shouldn't be called");
+                throw makeUI512Error("I@|shouldn't be called");
             };
             this.setPixel = newSetPixel;
             if (xPts.length === 1 && yPts.length === 1) {
@@ -235,7 +235,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
      * flood fill ('bucket tool')
      */
     floodFill(xIn: number, yIn: number, color: number) {
-        throw makeUI512Error('not implemented');
+        throw makeUI512Error('I?|not implemented');
     }
 
     /**

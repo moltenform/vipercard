@@ -13,95 +13,95 @@
 let mTests: (string | Function)[] = [
     'testVpcStyleToInt',
     () => {
-        assertEq(TextFontStyling.Default, SubstringStyleComplex.vpcStyleToInt([]), '');
-        assertEq(TextFontStyling.Default, SubstringStyleComplex.vpcStyleToInt(['plain']), '');
-        assertEq(TextFontStyling.Bold, SubstringStyleComplex.vpcStyleToInt(['bold']), '');
+        assertEq(TextFontStyling.Default, SubstringStyleComplex.vpcStyleToInt([]), 'I#|');
+        assertEq(TextFontStyling.Default, SubstringStyleComplex.vpcStyleToInt(['plain']), 'I!|');
+        assertEq(TextFontStyling.Bold, SubstringStyleComplex.vpcStyleToInt(['bold']), 'I |');
         assertEq(
             TextFontStyling.Bold | TextFontStyling.Italic,
             SubstringStyleComplex.vpcStyleToInt(['bold', 'italic']),
-            ''
+            'Iz|'
         );
         assertEq(
             TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline,
             SubstringStyleComplex.vpcStyleToInt(['bold', 'italic', 'underline']),
-            ''
+            'Iy|'
         );
-        assertEq(TextFontStyling.Shadow, SubstringStyleComplex.vpcStyleToInt(['shadow']), '');
+        assertEq(TextFontStyling.Shadow, SubstringStyleComplex.vpcStyleToInt(['shadow']), 'Ix|');
         assertEq(
             TextFontStyling.Shadow | TextFontStyling.Condense,
             SubstringStyleComplex.vpcStyleToInt(['shadow', 'condense']),
-            ''
+            'Iw|'
         );
         assertEq(
             TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline,
             SubstringStyleComplex.vpcStyleToInt(['shadow', 'condense', 'outline']),
-            ''
+            'Iv|'
         );
     },
     'testStringToTextFontStyling',
     () => {
-        assertEq(TextFontStyling.Default, stringToTextFontStyling('biuosdce'), '');
-        assertEq(TextFontStyling.Bold, stringToTextFontStyling('+biuosdce'), '');
-        assertEq(TextFontStyling.Bold | TextFontStyling.Italic, stringToTextFontStyling('+b+iuosdce'), '');
+        assertEq(TextFontStyling.Default, stringToTextFontStyling('biuosdce'), 'Iu|');
+        assertEq(TextFontStyling.Bold, stringToTextFontStyling('+biuosdce'), 'It|');
+        assertEq(TextFontStyling.Bold | TextFontStyling.Italic, stringToTextFontStyling('+b+iuosdce'), 'Is|');
         assertEq(
             TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline,
             stringToTextFontStyling('+b+i+uosdce'),
-            ''
+            'Ir|'
         );
-        assertEq(TextFontStyling.Shadow, stringToTextFontStyling('biuo+sdce'), '');
-        assertEq(TextFontStyling.Shadow | TextFontStyling.Condense, stringToTextFontStyling('biuo+sd+ce'), '');
+        assertEq(TextFontStyling.Shadow, stringToTextFontStyling('biuo+sdce'), 'Iq|');
+        assertEq(TextFontStyling.Shadow | TextFontStyling.Condense, stringToTextFontStyling('biuo+sd+ce'), 'Ip|');
         assertEq(
             TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline,
             stringToTextFontStyling('biu+o+sd+ce'),
-            ''
+            'Io|'
         );
     },
     'vpcStyleFromInt',
     () => {
-        assertEq('plain', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Default), '');
-        assertEq('bold', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Bold), '');
+        assertEq('plain', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Default), 'In|');
+        assertEq('bold', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Bold), 'Im|');
         assertEq(
             'bold,italic',
             SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Bold | TextFontStyling.Italic),
-            ''
+            'Il|'
         );
         assertEq(
             'bold,italic,underline',
             SubstringStyleComplex.vpcStyleFromInt(
                 TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline
             ),
-            ''
+            'Ik|'
         );
-        assertEq('shadow', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Shadow), '');
+        assertEq('shadow', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Shadow), 'Ij|');
         assertEq(
             'shadow,condense',
             SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Shadow | TextFontStyling.Condense),
-            ''
+            'Ii|'
         );
         assertEq(
             'outline,shadow,condense',
             SubstringStyleComplex.vpcStyleFromInt(
                 TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline
             ),
-            ''
+            'Ih|'
         );
     },
     'testTextFontStylingToString',
     () => {
-        assertEq('biuosdce', textFontStylingToString(TextFontStyling.Default), '');
-        assertEq('+biuosdce', textFontStylingToString(TextFontStyling.Bold), '');
-        assertEq('+b+iuosdce', textFontStylingToString(TextFontStyling.Bold | TextFontStyling.Italic), '');
+        assertEq('biuosdce', textFontStylingToString(TextFontStyling.Default), 'Ig|');
+        assertEq('+biuosdce', textFontStylingToString(TextFontStyling.Bold), 'If|');
+        assertEq('+b+iuosdce', textFontStylingToString(TextFontStyling.Bold | TextFontStyling.Italic), 'Ie|');
         assertEq(
             '+b+i+uosdce',
             textFontStylingToString(TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline),
-            ''
+            'Id|'
         );
-        assertEq('biuo+sdce', textFontStylingToString(TextFontStyling.Shadow), '');
-        assertEq('biuo+sd+ce', textFontStylingToString(TextFontStyling.Shadow | TextFontStyling.Condense), '');
+        assertEq('biuo+sdce', textFontStylingToString(TextFontStyling.Shadow), 'Ic|');
+        assertEq('biuo+sd+ce', textFontStylingToString(TextFontStyling.Shadow | TextFontStyling.Condense), 'Ib|');
         assertEq(
             'biu+o+sd+ce',
             textFontStylingToString(TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline),
-            ''
+            'Ia|'
         );
     },
     'testEvalHelpers.String Comparisons Must Be A Strict Match',

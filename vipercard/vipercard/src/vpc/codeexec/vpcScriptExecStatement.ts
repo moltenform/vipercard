@@ -214,11 +214,11 @@ export class ExecuteStatement {
         if (vals.vals[nm]) {
             for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
                 let child = vals.vals[nm][i];
-                checkThrow(child instanceof VpcVal, '');
+                checkThrow(child instanceof VpcVal, 'JS|');
                 ret.push(child as VpcVal);
             }
         } else {
-            checkThrow(!atLeastOne, 'no child');
+            checkThrow(!atLeastOne, 'JR|no child');
         }
 
         return ret;
@@ -296,7 +296,7 @@ export class ExecuteStatement {
                 : undefined;
         let justLoad = false;
         if (isJustLoadIdentifier && isString(isJustLoadIdentifier)) {
-            checkThrow(isJustLoadIdentifier === 'load', 'expected play "snd" load, but got', isJustLoadIdentifier);
+            checkThrow(isJustLoadIdentifier === 'load', 'JQ|expected play "snd" load, but got', isJustLoadIdentifier);
             justLoad = true;
         }
 
@@ -324,7 +324,7 @@ export class ExecuteStatement {
         let nm = fromNickname('FACTOR');
         let factor = throwIfUndefined(this.findChildVal(vals, nm), '5G|');
         let sTool = factor.readAsString().replace(/ +/, '_');
-        checkThrow(sTool.length > 1, 'not a valid tool name.');
+        checkThrow(sTool.length > 1, 'JP|not a valid tool name.');
 
         /* from string to enum entry */
         let tl = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
@@ -371,12 +371,12 @@ export class ExecuteStatement {
             let arVals = ar as VpcVal[];
             for (let i = 0, len = arVals.length; i < len; i++) {
                 let item = arVals[i];
-                assertTrue(item && item.isVpcVal, '50|every item must be a vpcval');
+                assertTrue(item && item.isVpcVal, 'JO|every item must be a vpcval');
                 argsGiven.push(item.readAsStrictInteger());
             }
         }
 
-        checkThrow(argsGiven.length > 1, 'not enough args');
+        checkThrow(argsGiven.length > 1, 'JN|not enough args');
         let mods = ModifierKeys.None;
         let allIdentifiers = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let sawExpected = false;
@@ -393,7 +393,7 @@ export class ExecuteStatement {
             }
         }
 
-        checkThrow(sawExpected, 'syntax error did not see ', expectSee);
+        checkThrow(sawExpected, 'JM|syntax error did not see ', expectSee);
         this.outside.SimulateClick(argsGiven, mods);
     }
 
@@ -429,7 +429,7 @@ export class ExecuteStatement {
      * This feature will arrive in a future version...
      */
     goCreate(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        throw makeVpcScriptErr("the 'create' command is not yet supported.");
+        throw makeVpcScriptErr("JL|the 'create' command is not yet supported.");
     }
 
     /**
@@ -708,8 +708,8 @@ export class ExecuteStatement {
             vals.vals['TokenTkidentifier'] && vals.vals['TokenTkidentifier'].length > 1
                 ? vals.vals['TokenTkidentifier'][1]
                 : undefined;
-        let unitRaw = throwIfUndefined(unitRawOrdinal || unitRawIdentifier, 'unitRawOrdinal || unitRawIdentifier');
-        checkThrow(isString(unitRaw), '');
+        let unitRaw = throwIfUndefined(unitRawOrdinal || unitRawIdentifier, 'JK|unitRawOrdinal || unitRawIdentifier');
+        checkThrow(isString(unitRaw), 'JJ|');
 
         /* because there is only 1 script execution thread, don't need to assign a unique id. */
         let asyncOpId = 'singleThreadAsyncOpId';

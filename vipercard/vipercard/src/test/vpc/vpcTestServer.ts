@@ -19,7 +19,7 @@ let mTests: (string | Function)[] = [
             let got: anyJson = await vpcSendRequestForJson(`/ping_valid${method.toLowerCase()}`, method, {});
 
             if (!(got && got[`gotSuccess${method.toLowerCase()}`] === 1)) {
-                assertTrue(false, "FAIL: json object didn't have property");
+                assertTrue(false, "IZ|FAIL: json object didn't have property");
             }
         }
     },
@@ -35,7 +35,7 @@ let mTests: (string | Function)[] = [
                 got = await vpcSendRequestForJson(`/ping_notvalid${method.toLowerCase()}`, method, {});
             };
 
-            await assertThrowsAsync('', 'err details here', cb);
+            await assertThrowsAsync('IY|', 'err details here', cb);
         }
     },
     'async/testVpcServerBasic.Ping 404',
@@ -50,7 +50,7 @@ let mTests: (string | Function)[] = [
                 got = await vpcSendRequestForJson(`/pagedoesnotexist${method.toLowerCase()}`, method, {});
             };
 
-            await assertThrowsAsync('', '404', cb);
+            await assertThrowsAsync('IX|', '404', cb);
         }
     },
     'async/testVpcServer.clearDataForTests',
@@ -73,7 +73,7 @@ let mTests: (string | Function)[] = [
             await vpcUsersCreate('testuser4', 'a', 'testuser4@test.com');
         };
 
-        await assertThrowsAsync('', 'too short', cb);
+        await assertThrowsAsync('IW|', 'too short', cb);
         let keyBase64 = 'uggs/wtV+0pSNyJ0lN+wNE/B8MdBafUqT/GJNoXu+Vw=';
         let keyBinary = strToArrBuffer(atob(keyBase64));
         let normalParams = {
@@ -96,7 +96,7 @@ let mTests: (string | Function)[] = [
             let url = '/vpusers/create';
             let response = await sendSignedRequestJson(url, 'POST', params, keyBinary);
         };
-        await assertThrowsAsync('', 'iterations', cb);
+        await assertThrowsAsync('IV|', 'iterations', cb);
 
         /* fails: username too short */
         cb = async () => {
@@ -106,7 +106,7 @@ let mTests: (string | Function)[] = [
             let url = '/vpusers/create';
             let response = await sendSignedRequestJson(url, 'POST', params, keyBinary);
         };
-        await assertThrowsAsync('', 'username is too short', cb);
+        await assertThrowsAsync('IU|', 'username is too short', cb);
 
         /* fails: no email given */
         cb = async () => {
@@ -116,7 +116,7 @@ let mTests: (string | Function)[] = [
             let url = '/vpusers/create';
             let response = await sendSignedRequestJson(url, 'POST', params, keyBinary);
         };
-        await assertThrowsAsync('', 'look right', cb);
+        await assertThrowsAsync('IT|', 'look right', cb);
 
         /* fails: time does not match server time */
         cb = async () => {
@@ -126,7 +126,7 @@ let mTests: (string | Function)[] = [
             let url = '/vpusers/create';
             let response = await sendSignedRequestJson(url, 'POST', params, keyBinary);
         };
-        await assertThrowsAsync('', 'incorrect time', cb);
+        await assertThrowsAsync('IS|', 'incorrect time', cb);
 
         /* fails: wrong hmac signature */
         cb = async () => {
@@ -141,7 +141,7 @@ let mTests: (string | Function)[] = [
                 'qqqqqqMi0/gOeXChKQ3uyVVvrCZ7xtFAXAHLOjsYhwM='
             );
         };
-        await assertThrowsAsync('is1', 'incorrect signature', cb);
+        await assertThrowsAsync('IR|is1', 'incorrect signature', cb);
 
         /* fails: same hmac signature but changed nonce */
         cb = async () => {
@@ -157,7 +157,7 @@ let mTests: (string | Function)[] = [
                 'SVITvMi0/gOeXChKQ3uyVVvrCZ7xtFAXAHLOjsYhwM='
             );
         };
-        await assertThrowsAsync('is2', 'incorrect signature', cb);
+        await assertThrowsAsync('IQ|is2', 'incorrect signature', cb);
 
         /* fails: same hmac signature but changed username */
         cb = async () => {
@@ -173,7 +173,7 @@ let mTests: (string | Function)[] = [
                 'SVITvMi0/gOeXChKQ3uyVVvrCZ7xtFAXAHLOjsYhwM='
             );
         };
-        await assertThrowsAsync('is3', 'incorrect signature', cb);
+        await assertThrowsAsync('IP|is3', 'incorrect signature', cb);
 
         /* fails: user already exists */
         cb = async () => {
@@ -196,7 +196,7 @@ let mTests: (string | Function)[] = [
                 strToArrBuffer(atob('374jOicDme1yOt97qSprtKgXO9ovfcnlT6eokHpdPtQ='))
             );
         };
-        await assertThrowsAsync('is4', 'user already exists', cb);
+        await assertThrowsAsync('IO|is4', 'user already exists', cb);
 
         /* fails: e-mail already exists */
         cb = async () => {
@@ -219,7 +219,7 @@ let mTests: (string | Function)[] = [
                 strToArrBuffer(atob('XHtQO/83jM6B2Ji4aFRhZuU9xd5GD6rjD81sb91JZvU='))
             );
         };
-        await assertThrowsAsync('', 'has this email', cb);
+        await assertThrowsAsync('IN|', 'has this email', cb);
 
         /* succeeds. and used later in subsequent tests. */
         /* 123abcdefg */
@@ -242,7 +242,7 @@ let mTests: (string | Function)[] = [
             strToArrBuffer(atob('ekNRKPs1AbVUQLhQAdTe8ECLaFU/Fkzn9zK5b6+YbLk='))
         );
 
-        assertEq(0, responseWorks.retcode, '');
+        assertEq(0, responseWorks.retcode, 'IM|');
     },
     'async/testVpcServer.checkLoginAndEmailVerifyTests',
     async () => {
@@ -257,45 +257,45 @@ let mTests: (string | Function)[] = [
         let cb = async () => {
             await vpcUsersCheckLogin('test4', 'a', fakeIp());
         };
-        await assertThrowsAsync('', 'too short', cb);
+        await assertThrowsAsync('IL|', 'too short', cb);
 
         /* username is too short */
         cb = async () => {
             await vpcUsersCheckLogin('a', 'abc12345678', fakeIp());
         };
-        await assertThrowsAsync('', 'username is too short', cb);
+        await assertThrowsAsync('IK|', 'username is too short', cb);
 
         /* user does not exist */
         cb = async () => {
             await vpcUsersCheckLogin('notexistingb5v4s4', 'abc12345678', fakeIp());
         };
-        await assertThrowsAsync('', 'user not found', cb);
+        await assertThrowsAsync('IJ|', 'user not found', cb);
 
         /* pending user, wrong password */
         cb = async () => {
             await vpcUsersCheckLogin('test4', 'wrongpw', fakeIp());
         };
-        await assertThrowsAsync('', 'wrong pass', cb);
+        await assertThrowsAsync('II|', 'wrong pass', cb);
 
         /* complete user, wrong password */
         cb = async () => {
             await vpcUsersCheckLogin('test1', 'wrongpw', fakeIp());
         };
-        await assertThrowsAsync('', 'wrong pass', cb);
+        await assertThrowsAsync('IH|', 'wrong pass', cb);
 
         /* pending user, right password, needs to be verified */
         let gotRaw = await vpcUsersCheckLogin('test4', '123abcdefg', fakeIp());
         let got: (string | ArrayBuffer)[];
         if (gotRaw instanceof VpcSession) {
-            assertTrue(false, 'should not have gotten complete session');
+            assertTrue(false, 'IG|should not have gotten complete session');
             return;
         } else {
             got = gotRaw;
         }
 
         /* ensure that we got the 'you-need-verification' message */
-        assertEq(4, got.length, '');
-        assertEq('needEmailVerify', got[0], '');
+        assertEq(4, got.length, 'IF|');
+        assertEq('needEmailVerify', got[0], 'IE|');
         let verifcode = got[3].toString();
         let key = cast(got[2], ArrayBuffer);
 
@@ -303,25 +303,25 @@ let mTests: (string | Function)[] = [
         cb = async () => {
             await vpcUsersEnterEmailVerifyCode('notexistingb5v4s4', key, 'wrongcode');
         };
-        await assertThrowsAsync('', 'no user found', cb);
+        await assertThrowsAsync('ID|', 'no user found', cb);
 
         /* send in wrong verify code */
         cb = async () => {
             await vpcUsersEnterEmailVerifyCode('test4', key, 'wrongcode');
         };
-        await assertThrowsAsync('', 'incorrect code', cb);
+        await assertThrowsAsync('IC|', 'incorrect code', cb);
 
         /* try to do actions when still pending */
         cb = async () => {
             let sess = new VpcSession('test4', key);
             await sess.vpcUsersUpdateEmail('test4_changed@test.com');
         };
-        await assertThrowsAsync('', 'not yet verified', cb);
+        await assertThrowsAsync('IB|', 'not yet verified', cb);
 
         /* send in right verify code */
         let gotRightVerify = await vpcUsersEnterEmailVerifyCode('test4', key, verifcode);
-        assertTrue(gotRightVerify && gotRightVerify instanceof VpcSession, '');
-        assertEq(gotRightVerify.username, 'test4', '');
+        assertTrue(gotRightVerify && gotRightVerify instanceof VpcSession, 'IA|');
+        assertEq(gotRightVerify.username, 'test4', 'I9|');
 
         /* wait for the user acct to become active */
         await sleep(8 * 1000);
@@ -330,12 +330,12 @@ let mTests: (string | Function)[] = [
         cb = async () => {
             await vpcUsersCheckLogin('test4', 'wrongpw', fakeIp());
         };
-        await assertThrowsAsync('', 'wrong pass', cb);
+        await assertThrowsAsync('I8|', 'wrong pass', cb);
 
         /* complete user, got right password! */
         let gotRightSessionRaw = await vpcUsersCheckLogin('test4', '123abcdefg', fakeIp());
         let gotRightSession = cast(gotRightSessionRaw, VpcSession);
-        assertEq(gotRightSession.username, 'test4', '');
+        assertEq(gotRightSession.username, 'test4', 'I7|');
 
         /* changing should now work with this session. */
         await gotRightSession.vpcUsersUpdateEmail('test4_changed@test.com');
@@ -353,7 +353,7 @@ let mTests: (string | Function)[] = [
         let cb = async () => {
             await badSession.vpcLogEntriesCreate('usertypeddesc', 'lastclientlogs', 'stackserverguid', fakeIp());
         };
-        await assertThrowsAsync('createLogEntryTests not logged in correctly', 'wrong pass', cb);
+        await assertThrowsAsync('I6|createLogEntryTests not logged in correctly', 'wrong pass', cb);
 
         let fakeserverguid = Util512.weakUuid();
         let fakelastclientlogs = Util512.weakUuid() + 'unicode\u2666chars\u0301';
@@ -371,7 +371,7 @@ let mTests: (string | Function)[] = [
             firstIp,
             faketime
         );
-        assertEq(true, got, '');
+        assertEq(true, got, 'I5|');
 
         await sleep(8000);
 
@@ -386,7 +386,7 @@ let mTests: (string | Function)[] = [
                 faketime
             );
         };
-        await assertThrowsAsync('ip address to send too many', 'not create log entry', cb);
+        await assertThrowsAsync('I4|ip address to send too many', 'not create log entry', cb);
 
         /* third should go through, since we have waited long enough */
         faketime = '1500';
@@ -397,7 +397,7 @@ let mTests: (string | Function)[] = [
             firstIp,
             faketime
         );
-        assertEq(true, got, '');
+        assertEq(true, got, 'I3|');
     },
     'async/testVpcServer.reset recorded stack ids',
     async () => {
@@ -436,7 +436,7 @@ let mTests: (string | Function)[] = [
                 fakeStackData + '0'
             );
         };
-        await assertThrowsAsync('stacks-not logged in correctly', 'wrong pass', cb);
+        await assertThrowsAsync('I2|stacks-not logged in correctly', 'wrong pass', cb);
 
         /* open session for test2 */
         let sess = new VpcSession('test2', strToArrBuffer(atob('E+9n4wx2OU8JJJwdnkrj56dyMzZZ97nXoGZ2B5Vrom4=')));
@@ -447,37 +447,37 @@ let mTests: (string | Function)[] = [
             fakeStackName + '1',
             TestVpcServer.fakeStackData1
         );
-        assertTrue(gotFirst, '');
+        assertTrue(gotFirst, 'I1|');
 
         /* cannot create a stack with dupe name */
         cb = async () => {
             await sess.vpcStacksSaveAs(VpcSession.generateStackPartialId(), fakeStackName + '1', fakeStackData);
         };
-        await assertThrowsAsync('stacks-dupe name', 'this name already exists', cb);
+        await assertThrowsAsync('I0|stacks-dupe name', 'this name already exists', cb);
 
         /* cannot create a stack with dupe id */
         cb = async () => {
             await sess.vpcStacksSaveAs(TestVpcServer.stackId1, fakeStackName + Math.random(), fakeStackData);
         };
-        await assertThrowsAsync('stacks-dupe id', 'this id already exists', cb);
+        await assertThrowsAsync('H~|stacks-dupe id', 'this id already exists', cb);
 
         /* cannot create a stack with 2 spaces in name */
         cb = async () => {
             await sess.vpcStacksSaveAs(VpcSession.generateStackPartialId(), fakeStackName + '  b', fakeStackData);
         };
-        await assertThrowsAsync('stacks-spaces', '2 spaces', cb);
+        await assertThrowsAsync('H}|stacks-spaces', '2 spaces', cb);
 
         /* cannot create a stack with disallowed tab char */
         cb = async () => {
             await sess.vpcStacksSaveAs(VpcSession.generateStackPartialId(), fakeStackName + '\tb', fakeStackData);
         };
-        await assertThrowsAsync('', 'disallowed character', cb);
+        await assertThrowsAsync('H||', 'disallowed character', cb);
 
         /* cannot create a stack with disallowed unicode char */
         cb = async () => {
             await sess.vpcStacksSaveAs(VpcSession.generateStackPartialId(), fakeStackName + '\u0301b', fakeStackData);
         };
-        await assertThrowsAsync('', 'disallowed character', cb);
+        await assertThrowsAsync('H{|', 'disallowed character', cb);
 
         /* can vpcStacksSaveAs another stack */
         await sleep(2000); /* docs say rate of ancestor insertion is limited to ~1 / second */
@@ -486,8 +486,8 @@ let mTests: (string | Function)[] = [
             fakeStackName + '2',
             TestVpcServer.fakeStackData2
         );
-        assertTrue(gotSecond, '');
-        assertTrue(TestVpcServer.stackId1 !== TestVpcServer.stackId2, '');
+        assertTrue(gotSecond, 'H`|');
+        assertTrue(TestVpcServer.stackId1 !== TestVpcServer.stackId2, 'H_|');
 
         /* cannot exceed max # of stacks */
         cb = async () => {
@@ -499,7 +499,7 @@ let mTests: (string | Function)[] = [
             );
         };
         await sleep(2000);
-        await assertThrowsAsync('max. #', 'max. #', cb);
+        await assertThrowsAsync('H^|max. #', 'max. #', cb);
 
         /* open session for test3 */
         sess = new VpcSession('test3', strToArrBuffer(atob('G25GDNGhJ2vkC01E7u5tBicpKmLfeUqzwsnqusMzqV8=')));
@@ -508,8 +508,8 @@ let mTests: (string | Function)[] = [
             fakeStackName + '3',
             TestVpcServer.fakeStackData3
         );
-        assertTrue(gotThird, '');
-        assertTrue(TestVpcServer.stackId2 !== TestVpcServer.stackId3, '');
+        assertTrue(gotThird, 'H]|');
+        assertTrue(TestVpcServer.stackId2 !== TestVpcServer.stackId3, 'H[|');
     },
     'async/testVpcServer.getStacks',
     async () => {
@@ -523,47 +523,47 @@ let mTests: (string | Function)[] = [
         let cb = async () => {
             await vpcStacksGetData(VpcSession.getFullStackId('test2', TestVpcServer.stackId1 + '00'));
         };
-        await assertThrowsAsync('', 'stack not found', cb);
+        await assertThrowsAsync('H@|', 'stack not found', cb);
 
         /* cannot open nonexistent stack 2 */
         cb = async () => {
             await vpcStacksGetData(VpcSession.getFullStackId('test2', TestVpcServer.stackId1.slice(0, -1)));
         };
-        await assertThrowsAsync('', 'stack not found', cb);
+        await assertThrowsAsync('H?|', 'stack not found', cb);
 
         /* cannot open nonexistent stack 3 (no such user) */
         cb = async () => {
             await vpcStacksGetData(VpcSession.getFullStackId('test-no-such-user', TestVpcServer.stackId1));
         };
-        await assertThrowsAsync('', 'stack not found', cb);
+        await assertThrowsAsync('H>|', 'stack not found', cb);
 
         /* cannot open nonexistent stack 4 (wrong user) */
         cb = async () => {
             await vpcStacksGetData(VpcSession.getFullStackId('test1', TestVpcServer.stackId1));
         };
-        await assertThrowsAsync('', 'stack not found', cb);
+        await assertThrowsAsync('H=|', 'stack not found', cb);
 
         /* open stackid1 */
         let row = await vpcStacksGetData(VpcSession.getFullStackId('test2', TestVpcServer.stackId1));
         let fakeStackName = 'My stack acc\u00e9nt';
-        assertEq('test2', row.ownerusername, '');
-        assertEq(fakeStackName + '1', row.stackname, '');
-        assertEq(TestVpcServer.fakeStackData1, row.stackdata, '');
-        assertEq(null, row.flagged, '');
+        assertEq('test2', row.ownerusername, 'H<|');
+        assertEq(fakeStackName + '1', row.stackname, 'H;|');
+        assertEq(TestVpcServer.fakeStackData1, row.stackdata, 'H:|');
+        assertEq(null, row.flagged, 'H/|');
 
         /* open stackid2 */
         row = await vpcStacksGetData(VpcSession.getFullStackId('test2', TestVpcServer.stackId2));
-        assertEq('test2', row.ownerusername, '');
-        assertEq(fakeStackName + '2', row.stackname, '');
-        assertEq(TestVpcServer.fakeStackData2, row.stackdata, '');
-        assertEq(null, row.flagged, '');
+        assertEq('test2', row.ownerusername, 'H.|');
+        assertEq(fakeStackName + '2', row.stackname, 'H-|');
+        assertEq(TestVpcServer.fakeStackData2, row.stackdata, 'H,|');
+        assertEq(null, row.flagged, 'H+|');
 
         /* open stackid3 */
         row = await vpcStacksGetData(VpcSession.getFullStackId('test3', TestVpcServer.stackId3));
-        assertEq('test3', row.ownerusername, '');
-        assertEq(fakeStackName + '3', row.stackname, '');
-        assertEq(TestVpcServer.fakeStackData3, row.stackdata, '');
-        assertEq(null, row.flagged, '');
+        assertEq('test3', row.ownerusername, 'H*|');
+        assertEq(fakeStackName + '3', row.stackname, 'H)|');
+        assertEq(TestVpcServer.fakeStackData3, row.stackdata, 'H(|');
+        assertEq(null, row.flagged, 'H&|');
 
         /* can't list stacks if not logged in */
         let badSession = new VpcSession('test3', strToArrBuffer(atob('XXXXXXGhJ2vkC01E7u5tBicpKmLfeUqzwsnqusMzqV8=')));
@@ -571,24 +571,24 @@ let mTests: (string | Function)[] = [
             await badSession.vpcListMyStacks();
         };
 
-        await assertThrowsAsync('', 'wrong pass', cb);
+        await assertThrowsAsync('H%|', 'wrong pass', cb);
 
         /* can't list stacks that belong to someone else */
         let sess = new VpcSession('test2', strToArrBuffer(atob('E+9n4wx2OU8JJJwdnkrj56dyMzZZ97nXoGZ2B5Vrom4=')));
         cb = async () => {
             await sess.vpcListMyStacks('test3');
         };
-        await assertThrowsAsync('', 'only list stacks you own', cb);
+        await assertThrowsAsync('H$|', 'only list stacks you own', cb);
 
         /* list my stacks */
         let got = await sess.vpcListMyStacks('test2');
         let expectedfullid1 = VpcSession.getFullStackId('test2', TestVpcServer.stackId1);
         let expectedfullid2 = VpcSession.getFullStackId('test2', TestVpcServer.stackId2);
-        assertEq(2, got.length, '');
-        assertEq(expectedfullid1, got[0].fullstackid, '');
-        assertEq(fakeStackName + '1', got[0].stackname, '');
-        assertEq(expectedfullid2, got[1].fullstackid, '');
-        assertEq(fakeStackName + '2', got[1].stackname, '');
+        assertEq(2, got.length, 'H#|');
+        assertEq(expectedfullid1, got[0].fullstackid, 'H!|');
+        assertEq(fakeStackName + '1', got[0].stackname, 'H |');
+        assertEq(expectedfullid2, got[1].fullstackid, 'Hz|');
+        assertEq(fakeStackName + '2', got[1].stackname, 'Hy|');
 
         /* open session for test3 */
         sess = new VpcSession('test3', strToArrBuffer(atob('G25GDNGhJ2vkC01E7u5tBicpKmLfeUqzwsnqusMzqV8=')));
@@ -597,14 +597,14 @@ let mTests: (string | Function)[] = [
         cb = async () => {
             await sess.vpcListMyStacks('test2');
         };
-        await assertThrowsAsync('', 'only list stacks you own', cb);
+        await assertThrowsAsync('Hx|', 'only list stacks you own', cb);
 
         /* list my stacks */
         got = await sess.vpcListMyStacks();
         expectedfullid1 = VpcSession.getFullStackId('test3', TestVpcServer.stackId3);
-        assertEq(1, got.length, '');
-        assertEq(expectedfullid1, got[0].fullstackid, '');
-        assertEq(fakeStackName + '3', got[0].stackname, '');
+        assertEq(1, got.length, 'Hw|');
+        assertEq(expectedfullid1, got[0].fullstackid, 'Hv|');
+        assertEq(fakeStackName + '3', got[0].stackname, 'Hu|');
     },
     'async/testVpcServer.updateStacks',
     async () => {
@@ -618,7 +618,7 @@ let mTests: (string | Function)[] = [
         let cb = async () => {
             await badSession.vpcStacksSave(TestVpcServer.stackId3, fakeStackData + '3changed');
         };
-        await assertThrowsAsync('', 'wrong pass', cb);
+        await assertThrowsAsync('Ht|', 'wrong pass', cb);
 
         /* open session for test3 */
         let sess = new VpcSession('test3', strToArrBuffer(atob('G25GDNGhJ2vkC01E7u5tBicpKmLfeUqzwsnqusMzqV8=')));
@@ -627,32 +627,32 @@ let mTests: (string | Function)[] = [
         cb = async () => {
             await sess.vpcStacksSave(TestVpcServer.stackId1, fakeStackData + '1changed');
         };
-        await assertThrowsAsync('', 'not found', cb);
+        await assertThrowsAsync('Hs|', 'not found', cb);
 
         /* can't update a non existing stack */
         cb = async () => {
             await sess.vpcStacksSave(TestVpcServer.stackId3 + '00', fakeStackData + '3changed');
         };
-        await assertThrowsAsync('', 'not found', cb);
+        await assertThrowsAsync('Hr|', 'not found', cb);
 
         /* can't update stack to short */
         cb = async () => {
             await sess.vpcStacksSave(TestVpcServer.stackId3, 'x');
         };
-        await assertThrowsAsync('', 'short', cb);
+        await assertThrowsAsync('Hq|', 'short', cb);
 
         /* can't update stack to nothing */
         cb = async () => {
             await sess.vpcStacksSave(TestVpcServer.stackId3, '');
         };
-        await assertThrowsAsync('', 'short', cb);
+        await assertThrowsAsync('Hp|', 'short', cb);
 
         /* can't update stack to too long */
         let kb150 = Util512.repeat(1024 / 8 * 150, '12345678').join('');
         cb = async () => {
             await sess.vpcStacksSave(TestVpcServer.stackId3, kb150);
         };
-        await assertThrowsAsync('', 'save as .json', cb);
+        await assertThrowsAsync('Ho|', 'save as .json', cb);
 
         /* update the stack */
         await sess.vpcStacksSave(TestVpcServer.stackId3, fakeStackData + '3changed');
@@ -660,15 +660,15 @@ let mTests: (string | Function)[] = [
         /* see if change worked */
         await sleep(4000);
         let row = await vpcStacksGetData(VpcSession.getFullStackId('test3', TestVpcServer.stackId3));
-        assertEq('test3', row.ownerusername, '');
-        assertEq('My stack acc\u00e9nt3', row.stackname, '');
-        assertEq(fakeStackData + '3changed', row.stackdata, '');
+        assertEq('test3', row.ownerusername, 'Hn|');
+        assertEq('My stack acc\u00e9nt3', row.stackname, 'Hm|');
+        assertEq(fakeStackData + '3changed', row.stackdata, 'Hl|');
 
         /* data from id2 should be unaffected */
         row = await vpcStacksGetData(VpcSession.getFullStackId('test2', TestVpcServer.stackId2));
-        assertEq('test2', row.ownerusername, '');
-        assertEq('My stack acc\u00e9nt2', row.stackname, '');
-        assertEq(TestVpcServer.fakeStackData2, row.stackdata, '');
+        assertEq('test2', row.ownerusername, 'Hk|');
+        assertEq('My stack acc\u00e9nt2', row.stackname, 'Hj|');
+        assertEq(TestVpcServer.fakeStackData2, row.stackdata, 'Hi|');
 
         /* update the stack again */
         await sess.vpcStacksSave(TestVpcServer.stackId3, fakeStackData + '3changedmore');
@@ -676,31 +676,31 @@ let mTests: (string | Function)[] = [
         /* see if change worked */
         await sleep(4000);
         row = await vpcStacksGetData(VpcSession.getFullStackId('test3', TestVpcServer.stackId3));
-        assertEq('test3', row.ownerusername, '');
-        assertEq('My stack acc\u00e9nt3', row.stackname, '');
-        assertEq(fakeStackData + '3changedmore', row.stackdata, '');
+        assertEq('test3', row.ownerusername, 'Hh|');
+        assertEq('My stack acc\u00e9nt3', row.stackname, 'Hg|');
+        assertEq(fakeStackData + '3changedmore', row.stackdata, 'Hf|');
 
         /* flag content, first time, unique ip */
         await vpcStacksFlagContent('test3', TestVpcServer.stackId3, '', '1.1.1.1');
         await sleep(2000);
         row = await vpcStacksGetData(VpcSession.getFullStackId('test3', TestVpcServer.stackId3));
-        assertEq('|1.1.1.1|', row.flagged, '');
+        assertEq('|1.1.1.1|', row.flagged, 'He|');
 
         /* flag content, another unique ip */
         await vpcStacksFlagContent('test3', TestVpcServer.stackId3, '', '1.1.1.2');
         await sleep(2000);
         row = await vpcStacksGetData(VpcSession.getFullStackId('test3', TestVpcServer.stackId3));
-        assertEq('|1.1.1.1||1.1.1.2|', row.flagged, '');
+        assertEq('|1.1.1.1||1.1.1.2|', row.flagged, 'Hd|');
 
         /* flag content, first time, redundant */
         await vpcStacksFlagContent('test3', TestVpcServer.stackId3, '', '1.1.1.1');
         await sleep(2000);
         row = await vpcStacksGetData(VpcSession.getFullStackId('test3', TestVpcServer.stackId3));
-        assertEq('|1.1.1.1||1.1.1.2|', row.flagged, '');
+        assertEq('|1.1.1.1||1.1.1.2|', row.flagged, 'Hc|');
 
         /* data from id2 should be unaffected */
         row = await vpcStacksGetData(VpcSession.getFullStackId('test2', TestVpcServer.stackId2));
-        assertEq(null, row.flagged, '');
+        assertEq(null, row.flagged, 'Hb|');
     }
 ];
 
@@ -714,7 +714,7 @@ function checkIfTestEnabled(s: string) {
     } else if (en === false) {
         return false;
     } else {
-        throw makeVpcInternalErr(`no entry in enabledTests for ${s}`);
+        throw makeVpcInternalErr(`Ha|no entry in enabledTests for ${s}`);
     }
 }
 

@@ -550,7 +550,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 return VpcVal.getScientificNotation(ctx.TokenTknumliteral[0].image);
             } else if (ctx.RuleHSimpleContainer[0]) {
                 let container = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
-                checkThrow(container.isRequestedContainerRef, `internal error, expected IntermedValContainer`);
+                checkThrow(container.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
                 return VpcValS(this.outside.ContainerRead(container));
             } else {
                 throw makeVpcInternalErr('|3|null');

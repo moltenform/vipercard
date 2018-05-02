@@ -185,7 +185,7 @@ export class IntroPageOpen extends IntroPageBase {
      * delete a project
      */
     deleteSelected(pr: VpcIntroInterface) {
-        assertTrue(false, 'not yet implemented.');
+        assertTrue(false, 'KE|not yet implemented.');
         let whichData = IntroPageOpen.getChosen(this);
         if (whichData) {
             pr.getModal().standardAnswer(
@@ -207,7 +207,7 @@ export class IntroPageOpen extends IntroPageBase {
      * delete a project, not yet implemented
      */
     protected deleteSelectedImpl(pr: VpcIntroInterface, whichData: string) {
-        assertTrue(false, 'not yet implemented.');
+        assertTrue(false, 'KD|not yet implemented.');
         pr.getModal().standardAnswer(
             pr,
             pr.app,

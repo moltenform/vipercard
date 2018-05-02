@@ -33,7 +33,7 @@ export class FormattedText {
     }
 
     setFontAt(i: number, s: string) {
-        assertTrueWarn(s.length > 0, '');
+        assertTrueWarn(s.length > 0, 'I||');
         assertTrue(!this.locked, '3q|locked');
         assertTrue(
             !scontains(s, specialCharFontChange),
@@ -49,7 +49,7 @@ export class FormattedText {
     }
 
     setFontEverywhere(s: string) {
-        assertTrueWarn(s.length > 0, '');
+        assertTrueWarn(s.length > 0, 'I{|');
         assertTrue(!this.locked, '3n|locked');
         assertTrue(
             !scontains(s, specialCharFontChange),
@@ -62,7 +62,7 @@ export class FormattedText {
     }
 
     push(char: number, font: string) {
-        assertTrueWarn(font.length > 0, '');
+        assertTrueWarn(font.length > 0, 'I`|');
         assertTrue(!this.locked, '3l|locked');
         assertTrue(
             !scontains(font, specialCharFontChange),
@@ -123,8 +123,8 @@ export class FormattedText {
             !scontains(font, specialCharFontChange),
             `3g|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
         );
-        assertTrue(n >= 0, 'invalid n', n);
-        assertTrue(nDelete >= 0, 'invalid nDelete', nDelete);
+        assertTrue(n >= 0, 'I_|invalid n', n);
+        assertTrue(nDelete >= 0, 'I^|invalid nDelete', nDelete);
 
         tNew.charArray = t.charArray.slice(0, n);
         for (let i = 0; i < insert.length; i++) {
@@ -265,7 +265,7 @@ export class FormattedText {
                 }
             } else {
                 currentFont = parts[i];
-                assertTrue(currentFont.length > 0, '');
+                assertTrue(currentFont.length > 0, 'I]|');
             }
         }
     }

@@ -96,7 +96,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         if (!this.vci) {
             checkThrow(
                 propName.startsWith('increasingnum'),
-                'we only expect increasingnum to be changed before init()'
+                'KV|we only expect increasingnum to be changed before init()'
             );
             return;
         }
@@ -278,7 +278,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * mapping a vel change to a ui512element change
      */
     protected applyOneChange(vel: VpcElBase, propName: string, newVal: ElementObserverVal, fromScratch: boolean) {
-        assertTrue(vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn, '');
+        assertTrue(vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn, 'KU|');
         let key = vel.getType().toString() + '/' + propName;
         let target = this.findVelIdToEl(vel.id);
         if (target) {

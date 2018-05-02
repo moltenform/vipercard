@@ -32,7 +32,7 @@ export class VelResolveName {
      * re-use logic for buttons and fields
      */
     protected goResolveNameBtn(vel: VpcElButton, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElButton, '');
+        checkThrow(vel.isVpcElButton, 'J[|');
         return this.belongsToBg(vel)
             ? this.goResolveBgBtnOrFld(vel, adjective)
             : this.goResolveCdBtnOrFld(vel, adjective);
@@ -42,7 +42,7 @@ export class VelResolveName {
      * re-use logic for buttons and fields
      */
     protected goResolveNameFld(vel: VpcElField, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElField, '');
+        checkThrow(vel.isVpcElField, 'J@|');
         return this.belongsToBg(vel)
             ? this.goResolveBgBtnOrFld(vel, adjective)
             : this.goResolveCdBtnOrFld(vel, adjective);
@@ -79,14 +79,14 @@ export class VelResolveName {
      * get the name of a background button or field
      */
     protected goResolveBgBtnOrFld(vel: VpcElButton | VpcElField, adjective: PropAdjective) {
-        checkThrow(false, 'not yet implemented');
+        checkThrow(false, 'J?|not yet implemented');
     }
 
     /**
      * get the name of a card
      */
     protected goResolveNameCard(vel: VpcElCard, adjective: PropAdjective): string {
-        checkThrow(vel.isVpcElCard, '');
+        checkThrow(vel.isVpcElCard, 'J>|');
         let name = vel.getS('name');
         if (name.length) {
             /* name exists, show the name */
@@ -111,7 +111,7 @@ export class VelResolveName {
      * get the name of a background
      */
     protected goResolveNameBg(vel: VpcElBg, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElBg, '');
+        checkThrow(vel.isVpcElBg, 'J=|');
         let name = vel.getS('name');
         if (name.length) {
             /* name exists, show the name */
@@ -137,7 +137,7 @@ export class VelResolveName {
      * interesting fact, in emulator the "long name" of stack would return filepath of the stack
      */
     protected goResolveNameStack(vel: VpcElStack, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElStack, '');
+        checkThrow(vel.isVpcElStack, 'J<|');
         if (adjective === PropAdjective.Short) {
             return vel.getS('name');
         } else {
@@ -150,7 +150,7 @@ export class VelResolveName {
      * interesting fact, in emulator the "long name" of product would return filepath of the app
      */
     protected goResolveNameProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElProduct, '');
+        checkThrow(vel.isVpcElProduct, 'J;|');
         return cProductName;
     }
 
@@ -166,7 +166,7 @@ export class VelResolveName {
      * implementation for "put the owner of cd 1 into x"
      */
     getOwnerName(vel: VpcElBase, adjective: PropAdjective) {
-        checkThrow(!(vel as VpcElStack).isVpcElStack, 'cannot get owner of stack');
+        checkThrow(!(vel as VpcElStack).isVpcElStack, 'J:|cannot get owner of stack');
         return this.go(this.model.getOwner(vel), adjective);
     }
 }
@@ -235,12 +235,12 @@ export class VelResolveReference {
 
         /* check that the types are consistent */
         checkThrow(ref.isRequestedVelRef, '76|invalid RequestedElRef');
-        checkThrow(!ref.parentCdInfo || ref.parentCdInfo.type === VpcElType.Card, '');
-        checkThrow(!ref.parentBgInfo || ref.parentBgInfo.type === VpcElType.Bg, '');
-        checkThrow(!ref.parentStackInfo || ref.parentStackInfo.type === VpcElType.Stack, '');
+        checkThrow(!ref.parentCdInfo || ref.parentCdInfo.type === VpcElType.Card, 'J/|');
+        checkThrow(!ref.parentBgInfo || ref.parentBgInfo.type === VpcElType.Bg, 'J.|');
+        checkThrow(!ref.parentStackInfo || ref.parentStackInfo.type === VpcElType.Stack, 'J-|');
         checkThrow(
             !ref.parentStackInfo || ref.parentStackInfo.onlyThisSpecified(),
-            `75|we don't currently support referring to stacks other than "this stack"`
+            `J,|we don't currently support referring to stacks other than "this stack"`
         );
 
         if (ref.isReferenceToMe) {
@@ -260,7 +260,7 @@ export class VelResolveReference {
         } else if (ref.lookById) {
             /* looking up by id is very fast, and the same for every type */
             let ret = this.model.findByIdUntyped(ref.lookById.toString());
-            checkThrow(!ret || ret.getType() === ref.type, 'wrong type', ref.type, ret ? ret.getType() : '');
+            checkThrow(!ret || ret.getType() === ref.type, 'J+|wrong type', ref.type, ret ? ret.getType() : '');
             return ret;
         }
 
@@ -291,8 +291,8 @@ export class VelResolveReference {
      * resolve a button or field
      */
     protected goBtnOrFld(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
-        checkThrow(!parentBg, "this type can't have a parent bg");
-        checkThrow(!isBg, 'not yet supported');
+        checkThrow(!parentBg, "J*|this type can't have a parent bg");
+        checkThrow(!isBg, 'J)|not yet supported');
         parentCd = parentCd || this.model.getCurrentCard();
         if (!isBg) {
             if (ref.lookByAbsolute !== undefined) {
@@ -303,7 +303,7 @@ export class VelResolveReference {
                 /* put the name of cd btn "myBtn" into x */
                 return parentCd.parts.find(vel => vel.getType() === ref.type && vel.getS('name') === ref.lookByName);
             } else {
-                checkThrow(false, 'unknown object reference');
+                checkThrow(false, 'J(|unknown object reference');
             }
         }
     }
@@ -312,8 +312,8 @@ export class VelResolveReference {
      * resolve a card
      */
     protected goCard(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
-        checkThrow(!parentCd, "this type can't have a parent card");
-        checkThrow(!isBg, "this type can't be in a bkgnd");
+        checkThrow(!parentCd, "J&|this type can't have a parent card");
+        checkThrow(!isBg, "J%|this type can't be in a bkgnd");
         let currentCard = this.model.getCurrentCard();
         if (parentBg) {
             let arr = parentBg.cards;
@@ -346,9 +346,9 @@ export class VelResolveReference {
      * resolve a background
      */
     protected goBg(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
-        checkThrow(!parentCd, "this type can't have a parent card");
-        checkThrow(!parentBg, "this type can't have a parent bg");
-        checkThrow(!isBg, "this type can't be in a bkgnd");
+        checkThrow(!parentCd, "J$|this type can't have a parent card");
+        checkThrow(!parentBg, "J#|this type can't have a parent bg");
+        checkThrow(!isBg, "J!|this type can't be in a bkgnd");
         let arr = this.model.stack.bgs;
         if (ref.lookByAbsolute !== undefined) {
             /* put the name of bkgnd 2 into x */
@@ -369,12 +369,12 @@ export class VelResolveReference {
      * resolve a stack
      */
     protected goStack(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
-        checkThrow(!parentCd, "this type can't have a parent card");
-        checkThrow(!parentBg, "this type can't have a parent bg");
-        checkThrow(!isBg, "this type can't be in a bkgnd");
+        checkThrow(!parentCd, "J |this type can't have a parent card");
+        checkThrow(!parentBg, "Jz|this type can't have a parent bg");
+        checkThrow(!isBg, "Jy|this type can't be in a bkgnd");
         checkThrow(
             !ref || ref.onlyThisSpecified(),
-            `75|we don't currently support referring to stacks other than "this stack"`
+            `Jx|we don't currently support referring to stacks other than "this stack"`
         );
 
         return this.model.stack;
@@ -384,9 +384,9 @@ export class VelResolveReference {
      * resolve a product
      */
     protected goProduct(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
-        checkThrow(!parentCd, "this type can't have a parent card");
-        checkThrow(!parentBg, "this type can't have a parent bg");
-        checkThrow(!isBg, "this type can't be in a bkgnd");
+        checkThrow(!parentCd, "Jw|this type can't have a parent card");
+        checkThrow(!parentBg, "Jv|this type can't have a parent bg");
+        checkThrow(!isBg, "Ju|this type can't be in a bkgnd");
         checkThrow(
             !ref || ref.onlyThisSpecified(),
             `75|we don't currently support referring to other than "${cProductName}"`

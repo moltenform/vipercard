@@ -118,7 +118,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
             childCount += arrs[i].length;
         }
 
-        checkThrowEq(0, childCount, `you must delete all children before deleting this object`);
+        checkThrowEq(0, childCount, `K(|you must delete all children before deleting this object`);
     }
 
     /**
@@ -153,7 +153,7 @@ class UndoableActionModifyVelement implements UndoableAction {
                 prevVal = '$' + UI512Compress.compressString(prevVal.toString());
                 newVal = '$' + UI512Compress.compressString(newVal.toString());
             } else {
-                throw makeVpcInternalErr('both must be strings ' + propName + ' ' + velId);
+                throw makeVpcInternalErr('K&|both must be strings ' + propName + ' ' + velId);
             }
         } else if ((prevVal as FormattedText).isFormattedText) {
             if ((newVal as FormattedText).isFormattedText) {
@@ -162,7 +162,7 @@ class UndoableActionModifyVelement implements UndoableAction {
                 prevVal = '@' + UI512Compress.compressString((prevVal as FormattedText).toSerialized());
                 newVal = '@' + UI512Compress.compressString((newVal as FormattedText).toSerialized());
             } else {
-                throw makeVpcInternalErr('both must be FormattedText ' + propName + ' ' + velId);
+                throw makeVpcInternalErr('K%|both must be FormattedText ' + propName + ' ' + velId);
             }
         }
 
@@ -327,7 +327,7 @@ export class UndoManager implements ElementObserver {
     undoableAction(fn: () => void, type = TypeOfUndoAction.StartNewAction) {
         /* note: use needToAddToList,
         be aware of re-entrancy into this method */
-        assertTrueWarn(!this.expectNoChanges, 'expected no changes');
+        assertTrueWarn(!this.expectNoChanges, 'K$|expected no changes');
         let needToAddToList = false;
         if (!this.activeChangeSet) {
             this.activeChangeSet = new UndoableChangeSet(type);
@@ -348,7 +348,7 @@ export class UndoManager implements ElementObserver {
      * record changes
      */
     protected pushUndoableChanges(list: UndoableChangeSet) {
-        assertTrueWarn(!this.expectNoChanges, 'expected no changes');
+        assertTrueWarn(!this.expectNoChanges, 'K#|expected no changes');
         if (this.doWithoutAbilityToUndoActive) {
             /* we've been told not to record any changes */
             return;
@@ -441,7 +441,7 @@ export class UndoManager implements ElementObserver {
         prevVal: ElementObserverVal,
         newVal: ElementObserverVal
     ) {
-        assertTrueWarn(!this.expectNoChanges, 'expected no changes');
+        assertTrueWarn(!this.expectNoChanges, 'K!|expected no changes');
         if (this.doWithoutAbilityToUndoActive) {
             return;
         } else if (

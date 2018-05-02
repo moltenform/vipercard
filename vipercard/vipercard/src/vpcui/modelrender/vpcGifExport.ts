@@ -92,7 +92,7 @@ export class PaintGifExport {
                 let cds = this.vci.getModel().stack.bgs[0].cards;
                 let cardId = cds[i].id;
                 let [currentlyCachedV, currentlyCachedIm] = this.cbRefreshCachedPaintForCard(cardId);
-                checkThrow(encoder.addFrame(currentlyCachedIm.context), `addFrame() returned false on cd ${i + 1}.`);
+                checkThrow(encoder.addFrame(currentlyCachedIm.context), `KT|addFrame() returned false on cd ${i + 1}.`);
             }
 
             await sleep(100);
@@ -121,7 +121,7 @@ export class PaintGifExport {
         /* next frame every n milliseconds */
         encoder.setDelay(delay);
 
-        checkThrow(encoder.start(), 'start() returned false.');
+        checkThrow(encoder.start(), 'KS|start() returned false.');
         return encoder;
     }
 

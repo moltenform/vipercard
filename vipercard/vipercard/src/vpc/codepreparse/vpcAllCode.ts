@@ -161,11 +161,11 @@ export class VpcAllCode {
                 /* a syntax error occurred */
                 let retAsErr = ret as VpcScriptErrorBase;
                 if (retAsErr && retAsErr.isVpcScriptErrorBase) {
-                    let err = makeVpcScriptErr('$compilation error$');
+                    let err = makeVpcScriptErr('JV|$compilation error$');
                     markUI512Err(err, true, false, true, retAsErr);
                     throw err;
                 } else {
-                    throw makeVpcScriptErr('VpcCodeOfOneVel did not return expected type ' + ret);
+                    throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
                 }
             } else {
                 /* it's fine, this vel has no code */

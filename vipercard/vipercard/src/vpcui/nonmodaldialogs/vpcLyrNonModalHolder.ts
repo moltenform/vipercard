@@ -40,7 +40,7 @@ export class VpcLyrNonModalHolder extends VpcUILayer {
             form.create(this.pr, this.vci.UI512App());
             this.current = form;
         } else if (form) {
-            throw makeVpcInternalErr('expected VpcFormNonModalDialogBase.');
+            throw makeVpcInternalErr('KY|expected VpcFormNonModalDialogBase.');
         }
     }
 

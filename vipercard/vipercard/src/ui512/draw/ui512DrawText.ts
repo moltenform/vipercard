@@ -511,7 +511,7 @@ class LineTextToRender {
         for (let i = 0; i < this.text.len(); i++) {
             if (this.text.charAt(i) !== specialCharNumZeroPixelChar) {
                 let drawn = this.measureChar(i, measurements);
-                assertTrue(drawn !== undefined, '');
+                assertTrue(drawn !== undefined, 'I[|');
                 curX += drawn.newLogicalX;
             }
         }

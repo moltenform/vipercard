@@ -107,7 +107,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
         this.children = [];
 
         let newForm = this.makeALoginClass();
-        checkThrow(newForm.isVpcNonModalFormLoginInterface, '');
+        checkThrow(newForm.isVpcNonModalFormLoginInterface, 'KX|');
         VpcNonModalFormBase.standardWindowBounds(newForm, this.vci);
         newForm.fnCbWhenSignedIn = this.fnCbWhenSignedIn;
         newForm.autoFillUsername = autoFillUsername;

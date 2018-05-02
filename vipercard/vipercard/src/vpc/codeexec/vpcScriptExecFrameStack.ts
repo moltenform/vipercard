@@ -68,7 +68,7 @@ export class VpcExecFrameStack {
         code: VpcCodeOfOneVel,
         codeLine: VpcCodeLineReference
     ) {
-        checkThrowEq(VpcTool.Browse, this.outside.GetCurrentTool(true), 'not browse tool?');
+        checkThrowEq(VpcTool.Browse, this.outside.GetCurrentTool(true), 'JI|not browse tool?');
         let newFrame = new VpcExecFrame(msgName, msg);
         newFrame.codeSection = code;
         this.validatedGoto(newFrame, codeLine, true);

@@ -26,7 +26,7 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            UI512BeginAsync(() => this.goSaveAsAsync(throwIfUndefined(ses, '')), undefined, false);
+            UI512BeginAsync(() => this.goSaveAsAsync(throwIfUndefined(ses, 'Kr|')), undefined, false);
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -46,7 +46,7 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            UI512BeginAsync(() => this.goSaveAsync(throwIfUndefined(ses, '')), undefined, false);
+            UI512BeginAsync(() => this.goSaveAsync(throwIfUndefined(ses, 'Kq|')), undefined, false);
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -340,10 +340,8 @@ export class VpcSave implements VpcSaveInterface {
             } else {
                 /* case 4) from a stack we do own */
                 if (this.pr.isDocDirty()) {
-                    throw makeVpcInternalErr(
-                        msgNotification +
-                            lng("lngIt looks like you have unsaved changes, we're reminding you to hit Save first.")
-                    );
+                    let msg = lng("lngIt looks like you have unsaved changes, we're reminding you to hit Save first.")
+                    throw makeVpcInternalErr(msgNotification + msg);
                 }
 
                 return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);

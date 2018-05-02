@@ -357,7 +357,9 @@ export class VpcBuiltinFunctions {
      */
     callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.cmdKey === undefined) {
-            throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
+            throw makeVpcScriptErr(
+                "Ja|not a key event - function can only be called in a handler like 'on afterkeydown'"
+            );
         } else {
             return VpcValBool(frmMsg && frmMsg.cmdKey);
         }
@@ -369,7 +371,9 @@ export class VpcBuiltinFunctions {
      */
     callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.optionKey === undefined) {
-            throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
+            throw makeVpcScriptErr(
+                "JZ|not a key event - function can only be called in a handler like 'on afterkeydown'"
+            );
         } else {
             return VpcValBool(frmMsg && frmMsg.optionKey);
         }
@@ -381,7 +385,9 @@ export class VpcBuiltinFunctions {
      */
     callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.shiftKey === undefined) {
-            throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
+            throw makeVpcScriptErr(
+                "JY|not a key event - function can only be called in a handler like 'on afterkeydown'"
+            );
         } else {
             return VpcValBool(frmMsg && frmMsg.shiftKey);
         }
@@ -393,7 +399,9 @@ export class VpcBuiltinFunctions {
      */
     callKeychar(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyChar === undefined) {
-            throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
+            throw makeVpcScriptErr(
+                "JX|not a key event - function can only be called in a handler like 'on afterkeydown'"
+            );
         } else {
             return VpcValS(frmMsg.keyChar);
         }
@@ -404,7 +412,9 @@ export class VpcBuiltinFunctions {
      */
     callKeyrepeated(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyRepeated === undefined) {
-            throw makeVpcScriptErr("not a key event - function can only be called in a handler like 'on afterkeydown'");
+            throw makeVpcScriptErr(
+                "JW|not a key event - function can only be called in a handler like 'on afterkeydown'"
+            );
         } else {
             return VpcValBool(frmMsg && frmMsg.keyRepeated);
         }

@@ -93,7 +93,7 @@ export class UI512PainterCvData extends UI512Painter {
     }
 
     floodFill(xIn: number, yIn: number, color: number) {
-        assertTrue(isFinite(xIn) && isFinite(yIn), 'not finite', xIn, yIn);
+        assertTrue(isFinite(xIn) && isFinite(yIn), 'I>|not finite', xIn, yIn);
         color = simplifyPattern(color);
         if (needsPatternSupport(color)) {
             this.floodFillInTwoStages(xIn, yIn, color);

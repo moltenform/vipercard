@@ -965,20 +965,20 @@ HContainer(
         let lexer = TestParseHelpers.instance.lexer;
         let input = 'put\\\n 4\\\n into\\\n x\nput 5\\\n into y';
         let lexResult = lexer.tokenize(input);
-        assertTrue(!lexResult.errors.length, `${lexResult.errors[0]}`);
-        assertEq(9, lexResult.tokens.length, '');
-        assertEq('1,2,3,4,4,5,5,6,6', lexResult.tokens.map(o => o.startLine).join(','), '');
-        assertEq('1,2,3,4,4,5,5,6,6', lexResult.tokens.map(o => o.endLine).join(','), '');
-        assertEq('put,4,into,x,\n,put,5,into,y', lexResult.tokens.map(o => o.image).join(','), '');
+        assertTrue(!lexResult.errors.length, `HX|${lexResult.errors[0]}`);
+        assertEq(9, lexResult.tokens.length, 'HW|');
+        assertEq('1,2,3,4,4,5,5,6,6', lexResult.tokens.map(o => o.startLine).join(','), 'HV|');
+        assertEq('1,2,3,4,4,5,5,6,6', lexResult.tokens.map(o => o.endLine).join(','), 'HU|');
+        assertEq('put,4,into,x,\n,put,5,into,y', lexResult.tokens.map(o => o.image).join(','), 'HT|');
     },
     'TestCloneToken',
     () => {
         let lexer = TestParseHelpers.instance.lexer;
         let input = 'put 4 into x';
         let lexResult = lexer.tokenize(input);
-        assertTrue(!lexResult.errors.length, `${lexResult.errors[0]}`);
-        assertEq(4, lexResult.tokens.length, '');
-        assertEq('put,4,into,x', lexResult.tokens.map(o => o.image).join(','), '');
+        assertTrue(!lexResult.errors.length, `HS|${lexResult.errors[0]}`);
+        assertEq(4, lexResult.tokens.length, 'HR|');
+        assertEq('put,4,into,x', lexResult.tokens.map(o => o.image).join(','), 'HQ|');
 
         /* check that the properties we copy over in
         cloneToken are the same that the real lexer produces */
@@ -990,10 +990,10 @@ HContainer(
         clonedTokenKeys.sort();
 
         /* these ones we know we can ignore, after confirming they are undefined in the real object */
-        assertEq(undefined, real.isInsertedInRecovery, '');
-        assertEq(undefined, real.tokenClassName, '');
+        assertEq(undefined, real.isInsertedInRecovery, 'HP|');
+        assertEq(undefined, real.tokenClassName, 'HO|');
         clonedTokenKeys = clonedTokenKeys.filter(k => k !== 'isInsertedInRecovery' && k !== 'tokenClassName');
-        assertEqWarn(realTokenKeys.join(','), clonedTokenKeys.join(','), '');
+        assertEqWarn(realTokenKeys.join(','), clonedTokenKeys.join(','), 'HN|');
     }
 ];
 

@@ -82,12 +82,11 @@ export class VpcChangeSelectedFont {
     protected setFont(v: string, type: string) {
         let worked = this.setFontImpl(v, type);
         if (!worked) {
-            throw makeVpcInternalErr(
-                msgNotification +
-                    lng(
-                        'lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.'
-                    )
+            let msg = lng(
+                'lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.'
             );
+
+            throw makeVpcInternalErr(msgNotification + msg);
         }
     }
 
@@ -118,7 +117,7 @@ export class VpcChangeSelectedFont {
             return 'plain';
         }
 
-        checkThrow(allStyle !== 'mixed', 'did not expected to see "mixed".');
+        checkThrow(allStyle !== 'mixed', 'KP|did not expected to see "mixed".');
         let styles = allStyle.split(',');
         styles = styles.filter(s => s !== 'plain');
         let foundIndex = styles.findIndex(s => s === v);
@@ -164,7 +163,7 @@ export class VpcChangeSelectedFont {
         chunk.type = VpcChunkType.Chars;
         let velRef = new RequestedVelRef(VpcElType.Fld);
         let idn = parseInt(vel.id, base10);
-        checkThrow(isFinite(idn), 'non numeric id?', vel.id);
+        checkThrow(isFinite(idn), 'KO|non numeric id?', vel.id);
         velRef.lookById = idn;
 
         if (typeOfChange !== 'textstyle') {
@@ -176,7 +175,7 @@ export class VpcChangeSelectedFont {
             /* do this character by character, because styles can differ */
             /* 1) if one of the letters was bold, setting the selection to italic shouldn't lose the bold of that one */
             /* 2) besides, if we looked up current style of all the selection, it might return 'mixed' and we wouldn't know how to flip */
-            assertTrueWarn(chunk.first <= chunk.last, '', chunk.first, chunk.last);
+            assertTrueWarn(chunk.first <= chunk.last, 'KN|', chunk.first, chunk.last);
             for (let i = chunk.first; i <= chunk.last; i++) {
                 let subChunk = new RequestedChunk(i);
                 subChunk.first = i;

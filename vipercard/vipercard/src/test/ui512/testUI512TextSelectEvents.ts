@@ -292,13 +292,13 @@ let mTests: (string | Function)[] = [
         let gel = new UI512ElTextFieldAsGeneric(el);
         el.setFmTxt(FormattedText.newFromUnformatted(''));
         TextSelModify.selectLineInField(gel, 0);
-        assertEq(0, el.getN('selcaret'), '');
-        assertEq(0, el.getN('selend'), '');
-        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(0, el.getN('selcaret'), 'C8|');
+        assertEq(0, el.getN('selend'), 'C7|');
+        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), 'C6|');
         TextSelModify.selectLineInField(gel, 2);
-        assertEq(0, el.getN('selcaret'), '');
-        assertEq(0, el.getN('selend'), '');
-        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(0, el.getN('selcaret'), 'C5|');
+        assertEq(0, el.getN('selend'), 'C4|');
+        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), 'C3|');
     },
     'testSelectLineInField,selectByLinesWhichLine.FieldWithNoEmptyLines',
     () => {
@@ -306,29 +306,29 @@ let mTests: (string | Function)[] = [
         let gel = new UI512ElTextFieldAsGeneric(el);
         el.setFmTxt(FormattedText.newFromUnformatted('abc\ndef\nghi'));
         TextSelModify.selectLineInField(gel, 0);
-        assertEq(0, el.getN('selcaret'), '');
-        assertEq(4, el.getN('selend'), '');
-        assertEq(0, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(0, el.getN('selcaret'), 'C2|');
+        assertEq(4, el.getN('selend'), 'C1|');
+        assertEq(0, TextSelModify.selectByLinesWhichLine(gel), 'C0|');
 
         TextSelModify.selectLineInField(gel, 1);
-        assertEq(4, el.getN('selcaret'), '');
-        assertEq(8, el.getN('selend'), '');
-        assertEq(1, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(4, el.getN('selcaret'), 'B~|');
+        assertEq(8, el.getN('selend'), 'B}|');
+        assertEq(1, TextSelModify.selectByLinesWhichLine(gel), 'B||');
 
         TextSelModify.selectLineInField(gel, 2);
-        assertEq(8, el.getN('selcaret'), '');
-        assertEq(11, el.getN('selend'), '');
-        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(8, el.getN('selcaret'), 'B{|');
+        assertEq(11, el.getN('selend'), 'B`|');
+        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), 'B_|');
 
         TextSelModify.selectLineInField(gel, 3);
-        assertEq(8, el.getN('selcaret'), '');
-        assertEq(11, el.getN('selend'), '');
-        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(8, el.getN('selcaret'), 'B^|');
+        assertEq(11, el.getN('selend'), 'B]|');
+        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), 'B[|');
 
         TextSelModify.selectLineInField(gel, 4);
-        assertEq(8, el.getN('selcaret'), '');
-        assertEq(11, el.getN('selend'), '');
-        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(8, el.getN('selcaret'), 'B@|');
+        assertEq(11, el.getN('selend'), 'B?|');
+        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), 'B>|');
     },
     'testSelectLineInField,selectByLinesWhichLine.FieldWithSomeEmptyLines',
     () => {
@@ -336,29 +336,29 @@ let mTests: (string | Function)[] = [
         let gel = new UI512ElTextFieldAsGeneric(el);
         el.setFmTxt(FormattedText.newFromUnformatted('\nabc\n\ndef\n'));
         TextSelModify.selectLineInField(gel, 0);
-        assertEq(0, el.getN('selcaret'), '');
-        assertEq(1, el.getN('selend'), '');
-        assertEq(0, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(0, el.getN('selcaret'), 'B=|');
+        assertEq(1, el.getN('selend'), 'B<|');
+        assertEq(0, TextSelModify.selectByLinesWhichLine(gel), 'B;|');
         TextSelModify.selectLineInField(gel, 1);
-        assertEq(1, el.getN('selcaret'), '');
-        assertEq(5, el.getN('selend'), '');
-        assertEq(1, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(1, el.getN('selcaret'), 'B:|');
+        assertEq(5, el.getN('selend'), 'B/|');
+        assertEq(1, TextSelModify.selectByLinesWhichLine(gel), 'B.|');
         TextSelModify.selectLineInField(gel, 2);
-        assertEq(5, el.getN('selcaret'), '');
-        assertEq(6, el.getN('selend'), '');
-        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(5, el.getN('selcaret'), 'B-|');
+        assertEq(6, el.getN('selend'), 'B,|');
+        assertEq(2, TextSelModify.selectByLinesWhichLine(gel), 'B+|');
         TextSelModify.selectLineInField(gel, 3);
-        assertEq(6, el.getN('selcaret'), '');
-        assertEq(10, el.getN('selend'), '');
-        assertEq(3, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(6, el.getN('selcaret'), 'B*|');
+        assertEq(10, el.getN('selend'), 'B)|');
+        assertEq(3, TextSelModify.selectByLinesWhichLine(gel), 'B(|');
         TextSelModify.selectLineInField(gel, 4);
-        assertEq(10, el.getN('selcaret'), '');
-        assertEq(10, el.getN('selend'), '');
-        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(10, el.getN('selcaret'), 'B&|');
+        assertEq(10, el.getN('selend'), 'B%|');
+        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), 'B$|');
         TextSelModify.selectLineInField(gel, 5);
-        assertEq(10, el.getN('selcaret'), '');
-        assertEq(10, el.getN('selend'), '');
-        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), '');
+        assertEq(10, el.getN('selcaret'), 'B#|');
+        assertEq(10, el.getN('selend'), 'B!|');
+        assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), 'B |');
     }
 ];
 

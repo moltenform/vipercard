@@ -142,7 +142,7 @@ export class UI512TestBase {
      * you will see a lot of false positives
      */
     static notifyUserIfDebuggerIsSetToAllExceptions() {
-        assertThrows('', 'intentionally throw', () => {
+        assertThrows('L||', 'intentionally throw', () => {
             throw makeVpcScriptErr(`1!|It looks like the debugger is set to break on 'All Exceptions'...
                 you probably want to turn this off because many tests intentionally throw exceptions.`);
         });
@@ -163,10 +163,10 @@ export async function assertThrowsAsync<T>(tagMsg: string, expectedErr: string, 
         UI512ErrorHandling.breakOnThrow = true;
     }
 
-    assertTrue(msg !== undefined, `did not throw ${tagMsg}`);
+    assertTrue(msg !== undefined, `JC|did not throw ${tagMsg}`);
     assertTrue(
         msg !== undefined && scontains(msg, expectedErr),
-        `message "${msg}" did not contain "${expectedErr}" ${tagMsg}`
+        `JB|message "${msg}" did not contain "${expectedErr}" ${tagMsg}`
     );
 }
 

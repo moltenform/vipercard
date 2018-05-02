@@ -16,10 +16,10 @@ export class VpcUI512Serialization {
         let ret: { [key: string]: ElementObserverVal } = {};
         for (let propName of propList) {
             let v = vel.getGeneric(propName);
-            assertTrueWarn(v !== undefined, propName);
+            assertTrueWarn(v !== undefined, propName, 'J||');
             if (propName === UI512Settable.fmtTxtVarName) {
                 let vAsText = v as FormattedText;
-                assertTrue(vAsText && vAsText.isFormattedText, 'invalid ftxt');
+                assertTrue(vAsText && vAsText.isFormattedText, 'J{|invalid ftxt');
                 ret[propName] = vAsText.toSerialized();
             } else {
                 ret[propName] = VpcUI512Serialization.serializePlain(v);
@@ -44,14 +44,14 @@ export class VpcUI512Serialization {
                             let vAsText = FormattedText.newFromSerialized(v);
                             vel.setFmTxt(vAsText);
                         } else {
-                            assertTrue(v instanceof FormattedText, 'not a string or FormattedText');
+                            assertTrue(v instanceof FormattedText, 'J`|not a string or FormattedText');
                             vel.setFmTxt(v as FormattedText);
                         }
                     } else {
                         vel.set(propName, VpcUI512Serialization.deserializePlain(v));
                     }
                 } else {
-                    assertTrueWarn(false, 'missing or null attr', propName);
+                    assertTrueWarn(false, 'J_|missing or null attr', propName);
                 }
             }
         } finally {
@@ -71,14 +71,14 @@ export class VpcUI512Serialization {
                         let vAsText = FormattedText.newFromSerialized(v as string);
                         setter.setFmTxt(vAsText);
                     } else {
-                        assertTrue(v instanceof FormattedText, 'not a string or FormattedText');
+                        assertTrue(v instanceof FormattedText, 'J^|not a string or FormattedText');
                         setter.setFmTxt(v as FormattedText);
                     }
                 } else {
                     setter.set(propName, v);
                 }
             } else {
-                assertTrueWarn(false, 'missing or null attr', propName);
+                assertTrueWarn(false, 'J]|missing or null attr', propName);
             }
         }
     }

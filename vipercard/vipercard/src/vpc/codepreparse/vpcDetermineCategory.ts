@@ -41,33 +41,33 @@ export class DetermineCategory {
         );
 
         checkThrow(!tk || !isTkType(tk, tks.TokenNumber), `8e|we don't support variables named "number"`);
-        checkThrow(!tk || !isTkType(tk, tks.TokenLength), `8d|we don't support variables named "length"`);
-        checkThrow(!tk || !isTkType(tk, tks.TokenContains), `8d|we don't support variables named "contains"`);
+        checkThrow(!tk || !isTkType(tk, tks.TokenLength), `Jj|we don't support variables named "length"`);
+        checkThrow(!tk || !isTkType(tk, tks.TokenContains), `Ji|we don't support variables named "contains"`);
         checkThrow(!tk || !isTkType(tk, tks.TokenWithin), `8d|we don't support variables named "within"`);
         checkThrow(!tk || !isTkType(tk, tks.TokenId), `8c|we don't support variables named "id"`);
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkordinal),
-            `8b|we don't support variables with names like "first", "last", "second", "middle", "any"`
+            `Jh|we don't support variables with names like "first", "last", "second", "middle", "any"`
         );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkcharorwordoritemorlineorplural),
-            `8b|we don't support variables with names like "char", "word", "item", "line"`
+            `Jg|we don't support variables with names like "char", "word", "item", "line"`
         );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkmultdivideexpdivmod),
-            `8b|we don't support variables with names like "div", "mod"`
+            `Jf|we don't support variables with names like "div", "mod"`
         );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkbkgndorpluralsyn),
-            `8b|we don't support variables with names like "bgs", "bkgnds", "backgrounds"`
+            `Je|we don't support variables with names like "bgs", "bkgnds", "backgrounds"`
         );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkcardorpluralsyn),
-            `8b|we don't support variables with names like "cds", "cards"`
+            `Jd|we don't support variables with names like "cds", "cards"`
         );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkbtnorpluralsyn),
-            `8b|we don't support variables with names like "btns", "buttons"`
+            `Jc|we don't support variables with names like "btns", "buttons"`
         );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkfldorpluralsyn),
@@ -345,7 +345,7 @@ export class DetermineCategory {
      */
     goExitRepeat(line: ChvIToken[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.RepeatExit;
-        checkThrowEq(2, line.length, `80|line should be just 'exit repeat'`);
+        checkThrowEq(2, line.length, `Jb|line should be just 'exit repeat'`);
     }
 
     /**

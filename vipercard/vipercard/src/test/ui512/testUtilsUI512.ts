@@ -9,72 +9,72 @@
 let mTests: (string | Function)[] = [
     'testUtil512findStrToEnum.FoundPrimary',
     () => {
-        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), '');
-        assertEq(TestEnum.Second, findStrToEnum<TestEnum>(TestEnum, 'Second'), '');
-        assertEq(TestEnum.Third, findStrToEnum<TestEnum>(TestEnum, 'Third'), '');
+        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), 'Dz|');
+        assertEq(TestEnum.Second, findStrToEnum<TestEnum>(TestEnum, 'Second'), 'Dy|');
+        assertEq(TestEnum.Third, findStrToEnum<TestEnum>(TestEnum, 'Third'), 'Dx|');
     },
     'testUtil512findStrToEnum.NotFound',
     () => {
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, ''), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'F'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firstf'), '');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, ''), 'Dw|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'F'), 'Dv|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firstf'), 'Du|');
     },
     'testUtil512findStrToEnum.YouShouldNotBeAbleToAccessFlags',
     () => {
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__isUI512Enum'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__UI512EnumCapitalize'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__foo'), '');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__isUI512Enum'), 'Dt|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__UI512EnumCapitalize'), 'Ds|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, '__foo'), 'Dr|');
     },
     'testUtil512findStrToEnum.YouShouldNotBeAbleToDirectlyAccessAlts',
     () => {
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormTheFirst'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormScnd'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormFoo'), '');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormTheFirst'), 'Dq|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormScnd'), 'Dp|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'AlternateFormFoo'), 'Do|');
     },
     'testUtil512findStrToEnum.FirstLetterCaseInsensitive',
     () => {
-        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), '');
-        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'first'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'firsT'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'FirsT'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'First '), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firstf'), '');
-        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firs'), '');
+        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), 'Dn|');
+        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'first'), 'Dm|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'firsT'), 'Dl|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'FirsT'), 'Dk|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'First '), 'Dj|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firstf'), 'Di|');
+        assertEq(undefined, findStrToEnum<TestEnum>(TestEnum, 'Firs'), 'Dh|');
     },
     'testUtil512findStrToEnum.UseAlts',
     () => {
-        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), '');
-        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'TheFirst'), '');
-        assertEq(TestEnum.Second, findStrToEnum<TestEnum>(TestEnum, 'Scnd'), '');
-        assertEq(TestEnum.Third, findStrToEnum<TestEnum>(TestEnum, 'Thd'), '');
+        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'First'), 'Dg|');
+        assertEq(TestEnum.First, findStrToEnum<TestEnum>(TestEnum, 'TheFirst'), 'Df|');
+        assertEq(TestEnum.Second, findStrToEnum<TestEnum>(TestEnum, 'Scnd'), 'De|');
+        assertEq(TestEnum.Third, findStrToEnum<TestEnum>(TestEnum, 'Thd'), 'Dd|');
     },
     'testUtil512getEnumToStr.FoundPrimary',
     () => {
-        assertEq('first', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.First), '');
-        assertEq('second', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.Second), '');
-        assertEq('third', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.Third), '');
+        assertEq('first', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.First), 'Dc|');
+        assertEq('second', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.Second), 'Db|');
+        assertEq('third', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.Third), 'Da|');
     },
     'testUtil512getEnumToStr.AlternatesHaveSameVal',
     () => {
-        assertEq('first', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormTheFirst), '');
-        assertEq('second', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormScnd), '');
-        assertEq('third', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormThd), '');
+        assertEq('first', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormTheFirst), 'DZ|');
+        assertEq('second', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormScnd), 'DY|');
+        assertEq('third', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.AlternateFormThd), 'DX|');
     },
     'testUtil512getEnumToStr.NotFound',
     () => {
-        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, -1), '');
-        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, 999), '');
+        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, -1), 'DW|');
+        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, 999), 'DV|');
     },
     'testUtil512getEnumToStr.ShouldNotBeAbleToAccessFlags',
     () => {
-        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.__isUI512Enum), '');
-        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.__UI512EnumCapitalize), '');
+        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.__isUI512Enum), 'DU|');
+        assertEq('Unknown', getEnumToStrOrUnknown<TestEnum>(TestEnum, TestEnum.__UI512EnumCapitalize), 'DT|');
     },
     'testUtil512getStrToEnum.FoundPrimary',
     () => {
-        assertEq(TestEnum.First, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'First'), '');
-        assertEq(TestEnum.Second, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'Second'), '');
-        assertEq(TestEnum.Third, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'Third'), '');
+        assertEq(TestEnum.First, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'First'), 'DS|');
+        assertEq(TestEnum.Second, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'Second'), 'DR|');
+        assertEq(TestEnum.Third, getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'Third'), 'DQ|');
     },
     'testUtil512getStrToEnum.ShowValuesInExceptionMsg',
     () => {
@@ -90,24 +90,24 @@ let mTests: (string | Function)[] = [
 
         let pts = excMessage.split(',');
         pts.sort();
-        assertEq(pts[0], ` first`, '');
-        assertEq(pts[1], ` second`, '');
-        assertEq(pts[2], ` third (4E)`, '');
-        assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum  try one of`), '');
+        assertEq(pts[0], ` first`, 'DP|');
+        assertEq(pts[1], ` second`, 'DO|');
+        assertEq(pts[2], ` third (4E)`, 'DN|');
+        assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum  try one of`), 'DM|');
     },
     'testUtil512fitIntoInclusive.AlreadyWithin',
     () => {
-        assertEq(1, fitIntoInclusive(1, 1, 1), '');
-        assertEq(1, fitIntoInclusive(1, 1, 3), '');
-        assertEq(2, fitIntoInclusive(2, 1, 3), '');
-        assertEq(3, fitIntoInclusive(3, 1, 3), '');
+        assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
+        assertEq(1, fitIntoInclusive(1, 1, 3), 'DK|');
+        assertEq(2, fitIntoInclusive(2, 1, 3), 'DJ|');
+        assertEq(3, fitIntoInclusive(3, 1, 3), 'DI|');
     },
     'testUtil512fitIntoInclusive.NeedToTruncate',
     () => {
-        assertEq(1, fitIntoInclusive(0, 1, 1), '');
-        assertEq(1, fitIntoInclusive(2, 1, 1), '');
-        assertEq(1, fitIntoInclusive(0, 1, 3), '');
-        assertEq(3, fitIntoInclusive(4, 1, 3), '');
+        assertEq(1, fitIntoInclusive(0, 1, 1), 'DH|');
+        assertEq(1, fitIntoInclusive(2, 1, 1), 'DG|');
+        assertEq(1, fitIntoInclusive(0, 1, 3), 'DF|');
+        assertEq(3, fitIntoInclusive(4, 1, 3), 'DE|');
     },
     'testUtil512defaultSort.String',
     () => {
@@ -149,49 +149,49 @@ let mTests: (string | Function)[] = [
     },
     'testUtil512defaultSort.DiffTypesShouldThrow',
     () => {
-        assertThrows('', 'not compare', () => defaultSort('a', 1));
-        assertThrows('', 'not compare', () => defaultSort('a', true));
-        assertThrows('', 'not compare', () => defaultSort('a', undefined));
-        assertThrows('', 'not compare', () => defaultSort('a', []));
-        assertThrows('', 'not compare', () => defaultSort(1, 'a'));
-        assertThrows('', 'not compare', () => defaultSort(1, true));
-        assertThrows('', 'not compare', () => defaultSort(1, undefined));
-        assertThrows('', 'not compare', () => defaultSort(1, []));
-        assertThrows('', 'not compare', () => defaultSort(true, 'a'));
-        assertThrows('', 'not compare', () => defaultSort(true, 1));
-        assertThrows('', 'not compare', () => defaultSort(true, undefined));
-        assertThrows('', 'not compare', () => defaultSort(true, []));
-        assertThrows('', 'not compare', () => defaultSort(undefined, 'a'));
-        assertThrows('', 'not compare', () => defaultSort(undefined, 1));
-        assertThrows('', 'not compare', () => defaultSort(undefined, true));
-        assertThrows('', 'not compare', () => defaultSort(undefined, []));
-        assertThrows('', 'not compare', () => defaultSort([], 'a'));
-        assertThrows('', 'not compare', () => defaultSort([], 1));
-        assertThrows('', 'not compare', () => defaultSort([], true));
-        assertThrows('', 'not compare', () => defaultSort([], undefined));
+        assertThrows('Le|', 'not compare', () => defaultSort('a', 1));
+        assertThrows('Ld|', 'not compare', () => defaultSort('a', true));
+        assertThrows('Lc|', 'not compare', () => defaultSort('a', undefined));
+        assertThrows('Lb|', 'not compare', () => defaultSort('a', []));
+        assertThrows('La|', 'not compare', () => defaultSort(1, 'a'));
+        assertThrows('LZ|', 'not compare', () => defaultSort(1, true));
+        assertThrows('LY|', 'not compare', () => defaultSort(1, undefined));
+        assertThrows('LX|', 'not compare', () => defaultSort(1, []));
+        assertThrows('LW|', 'not compare', () => defaultSort(true, 'a'));
+        assertThrows('LV|', 'not compare', () => defaultSort(true, 1));
+        assertThrows('LU|', 'not compare', () => defaultSort(true, undefined));
+        assertThrows('LT|', 'not compare', () => defaultSort(true, []));
+        assertThrows('LS|', 'not compare', () => defaultSort(undefined, 'a'));
+        assertThrows('LR|', 'not compare', () => defaultSort(undefined, 1));
+        assertThrows('LQ|', 'not compare', () => defaultSort(undefined, true));
+        assertThrows('LP|', 'not compare', () => defaultSort(undefined, []));
+        assertThrows('LO|', 'not compare', () => defaultSort([], 'a'));
+        assertThrows('LN|', 'not compare', () => defaultSort([], 1));
+        assertThrows('LM|', 'not compare', () => defaultSort([], true));
+        assertThrows('LL|', 'not compare', () => defaultSort([], undefined));
     },
     'testUtil512defaultSort.DiffTypesInArrayShouldThrow',
     () => {
-        assertThrows('', 'not compare', () => defaultSort(['a', 'a'], ['a', 1]));
-        assertThrows('', 'not compare', () => defaultSort(['a', 'a'], ['a', true]));
-        assertThrows('', 'not compare', () => defaultSort(['a', 'a'], ['a', undefined]));
-        assertThrows('', 'not compare', () => defaultSort(['a', 'a'], ['a', []]));
-        assertThrows('', 'not compare', () => defaultSort(['a', 1], ['a', 'a']));
-        assertThrows('', 'not compare', () => defaultSort(['a', 1], ['a', true]));
-        assertThrows('', 'not compare', () => defaultSort(['a', 1], ['a', undefined]));
-        assertThrows('', 'not compare', () => defaultSort(['a', 1], ['a', []]));
-        assertThrows('', 'not compare', () => defaultSort(['a', true], ['a', 'a']));
-        assertThrows('', 'not compare', () => defaultSort(['a', true], ['a', 1]));
-        assertThrows('', 'not compare', () => defaultSort(['a', true], ['a', undefined]));
-        assertThrows('', 'not compare', () => defaultSort(['a', true], ['a', []]));
-        assertThrows('', 'not compare', () => defaultSort(['a', undefined], ['a', 'a']));
-        assertThrows('', 'not compare', () => defaultSort(['a', undefined], ['a', 1]));
-        assertThrows('', 'not compare', () => defaultSort(['a', undefined], ['a', true]));
-        assertThrows('', 'not compare', () => defaultSort(['a', undefined], ['a', []]));
-        assertThrows('', 'not compare', () => defaultSort(['a', []], ['a', 'a']));
-        assertThrows('', 'not compare', () => defaultSort(['a', []], ['a', 1]));
-        assertThrows('', 'not compare', () => defaultSort(['a', []], ['a', true]));
-        assertThrows('', 'not compare', () => defaultSort(['a', []], ['a', undefined]));
+        assertThrows('LK|', 'not compare', () => defaultSort(['a', 'a'], ['a', 1]));
+        assertThrows('LJ|', 'not compare', () => defaultSort(['a', 'a'], ['a', true]));
+        assertThrows('LI|', 'not compare', () => defaultSort(['a', 'a'], ['a', undefined]));
+        assertThrows('LH|', 'not compare', () => defaultSort(['a', 'a'], ['a', []]));
+        assertThrows('LG|', 'not compare', () => defaultSort(['a', 1], ['a', 'a']));
+        assertThrows('LF|', 'not compare', () => defaultSort(['a', 1], ['a', true]));
+        assertThrows('LE|', 'not compare', () => defaultSort(['a', 1], ['a', undefined]));
+        assertThrows('LD|', 'not compare', () => defaultSort(['a', 1], ['a', []]));
+        assertThrows('LC|', 'not compare', () => defaultSort(['a', true], ['a', 'a']));
+        assertThrows('LB|', 'not compare', () => defaultSort(['a', true], ['a', 1]));
+        assertThrows('LA|', 'not compare', () => defaultSort(['a', true], ['a', undefined]));
+        assertThrows('L9|', 'not compare', () => defaultSort(['a', true], ['a', []]));
+        assertThrows('L8|', 'not compare', () => defaultSort(['a', undefined], ['a', 'a']));
+        assertThrows('L7|', 'not compare', () => defaultSort(['a', undefined], ['a', 1]));
+        assertThrows('L6|', 'not compare', () => defaultSort(['a', undefined], ['a', true]));
+        assertThrows('L5|', 'not compare', () => defaultSort(['a', undefined], ['a', []]));
+        assertThrows('L4|', 'not compare', () => defaultSort(['a', []], ['a', 'a']));
+        assertThrows('L3|', 'not compare', () => defaultSort(['a', []], ['a', 1]));
+        assertThrows('L2|', 'not compare', () => defaultSort(['a', []], ['a', true]));
+        assertThrows('L1|', 'not compare', () => defaultSort(['a', []], ['a', undefined]));
     },
     'testUtil512defaultSort.ArrayThreeElements',
     () => {
@@ -249,7 +249,7 @@ let mTests: (string | Function)[] = [
             result.push(item);
         }
 
-        assertEq([], result, '');
+        assertEq([], result, 'DD|');
     },
     'testUtil512forOfGenerator',
     () => {

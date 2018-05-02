@@ -62,7 +62,7 @@ export async function vpcUsersCheckLogin(
     }
 
     let responseGetSalt = await vpcSendRequestForJson('/vpusers/get_public_info', 'POST', paramsGetSalt);
-    checkThrowEq(0, responseGetSalt.retcode, '');
+    checkThrowEq(0, responseGetSalt.retcode, 'Jo|');
     if (!responseGetSalt.user_found) {
         throw Error('user not found');
     }
@@ -241,9 +241,9 @@ export class VpcSession implements UI512IsSessionInterface {
         setfakeIp?: string,
         setServerAndClientTime?: string
     ): Promise<boolean> {
-        checkThrow(logentriesUserTypedDesc && logentriesUserTypedDesc.length > 1, '');
-        checkThrow(logentriesLastClientLogs && logentriesLastClientLogs.length > 1, '');
-        checkThrow(logentriesStackServerGuid && logentriesStackServerGuid.length > 1, '');
+        checkThrow(logentriesUserTypedDesc && logentriesUserTypedDesc.length > 1, 'Jn|');
+        checkThrow(logentriesLastClientLogs && logentriesLastClientLogs.length > 1, 'Jm|');
+        checkThrow(logentriesStackServerGuid && logentriesStackServerGuid.length > 1, 'Jl|');
         let nonce = makeNonce();
         let now = setServerAndClientTime || getUnixTimeSeconds().toString();
         let params: anyJson = {
@@ -383,7 +383,7 @@ export class VpcSession implements UI512IsSessionInterface {
      * get full stack id (username+stackid)
      */
     static getFullStackId(ownerUsername: string, partialStackid: string) {
-        checkThrow(partialStackid.startsWith('S'), '');
+        checkThrow(partialStackid.startsWith('S'), 'Jk|');
         partialStackid = partialStackid.substr(1);
         let ownerUsernameEncoded = Util512.toBase64UrlSafe(ownerUsername);
         return ownerUsernameEncoded + '|' + partialStackid;

@@ -54,7 +54,7 @@ export class UI512ImageCollectionImage {
     }
 
     getUrl() {
-        assertTrue(this.parent.id.match(/^[a-z]+$/), '');
+        assertTrue(this.parent.id.match(/^[a-z]+$/), 'I}|');
         return this.parent.url + this.parent.id + '/' + this.id + this.parent.suffix;
     }
 }

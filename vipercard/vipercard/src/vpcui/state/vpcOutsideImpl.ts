@@ -87,7 +87,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let ret = resolver.go(ref, me, target);
         checkThrow(
             !ret || !scontains(ret.getS('name'), '$$'),
-            `names with $$ are reserved for internal ViperCard objects.`
+            `Kt|names with $$ are reserved for internal ViperCard objects.`
         );
 
         return ret;

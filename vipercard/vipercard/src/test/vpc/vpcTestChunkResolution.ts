@@ -394,12 +394,12 @@ function testSetChunk(sExpected: string, s: string, type: VpcChunkType, first: n
 export class MockOutsideWorld {
     result = '_';
     SetVarContents(varName: string, v: VpcVal) {
-        assertEq('varName', varName, '');
+        assertEq('varName', varName, 'F6|');
         this.result = v.readAsString();
     }
 
     ReadVarContents(varName: string): VpcVal {
-        assertEq('varName', varName, '');
+        assertEq('varName', varName, 'F5|');
         return VpcValS(this.result);
     }
 

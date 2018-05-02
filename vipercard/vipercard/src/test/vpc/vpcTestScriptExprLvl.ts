@@ -752,14 +752,14 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         },
         'test_vpcvalnumbers',
         () => {
-            assertThrows('', '> 1e18', () => VpcValN(Infinity));
-            assertThrows('', '> 1e18', () => VpcValN(Number.POSITIVE_INFINITY));
-            assertThrows('', '> 1e18', () => VpcValN(-Infinity));
-            assertThrows('', '> 1e18', () => VpcValN(Number.NEGATIVE_INFINITY));
-            assertThrows('', '> 1e18', () => VpcValN(NaN));
-            assertThrows('', '> 1e18', () => VpcValN(1 / 0));
-            assertThrows('', '> 1e18', () => VpcValN(0 / 0));
-            assertThrows('', '> 1e18', () => VpcValN(3 % 0));
+            assertThrows('L`|', '> 1e18', () => VpcValN(Infinity));
+            assertThrows('L_|', '> 1e18', () => VpcValN(Number.POSITIVE_INFINITY));
+            assertThrows('L^|', '> 1e18', () => VpcValN(-Infinity));
+            assertThrows('L]|', '> 1e18', () => VpcValN(Number.NEGATIVE_INFINITY));
+            assertThrows('L[|', '> 1e18', () => VpcValN(NaN));
+            assertThrows('L@|', '> 1e18', () => VpcValN(1 / 0));
+            assertThrows('L?|', '> 1e18', () => VpcValN(0 / 0));
+            assertThrows('L>|', '> 1e18', () => VpcValN(3 % 0));
             let batch: [string, string][];
             batch = [
                 /* scientific notation applied for num literals */
@@ -906,41 +906,41 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         },
         'testModelGetById.should throw if not found',
         () => {
-            assertEq(undefined, this.vcstate.model.findByIdUntyped('111'), '');
-            assertEq(this.elIds.card_a_a, this.vcstate.model.findByIdUntyped(this.elIds.card_a_a)!.id, '');
-            assertEq(this.elIds.stack, this.vcstate.model.findByIdUntyped(this.elIds.stack)!.id, '');
-            assertThrows('', 'not found', () => this.vcstate.model.getByIdUntyped('111'));
-            assertEq(this.elIds.card_a_a, this.vcstate.model.getByIdUntyped(this.elIds.card_a_a).id, '');
-            assertEq(this.elIds.stack, this.vcstate.model.getByIdUntyped(this.elIds.stack).id, '');
+            assertEq(undefined, this.vcstate.model.findByIdUntyped('111'), 'HM|');
+            assertEq(this.elIds.card_a_a, this.vcstate.model.findByIdUntyped(this.elIds.card_a_a)!.id, 'HL|');
+            assertEq(this.elIds.stack, this.vcstate.model.findByIdUntyped(this.elIds.stack)!.id, 'HK|');
+            assertThrows('L=|', 'not found', () => this.vcstate.model.getByIdUntyped('111'));
+            assertEq(this.elIds.card_a_a, this.vcstate.model.getByIdUntyped(this.elIds.card_a_a).id, 'HJ|');
+            assertEq(this.elIds.stack, this.vcstate.model.getByIdUntyped(this.elIds.stack).id, 'HI|');
         },
         'testModelFindById.when exists and given correct type',
         () => {
-            assertEq(VpcElType.Stack, this.vcstate.model.findById(this.elIds.stack, VpcElStack)!.getType(), '');
-            assertEq(VpcElType.Card, this.vcstate.model.findById(this.elIds.card_a_a, VpcElCard)!.getType(), '');
-            assertEq(VpcElType.Btn, this.vcstate.model.findById(this.elIds.btn_b_c_1, VpcElButton)!.getType(), '');
-            assertEq(VpcElType.Stack, this.vcstate.model.getById(this.elIds.stack, VpcElStack).getType(), '');
-            assertEq(VpcElType.Card, this.vcstate.model.getById(this.elIds.card_a_a, VpcElCard).getType(), '');
-            assertEq(VpcElType.Btn, this.vcstate.model.getById(this.elIds.btn_b_c_1, VpcElButton).getType(), '');
+            assertEq(VpcElType.Stack, this.vcstate.model.findById(this.elIds.stack, VpcElStack)!.getType(), 'HH|');
+            assertEq(VpcElType.Card, this.vcstate.model.findById(this.elIds.card_a_a, VpcElCard)!.getType(), 'HG|');
+            assertEq(VpcElType.Btn, this.vcstate.model.findById(this.elIds.btn_b_c_1, VpcElButton)!.getType(), 'HF|');
+            assertEq(VpcElType.Stack, this.vcstate.model.getById(this.elIds.stack, VpcElStack).getType(), 'HE|');
+            assertEq(VpcElType.Card, this.vcstate.model.getById(this.elIds.card_a_a, VpcElCard).getType(), 'HD|');
+            assertEq(VpcElType.Btn, this.vcstate.model.getById(this.elIds.btn_b_c_1, VpcElButton).getType(), 'HC|');
         },
         'testModelFindById.when exists and given incorrect type',
         () => {
-            assertThrows('', 'cast exception', () => this.vcstate.model.findById(this.elIds.stack, VpcElCard));
-            assertThrows('', 'cast exception', () => this.vcstate.model.findById(this.elIds.card_a_a, VpcElButton));
-            assertThrows('', 'cast exception', () => this.vcstate.model.findById(this.elIds.btn_b_c_1, VpcElStack));
-            assertThrows('', 'cast exception', () => this.vcstate.model.getById(this.elIds.stack, VpcElCard));
-            assertThrows('', 'cast exception', () => this.vcstate.model.getById(this.elIds.card_a_a, VpcElButton));
-            assertThrows('', 'cast exception', () => this.vcstate.model.getById(this.elIds.btn_b_c_1, VpcElStack));
+            assertThrows('L<|', 'cast exception', () => this.vcstate.model.findById(this.elIds.stack, VpcElCard));
+            assertThrows('L;|', 'cast exception', () => this.vcstate.model.findById(this.elIds.card_a_a, VpcElButton));
+            assertThrows('L:|', 'cast exception', () => this.vcstate.model.findById(this.elIds.btn_b_c_1, VpcElStack));
+            assertThrows('L/|', 'cast exception', () => this.vcstate.model.getById(this.elIds.stack, VpcElCard));
+            assertThrows('L.|', 'cast exception', () => this.vcstate.model.getById(this.elIds.card_a_a, VpcElButton));
+            assertThrows('L-|', 'cast exception', () => this.vcstate.model.getById(this.elIds.btn_b_c_1, VpcElStack));
         },
         'testModelFindById.when not exists',
         () => {
-            assertEq(undefined, this.vcstate.model.findById('111', VpcElCard), '');
-            assertEq(undefined, this.vcstate.model.findById('111', VpcElStack), '');
-            assertEq(undefined, this.vcstate.model.findById('', VpcElCard), '');
-            assertEq(undefined, this.vcstate.model.findById('', VpcElStack), '');
-            assertThrows('', 'not found', () => this.vcstate.model.getById('111', VpcElCard));
-            assertThrows('', 'not found', () => this.vcstate.model.getById('111', VpcElStack));
-            assertThrows('', 'not found', () => this.vcstate.model.getById('', VpcElCard));
-            assertThrows('', 'not found', () => this.vcstate.model.getById('', VpcElStack));
+            assertEq(undefined, this.vcstate.model.findById('111', VpcElCard), 'HB|');
+            assertEq(undefined, this.vcstate.model.findById('111', VpcElStack), 'HA|');
+            assertEq(undefined, this.vcstate.model.findById('', VpcElCard), 'H9|');
+            assertEq(undefined, this.vcstate.model.findById('', VpcElStack), 'H8|');
+            assertThrows('L,|', 'not found', () => this.vcstate.model.getById('111', VpcElCard));
+            assertThrows('L+|', 'not found', () => this.vcstate.model.getById('111', VpcElStack));
+            assertThrows('L*|', 'not found', () => this.vcstate.model.getById('', VpcElCard));
+            assertThrows('L)|', 'not found', () => this.vcstate.model.getById('', VpcElStack));
         },
         'async/testVpcStateSerialize',
         async () => {
@@ -956,11 +956,11 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             let restoredJson = JSON.parse(s);
 
             /* test raw json */
-            assertEq('vpc', restoredJson.product, '');
-            assertEq(3, restoredJson.fileformatmajor, '');
-            assertEq(0, restoredJson.fileformatminor, '');
-            assertEq(vpcversion, restoredJson.buildnumber, '');
-            assertEq(this.vcstate.vci.getModel().uuid, restoredJson.uuid, '');
+            assertEq('vpc', restoredJson.product, 'H7|');
+            assertEq(3, restoredJson.fileformatmajor, 'H6|');
+            assertEq(0, restoredJson.fileformatminor, 'H5|');
+            assertEq(vpcversion, restoredJson.buildnumber, 'H4|');
+            assertEq(this.vcstate.vci.getModel().uuid, restoredJson.uuid, 'H3|');
 
             /* do the full restore, as if opening from disk */
             let newProv = new VpcIntroProvider(s, 'docName', VpcDocumentLocation.FromJsonFile);
@@ -970,45 +970,45 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             this.testModelHasItAll(newState);
 
             /* check productOpts (should not be persisted) */
-            assertTrue(newState.model.productOpts.getN('optPaintLineColor') !== 1234, '');
-            assertEq('', newState.model.productOpts.getS('script'), '');
-            assertEq(cProductName, newState.model.productOpts.getS('name'), '');
-            assertEq(this.elIds.card_a_a, newState.model.productOpts.getS('currentCardId'), '');
+            assertTrue(newState.model.productOpts.getN('optPaintLineColor') !== 1234, 'H2|');
+            assertEq('', newState.model.productOpts.getS('script'), 'H1|');
+            assertEq(cProductName, newState.model.productOpts.getS('name'), 'H0|');
+            assertEq(this.elIds.card_a_a, newState.model.productOpts.getS('currentCardId'), 'G~|');
 
             /* check stack */
-            assertEq(`on t1\nend t1`, newState.model.stack.getS('script'), '');
-            assertEq(`stackname`, newState.model.stack.getS('name'), '');
+            assertEq(`on t1\nend t1`, newState.model.stack.getS('script'), 'G}|');
+            assertEq(`stackname`, newState.model.stack.getS('name'), 'G||');
 
             /* check bg */
             let newBg = newState.model.getById(this.elIds.bg_b, VpcElBg);
-            assertEq(`on t2\nend t2`, newBg.getS('script'), '');
-            assertEq(`paint2`, newBg.getS('paint'), '');
+            assertEq(`on t2\nend t2`, newBg.getS('script'), 'G{|');
+            assertEq(`paint2`, newBg.getS('paint'), 'G`|');
 
             /* check card */
             let newCard = newState.model.getById(this.elIds.card_b_c, VpcElCard);
-            assertEq(`on t3\nend t3`, newCard.getS('script'), '');
-            assertEq(`paint3`, newCard.getS('paint'), '');
+            assertEq(`on t3\nend t3`, newCard.getS('script'), 'G_|');
+            assertEq(`paint3`, newCard.getS('paint'), 'G^|');
 
             /* check button */
             let newBtn = newState.model.getById(this.elIds.btn_b_c_1, VpcElButton);
-            assertEq(true, newBtn.getB('checkmark'), '');
-            assertEq(false, newBtn.getB('enabled'), '');
-            assertEq(123, newBtn.getN('icon'), '');
-            assertEq('symbol', newBtn.getS('textfont'), '');
-            assertEq('on t4\nend t4', newBtn.getS('script'), '');
+            assertEq(true, newBtn.getB('checkmark'), 'G]|');
+            assertEq(false, newBtn.getB('enabled'), 'G[|');
+            assertEq(123, newBtn.getN('icon'), 'G@|');
+            assertEq('symbol', newBtn.getS('textfont'), 'G?|');
+            assertEq('on t4\nend t4', newBtn.getS('script'), 'G>|');
 
             /* check field */
             let newFld = newState.model.getById(this.elIds.fld_b_d_1, VpcElField);
-            assertEq(true, newFld.getB('dontwrap'), '');
-            assertEq(false, newFld.getB('enabled'), '');
-            assertEq(123, newFld.getN('scroll'), '');
-            assertEq('center', newFld.getS('textalign'), '');
-            assertEq('on t5\nend t5', newFld.getS('script'), '');
+            assertEq(true, newFld.getB('dontwrap'), 'G=|');
+            assertEq(false, newFld.getB('enabled'), 'G<|');
+            assertEq(123, newFld.getN('scroll'), 'G;|');
+            assertEq('center', newFld.getS('textalign'), 'G:|');
+            assertEq('on t5\nend t5', newFld.getS('script'), 'G/|');
 
             /* check FormattedText */
             let newTxt = newFld.getFmTxt();
-            assertTrue(newTxt.len() > 0, '');
-            assertEq(txt.toSerialized(), newTxt.toSerialized(), '');
+            assertTrue(newTxt.len() > 0, 'G.|');
+            assertEq(txt.toSerialized(), newTxt.toSerialized(), 'G-|');
         }
     ];
 
@@ -1061,53 +1061,53 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
      * with correct parents and children in the right order
      */
     protected testModelHasItAll(newState: VpcState) {
-        assertEq(this.elIds.stack, newState.model.stack.id, '');
+        assertEq(this.elIds.stack, newState.model.stack.id, 'G,|');
         let bgParents = newState.model.stack.bgs.map(bg => bg.parentId).join(',');
-        assertEq(`${this.elIds.stack},${this.elIds.stack},${this.elIds.stack}`, bgParents, '');
+        assertEq(`${this.elIds.stack},${this.elIds.stack},${this.elIds.stack}`, bgParents, 'G+|');
         let bgIds = newState.model.stack.bgs.map(bg => bg.id).join(',');
-        assertEq(`${this.elIds.bg_a},${this.elIds.bg_b},${this.elIds.bg_c}`, bgIds, '');
+        assertEq(`${this.elIds.bg_a},${this.elIds.bg_b},${this.elIds.bg_c}`, bgIds, 'G*|');
         let bgNames = newState.model.stack.bgs.map(bg => bg.getS('name')).join(',');
-        assertEq(`a,b,c`, bgNames, '');
+        assertEq(`a,b,c`, bgNames, 'G)|');
 
         let bgA = newState.model.getById(this.elIds.bg_a, VpcElBg);
         let cdParents = bgA.cards.map(cd => cd.parentId).join(',');
-        assertEq(`${this.elIds.bg_a}`, cdParents, '');
+        assertEq(`${this.elIds.bg_a}`, cdParents, 'G(|');
         let cdIds = bgA.cards.map(cd => cd.id).join(',');
-        assertEq(`${this.elIds.card_a_a}`, cdIds, '');
+        assertEq(`${this.elIds.card_a_a}`, cdIds, 'G&|');
         let cdNames = bgA.cards.map(cd => cd.getS('name')).join(',');
-        assertEq(`a`, cdNames, '');
+        assertEq(`a`, cdNames, 'G%|');
 
         let bgB = newState.model.getById(this.elIds.bg_b, VpcElBg);
         cdParents = bgB.cards.map(cd => cd.parentId).join(',');
-        assertEq(`${this.elIds.bg_b},${this.elIds.bg_b},${this.elIds.bg_b}`, cdParents, '');
+        assertEq(`${this.elIds.bg_b},${this.elIds.bg_b},${this.elIds.bg_b}`, cdParents, 'G$|');
         cdIds = bgB.cards.map(cd => cd.id).join(',');
-        assertEq(`${this.elIds.card_b_b},${this.elIds.card_b_c},${this.elIds.card_b_d}`, cdIds, '');
+        assertEq(`${this.elIds.card_b_b},${this.elIds.card_b_c},${this.elIds.card_b_d}`, cdIds, 'G#|');
         cdNames = bgB.cards.map(cd => cd.getS('name')).join(',');
-        assertEq(`b,c,d`, cdNames, '');
+        assertEq(`b,c,d`, cdNames, 'G!|');
 
         let bgC = newState.model.getById(this.elIds.bg_c, VpcElBg);
         cdParents = bgC.cards.map(cd => cd.parentId).join(',');
-        assertEq(`${this.elIds.bg_c}`, cdParents, '');
+        assertEq(`${this.elIds.bg_c}`, cdParents, 'G |');
         cdIds = bgC.cards.map(cd => cd.id).join(',');
-        assertEq(`${this.elIds.card_c_d}`, cdIds, '');
+        assertEq(`${this.elIds.card_c_d}`, cdIds, 'Gz|');
         cdNames = bgC.cards.map(cd => cd.getS('name')).join(',');
-        assertEq(`d`, cdNames, '');
+        assertEq(`d`, cdNames, 'Gy|');
 
         let cd_a_a = newState.model.getById(this.elIds.card_a_a, VpcElCard);
         let ptParents = cd_a_a.parts.map(pt => pt.parentId).join(',');
-        assertEq(`${this.elIds.card_a_a}`, ptParents, '');
+        assertEq(`${this.elIds.card_a_a}`, ptParents, 'Gx|');
         let ptIds = cd_a_a.parts.map(pt => pt.id).join(',');
-        assertEq(`${this.elIds.btn_go}`, ptIds, '');
+        assertEq(`${this.elIds.btn_go}`, ptIds, 'Gw|');
         let ptNames = cd_a_a.parts.map(pt => pt.getS('name')).join(',');
-        assertEq(`go`, ptNames, '');
+        assertEq(`go`, ptNames, 'Gv|');
 
         let cd_b_b = newState.model.getById(this.elIds.card_b_b, VpcElCard);
         ptParents = cd_b_b.parts.map(pt => pt.parentId).join(',');
-        assertEq(``, ptParents, '');
+        assertEq(``, ptParents, 'Gu|');
         ptIds = cd_b_b.parts.map(pt => pt.id).join(',');
-        assertEq(``, ptIds, '');
+        assertEq(``, ptIds, 'Gt|');
         ptNames = cd_b_b.parts.map(pt => pt.getS('name')).join(',');
-        assertEq(``, ptNames, '');
+        assertEq(``, ptNames, 'Gs|');
 
         let cd_b_c = newState.model.getById(this.elIds.card_b_c, VpcElCard);
         ptParents = cd_b_c.parts.map(pt => pt.parentId).join(',');
@@ -1116,7 +1116,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 this.elIds.card_b_c
             }`,
             ptParents,
-            ''
+            'Gr|'
         );
         ptIds = cd_b_c.parts.map(pt => pt.id).join(',');
         assertEq(
@@ -1124,25 +1124,25 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
                 this.elIds.btn_b_c_2
             }`,
             ptIds,
-            ''
+            'Gq|'
         );
         ptNames = cd_b_c.parts.map(pt => pt.getS('name')).join(',');
-        assertEq(`p1,p2,p3,p1,p2`, ptNames, '');
+        assertEq(`p1,p2,p3,p1,p2`, ptNames, 'Gp|');
 
         let cd_b_d = newState.model.getById(this.elIds.card_b_d, VpcElCard);
         ptParents = cd_b_d.parts.map(pt => pt.parentId).join(',');
-        assertEq(`${this.elIds.card_b_d},${this.elIds.card_b_d},${this.elIds.card_b_d}`, ptParents, '');
+        assertEq(`${this.elIds.card_b_d},${this.elIds.card_b_d},${this.elIds.card_b_d}`, ptParents, 'Go|');
         ptIds = cd_b_d.parts.map(pt => pt.id).join(',');
-        assertEq(`${this.elIds.fld_b_d_1},${this.elIds.fld_b_d_2},${this.elIds.btn_b_d_1}`, ptIds, '');
+        assertEq(`${this.elIds.fld_b_d_1},${this.elIds.fld_b_d_2},${this.elIds.btn_b_d_1}`, ptIds, 'Gn|');
         ptNames = cd_b_d.parts.map(pt => pt.getS('name')).join(',');
-        assertEq(`p1,p2,p1`, ptNames, '');
+        assertEq(`p1,p2,p1`, ptNames, 'Gm|');
 
         let cd_c_d = newState.model.getById(this.elIds.card_c_d, VpcElCard);
         ptParents = cd_c_d.parts.map(pt => pt.parentId).join(',');
-        assertEq(`${this.elIds.card_c_d},${this.elIds.card_c_d}`, ptParents, '');
+        assertEq(`${this.elIds.card_c_d},${this.elIds.card_c_d}`, ptParents, 'Gl|');
         ptIds = cd_c_d.parts.map(pt => pt.id).join(',');
-        assertEq(`${this.elIds.fld_c_d_1},${this.elIds.btn_c_d_1}`, ptIds, '');
+        assertEq(`${this.elIds.fld_c_d_1},${this.elIds.btn_c_d_1}`, ptIds, 'Gk|');
         ptNames = cd_c_d.parts.map(pt => pt.getS('name')).join(',');
-        assertEq(`p1,p1`, ptNames, '');
+        assertEq(`p1,p1`, ptNames, 'Gj|');
     }
 }

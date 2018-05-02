@@ -146,7 +146,7 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
         } else if (type === VpcElType.Product) {
             return '';
         } else {
-            throw makeVpcScriptErr('unknown VpcElType' + type);
+            throw makeVpcScriptErr('KB|unknown VpcElType' + type);
         }
     } else {
         if (type === VpcElType.Unknown) {
@@ -164,7 +164,7 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
         } else if (type === VpcElType.Product) {
             return '';
         } else {
-            throw makeVpcScriptErr('unknown VpcElType' + type);
+            throw makeVpcScriptErr('KA|unknown VpcElType' + type);
         }
     }
 }
@@ -284,7 +284,7 @@ export function toolToDispatchShapes(tl: VpcTool) {
     } else if (tl === VpcTool.Bucket) {
         return UI512PaintDispatchShapes.Bucket;
     } else {
-        throw makeVpcScriptErr('toPaintOntoCanvasShapes unsupported tool ' + tl);
+        throw makeVpcScriptErr('K9|toPaintOntoCanvasShapes unsupported tool ' + tl);
     }
 }
 

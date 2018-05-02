@@ -225,7 +225,7 @@ async function UI512BeginAsyncImpl<T>(
         }
 
         if (alertOnError) {
-            assertTrue(false, 'unhandled in async ' + e);
+            assertTrue(false, 'JD|unhandled in async ' + e);
         }
 
         if (onComplete) {

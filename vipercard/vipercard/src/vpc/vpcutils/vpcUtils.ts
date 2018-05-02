@@ -115,7 +115,7 @@ export class CountNumericIdNormal implements CountNumericId {
         if (n >= this.counter) {
             this.counter = n;
         } else {
-            assertTrueWarn(false, 'tried to set counter lower', n);
+            assertTrueWarn(false, 'KC|tried to set counter lower', n);
         }
     }
 }

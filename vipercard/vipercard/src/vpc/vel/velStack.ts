@@ -103,7 +103,7 @@ export class VpcElStack extends VpcElBase {
             let last = linParts[linParts.length - 1];
             return VpcElStackLineageEntry.fromSerialized(last);
         } else {
-            throw makeVpcInternalErr('stacklineage should never be empty');
+            throw makeVpcInternalErr('K5|stacklineage should never be empty');
         }
     }
 
@@ -249,12 +249,12 @@ export class VpcElStack extends VpcElBase {
  */
 export class VpcElStackLineageEntry {
     constructor(public stackOwner: string, public stackGuid: string, public stackName: string) {
-        checkThrow(slength(stackOwner) > 0, 'author is empty');
-        checkThrow(slength(stackGuid) > 0, 'guid is empty');
-        checkThrow(slength(stackName) > 0, 'name is empty');
-        checkThrow(!scontains(stackOwner, '|'), 'author must not contain |', stackOwner);
-        checkThrow(!scontains(stackGuid, '|'), 'guid must not contain |', stackGuid);
-        checkThrow(!scontains(stackName, '|'), 'name must not contain |', stackName);
+        checkThrow(slength(stackOwner) > 0, 'K4|author is empty');
+        checkThrow(slength(stackGuid) > 0, 'K3|guid is empty');
+        checkThrow(slength(stackName) > 0, 'K2|name is empty');
+        checkThrow(!scontains(stackOwner, '|'), 'K1|author must not contain |', stackOwner);
+        checkThrow(!scontains(stackGuid, '|'), 'K0|guid must not contain |', stackGuid);
+        checkThrow(!scontains(stackName, '|'), 'J~|name must not contain |', stackName);
     }
 
     serialize() {
@@ -263,7 +263,7 @@ export class VpcElStackLineageEntry {
 
     static fromSerialized(s: string) {
         let pts = s.split('|');
-        checkThrowEq(3, pts.length, 'invalid lineage', s);
+        checkThrowEq(3, pts.length, 'J}|invalid lineage', s);
         return new VpcElStackLineageEntry(pts[0], pts[1], pts[2]);
     }
 }

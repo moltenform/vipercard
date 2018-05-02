@@ -46,7 +46,7 @@ export class UI512ImageSerialization {
 
         checkThrowUI512(
             uncompressed.length * 4 === data.data.length,
-            'length mismatch, expected, got',
+            'K=|length mismatch, expected, got',
             data.data.length,
             uncompressed.length * 4
         );

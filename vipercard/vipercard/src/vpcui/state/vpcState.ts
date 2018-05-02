@@ -39,7 +39,7 @@ export class VpcState {
             newId = nextId.toString();
         }
 
-        checkThrow(newId.match(/^[0-9]+$/), 'id should be purely numeric', newId);
+        checkThrow(newId.match(/^[0-9]+$/), 'Ku|id should be purely numeric', newId);
         let cr = new UndoableActionCreateVel(newId, parentId, type, insertIndex);
         this.undoManager.changeSeenCreationDeletion(cr);
         cr.do(this.vci);

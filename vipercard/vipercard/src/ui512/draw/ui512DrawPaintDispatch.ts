@@ -83,7 +83,7 @@ export class UI512PaintDispatch {
         if (args.shape !== UI512PaintDispatchShapes.Bucket) {
             assertTrue(
                 !needsPatternSupport(color) && !needsPatternSupport(fill),
-                'not yet implemented (currently kinda slow when tested)'
+                'I=|not yet implemented (currently kinda slow when tested)'
             );
         }
 
@@ -114,37 +114,37 @@ export class UI512PaintDispatch {
                 );
             }
             case UI512PaintDispatchShapes.ShapeLine: {
-                assertEq(2, xPts.length, 'ShapeLine');
-                assertEq(2, yPts.length, 'ShapeLine');
+                assertEq(2, xPts.length, 'I<|ShapeLine');
+                assertEq(2, yPts.length, 'I;|ShapeLine');
                 return painter.publicStraightLine(xPts[0], yPts[0], xPts[1], yPts[1], color, args.lineSize);
             }
             case UI512PaintDispatchShapes.ShapeRectangle: {
-                assertEq(2, xPts.length, 'ShapeRectangle');
-                assertEq(2, yPts.length, 'ShapeRectangle');
+                assertEq(2, xPts.length, 'I:|ShapeRectangle');
+                assertEq(2, yPts.length, 'I/|ShapeRectangle');
                 return painter.publicRectangle(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
             }
             case UI512PaintDispatchShapes.ShapeEllipse: {
-                assertEq(2, xPts.length, 'ShapeEllipse');
-                assertEq(2, yPts.length, 'ShapeEllipse');
+                assertEq(2, xPts.length, 'I.|ShapeEllipse');
+                assertEq(2, yPts.length, 'I-|ShapeEllipse');
                 return painter.publicPlotEllipse(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
             }
             case UI512PaintDispatchShapes.ShapeRoundRect: {
-                assertEq(2, xPts.length, 'ShapeRoundRect');
-                assertEq(2, yPts.length, 'ShapeRoundRect');
+                assertEq(2, xPts.length, 'I,|ShapeRoundRect');
+                assertEq(2, yPts.length, 'I+|ShapeRoundRect');
                 return painter.publicRoundRect(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
             }
             case UI512PaintDispatchShapes.ShapeCurve: {
-                assertEq(3, xPts.length, 'ShapeCurve');
-                assertEq(3, yPts.length, 'ShapeCurve');
+                assertEq(3, xPts.length, 'I*|ShapeCurve');
+                assertEq(3, yPts.length, 'I)|ShapeCurve');
                 return painter.publicCurve(xPts[0], yPts[0], xPts[1], yPts[1], xPts[2], yPts[2], color, args.lineSize);
             }
             case UI512PaintDispatchShapes.Bucket: {
-                assertEq(1, xPts.length, 'Bucket');
-                assertEq(1, yPts.length, 'Bucket');
+                assertEq(1, xPts.length, 'I(|Bucket');
+                assertEq(1, yPts.length, 'I&|Bucket');
                 return UI512PaintDispatch.paintBucketSlowButWorks(painter, xPts[0], yPts[0], fill || 0);
             }
             default: {
-                assertTrueWarn(false, 'unknown shape', args.shape);
+                assertTrueWarn(false, 'I%|unknown shape', args.shape);
             }
         }
     }
@@ -160,7 +160,7 @@ export class UI512PaintDispatch {
         } else {
             /* unfortunately, we'll have to make a new painter that supports reading pixels */
             let cv: CanvasWrapper = painter.getBackingSurface();
-            assertTrue(cv instanceof CanvasWrapper, 'cv instanceof CanvasWrapper');
+            assertTrue(cv instanceof CanvasWrapper, 'I$|cv instanceof CanvasWrapper');
             const w = cv.canvas.width;
             const h = cv.canvas.height;
             let data = cv.context.getImageData(0, 0, w, h);

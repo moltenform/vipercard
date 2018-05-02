@@ -74,7 +74,7 @@ export class TestDrawUI512Paint extends UI512TestBase {
         /* test 4: serialize image to a string and round trip it */
         let worker = new UI512ImageSerialization();
         let serialized = worker.writeToString(testFillRect);
-        assertTrue(serialized.length < w * h, '');
+        assertTrue(serialized.length < w * h, 'Bz|');
         let deserialized = worker.loadFromString(testDeserialize, serialized);
 
         /* show these on the screen */

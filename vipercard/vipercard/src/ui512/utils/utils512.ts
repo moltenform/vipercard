@@ -249,7 +249,11 @@ export class Util512 {
      * callAsMethodOnClass('MyClass', inst, method, [], true)
      */
     static callAsMethodOnClass(clsname: string, me: any, s: string, args: any[], okIfNotExists: boolean) {
-        checkThrowUI512(s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/), 'callAsMethodOnClass requires alphanumeric no spaces', s);
+        checkThrowUI512(
+            s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
+            'K@|callAsMethodOnClass requires alphanumeric no spaces',
+            s
+        );
         let method = me[s];
         assertTrue(args === undefined || Array.isArray(args), '4I|args not an array');
         if (method && typeof method === 'function') {
@@ -308,7 +312,7 @@ export class Util512 {
     static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
     static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            assertTrue(url.startsWith('/'), '');
+            assertTrue(url.startsWith('/'), 'J8|');
             if (Util512.scriptsAlreadyLoaded[url]) {
                 resolve();
                 return;
@@ -519,7 +523,7 @@ export function cast<T>(instance: any, ctor: { new (...args: any[]): T }, contex
         return instance;
     }
 
-    throw makeUI512Error('type cast exception', context);
+    throw makeUI512Error('J7|type cast exception', context);
 }
 
 /**
@@ -639,7 +643,7 @@ export interface Root {
  */
 let rootHolder: Root[] = [];
 export function getRoot(): Root {
-    checkThrow(rootHolder[0], 'root not yet set.');
+    checkThrow(rootHolder[0], 'J6|root not yet set.');
     return rootHolder[0];
 }
 

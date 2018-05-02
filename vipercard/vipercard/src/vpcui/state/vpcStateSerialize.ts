@@ -57,8 +57,11 @@ export class VpcStateSerialize {
      */
     deserializeAll(building: VpcStateInterface, incoming: anyJson) {
         building.doWithoutAbilityToUndo(() => {
-            checkThrowEq('vpc', incoming.product, '');
-            checkThrow(incoming.fileformatmajor <= this.latestMajor, 'file comes from a future version, cannot open');
+            checkThrowEq('vpc', incoming.product, 'K |');
+            checkThrow(
+                incoming.fileformatmajor <= this.latestMajor,
+                'Kz|file comes from a future version, cannot open'
+            );
             console.log(
                 `opening a document format ${incoming.fileformatmajor}.${incoming.fileformatminor},
                 my version is ${this.latestMajor}.${this.latestMinor}`
@@ -68,7 +71,7 @@ export class VpcStateSerialize {
             );
 
             building.getModel().uuid = incoming.uuid;
-            checkThrow(incoming.elements && incoming.elements.length > 0, 'elements missing or empty');
+            checkThrow(incoming.elements && incoming.elements.length > 0, 'Ky|elements missing or empty');
             for (let i = 0; i < incoming.elements.length; i++) {
                 this.deserializeVel(building, incoming.elements[i]);
             }
@@ -95,7 +98,7 @@ export class VpcStateSerialize {
             let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);
             VpcUI512Serialization.deserializeSettable(created, created.getKeyPropertiesList(), incoming.attrs);
         } else {
-            assertTrueWarn(false, 'unsupported type', incoming.type);
+            assertTrueWarn(false, 'Kx|unsupported type', incoming.type);
         }
     }
 
@@ -126,7 +129,7 @@ export class VpcStateSerialize {
                     incoming.type === VpcElType.Card ||
                     incoming.type === VpcElType.Btn ||
                     incoming.type === VpcElType.Fld,
-                'unexpected type',
+                'Kw|unexpected type',
                 incoming.type
             );
 
@@ -134,6 +137,6 @@ export class VpcStateSerialize {
             VpcUI512Serialization.deserializeSettable(created, created.getKeyPropertiesList(), incoming.attrs);
         });
 
-        return throwIfUndefined(created, '');
+        return throwIfUndefined(created, 'Kv|');
     }
 }

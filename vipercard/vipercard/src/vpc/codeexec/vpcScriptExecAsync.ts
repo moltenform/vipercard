@@ -65,7 +65,7 @@ export class VpcScriptExecAsync {
                 pendingOps.markCompleted(asyncOpId, [n]);
             };
 
-            dlg = throwIfUndefined(dlg, 'cbAnswerMsg is undefined');
+            dlg = throwIfUndefined(dlg, 'JH|cbAnswerMsg is undefined');
             dlg(prmpt, markComplete, opt1, opt2, opt3);
         };
 
@@ -77,7 +77,7 @@ export class VpcScriptExecAsync {
                 if (cbStopCodeRunning) {
                     cbStopCodeRunning();
                 } else {
-                    throw makeVpcInternalErr('cbStopCodeRunning');
+                    throw makeVpcInternalErr('JG|cbStopCodeRunning');
                 }
 
                 /* this causes script to stop immediately,
@@ -105,7 +105,7 @@ export class VpcScriptExecAsync {
         defval: string
     ) {
         let asyncOp = () => {
-            dlg = throwIfUndefined(dlg, 'cbAskMsg');
+            dlg = throwIfUndefined(dlg, 'JF|cbAskMsg');
             dlg(prmpt, defval, (s: string, n: number) => {
                 pendingOps.markCompleted(asyncOpId, [s, n]);
             });
@@ -119,7 +119,7 @@ export class VpcScriptExecAsync {
                 if (cbStopCodeRunning) {
                     cbStopCodeRunning();
                 } else {
-                    throw makeVpcInternalErr('cbStopCodeRunning');
+                    throw makeVpcInternalErr('JE|cbStopCodeRunning');
                 }
 
                 /* this causes script to stop immediately,

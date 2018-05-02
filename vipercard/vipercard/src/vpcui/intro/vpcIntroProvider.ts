@@ -84,13 +84,13 @@ export class VpcIntroProvider {
         let serializedSavedData = '';
         if (this.loc === VpcDocumentLocation.NewDoc || this.loc === VpcDocumentLocation.ShowLoginForm) {
             /* no serialized data needed */
-            assertEqWarn('', this.identifier, '');
+            assertEqWarn('', this.identifier, 'KL|');
         } else if (this.loc === VpcDocumentLocation.FromStaticDemo) {
             /* request json asynchronously */
-            assertTrue(!scontains(this.identifier, '/'), '');
-            assertTrue(!scontains(this.identifier, '\\'), '');
-            assertTrue(!scontains(this.identifier, '..'), '');
-            assertTrue(this.identifier.endsWith('.json'), '');
+            assertTrue(!scontains(this.identifier, '/'), 'KK|');
+            assertTrue(!scontains(this.identifier, '\\'), 'KJ|');
+            assertTrue(!scontains(this.identifier, '..'), 'KI|');
+            assertTrue(this.identifier.endsWith('.json'), 'KH|');
             let got = await Util512.asyncBeginLoadJson('/resources/docs/' + this.identifier);
             serializedSavedData = JSON.stringify(got);
         } else if (this.loc === VpcDocumentLocation.FromJsonFile) {
@@ -101,14 +101,14 @@ export class VpcIntroProvider {
             let got = await vpcStacksGetData(this.identifier);
             serializedSavedData = got.stackdata;
         } else {
-            checkThrow(false, 'cannot open from location ' + this.loc);
+            checkThrow(false, 'KG|cannot open from location ' + this.loc);
         }
 
         checkThrow(
             this.loc === VpcDocumentLocation.NewDoc ||
                 this.loc === VpcDocumentLocation.ShowLoginForm ||
                 slength(serializedSavedData),
-            'serializedSavedData is ' + serializedSavedData
+            'KF|serializedSavedData is ' + serializedSavedData
         );
 
         return serializedSavedData;

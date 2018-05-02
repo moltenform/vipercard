@@ -181,7 +181,7 @@ export class MenuPositioning {
         /* top bar */
         let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
         menuRoot.setDimensions(app.bounds[0], app.bounds[1], app.bounds[2], MenuConsts.BarHeight - 1);
-        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'forgot to call createMenuHelperEls?');
+        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'J0|forgot to call createMenuHelperEls?');
 
         /* draw menu headers */
         /* interesting fact: the headers overlap each other. confirmed in emulator */
@@ -283,7 +283,7 @@ export class MenuPositioning {
             dropdn.set('labeltext', lng(headerLabelUntranslated));
         }
 
-        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'forgot to call createMenuHelperEls?');
+        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'I~|forgot to call createMenuHelperEls?');
         for (let menuString of arMenu) {
             let [itemId, itemUntranslated, hotkey] = menuString.split('|');
             itemId = slength(itemId) ? itemId : 'unnamedmenu' + Math.random();
@@ -317,7 +317,7 @@ export class MenuPositioning {
         if (grp) {
             return grp;
         } else {
-            checkThrowUI512(createIfNeeded, '2[|menubar group expected but not found');
+            checkThrowUI512(createIfNeeded, 'K?|menubar group expected but not found');
             let addedGrp = new UI512ElGroup(s, app.observer);
             app.addGroup(addedGrp);
             return addedGrp;

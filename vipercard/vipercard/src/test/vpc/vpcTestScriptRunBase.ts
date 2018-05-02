@@ -162,7 +162,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
         let fnd = this.vcstate.runtime.codeExec.findCode(owner.id);
         if (fnd && fnd instanceof VpcScriptSyntaxError) {
-            throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, '')(fnd);
+            throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
         }
     }
 
@@ -244,7 +244,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         }
 
         /* fake a click inside btnGo */
-        assertEq(VpcTool.Browse, this.pr.getTool(), '');
+        assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');
         this.pr.trackMouse = [this.simMouseX, this.simMouseY];
         let fakeEvent = new MouseUpEventDetails(1, this.simClickX, this.simClickY, 0, ModifierKeys.None);
         VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id, false);

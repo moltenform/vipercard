@@ -85,7 +85,7 @@ export class ScrollbarImpl {
         assertEqWarn(
             el.getB('scrollbar'),
             !!grp.findEl(fldIdToScrollbarPartId(el.id, 'arrowUp')),
-            'forgot to call rebuildFieldScrollbars? ' + el.id
+            'J3|forgot to call rebuildFieldScrollbars? ' + el.id
         );
 
         if (!el || !el.visible || !el.getDirty() || !el.getB('scrollbar')) {

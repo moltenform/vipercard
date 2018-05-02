@@ -12,9 +12,9 @@ export class VpcAudio {
      * get url for a sound
      */
     static urlFromKey(key: string) {
-        checkThrow(!scontains(key, '/'), '');
-        checkThrow(!scontains(key, '\\'), '');
-        checkThrow(key.match(/^[A-Za-z0-9_-]+$/), '');
+        checkThrow(!scontains(key, '/'), 'K8|');
+        checkThrow(!scontains(key, '\\'), 'K7|');
+        checkThrow(key.match(/^[A-Za-z0-9_-]+$/), 'K6|');
         return `/resources/sound/${key}.mp3`;
     }
 

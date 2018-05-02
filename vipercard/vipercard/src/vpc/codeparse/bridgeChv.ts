@@ -3,14 +3,16 @@
 
 /*
 This file is essentially chevrotain.d.ts wrapped in a namespace
-when typescript is built with modules=es6 ,
-it apparently assumes that all import {} statements are importing es6 modules
+when typescript is built with modules=es6,
+typescript apparently assumes that all import {} statements are importing es6 modules
 and as such should be left as-is in the generated JavaScript.
 
 So if I had chevrotain.d.ts and wrote import { Token } from 'chevrotain',
 everything compiles cleanly,
 but at runtime it fails because Chrome tries to execute "import { Token } from 'chevrotain'"
 and there is no such file, since the .d.ts does not become javascript.
+if I write /// <reference path="../path/to/chevrotain.d.ts" />,
+I get the error "chevrotain refers to a UMD global, but the current file is a module.""
 
 This file is a workaround I invented,
 at runtime this file becomes a valid JavaScript file because it's not a .d.ts,
