@@ -149,6 +149,16 @@ export interface VpcStateInterface {
     setCurrentCardNum(pos: OrdinalOrPosition): void;
 
     /**
+     * get current card id
+     */
+    getCurrentCardId(): string;
+
+    /**
+     * go to a card
+     */
+    setCurrentCardId(id: string, sendOpenCard: boolean): void;
+
+    /**
      * get the current tool
      */
     getTool(): VpcTool;

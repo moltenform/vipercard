@@ -401,12 +401,13 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * go card, relative to the given card
      * the given card defaults to current card, but another cardid can be provided
      */
-    GoCardRelative(pos: OrdinalOrPosition, id?: string) {
-        if (id) {
+    GoCardRelative(pos: OrdinalOrPosition, id: O<string>) {
+        if (id !== undefined) {
             assertEq(OrdinalOrPosition.This, pos, '6i|');
-            this.vci.getModel().productOpts.set('currentCardId', id);
+            this.vci.setCurrentCardId(id, true)
         } else {
-            this.vci.getModel().goCardRelative(pos);
+            let card = this.vci.getModel().getCardRelative(pos);
+            this.vci.setCurrentCardId(card, true)
         }
     }
 

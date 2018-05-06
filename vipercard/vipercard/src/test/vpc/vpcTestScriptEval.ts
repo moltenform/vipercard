@@ -50,7 +50,7 @@ export class TestVpcScriptEval extends TestVpcScriptRun {
             let batch: [string, string][];
 
             /* object resolution */
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 /* invalid */
                 [`the short id of xyz`, `ERR:We did not recognize`],
@@ -287,7 +287,7 @@ export class TestVpcScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvaluate(batch);
 
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 /* size properties */
                 ['the left of cd btn "p1"', '0'],
@@ -654,7 +654,7 @@ export class TestVpcScriptEval extends TestVpcScriptRun {
                 assertEq(expected, contents, '1v|');
             }
 
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 /* productopts */
                 [`the name of the ${cProductName}`, `${cProductName}`],
@@ -810,7 +810,7 @@ export class TestVpcScriptEval extends TestVpcScriptRun {
         },
         'test_builtinFunctions',
         () => {
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             let batch: [string, string][];
             batch = [
                 /* RuleExprSource and RuleHSimpleContainer */
@@ -835,7 +835,7 @@ export class TestVpcScriptEval extends TestVpcScriptRun {
             ];
             this.testBatchEvaluate(batch);
 
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 /* length */
                 ['the length of ""', '0'],

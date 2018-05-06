@@ -389,7 +389,7 @@ put x into x\\x`,
             this.testBatchEvaluate(batch);
 
             /* add, subtract, divide, multiply */
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             this.runGeneralCode('', 'put "0" into cd fld "p1"');
             this.assertLineError('add 4 with cd fld "p1"', 'MismatchedTokenException', 3);
             this.assertLineError('add 4 into cd fld "p1"', 'MismatchedTokenException', 3);
@@ -465,7 +465,7 @@ put x into x\\x`,
             this.testBatchEvaluate(batch, true);
 
             /* changing current card */
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             this.assertCompileErrorIn('go', 'on its own', 3);
             this.assertCompileErrorIn('go back', "don't support", 3);
             this.assertCompileErrorIn('go forth', "don't support", 3);
@@ -518,7 +518,7 @@ put x into x\\x`,
             ];
             this.testBatchEvaluate(batch);
 
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 /* not valid */
                 ['enable cd 1', `ERR:MismatchedTokenException`],
@@ -536,7 +536,7 @@ put x into x\\x`,
             ];
             this.testBatchEvaluate(batch);
 
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 /* not valid */
                 ['hide\\0', `ERR:NoViableAltException`],
@@ -649,7 +649,7 @@ put x into x\\x`,
             ];
             this.testBatchEvaluate(batch);
 
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 ['put "abc"\\0', 'ERR:missing into'],
                 ['put "abc" xyz\\0', 'ERR:missing into'],
@@ -1731,7 +1731,7 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
             );
             /* nesting/interesting custom function calls */
             /* we *manually* parse custom fn calls by counting parenthesis levels so this needs to be tested */
-            this.setCurrentCard(this.elIds.card_a_a);
+            this.pr.setCurrentCardId(this.elIds.card_a_a, false);
             this.updateObjectScript(
                 this.elIds.card_a_a,
                 `${this.customFunc} mm p1, p2, p3
@@ -2265,7 +2265,7 @@ put 3 into x`,
         },
         'test_scriptMessagePassing',
         () => {
-            this.setCurrentCard(this.elIds.card_a_a);
+            this.pr.setCurrentCardId(this.elIds.card_a_a, false);
             let parents = [this.vcstate.model.stack.id, this.elIds.bg_a, this.elIds.card_a_a];
             for (let parent of parents) {
                 /* reset all scripts */

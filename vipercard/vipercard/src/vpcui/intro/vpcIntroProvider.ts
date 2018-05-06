@@ -187,10 +187,13 @@ export class VpcIntroProvider {
         await this.yieldTime();
         vpcState.runtime.outside.vci = pr.vci;
         await this.yieldTime();
+
         /* go to the first card */
-        fullVci.doWithoutAbilityToUndo(() =>
-            vpcState.model.productOpts.set('currentCardId', vpcState.model.stack.bgs[0].cards[0].id)
-        );
+        fullVci.doWithoutAbilityToUndo(() => {
+            let card = vpcState.model.stack.bgs[0].cards[0].id
+            pr.setCurrentCardId(card, true)
+        });
+
         await this.yieldTime();
     }
 

@@ -699,7 +699,7 @@ export class TestVpcScriptExprLvl extends TestVpcScriptRun {
             ];
             this.testBatchEvaluate(batch);
 
-            this.setCurrentCard(this.elIds.card_b_c);
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
             batch = [
                 /* order of operations */
                 ['2 * 3 + 4', '10'],
@@ -1017,7 +1017,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         this.vcstate.model.productOpts.set('optPaintLineColor', 1234);
         this.vcstate.model.productOpts.set('script', `on t0\nend t0`);
         this.vcstate.model.productOpts.set('name', `productname`);
-        this.vcstate.model.productOpts.set('currentCardId', this.elIds.card_b_c);
+        this.pr.setCurrentCardId(this.elIds.card_b_c, false)
 
         /* modify stack */
         this.vcstate.model.stack.set('script', `on t1\nend t1`);

@@ -195,7 +195,7 @@ export class VpcMenuActions {
         let currentBg = this.vci.getModel().getById(currentCard.parentId, VpcElBg);
         let currentIndex = VpcElBase.findIndexById(currentBg.cards, currentCardId);
         let created = this.vci.getOutside().CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
-        this.vci.getModel().productOpts.set('currentCardId', created.id);
+        this.vci.setCurrentCardId(created.id, true);
     }
 
     /**
@@ -274,11 +274,12 @@ export class VpcMenuActions {
     goMnuDelCard() {
         let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         let wasCurrentCard = this.vci.getModel().getById(wasCurrentCardId, VpcElCard);
-        this.vci.getModel().goCardRelative(OrdinalOrPosition.Previous);
+        let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Previous);
         if (this.vci.getModel().productOpts.getS('currentCardId') === wasCurrentCardId) {
-            this.vci.getModel().goCardRelative(OrdinalOrPosition.Next);
+            card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Next);
         }
 
+        this.vci.setCurrentCardId(card, true);
         this.vci.getOutside().RemoveCard(wasCurrentCard);
     }
 

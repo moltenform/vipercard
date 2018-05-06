@@ -189,7 +189,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
      * go card, relative to the given card
      * the given card defaults to current card, but another cardid can be provided
      */
-    GoCardRelative(pos: OrdinalOrPosition, id?: string): void;
+    GoCardRelative(pos: OrdinalOrPosition, id: O<string>): void;
 
     /**
      * draw paint on the screen by simulating a click

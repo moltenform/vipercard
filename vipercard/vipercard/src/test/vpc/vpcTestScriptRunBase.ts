@@ -61,10 +61,6 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         return loader.loadDocumentTop();
     }
 
-    setCurrentCard(id: string) {
-        this.vcstate.vci.undoableAction(() => this.vcstate.model.productOpts.set('currentCardId', id));
-    }
-
     populateModel() {
         /*
          1st bg "a" has 1 card named "a"

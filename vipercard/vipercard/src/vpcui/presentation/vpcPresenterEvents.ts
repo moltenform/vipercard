@@ -390,7 +390,7 @@ export class VpcPresenterEvents {
     /**
      * is the menubar open
      */
-    protected static menuIsOpen(pr: VpcPresenterInterface) {
+    static menuIsOpen(pr: VpcPresenterInterface) {
         let grpmenubar = pr.app.findGroup('$$grpmenubar');
         if (grpmenubar) {
             let menubar = grpmenubar.findEl('$$menubarforapp');

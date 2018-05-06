@@ -26,6 +26,7 @@
 export class VpcElProductOpts extends VpcElBase {
     isVpcElProduct = true;
     allowSetCurrentTool = false;
+    allowSetCurrentCard = false;
     protected _itemDel = ',';
     protected _script = '';
     protected _name = `${cProductName}`;
@@ -37,9 +38,9 @@ export class VpcElProductOpts extends VpcElBase {
 
     /* settings that shouldn't be touched directly */
     protected _currentTool = VpcTool.Pencil;
+    protected _currentCardId = '';
 
     /* settings stored here to get an undoable setting */
-    protected _currentCardId = '';
     protected _optWideLines = false;
     protected _optPaintDrawMult = false;
     protected _currentPattern = UI512Patterns.defaultPattern;
@@ -78,6 +79,7 @@ export class VpcElProductOpts extends VpcElBase {
      */
     set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         assertTrueWarn(s !== 'currentTool' || this.allowSetCurrentTool, 'Jt|');
+        assertTrueWarn(s !== 'currentCardId' || this.allowSetCurrentCard, '');
         return super.set(s, newVal, context);
     }
 

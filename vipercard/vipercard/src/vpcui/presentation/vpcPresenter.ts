@@ -9,16 +9,18 @@
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 /* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
+/* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcPresenterInit } from '../../vpcui/presentation/vpcPresenterInit.js';
 
 /**
@@ -38,7 +40,8 @@ export class VpcPresenter extends VpcPresenterInit {
      * 'go to card 2'
      */
     setCurrentCardNum(ord: OrdinalOrPosition) {
-        this.vci.undoableAction(() => this.vci.getModel().goCardRelative(ord));
+        let card = this.vci.getModel().getCardRelative(ord)
+        this.setCurrentCardId(card, true)
     }
 
     /**
@@ -57,6 +60,7 @@ export class VpcPresenter extends VpcPresenterInit {
 
     /**
      * set the current tool
+     * this is the only place that should be able to directly set the tool
      * you must call this rather than modifying 'currentTool' directly
      */
     setTool(nextTl: VpcTool) {
@@ -85,6 +89,50 @@ export class VpcPresenter extends VpcPresenterInit {
 
             this.refreshCursor();
         }
+    }
+
+    /**
+     * set the current card id,
+     * this is the only place that should be able to directly set the card
+     */
+    setCurrentCardId(nextId:string, sendOpenCard:boolean) {
+        sendOpenCard = sendOpenCard && this.getTool() === VpcTool.Browse
+        let prevCardId:O<string>
+        let currBgId:O<string>
+        let nextBgId:O<string>
+        if (sendOpenCard) {
+            /* get the current background */
+            let bgIdFromCardId = (id:string) => {
+                if (id) {
+                    let vel = this.vci.getModel().getById(id, VpcElCard)
+                    let currentBg = this.vci.getModel().getById(vel.parentId, VpcElBg)
+                    return currentBg.id
+                }
+            }
+
+            prevCardId = this.vci.getOptionS('currentCardId')
+            currBgId = bgIdFromCardId(prevCardId)
+            nextBgId = bgIdFromCardId(nextId)
+        }
+
+        this.vci.undoableAction(() => {
+            this.vci.getModel().productOpts.allowSetCurrentCard = true;
+            this.vci.setOption('currentCardId', nextId);
+            this.vci.getModel().productOpts.allowSetCurrentCard = false;
+        });
+
+        // not yet implemented: send closecard and opencard events
+        // if (!VpcPresenterEvents.menuIsOpen(this)) {
+            // /* send closecard */
+            // let msg = new VpcScriptMessage(nextId, VpcBuiltinMsg.Closecard;
+            //
+            // /* send closebackground */
+            // msg = new VpcScriptMessage(nextId, VpcBuiltinMsg.Opencard);
+            // pr.vci.getCodeExec().scheduleCodeExec(msg);
+            // if (currBgId !== nextBgId) {
+                // msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground)
+            // }
+        // }
     }
 
     /**
@@ -119,13 +167,13 @@ export class VpcPresenter extends VpcPresenterInit {
             /* for example "send myevent to btn 4 of cd 5" */
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
             if (vel.getType() === VpcElType.Card) {
-                this.vci.setOption('currentCardId', vel.id);
+                this.vci.setCurrentCardId(vel.id, false)
             } else if (vel.getType() === VpcElType.Bg) {
                 assertTrue(false, 'Kk|nyi');
             } else if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
                 let parent = this.vci.getModel().findByIdUntyped(vel.parentId);
                 if (parent && parent.getType() === VpcElType.Card) {
-                    this.vci.setOption('currentCardId', parent.id);
+                    this.vci.setCurrentCardId(parent.id, false)
                 }
             }
 
@@ -510,7 +558,8 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
                 let currentCard = this.vci.getModel().findById(currentCardId, VpcElCard);
                 if (!currentCard) {
-                    this.vci.getModel().goCardRelative(OrdinalOrPosition.First);
+                    let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.First);
+                    this.vci.setCurrentCardId(card, true);
                 }
 
                 /* refresh everything */

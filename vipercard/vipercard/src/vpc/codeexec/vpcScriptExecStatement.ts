@@ -511,7 +511,7 @@ export class ExecuteStatement {
 
             checkThrow(isString(shp), '7O|');
             let hp = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'OrdinalOrPosition', shp);
-            this.outside.GoCardRelative(hp);
+            this.outside.GoCardRelative(hp, undefined);
         }
     }
 

@@ -100,11 +100,11 @@ export class VpcModelTop {
     /**
      * set the current card based on relative position
      */
-    goCardRelative(pos: OrdinalOrPosition) {
+    getCardRelative(pos: OrdinalOrPosition) {
         let curcardid =
             pos === OrdinalOrPosition.First || pos === OrdinalOrPosition.Last ? '' : this.getCurrentCard().id;
         let found = this.stack.getCardByOrdinal(curcardid, pos);
-        this.productOpts.set('currentCardId', found.id);
+        return found.id;
     }
 
     /**

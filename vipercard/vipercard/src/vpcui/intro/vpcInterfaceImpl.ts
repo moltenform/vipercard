@@ -239,6 +239,20 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
+     * get current card id
+     */
+    getCurrentCardId() {
+        return this.getOptionS('currentcardid')
+    }
+
+    /**
+     * go to a card
+     */
+    setCurrentCardId(id:string, b:boolean) {
+        return this.pr.setCurrentCardId(id, b)
+    }
+
+    /**
      * get the current tool
      */
     getTool() {
