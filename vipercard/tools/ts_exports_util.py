@@ -60,6 +60,10 @@ def myfileswriteall(path, txt):
     f.write(txt)
     f.close()
     
+def delIfExists(path):
+    if _os.path.exists(path):
+        _os.unlink(path)
+    
 def getInputBool(prompt, flushOutput=True):
     prompt += ' '
     while True:

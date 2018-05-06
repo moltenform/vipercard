@@ -91,6 +91,9 @@ def autoAddImports(srcdirectory):
     for layer in layers:
         fpath = layerPathToFilePath(srcdirectory, layer[0])
         symbolsInLayer = collectExports(fpath)
+        if fpath.lower().endswith('testregistrationempty.ts'):
+            continue
+            
         for symbol in symbolsInLayer:
             symbol = symbol.strip()
             if symbol:
@@ -104,7 +107,7 @@ def autoAddImports(srcdirectory):
         print(f'{layer[0]}')
         
         short = os.path.split(layer[0])[-1]
-        if short.startswith('bridge'):
+        if short.startswith('bridge') or short.lower().endswith('testregistrationempty'):
             continue
         
         fpath = layerPathToFilePath(srcdirectory, layer[0])
@@ -180,5 +183,5 @@ if __name__ == '__main__':
     layers = readLayers(srcdirectory)
     autoAddImports(srcdirectory)
     enforceLayering(srcdirectory)
-    
+
     

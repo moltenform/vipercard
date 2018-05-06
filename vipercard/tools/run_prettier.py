@@ -120,8 +120,6 @@ got = placeImportsOnOneLine(testInput)
 assertEq(testExpected, got)
 
 if __name__ == '__main__':
-    # "trailingComma": "es5", 
-    # "trailingComma": "none", 
     srcdirectory = '../vipercard/src'
     goPrettier(srcdirectory)
     goTsLint(srcdirectory)

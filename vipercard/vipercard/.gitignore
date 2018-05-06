@@ -1,9 +1,17 @@
 
 /node_modules
-/release
+/build
+
+vpcbundle.js
+vpcbundle_wtests.js
+vpcbundlemin.js
+vpcbundlemin.js.map
+vpcbundlemin_wtests.js
+vpcbundlemin_wtests.js.map
 
 # ones that are separate for build and ship
 /.tsconfig.json
 /0.2/index.html
+/src/config.ts
 
 
