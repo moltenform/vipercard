@@ -13,7 +13,7 @@ rootStartCanvas
 rootUI512
 
 /test/vpc/
-testRegistrationRelease
+testRegistrationEmpty
 testRegistration
 vpcTestServer
 vpcTestIntroProvider

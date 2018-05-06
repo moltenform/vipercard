@@ -118,8 +118,7 @@ def autoAddImports(srcdirectory):
         addNewForThisFile = []
         for line in lines:
             if not line.startswith('import ') and not line.startswith('/* auto */ import'):
-                for symbolFound in re.finditer('(^|[^\'"`])' + r'([a-zA-Z_][0-9a-zA-Z_]*)', line):
-                    symbol = symbolFound.group(2)
+                for symbol in getSymbolsFromLine(line):
                     if symbol in alreadyImported:
                         continue
                     
@@ -177,7 +176,21 @@ def doSomeAutomaticFormatting(lines):
         if lines[i] != stripped:
             print('removing whitespace on right of line')
         lines[i] = stripped
-    
+
+def getSymbolsFromLine(s):
+    for m in re.finditer(r'''(^|[^'"`a-zA-Z_])([a-zA-Z_][0-9a-zA-Z_]*)''', s):
+        yield m.group(2)
+
+testinput = '''abc, def, ghi, v1'''
+expected = ['abc', 'def', 'ghi', 'v1']
+assertEq(expected, list(getSymbolsFromLine(testinput)))
+testinput = '''  x = myFn('', h.walkNext(), 'GO|');'''
+expected = ['x', 'myFn', 'h', 'walkNext']
+assertEq(expected, list(getSymbolsFromLine(testinput)))
+testinput = ''' 's1', `s2`, "s3" '''
+expected = []
+assertEq(expected, list(getSymbolsFromLine(testinput)))
+
 if __name__ == '__main__':
     srcdirectory = '../vipercard/src'
     layers = readLayers(srcdirectory)
