@@ -242,7 +242,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get current card id
      */
     getCurrentCardId() {
-        return this.getOptionS('currentcardid')
+        return this.getOptionS('currentCardId')
     }
 
     /**

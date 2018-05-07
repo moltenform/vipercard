@@ -56,9 +56,41 @@ end afterKeyUp
 
 
 
+## on closeBackground
+
+When you go to a different card, if the card belongs to a different background, the closeBackground message will be sent. (You're leaving one background and going to another).
+
+
+Examples:
+
+```
+-- in a background's script
+on closeBackground
+    answer "you have left this background"
+end closeBackground
+```
+
+
+
+
+
 ## on closeCard
 
-This feature will arrive in a future version...
+Message sent upon leaving a card.
+
+Because messages continue up the hierarchy until they are handled, you can also respond to closeCard in a stack script.
+
+
+Examples:
+
+```
+-- in a card's script
+on closeCard
+    answer "you have left this card"
+end closeCard
+```
+
+
 
 
 
@@ -163,13 +195,57 @@ you can change to the button or field tool.)
 
 
 
+## on openBackground
+
+When you go to a different card, if the card belongs to a different background, the openBackground message will be sent. (You're leaving one background and going to another).
+
+
+Examples:
+
+```
+-- in a background's script
+on openBackground
+    answer "welcome to this background"
+end openBackground
+```
+
+
+
+
+
 ## on openCard
 
-This feature will arrive in a future version...
+Message sent upon going to a card.
+
+Because messages continue up the hierarchy until they are handled, you can also respond to openCard in a stack script.
+
+
+Examples:
+
+```
+-- in a card's script
+on openCard
+    answer "welcome to this card"
+end openCard
+```
+
+
 
 
 
 ## on openStack
 
-This feature will arrive in a future version...
+Message sent upon first opening the stack.
+
+
+Examples:
+
+```
+-- in a stack's script
+on openStack
+    answer "welcome to this card"
+end openStack
+```
+
+
 

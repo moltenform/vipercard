@@ -72,7 +72,7 @@ export class VpcModelTop {
     /**
      * a convenient way to go from a vel to its owner
      */
-    getOwner(vel: VpcElBase): VpcElBase {
+    getOwnerUntyped(vel: VpcElBase): VpcElBase {
         if (vel instanceof VpcElStack) {
             return this.productOpts;
         } else if (vel instanceof VpcElProductOpts) {
@@ -85,6 +85,14 @@ export class VpcModelTop {
                 throw makeVpcScriptErr(`4s|cannot get the owner of el ${vel.id}`);
             }
         }
+    }
+
+    /**
+     * a convenient way to go from a vel to its owner, confirm type is as expected
+     */
+    getOwner<T>(vel: VpcElBase, ctor: { new (...args: any[]): T }): T {
+        let found = this.getOwnerUntyped(vel)
+        return cast(found, ctor)
     }
 
     /**

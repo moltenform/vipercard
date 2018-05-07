@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, checkThrow, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { assertTrue, assertTrueWarn, checkThrow, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEqWarn, getRoot, sleep, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
@@ -18,6 +18,7 @@
 /* auto */ import { VpcRuntime, VpcState } from '../../vpcui/state/vpcState.js';
 /* auto */ import { VpcNonModalFormSendReport } from '../../vpcui/nonmodaldialogs/vpcFormSendReport.js';
 /* auto */ import { VpcNonModalFormLogin } from '../../vpcui/nonmodaldialogs/vpcFormLogin.js';
+/* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcPresenter } from '../../vpcui/presentation/vpcPresenter.js';
 /* auto */ import { VpcStateInterfaceImpl } from '../../vpcui/intro/vpcInterfaceImpl.js';
 
@@ -68,7 +69,12 @@ export class VpcIntroProvider {
         await this.initPrUI(pr, serialized, fullVci, vpcState, idGen);
 
         /* compile scripts, set stack lineage */
-        await this.initPrSettings(vpcState, fullVci);
+        try {
+            /* don't prevent stack from opening if a failure happens here */
+            await this.initPrSettings(pr, vpcState, fullVci);
+        } catch(e) {
+            assertTrueWarn(false, 'initPrSettings', e.toString())
+        }
 
         /* setup the redirection-to-login-form if requested */
         this.setFirstActionUponLoad(vpcState, pr);
@@ -188,19 +194,17 @@ export class VpcIntroProvider {
         vpcState.runtime.outside.vci = pr.vci;
         await this.yieldTime();
 
-        /* go to the first card */
+        /* go to the first card (but don't send opencard yet) */
         fullVci.doWithoutAbilityToUndo(() => {
             let card = vpcState.model.stack.bgs[0].cards[0].id
-            pr.setCurrentCardId(card, true)
+            pr.setCurrentCardId(card, false)
         });
-
-        await this.yieldTime();
     }
 
     /**
      * compile scripts, set stack lineage
      */
-    protected async initPrSettings(vci: VpcState, fullVci: VpcStateInterfaceImpl) {
+    protected async initPrSettings(pr: VpcPresenter, vci: VpcState, fullVci: VpcStateInterfaceImpl) {
         /* compile all existing scripts */
         for (let vel of vci.model.stack.iterEntireStack()) {
             let scr = vel.getS('script');
@@ -218,6 +222,7 @@ export class VpcIntroProvider {
                     VpcSession.generateStackPartialId(),
                     'untitled'
                 );
+
                 vci.model.stack.appendToStackLineage(en);
             });
         }
@@ -236,6 +241,9 @@ export class VpcIntroProvider {
 
         vci.vci.doWithoutAbilityToUndo(() => {
             vci.vci.setTool(hasContent ? VpcTool.Browse : VpcTool.Pencil);
+            if (hasContent) {
+                VpcPresenterEvents.sendInitialOpenStackAndOpenCard(pr, vci.vci)
+            }
         });
 
         vci.vci.causeUIRedraw();
@@ -260,7 +268,7 @@ export class VpcIntroProvider {
                 vpcState.vci.setNonModalDialog(form);
             });
         } else if (this.loc === VpcDocumentLocation.FromStackIdOnline) {
-            /* tell the presenter to show a dialog explaining that this is someone else's stacl */
+            /* tell the presenter to show a dialog explaining that this is someone else's stack */
             pr.placeCallbackInQueue(() => {
                 try {
                     let ses = VpcSession.fromRoot();

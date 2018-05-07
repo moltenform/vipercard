@@ -167,7 +167,7 @@ export class VelResolveName {
      */
     getOwnerName(vel: VpcElBase, adjective: PropAdjective) {
         checkThrow(!(vel as VpcElStack).isVpcElStack, 'J:|cannot get owner of stack');
-        return this.go(this.model.getOwner(vel), adjective);
+        return this.go(this.model.getOwnerUntyped(vel), adjective);
     }
 }
 

@@ -14,6 +14,8 @@
 /* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcModelRender, VpcTextFieldAsGeneric } from '../../vpcui/modelrender/vpcModelRender.js';
 /* auto */ import { VpcAppUIToolSmear } from '../../vpcui/tools/vpcToolSmear.js';
@@ -390,12 +392,73 @@ export class VpcPresenterEvents {
     /**
      * is the menubar open
      */
-    static menuIsOpen(pr: VpcPresenterInterface) {
+    protected static menuIsOpen(pr: VpcPresenterInterface) {
         let grpmenubar = pr.app.findGroup('$$grpmenubar');
         if (grpmenubar) {
             let menubar = grpmenubar.findEl('$$menubarforapp');
             if (menubar && menubar.getN('whichIsExpanded') >= 0) {
                 return true;
+            }
+        }
+    }
+
+    /**
+     * send the first opencard, openbackground, and openstack message
+     */
+    static sendInitialOpenStackAndOpenCard(
+        pr: VpcPresenterInterface,
+        vci: VpcStateInterface) {
+
+        { /* send openstack */
+            let msg = new VpcScriptMessage(vci.getModel().stack.id, VpcBuiltinMsg.Openstack);
+            pr.vci.getCodeExec().scheduleCodeExec(msg);
+        }
+
+        { /* send openbackground */
+            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard)
+            let currentBg = vci.getModel().getOwner(currentCard, VpcElBg)
+            let msg = new VpcScriptMessage(currentBg.id, VpcBuiltinMsg.Openbackground);
+            pr.vci.getCodeExec().scheduleCodeExec(msg);
+        }
+
+        { /* send opencard */
+            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard)
+            let msg = new VpcScriptMessage(currentCard.id, VpcBuiltinMsg.Opencard);
+            pr.vci.getCodeExec().scheduleCodeExec(msg);
+        }
+    }
+
+    /**
+     * send messages when card changes
+     */
+    static sendCardChangeMsgs(pr: VpcPresenterInterface,
+        vci: VpcStateInterface, before:boolean, wasCardId:string, nextCardId:string) {
+        let wasCard = vci.getModel().getById(wasCardId, VpcElCard)
+        let nextCard = vci.getModel().getById(nextCardId, VpcElCard)
+        let wasBgId = wasCard.parentId
+        let nextBgId = nextCard.parentId
+
+        if (before) {
+            /* send closing messages */
+            if (wasCardId !== nextCardId) {
+                let msg = new VpcScriptMessage(wasCardId, VpcBuiltinMsg.Closecard);
+                pr.vci.getCodeExec().scheduleCodeExec(msg);
+            }
+
+            if (wasBgId !== nextBgId) {
+                let msg = new VpcScriptMessage(wasBgId, VpcBuiltinMsg.Closebackground);
+                pr.vci.getCodeExec().scheduleCodeExec(msg);
+            }
+        } else {
+            /* send opening messages */
+            if (wasCardId !== nextCardId) {
+                let msg = new VpcScriptMessage(nextCardId, VpcBuiltinMsg.Opencard);
+                pr.vci.getCodeExec().scheduleCodeExec(msg);
+            }
+
+            if (wasBgId !== nextBgId) {
+                let msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground);
+                pr.vci.getCodeExec().scheduleCodeExec(msg);
             }
         }
     }

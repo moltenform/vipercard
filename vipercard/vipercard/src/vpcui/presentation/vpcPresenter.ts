@@ -9,19 +9,20 @@
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 /* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
 /* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcPresenterInit } from '../../vpcui/presentation/vpcPresenterInit.js';
+
+import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
 
 /**
  * main ViperCard presentation object
@@ -93,26 +94,14 @@ export class VpcPresenter extends VpcPresenterInit {
 
     /**
      * set the current card id,
-     * this is the only place that should be able to directly set the card
+     * this is the only place that should be able to directly set the card,
+     * since we want to send opencard events.
      */
     setCurrentCardId(nextId:string, sendOpenCard:boolean) {
         sendOpenCard = sendOpenCard && this.getTool() === VpcTool.Browse
-        let prevCardId:O<string>
-        let currBgId:O<string>
-        let nextBgId:O<string>
+        let wasCardId = this.vci.getOptionS('currentCardId')
         if (sendOpenCard) {
-            /* get the current background */
-            let bgIdFromCardId = (id:string) => {
-                if (id) {
-                    let vel = this.vci.getModel().getById(id, VpcElCard)
-                    let currentBg = this.vci.getModel().getById(vel.parentId, VpcElBg)
-                    return currentBg.id
-                }
-            }
-
-            prevCardId = this.vci.getOptionS('currentCardId')
-            currBgId = bgIdFromCardId(prevCardId)
-            nextBgId = bgIdFromCardId(nextId)
+            VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, true, wasCardId, nextId)
         }
 
         this.vci.undoableAction(() => {
@@ -121,18 +110,9 @@ export class VpcPresenter extends VpcPresenterInit {
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
         });
 
-        // not yet implemented: send closecard and opencard events
-        // if (!VpcPresenterEvents.menuIsOpen(this)) {
-            // /* send closecard */
-            // let msg = new VpcScriptMessage(nextId, VpcBuiltinMsg.Closecard;
-            //
-            // /* send closebackground */
-            // msg = new VpcScriptMessage(nextId, VpcBuiltinMsg.Opencard);
-            // pr.vci.getCodeExec().scheduleCodeExec(msg);
-            // if (currBgId !== nextBgId) {
-                // msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground)
-            // }
-        // }
+        if (sendOpenCard) {
+            VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, false, wasCardId, nextId)
+        }
     }
 
     /**
