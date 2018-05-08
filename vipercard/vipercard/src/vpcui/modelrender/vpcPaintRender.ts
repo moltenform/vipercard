@@ -55,7 +55,6 @@ export class VpcPaintRender extends VpcUILayer {
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         let [currentlyCachedV, currentlyCachedIm] = this.refreshCachedPaintForCard(currentCardId);
         mainPaint.setCanvas(currentlyCachedIm);
-        this.doMaintenance();
     }
 
     /**

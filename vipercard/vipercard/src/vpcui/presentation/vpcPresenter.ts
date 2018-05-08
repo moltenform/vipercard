@@ -438,7 +438,6 @@ export class VpcPresenter extends VpcPresenterInit {
             vel.set('label', lng('lngNew Button'));
             vel.set('showlabel', true);
             vel.set('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp');
-            this.vci.getCodeExec().updateChangedCode(vel, vel.getS('script'));
         } else {
             /* need to give it content, since we don't currently
             draw the lines, otherwise you'd see nothing there */
@@ -482,9 +481,6 @@ export class VpcPresenter extends VpcPresenterInit {
                 dupe.getN('w'),
                 dupe.getN('h')
             );
-
-            /* and compile its script too... */
-            this.vci.getCodeExec().updateChangedCode(dupe, dupe.getS('script'));
         } else {
             throw makeVpcInternalErr(msgNotification + lng("lngCan't paste this."));
         }

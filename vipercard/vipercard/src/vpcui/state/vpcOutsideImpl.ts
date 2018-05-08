@@ -391,9 +391,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
-     * get element by id
+     * find element by id
      */
-    ElementById(id: O<string>): O<VpcElBase> {
+    FindVelById(id: O<string>): O<VpcElBase> {
         return this.vci.getModel().findByIdUntyped(id);
     }
 

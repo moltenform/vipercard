@@ -8,7 +8,7 @@
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { VpcParsed } from '../../vpc/codeparse/vpcTokens.js';
-/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { LoopLimit, VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
 /* auto */ import { BranchProcessing } from '../../vpc/codepreparse/vpcBranchProcessing.js';
@@ -218,17 +218,23 @@ export class VpcExecFrameStack {
      * look in the message hierarchy for a handler
      */
     findHandlerUpwards(id: string, handlername: string, onlyParents: boolean) {
-        let vel = this.outside.ElementById(id);
-        let nextParent = vel ? vel.parentId : undefined;
-        let nextToLookAt = onlyParents ? nextParent : id;
-        while (!!vel) {
-            let found = this.code.findHandlerInScript(nextToLookAt, handlername);
-            if (found) {
-                return found;
+        let loop = new LoopLimit(CodeLimits.MaxObjectsInMsgChain, 'maxObjectsInMsgChain');
+        let vel = this.outside.FindVelById(id);
+        let firstTimeInLoop = true
+        while (loop.next()) {
+            if (!vel) {
+                return undefined
             }
 
-            vel = this.outside.ElementById(nextToLookAt);
-            nextToLookAt = vel ? vel.parentId : undefined;
+            if (!onlyParents || !firstTimeInLoop) {
+                let found = this.code.findHandlerInScript(vel.id, vel.getScript(), handlername);
+                if (found) {
+                    return found
+                }
+            }
+
+            vel = this.outside.FindVelById(vel.parentId)
+            firstTimeInLoop = false
         }
     }
 

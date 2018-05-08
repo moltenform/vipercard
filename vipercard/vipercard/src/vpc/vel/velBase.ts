@@ -151,6 +151,14 @@ export abstract class VpcElBase extends UI512Settable {
     }
 
     /**
+     * get the script, or empty string if the object has no script
+     */
+    getScript():string {
+        let rawScript = this.get('script')
+        return rawScript === undefined ? '' : rawScript
+    }
+
+    /**
      * look for the index (z-order) of a child element
      * return undefined if not found
      */

@@ -156,7 +156,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
 
     protected updateChangedCodeAndCheckForSyntaxError(owner: VpcElBase, code: string) {
         this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
-        let fnd = this.vcstate.runtime.codeExec.findCode(owner.id);
+        let fnd = this.vcstate.runtime.codeExec.getCompiledScript(owner.id, owner.getScript());
         if (fnd && fnd instanceof VpcScriptSyntaxError) {
             throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
         }
@@ -176,7 +176,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
         let obj = this.vcstate.model.getByIdUntyped(id);
         this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
-        this.updateChangedCodeAndCheckForSyntaxError(obj, obj.getS('script'));
+        this.updateChangedCodeAndCheckForSyntaxError(obj, obj.getScript());
     }
 
     protected runGeneralCode(

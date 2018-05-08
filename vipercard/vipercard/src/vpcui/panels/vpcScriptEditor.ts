@@ -168,7 +168,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             );
         } else {
             /* check for syntax err */
-            let codeStatus = this.vci.getCodeExec().findCode(vel.id);
+            let codeStatus = this.vci.getCodeExec().getCompiledScript(vel.id, vel.getScript());
             if (codeStatus instanceof VpcScriptErrorBase) {
                 this.setStatusLabeltext(
                     'lngSyntax error:',

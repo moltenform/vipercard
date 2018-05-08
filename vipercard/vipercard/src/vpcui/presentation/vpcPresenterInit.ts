@@ -60,11 +60,13 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
     /*  - will be a no-op most of the time */
     readonly sendMouseWithinPeriod = 250;
     readonly blinkMarqueePeriod = 350;
+    readonly runMaintenancePeriod = 60 * 1000;
     readonly runScriptPeriod = 5;
     readonly runScriptTimeslice = 400;
     timerSendMouseWithin = new RepeatingTimer(this.sendMouseWithinPeriod);
     timerRunScript = new RepeatingTimer(this.runScriptPeriod);
     timerBlinkMarquee = new RepeatingTimer(this.blinkMarqueePeriod);
+    timerRunMaintenance = new RepeatingTimer(this.runMaintenancePeriod);
 
     /* have we been told to refresh the cursor */
     cursorRefreshPending = true;

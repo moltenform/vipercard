@@ -96,8 +96,8 @@ export class VpcExecTop {
     /**
      * retrieve code for a vel
      */
-    findCode(id: string) {
-        return this.code.findCode(id);
+    getCompiledScript(id: string, rawScript:string) {
+        return this.code.getCompiledScript(id, rawScript);
     }
 
     /**
@@ -200,7 +200,7 @@ export class VpcExecTop {
         checkThrow(!this.isCodeRunning(), "7y|we don't currently support changing code while code is running");
         UI512ErrorHandling.breakOnThrow = false;
         try {
-            this.code.updateCode(code, owner);
+            this.code.updateCode(code, owner.id);
         } finally {
             UI512ErrorHandling.breakOnThrow = true;
         }
@@ -226,5 +226,12 @@ export class VpcExecTop {
         } else {
             assertTrue(false, `5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
         }
+    }
+
+    /**
+     * run maintenance
+     */
+    doMaintenance() {
+        this.code.doMaintenance(this.outside)
     }
 }

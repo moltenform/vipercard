@@ -131,7 +131,6 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
         this.causeFullRedraw();
         readded.observer = this.vcstate.runtime.useThisObserverForVpcEls;
         this.getModel().addIdToMapOfElements(readded);
-        this.getCodeExec().updateChangedCode(readded, readded.getS('script'));
     }
 
     /**

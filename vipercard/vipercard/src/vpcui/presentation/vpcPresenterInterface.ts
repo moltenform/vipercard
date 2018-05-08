@@ -27,6 +27,7 @@ export abstract class VpcPresenterInterface extends UI512Presenter {
     timerSendMouseWithin: RepeatingTimer;
     timerRunScript: RepeatingTimer;
     timerBlinkMarquee: RepeatingTimer;
+    timerRunMaintenance: RepeatingTimer;
     userBounds: number[];
     cursorRefreshPending: boolean;
     runScriptTimeslice: number;

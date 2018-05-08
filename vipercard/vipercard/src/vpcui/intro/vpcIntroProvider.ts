@@ -205,15 +205,6 @@ export class VpcIntroProvider {
      * compile scripts, set stack lineage
      */
     protected async initPrSettings(pr: VpcPresenter, vci: VpcState, fullVci: VpcStateInterfaceImpl) {
-        /* compile all existing scripts */
-        for (let vel of vci.model.stack.iterEntireStack()) {
-            let scr = vel.getS('script');
-            if (scr && scr.length) {
-                vci.runtime.codeExec.updateChangedCode(vel, scr);
-                await this.yieldTime();
-            }
-        }
-
         /* create a new stack lineage */
         if (!vci.model.stack.getS('stacklineage').length) {
             fullVci.doWithoutAbilityToUndo(() => {

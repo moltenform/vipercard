@@ -1,8 +1,8 @@
 
-/* auto */ import { O, assertTrue, makeVpcScriptErr, markUI512Err } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeVpcScriptErr, markUI512Err, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject, MapKeyToObjectCanSet, Util512, ValHolder, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, VpcScriptErrorBase, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor.js';
 /* auto */ import { LoopLimit, MakeLowerCase, MapBuiltinCmds, SplitIntoLinesProducer } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
@@ -82,7 +82,7 @@ export class VpcAllCode {
     }
 
     /* map vel id to code or syntax error*/
-    protected code = new MapKeyToObjectCanSet<O<VpcCodeOfOneVel | VpcScriptSyntaxError>>();
+    protected code = new MapKeyToObjectCanSet<VpcCodeOfOneVel | VpcScriptSyntaxError>();
 
     /* processes code */
     protected processor = new VpcCodeProcessor();
@@ -93,20 +93,22 @@ export class VpcAllCode {
     /**
      * update the code of a vel.
      */
-    updateCode(code: string, owner: VpcElBase) {
-        assertTrue(owner && slength(owner.id), '5*|invalid owner id');
-        this.code.set(owner.id, undefined);
+    updateCode(code: string, ownerId: string) {
+        assertTrue(slength(ownerId), '5*|invalid owner id');
+        let emptyCode = new VpcCodeOfOneVel(ownerId, code)
+        this.code.set(ownerId, emptyCode);
         if (!code || code.match(/^\s*$/)) {
             /* there is no code, so exit early */
-            this.code.set(owner.id, undefined);
+            this.code.set(ownerId, emptyCode);
             return;
         }
 
-        let codeOfElem = new VpcCodeOfOneVel(owner);
+        let codeOfElem = new VpcCodeOfOneVel(ownerId, code);
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
         let syntaxError: O<VpcScriptSyntaxError>;
         try {
+            UI512ErrorHandling.breakOnThrow = false
             codeOfElem.setHandlers(
                 this.processor.go(code, codeOfElem.lines, this.idGen, latestSrcLineSeen, latestDestLineSeen)
             );
@@ -115,15 +117,17 @@ export class VpcAllCode {
             syntaxError.isScriptException = e.isVpcError;
             syntaxError.isExternalException = !e.isUi512Error;
             syntaxError.lineNumber = latestSrcLineSeen.val;
-            syntaxError.velId = owner.id;
+            syntaxError.velId = ownerId;
             syntaxError.lineData = latestDestLineSeen.val;
             syntaxError.details = e.message;
+        } finally {
+            UI512ErrorHandling.breakOnThrow = true
         }
 
         if (syntaxError) {
-            this.code.set(owner.id, syntaxError);
+            this.code.set(ownerId, syntaxError);
         } else {
-            this.code.set(owner.id, codeOfElem);
+            this.code.set(ownerId, codeOfElem);
             Util512.freezeRecurse(codeOfElem);
         }
     }
@@ -131,10 +135,17 @@ export class VpcAllCode {
     /**
      * retrieve code for a vel
      * if code could not compile, returns a VpcScriptSyntaxError instance
-     * returns undefined if the object has no script
+     * returns undefined if the object has an empty script
      */
-    findCode(id: O<string>): O<VpcCodeOfOneVel | VpcScriptSyntaxError> {
-        return this.code.find(id);
+    getCompiledScript(id: string, rawScript:string): VpcCodeOfOneVel | VpcScriptSyntaxError {
+        let foundInCache = this.code.find(id)
+        if (foundInCache instanceof VpcCodeOfOneVel && foundInCache.rawScript === rawScript) {
+            return foundInCache
+        } else {
+            /* cache might be out of date, recompile */
+            this.updateCode(rawScript, id)
+            return throwIfUndefined(this.code.find(id), '');
+        }
     }
 
     /**
@@ -147,30 +158,42 @@ export class VpcAllCode {
     /**
      * find a handler in a script
      */
-    findHandlerInScript(id: O<string>, handlername: string): O<[VpcCodeOfOneVel, VpcCodeLineReference]> {
-        if (id) {
-            let ret = this.findCode(id);
-            let retAsCode = ret as VpcCodeOfOneVel;
-            if (retAsCode && retAsCode.isVpcCodeOfOneVel) {
-                /* check in the cached map of handlers */
-                let handler = retAsCode.handlers.find(handlername);
-                if (handler) {
-                    return [retAsCode, handler];
-                }
-            } else if (ret) {
-                /* a syntax error occurred */
-                let retAsErr = ret as VpcScriptErrorBase;
-                if (retAsErr && retAsErr.isVpcScriptErrorBase) {
-                    let err = makeVpcScriptErr('JV|$compilation error$');
-                    markUI512Err(err, true, false, true, retAsErr);
-                    throw err;
-                } else {
-                    throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
-                }
+    findHandlerInScript(id: string, rawScript:string, handlername: string): O<[VpcCodeOfOneVel, VpcCodeLineReference]> {
+        let ret = this.getCompiledScript(id, rawScript);
+        let retAsCode = ret as VpcCodeOfOneVel;
+        if (retAsCode && retAsCode.isVpcCodeOfOneVel) {
+            /* check in the cached map of handlers */
+            let handler = retAsCode.handlers.find(handlername);
+            if (handler) {
+                return [retAsCode, handler];
+            }
+        } else if (ret) {
+            /* a syntax error occurred */
+            let retAsErr = ret as VpcScriptErrorBase;
+            if (retAsErr && retAsErr.isVpcScriptErrorBase) {
+                let err = makeVpcScriptErr('JV|$compilation error$');
+                markUI512Err(err, true, false, true, retAsErr);
+                throw err;
             } else {
-                /* it's fine, this vel has no code */
+                throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
+            }
+        } else {
+            /* it's fine, this vel has no code */
+        }
+    }
+
+    /**
+     * flush out unneeded code from deleted objects
+     */
+    doMaintenance(outside: OutsideWorldReadWrite) {
+        let newCode = new MapKeyToObjectCanSet<VpcCodeOfOneVel | VpcScriptSyntaxError>();
+        for(let key of this.code.getKeys()) {
+            if (outside.FindVelById(key)) {
+                newCode.set(key, this.code.get(key))
             }
         }
+
+        this.code = newCode
     }
 }
 
@@ -246,9 +269,7 @@ export class VpcCodeOfOneVel {
     lines: VpcCodeLine[] = [];
     protected _handlers = new MapKeyToObject<VpcCodeLineReference>();
     protected _handlerStarts: number[] = [];
-    readonly ownerId: string;
-    constructor(owner: VpcElBase) {
-        this.ownerId = owner.id;
+    constructor(public readonly ownerId: string, public readonly rawScript: string) {
     }
 
     /**

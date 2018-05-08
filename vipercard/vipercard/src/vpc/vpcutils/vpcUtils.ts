@@ -135,6 +135,7 @@ export enum CodeLimits {
     MaxGlobalVars = 256,
     MaxStringLength = 64 * 1024,
     MaxVelChildren = 256,
+    MaxObjectsInMsgChain = 128,
     LimitChevErr = 128,
     MaxStackNameLen = 256
 }

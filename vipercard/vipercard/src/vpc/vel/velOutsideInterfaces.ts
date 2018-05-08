@@ -161,9 +161,9 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void;
 
     /**
-     * get element by id
+     * find element by id
      */
-    ElementById(id: O<string>): O<VpcElBase>;
+    FindVelById(id: O<string>): O<VpcElBase>;
 
     /**
      * get a runtime (non-persisted) string value

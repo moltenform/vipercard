@@ -1,6 +1,6 @@
 
 /* auto */ import { O, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast, slength } from '../../ui512/utils/utils512.js';
+/* auto */ import { cast, slength, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
@@ -387,15 +387,25 @@ export class VpcPresenterEvents {
                 pr.tlctgRectSelect.blinkSelection();
             }
         }
+
+        if (!d.handled()) {
+            /* run maintenance */
+            pr.timerRunMaintenance.update(d.milliseconds);
+            if (pr.timerRunMaintenance.isDue()) {
+                pr.timerRunMaintenance.reset();
+                Util512.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance())
+                Util512.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance())
+            }
+        }
     }
 
     /**
      * is the menubar open
      */
     protected static menuIsOpen(pr: VpcPresenterInterface) {
-        let grpmenubar = pr.app.findGroup('$$grpmenubar');
-        if (grpmenubar) {
-            let menubar = grpmenubar.findEl('$$menubarforapp');
+        let grpMenubar = pr.app.findGroup('$$grpmenubar');
+        if (grpMenubar) {
+            let menubar = grpMenubar.findEl('$$menubarforapp');
             if (menubar && menubar.getN('whichIsExpanded') >= 0) {
                 return true;
             }

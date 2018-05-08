@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrow, checkThrowUI512, makeUI512Error, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, checkThrow, checkThrowUI512, makeUI512Error, makeVpcScriptErr, scontains, throwIfUndefined, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
 
 export class Util512 {
     /**
@@ -276,6 +276,17 @@ export class Util512 {
      */
     static isMethodOnClass(me: any, s: string) {
         return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
+    }
+
+    /**
+     * if an error is thrown, show a warning message and swallow the error
+     */
+    static showWarningIfExceptionThrown(fn: ()=> void) {
+        try {
+            fn()
+        } catch(e) {
+            assertTrueWarn(false, e.toString())
+        }
     }
 
     /**
