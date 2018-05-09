@@ -529,6 +529,109 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
             ];
             this.testBatchEvaluate(batch);
         },
+        'test_execCommands replace',
+        () => {
+            let batch: [string, string][];
+            batch = [
+                /* incorrect usage */
+                ['put 123 into replace\\0', `ERR:variable name not allowed`],
+                ['replace\\0', `ERR:see the keyword`],
+                ['replace with\\0', `ERR:NoViableAltException`],
+                ['replace in\\0', `ERR:see the keyword`],
+                ['replace "aa" "bb" \\0', `ERR:see the keyword`],
+                ['replace "aa" with "bb" \\0', `ERR:MismatchedTokenException`],
+                ['replace "aa" in "bb" \\0', `ERR:see the keyword`],
+                ['replace with in \\0', `ERR:NoViableAltException`],
+                ['replace with "bb" in \\0', `ERR:NoViableAltException`],
+                ['replace "aa" with in \\0', `ERR:NoViableAltException`],
+                ['replace "aa" with in "bb" \\0', `ERR:NoViableAltException`],
+                ['replace "aa" with "bb" in "cc" \\0', `ERR:NoViableAltException`],
+                ['replace "aa" with "bb" in 123 \\0', `ERR:NoViableAltException`],
+                ['replace "aa" with "bb" in this stack \\0', `ERR:NotAllInputParsedException`],
+                ['replace "aa" with "bb" in this card \\0', `ERR:NotAllInputParsedException`],
+                [`put "" into s
+replace "aa" with "bb" of s
+\\s`, 'ERR:5:MismatchedTokenException'],
+                /* correct usage */
+                [`put "" into s
+replace "aa" with "bb" in s
+\\s`, ''],
+                [`put "abc" into s
+replace "aa" with "bb" in s
+\\s`, 'abc'],
+                [`put "aa" into s
+replace "aa" with "bb" in s
+\\s`, 'bb'],
+                [`put "aa.aa.aa." into s
+replace "aa" with "bb" in s
+\\s`, 'bb.bb.bb.'],
+                [`put ".aa.aa.aa" into s
+replace "aa" with "bb" in s
+\\s`, '.bb.bb.bb'],
+                [`put "aaa.aaaa.aaaaa" into s
+replace "aa" with "bb" in s
+\\s`, 'bba.bbbb.bbbba'],
+                [`put "123123" into s
+replace "1" with "2" in s
+\\s`, '223223'],
+                [`put "123123" into s
+put "1" into s1
+put "2" into s2
+replace s1 with s2 in s
+\\s`, '223223'],
+            [`put "aaAA" into s
+replace "aa" with "bb" in s
+\\s`, 'bbAA'],
+            [`put "cc aa aa bb" into s
+replace "aa" with "bb" in s
+\\s`, 'cc bb bb bb'],
+            [`put "cc aa aa bb" into s
+replace "a" & "a" with "b" & "b" in s
+\\s`, 'cc bb bb bb'],
+/* test with empty string */
+[`put "cc aa aa bb" into s
+replace "aa" with "" in s
+\\s`, 'cc   bb'],
+[`put "cc aa aa bb" into s
+replace "" with "bb" in s
+\\s`, 'ERR:5:empty string'],
+[`put "cc aa aa bb" into s
+replace "" with "" in s
+\\s`, 'ERR:5:empty string'],
+/* use regex trip-up chars */
+[`put "a**a" into s
+replace "*" with "**" in s
+\\s`, 'a****a'],
+[`put "a%$a" into s
+replace "%$" with "*" in s
+\\s`, 'a*a'],
+[`put "abba" into s
+replace "b" with "$&" in s
+\\s`, 'a$&$&a'],
+            ];
+            this.testBatchEvaluate(batch);
+
+            /* use a real field */
+            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            batch = [
+                [`put "" into cd fld "p1"
+replace "1" with "2" in cd fld ("p" & "1")
+\\cd fld "p1"`, ''],
+                [`put "123123" into cd fld "p1"
+replace "1" with "2" in cd fld "p1"
+\\cd fld "p1"`, '223223'],
+                [`put "cc aa aa bb" into cd fld "p1"
+replace "aa" with "bb" in cd fld "p1"
+\\cd fld "p1"`, 'cc bb bb bb'],
+                [`put "cc aa aa bb" into cd fld "p1"
+replace "aa" with "bb" in cd btn "p1"
+\\cd fld "p1"`, 'ERR:5:placing text'],
+                [`put "cc aa aa bb" into cd fld "p1"
+replace "aa" with "bb" in cd fld "pnotexist"
+\\cd fld "p1"`, 'ERR:5:not found'],
+            ]
+            this.testBatchEvaluate(batch);
+        },
         'test_dynamicCode do',
         () => {
             let batch: [string, string][];
@@ -550,6 +653,7 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 ['put "end if" into code\ndo code\\0', 'ERR:5:compilation error'],
                 ['put "if true then" into code\ndo code\\0', 'ERR:5:compilation error'],
                 ['put "put" into code\ndo code\\0', 'ERR:5:compilation error'],
+                ['put 123 into do\\0', `ERR:variable name not allowed`],
                 /* nested (do calls do) */
                 ['put counting() into cfirst\\counting() - cfirst', '1'],
                 [`

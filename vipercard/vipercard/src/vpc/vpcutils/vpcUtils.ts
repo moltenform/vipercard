@@ -23,6 +23,7 @@ export interface ReadableContainer {
 export interface WritableContainer extends ReadableContainer {
     setAll(newText: string): void;
     splice(insertion: number, lenToDelete: number, newText: string): void;
+    replaceAll(search:string, replaceWith:string):void;
 }
 
 /**

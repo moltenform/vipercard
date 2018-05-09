@@ -117,6 +117,7 @@ export class MapBuiltinCmds extends MapKeyToObject<Function> {
         this.add('multiply', parser.RuleBuiltinCmdMultiply);
         this.add('play', parser.RuleBuiltinCmdPlay);
         this.add('put', parser.RuleBuiltinCmdPut);
+        this.add('replace', parser.RuleBuiltinCmdReplace);
         this.add('reset', parser.RuleBuiltinCmdReset);
         this.add('set', parser.RuleBuiltinCmdSet);
         this.add('show', parser.RuleBuiltinCmdShow);

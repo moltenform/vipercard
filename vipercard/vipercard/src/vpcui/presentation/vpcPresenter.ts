@@ -555,7 +555,7 @@ export class VpcPresenter extends VpcPresenterInit {
 
         let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
         UI512ErrorHandling.breakOnThrow = false;
-        
+
         try {
             if (s === 'mnuUndo') {
                 this.runUndoOrRedo(() => this.vci.performUndo(), 'lngNothing to undo.', true);

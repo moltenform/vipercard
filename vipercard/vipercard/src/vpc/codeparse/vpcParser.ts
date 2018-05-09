@@ -581,6 +581,15 @@ export class VpcChvParser extends ChvParser {
         });
     });
 
+    RuleBuiltinCmdReplace = this.RULE('RuleBuiltinCmdReplace', () => {
+        this.CONSUME1(tks.TokenTkidentifier);
+        this.SUBRULE1(this.RuleExpr);
+        this.CONSUME1(tks.TokenTknewline);
+        this.SUBRULE2(this.RuleExpr);
+        this.CONSUME1(tks.TokenTkinonly);
+        this.SUBRULE1(this.RuleHSimpleContainer);
+    });
+
     RuleBuiltinCmdReset = this.RULE('RuleBuiltinCmdReset', () => {
         this.CONSUME1(tks.TokenTkidentifier);
         this.CONSUME2(tks.TokenTkidentifier);

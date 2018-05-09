@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';

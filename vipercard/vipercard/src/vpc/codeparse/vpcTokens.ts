@@ -168,6 +168,8 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
     it: true,
 
     /* tokens from realVpc000, includes all built-in commands */
+    do: true,
+    send: true,
     the: true,
     put: true,
     set: true,

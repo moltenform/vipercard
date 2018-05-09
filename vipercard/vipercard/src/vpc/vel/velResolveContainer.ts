@@ -1,5 +1,6 @@
 
 /* auto */ import { checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
@@ -65,6 +66,23 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
     setAll(newText: string) {
         this.outsideWritable.SetVarContents(this.varName, VpcValS(newText));
     }
+
+    replaceAll(search:string, replaceWith:string) {
+        let s = this.getRawString()
+        let result = WritableContainerVar.replaceAll(s, search, replaceWith)
+        this.setAll(result)
+    }
+
+    static replaceAll(s:string, search:string, replace:string) {
+        checkThrow(slength(search) > 0,
+            'you cannot search for an empty string, replace "" with "" in s is not allowed.')
+
+        /* regular expressions would be faster, but we'd need to escape
+        all metacharacters in the search string (hard to know if any metacharacters missed)
+        and also need to be careful about special strings like $& in the replace string.
+        so, until there's a standardized re.escape, use this. */
+        return s.split(search).join(replace)
+    }
 }
 
 /**
@@ -114,5 +132,12 @@ export class WritableContainerField extends ReadableContainerField implements Wr
     setAll(newText: string) {
         /* follow emulator, there is different behavior (lose formatting) when replacing all text */
         this.fld.setProp('alltext', VpcValS(newText));
+    }
+
+    replaceAll(search:string, replaceWith:string) {
+        /* currently loses all formatting. this feature could be added if desired. */
+        let s = this.getRawString()
+        let result = WritableContainerVar.replaceAll(s, search, replaceWith)
+        this.setAll(result)
     }
 }

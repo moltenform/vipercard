@@ -246,6 +246,22 @@ put it into x
 answer x -- shows the width of the specified button
 
 =====
+replace {string} with {string} in {container}
+=====
+Replace all occurrences of a string.
+
+Examples:
+put "a-b-c" into x
+replace "-" with "_" in x
+answer (x) -- shows a_b_c
+
+
+-- you can also use replace in a field.
+put "-" into search
+put "_" into replacement
+replace search with replacement in cd fld "myFld"
+
+=====
 put {expression} into {container}
 =====
 Evaluates any expression and saves the result to a variable or 

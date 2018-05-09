@@ -45,7 +45,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             --- you have to use the presence of <sub2> or <sub3> to know which branch was taken. ---
             the rule results are pushed onto the array just from left to right as they come, they have no position information.
         */
-
         RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = new RequestedContainerRef();
             if (ctx.RuleObjectPart[0]) {

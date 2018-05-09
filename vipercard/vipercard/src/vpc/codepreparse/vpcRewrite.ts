@@ -120,6 +120,12 @@ export class SyntaxRewriter {
         this.replaceIdentifierWithSyntaxMarker(line, 'from', 1, IsNeeded.Required);
     }
 
+    /* input was: replace "a" with "b" in s */
+    /* turn the 'with' into TkSyntaxMarker for easier parsing later */
+    rewriteReplace(line: ChvIToken[]) {
+        this.replaceIdentifierWithSyntaxMarker(line, 'with', 1, IsNeeded.Required);
+    }
+
     /* for a line like pass mouseUp, */
     /* add a return statement afterwards, solely to make code exec simpler. */
     rewritePass(line: ChvIToken[]) {

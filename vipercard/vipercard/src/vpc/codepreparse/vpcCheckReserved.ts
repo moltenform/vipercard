@@ -5,6 +5,7 @@
 /* auto */ import { VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
 /* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
 /* auto */ import { alsoReservedWordsList, partialReservedWordsList } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { MapBuiltinCmds } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcBuiltinFunctions.js';
 
 /**
@@ -12,7 +13,8 @@
  * or if it is a reserved term that is disallowed
  */
 export class CheckReservedWords {
-    constants = new VariableCollectionConstants();
+    readonly constants = new VariableCollectionConstants();
+    readonly builtinCmds = new MapBuiltinCmds({} as any);
     isBuiltinHandler(s: string): boolean {
         /* "mouseup", "arrowkey" */
         s = s.toLowerCase();
@@ -35,8 +37,11 @@ export class CheckReservedWords {
     }
 
     isKeyword(s: string): boolean {
+        /* "put" "do" "replace" */
+        let isCmd = this.builtinCmds.exists(s)
+
         /* "from", "with", "to", "end" */
-        return partialReservedWordsList[s] || alsoReservedWordsList[s];
+        return isCmd || partialReservedWordsList[s] || alsoReservedWordsList[s];
     }
 
     okHandlerName(s: string) {

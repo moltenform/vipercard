@@ -77,10 +77,10 @@ export class VpcExecTop {
             this.justSawRepeatedMousedown = false;
         }
 
-        /* an error might be thrown, like if there if the script causes a lexer error  */
+        /* an error might be thrown, e.g the script causes a lexer error  */
         let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
         UI512ErrorHandling.breakOnThrow = false;
-        
+
         try {
             newWork.findHandlerToExec();
             if (newWork.stack.length > 1) {
@@ -179,7 +179,7 @@ export class VpcExecTop {
         /* allow exceptions, because we will catch them here */
         let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
         UI512ErrorHandling.breakOnThrow = false;
-        
+
         try {
             first.runTimeslice(ms);
         } catch (e) {

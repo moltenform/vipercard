@@ -185,6 +185,24 @@ answer x -- will display "1,4,3"
 
 
 
+## do {expression}
+
+Take a string, and execute it as if it were a ViperCard script.
+
+Similar to eval() in other languages.
+
+
+Examples:
+
+```put "answer " into buildScript
+put quote & "abc" & quote after buildScript
+do buildScript
+```
+
+
+
+
+
 ## drag from {x1}, {y1} to {x2}, {y2}
 
 Use the drag command for programmatically drawing pictures.
@@ -262,8 +280,7 @@ end repeat
 
 Evaluates any expression and saves the result to the variable "it".
 
-Not very useful compared with the 'put' command, but it is here
-for tradition's sake.
+The 'put' command is typically more useful.
 
 
 Examples:
@@ -607,6 +624,28 @@ end repeat
 
 
 
+## replace {string} with {string} in {container}
+
+Replace all occurrences of a string.
+
+
+Examples:
+
+```put "a-b-c" into x
+replace "-" with "_" in x
+answer (x) -- shows a_b_c
+
+
+-- you can also use replace in a field.
+put "-" into search
+put "_" into replacement
+replace search with replacement in cd fld "myFld"
+```
+
+
+
+
+
 ## return {expression}
 
 return a value from the current function.
@@ -626,6 +665,12 @@ end mouseUp
 ```
 
 
+
+
+
+## send {expression} to {object}
+
+This feature will arrive in a future version...
 
 
 

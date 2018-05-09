@@ -898,6 +898,10 @@ export class MapKeyToObject<T> {
         return throwIfUndefined(this.objects[key], '3_|id not found', key);
     }
 
+    exists(key: string) {
+        return Object.prototype.hasOwnProperty.call(this.objects, key)
+    }
+
     find(key: O<string>) {
         if (key) {
             return this.objects[key];

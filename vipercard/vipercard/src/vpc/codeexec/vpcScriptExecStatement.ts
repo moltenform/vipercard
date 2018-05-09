@@ -455,6 +455,28 @@ export class ExecuteStatement {
     }
 
     /**
+     * replace text
+     */
+    goReplace(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+        let exprs = vals.vals['RuleExpr'];
+        let expr1 = exprs[0] as VpcVal
+        let expr2 = exprs[1] as VpcVal
+        checkThrowEq(2, exprs.length, '')
+        checkThrow(expr1 && expr1.isVpcVal, '')
+        checkThrow(expr2 && expr2.isVpcVal, '')
+        let searchFor = expr1.readAsString()
+        let replaceWith = expr2.readAsString()
+
+        let contRef = throwIfUndefined(
+            this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHSimpleContainer'),
+            '53|'
+        );
+
+        let cont = this.outside.ResolveContainerWritable(contRef);
+        cont.replaceAll(searchFor, replaceWith)
+    }
+
+    /**
      * get {expression}
      * Evaluates any expression and saves the result to the variable "it".
      */
