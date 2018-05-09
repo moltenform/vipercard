@@ -552,9 +552,9 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
 function getIconGroupId(vel: VpcElBase, el: UI512Element, newVal: ElementObserverVal) {
     if (!newVal) {
         return '';
-    } else if (vel.getS('name').startsWith('glider_sprites')) {
+    } else if (vel.getS('name').startsWith('gliderSprites')) {
         return 'gliderSprites';
-    } else if (vel.getS('name').startsWith('glider_bg')) {
+    } else if (vel.getS('name').startsWith('gliderBg')) {
         return 'gliderBg';
     } else if (vel.getS('name').startsWith('spacegame_sprites')) {
         return 'spacegame';
