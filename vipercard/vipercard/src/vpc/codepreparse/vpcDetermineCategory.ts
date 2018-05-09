@@ -79,11 +79,10 @@ export class DetermineCategory {
      * determine the category
      */
     go(line: ChvIToken[]): VpcCodeLine {
-        checkThrow(line && line.length > 0, `8O|we don't allow empty lines of code`);
-
+        checkThrow(line && line.length > 0, "8O|we don't allow empty lines of code");
         checkThrow(
             isTkType(line[0], tks.TokenTkidentifier),
-            `8N|The first word of this line (${line[0].image}) is not a valid command or keyword.`
+            "8N|The first word of this line is not a valid command or keyword.", line[0].image
         );
 
         let firstImage = line[0].image;
@@ -95,7 +94,7 @@ export class DetermineCategory {
         } else {
             /* this is either a syntax structure (like end repeat) or a custom handler call */
             let cmd = firstImage.replace(/\^/g, '');
-            let method = `go` + Util512.capitalizeFirst(cmd);
+            let method = 'go' + Util512.capitalizeFirst(cmd);
             method = Util512.isMethodOnClass(this, method) ? method : 'goCustomHandler';
             let ret = Util512.callAsMethodOnClass('DetermineCategory', this, method, [line, output], false);
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
@@ -433,6 +432,15 @@ export class DetermineCategory {
         } else {
             return this.goExitHandler(line, output);
         }
+    }
+
+    /**
+     * line begins with do
+     */
+    goDo(line: ChvIToken[], output: VpcCodeLine) {
+        checkThrow(line.length >= 2, `line is too short.`);
+        output.excerptToParse = line.slice(1)
+        output.ctg = VpcLineCategory.CallDynamic;
     }
 
     /**

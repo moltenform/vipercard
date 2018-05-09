@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrow, checkThrowUI512, makeUI512Error, makeVpcScriptErr, scontains, throwIfUndefined, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, checkThrowUI512, makeUI512Error, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 
 export class Util512 {
     /**

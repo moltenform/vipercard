@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
@@ -16,13 +16,12 @@
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 /* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
 /* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcPresenterInit } from '../../vpcui/presentation/vpcPresenterInit.js';
-
-import { NullaryFn } from '../../ui512/utils/utilsTestCanvas.js';
 
 /**
  * main ViperCard presentation object
@@ -143,21 +142,20 @@ export class VpcPresenter extends VpcPresenterInit {
                 return;
             }
 
+            /* by leaving browse tool we won't execute closeCard or openCard */
+            this.setTool(VpcTool.Button);
+
+            /* strip out the dynamic stuff so it isn't stuck (for example, lex error in do "#$@#$") */
+            let script = vel.getS('script')
+            let redirredLine = VpcExecFrame.getBetterLineNumberIfTemporary(script, scriptErr.lineNumber)
+            scriptErr.lineNumber = redirredLine
+            vel.set('script', VpcExecFrame.filterTemporaryFromScript(script))
+
             /* move to the card where the error happened. */
             /* for example "send myevent to btn 4 of cd 5" */
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
-            if (vel.getType() === VpcElType.Card) {
-                this.vci.setCurrentCardId(vel.id, false)
-            } else if (vel.getType() === VpcElType.Bg) {
-                assertTrue(false, 'Kk|nyi');
-            } else if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-                let parent = this.vci.getModel().findByIdUntyped(vel.parentId);
-                if (parent && parent.getType() === VpcElType.Card) {
-                    this.vci.setCurrentCardId(parent.id, false)
-                }
-            }
-
-            this.setTool(VpcTool.Button);
+            let parentCard = this.vci.getModel().getParentCardOfElement(vel)
+            this.vci.setCurrentCardId(parentCard.id, false)
 
             /* set the runtime flags */
             this.vci.getCodeExec().lastEncounteredScriptErr = scriptErr;
@@ -555,8 +553,10 @@ export class VpcPresenter extends VpcPresenterInit {
             return;
         }
 
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+        UI512ErrorHandling.breakOnThrow = false;
+        
         try {
-            UI512ErrorHandling.breakOnThrow = false;
             if (s === 'mnuUndo') {
                 this.runUndoOrRedo(() => this.vci.performUndo(), 'lngNothing to undo.', true);
             } else if (s === 'mnuRedo') {
@@ -571,7 +571,7 @@ export class VpcPresenter extends VpcPresenterInit {
         } catch (e) {
             this.answerMsg(cleanExceptionMsg(e.message));
         } finally {
-            UI512ErrorHandling.breakOnThrow = true;
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
 
         this.lyrModelRender.uiRedrawNeeded();

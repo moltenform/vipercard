@@ -1,6 +1,6 @@
 
 /* auto */ import { O, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast, slength, Util512 } from '../../ui512/utils/utils512.js';
+/* auto */ import { Util512, cast, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
@@ -16,6 +16,7 @@
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcModelRender, VpcTextFieldAsGeneric } from '../../vpcui/modelrender/vpcModelRender.js';
 /* auto */ import { VpcAppUIToolSmear } from '../../vpcui/tools/vpcToolSmear.js';
@@ -395,7 +396,18 @@ export class VpcPresenterEvents {
                 pr.timerRunMaintenance.reset();
                 Util512.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance())
                 Util512.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance())
+                Util512.showWarningIfExceptionThrown(() => VpcPresenterEvents.filterTemporaryFromAllScripts(pr))
             }
+        }
+    }
+
+    /**
+     * remove temporary handlers from scripts, so they don't accumulate indefinitely
+     */
+    static filterTemporaryFromAllScripts(pr: VpcPresenterInterface) {
+        if (!pr.vci.isCodeRunning()) {
+            pr.vci.undoableAction(() =>
+                VpcExecFrame.filterTemporaryFromAllScripts(pr.vci.getModel()))
         }
     }
 

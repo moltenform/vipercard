@@ -19,6 +19,7 @@
 /* auto */ import { vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcEditPanels } from '../../vpcui/panels/vpcPanelsInterface.js';
 
@@ -168,7 +169,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             );
         } else {
             /* check for syntax err */
-            let codeStatus = this.vci.getCodeExec().getCompiledScript(vel.id, vel.getScript());
+            let codeStatus = this.vci.getCodeExec().getCompiledScript(vel.id, VpcElBase.getScript(vel));
             if (codeStatus instanceof VpcScriptErrorBase) {
                 this.setStatusLabeltext(
                     'lngSyntax error:',
@@ -301,6 +302,14 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             let validVel = this.cbGetAndValidateSelectedVel('selectedVelId');
             if (validVel) {
                 this.vci.setOption('viewingScriptVelId', validVel.id);
+
+                /* don't show any 'dynamic' code here */
+                let script = VpcElBase.getScript(validVel)
+                if (slength(script)) {
+                    script = VpcExecFrame.filterTemporaryFromScript(script)
+                    VpcElBase.setScript(validVel, script)
+                }
+
                 this.refreshFromModel(app);
             }
         } else {

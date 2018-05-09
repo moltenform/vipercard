@@ -4,6 +4,8 @@
 /* auto */ import { ElementObserverDefault } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
@@ -96,7 +98,34 @@ export class VpcModelTop {
     }
 
     /**
-     * get the vel of the current card
+     * get the parent card of an element
+     */
+    getParentCardOfElement(vel: VpcElBase):VpcElBase {
+        let velAsCard = vel as VpcElCard;
+        let velAsBg = vel as VpcElBg;
+        let velAsStack = vel as VpcElStack;
+        let velAsBtn = vel as VpcElButton;
+        let velAsFld = vel as VpcElField;
+        let velAsOpts = vel as VpcElProductOpts;
+        let cur = this.getCurrentCard()
+        if (velAsCard && velAsCard.isVpcElCard) {
+            return velAsCard
+        } else if (velAsBg && velAsBg.isVpcElBg) {
+            if (velAsBg.id === cur.parentId) {
+                return cur
+            } else {
+                return velAsBg.cards[0]
+            }
+        } else if (velAsBtn && velAsBtn.isVpcElButton || velAsFld && velAsFld.isVpcElField) {
+            let parent = this.getByIdUntyped(vel.parentId)
+            return this.getParentCardOfElement(parent)
+        } else {
+            return cur
+        }
+    }
+
+    /**
+     * get the current card
      */
     getCurrentCard() {
         let cardId = this.productOpts.getS('currentCardId');

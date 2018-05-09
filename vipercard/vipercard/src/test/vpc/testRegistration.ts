@@ -22,7 +22,8 @@
 /* auto */ import { TestVpcParseCmd } from '../../test/vpc/vpcTestScriptParseCmd.js';
 /* auto */ import { TestVpcParseExpr } from '../../test/vpc/vpcTestScriptParseExpr.js';
 /* auto */ import { TestVpcScriptRunBase } from '../../test/vpc/vpcTestScriptRunBase.js';
-/* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpcTestScriptRun.js';
+/* auto */ import { TestVpcScriptRunSyntax } from '../../test/vpc/vpcTestScriptRunSyntax.js';
+/* auto */ import { TestVpcScriptRunCmd } from '../../test/vpc/vpcTestScriptRunCmd.js';
 /* auto */ import { TestVpcScriptExprLvl } from '../../test/vpc/vpcTestScriptExprLvl.js';
 /* auto */ import { TestVpcScriptEval } from '../../test/vpc/vpcTestScriptEval.js';
 /* auto */ import { TestVpcMsgBox } from '../../test/vpc/vpcTestMsgBox.js';
@@ -53,7 +54,8 @@ export function runTestsImpl(all = true) {
         () => new TestVpcScriptExprLvl(),
         () => new TestVpcParseCmd(),
         () => new TestVpcParseExpr(),
-        () => new TestVpcScriptRun(),
+        () => new TestVpcScriptRunCmd(),
+        () => new TestVpcScriptRunSyntax(),
         () => new TestVpcScriptRunBase(),
         () => new TestVpcServer(),
         () => new TestVpcUtils(),

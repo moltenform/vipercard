@@ -9,7 +9,7 @@
 /* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
 /* auto */ import { OrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpcTestScriptRun.js';
+/* auto */ import { TestVpcScriptRunBase } from '../../test/vpc/vpcTestScriptRunBase.js';
 
 /**
  * test running ViperCard scripts that evaluate expressions.
@@ -34,11 +34,7 @@
  * since if a == b, we also confirm that
  * b == a, a != b, and b != a
  */
-export class TestVpcScriptEval extends TestVpcScriptRun {
-    constructor() {
-        super();
-    }
-
+export class TestVpcScriptEval extends TestVpcScriptRunBase {
     tests = [
         'async/vpctestscriptevalinit',
         async () => {

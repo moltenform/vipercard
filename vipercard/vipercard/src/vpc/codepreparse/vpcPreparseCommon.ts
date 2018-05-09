@@ -88,6 +88,7 @@ export enum VpcLineCategory {
     RepeatEnd,
     DeclareGlobal,
     Statement,
+    CallDynamic,
     CallHandler
 }
 

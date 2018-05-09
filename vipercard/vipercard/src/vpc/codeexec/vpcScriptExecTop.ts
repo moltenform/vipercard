@@ -77,9 +77,11 @@ export class VpcExecTop {
             this.justSawRepeatedMousedown = false;
         }
 
+        /* an error might be thrown, like if there if the script causes a lexer error  */
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+        UI512ErrorHandling.breakOnThrow = false;
+        
         try {
-            /* an error might be thrown, like if there if the script causes a lexer error  */
-            UI512ErrorHandling.breakOnThrow = false;
             newWork.findHandlerToExec();
             if (newWork.stack.length > 1) {
                 this.workQueue.push(newWork);
@@ -89,7 +91,7 @@ export class VpcExecTop {
                 this.respondScriptError(e);
             }
         } finally {
-            UI512ErrorHandling.breakOnThrow = true;
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
     }
 
@@ -174,14 +176,16 @@ export class VpcExecTop {
             return;
         }
 
+        /* allow exceptions, because we will catch them here */
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+        UI512ErrorHandling.breakOnThrow = false;
+        
         try {
-            /* allow exceptions, because we will catch them here */
-            UI512ErrorHandling.breakOnThrow = false;
             first.runTimeslice(ms);
         } catch (e) {
             this.respondScriptError(e);
         } finally {
-            UI512ErrorHandling.breakOnThrow = true;
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
 
         if (first.stack.length <= 1) {
@@ -198,11 +202,12 @@ export class VpcExecTop {
      */
     updateChangedCode(owner: VpcElBase, code: string) {
         checkThrow(!this.isCodeRunning(), "7y|we don't currently support changing code while code is running");
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
         UI512ErrorHandling.breakOnThrow = false;
         try {
             this.code.updateCode(code, owner.id);
         } finally {
-            UI512ErrorHandling.breakOnThrow = true;
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
     }
 

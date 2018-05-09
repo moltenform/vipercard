@@ -39,9 +39,6 @@ export class TestVpcScriptRunBase extends UI512TestBase {
     simClickX: number;
     simClickY: number;
     readonly customFunc = 'function';
-    constructor() {
-        super();
-    }
 
     async initEnvironment() {
         if (!this.initedAppl) {
@@ -156,7 +153,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
 
     protected updateChangedCodeAndCheckForSyntaxError(owner: VpcElBase, code: string) {
         this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
-        let fnd = this.vcstate.runtime.codeExec.getCompiledScript(owner.id, owner.getScript());
+        let fnd = this.vcstate.runtime.codeExec.getCompiledScript(owner.id, VpcElBase.getScript(owner));
         if (fnd && fnd instanceof VpcScriptSyntaxError) {
             throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
         }
@@ -176,7 +173,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
         let obj = this.vcstate.model.getByIdUntyped(id);
         this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
-        this.updateChangedCodeAndCheckForSyntaxError(obj, obj.getScript());
+        this.updateChangedCodeAndCheckForSyntaxError(obj, VpcElBase.getScript(obj));
     }
 
     protected runGeneralCode(

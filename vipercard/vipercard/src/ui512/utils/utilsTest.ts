@@ -154,13 +154,14 @@ export class UI512TestBase {
  */
 export async function assertThrowsAsync<T>(tagMsg: string, expectedErr: string, fn: () => Promise<T>) {
     let msg: O<string>;
+    let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+    UI512ErrorHandling.breakOnThrow = false;
     try {
-        UI512ErrorHandling.breakOnThrow = false;
         await fn();
     } catch (e) {
         msg = e.message ? e.message : '';
     } finally {
-        UI512ErrorHandling.breakOnThrow = true;
+        UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
     }
 
     assertTrue(msg !== undefined, `JC|did not throw ${tagMsg}`);
@@ -175,13 +176,14 @@ export async function assertThrowsAsync<T>(tagMsg: string, expectedErr: string, 
  */
 export function assertThrows(tagMsg: string, expectedErr: string, fn: Function) {
     let msg: O<string>;
+    let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
     try {
         UI512ErrorHandling.breakOnThrow = false;
         fn();
     } catch (e) {
         msg = e.message ? e.message : '';
     } finally {
-        UI512ErrorHandling.breakOnThrow = true;
+        UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
     }
 
     assertTrue(msg !== undefined, `3{|did not throw ${tagMsg}`);

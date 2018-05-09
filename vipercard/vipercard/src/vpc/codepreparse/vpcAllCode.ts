@@ -107,6 +107,7 @@ export class VpcAllCode {
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
         let syntaxError: O<VpcScriptSyntaxError>;
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
         try {
             UI512ErrorHandling.breakOnThrow = false
             codeOfElem.setHandlers(
@@ -121,7 +122,7 @@ export class VpcAllCode {
             syntaxError.lineData = latestDestLineSeen.val;
             syntaxError.details = e.message;
         } finally {
-            UI512ErrorHandling.breakOnThrow = true
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow
         }
 
         if (syntaxError) {

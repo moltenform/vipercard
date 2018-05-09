@@ -6,6 +6,7 @@
 /* auto */ import { CodeLimits, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { VpcParsed } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { LoopLimit, VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
@@ -227,7 +228,7 @@ export class VpcExecFrameStack {
             }
 
             if (!onlyParents || !firstTimeInLoop) {
-                let found = this.code.findHandlerInScript(vel.id, vel.getScript(), handlername);
+                let found = this.code.findHandlerInScript(vel.id, VpcElBase.getScript(vel), handlername);
                 if (found) {
                     return found
                 }
@@ -515,18 +516,41 @@ export class VpcExecFrameStack {
      * run custom handler like doMyHandler
      */
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
+        let newHandlerName = curLine.excerptToParse[1].image;
+        let args = this.helpGetEvaledArgs(parsed, curLine);
+        this.callHandlerAndThrowIfNotExist(curFrame, args, curFrame.codeSection.ownerId, newHandlerName )
+    }
+
+    /**
+     * call a handler
+     */
+    protected callHandlerAndThrowIfNotExist(curFrame: VpcExecFrame, args: VpcVal[], ownerId:string, handlerName:string) {
         /* reset the result, in case the callee doesn't return anything */
         curFrame.locals.set('$result', VpcVal.Empty);
-        let newHandlerName = curLine.excerptToParse[1].image;
         curFrame.next();
-        let found = this.findHandlerUpwards(curFrame.codeSection.ownerId, newHandlerName, false);
+        let found = this.findHandlerUpwards(ownerId, handlerName, false);
         if (found) {
-            let args = this.helpGetEvaledArgs(parsed, curLine);
-            let newFrame = this.pushStackFrame(newHandlerName, curFrame.message, found[0], found[1]);
+            let newFrame = this.pushStackFrame(handlerName, curFrame.message, found[0], found[1]);
             newFrame.args = args;
             Util512.freezeRecurse(newFrame.args);
         } else {
-            throw makeVpcScriptErr(`5O|tried to call ${newHandlerName} but no handler of this name found`);
+            throw makeVpcScriptErr(`5O|tried to call ${handlerName} but no handler of this name found`);
         }
+    }
+
+    /**
+     * run dynamically-built code like 'do "answer 1+1"'
+     */
+    visitCallDynamic(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
+        let evaluated = this.evalRequestedExpression(parsed, curLine);
+        let s = evaluated.readAsString()
+        let lineNumber = curLine.excerptToParse[1].startLine || 0
+
+        /* build a new temporary handler, then call it.
+        a bit "interesting" to be modifying the same script we are currently running,
+        but because we are appending only, and because VpcExecFrame has its own copy of the code anyways,
+        this should be safe. */
+        let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, curFrame.codeSection.ownerId, s, lineNumber)
+        this.callHandlerAndThrowIfNotExist(curFrame, [], curFrame.codeSection.ownerId, newHandlerName)
     }
 }

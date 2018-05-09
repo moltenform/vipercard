@@ -1,8 +1,12 @@
 
-/* auto */ import { O, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, checkThrow, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { base10 } from '../../ui512/utils/utils512.js';
 /* auto */ import { CodeLimits, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
+/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
+/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcAllCode.js';
 
@@ -66,5 +70,67 @@ export class VpcExecFrame {
             checkThrow(next === this.currentHandler, '7i|jumping into a different handler is not allowed', next);
             this.currentHandler = next;
         }
+    }
+
+    /**
+     * indicates temporary code
+     */
+    static getTempCodePrefix() {
+        return '----$$vipercard internal temporary handler$$'
+    }
+
+    /**
+     * add dynamic code to the script
+     */
+    static appendTemporaryDynamicCodeToScript(outside: OutsideWorldReadWrite, ownerId: string, codeBody: string, hintLineNumber:number) {
+        let handlerName = 'tempdynamic' + Math.random().toString().replace(/\./g, '')
+        let s = ''
+        s += '\n\n' + VpcExecFrame.getTempCodePrefix() + hintLineNumber.toString() + '$$----'
+        s += '\n----(this is temporary and can be safely removed)'
+        s += `\non ${handlerName}\n` + codeBody + `\nend ${handlerName}\n`
+        let vel = outside.FindVelById(ownerId)
+        vel = throwIfUndefined(vel, 'not found', ownerId)
+        let curScript = VpcElBase.getScript(vel)
+        VpcElBase.setScript(vel, curScript + s)
+        return handlerName
+    }
+
+    /**
+     * strip out the dynamic code
+     */
+    static filterTemporaryFromAllScripts(model:VpcModelTop) {
+        for (let vel of model.stack.iterEntireStack()) {
+            let s = vel.getS('script')
+            s = VpcExecFrame.filterTemporaryFromScript(s)
+            vel.set('script', s)
+        }
+    }
+
+    /**
+     * strip out the dynamic code
+     */
+    static filterTemporaryFromScript(s:string) {
+        /* clear everything after marker */
+        s = s.split(VpcExecFrame.getTempCodePrefix())[0]
+
+        /* delete trailing whitespace, otherwise it'd accumulate over time */
+        s = s.replace(/\s+$/g, '\n');
+        return s
+    }
+
+    /**
+     * did the script error within dynamic code?
+     */
+    static getBetterLineNumberIfTemporary(script:string, given:number) {
+        let lines = script.split('\n')
+        for (let i=0, len = lines.length; i<len; i++) {
+            if (lines[i].startsWith(VpcExecFrame.getTempCodePrefix())) {
+                let rest = lines[i].substr(VpcExecFrame.getTempCodePrefix().length)
+                rest = rest.split('$$')[0]
+                return parseInt(rest, base10) || 0
+            }
+        }
+
+        return given
     }
 }

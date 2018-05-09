@@ -159,6 +159,24 @@ create btn|fld
 This feature will arrive in a future version...
 
 =====
+do {expression}
+=====
+Take a string, and execute it as if it were a ViperCard script.
+
+Similar to eval() in other languages.
+
+Examples:
+put "answer " into buildScript
+put quote & "abc" & quote after buildScript
+do buildScript
+
+=====
+send {expression} to {object}
+=====
+This feature will arrive in a future version...
+
+
+=====
 lock___screen
 =====
 This feature will arrive in a future version...
@@ -215,8 +233,7 @@ get {expression}
 =====
 Evaluates any expression and saves the result to the variable "it".
 
-Not very useful compared with the 'put' command, but it is here
-for tradition's sake.
+The 'put' command is typically more useful.
 
 Examples:
 

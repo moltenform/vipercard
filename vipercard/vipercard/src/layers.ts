@@ -20,7 +20,8 @@ vpcTestIntroProvider
 vpcTestMsgBox
 vpcTestScriptEval
 vpcTestScriptExprLvl
-vpcTestScriptRun
+vpcTestScriptRunCmd
+vpcTestScriptRunSyntax
 vpcTestScriptRunBase
 vpcTestScriptParseExpr
 vpcTestScriptParseCmd

@@ -16,7 +16,7 @@
 /* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
 /* auto */ import { VpcState } from '../../vpcui/state/vpcState.js';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
-/* auto */ import { TestVpcScriptRun } from '../../test/vpc/vpcTestScriptRun.js';
+/* auto */ import { TestVpcScriptRunBase } from '../../test/vpc/vpcTestScriptRunBase.js';
 
 /**
  * test running ViperCard scripts that evaluate simple computation expressions.
@@ -41,7 +41,7 @@
  * since if a == b, we also confirm that
  * b == a, a != b, and b != a
  */
-export class TestVpcScriptExprLvl extends TestVpcScriptRun {
+export class TestVpcScriptExprLvl extends TestVpcScriptRunBase {
     tests = [
         'async/vpctestscriptevalinit',
         async () => {

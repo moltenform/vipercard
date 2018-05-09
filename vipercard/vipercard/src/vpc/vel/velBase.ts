@@ -153,9 +153,18 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * get the script, or empty string if the object has no script
      */
-    getScript():string {
-        let rawScript = this.get('script')
+    static getScript(vel:VpcElBase):string {
+        let rawScript = vel.get('script')
         return rawScript === undefined ? '' : rawScript
+    }
+
+    /**
+     * set the script, throws if the object has no script
+     */
+    static setScript(vel:VpcElBase, s:string) {
+        let rawScript = vel.get('script')
+        checkThrow(rawScript !== undefined, 'object has no script', vel.id)
+        vel.set('script', s)
     }
 
     /**
