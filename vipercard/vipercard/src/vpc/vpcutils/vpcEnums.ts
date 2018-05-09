@@ -138,7 +138,7 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
         } else if (type === VpcElType.Fld) {
             return 'cd fld';
         } else if (type === VpcElType.Card) {
-            return 'cd';
+            return 'card';
         } else if (type === VpcElType.Bg) {
             return 'bg';
         } else if (type === VpcElType.Stack) {

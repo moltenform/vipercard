@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
@@ -219,6 +219,7 @@ export class VpcExecFrameStack {
      * look in the message hierarchy for a handler
      */
     findHandlerUpwards(id: string, handlername: string, onlyParents: boolean) {
+        assertTrueWarn(id.match(/^[0-9]+$/), '')
         let loop = new LoopLimit(CodeLimits.MaxObjectsInMsgChain, 'maxObjectsInMsgChain');
         let vel = this.outside.FindVelById(id);
         let firstTimeInLoop = true

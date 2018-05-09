@@ -219,7 +219,7 @@ export class VpcMenuActions {
      */
     goMnuPublishFeatured() {
         this.showModal(
-            "lngYour project could be featured on ViperCard's front page! We will be adding 10 new featured stacks by April 2. Save the project, choose 'Share a link' from the File menu, and send the link to @ViperCardDotNet on Twitter."
+            "lngYour project could be featured on ViperCard's front page! Save the project, choose 'Share a link' from the File menu, and send the link to @ViperCardDotNet on Twitter."
         );
     }
 

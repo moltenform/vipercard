@@ -57,10 +57,10 @@ export class VpcPresenterEvents {
             BasicHandlers.trackMouseStatusMouseUp,
             BasicHandlers.trackCurrentElMouseUp,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
+            MenuListeners.onMouseUp,
             VpcPresenterEvents.respondMouseUp,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
             BasicHandlers.trackHighlightedButtonMouseUp,
-            MenuListeners.onMouseUp,
             editTextBehavior.onMouseUp.bind(editTextBehavior)
         ];
 
@@ -123,7 +123,9 @@ export class VpcPresenterEvents {
             VpcPresenterEvents.respondMenuItemClicked
         ];
 
-        pr.listeners[UI512EventType.FocusChanged.valueOf()] = [VpcPresenterEvents.cancelEvtIfCodeRunning];
+        pr.listeners[UI512EventType.FocusChanged.valueOf()] = [
+            VpcPresenterEvents.cancelEvtIfCodeRunning
+        ];
 
         pr.listeners[UI512EventType.Idle.valueOf()] = [
             VpcPresenterEvents.respondIdle,
@@ -532,6 +534,8 @@ export class VpcPresenterEvents {
                 let el = pr.vci.UI512App().coordsToElement(mouseX, mouseY);
                 if (el) {
                     target = el.id;
+                } else {
+                    target = '<use-current-card>';
                 }
             } else {
                 /* idle event */

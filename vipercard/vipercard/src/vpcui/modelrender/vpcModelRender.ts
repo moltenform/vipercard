@@ -202,10 +202,10 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         if (scontains(id, '##sb##')) {
             /* scrollbar parts aren't considered part of the vel */
             return undefined;
-        } else if (id.startsWith('VpcModelRender$$')) {
-            return id.substr('VpcModelRender$$'.length);
         } else if (id === 'VpcModelRender$$renderbg') {
             return undefined;
+        } else if (id.startsWith('VpcModelRender$$')) {
+            return id.substr('VpcModelRender$$'.length);
         } else {
             return undefined;
         }
