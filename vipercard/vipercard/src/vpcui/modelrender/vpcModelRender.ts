@@ -556,7 +556,7 @@ function getIconGroupId(vel: VpcElBase, el: UI512Element, newVal: ElementObserve
         return 'gliderSprites';
     } else if (vel.getS('name').startsWith('gliderBg')) {
         return 'gliderBg';
-    } else if (vel.getS('name').startsWith('spacegame_sprites')) {
+    } else if (vel.getS('name').startsWith('spacegameSprites')) {
         return 'spacegame';
     } else {
         return '002';
