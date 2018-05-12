@@ -303,12 +303,13 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             if (validVel) {
                 this.vci.setOption('viewingScriptVelId', validVel.id);
 
-                /* don't show any 'dynamic' code here */
+                /* reset scroll, in case the last script we saw was really long */
+                this.el.set('scrollamt', 0);
+
+                /* filter out all temporary code */
                 let script = VpcElBase.getScript(validVel)
-                if (slength(script)) {
-                    script = VpcExecFrame.filterTemporaryFromScript(script)
-                    VpcElBase.setScript(validVel, script)
-                }
+                script = VpcExecFrame.filterTemporaryFromScript(script)
+                VpcElBase.setScript(validVel, script)
 
                 this.refreshFromModel(app);
             }

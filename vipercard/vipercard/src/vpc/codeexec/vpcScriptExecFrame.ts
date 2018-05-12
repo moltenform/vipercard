@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, checkThrow, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { base10 } from '../../ui512/utils/utils512.js';
+/* auto */ import { base10, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { CodeLimits, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
@@ -82,10 +82,10 @@ export class VpcExecFrame {
     /**
      * add dynamic code to the script
      */
-    static appendTemporaryDynamicCodeToScript(outside: OutsideWorldReadWrite, ownerId: string, codeBody: string, hintLineNumber:number) {
+    static appendTemporaryDynamicCodeToScript(outside: OutsideWorldReadWrite, ownerId: string, codeBody: string, hintSourceId: string, hintLineNumber:number) {
         let handlerName = 'tempdynamic' + Math.random().toString().replace(/\./g, '')
         let s = ''
-        s += '\n\n' + VpcExecFrame.getTempCodePrefix() + hintLineNumber.toString() + '$$----'
+        s += `\n\n${VpcExecFrame.getTempCodePrefix()}${hintSourceId}$$${hintLineNumber}$$----`
         s += '\n----(this is temporary and can be safely removed)'
         s += `\non ${handlerName}\n` + codeBody + `\nend ${handlerName}\n`
         let vel = outside.FindVelById(ownerId)
@@ -110,6 +110,11 @@ export class VpcExecFrame {
      * strip out the dynamic code
      */
     static filterTemporaryFromScript(s:string) {
+        /* exit early if script is empty */
+        if (!slength(s)) {
+            return s
+        }
+
         /* clear everything after marker */
         s = s.split(VpcExecFrame.getTempCodePrefix())[0]
 
@@ -121,16 +126,27 @@ export class VpcExecFrame {
     /**
      * did the script error within dynamic code?
      */
-    static getBetterLineNumberIfTemporary(script:string, given:number) {
+    static getBetterLineNumberIfTemporary(script:string, givenVelId:string, given:number):[string, number] {
         let lines = script.split('\n')
+        let lastSeen:[string, number] = [givenVelId, given]
         for (let i=0, len = lines.length; i<len; i++) {
             if (lines[i].startsWith(VpcExecFrame.getTempCodePrefix())) {
                 let rest = lines[i].substr(VpcExecFrame.getTempCodePrefix().length)
-                rest = rest.split('$$')[0]
-                return parseInt(rest, base10) || 0
+                let parts = rest.split('$$')
+                if (parts.length === 3) {
+                    let velid = parts[0]
+                    let linenumber = parseInt(parts[1], base10) || 0
+                    lastSeen = [velid, linenumber]
+                }
+            } else if (lines[i].startsWith('end tempdynamic')) {
+                lastSeen = [givenVelId, given]
+            }
+
+            if (i >= given) {
+                break;
             }
         }
 
-        return given
+        return lastSeen
     }
 }

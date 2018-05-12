@@ -145,10 +145,18 @@ export class VpcPresenter extends VpcPresenterInit {
             /* by leaving browse tool we won't execute closeCard or openCard */
             this.setTool(VpcTool.Button);
 
-            /* get better line number */
+            /* redirect line number if this came from 'send' or 'do' */
             let script = vel.getS('script')
-            let redirredLine = VpcExecFrame.getBetterLineNumberIfTemporary(script, scriptErr.lineNumber)
+            let [redirredVelId, redirredLine] = VpcExecFrame.getBetterLineNumberIfTemporary(script, vel.id, scriptErr.lineNumber)
+            let redirredVel = this.vci.getModel().findByIdUntyped(redirredVelId);
+            vel = redirredVel ? redirredVel : vel
+            scriptErr.velId = vel.id
             scriptErr.lineNumber = redirredLine
+
+            /* strip out dynamic code */
+            script = vel.getS('script')
+            let scriptNew = VpcExecFrame.filterTemporaryFromScript(script)
+            vel.set('script', scriptNew)
 
             /* move to the card where the error happened. */
             /* for example "send myevent to btn 4 of cd 5" */

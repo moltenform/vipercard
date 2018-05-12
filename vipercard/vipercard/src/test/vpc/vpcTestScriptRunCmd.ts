@@ -704,7 +704,7 @@ send code to bg "b"\\g`, `${this.elIds.bg_b}`],
                 [`global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`, `${this.elIds.stack}`],
-                // /* not valid */
+                /* not valid */
                 ['send\\0', 'ERR:too short'],
                 ['send "put 1 into x"\\0', 'ERR:MismatchedTokenException'],
                 ['send to\\0', 'ERR:NoViableAltException'],
@@ -783,6 +783,43 @@ end myCompute`))
             \\the result`, `10`],
             ]
             this.testBatchEvaluate(batch);
+
+            /* map temp line numbers to the target line */
+            /* part 1: call send a few times */
+            let stack = this.vcstate.vci.getModel().getById(this.elIds.stack, VpcElStack)
+            this.vcstate.vci.undoableAction(
+                ()=>stack.set('script', `on myHandler n
+            put 1 into x
+            end myHandler`))
+
+            batch = [
+                [`send "myHandler 1" to this stack
+                send "myHandler 2" to this stack
+                put 1 into x
+                send "myHandler 3" to this stack
+            \\0`, `0`],
+            ]
+            this.testBatchEvaluate(batch);
+
+            /* map temp line numbers to the target line */
+            /* part 2: test getBetterLineNumberIfTemporary */
+            let spl = stack.getS('script').split('\n')
+            for (let i = 0; i<30; i++) {
+                let [redirVel,redirLine] = VpcExecFrame.getBetterLineNumberIfTemporary(stack.getS('script'), '(not redirected)', i)
+                if (i >= 4 && i <= 8) {
+                    assertEq(`${this.elIds.btn_go}`, redirVel, '')
+                    assertEq(6, redirLine, '')
+                } else if (i >= 12 && i <= 16) {
+                    assertEq(`${this.elIds.btn_go}`, redirVel, '')
+                    assertEq(7, redirLine, '')
+                } else if (i >= 20 && i <= 24) {
+                    assertEq(`${this.elIds.btn_go}`, redirVel, '')
+                    assertEq(9, redirLine, '')
+                } else {
+                    assertEq(`(not redirected)`, redirVel, '')
+                    assertEq(i, redirLine, '')
+                }
+            }
         },
     ];
 }

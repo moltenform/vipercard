@@ -1,12 +1,10 @@
 
 /* auto */ import { vpcversion } from '../../config.js';
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { anyJson, checkThrowEq, isString } from '../../ui512/utils/utils512.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
+/* auto */ import { anyJson, checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
-/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 /**
@@ -43,19 +41,6 @@ export class VpcStateSerialize {
     }
 
     /**
-     * statements like "do" and "send" leave behind temporary handlers
-     * let's not persist the temporary handlers in the stack
-     */
-    protected filterTemporaryFromScript(o:{ [key: string]: ElementObserverVal }) {
-        if (o['script'] !== undefined) {
-            let script = o['script']
-            if (isString(script)) {
-                o['script'] = VpcExecFrame.filterTemporaryFromScript(script.toString())
-            }
-        }
-    }
-
-    /**
      * serialize a vel
      */
     serializeVel(vel: VpcElBase) {
@@ -64,7 +49,6 @@ export class VpcStateSerialize {
         ret.id = vel.id;
         ret.parent_id = vel.parentId;
         ret.attrs = VpcUI512Serialization.serializeGettable(vel, vel.getKeyPropertiesList());
-        this.filterTemporaryFromScript(ret.attrs)
         return ret;
     }
 

@@ -570,9 +570,10 @@ export class VpcExecFrameStack {
      * run dynamically-built code like 'send "answer 1+1" to cd btn "myBtn"'
      */
     visitCallDynamic(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
+        let me = this.stack[this.stack.length - 1]!.codeSection.ownerId
+        let lineNumber = curLine.excerptToParse[1].startLine || 0
         let [val, vel] = this.visitSendStatement(curLine, parsed)
         let codeToCompile = val.readAsString()
-        let lineNumber = curLine.excerptToParse[1].startLine || 0
 
         /* for compatibility with original product, if there's no return statement,
         return the last result that was computed. see the myCompute example in the docs. */
@@ -583,7 +584,7 @@ export class VpcExecFrameStack {
         but because we are appending only, and because VpcExecFrame has its own copy of the code anyways,
         this should be safe. */
         let prevCode = vel.getS('script')
-        let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, vel.id, codeToCompile, lineNumber)
+        let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, vel.id, codeToCompile, me, lineNumber)
         try {
             this.callHandlerAndThrowIfNotExist(curFrame, [], vel.id, newHandlerName)
         } catch (e) {

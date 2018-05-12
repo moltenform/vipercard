@@ -75,12 +75,12 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * resolve reference to a vel
      */
     ResolveVelRef(ref: RequestedVelRef): O<VpcElBase> {
-        let target: O<VpcElBase>;
         let me: O<VpcElBase>;
+        let target: O<VpcElBase>;
         let [frStack, frame] = this.vci.findExecFrameStack();
         if (frame) {
-            target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
             me = this.vci.getModel().findByIdUntyped(frame.codeSection.ownerId);
+            target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
         }
 
         let resolver = new VelResolveReference(this.vci.getModel());
