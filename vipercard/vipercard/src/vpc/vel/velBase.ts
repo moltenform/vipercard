@@ -212,20 +212,6 @@ export abstract class VpcElBase extends UI512Settable {
         let index = getPositionFromOrdinalOrPosition(pos, currentIndex, 0, list.length - 1);
         return list[index] ? (list[index] as T) : undefined;
     }
-
-    /**
-     * this is the message repl, an internal element that shouldn't be serialized
-     */
-    static isActuallyMsgRepl(vel: VpcElBase) {
-        return vel.getType() === VpcElType.Btn && vel.getS('name') === VpcElBase.nameForMsgRepl();
-    }
-
-    /**
-     * name of the message repl element
-     */
-    static nameForMsgRepl() {
-        return '$$msgrepl$$';
-    }
 }
 
 /**

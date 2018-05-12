@@ -128,19 +128,19 @@ export class VpcPresenter extends VpcPresenterInit {
             velId = velId || this.vci.getModel().getCurrentCard().id;
             let vel = this.vci.getModel().findByIdUntyped(velId);
             vel = vel || this.vci.getModel().getCurrentCard();
-            if (VpcElBase.isActuallyMsgRepl(vel)) {
-                /* error came from the message box */
-                this.setTool(VpcTool.Button);
+            // if (VpcElBase.isActuallyMsgRepl(vel)) {
+            //     /* error came from the message box */
+            //     this.setTool(VpcTool.Button);
 
-                if (
-                    this.lyrNonModalDlgHolder.current &&
-                    this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
-                ) {
-                    this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
-                }
+            //     if (
+            //         this.lyrNonModalDlgHolder.current &&
+            //         this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
+            //     ) {
+            //         this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
+            //     }
 
-                return;
-            }
+            //     return;
+            // }
 
             /* by leaving browse tool we won't execute closeCard or openCard */
             this.setTool(VpcTool.Button);

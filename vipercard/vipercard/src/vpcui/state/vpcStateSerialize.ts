@@ -31,10 +31,8 @@ export class VpcStateSerialize {
         ret.elements = [];
         let stack = vci.getModel().stack;
         for (let vel of stack.iterEntireStack()) {
-            if (!VpcElBase.isActuallyMsgRepl(vel)) {
-                let serialized = this.serializeVel(vel);
-                ret.elements.push(serialized);
-            }
+            let serialized = this.serializeVel(vel);
+            ret.elements.push(serialized);
         }
 
         return ret;

@@ -1,5 +1,5 @@
 
-/* auto */ import { O, cleanExceptionMsg, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, cleanExceptionMsg, scontains, assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { TextFontSpec, TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
@@ -162,40 +162,29 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         if (!this.busy) {
             this.busy = true;
             let transformed = VpcNonModalReplBox.transformText(scr);
-            let fakeVel = this.getOrMakeFakeButton();
-            fakeVel.set('script', transformed);
-            let code = fakeVel.getS('script');
-            this.vci.getCodeExec().updateChangedCode(fakeVel, code);
 
             this.history.append(scr);
             this.appendToOutput('> ' + scr + ' ...', false);
             this.setFontAndText(this.entry, '', 'geneva', 12);
 
-            let fakeEl: any = new Object();
-            fakeEl.id = 'VpcModelRender$$' + fakeVel.id;
-            fakeEl.x = fakeVel.getN('x');
-            fakeEl.y = fakeVel.getN('y');
-            fakeEl.w = fakeVel.getN('w');
-            fakeEl.h = fakeVel.getN('h');
-
             this.rememberedTool = this.vci.getTool();
             this.vci.setTool(VpcTool.Browse);
 
-            /* inject fake event */
-            this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
-            let simEvent = new MouseUpEventDetails(
-                0,
-                fakeVel.getN('x') + 1,
-                fakeVel.getN('y') + 1,
-                0,
-                ModifierKeys.None
-            );
+            // /* inject fake event */
+            // this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
+            // let simEvent = new MouseUpEventDetails(
+            //     0,
+            //     fakeVel.getN('x') + 1,
+            //     fakeVel.getN('y') + 1,
+            //     0,
+            //     ModifierKeys.None
+            // );
 
-            simEvent.elClick = fakeEl;
-            simEvent.elRaw = fakeEl;
+            // simEvent.elClick = fakeEl;
+            // simEvent.elRaw = fakeEl;
 
-            /* do this last because it could throw synchronously and call onScriptErr right away */
-            this.vci.scheduleScriptEventSend(simEvent);
+            // /* do this last because it could throw synchronously and call onScriptErr right away */
+            // this.vci.scheduleScriptEventSend(simEvent);
         }
     }
 
@@ -230,22 +219,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * make the fake button to run our script in
      */
     getOrMakeFakeButton() {
-        let currentCardId = this.vci.getOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
-        for (let part of currentCard.parts) {
-            if (VpcElBase.isActuallyMsgRepl(part)) {
-                return part;
-            }
-        }
-
-        /* we'll have to generate it */
-        let newPart = this.vci.createVel(currentCardId, VpcElType.Btn, 0);
-        newPart.set('name', VpcElBase.nameForMsgRepl());
-        newPart.set('x', -100);
-        newPart.set('y', -100);
-        newPart.set('w', 10);
-        newPart.set('h', 10);
-        return newPart;
+        assertTrue(false, "nyi")
     }
 
     /**

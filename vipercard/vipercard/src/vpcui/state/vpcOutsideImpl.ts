@@ -121,7 +121,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsBg.isVpcElBg) {
             return parentAsBg.parts.filter(ch => ch.getType() === type).length;
         } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsCard.isVpcElCard) {
-            return parentAsCard.parts.filter(ch => ch.getType() === type && !VpcElBase.isActuallyMsgRepl(ch)).length;
+            return parentAsCard.parts.filter(ch => ch.getType() === type).length;
         } else {
             throw makeVpcScriptErr(`6s|cannot count types ${type} parent of type ${parent.getType()} ${parent.id}`);
         }
