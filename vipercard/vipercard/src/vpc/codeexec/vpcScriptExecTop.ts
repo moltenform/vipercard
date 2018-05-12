@@ -77,7 +77,7 @@ export class VpcExecTop {
             this.justSawRepeatedMousedown = false;
         }
 
-        /* an error might be thrown, e.g the script causes a lexer error  */
+        /* an error might be thrown, e.g. the script causes a lexer error  */
         let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
         UI512ErrorHandling.breakOnThrow = false;
 

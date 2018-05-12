@@ -49,6 +49,11 @@ export class SyntaxRewriter {
             let firstToken = line[0].image;
             let method = 'rewrite' + Util512.capitalizeFirst(firstToken);
             let rewritten = Util512.callAsMethodOnClass('SyntaxRewriter', this, method, [line], true);
+            if (rewritten) {
+                checkThrow(rewritten.length !== undefined, 'rewrite should have returned list of lists 1');
+                checkThrow(rewritten[0] && rewritten[0].length !== undefined, 'rewrite should have returned list of lists 2');
+            }
+
             rewritten = !rewritten ? [line] : rewritten;
             ret = ret.concat(rewritten);
         }
@@ -124,6 +129,18 @@ export class SyntaxRewriter {
     /* turn the 'with' into TkSyntaxMarker for easier parsing later */
     rewriteReplace(line: ChvIToken[]) {
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1, IsNeeded.Required);
+    }
+
+    /* input was: do "abc" */
+    /* turn into send "abc" to me */
+    rewriteDo(line: ChvIToken[]) {
+        checkThrow(line.length > 0, "cannot have just do.")
+        let addedLine: ChvIToken[] = [];
+        addedLine.push(this.buildFake.makeIdentifier(line[0], 'send'));
+        addedLine = addedLine.concat(line.slice(1))
+        addedLine.push(this.buildFake.make(line[0], tks.TokenTo));
+        addedLine.push(this.buildFake.makeIdentifier(line[0], 'me'));
+        return [addedLine]
     }
 
     /* for a line like pass mouseUp, */

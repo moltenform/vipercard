@@ -1,11 +1,12 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { CodeLimits, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
+/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { VpcParsed } from '../../vpc/codeparse/vpcTokens.js';
@@ -198,7 +199,7 @@ export class VpcExecFrameStack {
         );
 
         let ret = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow(ret.isVpcVal, '7u|evalRequestedExpression expected a number, string, or bool.');
+        checkThrow(ret && ret.isVpcVal, '7u|evalRequestedExpression expected a number, string, or bool.');
         return ret;
     }
 
@@ -540,18 +541,56 @@ export class VpcExecFrameStack {
     }
 
     /**
-     * run dynamically-built code like 'do "answer 1+1"'
+     * 'send' has both an expression and a target object, so can't use the same old evalRequestedExpression
+     */
+    protected visitSendStatement(curLine: VpcCodeLine, parsed: VpcParsed):[VpcVal, VpcElBase] {
+        assertTrue(
+            this.cacheParsed.parser.RuleBuiltinCmdSend === curLine.getParseRule(),
+            '5a|expected "send" parse rule'
+        );
+
+        let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
+        checkThrow(visited && visited.isIntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
+        checkThrow(
+            visited.vals.RuleExpr && visited.vals.RuleObject,
+            '7v|visitSendStatement expected both RuleExpr and RuleObject'
+        );
+
+        let val = visited.vals.RuleExpr[0] as VpcVal;
+        checkThrow(val && val.isVpcVal, '7u|visitSendStatement expected a string.');
+
+        let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
+        checkThrow(velRef && velRef.isRequestedVelRef, '7u|visitSendStatement expected vel reference.');
+        let vel = throwIfUndefined(this.outside.ResolveVelRef(velRef), "target of 'send' not found")
+
+        return [val, vel]
+    }
+
+    /**
+     * run dynamically-built code like 'send "answer 1+1" to cd btn "myBtn"'
      */
     visitCallDynamic(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        let evaluated = this.evalRequestedExpression(parsed, curLine);
-        let s = evaluated.readAsString()
+        let [val, vel] = this.visitSendStatement(curLine, parsed)
+        let codeToCompile = val.readAsString()
         let lineNumber = curLine.excerptToParse[1].startLine || 0
 
+        /* for compatibility with original product, if there's no return statement,
+        return the last result that was computed. see the myCompute example in the docs. */
+        codeToCompile += '\n' + 'return the result'
+
         /* build a new temporary handler, then call it.
-        a bit "interesting" to be modifying the same script we are currently running,
+        a bit "interesting" to be potentially modifying the same script we are currently running,
         but because we are appending only, and because VpcExecFrame has its own copy of the code anyways,
         this should be safe. */
-        let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, curFrame.codeSection.ownerId, s, lineNumber)
-        this.callHandlerAndThrowIfNotExist(curFrame, [], curFrame.codeSection.ownerId, newHandlerName)
+        let prevCode = vel.getS('script')
+        let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, vel.id, codeToCompile, lineNumber)
+        try {
+            this.callHandlerAndThrowIfNotExist(curFrame, [], vel.id, newHandlerName)
+        } catch (e) {
+            /* if there are major (compile) errors, undo the script change we made,
+            otherwise we'd be 'stuck' with the syntax error repeatedly */
+            vel.set('script', prevCode)
+            throw(e);
+        }
     }
 }

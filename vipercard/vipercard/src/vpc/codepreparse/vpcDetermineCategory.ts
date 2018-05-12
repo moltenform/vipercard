@@ -99,10 +99,14 @@ export class DetermineCategory {
             let ret = Util512.callAsMethodOnClass('DetermineCategory', this, method, [line, output], false);
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {
-                if (this.isParsingNeeded(output.ctg)) {
+                if (output.ctg === VpcLineCategory.CallDynamic) {
+                    /* pass the original line of code to the parser */
+                    output.excerptToParse = output.excerptToParse.slice();
+                    output.setParseRule(this.parser.RuleBuiltinCmdSend);
+                } else if (this.isParsingNeeded(output.ctg)) {
                     /* construct an array to be sent to the parser */
-                    output.setParseRule(this.parser.RuleTopLevelRequestEval);
                     output.excerptToParse = [this.reusableRequestEval].concat(output.excerptToParse);
+                    output.setParseRule(this.parser.RuleTopLevelRequestEval);
                 }
             }
 
@@ -116,6 +120,8 @@ export class DetermineCategory {
      */
     protected isParsingNeeded(ctg: VpcLineCategory) {
         switch (ctg) {
+            case VpcLineCategory.CallDynamic:
+                checkThrow(false, 'call dynamic should be handled elsewhere')
             case VpcLineCategory.HandlerStart: /* fall-through */
             case VpcLineCategory.HandlerEnd: /* fall-through */
             case VpcLineCategory.HandlerExit: /* fall-through */
@@ -127,7 +133,7 @@ export class DetermineCategory {
             case VpcLineCategory.RepeatNext: /* fall-through */
             case VpcLineCategory.RepeatForever: /* fall-through */
             case VpcLineCategory.RepeatEnd: /* fall-through */
-            case VpcLineCategory.DeclareGlobal /* fall-through */:
+            case VpcLineCategory.DeclareGlobal: /* fall-through */
                 return false;
             default:
                 return true;
@@ -438,8 +444,18 @@ export class DetermineCategory {
      * line begins with do
      */
     goDo(line: ChvIToken[], output: VpcCodeLine) {
+        checkThrow(false, `expected do to have been turned to send.`);
+    }
+
+    /**
+     * line begins with send
+     */
+    goSend(line: ChvIToken[], output: VpcCodeLine) {
         checkThrow(line.length >= 2, `line is too short.`);
-        output.excerptToParse = line.slice(1)
+
+        /* other control blocks just parse a single expression,
+        but this has to parse both an expression and an object */
+        output.excerptToParse = line.slice()
         output.ctg = VpcLineCategory.CallDynamic;
     }
 

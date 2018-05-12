@@ -166,6 +166,7 @@ Take a string, and execute it as if it were a ViperCard script.
 Similar to eval() in other languages.
 
 Examples:
+
 put "answer " into buildScript
 put quote & "abc" & quote after buildScript
 do buildScript
@@ -173,8 +174,32 @@ do buildScript
 =====
 send {expression} to {object}
 =====
-This feature will arrive in a future version...
+Take a string, and execute it as if it were a ViperCard script in the context of an object.
 
+Messages in ViperCard automatically travel upwards from button to card, background, and then stack.
+
+But by using the 'send' command, you can send a message to any target -- from a card down to a button, from one card to a different card, and so on. One case where this is helpful is if you have a large amount of code in one script: subroutines can be moved to other objects and called via send.
+
+Examples:
+
+-- sending a message to a different card
+send "prepareNextCard" to card "otherCard"
+
+-- simulate a button click
+send "mouseUp" to cd btn "myButton"
+
+-- if you have hundreds of lines of code in one script, this
+-- can feel disorganized. with "send" you can store code
+-- in other objects, for example, moving
+-- mathematical computation to a different card or button.
+-- in the script of cd btn "mathUtils" of card "otherCard", write
+on myCompute a, b
+    return a * a + b
+end myCompute
+
+-- from another script
+send "myCompute 3, 4" to cd btn "mathUtils" of card "otherCard"
+put the result into x
 
 =====
 lock___screen

@@ -546,6 +546,7 @@ Scripting differences between ViperCard and HyperCard:
 - You can write `exit to ViperCard` instead of `exit to HyperCard`
 - You must specify `cd` or `bg` when referring to a button or field
 - No one-line `if x>3 then answer x` if statements
+- Added: afterkeydown, replace command, owner property
 - Currently: message chain for key events is different, on afterkeydown to indicate cannot prevent default action.
 - Currently: wait until the mouseclick is not supported
 - Scripts only run when browse tool is active; you can exit an infinite loop by changing the tool
@@ -553,6 +554,7 @@ Scripting differences between ViperCard and HyperCard:
 - hilite and checkmark are separate properties
 - There are places custom function calls can't occur: as an argument to custom handler call, as an argument to repeat while, and as an argument to else if.
 - Can't have a variable named id, length, short, long, first, second
+- Unification of functions and handlers, both use "the result"
 
 Differences in specific commands/functions:
 - choose "browse" tool, not choose browse tool

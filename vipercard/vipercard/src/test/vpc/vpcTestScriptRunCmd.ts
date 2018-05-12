@@ -1,4 +1,8 @@
 
+/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
+/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
+/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { TestVpcScriptRunBase } from '../../test/vpc/vpcTestScriptRunBase.js';
 
 /**
@@ -642,6 +646,7 @@ replace "aa" with "bb" in cd fld "pnotexist"
                 ['global g\ndo ("global g" & cr & "put 3+3 into g")\\g', '6'],
                 ['global g\ndo ("global g" & cr & "put 64 into t" & cr & "put sqrt(t) into g")\\g', '8'],
                 ['put "put 0 into x" into code\ndo code\\0', '0'],
+                ['put "" into code\ndo code\\0', '0'],
                 /* runtime error */
                 ['global g\ndo ("global g" & cr & "put abcde into g")\\g', 'ERR:13:no variable found'],
                 ['global g\ndo "callNonExist"\\g', 'ERR:12:of this name found'],
@@ -673,6 +678,110 @@ put " & quote )" after s
 do s\\counting() - cfirst`, '2'],
             ]
 
+            this.testBatchEvaluate(batch);
+        },
+        'test_dynamicCode send',
+        () => {
+            this.pr.setCurrentCardId(this.elIds.card_a_a, false);
+            let batch: [string, string][];
+            batch = [
+                /* valid */
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to cd fld id ${this.elIds.fld_c_d_1}\\g`, `${this.elIds.fld_c_d_1}`],
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to cd btn id ${this.elIds.btn_b_c_1}\\g`, `${this.elIds.btn_b_c_1}`],
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to card "a"\\g`, `${this.elIds.card_a_a}`],
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to card id ${this.elIds.card_c_d}\\g`, `${this.elIds.card_c_d}`],
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to bg "b"\\g`, `${this.elIds.bg_b}`],
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to this stack\\g`, `${this.elIds.stack}`],
+                // /* not valid */
+                ['send\\0', 'ERR:too short'],
+                ['send "put 1 into x"\\0', 'ERR:MismatchedTokenException'],
+                ['send to\\0', 'ERR:NoViableAltException'],
+                ['send to this stack\\0', 'ERR:NoViableAltException'],
+                ['send "put 1 into x" to\\0', 'ERR:NoViableAltException'],
+                ['send "put 1 into x" this stack\\0', 'ERR:MismatchedTokenException'],
+                ['send "put 1 into x" of this stack\\0', 'ERR:MismatchedTokenException'],
+                ['send "put 1 into x" to "string"\\0', 'ERR:NoViableAltException'],
+                ['put 123 into send\\0', `ERR:variable name not allowed`],
+                /* syntax error in sent code */
+                ['send "put" to this stack\\0', 'ERR:4:$compilation error$'],
+                ['send "put 1 into" to this stack\\0', 'ERR:15:not defined'],
+                ['send "put \'1 into" to this stack\\0', 'ERR:4:$compilation error$'],
+                ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:$compilation error$'],
+                ['send "on h" to this stack\\0', 'ERR:4:$compilation error$'],
+                ['send "put 10 11 into x" to this stack\\0', 'ERR:23:MismatchedTokenException'],
+                ['send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:31:element not found'],
+                /* not exist */
+                ['send "put 1 into x" to card 10\\0', 'ERR:target of \'send\' not found'],
+                ['send "put 1 into x" to bg "notfound"\\0', 'ERR:target of \'send\' not found'],
+                ['send "put 1 into x" to cd btn 99999\\0', 'ERR:target of \'send\' not found'],
+                ['send "put 1 into x" to cd btn id 99999\\0', 'ERR:target of \'send\' not found'],
+            ]
+            this.testBatchEvaluate(batch);
+
+            /* make sure that invalid code is cleaned out after a failure. */
+            batch = [
+                ['send "$$$#$%#$" to this stack\\0', 'ERR:4:$compilation error$'],
+            ]
+            this.testBatchEvaluate(batch);
+            batch = [
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to this stack\\g`, `${this.elIds.stack}`],
+            ]
+            this.testBatchEvaluate(batch);
+
+            /* calling as a handler, like the original product could do */
+            let v = this.vcstate.vci.getModel().getById(this.elIds.btn_b_c_1, VpcElButton)
+            this.vcstate.vci.undoableAction(() => v.set('script', `
+on myCompute a, b
+    return a * a + b
+end myCompute`))
+            batch = [
+                [`send "myCompute 2, 3" to cd btn id ${this.elIds.btn_b_c_1}
+            \\the result`, `7`],
+                [`send "myCompute 2, 3" & cr & "return the result" to cd btn id ${this.elIds.btn_b_c_1}
+            \\the result`, `7`],
+            ]
+            this.testBatchEvaluate(batch);
+
+            /* calling as a function */
+            this.vcstate.vci.undoableAction(() => v.set('script', `
+function myCompute a, b
+    return a * a + b
+end myCompute`))
+            batch = [
+                [`send "myCompute(2, 3)" to cd btn id ${this.elIds.btn_b_c_1}
+            \\the result`, `ERR:4:$compilation error$`],
+                [`send "return myCompute(3, 3)" to cd btn id ${this.elIds.btn_b_c_1}
+            \\the result`, `12`],
+            ]
+            this.testBatchEvaluate(batch);
+
+            /* calling as a function (can access others in that scope) */
+            this.vcstate.vci.undoableAction(() => v.set('script', `
+function myDouble a
+    return a * 2
+end myDouble
+
+function myCompute a, b
+    return myDouble(a) + myDouble(b)
+end myCompute`))
+            batch = [
+                [`send "return myCompute(2, 3)" to cd btn id ${this.elIds.btn_b_c_1}
+            \\the result`, `10`],
+            ]
             this.testBatchEvaluate(batch);
         },
     ];
