@@ -585,13 +585,6 @@ export class VpcExecFrameStack {
         this should be safe. */
         let prevCode = vel.getS('script')
         let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, vel.id, codeToCompile, me, lineNumber)
-        try {
-            this.callHandlerAndThrowIfNotExist(curFrame, [], vel.id, newHandlerName)
-        } catch (e) {
-            /* if there are major (compile) errors, undo the script change we made,
-            otherwise we'd be 'stuck' with the syntax error repeatedly */
-            vel.set('script', prevCode)
-            throw(e);
-        }
+        this.callHandlerAndThrowIfNotExist(curFrame, [], vel.id, newHandlerName)
     }
 }

@@ -1,7 +1,6 @@
 
-/* auto */ import { O, cleanExceptionMsg, scontains, assertTrue } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, cleanExceptionMsg, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { TextFontSpec, TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
@@ -9,15 +8,15 @@
 /* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { KeyDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { PalBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
-/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcBuiltinMsg, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
+/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from '../../vpcui/nonmodaldialogs/vpcLyrNonModalHolder.js';
 
@@ -151,6 +150,11 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     }
 
     /**
+     * a special id signifies the messagebox
+     */
+    static readonly markMessageBox = -99999;
+
+    /**
      * launch the script
      */
     launchScript(scr: string) {
@@ -161,30 +165,21 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
 
         if (!this.busy) {
             this.busy = true;
-            let transformed = VpcNonModalReplBox.transformText(scr);
 
             this.history.append(scr);
             this.appendToOutput('> ' + scr + ' ...', false);
             this.setFontAndText(this.entry, '', 'geneva', 12);
 
+            /* prepare to run the code */
+            let codeBody = VpcNonModalReplBox.transformText(scr);
+            let curCard = this.vci.getOptionS('currentCardId')
+            let handler = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.vci.getOutside(), curCard, codeBody, curCard, VpcNonModalReplBox.markMessageBox)
             this.rememberedTool = this.vci.getTool();
             this.vci.setTool(VpcTool.Browse);
 
-            // /* inject fake event */
-            // this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
-            // let simEvent = new MouseUpEventDetails(
-            //     0,
-            //     fakeVel.getN('x') + 1,
-            //     fakeVel.getN('y') + 1,
-            //     0,
-            //     ModifierKeys.None
-            // );
-
-            // simEvent.elClick = fakeEl;
-            // simEvent.elRaw = fakeEl;
-
-            // /* do this last because it could throw synchronously and call onScriptErr right away */
-            // this.vci.scheduleScriptEventSend(simEvent);
+            /* do this last because it could throw synchronously and call onScriptErr right away */
+            let msg = new VpcScriptMessage(curCard, VpcBuiltinMsg.__Custom, handler);
+            this.vci.getCodeExec().scheduleCodeExec(msg);
         }
     }
 
@@ -216,13 +211,6 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     }
 
     /**
-     * make the fake button to run our script in
-     */
-    getOrMakeFakeButton() {
-        assertTrue(false, "nyi")
-    }
-
-    /**
      * respond to a script error
      * sometimes it's a script error we intentionally made!
      */
@@ -231,6 +219,18 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         it's how we get the signal back after running a script,
         we intentionally try to call a handler that doesn't exist. */
         this.busy = false;
+
+        /* filter out any dynamic code,
+        otherwise we could be stuck with a syntax error in the card's script */
+        let curCardId = this.vci.getOptionS('currentCardId')
+        let curCard = this.vci.getModel().getById(curCardId, VpcElCard)
+        let script = curCard.getS('script')
+        let scriptNew = VpcExecFrame.filterTemporaryFromScript(script)
+        this.vci.undoableAction(() => {
+            curCard.set('script', scriptNew)
+        })
+
+        /* go back to the previous tool */
         this.vci.setTool(this.rememberedTool);
 
         if (scriptErr && scriptErr.details && scontains(scriptErr.details, VpcNonModalReplBox.markIntentionalErr)) {
@@ -290,16 +290,11 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
             }
         });
 
-        let total = `-- this is not a real object script, it is a temporary
-    -- script for the message repl box. any code
-    -- written here will not be saved.
-    on mouseUp
-    global  g_msgreplboxcontents
-    put "" into  g_msgreplboxcontents
-    `;
+        let total = `global g_msgreplboxcontents
+        put "" into g_msgreplboxcontents
+        `;
         total += linesOut.join('\n');
         total += '\n' + VpcNonModalReplBox.markIntentionalErr;
-        total += '\nend mouseUp';
         return total;
     }
 

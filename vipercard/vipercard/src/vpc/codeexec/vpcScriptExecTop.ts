@@ -212,22 +212,34 @@ export class VpcExecTop {
     }
 
     /**
+     * get an instance of VpcScriptErrorBase, or create if needed
+     */
+    protected getOrGenerateScriptErr(e:any):VpcScriptErrorBase {
+        if (e instanceof VpcScriptErrorBase) {
+            return e
+        } else if (e.attachErr && e.attachErr instanceof VpcScriptErrorBase) {
+            return e.attachErr
+        } else if (e.vpcScriptErr && e.vpcScriptErr instanceof VpcScriptErrorBase) {
+            return e.vpcScriptErr
+        } else {
+            let scrRuntime = new VpcScriptRuntimeError();
+            scrRuntime.isScriptException = false;
+            scrRuntime.isExternalException = !e.isUi512Error;
+            scrRuntime.details = e.toString();
+            scrRuntime.e = e;
+            return scrRuntime
+        }
+    }
+
+    /**
      * add context information to the error and call cbOnScriptError
      */
     protected respondScriptError(e: any) {
         this.forceStopRunning();
-        let vpcScriptErr = e.vpcScriptErr as VpcScriptErrorBase;
-        if (!vpcScriptErr) {
-            let scrRuntime = new VpcScriptRuntimeError();
-            scrRuntime.isScriptException = false;
-            scrRuntime.isExternalException = !e.isUi512Error;
-            scrRuntime.details = e.message;
-            scrRuntime.e = e;
-            vpcScriptErr = scrRuntime;
-        }
+        let err = this.getOrGenerateScriptErr(e)
 
         if (this.cbOnScriptError) {
-            this.cbOnScriptError(vpcScriptErr);
+            this.cbOnScriptError(err);
         } else {
             assertTrue(false, `5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
         }

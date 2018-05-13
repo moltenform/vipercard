@@ -186,17 +186,23 @@ export class TestVpcScriptRunBase extends UI512TestBase {
     ) {
         let caughtErr = false;
         let isCompilationStage = true;
-        this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
-            let id = errFromScript.velId;
-            let n = errFromScript.lineNumber;
-            let isUs = !errFromScript.isExternalException;
-            let msg = errFromScript.details;
+        this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
+            let msg = scriptErr.details;
+            let velId = ''
+            let line = -1
+            this.vcstate.vci.undoableAction(() => {
+                let [origVelId, origLine, reVelId, reLine] = VpcPresenter.commonRespondToError(this.vcstate.vci, scriptErr)
+                velId = reVelId
+                line = reLine
+                this.vcstate.vci.setTool(VpcTool.Browse);
+            })
+
             if (expectCompErr !== undefined && isCompilationStage !== expectCompErr) {
                 let lns = built.split('\n');
-                let culpritLine = n ? lns[n - 1] + '; ' + lns[n] : '';
+                let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
                 assertTrueWarn(false, '2a|got error at the wrong stage', culpritLine, msg);
             } else if (expectErrMsg) {
-                assertEq(expectErrLine, n, codeBefore, codeIn, '2Z|');
+                assertEq(expectErrLine, line, codeBefore, codeIn, '2Z|');
                 if (!scontains(msg, expectErrMsg)) {
                     console.error(
                         'DIFFERENT ERR MSG for input ' +
@@ -211,8 +217,8 @@ export class TestVpcScriptRunBase extends UI512TestBase {
                 }
             } else {
                 let lns = built.split('\n');
-                let culpritLine = n ? lns[n - 1] + '; ' + lns[n] : '';
-                assertTrue(false, `2X|script error, looks like <${culpritLine}> ${n}`, msg);
+                let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
+                assertTrue(false, `2X|script error, looks like <${culpritLine}> ${line}`, msg);
             }
 
             caughtErr = true;

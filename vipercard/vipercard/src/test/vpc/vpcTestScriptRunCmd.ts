@@ -648,16 +648,16 @@ replace "aa" with "bb" in cd fld "pnotexist"
                 ['put "put 0 into x" into code\ndo code\\0', '0'],
                 ['put "" into code\ndo code\\0', '0'],
                 /* runtime error */
-                ['global g\ndo ("global g" & cr & "put abcde into g")\\g', 'ERR:13:no variable found'],
-                ['global g\ndo "callNonExist"\\g', 'ERR:12:of this name found'],
+                ['global g\ndo ("global g" & cr & "put abcde into g")\\g', 'ERR:5:no variable found'],
+                ['global g\ndo "callNonExist"\\g', 'ERR:5:of this name found'],
                 /* lex error */
-                ['put "$$$" into code\ndo code\\0', 'ERR:5:compilation error'],
-                ['put "put " & quote & "unterminated" into code\ndo code\\0', 'ERR:5:compilation error'],
+                ['put "$$$" into code\ndo code\\0', 'ERR:5:lex error'],
+                ['put "put " & quote & "unterminated" into code\ndo code\\0', 'ERR:5:unexpected'],
                 /* syntax error */
-                ['put "on abc" into code\ndo code\\0', 'ERR:5:compilation error'],
-                ['put "end if" into code\ndo code\\0', 'ERR:5:compilation error'],
-                ['put "if true then" into code\ndo code\\0', 'ERR:5:compilation error'],
-                ['put "put" into code\ndo code\\0', 'ERR:5:compilation error'],
+                ['put "on abc" into code\ndo code\\0', 'ERR:5:cannot begin'],
+                ['put "end if" into code\ndo code\\0', 'ERR:5:interleaved'],
+                ['put "if true then" into code\ndo code\\0', 'ERR:14:interleaved'],
+                ['put "put" into code\ndo code\\0', 'ERR:5:missing into'],
                 ['put 123 into do\\0', `ERR:variable name not allowed`],
                 /* nested (do calls do) */
                 ['put counting() into cfirst\\counting() - cfirst', '1'],
@@ -715,13 +715,13 @@ send code to this stack\\g`, `${this.elIds.stack}`],
                 ['send "put 1 into x" to "string"\\0', 'ERR:NoViableAltException'],
                 ['put 123 into send\\0', `ERR:variable name not allowed`],
                 /* syntax error in sent code */
-                ['send "put" to this stack\\0', 'ERR:4:$compilation error$'],
-                ['send "put 1 into" to this stack\\0', 'ERR:15:not defined'],
-                ['send "put \'1 into" to this stack\\0', 'ERR:4:$compilation error$'],
-                ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:$compilation error$'],
-                ['send "on h" to this stack\\0', 'ERR:4:$compilation error$'],
-                ['send "put 10 11 into x" to this stack\\0', 'ERR:23:MismatchedTokenException'],
-                ['send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:31:element not found'],
+                ['send "put" to this stack\\0', 'ERR:4:missing into'],
+                ['send "put 1 into" to this stack\\0', 'ERR:4:not defined'],
+                ['send "put \'1 into" to this stack\\0', 'ERR:4:lex error'],
+                ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:unexpected character'],
+                ['send "on h" to this stack\\0', 'ERR:4:cannot begin'],
+                ['send "put 10 11 into x" to this stack\\0', 'ERR:4:MismatchedTokenException'],
+                ['send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:4:element not found'],
                 /* not exist */
                 ['send "put 1 into x" to card 10\\0', 'ERR:target of \'send\' not found'],
                 ['send "put 1 into x" to bg "notfound"\\0', 'ERR:target of \'send\' not found'],
@@ -730,9 +730,26 @@ send code to this stack\\g`, `${this.elIds.stack}`],
             ]
             this.testBatchEvaluate(batch);
 
-            /* make sure that invalid code is cleaned out after a failure. */
+            /* make sure that invalid code is cleaned out after a compile failure. */
+            let stack = this.vcstate.vci.getModel().getById(this.elIds.stack, VpcElStack)
+            this.vcstate.vci.undoableAction(
+                ()=>stack.set('script', ``))
             batch = [
-                ['send "$$$#$%#$" to this stack\\0', 'ERR:4:$compilation error$'],
+                ['send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error'],
+            ]
+            this.testBatchEvaluate(batch);
+            batch = [
+                [`global g
+put "global g" & cr & "put the short id of me into g" into code
+send code to this stack\\g`, `${this.elIds.stack}`],
+            ]
+            this.testBatchEvaluate(batch);
+
+            /* make sure that code can run after a runtime failure. */
+            this.vcstate.vci.undoableAction(
+                ()=>stack.set('script', ``))
+            batch = [
+                ['send "put 1 into cd fld 999" to this stack\\0', 'ERR:4:element not found'],
             ]
             this.testBatchEvaluate(batch);
             batch = [
@@ -763,7 +780,7 @@ function myCompute a, b
 end myCompute`))
             batch = [
                 [`send "myCompute(2, 3)" to cd btn id ${this.elIds.btn_b_c_1}
-            \\the result`, `ERR:4:$compilation error$`],
+            \\the result`, `ERR:4:this isn't C`],
                 [`send "return myCompute(3, 3)" to cd btn id ${this.elIds.btn_b_c_1}
             \\the result`, `12`],
             ]
@@ -786,7 +803,6 @@ end myCompute`))
 
             /* map temp line numbers to the target line */
             /* part 1: call send a few times */
-            let stack = this.vcstate.vci.getModel().getById(this.elIds.stack, VpcElStack)
             this.vcstate.vci.undoableAction(
                 ()=>stack.set('script', `on myHandler n
             put 1 into x
@@ -806,13 +822,13 @@ end myCompute`))
             let spl = stack.getS('script').split('\n')
             for (let i = 0; i<30; i++) {
                 let [redirVel,redirLine] = VpcExecFrame.getBetterLineNumberIfTemporary(stack.getS('script'), '(not redirected)', i)
-                if (i >= 4 && i <= 8) {
+                if (i >= 5 && i <= 9) {
                     assertEq(`${this.elIds.btn_go}`, redirVel, '')
                     assertEq(6, redirLine, '')
-                } else if (i >= 12 && i <= 16) {
+                } else if (i >= 13 && i <= 17) {
                     assertEq(`${this.elIds.btn_go}`, redirVel, '')
                     assertEq(7, redirLine, '')
-                } else if (i >= 20 && i <= 24) {
+                } else if (i >= 21 && i <= 25) {
                     assertEq(`${this.elIds.btn_go}`, redirVel, '')
                     assertEq(9, redirLine, '')
                 } else {

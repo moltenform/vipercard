@@ -129,6 +129,9 @@ export class VpcExecFrame {
     static getBetterLineNumberIfTemporary(script:string, givenVelId:string, given:number):[string, number] {
         let lines = script.split('\n')
         let lastSeen:[string, number] = [givenVelId, given]
+
+        /* from 1-based to 0-based, line numbers start at 1 */
+        let given0based = given - 1
         for (let i=0, len = lines.length; i<len; i++) {
             if (lines[i].startsWith(VpcExecFrame.getTempCodePrefix())) {
                 let rest = lines[i].substr(VpcExecFrame.getTempCodePrefix().length)
@@ -142,7 +145,7 @@ export class VpcExecFrame {
                 lastSeen = [givenVelId, given]
             }
 
-            if (i >= given) {
+            if (i >= given0based) {
                 break;
             }
         }

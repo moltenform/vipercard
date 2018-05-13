@@ -12,11 +12,12 @@
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
+/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 /* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
@@ -115,6 +116,43 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     /**
+     * from script error, to an appropriate site of the error location
+     */
+    static commonRespondToError(vci: VpcStateInterface, scriptErr: VpcScriptErrorBase):[string, number, string, number] {
+        /* use current card if velId is unknown */
+        let origVelId = scriptErr.velId;
+        origVelId = origVelId || vci.getModel().getCurrentCard().id;
+        let origVel = vci.getModel().findByIdUntyped(origVelId);
+        origVel = origVel || vci.getModel().getCurrentCard();
+        let origLine = scriptErr.lineNumber
+
+        /* by leaving browse tool we won't execute closeCard or openCard */
+        vci.setTool(VpcTool.Button);
+
+        /* redirect line number if this came from 'send' or 'do' */
+        let script = origVel.getS('script')
+        let [redirredVelId, redirredLine] = VpcExecFrame.getBetterLineNumberIfTemporary(script, origVel.id, origLine)
+        let redirredVel = vci.getModel().findByIdUntyped(redirredVelId) || origVel;
+
+        /* update the error object */
+        scriptErr.velId = redirredVel.id
+        scriptErr.lineNumber = redirredLine
+
+        /* strip temporary code from both locations:
+        so we're not stuck with bad syntax,
+        and we don't show temp code in editor */
+        for (let vid of [origVelId, redirredVelId]) {
+            let v = vci.getModel().getByIdUntyped(vid);
+            let s = v.getS('script')
+            s = VpcExecFrame.filterTemporaryFromScript(s)
+            v.set('script', s)
+        }
+
+
+        return [origVelId, origLine, redirredVelId, redirredLine]
+    }
+
+    /**
      * respond to a script error,
      * might be either a compile error
      * or a runtime error
@@ -123,44 +161,24 @@ export class VpcPresenter extends VpcPresenterInit {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
-            /* use current card if velId is unknown */
-            let velId = scriptErr.velId;
-            velId = velId || this.vci.getModel().getCurrentCard().id;
-            let vel = this.vci.getModel().findByIdUntyped(velId);
-            vel = vel || this.vci.getModel().getCurrentCard();
-            // if (VpcElBase.isActuallyMsgRepl(vel)) {
-            //     /* error came from the message box */
-            //     this.setTool(VpcTool.Button);
+            let [origVelId, origLine, velId, line] = VpcPresenter.commonRespondToError(this.vci, scriptErr)
 
-            //     if (
-            //         this.lyrNonModalDlgHolder.current &&
-            //         this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
-            //     ) {
-            //         this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
-            //     }
+            /* did this come from the messagebox? */
+            if (line === VpcNonModalReplBox.markMessageBox) {
+                if (
+                    this.lyrNonModalDlgHolder.current &&
+                    this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
+                ) {
+                    this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
+                }
 
-            //     return;
-            // }
-
-            /* by leaving browse tool we won't execute closeCard or openCard */
-            this.setTool(VpcTool.Button);
-
-            /* redirect line number if this came from 'send' or 'do' */
-            let script = vel.getS('script')
-            let [redirredVelId, redirredLine] = VpcExecFrame.getBetterLineNumberIfTemporary(script, vel.id, scriptErr.lineNumber)
-            let redirredVel = this.vci.getModel().findByIdUntyped(redirredVelId);
-            vel = redirredVel ? redirredVel : vel
-            scriptErr.velId = vel.id
-            scriptErr.lineNumber = redirredLine
-
-            /* strip out dynamic code */
-            script = vel.getS('script')
-            let scriptNew = VpcExecFrame.filterTemporaryFromScript(script)
-            vel.set('script', scriptNew)
+                return;
+            }
 
             /* move to the card where the error happened. */
             /* for example "send myevent to btn 4 of cd 5" */
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
+            let vel = this.vci.getModel().getByIdUntyped(velId);
             let parentCard = this.vci.getModel().getParentCardOfElement(vel)
             this.vci.setCurrentCardId(parentCard.id, false)
 
