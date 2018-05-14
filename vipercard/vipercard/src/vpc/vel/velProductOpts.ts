@@ -1,6 +1,6 @@
 
 /* auto */ import { vpcversion } from '../../config.js';
-/* auto */ import { assertTrueWarn, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { assertTrue, assertTrueWarn, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
@@ -16,19 +16,26 @@
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 
 /**
- * a product options class
- * when you say 'set the cursor to watch', you are setting a property on this object
- * runtime settings here are undoable, since they are vel object properties
- * runtime settings in vpcruntimesettings, on the other hand, are not undoable
+ * product options class
  *
- * note: this class is runtime-only settings -- nothing here is persisted during save.
+ * the vel object singleton that can be referred to with code like
+ * 'exit to ViperCard'
+ * or
+ * 'set the cursor to watch'
+ * (when you set a global property, you are setting a
+ * property on this object.)
+ *
+ * settings here are undoable, since they are on a vel
+ * settings in vpcruntimesettings, on the other hand, are not undoable
+ *
+ * these are runtime-only settings -- nothing here is persisted during save.
  */
 export class VpcElProductOpts extends VpcElBase {
     isVpcElProduct = true;
     allowSetCurrentTool = false;
     allowSetCurrentCard = false;
     protected _itemDel = ',';
-    protected _script = '';
+    protected _script = VpcElProductOpts.productOptsScript;
     protected _name = `${cProductName}`;
     protected _longname = `Applications:${cProductName} Folder:${cProductName}`;
     constructor(id: string, parentId: string) {
@@ -80,6 +87,7 @@ export class VpcElProductOpts extends VpcElBase {
     set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         assertTrueWarn(s !== 'currentTool' || this.allowSetCurrentTool, 'Jt|');
         assertTrueWarn(s !== 'currentCardId' || this.allowSetCurrentCard, '');
+        assertTrue(s !== 'script', "you can't set script of Vpc");
         return super.set(s, newVal, context);
     }
 
@@ -206,6 +214,32 @@ export class VpcElProductOpts extends VpcElBase {
             !!VpcElProductOpts.cachedSetters[propName]
         );
     }
+
+    /* provide script,
+    1) we want to follow the product where 'send openCard to card 2'
+    is not an error even if card 2 does not handle openCard. */
+    static productOptsScript = `
+on openbackground
+end openbackground
+
+on opencard
+end opencard
+
+on openstack
+end openstack
+
+on closebackground
+end closebackground
+
+on closecard
+end closecard
+
+on afterkeydown
+end afterkeydown
+
+on afterkeyup
+end afterkeyup
+    `
 }
 
 /**

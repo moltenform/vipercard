@@ -230,7 +230,7 @@ export class VpcExecFrameStack {
             }
 
             if (!onlyParents || !firstTimeInLoop) {
-                let found = this.code.findHandlerInScript(vel.id, VpcElBase.getScript(vel), handlername);
+                let found = this.code.findHandlerInScript(vel.id, vel.getS('script'), handlername);
                 if (found) {
                     return found
                 }

@@ -971,7 +971,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             /* check productOpts (should not be persisted) */
             assertTrue(newState.model.productOpts.getN('optPaintLineColor') !== 1234, 'H2|');
-            assertEq('', newState.model.productOpts.getS('script'), 'H1|');
+            assertEq(true, newState.model.productOpts.getB('optUseHostClipboard'), '');
             assertEq(cProductName, newState.model.productOpts.getS('name'), 'H0|');
             assertEq(this.elIds.card_a_a, newState.model.productOpts.getS('currentCardId'), 'G~|');
 
@@ -1015,7 +1015,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
     protected modifyVcState() {
         /* modify productOpts (should not be persisted) */
         this.vcstate.model.productOpts.set('optPaintLineColor', 1234);
-        this.vcstate.model.productOpts.set('script', `on t0\nend t0`);
+        this.vcstate.model.productOpts.set('optUseHostClipboard', false);
         this.vcstate.model.productOpts.set('name', `productname`);
         this.pr.setCurrentCardId(this.elIds.card_b_c, false)
 

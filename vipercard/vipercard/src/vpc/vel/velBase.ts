@@ -151,23 +151,6 @@ export abstract class VpcElBase extends UI512Settable {
     }
 
     /**
-     * get the script, or empty string if the object has no script
-     */
-    static getScript(vel:VpcElBase):string {
-        let rawScript = vel.get('script')
-        return rawScript === undefined ? '' : rawScript
-    }
-
-    /**
-     * set the script, throws if the object has no script
-     */
-    static setScript(vel:VpcElBase, s:string) {
-        let rawScript = vel.get('script')
-        checkThrow(rawScript !== undefined, 'object has no script', vel.id)
-        vel.set('script', s)
-    }
-
-    /**
      * look for the index (z-order) of a child element
      * return undefined if not found
      */

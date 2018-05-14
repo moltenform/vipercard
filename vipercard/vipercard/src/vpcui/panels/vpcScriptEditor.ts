@@ -169,7 +169,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             );
         } else {
             /* check for syntax err */
-            let codeStatus = this.vci.getCodeExec().getCompiledScript(vel.id, VpcElBase.getScript(vel));
+            let codeStatus = this.vci.getCodeExec().getCompiledScript(vel.id, vel.getS('script'));
             if (codeStatus instanceof VpcScriptErrorBase) {
                 this.setStatusLabeltext(
                     'lngSyntax error:',
@@ -307,9 +307,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 this.el.set('scrollamt', 0);
 
                 /* filter out all temporary code */
-                let script = VpcElBase.getScript(validVel)
+                let script = validVel.getS('script')
                 script = VpcExecFrame.filterTemporaryFromScript(script)
-                VpcElBase.setScript(validVel, script)
+                validVel.set('script', script)
 
                 this.refreshFromModel(app);
             }

@@ -4,7 +4,6 @@
 /* auto */ import { CodeLimits, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
@@ -90,8 +89,8 @@ export class VpcExecFrame {
         s += `\non ${handlerName}\n` + codeBody + `\nend ${handlerName}\n`
         let vel = outside.FindVelById(ownerId)
         vel = throwIfUndefined(vel, 'not found', ownerId)
-        let curScript = VpcElBase.getScript(vel)
-        VpcElBase.setScript(vel, curScript + s)
+        let curScript = vel.getS('script')
+        vel.set('script', curScript + s)
         return handlerName
     }
 

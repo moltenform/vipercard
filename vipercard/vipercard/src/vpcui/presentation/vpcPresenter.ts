@@ -100,9 +100,9 @@ export class VpcPresenter extends VpcPresenterInit {
     setCurrentCardId(nextId:string, sendOpenCard:boolean) {
         sendOpenCard = sendOpenCard && this.getTool() === VpcTool.Browse
         let wasCardId = this.vci.getOptionS('currentCardId')
-        if (sendOpenCard) {
-            VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, true, wasCardId, nextId)
-        }
+        // if (sendOpenCard) {
+        //     VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, true, wasCardId, nextId)
+        // }
 
         this.vci.undoableAction(() => {
             this.vci.getModel().productOpts.allowSetCurrentCard = true;
@@ -110,9 +110,9 @@ export class VpcPresenter extends VpcPresenterInit {
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
         });
 
-        if (sendOpenCard) {
-            VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, false, wasCardId, nextId)
-        }
+        // if (sendOpenCard) {
+        //     VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, false, wasCardId, nextId)
+        // }
     }
 
     /**
