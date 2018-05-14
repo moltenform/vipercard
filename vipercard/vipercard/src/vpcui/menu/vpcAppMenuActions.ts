@@ -5,7 +5,8 @@
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
@@ -195,7 +196,7 @@ export class VpcMenuActions {
         let currentBg = this.vci.getModel().getById(currentCard.parentId, VpcElBg);
         let currentIndex = VpcElBase.findIndexById(currentBg.cards, currentCardId);
         let created = this.vci.getOutside().CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
-        this.vci.setCurrentCardId(created.id, true);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id)
     }
 
     /**
@@ -272,15 +273,22 @@ export class VpcMenuActions {
      * note that we have to move away from this card first before deleting it
      */
     goMnuDelCard() {
-        let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let wasCurrentCard = this.vci.getModel().getById(wasCurrentCardId, VpcElCard);
-        let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Previous);
-        if (this.vci.getModel().productOpts.getS('currentCardId') === wasCurrentCardId) {
-            card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Next);
-        }
 
-        this.vci.setCurrentCardId(card, true);
-        this.vci.getOutside().RemoveCard(wasCurrentCard);
+        if (this.vci.getTool() === VpcTool.Browse) {
+            let stack = this.vci.getModel().stack
+            let msg = new VpcScriptMessage(stack.id, VpcBuiltinMsg.__Custom, "internalVpcBeginDeleteCurCard");
+            this.vci.getCodeExec().scheduleCodeExec(msg);
+        } else {
+            let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
+            let wasCurrentCard = this.vci.getModel().getById(wasCurrentCardId, VpcElCard);
+            let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Previous);
+            if (this.vci.getModel().productOpts.getS('currentCardId') === wasCurrentCardId) {
+                card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Next);
+            }
+
+            this.vci.setCurCardNoOpenCardEvt(card);
+            this.vci.getOutside().RemoveCard(wasCurrentCard);
+        }
     }
 
     /**
@@ -370,28 +378,28 @@ export class VpcMenuActions {
      * go to first card
      */
     goMnuGoCardFirst() {
-        this.vci.setCurrentCardNum(OrdinalOrPosition.First);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.First, undefined);
     }
 
     /**
      * go to previous card
      */
     goMnuGoCardPrev() {
-        this.vci.setCurrentCardNum(OrdinalOrPosition.Previous);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined);
     }
 
     /**
      * go to the next card
      */
     goMnuGoCardNext() {
-        this.vci.setCurrentCardNum(OrdinalOrPosition.Next);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined);
     }
 
     /**
      * go to the last card
      */
     goMnuGoCardLast() {
-        this.vci.setCurrentCardNum(OrdinalOrPosition.Last);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
     }
 
     /**

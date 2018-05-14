@@ -231,13 +231,6 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
-     * go to a card
-     */
-    setCurrentCardNum(pos: OrdinalOrPosition) {
-        return this.pr.setCurrentCardNum(pos);
-    }
-
-    /**
      * get current card id
      */
     getCurrentCardId() {
@@ -245,10 +238,17 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
-     * go to a card
+     * asynchronously go to a card, if browse tool calls closecard + opencard events
      */
-    setCurrentCardId(id:string, b:boolean) {
-        return this.pr.setCurrentCardId(id, b)
+    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific:O<string>) {
+        this.pr.beginSetCurCardWithOpenCardEvt(pos, idSpecific)
+    }
+
+    /**
+     * go to a card without sending any closecard or opencard events
+     */
+    setCurCardNoOpenCardEvt(id: string):void {
+        return this.pr.setCurCardNoOpenCardEvt(id)
     }
 
     /**

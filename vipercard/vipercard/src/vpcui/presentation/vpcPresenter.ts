@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, msgNotification, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RenderComplete, Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
@@ -9,8 +9,8 @@
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
@@ -21,7 +21,6 @@
 /* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
 /* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
-/* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
 /* auto */ import { VpcPresenterInit } from '../../vpcui/presentation/vpcPresenterInit.js';
 
 /**
@@ -34,15 +33,6 @@ export class VpcPresenter extends VpcPresenterInit {
     getCurrentCardNum() {
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         return this.vci.getModel().stack.getCardStackPosition(currentCardId);
-    }
-
-    /**
-     * set the current card number
-     * 'go to card 2'
-     */
-    setCurrentCardNum(ord: OrdinalOrPosition) {
-        let card = this.vci.getModel().getCardRelative(ord)
-        this.setCurrentCardId(card, true)
     }
 
     /**
@@ -93,26 +83,27 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     /**
-     * set the current card id,
-     * this is the only place that should be able to directly set the card,
-     * since we want to send opencard events.
+     * set the current card, without sending any closecard or opencard events
      */
-    setCurrentCardId(nextId:string, sendOpenCard:boolean) {
-        sendOpenCard = sendOpenCard && this.getTool() === VpcTool.Browse
-        let wasCardId = this.vci.getOptionS('currentCardId')
-        // if (sendOpenCard) {
-        //     VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, true, wasCardId, nextId)
-        // }
-
+    setCurCardNoOpenCardEvt(nextId:string) {
         this.vci.undoableAction(() => {
             this.vci.getModel().productOpts.allowSetCurrentCard = true;
             this.vci.setOption('currentCardId', nextId);
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
         });
+    }
 
-        // if (sendOpenCard) {
-        //     VpcPresenterEvents.sendCardChangeMsgs(this, this.vci, false, wasCardId, nextId)
-        // }
+    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific:O<string>) {
+        assertTrue(!idSpecific || pos === OrdinalOrPosition.This, "specifying an id, should set to This")
+        let targetCardId = idSpecific ? idSpecific : this.vci.getModel().getCardRelative(pos)
+        if (this.getTool() === VpcTool.Browse) {
+            this.vci.getCodeExec().globals.set('internalVpcBeginSetCurCardWithOpenCardEvtParam', VpcValS(targetCardId))
+            let stack = this.vci.getModel().stack
+            let msg = new VpcScriptMessage(stack.id, VpcBuiltinMsg.__Custom, "internalVpcBeginSetCurCardWithOpenCardEvt");
+            this.vci.getCodeExec().scheduleCodeExec(msg);
+        } else {
+            this.setCurCardNoOpenCardEvt(targetCardId)
+        }
     }
 
     /**
@@ -180,7 +171,7 @@ export class VpcPresenter extends VpcPresenterInit {
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
             let vel = this.vci.getModel().getByIdUntyped(velId);
             let parentCard = this.vci.getModel().getParentCardOfElement(vel)
-            this.vci.setCurrentCardId(parentCard.id, false)
+            this.vci.setCurCardNoOpenCardEvt(parentCard.id)
 
             /* set the runtime flags */
             this.vci.getCodeExec().lastEncounteredScriptErr = scriptErr;
@@ -557,8 +548,9 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
                 let currentCard = this.vci.getModel().findById(currentCardId, VpcElCard);
                 if (!currentCard) {
+                    assertTrueWarn(false, "card has been deleted, going to card 1 instead.")
                     let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.First);
-                    this.vci.setCurrentCardId(card, true);
+                    this.vci.setCurCardNoOpenCardEvt(card)
                 }
 
                 /* refresh everything */

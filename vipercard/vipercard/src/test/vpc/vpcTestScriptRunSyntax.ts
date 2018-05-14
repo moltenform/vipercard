@@ -1241,7 +1241,7 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
             );
             /* nesting/interesting custom function calls */
             /* we *manually* parse custom fn calls by counting parenthesis levels so this needs to be tested */
-            this.pr.setCurrentCardId(this.elIds.card_a_a, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_a_a);
             this.updateObjectScript(
                 this.elIds.card_a_a,
                 `${this.customFunc} mm p1, p2, p3
@@ -1775,7 +1775,7 @@ put 3 into x`,
         },
         'test_scriptMessagePassing',
         () => {
-            this.pr.setCurrentCardId(this.elIds.card_a_a, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_a_a);
             let parents = [this.vcstate.model.stack.id, this.elIds.bg_a, this.elIds.card_a_a];
             for (let parent of parents) {
                 /* reset all scripts */

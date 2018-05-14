@@ -71,7 +71,7 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
         'test_execCommands arithmetic invalid parse',
         () => {
             /* add, subtract, divide, multiply */
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             this.runGeneralCode('', 'put "0" into cd fld "p1"');
             this.assertLineError('add 4 with cd fld "p1"', 'MismatchedTokenException', 3);
             this.assertLineError('add 4 into cd fld "p1"', 'MismatchedTokenException', 3);
@@ -152,7 +152,7 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
         'test_execCommands go to card',
         () => {
             /* changing current card */
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             this.assertCompileErrorIn('go', 'on its own', 3);
             this.assertCompileErrorIn('go back', "don't support", 3);
             this.assertCompileErrorIn('go forth', "don't support", 3);
@@ -205,7 +205,7 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 ['go to card 4\\the short id of next cd', `${this.elIds.card_c_d}`]
             ];
             this.testBatchEvaluate(batch);
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
         },
         'test_execCommands disable and enable',
         () => {
@@ -229,7 +229,7 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
         },
         'test_execCommands hide and show',
         () => {
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             let batch: [string, string][];
             batch = [
                 /* not valid */
@@ -351,7 +351,7 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
         },
         'test_execCommands put',
         () => {
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             let batch: [string, string][];
             batch = [
                 ['put "abc"\\0', 'ERR:missing into'],
@@ -616,7 +616,7 @@ replace "b" with "$&" in s
             this.testBatchEvaluate(batch);
 
             /* use a real field */
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             batch = [
                 [`put "" into cd fld "p1"
 replace "1" with "2" in cd fld ("p" & "1")
@@ -682,7 +682,7 @@ do s\\counting() - cfirst`, '2'],
         },
         'test_dynamicCode send',
         () => {
-            this.pr.setCurrentCardId(this.elIds.card_a_a, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_a_a);
             let batch: [string, string][];
             batch = [
                 /* valid */

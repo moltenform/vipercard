@@ -144,19 +144,19 @@ export interface VpcStateInterface {
     getCurrentCardNum(): number;
 
     /**
-     * go to a card
-     */
-    setCurrentCardNum(pos: OrdinalOrPosition): void;
-
-    /**
      * get current card id
      */
     getCurrentCardId(): string;
 
     /**
-     * go to a card
+     * asynchronously go to a card, if browse tool calls closecard + opencard events
      */
-    setCurrentCardId(id: string, sendOpenCard: boolean): void;
+    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific:O<string>):void
+
+    /**
+     * go to a card without sending any closecard or opencard events
+     */
+    setCurCardNoOpenCardEvt(id: string):void
 
     /**
      * get the current tool

@@ -46,7 +46,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
             let batch: [string, string][];
 
             /* object resolution */
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             batch = [
                 /* invalid */
                 [`the short id of xyz`, `ERR:We did not recognize`],
@@ -283,7 +283,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
             ];
             this.testBatchEvaluate(batch);
 
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             batch = [
                 /* size properties */
                 ['the left of cd btn "p1"', '0'],
@@ -650,7 +650,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
                 assertEq(expected, contents, '1v|');
             }
 
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             batch = [
                 /* productopts */
                 [`the name of the ${cProductName}`, `${cProductName}`],
@@ -806,7 +806,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
         },
         'test_builtinFunctions',
         () => {
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             let batch: [string, string][];
             batch = [
                 /* RuleExprSource and RuleHSimpleContainer */
@@ -831,7 +831,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
             ];
             this.testBatchEvaluate(batch);
 
-            this.pr.setCurrentCardId(this.elIds.card_b_c, false);
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             batch = [
                 /* length */
                 ['the length of ""', '0'],

@@ -197,7 +197,7 @@ export class VpcIntroProvider {
         /* go to the first card (but don't send opencard yet) */
         fullVci.doWithoutAbilityToUndo(() => {
             let card = vpcState.model.stack.bgs[0].cards[0].id
-            pr.setCurrentCardId(card, false)
+            pr.setCurCardNoOpenCardEvt(card)
         });
     }
 

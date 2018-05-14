@@ -489,6 +489,7 @@ export class ExecuteStatement {
      * Go to a different card.
      */
     goGo(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+        assertTrue(false, "nyi")
         let ref = this.findChildVelRef(vals, 'RuleNtDest');
         if (ref) {
             let vel = this.getResolveChildVel(vals, 'RuleNtDest');
@@ -497,7 +498,7 @@ export class ExecuteStatement {
             let velAsCard = vel as VpcElCard;
             if (velAsCard && velAsCard.isVpcElCard) {
                 /* e.g. go card 2 */
-                this.outside.GoCardRelative(OrdinalOrPosition.This, velAsCard.id);
+                // this.outside.GoCardRelative(OrdinalOrPosition.This, velAsCard.id);
             } else {
                 let requestStack = new RequestedVelRef(VpcElType.Stack);
                 requestStack.lookByRelative = OrdinalOrPosition.This;
@@ -513,7 +514,7 @@ export class ExecuteStatement {
                     }
                 } else if (velAsBg && velAsBg.isVpcElBg && velAsBg.cards.length) {
                     /* e.g. go to bg 2 */
-                    this.outside.GoCardRelative(OrdinalOrPosition.This, velAsBg.cards[0].id);
+                    // this.outside.GoCardRelative(OrdinalOrPosition.This, velAsBg.cards[0].id);
                 } else {
                     /* e.g. go to cd btn 2 */
                     throw makeVpcScriptErr('56|we only support going to a card or a bg');
@@ -533,7 +534,7 @@ export class ExecuteStatement {
 
             checkThrow(isString(shp), '7O|');
             let hp = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'OrdinalOrPosition', shp);
-            this.outside.GoCardRelative(hp, undefined);
+            // this.outside.GoCardRelative(hp, undefined);
         }
     }
 

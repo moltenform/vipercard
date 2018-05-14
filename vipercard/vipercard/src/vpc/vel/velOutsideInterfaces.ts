@@ -3,7 +3,7 @@
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkPreposition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
@@ -186,10 +186,9 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     SetOption<T extends ElementObserverVal>(prop: string, newVal: T): void;
 
     /**
-     * go card, relative to the given card
-     * the given card defaults to current card, but another cardid can be provided
+     * go straight to a card without calling closecard or opencard
      */
-    GoCardRelative(pos: OrdinalOrPosition, id: O<string>): void;
+    SetCurCardNoOpenCardEvt(id: string):void
 
     /**
      * draw paint on the screen by simulating a click

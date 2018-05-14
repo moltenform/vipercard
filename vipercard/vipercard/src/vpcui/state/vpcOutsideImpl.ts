@@ -4,7 +4,7 @@
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
@@ -398,17 +398,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
-     * go card, relative to the given card
-     * the given card defaults to current card, but another cardid can be provided
+     * go straight to a card without calling closecard or opencard
      */
-    GoCardRelative(pos: OrdinalOrPosition, id: O<string>) {
-        if (id !== undefined) {
-            assertEq(OrdinalOrPosition.This, pos, '6i|');
-            this.vci.setCurrentCardId(id, true)
-        } else {
-            let card = this.vci.getModel().getCardRelative(pos);
-            this.vci.setCurrentCardId(card, true)
-        }
+    SetCurCardNoOpenCardEvt(id: string) {
+        this.vci.setCurCardNoOpenCardEvt(id)
     }
 
     /**

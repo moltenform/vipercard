@@ -239,6 +239,26 @@ end afterkeydown
 
 on afterkeyup
 end afterkeyup
+
+on internalVpcBeginSetCurCardWithOpenCardEvt
+    global internalVpcBeginSetCurCardWithOpenCardEvtParam
+    go to card id internalVpcBeginSetCurCardWithOpenCardEvtParam
+end internalVpcBeginSetCurCardWithOpenCardEvt
+
+on internalVpcBeginDeleteCurCard
+    put the short id of this cd into targetToDelete
+    if the short id of (prev card) is targetToDelete then
+        if the short id of (next card) is targetToDelete then
+            answer "Cannot delete the only card."
+            exit internalVpcBeginDeleteCurCard
+        else
+            go next
+        end if
+    else
+        go prev
+    end if
+    delete card id targetToDelete
+end internalVpcBeginDeleteCurCard
     `
 }
 
