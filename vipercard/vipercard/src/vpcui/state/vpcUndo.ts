@@ -345,6 +345,13 @@ export class UndoManager implements ElementObserver {
     }
 
     /**
+     * are we 'back in time' looking at a previous state?
+     */
+    isCurrentlyUndoing() {
+        return this.pos !== this.history.length - 1
+    }
+
+    /**
      * record changes
      */
     protected pushUndoableChanges(list: UndoableChangeSet) {

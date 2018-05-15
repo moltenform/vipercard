@@ -396,9 +396,11 @@ export class VpcPresenterEvents {
             pr.timerRunMaintenance.update(d.milliseconds);
             if (pr.timerRunMaintenance.isDue()) {
                 pr.timerRunMaintenance.reset();
-                Util512.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance())
-                Util512.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance())
-                Util512.showWarningIfExceptionThrown(() => VpcPresenterEvents.filterTemporaryFromAllScripts(pr))
+                if (!pr.vci.isCurrentlyUndoing()) {
+                    Util512.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance())
+                    Util512.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance())
+                    Util512.showWarningIfExceptionThrown(() => VpcPresenterEvents.filterTemporaryFromAllScripts(pr))
+                }
             }
         }
     }

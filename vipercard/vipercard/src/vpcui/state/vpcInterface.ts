@@ -108,6 +108,11 @@ export interface VpcStateInterface {
     undoableAction(fn: () => void, typ?: TypeOfUndoAction): void;
 
     /**
+     * are we 'back in time' looking at a previous state?
+     */
+    isCurrentlyUndoing():boolean
+
+    /**
      * schedule event to be sent
      */
     scheduleScriptEventSend(d: EventDetails): void;

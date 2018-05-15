@@ -181,6 +181,13 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
+     * are we 'back in time' looking at a previous state?
+     */
+    isCurrentlyUndoing() {
+        return this.vcstate.undoManager.isCurrentlyUndoing()
+    }
+
+    /**
      * schedule event to be sent
      */
     scheduleScriptEventSend(d: EventDetails) {
