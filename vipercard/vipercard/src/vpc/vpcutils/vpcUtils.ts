@@ -147,6 +147,7 @@ export enum CodeLimits {
  */
 export class RememberHistory {
     pointer = 0;
+    keepBeforeEnd = false
     list: string[] = [];
 
     /**
@@ -182,7 +183,11 @@ export class RememberHistory {
      */
     append(s: string) {
         this.list.push(s);
-        this.pointer = this.list.length;
+        if (this.keepBeforeEnd) {
+            this.pointer = this.list.length - 1;
+        } else {
+            this.pointer = this.list.length;
+        }
     }
 }
 

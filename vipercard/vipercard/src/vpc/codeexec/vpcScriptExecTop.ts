@@ -37,6 +37,7 @@ export class VpcExecTop {
         this.code = new VpcAllCode(idGen);
         this.outside = outside;
         this.runStatements.outside = outside;
+        this.cardHistory.keepBeforeEnd = true
         this.cacheParsed.visitor.outside = outside as OutsideWorldRead;
     }
 

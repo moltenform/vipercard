@@ -390,6 +390,8 @@ this
 mid
 prev
 
+('go back' and 'go forth' are present for backwards compatibility, but are not recommended for use in new code)
+
 =====
 set the {property} of {button|field} to {value}
 set the {property} to {value}

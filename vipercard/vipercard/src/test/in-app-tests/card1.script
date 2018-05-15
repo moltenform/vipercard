@@ -1,5 +1,14 @@
+on openCard
+	global logCardEvts
+	put ",opencd card1 cur=" & (the short name of this cd) after logCardEvts
+end openCard
 
-on mouseup
+on closeCard
+	global logCardEvts
+	put ",closecd card1 cur=" & (the short name of this cd) after logCardEvts
+end closeCard
+
+on mouseUp
 	if the short name of the target is "testDlgs" then
 		runTestDlgs
 	else if the short name of the target is "testMisc" then
@@ -8,8 +17,10 @@ on mouseup
 		runTestValOps
 	else if the short name of the target is "testDraw" then
 		runTestDraw
+	else if the short name of the target is "testGoCard" then
+		runTestGoCardAndOpenCard
 	end if
-end mouseup
+end mouseUp
 
 on assertEq expected, got
 	put "expected '"&expected&"' but got '"&got&"'" into tmsg
@@ -20,7 +31,7 @@ on assertTrue b, tmsg
 	if not b then
 		log ("assertion failed " & tmsg)
 		answer ("assertion failed " & tmsg)
-		put intentionallyStopScript into x
+		intentionallyStopScript
 	end if
 end assertTrue
 
@@ -157,7 +168,11 @@ on runTestValOps
 	answer "btnTest1 should be enabled"
 	set the label of cd btn "btnTest1" to "changedlabel"
 	answer "btnTest1 should say 'changedlabel'"
-	set the label of cd btn "btnTest1" to "btnTest1"
+	set the style of cd btn "btnTest1" to roundrect
+	answer "btnTest1 should have style changed"
+	set the style of cd btn "btnTest1" to rectangle
+	answer "btnTest1 should be back to rectangle"
+	set the label of cd btn "btnTest1" to "(test)"
 	answer "btnTest1 back to 'btnTest1'"
 	set the showlabel of cd btn "btnTest1" to false
 	answer "btnTest1 should not show label"
@@ -246,4 +261,76 @@ on runTestDraw
 		click at x,y
 	end repeat
 end runTestDraw
+
+on runTestGoCardAndOpenCard
+	global openStackWasCalled
+	global openBgWasCalled
+	assertTrue openStackWasCalled, "failed: openStack Was not Called"
+	assertTrue openBgWasCalled, "failed: openBg Was not Called"
+	
+	global logCardEvts
+	put "" into logCardEvts
+	
+	-- go to nonexistent card, should fail silently
+	go to card 999
+	assertEq "No such card.", the result
+	assertEq "", logCardEvts
+	go to this card
+	assertEq "", the result
+	go next
+	assertEq "", the result
+	
+	-- go by relative, by ordinal
+	go first
+	go next
+	assertEq the short id of card 2, the short id of this card
+	go prev
+	assertEq the short id of card 1, the short id of this card
+	go second
+	assertEq the short id of card 2, the short id of this card
+	go first
+	assertEq the short id of card 1, the short id of this card
+	
+	-- test back and forth
+	repeat 3 times
+		go first
+		assertEq the short id of card 1, the short id of this card
+		go next
+		assertEq the short id of card 2, the short id of this card
+		go next
+		assertEq the short id of card 3, the short id of this card
+		go back
+		assertEq the short id of card 2, the short id of this card
+		go back
+		assertEq the short id of card 1, the short id of this card
+		go forth
+		assertEq the short id of card 2, the short id of this card
+		go forth
+		assertEq the short id of card 3, the short id of this card
+	end repeat
+	
+	-- going to the same card already on, shouldn't call anything
+	go first
+	assertEq the short id of card 1, the short id of this card
+	put "" into logCardEvts
+	go first
+	assertEq the short id of card 1, the short id of this card
+	assertEq "", logCardEvts
+	
+	-- test going to different cards
+	go first
+	put "" into logCardEvts
+	go to card id (the short id of card 2)
+	assertEq the short id of card 2, the short id of this card
+	go to card id (the short id of card 3)
+	assertEq the short id of card 3, the short id of this card
+	go to card "card1"
+	assertEq the short id of card 1, the short id of this card
+	put ",closecd card1 cur=card1,opencd card2 cur=card2,closecd card2 cur=card2,opencd card3 cur=card3,closecd card3 cur=card3,opencd card1 cur=card1" into expected
+	assertEq expected, logCardEvts
+	
+	answer "test complete."
+end runTestGoCardAndOpenCard
+
+
 
