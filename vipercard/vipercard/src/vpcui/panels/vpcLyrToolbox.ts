@@ -1,11 +1,10 @@
 
 /* auto */ import { O, assertTrueWarn, checkThrow, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, findEnumToStr, getStrToEnum, slength } from '../../ui512/utils/utils512.js';
+/* auto */ import { findEnumToStr, getStrToEnum, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { OrdinalOrPosition, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
 /* auto */ import { ToolboxDims, VpcToolboxPatterns } from '../../vpcui/panels/vpcToolboxPatterns.js';
 /* auto */ import { VpcToolboxNav } from '../../vpcui/panels/vpcToolboxNav.js';
@@ -108,12 +107,9 @@ export class VpcAppLyrToolbox extends VpcUILayer {
         if (id === 'cardNumOrStop') {
             this.cbStopCodeRunning();
         } else if (id === 'cardPrev') {
-            this.nav(OrdinalOrPosition.Previous, 'lngYou are already at the first card.');
+            this.vci.performMenuAction('mnuGoCardPrev')
         } else if (id === 'cardNext') {
-            this.nav(
-                OrdinalOrPosition.Next,
-                "lngYou are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
-            );
+            this.vci.performMenuAction('mnuGoCardNext')
         } else if (id === 'dupeCardOrStatus') {
             if (!this.vci.isCodeRunning()) {
                 this.dupeCard();
@@ -130,30 +126,6 @@ export class VpcAppLyrToolbox extends VpcUILayer {
      */
     protected dupeCard() {
         this.vci.performMenuAction('mnuDupeCard');
-    }
-
-    /**
-     * navigate to a different card, or
-     * show a dialog if we can go no further
-     */
-    protected nav(pos: OrdinalOrPosition, msg: string) {
-        let cardNum = this.vci.getCurrentCardNum()
-        if (pos === OrdinalOrPosition.Previous) {
-            if (cardNum <= 0) {
-                this.cbAnswerMsg(lng(msg), () => {});
-            } else {
-                this.vci.beginSetCurCardWithOpenCardEvt(pos, undefined)
-            }
-        } else if (pos === OrdinalOrPosition.Next) {
-            let totalCardNum = this.vci.getModel().stack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
-            if (cardNum >= totalCardNum - 1) {
-                this.cbAnswerMsg(lng(msg), () => {});
-            } else {
-                this.vci.beginSetCurCardWithOpenCardEvt(pos, undefined)
-            }
-        } else {
-            assertTrueWarn(false, "expected prev or next")
-        }
     }
 
     /**

@@ -1,6 +1,6 @@
 
 /* auto */ import { makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { BrowserOSInfo, getRoot } from '../../ui512/utils/utils512.js';
+/* auto */ import { BrowserOSInfo, Util512, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
@@ -382,24 +382,37 @@ export class VpcMenuActions {
     }
 
     /**
+     * go to the last card
+     */
+    goMnuGoCardLast() {
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
+    }
+
+    /**
      * go to previous card
      */
     goMnuGoCardPrev() {
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined);
+        let cardNum = this.vci.getCurrentCardNum()
+        let msg = 'lngYou are already at the first card.'
+        if (cardNum <= 0) {
+            this.showModal(msg);
+        } else {
+            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined)
+        }
     }
 
     /**
      * go to the next card
      */
     goMnuGoCardNext() {
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined);
-    }
-
-    /**
-     * go to the last card
-     */
-    goMnuGoCardLast() {
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
+        let cardNum = this.vci.getCurrentCardNum()
+        let totalCardNum = this.vci.getModel().stack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
+        let msg = "lngYou are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
+        if (cardNum >= totalCardNum - 1) {
+            this.showModal(msg);
+        } else {
+            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined)
+        }
     }
 
     /**

@@ -403,11 +403,15 @@ export function getPositionFromOrdinalOrPosition(
                 return min + 8;
             case OrdinalOrPosition.Tenth:
                 return min + 9;
-            case OrdinalOrPosition.Next:
-                return current + 1;
-            case OrdinalOrPosition.Previous:
-                return current - 1;
-            case OrdinalOrPosition.This:
+            case OrdinalOrPosition.Next: {
+                /* cycle back to the beginning */
+                let tmp = current + 1;
+                return (tmp > max) ? min : tmp
+            } case OrdinalOrPosition.Previous: {
+                /* cycle back to the end */
+                let tmp = current - 1;
+                return (tmp < min) ? max : tmp
+            } case OrdinalOrPosition.This:
                 return current;
             default:
                 throw makeVpcScriptErr(`4-|unknown ordinal ${rel}`);

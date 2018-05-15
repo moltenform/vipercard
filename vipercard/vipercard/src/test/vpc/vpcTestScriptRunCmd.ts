@@ -161,8 +161,30 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
             this.assertLineError('go xyz', 'Not a valid choice', 3);
             let batch: [string, string][];
             batch = [
+                /* go by id */
+                [`go to card id ${this.elIds.card_b_c}\\the short id of this cd`, `${this.elIds.card_b_c}`],
+                [`go to card id ${this.elIds.card_b_d}\\the short id of this cd`, `${this.elIds.card_b_d}`],
+                [`go to card id ${this.elIds.card_c_d}\\the short id of this cd`, `${this.elIds.card_c_d}`],
+
+                /* go by number */
+                ['go to card 1\\the short id of this cd', `${this.elIds.card_a_a}`],
+                ['go to card 2\\the short id of this cd', `${this.elIds.card_b_b}`],
+                ['go to card 3\\the short id of this cd', `${this.elIds.card_b_c}`],
+                ['go to card 4\\the short id of this cd', `${this.elIds.card_b_d}`],
+                ['go to card 5\\the short id of this cd', `${this.elIds.card_c_d}`],
+
+                /* get by relative (tests getCardByOrdinal) */
+                ['go to card 1\\the short id of next cd', `${this.elIds.card_b_b}`],
+                ['go to card 2\\the short id of next cd', `${this.elIds.card_b_c}`],
+                ['go to card 3\\the short id of next cd', `${this.elIds.card_b_d}`],
+                ['go to card 4\\the short id of next cd', `${this.elIds.card_c_d}`],
+                ['go to card 2\\the short id of prev cd', `${this.elIds.card_a_a}`],
+                ['go to card 3\\the short id of prev cd', `${this.elIds.card_b_b}`],
+                ['go to card 4\\the short id of prev cd', `${this.elIds.card_b_c}`],
+                ['go to card 5\\the short id of prev cd', `${this.elIds.card_b_d}`],
+
                 /* ord/position */
-                ['the short id of this cd', `${this.elIds.card_b_c}`],
+                ['go to card 3\\the short id of this cd', `${this.elIds.card_b_c}`],
                 ['go next\\the short id of this cd', `${this.elIds.card_b_d}`],
                 ['go prev\\the short id of this cd', `${this.elIds.card_b_c}`],
                 ['go previous\\the short id of this cd', `${this.elIds.card_b_b}`],
@@ -171,8 +193,12 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 ['go last\\the short id of this cd', `${this.elIds.card_c_d}`],
                 ['go third\\the short id of this cd', `${this.elIds.card_b_c}`],
 
+                /* should wrap around */
+                ['go first\ngo prev\\the short id of this cd', `${this.elIds.card_c_d}`],
+                ['go last\ngo next\\the short id of this cd', `${this.elIds.card_a_a}`],
+
                 /* object reference */
-                ['go to this stack\\the short id of this cd', `${this.elIds.card_b_c}`],
+                ['go third\ngo to this stack\\the short id of this cd', `${this.elIds.card_b_c}`],
                 ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
                 ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
                 [`go to stack id ${this.vcstate.model.stack.id}\\the short id of this cd`, `ERR:NoViableAltException`],
@@ -196,11 +222,12 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 ['go to card 1\ngo to card "d" of bg 2\\the short id of this cd', `${this.elIds.card_b_d}`],
                 ['go to card 1\ngo to card "d" of bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
 
-                /* getCardByOrdinal */
-                ['go to card 1\\the short id of next cd', `${this.elIds.card_b_b}`],
-                ['go to card 2\\the short id of next cd', `${this.elIds.card_b_c}`],
-                ['go to card 3\\the short id of next cd', `${this.elIds.card_b_d}`],
-                ['go to card 4\\the short id of next cd', `${this.elIds.card_c_d}`]
+                /* confirmed in emulator: if there are ambiguous card names,
+                use whichever comes first in the stack, regardless of current bg */
+                [`go to card id ${this.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`, `${this.elIds.card_b_d}`],
+                [`go to card id ${this.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`, `${this.elIds.card_b_d}`],
+                [`go to card id ${this.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`, `${this.elIds.card_b_d}`],
+
             ];
             this.testBatchEvaluate(batch);
             this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
