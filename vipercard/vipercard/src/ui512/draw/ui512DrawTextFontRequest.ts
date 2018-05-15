@@ -163,9 +163,9 @@ export class UI512FontRequest {
      * and aren't persisted in a json file
      */
     stripManuallyAddedStyling(s: string) {
-        s = s.replace('+c', 'c');
-        s = s.replace('+e', 'e');
-        s = s.replace('+u', 'u');
+        s = s.replace(/\+c/g, 'c');
+        s = s.replace(/\+e/g, 'e');
+        s = s.replace(/\+u/g, 'u');
         return s;
     }
 }

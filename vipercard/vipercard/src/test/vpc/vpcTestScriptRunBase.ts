@@ -337,7 +337,7 @@ put ${s} into testresult`;
         for (let i = 0; i < testsErr.length; i++) {
             let [beforeLine, expr] = getBeforeLine(testsErr[i][0]);
             let errOnLine = beforeLine.length ? 4 : 5;
-            let expectErr = testsErr[i][1].replace('ERR:', '');
+            let expectErr = testsErr[i][1].replace(/ERR:/g, '');
             if (scontains(expectErr, ':') && isFinite(parseInt(expectErr.split(':')[0], base10))) {
                 errOnLine = parseInt(expectErr.split(':')[0], base10);
                 expectErr = expectErr.split(':')[1];

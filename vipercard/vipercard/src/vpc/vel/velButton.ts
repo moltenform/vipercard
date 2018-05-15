@@ -103,7 +103,7 @@ export class VpcElButton extends VpcElSizable {
             PrpTyp.Str,
             (me: VpcElButton) => {
                 let ret = getEnumToStrOrUnknown<VpcBtnStyle>(VpcBtnStyle, me._style);
-                return ret.replace(/osstandard/, 'standard').replace(/osdefault/, 'default');
+                return ret.replace(/osstandard/g, 'standard').replace(/osdefault/g, 'default');
             }
         ];
     }

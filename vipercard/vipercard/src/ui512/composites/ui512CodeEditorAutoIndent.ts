@@ -155,7 +155,7 @@ export class UI512AutoIndent {
      * set the indentation of a line
      */
     protected lineSetIndent(s: string, n: number) {
-        s = s.replace(/^[ \t]+/, '');
+        s = s.replace(/^[ \t]+/g, '');
         let space = this.useTabs ? '\t' : Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         for (let i = 0; i < n; i++) {
             s = space + s;
