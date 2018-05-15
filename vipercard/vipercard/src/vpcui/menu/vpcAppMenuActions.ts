@@ -5,8 +5,7 @@
 /* auto */ import { clrBlack, clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
@@ -273,22 +272,23 @@ export class VpcMenuActions {
      * note that we have to move away from this card first before deleting it
      */
     goMnuDelCard() {
-
         if (this.vci.getTool() === VpcTool.Browse) {
-            let stack = this.vci.getModel().stack
-            let msg = new VpcScriptMessage(stack.id, VpcBuiltinMsg.__Custom, "internalVpcBeginDeleteCurCard");
-            this.vci.getCodeExec().scheduleCodeExec(msg);
-        } else {
-            let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-            let wasCurrentCard = this.vci.getModel().getById(wasCurrentCardId, VpcElCard);
-            let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Previous);
-            if (this.vci.getModel().productOpts.getS('currentCardId') === wasCurrentCardId) {
-                card = this.vci.getModel().getCardRelative(OrdinalOrPosition.Next);
-            }
-
-            this.vci.setCurCardNoOpenCardEvt(card);
-            this.vci.getOutside().RemoveCard(wasCurrentCard);
+            /* previously, called a handler in productopts that
+            would move to a different card and delete the current card, but this is simpler */
+            this.vci.setTool(VpcTool.Button);
         }
+
+        /* either go forwards or backwards, as long as we're somewhere else */
+        let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
+        let wasCurrentCard = this.vci.getModel().getById(wasCurrentCardId, VpcElCard);
+        let otherCardId = this.vci.getModel().getCardRelative(OrdinalOrPosition.Previous);
+        if (otherCardId === wasCurrentCardId) {
+            otherCardId = this.vci.getModel().getCardRelative(OrdinalOrPosition.Next);
+        }
+
+        /* RemoveCard itself will do further checks, like preventing deleting the only card */
+        this.vci.setCurCardNoOpenCardEvt(otherCardId);
+        this.vci.getOutside().RemoveCard(wasCurrentCard);
     }
 
     /**

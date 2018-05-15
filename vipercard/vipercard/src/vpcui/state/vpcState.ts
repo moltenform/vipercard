@@ -1,5 +1,6 @@
 
 /* auto */ import { assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { Util512 } from '../../ui512/utils/utils512.js';
 /* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
@@ -50,9 +51,12 @@ export class VpcState {
      * remove an element from the model, includng children
      */
     removeVel(vel: VpcElBase) {
-        UndoableActionDeleteVel.checkIfCanDelete(vel, this.vci);
-
         if (vel instanceof VpcElCard) {
+            let totalCardNum = this.vci.getModel().stack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
+            checkThrow(totalCardNum > 1, '8%|Cannot delete the only card of a stack');
+            let curCard = this.vci.getOptionS('currentCardId')
+            checkThrow(vel.id !== curCard, 'cannot delete the current card')
+
             /* if deleting a card, first delete all of its children */
             let partsToRemove: VpcElBase[] = [];
             for (let part of vel.parts) {
@@ -65,6 +69,7 @@ export class VpcState {
             }
         }
 
+        UndoableActionDeleteVel.checkIfCanDelete(vel, this.vci);
         this.removeElemImpl(vel);
 
         if (vel.getType() === VpcElType.Card) {

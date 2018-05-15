@@ -244,23 +244,6 @@ on internalvpcbeginsetcurcardwithopencardevt
     global internalvpcbeginsetcurcardwithopencardevtparam
     go to card id internalvpcbeginsetcurcardwithopencardevtparam
 end internalvpcbeginsetcurcardwithopencardevt
-
-on internalVpcBeginDeleteCurCard
-    answer "please choose the Button tool when deleting a card"
-    exit internalVpcBeginDeleteCurCard
-    put the short id of this cd into targetToDelete
-    if the short id of (prev card) is targetToDelete then
-        if the short id of (next card) is targetToDelete then
-            answer "Cannot delete the only card."
-            exit internalVpcBeginDeleteCurCard
-        else
-            go next
-        end if
-    else
-        go prev
-    end if
-    delete card id targetToDelete
-end internalVpcBeginDeleteCurCard
     `
 }
 

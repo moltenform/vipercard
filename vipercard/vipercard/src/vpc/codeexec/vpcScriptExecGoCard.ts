@@ -13,6 +13,10 @@
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpcCodeLine.js';
 
+/**
+ * implementation for the 'go' command
+ * not as trivial as you'd think since we need to send the closecard + closebg events
+ */
 export class VpcExecGoCardHelpers {
     constructor(
         protected outside: OutsideWorldReadWrite,
