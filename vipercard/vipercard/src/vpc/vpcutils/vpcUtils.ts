@@ -1,6 +1,6 @@
 
 /* auto */ import { O, UI512AttachableErr, assertTrue, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utils512.js';
+/* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { VpcBuiltinMsg } from '../../vpc/vpcutils/vpcEnums.js';
 
@@ -140,3 +140,49 @@ export enum CodeLimits {
     LimitChevErr = 128,
     MaxStackNameLen = 256
 }
+
+
+/**
+ * record what you submit to the repl, for history
+ */
+export class RememberHistory {
+    pointer = 0;
+    list: string[] = [];
+
+    /**
+     * get the history at the current point
+     */
+    protected getAt() {
+        this.pointer = fitIntoInclusive(this.pointer, 0, this.list.length);
+        if (this.pointer >= this.list.length) {
+            return '';
+        } else {
+            return this.list[this.pointer];
+        }
+    }
+
+    /**
+     * user pressed up, like pressing arrow key up in bash
+     */
+    walkPrevious() {
+        this.pointer -= 1;
+        return this.getAt();
+    }
+
+    /**
+     * user pressed down, like pressing arrow key up in bash
+     */
+    walkNext() {
+        this.pointer += 1;
+        return this.getAt();
+    }
+
+    /**
+     * add to the list
+     */
+    append(s: string) {
+        this.list.push(s);
+        this.pointer = this.list.length;
+    }
+}
+

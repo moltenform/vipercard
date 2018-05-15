@@ -154,9 +154,7 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
             /* changing current card */
             this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             this.assertCompileErrorIn('go', 'on its own', 3);
-            this.assertCompileErrorIn('go back', "don't support", 3);
-            this.assertCompileErrorIn('go forth', "don't support", 3);
-            this.assertLineError('go "a"', 'NoViableAltException', 3);
+            this.assertLineError('go "a"', 'not this', 3);
             this.assertLineError('go 1', 'NoViableAltException', 3);
             this.assertLineError('go to cd btn id 1', 'NoViableAltException', 3);
             this.assertLineError('go to cd btn "p1"', 'NoViableAltException', 3);

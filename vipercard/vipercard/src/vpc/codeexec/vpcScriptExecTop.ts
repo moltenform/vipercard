@@ -2,7 +2,7 @@
 /* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VarCollection, VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
@@ -21,6 +21,7 @@
  */
 export class VpcExecTop {
     globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
+    cardHistory = new RememberHistory()
     constants = new VariableCollectionConstants();
     check = new CheckReservedWords();
     runStatements = new ExecuteStatement();
@@ -50,6 +51,7 @@ export class VpcExecTop {
             this.runStatements,
             this.constants,
             this.globals,
+            this.cardHistory,
             this.check,
             msg
         );

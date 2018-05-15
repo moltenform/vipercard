@@ -11,7 +11,7 @@
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElSizable } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
@@ -87,19 +87,38 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     setCurCardNoOpenCardEvt(nextId:string) {
         this.vci.undoableAction(() => {
+            /* verify card exists */
+            this.vci.getModel().getById(nextId, VpcElCard)
+
+            /* go to the card */
+            let wasCard = this.vci.getOptionS('currentCardId')
             this.vci.getModel().productOpts.allowSetCurrentCard = true;
             this.vci.setOption('currentCardId', nextId);
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
+
+            if (wasCard !== nextId) {
+                /* remember history, for go back and go forth */
+                let suspended = this.vci.getCodeExec().globals.find('internalvpcgocardimplsuspendhistory')
+                if (suspended === undefined || suspended.readAsString() !== '1') {
+                    this.vci.getCodeExec().cardHistory.append(nextId)
+                }
+            }
+
+            /* turn this off, so it's never stuck on indefinitely */
+            this.vci.getCodeExec().globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0))
         });
     }
 
+    /**
+     * schedules an event that will eventually set the current card, including sending closecard + opencard events
+     */
     beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific:O<string>) {
         assertTrue(!idSpecific || pos === OrdinalOrPosition.This, "specifying an id, should set to This")
         let targetCardId = idSpecific ? idSpecific : this.vci.getModel().getCardRelative(pos)
         if (this.getTool() === VpcTool.Browse) {
-            this.vci.getCodeExec().globals.set('internalVpcBeginSetCurCardWithOpenCardEvtParam', VpcValS(targetCardId))
+            this.vci.getCodeExec().globals.set('internalvpcbeginsetcurcardwithopencardevtparam', VpcValS(targetCardId))
             let stack = this.vci.getModel().stack
-            let msg = new VpcScriptMessage(stack.id, VpcBuiltinMsg.__Custom, "internalVpcBeginSetCurCardWithOpenCardEvt");
+            let msg = new VpcScriptMessage(stack.id, VpcBuiltinMsg.__Custom, "internalvpcbeginsetcurcardwithopencardevt");
             this.vci.getCodeExec().scheduleCodeExec(msg);
         } else {
             this.setCurCardNoOpenCardEvt(targetCardId)
@@ -134,9 +153,11 @@ export class VpcPresenter extends VpcPresenterInit {
         and we don't show temp code in editor */
         for (let vid of [origVelId, redirredVelId]) {
             let v = vci.getModel().getByIdUntyped(vid);
-            let s = v.getS('script')
-            s = VpcExecFrame.filterTemporaryFromScript(s)
-            v.set('script', s)
+            if (v.getType() !== VpcElType.Product) {
+                let s = v.getS('script')
+                s = VpcExecFrame.filterTemporaryFromScript(s)
+                v.set('script', s)
+            }
         }
 
 

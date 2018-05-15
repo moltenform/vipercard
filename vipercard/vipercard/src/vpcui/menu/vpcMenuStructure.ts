@@ -204,12 +204,14 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
         */
 
         this.keyMappings['ArrowLeft'] = (self: VpcAppMenuStructure) => {
+            /* a game might want to use arrowkeys, so don't handle here yet */
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardPrev';
             }
         };
 
         this.keyMappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
+            /* a game might want to use arrowkeys, so don't handle here yet */
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardNext';
             }

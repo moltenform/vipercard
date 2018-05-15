@@ -3,15 +3,12 @@
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { MapTermToMilliseconds, OrdinalOrPosition, SortType, VpcChunkPreposition, VpcChunkType, VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcChunkType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { VpcAudio } from '../../vpc/vpcutils/vpcAudio.js';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { fromNickname } from '../../vpc/codeparse/vpcVisitorMixin.js';
@@ -323,7 +320,7 @@ export class ExecuteStatement {
     goChoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let nm = fromNickname('FACTOR');
         let factor = throwIfUndefined(this.findChildVal(vals, nm), '5G|');
-        let sTool = factor.readAsString().replace(/ +/, '_');
+        let sTool = factor.readAsString().replace(/ +/g, '_');
         checkThrow(sTool.length > 1, 'JP|not a valid tool name.');
 
         /* from string to enum entry */
@@ -483,59 +480,6 @@ export class ExecuteStatement {
     goGet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
         let expr = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '58|');
         this.outside.SetSpecialVar('it', expr);
-    }
-
-    /**
-     * Go to a different card.
-     */
-    goGo(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        assertTrue(false, "nyi")
-        let ref = this.findChildVelRef(vals, 'RuleNtDest');
-        if (ref) {
-            let vel = this.getResolveChildVel(vals, 'RuleNtDest');
-            let velAsStack = vel as VpcElStack;
-            let velAsBg = vel as VpcElBg;
-            let velAsCard = vel as VpcElCard;
-            if (velAsCard && velAsCard.isVpcElCard) {
-                /* e.g. go card 2 */
-                // this.outside.GoCardRelative(OrdinalOrPosition.This, velAsCard.id);
-            } else {
-                let requestStack = new RequestedVelRef(VpcElType.Stack);
-                requestStack.lookByRelative = OrdinalOrPosition.This;
-                let stack = this.outside.ResolveVelRef(requestStack) as VpcElStack;
-                checkThrow(stack && stack.isVpcElStack, '7P|');
-
-                if (velAsStack && velAsStack.isVpcElStack) {
-                    if (velAsStack.id !== stack.id) {
-                        /* e.g. go to stack "otherStack" */
-                        throw makeVpcScriptErr("57|we don't support going to other stacks");
-                    } else {
-                        /* nothing to do, we're already on this stack */
-                    }
-                } else if (velAsBg && velAsBg.isVpcElBg && velAsBg.cards.length) {
-                    /* e.g. go to bg 2 */
-                    // this.outside.GoCardRelative(OrdinalOrPosition.This, velAsBg.cards[0].id);
-                } else {
-                    /* e.g. go to cd btn 2 */
-                    throw makeVpcScriptErr('56|we only support going to a card or a bg');
-                }
-            }
-        } else {
-            let shp: string;
-            if (vals.vals.RuleHOrdinal) {
-                /* e.g. go second card */
-                shp = vals.vals.RuleHOrdinal[0] as string;
-            } else if (vals.vals.RuleHPosition) {
-                /* e.g. go next card */
-                shp = vals.vals.RuleHPosition[0] as string;
-            } else {
-                throw makeVpcScriptErr('55|all choices null');
-            }
-
-            checkThrow(isString(shp), '7O|');
-            let hp = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'OrdinalOrPosition', shp);
-            // this.outside.GoCardRelative(hp, undefined);
-        }
     }
 
     /**

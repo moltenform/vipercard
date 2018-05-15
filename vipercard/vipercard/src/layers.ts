@@ -143,6 +143,7 @@ bridgeTextEncoding
 vpcScriptExecTop
 vpcScriptExecFrameStack
 vpcScriptExecFrame
+vpcScriptExecGoCard
 vpcScriptExecStatement
 vpcScriptExecAsync
 vpcScriptCacheParsed

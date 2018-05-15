@@ -394,7 +394,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             let top = cast(grp.getEl(this.getElId('topChoice')), UI512ElTextField);
             let ctg = this.getChosenCategoryNumber(top);
             if (ctg !== undefined && this.examplesInfo[ctg]) {
-                let num = this.examplesInfo[ctg][0].replace('vid', '');
+                let num = this.examplesInfo[ctg][0].replace(/vid/g, '');
                 let redirectWindow = window.open('/0.2/html/video' + num + '.html', '_blank');
             }
         }

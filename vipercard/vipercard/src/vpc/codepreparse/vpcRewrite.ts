@@ -152,20 +152,61 @@ export class SyntaxRewriter {
         return [line, addedLine];
     }
 
-    /* for a line like go back, */
-    /* we don't support this construct */
+    /**
+     * from 'go to card "myCard"'
+     * to
+     * builtinInternalVpcGoCardImpl "gettarget" tmpc1 to card "myCard"
+     * builtinInternalVpcGoCardImpl "closecard" tmpc1
+     * builtinInternalVpcGoCardImpl "closebackground" tmpc1
+     * builtinInternalVpcGoCardImpl "set" tmpc1
+     * builtinInternalVpcGoCardImpl "openbackground" tmpc1
+     * builtinInternalVpcGoCardImpl "opencard" tmpc1
+     * builtinInternalVpcGoCardImpl "setresult" tmpc1
+     *
+     * target computed first 1) in case computation has side effects 2) to support 'any card'
+     */
     rewriteGo(line: ChvIToken[]) {
-        /* we no longer support "go back" and "go forth". */
-        /* they'd be wrongly parsed (eaten by NtDest / Position) anyways */
         checkThrow(line.length > 1, "8k|can't have just 'go' on its own. try 'go next' or 'go prev' ");
-        checkThrow(
-            line[1].image !== 'back',
-            "8j|we don't support 'go back', instead use 'go next' or 'go prev' or 'go card 2'."
-        );
-        checkThrow(
-            line[1].image !== 'forth',
-            "8i|we don't support 'go forth', instead use 'go next' or 'go prev' or 'go card 2'."
-        );
+        let ret:ChvIToken[][] = []
+        let firstNewLine:ChvIToken[] = []
+        let newVarName = `tmpgovar^^${this.idgenThisScript.next()}`;
+        firstNewLine.push(this.buildFake.makeIdentifier(line[0], 'BuiltinInternalVpcGoCardImpl'))
+        firstNewLine.push(this.buildFake.makeStrLiteral(line[0], 'gettarget'))
+        firstNewLine.push(this.buildFake.makeIdentifier(line[0], newVarName))
+        let isBackOrForth = false
+
+        if (line[1].image === 'back') {
+            checkThrowEq(2, line.length, "expected 'go back', not 'go back xzy...'")
+            firstNewLine.push(this.buildFake.makeStrLiteral(line[0], 'back'))
+            isBackOrForth = true
+        } else if (line[1].image === 'forth') {
+            checkThrowEq(2, line.length, "expected 'go forth', not 'go forth xzy...'")
+            firstNewLine.push(this.buildFake.makeStrLiteral(line[0], 'forth'))
+            isBackOrForth = true
+        } else {
+            firstNewLine = firstNewLine.concat(line.slice(1))
+        }
+
+        ret.push(firstNewLine)
+        for (let s of ['closecard', 'closebackground', 'set', 'openbackground', 'opencard', 'setresult']) {
+            if (s === 'set' && isBackOrForth) {
+                let suspend:ChvIToken[] = []
+                suspend.push(this.buildFake.makeIdentifier(line[0], 'global'))
+                suspend.push(this.buildFake.makeIdentifier(line[0], 'internalvpcgocardimplsuspendhistory'))
+                ret.push(suspend)
+                let putIntoSuspend = this.buildPutIntoStatement('internalvpcgocardimplsuspendhistory', [this.buildFake.makeNumLiteral(line[0], 1)])
+                ret.push(putIntoSuspend)
+            }
+
+            let newLine:ChvIToken[] = []
+            newLine.push(this.buildFake.makeIdentifier(line[0], 'BuiltinInternalVpcGoCardImpl'))
+            newLine.push(this.buildFake.makeStrLiteral(line[0], s))
+            newLine.push(this.buildFake.makeIdentifier(line[0], newVarName))
+            newLine.push(this.buildFake.makeStrLiteral(line[0], ''))
+            ret.push(newLine)
+        }
+
+        return ret
     }
 
     /* input was: put "abc" into x */

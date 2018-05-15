@@ -100,9 +100,13 @@ export class DetermineCategory {
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {
                 if (output.ctg === VpcLineCategory.CallDynamic) {
-                    /* pass the original line of code to the parser */
+                    /* specify parsing for 'send' */
                     output.excerptToParse = output.excerptToParse.slice();
                     output.setParseRule(this.parser.RuleBuiltinCmdSend);
+                } else if (output.ctg === VpcLineCategory.GoCardImpl) {
+                    /* specify parsing for 'goCardImpl' */
+                    output.excerptToParse = output.excerptToParse.slice();
+                    output.setParseRule(this.parser.RuleBuiltinInternalVpcGoCardImpl);
                 } else if (this.isParsingNeeded(output.ctg)) {
                     /* construct an array to be sent to the parser */
                     output.excerptToParse = [this.reusableRequestEval].concat(output.excerptToParse);
@@ -122,6 +126,10 @@ export class DetermineCategory {
         switch (ctg) {
             case VpcLineCategory.CallDynamic:
                 checkThrow(false, 'call dynamic should be handled elsewhere')
+                break
+            case VpcLineCategory.GoCardImpl:
+                checkThrow(false, 'go to card should be handled elsewhere')
+                break
             case VpcLineCategory.HandlerStart: /* fall-through */
             case VpcLineCategory.HandlerEnd: /* fall-through */
             case VpcLineCategory.HandlerExit: /* fall-through */
@@ -457,6 +465,18 @@ export class DetermineCategory {
         but this has to parse both an expression and an object */
         output.excerptToParse = line.slice()
         output.ctg = VpcLineCategory.CallDynamic;
+    }
+
+    /**
+     * line begins with goCardImpl
+     */
+    goBuiltinInternalVpcGoCardImpl(line: ChvIToken[], output: VpcCodeLine) {
+        checkThrow(line.length >= 2, `line is too short.`);
+
+        /* other control blocks just parse a single expression,
+        but this has to parse a refrence to a card */
+        output.excerptToParse = line.slice()
+        output.ctg = VpcLineCategory.GoCardImpl;
     }
 
     /**

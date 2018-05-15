@@ -2,7 +2,8 @@
 /* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { RememberHistory, VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
+/* auto */ import { RememberHistory } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { VpcNonModalReplBox } from '../../vpcui/nonmodaldialogs/vpcReplMessageBox.js';
 
 /**
  * tests on FormattedText

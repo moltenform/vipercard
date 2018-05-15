@@ -518,12 +518,19 @@ export class VpcChvParser extends ChvParser {
         this.SUBRULE1(this.RuleExpr);
     });
 
-    RuleBuiltinCmdGoCard = this.RULE('RuleBuiltinCmdGoCard', () => {
+    RuleBuiltinInternalVpcGoCardImpl = this.RULE('RuleBuiltinInternalVpcGoCardImpl', () => {
         this.CONSUME1(tks.TokenTkidentifier);
+        this.CONSUME1(tks.TokenTkstringliteral);
+        this.CONSUME2(tks.TokenTkidentifier);
         this.OPTION1(() => {
             this.CONSUME1(tks.TokenTo);
         });
         this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.TokenTkstringliteral);
+                }
+            },
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleNtDest);

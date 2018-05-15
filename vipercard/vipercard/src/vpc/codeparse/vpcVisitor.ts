@@ -208,7 +208,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdGoCard(ctx: VisitingContext): IntermedMapOfIntermedVals {
+        RuleBuiltinInternalVpcGoCardImpl(ctx: VisitingContext): string | VpcIntermedValBase {
             return this.H$BuildMap(ctx);
         }
 

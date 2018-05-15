@@ -88,6 +88,7 @@ export enum VpcLineCategory {
     RepeatEnd,
     DeclareGlobal,
     Statement,
+    GoCardImpl,
     CallDynamic,
     CallHandler
 }
@@ -111,7 +112,6 @@ export class MapBuiltinCmds extends MapKeyToObject<Function> {
         this.add('drag', parser.RuleBuiltinCmdDrag);
         this.add('enable', parser.RuleBuiltinCmdEnable);
         this.add('get', parser.RuleBuiltinCmdGet);
-        this.add('go', parser.RuleBuiltinCmdGoCard);
         this.add('hide', parser.RuleBuiltinCmdHide);
         this.add('lock', parser.RuleBuiltinCmdLock);
         this.add('multiply', parser.RuleBuiltinCmdMultiply);

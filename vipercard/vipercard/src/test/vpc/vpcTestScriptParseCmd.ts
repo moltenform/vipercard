@@ -534,34 +534,6 @@ ExprSource(
     HSimpleContainer( $y ) ) $ask`
         );
     },
-    'TestVpcParseCmdGo',
-    () => {
-        testCmd('go to first', `HOrdinal( first ) $go to )`);
-        testCmd('go first', `HOrdinal( first ) $go )`);
-        testCmd(
-            'go first cd',
-            `NtDest(
-    ObjectCard(
-        HOrdinal( first ) cd ) ) $go )`
-        );
-        testCmd(
-            'go first bg',
-            `NtDest(
-    ObjectBg(
-        HOrdinal( first ) bg ) ) $go )`
-        );
-        testCmd(
-            'go cd 2',
-            `NtDest(
-    ObjectCard(
-        ExprSource( 2 ) cd ) ) $go )`
-        );
-        testCmd('go next', `HPosition( $next ) $go )`);
-        testCmd('go back', `HPosition( $back ) $go )`);
-        testCmd('go forth', `HPosition( $forth ) $go )`);
-        assertFailsCmd('go 2', 'NoViableAltException');
-        assertFailsCmd('go "abc"', 'NoViableAltException');
-    },
     'TestVpcParseCmdMultiply',
     () => {
         testCmd(

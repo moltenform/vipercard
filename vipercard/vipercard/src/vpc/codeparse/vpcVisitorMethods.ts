@@ -39,7 +39,7 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdEnable(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdGet(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdGoCard(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinInternalVpcGoCardImpl(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdLock(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdMultiply(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -110,6 +110,7 @@ export interface VisitingContext {
     RuleNtDest: any[];
     RuleNtVisEffect: any[];
     RuleNtVisEffectTerm: any[];
+    RuleBuiltinInternalVpcGoCardImpl: any[];
     RuleShow_1: any[];
     RuleShow_2: any[];
     RuleAnyPropertyName: any[];

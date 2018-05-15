@@ -1,9 +1,9 @@
 
 /* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown } from '../../ui512/utils/utils512.js';
+/* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CodeLimits, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
 /* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
@@ -18,6 +18,7 @@
 /* auto */ import { VpcCacheParsed } from '../../vpc/codeexec/vpcScriptCacheParsed.js';
 /* auto */ import { VpcPendingAsyncOps } from '../../vpc/codeexec/vpcScriptExecAsync.js';
 /* auto */ import { ExecuteStatement } from '../../vpc/codeexec/vpcScriptExecStatement.js';
+/* auto */ import { VpcExecGoCardHelpers } from '../../vpc/codeexec/vpcScriptExecGoCard.js';
 /* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 
 /**
@@ -34,6 +35,7 @@ export class VpcExecFrameStack {
         protected execStatements: ExecuteStatement,
         public constants: VarCollection,
         public globals: VarCollection,
+        public cardHistory:RememberHistory,
         public check: CheckReservedWords,
         public originalMsg: VpcScriptMessage
     ) {
@@ -520,6 +522,7 @@ export class VpcExecFrameStack {
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         let newHandlerName = curLine.excerptToParse[1].image;
         let args = this.helpGetEvaledArgs(parsed, curLine);
+        curFrame.next()
         this.callHandlerAndThrowIfNotExist(curFrame, args, curFrame.codeSection.ownerId, newHandlerName )
     }
 
@@ -529,7 +532,6 @@ export class VpcExecFrameStack {
     protected callHandlerAndThrowIfNotExist(curFrame: VpcExecFrame, args: VpcVal[], ownerId:string, handlerName:string) {
         /* reset the result, in case the callee doesn't return anything */
         curFrame.locals.set('$result', VpcVal.Empty);
-        curFrame.next();
         let found = this.findHandlerUpwards(ownerId, handlerName, false);
         if (found) {
             let newFrame = this.pushStackFrame(handlerName, curFrame.message, found[0], found[1]);
@@ -546,21 +548,21 @@ export class VpcExecFrameStack {
     protected visitSendStatement(curLine: VpcCodeLine, parsed: VpcParsed):[VpcVal, VpcElBase] {
         assertTrue(
             this.cacheParsed.parser.RuleBuiltinCmdSend === curLine.getParseRule(),
-            '5a|expected "send" parse rule'
+            'expected "send" parse rule'
         );
 
         let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
         checkThrow(visited && visited.isIntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
         checkThrow(
             visited.vals.RuleExpr && visited.vals.RuleObject,
-            '7v|visitSendStatement expected both RuleExpr and RuleObject'
+            'visitSendStatement expected both RuleExpr and RuleObject'
         );
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow(val && val.isVpcVal, '7u|visitSendStatement expected a string.');
+        checkThrow(val && val.isVpcVal, 'visitSendStatement expected a string.');
 
         let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
-        checkThrow(velRef && velRef.isRequestedVelRef, '7u|visitSendStatement expected vel reference.');
+        checkThrow(velRef && velRef.isRequestedVelRef, 'visitSendStatement expected vel reference.');
         let vel = throwIfUndefined(this.outside.ResolveVelRef(velRef), "target of 'send' not found")
 
         return [val, vel]
@@ -574,6 +576,7 @@ export class VpcExecFrameStack {
         let lineNumber = curLine.excerptToParse[1].startLine || 0
         let [val, vel] = this.visitSendStatement(curLine, parsed)
         let codeToCompile = val.readAsString()
+        curFrame.next()
 
         /* for compatibility with original product, if there's no return statement,
         return the last result that was computed. see the myCompute example in the docs. */
@@ -586,5 +589,25 @@ export class VpcExecFrameStack {
         let prevCode = vel.getS('script')
         let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, vel.id, codeToCompile, me, lineNumber)
         this.callHandlerAndThrowIfNotExist(curFrame, [], vel.id, newHandlerName)
+    }
+
+    /**
+     * one of the goCardImpl pieces that result from a 'go next' call
+     */
+    visitGoCardImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
+        assertTrue(
+            this.cacheParsed.parser.RuleBuiltinInternalVpcGoCardImpl === curLine.getParseRule(),
+            'expected "goCardImpl" parse rule'
+        );
+
+        let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
+        checkThrow(visited && visited.isIntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
+        curFrame.next();
+
+        let helper = new VpcExecGoCardHelpers(this.outside, this.globals, curFrame.locals, this.cardHistory)
+        let [sendMsg, sendMsgTarget] = helper.execGoCard(curLine, visited)
+        if (slength(sendMsg)) {
+            this.callHandlerAndThrowIfNotExist(curFrame, [], sendMsgTarget, sendMsg)
+        }
     }
 }

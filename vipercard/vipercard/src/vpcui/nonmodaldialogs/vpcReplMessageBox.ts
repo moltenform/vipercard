@@ -1,6 +1,5 @@
 
 /* auto */ import { O, cleanExceptionMsg, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
 /* auto */ import { TextFontSpec, TextFontStyling } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
@@ -13,7 +12,7 @@
 /* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { PalBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { VpcBuiltinMsg, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { RememberHistory, VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
@@ -309,48 +308,4 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * use this unique marker to know if the error was intentional
      */
     static readonly markIntentionalErr = 'intentionalcausescripterrorleavingreplbox';
-}
-
-/**
- * record what you submit to the repl, for history
- */
-export class RememberHistory {
-    pointer = 0;
-    list: string[] = [];
-
-    /**
-     * get the history at the current point
-     */
-    protected getAt() {
-        this.pointer = fitIntoInclusive(this.pointer, 0, this.list.length);
-        if (this.pointer >= this.list.length) {
-            return '';
-        } else {
-            return this.list[this.pointer];
-        }
-    }
-
-    /**
-     * user pressed up, like pressing arrow key up in bash
-     */
-    walkPrevious() {
-        this.pointer -= 1;
-        return this.getAt();
-    }
-
-    /**
-     * user pressed down, like pressing arrow key up in bash
-     */
-    walkNext() {
-        this.pointer += 1;
-        return this.getAt();
-    }
-
-    /**
-     * add to the list
-     */
-    append(s: string) {
-        this.list.push(s);
-        this.pointer = this.list.length;
-    }
 }
