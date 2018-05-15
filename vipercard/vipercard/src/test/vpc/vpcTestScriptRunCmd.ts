@@ -197,23 +197,6 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 ['go first\ngo prev\\the short id of this cd', `${this.elIds.card_c_d}`],
                 ['go last\ngo next\\the short id of this cd', `${this.elIds.card_a_a}`],
 
-                /* object reference */
-                ['go third\ngo to this stack\\the short id of this cd', `${this.elIds.card_b_c}`],
-                ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
-                ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
-                [`go to stack id ${this.vcstate.model.stack.id}\\the short id of this cd`, `ERR:NoViableAltException`],
-                ['go to bg 1\\the short id of this cd', `${this.elIds.card_a_a}`],
-                ['go to bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
-                ['go to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
-                ['go to card 1\\the short id of this cd', `${this.elIds.card_a_a}`],
-                ['go to card 4\\the short id of this cd', `${this.elIds.card_b_d}`],
-                ['go to card 1 of this stack\\the short id of this cd', `ERR:MismatchedTokenException`],
-                ['go to card 4 of this stack\\the short id of this cd', `ERR:MismatchedTokenException`],
-                ['go to card 1 of bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
-                ['go to card 1 of bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
-                ['go to card 1 of bg 2 of this stack\\the short id of this cd', `${this.elIds.card_b_b}`],
-                ['go to card 1 of bg 3 of this stack\\the short id of this cd', `${this.elIds.card_c_d}`],
-
                 /* reference by name */
                 ['go to card 1\ngo to card "a"\\the short id of this cd', `${this.elIds.card_a_a}`],
                 ['go to card 1\ngo to card "b"\\the short id of this cd', `${this.elIds.card_b_b}`],
@@ -228,6 +211,31 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 [`go to card id ${this.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`, `${this.elIds.card_b_d}`],
                 [`go to card id ${this.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`, `${this.elIds.card_b_d}`],
 
+                /* reference by bg */
+                ['go to card 1\ngo to bg 1\\the short id of this cd', `${this.elIds.card_a_a}`],
+                ['go to card 2\ngo to bg 1\\the short id of this cd', `${this.elIds.card_a_a}`],
+                ['go to card 2\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
+                ['go to card 5\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
+                ['go to card 5\ngo to bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
+                ['go to card 2\ngo to bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
+
+                /* confirmed in emulator: if sent to the same bg,
+                do not change the current card */
+                ['go to card 2\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
+                ['go to card 3\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_c}`],
+                ['go to card 4\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_d}`],
+
+                /* object reference */
+                ['go third\ngo to this stack\\the short id of this cd', `${this.elIds.card_b_c}`],
+                ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
+                ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
+                [`go to stack id ${this.vcstate.model.stack.id}\\the short id of this cd`, `ERR:NoViableAltException`],
+                ['go to card 1 of this stack\\the short id of this cd', `ERR:MismatchedTokenException`],
+                ['go to card 4 of this stack\\the short id of this cd', `ERR:MismatchedTokenException`],
+                ['go to card 1 of bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
+                ['go to card 1 of bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
+                ['go to card 1 of bg 2 of this stack\\the short id of this cd', `${this.elIds.card_b_b}`],
+                ['go to card 1 of bg 3 of this stack\\the short id of this cd', `${this.elIds.card_c_d}`],
             ];
             this.testBatchEvaluate(batch);
             this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);

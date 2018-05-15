@@ -158,7 +158,7 @@ export class VpcExecGoCardHelpers {
                 }
             } else if (velAsBg && velAsBg.isVpcElBg && velAsBg.cards.length) {
                 /* e.g. go to bg 2 */
-                return velAsBg.cards[0].id
+                return this.goBasedOnBg(velAsBg)
             } else {
                 /* e.g. go to cd btn 2 */
                 throw makeVpcScriptErr('56|we only support going to a card or a bg');
@@ -179,6 +179,20 @@ export class VpcExecGoCardHelpers {
             let hp = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'OrdinalOrPosition', shp);
             let currentCardId = this.outside.GetOptionS('currentCardId')
             return curStack.getCardByOrdinal(currentCardId, hp).id
+        }
+    }
+
+    /**
+     * confirmed in emulator: if sent to the same bg we're already at,
+     * do not change the current card
+     */
+    protected goBasedOnBg(bg: VpcElBg) {
+        let curCardId = this.outside.GetOptionS('currentCardId')
+        let curCard = this.outside.FindVelById(curCardId)
+        if (curCard && curCard.parentId === bg.id) {
+            return curCardId
+        } else {
+           return bg.cards[0].id
         }
     }
 
