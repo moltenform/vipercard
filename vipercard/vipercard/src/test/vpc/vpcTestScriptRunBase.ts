@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, assertTrueWarn, makeVpcInternalErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, base10, getRoot } from '../../ui512/utils/utils512.js';
+/* auto */ import { assertEq, assertEqWarn, base10, getRoot } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
@@ -202,7 +202,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
                 let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
                 assertTrueWarn(false, '2a|got error at the wrong stage', culpritLine, msg);
             } else if (expectErrMsg) {
-                assertEq(expectErrLine, line, codeBefore, codeIn, '2Z|');
+                assertEqWarn(expectErrLine, line, codeBefore, codeIn, '2Z|');
                 if (!scontains(msg, expectErrMsg)) {
                     console.error(
                         'DIFFERENT ERR MSG for input ' +
@@ -285,9 +285,15 @@ put ${s} into testresult`;
 
     testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
         let getBeforeLine = (s: string): [string, string] => {
-            let pts = s.split('\\');
-            assertTrue(pts.length === 1 || pts.length === 2, '2S|too many \\');
-            return pts.length === 2 ? [pts[0], pts[1]] : ['', pts[0]];
+            let ptsWithRes = s.split('{RESULT}')
+            if (ptsWithRes.length > 1) {
+                assertTrue(ptsWithRes.length === 2, 'too many {RESULT}');
+                return [ptsWithRes[0], ptsWithRes[1]]
+            } else {
+                let pts = s.split('\\');
+                assertTrue(pts.length === 1 || pts.length === 2, '2S|too many \\');
+                return pts.length === 2 ? [pts[0], pts[1]] : ['', pts[0]];
+            }
         };
 
         let testsErr = tests.filter(item => item[1].startsWith('ERR:'));

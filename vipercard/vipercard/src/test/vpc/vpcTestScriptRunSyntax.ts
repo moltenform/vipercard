@@ -311,7 +311,7 @@ put x into x\\x`,
                 } else if (reserved === 'if') {
                     expectErr = "all-on-one-line";
                 } else if (reserved === 'else') {
-                    expectErr = 'line to end with "then"';
+                    expectErr = 'no longer expect to see';
                 } else if (reserved === 'return') {
                     expectErr = 'NotAllInputParsedException';
                 }
@@ -1311,8 +1311,6 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
                     '0,0,0,0,0,0,3,0,0'
                 ],
                 ['get abs(mm(1))\\0', 'ERR:expected a number'],
-                ['repeat while length(mm(1)) > 15\nend repeat\\0', 'ERR:support custom fn calls'],
-                ['mm mm(1)\\0', 'ERR:support custom fn calls'],
                 ['there is a cd btn mm(1)', 'false'],
                 ['show cd btn mm(1)\\0', 'ERR:could not find the specified element'],
                 ['enable cd btn mm(1)\\0', 'ERR:could not find the specified element'],
@@ -1627,7 +1625,7 @@ next repeat`,
             this.assertCompileErrorIn(
                 `if false then
         else then`,
-                'cannot have a line',
+                'no longer expect to see',
                 4
             );
             /* cannot say just "if" */

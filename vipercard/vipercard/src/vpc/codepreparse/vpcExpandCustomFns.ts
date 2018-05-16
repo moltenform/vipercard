@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { ValHolder, assertEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { CodeLimits, CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
@@ -28,11 +28,22 @@
  */
 export class ExpandCustomFunctions {
     protected buildToken = new BuildFakeTokens();
+    protected skipExpansion: { [key: string]: boolean } = {}
     constructor(
         protected idgenThisScript: CountNumericId,
         protected mapBuiltinCmds: MapBuiltinCmds,
         protected check: CheckReservedWords
-    ) {}
+    ) {
+        /* we don't need to check for fn calls if the line starts with any of these symbols. */
+        this.skipExpansion['global'] = true
+        this.skipExpansion['next'] = true
+        this.skipExpansion['exit'] = true
+        this.skipExpansion['else'] = true
+        this.skipExpansion['end'] = true
+        this.skipExpansion['on'] = true
+        this.skipExpansion['function'] = true
+        this.skipExpansion['pass'] = true
+    }
 
     /* expand function call in this line
     returns a list of resulting lines, since the result could be many lines */
@@ -40,14 +51,6 @@ export class ExpandCustomFunctions {
         if (this.supportsCustomFnExpansion(line)) {
             return this.goImpl(line);
         } else {
-            let isPotentialUserFn = (n: number, s: string) => this.check.potentialUserFn(s);
-            let found = this.findAFunctionCall(line, 1, line.length, isPotentialUserFn);
-            if (found) {
-                throw makeVpcScriptErr(`5!|this looks like a custom function call ${line[found[0]].image}(),
-                but we don't yet support custom fn calls in this type of line.
-                try putting into another variable first.`);
-            }
-
             return [line];
         }
     }
@@ -58,8 +61,7 @@ export class ExpandCustomFunctions {
     protected supportsCustomFnExpansion(line: ChvIToken[]) {
         return (
             line.length > 0 &&
-            isTkType(line[0], tks.TokenTkidentifier) &&
-            (line[0].image === 'if' || line[0].image === 'return' || this.mapBuiltinCmds.find(line[0].image))
+            !this.skipExpansion[line[0].image]
         );
     }
 

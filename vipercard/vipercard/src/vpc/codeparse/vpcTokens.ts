@@ -13,8 +13,8 @@ export type TypeGreaterLessThanEqual = '=' | '==' | '<' | '>' | '<=' | '>=';
 export type VpcParsed = any;
 
 /**
- * when re-writing syntax, sometimes we need to construct a token, and make it
- * look as if it had come from the lexer.
+ * when re-writing syntax, sometimes we want to construct a token, and make it
+ * look just as if it had come from the lexer.
  * use this class to build a fake token based on a real token
  */
 export class BuildFakeTokens {
@@ -25,6 +25,7 @@ export class BuildFakeTokens {
         this.knownImages[tokenType(tks.TokenTklparen)] = '(';
         this.knownImages[tokenType(tks.TokenTkrparen)] = ')';
         this.knownImages[tokenType(tks.TokenTo)] = 'to';
+        this.knownImages[tokenType(tks.TokenNot)] = 'not';
     }
 
     /**

@@ -1,7 +1,7 @@
 
 /* auto */ import { checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
-/* auto */ import { BuildFakeTokens } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { BuildFakeTokens, tks } from '../../vpc/codeparse/vpcTokens.js';
 
 /**
     from
@@ -63,9 +63,70 @@ export class ExpandIfElse {
         } else if (line.length >= 1 && line[0].image === 'else') {
             /* don't need to transform anything */
             return [line]
+        } else if (line.length >= 1 && line[0].image === 'repeat') {
+            return this.expandRepeatWhileUntil(line)
         } else {
             /* not related to if/else, don't need to transform anything */
             return [line]
         }
+    }
+
+    /**
+    from
+
+    repeat while x < myFn()
+        code
+    end repeat
+
+    to the equivalent
+
+    repeat
+        if not (x < myFn()) then
+            exit repeat
+        end if
+        code
+    end repeat
+
+    why do this? if there's an expandCustomFns in the condition,
+    it has to be called every time through the loop
+     */
+    expandRepeatWhileUntil(line: ChvIToken[]): ChvIToken[][] {
+        let isWhile = true
+        if (line.length >= 3 && line[1].image === 'while') {
+            isWhile = true
+        } else if (line.length >= 3 && line[1].image === 'until') {
+            isWhile = false
+        } else {
+            return [line]
+        }
+
+        let ret: ChvIToken[][] = []
+        let partRepeat = line.slice(0, 1)
+        let partExp = line.slice(2)
+        ret.push(partRepeat)
+
+        let ifStatement: ChvIToken[] = []
+        ifStatement.push(this.buildToken.makeIdentifier(line[0], 'if'))
+        if (isWhile) {
+            ifStatement.push(this.buildToken.make(line[0], tks.TokenNot))
+            ifStatement.push(this.buildToken.make(line[0], tks.TokenTklparen))
+        }
+        ifStatement = ifStatement.concat(partExp)
+        if (isWhile) {
+            ifStatement.push(this.buildToken.make(line[0], tks.TokenTkrparen))
+        }
+        ifStatement.push(this.buildToken.makeIdentifier(line[0], 'then'))
+        ret.push(ifStatement)
+
+        let lineExit: ChvIToken[] = []
+        lineExit.push(this.buildToken.makeIdentifier(line[0], 'exit'))
+        lineExit.push(this.buildToken.makeIdentifier(line[0], 'repeat'))
+        ret.push(lineExit)
+
+        let lineEndIf: ChvIToken[] = []
+        lineEndIf.push(this.buildToken.makeIdentifier(line[0], 'end'))
+        lineEndIf.push(this.buildToken.makeIdentifier(line[0], 'if'))
+        ret.push(lineEndIf)
+        return ret
     }
 }

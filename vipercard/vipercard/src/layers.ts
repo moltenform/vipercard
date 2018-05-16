@@ -22,6 +22,7 @@ vpcTestScriptEval
 vpcTestScriptExprLvl
 vpcTestScriptRunCmd
 vpcTestScriptRunSyntax
+vpcTestScriptRunCustomFns
 vpcTestScriptRunBase
 vpcTestScriptParseExpr
 vpcTestScriptParseCmd

@@ -401,9 +401,12 @@ export class VpcExecFrameStack {
 
     /**
      * start an "else if"
-     * use offsetsMarked to record where we've been
      */
     visitIfElse(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
+        checkThrow(false, `else if no longer exists,
+            vpcExpandIfElse should turn every "if else" into a separate "if + end if".`)
+
+
         let blockInfo = this.getBlockInfo(curLine, 3);
         let anyTaken = blockInfo.some(ln => curFrame.offsetsMarked[ln.offset]);
         if (anyTaken) {

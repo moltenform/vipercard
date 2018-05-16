@@ -311,6 +311,8 @@ export class DetermineCategory {
      * this line is like "else if x > y then"
      */
     goElseIfCond(line: ChvIToken[], output: VpcCodeLine) {
+        checkThrow(false, "we no longer expect to see an 'else if', it should have been expanded by vpcExpandIfElse")
+
         output.ctg = VpcLineCategory.IfElse;
         let lastToken = line[line.length - 1];
         checkThrow(
