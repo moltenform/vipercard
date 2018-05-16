@@ -308,8 +308,10 @@ put x into x\\x`,
                     expectErr = 'invalid name';
                 } else if (reserved === 'end' || reserved === 'exit' || reserved === 'pass') {
                     expectErr = 'wrong line length';
-                } else if (reserved === 'if' || reserved === 'else') {
-                    expectErr = 'end with "then"';
+                } else if (reserved === 'if') {
+                    expectErr = "all-on-one-line";
+                } else if (reserved === 'else') {
+                    expectErr = 'line to end with "then"';
                 } else if (reserved === 'return') {
                     expectErr = 'NotAllInputParsedException';
                 }
@@ -1314,7 +1316,7 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
                 ['there is a cd btn mm(1)', 'false'],
                 ['show cd btn mm(1)\\0', 'ERR:could not find the specified element'],
                 ['enable cd btn mm(1)\\0', 'ERR:could not find the specified element'],
-                /* currently can expand for initial if, but not else */
+                /* can expand custom functions in condition */
                 [
                     `if char 1 of mm(1) is "m" then
             get 1
@@ -1322,14 +1324,6 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
             get 2
             end if\\it`,
                     '1'
-                ],
-                [
-                    `if false then
-            get 1
-            else if char 1 of mm(1) is "m" then
-            get 2
-            end if\\it`,
-                    'ERR:6:support custom fn calls'
                 ],
                 /* custom fn error reporting */
                 ['get mm(1\\it', 'ERR:missing )'],
@@ -1640,14 +1634,14 @@ next repeat`,
             this.assertCompileErrorIn(
                 `if
         end if`,
-                'expected line to end with',
+                'all-on-one-line',
                 3
             );
             /* cannot ommit the "then" */
             this.assertCompileErrorIn(
                 `if true
         end if`,
-                'expected line to end with',
+                'all-on-one-line',
                 3
             );
             /* cannot just say "return" */

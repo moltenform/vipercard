@@ -154,6 +154,7 @@ vpcAllCode
 vpcBranchProcessing
 vpcRewrite
 vpcExpandCustomFns
+vpcExpandIfElse
 vpcDetermineCategory
 vpcCodeLine
 vpcCheckReserved

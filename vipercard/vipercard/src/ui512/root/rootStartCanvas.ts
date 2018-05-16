@@ -169,5 +169,5 @@ function mainOnResize(root: FullRootUI512, gly: any) {
     }
 }
 
-// expose this function globally
+/* expose this function globally */
 (window as any).mainVPCStartCanvas = mainVPCStartCanvas; /* on window */

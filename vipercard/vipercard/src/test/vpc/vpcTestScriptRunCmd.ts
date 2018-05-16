@@ -1,7 +1,9 @@
 
-/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
+/* auto */ import { assertEq, defaultSort } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
+/* auto */ import { VpcCodeOfOneVel } from '../../vpc/codepreparse/vpcAllCode.js';
 /* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
 /* auto */ import { TestVpcScriptRunBase } from '../../test/vpc/vpcTestScriptRunBase.js';
 
@@ -869,6 +871,283 @@ end myCompute`))
                     assertEq(i, redirLine, '')
                 }
             }
+        },
+        'test_expand if + if else',
+        () => {
+            let compareRewrittenCode = (script:string, expected:string) => {
+                let btnGo = this.vcstate.model.getById(this.elIds.btn_go, VpcElButton);
+                this.vcstate.vci.undoableAction(()=>btnGo.set('script', script))
+                let transformedCode = this.vcstate.vci.getCodeExec().getCompiledScript(btnGo.id, btnGo.getS('script')) as VpcCodeOfOneVel
+                let got = transformedCode.lines.map(o => o.allImages || VpcLineCategory[o.ctg])
+                let exp = expected.split('\n').map(s=>s.trim())
+                if (defaultSort(exp, got) !== 0) {
+                    console.error("\nexpected\n", exp.join('\n'), "\nbut got\n", got.join('\n'), '\n\n')
+                }
+            }
+
+            let inp = `on myCode
+    test001
+    if 0 is 1 then
+        code1
+    end if
+end myCode`
+            let expected = `HandlerStart
+    test001~
+    if~0~is~1~then~
+        code1~
+    IfEnd
+HandlerEnd`
+            compareRewrittenCode(inp, expected)
+
+            inp = `on myCode
+    test002
+    if 0 is 1 then
+        code1
+    else
+        code2
+    end if
+end myCode`
+            expected = `HandlerStart
+    test002~
+    if~0~is~1~then~
+        code1~
+    IfElsePlain
+        code2~
+    IfEnd
+HandlerEnd`
+            compareRewrittenCode(inp, expected)
+
+            inp = `on myCode
+    test003
+    if 0 is 1 then
+        code1
+    else if 0 is 2 then
+        code2
+    else if 0 is 3 then
+        code3
+    else
+        code4
+    end if
+end myCode`
+            expected = `HandlerStart
+    test003~
+    if~0~is~1~then~
+        code1~
+    IfElsePlain
+        if~0~is~2~then~
+            code2~
+        IfElsePlain
+            if~0~is~3~then~
+                code3~
+            IfElsePlain
+                code4~
+            IfEnd
+        IfEnd
+    IfEnd
+HandlerEnd`
+            compareRewrittenCode(inp, expected)
+
+            inp = `on myCode
+    test004
+    if 0 is 1 then
+        code1
+    else if 0 is 2 then
+        code2
+    else if 0 is 3 then
+        code3
+    else if 0 is 4 then
+        code4
+    end if
+end myCode`
+            expected = `HandlerStart
+    test004~
+    if~0~is~1~then~
+        code1~
+    IfElsePlain
+        if~0~is~2~then~
+            code2~
+        IfElsePlain
+            if~0~is~3~then~
+                code3~
+            IfElsePlain
+                if~0~is~4~then~
+                    code4~
+                IfEnd
+            IfEnd
+        IfEnd
+    IfEnd
+HandlerEnd`
+            compareRewrittenCode(inp, expected)
+
+            inp = `on myCode
+    test005
+    if 0 is 1 then
+        if -1 is 1 then
+            othercode1
+        end if
+    else if 0 is 2 then
+        code1a
+        if -1 is 2 then
+            othercode2
+        else if 3 then
+            othercode3
+        end if
+        code1b
+    else if 0 is 3 then
+        if -1 is 3 then
+        end if
+    end if
+end myCode`
+            expected = `HandlerStart
+    test005~
+    if~0~is~1~then~
+        if~-~1~is~1~then~
+            othercode1~
+        IfEnd
+    IfElsePlain
+        if~0~is~2~then~
+            code1a~
+            if~-~1~is~2~then~
+                othercode2~
+            IfElsePlain
+                if~3~then~
+                    othercode3~
+                IfEnd
+            IfEnd
+            code1b~
+        IfElsePlain
+            if~0~is~3~then~
+                if~-~1~is~3~then~
+                IfEnd
+            IfEnd
+        IfEnd
+    IfEnd
+HandlerEnd`
+            compareRewrittenCode(inp, expected)
+
+            inp = `on myCode
+    test006
+    if 0 is 1 then
+        if -1 is 1 then
+        else
+        end if
+    else if 0 is 2 then
+        if -1 is 2 then
+            c1
+        else if -1 is 3 then
+            c2
+        end if
+    else if 0 is 3 then
+        if -1 is 4 then
+            d1
+        else if -1 is 5 then
+            d2
+        else if -1 is 6 then
+            d3
+        end if
+    end if
+end myCode`
+            expected = `HandlerStart
+    test006~
+    if~0~is~1~then~
+        if~-~1~is~1~then~
+        IfElsePlain
+        IfEnd
+    IfElsePlain
+        if~0~is~2~then~
+            if~-~1~is~2~then~
+                c1~
+            IfElsePlain
+                if~-~1~is~3~then~
+                    c2~
+                IfEnd
+            IfEnd
+        IfElsePlain
+            if~0~is~3~then~
+                if~-~1~is~4~then~
+                    d1~
+                IfElsePlain
+                    if~-~1~is~5~then~
+                        d2~
+                    IfElsePlain
+                        if~-~1~is~6~then~
+                            d3~
+                        IfEnd
+                    IfEnd
+                IfEnd
+            IfEnd
+        IfEnd
+    IfEnd
+HandlerEnd`
+            compareRewrittenCode(inp, expected)
+
+            inp = `on myCode
+    test007
+    if 0 is 1 then
+        if -1 is 1 then
+            if -2 is 1 then
+            else if -2 is 2 then
+            else if -2 is 3 then
+            end if
+        else if -1 is 2 then
+            if -3 is 1 then
+            else if -3 is 2 then
+                if -4 is 1 then
+                else if -4 is 2 then
+                else if -4 is 3 then
+                end if
+            else if -3 is 3 then
+            end if
+        else if -1 is 3 then
+        end if
+    else if 0 is 2 then
+    else if 0 is 3 then
+    end if
+end myCode`
+            expected = `HandlerStart
+    test007~
+    if~0~is~1~then~
+        if~-~1~is~1~then~
+            if~-~2~is~1~then~
+            IfElsePlain
+                if~-~2~is~2~then~
+                IfElsePlain
+                    if~-~2~is~3~then~
+                    IfEnd
+                IfEnd
+            IfEnd
+        IfElsePlain
+            if~-~1~is~2~then~
+                if~-~3~is~1~then~
+                IfElsePlain
+                    if~-~3~is~2~then~
+                        if~-~4~is~1~then~
+                        IfElsePlain
+                            if~-~4~is~2~then~
+                            IfElsePlain
+                                if~-~4~is~3~then~
+                                IfEnd
+                            IfEnd
+                        IfEnd
+                    IfElsePlain
+                        if~-~3~is~3~then~
+                        IfEnd
+                    IfEnd
+                IfEnd
+            IfElsePlain
+                if~-~1~is~3~then~
+                IfEnd
+            IfEnd
+        IfEnd
+    IfElsePlain
+        if~0~is~2~then~
+        IfElsePlain
+            if~0~is~3~then~
+            IfEnd
+        IfEnd
+    IfEnd
+HandlerEnd`
+            compareRewrittenCode(inp, expected)
         },
     ];
 }

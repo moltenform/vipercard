@@ -8,6 +8,7 @@
 /* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference } from '../../vpc/codepreparse/vpcCodeLine.js';
 /* auto */ import { DetermineCategory } from '../../vpc/codepreparse/vpcDetermineCategory.js';
+/* auto */ import { ExpandIfElse } from '../../vpc/codepreparse/vpcExpandIfElse.js';
 /* auto */ import { SyntaxRewriter } from '../../vpc/codepreparse/vpcRewrite.js';
 /* auto */ import { BranchProcessing } from '../../vpc/codepreparse/vpcBranchProcessing.js';
 
@@ -226,6 +227,7 @@ class VpcCodeProcessor {
         let mapBuiltinCmds = new MapBuiltinCmds(parser);
         let determineCategory = new DetermineCategory(idGen, parser, mapBuiltinCmds, checkReserved);
         let lineSplitter = new SplitIntoLinesProducer(lexed.tokens, idGen, makeLowercase);
+        let ifElseExpander = new ExpandIfElse()
         let syntaxRewriter = new SyntaxRewriter(idGen, idGenThisScript, mapBuiltinCmds, checkReserved);
         let branchProcessor = new BranchProcessing(idGen);
         let loop = new LoopLimit(CodeLimits.MaxLinesInScript, 'maxLinesInScript');
@@ -237,19 +239,25 @@ class VpcCodeProcessor {
                     latestSrcLineSeen.val = latest.startLine;
                 }
 
-                /* syntax rewriting might split a line into two lines */
-                let tokenLists = syntaxRewriter.go(tokenList);
-                for (let i = 0; i < tokenLists.length; i++) {
-                    let list = tokenLists[i];
-                    let line = determineCategory.go(list);
-                    latestDestLineSeen.val = line;
-                    line.offset = lineNumber;
-                    branchProcessor.go(line);
-                    output[lineNumber] = line;
-                    lineNumber += 1;
+                /* the ifElseExpander might split a line into many lines */
+                let lines = ifElseExpander.go(tokenList)
+                for (let i = 0, len = lines.length; i < len; i++) {
+                    let lineExpanded = lines[i]
 
-                    /* save memory, we don't need this anymore */
-                    line.tmpEntireLine = undefined;
+                    /* syntax rewriting might split a line into many lines */
+                    let linesRewritten = syntaxRewriter.go(lineExpanded);
+                    for (let j = 0, len = linesRewritten.length; j < len; j++) {
+                        let list = linesRewritten[j];
+                        let line = determineCategory.go(list);
+                        latestDestLineSeen.val = line;
+                        line.offset = lineNumber;
+                        branchProcessor.go(line);
+                        output[lineNumber] = line;
+                        lineNumber += 1;
+
+                        /* save memory, we don't need this anymore */
+                        line.tmpEntireLine = undefined;
+                    }
                 }
             } else {
                 break;
