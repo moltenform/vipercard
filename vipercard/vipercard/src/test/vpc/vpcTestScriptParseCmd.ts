@@ -56,7 +56,6 @@ AnyPropertyVal(
     'TestVpcParseCmdSet.confirm that cases that should fail, do fail',
     () => {
         assertFailsCmdSet(`set prop in cd btn 1 to 2`, `MismatchedTokenException: Expecting token of type `);
-        assertFailsCmdSet(`set prop of cd btn 1 to 2 > 3`, `NotAllInputParsedException: Redundant input, expec`);
         assertFailsCmdSet(`set prop of cd btn 1 to 2 and 3`, `NotAllInputParsedException: Redundant input, expec`);
 
         /* hm, a TkIdentifier is currently a valid <Object>. not ideal but saves a few tokens. */

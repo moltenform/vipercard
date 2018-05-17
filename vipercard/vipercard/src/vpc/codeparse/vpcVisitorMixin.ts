@@ -562,10 +562,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
  * nicknames in the grammar, where it wasn't clear which level of expression to allow
  */
 let mapNicknames: { [key: string]: string } = {
-    FACTOR: 'RuleLvl6Expression',
-    MAYBE_FACTOR: 'RuleLvl6Expression',
-    MAYBE_ALLOW_ARITH: 'RuleLvl4Expression',
-    ARITH: 'RuleLvl4Expression'
+    FACTOR: 'RuleLvl6Expression'
 };
 
 /**

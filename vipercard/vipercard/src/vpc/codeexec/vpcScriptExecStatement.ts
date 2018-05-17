@@ -361,7 +361,7 @@ export class ExecuteStatement {
      * click, drag implementation
      */
     protected clickOrDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, expectSee: string) {
-        let nm = fromNickname('MAYBE_ALLOW_ARITH');
+        let nm = 'RuleLvl4Expression'
         let argsGiven: number[] = [];
         let ar = vals.vals[nm];
         if (ar && ar.length) {
@@ -525,7 +525,7 @@ export class ExecuteStatement {
         /* that way we'll support coordinates "1,2" and text styles "plain, bold" */
         let strings: string[] = [];
         let val = this.findChildMap(vals, 'RuleAnyPropertyVal');
-        let nm = fromNickname('MAYBE_ALLOW_ARITH');
+        let nm = 'RuleLvl1Expression'
         let ar = val ? val.vals[nm] : undefined;
         if (ar && ar.length) {
             let arVals = ar as VpcVal[];
@@ -563,7 +563,7 @@ export class ExecuteStatement {
             /* show cd btn "myBtn" at 34,45 */
             let ref = throwIfUndefined(this.findChildVelRef(rule1, 'RuleObjectPart'), '4||');
             this.outside.SetProp(ref, 'visible', VpcVal.True, undefined);
-            let nmExpr = fromNickname('MAYBE_ALLOW_ARITH');
+            let nmExpr = 'RuleLvl4Expression'
             if (rule1.vals[nmExpr]) {
                 let val1 = rule1.vals[nmExpr][0] as VpcVal;
                 let val2 = rule1.vals[nmExpr][1] as VpcVal;

@@ -734,7 +734,7 @@ export class VpcChvParser extends ChvParser {
         this.AT_LEAST_ONE_SEP({
             SEP: tks.TokenTkcomma,
             DEF: () => {
-                this.SUBRULE1(this.RuleLvl4Expression);
+                this.SUBRULE1(this.RuleLvl1Expression);
             }
         });
     });

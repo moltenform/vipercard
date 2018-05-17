@@ -804,6 +804,25 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
             ];
             this.testBatchEvaluate(batch);
         },
+        'test_setting a property can use variety of expression levels',
+        () => {
+            this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+            let batch: [string, string][] =
+            [
+                ['set hilite of cd btn "p1" to 2 == 3\\hilite of cd btn "p1"', 'false'],
+                ['set hilite of cd btn "p1" to 3 > 2\\hilite of cd btn "p1"', 'true'],
+                ['set hilite of cd btn "p1" to 3 is a number\\hilite of cd btn "p1"', 'true'],
+                ['set hilite of cd btn "p1" to 3 is "3"\\hilite of cd btn "p1"', 'true'],
+                ['set hilite of cd btn "p1" to "c" is in "abc"\\hilite of cd btn "p1"', 'true'],
+                ['set label of cd btn "p1" to "a" & "b"\\label of cd btn "p1"', 'ab'],
+                ['set label of cd btn "p1" to 1+1\\label of cd btn "p1"', '2'],
+                ['set label of cd btn "p1" to 2*2\\label of cd btn "p1"', '4'],
+                ['set label of cd btn "p1" to -(the number of chars in "ab")\\label of cd btn "p1"', '-2'],
+                ['set hilite of cd btn "p1" to (2 == 3)\\hilite of cd btn "p1"', 'false'],
+                ['set hilite of cd btn "p1" to (3 > 2)\\hilite of cd btn "p1"', 'true'],
+            ]
+            this.testBatchEvaluate(batch);
+        },
         'test_builtinFunctions',
         () => {
             this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
