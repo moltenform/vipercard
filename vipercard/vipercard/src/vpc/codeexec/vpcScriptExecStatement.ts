@@ -82,7 +82,7 @@ export class ExecuteStatement {
      * implementation of add, subtract, etc
      */
     protected goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
-        let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl4Expression'), '5M|');
+        let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
         let container = throwIfUndefined(
             this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
             '5L|'

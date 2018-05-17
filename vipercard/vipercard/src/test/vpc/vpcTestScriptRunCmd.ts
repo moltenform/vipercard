@@ -144,7 +144,21 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 ['add (1+2) to cd fld "p2"\\cd fld "p2"', 'ERR:expected a number'],
                 ['subtract (1+2) from cd fld "p2"\\cd fld "p2"', 'ERR:expected a number'],
                 ['multiply cd fld "p2" by (1+2)\\cd fld "p2"', 'ERR:expected a number'],
-                ['divide cd fld "p2" by (1+3)\\cd fld "p2"', 'ERR:expected a number']
+                ['divide cd fld "p2" by (1+3)\\cd fld "p2"', 'ERR:expected a number'],
+
+                /* to match original product, allow Lvl3Expressions */
+                ['put 1 into x\n add 1&1 to x\\x', '12'],
+                ['put 1 into x\n add 1+1 to x\\x', '3'],
+                ['put 1 into x\n add 1*1 to x\\x', '2'],
+                ['put 1 into x\n subtract 1&1 from x\\x', '-10'],
+                ['put 1 into x\n subtract 1+1 from x\\x', '-1'],
+                ['put 1 into x\n subtract 1*1 from x\\x', '0'],
+                ['put 1 into x\n multiply x by 1&1\\x', '11'],
+                ['put 1 into x\n multiply x by 1+1\\x', '2'],
+                ['put 1 into x\n multiply x by 1*1\\x', '1'],
+                ['put 22 into x\n divide x by 1&1\\x', '2'],
+                ['put 22 into x\n divide x by 1+1\\x', '11'],
+                ['put 22 into x\n divide x by 1*1\\x', '22'],
             ];
 
             this.testBatchEvaluate(batch, true);
