@@ -37,7 +37,28 @@ end assertTrue
 
 on runTestDlgs
 	put "" into cd fld "log"
-	answer ("answer dialog with btn 'ok'" & cr & "line 2") 
+	
+	answer "we'll show many dialogs where the caption is 'true'."
+	answer true or false with "c" or "b" or "a"
+	answer true or false
+	answer 3 > 2
+	answer 2 == 2
+	answer 2 is a number
+	answer 2 is 2
+	answer "b" is in "abc"
+	answer "tr" & "ue"
+	answer not false
+	
+	answer "we'll show many dialogs where the caption is '2'."
+	answer 1+1
+	answer 1*2
+	answer 6 div 3
+	answer (8/8 + 1)
+	answer the number of chars in "ab"
+	put 2 into x
+	answer x
+	
+	answer "this is an answer dialog with btn 'Ok'" & cr & "line 2"
 	put it into res
 	assertEq 1, res
 	answer "dialog with btn 'opt1'" \

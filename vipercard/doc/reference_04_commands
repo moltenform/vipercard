@@ -46,7 +46,7 @@ Examples:
 
 ask "what is your favorite color?" with "blue"
 put it into favColor
-answer ("you chose" && favColor)
+answer "you chose" && favColor
 
 =====
 beep
@@ -278,7 +278,7 @@ Replace all occurrences of a string.
 Examples:
 put "a-b-c" into x
 replace "-" with "_" in x
-answer (x) -- shows a_b_c
+answer x -- shows a_b_c
 
 
 -- you can also use replace in a field.
@@ -544,11 +544,11 @@ Use to create a loop.
 Examples:
 
 repeat with x = 1 to 5
-    answer ("x is now" & x)
+    answer "x is now" & x
 end repeat
 
 repeat with x = 5 down to 1
-    answer ("x is now" & x)
+    answer "x is now" & x
 end repeat
 
 repeat 3 times

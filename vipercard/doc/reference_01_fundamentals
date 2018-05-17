@@ -118,13 +118,15 @@ gives a different answer than
 
 Parentheses are also used for grouping an expression.
 for example, we needed to get the (n + 1)th line of a 
-variable, we would type `answer (line (n + 1) of x)`
+variable, we would type `(line (n + 1) of x)`
 
 Do not type something like
 `answer (line n + 1 of x) -- this is hard to read.`
 this is unclear, and will often cause syntax errors.
 
-In the expression `2+3`, the `+` is called an operator.
+`answer (line (n + 1) of x) -- this is preferred.`
+
+In the expression `2 + 3`, the symbol `+` is called an operator.
 
 Here are the operators that can be used.
 `2 * 3`
@@ -418,21 +420,21 @@ Chunks
 We call a reference to a part of a container a "chunk". These 
 examples demonstrate what can be done with chunk expressions:
 
-`answer (char 2 of "abcd") -- displays "b"
-answer (char 2 to 3 of "abcd") -- displays "bc"
-answer (item 2 of "a,b,c,d") -- displays "b"
-answer (item 2 to 3 of "a,b,c,d") -- displays "b,c"
-answer (word 2 of "a b c d") -- displays "b"
-answer (word 2 to 3 of "a b c d") -- displays "b c"
+`answer char 2 of "abcd" -- displays "b"
+answer char 2 to 3 of "abcd" -- displays "bc"
+answer item 2 of "a,b,c,d" -- displays "b"
+answer item 2 to 3 of "a,b,c,d" -- displays "b,c"
+answer word 2 of "a b c d" -- displays "b"
+answer word 2 to 3 of "a b c d" -- displays "b c"
 put "a" & newline & "b" & newline & "c" & newline into lines
-answer (line 2 of lines) -- displays "b"
-answer (line 2 to 3 of lines) -- displays "b" & newline & "c"
+answer line 2 of lines -- displays "b"
+answer line 2 to 3 of lines -- displays "b" & newline & "c"
 
-answer (first char of "abcd") -- displays "a"
-answer (second char of "abcd") -- displays "b"
-answer (any char of "abcd") -- displays a random choice
-answer (middle char of "abcd") 
-answer (last char of "abcd") 
+answer first char of "abcd" -- displays "a"
+answer second char of "abcd" -- displays "b"
+answer any char of "abcd" -- displays a random choice
+answer middle char of "abcd" 
+answer last char of "abcd" 
 
 put "x" into char 2 of "abcd"
 put "x" into char 2 to 3 of "abcd"
@@ -450,7 +452,7 @@ the itemdelimeter is "," by default but can be changed.
 this can be helpful for simple parsing.
 `put "abc|def|ghi" into x
 set the itemdelimiter to "|"
-answer (item 2 of x) -- displays "def"`
+answer item 2 of x -- displays "def"`
 
 
 

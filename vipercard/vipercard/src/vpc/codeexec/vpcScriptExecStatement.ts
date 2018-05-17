@@ -226,9 +226,12 @@ export class ExecuteStatement {
      * The button that is pressed (1, 2, or 3) will be assigned to the variable "it".
      */
     goAnswer(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        let nm = fromNickname('FACTOR');
-        let argsVals = this.getAllChildVpcVals(vals, nm, true);
-        let args = argsVals.map(item => item.readAsString());
+        let ruleCaption = 'RuleExpr'
+        let captionVals = this.getAllChildVpcVals(vals, ruleCaption, true);
+        let captionArgs = captionVals.map(item => item.readAsString());
+        let ruleChoices = 'RuleLvl6Expression'
+        let choicesVals = this.getAllChildVpcVals(vals, ruleChoices, false);
+        let choicesArgs = choicesVals.map(item => item.readAsString());
 
         /* because there is only 1 script execution thread, don't need to assign a unique id. */
         let asyncOpId = 'singleThreadAsyncOpId';
@@ -239,10 +242,10 @@ export class ExecuteStatement {
             this.cbAnswerMsg,
             this.cbStopCodeRunning,
             asyncOpId,
-            args[0] || '',
-            args[1] || '',
-            args[2] || '',
-            args[3] || ''
+            captionArgs[0] || '',
+            choicesArgs[0] || '',
+            choicesArgs[1] || '',
+            choicesArgs[2] || ''
         );
     }
 
