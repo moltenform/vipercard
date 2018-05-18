@@ -739,7 +739,7 @@ let mTests: (string | Function)[] = [
     OpStringConcat( & ) )`
         );
     },
-    'testScriptParseExpr.expression precedence, parsed this way because btn names are <FACTOR>, not <ARITH>',
+    'testScriptParseExpr.expression precedence, the btn name is a Lvl6Expression, confirmed in emulator',
     () => {
         testExp(
             `cd btn 1 + 1`,

@@ -553,15 +553,12 @@ Scripting differences between ViperCard and HyperCard:
 - Currently: message chain for key events is different, on afterkeydown to indicate cannot prevent default action.
 - Currently: wait until the mouseclick is not supported
 - Scripts only run when browse tool is active; you can exit an infinite loop by changing the tool
-- while globals that aren't set default to "", variables that aren't set get a runtime error if accessed
+- Unset variables do not default to containing their name
 - hilite and checkmark are separate properties
 - Set the label vs set the name
-- There are places custom function calls can't occur: as an argument to custom handler call, as an argument to repeat while, and as an argument to else if.
 - Can't have a variable named id, length, short, long, first, second
-- Unification of functions and handlers, both use "the result"
-
-Differences in specific commands/functions:
-- choose "browse" tool, not choose browse tool
+- A custom handler "on myCode" and custom function "function myCode" are equivalent, both use return and set "the result"
+- The `choose` command sets the emulated current tool, not the actual tool, and is limited to certain paint operations
 
 =====
 Credits

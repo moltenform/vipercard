@@ -103,17 +103,20 @@ glider_1_Zap`
 choose {toolname} tool
 =====
 
-Use the choose command for programmatically drawing pictures.
-See the example.
-Doesn't set the actual tool, which is always Browse when scripts 
-are running.
-See also: click, drag.
+You can use the choose command to programmatically draw shapes and lines.
+
+When a script completes, you'll be taken back to the Browse tool regardless of which tool was chosen within a script.
 
 Examples:
 
-choose "pencil" tool
+choose pencil tool
 click at 10,20
 -- this draws a black pixel at the coordinates x=10, y=20
+
+choose line tool
+drag from 10,20 to 30,40
+-- this draws a line starting at the coordinates (10,20) 
+-- ending at (30,40)
 
 -- Currently supported tools include:
 brush
@@ -125,6 +128,7 @@ oval
 roundrect
 curve
 spray
+browse
 
 =====
 click at {x}, {y}
@@ -135,7 +139,7 @@ draw.
 
 Examples:
 
-choose "pencil" tool
+choose pencil tool
 click at 10,20
 -- this draws a pixel at the coordinates x=10, y=20
 
@@ -148,7 +152,7 @@ draw.
 
 Examples:
 
-choose "line" tool
+choose line tool
 drag from 10,20 to 30,40
 -- this draws a line starting at the coordinates (10,20) 
 -- ending at (30,40)

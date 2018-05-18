@@ -426,17 +426,12 @@ put selectedText() into x
 =====
 tool()
 =====
-The tool to be used when programmatically drawing shapes.
-(Not the actual tool, which would always be Browse)
-
-See also: the click, drag commands.
+The current tool, as set by the `choose` command. (The `choose` command can be used to draw lines and shapes).
 
 Examples:
 
-choose "pencil" tool
-click at 10,20
--- this draws a black pixel at the coordinates x=10, y=20
-put tool() into x
+choose pencil tool
+answer tool() -- shows "pencil"
 
 
 =====

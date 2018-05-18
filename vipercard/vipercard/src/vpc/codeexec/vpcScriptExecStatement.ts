@@ -1,9 +1,9 @@
 
 /* auto */ import { isRelease } from '../../config.js';
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString } from '../../ui512/utils/utils512.js';
+/* auto */ import { Util512, ValHolder, base10, checkThrowEq, getStrToEnum, isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcChunkType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcChunkType, VpcTool, VpcToolCtg, getToolCategory, originalToolNumberToTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { VpcAudio } from '../../vpc/vpcutils/vpcAudio.js';
@@ -11,7 +11,6 @@
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
-/* auto */ import { fromNickname } from '../../vpc/codeparse/vpcVisitorMixin.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
 /* auto */ import { VpcCodeLine } from '../../vpc/codepreparse/vpcCodeLine.js';
 /* auto */ import { VpcPendingAsyncOps, VpcScriptExecAsync } from '../../vpc/codeexec/vpcScriptExecAsync.js';
@@ -321,14 +320,11 @@ export class ExecuteStatement {
      * Doesn't set the actual tool, which is always Browse when scripts are running.
      */
     goChoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
-        let nm = fromNickname('FACTOR');
-        let factor = throwIfUndefined(this.findChildVal(vals, nm), '5G|');
-        let sTool = factor.readAsString().replace(/ +/g, '_');
-        checkThrow(sTool.length > 1, 'JP|not a valid tool name.');
+        let term = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '5G|');
+        let tool = this.getWhichTool(term.readAsString())
+        let ctg = getToolCategory(tool);
 
-        /* from string to enum entry */
-        let tl = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', sTool);
-        let ctg = getToolCategory(tl);
+        /* see if we support setting to this tool */
         if (
             ctg === VpcToolCtg.CtgShape ||
             ctg === VpcToolCtg.CtgSmear ||
@@ -336,11 +332,25 @@ export class ExecuteStatement {
             ctg === VpcToolCtg.CtgCurve ||
             ctg === VpcToolCtg.CtgBrowse
         ) {
-            this.outside.SetOption('mimicCurrentTool', tl);
+            this.outside.SetOption('mimicCurrentTool', tool);
         } else {
             throw makeVpcScriptErr(
-                '5F|the choose command is now used for simulating drawing only, so it must be one of the paint tools like "pencil" or "brush" chosen'
+                '5F|the choose command is currently used for simulating drawing only, so it must be one of the paint tools like "pencil" or "brush" chosen'
             );
+        }
+    }
+
+    /**
+     * understands both "4" and "line"
+     */
+    protected getWhichTool(s:string):VpcTool {
+        s = s.replace(/ +/g, '_');
+        checkThrow(s.length >= 1, 'JP|not a valid tool name.');
+        let choseNumber = parseInt(s, base10)
+        if (Number.isFinite(choseNumber)) {
+            return originalToolNumberToTool(choseNumber)
+        } else {
+            return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
         }
     }
 

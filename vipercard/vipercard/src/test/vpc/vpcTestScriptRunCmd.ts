@@ -32,17 +32,24 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
         },
         'test_execCommands choose',
         () => {
-            /* choose tool */
-            this.assertCompileErrorIn('choose', 'not enough args', 3);
-            this.assertCompileErrorIn('choose tool', 'not enough args', 3);
-            this.assertCompileErrorIn('choose 3', 'not enough args', 3);
-            this.assertCompileErrorIn('choose pencil', 'not enough args', 3);
-            this.assertCompileErrorIn('choose "pencil"', 'not enough args', 3);
-            this.assertCompileErrorIn('choose "pencil" xyz', 'did not see the keyword', 3);
-            this.assertCompileErrorIn('choose "pencil" "tool"', 'did not see the keyword', 3);
-
             let batch: [string, string][];
             batch = [
+                /* not valid */
+                ['choose\\tool()', 'ERR:not enough args'],
+                ['choose tool\\tool()', 'ERR:not enough args'],
+                ['choose 3\\tool()', 'ERR:not enough args'],
+                ['choose pencil\\tool()', 'ERR:not enough args'],
+                ['choose abc\\tool()', 'ERR:not enough args'],
+                ['choose pencil def\\tool()', 'ERR:not see the keyword'],
+                ['choose pencil def tool\\tool()', 'ERR:NotAllInputParsedException'],
+                ['choose tool 3 tool\\tool()', 'ERR:Redundant input'],
+                ['choose tool "pencil" tool\\tool()', 'ERR:NotAllInputParsedException'],
+                ['choose tool "pencil" xyz\\tool()', 'ERR:NotAllInputParsedException'],
+                ['choose tool "pencil" "tool"\\tool()', 'ERR:NotAllInputParsedException'],
+                ['choose "pencil" xyz\\tool()', 'ERR:not see the keyword'],
+                ['choose "pencil" "tool"\\tool()', 'ERR:not see the keyword'],
+
+                /* updated style */
                 ['choose "browse" tool\\tool()', 'browse'],
                 ['choose "button" tool\\tool()', 'ERR:drawing only'],
                 ['choose "field" tool\\tool()', 'ERR:drawing only'],
@@ -63,7 +70,58 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
                 ['choose "round rect" tool\\tool()', 'roundrect'],
                 ['choose "round  rect" tool\\tool()', 'roundrect'],
                 ['choose "xyz" tool\\tool()', 'ERR:Not a valid choice'],
-                ['choose "" tool\\tool()', 'ERR:valid tool name']
+                ['choose "" tool\\tool()', 'ERR:valid tool name'],
+
+                /* classic style */
+                ['choose browse tool\\tool()', 'browse'],
+                ['choose button tool\\tool()', 'ERR:drawing only'],
+                ['choose field tool\\tool()', 'ERR:drawing only'],
+                ['choose select tool\\tool()', 'ERR:drawing only'],
+                ['choose brush tool\\tool()', 'brush'],
+                ['choose bucket tool\\tool()', 'bucket'],
+                ['choose stamp tool\\tool()', 'ERR:drawing only'],
+                ['choose pencil tool\\tool()', 'pencil'],
+                ['choose line tool\\tool()', 'line'],
+                ['choose curve tool\\tool()', 'curve'],
+                ['choose lasso tool\\tool()', 'ERR:drawing only'],
+                ['choose eraser tool\\tool()', 'eraser'],
+                ['choose rect tool\\tool()', 'rect'],
+                ['choose oval tool\\tool()', 'oval'],
+                ['choose roundrect tool\\tool()', 'roundrect'],
+                ['choose spray tool\\tool()', 'spray'],
+                ['choose spray can tool\\tool()', 'spray'],
+                ['choose round rect tool\\tool()', 'roundrect'],
+                ['choose round  rect tool\\tool()', 'roundrect'],
+                ['choose xyz tool\\tool()', 'ERR:no variable found'],
+                ['choose tool\\tool()', 'ERR:not enough args'],
+
+                /* numeric style */
+                ['choose tool 1\\tool()', 'browse'],
+                ['choose tool 2\\tool()', 'ERR:drawing only'],
+                ['choose tool 4\\tool()', 'ERR:drawing only'],
+                ['choose tool 9\\tool()', 'line'],
+                ['choose tool 10\\tool()', 'spray'],
+                ['choose tool 15\\tool()', 'curve'],
+                ['choose tool 17\\tool()', 'ERR:unknown or unsupported'],
+                ['choose tool 99\\tool()', 'ERR:unknown or unsupported'],
+                ['choose tool 0\\tool()', 'ERR:unknown or unsupported'],
+                ['choose tool -1\\tool()', 'ERR:unknown or unsupported'],
+
+                /* we'll allow this */
+                ['choose tool "pencil"\\tool()', 'pencil'],
+                ['choose 10 tool\\tool()', 'spray'],
+
+                /* by expression */
+                ['choose "pen" & "cil" tool\\tool()', 'pencil'],
+                ['choose ("pen" & "cil") tool\\tool()', 'pencil'],
+                ['put "pencil" into x\nchoose x tool\\tool()', 'pencil'],
+                ['put "spray can" into x\nchoose x tool\\tool()', 'spray'],
+                ['put "spray can" into x\nchoose (x) tool\\tool()', 'spray'],
+                ['choose tool 10 + 5\\tool()', 'curve'],
+                ['choose tool 100/10\\tool()', 'spray'],
+                ['choose tool (10 - 1)\\tool()', 'line'],
+                ['put 15 into x\nchoose tool x\\tool()', 'curve'],
+                ['put 15 into x\nchoose tool (x)\\tool()', 'curve'],
             ];
 
             this.testBatchEvaluate(batch);

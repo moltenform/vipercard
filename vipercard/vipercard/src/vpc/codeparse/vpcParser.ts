@@ -412,8 +412,13 @@ export class VpcChvParser extends ChvParser {
 
     RuleBuiltinCmdChoose = this.RULE('RuleBuiltinCmdChoose', () => {
         this.CONSUME1(tks.TokenTkidentifier);
-        this.SUBRULE1(this.RuleLvl6Expression);
-        this.CONSUME1(tks.TokenTknewline);
+        this.OPTION1(() => {
+            this.CONSUME1(tks.TokenTknewline);
+        });
+        this.SUBRULE1(this.RuleExpr);
+        this.OPTION2(() => {
+            this.CONSUME2(tks.TokenTknewline);
+        });
     });
 
     RuleBuiltinCmdClick = this.RULE('RuleBuiltinCmdClick', () => {

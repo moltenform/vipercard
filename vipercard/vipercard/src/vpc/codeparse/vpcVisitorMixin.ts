@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcInternalErr, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq, checkThrowEq, getStrToEnum, isString, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType, VpcOpCtg } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
@@ -214,7 +214,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         Helper$ReadVpcVal(ctx: VisitingContext, name: string, isNickname: boolean): VpcVal {
-            name = isNickname ? fromNickname(name) : name;
             let child = ctx[name];
             checkThrow(!!child[0], `9P|expected this to have a RuleLvl6Expression`);
             let evaledVpc = this.visit(child[0]) as VpcVal;
@@ -223,7 +222,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         Helper$EvalForObjects(ctx: VisitingContext, ref: RequestedVelRef, hasId: boolean): void {
-            let evaled = this.Helper$ReadVpcVal(ctx, 'FACTOR', true);
+            let evaled = this.Helper$ReadVpcVal(ctx, 'RuleLvl6Expression', true);
             if (hasId) {
                 /* put the name of cd btn id 1234 into x */
                 ref.lookById = evaled.readAsStrictNumeric(this.tmpArr);
@@ -266,14 +265,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleFnCallLength(ctx: VisitingContext): VpcVal {
             /* put the length of "abc" into x */
-            let evaledvpc = this.Helper$ReadVpcVal(ctx, 'FACTOR', true);
+            let evaledvpc = this.Helper$ReadVpcVal(ctx, 'RuleLvl6Expression', true);
             let len = evaledvpc.readAsString().length;
             return VpcValN(len);
         }
 
         RuleFnCallNumberOf_1(ctx: VisitingContext): VpcVal {
             /* put the number of card buttons into x */
-            let evaledvpc = this.Helper$ReadVpcVal(ctx, 'FACTOR', true);
+            let evaledvpc = this.Helper$ReadVpcVal(ctx, 'RuleLvl6Expression', true);
             let str = evaledvpc.readAsString();
             let stype = ctx.TokenTkcharorwordoritemorlineorplural[0].image;
             let type = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', stype);
@@ -556,18 +555,4 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
         }
     };
-}
-
-/**
- * nicknames in the grammar, where it wasn't clear which level of expression to allow
- */
-let mapNicknames: { [key: string]: string } = {
-    FACTOR: 'RuleLvl6Expression'
-};
-
-/**
- * from nickname to rulename.
- */
-export function fromNickname(s: string) {
-    return throwIfUndefined(mapNicknames[s], '9c|nickname not found', s);
 }

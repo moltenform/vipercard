@@ -1,6 +1,7 @@
 
 /* auto */ import { assertTrue, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utils512.js';
+/* auto */ import { Util512, checkThrowEq, findStrToEnum } from '../../ui512/utils/utils512.js';
+/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 /* auto */ import { BuildFakeTokens, TypeGreaterLessThanEqual, isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
@@ -61,9 +62,11 @@ export class SyntaxRewriter {
         return ret;
     }
 
-    /* input was: answer <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]] */
+    /* input was: answer {x} [with {w} [ or {y} [ or {z}]]] */
     /* turn the 'with' into TkSyntaxMarker for easier parsing later */
-    /* safe because there won't ever be a real variable/function called "with". */
+    /* safe because there can't be a real variable/function called "with". */
+    /* otherwise we'd have to make 'with' a token or make it illegal in an expression, */
+    /* which is inefficient */
     rewriteAnswer(line: ChvIToken[]) {
         this.replaceIdentifierWithSyntaxMarker(line, 'with', 1);
     }
@@ -78,13 +81,37 @@ export class SyntaxRewriter {
         }
     }
 
-    /* original syntax: choose browse tool, choose round rect tool, choose tool 3 */
-    /* my syntax (much simpler): choose "browse" tool, choose "round rect" tool */
+    /* turn 'choose line tool' into 'choose "line" syntaxmarker' */
+    /* turn 'choose tool 6' into 'choose syntaxmarker 6' */
     rewriteChoose(line: ChvIToken[]) {
         checkThrow(
             line.length > 2,
             `8l|not enough args given for choose, expected 'choose tool 3' or 'choose line tool'`
         );
+
+        /* for backwards compat, */
+        /* choose line to choose "line" (only if it's a valid tool name though) */
+        /* take 2 identifiers because 'choose spray can tool' is also valid */
+        if ((isTkType(line[1], tks.TokenTkidentifier) || isTkType(line[1], tks.TokenTkcharorwordoritemorlineorplural)
+        || isTkType(line[1], tks.TokenTkbtnorpluralsyn) || isTkType(line[1], tks.TokenTkfldorpluralsyn) ) && isTkType(line[2], tks.TokenTkidentifier) &&
+            line[1].image !== 'tool') {
+
+            let maybeToolname = line[1].image
+            if (line[2].image !== 'tool') {
+                maybeToolname += '_' + line[2].image
+            }
+
+            if (findStrToEnum<VpcTool>(VpcTool, maybeToolname) !== undefined) {
+                let newLine: ChvIToken[] = []
+                newLine.push(line[0])
+                newLine.push(this.buildFake.makeStrLiteral(line[1], maybeToolname))
+                newLine.push(this.buildFake.makeIdentifier(line[1], 'tool'))
+
+                /* replace contents of line with contents of newLine */
+                line.length = 0;
+                Util512.extendArray(line, newLine)
+            }
+        }
 
         this.replaceIdentifierWithSyntaxMarker(line, 'tool', 1, IsNeeded.Required);
     }

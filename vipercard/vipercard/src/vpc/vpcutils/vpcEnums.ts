@@ -289,6 +289,34 @@ export function toolToDispatchShapes(tl: VpcTool) {
 }
 
 /**
+ * for backwards compatibility: the original tool numbers
+ */
+export function originalToolNumberToTool(n:number):VpcTool {
+    switch(n) {
+        case 1: return VpcTool.Browse
+case 2: return VpcTool.Button
+case 3: return VpcTool.Field
+case 4: return VpcTool.Select
+case 5: return VpcTool.Lasso
+case 6: return VpcTool.Pencil
+case 7: return VpcTool.Brush
+case 8: return VpcTool.Eraser
+case 9: return VpcTool.Line
+case 10: return VpcTool.Spray
+case 11: return VpcTool.Rect
+case 12: return VpcTool.Roundrect
+case 13: return VpcTool.Bucket
+case 14: return VpcTool.Oval
+case 15: return VpcTool.Curve
+/* 16: text tool, not yet implemented */
+/* 17: regular polygon tool, not yet implemented */
+/* 18: polygon tool, not yet implemented */
+     default:
+     throw makeVpcScriptErr(`unknown or unsupported tool ${n}`)
+    }
+}
+
+/**
  * built-in messages sent to scripts.
  */
 export enum VpcBuiltinMsg {

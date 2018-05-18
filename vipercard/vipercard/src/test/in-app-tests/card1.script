@@ -242,40 +242,40 @@ on runTestMisc
 end runTestMisc
 
 on runTestDraw
-	choose "brush" tool
+	choose brush tool
 	put 0 into x
 	click at 15+x, 15
 	drag from 20+x, 5 to 20+x, 15
 	
 	add 15 to x
-	choose "pencil" tool
+	choose pencil tool
 	click at 15+x, 15
 	drag from 20+x, 5 to 20+x, 15
 	
 	add 15 to x
-	choose "spray" tool
+	choose spray tool
 	click at 15+x, 15
 	drag from 20+x, 5 to 20+x, 15
 	
 	add 15 to x
-	choose "rect" tool
+	choose rect tool
 	drag from 20+x, 5 to 30+x, 15
 	
 	add 15 to x
-	choose "oval" tool
+	choose oval tool
 	drag from 20+x, 5 to 30+x, 15
 	
 	add 15 to x
-	choose "line" tool
+	choose line tool
 	drag from 20+x, 5 to 30+x, 15
 	
 	answer ("we'll now draw a lot of random pixels," & \
 		"hit Stop (black rectangle) to stop.")
 	
-	choose "pencil" tool
+	choose pencil tool
 	put 30 into minpos
 	put 120 into maxpos
-	put maxpos-minpos into span
+	put maxpos - minpos into span
 	repeat with i = 1 to 99999
 		put random(span) + minpos into x
 		put random(span) + minpos into y
