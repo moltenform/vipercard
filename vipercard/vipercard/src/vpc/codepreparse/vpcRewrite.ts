@@ -183,6 +183,8 @@ export class SyntaxRewriter {
      * from 'go to card "myCard"'
      * to
      * builtinInternalVpcGoCardImpl "gettarget" tmpc1 to card "myCard"
+     * builtinInternalVpcGoCardImpl "exitfield" tmpc1
+     * builtinInternalVpcGoCardImpl "closefield" tmpc1
      * builtinInternalVpcGoCardImpl "closecard" tmpc1
      * builtinInternalVpcGoCardImpl "closebackground" tmpc1
      * builtinInternalVpcGoCardImpl "set" tmpc1
@@ -215,7 +217,7 @@ export class SyntaxRewriter {
         }
 
         ret.push(firstNewLine)
-        for (let s of ['closecard', 'closebackground', 'set', 'openbackground', 'opencard', 'setresult']) {
+        for (let s of ['exitfield', 'closefield', 'closecard', 'closebackground', 'set', 'openbackground', 'opencard', 'setresult']) {
             if (s === 'set' && isBackOrForth) {
                 let suspend:ChvIToken[] = []
                 suspend.push(this.buildFake.makeIdentifier(line[0], 'global'))

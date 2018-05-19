@@ -559,6 +559,7 @@ Scripting differences between ViperCard and HyperCard:
 - Can't have a variable named id, length, short, long, first, second
 - A custom handler "on myCode" and custom function "function myCode" are equivalent, both use return and set "the result"
 - The `choose` command sets the emulated current tool, not the actual tool, and is limited to certain paint operations
+- You have to write 'sin(x)', not 'the sin of x'. you have to write 'the clickLoc()', not 'the clickLoc'.
 
 =====
 Credits

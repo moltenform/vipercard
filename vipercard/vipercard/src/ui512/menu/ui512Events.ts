@@ -290,6 +290,7 @@ export class PasteTextEventDetails extends EventDetails implements UI512IsEventI
 export class FocusChangedEventDetails extends EventDetails {
     isFocusChangedEventDetails = true;
     preventChange = false;
+    skipCloseFieldMsg = false;
     constructor(public readonly idPrev: O<string>, public readonly idNext: O<string>) {
         super();
     }

@@ -336,6 +336,9 @@ export enum VpcBuiltinMsg {
     Idle,
     Afterkeydown,
     Afterkeyup,
+    Openfield,
+    Closefield,
+    Exitfield,
     __Custom
 }
 

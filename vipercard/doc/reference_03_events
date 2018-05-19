@@ -74,6 +74,7 @@ you can change to the button or field tool.)
 To get faster idle calls, at the expense of heavier cpu usage,
 use
 `set the idlerate to "faster"`
+
 =====
 on___mouseDoubleClick
 =====
@@ -102,6 +103,7 @@ Examples:
 on mouseDown
     answer "code is running."
 end mouseDown
+
 =====
 on___mouseUp
 =====
@@ -181,3 +183,76 @@ on afterKeyUp
         answer "you pressed shift-u"
     end if
 end afterKeyUp
+
+
+=====
+on___openField
+=====
+Sent to a field, when text is first selected in it.
+
+See also: `closeField`.
+
+Examples:
+
+-- in a field's script
+
+on openField
+    -- place default text in the field when you tab over to it...
+    put "abc" into the target
+end openField
+
+=====
+on___closeField
+=====
+Sent to a field when the selection leaves it. 
+
+If the browse tool is active, this message will be sent by the following:
+When you're typing text into a field, and click outside the field
+When you're typing text into a field, and press Enter
+When you're typing text into a field, and go to a different card
+
+It's possible for closeField to be sent to the field more than once if some of the above actions happen at the same time.
+
+See also: `openField`.
+
+Examples:
+
+-- in a field's script
+
+on closeField
+    -- do a simple check of what the user just typed
+    if not "@" in the target or not "." in the target then
+        put "Not a valid e-mail address" into cd fld "status"
+    else
+        put "" into cd fld "status"
+    end if
+end closeField
+
+=====
+on___exitField
+=====
+Sent to a field when the selection leaves it.
+
+There is currently no difference between exitField and closeField.
+
+If the browse tool is active, this message will be sent by the following:
+When you're typing text into a field, and click outside the field
+When you're typing text into a field, and press Enter
+When you're typing text into a field, and go to a different card
+
+It's possible for closeField to be sent to the field more than once if some of the above actions happen at the same time.
+
+See also: `openField`.
+
+Examples:
+
+-- in a field's script
+
+on exitField
+    -- do a simple check of what the user just typed
+    if not "@" in the target or not "." in the target then
+        put "Not a valid e-mail address" into cd fld "status"
+    else
+        put "" into cd fld "status"
+    end if
+end exitField

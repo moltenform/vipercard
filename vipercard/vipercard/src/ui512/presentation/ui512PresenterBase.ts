@@ -62,9 +62,10 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     /**
      * set element with the focus
      */
-    setCurrentFocus(next: O<string>) {
+    setCurrentFocus(next: O<string>, skipCloseFieldMsg=false) {
         if (next !== this.currentFocus) {
             let evt = new FocusChangedEventDetails(this.currentFocus, next);
+            evt.skipCloseFieldMsg = skipCloseFieldMsg
 
             try {
                 this.rawEvent(evt);

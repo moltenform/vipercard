@@ -53,6 +53,12 @@ export class VpcExecGoCardHelpers {
             let cardTo = whichCards.split('\n')[1]
             let s = (cardTo && cardTo === '<notfound>') ? 'No such card.' : ''
             this.locals.set('$result',  VpcValS(s))
+        } else if (directive === 'exitfield' || directive === 'closefield') {
+            let currentCardId = this.outside.GetOptionS('currentCardId')
+            let seld = this.outside.GetSelectedField()
+            if (seld && seld.parentId === currentCardId) {
+                ret = [directive, seld.id]
+            }
         } else {
             ret = this.prepareOpenOrCloseEvent(directive, varName)
         }

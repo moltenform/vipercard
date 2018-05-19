@@ -2,6 +2,7 @@
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { RepeatingTimer } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { FocusChangedEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase } from '../../vpc/vpcutils/vpcUtils.js';
@@ -53,6 +54,10 @@ export abstract class VpcPresenterInterface extends UI512Presenter {
     abstract getToolResponse(t: VpcTool): VpcAppUIToolBase;
     abstract refreshCursor(): void;
     abstract refreshCursorElemKnown(el: O<UI512Element>, isDocumentEl: boolean): void;
+    abstract beginScheduleFldOpenCloseEvent(evt:FocusChangedEventDetails): void;
+    abstract beginScheduleFldOpenCloseEventClose(prevId:string): void;
+    abstract beginScheduleFldOpenCloseEventOpen(nextId:string): void;
+
     abstract answerMsg(
         prompt: string,
         fnOnResult?: (n: number) => void,

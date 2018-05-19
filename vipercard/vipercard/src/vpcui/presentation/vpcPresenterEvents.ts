@@ -5,7 +5,7 @@
 /* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
 /* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { EventDetails, IdleEventDetails, KeyDownEventDetails, KeyEventDetails, MenuItemClickedDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseEventDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { EventDetails, FocusChangedEventDetails, IdleEventDetails, KeyDownEventDetails, KeyEventDetails, MenuItemClickedDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseEventDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { MenuListeners } from '../../ui512/menu/ui512MenuListeners.js';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
@@ -124,6 +124,7 @@ export class VpcPresenterEvents {
         ];
 
         pr.listeners[UI512EventType.FocusChanged.valueOf()] = [
+            VpcPresenterEvents.respondFocusChanged,
             VpcPresenterEvents.cancelEvtIfCodeRunning
         ];
 
@@ -186,9 +187,15 @@ export class VpcPresenterEvents {
                 pr.lyrNonModalDlgHolder.respondMouseDown(d);
 
                 /* change focus on click, to make the property panel commit */
-                let wasFocused = pr.getCurrentFocus();
-                pr.setCurrentFocus(undefined);
-                pr.setCurrentFocus(wasFocused);
+                let focused = pr.getCurrentFocus();
+                pr.setCurrentFocus(undefined, true);
+                pr.setCurrentFocus(focused, true);
+
+                /* according to docs closefield should be called when user clicks outside the field */
+                let elClicked = d.el ? d.el.id : undefined
+                if (!d.handled() && pr.vci.getTool() === VpcTool.Browse && focused && focused !== elClicked) {
+                    pr.beginScheduleFldOpenCloseEventClose(focused)
+                }
             }
         });
     }
@@ -289,7 +296,13 @@ export class VpcPresenterEvents {
                 pr.lyrPropPanel.respondKeydown(d);
             }
 
+             if (!d.handled() && pr.vci.getTool() === VpcTool.Browse && currentFocus && (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')) {
+                /* according to docs, closefield should be called when user hits Enter in a field */
+                pr.beginScheduleFldOpenCloseEventClose(currentFocus)
+            }
+
             if (!pr.vci.isCodeRunning() && !d.handled()) {
+                /* normal typing text into a field */
                 ed.onKeyDown(pr, d);
             }
 
@@ -327,7 +340,18 @@ export class VpcPresenterEvents {
      * respond to menu item
      */
     static respondMenuItemClicked(pr: VpcPresenterInterface, d: MenuItemClickedDetails) {
-        pr.vci.performMenuAction(d.id);
+        if (!d.handled()) {
+            pr.vci.performMenuAction(d.id);
+        }
+    }
+
+    /**
+     * on focus changed (user highlighted something)
+     */
+    static respondFocusChanged(pr: VpcPresenterInterface, d: FocusChangedEventDetails) {
+        if (!d.handled()) {
+            pr.beginScheduleFldOpenCloseEvent(d)
+        }
     }
 
     /**

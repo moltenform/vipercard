@@ -228,11 +228,20 @@ end opencard
 on openstack
 end openstack
 
+on openfield
+end openfield
+
 on closebackground
 end closebackground
 
 on closecard
 end closecard
+
+on closefield
+end closefield
+
+on exitfield
+end exitfield
 
 on afterkeydown
 end afterkeydown

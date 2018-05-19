@@ -8,6 +8,7 @@
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
 /* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { FocusChangedEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512CompModalDialog } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
@@ -122,6 +123,63 @@ export class VpcPresenter extends VpcPresenterInit {
             this.vci.getCodeExec().scheduleCodeExec(msg);
         } else {
             this.setCurCardNoOpenCardEvt(targetCardId)
+        }
+    }
+
+    /**
+     * implement sending closeField/openField event
+     *
+     * places this should ideally be called, if browse tool is active:
+     * clicking outside field
+     * move to different field via tab key
+     * press Enter key
+     * go to a different card
+     * press Cmd+Z to undo (not yet implemented)
+     * quitting the program (not yet implemented)
+     * select command  (implemented, unless a script selects a different field and comes back quickly)
+     */
+    beginScheduleFldOpenCloseEvent(evt: FocusChangedEventDetails) {
+        if (evt.idPrev === evt.idNext || this.getTool() !== VpcTool.Browse || evt.skipCloseFieldMsg) {
+            return
+        }
+
+        if (evt.idPrev) {
+            this.beginScheduleFldOpenCloseEventClose(evt.idPrev)
+        }
+
+        if (evt.idNext) {
+            this.beginScheduleFldOpenCloseEventOpen(evt.idNext)
+        }
+    }
+
+    /**
+     * schedule the closefield event(s)
+     */
+    beginScheduleFldOpenCloseEventClose(prevId: string) {
+        /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
+        since people's closeField scripts probably assume we are on the card anyways */
+        let prevVel = this.lyrModelRender.findElIdToVel(prevId)
+        if (prevVel && prevVel.getType() === VpcElType.Fld) {
+            /* ideally, closefield only called if no changes made in the field */
+            let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
+            this.vci.getCodeExec().scheduleCodeExec(msg);
+
+            /* ideally, exitfield only called if some changes were made in the field */
+            msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
+            this.vci.getCodeExec().scheduleCodeExec(msg);
+        }
+    }
+
+    /**
+     * schedule the openfield event
+     */
+    beginScheduleFldOpenCloseEventOpen(nextId:string) {
+        /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
+        since people's openField scripts probably assume we are on the card anyways */
+        let vel = this.lyrModelRender.findElIdToVel(nextId)
+        if (vel && vel.getType() === VpcElType.Fld) {
+            let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
+            this.vci.getCodeExec().scheduleCodeExec(msg);
         }
     }
 
