@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeVpcScriptErr, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, makeVpcScriptErr, scontains, makeUI512Error } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 
 /**
@@ -8,6 +8,7 @@
 export class UI512TestBase {
     tests: (string | Function)[] = [];
     inited = false;
+    static haveHitWarnAndAllowToContinue = false
 
     /**
      * tests can put initialization logic in this method
@@ -146,6 +147,22 @@ export class UI512TestBase {
             throw makeVpcScriptErr(`1!|It looks like the debugger is set to break on 'All Exceptions'...
                 you probably want to turn this off because many tests intentionally throw exceptions.`);
         });
+    }
+
+    /**
+     * the first time hit, show a dialog asking if we should continue
+     * subsequent hits, allow through without stopping
+     */
+    static warnAndAllowToContinue(...message: any[]) {
+        console.error(...message)
+
+        if (!UI512TestBase.haveHitWarnAndAllowToContinue) {
+            if (!window.confirm('test failed. see details in console. continue running tests?')) {
+                throw makeUI512Error('user chose to stop after failed test.')
+            }
+
+            UI512TestBase.haveHitWarnAndAllowToContinue = true
+        }
     }
 }
 

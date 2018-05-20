@@ -204,7 +204,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
             } else if (expectErrMsg) {
                 assertEqWarn(expectErrLine, line, codeBefore, codeIn, '2Z|');
                 if (!scontains(msg, expectErrMsg)) {
-                    console.error(
+                    UI512TestBase.warnAndAllowToContinue(
                         'DIFFERENT ERR MSG for input ' +
                             codeBefore.replace(/\n/g, '; ').replace(/global testresult; ;/g, '') +
                             codeIn.replace(/\n/g, '; ').replace(/global testresult; ;/g, '') +
@@ -325,7 +325,7 @@ put ${s} into testresult`;
                         .evalOp(VpcValN(parseFloat(expectString)), got, VpcOpCtg.OpEqualityGreaterLessOrContains, '==')
                         .readAsString() !== 'true'
                 ) {
-                    console.error(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
+                    UI512TestBase.warnAndAllowToContinue(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
                 }
@@ -333,7 +333,7 @@ put ${s} into testresult`;
                 let gt = got.readAsString();
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
-                    console.error(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
+                    UI512TestBase.warnAndAllowToContinue(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
                 }

@@ -1025,7 +1025,7 @@ export class TestParseHelpers {
 
         flattened = flattened.trim();
         if (sExpected.replace(/ /g, '') !== flattened.replace(/ /g, '')) {
-            console.error(`err--for ${sInput} we got \n${flattened}\n`);
+            UI512TestBase.warnAndAllowToContinue(`err--for ${sInput} we got \n${flattened}\n`);
         }
     }
 
@@ -1042,7 +1042,7 @@ export class TestParseHelpers {
                         .substr(0, 50)
                         .split('\r')[0]
                         .split('\n')[0];
-                    console.error(`for input ${sInput} got\n${got}`);
+                    UI512TestBase.warnAndAllowToContinue(`for input ${sInput} got\n${got}`);
                     return false;
                 }
 

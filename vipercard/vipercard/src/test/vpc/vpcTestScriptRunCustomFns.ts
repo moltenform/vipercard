@@ -1,6 +1,7 @@
 
 /* auto */ import { cProductName } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { defaultSort } from '../../ui512/utils/utils512.js';
+/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
@@ -1468,7 +1469,7 @@ theTest myMult(2,myMult(3,4)), myMult(5,6)
             .map(s => s.trim());
         if (defaultSort(exp, got) !== 0) {
             console.log('\ncontext\n\n', script)
-            console.error('\nexpected\n', exp.join('\n'), '\nbut got\n', got.join('\n'), '\n\n');
+            UI512TestBase.warnAndAllowToContinue('\nexpected\n', exp.join('\n'), '\nbut got\n', got.join('\n'), '\n\n');
         }
     }
 
