@@ -311,7 +311,7 @@ put x into x\\x`,
                 } else if (reserved === 'if') {
                     expectErr = "all-on-one-line";
                 } else if (reserved === 'else') {
-                    expectErr = 'no longer expect to see';
+                    expectErr = 'interleaved';
                 } else if (reserved === 'return') {
                     expectErr = 'NotAllInputParsedException';
                 }
@@ -1625,7 +1625,7 @@ next repeat`,
             this.assertCompileErrorIn(
                 `if false then
         else then`,
-                'no longer expect to see',
+                'expected else to not have then',
                 4
             );
             /* cannot say just "if" */

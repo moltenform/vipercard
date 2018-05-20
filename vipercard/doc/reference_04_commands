@@ -511,34 +511,52 @@ end repeat
 if/then
 =====
 
-Like in C, if a branch can be taken, all other else branches
-will be skipped, as in the third example below.
+Use to run certain code based on a condition that can be true or false.
 
-Examples:
+In the example
 
+`
+put 2 into x
 if x > 0 then
     answer "x is greater than 0"
-end if
+end if`
 
-if x > 0 then
+First, we'll check the expression `x > 0`. Since it evaluates to true,
+the code inside is run. 
+
+You can also include an "else" section that will be run only if the expression evaluated to false.
+
+`if x > 0 then
     answer "x is greater than 0"
 else
     answer "x is not greater than 0"
-end if
+end if`
 
+You can chain together many different conditions with "else if". 
+
+`
+put 3 into x
+if x > 3 then
+    answer "x is greater than 3"
+else if x < 3 then
+    answer "x is less than 3"
+else if x is 3 then
+    answer "x is 3"
+end if`
+
+Like in other programming languages, as soon as one of the branches
+is taken, all of the remaining branches are skipped -- even if the condition is true.
+
+`
 if 3+3 is 6 then
-    answer "yes"
+    answer "aaa"
 else if 2+2 is 4 then
-    answer "not run, even though it is true"
+    -- this not run, even though the expression is true
+    answer "bbb"
 end if
+`
 
-if x > 50 then
-    answer "x is greater than 50"
-else if x > 40 then
-    answer "x is greater than 40"
-else
-    answer "x is not greater than 40"
-end if
+For backwards compatibility, we support single-line if statements but do not recommend this style for new code.
 
 =====
 repeat

@@ -188,12 +188,14 @@ been skipped.
 Variables
 =====
 
-To introduce a variable, use the "put" command to place contents 
-into it. Running `put 3 into x` is valid even if x has never been
-used before.
+Use a statement like 
 
-If you try to read from a variable before it has been introduced, 
-a runtime error will occur.
+`put 3 into x`
+
+to put the value "3" into a
+variable named "x".
+
+You don't need any line to declare x as a variable.
 
 Variable names and function names are case insensitive.
 
@@ -203,6 +205,10 @@ used as variable names because they are already keywords
 or built-in functions. For example, you cannot have a variable 
 named "line" because this is a keyword. You cannot have a 
 variable named "result" because this is a built-in function.
+
+If you try to read from a variable before it has been introduced, 
+a runtime error will occur. `put notSeenBefore into x` will cause
+an error unless there is a statement assigning a value to `notSeenBefore`.
 
 Use "global" to declare a variable as a global.
 1) it can be accessed from any other script
@@ -541,13 +547,12 @@ Some of the main differences between ViperCard and HyperCard:
 -  you can export stacks as a modern json format
 -  art-stamps feature for adding clip art
 -  new animation features like save-to-gif
--  in ViperCard you have to hit Save to save changes (regretably)
+-  in ViperCard you have to hit Save to save changes
 -  in ViperCard you have an extensive undo history and can even undo changes made by a script
 
 Scripting differences between ViperCard and HyperCard:
 - You can write `exit to ViperCard` instead of `exit to HyperCard`
 - You must specify `cd` or `bg` when referring to a button or field
-- No one-line `if x>3 then answer x` if statements
 - Newline char is \n and not \r
 - Added: afterkeydown, replace command, owner property
 - Currently: message chain for key events is different, on afterkeydown to indicate cannot prevent default action.

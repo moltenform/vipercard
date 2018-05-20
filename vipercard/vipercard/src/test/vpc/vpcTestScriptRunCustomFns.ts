@@ -299,6 +299,427 @@ HandlerStart
 HandlerEnd`;
             this.compareRewrittenCode(inp, expected);
         },
+        'test_expand single-line if and else-if',
+        () => {
+
+            let inp = `
+on myCode
+    if x > 1 then c1
+end myCode`
+            let expected = `
+HandlerStart
+    if~x~>~1~then~
+        c1~
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+            inp = `
+on myCode
+    if x > 1 then c1
+    if x > 2 then c2
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~1~then~
+        c1~
+    IfEnd
+    if~x~>~2~then~
+        c2~
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+            inp = `
+on myCode
+    if x > 1 then c1
+    if x > 2 then c2
+    if x > 3 then c3
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~1~then~
+        c1~
+    IfEnd
+    if~x~>~2~then~
+        c2~
+    IfEnd
+    if~x~>~3~then~
+        c3~
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+            inp = `
+on myCode
+    if x > 1 then
+        if x > 2 then c2
+    end if
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~1~then~
+        if~x~>~2~then~
+            c2~
+        IfEnd
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+            inp = `
+on myCode
+    if x > 1 then c1
+    c2
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~1~then~
+        c1~
+    IfEnd
+    c2~
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+            /* two lines */
+            expected = `
+HandlerStart
+    if~x~>~1~then~
+        c1~
+    IfElsePlain
+        c2~
+    IfEnd
+HandlerEnd
+`
+            inp = `
+on myCode
+    if x > 1 then c1
+    else c2
+end myCode`
+
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 1 then
+        c1
+    else c2
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 1 then c1
+    else
+        c2
+    end if
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 1 then
+        c1
+    else
+        c2
+    end if
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+
+            /* three lines */
+            expected = `
+HandlerStart
+    if~x~>~1~then~
+        c1~
+    IfElsePlain
+        if~x~>~2~then~
+            c2~
+        IfElsePlain
+            c3~
+        IfEnd
+    IfEnd
+HandlerEnd
+`
+            inp = `
+on myCode
+    if x > 1 then c1
+    else if x > 2 then c2
+    else c3
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 1 then
+        c1
+    else if x > 2 then c2
+    else c3
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 1 then
+        c1
+    else if x > 2 then
+        c2
+    else c3
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 1 then c1
+    else if x > 2 then c2
+    else
+        c3
+    end if
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 1 then
+        c1
+    else if x > 2 then c2
+    else
+        c3
+    end if
+end myCode`
+            this.compareRewrittenCode(inp, expected);
+
+            /* if a plain else, must end the single line! */
+            inp = `
+on myCode
+    if x > 0 then
+        if x > 1 then c1
+        else c2
+    else c3
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~0~then~
+        if~x~>~1~then~
+            c1~
+        IfElsePlain
+            c2~
+        IfEnd
+    IfElsePlain
+        c3~
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+            inp = `
+on myCode
+    if x > 0 then
+        if x > 1 then c1
+        else c2
+    else if x > 3 then
+        c3
+    end if
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~0~then~
+        if~x~>~1~then~
+            c1~
+        IfElsePlain
+            c2~
+        IfEnd
+    IfElsePlain
+        if~x~>~3~then~
+            c3~
+        IfEnd
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 0 then
+        if x > 1 then c1
+        else c2
+    else if x > 3 then c3
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~0~then~
+        if~x~>~1~then~
+            c1~
+        IfElsePlain
+            c2~
+        IfEnd
+    IfElsePlain
+        if~x~>~3~then~
+            c3~
+        IfEnd
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+            inp = `
+on myCode
+    if x > 0 then
+        if x > 1 then c1
+        else if x > 2 then c2
+        else
+            c3
+        end if
+    else
+        c10
+    end if
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~0~then~
+        if~x~>~1~then~
+            c1~
+        IfElsePlain
+            if~x~>~2~then~
+                c2~
+            IfElsePlain
+                c3~
+            IfEnd
+        IfEnd
+    IfElsePlain
+        c10~
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+            inp = `
+on myCode
+    if x > 0 then
+        if x > 1 then c1
+        else if x > 2 then c2
+        else c3
+    else
+        c10
+    end if
+end myCode`
+            expected = `
+HandlerStart
+    if~x~>~0~then~
+        if~x~>~1~then~
+            c1~
+        IfElsePlain
+            if~x~>~2~then~
+                c2~
+            IfElsePlain
+                c3~
+            IfEnd
+        IfEnd
+    IfElsePlain
+        c10~
+    IfEnd
+HandlerEnd
+`
+            this.compareRewrittenCode(inp, expected);
+
+        },
+        'test_run code with single-line if',
+        () => {
+            let batch: [string, string][] = [
+                [
+                    `
+if 3 > 2 then put 1 into ret
+\\ret`, '1' ],
+                [
+                    `
+if 3 > 2 then put 1 into ret
+if 3 > 2 then add 1 to ret
+if 3 > 2 then add 1 to ret
+\\ret`, '3' ],
+                [
+                    `
+if 3 > 2 then
+    if 2 > 1 then put 1 into ret
+end if
+\\ret`, '1' ],
+                [
+                    `
+if 3 > 2 then put 1 into ret
+else put 0 into ret
+\\ret`, '1' ],
+                [
+                    `
+if 3 > 4 then put 1 into ret
+else put 0 into ret
+\\ret`, '0' ],
+[
+    `
+if 4 > 3 then put 2 into ret
+else if 3 > 2 then put 1 into ret
+else put 0 into ret
+\\ret`, '2' ],
+[
+    `
+if 3 > 3 then put 2 into ret
+else if 3 > 2 then put 1 into ret
+else put 0 into ret
+\\ret`, '1' ],
+[
+    `
+if 3 > 3 then put 2 into ret
+else if 3 > 3 then put 1 into ret
+else put 0 into ret
+\\ret`, '0' ],
+            [`
+if 6>5 then
+    if 3 > 4 then put 1 into ret
+    else put 0 into ret
+else
+    put -1 into ret
+end if
+\\ret`, '0' ],
+            [`
+if 6>5 then
+    if 3 > 4 then put 0 into ret
+    else if 2 > 1 then put 1 into ret
+    else
+        put 0 into ret
+    end if
+else
+    put -1 into ret
+end if
+\\ret`, '1' ],
+            [`
+if 6>5 then
+    if 3 > 4 then put 0 into ret
+    else if 2 > 1 then put 1 into ret
+    else put 0 into ret
+else
+    put -1 into ret
+end if
+\\ret`, '1' ],
+            [`
+if 6>5 then
+    if 3 > 4 then put 0 into ret
+    else if 2 > 1 then put 1 into ret
+    else put 0 into ret
+else if true then
+    put -1 into ret
+end if
+\\ret`, '1' ],
+            [`
+if 6>5 then
+    if 3 > 4 then put 0 into ret
+    else if 2 > 1 then put 1 into ret
+    else put 0 into ret
+else if true then put -1 into ret
+\\ret`, '1' ],
+            [`
+if 6>5 then
+    if 3 > 4 then
+        put 0 into ret
+    else if 2 > 1 then put 1 into ret
+    else put 0 into ret
+end if
+\\ret`, '1' ],
+            ]
+
+            this.testBatchEvaluate(batch);
+        },
         'test_expand with nested calls',
         () => {
             this.provideCustomFnInStackScript(`
@@ -419,7 +840,7 @@ on myHandler
     else myFn(1, 2)
     end if
 end myHandler`;
-            this.assertCompileError(inp, "see an 'else if'", 4);
+            this.assertCompileError(inp, "'fn()' alone", 4);
 
             /* VpcLineCategory.IfEnd */
             inp = `
@@ -1046,6 +1467,7 @@ theTest myMult(2,myMult(3,4)), myMult(5,6)
             .split('\n')
             .map(s => s.trim());
         if (defaultSort(exp, got) !== 0) {
+            console.log('\ncontext\n\n', script)
             console.error('\nexpected\n', exp.join('\n'), '\nbut got\n', got.join('\n'), '\n\n');
         }
     }

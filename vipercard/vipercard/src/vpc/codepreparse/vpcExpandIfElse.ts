@@ -1,41 +1,139 @@
 
 /* auto */ import { checkThrow } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
-/* auto */ import { BuildFakeTokens, tks } from '../../vpc/codeparse/vpcTokens.js';
+/* auto */ import { BuildFakeTokens, isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
 
 /**
-    from
-
-        if myfn() then
-            code1
-        else if myotherfn() then
-            code2
-        else
-            code3
-        end if
-
-    to the equivalent
-
-        if myfn() then
-            code1
-        else
-            if myotherfn() then
-                code2
-            else
-                code3
-            end if
-        end if
-
-    why do this? to support expandCustomFns on 'else if' clauses
+ * transform if, else if, and repeat while
  */
 export class ExpandIfElse {
     protected buildToken = new BuildFakeTokens();
     curLevel = 0
     levelsNeedToCloseAt: { [key: number]: boolean } = {}
+    needToCloseSingleLineIf = false
+    needToCloseSingleLineIfAlways = false
 
-    go(line: ChvIToken[]): ChvIToken[][] {
+    /**
+     * from
+     *
+     * if x > 2 then answer "a"
+     * else if x > 1 then answer "b"
+     * else answer "c"
+     *
+     * to
+     *
+     * if x > 2 then
+     *      answer "a"
+     * else if x > 1 then
+     *      answer "b"
+     * else
+     *      answer "c"
+     * end if
+     *
+     */
+    goExpandSingleLineIf(line: ChvIToken[]): ChvIToken[][] {
+        let ret:ChvIToken[][] = []
         if (line.length >= 1 && line[0].image === 'if') {
-            checkThrow(line[line.length - 1].image === 'then', "we don't support all-on-one-line if statements. use instead \n'if x>1 then\ndoThis\nend if'.")
+            if (this.needToCloseSingleLineIf || this.needToCloseSingleLineIfAlways) {
+                this.needToCloseSingleLineIf = false
+                this.needToCloseSingleLineIfAlways = false
+                ret.push(this.buildEndIf(line[0]))
+            }
+
+            let findThen = line.findIndex(tk => isTkType(tk, tks.TokenTkidentifier) && tk.image === 'then')
+            if (findThen !== -1 && findThen !== line.length - 1) {
+                /* this is a single-line if! */
+                this.needToCloseSingleLineIf = true
+                ret.push(line.slice(0, findThen + 1))
+                ret.push(line.slice(findThen + 1))
+            } else {
+                ret.push(line)
+            }
+        } else if (line.length >= 2 && line[0].image === 'else' && line[1].image === 'if') {
+            /* usually don't add an end-if here */
+            this.needToCloseSingleLineIf = false
+
+            /* unless needToCloseSingleLineIfAlways is true */
+            if (this.needToCloseSingleLineIfAlways) {
+                this.needToCloseSingleLineIf = false
+                this.needToCloseSingleLineIfAlways = false
+                ret.push(this.buildEndIf(line[0]))
+            }
+
+            let findThen = line.findIndex(tk => isTkType(tk, tks.TokenTkidentifier) && tk.image === 'then')
+            if (findThen !== -1 && findThen !== line.length - 1) {
+                /* this is a single-line else-if! */
+                this.needToCloseSingleLineIf = true
+                ret.push(line.slice(0, findThen + 1))
+                ret.push(line.slice(findThen + 1))
+            } else {
+                ret.push(line)
+            }
+        } else if (line.length >= 1 && line[0].image === 'else') {
+            /* usually don't add an end-if here */
+            this.needToCloseSingleLineIf = false
+
+            /* unless needToCloseSingleLineIfAlways is true */
+            if (this.needToCloseSingleLineIfAlways) {
+                this.needToCloseSingleLineIf = false
+                this.needToCloseSingleLineIfAlways = false
+                ret.push(this.buildEndIf(line[0]))
+            }
+
+            if (line.length > 1) {
+                let findThen = line.findIndex(tk => isTkType(tk, tks.TokenTkidentifier) && tk.image === 'then')
+                checkThrowEq(-1, findThen, 'expected else to not have then. only else if can have then.')
+
+                /* this is a single-line else-code! */
+                this.needToCloseSingleLineIf = true
+                this.needToCloseSingleLineIfAlways = true
+                ret.push(line.slice(0, 1))
+                ret.push(line.slice(1))
+            } else {
+                ret.push(line)
+            }
+        } else {
+            if (this.needToCloseSingleLineIf || this.needToCloseSingleLineIfAlways) {
+                this.needToCloseSingleLineIf = false
+                this.needToCloseSingleLineIfAlways = false
+                ret.push(this.buildEndIf(line[0]))
+            }
+
+            ret.push(line)
+        }
+
+        return ret
+    }
+
+    /**
+        from
+
+            if myfn() then
+                code1
+            else if myotherfn() then
+                code2
+            else
+                code3
+            end if
+
+        to the equivalent
+
+            if myfn() then
+                code1
+            else
+                if myotherfn() then
+                    code2
+                else
+                    code3
+                end if
+            end if
+
+        why do this? to support expandCustomFns on 'else if' clauses
+    */
+    goExpandElseIf(line: ChvIToken[]): ChvIToken[][] {
+        if (line.length >= 1 && line[0].image === 'if') {
+            checkThrow(line[line.length - 1].image === 'then', "we should have already processed all-on-one-line if statements...")
             this.curLevel += 1
             return [line]
         } else if (line.length >= 2 && line[0].image === 'end' && line[1].image === 'if') {
@@ -53,7 +151,7 @@ export class ExpandIfElse {
 
             return ret
         } else if (line.length >= 2 && line[0].image === 'else' && line[1].image === 'if') {
-            checkThrow(line[line.length - 1].image === 'then', "we don't support all-on-one-line else if statements. use instead \n'else if x>1 then\ndoThis\nend if'.")
+            checkThrow(line[line.length - 1].image === 'then', "we should have already processed all-on-one-line else if statements...")
             let part1 = line.slice(0, 1)
             let part2 = line.slice(1)
             this.levelsNeedToCloseAt[this.curLevel] = true
@@ -123,10 +221,17 @@ export class ExpandIfElse {
         lineExit.push(this.buildToken.makeIdentifier(line[0], 'repeat'))
         ret.push(lineExit)
 
-        let lineEndIf: ChvIToken[] = []
-        lineEndIf.push(this.buildToken.makeIdentifier(line[0], 'end'))
-        lineEndIf.push(this.buildToken.makeIdentifier(line[0], 'if'))
-        ret.push(lineEndIf)
+        ret.push(this.buildEndIf(line[0]))
         return ret
+    }
+
+    /**
+     * make a line saying "end if"
+     */
+    protected buildEndIf(basis: ChvIToken): ChvIToken[] {
+        let lineEndIf: ChvIToken[] = []
+        lineEndIf.push(this.buildToken.makeIdentifier(basis, 'end'))
+        lineEndIf.push(this.buildToken.makeIdentifier(basis, 'if'))
+        return lineEndIf
     }
 }
