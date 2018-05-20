@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, makeVpcScriptErr, scontains, makeUI512Error } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, makeVpcScriptErr, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
 
 /**

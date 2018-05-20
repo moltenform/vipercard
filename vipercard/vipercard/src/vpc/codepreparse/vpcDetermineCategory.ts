@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, cAltProductName, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
@@ -443,7 +443,7 @@ export class DetermineCategory {
 
         if (line[1].image === 'repeat') {
             return this.goExitRepeat(line, output);
-        } else if (line[1].image === cProductName.toLowerCase()) {
+        } else if (line[1].image === cProductName.toLowerCase() || line[1].image === cAltProductName.toLowerCase()) {
             return this.goExitProduct(line, output);
         } else {
             return this.goExitHandler(line, output);
