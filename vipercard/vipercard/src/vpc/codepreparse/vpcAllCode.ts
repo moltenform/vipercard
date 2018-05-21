@@ -1,7 +1,7 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, makeVpcScriptErr, markUI512Err, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObject, MapKeyToObjectCanSet, Util512, ValHolder, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, VpcScriptErrorBase, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { CodeLimits, CountNumericId, CountNumericIdNormal, LogToReplMsgBox, VpcScriptErrorBase, VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor.js';
 /* auto */ import { LoopLimit, MakeLowerCase, MapBuiltinCmds, SplitIntoLinesProducer } from '../../vpc/codepreparse/vpcPreparseCommon.js';
@@ -210,6 +210,9 @@ class VpcCodeProcessor {
         latestSrcLineSeen: ValHolder<number>,
         latestDestLineSeen: ValHolder<VpcCodeLine>
     ) {
+        /* redirect references to the message box */
+        code = LogToReplMsgBox.processScript(code)
+
         /* lex the input */
         let [lexer, parser, visitor] = getParsingObjects();
         let lexed = lexer.tokenize(code);

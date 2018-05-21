@@ -63,7 +63,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         this.showResults.setDimensions(this.x + 14 + 5, this.y + 50 + 5, 460 + 15, 50);
         this.showResults.set('style', UI512FldStyle.Rectangle);
         this.showResults.set('scrollbar', true);
-        this.showResults.set('canedit', false);
+        this.showResults.set('canedit', true);
 
         let dashedLine = this.genBtn(app, grp, 'dashedLine');
         dashedLine.setDimensions(this.x + 14 - 1, this.y + 30 + 9 + 1, 490, 8);
@@ -233,8 +233,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         this.vci.setTool(this.rememberedTool);
 
         if (scriptErr && scriptErr.details && scontains(scriptErr.details, VpcNonModalReplBox.markIntentionalErr)) {
-            let vGot = this.vci.getCodeExec().globals.find('g_msgreplboxcontents');
-            this.appendToOutput(vGot ? vGot.readAsString().trim() : 'Unknown (not set)', true);
+            /* it wasn't actually an error, we internally caused it */
         } else if (scriptErr) {
             this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);
         } else {
@@ -275,23 +274,10 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
             line = line.trim();
             let lineWithNoStringLiterals = VpcNonModalReplBox.removeStringLiterals(line);
             VpcNonModalReplBox.makeAllVarsGlobals(linesOut, lineWithNoStringLiterals);
-            if (
-                lineWithNoStringLiterals.startsWith('put ') &&
-                !scontains(lineWithNoStringLiterals, ' into ') &&
-                !scontains(lineWithNoStringLiterals, ' after ') &&
-                !scontains(lineWithNoStringLiterals, ' before ')
-            ) {
-                line += ' after  g_msgreplboxcontents';
-                linesOut.push(line);
-                linesOut.push('put newline after  g_msgreplboxcontents');
-            } else {
-                linesOut.push(line);
-            }
+            linesOut.push(line);
         });
 
-        let total = `global g_msgreplboxcontents
-        put "" into g_msgreplboxcontents
-        `;
+        let total = ``;
         total += linesOut.join('\n');
         total += '\n' + VpcNonModalReplBox.markIntentionalErr;
         return total;

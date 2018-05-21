@@ -1,11 +1,11 @@
 
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, assertEq, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
@@ -162,6 +162,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     ReadVarContents(varName: string): VpcVal {
         assertTrue(slength(varName), '6p|bad varName', varName);
+
+        if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
+            throw makeVpcScriptErr(`in ${cProductName}, you can only write to the msg box, not read from it.`);
+        }
+
         let [frStack, frame] = this.getExecFrameStack();
         let found = frStack.constants.find(varName);
         if (found) {
@@ -186,6 +191,12 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     SetVarContents(varName: string, v: VpcVal): void {
         assertTrue(slength(varName), '6n|bad varName', varName);
+
+        if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
+            this.WriteToReplMessageBox(v.readAsString())
+            return
+        }
+
         let [frStack, frame] = this.getExecFrameStack();
         let found = frStack.constants.find(varName);
         if (found) {
@@ -451,6 +462,14 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         ret.cardId = this.GetOptionS('currentCardId');
         ret.mods = mods;
         return ret;
+    }
+
+    /**
+     * append text to the message box
+     * ignored if the message box is not currently open
+     */
+    WriteToReplMessageBox(s:string):void {
+        return this.vci.writeToReplMessageBox(s)
     }
 
     /**

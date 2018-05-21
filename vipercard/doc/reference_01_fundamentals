@@ -507,13 +507,47 @@ formfeed
 linefeed`
 
 =====
+Message Box
+=====
+
+Open the Message Box by choosing 'Message Box' from the Go menu, or by pressing Cmd+M.
+
+The message box can be used to quickly try out snippets of code. For example, if you want to evaluate some math, you can open the message box, type `put 12*34`, and press Enter. The result will be shown below.
+
+As another example, if you have two buttons, and you want to align the left sides of the buttons, you can type `set the left of cd btn 2 to the left of cd btn 1`, and press Enter, and the action will be performed.
+
+You can use the Up and Down arrow keys to see previously typed commands.
+
+You can use a semicolon to combine many lines, for example `put 2 into x; put x * 3`
+
+You can use the message box to check or change the contents of a global variable. In fact, any variable mentioned in the message box will be assumed to be a global, so you can write `put 4 into myGlobal` without first needing to declare `global myGlobal`.
+
+In your script, you can add debugging statements that trace a value and show it in the message box, as long as the message box is currently open.
+
+`
+put 45 * 56 into x
+-- if the msg box is open, will show the value of x
+-- otherwise, the line is ignored
+put x into the msg box
+-- code will continue running
+`
+
+The shortened form,
+
+`
+put 45 * 56 into x
+-- if the msg box is open, will show the value of x
+put x`
+
+is also supported, but isn't encouraged because it is harder to read.
+
+=====
 Tips & Shortcuts
 =====
 
 General tips
 
 -   Double-click the eraser tool to clear paint on the current card
--   Use the message box (from the Go menu, choose Message Box) to quickly try running code
 -   If your script is caught in an infinite loop, click the Stop button (black rectangle) to stop the script
 -   See more error details, when in the Script Editor, by clicking on the error excerpt
 

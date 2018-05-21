@@ -199,4 +199,10 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
      * commit simulated clicks to the screen
      */
     CommitSimulatedClicks(queue: UI512PaintDispatch[]): void;
+
+    /**
+     * append text to the message box
+     * ignored if the message box is not currently open
+     */
+    WriteToReplMessageBox(s:string):void;
 }

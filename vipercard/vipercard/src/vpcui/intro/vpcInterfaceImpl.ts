@@ -344,6 +344,14 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     }
 
     /**
+     * append text to the message box
+     * ignored if the message box is not currently open
+     */
+    writeToReplMessageBox(s:string):void {
+        return this.pr.writeToReplMessageBox(s)
+    }
+
+    /**
      * releases memory by nulling out everything owned by the class
      */
     destroy(): void {

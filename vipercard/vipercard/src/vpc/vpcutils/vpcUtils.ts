@@ -141,6 +141,20 @@ export enum CodeLimits {
     MaxStackNameLen = 256
 }
 
+/**
+ * the user can log to the message box
+ */
+export class LogToReplMsgBox {
+    static redirectThisVariableToMsgBox = 'vpc__internal__msgbox'
+
+    static processScript(script:string) {
+        /* warning: also replaces within string literals */
+        script = script.replace(/\b(the )?(message|msg) (box|window)\b/g,
+            LogToReplMsgBox.redirectThisVariableToMsgBox)
+        return script
+    }
+}
+
 
 /**
  * record what you submit to the repl, for history

@@ -298,10 +298,10 @@ container.
 
 Examples:
 
-put "hello" into cd fld "message"
-
 put 2+3 into x
 answer x -- shows 5
+
+put "hello" into cd fld "message"
 
 put "aa,bb,cc" into x
 put "11" into item 2 of x
@@ -313,6 +313,11 @@ answer x -- shows "aqc"
 
 put "appended text" after x
 put "prepended text" before x
+
+-- if the message box is open, you can display the contents of a variable into the message box,
+-- this is similar to "print" or "writeline" in other languages.
+put 2+3 into x
+put x into the msg box
 
 =====
 divide [chunk of] {container} by {number}

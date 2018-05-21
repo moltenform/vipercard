@@ -2,7 +2,7 @@
 /* auto */ import { assertTrue, cProductName, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { Util512, checkThrowEq, findStrToEnum } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CountNumericId } from '../../vpc/vpcutils/vpcUtils.js';
+/* auto */ import { CountNumericId, LogToReplMsgBox } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { ChvIToken } from '../../vpc/codeparse/bridgeChv.js';
 /* auto */ import { BuildFakeTokens, TypeGreaterLessThanEqual, isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { MapBuiltinCmds } from '../../vpc/codepreparse/vpcPreparseCommon.js';
@@ -258,10 +258,12 @@ export class SyntaxRewriter {
             }
         }
 
-        checkThrow(
-            foundPreposition !== -1,
-            "5$|missing into, before, or after. we don't support 'put \"abc\"' to use the message box."
-        );
+        if (foundPreposition === -1) {
+            /* say put "abc" to add to the message box */
+            foundPreposition = line.length
+            line.push(this.buildFake.makeIdentifier(line[0], 'into'))
+            line.push(this.buildFake.makeIdentifier(line[0], LogToReplMsgBox.redirectThisVariableToMsgBox))
+        }
 
         let newMarker1 = this.buildFake.makeSyntaxMarker(line[0]);
         let newMarker2 = this.buildFake.makeSyntaxMarker(line[0]);

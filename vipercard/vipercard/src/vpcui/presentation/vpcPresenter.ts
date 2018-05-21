@@ -708,4 +708,17 @@ export class VpcPresenter extends VpcPresenterInit {
     queueRefreshCursor(): void {
         this.cursorRefreshPending = true;
     }
+
+    /**
+     * append text to the message box
+     * ignored if the message box is not currently open
+     */
+    writeToReplMessageBox(s:string):void {
+        if (
+            this.lyrNonModalDlgHolder.current &&
+            this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
+        ) {
+            this.lyrNonModalDlgHolder.current.appendToOutput(s, false)
+        }
+    }
 }
