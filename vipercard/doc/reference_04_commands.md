@@ -62,7 +62,7 @@ Examples:
 ```
 ask "what is your favorite color?" with "blue"
 put it into favColor
-answer ("you chose" && favColor)
+answer "you chose" && favColor
 ```
 
 
@@ -77,19 +77,22 @@ Play the system beep sound.
 
 ## choose {toolname} tool
 
-Use the choose command for programmatically drawing pictures.
-See the example.
-Doesn't set the actual tool, which is always Browse when scripts 
-are running.
-See also: click, drag.
+You can use the choose command to programmatically draw shapes and lines.
+
+When a script completes, you'll be taken back to the Browse tool regardless of which tool was chosen within a script.
 
 
 Examples:
 
 ```
-choose "pencil" tool
+choose pencil tool
 click at 10,20
 -- this draws a black pixel at the coordinates x=10, y=20
+
+choose line tool
+drag from 10,20 to 30,40
+-- this draws a line starting at the coordinates (10,20) 
+-- ending at (30,40)
 
 -- Currently supported tools include:
 brush
@@ -101,6 +104,7 @@ oval
 roundrect
 curve
 spray
+browse
 ```
 
 
@@ -117,7 +121,7 @@ draw.
 Examples:
 
 ```
-choose "pencil" tool
+choose pencil tool
 click at 10,20
 -- this draws a pixel at the coordinates x=10, y=20
 ```
@@ -194,7 +198,8 @@ Similar to eval() in other languages.
 
 Examples:
 
-```put "answer " into buildScript
+```
+put "answer " into buildScript
 put quote & "abc" & quote after buildScript
 do buildScript
 ```
@@ -213,7 +218,7 @@ draw.
 Examples:
 
 ```
-choose "line" tool
+choose line tool
 drag from 10,20 to 30,40
 -- this draws a line starting at the coordinates (10,20) 
 -- ending at (30,40)
@@ -354,6 +359,8 @@ previous
 this
 mid
 prev
+
+('go back' and 'go forth' are present for backwards compatibility, but are not recommended for use in new code)
 ```
 
 
@@ -368,39 +375,68 @@ Hides a button or field.
 
 ## if/then
 
-Like in C, if a branch can be taken, all other else branches
-will be skipped, as in the third example below.
+Use to run certain code based on a condition that can be true or false.
 
+In the example
 
-Examples:
 
 ```
+
+put 2 into x
 if x > 0 then
     answer "x is greater than 0"
 end if
+```
 
+
+First, we'll check the expression `x > 0`. Since it evaluates to true,
+the code inside is run. 
+
+You can also include an "else" section that will be run only if the expression evaluated to false.
+
+
+```
 if x > 0 then
     answer "x is greater than 0"
 else
     answer "x is not greater than 0"
 end if
+```
 
-if 3+3 is 6 then
-    answer "yes"
-else if 2+2 is 4 then
-    answer "not run, even though it is true"
-end if
 
-if x > 50 then
-    answer "x is greater than 50"
-else if x > 40 then
-    answer "x is greater than 40"
-else
-    answer "x is not greater than 40"
+You can chain together many different conditions with "else if". 
+
+
+```
+
+put 3 into x
+if x > 3 then
+    answer "x is greater than 3"
+else if x < 3 then
+    answer "x is less than 3"
+else if x is 3 then
+    answer "x is 3"
 end if
 ```
 
 
+Like in other programming languages, as soon as one of the branches
+is taken, all of the remaining branches are skipped -- even if the condition is true.
+
+
+```
+
+if 3+3 is 6 then
+    answer "aaa"
+else if 2+2 is 4 then
+    -- this not run, even though the expression is true
+    answer "bbb"
+end if
+
+```
+
+
+For backwards compatibility, we support single-line if statements but do not recommend this style for new code.
 
 
 
@@ -555,10 +591,10 @@ container.
 Examples:
 
 ```
-put "hello" into cd fld "message"
-
 put 2+3 into x
 answer x -- shows 5
+
+put "hello" into cd fld "message"
 
 put "aa,bb,cc" into x
 put "11" into item 2 of x
@@ -570,6 +606,11 @@ answer x -- shows "aqc"
 
 put "appended text" after x
 put "prepended text" before x
+
+-- if the message box is open, you can display the contents of a variable into the message box,
+-- this is similar to "print" or "writeline" in other languages.
+put 2+3 into x
+put x into the msg box
 ```
 
 
@@ -585,11 +626,11 @@ Examples:
 
 ```
 repeat with x = 1 to 5
-    answer ("x is now" & x)
+    answer "x is now" & x
 end repeat
 
 repeat with x = 5 down to 1
-    answer ("x is now" & x)
+    answer "x is now" & x
 end repeat
 
 repeat 3 times
@@ -633,7 +674,7 @@ Examples:
 
 ```put "a-b-c" into x
 replace "-" with "_" in x
-answer (x) -- shows a_b_c
+answer x -- shows a_b_c
 
 
 -- you can also use replace in a field.
@@ -670,7 +711,37 @@ end mouseUp
 
 ## send {expression} to {object}
 
-This feature will arrive in a future version...
+Take a string, and execute it as if it were a ViperCard script in the context of an object.
+
+Messages in ViperCard automatically travel upwards from button to card, background, and then stack.
+
+But by using the 'send' command, you can send a message to any target -- from a card down to a button, from one card to a different card, and so on. One case where this is helpful is if you have a large amount of code in one script: subroutines can be moved to other objects and called via send.
+
+
+Examples:
+
+```
+-- sending a message to a different card
+send "prepareNextCard" to card "otherCard"
+
+-- simulate a button click
+send "mouseUp" to cd btn "myButton"
+
+-- if you have hundreds of lines of code in one script, this
+-- can feel disorganized. with "send" you can store code
+-- in other objects, for example, moving
+-- mathematical computation to a different card or button.
+-- in the script of cd btn "mathUtils" of card "otherCard", write
+on myCompute a, b
+    return a * a + b
+end myCompute
+
+-- from another script
+send "myCompute 3, 4" to cd btn "mathUtils" of card "otherCard"
+put the result into x
+```
+
+
 
 
 

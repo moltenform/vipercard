@@ -170,7 +170,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                 [
                     'mnuOSAbout2|lngAbout ViperCard...|',
                     '|---|',
-                    'mnuDlgHelpScreenshots|lngExamples & Tutorials...|',
+                    'mnuDlgHelpExamples|lngExamples & Tutorials...|',
                     'mnuDlgHelpReference|lngScript Reference...|'
                 ]
             ],

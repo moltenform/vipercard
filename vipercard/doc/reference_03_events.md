@@ -94,6 +94,77 @@ end closeCard
 
 
 
+## on closeField
+
+Sent when the user clicks on a field to select it, types text into the field, and then de-selects the field.
+
+If the browse tool is active, this message will be sent by the following:
+When typing text into a field, click outside the field
+When typing text into a field, press Enter
+When typing text into a field, go to a different card
+
+See also: `openField` and `exitField`.
+
+The message is sent to the target field and travels upward to the current card as usual.
+
+
+Examples:
+
+```
+-- in a field's script
+
+on closeField
+    -- do a simple check of what the user just typed
+    if not "@" in the target then
+        put "not a e-mail address" into cd fld "status"
+    else
+        put "" into cd fld "status"
+    end if
+end closeField
+```
+
+
+
+
+
+## on exitField
+
+Sent when the user clicks on a field to select it, does not type text into the field, and then de-selects the field.
+
+If the browse tool is active, this message will be sent by the following:
+When a field is selected, click outside the field
+When a field is selected, press Enter
+When a field is selected, go to a different card
+
+It's possible for exitField to be sent to the field more than once if some of the above actions happen at the same time.
+
+See also: `openField` and `closeField`.
+
+The message is sent to the target field and travels upward to the current card as usual.
+
+
+Examples:
+
+```
+-- in a field's script
+
+on openField
+    show cd btn "indicateCurrentlyEditingField"
+end openField
+
+on closeField
+    hide cd btn "indicateCurrentlyEditingField"
+end closeField
+
+on exitField
+    hide cd btn "indicateCurrentlyEditingField"
+end exitField
+```
+
+
+
+
+
 ## on idle
 
 Sent repeatedly to the current card. Can be used for a game loop.
@@ -227,6 +298,28 @@ Examples:
 on openCard
     answer "welcome to this card"
 end openCard
+```
+
+
+
+
+
+## on openField
+
+Sent to a field, when text is first selected in it.
+
+See also: `closeField` and `exitField`.
+
+
+Examples:
+
+```
+-- in a field's script
+
+on openField
+    -- place default text in the field when you tab over to it...
+    put "abc" into the target
+end openField
 ```
 
 

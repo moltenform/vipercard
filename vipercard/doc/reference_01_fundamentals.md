@@ -164,7 +164,7 @@ gives a different answer than
 
 Parentheses are also used for grouping an expression.
 for example, we needed to get the (n + 1)th line of a 
-variable, we would type `answer (line (n + 1) of x)`
+variable, we would type `(line (n + 1) of x)`
 
 Do not type something like
 
@@ -174,7 +174,13 @@ answer (line n + 1 of x) -- this is hard to read.
 
 this is unclear, and will often cause syntax errors.
 
-In the expression `2+3`, the `+` is called an operator.
+
+```
+answer (line (n + 1) of x) -- this is preferred.
+```
+
+
+In the expression `2 + 3`, the symbol `+` is called an operator.
 
 Here are the operators that can be used.
 
@@ -280,12 +286,18 @@ been skipped.
 
 ## Variables
 
-To introduce a variable, use the "put" command to place contents 
-into it. Running `put 3 into x` is valid even if x has never been
-used before.
+Use a statement like 
 
-If you try to read from a variable before it has been introduced, 
-a runtime error will occur.
+
+```
+put 3 into x
+```
+
+
+to put the value "3" into a
+variable named "x".
+
+You don't need any line to declare x as a variable.
 
 Variable names and function names are case insensitive.
 
@@ -295,6 +307,10 @@ used as variable names because they are already keywords
 or built-in functions. For example, you cannot have a variable 
 named "line" because this is a keyword. You cannot have a 
 variable named "result" because this is a built-in function.
+
+If you try to read from a variable before it has been introduced, 
+a runtime error will occur. `put notSeenBefore into x` will cause
+an error unless there is a statement assigning a value to `notSeenBefore`.
 
 Use "global" to declare a variable as a global.
 1) it can be accessed from any other script
@@ -575,21 +591,21 @@ examples demonstrate what can be done with chunk expressions:
 
 
 ```
-answer (char 2 of "abcd") -- displays "b"
-answer (char 2 to 3 of "abcd") -- displays "bc"
-answer (item 2 of "a,b,c,d") -- displays "b"
-answer (item 2 to 3 of "a,b,c,d") -- displays "b,c"
-answer (word 2 of "a b c d") -- displays "b"
-answer (word 2 to 3 of "a b c d") -- displays "b c"
+answer char 2 of "abcd" -- displays "b"
+answer char 2 to 3 of "abcd" -- displays "bc"
+answer item 2 of "a,b,c,d" -- displays "b"
+answer item 2 to 3 of "a,b,c,d" -- displays "b,c"
+answer word 2 of "a b c d" -- displays "b"
+answer word 2 to 3 of "a b c d" -- displays "b c"
 put "a" & newline & "b" & newline & "c" & newline into lines
-answer (line 2 of lines) -- displays "b"
-answer (line 2 to 3 of lines) -- displays "b" & newline & "c"
+answer line 2 of lines -- displays "b"
+answer line 2 to 3 of lines -- displays "b" & newline & "c"
 
-answer (first char of "abcd") -- displays "a"
-answer (second char of "abcd") -- displays "b"
-answer (any char of "abcd") -- displays a random choice
-answer (middle char of "abcd") 
-answer (last char of "abcd") 
+answer first char of "abcd" -- displays "a"
+answer second char of "abcd" -- displays "b"
+answer any char of "abcd" -- displays a random choice
+answer middle char of "abcd" 
+answer last char of "abcd" 
 
 put "x" into char 2 of "abcd"
 put "x" into char 2 to 3 of "abcd"
@@ -617,7 +633,7 @@ the itemdelimeter is "," by default but can be changed.
 this can be helpful for simple parsing.
 `put "abc|def|ghi" into x
 set the itemdelimiter to "|"
-answer (item 2 of x) -- displays "def"`
+answer item 2 of x -- displays "def"`
 
 
 
@@ -670,12 +686,54 @@ linefeed`
 
 
 
+## Message Box
+
+Open the Message Box by choosing 'Message Box' from the Go menu, or by pressing Cmd+M.
+
+The message box can be used to quickly try out snippets of code. For example, if you want to evaluate some math, you can open the message box, type `put 12*34`, and press Enter. The result will be shown below.
+
+As another example, if you have two buttons, and you want to align the left sides of the buttons, you can type `set the left of cd btn 2 to the left of cd btn 1`, and press Enter, and the action will be performed.
+
+You can use the Up and Down arrow keys to see previously typed commands.
+
+You can use a semicolon to combine many lines, for example `put 2 into x; put x * 3`
+
+You can use the message box to check or change the contents of a global variable. In fact, any variable mentioned in the message box will be assumed to be a global, so you can write `put 4 into myGlobal` without first needing to declare `global myGlobal`.
+
+In your script, you can add debugging statements that trace a value and show it in the message box, as long as the message box is currently open.
+
+
+```
+
+put 45 * 56 into x
+-- if the msg box is open, will show the value of x
+-- otherwise, the line is ignored
+put x into the msg box
+-- code will continue running
+
+```
+
+
+The shortened form,
+
+
+```
+
+put 45 * 56 into x
+-- if the msg box is open, will show the value of x
+put x
+```
+
+
+is also supported, but isn't encouraged because it is harder to read.
+
+
+
 ## Tips & Shortcuts
 
 General tips
 
 -   Double-click the eraser tool to clear paint on the current card
--   Use the message box (from the Go menu, choose Message Box) to quickly try running code
 -   If your script is caught in an infinite loop, click the Stop button (black rectangle) to stop the script
 -   See more error details, when in the Script Editor, by clicking on the error excerpt
 
@@ -709,23 +767,24 @@ Some of the main differences between ViperCard and HyperCard:
 -  you can export stacks as a modern json format
 -  art-stamps feature for adding clip art
 -  new animation features like save-to-gif
--  in ViperCard you have to hit Save to save changes (regretably)
+-  in ViperCard you have to hit Save to save changes
 -  in ViperCard you have an extensive undo history and can even undo changes made by a script
 
 Scripting differences between ViperCard and HyperCard:
 - You can write `exit to ViperCard` instead of `exit to HyperCard`
 - You must specify `cd` or `bg` when referring to a button or field
-- No one-line `if x>3 then answer x` if statements
+- Newline char is \n and not \r
+- Added: afterkeydown, replace command, owner property
 - Currently: message chain for key events is different, on afterkeydown to indicate cannot prevent default action.
 - Currently: wait until the mouseclick is not supported
 - Scripts only run when browse tool is active; you can exit an infinite loop by changing the tool
-- while globals that aren't set default to "", variables that aren't set get a runtime error if accessed
+- Unset variables do not default to containing their name
 - hilite and checkmark are separate properties
-- There are places custom function calls can't occur: as an argument to custom handler call, as an argument to repeat while, and as an argument to else if.
+- Set the label vs set the name
 - Can't have a variable named id, length, short, long, first, second
-
-Differences in specific commands/functions:
-- choose "browse" tool, not choose browse tool
+- A custom handler "on myCode" and custom function "function myCode" are equivalent, both use return and set "the result"
+- The `choose` command sets the emulated current tool, not the actual tool, and is limited to certain paint operations
+- You have to write 'sin(x)', not 'the sin of x'. you have to write 'the clickLoc()', not 'the clickLoc'.
 
 
 

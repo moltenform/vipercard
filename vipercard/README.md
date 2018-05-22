@@ -16,3 +16,26 @@ Source code:
 - `./vipercard/src/vpcui` is ViperCard's user interface
     
 To learn about building from source, see [building.md](vipercard/building.md).
+
+Dependencies:
+
+- [chevrotain](https://github.com/SAP/chevrotain)
+    
+- [filesaver.js](https://github.com/eligrey/FileSaver.js)
+    
+- [golly](https://github.com/dannygarcia/golly)
+
+- [js-lru](https://github.com/rsms/js-lru)
+    
+- [clipboard.js](https://github.com/zenorocha/clipboard.js)
+    
+- [base64js](https://github.com/beatgammit/base64-js)
+
+- [JSGIF](https://github.com/antimatter15/jsgif)
+
+- [Bresenham easy.filter](http://members.chello.at/easyfilter/bresenham.html)
+
+- Wikipedia's [description of Mac OS Roman](https://en.wikipedia.org/wiki/Mac_OS_Roman)
+
+- and a small excerpt from the [SciTE code editor](https://www.scintilla.org/SciTE.html)
+

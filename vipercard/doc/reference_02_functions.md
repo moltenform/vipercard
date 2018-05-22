@@ -325,8 +325,8 @@ Examples:
 
 ```
 answer length("abc") -- displays 3
-answer (the length of "") -- displays 0
-answer (the length of "abc") -- displays 3
+answer the length of "" -- displays 0
+answer the length of "abc" -- displays 3
 ```
 
 
@@ -526,13 +526,13 @@ lines/items in a string.
 Examples:
 
 ```
-answer (the number of chars in "1,2,3")
-answer (the number of items in "1,2,3")
-answer (the number of words in "1,2,3")
-answer (the number of lines in "1,2,3")
-answer (the number of cards)
-answer (the number of card buttons)
-answer (the number of card fields)
+answer the number of chars in "1,2,3"
+answer the number of items in "1,2,3"
+answer the number of words in "1,2,3"
+answer the number of lines in "1,2,3"
+answer the number of cards
+answer the number of card buttons
+answer the number of card fields
 ```
 
 
@@ -600,7 +600,7 @@ on mySumOfNumbers
     repeat with x = 1 to paramCount()
         put total + param(x) into total
     end repeat
-    answer ("total is" && total)
+    answer "total is" && total
 end mySumOfNumbers
 
 on mouseUp
@@ -627,7 +627,7 @@ on mySumOfNumbers
     repeat with x = 1 to paramCount()
         put total + param(x) into total
     end repeat
-    answer ("total is" && total)
+    answer "total is" && total
 end mySumOfNumbers
 
 on mouseUp
@@ -680,7 +680,7 @@ on myProc
 end myProc
 on mouseUp
     myProc
-    answer (result())
+    answer result()
 end mouseUp
 ```
 
@@ -975,19 +975,14 @@ put ticks() into x
 
 ## tool()
 
-The tool to be used when programmatically drawing shapes.
-(Not the actual tool, which would always be Browse)
-
-See also: the click, drag commands.
+The current tool, as set by the `choose` command. (The `choose` command can be used to draw lines and shapes).
 
 
 Examples:
 
 ```
-choose "pencil" tool
-click at 10,20
--- this draws a black pixel at the coordinates x=10, y=20
-put tool() into x
+choose pencil tool
+answer tool() -- shows "pencil"
 ```
 
 

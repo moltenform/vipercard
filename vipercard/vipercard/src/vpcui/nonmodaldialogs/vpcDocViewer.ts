@@ -52,11 +52,11 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      */
     readonly referenceInfo: [string, string, string[]][] = [
         /* prettier-ignore */
-        ['fundamentals', 'lngFundamentals', ['Introduction', 'Fundamentals', 'Expressions', 'Variables', 'Structure', 'Lists/arrays', 'Custom funcs', 'Chunks', 'Constants', 'Tips & Shortcuts', 'Credits']],
+        ['fundamentals', 'lngFundamentals', ['Introduction', 'Fundamentals', 'Expressions', 'Variables', 'Structure', 'Lists/arrays', 'Custom funcs', 'Chunks', 'Constants', 'Message Box', 'Tips & Shortcuts', 'Credits']],
         /* prettier-ignore */
         ['functions', 'lngFunctions', ['abs', 'atan', 'charToNum', 'clickh', 'clickloc', 'clickv', 'commandKey', 'contains', 'cos', 'diskSpace', 'exp', 'exp1', 'exp2', 'heapSpace', 'is a', 'is in', 'is within', 'keyChar', 'keyRepeated', 'length', 'ln', 'ln1', 'log2', 'max', 'me', 'min', 'mouse', 'mouseclick', 'mouseh', 'mouseloc', 'mousev', 'numToChar', 'number', 'numberToStr', 'offset', 'optionKey', 'param', 'paramCount', 'params', 'random', 'result', 'round', 'screenRect', 'seconds', 'selectedChunk', 'selectedField', 'selectedLine', 'selectedText', 'shiftKey', 'sin', 'sqrt', 'stackSpace', 'strToNumber', 'sum', 'systemVersion', 'tan', 'target', 'there is a', 'ticks', 'tool', 'trunc']],
         /* prettier-ignore */
-        ['eventhandlers', 'lngEvent Handlers', ['on afterKeyDown', 'on afterKeyUp', 'on closeBackground', 'on closeCard', 'on idle', 'on mouseDoubleClick', 'on mouseDown', 'on mouseEnter', 'on mouseLeave', 'on mouseUp', 'on mouseWithin', 'on openBackground', 'on openCard', 'on openStack']],
+        ['eventhandlers', 'lngEvent Handlers', ['on afterKeyDown', 'on afterKeyUp', 'on closeBackground', 'on closeCard', 'on closeField', 'on exitField', 'on idle', 'on mouseDoubleClick', 'on mouseDown', 'on mouseEnter', 'on mouseLeave', 'on mouseUp', 'on mouseWithin', 'on openBackground', 'on openCard', 'on openField', 'on openStack']],
         /* prettier-ignore */
         ['commands', 'lngCommands', ['add', 'answer', 'ask', 'beep', 'choose', 'click', 'create', 'delete', 'disable', 'divide', 'do', 'drag', 'enable', 'exit', 'exit repeat', 'get', 'global', 'go', 'hide', 'if/then', 'lock screen', 'multiply', 'next repeat', 'pass', 'play', 'put', 'repeat', 'replace', 'return', 'send', 'set', 'show', 'sort', 'subtract', 'unlock screen', 'wait']],
         /* prettier-ignore */
