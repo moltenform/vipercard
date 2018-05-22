@@ -459,10 +459,10 @@ export class TestVpcScriptRunCmd extends TestVpcScriptRunBase {
             this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
             let batch: [string, string][];
             batch = [
-                ['put "abc"\\0', 'ERR:missing into'],
-                ['put "abc" xyz\\0', 'ERR:missing into'],
-                ['put "abc" xyz x\\0', 'ERR:missing into'],
-                ['put "abc" xyz cd fld "p1"\\0', 'ERR:missing into'],
+                ['put "abc"\\0', '0'],
+                ['put "abc" xyz\\0', 'ERR:MismatchedTokenException'],
+                ['put "abc" xyz x\\0', 'ERR:MismatchedTokenException'],
+                ['put "abc" xyz cd fld "p1"\\0', 'ERR:MismatchedTokenException'],
                 ['put "abc" xyz line 1 to into of cd fld "p1"\\0', 'ERR:MismatchedTokenException'],
                 ['put "abc" into line 1 to into of cd fld "p1"\\0', 'ERR:only see one'],
                 ['put "abc" into line 1 to before of cd fld "p1"\\0', 'ERR:only see one'],
@@ -762,7 +762,7 @@ replace "aa" with "bb" in cd fld "pnotexist"
                 ['put "on abc" into code\ndo code\\0', 'ERR:5:cannot begin'],
                 ['put "end if" into code\ndo code\\0', 'ERR:5:interleaved'],
                 ['put "if true then" into code\ndo code\\0', 'ERR:14:interleaved'],
-                ['put "put" into code\ndo code\\0', 'ERR:5:missing into'],
+                ['put "put" into code\ndo code\\0', 'ERR:5:NoViableAltException'],
                 ['put 123 into do\\0', `ERR:variable name not allowed`],
                 /* nested (do calls do) */
                 ['put counting() into cfirst\\counting() - cfirst', '1'],
@@ -820,7 +820,7 @@ send code to this stack\\g`, `${this.elIds.stack}`],
                 ['send "put 1 into x" to "string"\\0', 'ERR:NoViableAltException'],
                 ['put 123 into send\\0', `ERR:variable name not allowed`],
                 /* syntax error in sent code */
-                ['send "put" to this stack\\0', 'ERR:4:missing into'],
+                ['send "put" to this stack\\0', 'ERR:4:NoViableAltException'],
                 ['send "put 1 into" to this stack\\0', 'ERR:4:not defined'],
                 ['send "put \'1 into" to this stack\\0', 'ERR:4:lex error'],
                 ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:unexpected character'],

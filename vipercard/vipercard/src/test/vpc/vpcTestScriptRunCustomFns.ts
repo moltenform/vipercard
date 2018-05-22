@@ -618,6 +618,124 @@ HandlerEnd
             this.compareRewrittenCode(inp, expected);
 
         },
+        'test_put into message box',
+        () => {
+        let inp = `on myCode
+put "abc"
+end myCode`
+        let expected = `HandlerStart
+        put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+        HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc"
+put "def"
+end myCode`
+        expected = `HandlerStart
+        put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+        put~"def"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+        HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "a" & "b" & "c"
+end myCode`
+        expected = `HandlerStart
+        put~"a"~&~"b"~&~"c"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+        HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "a" & "b into c"
+end myCode`
+expected = `HandlerStart
+put~"a"~&~"b into c"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into x
+end myCode`
+        expected = `HandlerStart
+        put~"abc"~syntaxmarker~into~syntaxmarker~x~
+        HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into msgbox
+end myCode`
+expected = `HandlerStart
+put~"abc"~syntaxmarker~into~syntaxmarker~msgbox~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+add 1 to the msg box
+end myCode`
+expected = `HandlerStart
+add~1~to~vpc__internal__msgbox~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into msg boxb
+end myCode`
+expected = `HandlerStart
+put~"abc"~syntaxmarker~into~syntaxmarker~msg~boxb~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into bmsg box
+end myCode`
+expected = `HandlerStart
+put~"abc"~syntaxmarker~into~syntaxmarker~bmsg~box~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into msg box
+end myCode`
+expected = `HandlerStart
+put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into msg box
+put "def" into msg box
+end myCode`
+expected = `HandlerStart
+put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+put~"def"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into the msg boxb
+end myCode`
+        expected = `HandlerStart
+        put~"abc"~syntaxmarker~into~syntaxmarker~the~msg~boxb~
+        HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into xthe msg box
+end myCode`
+expected = `HandlerStart
+put~"abc"~syntaxmarker~into~syntaxmarker~xthe~vpc__internal__msgbox~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+
+        inp = `on myCode
+put "abc" into the msg box
+end myCode`
+expected = `HandlerStart
+put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+HandlerEnd`
+        this.compareRewrittenCode(inp, expected);
+        },
         'test_run code with single-line if',
         () => {
             let batch: [string, string][] = [
@@ -1463,6 +1581,7 @@ theTest myMult(2,myMult(3,4)), myMult(5,6)
             .getCompiledScript(btnGo.id, btnGo.getS('script')) as VpcCodeOfOneVel;
 
         let got = transformedCode.lines.map(o => o.allImages || VpcLineCategory[o.ctg]);
+        got = got.map(o => o.replace(/\n/g, 'syntaxmarker'))
         let exp = expected
             .trim()
             .split('\n')
