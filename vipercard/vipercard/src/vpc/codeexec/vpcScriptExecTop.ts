@@ -1,6 +1,6 @@
 
 /* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { slength } from '../../ui512/utils/utils512.js';
+/* auto */ import { ValHolder, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VarCollection, VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
@@ -30,6 +30,7 @@ export class VpcExecTop {
     cbOnScriptError: O<(err: VpcScriptErrorBase) => void>;
     cbCauseUIRedraw: O<() => void>;
     lastEncounteredScriptErr: O<VpcScriptErrorBase>;
+    fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({})
     protected justSawRepeatedMousedown = false;
     protected readonly code: VpcAllCode;
     protected readonly outside: OutsideWorldReadWrite;

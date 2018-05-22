@@ -9,9 +9,10 @@
 /* auto */ import { MenuListeners } from '../../ui512/menu/ui512MenuListeners.js';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
+/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
 /* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
 /* auto */ import { UI512TextEvents } from '../../ui512/textedit/ui512TextEvents.js';
-/* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
+/* auto */ import { VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
@@ -302,6 +303,10 @@ export class VpcPresenterEvents {
             }
 
             if (!pr.vci.isCodeRunning() && !d.handled()) {
+                VpcPresenterEvents.updateFieldsRecentlyEdited(pr, d)
+            }
+
+            if (!pr.vci.isCodeRunning() && !d.handled()) {
                 /* normal typing text into a field */
                 ed.onKeyDown(pr, d);
             }
@@ -314,6 +319,22 @@ export class VpcPresenterEvents {
                 d.setHandled();
             }
         });
+    }
+
+    /**
+     * track when we've typed normal text in a field, used to
+     * know if we should call closeField or exitField
+     */
+    static updateFieldsRecentlyEdited(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
+        if (UI512TextEvents.keyDownProbablyCausesTextChange(d)) {
+            let el = TextSelModify.getSelectedField(pr);
+            if (el) {
+                let vel = pr.lyrModelRender.findElIdToVel(el.id)
+                if (vel && vel.getType() === VpcElType.Fld && !vel.getB('locktext')) {
+                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id] = true
+                }
+            }
+        }
     }
 
     /**

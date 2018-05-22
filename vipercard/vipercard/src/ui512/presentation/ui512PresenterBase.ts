@@ -77,7 +77,6 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
                 this.currentFocus = next;
             }
 
-            /* change 3/30 */
             /* adjust focus to be appropriate to length of content */
             let nextFocus = this.app.findEl(next);
             if (nextFocus && nextFocus instanceof UI512ElTextField) {

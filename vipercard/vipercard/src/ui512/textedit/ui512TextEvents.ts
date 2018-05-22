@@ -252,6 +252,9 @@ export class UI512TextEvents {
                 let arrowbtndn = fldIdToScrollbarPartId(el.id, 'arrowDn');
                 this.getScrollbarImpl().onScrollArrowClicked(pr, arrowbtndn, UI512TextEvents.amtScrollArrowClicked);
                 break;
+            case 'Return':
+                TextSelModify.changeTextInsert(gel, '\n');
+                break;
             case 'Enter':
                 TextSelModify.changeTextInsert(gel, '\n');
                 break;
@@ -287,6 +290,35 @@ export class UI512TextEvents {
                     d.setHandled();
                 }
             }
+        }
+    }
+
+    /**
+     * will this key probably cause a change in the text field?
+     */
+    static keyDownProbablyCausesTextChange(d: KeyDownEventDetails) {
+        if ((d.mods === 0 || d.mods === ModifierKeys.Shift) && d.keyChar.length === 1) {
+            return true
+        }
+
+        if (d.readableShortcut.search(/\bBackspace\b/) !== -1 ||
+        d.readableShortcut.search(/\bDelete\b/) !== -1) {
+            return true
+        }
+
+        switch(d.readableShortcut) {
+            case 'Return':
+                return true
+            case 'Enter':
+                return true
+            case 'NumpadEnter':
+                return true
+            case 'Cmd+V':
+                return true
+            case 'Cmd+X':
+                return true
+            default:
+                return false
         }
     }
 

@@ -155,18 +155,22 @@ export class VpcPresenter extends VpcPresenterInit {
     /**
      * schedule the closefield event(s)
      */
-    beginScheduleFldOpenCloseEventClose(prevId: string) {
+    beginScheduleFldOpenCloseEventClose(prevElId: string) {
         /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
         since people's closeField scripts probably assume we are on the card anyways */
-        let prevVel = this.lyrModelRender.findElIdToVel(prevId)
+        let prevVel = this.lyrModelRender.findElIdToVel(prevElId)
         if (prevVel && prevVel.getType() === VpcElType.Fld) {
-            /* ideally, closefield only called if no changes made in the field */
-            let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
-            this.vci.getCodeExec().scheduleCodeExec(msg);
+            if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
+                /* closefield called if changes made in the field */
+                let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
+                this.vci.getCodeExec().scheduleCodeExec(msg);
 
-            /* ideally, exitfield only called if some changes were made in the field */
-            msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
-            this.vci.getCodeExec().scheduleCodeExec(msg);
+                this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false
+            } else {
+                /* exitfield called if no changes were made in the field */
+                let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
+                this.vci.getCodeExec().scheduleCodeExec(msg);
+            }
         }
     }
 

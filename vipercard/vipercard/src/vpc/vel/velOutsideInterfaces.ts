@@ -1,5 +1,6 @@
 
 /* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { ValHolder } from '../../ui512/utils/utils512.js';
 /* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
 /* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
@@ -205,4 +206,10 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
      * ignored if the message box is not currently open
      */
     WriteToReplMessageBox(s:string):void;
+
+    /**
+     * get access to FieldsRecentlyEdited, used to determine
+     * whether we should call openField or exitField
+     */
+    GetFieldsRecentlyEdited(): ValHolder<{ [id: string]: boolean }>;
 }

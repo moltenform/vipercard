@@ -1,7 +1,6 @@
 
 /* auto */ import { O, cleanExceptionMsg, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { MapKeyToObjectCanSet, base10, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
 /* auto */ import { lng } from '../../ui512/lang/langBase.js';
 /* auto */ import { TextFontStyling, textFontStylingToString } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
@@ -12,6 +11,7 @@
 /* auto */ import { KeyDownEventDetails } from '../../ui512/menu/ui512Events.js';
 /* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
 /* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
+/* auto */ import { UI512TextEvents } from '../../ui512/textedit/ui512TextEvents.js';
 /* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
 /* auto */ import { WndBorderDecorationConsts } from '../../ui512/composites/ui512Composites.js';
 /* auto */ import { UI512CompCodeEditorFont } from '../../ui512/composites/ui512CodeEditorAutoIndent.js';
@@ -266,12 +266,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             return;
         }
 
-        if (
-            d.readableShortcut.search(/\bBackspace\b/) !== -1 ||
-            d.readableShortcut.search(/\bDelete\b/) !== -1 ||
-            d.readableShortcut.search(/\bEnter\b/) !== -1 ||
-            ((d.mods === 0 || d.mods === ModifierKeys.Shift) && d.keyChar.length === 1 && d.keyChar.charCodeAt(0) >= 32)
-        ) {
+        if (UI512TextEvents.keyDownProbablyCausesTextChange(d)) {
             /* make the 'save' button bold since we have unsaved changes */
             let vel = this.cbGetAndValidateSelectedVel('selectedVelId');
             if (vel) {

@@ -473,6 +473,14 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
+     * get access to FieldsRecentlyEdited, used to determine
+     * whether we should call openField or exitField
+     */
+    GetFieldsRecentlyEdited() {
+        return this.vci.getCodeExec().fieldsRecentlyEdited
+    }
+
+    /**
      * get the name of the 'target' (the vel that was interacted with)
      */
     protected getTargetName(resolver: VelResolveName, adjective: PropAdjective) {
