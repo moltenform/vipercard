@@ -1,6 +1,7 @@
 
 /* auto */ import { checkThrow, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512BeginAsyncIgnoreFailures } from '../../ui512/utils/utilsTestCanvas.js';
+/* auto */ import { Util512, ValHolder } from '../../ui512/utils/utils512.js';
+/* auto */ import { NullaryFn, UI512BeginAsyncIgnoreFailures } from '../../ui512/utils/utilsTestCanvas.js';
 
 /**
  * support the "play" command in vipercard
@@ -63,5 +64,85 @@ export class VpcAudio {
             aud.currentTime = 0;
             UI512BeginAsyncIgnoreFailures(() => aud.play());
         }
+    }
+
+
+}
+
+/**
+ * support the "dial" command in vipercard
+ */
+export class VpcPhoneDial {
+    /**
+     * dials a number, and call cbWhenComplete when complete
+     */
+    static goDial(s:string, cbWhenComplete:NullaryFn) {
+        let alreadyRun = new ValHolder(false)
+        let runCallbackUnlessAlreadyRun = () => {
+            if (!alreadyRun.val) {
+                cbWhenComplete()
+                alreadyRun.val = true
+            }
+        }
+
+        /* fail-safe: continue running the script in 5 seconds even if everything else fails */
+        let fiveSeconds = 5 * 1000
+        window.setTimeout(runCallbackUnlessAlreadyRun, fiveSeconds)
+
+        /* preload, so we'll at least have them available for next time */
+        for (let i=0; i<10; i++) {
+            let filename = `dial${i}`
+            VpcAudio.preload(filename)
+        }
+
+        /* start playback */
+        let padding = 30
+        let arr = VpcPhoneDial.intoArray(s)
+        if (!arr.length) {
+            window.setTimeout(runCallbackUnlessAlreadyRun, 1)
+            return
+        }
+
+        /* schedule playing each tone */
+        let durations = arr.map(n=>VpcPhoneDial.mapDialDurations[n] + padding)
+        for (let i=0; i<arr.length; i++) {
+            let timeAt = durations.slice(0, i+1).reduce(Util512.add)
+            let filename = `dial${arr[i]}`
+            window.setTimeout(()=>VpcAudio.play(filename), timeAt)
+        }
+
+        /* schedule returing to the script */
+        let totalTime = durations.reduce(Util512.add) + 500
+        window.setTimeout(runCallbackUnlessAlreadyRun, totalTime)
+    }
+
+    /**
+     * from '123' to [1,2,3]
+     */
+    protected static intoArray(s:string):number[] {
+        let ret:number[] = []
+        for (let i=0; i<s.length; i++) {
+            if (s.charCodeAt(i) >= '0'.charCodeAt(0) && s.charCodeAt(i) <= '9'.charCodeAt(0)) {
+                ret.push(s.charCodeAt(i) - '0'.charCodeAt(0))
+            }
+        }
+
+        return ret
+    }
+
+    /**
+     * durations in milliseconds of the sounds
+     */
+    static mapDialDurations:{ [key: number]:number} = {
+        0: 261,
+        1: 261,
+        2: 235,
+        3: 287,
+        4: 287,
+        5: 313,
+        6: 313,
+        7: 235,
+        8: 313,
+        9: 313
     }
 }

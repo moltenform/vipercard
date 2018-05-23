@@ -3,6 +3,7 @@
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from '../../ui512/utils/utils512.js';
 /* auto */ import { UI512CompStdDialogResult } from '../../ui512/composites/ui512ModalDialog.js';
 /* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcPhoneDial } from '../../vpc/vpcutils/vpcAudio.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 
 /**
@@ -39,6 +40,25 @@ export class VpcScriptExecAsync {
             window.setTimeout(() => {
                 pendingOps.markCompleted(asyncOpId, true);
             }, milliseconds);
+        };
+
+        pendingOps.go(asyncOpId, asyncOp, blocked);
+    }
+
+    /**
+     * e.g. 'dial "1234"'
+     * because we know the length of each audio clip,
+     * we know how long to wait
+     */
+    static goAsyncDial(
+        pendingOps: VpcPendingAsyncOps,
+        blocked: ValHolder<number>,
+        asyncOpId: string,
+        numbersToDial: string
+    ) {
+        let asyncOp = () => {
+            let markComplete = () => pendingOps.markCompleted(asyncOpId, true)
+            VpcPhoneDial.goDial(numbersToDial, markComplete)
         };
 
         pendingOps.go(asyncOpId, asyncOp, blocked);

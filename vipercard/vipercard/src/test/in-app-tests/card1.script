@@ -211,7 +211,9 @@ on runTestValOps
 end runTestValOps
 
 on runTestMisc
-	answer "about to play beep"
+	answer "about to play dial audio"
+	dial "0123456789"
+	answer "done playing dial audio. about to play beep"
 	beep
 	go next
 	put "" into cd fld "fldTest"

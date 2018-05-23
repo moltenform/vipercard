@@ -34,6 +34,7 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdClick(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdCreate(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDelete(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdDial(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDisable(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDivide(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals;

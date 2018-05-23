@@ -280,6 +280,20 @@ export class ExecuteStatement {
     }
 
     /**
+     * Dial a number with old touch tones
+     */
+    goDial(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<number>) {
+        let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
+
+        /* read as a string, since it could have embedded - or a leading zero */
+        let numbersToDial = args[0].readAsString()
+
+        /* because there is only 1 script execution thread, don't need to assign a unique id. */
+        let asyncOpId = 'singleThreadAsyncOpId';
+        VpcScriptExecAsync.goAsyncDial(this.pendingOps, blocked, asyncOpId, numbersToDial)
+    }
+
+    /**
      * Play a sound effect.
      * Use
      *      play "mySound" load

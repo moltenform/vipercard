@@ -188,6 +188,10 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
+        RuleBuiltinCmdDial(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
         RuleBuiltinCmdDisable(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
