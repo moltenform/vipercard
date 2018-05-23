@@ -5,7 +5,7 @@ What is ViperCard?
     
 - [homepage](https://www.vipercard.net) - ViperCard runs in any modern web browser
 
-- [complete script reference](doc/README.md) - what's available when making a project in ViperCard
+- [complete script reference](doc/reference_01_fundamentals.md) - what's available when making a project in ViperCard
 
 Source code:
 

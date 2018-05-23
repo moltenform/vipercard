@@ -1,6 +1,8 @@
 <!---
 this is a generated file, changes will be lost.
 -->
+[Fundamentals](./reference_01_fundamentals.md) | [Functions](./reference_02_functions.md) | [Events](./reference_03_events.md) | [Commands] | [Properties](./reference_05_properties.md)
+
 
 
 ## add {number} to [chunk of] {container}

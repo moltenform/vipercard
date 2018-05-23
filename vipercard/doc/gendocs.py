@@ -150,21 +150,35 @@ def goMakeJson(sections, sectionname):
     f.close()
 
 def goMakeMarkdown(sections, sectionname):
+    filename = sections[sectionname][0]
     s = sections[sectionname][1]
     sectionMd = goSection(s, sectionname, addFormattingMarkdown, addFormattingMarkdownFinish)
     
     header = '''<!---
 this is a generated file, changes will be lost.
 -->'''
+
     markd = ''
     markd += header + '\n'
+    
+    headerLinks = ''
+    headerLinks+='[Fundamentals](./reference_01_fundamentals.md) | '
+    headerLinks+='[Functions](./reference_02_functions.md) | '
+    headerLinks+='[Events](./reference_03_events.md) | '
+    headerLinks+='[Commands](./reference_04_commands.md) | '
+    headerLinks+='[Properties](./reference_05_properties.md)'
+    fullfilename = './' + filename + '.md'
+    headerLinks = headerLinks.replace('('+fullfilename+')', '')
+    
+    markd += headerLinks
+    markd += '\n\n'
+        
     for se in sectionMd['entries']:
         body = se['body']
         body = body.replace(changeFontTitle, '## ')
         body = body.replace(changeFontBody, '')
         markd += '\n\n' +body + '\n\n'
     
-    filename = sections[sectionname][0]
     assertTrue(not '/' in filename and not '\\' in filename and not '.' in filename, filename)
     myfileswriteall('./' + filename + '.md', markd)
 

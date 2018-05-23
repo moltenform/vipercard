@@ -1,6 +1,8 @@
 <!---
 this is a generated file, changes will be lost.
 -->
+[Fundamentals] | [Functions](./reference_02_functions.md) | [Events](./reference_03_events.md) | [Commands](./reference_04_commands.md) | [Properties](./reference_05_properties.md)
+
 
 
 ## Introduction

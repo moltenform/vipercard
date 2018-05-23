@@ -1,6 +1,8 @@
 <!---
 this is a generated file, changes will be lost.
 -->
+[Fundamentals](./reference_01_fundamentals.md) | [Functions](./reference_02_functions.md) | [Events] | [Commands](./reference_04_commands.md) | [Properties](./reference_05_properties.md)
+
 
 
 ## on afterKeyDown
