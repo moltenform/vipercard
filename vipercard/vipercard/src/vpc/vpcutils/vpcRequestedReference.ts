@@ -75,7 +75,7 @@ export enum PrpTyp {
  * or a
  * function (dynamic code to retrieve the property)
  */
-export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T) => string | number | boolean)];
+export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T, cardId: string) => string | number | boolean)];
 
 /**
  * a vel prop-setter can be either a
@@ -83,4 +83,4 @@ export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T) => 
  * or a
  * function (dynamic code to set the property)
  */
-export type PropSetter<T extends UI512Settable> = [PrpTyp, string | ((me: T, v: string | number | boolean) => void)];
+export type PropSetter<T extends UI512Settable> = [PrpTyp, string | ((me: T, v: string | number | boolean, cardId: string) => void)];

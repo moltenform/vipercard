@@ -229,7 +229,7 @@ let mTests: (string | Function)[] = [
         let vel = new VpcElField('12', '34');
         vel.observer = new ElementObserverNoOp();
         vel.set('h', 123);
-        let gel = new VpcTextFieldAsGeneric(el, vel);
+        let gel = new VpcTextFieldAsGeneric(el, vel, vel.parentId);
 
         /* test setFmtTxt */
         let txt = FormattedText.newFromUnformatted('abc');

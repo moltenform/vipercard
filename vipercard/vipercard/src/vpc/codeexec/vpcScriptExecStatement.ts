@@ -8,7 +8,6 @@
 /* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
 /* auto */ import { VpcAudio } from '../../vpc/vpcutils/vpcAudio.js';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 /* auto */ import { isTkType, tks } from '../../vpc/codeparse/vpcTokens.js';
 /* auto */ import { VpcLineCategory } from '../../vpc/codepreparse/vpcPreparseCommon.js';
@@ -174,14 +173,6 @@ export class ExecuteStatement {
         } else {
             return undefined;
         }
-    }
-
-    /**
-     * resolve reference to a vel
-     */
-    protected getResolveChildVel(vals: IntermedMapOfIntermedVals, nm: string): VpcElBase {
-        let ref = throwIfUndefined(this.findChildVelRef(vals, nm), '5K|not found', nm);
-        return throwIfUndefined(this.outside.ResolveVelRef(ref), '5J|element not found');
     }
 
     /**

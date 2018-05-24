@@ -74,7 +74,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * resolve reference to a vel
      */
-    ResolveVelRef(ref: RequestedVelRef): O<VpcElBase> {
+    ResolveVelRef(ref: RequestedVelRef): [O<VpcElBase>, VpcElCard] {
         let me: O<VpcElBase>;
         let target: O<VpcElBase>;
         let [frStack, frame] = this.vci.findExecFrameStack();
@@ -85,11 +85,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
 
         let resolver = new VelResolveReference(this.vci.getModel());
         let ret = resolver.go(ref, me, target);
-        checkThrow(
-            !ret || !scontains(ret.getS('name'), '$$'),
-            `Kt|names with $$ are reserved for internal ViperCard objects.`
-        );
-
+        checkThrow(ret && ret.length === 2, 'VelResolveReference invalid return')
+        checkThrow(!ret[0] || !scontains(ret[0]!.getS('name'), '$$'), `Kt|names with $$ are reserved for internal ViperCard objects.`)
         return ret;
     }
 
@@ -97,14 +94,14 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * try resolving a RequestedVelRef, and if resolution fails, return false
      */
     ElementExists(vel: RequestedVelRef): boolean {
-        return this.ResolveVelRef(vel) !== undefined;
+        return this.ResolveVelRef(vel)[0] !== undefined;
     }
 
     /**
      * count the number of elements of a certain type
      */
     CountElements(type: VpcElType, parentRef: RequestedVelRef): number {
-        let parent = throwIfUndefined(this.ResolveVelRef(parentRef), '6t|Cannot find this element');
+        let parent = throwIfUndefined(this.ResolveVelRef(parentRef)[0], '6t|Cannot find this element');
         let parentAsCard = parent as VpcElCard;
         let parentAsBg = parent as VpcElBg;
         let parentAsStack = parent as VpcElStack;
@@ -227,9 +224,15 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     ResolveContainerReadable(container: RequestedContainerRef): ReadableContainer {
         checkThrow(container.isRequestedContainerRef, '8<|not a valid container');
         if (container.vel) {
-            let resolved = this.ResolveVelRef(container.vel) as VpcElBase;
-            checkThrow(resolved && resolved.isVpcElBase, `8;|element not found`);
-            return new ReadableContainerField(resolved);
+            let resolved = this.ResolveVelRef(container.vel);
+            let vel = resolved[0]
+            checkThrow(vel && vel.isVpcElBase, `8;|element not found`);
+            let asFld = vel as VpcElField
+            checkThrow(
+                asFld && asFld.isVpcElField,
+                `6[|currently we only support reading text from a fld. to read label of button, use 'the label of cd btn 1'`
+            );
+            return new ReadableContainerField(asFld, resolved[1].id);
         } else if (container.variable) {
             return new ReadableContainerVar(this as OutsideWorldRead, container.variable);
         } else {
@@ -243,9 +246,16 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     ResolveContainerWritable(container: RequestedContainerRef): WritableContainer {
         if (container.vel) {
-            let resolved = this.ResolveVelRef(container.vel) as VpcElBase;
-            checkThrow(resolved && resolved.isVpcElBase, `8:|element not found`);
-            return new WritableContainerField(resolved);
+            let resolved = this.ResolveVelRef(container.vel);
+            let vel = resolved[0]
+            checkThrow(vel && vel.isVpcElBase, `8;|element not found`);
+            let asFld = vel as VpcElField
+            checkThrow(
+                asFld && asFld.isVpcElField,
+                `currently we only support writing text to a fld. to write label of button, use 'the label of cd btn 1'`
+            );
+
+            return new WritableContainerField(asFld, resolved[1].id);
         } else if (container.variable) {
             return new WritableContainerVar(this, container.variable);
         } else {
@@ -285,14 +295,22 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void {
-        let vel = (ref ? this.ResolveVelRef(ref) : this.vci.getModel().productOpts) as VpcElBase;
-        checkThrow(vel && vel.isVpcElBase, `8/|could not set ${prop} because could not find the specified element.`);
+        let resolved:[O<VpcElBase>, VpcElCard]
+        if (ref) {
+            resolved = this.ResolveVelRef(ref)
+        } else {
+            resolved = [this.vci.getModel().productOpts,
+                this.vci.getModel().getCurrentCard()]
+        }
+
+        let vel = throwIfUndefined(resolved[0], `8/|could not get ${prop} because could not find the specified element.`);
+        let cardId = resolved[1].id
         if (chunk) {
             let fld = vel as VpcElField;
             checkThrow(fld.isVpcElField, `8.|can only say 'set the (prop) of char 1 to 2' on fields.`);
-            fld.specialSetPropChunk(prop, chunk, v, this.GetItemDelim());
+            fld.specialSetPropChunk(cardId, prop, chunk, v, this.GetItemDelim());
         } else {
-            vel.setProp(prop, v);
+            vel.setProp(prop, v, cardId);
         }
     }
 
@@ -300,14 +318,22 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * high-level get property of a vel, returns VpcVal
      */
     GetProp(ref: O<RequestedVelRef>, prop: string, adjective: PropAdjective, chunk: O<RequestedChunk>): VpcVal {
-        let vel = (ref ? this.ResolveVelRef(ref) : this.vci.getModel().productOpts) as VpcElBase;
-        checkThrow(vel && vel.isVpcElBase, `8-|could not get ${prop} because could not find the specified element.`);
+        let resolved:[O<VpcElBase>, VpcElCard]
+        if (ref) {
+            resolved = this.ResolveVelRef(ref)
+        } else {
+            resolved = [this.vci.getModel().productOpts,
+                this.vci.getModel().getCurrentCard()]
+        }
+
+        let vel = throwIfUndefined(resolved[0], `8-|could not get ${prop} because could not find the specified element.`);
+        let cardId = resolved[1].id
         let resolver = new VelResolveName(this.vci.getModel());
         if (chunk) {
             /* put the textstyle of char 2 to 4 of fld "myFld" into x */
             let fld = vel as VpcElField;
             checkThrow(fld.isVpcElField, `8,|can only say 'get the (prop) of char 1 to 2' on fields.`);
-            return fld.specialGetPropChunk(prop, chunk, this.GetItemDelim());
+            return fld.specialGetPropChunk(cardId, prop, chunk, this.GetItemDelim());
         } else if (prop === 'owner') {
             /* put the owner of card "myCard" into x */
             return VpcValS(resolver.getOwnerName(vel, adjective));
@@ -333,7 +359,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             }
 
             /* ask the vel for the property */
-            return vel.getProp(prop);
+            return vel.getProp(prop, cardId);
         }
     }
 
@@ -364,6 +390,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     CallBuiltinFunction(s: string, args: VpcVal[]): VpcVal {
         return this.builtinFns.call(s, args);
     }
+
+    GetCurrentCardId(): string {
+        return this.vci.getOptionS('currentCardId')
+    }
+
 
     /**
      * get code execution frame information
@@ -486,7 +517,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     protected getTargetName(resolver: VelResolveName, adjective: PropAdjective) {
         let newRef = new RequestedVelRef(VpcElType.Unknown);
         newRef.isReferenceToTarget = true;
-        let velTarget = this.ResolveVelRef(newRef);
+        let velTarget = this.ResolveVelRef(newRef)[0];
         if (velTarget) {
             return resolver.go(velTarget, adjective);
         } else {

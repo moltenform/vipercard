@@ -63,14 +63,16 @@ export class VpcChangeSelectedFont {
     protected setAlignImpl(v: string) {
         v = v.toLowerCase();
         let vel = this.cbGetEditToolSelectedFldOrBtn();
+        let currentCardId = this.vci.getOptionS('currentCardId')
+
         if (vel) {
-            vel.setProp('textalign', VpcValS(v));
+            vel.setProp('textalign', VpcValS(v), currentCardId);
             return true;
         } else {
             let chunksel = this.getActiveChunkSel();
             if (chunksel) {
                 /* we don't yet support setting alignment on a per-paragraph basis */
-                chunksel[0].setProp('textalign', VpcValS(v));
+                chunksel[0].setProp('textalign', VpcValS(v), currentCardId);
                 return true;
             }
         }
@@ -140,8 +142,9 @@ export class VpcChangeSelectedFont {
         if (vel) {
             /* note: get from focused, not vel, since it's more up to date? */
             /* no, since we're acting on the vel, get everything from one for consistency */
-            let selcaret = fitIntoInclusive(vel.getN('selcaret'), 0, vel.getFmTxt().len());
-            let selend = fitIntoInclusive(vel.getN('selend'), 0, vel.getFmTxt().len());
+            let currentCardId = this.vci.getOptionS('currentCardId')
+            let selcaret = fitIntoInclusive(vel.getN('selcaret'), 0, vel.getCardFmTxt(currentCardId).len());
+            let selend = fitIntoInclusive(vel.getN('selend'), 0, vel.getCardFmTxt(currentCardId).len());
             if (selcaret !== selend) {
                 return [vel, Math.min(selcaret, selend), Math.max(selcaret, selend)];
             }
@@ -198,16 +201,17 @@ export class VpcChangeSelectedFont {
      * set font of a vel
      */
     protected setFontBtnFld(vel: VpcElBase, v: string, typeOfChange: string) {
+        let currentCardId = this.vci.getOptionS('currentCardId')
         if (typeOfChange !== 'textstyle') {
-            vel.setProp(typeOfChange, VpcValS(v));
+            vel.setProp(typeOfChange, VpcValS(v), currentCardId);
             return true;
         } else {
             let curStyle = vel
-                .getProp('textstyle')
+                .getProp('textstyle', currentCardId)
                 .readAsString()
                 .toLowerCase();
             curStyle = this.toggleStyle(curStyle, v);
-            vel.setProp('textstyle', VpcValS(curStyle));
+            vel.setProp('textstyle', VpcValS(curStyle), currentCardId);
             return true;
         }
     }

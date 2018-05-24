@@ -196,6 +196,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             return;
         }
 
+        let currentCardId = this.vci.getOptionS('currentCardId')
         this.fillInValuesTip(app, vel);
         let grp = app.getGroup(this.grpId);
         for (let [lblTxt, inId, inputW] of this.topInputs) {
@@ -216,7 +217,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         }
 
         if (this.leftChoices.length) {
-            let styl = vel.getProp('style').readAsString();
+            let styl = vel.getProp('style', currentCardId).readAsString();
             let el = grp.getEl(this.getElId(`leftchoice`));
             let found = this.leftChoices.findIndex(item => item[1].toLowerCase() === styl.toLowerCase());
             if (found !== -1) {
@@ -232,7 +233,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
 
         for (let [lblTxt, inId] of this.rightOptions) {
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
-            let val = vel.getProp(inId);
+            let val = vel.getProp(inId, currentCardId);
             el.set('checkmark', val.readAsStrictBoolean());
         }
     }
@@ -248,13 +249,14 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
      * save changes for one property
      */
     protected saveChangesToModelSetProp(vel: VpcElBase, propName: string, newVal: VpcVal, onlyCheckIfDirty: boolean) {
+        let currentCardId = this.vci.getOptionS('currentCardId')
         if (onlyCheckIfDirty) {
-            let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName);
+            let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName, currentCardId);
             if (current.readAsString() !== newVal.readAsString()) {
                 throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
-            vel.setProp(propName, newVal);
+            vel.setProp(propName, newVal, currentCardId);
         }
     }
 
@@ -316,7 +318,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         for (let [lblTxt, inId] of this.rightOptions) {
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
             let checked = el.getB('checkmark');
-            vel.setProp(inId, VpcValBool(checked));
+            vel.setProp(inId, VpcValBool(checked), this.vci.getOptionS('currentCardId'));
             this.saveChangesToModelSetProp(vel, inId, VpcValBool(checked), onlyCheckIfDirty);
         }
     }

@@ -1,8 +1,9 @@
 
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { isString } from '../../ui512/utils/utils512.js';
+/* auto */ import { checkThrowEq, isString, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
+/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { ElementObserverVal, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
@@ -67,28 +68,28 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * high-level property get, from a vpc script
      */
-    getProp(propName: string): VpcVal {
+    getProp(propName: string, cardId: string): VpcVal {
         let found = this.getters[propName];
         if (found) {
             let type = found[0];
             let mappedProp = found[1];
             if (type === PrpTyp.Str) {
                 if (typeof mappedProp === 'function') {
-                    return VpcValS(mappedProp(this) as string);
+                    return VpcValS(mappedProp(this, cardId) as string);
                 } else {
                     assertTrue(isString(mappedProp), '4,|not a string');
                     return VpcValS(this.getS(mappedProp));
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
-                    return VpcValN(mappedProp(this) as number);
+                    return VpcValN(mappedProp(this, cardId) as number);
                 } else {
                     assertTrue(isString(mappedProp), '4+|not a string');
                     return VpcValN(this.getN(mappedProp));
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
-                    return VpcValBool(mappedProp(this) as boolean);
+                    return VpcValBool(mappedProp(this, cardId) as boolean);
                 } else {
                     assertTrue(isString(mappedProp), '4*|not a string');
                     return VpcValBool(this.getB(mappedProp));
@@ -104,28 +105,28 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * high-level property set, from a vpc script
      */
-    setProp(propName: string, val: VpcVal): void {
+    setProp(propName: string, val: VpcVal, cardId: string): void {
         let found = this.setters[propName];
         if (found) {
             let type = found[0];
             let mappedProp = found[1];
             if (type === PrpTyp.Str) {
                 if (typeof mappedProp === 'function') {
-                    mappedProp(this, val.readAsString());
+                    mappedProp(this, val.readAsString(), cardId);
                 } else {
                     assertTrue(isString(mappedProp), '4&|prop name not a string');
                     this.set(mappedProp, val.readAsString());
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
-                    mappedProp(this, val.readAsStrictInteger(this.tmpArray));
+                    mappedProp(this, val.readAsStrictInteger(this.tmpArray), cardId);
                 } else {
                     assertTrue(isString(mappedProp), '4%|prop name not a string');
                     this.set(mappedProp, val.readAsStrictInteger(this.tmpArray));
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
-                    mappedProp(this, val.readAsStrictBoolean(this.tmpArray));
+                    mappedProp(this, val.readAsStrictBoolean(this.tmpArray), cardId);
                 } else {
                     assertTrue(isString(mappedProp), '4$|prop name not a string');
                     this.set(mappedProp, val.readAsStrictBoolean(this.tmpArray));
@@ -138,6 +139,11 @@ export abstract class VpcElBase extends UI512Settable {
         }
     }
 
+    /* e.g. a background field has different content on every card */
+    isCardSpecificContent(key:string) {
+        return false
+    }
+
     /**
      * when a vel is no longer valid, null out the fields
      * so that code mistakenly referring to it will
@@ -147,7 +153,7 @@ export abstract class VpcElBase extends UI512Settable {
         this.getters = undefined as any; /* destroy() */
         this.setters = undefined as any; /* destroy() */
         this.set = undefined as any; /* destroy() */
-        this.setFmTxt = undefined as any; /* destroy() */
+        this.setCardFmTxt = undefined as any; /* destroy() */
     }
 
     /**
@@ -194,6 +200,39 @@ export abstract class VpcElBase extends UI512Settable {
     static findByOrdinal<T extends VpcElBase>(list: VpcElBase[], currentIndex: number, pos: OrdinalOrPosition) {
         let index = getPositionFromOrdinalOrPosition(pos, currentIndex, 0, list.length - 1);
         return list[index] ? (list[index] as T) : undefined;
+    }
+
+    setPossiblyCardSpecific(key:string, newv:ElementObserverVal, defaultVal:ElementObserverVal, cardId:string) {
+        if (this.isCardSpecificContent(key)) {
+            checkThrow(slength(cardId) > 0, 'invalid card id')
+            let curVal = this.get(key)
+            checkThrowEq(typeof curVal, typeof newv, '')
+            let specificKey = key + '_oncard_' + cardId;
+            this.setSkipTypeCheck(specificKey, newv, defaultVal)
+        } else {
+            this.set(key, newv)
+        }
+    }
+
+    getPossiblyCardSpecific(key:string, defaultVal:ElementObserverVal, cardId:string):ElementObserverVal {
+        if (this.isCardSpecificContent(key)) {
+            let specificKey = key + '_oncard_' + cardId;
+            return this.getSkipTypeCheck(specificKey, defaultVal)
+        } else {
+            return this.get(key)
+        }
+    }
+
+    getCardFmTxt(cardId:string): FormattedText {
+        let got = this.getPossiblyCardSpecific('ftxt', new FormattedText(), cardId)
+        let gotAsTxt = got as FormattedText;
+        checkThrow(gotAsTxt && gotAsTxt.isFormattedText, 'not FormattedText')
+        return gotAsTxt
+    }
+
+    setCardFmTxt(cardId:string, newTxt: FormattedText, context = ChangeContext.Default) {
+        newTxt.lock()
+        this.setPossiblyCardSpecific('ftxt', newTxt, new FormattedText(), cardId)
     }
 }
 

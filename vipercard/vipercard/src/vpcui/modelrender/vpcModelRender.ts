@@ -107,6 +107,25 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         }
     }
 
+    protected getCardSpecific(vel: VpcElBase, propName:string, currentCardId:string) {
+        let spl = propName.split('_oncard_')
+        if (spl.length > 1) {
+            let shortPropname = spl[0]
+            let propCardname = spl[1]
+            if (vel.isCardSpecificContent(shortPropname)) {
+                return propCardname === currentCardId ? shortPropname : '______'
+            } else {
+                return '______'
+            }
+        } else {
+            if (vel.isCardSpecificContent(propName)) {
+                return '______'
+            } else {
+                return propName
+            }
+        }
+    }
+
     /**
      * apply the change, if the vel type is one we listen to
      * for example, if change is to a vel on a different card, ignore the change
@@ -117,9 +136,14 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         newVal: ElementObserverVal,
         fromScratch: boolean
     ) {
-        let currentCardId = this.vci.getOptionS('currentCardId');
-        let screenlocked = this.vci.getOptionB('screenLocked');
+        /* translate from card-specific content */
         let type = vel.getType();
+        let currentCardId = this.vci.getOptionS('currentCardId');
+        if (type === VpcElType.Btn || type === VpcElType.Fld) {
+            propName = this.getCardSpecific(vel, propName, currentCardId)
+        }
+
+        let screenlocked = this.vci.getOptionB('screenLocked');
         if (type === VpcElType.Product && propName === 'suggestedIdleRate') {
             this.changeIdleRate(newVal);
         } else if (screenlocked) {
@@ -166,9 +190,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             let partAsBtn = part as VpcElButton;
             let partAsField = part as VpcElField;
             if (partAsBtn && partAsBtn.isVpcElButton) {
-                this.buildBtnFromScratch(partAsBtn);
+                this.buildBtnFromScratch(partAsBtn, currentCardId);
             } else if (partAsField && partAsField.isVpcElField) {
-                this.buildFldFromScratch(partAsField);
+                this.buildFldFromScratch(partAsField, currentCardId);
             } else {
                 throw makeVpcInternalErr('6*|invalid part type');
             }
@@ -248,7 +272,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     /**
      * build a button from scratch
      */
-    protected buildBtnFromScratch(vpcel: VpcElButton) {
+    protected buildBtnFromScratch(vpcel: VpcElButton, currentCardId:string) {
         let target = new UI512ElButton(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.vci.UI512App(), target);
         for (let i = 0, len = VpcElButton.keyPropertiesList.length; i < len; i++) {
@@ -261,7 +285,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     /**
      * build a field from scratch
      */
-    protected buildFldFromScratch(vpcel: VpcElField) {
+    protected buildFldFromScratch(vpcel: VpcElField, currentCardId:string) {
         let target = new UI512ElTextField(this.velIdToElId(vpcel.id));
         this.grp.addElement(this.vci.UI512App(), target);
         for (let i = 0, len = VpcElField.keyPropertiesList.length; i < len; i++) {
@@ -270,7 +294,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             this.applyOneChange(vpcel, prop, newVal, true);
         }
 
-        target.setFmTxt(vpcel.getFmTxt());
+        target.setFmTxt(vpcel.getCardFmTxt(currentCardId));
     }
 
     /**
@@ -488,14 +512,14 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
  * we need to update the _VpcElField_ model first
  */
 export class VpcTextFieldAsGeneric implements GenericTextField {
-    constructor(protected el512: UI512ElTextField, protected impl: VpcElField) {}
+    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected cardId: string) {}
 
     setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
-        this.impl.setFmTxt(newTxt, context);
+        this.impl.setCardFmTxt(this.cardId, newTxt, context);
     }
 
     getFmtTxt(): FormattedText {
-        return this.impl.getFmTxt();
+        return this.impl.getCardFmTxt(this.cardId);
     }
 
     canEdit() {
@@ -536,12 +560,13 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     }
 
     getScrollAmt(): number {
-        return this.impl.getN('scroll');
+        let got = this.impl.getPossiblyCardSpecific('scroll', 0, this.cardId)
+        return got as number
     }
 
     setScrollAmt(n: O<number>): void {
         if (n !== undefined && n !== null) {
-            return this.impl.set('scroll', n);
+            return this.impl.setPossiblyCardSpecific('scroll', n, 0, this.cardId)
         }
     }
 }

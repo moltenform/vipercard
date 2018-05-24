@@ -229,8 +229,10 @@ export class VelResolveReference {
 
     /**
      * resolve the reference
+     * returns the given parent card as well,
+     * since 'bg fld id 1234 of cd 1' is different than 'bg fld id 1234 of cd 2'
      */
-    go(ref: RequestedVelRef, me: O<VpcElBase>, target: O<VpcElBase>): O<VpcElBase> {
+    go(ref: RequestedVelRef, me: O<VpcElBase>, target: O<VpcElBase>): [O<VpcElBase>, VpcElCard] {
         const currentCard = this.model.getCurrentCard();
 
         /* check that the types are consistent */
@@ -245,23 +247,23 @@ export class VelResolveReference {
 
         if (ref.isReferenceToMe) {
             checkThrowEq(VpcElType.Unknown, ref.type, '6}|');
-            return me;
+            return [me, currentCard];
         } else if (ref.isReferenceToTarget) {
             checkThrowEq(VpcElType.Unknown, ref.type, '6||');
-            return target;
+            return [target, currentCard];
         }
 
-        let parentCard = ref.parentCdInfo ? this.go(ref.parentCdInfo, me, target) : undefined;
-        let parentBg = ref.parentBgInfo ? this.go(ref.parentBgInfo, me, target) : undefined;
+        let parentCard:O<VpcElBase> = ref.parentCdInfo ? this.go(ref.parentCdInfo, me, target)[0] : undefined;
+        let parentBg:O<VpcElBase> = ref.parentBgInfo ? this.go(ref.parentBgInfo, me, target)[0] : undefined;
         let methodName = 'go' + VpcElType[ref.type];
         if ((ref.parentCdInfo && !parentCard) || (ref.parentBgInfo && !parentBg)) {
             /* you have specified a parent, but the parent does not exist! therefore the child does not exist */
-            return undefined;
-        } else if (ref.lookById) {
+            return [undefined, currentCard];
+        } else if (ref.lookById && !ref.partIsBg) {
             /* looking up by id is very fast, and the same for every type */
             let ret = this.model.findByIdUntyped(ref.lookById.toString());
             checkThrow(!ret || ret.getType() === ref.type, 'J+|wrong type', ref.type, ret ? ret.getType() : '');
-            return ret;
+            return [ret, currentCard];
         }
 
         return Util512.callAsMethodOnClass(
@@ -290,85 +292,111 @@ export class VelResolveReference {
     /**
      * resolve a button or field
      */
-    protected goBtnOrFld(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
-        checkThrow(!parentBg, "J*|this type can't have a parent bg");
+    protected goBtnOrFld(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBgGiven: O<VpcElBg>, isBg: boolean): [O<VpcElBase>, VpcElCard] {
+        checkThrow(!parentBgGiven, "J*|this type can't have a parent bg, specify card instead");
         checkThrow(!isBg, 'J)|not yet supported');
         parentCd = parentCd || this.model.getCurrentCard();
-        if (!isBg) {
+        let retBtnOrFld:O<VpcElBase>
+        if (isBg) {
+            let parentBgId = parentCd.parentId
+            let parentBg = this.model.getById(parentBgId, VpcElBg)
+            if (ref.lookById !== undefined) {
+                /* put the name of bg btn id 1234 into x */
+                retBtnOrFld = parentBg.parts.find(vel => vel.id === ref.lookById!.toString())
+            } else if (ref.lookByAbsolute !== undefined) {
+                /* put the name of bg btn 2 into x */
+                let arr = parentBg.parts.filter(vel => vel.getType() === ref.type);
+                retBtnOrFld = arr[ref.lookByAbsolute - 1];
+            } else if (ref.lookByName !== undefined) {
+                /* put the name of cd btn "myBtn" into x */
+                retBtnOrFld = parentBg.parts.find(vel => vel.getType() === ref.type && vel.getS('name') === ref.lookByName);
+            } else {
+                checkThrow(false, 'J(|unknown object reference');
+            }
+        } else {
             if (ref.lookByAbsolute !== undefined) {
                 /* put the name of cd btn 2 into x */
                 let arr = parentCd.parts.filter(vel => vel.getType() === ref.type);
-                return arr[ref.lookByAbsolute - 1];
+                retBtnOrFld = arr[ref.lookByAbsolute - 1];
             } else if (ref.lookByName !== undefined) {
                 /* put the name of cd btn "myBtn" into x */
-                return parentCd.parts.find(vel => vel.getType() === ref.type && vel.getS('name') === ref.lookByName);
+                retBtnOrFld = parentCd.parts.find(vel => vel.getType() === ref.type && vel.getS('name') === ref.lookByName);
             } else {
                 checkThrow(false, 'J(|unknown object reference');
             }
         }
+
+        return [retBtnOrFld, parentCd]
     }
 
     /**
      * resolve a card
      */
-    protected goCard(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
+    protected goCard(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean): [O<VpcElBase>, VpcElCard] {
         checkThrow(!parentCd, "J&|this type can't have a parent card");
         checkThrow(!isBg, "J%|this type can't be in a bkgnd");
         let currentCard = this.model.getCurrentCard();
+        let retCard:O<VpcElBase>
         if (parentBg) {
             let arr = parentBg.cards;
             if (ref.lookByAbsolute !== undefined) {
                 /* put the name of card 2 of bg "myBg" into x */
-                return arr[ref.lookByAbsolute - 1];
+                retCard = arr[ref.lookByAbsolute - 1];
             } else if (ref.lookByName !== undefined) {
                 /* put the name of card "myCard" of bg "myBg" into x */
-                return arr.find(vel => vel.getS('name') === ref.lookByName);
+                retCard = arr.find(vel => vel.getS('name') === ref.lookByName);
             } else if (ref.lookByRelative !== undefined) {
                 /* put the name of next card of bg "myBg" into x */
                 let currentPos = arr.findIndex(vel => vel.id === currentCard.id);
-                return VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
+                retCard = VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
             }
         } else {
             if (ref.lookByAbsolute !== undefined) {
                 /* put the name of card 2 into x */
-                return this.model.stack.findFromCardStackPosition(ref.lookByAbsolute - 1);
+                retCard = this.model.stack.findFromCardStackPosition(ref.lookByAbsolute - 1);
             } else if (ref.lookByName !== undefined) {
                 /* put the name of card "myCard" into x */
-                return this.model.stack.findCardByName(ref.lookByName);
+                retCard = this.model.stack.findCardByName(ref.lookByName);
             } else if (ref.lookByRelative !== undefined) {
                 /* put the name of next card into x */
-                return this.model.stack.getCardByOrdinal(currentCard.id, ref.lookByRelative);
+                retCard = this.model.stack.getCardByOrdinal(currentCard.id, ref.lookByRelative);
             }
         }
+
+        return [retCard, currentCard]
     }
 
     /**
      * resolve a background
      */
-    protected goBg(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
+    protected goBg(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean): [O<VpcElBase>, VpcElCard] {
         checkThrow(!parentCd, "J$|this type can't have a parent card");
         checkThrow(!parentBg, "J#|this type can't have a parent bg");
         checkThrow(!isBg, "J!|this type can't be in a bkgnd");
         let arr = this.model.stack.bgs;
+        let retBg:O<VpcElBase>
         if (ref.lookByAbsolute !== undefined) {
             /* put the name of bkgnd 2 into x */
-            return arr[ref.lookByAbsolute - 1];
+            retBg = arr[ref.lookByAbsolute - 1];
         } else if (ref.lookByName !== undefined) {
             /* put the name of bkgnd "myBg" into x */
-            return arr.find(vel => vel.getS('name') === ref.lookByName);
+            retBg = arr.find(vel => vel.getS('name') === ref.lookByName);
         } else if (ref.lookByRelative !== undefined) {
             /* put the name of next bkgnd into x */
             let currentCard = this.model.getCurrentCard();
             let currentBg = currentCard.parentId;
             let currentPos = arr.findIndex(vel => vel.id === currentBg);
-            return VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
+            retBg = VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
         }
+
+        let currentCard = this.model.getCurrentCard();
+        return [retBg, currentCard]
     }
 
     /**
      * resolve a stack
      */
-    protected goStack(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
+    protected goStack(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean): [O<VpcElBase>, VpcElCard] {
         checkThrow(!parentCd, "J |this type can't have a parent card");
         checkThrow(!parentBg, "Jz|this type can't have a parent bg");
         checkThrow(!isBg, "Jy|this type can't be in a bkgnd");
@@ -377,13 +405,14 @@ export class VelResolveReference {
             `Jx|we don't currently support referring to stacks other than "this stack"`
         );
 
-        return this.model.stack;
+        let currentCard = this.model.getCurrentCard();
+        return [this.model.stack, currentCard];
     }
 
     /**
      * resolve a product
      */
-    protected goProduct(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean) {
+    protected goProduct(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>, isBg: boolean): [O<VpcElBase>, VpcElCard] {
         checkThrow(!parentCd, "Jw|this type can't have a parent card");
         checkThrow(!parentBg, "Jv|this type can't have a parent bg");
         checkThrow(!isBg, "Ju|this type can't be in a bkgnd");
@@ -392,6 +421,7 @@ export class VelResolveReference {
             `75|we don't currently support referring to other than "${cProductName}"`
         );
 
-        return this.model.productOpts;
+        let currentCard = this.model.getCurrentCard();
+        return [this.model.productOpts, currentCard];
     }
 }

@@ -11,6 +11,7 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
+/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 
 /**
  * OutsideWorldRead:
@@ -91,6 +92,11 @@ export interface OutsideWorldRead {
      * call a built-in function
      */
     CallBuiltinFunction(s: string, args: VpcVal[]): VpcVal;
+
+    /**
+     * get the current card
+     */
+    GetCurrentCardId(): string
 }
 
 /**
@@ -123,7 +129,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**
      * resolve reference to a vel
      */
-    ResolveVelRef(ref: RequestedVelRef): O<VpcElBase>;
+    ResolveVelRef(ref: RequestedVelRef): [O<VpcElBase>, VpcElCard];
 
     /**
      * declare a global

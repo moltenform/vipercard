@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, assertTrueWarn } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { assertTrue, assertTrueWarn, checkThrow } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { anyJson, isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
@@ -39,7 +39,8 @@ export class VpcUI512Serialization {
             for (let propName of propList) {
                 let v = vals[propName];
                 if (v !== null && v !== undefined) {
-                    if (propName === UI512Settable.fmtTxtVarName) {
+                    assertTrueWarn(false, 'nyi')
+                    /*if (propName === UI512Settable.fmtTxtVarName) {
                         if (isString(v)) {
                             let vAsText = FormattedText.newFromSerialized(v);
                             vel.setFmTxt(vAsText);
@@ -49,7 +50,7 @@ export class VpcUI512Serialization {
                         }
                     } else {
                         vel.set(propName, VpcUI512Serialization.deserializePlain(v));
-                    }
+                    }*/
                 } else {
                     assertTrueWarn(false, 'J_|missing or null attr', propName);
                 }
@@ -63,24 +64,7 @@ export class VpcUI512Serialization {
      * copy over the prop values of one object onto another object
      */
     static copyPropsOver(getter: UI512Gettable, setter: UI512Settable, propList: string[]) {
-        for (let propName of propList) {
-            let v = getter.getGeneric(propName);
-            if (v !== null && v !== undefined) {
-                if (propName === UI512Settable.fmtTxtVarName) {
-                    if (isString(v)) {
-                        let vAsText = FormattedText.newFromSerialized(v as string);
-                        setter.setFmTxt(vAsText);
-                    } else {
-                        assertTrue(v instanceof FormattedText, 'J^|not a string or FormattedText');
-                        setter.setFmTxt(v as FormattedText);
-                    }
-                } else {
-                    setter.set(propName, v);
-                }
-            } else {
-                assertTrueWarn(false, 'J]|missing or null attr', propName);
-            }
-        }
+        checkThrow(false, 'nyi -- delete this and serialize it instead')
     }
 
     /**

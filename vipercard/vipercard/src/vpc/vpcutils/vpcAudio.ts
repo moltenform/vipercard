@@ -65,8 +65,6 @@ export class VpcAudio {
             UI512BeginAsyncIgnoreFailures(() => aud.play());
         }
     }
-
-
 }
 
 /**

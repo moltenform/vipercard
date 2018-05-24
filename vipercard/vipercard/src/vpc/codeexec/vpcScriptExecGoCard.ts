@@ -1,12 +1,11 @@
 
-/* auto */ import { O, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { O, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { checkThrowEq, getStrToEnum, isString, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { RememberHistory } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { IntermedMapOfIntermedVals, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VarCollection } from '../../vpc/vpcutils/vpcVarCollection.js';
 /* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
@@ -151,7 +150,7 @@ export class VpcExecGoCardHelpers {
             /* returns card id if present in history, otherwise undefined */
             return this.goBackOrForth(vals.vals.TokenTkstringliteral[1] as string)
         } else if (ref) {
-            let vel = this.outside.ResolveVelRef(ref)
+            let vel = this.outside.ResolveVelRef(ref)[0]
             if (!vel) {
                 /* according to docs, go to card "notExist" should fail silently */
                 return undefined
@@ -227,20 +226,12 @@ export class VpcExecGoCardHelpers {
     }
 
     /**
-     * resolve reference to a vel
-     */
-    protected getResolveChildVel(vals: IntermedMapOfIntermedVals, nm: string): VpcElBase {
-        let ref = throwIfUndefined(this.findChildVelRef(vals, nm), '5K|not found', nm);
-        return throwIfUndefined(this.outside.ResolveVelRef(ref), '5J|element not found');
-    }
-
-    /**
      * get current stack object
      */
     protected getCurrentStack() {
         let requestStack = new RequestedVelRef(VpcElType.Stack);
         requestStack.lookByRelative = OrdinalOrPosition.This;
-        let stack = this.outside.ResolveVelRef(requestStack) as VpcElStack;
+        let stack = this.outside.ResolveVelRef(requestStack)[0] as VpcElStack;
         checkThrow(stack && stack.isVpcElStack, '7P|');
         return stack
     }

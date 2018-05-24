@@ -4,7 +4,6 @@
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
 
@@ -89,13 +88,7 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
  * reading content from a field
  */
 export class ReadableContainerField implements ReadableContainer {
-    protected fld: VpcElField;
-    constructor(vel: VpcElBase) {
-        this.fld = vel as VpcElField;
-        checkThrow(
-            this.fld && this.fld.isVpcElField,
-            `6[|currently we only support reading text from fld. to read label of button, use 'the label of cd btn 1'`
-        );
+    constructor(protected fld: VpcElField, protected parentCardId:string) {
     }
 
     isDefined() {
@@ -104,11 +97,11 @@ export class ReadableContainerField implements ReadableContainer {
 
     len() {
         /* this is fast, it's the reason we have a len() and not just getRawString().length */
-        return this.fld.getFmTxt().len();
+        return this.fld.getCardFmTxt(this.parentCardId).len()
     }
 
     getRawString(): string {
-        return this.fld.getFmTxt().toUnformatted();
+        return this.fld.getCardFmTxt(this.parentCardId).toUnformatted();
     }
 }
 
@@ -117,21 +110,21 @@ export class ReadableContainerField implements ReadableContainer {
  */
 export class WritableContainerField extends ReadableContainerField implements WritableContainer {
     splice(insertion: number, lenToDelete: number, newstring: string) {
-        let txt = this.fld.getFmTxt();
+        let txt = this.fld.getCardFmTxt(this.parentCardId);
         if (insertion === 0 && lenToDelete >= txt.len()) {
             /* follow emulator, there is different behavior (lose formatting) when replacing all text */
-            this.fld.setProp('alltext', VpcValS(newstring));
+            this.fld.setProp('alltext', VpcValS(newstring), this.parentCardId);
         } else {
             let font =
                 insertion >= 0 && insertion < txt.len() ? txt.fontAt(insertion) : this.fld.getDefaultFontAsUi512();
             let newTxt = FormattedText.byInsertion(txt, insertion, lenToDelete, newstring, font);
-            this.fld.setFmTxt(newTxt);
+            this.fld.setCardFmTxt(this.parentCardId, newTxt)
         }
     }
 
     setAll(newText: string) {
         /* follow emulator, there is different behavior (lose formatting) when replacing all text */
-        this.fld.setProp('alltext', VpcValS(newText));
+        this.fld.setProp('alltext', VpcValS(newText), this.parentCardId);
     }
 
     replaceAll(search:string, replaceWith:string) {

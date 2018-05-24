@@ -531,7 +531,7 @@ export class VpcPresenter extends VpcPresenterInit {
 
         if (type === VpcElType.Btn) {
             /* give it a style and initial script */
-            vel.setProp('style', VpcValS('roundrect'));
+            vel.setProp('style', VpcValS('roundrect'), this.vci.getOptionS('currentCardId'));
             vel.set('label', lng('lngNew Button'));
             vel.set('showlabel', true);
             vel.set('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp');
@@ -543,8 +543,8 @@ export class VpcPresenter extends VpcPresenterInit {
                 UI512DrawText.setFont('abcde\nabcde\nabcde', velFld.getDefaultFontAsUi512())
             );
 
-            velFld.setFmTxt(newTxt);
-            velFld.setProp('style', VpcValS('scrolling'));
+            velFld.setCardFmTxt(this.vci.getOptionS('currentCardId'), newTxt);
+            velFld.setProp('style', VpcValS('scrolling'), this.vci.getOptionS('currentCardId'));
         }
 
         /* save *before* setting selectedVelId */

@@ -549,7 +549,7 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = fld.getN('selcaret');
             let end = fld.getN('selend');
-            let s = fld.getFmTxt().toUnformattedSubstr(start, end - start);
+            let s = fld.getCardFmTxt(this.readoutside.GetCurrentCardId()).toUnformattedSubstr(start, end - start);
             return VpcValS(s);
         } else {
             return VpcVal.Empty;
@@ -563,7 +563,7 @@ export class VpcBuiltinFunctions {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = fld.getN('selcaret');
-            let lines = new UI512Lines(fld.getFmTxt());
+            let lines = new UI512Lines(fld.getCardFmTxt(this.readoutside.GetCurrentCardId()));
             return VpcValN(lines.indexToLineNumber(start));
         } else {
             return VpcVal.Empty;

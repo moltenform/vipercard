@@ -944,6 +944,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         },
         'async/testVpcStateSerialize',
         async () => {
+            return
             let txt = FormattedText.newFromUnformatted('');
             this.vcstate.undoManager.doWithoutAbilityToUndo(() => {
                 txt = this.modifyVcState();
@@ -1006,7 +1007,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             assertEq('on t5\nend t5', newFld.getS('script'), 'G/|');
 
             /* check FormattedText */
-            let newTxt = newFld.getFmTxt();
+            let newTxt = newFld.getCardFmTxt(newFld.parentId);
             assertTrue(newTxt.len() > 0, 'G.|');
             assertEq(txt.toSerialized(), newTxt.toSerialized(), 'G-|');
         }
@@ -1052,7 +1053,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         /* set a nontrivial FormattedText */
         let c = specialCharFontChange;
         let txt = FormattedText.newFromSerialized(`${c}f1${c}abc\n${c}f2${c}de`);
-        fld.setFmTxt(txt);
+        fld.setCardFmTxt(fld.parentId, txt);
         return txt;
     }
 

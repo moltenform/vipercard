@@ -22,13 +22,18 @@ export class VpcElField extends VpcElSizable {
     protected _singleline = false;
     protected _selcaret = 0;
     protected _selend = 0;
-    protected _scroll = 0;
     protected _style: number = VpcFldStyleInclScroll.Rectangle;
     protected _visible = true;
     protected _script = '';
     protected _textalign = 'left';
     protected _name = '';
+    protected _scroll = 0;
     protected _ftxt = new FormattedText();
+    /* always true if belongs to a card */
+    protected _sharedtext = true;
+    /* specific-card content will be in the form: */
+    /* _scroll_oncard_12345 */
+    /* _ftxt_oncard_12345 */
     constructor(id: string, parentId: string) {
         super(id, parentId);
         this._ftxt.lock();
@@ -48,6 +53,11 @@ export class VpcElField extends VpcElSizable {
     protected _defaulttextfont = 'geneva';
     protected _defaulttextsize = 12;
     protected _defaulttextstyle = 0;
+
+    /* e.g. a background field has different content on every card */
+    isCardSpecificContent(key:string) {
+        return !this.getB('sharedtext') && (key === 'scroll' || key === 'ftxt')
+    }
 
     /* verified in tests */
     static readonly keyPropertiesList = [
@@ -77,7 +87,19 @@ export class VpcElField extends VpcElSizable {
      * get the properties that need to be serialized
      */
     getKeyPropertiesList() {
-        return VpcElField.keyPropertiesList;
+        if (this.getB('sharedtext')) {
+            return VpcElField.keyPropertiesList;
+        } else {
+            let keys = Util512.getMapKeys(this as any)
+            let ret:string[] = []
+            for (var i=0, len=keys.length; i<len; i++) {
+                if (keys[i].charAt(0) === '_') {
+                    ret.push(keys[i].slice(1))
+                }
+            }
+
+            return ret
+        }
     }
 
     /**
@@ -107,11 +129,11 @@ export class VpcElField extends VpcElSizable {
     /**
      * for convenience, set entire font
      */
-    protected setEntireFontFromDefaultFont() {
+    protected setEntireFontFromDefaultFont(cardId:string) {
         let font = this.getDefaultFontAsUi512();
-        let newTxt = this.getFmTxt().getUnlockedCopy();
+        let newTxt = this.getCardFmTxt(cardId).getUnlockedCopy();
         newTxt.setFontEverywhere(font);
-        this.setFmTxt(newTxt);
+        this.setCardFmTxt(cardId, newTxt);
     }
 
     /**
@@ -120,7 +142,7 @@ export class VpcElField extends VpcElSizable {
     static fldGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['singleline'] = [PrpTyp.Bool, 'singleline'];
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
-        getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.getFmTxt().toUnformatted()];
+        getters['alltext'] = [PrpTyp.Str, (me: VpcElField, cardId:string) => me.getCardFmTxt(cardId).toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
             (me: VpcElField) => SubstringStyleComplex.vpcStyleFromInt(me._defaulttextstyle)
@@ -137,6 +159,13 @@ export class VpcElField extends VpcElSizable {
         getters['textstyle'] = getters['defaulttextstyle'];
         getters['textfont'] = getters['defaulttextfont'];
         getters['textsize'] = getters['defaulttextsize'];
+
+        getters['scroll'] = [
+            PrpTyp.Num,
+            (me: VpcElField, cardId:string) => {
+                return me.getPossiblyCardSpecific('scroll', 0, cardId) as number
+            }
+        ];
     }
 
     /**
@@ -146,36 +175,36 @@ export class VpcElField extends VpcElSizable {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['style'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string) => {
+            (me: VpcElField, s: string, cardId:string) => {
                 let styl = getStrToEnum<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, 'Field style or "scrolling"', s);
                 me.set('style', styl);
 
                 /* changing style resets scroll amount */
-                me.setProp('scroll', VpcValN(0));
+                me.setProp('scroll', VpcValN(0), cardId);
             }
         ];
 
         setters['textstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string) => {
-                me.setProp('defaulttextstyle', VpcValS(s));
-                me.setEntireFontFromDefaultFont();
+            (me: VpcElField, s: string, cardId:string) => {
+                me.setProp('defaulttextstyle', VpcValS(s), cardId);
+                me.setEntireFontFromDefaultFont(cardId);
             }
         ];
 
         setters['textfont'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string) => {
+            (me: VpcElField, s: string, cardId:string) => {
                 me.set('defaulttextfont', s);
-                me.setEntireFontFromDefaultFont();
+                me.setEntireFontFromDefaultFont(cardId);
             }
         ];
 
         setters['textsize'] = [
             PrpTyp.Num,
-            (me: VpcElField, n: number) => {
+            (me: VpcElField, n: number, cardId:string) => {
                 me.set('defaulttextsize', n);
-                me.setEntireFontFromDefaultFont();
+                me.setEntireFontFromDefaultFont(cardId);
             }
         ];
 
@@ -183,10 +212,10 @@ export class VpcElField extends VpcElSizable {
         or when saying put "abc" into cd fld 1 with no chunk qualifications */
         setters['alltext'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string) => {
+            (me: VpcElField, s: string, cardId:string) => {
                 let newTxt = FormattedText.newFromUnformatted(s);
                 newTxt.setFontEverywhere(me.getDefaultFontAsUi512());
-                me.setFmTxt(newTxt);
+                me.setCardFmTxt(cardId, newTxt)
             }
         ];
 
@@ -214,18 +243,25 @@ export class VpcElField extends VpcElSizable {
 
         setters['singleline'] = [
             PrpTyp.Bool,
-            (me: VpcElField, b: boolean) => {
+            (me: VpcElField, b: boolean, cardId:string) => {
                 me.set('singleline', b);
                 if (b) {
-                    let hasNewLine = me.getFmTxt().indexOf(specialCharNumNewline);
+                    let hasNewLine = me.getCardFmTxt(cardId).indexOf(specialCharNumNewline);
                     if (hasNewLine !== -1) {
                         let newTxt = new FormattedText();
-                        newTxt.appendSubstring(me.getFmTxt(), 0, hasNewLine);
-                        me.setFmTxt(newTxt);
+                        newTxt.appendSubstring(me.getCardFmTxt(cardId), 0, hasNewLine);
+                        me.setCardFmTxt(cardId, newTxt)
                     }
                 }
             }
         ];
+
+        setters['scroll'] = [
+            PrpTyp.Num,
+            (me: VpcElField, n: number, cardId:string) => {
+                me.setPossiblyCardSpecific('scroll', n, 0, cardId)
+            }
+        ]
     }
 
     /**
@@ -236,7 +272,6 @@ export class VpcElField extends VpcElSizable {
             ['dontwrap', PrpTyp.Bool],
             ['enabled', PrpTyp.Bool],
             ['locktext', PrpTyp.Bool],
-            ['scroll', PrpTyp.Num],
             ['defaulttextfont', PrpTyp.Str],
             ['defaulttextsize', PrpTyp.Num],
             ['visible', PrpTyp.Bool]
@@ -263,8 +298,8 @@ export class VpcElField extends VpcElSizable {
     /**
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
-    specialSetPropChunkImpl(prop: string, s: string, charstart: number, charend: number): void {
-        let newTxt = this.getFmTxt().getUnlockedCopy();
+    specialSetPropChunkImpl(cardId:string, prop: string, s: string, charstart: number, charend: number): void {
+        let newTxt = this.getCardFmTxt(cardId).getUnlockedCopy();
         let len = charend - charstart;
         if (prop === 'textstyle') {
             let list = s.split(',').map(item => item.trim());
@@ -280,18 +315,18 @@ export class VpcElField extends VpcElSizable {
             );
         }
 
-        this.setFmTxt(newTxt);
+        this.setCardFmTxt(cardId, newTxt);
     }
 
     /**
      * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
      */
-    specialGetPropChunkImpl(prop: string, charstart: number, charend: number): string {
+    specialGetPropChunkImpl(cardId:string, prop: string, charstart: number, charend: number): string {
         let len = charend - charstart;
         if (prop === 'textstyle') {
             /* returns comma-delimited styles, or the string 'mixed' */
             let list = SubstringStyleComplex.getChunkTextStyle(
-                this.getFmTxt(),
+                this.getCardFmTxt(cardId),
                 this.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -301,7 +336,7 @@ export class VpcElField extends VpcElSizable {
         } else if (prop === 'textfont') {
             /* returns typeface name or the string 'mixed' */
             return SubstringStyleComplex.getChunkTextFace(
-                this.getFmTxt(),
+                this.getCardFmTxt(cardId),
                 this.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -309,7 +344,7 @@ export class VpcElField extends VpcElSizable {
         } else if (prop === 'textsize') {
             /* as per spec this can return either an integer or the string 'mixed' */
             return SubstringStyleComplex.getChunkTextSize(
-                this.getFmTxt(),
+                this.getCardFmTxt(cardId),
                 this.getDefaultFontAsUi512(),
                 charstart,
                 len
@@ -324,7 +359,7 @@ export class VpcElField extends VpcElSizable {
     /**
      * when you say set the textstyle of char 999 to 1000... how do we respond when outside content length
      */
-    protected resolveChunkBounds(chunk: RequestedChunk, itemDel: string) {
+    protected resolveChunkBounds(cardId:string, chunk: RequestedChunk, itemDel: string) {
         let newChunk = chunk.getClone();
         if (
             newChunk.type === VpcChunkType.Chars &&
@@ -338,7 +373,7 @@ export class VpcElField extends VpcElSizable {
         }
 
         /* we handle the formattedText.len() === 0 case in getChunkTextAttribute */
-        let unformatted = this.getFmTxt().toUnformatted();
+        let unformatted = this.getCardFmTxt(cardId).toUnformatted();
         newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
         let bounds = ChunkResolution.resolveBoundsForGet(unformatted, itemDel, newChunk);
         bounds = bounds === undefined ? [0, 0] : bounds;
@@ -348,17 +383,17 @@ export class VpcElField extends VpcElSizable {
     /**
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
-    specialSetPropChunk(prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
-        let [start, end] = this.resolveChunkBounds(chunk, itemDel);
-        return this.specialSetPropChunkImpl(prop, val.readAsString(), start, end);
+    specialSetPropChunk(cardId:string, prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
+        let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
+        return this.specialSetPropChunkImpl(cardId, prop, val.readAsString(), start, end);
     }
 
     /**
      * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
      */
-    specialGetPropChunk(prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
-        let [start, end] = this.resolveChunkBounds(chunk, itemDel);
-        return VpcValS(this.specialGetPropChunkImpl(prop, start, end));
+    specialGetPropChunk(cardId:string, prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
+        let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
+        return VpcValS(this.specialGetPropChunkImpl(cardId, prop, start, end));
     }
 }
 

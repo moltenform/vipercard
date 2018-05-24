@@ -527,7 +527,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
                 new TextFontSpec('Courier', TextFontStyling.Italic | TextFontStyling.Shadow, 18).toSpecString()
             );
             sfmt += UI512DrawText.setFont('ef', new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString());
-            this.vcstate.vci.undoableAction(() => fldPerChar.setFmTxt(FormattedText.newFromSerialized(sfmt)));
+            this.vcstate.vci.undoableAction(() => fldPerChar.setCardFmTxt(fldPerChar.parentId, FormattedText.newFromSerialized(sfmt)));
             batch = [
                 /* non per-character properties */
                 ['the defaulttextfont of cd fld "p2"', 'geneva'],
@@ -562,7 +562,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
             this.testBatchEvaluate(batch);
 
             /* formatting should have been preserved */
-            let contents = fldPerChar.getFmTxt().toSerialized();
+            let contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
             assertEqWarn(sfmt, contents, '1y|');
 
             batch = [
@@ -611,7 +611,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
             this.testBatchEvaluate(batch);
 
             /* confirm formatting */
-            contents = fldPerChar.getFmTxt().toSerialized();
+            contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
             assertEqWarn(
                 '|Courier_24_+biuosdce|a|geneva_24_+biuosdce|b|geneva_18_b+iuo+sdce|c|Courier_18_bi+uosdce|d|Times_18_bi+uosdce|e|Times_14_biuosdce|f',
                 contents.replace(new RegExp(specialCharFontChange, 'g'), '|'),
@@ -634,8 +634,8 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
             ];
 
             for (let [action, expectedFont] of actions) {
-                this.vcstate.vci.undoableAction(() => fldPerChar.setFmTxt(FormattedText.newFromSerialized(sfmt)));
-                assertEq(sfmt, fldPerChar.getFmTxt().toSerialized(), '1w|');
+                this.vcstate.vci.undoableAction(() => fldPerChar.setCardFmTxt(fldPerChar.parentId, FormattedText.newFromSerialized(sfmt)));
+                assertEq(sfmt, fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized(), '1w|');
                 batch = [
                     ['set the defaulttextfont of cd fld "p2" to "geneva"\\0', '0'],
                     ['set the defaulttextstyle of cd fld "p2" to "plain"\\0', '0'],
@@ -645,7 +645,7 @@ export class TestVpcScriptEval extends TestVpcScriptRunBase {
                 this.testBatchEvaluate(batch);
 
                 /* formatting should have been lost */
-                contents = fldPerChar.getFmTxt().toSerialized();
+                contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
                 let expected = UI512DrawText.setFont('abcdef', expectedFont.toSpecString());
                 assertEq(expected, contents, '1v|');
             }

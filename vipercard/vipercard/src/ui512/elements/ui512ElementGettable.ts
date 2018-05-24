@@ -41,17 +41,6 @@ export abstract class UI512Gettable {
         let v: any = (this as any)['_' + s]; /* gettable */
         return v;
     }
-
-    getFmTxt(): FormattedText {
-        let v = this.get(UI512Settable.fmtTxtVarName);
-        let fmTxt = v as FormattedText;
-        assertTrue(fmTxt && fmTxt.isFormattedText, `2&|did not get formatted text as expected`);
-
-        /* ensure the "lock" bit has been set before we allow access
-        otherwise, you could make changes to the object and we'd never recieve any change notification */
-        fmTxt.lock();
-        return fmTxt;
-    }
 }
 
 /**
@@ -92,15 +81,30 @@ export abstract class UI512Settable extends UI512Gettable {
         }
     }
 
-    setFmTxt(newTxt: FormattedText, context = ChangeContext.Default) {
-        checkThrowUI512(!this.locked, 'K>|tried to set value when locked. setting during refresh()?');
-        let prevVal = this.getFmTxt();
-        assertTrue(!!newTxt, '2!|invalid newTxt', this.id);
-        (this as any)['_' + UI512Settable.fmtTxtVarName] = newTxt; /* gettable */
-        if (prevVal !== newTxt) {
+    protected setSkipTypeCheck(s: string, newVal: ElementObserverVal, defaultVal: ElementObserverVal, context = ChangeContext.Default) {
+        checkThrowUI512(!this.locked, '6L|tried to set value when locked. setting during refresh()?');
+        let prevVal = (this as any)['_' + s]
+        (this as any)['_' + s] = newVal; /* gettable */
+        if (prevVal !== newVal) {
+            if (prevVal === undefined || prevVal === null) {
+                prevVal = defaultVal
+            }
+
             this.dirty = true;
-            newTxt.lock();
-            this.observer.changeSeen(context, this.id, UI512Settable.fmtTxtVarName, prevVal, newTxt);
+            if ((newVal as FormattedText).isFormattedText) {
+                (newVal as FormattedText).lock()
+            }
+
+            this.observer.changeSeen(context, this.id, s, prevVal, newVal);
+        }
+    }
+
+    protected getSkipTypeCheck(s:string, defaultVal: ElementObserverVal):ElementObserverVal {
+        let v = (this as any)['_' + s]
+        if (v === undefined || v === null) {
+            return defaultVal
+        } else {
+            return v
         }
     }
 
