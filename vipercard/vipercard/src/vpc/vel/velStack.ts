@@ -56,7 +56,7 @@ export class VpcElStack extends VpcElBase {
      * get next id for created element
      */
     getNextId() {
-        let ret = this._increasingnumberforid;
+        let ret = this.getN('increasingnumberforid');
         this.set('increasingnumberforid', ret + 1);
         return ret.toString();
     }
@@ -65,7 +65,7 @@ export class VpcElStack extends VpcElBase {
      * get next number, when you create a button in the ui and it's called "my button 3"
      */
     getNextNumberForElemName() {
-        let ret = this._increasingnumberforelemname;
+        let ret = this.getN('increasingnumberforelemname');
         this.set('increasingnumberforelemname', ret + 1);
         return ret.toString();
     }

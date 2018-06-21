@@ -209,10 +209,12 @@ export class ExpandIfElse {
             ifStatement.push(this.buildToken.make(line[0], tks.TokenNot))
             ifStatement.push(this.buildToken.make(line[0], tks.TokenTklparen))
         }
+
         ifStatement = ifStatement.concat(partExp)
         if (isWhile) {
             ifStatement.push(this.buildToken.make(line[0], tks.TokenTkrparen))
         }
+
         ifStatement.push(this.buildToken.makeIdentifier(line[0], 'then'))
         ret.push(ifStatement)
 

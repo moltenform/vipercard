@@ -12,12 +12,13 @@
  * base class for a vel (vpc element)
  *
  * this is just a model, _modelrender_ will create a corresponding ui512 element.
- * why do have new objects for vpc and not use ui512 elements directly?
+ * why have separate "vpc" objects and not use ui512 elements directly?
  *      vipercard elements have properties like 'script' that don't apply to ui512
  *      vipercard elements like a scrolling text field comprise several ui512 elements
- *      a script should be able to set properties of vipercard elements without seeing the change in ui
- *      (screen locked) which would be complex to do otherwise (you'd have to clone the state somewhere)
- *      allows ui512 behavior to change independently from vpc, which might otherwise break saved vpc stacks
+ *      for features like 'lock screen' a script should be able to set properties of
+ *      vipercard elements without seeing the change in ui which would be complex to do
+ *      otherwise (you'd have to clone the state somewhere). also allows ui512 to change
+ *      apart from vpc; vpc is persisted to disk, so harder to change w/o breaking compat
  */
 export abstract class VpcElBase extends UI512Settable {
     isVpcElBase = true;
@@ -202,29 +203,30 @@ export abstract class VpcElBase extends UI512Settable {
         return list[index] ? (list[index] as T) : undefined;
     }
 
-    setPossiblyCardSpecific(key:string, newv:ElementObserverVal, defaultVal:ElementObserverVal, cardId:string) {
+    setPossiblyCardSpecific(key:string, newv:ElementObserverVal, defaultVal:ElementObserverVal, cardId:string, context = ChangeContext.Default) {
         if (this.isCardSpecificContent(key)) {
             checkThrow(slength(cardId) > 0, 'invalid card id')
-            let curVal = this.get(key)
+            let curVal = (this as any)['_' + key]
             checkThrowEq(typeof curVal, typeof newv, '')
             let specificKey = key + '_oncard_' + cardId;
-            this.setSkipTypeCheck(specificKey, newv, defaultVal)
+            this.setImpl(key, newv, defaultVal, context)
         } else {
-            this.set(key, newv)
+            this.setImpl(key, newv, undefined, context)
         }
     }
 
     getPossiblyCardSpecific(key:string, defaultVal:ElementObserverVal, cardId:string):ElementObserverVal {
         if (this.isCardSpecificContent(key)) {
             let specificKey = key + '_oncard_' + cardId;
-            return this.getSkipTypeCheck(specificKey, defaultVal)
+            let curVal = (this as any)['_' + key]
+            return (curVal === null || curVal === undefined) ? defaultVal : curVal
         } else {
-            return this.get(key)
+            return (this as any)['_' + key]
         }
     }
 
     getCardFmTxt(cardId:string): FormattedText {
-        let got = this.getPossiblyCardSpecific('ftxt', new FormattedText(), cardId)
+        let got = this.getPossiblyCardSpecific(UI512Settable.fmtTxtVarName, new FormattedText(), cardId)
         let gotAsTxt = got as FormattedText;
         checkThrow(gotAsTxt && gotAsTxt.isFormattedText, 'not FormattedText')
         return gotAsTxt
@@ -232,7 +234,7 @@ export abstract class VpcElBase extends UI512Settable {
 
     setCardFmTxt(cardId:string, newTxt: FormattedText, context = ChangeContext.Default) {
         newTxt.lock()
-        this.setPossiblyCardSpecific('ftxt', newTxt, new FormattedText(), cardId)
+        this.setPossiblyCardSpecific(UI512Settable.fmtTxtVarName, newTxt, new FormattedText(), cardId)
     }
 }
 

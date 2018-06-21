@@ -272,29 +272,29 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     /**
      * build a button from scratch
      */
-    protected buildBtnFromScratch(vpcel: VpcElButton, currentCardId:string) {
-        let target = new UI512ElButton(this.velIdToElId(vpcel.id));
+    protected buildBtnFromScratch(vel: VpcElButton, currentCardId:string) {
+        let target = new UI512ElButton(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
         for (let i = 0, len = VpcElButton.keyPropertiesList.length; i < len; i++) {
             let prop = VpcElButton.keyPropertiesList[i];
-            let newVal = vpcel.getGeneric(prop);
-            this.applyOneChange(vpcel, prop, newVal, true);
+            let newVal = vel.getGeneric(prop);
+            this.applyOneChange(vel, prop, newVal, true);
         }
     }
 
     /**
      * build a field from scratch
      */
-    protected buildFldFromScratch(vpcel: VpcElField, currentCardId:string) {
-        let target = new UI512ElTextField(this.velIdToElId(vpcel.id));
+    protected buildFldFromScratch(vel: VpcElField, currentCardId:string) {
+        let target = new UI512ElTextField(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
         for (let i = 0, len = VpcElField.keyPropertiesList.length; i < len; i++) {
             let prop = VpcElField.keyPropertiesList[i];
-            let newVal = vpcel.getGeneric(prop);
-            this.applyOneChange(vpcel, prop, newVal, true);
+            let newVal = vel.getGeneric(prop);
+            this.applyOneChange(vel, prop, newVal, true);
         }
 
-        target.setFmTxt(vpcel.getCardFmTxt(currentCardId));
+        target.setFmTxt(vel.getCardFmTxt(currentCardId));
     }
 
     /**

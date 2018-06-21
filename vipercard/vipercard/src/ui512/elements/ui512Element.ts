@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, checkThrowUI512 } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
@@ -34,26 +34,17 @@ export abstract class UI512Element extends UI512Settable {
     }
 
     getFmTxt(): FormattedText {
-        let v = this.get(UI512Settable.fmtTxtVarName);
-        let fmTxt = v as FormattedText;
-        assertTrue(fmTxt && fmTxt.isFormattedText, `2&|did not get formatted text as expected`);
+        let got = (this as any)['_' + UI512Settable.fmtTxtVarName] as FormattedText
+        assertTrue(got && got.isFormattedText, `2&|did not get formatted text as expected`);
 
         /* ensure the "lock" bit has been set before we allow access
-        otherwise, you could make changes to the object and we'd never recieve any change notification */
-        fmTxt.lock();
-        return fmTxt;
+        otherwise, you could make changes to the object and we'd never receive any change notification */
+        got.lock();
+        return got;
     }
 
     setFmTxt(newTxt: FormattedText, context = ChangeContext.Default) {
-        checkThrowUI512(!this.locked, 'K>|tried to set value when locked. setting during refresh()?');
-        let prevVal = this.getFmTxt();
-        assertTrue(!!newTxt, '2!|invalid newTxt', this.id);
-        (this as any)['_' + UI512Settable.fmtTxtVarName] = newTxt; /* gettable */
-        if (prevVal !== newTxt) {
-            this.dirty = true;
-            newTxt.lock();
-            this.observer.changeSeen(context, this.id, UI512Settable.fmtTxtVarName, prevVal, newTxt);
-        }
+        this.setImpl(UI512Settable.fmtTxtVarName, newTxt, undefined, context)
     }
 
     /* a few getters for convenience */

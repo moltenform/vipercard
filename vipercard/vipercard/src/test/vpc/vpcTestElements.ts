@@ -157,7 +157,7 @@ let mTests: (string | Function)[] = [
     },
     'testSerializeGettable',
     () => {
-        return;
+        return
         for (let b of [true, false]) {
             let vel = new VpcElField('id1', 'parentid1');
             vel.observer = new ElementObserverNoOp();
@@ -260,7 +260,6 @@ let mTests: (string | Function)[] = [
     },
     'testVpcElements.Properties for serialization should include all member vars starting with _',
     () => {
-        return
         TestVpcElements.testKeyProperties(VpcElButton);
         TestVpcElements.testKeyProperties(VpcElField);
         TestVpcElements.testKeyProperties(VpcElCard);

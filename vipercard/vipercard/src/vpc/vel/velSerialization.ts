@@ -17,10 +17,10 @@ export class VpcUI512Serialization {
         for (let propName of propList) {
             let v = vel.getGeneric(propName);
             assertTrueWarn(v !== undefined, propName, 'J||');
-            if (propName === UI512Settable.fmtTxtVarName) {
-                let vAsText = v as FormattedText;
-                assertTrue(vAsText && vAsText.isFormattedText, 'J{|invalid ftxt');
-                ret[propName] = vAsText.toSerialized();
+            if (v instanceof FormattedText) {
+                assertTrueWarn(VpcUI512Serialization.propNameExpectFormattedText(propName), 'expected ftxt, got ', propName)
+                assertTrue(v && v.isFormattedText, 'J{|invalid ftxt');
+                ret[propName] = v.toSerialized();
             } else {
                 ret[propName] = VpcUI512Serialization.serializePlain(v);
             }
@@ -39,18 +39,18 @@ export class VpcUI512Serialization {
             for (let propName of propList) {
                 let v = vals[propName];
                 if (v !== null && v !== undefined) {
-                    assertTrueWarn(false, 'nyi')
-                    /*if (propName === UI512Settable.fmtTxtVarName) {
+                    if (VpcUI512Serialization.propNameExpectFormattedText(propName)) {
                         if (isString(v)) {
                             let vAsText = FormattedText.newFromSerialized(v);
-                            vel.setFmTxt(vAsText);
+                            VpcUI512Serialization.setAnyAndSendChangeNotification(vel, propName, vAsText)
                         } else {
                             assertTrue(v instanceof FormattedText, 'J`|not a string or FormattedText');
-                            vel.setFmTxt(v as FormattedText);
+                            VpcUI512Serialization.setAnyAndSendChangeNotification(vel, propName, v)
                         }
                     } else {
-                        vel.set(propName, VpcUI512Serialization.deserializePlain(v));
-                    }*/
+                        let decoded = VpcUI512Serialization.deserializePlain(v)
+                        VpcUI512Serialization.setAnyAndSendChangeNotification(vel, propName, decoded)
+                    }
                 } else {
                     assertTrueWarn(false, 'J_|missing or null attr', propName);
                 }
@@ -61,10 +61,43 @@ export class VpcUI512Serialization {
     }
 
     /**
+     * set a property, and set to 2 different values to ensure that the 'change' event is sent
+     */
+    protected static setAnyAndSendChangeNotification(vel: UI512Settable, propName:string, v:ElementObserverVal) {
+        if (typeof v === 'boolean') {
+            (vel as any)[propName] = false
+            vel.set(propName, !v)
+            vel.set(propName, v)
+        } else if (typeof v === 'number') {
+            (vel as any)[propName] = 0
+            vel.set(propName, v === 0 ? 1 : 0)
+            vel.set(propName, v)
+        } else if (isString(v)) {
+            (vel as any)[propName] = ''
+            vel.set(propName, (v as string).length === 0 ? ' ' : '')
+            vel.set(propName, v)
+        } else if (v instanceof FormattedText) {
+            (vel as any)[propName] = new FormattedText()
+            vel.set(propName, new FormattedText())
+            vel.set(propName, v)
+        } else {
+            assertTrueWarn(false, 'unknown data type for ' + v)
+        }
+    }
+
+    /**
+     * do we expect the type of this property to be a formattedtext
+     */
+    protected static propNameExpectFormattedText(propName:string) {
+        return propName === UI512Settable.fmtTxtVarName ||
+            propName.startsWith(UI512Settable.fmtTxtVarName) + '_'
+    }
+
+    /**
      * copy over the prop values of one object onto another object
      */
     static copyPropsOver(getter: UI512Gettable, setter: UI512Settable, propList: string[]) {
-        checkThrow(false, 'nyi -- delete this and serialize it instead')
+        checkThrow(false, 'nyi -- use serialization instead')
     }
 
     /**

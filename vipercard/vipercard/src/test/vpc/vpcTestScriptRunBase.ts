@@ -93,6 +93,13 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         let btn_b_d_1 = this.vcstate.createVel(card_b_d.id, VpcElType.Btn, -1);
         let fld_c_d_1 = this.vcstate.createVel(card_c_d.id, VpcElType.Fld, -1);
         let btn_c_d_1 = this.vcstate.createVel(card_c_d.id, VpcElType.Btn, -1);
+
+        let bgfld_b_1 = this.vcstate.createVel(bg_b.id, VpcElType.Fld, -1);
+        let bgfld_b_2 = this.vcstate.createVel(bg_b.id, VpcElType.Fld, -1);
+        let bgfld_c_1 = this.vcstate.createVel(bg_c.id, VpcElType.Fld, -1);
+        let bgbtn_b_1 = this.vcstate.createVel(bg_b.id, VpcElType.Btn, -1);
+        let bgbtn_b_2 = this.vcstate.createVel(bg_b.id, VpcElType.Btn, -1);
+        let bgbtn_c_1 = this.vcstate.createVel(bg_c.id, VpcElType.Btn, -1);
         let btn_go = this.vcstate.createVel(card_a_a.id, VpcElType.Btn, -1);
 
         model.stack.set('name', 'teststack');
@@ -114,6 +121,12 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         btn_b_d_1.set('name', 'p1');
         fld_c_d_1.set('name', 'p1');
         btn_c_d_1.set('name', 'p1');
+        bgfld_b_1.set('name', 'p1')
+        bgfld_b_2.set('name', 'p2')
+        bgfld_c_1.set('name', 'p1')
+        bgbtn_b_1.set('name', 'p2')
+        bgbtn_b_2.set('name', 'p1')
+        bgbtn_c_1.set('name', 'p1')
         btn_go.set('name', 'go');
 
         this.elIds = {
@@ -136,7 +149,13 @@ export class TestVpcScriptRunBase extends UI512TestBase {
             btn_b_d_1: btn_b_d_1.id,
             fld_c_d_1: fld_c_d_1.id,
             btn_c_d_1: btn_c_d_1.id,
-            btn_go: btn_go.id
+            bgfld_b_1: bgfld_b_1.id,
+            bgfld_b_2: bgfld_b_2.id,
+            bgfld_c_1: bgfld_c_1.id,
+            bgbtn_b_1: bgbtn_b_1.id,
+            bgbtn_b_2: bgbtn_b_2.id,
+            bgbtn_c_1: bgbtn_c_1.id,
+            btn_go: btn_go.id,
         };
 
         let b = btn_go as VpcElButton;

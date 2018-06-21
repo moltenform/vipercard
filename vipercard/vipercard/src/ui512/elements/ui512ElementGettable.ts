@@ -1,6 +1,6 @@
 
-/* auto */ import { assertTrue, checkThrowUI512, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, slength } from '../../ui512/utils/utils512.js';
+/* auto */ import { O, assertTrue, checkThrowUI512, scontains } from '../../ui512/utils/utilsAssert.js';
+/* auto */ import { assertEq, assertEqWarn, slength } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 
@@ -10,35 +10,30 @@ export type ElementObserverVal = string | boolean | number | FormattedText;
 /**
  * a "Gettable" class has all of its properties marked as protected,
  * and allows access to them through a get() method.
- * types are checked at runtime, since we've forfeited TS's compile time checking.
+ * types are currently verified at runtime.
  */
 export abstract class UI512Gettable {
     getN(s: string): number {
-        let v = this.get(s);
+        let v = (this as any)['_' + s]; /* gettable */;
         assertEq(typeof 0, typeof v, `2+|${s} expected type ${typeof 0}`);
         return v;
     }
 
     getS(s: string): string {
-        let v = this.get(s);
-        assertEq(typeof '', typeof v, `2*|${s} expected type ${typeof ''}`);
+        let v = (this as any)['_' + s]; /* gettable */;
+        assertEqWarn(typeof '', typeof v, `2*|${s} expected type ${typeof ''}`);
         return v;
     }
 
     getB(s: string): boolean {
-        let v = this.get(s);
+        let v = (this as any)['_' + s]; /* gettable */;
         assertEq('boolean', typeof v, `2)|${s} expected type 'boolean'}`);
         return v;
     }
 
     getGeneric(s: string): ElementObserverVal {
-        let v = this.get(s);
+        let v = (this as any)['_' + s]; /* gettable */;
         assertTrue(v !== null && v !== undefined, `2(|${s} undefined`);
-        return v;
-    }
-
-    protected get(s: string): any {
-        let v: any = (this as any)['_' + s]; /* gettable */
         return v;
     }
 }
@@ -55,6 +50,7 @@ export abstract class UI512Settable extends UI512Gettable {
     readonly id: string;
     protected dirty = true;
     protected locked = false;
+    protected static readonly emptyFmTxt = new FormattedText();
     observer: ElementObserver;
 
     lock(locked: boolean) {
@@ -67,27 +63,22 @@ export abstract class UI512Settable extends UI512Gettable {
         assertTrue(!scontains(id, '|'), '2$|invalid id');
         this.id = id;
         this.observer = observer;
+        UI512Settable.emptyFmTxt.lock()
     }
 
-    /* type inference works well enough that you shouldn't ever have to specify the type. */
-    set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
-        checkThrowUI512(!this.locked, '6L|tried to set value when locked. setting during refresh()?');
-        let prevVal = this.get(s);
-        assertEq(typeof prevVal, typeof newVal, `2#|property ${s} type mismatch`);
+    protected setImpl(s: string, newVal: ElementObserverVal, defaultVal: O<ElementObserverVal>, context: ChangeContext) {
+        checkThrowUI512(!this.locked, 'tried to set value when locked. setting during refresh()?');
+        let prevVal = (this as any)['_' + s];
         (this as any)['_' + s] = newVal; /* gettable */
         if (prevVal !== newVal) {
-            this.dirty = true;
-            this.observer.changeSeen(context, this.id, s, prevVal, newVal);
-        }
-    }
-
-    protected setSkipTypeCheck(s: string, newVal: ElementObserverVal, defaultVal: ElementObserverVal, context = ChangeContext.Default) {
-        checkThrowUI512(!this.locked, '6L|tried to set value when locked. setting during refresh()?');
-        let prevVal = (this as any)['_' + s]
-        (this as any)['_' + s] = newVal; /* gettable */
-        if (prevVal !== newVal) {
-            if (prevVal === undefined || prevVal === null) {
-                prevVal = defaultVal
+            if (defaultVal === undefined) {
+                /* type check mandatory */
+                assertEq(typeof prevVal, typeof newVal, `2#|property ${s} type mismatch`);
+            } else {
+                /* skip the type check, since the prev val might be undefined */
+                if (prevVal === undefined || prevVal === null) {
+                    prevVal = defaultVal
+                }
             }
 
             this.dirty = true;
@@ -99,13 +90,8 @@ export abstract class UI512Settable extends UI512Gettable {
         }
     }
 
-    protected getSkipTypeCheck(s:string, defaultVal: ElementObserverVal):ElementObserverVal {
-        let v = (this as any)['_' + s]
-        if (v === undefined || v === null) {
-            return defaultVal
-        } else {
-            return v
-        }
+    set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
+        this.setImpl(s, newVal, undefined, context)
     }
 
     getDirty() {

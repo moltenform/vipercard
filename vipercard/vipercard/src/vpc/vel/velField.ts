@@ -36,7 +36,7 @@ export class VpcElField extends VpcElSizable {
     /* _ftxt_oncard_12345 */
     constructor(id: string, parentId: string) {
         super(id, parentId);
-        this._ftxt.lock();
+        this.getCardFmTxt('').lock()
     }
 
     /* cached getters */
@@ -66,6 +66,7 @@ export class VpcElField extends VpcElSizable {
         'w',
         'h',
         'dontwrap',
+        'sharedtext',
         'enabled',
         'locktext',
         'singleline',
@@ -119,10 +120,18 @@ export class VpcElField extends VpcElSizable {
     }
 
     /**
+     * from internal textfont to "geneva_12_biuosdce"
+     */
+    getFontAsUI512() {
+        let spec = new TextFontSpec(this.getS('textfont'), this.getN('textstyle'), this.getN('textsize'));
+        return spec.toSpecString();
+    }
+
+    /**
      * for convenience, get the default font as ui512
      */
     getDefaultFontAsUi512() {
-        let spec = new TextFontSpec(this._defaulttextfont, this._defaulttextstyle, this._defaulttextsize);
+        let spec = new TextFontSpec(this.getS('defaulttextfont'), this.getN('defaulttextstyle'), this.getN('defaulttextsize'));
         return spec.toSpecString();
     }
 

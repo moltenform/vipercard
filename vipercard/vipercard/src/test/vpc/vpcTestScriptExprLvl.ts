@@ -6,7 +6,7 @@
 /* auto */ import { specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcValN } from '../../vpc/vpcutils/vpcVal.js';
+/* auto */ import { VpcValBool, VpcValN } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
@@ -969,6 +969,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
 
             /* test that it has everything */
             this.testModelHasItAll(newState);
+            this.testModelBgPartProps(newState);
 
             /* check productOpts (should not be persisted) */
             assertTrue(newState.model.productOpts.getN('optPaintLineColor') !== 1234, 'H2|');
@@ -1013,6 +1014,66 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         }
     ];
 
+    /**
+     * some properties on background elements can have values stored per-card,
+     * which has its own logic and needs to be tested
+     */
+    protected testModelBgPartProps(newState: VpcState) {
+        return
+        /* check bg field, card specific */
+        let bgfld = newState.model.getById(this.elIds.bgfld_b_1, VpcElField);
+        bgfld.set('sharedtext', false)
+        assertEq(123, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+        assertEq('forbb', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+        assertEq(456, bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(), '')
+        assertEq('forbc', bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(), '')
+        assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_d).readAsStrictInteger(), '')
+        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_d).toUnformatted(), '')
+
+        /* check bg field, shared */
+        bgfld.set('sharedtext', true)
+        assertEq(789, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+        assertEq('forshared', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+        assertEq(789, bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(), '')
+        assertEq('forshared', bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(), '')
+
+        /* check bg field, not set */
+        bgfld = newState.model.getById(this.elIds.bgfld_b_2, VpcElField);
+        assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+        bgfld.set('sharedhilite', false)
+        assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+
+        /* check bg btn, card specific */
+        let bgbtn = newState.model.getById(this.elIds.bgfld_b_1, VpcElButton);
+        bgbtn.set('sharedhilite', false)
+        assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(), '')
+        assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(), '')
+        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_d).readAsStrictBoolean(), '')
+        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_d).readAsStrictBoolean(), '')
+
+        /* check bg btn, shared */
+        bgbtn.set('sharedhilite', true)
+        assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(), '')
+        assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(), '')
+
+        /* check bg btn, not set */
+        bgbtn = newState.model.getById(this.elIds.bgbtn_b_2, VpcElButton);
+        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        bgbtn.set('sharedhilite', false)
+        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+    }
+
+    /**
+     * make changes to elements, that we'll read later
+     */
     protected modifyVcState() {
         /* modify productOpts (should not be persisted) */
         this.vcstate.model.productOpts.set('optPaintLineColor', 1234);
@@ -1054,6 +1115,39 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         let c = specialCharFontChange;
         let txt = FormattedText.newFromSerialized(`${c}f1${c}abc\n${c}f2${c}de`);
         fld.setCardFmTxt(fld.parentId, txt);
+
+        /* modify bg field - for card bb */
+        let bgfld = this.vcstate.model.getById(this.elIds.bgfld_b_1, VpcElField);
+        bgfld.set('sharedtext', false)
+        bgfld.setCardFmTxt(this.elIds.card_b_b, FormattedText.newFromSerialized(`forbb`))
+        bgfld.setProp('scroll', VpcValN(123), this.elIds.card_b_b)
+
+        /* modify bg field - for card bc */
+        bgfld.setCardFmTxt(this.elIds.card_b_c, FormattedText.newFromSerialized(`forbc`))
+        bgfld.setProp('scroll', VpcValN(456), this.elIds.card_b_c)
+
+        /* modify bg field - shared contents */
+        bgfld.set('sharedtext', true)
+        bgfld.setCardFmTxt(this.elIds.card_b_c, FormattedText.newFromSerialized(`forshared`))
+        bgfld.setProp('scroll', VpcValN(789), this.elIds.card_b_c)
+
+        /* modify bg btn - for card bb */
+        let bgbtn = this.vcstate.model.getById(this.elIds.bgfld_b_1, VpcElField);
+        bgbtn.set('sharedhilite', false)
+        bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_b)
+        bgbtn.setProp('checkmark', VpcValBool(false), this.elIds.card_b_b)
+
+        /* modify bg btn - for card bc */
+        bgbtn.setProp('hilite', VpcValBool(false), this.elIds.card_b_c)
+        bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_c)
+
+        /* modify bg btn - shared contents */
+        bgbtn.set('sharedhilite', true)
+        bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_c)
+        bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_c)
+        bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_d)
+        bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_d)
+
         return txt;
     }
 
@@ -1145,5 +1239,21 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         assertEq(`${this.elIds.fld_c_d_1},${this.elIds.btn_c_d_1}`, ptIds, 'Gk|');
         ptNames = cd_c_d.parts.map(pt => pt.getS('name')).join(',');
         assertEq(`p1,p1`, ptNames, 'Gj|');
+
+        /* look for bg b's parts */
+        ptParents = bgB.parts.map(pt => pt.parentId).join(',');
+        assertEq(`${this.elIds.bg_b},${this.elIds.bg_b},${this.elIds.bg_b},${this.elIds.bg_b}`, ptParents, '');
+        ptIds = bgB.parts.map(pt => pt.id).join(',');
+        assertEq(`${this.elIds.bgfld_b_1},${this.elIds.bgfld_b_2},${this.elIds.bgbtn_b_1},${this.elIds.bgbtn_b_2}`, ptIds, '');
+        ptNames = bgB.parts.map(pt => pt.getS('name')).join(',');
+        assertEq(`p1,p1,p1,p2`, ptNames, '');
+
+        /* look for bg c's parts */
+        ptParents = bgC.parts.map(pt => pt.parentId).join(',');
+        assertEq(`${this.elIds.bg_c},${this.elIds.bg_c}`, ptParents, '');
+        ptIds = bgC.parts.map(pt => pt.id).join(',');
+        assertEq(`${this.elIds.bgfld_c_1},${this.elIds.bgbtn_c_1}`, ptIds, '');
+        ptNames = bgC.parts.map(pt => pt.getS('name')).join(',');
+        assertEq(`p1,p1`, ptNames, '');
     }
 }

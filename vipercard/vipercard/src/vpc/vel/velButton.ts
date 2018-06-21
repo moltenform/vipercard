@@ -28,6 +28,11 @@ export class VpcElButton extends VpcElSizable {
     protected _visible = true;
     protected _script = '';
     protected _name = '';
+    /* always true if belongs to a card */
+    protected _sharedhilite = true;
+    /* specific-card content will be in the form: */
+    /* _hilite_oncard_12345 */
+    /* _checkmark_oncard_12345 */
     constructor(id: string, parentId: string) {
         super(id, parentId);
     }
@@ -47,6 +52,7 @@ export class VpcElButton extends VpcElSizable {
         'autohilite',
         'enabled',
         'hilite',
+        'sharedhilite',
         'checkmark',
         'icon',
         'showlabel',
@@ -75,6 +81,11 @@ export class VpcElButton extends VpcElSizable {
         return VpcElType.Btn;
     }
 
+    /* e.g. a background btn can have a different hilite on every card */
+    isCardSpecificContent(key:string) {
+        return !this.getB('sharedhilite') && (key === 'hilite' || key === 'checkmark')
+    }
+
     /**
      * re-use cached getters and setter callback functions for better perf
      */
@@ -82,14 +93,6 @@ export class VpcElButton extends VpcElSizable {
         VpcElButton.btnInit();
         this.getters = VpcElButton.cachedGetters;
         this.setters = VpcElButton.cachedSetters;
-    }
-
-    /**
-     * from internal textfont to "geneva_12_biuosdce"
-     */
-    getFontAsUI512() {
-        let spec = new TextFontSpec(this._textfont, this._textstyle, this._textsize);
-        return spec.toSpecString();
     }
 
     /**
@@ -104,6 +107,20 @@ export class VpcElButton extends VpcElSizable {
             (me: VpcElButton) => {
                 let ret = getEnumToStrOrUnknown<VpcBtnStyle>(VpcBtnStyle, me._style);
                 return ret.replace(/osstandard/g, 'standard').replace(/osdefault/g, 'default');
+            }
+        ];
+
+        getters['hilite'] = [
+            PrpTyp.Bool,
+            (me: VpcElButton, cardId:string) => {
+                return me.getPossiblyCardSpecific('hilite', false, cardId) as boolean
+            }
+        ];
+
+        getters['checkmark'] = [
+            PrpTyp.Bool,
+            (me: VpcElButton, cardId:string) => {
+                return me.getPossiblyCardSpecific('checkmark', false, cardId) as boolean
             }
         ];
     }
@@ -143,14 +160,26 @@ export class VpcElButton extends VpcElSizable {
                 }
             }
         ];
+
+        setters['hilite'] = [
+            PrpTyp.Bool,
+            (me: VpcElButton, v: boolean, cardId:string) => {
+                me.setPossiblyCardSpecific('hilite', v, false, cardId )
+            }
+        ]
+
+        setters['checkmark'] = [
+            PrpTyp.Bool,
+            (me: VpcElButton, v: boolean, cardId:string) => {
+                me.setPossiblyCardSpecific('checkmark', v, false, cardId )
+            }
+        ]
     }
 
     static simpleBtnGetSet(): [string, PrpTyp][] {
         return [
             ['autohilite', PrpTyp.Bool],
             ['enabled', PrpTyp.Bool],
-            ['hilite', PrpTyp.Bool],
-            ['checkmark', PrpTyp.Bool],
             ['icon', PrpTyp.Num],
             ['label', PrpTyp.Str],
             ['showlabel', PrpTyp.Bool],
@@ -175,6 +204,14 @@ export class VpcElButton extends VpcElSizable {
             Util512.freezeRecurse(VpcElButton.cachedGetters);
             Util512.freezeRecurse(VpcElButton.cachedSetters);
         }
+    }
+
+    /**
+     * from internal textfont to "geneva_12_biuosdce"
+     */
+    getFontAsUI512() {
+        let spec = new TextFontSpec(this.getS('textfont'), this.getN('textstyle'), this.getN('textsize'));
+        return spec.toSpecString();
     }
 }
 
