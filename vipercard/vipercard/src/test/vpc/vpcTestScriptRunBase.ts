@@ -124,8 +124,8 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         bgfld_b_1.set('name', 'p1')
         bgfld_b_2.set('name', 'p2')
         bgfld_c_1.set('name', 'p1')
-        bgbtn_b_1.set('name', 'p2')
-        bgbtn_b_2.set('name', 'p1')
+        bgbtn_b_1.set('name', 'p1')
+        bgbtn_b_2.set('name', 'p2')
         bgbtn_c_1.set('name', 'p1')
         btn_go.set('name', 'go');
 

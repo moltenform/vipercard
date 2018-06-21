@@ -71,13 +71,6 @@ export class VpcElStack extends VpcElBase {
     }
 
     /**
-     * get the properties that need to be serialized
-     */
-    getKeyPropertiesList() {
-        return ['script', 'name', 'increasingnumberforelemname', 'increasingnumberforid', 'stacklineage'];
-    }
-
-    /**
      * re-use cached getters and setter callback functions for better perf
      */
     startGettersSetters() {
@@ -239,6 +232,10 @@ export class VpcElStack extends VpcElBase {
                 for (let pt of cd.parts) {
                     yield pt;
                 }
+            }
+
+            for (let bgpt of bg.parts) {
+                yield bgpt;
             }
         }
     }

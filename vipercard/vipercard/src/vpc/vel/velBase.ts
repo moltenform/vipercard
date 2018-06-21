@@ -25,7 +25,6 @@ export abstract class VpcElBase extends UI512Settable {
     readonly parentId: string;
     protected abstract _name: string;
     abstract getType(): VpcElType;
-    abstract getKeyPropertiesList(): string[];
     abstract startGettersSetters(): void;
     readonly tmpArray: [boolean, any] = [false, undefined];
 
@@ -209,7 +208,7 @@ export abstract class VpcElBase extends UI512Settable {
             let curVal = (this as any)['_' + key]
             checkThrowEq(typeof curVal, typeof newv, '')
             let specificKey = key + '_oncard_' + cardId;
-            this.setImpl(key, newv, defaultVal, context)
+            this.setImpl(specificKey, newv, defaultVal, context)
         } else {
             this.setImpl(key, newv, undefined, context)
         }
@@ -218,7 +217,7 @@ export abstract class VpcElBase extends UI512Settable {
     getPossiblyCardSpecific(key:string, defaultVal:ElementObserverVal, cardId:string):ElementObserverVal {
         if (this.isCardSpecificContent(key)) {
             let specificKey = key + '_oncard_' + cardId;
-            let curVal = (this as any)['_' + key]
+            let curVal = (this as any)['_' + specificKey]
             return (curVal === null || curVal === undefined) ? defaultVal : curVal
         } else {
             return (this as any)['_' + key]

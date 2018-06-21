@@ -33,13 +33,6 @@ export class VpcElBg extends VpcElBase {
     parts: (VpcElButton | VpcElField)[] = [];
 
     /**
-     * get the properties that need to be serialized
-     */
-    getKeyPropertiesList() {
-        return ['script', 'name', 'paint'];
-    }
-
-    /**
      * type of element
      */
     getType() {

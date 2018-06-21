@@ -1,6 +1,6 @@
 
 /* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { getRoot, isString } from '../../ui512/utils/utils512.js';
+/* auto */ import { Util512, getRoot, isString } from '../../ui512/utils/utils512.js';
 /* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
@@ -275,10 +275,14 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected buildBtnFromScratch(vel: VpcElButton, currentCardId:string) {
         let target = new UI512ElButton(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        for (let i = 0, len = VpcElButton.keyPropertiesList.length; i < len; i++) {
-            let prop = VpcElButton.keyPropertiesList[i];
-            let newVal = vel.getGeneric(prop);
-            this.applyOneChange(vel, prop, newVal, true);
+        let keys = Util512.getMapKeys(vel as any)
+        for (let i = 0, len = keys.length; i<len; i++) {
+            let prop = keys[i];
+            if (prop[0] === '_' && prop[1] !== '_') {
+                prop = prop.slice(1)
+                let newVal = vel.getGeneric(prop);
+                this.applyOneChange(vel, prop, newVal, true);
+            }
         }
     }
 
@@ -288,10 +292,14 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected buildFldFromScratch(vel: VpcElField, currentCardId:string) {
         let target = new UI512ElTextField(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        for (let i = 0, len = VpcElField.keyPropertiesList.length; i < len; i++) {
-            let prop = VpcElField.keyPropertiesList[i];
-            let newVal = vel.getGeneric(prop);
-            this.applyOneChange(vel, prop, newVal, true);
+        let keys = Util512.getMapKeys(vel as any)
+        for (let i = 0, len = keys.length; i<len; i++) {
+            let prop = keys[i];
+            if (prop[0] === '_' && prop[1] !== '_') {
+                prop = prop.slice(1)
+                let newVal = vel.getGeneric(prop);
+                this.applyOneChange(vel, prop, newVal, true);
+            }
         }
 
         target.setFmTxt(vel.getCardFmTxt(currentCardId));

@@ -59,50 +59,6 @@ export class VpcElField extends VpcElSizable {
         return !this.getB('sharedtext') && (key === 'scroll' || key === 'ftxt')
     }
 
-    /* verified in tests */
-    static readonly keyPropertiesList = [
-        'x',
-        'y',
-        'w',
-        'h',
-        'dontwrap',
-        'sharedtext',
-        'enabled',
-        'locktext',
-        'singleline',
-        'selcaret',
-        'selend',
-        'scroll',
-        'style',
-        'visible',
-        'script',
-        'textalign',
-        'name',
-        'defaulttextfont',
-        'defaulttextsize',
-        'defaulttextstyle',
-        'ftxt'
-    ];
-
-    /**
-     * get the properties that need to be serialized
-     */
-    getKeyPropertiesList() {
-        if (this.getB('sharedtext')) {
-            return VpcElField.keyPropertiesList;
-        } else {
-            let keys = Util512.getMapKeys(this as any)
-            let ret:string[] = []
-            for (var i=0, len=keys.length; i<len; i++) {
-                if (keys[i].charAt(0) === '_') {
-                    ret.push(keys[i].slice(1))
-                }
-            }
-
-            return ret
-        }
-    }
-
     /**
      * type of element
      */
@@ -281,6 +237,7 @@ export class VpcElField extends VpcElSizable {
             ['dontwrap', PrpTyp.Bool],
             ['enabled', PrpTyp.Bool],
             ['locktext', PrpTyp.Bool],
+            ['sharedtext', PrpTyp.Bool],
             ['defaulttextfont', PrpTyp.Str],
             ['defaulttextsize', PrpTyp.Num],
             ['visible', PrpTyp.Bool]

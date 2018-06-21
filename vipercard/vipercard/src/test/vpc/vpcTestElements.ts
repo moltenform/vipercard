@@ -1,18 +1,15 @@
 
 /* auto */ import { assertTrue, scontains } from '../../ui512/utils/utilsAssert.js';
 /* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512TestBase, assertThrows } from '../../ui512/utils/utilsTest.js';
+/* auto */ import { assertThrows } from '../../ui512/utils/utilsTest.js';
 /* auto */ import { specialCharFontChange } from '../../ui512/draw/ui512DrawTextClasses.js';
 /* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
 /* auto */ import { ElementObserverNoOp } from '../../ui512/elements/ui512ElementGettable.js';
 /* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
 /* auto */ import { VpcValBool } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
+/* auto */ import { VpcGettableSerialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
 /* auto */ import { VpcElStack, VpcElStackLineageEntry } from '../../vpc/vel/velStack.js';
 /* auto */ import { WritableContainerVar } from '../../vpc/vel/velResolveContainer.js';
 /* auto */ import { MockOutsideWorld } from '../../test/vpc/vpcTestChunkResolution.js';
@@ -157,7 +154,6 @@ let mTests: (string | Function)[] = [
     },
     'testSerializeGettable',
     () => {
-        return
         for (let b of [true, false]) {
             let vel = new VpcElField('id1', 'parentid1');
             vel.observer = new ElementObserverNoOp();
@@ -176,12 +172,12 @@ let mTests: (string | Function)[] = [
             vel.set('textalign', 'ghi');
             vel.set('name', 'jkl');
 
-            let serialized = VpcUI512Serialization.serializeGettable(vel, vel.getKeyPropertiesList());
+            let serialized = VpcGettableSerialization.serializeGettable(vel);
             let restored = new VpcElField('id1', 'parentid1');
             restored.observer = new ElementObserverNoOp();
             let s = JSON.stringify(serialized);
             let restoredJson = JSON.parse(s);
-            VpcUI512Serialization.deserializeSettable(restored, restored.getKeyPropertiesList(), restoredJson);
+            VpcGettableSerialization.deserializeSettable(restored, restoredJson);
 
             assertEq('abc', restored.getCardFmTxt(fakeCardId).toUnformatted(), 'Fi|');
             assertEq(b, restored.getB('dontwrap'), 'Fh|');
@@ -209,28 +205,27 @@ let mTests: (string | Function)[] = [
         let sWithNewline = 'abc\n';
         let sWithSerialized = txt.toSerialized();
         assertTrue(scontains(sWithSerialized, specialCharFontChange), 'FV|');
-        let sAllAsciiSer = VpcUI512Serialization.serializePlain(sAllAscii);
-        let sWithTabSer = VpcUI512Serialization.serializePlain(sWithTab);
-        let sWithGreaterSer = VpcUI512Serialization.serializePlain(sWithGreater);
-        let sWithSmallerSer = VpcUI512Serialization.serializePlain(sWithSmaller);
-        let sWithNewlineSer = VpcUI512Serialization.serializePlain(sWithNewline);
-        let sWithSerializedSer = VpcUI512Serialization.serializePlain(sWithSerialized);
+        let sAllAsciiSer = VpcGettableSerialization.serializePlain(sAllAscii);
+        let sWithTabSer = VpcGettableSerialization.serializePlain(sWithTab);
+        let sWithGreaterSer = VpcGettableSerialization.serializePlain(sWithGreater);
+        let sWithSmallerSer = VpcGettableSerialization.serializePlain(sWithSmaller);
+        let sWithNewlineSer = VpcGettableSerialization.serializePlain(sWithNewline);
+        let sWithSerializedSer = VpcGettableSerialization.serializePlain(sWithSerialized);
         assertTrue(!scontains(sAllAsciiSer.toString(), 'b64'), 'FU|');
         assertTrue(!scontains(sWithTabSer.toString(), 'b64'), 'FT|');
         assertTrue(scontains(sWithGreaterSer.toString(), 'b64'), 'FS|');
         assertTrue(scontains(sWithSmallerSer.toString(), 'b64'), 'FR|');
         assertTrue(!scontains(sWithNewlineSer.toString(), 'b64'), 'FQ|');
         assertTrue(!scontains(sWithSerializedSer.toString(), 'b64'), 'FP|');
-        assertEq(sAllAscii, VpcUI512Serialization.deserializePlain(sAllAsciiSer), 'FO|');
-        assertEq(sWithTab, VpcUI512Serialization.deserializePlain(sWithTabSer), 'FN|');
-        assertEq(sWithGreater, VpcUI512Serialization.deserializePlain(sWithGreaterSer), 'FM|');
-        assertEq(sWithSmaller, VpcUI512Serialization.deserializePlain(sWithSmallerSer), 'FL|');
-        assertEq(sWithNewline, VpcUI512Serialization.deserializePlain(sWithNewlineSer), 'FK|');
-        assertEq(sWithSerialized, VpcUI512Serialization.deserializePlain(sWithSerializedSer), 'FJ|');
+        assertEq(sAllAscii, VpcGettableSerialization.deserializePlain(sAllAsciiSer), 'FO|');
+        assertEq(sWithTab, VpcGettableSerialization.deserializePlain(sWithTabSer), 'FN|');
+        assertEq(sWithGreater, VpcGettableSerialization.deserializePlain(sWithGreaterSer), 'FM|');
+        assertEq(sWithSmaller, VpcGettableSerialization.deserializePlain(sWithSmallerSer), 'FL|');
+        assertEq(sWithNewline, VpcGettableSerialization.deserializePlain(sWithNewlineSer), 'FK|');
+        assertEq(sWithSerialized, VpcGettableSerialization.deserializePlain(sWithSerializedSer), 'FJ|');
     },
     'testSerializeGettable with nonascii characters',
     () => {
-        return
         let vel = new VpcElField('id1', 'parentid1');
         vel.observer = new ElementObserverNoOp();
         let sBinX01 = 'def\x01binary';
@@ -241,7 +236,7 @@ let mTests: (string | Function)[] = [
         vel.set('name', sBinMany);
         assertTrue(scontains(vel.getS('script'), '\x01'), 'FI|');
         assertTrue(scontains(vel.getS('textalign'), '\xbb'), 'FH|');
-        let serialized = VpcUI512Serialization.serializeGettable(vel, vel.getKeyPropertiesList());
+        let serialized = VpcGettableSerialization.serializeGettable(vel);
         assertTrue(scontains(serialized['script'].toString(), 'b64'), 'FG|');
         assertTrue(scontains(serialized['textalign'].toString(), 'b64'), 'FF|');
         assertTrue(!scontains(serialized['script'].toString(), '\x01'), 'FE|');
@@ -253,46 +248,16 @@ let mTests: (string | Function)[] = [
         let restoredJson = JSON.parse(s);
         let restored = new VpcElField('id1', 'parentid1');
         restored.observer = new ElementObserverNoOp();
-        VpcUI512Serialization.deserializeSettable(restored, restored.getKeyPropertiesList(), restoredJson);
+        VpcGettableSerialization.deserializeSettable(restored, restoredJson);
         assertEq(sBinX01, restored.getS('script'), 'FA|');
         assertEq(sBinXbb, restored.getS('textalign'), 'F9|');
         assertEq(sBinMany, restored.getS('name'), 'F8|');
     },
     'testVpcElements.Properties for serialization should include all member vars starting with _',
     () => {
-        TestVpcElements.testKeyProperties(VpcElButton);
-        TestVpcElements.testKeyProperties(VpcElField);
-        TestVpcElements.testKeyProperties(VpcElCard);
-        TestVpcElements.testKeyProperties(VpcElBg);
-        TestVpcElements.testKeyProperties(VpcElStack);
+        return
+        // perhaps add a test, we want assert to fire if an important property on a button is missing
     }
 ];
 
 let fakeCardId = ''
-
-/**
- * exported test class for mTests
- */
-export class TestVpcElements extends UI512TestBase {
-    tests = mTests;
-
-    /**
-     * Properties for serialization should include all member vars starting with _
-     */
-    static testKeyProperties<T extends VpcElBase>(ctor: { new (...args: any[]): T }) {
-        let instance = new ctor('id1', 'parentid1');
-        let expected = instance.getKeyPropertiesList();
-        let got: string[] = [];
-        for (let key in instance) {
-            if (Object.prototype.hasOwnProperty.call(instance, key)) {
-                if (key.startsWith('_') && !key.startsWith('__')) {
-                    got.push(key.substr(1));
-                }
-            }
-        }
-
-        expected.sort();
-        got.sort();
-        assertEq(expected, got, 'F7|');
-    }
-}

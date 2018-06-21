@@ -65,14 +65,6 @@ export class VpcElProductOpts extends VpcElBase {
     static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
 
     /**
-     * get the properties that need to be serialized
-     * none, because these settings are runtime-only
-     */
-    getKeyPropertiesList() {
-        return [];
-    }
-
-    /**
      * type of element
      */
     getType() {

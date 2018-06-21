@@ -43,37 +43,6 @@ export class VpcElButton extends VpcElSizable {
     /* cached setters */
     static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
 
-    /* the properties that need to be serialized (verified in tests) */
-    static readonly keyPropertiesList = [
-        'x',
-        'y',
-        'w',
-        'h',
-        'autohilite',
-        'enabled',
-        'hilite',
-        'sharedhilite',
-        'checkmark',
-        'icon',
-        'showlabel',
-        'style',
-        'label',
-        'textalign',
-        'textfont',
-        'textsize',
-        'textstyle',
-        'visible',
-        'script',
-        'name'
-    ];
-
-    /**
-     * get the properties that need to be serialized
-     */
-    getKeyPropertiesList() {
-        return VpcElButton.keyPropertiesList;
-    }
-
     /**
      * type of element
      */
@@ -179,6 +148,7 @@ export class VpcElButton extends VpcElSizable {
     static simpleBtnGetSet(): [string, PrpTyp][] {
         return [
             ['autohilite', PrpTyp.Bool],
+            ['sharedhilite', PrpTyp.Bool],
             ['enabled', PrpTyp.Bool],
             ['icon', PrpTyp.Num],
             ['label', PrpTyp.Str],

@@ -4,7 +4,7 @@
 /* auto */ import { anyJson, checkThrowEq } from '../../ui512/utils/utils512.js';
 /* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
 /* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
+/* auto */ import { VpcGettableSerialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
 
 /**
@@ -46,7 +46,8 @@ export class VpcStateSerialize {
         ret.type = vel.getType();
         ret.id = vel.id;
         ret.parent_id = vel.parentId;
-        ret.attrs = VpcUI512Serialization.serializeGettable(vel, vel.getKeyPropertiesList());
+
+        ret.attrs = VpcGettableSerialization.serializeGettable(vel);
         return ret;
     }
 
@@ -82,9 +83,8 @@ export class VpcStateSerialize {
     deserializeVel(building: VpcStateInterface, incoming: anyJson) {
         if (incoming.type === VpcElType.Stack) {
             /* don't create a new element, just copy over the attrs */
-            VpcUI512Serialization.deserializeSettable(
+            VpcGettableSerialization.deserializeSettable(
                 building.getModel().stack,
-                building.getModel().stack.getKeyPropertiesList(),
                 incoming.attrs
             );
         } else if (
@@ -94,7 +94,7 @@ export class VpcStateSerialize {
             incoming.type === VpcElType.Fld
         ) {
             let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);
-            VpcUI512Serialization.deserializeSettable(created, created.getKeyPropertiesList(), incoming.attrs);
+            VpcGettableSerialization.deserializeSettable(created, incoming.attrs);
         } else {
             assertTrueWarn(false, 'Kx|unsupported type', incoming.type);
         }
@@ -132,7 +132,7 @@ export class VpcStateSerialize {
             );
 
             created = building.createVel(incoming.parent_id, incoming.type, incoming.insertIndex, incoming.id);
-            VpcUI512Serialization.deserializeSettable(created, created.getKeyPropertiesList(), incoming.attrs);
+            VpcGettableSerialization.deserializeSettable(created, incoming.attrs);
         });
 
         return throwIfUndefined(created, 'Kv|');

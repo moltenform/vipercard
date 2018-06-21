@@ -944,7 +944,6 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         },
         'async/testVpcStateSerialize',
         async () => {
-            return
             let txt = FormattedText.newFromUnformatted('');
             this.vcstate.undoManager.doWithoutAbilityToUndo(() => {
                 txt = this.modifyVcState();
@@ -1019,56 +1018,60 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
      * which has its own logic and needs to be tested
      */
     protected testModelBgPartProps(newState: VpcState) {
-        return
-        /* check bg field, card specific */
-        let bgfld = newState.model.getById(this.elIds.bgfld_b_1, VpcElField);
-        bgfld.set('sharedtext', false)
-        assertEq(123, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
-        assertEq('forbb', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
-        assertEq(456, bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(), '')
-        assertEq('forbc', bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(), '')
-        assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_d).readAsStrictInteger(), '')
-        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_d).toUnformatted(), '')
+        /* we'll be setting sharedtext and sharedhilite a few times, so for convenience
+        allow setting data throughout */
+        newState.undoManager.doWithoutAbilityToUndo(() => {
 
-        /* check bg field, shared */
-        bgfld.set('sharedtext', true)
-        assertEq(789, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
-        assertEq('forshared', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
-        assertEq(789, bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(), '')
-        assertEq('forshared', bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(), '')
+            /* check bg field, card specific */
+            let bgfld = newState.model.getById(this.elIds.bgfld_b_1, VpcElField);
+            assertEq(false, bgfld.getProp('sharedtext', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(123, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+            assertEq('forbb', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+            assertEq(456, bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(), '')
+            assertEq('forbc', bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(), '')
+            assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_d).readAsStrictInteger(), '')
+            assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_d).toUnformatted(), '')
 
-        /* check bg field, not set */
-        bgfld = newState.model.getById(this.elIds.bgfld_b_2, VpcElField);
-        assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
-        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
-        bgfld.set('sharedhilite', false)
-        assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
-        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+            /* check bg field, shared */
+            bgfld.set('sharedtext', true)
+            assertEq(789, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+            assertEq('forshared', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+            assertEq(789, bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(), '')
+            assertEq('forshared', bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(), '')
 
-        /* check bg btn, card specific */
-        let bgbtn = newState.model.getById(this.elIds.bgfld_b_1, VpcElButton);
-        bgbtn.set('sharedhilite', false)
-        assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
-        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
-        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(), '')
-        assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(), '')
-        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_d).readAsStrictBoolean(), '')
-        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_d).readAsStrictBoolean(), '')
+            /* check bg field, not set */
+            bgfld = newState.model.getById(this.elIds.bgfld_b_2, VpcElField);
+            assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+            assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
+            bgfld.set('sharedtext', false)
+            assertEq(0, bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(), '')
+            assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '')
 
-        /* check bg btn, shared */
-        bgbtn.set('sharedhilite', true)
-        assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
-        assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
-        assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(), '')
-        assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(), '')
+            /* check bg btn, card specific */
+            let bgbtn = newState.model.getById(this.elIds.bgbtn_b_1, VpcElButton);
+            assertEq(false, bgbtn.getProp('sharedhilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(), '')
+            assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(), '')
+            assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_d).readAsStrictBoolean(), '')
+            assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_d).readAsStrictBoolean(), '')
 
-        /* check bg btn, not set */
-        bgbtn = newState.model.getById(this.elIds.bgbtn_b_2, VpcElButton);
-        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
-        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
-        bgbtn.set('sharedhilite', false)
-        assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
-        assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            /* check bg btn, shared */
+            bgbtn.set('sharedhilite', true)
+            assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(true, bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(), '')
+            assertEq(true, bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(), '')
+
+            /* check bg btn, not set */
+            bgbtn = newState.model.getById(this.elIds.bgbtn_b_2, VpcElButton);
+            assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            bgbtn.set('sharedhilite', false)
+            assertEq(false, bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(), '')
+            assertEq(false, bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(), '')
+        })
     }
 
     /**
@@ -1130,9 +1133,10 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         bgfld.set('sharedtext', true)
         bgfld.setCardFmTxt(this.elIds.card_b_c, FormattedText.newFromSerialized(`forshared`))
         bgfld.setProp('scroll', VpcValN(789), this.elIds.card_b_c)
+        bgfld.set('sharedtext', false)
 
         /* modify bg btn - for card bb */
-        let bgbtn = this.vcstate.model.getById(this.elIds.bgfld_b_1, VpcElField);
+        let bgbtn = this.vcstate.model.getById(this.elIds.bgbtn_b_1, VpcElButton);
         bgbtn.set('sharedhilite', false)
         bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_b)
         bgbtn.setProp('checkmark', VpcValBool(false), this.elIds.card_b_b)
@@ -1147,6 +1151,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_c)
         bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_d)
         bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_d)
+        bgbtn.set('sharedhilite', false)
 
         return txt;
     }
@@ -1246,7 +1251,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
         ptIds = bgB.parts.map(pt => pt.id).join(',');
         assertEq(`${this.elIds.bgfld_b_1},${this.elIds.bgfld_b_2},${this.elIds.bgbtn_b_1},${this.elIds.bgbtn_b_2}`, ptIds, '');
         ptNames = bgB.parts.map(pt => pt.getS('name')).join(',');
-        assertEq(`p1,p1,p1,p2`, ptNames, '');
+        assertEq(`p1,p2,p1,p2`, ptNames, '');
 
         /* look for bg c's parts */
         ptParents = bgC.parts.map(pt => pt.parentId).join(',');

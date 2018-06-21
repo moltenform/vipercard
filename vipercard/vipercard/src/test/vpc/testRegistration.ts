@@ -18,7 +18,6 @@
 /* auto */ import { TestCodeEditorHelpers } from '../../test/ui512/testUI512CodeEditor.js';
 /* auto */ import { TestVpcUtils } from '../../test/vpc/vpcTestUtils.js';
 /* auto */ import { TestVpcChunkResolution } from '../../test/vpc/vpcTestChunkResolution.js';
-/* auto */ import { TestVpcElements } from '../../test/vpc/vpcTestElements.js';
 /* auto */ import { TestVpcParseCmd } from '../../test/vpc/vpcTestScriptParseCmd.js';
 /* auto */ import { TestVpcParseExpr } from '../../test/vpc/vpcTestScriptParseExpr.js';
 /* auto */ import { TestVpcScriptRunBase } from '../../test/vpc/vpcTestScriptRunBase.js';
@@ -50,7 +49,6 @@ export function runTestsImpl(all = true) {
         () => new TestUI512Utils(),
         () => new TestUtil512Class(),
         () => new TestVpcChunkResolution(),
-        () => new TestVpcElements(),
         () => new TestVpcScriptEval(),
         () => new TestVpcScriptExprLvl(),
         () => new TestVpcParseCmd(),

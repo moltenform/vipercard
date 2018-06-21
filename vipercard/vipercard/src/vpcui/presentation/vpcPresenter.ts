@@ -14,7 +14,7 @@
 /* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from '../../vpc/vpcutils/vpcUtils.js';
 /* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
 /* auto */ import { VpcElSizable } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcUI512Serialization } from '../../vpc/vel/velSerialization.js';
+/* auto */ import { VpcGettableSerialization } from '../../vpc/vel/velSerialization.js';
 /* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
 /* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
 /* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
@@ -568,7 +568,7 @@ export class VpcPresenter extends VpcPresenterInit {
             let dupe = this.makePart(orig.getType());
             let dupeSizable = dupe as VpcElSizable;
             checkThrow(dupeSizable && dupeSizable.isVpcElSizable, 'Ke|');
-            VpcUI512Serialization.copyPropsOver(orig, dupe, orig.getKeyPropertiesList());
+            VpcGettableSerialization.copyPropsOver(orig, dupe);
 
             /* move it a bit */
             let amtToMove = Util512.getRandIntInclusiveWeak(10, 50);
