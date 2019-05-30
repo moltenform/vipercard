@@ -24,4 +24,4 @@ ViperCard makes me consider that an old black-and-white program from the 90s can
 
 - ViperCard is still in development and some features are not yet complete. For example: HyperCard's visual effect command and show all cards command.
 
-ViperCard is developed under the GNU Public License. See https://github.com/downpoured/vipercard for more information.
+ViperCard is developed under the GNU Public License. See https://github.com/moltenform/vipercard for more information.

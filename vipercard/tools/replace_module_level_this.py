@@ -1,5 +1,5 @@
 
-# https://github.com/downpoured/vipercard
+# https://github.com/moltenform/vipercard
 # replace_module_level_this.py
 #
 # the typescript-emitted javascript contains a lot of code referring to module-level this,

@@ -5,7 +5,7 @@
   "main": "./lib/vpcbundlemin.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/downpoured/vipercard"
+    "url": "https://github.com/moltenform/vipercard"
   },
   "author": "Ben Fisher",
   "license": "GPL-3.0",

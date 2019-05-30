@@ -33,7 +33,7 @@ export class VpcAboutDialog {
             pr.app,
             `@ViperCardDotNet\n` +
                 `Re-creating and re-imagining HyperCard, to make animations, games, and interactive art.\n` +
-                `https://github.com/downpoured/vipercard\n` +
+                `https://github.com/moltenform/vipercard\n` +
                 `groups.google.com/forum/#!forum/vipercard\n`,
             n => {
                 if (n === UI512CompStdDialogResult.Btn2) {

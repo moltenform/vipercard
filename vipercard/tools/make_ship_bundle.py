@@ -1,4 +1,4 @@
-# https://github.com/downpoured/vipercard
+# https://github.com/moltenform/vipercard
 # make_release_bundle.py
 
 import os
