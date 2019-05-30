@@ -59,11 +59,11 @@ function webRequestImpl(url: string, verb: string, params: O<{ [key: string]: st
         const xhr = new XMLHttpRequest();
 
         xhr.addEventListener('load', () => {
-            resolve([xhr.status, xhr.responseText]);
+            resolve([xhr.status || 0, xhr.responseText || '']);
         });
 
         xhr.addEventListener('error', () => {
-            resolve([xhr.status, xhr.responseText]);
+            resolve([xhr.status || 0, xhr.responseText || '']);
         });
 
         if (verb === 'GET') {
