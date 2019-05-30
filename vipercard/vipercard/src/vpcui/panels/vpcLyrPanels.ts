@@ -18,6 +18,7 @@
 /* auto */ import { VpcEditPanelsCard } from '../../vpcui/panels/vpcEditPanelsCard.js';
 /* auto */ import { VpcEditPanelsStack } from '../../vpcui/panels/vpcEditPanelsStack.js';
 /* auto */ import { VpcAppLyrDragHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
+import { VpcElBase } from '../../vpc/vel/velBase.js';
 
 /**
  * layer that holds the property panels
@@ -86,6 +87,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
             shouldBeActive = this.panelEmpty;
         } else {
             shouldBeActive = this.panels.find(selected.getType().toString()) || this.panelEmpty;
+            this.showOrHideCheckboxItems(selected, shouldBeActive)
         }
 
         let arPanels = this.panels.getVals();
@@ -102,6 +104,21 @@ export class VpcAppLyrPanels extends VpcUILayer {
         if (this.active) {
             this.active.refreshFromModel(this.vci.UI512App());
         }
+    }
+
+    /**
+     * e.g. certain properties only apply to bg items
+     */
+    showOrHideCheckboxItems(sel:VpcElBase, panel:VpcEditPanels) {
+        let isBgPart = false
+        if (sel.getType() === VpcElType.Btn || sel.getType() === VpcElType.Fld) {
+            let parent = this.vci.getModel().findByIdUntyped(sel.parentId);
+            if (parent && parent.getType() === VpcElType.Bg) {
+                isBgPart = true
+            }
+        }
+
+        panel.showOrHideBgSpecific(this.vci.UI512App(), isBgPart)
     }
 
     /**

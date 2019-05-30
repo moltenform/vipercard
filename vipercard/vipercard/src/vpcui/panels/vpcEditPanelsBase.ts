@@ -322,4 +322,38 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             this.saveChangesToModelSetProp(vel, inId, VpcValBool(checked), onlyCheckIfDirty);
         }
     }
+
+    /**
+     * e.g. certain properties only apply to bg items
+     */
+    showOrHideBgSpecific(app: UI512Application, isBgPart:boolean) {
+        if (this.velType === VpcElType.Btn) {
+            this.showOrHideBgSpecificImpl(app, 'sharedtext', 200, isBgPart)
+        } else if (this.velType === VpcElType.Fld) {
+            this.showOrHideBgSpecificImpl(app, 'sharedhilite', 180, isBgPart)
+        }
+    }
+
+    /**
+     * e.g. certain properties only apply to bg items
+     */
+    protected showOrHideBgSpecificImpl(app: UI512Application, prop:string, basey:number, isBgPart:boolean) {
+        let grp = app.getGroup(this.grpId);
+        let chkbox = grp.getEl(this.getElId('toggle##' + prop))
+        const inputH = 15;
+        const inputMargin = 3;
+        if (isBgPart) {
+            chkbox.set('visible', true)
+            basey -= Math.round((inputH + inputMargin) / 2)
+        } else {
+            chkbox.set('visible', false)            
+        }
+
+        let curY = basey
+        for (let [lblTxt, inId] of this.rightOptions) {
+            let inp = grp.getEl(this.getElId(`toggle##${inId}`));
+            inp.setDimensions(inp.x, curY, inp.w, inp.h)
+            curY += inputH + inputMargin;
+        }
+    }
 }

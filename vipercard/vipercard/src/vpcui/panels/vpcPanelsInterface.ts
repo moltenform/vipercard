@@ -21,4 +21,5 @@ export interface VpcEditPanels {
     saveChangesToModel(app: UI512Application, onlyCheckIfDirty: boolean): void;
     fromFullId(fullId: string): O<string>;
     cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
+    showOrHideBgSpecific(app: UI512Application, isBgPart:boolean):void
 }

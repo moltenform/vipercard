@@ -28,6 +28,7 @@ export class VpcEditPanelsField extends VpcEditPanelsBase {
         ['lngLock Text', 'locktext'],
         ["lngDon't Wrap", 'dontwrap'],
         ['lngSingle Line', 'singleline'],
-        ['lngEnabled', 'enabled']
+        ['lngEnabled', 'enabled'],
+        ['lngShare Text', 'sharedtext']
     ];
 }

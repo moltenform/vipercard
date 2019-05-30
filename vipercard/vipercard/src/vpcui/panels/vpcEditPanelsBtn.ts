@@ -33,6 +33,7 @@ export class VpcEditPanelsBtn extends VpcEditPanelsBase {
     rightOptions: [string, string][] = [
         ['lngShow Label', 'showlabel'],
         ['lngAuto Hilite', 'autohilite'],
-        ['lngEnabled', 'enabled']
+        ['lngEnabled', 'enabled'],
+        ['lngShared Hilite', 'sharedhilite']
     ];
 }
