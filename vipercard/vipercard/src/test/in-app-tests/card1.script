@@ -174,7 +174,7 @@ on runTestValOps
 	set the width of cd btn "btnTest1" to (the width of cd btn "btnTest1"+45)
 	set the height of cd btn "btnTest1" to (the height of cd btn "btnTest1"+45)
 	answer "btnTest1 should be shifted down/right and bigger"
-    set the icon of cd btn "btnTest1" to 4
+	set the icon of cd btn "btnTest1" to 4
 	answer "btnTest1 should have icon"
 	set the icon of cd btn "btnTest1" to 0
 	answer "btnTest1 should have no icon"
