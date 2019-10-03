@@ -1,0 +1,76 @@
+
+/*
+
+SIMPLIFIED VPC GRAMMER
+1) check levels, if final level is not 0 then quit w error
+i.e. the grammer doesn't need to validate that on custom1 and end custom1 match
+2) kill comments
+3) lex
+4) parse
+look up fn+command names at runtime, not compile time
+because user defined fns can be made
+
+on thecustomhandler
+    repeat with x = 1 to 5
+        next repeat
+        repeat forever
+            add 2 to total
+        end repeat
+    end repeat
+    ask "where is it" with "cool"
+    answer "hello"
+    answer "hello" & (6*3)
+    answer "hello" & (6*sin(3))
+    answer "hello" & (6*cos(3) + 5)
+    answer "hello" & (6*cos(3) + 5 + myglobal)
+    answer "hello" & (6*cos(3) + 5 + mycustom(123))
+    answer "long string" & \
+        "continued"
+    myCustom 1,2,3
+    myCustom 1,atan(1,2),3
+
+end thecustomhandler
+
+*/
+
+
+const Lexer = chevrotain.Lexer
+const Parser = chevrotain.Parser
+const tokenVocabulary = {}
+const allTokens = []
+// a little utility to reduce duplication
+const createToken = function createTokenWrapper(options) {
+    // usage of the official createToken API.
+    let newTokenType = chevrotain.createToken(options)
+    allTokens.push(newTokenType)
+    tokenVocabulary[options.name] = newTokenType
+}
+
+// createToken is used to create a "constructor" for a Token class
+// The Lexer's output will contain an array of token Objects created by metadata
+// on these "constructors". Note that the Token "instances" are not proper class instances
+// So use chevrotain.tokenMatcher instead of "instanceof" when matching
+createToken({ name: "symOn", pattern: /on/ })
+createToken({ name: "symEnd", pattern: /end/ })
+createToken({ name: "symRepeat", pattern: /repeat/ })
+createToken({ name: "symWith", pattern: /with/ })
+createToken({ name: "symNext", pattern: /next/ })
+createToken({ name: "symForever", pattern: /forever/ })
+createToken({ name: "symTo", pattern: /to/ })
+createToken({ name: "symAdd", pattern: /add/ })
+createToken({ name: "symAsk", pattern: /ask/ })
+createToken({ name: "symAnswer", pattern: /answer/ })
+createToken({ name: "chrEq", pattern: /=/ })
+createToken({ name: "chrAmper", pattern: /&/ })
+createToken({ name: "chrOpen", pattern: /\(/ })
+createToken({ name: "chrClose", pattern: /\)/ })
+createToken({ name: "chrComma", pattern: /,/ })
+createToken({ name: "continuedLine", pattern: /\\\n/, group: Lexer.SKIPPED, line_breaks: true })
+createToken({ name: "newLine", pattern: /\n/, line_breaks: true })
+createToken({ name: "litString", pattern: /"[^"\n]+"/ })
+
+createToken({ name: "litInteger", pattern: /0|[1-9]\d+/ })
+createToken({ name: "otherIdentifier", pattern: /[a-zA-Z]\w*/ })
+createToken({name: "spaces", pattern: /[ \t]+/, group: Lexer.SKIPPED })
+
+
