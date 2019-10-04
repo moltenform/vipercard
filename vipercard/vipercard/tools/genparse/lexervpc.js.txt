@@ -36,14 +36,14 @@ end thecustomhandler
 
 const Lexer = chevrotain.Lexer
 const Parser = chevrotain.Parser
-const tokenVocabulary = {}
+const tokenVocab = {}
 const allTokens = []
 // a little utility to reduce duplication
 const createToken = function createTokenWrapper(options) {
     // usage of the official createToken API.
     let newTokenType = chevrotain.createToken(options)
     allTokens.push(newTokenType)
-    tokenVocabulary[options.name] = newTokenType
+    tokenVocab[options.name] = newTokenType
 }
 
 // createToken is used to create a "constructor" for a Token class
@@ -53,6 +53,9 @@ const createToken = function createTokenWrapper(options) {
 createToken({ name: "symOn", pattern: /on/ })
 createToken({ name: "symEnd", pattern: /end/ })
 createToken({ name: "symRepeat", pattern: /repeat/ })
+createToken({ name: "symLock", pattern: /lock/ })
+createToken({ name: "symUnlock", pattern: /unlock/ })
+createToken({ name: "symScreen", pattern: /screen/ })
 createToken({ name: "symWith", pattern: /with/ })
 createToken({ name: "symNext", pattern: /next/ })
 createToken({ name: "symForever", pattern: /forever/ })
@@ -60,17 +63,48 @@ createToken({ name: "symTo", pattern: /to/ })
 createToken({ name: "symAdd", pattern: /add/ })
 createToken({ name: "symAsk", pattern: /ask/ })
 createToken({ name: "symAnswer", pattern: /answer/ })
+createToken({ name: "chrDoubleEq", pattern: /==/ })
 createToken({ name: "chrEq", pattern: /=/ })
 createToken({ name: "chrAmper", pattern: /&/ })
 createToken({ name: "chrOpen", pattern: /\(/ })
 createToken({ name: "chrClose", pattern: /\)/ })
 createToken({ name: "chrComma", pattern: /,/ })
 createToken({ name: "continuedLine", pattern: /\\\n/, group: Lexer.SKIPPED, line_breaks: true })
-createToken({ name: "newLine", pattern: /\n/, line_breaks: true })
+createToken({ name: "newLine", pattern: /\n+/, line_breaks: true })
 createToken({ name: "litString", pattern: /"[^"\n]+"/ })
-
 createToken({ name: "litInteger", pattern: /0|[1-9]\d+/ })
-createToken({ name: "otherIdentifier", pattern: /[a-zA-Z]\w*/ })
-createToken({name: "spaces", pattern: /[ \t]+/, group: Lexer.SKIPPED })
+createToken({ name: "symCommandSpAdd", pattern: /add/ })
+createToken({ name: "symCommandSpAnswer", pattern: /answer/ })
+createToken({ name: "symCommandSpArrowkey", pattern: /arrowkey/ })
+createToken({ name: "symCommandSpAsk", pattern: /ask/ })
+createToken({ name: "symCommand1ArgBeep", pattern: /beep/ })
 
+createToken({ name: "symCommandSpChoose", pattern: /choose/ })
+createToken({ name: "symCommand1ArgDelete", pattern: /delete/ })
+createToken({ name: "symCommandSpDivide", pattern: /divide/ })
+createToken({ name: "symCommandSpGet", pattern: /get/ })
+createToken({ name: "symCommandSpGo", pattern: /go/ })
+createToken({ name: "symCommandSpHide", pattern: /hide/ })
+createToken({ name: "symCommandSpMultiply", pattern: /multiply/ })
+createToken({ name: "symCommandSpPut", pattern: /put/ })
+createToken({ name: "symCommandSpSet", pattern: /set/ })
+createToken({ name: "symCommandSpShow", pattern: /show/ })
+createToken({ name: "symCommandSpSort", pattern: /sort/ })
+createToken({ name: "symCommandSpSubtract", pattern: /subtract/ })
+createToken({ name: "symCommandSpWait", pattern: /wait/ })
+createToken({ name: "otherIdentifier", pattern: /[a-zA-Z]\w*/ })
+createToken({ name: "spaces", pattern: /[ \t]+/, group: Lexer.SKIPPED })
+
+const VPCLexer = new Lexer(allTokens)
+var vpcLexer = {
+    tokenVocab:tokenVocab,
+    lex: function(inputText) {
+        let lexingResult = VPCLexer.tokenize(inputText)
+        if (lexingResult.errors.length > 0) {
+            return [[], lexingResult.errors]
+        } else {
+            return [lexingResult, []]
+        }
+    }
+}
 
