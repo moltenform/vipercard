@@ -1,0 +1,43 @@
+
+
+----Begin:Tokens--------
+Select=/FRO(?![a-zA-Z0-9_])/
+From=/FROM(?![a-zA-Z0-9_])/
+Where=/FROME(?![a-zA-Z0-9_])/
+Comma=/,/
+Identifier=/\w+/
+Integer=/0|[1-9]\d+/
+GreaterThan=/>/
+LessThan=/</
+WhiteSpace=/\s+/|||||static GROUP = ChvLexer.SKIPPED;static LINE_BREAKS = true
+----End:Tokens--------
+
+
+
+manually add to the top of the class:
+
+    public TopBegin() {
+        return this.RuleSelect()
+    }
+    
+    private RuleSelectClause = this.RULE("RuleSelectClause", () => {
+        this.CONSUME(TokenSelect)
+        this.AT_LEAST_ONE_SEP({ 
+            SEP: TokenComma,
+            DEF: () => {
+                this.CONSUME(TokenIdentifier)
+            }
+        })
+	})
+
+----Begin:Rules--------
+Select:=<SelectClause> <FromClause> [ <WhereClause> ]
+SelectClause:={custom definition above}
+FromClause:=From Identifier
+WhereClause:=Where <Expression>
+Expression:=<AtomicExpr> <RelationalOperator> <AtomicExpr>
+AtomicExpr:={Integer | Identifier}
+RelationalOperator:={GreaterThan | LessThan}
+
+----End:Rules--------
+

@@ -1,0 +1,112 @@
+
+possible to use 0|[1-9]\d+ to disallow 00123
+
+new syntax: 
+function square x
+    return x*x
+end square
+put square(2) into y --legal (we recognize that first token is custom handler)
+put 1 + square(2) into y --not yet legal, because expressions must be finite-time
+put square(2) + 1 into y --not yet legal, but could be implemented
+
+--are there any blocking built-in functions????
+--there aren't... so let's not allow custom functions for now except with the special put syntax
+
+
+----Begin:Tokens--------
+Number=/-?[0-9]+(\.[0-9]+)?/
+Divide=/\//
+LParen=/\(/
+RParen=/\)/
+Plus=/\+/
+Minus=/\-/
+Mult=/\*/
+Equals=/=/
+Comma=/,/
+continuedLine=/\\\n/|||||static GROUP = ChvLexer.SKIPPED;static LINE_BREAKS = true
+newLine=/\n+/|||||static LINE_BREAKS = true
+stringLiteral=/"[^"\n]*"/
+whiteSpace=/[ \t]+/|||||static GROUP = ChvLexer.SKIPPED
+productname=new RegExp(cProductName.toLowerCase(), 'i')
+on=SAME
+function=SAME
+end=SAME
+exit=SAME
+to=SAME
+next=SAME
+pass=SAME
+return=SAME
+if=SAME
+then=SAME
+else=SAME
+repeat=SAME
+until=SAME
+while=SAME
+with=SAME
+for=SAME
+times=SAME
+down=SAME
+forever=SAME
+put=SAME
+the=SAME
+result=SAME
+into=SAME
+requestCallFn=/$$requestcallfn/
+requestEval=/$$requesteval/
+otherIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
+
+----End:Tokens--------
+
+
+----Begin:Rules--------
+flow_onhandlerstart:={on | function} otherIdentifier MANYSEP{{ Comma / otherIdentifier }}ENDMANYSEP
+flow_repeatwith:=repeat with otherIdentifier Equals <expr> [down] to <expr>
+expr:=Number
+----End:Rules--------
+
+
+manual:
+r_answer:=answer <expr> [with <factor> [or <factor> [or <factor>]]]
+r_get:=get {<expr> | [ the ] <property> [ of { <window> | <object> | <chunk> <field> }]}
+r_put:=put <expr> [ <preposition> [<container> ] ]
+r_set:=set [ the ] <property> [ <ofOnly> {<window> | <object> | <menuItem> of <menu> | <chunk> <field>} ] to <propVal>
+r_show:=show menuBar | [ all | marked | <unsigned> ] cards
+r_sort:=sort [ ascending | descending ] [ text | numeric | international | dateTime ] by <expr> [ { lines | items } of ] <container> by <expr>
+
+
+catch when someone makes a handler like
+on add
+end add
+
+----Begin:Rules3--------
+flow_onhandlerstart:={on | function} otherIdentifier MANYSEP{{ Comma / otherIdentifier }}ENDMANYSEP
+flow_repeatwith:=repeat with otherIdentifier Equals <expr> [down] to <expr>
+r_requestEval:=requesteval <expr>
+r_requestCallFn:=requestCallFn LParen MANYSEP{{ Comma / <expr> }}ENDMANYSEP RParen
+r_callOtherHandler:=otherIdentifier MANYSEP{{ Comma / <expr> }}ENDMANYSEP
+r_add:=add <expr> to <container>
+r_ask:=ask [password] <expr> [with <expr>]
+r_beep:=beep [<expr>]
+r_choose:={ choose tool <expr> | choose otherIdentifier tool }
+r_click:=click at <expr> Comma <expr> [ with <springKeys> ]
+r_create:=create menu <expr>
+r_delete:=delete <chunk> <simpleContainer>
+r_disable:=disable <button>
+r_enable:=enable <button>
+r_divide:=divide <container> by <expr>
+r_drag:=drag from <expr> Comma <expr> to <expr> Comma <expr> [ with <springKeys> ]
+r_gocard:=go [ to ] {<ordinal> | <position>  | <dest>}
+r_hide:=hide menubar | <part>
+r_lock:=lock screen | messages | error dialogs | recent
+r_multiply:=multiply <container> by <expr>
+r_reset:=reset { paint | menubar | printing }
+r_subtract:=subtract <expr> from <container>
+r_unlock:=unlock screen [ with <r_visual> ]
+r_visual:=visual [ effect ] <visEffect>
+r_wait:=wait <count> [ ticks | tick | seconds | second | sec ]
+
+
+
+expr:=Number
+----End:Rules3--------
+
