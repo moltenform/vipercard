@@ -1,0 +1,34 @@
+
+// let's require that function calls have parens... easier to read that way imo
+
+----Begin:Tokens--------
+TkBkgndsyn=/background(?![a-zA-Z0-9_])|bkgnd(?![a-zA-Z0-9_])|bg(?![a-zA-Z0-9_])/i
+TkCardsyn=/card(?![a-zA-Z0-9_])|cd(?![a-zA-Z0-9_])/i
+TkBtnsyn=/button(?![a-zA-Z0-9_])|btn(?![a-zA-Z0-9_])/i
+TkFldsyn=/fields(?![a-zA-Z0-9_])|field(?![a-zA-Z0-9_])|flds(?![a-zA-Z0-9_])|fld(?![a-zA-Z0-9_])/i
+TkCharsyn=/characters(?![a-zA-Z0-9_])|character(?![a-zA-Z0-9_])|chars(?![a-zA-Z0-9_])|char(?![a-zA-Z0-9_])/i
+TkCommandcharsyn=/commandChar(?![a-zA-Z0-9_])|cmdChar(?![a-zA-Z0-9_])/i
+TkMsgsyn=/message(?![a-zA-Z0-9_])|msg(?![a-zA-Z0-9_])/i
+TkPrevsyn=/previous(?![a-zA-Z0-9_])|prev(?![a-zA-Z0-9_])/i
+TkOfonly=/of(?![a-zA-Z0-9_])/
+TkInOnly=/in(?![a-zA-Z0-9_])/
+TkProductname=new RegExp(cProductName, 'i')
+TkNotEqBasicStyle=/<>/
+TkNotEqCStyle=/!=/
+TkEquals=/=/
+TkMinus=/-/
+TkGreaterEqual=/>=/
+TkLessEqual=/<=/
+TkGreater=/>/
+TkLess=/</
+----End:Tokens--------
+
+----Begin:Rules--------
+BuiltinStmtHelperChooseToolName:= { TkBtnsyn | TkFldsyn | rect | brush | select | text | Identifier [Identifier] }
+----End:Rules--------
+
+
+----Begin:Checks--------
+Rule|BuiltinStmtHelperChooseToolName|Should Accept Any Of|
+----End:Checks--------
+
