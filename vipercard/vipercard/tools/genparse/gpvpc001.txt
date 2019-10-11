@@ -53,7 +53,7 @@ result=SAME
 into=SAME
 requestCallFn=/$$requestcallfn/
 requestEval=/$$requesteval/
-otherIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
+
 
 ----End:Tokens--------
 
