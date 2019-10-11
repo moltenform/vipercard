@@ -22,9 +22,13 @@ symAtLeastOneSepEnd = '\x14'
 tabs1 = '    '
 tabs2 = tabs1 * 2
 
+def getDefaultPattern(s):
+    return s+'(?![a-zA-Z0-9_])'
+
 def processTokens(tokens, allout):
+    theplainwordtokens = {}
     thetokens = {}
-    writeAllTokens = ['export const allTokens = {']
+    writeAllTokens = ['export const tks = {']
     writeListTokens = ['export const listTokens = [ // note: order matters here']
     for line in tokens:
         line = line.strip()
@@ -44,7 +48,19 @@ def processTokens(tokens, allout):
             # use lookahead --- otherwise incorrect matches 
             # if there are tokens "the", "then" -- "then" will be lexed as "the" "n" instead of "then"
             # positive lookahead (?=[^a-zA-Z0-9_]) almost works but fails at the end of string
-            pattern= '/'+name+'(?![a-zA-Z0-9_])/i'
+            pattern= '/' + getDefaultPattern(name) + '/i'
+            theplainwordtokens[name] = True
+        elif pattern.startswith('OneOfWords('):
+            inParens = pattern.split('(')[1].split(')')[0]
+            items = inParens.split(',')
+            for item in items:
+                assertTrue(re.match(r'^[a-z_?]+$', item), item)
+                assertTrue(len(item.split('?')) <= 2, 'only support one ? here now ', item)
+                itemwithoptional = item.replace('?', '')
+                theplainwordtokens[itemwithoptional] = True
+                itemwithoutoptional = re.sub(r'.\?', '', item)
+                theplainwordtokens[itemwithoutoptional] = True
+            pattern= '/' + '|'.join([getDefaultPattern(x.strip()) for x in items]) + '/i'
         if not pattern.startswith('new RegExp'):
             assertTrue(pattern.startswith('/'), line)
             assertTrue(pattern.endswith('/') or pattern.endswith('/i'), line)
@@ -52,7 +68,7 @@ def processTokens(tokens, allout):
         smallname = name
         name = getFullTokenName(name)
         assertTrue(name not in thetokens, f'duplicate token {smallname}')
-        thetokens[name] = True
+        thetokens[name] = False
         writeAllTokens.append(f'{tabs1}{name}:{name},')
         writeListTokens.append(f'{tabs1}{name},')
         allout.append(f'class {name} extends ChvToken {{')
@@ -66,7 +82,7 @@ def processTokens(tokens, allout):
     writeListTokens.append('];')
     allout.extend(writeListTokens)
     allout.extend(writeAllTokens)
-    return thetokens
+    return thetokens, theplainwordtokens
 
 def getFullTokenName(s):
     s = s.lower()
@@ -119,10 +135,16 @@ def lexrule(thetokens, b, rule, rulesDefined, helperGetTokens):
             if getFullTokenName(part) not in thetokens:
                 if helperGetTokens and part==part.lower():
                     if part not in helpedTokens:
+                        if not len(helpedTokens):
+                            print("welcome to helpedTokens. you can look at this output, and if it looks right, copy into the Tokens section.")
+                            print('note, however, that fewer tokens is better, please try to combine them.')
+                            print("(please keep running the program until this message no longer appears)")
                         print(f'{part}=SAME')
                     helpedTokens[part] = True
                 else:
                     assertTrue(getFullTokenName(part) in thetokens, f' {part} not seen in tokens')
+            else:
+                thetokens[getFullTokenName(part)] = True
             part = getFullTokenName(part)
         out.append(part)
     return out
@@ -174,7 +196,7 @@ def recurseThroughRuleManyOrAtLeastOneSep(rulename, ruleparts, symStart, symEnd,
     out = [startcode]
     theSeparatorGot = recurseThroughRule(rulename, [theSeparator])
     assertTrue('this.CONSUME000' in theSeparatorGot[0], f'in {rulename} the sep should be token but got {theSeparator}')
-    out.append('SEP:' + 'allTokens.' + theSeparator + ',')
+    out.append('SEP:' + 'tks.' + theSeparator + ',')
     out.append('DEF: () => {')
     for pt in current:
         gotpt = recurseThroughRule(rulename, [pt])
@@ -202,7 +224,7 @@ def recurseThroughRule(rulename, ruleparts):
         divpoint = getEndOfBlock(rulename, ruleparts, '}', '|')
         current = ruleparts[1:divpoint]
         next = ruleparts[divpoint+1:]
-        out = ['this.OR([']
+        out = ['this.OR000([']
         curentpieces = list(_itersplit(current, ['|']))
         assertTrue(len(curentpieces), f'{rulename}: it looks like you have alternation with no choices, need {{a | b}} not {{a}}', ruleparts)
         for curentpiece in curentpieces:
@@ -220,7 +242,7 @@ def recurseThroughRule(rulename, ruleparts):
         divpoint = getEndOfBlockSearchLevel(rulename, ruleparts, '[', ']', '(allowall)')
         current = ruleparts[1:divpoint]
         next = ruleparts[divpoint+1:]
-        out = ['this.OPTION(() => {']
+        out = ['this.OPTION000(() => {']
         addToOut = recurseThroughRule(rulename, current)
         out += [(tabs1 + line) for line in addToOut]
         out.append('});')
@@ -237,7 +259,7 @@ def recurseThroughRule(rulename, ruleparts):
         ref = 'Rule' + ruleparts[0].replace('<', '').replace('>', '')
         return [f'this.SUBRULE000(this.{ref})'] + recurseThroughRule(rulename, ruleparts[1:])
     elif len(ruleparts[0]) > 2:
-        return [f'this.CONSUME000(allTokens.{ruleparts[0]})'] + recurseThroughRule(rulename, ruleparts[1:])
+        return [f'this.CONSUME000(tks.{ruleparts[0]})'] + recurseThroughRule(rulename, ruleparts[1:])
     else:
         assertTrue(False, f'{rulename}: invalid rulepart {ruleparts[0]}', ruleparts)
 
@@ -250,17 +272,19 @@ def addNumeralsIm(s, search, haveSeen):
         else:
             haveSeen[fnd] = 1
             n = 1
-        assertTrue('E000(' in fnd, fnd)
-        return fnd.replace('E000(', f'E{n}(')
+        assertTrue('000(' in fnd, fnd)
+        return fnd.replace('000(', f'{n}(')
         
-    return re.sub(search + r'(\([^)]+\))', dorepl, s)
+    return re.sub(search, dorepl, s)
 
 def addNumerals(got):
     seenConsumes = {}
     seenSubrules = {}
     for i in range(len(got)):
-        got[i] = addNumeralsIm(got[i], 'this.CONSUME000', seenConsumes)
-        got[i] = addNumeralsIm(got[i], 'this.SUBRULE000', seenSubrules)
+        got[i] = addNumeralsIm(got[i], r'this.CONSUME000(\([^)]+\))', seenConsumes) # captures inner
+        got[i] = addNumeralsIm(got[i], r'this.SUBRULE000(\([^)]+\))', seenSubrules) # captures inner
+        got[i] = addNumeralsIm(got[i], r'this.OPTION000\(\(\)( )', seenSubrules) # intentionally always capture the single space
+        got[i] = addNumeralsIm(got[i], r'this.OR000\((\[)', seenSubrules) # intentionally always capture the [
     
 def processRules(rules, thetokens, allout, helperGetTokens):
     rulesDefined = {}
@@ -296,7 +320,7 @@ def processRules(rules, thetokens, allout, helperGetTokens):
         got = recurseThroughRule(rulename, ruleparts)
         addNumerals(got)
         allout.append('')
-        allout.append(f'{tabs1}private Rule{rulename} = this.RULE("Rule{rulename}", () => {{')
+        allout.append(f'{tabs1}public Rule{rulename} = this.RULE("Rule{rulename}", () => {{')
         allout.extend([f'{tabs1}{tabs1}'+ln for ln in got])
         allout.append(f'{tabs1}}})')
     return lexed
@@ -376,7 +400,6 @@ def readRuleParts(ruleparts, thetokens):
 
 def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
     rulesReferenced, tokensReferenced = readRuleParts(ruleparts, thetokens)
-    #~ print(f'rl:{rulesReferenced} tk:{tokensReferenced}')
     if visitor=='WhicheverIsNotAToken':
         assertEq(1, len(rulesReferenced), f'in {rulename} ambiguous, could be any of {rulesReferenced}')
         return templateWhicheverIsNotAToken.replace('%method%', 'Rule'+rulename).replace('%child%', rulesReferenced[0] + '[0]')
@@ -430,7 +453,14 @@ def assertNotTokens(lexedRules, thetokens, line):
         assertTrue(not tk.lower() in thetokens, tk)
         assertTrue(not getFullTokenName(tk) in thetokens, getFullTokenName(tk))
 
-def assertRuleAccepts(lexedRules, thetokens, rulename, otherfile, othersection):
+def assertRuleAccepts(lexedRules, thetokens, theplainwordtokens, rulename, otherfile, othersection ):
+    allowances = {}
+    if '::' in othersection:
+        othersection, sAllowances = othersection.split('::')
+        allowances = {}
+        for item in sAllowances.split(':'):
+            allowances[item.split('/')[0]] = True
+        
     # this is for "semi-keywords" that we don't want to make a token, because it prevent the user from using common terms as variable names
     if otherfile.endswith('.txt'):
         othertxt = open(otherfile, 'r', encoding='utf8').read().replace('\r\n','\n')
@@ -455,13 +485,22 @@ def assertRuleAccepts(lexedRules, thetokens, rulename, otherfile, othersection):
         if canAcceptAnyIdentifier and (not getFullTokenName(word) in thetokens):
             # it works here since it's not a token and will be captured by Identifier
             continue
+        if canAcceptAnyIdentifier and (not word in theplainwordtokens):
+            # it works here since it's not a token and will be captured by Identifier
+            continue
         if (word == 'bkgnd' and ('TkBkgndsyn' in acceptedWordsLexed)) or (word == 'card' and ('TkCardSyn' in acceptedWordsLexed)) or (word == 'button' and ('TkBtnSyn' in acceptedWordsLexed)) or (word == 'field' and ('TkFldsyn' in acceptedWordsLexed)):
             # it works here because we accept a synonym
             continue
-        assertTrue(False, f'it looks like the rule {rulename}\n would not accept the word {word} ... {acceptedWordsLexed}')
+        if word in allowances:
+            # we explicitly let this one through
+            continue
+        assertTrue(False, f'it looks like the rule {rulename}\n would not accept the word "{word}" ... {acceptedWordsLexed}')
 
+def assertAllTokensSeen(thetokens, okIfMissing):
+    for key in thetokens:
+        assertTrue(thetokens[key] is True or (key in okIfMissing), f'we did not seem to use the token {key}')
 
-def processChecks(lexedRules, thetokens, checks):
+def processChecks(lexedRules, thetokens, theplainwordtokens, checks):
     for line in checks:
         line = line.strip()
         if line and not line.startswith('//'):
@@ -469,7 +508,10 @@ def processChecks(lexedRules, thetokens, checks):
                 assertNotTokens(lexedRules, thetokens, line)
             elif line.startswith('Rule Should Accept Any Of These|'):
                 _, rulename, otherfile, othersection = line.split('|')
-                assertRuleAccepts(lexedRules, thetokens, rulename, otherfile, othersection)
+                assertRuleAccepts(lexedRules, thetokens, theplainwordtokens, rulename, otherfile, othersection)
+            elif line.startswith('Referred To All Tokens Except|'):
+                okIfMissing = line.split('|')[1:]
+                assertAllTokensSeen(thetokens, okIfMissing)
             else:
                 assertTrue(False, 'unknown Checks directive '+line)
 
@@ -496,7 +538,6 @@ def checkSingleLetter(txt):
         if not line.startswith('//'):
             for found in re.finditer(r'\b[0-9a-zA-Z_]\b', line):
                 assertTrue(False, f"we currently don't support tokens or rules that are exactly one letter. (saw '{found.group(0)}')")
-    
 
 def goAllReady(fname, helperGetTokens = False):
     alllines = open(fname, 'r', encoding='utf8').read().replace('\r\n','\n')
@@ -505,7 +546,7 @@ def goAllReady(fname, helperGetTokens = False):
     tokens = tokens.split('\n')
     allout = []
     allout.append(warnmsg)
-    thetokens = processTokens(tokens, allout)
+    thetokens, theplainwordtokens = processTokens(tokens, allout)
     allout.append('')
     sendToFile(allout, '../../src/vpc/vpcgentokens.ts')
     
@@ -529,7 +570,7 @@ def goAllReady(fname, helperGetTokens = False):
     checks = getSection(alllines, 'Checks', False)
     if checks:
         checks = checks.split('\n')
-        processChecks(lexedRules, thetokens, checks)
+        processChecks(lexedRules, thetokens, theplainwordtokens, checks)
     print('Done.')
 
 
@@ -538,6 +579,6 @@ def goAllReady(fname, helperGetTokens = False):
 if __name__=='__main__':
     #~ goAllReady('works--chvdemo_and_infix_and_visit.txt')
     #~ goAllReady('real_vpc001.txt')
-    goAllReady('real_vpc001.txt', True)
+    goAllReady('real_vpc000_trying.txt', True)
     
     

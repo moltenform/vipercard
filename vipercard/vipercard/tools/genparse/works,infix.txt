@@ -36,6 +36,28 @@ Variable:={Four | Five | Identifier }
 
 ----End:Rules--------
 
+
+I tried this from online,
+ParenExpr:= LParen <Expr> RParen
+P0Term:={<ParenExpr> | Number}
+P1Term:={ <P0Expr> | <ParenExpr> | Number}
+P2Term:={<P0Expr> | <P1Expr> | <ParenExpr> | Number}
+Expr:={<P2Expr> | <P1Expr> | <P0Expr> | <ParenExpr> | Number}
+but it didn't work, Chevrotain ran into runtime issues with it saying it created cycles or something.
+looked at an example of infix from
+from https://github.com/metabase/metabase/blob/136dfb17954f4e4302b3bf2fee99ff7b7b12fd7c/frontend/src/metabase/lib/expressions/parser.js
+whittled it down to
+      additionExpression:=<multiplicationExpression> many( AdditiveOperator <multiplicationExpression>)
+      multiplicationExpression:=<atomicExpression> many(MultiplicativeOperator <atomicExpression>)
+      nullaryCall:= LParen RParen
+      unaryCall:= LParen <expression> RParen
+      aggregationExpression:= { NullaryAggregation [nullaryCall] | UnaryAggregation [unaryCall] }
+      atomicExpression:= { <parenthesisExpression> | numberLiteral  }
+      parenthesisExpression:= LParen <expression> RParen
+
+
+
+
 RequestEval 3*(4+Five)*6
 tree created looks like this:
 {
