@@ -261,7 +261,6 @@ Rule Should Accept Any Of These|NtChooseToolName|/browse/button/field/select/las
 //Rule Should Accept Any Of These|BuiltinCmdChoose|/tool/|
 //Rule Should Accept Any Of These|BuiltinCmdWait|ticks/tick/seconds/second/sec|
 //Rule Should Accept Any Of These|BuiltinCmdSort|ascending/descending/text/numeric/international/datetime|
-//Rule Should Accept Any Of These|BuiltinCmdShow|menubar|
 //Rule Should Accept Any Of These|BuiltinCmdUnlock|screen/visual/effect|
 //Rule Should Accept Any Of These|BuiltinCmdVisual|effect|
 
@@ -273,6 +272,7 @@ Rule Should Accept Any Of These|Lvl2Expression|number/integer/point/rect/logical
 //Rule Should Accept Any Of These|BuiltinCmdDrag|shiftkey/optionkey/commandkey|
 //Rule Should Accept Any Of These|BuiltinCmdHide|menubar|
 //Rule Should Accept Any Of These|BuiltinCmdReset|paint/menubar/printing|
+//Rule Should Accept Any Of These|BuiltinCmdShow|menubar|
 //Rule Should Accept Any Of These|BuiltinCmdLock|screen/messages/error/dialogs/recent|
 
 

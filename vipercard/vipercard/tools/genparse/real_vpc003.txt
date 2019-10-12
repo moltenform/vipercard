@@ -21,9 +21,9 @@ TkOfOnly=/of(?![a-zA-Z0-9_])/
 TkInOnly=/in(?![a-zA-Z0-9_])/
 TkA=/a(?![a-zA-Z0-9_])/
 TkProductname=new RegExp(cProductName + '(?![a-zA-Z0-9_])', 'i')
-TkRequestEval=/$$RequestEval(?![a-zA-Z0-9_])/
-TkRequestHandlerCall=/$$RequestHandlerCall(?![a-zA-Z0-9_])/
-TkRequestUserFnCall=/$$RequestCustomFnCall(?![a-zA-Z0-9_])/
+TkRequestEval=/\$\$RequestEval(?![a-zA-Z0-9_])/
+TkRequestHandlerCall=/\$\$RequestHandlerCall(?![a-zA-Z0-9_])/
+TkRequestUserFnCall=/\$\$RequestCustomFnCall(?![a-zA-Z0-9_])/
 
 // two symbols
 TkNotEqBasicStyle=/<>/
@@ -36,7 +36,7 @@ TkLessEqual=/<=/
 TkConcatSingle=/&/
 TkPlus=/\+/
 TkMinus=/-/
-TkCaret=/^/
+TkCaret=/\^/
 TkMult=/\*/
 TkDivide=/\//
 TkGreater=/>/
@@ -44,7 +44,7 @@ TkLess=/</
 TkComma=/,/
 TkLParen=/\(/
 TkRParen=/\)/
-TkEquals=/=/
+TkEquals=/==?/
 
 // reserved words. use cannot create a variable with these names.
 the=SAME
@@ -99,7 +99,6 @@ right=SAME
 up=SAME
 down=SAME
 out=SAME
-in=SAME
 top=SAME
 bottom=SAME
 center=SAME
@@ -150,7 +149,6 @@ international=SAME
 datetime=SAME
 lines=SAME
 items=SAME
-of=SAME
 subtract=SAME
 unlock=SAME
 visual=SAME
@@ -217,21 +215,25 @@ TkIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
 // however, this also means slightly longer time in traversing as there are many conditionals to see which subrule is not null
 
 ///////////// Chunks and Prepositions
+
 HOrdinal:=[ the ] { last | mid | middle | any | first | second | third | fourth | fifth | sixth | seventh | eigth | ninth | tenth }
 HPosition:={this | TkPrevsyn | next | the TkPrevsyn | the next }
-HSimpleContainer:= { <ObjectPart> | <HMessageBox> | TkIdentifier }
+
+// Reorder the alternatives so that shorter common prefix lookahead paths appears after the longer ones.
+// i.e. longer ones first
+HSimpleContainer:= { <ObjectPart> | <HMessageBox> |  TkIdentifier }
 HContainer:= { <HChunk> <HSimpleContainer> | <HSimpleContainer> }
 HMessageBox:=[ the ] TkMsgsyn { box | window }
-HChunk:={ <HOrdinal> TkCharsyn | <HOrdinal> word | <HOrdinal> item | <HOrdinal> line | TkCharsyn <HChunk_1> | word <HChunk_1> | item <HChunk_1> | line <HChunk_1> } <Of>
+HChunk:={ TkCharsyn <HChunk_1> | word <HChunk_1> | item <HChunk_1> | line <HChunk_1> | <HOrdinal> TkCharsyn | <HOrdinal> word | <HOrdinal> item | <HOrdinal> line  } <Of>
 HChunk_1:= <MAYBEFACTOR> [ to <MAYBEFACTOR> ]
 HAdjective:={ long | short | abbrev | abbr | abbreviated }
 
 
 //////////// Objects
-Object:={ TkProductname | me | <Object_1> | <ObjectBtn> | <ObjectFld> | <ObjectCard> | <ObjectBg> | <ObjectStack> }
+Object:={ <ObjectBtn> | <ObjectFld> | <ObjectCard> | <ObjectBg> | <ObjectStack> | <Object_1> | TkProductname | me }
 Object_1:=[ the ] target
-ObjectBtn:={TkBtnsyn id <FACTOR> | TkBtnsyn <FACTOR> | <HOrdinal> TkBtnsyn} [ <Of> <ObjectCard> ]
-ObjectFld:={TkFldsyn id <FACTOR> | TkFldsyn <FACTOR> | <HOrdinal> TkFldsyn} [ <Of> <ObjectCard> ]
+ObjectBtn:={TkCardsyn | TkBkgndsyn} {TkBtnsyn id <FACTOR> | TkBtnsyn <FACTOR> | <HOrdinal> TkBtnsyn} [ <Of> <ObjectCard> ]
+ObjectFld:={TkCardsyn | TkBkgndsyn} {TkFldsyn id <FACTOR> | TkFldsyn <FACTOR> | <HOrdinal> TkFldsyn} [ <Of> <ObjectCard> ]
 ObjectCard:={ TkCardsyn id <FACTOR> | TkCardsyn <FACTOR> | <HOrdinal> TkCardsyn | <HPosition> TkCardsyn  }
 ObjectBg:={TkBkgndsyn id <FACTOR> | TkBkgndsyn <FACTOR> | <HOrdinal> TkBkgndsyn | <HPosition> TkBkgndsyn }
 ObjectStack:=this stack 
@@ -242,42 +244,47 @@ NtDest:={ <ObjectCard> | <ObjectBg> | <ObjectStack> }
 NtPreposition:={ before | after | into}
 NtTextStyleList:=ATLEASTONE{{   <NtTextStyle> }}ENDATLEASTONE
 NtTextStyle:={plain | bold | italic | underline | outline |shadow | condense | extend} 
-NtVisEffect:= <NtVisEffectKind> [ TkIdentifier [TkIdentifier] ]  [ to { TkCardsyn | TkIdentifier } ]
-NtVisEffectKind:= [TkIdentifier] { TkIdentifier | to | from | push | plain }  [{ open | close | left | right | up | down | out | in | top | bottom | center }]
-NtChooseToolName:= { TkBtnsyn | TkFldsyn | rect | select | text | line | TkIdentifier TkIdentifier | TkIdentifier }
+//NtVisEffect:= <NtVisEffectKind> [ TkIdentifier [TkIdentifier] ]  [ to { TkCardsyn | TkIdentifier } ]
+//NtVisEffectKind:= [TkIdentifier] { TkIdentifier | to | from | push | plain }  [{ open | close | left | right | up | down | out | TkInOnly | top | bottom | center }]
+
+// we'll have to interpret this at runtime anyways. was causing parsing problems so why bother
+NtVisEffect:= ATLEASTONE{{   <NtVisEffectTerm> }}ENDATLEASTONE
+NtVisEffectTerm:= { TkIdentifier |  to | from | push | plain | open | close | left | right | up | down | out | TkInOnly | top | bottom | center }
+
+NtChooseToolName:= { TkIdentifier TkIdentifier | TkIdentifier | TkBtnsyn | TkFldsyn | rect | select | text | line }
 NtHotKey:={shiftkey | optionkey | commandkey}
 
 ////////// Commands
 //BuiltinCmds:={<BuiltinCmdAdd>|<BuiltinCmdAsk>|<BuiltinCmdBeep>|<BuiltinCmdChoose>|<BuiltinCmdClick>|<BuiltinCmdDelete>|<BuiltinCmdDisable>|<BuiltinCmdEnable>|<BuiltinCmdDivide>|<BuiltinCmdDrag>|<BuiltinCmdGoCard>|<BuiltinCmdHide>|<BuiltinCmdLock>|<BuiltinCmdMultiply>|<BuiltinCmdReset>|<BuiltinCmdSubtract>|<BuiltinCmdUnlock>|<BuiltinCmdVisual>|<BuiltinCmdWait>|<BuiltinCmdAnswer>|<BuiltinCmdGet>|<BuiltinCmdPut>|<BuiltinCmdSet>|<BuiltinCmdShow>|<BuiltinCmdSort>}
 BuiltinCmdAdd:=add <ARITH> to <HContainer>
-//BuiltinCmdAnswer:=answer <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]]
-//BuiltinCmdAsk:=ask [password] <Expr> [with <Expr>]
-//BuiltinCmdBeep:=beep [<Expr>]
-//BuiltinCmdChoose:={ choose tool <MAYBE_ALLOW_ARITH> | choose <NtChooseToolName> tool }
-//BuiltinCmdClick:=click at <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ with <NtHotKey> [ TkComma <NtHotKey> [ TkComma <NtHotKey> ] ] ]
-//BuiltinCmdDelete:=delete { <HChunk> <HSimpleContainer> | <ObjectPart> }
-//BuiltinCmdDisable:=disable <ObjectBtn>
-//BuiltinCmdDivide:=divide <HContainer> by <ARITH>
-//BuiltinCmdDrag:=drag from <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> to <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ with <NtHotKey> [ TkComma <NtHotKey> [ TkComma <NtHotKey> ] ] ]
-//BuiltinCmdEnable:=enable <ObjectBtn>
-//// I don't see why "get" would need anything special for accessing properties... any <Expr> can already access properties.
-//BuiltinCmdGet:=get <Expr>
-//BuiltinCmdGoCard:=go [ to ] {<HOrdinal> | <HPosition>  | <NtDest>}
-//BuiltinCmdHide:=hide { menubar | <ObjectPart> }
-//BuiltinCmdLock:=lock {screen | messages | error dialogs | recent}
-//BuiltinCmdMultiply:=multiply <HContainer> by <ARITH>
-//BuiltinCmdPut:=put <Expr> [ <NtPreposition> [ <HContainer> ]]
-//BuiltinCmdReset:=reset { paint | menubar | printing }
-//BuiltinCmdSet:=set [the] <AnyPropertyName> [ <OfOnly> { <Object> | <HChunk> <ObjectFld> } ] to <AnyPropertyVal>
-//BuiltinCmdShow:=show { menubar | <BuiltinCmdShow_1>  | <BuiltinCmdShow_2>}
-//BuiltinCmdShow_1:=<ObjectPart> [ at  <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]
-//BuiltinCmdShow_2:=[ {all  | <ARITH>} ] TkCardssyn
+BuiltinCmdAnswer:=answer <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]]
+BuiltinCmdAsk:=ask [password] <Expr> [with <Expr>]
+BuiltinCmdBeep:=beep [<Expr>]
+BuiltinCmdChoose:={ choose tool <MAYBE_ALLOW_ARITH> | choose <NtChooseToolName> tool }
+BuiltinCmdClick:=click at <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ with <NtHotKey> [ TkComma <NtHotKey> [ TkComma <NtHotKey> ] ] ]
+BuiltinCmdDelete:=delete { <HChunk> <HSimpleContainer> | <ObjectPart> }
+BuiltinCmdDisable:=disable <ObjectBtn>
+BuiltinCmdDivide:=divide <HContainer> by <ARITH>
+BuiltinCmdDrag:=drag from <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> to <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ with <NtHotKey> [ TkComma <NtHotKey> [ TkComma <NtHotKey> ] ] ]
+BuiltinCmdEnable:=enable <ObjectBtn>
+// I don't see why "get" would need anything special for accessing properties... any <Expr> can already access properties.
+BuiltinCmdGet:=get <Expr>
+BuiltinCmdGoCard:=go [ to ] { <NtDest> | <HOrdinal> | <HPosition> }
+BuiltinCmdHide:=hide { <ObjectPart> | menubar }
+BuiltinCmdLock:=lock { error dialogs | screen | messages |  recent}
+BuiltinCmdMultiply:=multiply <HContainer> by <ARITH>
+BuiltinCmdPut:=put <Expr> [ <NtPreposition> [ <HContainer> ]]
+BuiltinCmdReset:=reset { paint | menubar | printing }
+BuiltinCmdSet:=set [the] <AnyPropertyName> [ TkOfOnly { <HChunk> <ObjectFld> | <Object> } ] to <AnyPropertyVal>
+BuiltinCmdShow:=show { <BuiltinCmdShow_1>  | <BuiltinCmdShow_2> | menubar }
+BuiltinCmdShow_1:=<ObjectPart> [ at  <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]
+BuiltinCmdShow_2:=[ all ] TkCardssyn
 //// we don't yet support sort by expression where the value of 'each' is set to each line -- might be too slow to be done synchronously
-//BuiltinCmdSort:=sort [ {ascending | descending} ] [ {text | numeric | international | datetime} ] { lines | items } of <HContainer>
-//BuiltinCmdSubtract:=subtract <ARITH> from <HContainer>
-//BuiltinCmdUnlock:=unlock screen [ with [ visual [ effect ] ] <NtVisEffect> ]
-//BuiltinCmdVisual:=visual [ effect ] <NtVisEffect>
-//BuiltinCmdWait:=wait [for] <Expr> { TkIdentifier | second }
+BuiltinCmdSort:=sort [ {ascending | descending} ] [ {text | numeric | international | datetime} ] { lines | items } <Of> <HContainer>
+BuiltinCmdSubtract:=subtract <ARITH> from <HContainer>
+BuiltinCmdUnlock:=unlock screen [ with [ visual [ effect ] ] <NtVisEffect> ]
+BuiltinCmdVisual:=visual [ effect ] <NtVisEffect>
+BuiltinCmdWait:=wait [for] <Expr> { TkIdentifier | second }
 
 //////////// syntax keywords
 // on handler -- interpretted before reaching the parser
@@ -299,24 +306,28 @@ BuiltinCmdAdd:=add <ARITH> to <HContainer>
 
 ///////// Properties
 AnyPropertyName:= {  right | left | bottom |top | rect | id | TkIdentifier  }
-AnyPropertyVal:= { TkIdentifier | up | down | right | left | center | shadow| <NtTextStyleList> | <AnyPropertyVal_ValPtOrRect> }
-AnyPropertyVal_ValPtOrRect:= <MAYBE_ALLOW_ARITH> [ TkComma <MAYBE_ALLOW_ARITH> [ TkComma <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]] 
-OfOnly:=TkOfonly                
+
+// we want AnyPropertyVal to take TkIdentifier | up | down | right | left | center | shadow.
+// well TkIdentifier can be a AnyPropertyVal_ValPtOrRect (treated as variable)
+// and up and down are AnyPropertyVal_ValPtOrRect (going down to ExprSource, ExprLiteral, constants)
+// shadow can be taken by NtTextStyleList 
+AnyPropertyVal:= { <AnyPropertyVal_ValPtOrRect> | <NtTextStyleList> | right | left | center }
+AnyPropertyVal_ValPtOrRect:= <MAYBE_ALLOW_ARITH> [ TkComma <MAYBE_ALLOW_ARITH> [ TkComma <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]]               
 Of:={TkOfonly|TkInOnly}   
 
 ///////// Function calls
-FnCall:= { the length of <FACTOR> | the result | the paramcount | the params | <FnCallNumberOf> | <ExprThereIs> | <FnCallAllowedNoParensTarget> | <FnCallWithParens> }
+FnCall:= { the length TkOfOnly <FACTOR> | <FnCallWithParens> | <FnCallAllowedNoParensTarget> | <FnCallNumberOf> | <ExprThereIs> | the result | the paramcount | the params  }
 FnCallAllowedNoParensTarget:= the [ <HAdjective> ] target
-FnCallNumberOf:= the number of { TkBkgndssyn | <FnCallNumberOf_1> | <FnCallNumberOf_2> | <FnCallNumberOf_3> | <Object> }
+FnCallNumberOf:= the number TkOfOnly { <FnCallNumberOf_3> | <FnCallNumberOf_2> |  <Object>  | <FnCallNumberOf_1> |  TkBkgndssyn  }
 FnCallNumberOf_1:= TkCardssyn [ <Of> <ObjectBg> ] 
 FnCallNumberOf_2:= [ {TkCardsyn | TkBkgndsyn} ] { TkBtnssyn | TkFldssyn }
 FnCallNumberOf_3:= { TkCharsyn | words | items | lines} <Of> <FACTOR>
 FnCallWithParens:=[the] [ <HAdjective> ] { TkIdentifier | length | result | paramcount | params | target | commandkey | shiftkey | optionkey | tool  } TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP  TkRParen 
 
 ////////////Expressions
-ExprSource:={ <ExprLiteral> |  <HSimpleContainer> | <FnCall> | <ExprGetProperty> }
-ExprGetProperty:=[the] [ <HAdjective> ] <AnyPropertyName> of { <Object> | <HChunk> <ObjectFld> } 
-ExprLiteral:={ TkStringLiteral | TkNumber | TkIdentifier | up | down | true | false }
+// ExprLiteral used to have TkIdentifier, but HSimpleContainer takes a TkIdentifier
+ExprSource:={ <ExprGetProperty>| <FnCall> | <HSimpleContainer> | TkStringLiteral | TkNumber | up | down | true | false }
+ExprGetProperty:=[the] [ <HAdjective> ] <AnyPropertyName> TkOfOnly { <HChunk> <ObjectFld> | <Object> } 
 ExprThereIs:=there is { an | TkA | no | not TkA } <Object>
 Expr:= <Lvl1Expression> MANY{{ <OpLogicalOrAnd> <Lvl1Expression> }}ENDMANY
 Lvl1Expression:= <Lvl2Expression> MANY{{ <OpContainingEqualityGreaterLess> <Lvl2Expression> }}ENDMANY
@@ -329,18 +340,18 @@ Lvl6Expression:= [ { TkMinus | not } ] [<HChunk>] { <ExprSource> | TkLParen <Exp
 
 ////////////Operators
 OpLogicalOrAnd:= {or | and}
-OpContainingEqualityGreaterLess:= {  TkGreaterEqual | TkLessEqual | TkGreater | TkLess | <OpContainingWithin> | TkEquals | is not | is | TkNotEqBasicStyle | TkNotEqCStyle  }
-OpContainingWithin:= {  is in | contains | is not in | is within | is not within }
+OpContainingEqualityGreaterLess:= { <OpContainingWithin> | is not | TkGreaterEqual | TkLessEqual | TkGreater | TkLess | TkEquals  | is | TkNotEqBasicStyle | TkNotEqCStyle  }
+OpContainingWithin:= {  is TkInOnly | contains | is not TkInOnly | is within | is not within }
 OpStringConcat:= { TkConcatDouble | TkConcatSingle }
 OpPlusMinus:= { TkPlus | TkMinus }
 OpMultDivideExp:= { TkMult | TkDivide | TkCaret | div | mod }
 
 ///////////// top level, generated in 'lines.ts'
-TopLevel:={<TopLevelRequestEval> | <TopLevelRequestHandlerCall> | <TopLevelRequestUserFnCall> | <TopLevelRepeatWith> | <BuiltinCmds>}
+//TopLevel:={<TopLevelRequestEval> | <TopLevelRequestHandlerCall> | <TopLevelRequestUserFnCall> | <TopLevelRepeatWith> | <BuiltinCmds>}
 TopLevelRequestEval:=TkRequestEval <Expr>
-TopLevelRequestHandlerCall:=TkRequestHandlerCall TkIdentifier MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP 
-TopLevelRequestUserFnCall:=TkRequestUserFnCall TkIdentifier TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP TkRParen
-TopLevelRepeatWith:= repeat with TkIdentifier TkEquals <Expr> [down] to <Expr>
+//TopLevelRequestHandlerCall:=TkRequestHandlerCall TkIdentifier MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP 
+//TopLevelRequestUserFnCall:=TkRequestUserFnCall TkIdentifier TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP TkRParen
+//TopLevelRepeatWith:= repeat with TkIdentifier TkEquals <Expr> [down] to <Expr>
 
 ///////////////////////////////////////////////////////////// 
 
@@ -352,18 +363,20 @@ TopLevelRepeatWith:= repeat with TkIdentifier TkEquals <Expr> [down] to <Expr>
 // we need to use TkCardsyn and not "card" 
 AssertNotToken|bkgnd|bg|card|cd|button|btn|field|fld|char|character|msg|message|prev|previous
 AssertNotToken|bkgnds|bgs|cards|cds|buttons|btns|fields|flds
+AssertNotToken|of|in
 
 Rule Should Accept Any Of These|AnyPropertyName|listfunctions.txt|ListProperties
-Rule Should Accept Any Of These|AnyPropertyVal|listfunctions.txt|ListStyles
-Rule Should Accept Any Of These|AnyPropertyVal|right/left/center|
-Rule Should Accept Any Of These|FnCallWithParens|listfunctions.txt|ListFunctions
-Rule Should Accept Any Of These|ExprLiteral|listfunctions.txt|ListConstants
+//Rule Should Accept Any Of These|AnyPropertyVal|listfunctions.txt|ListStyles
+//Rule Should Accept Any Of These|AnyPropertyVal|right/left/center|
 
-Rule Should Accept Any Of These|NtVisEffect|very/slow/slowly/fast|
-Rule Should Accept Any Of These|NtVisEffect|card/black/white/gray/grey/inverse|
-Rule Should Accept Any Of These|NtVisEffectKind|barn/door/open/close/cut/plain/dissolve/venetian/blinds/checkerboard/iris/open/close/scroll/left/right/up/down/wipe/left/right/up/down/zoom/open/out/close/in/shrink/to/top/bottom/center/stretch/from/top/bottom/center/push/left/right/up/down/|
+Rule Should Accept Any Of These|FnCallWithParens|listfunctions.txt|ListFunctions
+//Rule Should Accept Any Of These|ExprSource|listfunctions.txt|ListConstants
+
+Rule Should Accept Any Of These|NtVisEffectTerm|very/slow/slowly/fast|
+Rule Should Accept Any Of These|NtVisEffectTerm|card/black/white/gray/grey/inverse|
+Rule Should Accept Any Of These|NtVisEffectTerm|barn/door/open/close/cut/plain/dissolve/venetian/blinds/checkerboard/iris/open/close/scroll/left/right/up/down/wipe/left/right/up/down/zoom/open/out/close/in/shrink/to/top/bottom/center/stretch/from/top/bottom/center/push/left/right/up/down/|
 Rule Should Accept Any Of These|NtChooseToolName|/browse/button/field/select/lasso/pencil/brush/eraser/line/spray/can/rect/round/rect/bucket/oval/curve/text/reg/regular/polygon/poly/|
-Rule Should Accept Any Of These|BuiltinCmdWait|ticks/tick/seconds/second/sec|
+//Rule Should Accept Any Of These|BuiltinCmdWait|ticks/tick/seconds/second/sec|
 
 
 ----End:Checks--------

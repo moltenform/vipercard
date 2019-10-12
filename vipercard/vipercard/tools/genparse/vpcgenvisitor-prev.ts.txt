@@ -1,0 +1,245 @@
+/* -auto-import- * from chvbridge */ import {ChvLexer, ChvParser, ChvToken, ChvILexingResult, ChvILexingError, ChvIToken}  from "../vpc/chvbridge.js"
+/* -auto-import- * from vpcgentokens */ import {cProductName, listTokens, tks}  from "../vpc/vpcgentokens.js"
+/* -auto-import- * from vpcgenrules */ import {ChvParserClass}  from "../vpc/vpcgenrules.js"
+/* -auto-import- * from ui512utils */ import {ui512CreateError, ui512RespondError, assertTrue, assertEq, assertTrueWarn, assertEqWarn, assertNever, O, bool, booltrue, add, scontains, slength, setarr, cast, isString, isValidNumber, range, coal, repeat, concatarray, getdatestring, RenderComplete, defaultSort, makeDefaultSort, getElem, weakUuid, LockableArr, RepeatingTimer, IFontManager, IIconManager, Root, OrderedHash, BrowserOSInfo, getBrowserOS, beginLoadImage, beginLoadJson, Tests_BaseClass, runTestsArray, CharClass, GetCharClass}  from "../ui512/ui512utils.js"
+
+export function makeVpcRuntimeError(s: string) {
+    return new Error(`VpcRuntimeError: in user-provide script ${s}`);
+}
+
+export function makeVpcParseError(s: string) {
+    return new Error(`VpcParseError: in user-provide script ${s}`);
+}
+
+export enum VpcMetaValueType {
+    Void,
+    ObjectReference,
+    Value,
+    GenericValue, // like 'shadow' or 'opaque' that's not quite a string
+    
+}
+
+export class VpcValue {
+
+}
+
+export function createVisitor(parser: ChvParserClass): object {
+    let Basev = parser.getBaseCstVisitorConstructor();
+    class VPCCustomVisitor extends Basev {
+        constructor() {
+            super();
+            this.validateVisitor();
+        }
+
+        private __$doarith(n1: any, n2: any, op: string) {
+            if (typeof n1 !== "number") {
+                throw makeVpcRuntimeError(`n1 is not a number, is ${n1}`);
+            } else if (typeof n2 !== "number") {
+                throw makeVpcRuntimeError(`n2 is not a number, is ${n2}`);
+            }
+
+            switch (op) {
+                case "+":
+                    return n1 + n2;
+                case "-":
+                    return n1 - n2;
+                case "*":
+                    return n1 * n2;
+                case "/":
+                    return n1 / n2;
+                case ">":
+                    return n1 > n2 ? 1 : 0;
+                case "<":
+                    return n1 < n2 ? 1 : 0;
+                default:
+                    throw makeVpcRuntimeError(`unknown operator ${op}`);
+            }
+        }
+
+        protected RuleFunctionCall(ctx: any) {
+            let fnname = ctx.Identifier[0].Image
+            if (fnname === 'firstTimesSecondMinusThird') {
+                assertEq(3, ctx.Expression.length)
+                let v1 = this.visit(ctx.Expression[0])
+                let v2 = this.visit(ctx.Expression[1])
+                let v3 = this.visit(ctx.Expression[2])
+                return (v1 * v2) - v3
+            } else if (fnname === 'firstSquaredPlusSecond') {
+                assertEq(2, ctx.Expression.length)
+                let v1 = this.visit(ctx.Expression[0])
+                let v2 = this.visit(ctx.Expression[1])
+                return (v1 * v1) + v2
+            } else if (fnname === 'negativeFirstSquared') {
+                assertEq(1, ctx.Expression.length)
+                let v1 = this.visit(ctx.Expression[0])
+                return -1 * (v1 * v1)
+            } else {
+                throw makeVpcRuntimeError(`unknown function ${fnname}`);
+            }
+        }
+
+        protected RuleVariable(ctx: any) {
+            let totalLength = 0;
+            for (let key of ["TokenFour", "TokenFive", "TokenIdentifier"]) {
+                totalLength += ctx[key].length;
+            }
+
+            assertEq(1, totalLength);
+            if (ctx.TokenFour.length) {
+                return 4.0;
+            } else if (ctx.TokenFive.length) {
+                return 5.0;
+            } else if (ctx.TokenIdentifier.length) {
+                let nm = ctx.TokenIdentifier[0].image.toLowerCase();
+                if (nm === "one") {
+                    return 1.0;
+                } else if (nm === "two") {
+                    return 2.0;
+                } else {
+                    throw makeVpcRuntimeError(`unknown variable ${nm}`);
+                }
+            } else {
+                throw makeVpcRuntimeError(`internal vistor error`);
+            }
+        }
+
+        protected RuleAtomicExpression(ctx: any) {
+            let totalLength = 0;
+            for (let key of ["TokenNumber", "RuleVariable", "RuleParenExpression"]) {
+                totalLength += ctx[key].length;
+            }
+
+            let makeMinus = 1
+            if (ctx.TokenMinus.length) {
+                makeMinus = -1
+            }
+
+            assertEq(1, totalLength);
+            if (ctx.TokenNumber.length) {
+                return makeMinus * parseFloat(ctx.TokenNumber[0].image);
+            } else if (ctx.RuleVariable.length) {
+                return makeMinus * this.visit(ctx.RuleVariable[0]);
+            } else if (ctx.RuleParenExpression.length) {
+                return makeMinus * this.visit(ctx.RuleParenExpression[0]);
+            } else {
+                throw makeVpcRuntimeError(`internal visitor error`);
+            }
+        }
+                
+// generated code, any changes past this point will be lost:
+        
+        protected RuleTotalEval(ctx: any) {
+            if (ctx.RuleExpression[0]) {
+                return this.visit(ctx.RuleExpression[0]);
+            } else {
+                throw makeVpcRuntimeError(`internal error in RuleTotalEval. RuleExpression[0] not present.`);
+            }
+        }
+        
+        protected RuleExpression(ctx: any) {
+            if (ctx.RuleLvl0Expression[0]) {
+                return this.visit(ctx.RuleLvl0Expression[0]);
+            } else {
+                throw makeVpcRuntimeError(`internal error in RuleExpression. RuleLvl0Expression[0] not present.`);
+            }
+        }
+        
+        protected RuleLvl0Expression(ctx:any) {
+            if (!ctx.RuleLvl1Expression.length || ctx.RulePlusOrMinus.length + 1 !== ctx.RuleLvl1Expression.length) {
+                throw makeVpcRuntimeError(`internal error in RuleLvl0Expression. len operators=${ctx.RulePlusOrMinus.length} but len children=${ctx.RuleLvl1Expression.length}.`);
+            }
+            
+            let total = this.visit(ctx.RuleLvl1Expression[0]);
+            for (let i = 0; i < ctx.RulePlusOrMinus.length; i++) {
+                let whichop = this.visit(ctx.RulePlusOrMinus[i]);
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl1Expression[i + 1]);
+                total = this.__$doarith(val1, val2, whichop);
+            }
+        
+            return total;
+        }
+        
+        protected RuleLvl1Expression(ctx:any) {
+            if (!ctx.RuleLvl2Expression.length || ctx.RuleMultOrDiv.length + 1 !== ctx.RuleLvl2Expression.length) {
+                throw makeVpcRuntimeError(`internal error in RuleLvl1Expression. len operators=${ctx.RuleMultOrDiv.length} but len children=${ctx.RuleLvl2Expression.length}.`);
+            }
+            
+            let total = this.visit(ctx.RuleLvl2Expression[0]);
+            for (let i = 0; i < ctx.RuleMultOrDiv.length; i++) {
+                let whichop = this.visit(ctx.RuleMultOrDiv[i]);
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl2Expression[i + 1]);
+                total = this.__$doarith(val1, val2, whichop);
+            }
+        
+            return total;
+        }
+        
+        protected RuleLvl2Expression(ctx:any) {
+            if (!ctx.RuleLvl3Expression.length || ctx.RuleGreaterOrLess.length + 1 !== ctx.RuleLvl3Expression.length) {
+                throw makeVpcRuntimeError(`internal error in RuleLvl2Expression. len operators=${ctx.RuleGreaterOrLess.length} but len children=${ctx.RuleLvl3Expression.length}.`);
+            }
+            
+            let total = this.visit(ctx.RuleLvl3Expression[0]);
+            for (let i = 0; i < ctx.RuleGreaterOrLess.length; i++) {
+                let whichop = this.visit(ctx.RuleGreaterOrLess[i]);
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl3Expression[i + 1]);
+                total = this.__$doarith(val1, val2, whichop);
+            }
+        
+            return total;
+        }
+        
+        protected RuleLvl3Expression(ctx: any) {
+            if (ctx.RuleFunctionCall[0]) {
+                return this.visit(ctx.RuleFunctionCall[0]);
+            } else if (ctx.RuleAtomicExpression[0]) {
+                return this.visit(ctx.RuleAtomicExpression[0]);
+            } else {
+                throw makeVpcRuntimeError(`internal error in RuleLvl3Expression. all children null.`);
+            }
+        }
+        
+        protected RuleParenExpression(ctx: any) {
+            if (ctx.RuleExpression[0]) {
+                return this.visit(ctx.RuleExpression[0]);
+            } else {
+                throw makeVpcRuntimeError(`internal error in RuleParenExpression. RuleExpression[0] not present.`);
+            }
+        }
+        
+        protected RulePlusOrMinus(ctx: any) {
+            if (ctx.TokenPlus[0]) {
+                return ctx.TokenPlus[0].image;
+            } else if (ctx.TokenMinus[0]) {
+                return ctx.TokenMinus[0].image;
+            } else {
+                throw makeVpcRuntimeError(`internal error in RulePlusOrMinus. all children null.`);
+            }
+        }
+        
+        protected RuleMultOrDiv(ctx: any) {
+            if (ctx.TokenMult[0]) {
+                return ctx.TokenMult[0].image;
+            } else if (ctx.TokenDivide[0]) {
+                return ctx.TokenDivide[0].image;
+            } else {
+                throw makeVpcRuntimeError(`internal error in RuleMultOrDiv. all children null.`);
+            }
+        }
+        
+        protected RuleGreaterOrLess(ctx: any) {
+            if (ctx.TokenGreaterThan[0]) {
+                return ctx.TokenGreaterThan[0].image;
+            } else if (ctx.TokenLessThan[0]) {
+                return ctx.TokenLessThan[0].image;
+            } else {
+                throw makeVpcRuntimeError(`internal error in RuleGreaterOrLess. all children null.`);
+            }
+        }
+    }
+
+    return new VPCCustomVisitor();
+}

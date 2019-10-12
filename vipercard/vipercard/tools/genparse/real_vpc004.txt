@@ -1,0 +1,282 @@
+
+BuiltinCmdClick, BuiltinCmdDrag should at runtime validate the 'hotkeys' given which can now be any Tkidentifier
+BuiltinCmdChoose should make sure it actually gets 'tool'
+
+----Begin:Tokens--------
+// Be careful when lexing because tokens are greedy. If you have 3 tokens /fro/ /from/ /frome/,
+// the string "from frome" becomes [fro, m, fro, me].
+// the (?![a-zA-Z0-9_]) means to look ahead to make sure no other word/letters are there.
+// important, otherwise if you have tokens "the" and "then", you'd need to order everything right, or "then" would lex into "the", "n"
+
+TkBkgndOrPluralSyn=OneOfWords(backgrounds?,bkgnds?,bgs?)
+TkCardOrPluralSyn=OneOfWords(cards?,cds?)
+TkBtnOrPluralSyn=OneOfWords(buttons?,btns?)
+TkFldOrPluralSyn=OneOfWords(fields?,flds?)
+TkMsgsyn=OneOfWords(message,msg)
+TkOfOnly=OneOfWords(of)
+TkInOnly=OneOfWords(in)
+TkCharOrWordOrItemOrLineOrPlural=OneOfWords(characters?,chars?,words?,items?,lines?)
+
+TkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eigth,ninth,tenth)
+TkAdjective=OneOfWords(long,short,abbreviated,abbrev,abbr)
+TkMultDivideExpDivMod=/\*|\/|\^|div(?![a-zA-Z0-9_])|mod(?![a-zA-Z0-9_])/i
+TkGreaterOrLessEqualOrEqual=/>=|<=|<>|>|<|!=|==?/
+TkConcatDoubleOrSingle=/&&?/
+TkPlusOrMinus=/\+|-/
+TkComma=/,/
+TkLParen=/\(/
+TkRParen=/\)/
+
+// reserved words. use cannot create a variable with these names.
+the=SAME
+to=SAME
+id=SAME
+stack=SAME
+from=SAME
+with=SAME
+or=SAME
+by=SAME
+length=SAME
+number=SAME
+there=SAME
+is=SAME
+not=SAME
+and=SAME
+contains=SAME
+
+
+// space, literals
+// possible to use 0|[1-9]\d+ to disallow 00123, I don't care right now.
+TkNumber=/[0-9]+(\.[0-9]+)?/
+TkContinuedLine=/\\\n/|||||static GROUP = ChvLexer.SKIPPED;static LINE_BREAKS = true
+TkNewLine=/\n+/|||||static LINE_BREAKS = true
+TkStringLiteral=/"[^"\n]*"/
+TkWhiteSpace=/[ \t]+/|||||static GROUP = ChvLexer.SKIPPED
+
+// should be last
+TkIdentifier=new RegExp('[a-zA-Z][0-9a-zA-Z_]*')
+----End:Tokens--------
+
+
+
+----Begin:Rules--------
+
+//////////////////////////////////////////////////////// 
+
+// there are several semi-keywords, like "transparent". You can use the term transparent with no parens like set the style to transparent,
+// but also create a variable (put "abc" into transparent) with no problem. so is "transparent" a keyword or not?
+// the product is very lenient -- you can even assign over functions (put "abc" into cos; answer cos && cos)
+// note that if we made "transparent" et all a token, then it would be difficult to allow a variable named transparent. also, we'd have nearly 100 more tokens to deal with.
+// let's use this approach:
+//      certain terms are reserved keywords like "word", "item". defined as tokens, cannot be used as variable names at all.
+//      certain terms are built-in properties/functions. "cos", "mouseloc". not defined as tokens. if you try 'put "abc" into cos' we check at runtime and error then.
+//      certain terms are allowed as variable names and understood in some contexts. like "transparent" or "gray".
+//      another benefit: user typos like "autoHilite2" don't create a mysterious syntax error, can have a better error message, "unknown property"
+
+// note that in the product, nearly all functions can be used without parens. ("the sin of 4" == "sin(4)"). I don't like this, so I'm not implementing it.
+
+// a bit of a space/time tradeoff.
+// when we cram everything into one rule, slightly less space in memory taken as CST has fewer branches
+// however, this also means slightly longer time in traversing as there are many conditionals to see which subrule is not null
+
+// Reorder the alternatives so that shorter common prefix lookahead paths appears after the longer ones.
+// i.e. when you have a group { a | b | c } put the longer ones first. makes validation faster at least, might not make a difference at parse time.
+
+///////////// Chunks and Prepositions
+
+HOrdinal:=[ the ] TkOrdinal
+HPosition:={the TkIdentifier | TkIdentifier  }
+HSimpleContainer:= { <ObjectPart> | <HMessageBox> |  TkIdentifier }
+HContainer:= { <HChunk> <HSimpleContainer> | <HSimpleContainer> }
+HMessageBox:=[ the ] TkMsgsyn TkIdentifier
+HChunk:={ TkCharOrWordOrItemOrLineOrPlural <HChunk_1> | <HOrdinal> TkCharOrWordOrItemOrLineOrPlural } <Of>
+HChunk_1:= <MAYBE_FACTOR> [ to <MAYBE_FACTOR> ]
+
+
+//////////// Objects
+Object:={ <ObjectBtn> | <ObjectFld> | <ObjectCard> | <ObjectBg> | <ObjectStack> | <Object_1>  }
+// should really only be "target" or "me" or "productname"
+Object_1:=[ the ] TkIdentifier
+ObjectBtn:={TkCardOrPluralSyn | TkBkgndOrPluralSyn} {TkBtnOrPluralSyn id <FACTOR> | TkBtnOrPluralSyn <FACTOR> | <HOrdinal> TkBtnOrPluralSyn} [ <Of> <ObjectCard> ]
+ObjectFld:={TkCardOrPluralSyn | TkBkgndOrPluralSyn} {TkFldOrPluralSyn id <FACTOR> | TkFldOrPluralSyn <FACTOR> | <HOrdinal> TkFldOrPluralSyn} [ <Of> <ObjectCard> ]
+ObjectCard:={ TkCardOrPluralSyn id <FACTOR> | TkCardOrPluralSyn <FACTOR> | <HOrdinal> TkCardOrPluralSyn | <HPosition> TkCardOrPluralSyn  }
+ObjectBg:={TkBkgndOrPluralSyn id <FACTOR> | TkBkgndOrPluralSyn <FACTOR> | <HOrdinal> TkBkgndOrPluralSyn | <HPosition> TkBkgndOrPluralSyn }
+ObjectStack:=TkIdentifier stack 
+ObjectPart:={<ObjectBtn> | <ObjectFld> }
+
+///////////// Command Nonterminals
+NtDest:={ <ObjectCard> | <ObjectBg> | <ObjectStack> }
+NtTextStyleList:= ATLEASTONE{{  TkIdentifier  }}ENDATLEASTONE
+
+// we'll have to interpret this at runtime anyways. was causing parsing problems so why bother
+NtVisEffect:= ATLEASTONE{{   <NtVisEffectTerm> }}ENDATLEASTONE
+NtVisEffectTerm:= { TkIdentifier |  to | from   | TkInOnly  }
+
+
+////////// Commands
+BuiltinCmdAdd:=TkComma <ARITH> to <HContainer>
+BuiltinCmdAnswer:=TkComma <FACTOR> [with <FACTOR> [ or <FACTOR> [ or <FACTOR>]]]
+// preprocessing checks if first param is "password" and puts TkComma there in that case
+BuiltinCmdAsk:=TkComma [TkComma] <Expr> [with <Expr>]
+BuiltinCmdBeep:=TkComma [<Expr>]
+BuiltinCmdChoose:=TkComma  {<MAYBE_FACTOR> | TkBtnOrPluralSyn | TkFldOrPluralSyn | TkCharOrWordOrItemOrLineOrPlural} [<MAYBE_FACTOR> [TkIdentifier] ]  
+BuiltinCmdClick:=TkComma TkIdentifier <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ with TkIdentifier [ TkComma TkIdentifier [ TkComma TkIdentifier ] ] ]
+BuiltinCmdDelete:=TkComma { <HChunk> <HSimpleContainer> | <ObjectPart> }
+BuiltinCmdDisable:=TkComma <ObjectBtn>
+BuiltinCmdDivide:=TkComma <HContainer> by <ARITH>
+BuiltinCmdDrag:=TkComma from <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> to <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ with TkIdentifier [ TkComma TkIdentifier [ TkComma TkIdentifier ] ] ]
+BuiltinCmdEnable:=TkComma <ObjectBtn>
+BuiltinCmdGet:=TkComma <Expr>
+BuiltinCmdGoCard:=TkComma [ to ] { <NtDest> | <HOrdinal> | <HPosition> }
+BuiltinCmdHide:=TkComma { <ObjectPart> | TkIdentifier }
+BuiltinCmdLock:=TkComma TkIdentifier
+BuiltinCmdMultiply:=TkComma <HContainer> by <ARITH>
+BuiltinCmdPut:=TkComma <Expr> [ TkIdentifier [ <HContainer> ]]
+BuiltinCmdReset:=TkComma TkIdentifier
+BuiltinCmdSet:=TkComma [the] <AnyPropertyName> [ TkOfOnly { <HChunk> <ObjectFld> | <Object> } ] to <AnyPropertyVal>
+BuiltinCmdShow:=TkComma { <BuiltinCmdShow_1>  | <BuiltinCmdShow_2> | TkIdentifier }
+BuiltinCmdShow_1:=<ObjectPart> [ TkIdentifier  <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]
+BuiltinCmdShow_2:=[ TkIdentifier ] TkCardOrPluralSyn
+//// we don't yet support sort by expression where the value of 'each' is set to each line -- might be too slow to be done synchronously. possible with syntax rewriting.
+BuiltinCmdSort:=TkComma MANY{{ TkIdentifier }}ENDMANY TkCharOrWordOrItemOrLineOrPlural <Of> <HContainer>
+BuiltinCmdSubtract:=TkComma <ARITH> from <HContainer>
+BuiltinCmdUnlock:=TkComma TkIdentifier [ with [ TkIdentifier [ TkIdentifier ] ] <NtVisEffect> ]
+BuiltinCmdVisual:=TkComma [ TkIdentifier ] <NtVisEffect>
+BuiltinCmdWait:=TkComma [TkIdentifier] <Expr> { TkIdentifier | TkOrdinal  }
+
+//////////// syntax keywords
+// on handler -- interpretted before reaching the parser
+// end handler -- interpretted before reaching the parser
+// return <expression> -- interpretted before reaching the parser
+// exit handler -- interpretted before reaching the parser
+// exit repeat -- interpretted before reaching the parser
+// next repeat -- interpretted before reaching the parser
+// pass handler -- interpretted before reaching the parser
+// exit to productname -- interpretted before reaching the parser
+// global var1, var2 -- interpretted before reaching the parser
+// send expr ... sometimes nice to have, but not needed
+// if x then doSomething -- not supported
+// if x then -- interpretted before reaching the parser
+// else if y then -- interpretted before reaching the parser
+// end if -- interpretted before reaching the parser
+// repeat with -- interpretted before reaching the parser
+// end repeat -- interpretted before reaching the parser
+
+///////// Properties
+AnyPropertyName:= {  id | TkIdentifier  }
+
+// we want AnyPropertyVal to take many things
+// well TkIdentifier can be a AnyPropertyVal_ValPtOrRect (treated as variable)
+// and shadow can be a AnyPropertyVal_ValPtOrRect (treated as variable)
+// and left, right can be a AnyPropertyVal_ValPtOrRect (treated as variable)
+// and center can be a AnyPropertyVal_ValPtOrRect (treated as variable)
+// and up and down are AnyPropertyVal_ValPtOrRect (going down to ExprSource, ExprLiteral, constants)
+
+// if this is a text style list like "bold italic shadow", the first item "bold" will be captured by AnyPropertyVal_ValPtOrRect and the rest go into NtTextStyleList
+AnyPropertyVal:= <AnyPropertyVal_ValPtOrRect> [ <NtTextStyleList> ]
+AnyPropertyVal_ValPtOrRect:= <MAYBE_ALLOW_ARITH> [ TkComma <MAYBE_ALLOW_ARITH> [ TkComma <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]]               
+Of:={TkOfonly|TkInOnly}   
+
+///////// Function calls
+FnCall:= { the length TkOfOnly <FACTOR> | <FnCallWithParens> | <FnCallAllowedNoParensTarget> | <FnCallNumberOf> | <ExprThereIs>  }
+// TkIdentifier should only be 'target,'result'   'params' or 'paramcount'
+FnCallAllowedNoParensTarget:= the [ TkAdjective ] TkIdentifier
+FnCallNumberOf:= the number TkOfOnly { <FnCallNumberOf_3> | <FnCallNumberOf_2>  | <FnCallNumberOf_1> |  TkBkgndOrPluralSyn  }
+FnCallNumberOf_1:= TkCardOrPluralSyn [ <Of> <ObjectBg> ] 
+FnCallNumberOf_2:= [ {TkCardOrPluralSyn | TkBkgndOrPluralSyn} ] { TkBtnOrPluralSyn | TkFldOrPluralSyn }
+FnCallNumberOf_3:= TkCharOrWordOrItemOrLineOrPlural <Of> <FACTOR>
+FnCallWithParens:=[the] [ TkAdjective ] { TkIdentifier | length } TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP  TkRParen 
+
+////////////Expressions
+// ExprLiteral used to have TkIdentifier, but HSimpleContainer takes a TkIdentifier
+ExprSource:={ <ExprGetProperty>| <FnCall> | <HSimpleContainer> | TkStringLiteral | TkNumber  }
+ExprGetProperty:=[the] [ TkAdjective ] <AnyPropertyName> TkOfOnly { <HChunk> <ObjectFld> | <Object> } 
+ExprThereIs:=there is { not TkIdentifier | TkIdentifier } <Object>
+Expr:= <Lvl1Expression> MANY{{ <OpLogicalOrAnd> <Lvl1Expression> }}ENDMANY
+Lvl1Expression:= <Lvl2Expression> MANY{{ <OpContainingEqualityGreaterLess> <Lvl2Expression> }}ENDMANY
+Lvl2Expression:= <Lvl3Expression> [ is [not] TkIdentifier { number  | TkIdentifier } ]
+Lvl3Expression:= <Lvl4Expression> MANY{{ <OpStringConcat> <Lvl4Expression> }}ENDMANY
+Lvl4Expression:= <Lvl5Expression> MANY{{ <OpPlusMinus> <Lvl5Expression> }}ENDMANY
+Lvl5Expression:= <Lvl6Expression> MANY{{ <OpMultDivideExpDivMod> <Lvl6Expression> }}ENDMANY
+Lvl6Expression:= [ { TkPlusOrMinus | not } ] [<HChunk>] { <ExprSource> | TkLParen <Expr> TkRParen }
+
+
+////////////Operators
+OpLogicalOrAnd:= {or | and}
+OpContainingEqualityGreaterLess:= { <OpContainingWithin> | is not | TkGreaterOrLessEqualOrEqual  | is  }
+OpContainingWithin:= {  is TkInOnly | contains | is not TkInOnly | is TkIdentifier | is not TkIdentifier }
+OpStringConcat:= TkConcatDoubleOrSingle
+OpPlusMinus:= TkPlusOrMinus
+OpMultDivideExpDivMod:= TkMultDivideExpDivMod
+
+///////////// top level, generated in 'lines.ts'
+TopLevelRequestEval:=TkComma   <Expr>
+TopLevelRequestHandlerCall:=TkComma   TkIdentifier MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP 
+TopLevelRequestUserFnCall:=TkComma TkIdentifier  TkIdentifier TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP TkRParen
+TopLevelRepeatWith:= TkComma   TkIdentifier TkGreaterOrLessEqualOrEqual <Expr> [TkIdentifier] to <Expr>
+
+///////////////////////////////////////////////////////////// 
+
+
+----End:Rules--------
+
+
+----Begin:Checks--------
+// we need to use TkCardOrPluralSyn and not "card" 
+AssertNotToken|bkgnd|bg|card|cd|button|btn|field|fld|char|character|msg|message|prev|previous
+AssertNotToken|bkgnds|bgs|cards|cds|buttons|btns|fields|flds
+AssertNotToken|of|in
+
+// text style is now just a bunch of identifiers, so they shouldn't be eaten by tokens
+AssertNotToken|plain|bold|italic|underline|outline |shadow|condense|extend
+
+Rule Should Accept Any Of These|HMessageBox|window/box|
+Rule Should Accept Any Of These|AnyPropertyName|listfunctions.txt|ListProperties
+
+// AnyPropertyVal has TkIdentifier via AnyPropertyVal_ValPtOrRect
+Rule Should Accept Any Of These|AnyPropertyVal/hasTkIdentifier|listfunctions.txt|ListStyles
+Rule Should Accept Any Of These|AnyPropertyVal/hasTkIdentifier|right/left/center|
+
+// ExprSource has TkIdentifier via HSimpleContainer
+Rule Should Accept Any Of These|ExprSource/hasTkIdentifier|listfunctions.txt|ListConstants
+
+Rule Should Accept Any Of These|FnCallWithParens|listfunctions.txt|ListFunctions
+Rule Should Accept Any Of These|FnCallWithParens|commandkey/optionkey/shiftkey|
+Rule Should Accept Any Of These|NtVisEffectTerm|very/slow/slowly/fast|
+Rule Should Accept Any Of These|NtVisEffectTerm|card/black/white/gray/grey/inverse|
+Rule Should Accept Any Of These|NtVisEffectTerm|barn/door/open/close/cut/plain/dissolve/venetian/blinds/checkerboard/iris/open/close/scroll/left/right/up/down/wipe/left/right/up/down/zoom/open/out/close/in/shrink/to/top/bottom/center/stretch/from/top/bottom/center/push/left/right/up/down/|
+Rule Should Accept Any Of These|BuiltinCmdChoose|/browse/button/field/select/lasso/pencil/brush/eraser/line/spray/can/rect/round/rect/bucket/oval/curve/text/reg/regular/polygon/poly/|
+Rule Should Accept Any Of These|BuiltinCmdWait|ticks/tick/seconds/second/sec|
+Rule Should Accept Any Of These|BuiltinCmdWait|for|
+Rule Should Accept Any Of These|BuiltinCmdChoose|tool|
+
+Rule Should Accept Any Of These|BuiltinCmdHide|menubar|
+Rule Should Accept Any Of These|BuiltinCmdReset|paint/menubar/printing|
+Rule Should Accept Any Of These|BuiltinCmdShow|menubar|
+Rule Should Accept Any Of These|BuiltinCmdLock|screen/messages/error/dialogs/recent|
+Rule Should Accept Any Of These|BuiltinCmdShow_2|all|
+Rule Should Accept Any Of These|BuiltinCmdSort|ascending/descending/text/numeric/international/datetime/lines/items|::lines/ok/TkCharOrWordOrItemOrLineOrPlural:items/ok/TkCharOrWordOrItemOrLineOrPlural
+
+Rule Should Accept Any Of These|Lvl2Expression|number/integer/point/rect/logical|
+
+Rule Should Accept Any Of These|BuiltinCmdUnlock|screen/with/visual/effect|
+Rule Should Accept Any Of These|BuiltinCmdVisual|effect|
+Rule Should Accept Any Of These|HPosition|next/prev/previous/this/the|
+Rule Should Accept Any Of These|BuiltinCmdPut|into/before/after|
+Rule Should Accept Any Of These|OpContainingWithin|within|
+
+
+Referred To All Tokens Except|TokenTkcontinuedline|TokenTknewline|TokenTkwhitespace
+
+
+----End:Checks--------
+
+
+----Begin:Directives--------
+// one reason to use FACTOR is that it can't have the term "or" (unless in parens) and so it won't interfere with answer "a" with "b" or "c", which would otherwise be parsed as answer "a" with "true" because ("b" or "c" is true)
+InRulesReplaceWholeWord|FACTOR|Lvl6Expression
+InRulesReplaceWholeWord|MAYBE_FACTOR|Lvl6Expression
+InRulesReplaceWholeWord|MAYBE_ALLOW_ARITH|Lvl4Expression
+InRulesReplaceWholeWord|ARITH|Lvl4Expression
+----End:Directives--------
+

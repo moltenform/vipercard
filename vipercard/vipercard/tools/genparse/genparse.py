@@ -22,6 +22,8 @@ symAtLeastOneSepEnd = '\x14'
 tabs1 = '    '
 tabs2 = tabs1 * 2
 
+
+
 def getDefaultPattern(s):
     return s+'(?![a-zA-Z0-9_])'
 
@@ -54,7 +56,7 @@ def processTokens(tokens, allout):
             inParens = pattern.split('(')[1].split(')')[0]
             items = inParens.split(',')
             for item in items:
-                assertTrue(re.match(r'^[a-z_?]+$', item), item)
+                #~ assertTrue(re.match(r'^([a-z]|\_|\?)+$', item), item + '|' + ' '.join([c for c in item]) + '|')
                 assertTrue(len(item.split('?')) <= 2, 'only support one ? here now ', item)
                 itemwithoptional = item.replace('?', '')
                 theplainwordtokens[itemwithoptional] = True
@@ -78,6 +80,7 @@ def processTokens(tokens, allout):
             allout.append(f'{tabs1}{opts}')
         allout.append(f'}}')
     
+    print(f'# of tokens is about {len(writeAllTokens)-1}')
     writeAllTokens.append('};')
     writeListTokens.append('];')
     allout.extend(writeListTokens)
@@ -355,18 +358,22 @@ protected %method%(ctx:any) {
     return total;
 }'''
 
-templateWhicheverIsNotAToken = r'''
+templateReturnSubrule = r'''
 protected %method%(ctx: any) {
     if (ctx.%child%) {
         return this.visit(ctx.%child%);
     } else {
-        throw makeVpcRuntimeError(`internal error in %method%. %child% not present.`);
+        throw makeVpcInternalErr(`in %method%. %child% not present.`);
     }
 }'''
 
-templateReturnLiteral = r'''
+templateReturnTokenImage = r'''
 protected %method%(ctx: any) {
-    return %lit%
+    if (ctx.%child%) {
+        return ctx.%child%.image;
+    } else {
+        throw makeVpcInternalErr(`in %method%. %child% not present.`);
+    }
 }'''
 
 templateNotYetImplemented = r'''
@@ -378,7 +385,7 @@ protected %method%(ctx: any) {
 templateWhicheverIsDefinedInclImage = r'''
 protected %method%(ctx: any) {%pieces%
     } else {
-        throw makeVpcRuntimeError(`internal error in %method%. all children null.`);
+        throw makeVpcInternalErr(`in %method%. all children null.`);
     }
 }'''
 
@@ -400,9 +407,18 @@ def readRuleParts(ruleparts, thetokens):
 
 def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
     rulesReferenced, tokensReferenced = readRuleParts(ruleparts, thetokens)
-    if visitor=='WhicheverIsNotAToken':
-        assertEq(1, len(rulesReferenced), f'in {rulename} ambiguous, could be any of {rulesReferenced}')
-        return templateWhicheverIsNotAToken.replace('%method%', 'Rule'+rulename).replace('%child%', rulesReferenced[0] + '[0]')
+    if visitor.startswith('ReturnSubrule|'):
+        vparts = [vpart.strip() for vpart in visitor.split('|')]
+        assertEq(2, len(vparts), f'rule {rulename} and {ruleparts}')
+        subrule = vparts[1]
+        assertTrue(subrule.split('[')[0] in rulesReferenced, f'did not see {subrule} in rulesReferenced {rulesReferenced}. rule {rulename} and {ruleparts}')
+        return templateReturnSubrule.replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+subrule)
+    elif visitor.startswith('ReturnTokenImage|'):
+        vparts = [vpart.strip() for vpart in visitor.split('|')]
+        assertEq(2, len(vparts), f'rule {rulename} and {ruleparts}')
+        subtoken = vparts[1]
+        assertTrue(subtoken.split('[')[0] in tokensReferenced, f'did not see {subtoken} in tokensReferenced {tokensReferenced}. rule {rulename} and {ruleparts}')
+        return ReturnTokenImage.replace('%method%', 'Rule'+rulename).replace('%child%', subtoken)
     elif visitor=='WhicheverIsDefinedInclImage':
         assertTrue(ruleparts[0] == '{' and ruleparts[-1]=='}', f"in {rulename} prob too dangerous to use WhicheverIsDefinedInclImage when this isn't a simple choice. {ruleparts}")
         pieces = ''
@@ -416,16 +432,12 @@ def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
             pieces += '\n' + piece
         return templateWhicheverIsDefinedInclImage.replace('%method%', 'Rule'+rulename).replace('%pieces%', pieces)
             
-    elif visitor.startswith('GenerateInfix'):
+    elif visitor.startswith('GenerateInfix|'):
         vparts = [vpart.strip() for vpart in visitor.split('|')]
         assertEq(4, len(vparts), f'rule {rulename} and {ruleparts}')
         _, childrule, whichoprule, evalmethod = vparts
         return templateGenerateInfix.replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+childrule) \
             .replace('%operatorrule%', 'Rule'+whichoprule).replace('%evalmethod%', evalmethod)
-    elif visitor.startswith('ReturnLiteral'):
-        vparts = [vpart.strip() for vpart in visitor.split('|')]
-        assertEq(2, len(vparts), f'rule {rulename} and {ruleparts}')
-        return templateReturnLiteral.replace('%method%', 'Rule'+rulename).replace('%lit%', vpart[1])
     elif visitor == 'NotYetImplemented':
         return templateNotYetImplemented.replace('%method%', 'Rule'+rulename)
     else:
@@ -454,6 +466,11 @@ def assertNotTokens(lexedRules, thetokens, line):
         assertTrue(not getFullTokenName(tk) in thetokens, getFullTokenName(tk))
 
 def assertRuleAccepts(lexedRules, thetokens, theplainwordtokens, rulename, otherfile, othersection ):
+    claimThatHasTkIdentifier=False
+    if rulename.endswith('/hasTkIdentifier'):
+        claimThatHasTkIdentifier=True
+        rulename = rulename.split('/')[0]
+        
     allowances = {}
     if '::' in othersection:
         othersection, sAllowances = othersection.split('::')
@@ -473,7 +490,7 @@ def assertRuleAccepts(lexedRules, thetokens, theplainwordtokens, rulename, other
     lexedRuleFound = [lexedRule for lexedRule in lexedRules if (lexedRule[0] ==  rulename)]
     assertEq(1, len(lexedRuleFound), f'rule name {rulename} not found')
     acceptedWordsLexed = lexedRuleFound[0][1]
-    canAcceptAnyIdentifier = ('TokenTkidentifier' in acceptedWordsLexed)
+    canAcceptAnyIdentifier = ('TokenTkidentifier' in acceptedWordsLexed) or claimThatHasTkIdentifier
     for word in possiblewords:
         assertTrue(not 'Tk' in word and not word.startswith('Token'), word)
         if '!!!' in word:
@@ -498,7 +515,9 @@ def assertRuleAccepts(lexedRules, thetokens, theplainwordtokens, rulename, other
 
 def assertAllTokensSeen(thetokens, okIfMissing):
     for key in thetokens:
-        assertTrue(thetokens[key] is True or (key in okIfMissing), f'we did not seem to use the token {key}')
+        #~ assertTrue(thetokens[key] is True or (key in okIfMissing), f'we did not seem to use the token {key}')
+        if not (thetokens[key] is True or (key in okIfMissing)):
+            warn(f'we did not seem to use the token {key}')
 
 def processChecks(lexedRules, thetokens, theplainwordtokens, checks):
     for line in checks:
@@ -579,6 +598,7 @@ def goAllReady(fname, helperGetTokens = False):
 if __name__=='__main__':
     #~ goAllReady('works--chvdemo_and_infix_and_visit.txt')
     #~ goAllReady('real_vpc001.txt')
-    goAllReady('real_vpc000_trying.txt', True)
+    goAllReady('real_vpc005.txt', True)
+    
     
     

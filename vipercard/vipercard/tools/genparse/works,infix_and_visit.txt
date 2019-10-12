@@ -25,14 +25,14 @@ WhiteSpace=/\s+/|||||static GROUP = ChvLexer.SKIPPED;static LINE_BREAKS = true
 
 
 ----Begin:Rules--------
-TotalEval:=RequestEval <Expression>                                                                                         ---> WhicheverIsNotAToken
-Expression:= <Lvl0Expression>                                                                                                  ---> WhicheverIsNotAToken
+TotalEval:=RequestEval <Expression>                                                                                         ---> ReturnSubrule|Expression[0]
+Expression:= <Lvl0Expression>                                                                                                  ---> ReturnSubrule|Lvl0Expression[0]
 Lvl0Expression:= <Lvl1Expression> MANY{{ <PlusOrMinus> <Lvl1Expression> }}ENDMANY           ---> GenerateInfix|Lvl1Expression|PlusOrMinus|this.__$doarith
 Lvl1Expression:= <Lvl2Expression> MANY{{ <MultOrDiv> <Lvl2Expression> }}ENDMANY                 ---> GenerateInfix|Lvl2Expression|MultOrDiv|this.__$doarith
 Lvl2Expression:= <Lvl3Expression> MANY{{ <GreaterOrLess> <Lvl3Expression> }}ENDMANY           ---> GenerateInfix|Lvl3Expression|GreaterOrLess|this.__$doarith
 Lvl3Expression:= { <FunctionCall> | <AtomicExpression>  }                                                            ---> WhicheverIsDefinedInclImage
 AtomicExpression:= [Minus] { <ParenExpression> | Number | <Variable> }                                  ---> (custom)
-ParenExpression:= LParen <Expression> RParen                                                                ---> WhicheverIsNotAToken
+ParenExpression:= LParen <Expression> RParen                                                                ---> ReturnSubrule|Expression[0]
 FunctionCall:=Identifier LParen MANYSEP{{ Comma / <Expression> }}ENDMANYSEP RParen           ---> (custom)
 PlusOrMinus:={Plus|Minus}                                                                                                   ---> WhicheverIsDefinedInclImage
 MultOrDiv:={Mult|Divide}                                                                                               ---> WhicheverIsDefinedInclImage
