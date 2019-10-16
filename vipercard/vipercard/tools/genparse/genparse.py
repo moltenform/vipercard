@@ -87,7 +87,10 @@ def processTokens(tokens, allout):
     allout.extend(writeAllTokens)
     return thetokens, theplainwordtokens
 
-def getFullTokenName(s):
+def getFullTokenName(s, saveIndex= False):
+    if saveIndex and '[' in s:
+        a,b = s.split('[')
+        return getFullTokenName(a, False) + '[' + b
     s = s.lower()
     return 'Token'+s[0].upper() + s[1:]
 
@@ -342,57 +345,60 @@ def sendToFile(allout, foutname):
     fout.close()
 
 templateGenerateInfix = r'''
-protected %method%(ctx:any) {
-    if (!ctx.%child%.length || ctx.%operatorrule%.length + 1 !== ctx.%child%.length) {
-        throw makeVpcRuntimeError(`internal error in %method%. len operators=${ctx.%operatorrule%.length} but len children=${ctx.%child%.length}.`);
+%method%(ctx:VisitingContext) : string | VpcIntermedValBase {
+    if (!ctx.children.%child%.length || ctx.children.%operatorrule%.length + 1 !== ctx.children.%child%.length) {
+        throw makeVpcInternalErr(`in %method%. len operators=${ctx.children.%operatorrule%.length} but len children=${ctx.children.%child%.length}.`);
     }
     
-    let total = this.visit(ctx.%child%[0]);
-    for (let i = 0; i < ctx.%operatorrule%.length; i++) {
-        let whichop = this.visit(ctx.%operatorrule%[i]);
+    let total = this.visit(ctx.children.%child%[0]);
+    const oprulename = `%operatorruleshort%`
+    for (let i = 0; i < ctx.children.%operatorrule%.length; i++) {
+        let whichop = this.visit(ctx.children.%operatorrule%[i]);
         let val1 = total;
-        let val2 = this.visit(ctx.%child%[i + 1]);
-        total = %evalmethod%(val1, val2, whichop);
+        let val2 = this.visit(ctx.children.%child%[i + 1]);
+        total = %evalmethod%(val1, val2, oprulename, whichop %addedargs%);
     }
 
     return total;
 }'''
 
-templateReturnSubrule = r'''
-protected %method%(ctx: any) {
-    if (ctx.%child%) {
-        return this.visit(ctx.%child%);
-    } else {
-        throw makeVpcInternalErr(`in %method%. %child% not present.`);
-    }
-}'''
-
-templateReturnTokenImage = r'''
-protected %method%(ctx: any) {
-    if (ctx.%child%) {
-        return ctx.%child%.image;
-    } else {
-        throw makeVpcInternalErr(`in %method%. %child% not present.`);
-    }
+templateBuildMapWithAllChildren = r'''
+%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
+    return this.Helper$BuildMapWithAllChildren(ctx)
 }'''
 
 templateNotYetImplemented = r'''
-protected %method%(ctx: any) {
+%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
     assertTrue(false, '%method% not yet implemented')
-    throw makeVpcRuntimeError('%method% not yet implemented')
+    throw makeVpcInternalErr('%method% not yet implemented')
 }'''
 
-templateWhicheverIsDefinedInclImage = r'''
-protected %method%(ctx: any) {%pieces%
+templateNotReached= r'''
+%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
+    throw makeVpcInternalErr('did not expect method %method% to be reached')
+}'''
+
+templateBuildList = r'''
+%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
+    const ch = ctx.children
+    let ret = new IntermedListOfVals()%pieces%
+    return ret
+}'''
+
+templateBuildListRlPiece = r'''    ret.vals[%index%] = (ch.%child%) ? this.visit(ch.%child%) : undefined'''
+templateBuildListImPiece = r'''    ret.vals[%index%] = (ch.%child%) ? ch.%child%.image : undefined'''
+
+templateGeneral = r'''
+%method%(ctx: VisitingContext) : string | VpcIntermedValBase {%pieces%
     } else {
-        throw makeVpcInternalErr(`in %method%. all children null.`);
+        throw makeVpcInternalErr(`in %method%. all interesting children null.`);
     }
 }'''
 
-templateWhicheverIsDefinedInclImageRlPiece = r'''    } else if (ctx.%child%) {
-        return this.visit(ctx.%child%);'''
-templateWhicheverIsDefinedInclImageImPiece = r'''    } else if (ctx.%child%) {
-        return ctx.%child%.image;'''
+templateGeneralRlPiece = r'''    } else if (ctx.children.%child%) {
+        return this.visit(ctx.children.%child%);'''
+templateGeneralImPiece = r'''    } else if (ctx.children.%child%) {
+        return ctx.children.%child%.image;'''
 
 def readRuleParts(ruleparts, thetokens):
     rulesReferenced = []
@@ -405,54 +411,125 @@ def readRuleParts(ruleparts, thetokens):
             tokensReferenced.append(part)
     return rulesReferenced, tokensReferenced
 
+def generateBuildList(rulename, fullpartnames):
+    pieces = ''
+    for i, part in enumerate(fullpartnames):
+        piece = templateBuildListRlPiece if part.startswith('Rule') else templateBuildListImPiece
+        piece = piece.replace('%child%', part).replace('%index%', str(i))
+        pieces += '\n' + piece
+    return templateBuildList.replace('%method%', 'Rule'+rulename).replace('%pieces%', pieces)
+
+def generateFromTemplate(rulename, tokensToSearch, subRulesToSearch):
+    pieces = ''
+    for tokenReferenced in tokensToSearch:
+        piece = templateGeneralImPiece.replace('%child%', tokenReferenced)
+        if not pieces: piece = piece.replace('} else if (', 'if (')
+        pieces += '\n' + piece
+    for ruleReferenced in subRulesToSearch:
+        piece = templateGeneralRlPiece.replace('%child%', ruleReferenced)
+        if not pieces: piece = piece.replace('} else if (', 'if (')
+        pieces += '\n' + piece
+    return templateGeneral.replace('%method%', 'Rule'+rulename).replace('%pieces%', pieces)
+
 def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
     rulesReferenced, tokensReferenced = readRuleParts(ruleparts, thetokens)
-    if visitor.startswith('ReturnSubrule|'):
+    if visitor.startswith('GenerateInfix|'):
         vparts = [vpart.strip() for vpart in visitor.split('|')]
-        assertEq(2, len(vparts), f'rule {rulename} and {ruleparts}')
-        subrule = vparts[1]
-        assertTrue(subrule.split('[')[0] in rulesReferenced, f'did not see {subrule} in rulesReferenced {rulesReferenced}. rule {rulename} and {ruleparts}')
-        return templateReturnSubrule.replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+subrule)
-    elif visitor.startswith('ReturnTokenImage|'):
-        vparts = [vpart.strip() for vpart in visitor.split('|')]
-        assertEq(2, len(vparts), f'rule {rulename} and {ruleparts}')
-        subtoken = vparts[1]
-        assertTrue(subtoken.split('[')[0] in tokensReferenced, f'did not see {subtoken} in tokensReferenced {tokensReferenced}. rule {rulename} and {ruleparts}')
-        return ReturnTokenImage.replace('%method%', 'Rule'+rulename).replace('%child%', subtoken)
-    elif visitor=='WhicheverIsDefinedInclImage':
-        assertTrue(ruleparts[0] == '{' and ruleparts[-1]=='}', f"in {rulename} prob too dangerous to use WhicheverIsDefinedInclImage when this isn't a simple choice. {ruleparts}")
-        pieces = ''
-        for ruleReferenced in rulesReferenced:
-            piece = templateWhicheverIsDefinedInclImageRlPiece.replace('%child%', ruleReferenced + '[0]')
-            if not pieces: piece = piece.replace('} else if (', 'if (')
-            pieces += '\n' + piece
-        for tokenReferenced in tokensReferenced:
-            piece = templateWhicheverIsDefinedInclImageImPiece.replace('%child%', tokenReferenced + '[0]')
-            if not pieces: piece = piece.replace('} else if (', 'if (')
-            pieces += '\n' + piece
-        return templateWhicheverIsDefinedInclImage.replace('%method%', 'Rule'+rulename).replace('%pieces%', pieces)
-            
-    elif visitor.startswith('GenerateInfix|'):
-        vparts = [vpart.strip() for vpart in visitor.split('|')]
-        assertEq(4, len(vparts), f'rule {rulename} and {ruleparts}')
-        _, childrule, whichoprule, evalmethod = vparts
+        assertEq(5, len(vparts), f'rule {rulename} and {ruleparts}')
+        _, childrule, whichoprule, evalmethod, addedargs = vparts
         return templateGenerateInfix.replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+childrule) \
-            .replace('%operatorrule%', 'Rule'+whichoprule).replace('%evalmethod%', evalmethod)
+            .replace('%operatorrule%', 'Rule'+whichoprule).replace('%operatorruleshort%', whichoprule).replace('%evalmethod%', evalmethod).replace('%addedargs%', addedargs)
+    elif visitor == 'BuildMapWithAllChildren':
+        return templateBuildMapWithAllChildren.replace('%method%', 'Rule'+rulename)
     elif visitor == 'NotYetImplemented':
         return templateNotYetImplemented.replace('%method%', 'Rule'+rulename)
+    elif visitor == 'NotReached':
+        return templateNotReached.replace('%method%', 'Rule'+rulename)
+    
+    subrulesWanted = []
+    tokensWanted = []
+    if visitor == 'GetChildOrImageFromAlternatives':
+        insideGroup = False
+        foundGroup = False
+        for i in range(len(ruleparts)):
+            part = ruleparts[i]
+            if ruleparts[i] == '{':
+                assertTrue(not foundGroup, f"in {rulename} GetChildOrImageFromAlternatives we don't support multiple {{groups}}")
+                foundGroup = True
+                insideGroup = True
+            elif ruleparts[i] == '}':
+                insideGroup = False
+            elif len(part) == 1 and part != '|':
+                assertTrue(False, f"in {rulename} prob too dangerous to use GetChildOrImageFromAlternatives when this isn't a simple choice. {ruleparts}")
+            elif insideGroup and len(part) >= 3 and part.startswith('<') and part.endswith('>'):
+                subrulesWanted.append('Rule' + part[1:-1] + '[0]')
+            elif insideGroup and len(part) > 1:
+                assertTrue(part in thetokens, f'{part}')
+                tokensWanted.append(part + '[0]')
+    elif visitor.startswith('GetChildOrImage|') or visitor.startswith('BuildList|'):
+        vparts = [vpart.strip() for vpart in visitor.split('|')]
+        fullpartnames = []
+        vparts.pop(0)
+        assertTrue(len(vparts), f"in {rulename} no rules or tokens listed")
+        for part in vparts:
+            assertTrue('[' in part, f"in {rulename} the part {part} should have an index like Expr[0]")
+            if 'Rule' + part.split('[')[0] in rulesReferenced:
+                fullpartnames.append('Rule' + part)
+                subrulesWanted.append('Rule' + part)
+            elif getFullTokenName(part.split('[')[0]) in tokensReferenced:
+                fullpartnames.append(getFullTokenName(part, True))
+                tokensWanted.append(getFullTokenName(part, True))
+            else:
+                assertTrue(False, f"in {rulename} not sure if part {part} is a token or subrule. {ruleparts}")
+        
+        if visitor.startswith('BuildList|'):
+            return generateBuildList(rulename, fullpartnames)
     else:
-        assertTrue(False, f'unknown visitor directive for rule {rulename} and {ruleparts}')
+        assertTrue(False, f'unknown visitor directive "{visitor}" for rule {rulename} and {ruleparts}')
+    
+    
+    return generateFromTemplate(rulename,tokensWanted,subrulesWanted)
+    
+        
 
+def writeHelperInterface(lexedRules, thetokens, allout):
+    allout.append('')    
+    allout.append('interface VisitingVisitor {')    
+    for rulename, ruleparts, visitor in lexedRules:
+        allout.append(f'{tabs1}Rule{rulename}(ctx:VisitingContext): string | VpcIntermedValBase;')
+    #allout.append(f'{tabs1}visit(ctx:VisitingContext): string | VpcIntermedValBase;')    
+    allout.append('}')
+    allout.append('')    
+    allout.append('interface VisitingContext {')    
+    allout.append(f'{tabs1}name:string;')    
+    allout.append(f'{tabs1}children:VisitingContextChildren;')    
+    allout.append('}')
+    allout.append('')    
+    # technically these are optional properties width?: number, but this would make users do null checks.
+    allout.append('interface VisitingContextChildren {') 
+    for rulename, ruleparts, visitor in lexedRules:
+        if 'BuiltinCmd' not in rulename and 'TopLevel' not in rulename:
+            allout.append(f'{tabs1}Rule{rulename}:any[];')
+    for token in thetokens:
+        allout.append(f'{tabs1}{token}:ChvIToken[];')
+    allout.append('}')    
+    
 
 def processVisitors(lexedRules, thetokens, allout):
     for rulename, ruleparts, visitor in lexedRules:
+        if not visitor or not visitor.strip():
+            visitor = 'NotYetImplemented'
         visitor = visitor.strip()
-        if visitor!='(custom)':
+        if visitor!='Custom':
             txt = processVisitor(rulename, ruleparts, visitor, thetokens, allout)
             allout.extend(txt.replace('\r\n', '\n').split('\n'))
             
     allout = [tabs2+line for line in allout]
     allout.append(tabs1 + '}')
+    allout.append('')
+    a2 = []
+    writeHelperInterface(lexedRules, thetokens, a2)
+    allout.extend([tabs1 + line for line in a2])
     allout.append('')
     allout.append(tabs1 + 'return new VPCCustomVisitor();')
     allout.append('}')
@@ -515,7 +592,6 @@ def assertRuleAccepts(lexedRules, thetokens, theplainwordtokens, rulename, other
 
 def assertAllTokensSeen(thetokens, okIfMissing):
     for key in thetokens:
-        #~ assertTrue(thetokens[key] is True or (key in okIfMissing), f'we did not seem to use the token {key}')
         if not (thetokens[key] is True or (key in okIfMissing)):
             warn(f'we did not seem to use the token {key}')
 
@@ -555,6 +631,7 @@ def checkSingleLetter(txt):
     lines = txt.split('\n')
     for line in lines:
         if not line.startswith('//'):
+            line = line.split('--->')[0]
             for found in re.finditer(r'\b[0-9a-zA-Z_]\b', line):
                 assertTrue(False, f"we currently don't support tokens or rules that are exactly one letter. (saw '{found.group(0)}')")
 
