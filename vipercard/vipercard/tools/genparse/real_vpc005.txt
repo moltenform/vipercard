@@ -146,13 +146,16 @@ NtVisEffectTerm:= { TkIdentifier |  to    | TkInOnly  }                         
 
 
 ////////// Commands
+// the syntax rewriting phase changes the syntax here... see real_vpc000.txt for something closer to original syntax
 BuiltinCmdAdd:=TkSyntaxMarker <ARITH> to <HContainer>                                                                                      --->BuildMapWithAllChildren|
 BuiltinCmdAnswer:=TkSyntaxMarker <FACTOR> [TkSyntaxMarker <FACTOR> [ or <FACTOR> [ or <FACTOR>]]]            --->BuildMapWithAllChildren|
 BuiltinCmdAsk:=TkSyntaxMarker [TkComma] <Expr> [TkSyntaxMarker <Expr>]                                         --->BuildMapWithAllChildren|
 BuiltinCmdBeep:=TkSyntaxMarker [<Expr>]                                                                                         --->BuildMapWithAllChildren|
 
-// syntax rewrite phrase rewrites this into something that is more manageable
-BuiltinCmdChoose:=TkSyntaxMarker  [<MAYBE_FACTOR>]                                                              --->BuildMapWithAllChildren|
+BuiltinCmdChoose:=TkSyntaxMarker  { TkSyntaxMarker <BuiltinCmdChoose_1> | <MAYBE_FACTOR> }                                                             --->BuildMapWithAllChildren|
+BuiltinCmdChoose_1:= ATLEASTONE{{ <BuiltinCmdChooseToolname>   }}ENDATLEASTONE
+BuiltinCmdChooseToolname:= { TkIdentifier | TkCharOrWordOrItemOrLineOrPlural}
+
 BuiltinCmdClick:=TkSyntaxMarker TkIdentifier <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ TkSyntaxMarker TkIdentifier [ TkComma TkIdentifier [ TkComma TkIdentifier ] ] ]  --->BuildMapWithAllChildren|
 BuiltinCmdDelete:=TkSyntaxMarker { <HChunk> <HSimpleContainer> | <ObjectPart> }
 BuiltinCmdDisable:=TkSyntaxMarker <ObjectBtn>
@@ -295,10 +298,11 @@ Rule Should Accept Any Of These|FnCallWithParens|commandkey/optionkey/shiftkey|
 Rule Should Accept Any Of These|NtVisEffectTerm|very/slow/slowly/fast|
 Rule Should Accept Any Of These|NtVisEffectTerm|card/black/white/gray/grey/inverse|
 Rule Should Accept Any Of These|NtVisEffectTerm|barn/door/open/close/cut/plain/dissolve/venetian/blinds/checkerboard/iris/open/close/scroll/left/right/up/down/wipe/left/right/up/down/zoom/open/out/close/in/shrink/to/top/bottom/center/stretch/from/top/bottom/center/push/left/right/up/down/|
-Rule Should Accept Any Of These|BuiltinCmdChoose|/browse/button/field/select/lasso/pencil/brush/eraser/line/spray/can/rect/round/rect/bucket/oval/curve/text/reg/regular/polygon/poly/|
+// done in processing
+//Rule Should Accept Any Of These|BuiltinCmdChoose|/browse/button/field/select/lasso/pencil/brush/eraser/line/spray/can/rect/round/rect/bucket/oval/curve/text/reg/regular/polygon/poly/|
+//Rule Should Accept Any Of These|BuiltinCmdChoose|tool|
 Rule Should Accept Any Of These|BuiltinCmdWait|ticks/tick/seconds/second/sec|
 Rule Should Accept Any Of These|BuiltinCmdWait|for|
-Rule Should Accept Any Of These|BuiltinCmdChoose|tool|
 
 Rule Should Accept Any Of These|BuiltinCmdHide|menubar|
 Rule Should Accept Any Of These|BuiltinCmdReset|paint/menubar/printing|

@@ -381,7 +381,7 @@ templateNotReached= r'''
 templateBuildList = r'''
 %method%(ctx: VisitingContext) : string | VpcIntermedValBase {
     const ch = ctx.children
-    let ret = new IntermedListOfVals()%pieces%
+    let ret = new IntermedListOfIntermedVals()%pieces%
     return ret
 }'''
 
@@ -439,7 +439,7 @@ def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
         _, childrule, whichoprule, evalmethod, addedargs = vparts
         return templateGenerateInfix.replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+childrule) \
             .replace('%operatorrule%', 'Rule'+whichoprule).replace('%operatorruleshort%', whichoprule).replace('%evalmethod%', evalmethod).replace('%addedargs%', addedargs)
-    elif visitor == 'BuildMapWithAllChildren':
+    elif visitor == 'BuildMapWithAllChildren|':
         return templateBuildMapWithAllChildren.replace('%method%', 'Rule'+rulename)
     elif visitor == 'NotYetImplemented':
         return templateNotYetImplemented.replace('%method%', 'Rule'+rulename)
