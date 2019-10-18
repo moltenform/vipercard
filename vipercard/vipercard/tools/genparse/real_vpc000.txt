@@ -184,7 +184,7 @@ mod=SAME
 
 // space, literals
 // possible to use 0|[1-9]\d+ to disallow 00123, I don't care right now.
-TkNumber=/[0-9]+(\.[0-9]+)?/
+TkNumLiteral=/[0-9]+(\.[0-9]+)?/
 TkContinuedLine=/\\\n/|||||static GROUP = ChvLexer.SKIPPED;static LINE_BREAKS = true
 TkNewLine=/\n+/|||||static LINE_BREAKS = true
 TkStringLiteral=/"[^"\n]*"/
@@ -316,7 +316,7 @@ FnCallWithParens:=[the] [ <HAdjective> ] { TkIdentifier | length | result | para
 ////////////Expressions
 ExprSource:={ <ExprLiteral> |  <HSimpleContainer> | <FnCall> | <ExprGetProperty> }
 ExprGetProperty:=[the] [ <HAdjective> ] <AnyPropertyName> of { <Object> | <HChunk> <ObjectFld> } 
-ExprLiteral:={ TkStringLiteral | TkNumber | TkIdentifier | up | down | true | false }
+ExprLiteral:={ TkStringLiteral | TkNumLiteral | TkIdentifier | up | down | true | false }
 ExprThereIs:=there is { an | TkA | no | not TkA } <Object>
 Expr:= <Lvl1Expression> MANY{{ <OpLogicalOrAnd> <Lvl1Expression> }}ENDMANY
 Lvl1Expression:= <Lvl2Expression> MANY{{ <OpContainingEqualityGreaterLess> <Lvl2Expression> }}ENDMANY

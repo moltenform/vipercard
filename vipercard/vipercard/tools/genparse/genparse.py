@@ -439,7 +439,7 @@ def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
         _, childrule, whichoprule, evalmethod, addedargs = vparts
         return templateGenerateInfix.replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+childrule) \
             .replace('%operatorrule%', 'Rule'+whichoprule).replace('%operatorruleshort%', whichoprule).replace('%evalmethod%', evalmethod).replace('%addedargs%', addedargs)
-    elif visitor == 'BuildMapWithAllChildren|':
+    elif visitor.startswith('BuildMapWithAllChildren|'):
         return templateBuildMapWithAllChildren.replace('%method%', 'Rule'+rulename)
     elif visitor == 'NotYetImplemented':
         return templateNotYetImplemented.replace('%method%', 'Rule'+rulename)
@@ -635,6 +635,16 @@ def checkSingleLetter(txt):
             for found in re.finditer(r'\b[0-9a-zA-Z_]\b', line):
                 assertTrue(False, f"we currently don't support tokens or rules that are exactly one letter. (saw '{found.group(0)}')")
 
+def listPlainWordTokens(theplainwordtokens, allout):
+    keys = list(theplainwordtokens.keys())
+    keys.sort()
+    allout.append('')
+    allout.append('export const partialReservedWordsList : { [key: string]: boolean } = {')
+    for key in keys:
+        allout.append(f"{tabs1}'{key}': true,")
+    allout.append('}')
+    
+
 def goAllReady(fname, helperGetTokens = False):
     alllines = open(fname, 'r', encoding='utf8').read().replace('\r\n','\n')
     tokens = getSection(alllines, 'Tokens')
@@ -643,6 +653,7 @@ def goAllReady(fname, helperGetTokens = False):
     allout = []
     allout.append(warnmsg)
     thetokens, theplainwordtokens = processTokens(tokens, allout)
+    listPlainWordTokens(theplainwordtokens, allout)
     allout.append('')
     sendToFile(allout, '../../src/vpc/vpcgentokens.ts')
     
