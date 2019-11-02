@@ -108,6 +108,7 @@ TkIdentifier=new RegExp('[a-zA-Z][0-9a-zA-Z_]*')
 // BuildMapWithAllChildren
 // GetChildOrImage
 // GetChildOrImageFromAlternatives
+// GetImageToEnum
 // GenerateInfix
 // NotYetImplemented
 // NotReached
@@ -115,72 +116,84 @@ TkIdentifier=new RegExp('[a-zA-Z][0-9a-zA-Z_]*')
 
 
 
-HOrdinal:= [ the ] TkOrdinal                                                                                                                                                  ---> GetChildOrImage|TkOrdinal[0]
-HPosition:= [ the ] TkIdentifier                                                                                                                                               ---> GetChildOrImage|TkIdentifier[0]
+HOrdinal:= [ the ] TkOrdinal                                                                                    --->string--->GetChildOrImage|TkOrdinal[0]
+HPosition:= [ the ] TkIdentifier                                                                                --->string--->GetChildOrImage|TkIdentifier[0]
 
-// emulator does allow setting a btn as a container, have no idea what this does/means. let's fail at runtime when visiting HSimpleContainer  for now.
-HSimpleContainer:= { <ObjectPart> | <HMessageBox> |  TkIdentifier }                                                                                                   --->Custom
-HContainer:= [<HChunk>] <HSimpleContainer>                                                                                                                                 --->Custom
-HMessageBox:=[ the ] TkMsgsyn TkIdentifier                                                                                                                              ---> NotReached
-HChunk:={ TkCharOrWordOrItemOrLineOrPlural <HChunk_1> | <HOrdinal> TkCharOrWordOrItemOrLineOrPlural } <Of>                                      --->Custom
-HChunk_1:= <MAYBE_FACTOR> [ to <MAYBE_FACTOR> ]                                                                                                     ---> NotReached
+// emulator does allow setting a btn as a container, have no idea what this does/means.
+// let's fail at runtime when visiting HSimpleContainer for now.
+HSimpleContainer:= { <ObjectPart> | <HMessageBox> |  TkIdentifier }                                             --->RequestedContainerRef--->Custom
+HContainer:= [<HChunk>] <HSimpleContainer>                                                                      --->RequestedContainerRef--->Custom
+HMessageBox:=[ the ] TkMsgsyn TkIdentifier                                                                      --->NotReached
+HChunk:={ TkCharOrWordOrItemOrLineOrPlural <HChunk_1> | <HOrdinal> TkCharOrWordOrItemOrLineOrPlural } <Of>      --->RequestedChunk--->Custom
+HChunk_1:= <MAYBE_FACTOR> [ to <MAYBE_FACTOR> ]                                                                 --->NotReached
 
 
 //////////// Objects
-Object:={ <ObjectBtn> | <ObjectFld> | <ObjectCard> | <ObjectBg> | <ObjectStack> | <Object_1>  }                         --->GetChildOrImageFromAlternatives
 // should really only be "target" or "me" or "productname"        
-Object_1:=[ the ] TkIdentifier                                                                                                                                                                                                   --->Custom
-ObjectBtn:={TkCardOrPluralSyn | TkBkgndOrPluralSyn} {TkBtnOrPluralSyn id <FACTOR> | TkBtnOrPluralSyn <FACTOR>} [ <Of> <ObjectCard> ]                                       --->Custom
-ObjectFld:={TkCardOrPluralSyn | TkBkgndOrPluralSyn} {TkFldOrPluralSyn id <FACTOR> | TkFldOrPluralSyn <FACTOR>} [ <Of> <ObjectCard> ]                                       --->Custom
-ObjectCard:={ TkCardOrPluralSyn id <FACTOR> | TkCardOrPluralSyn <FACTOR> | <HOrdinal> TkCardOrPluralSyn | <HPosition> TkCardOrPluralSyn  } [ <Of> <ObjectBg> ]          --->Custom
-ObjectBg:={TkBkgndOrPluralSyn id <FACTOR> | TkBkgndOrPluralSyn <FACTOR> | <HOrdinal> TkBkgndOrPluralSyn | <HPosition> TkBkgndOrPluralSyn }                                       --->Custom
-ObjectStack:=TkIdentifier stack                                                                         --->Custom
-ObjectPart:={<ObjectBtn> | <ObjectFld> }                                                --->GetChildOrImageFromAlternatives
+Object_1:=[ the ] TkIdentifier                                                                                  --->RequestedObjRef--->Custom
+Object:={ <ObjectBtn> | <ObjectFld> | <ObjectCard> | <ObjectBg> | <ObjectStack> | <Object_1>  }                 --->GetChildOrImageFromAlternatives
+ObjectBtn:={TkCardOrPluralSyn | TkBkgndOrPluralSyn} {TkBtnOrPluralSyn id <FACTOR> | TkBtnOrPluralSyn <FACTOR>} [ <Of> <ObjectCard> ]                            --->RequestedObjRef--->Custom
+ObjectFld:={TkCardOrPluralSyn | TkBkgndOrPluralSyn} {TkFldOrPluralSyn id <FACTOR> | TkFldOrPluralSyn <FACTOR>} [ <Of> <ObjectCard> ]                            --->RequestedObjRef--->Custom
+ObjectCard:={ TkCardOrPluralSyn id <FACTOR> | TkCardOrPluralSyn <FACTOR> | <HOrdinal> TkCardOrPluralSyn | <HPosition> TkCardOrPluralSyn  } [ <Of> <ObjectBg> ]  --->RequestedObjRef--->Custom
+ObjectBg:={TkBkgndOrPluralSyn id <FACTOR> | TkBkgndOrPluralSyn <FACTOR> | <HOrdinal> TkBkgndOrPluralSyn | <HPosition> TkBkgndOrPluralSyn } [ <Of> <ObjectStack> ]  --->RequestedObjRef--->Custom
+ObjectStack:=TkIdentifier stack                                                                                 --->RequestedObjRef--->Custom
+ObjectPart:={<ObjectBtn> | <ObjectFld> }                                                                        --->GetChildOrImageFromAlternatives
 
 ///////////// Command Nonterminals
-NtDest:={ <ObjectCard> | <ObjectBg> | <ObjectStack> }                                             --->GetChildOrImageFromAlternatives
+NtDest:={ <ObjectCard> | <ObjectBg> | <ObjectStack> }                                                           --->GetChildOrImageFromAlternatives
 
 // we'll have to interpret this at runtime anyways. was causing parsing problems so why bother
-NtVisEffect:= ATLEASTONE{{   <NtVisEffectTerm> }}ENDATLEASTONE                                                                              --->BuildMapWithAllChildren|
-NtVisEffectTerm:= { TkIdentifier |  to    | TkInOnly  }                                                                                                        --->GetChildOrImageFromAlternatives
+NtVisEffect:= ATLEASTONE{{   <NtVisEffectTerm> }}ENDATLEASTONE                                                  --->BuildMapWithAllChildren|
+NtVisEffectTerm:= { TkIdentifier |  to    | TkInOnly  }                                                         --->string--->GetChildOrImageFromAlternatives
 
 
 ////////// Commands
-// the syntax rewriting phase changes the syntax here... see real_vpc000.txt for something closer to original syntax
-BuiltinCmdAdd:=TkIdentifier <ARITH> to <HContainer>                                                                                      --->BuildMapWithAllChildren|
-BuiltinCmdAnswer:=TkIdentifier <FACTOR> [TkSyntaxMarker <FACTOR> [ or <FACTOR> [ or <FACTOR>]]]            --->BuildMapWithAllChildren|
-BuiltinCmdAsk:=TkIdentifier [TkComma] <Expr> [TkSyntaxMarker <Expr>]                                         --->BuildMapWithAllChildren|
-BuiltinCmdBeep:=TkIdentifier [<Expr>]                                                                                         --->BuildMapWithAllChildren|
+// syntax rewriting will change the syntax in some commands. real_vpc000.txt is closer to actual syntax
+BuiltinCmdAdd:=TkIdentifier <ARITH> to <HContainer>                                                             --->BuildMapWithAllChildren|
 
-BuiltinCmdChoose:=TkIdentifier  { TkSyntaxMarker <BuiltinCmdChooseToolnames> | <MAYBE_FACTOR> }                                                             --->BuildMapWithAllChildren|
-BuiltinCmdChooseToolnames:= ATLEASTONE{{ <BuiltinCmdChooseToolname>   }}ENDATLEASTONE           --->BuildMapWithAllChildren|
-BuiltinCmdChooseToolname:= { TkIdentifier | TkCharOrWordOrItemOrLineOrPlural}                               --->GetChildOrImageFromAlternatives
+// we can't support these until we support async
+BuiltinCmdAnswer:=TkIdentifier <FACTOR> [TkSyntaxMarker <FACTOR> [ or <FACTOR> [ or <FACTOR>]]]                 --->BuildMapWithAllChildren|
+BuiltinCmdAsk:=TkIdentifier [TkComma] <Expr> [TkSyntaxMarker <Expr>]                                            --->BuildMapWithAllChildren|
+BuiltinCmdWait:=TkIdentifier [TkSyntaxMarker] <Expr> { TkIdentifier | TkOrdinal  }                              --->BuildMapWithAllChildren|
+
+
+BuiltinCmdBeep:=TkIdentifier [<Expr>]                                                                           --->BuildMapWithAllChildren|
+
+BuiltinCmdChoose:=TkIdentifier  { TkSyntaxMarker <ChooseToolname_1> | <MAYBE_FACTOR> }                          --->BuildMapWithAllChildren|
+ChooseToolname_1:= ATLEASTONE{{ <ChooseToolname_2>   }}ENDATLEASTONE                                            --->BuildMapWithAllChildren|
+ChooseToolname_2:= { TkIdentifier | TkCharOrWordOrItemOrLineOrPlural}                                           --->string--->GetChildOrImageFromAlternatives
 
 BuiltinCmdClick:=TkIdentifier TkIdentifier <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ TkSyntaxMarker TkIdentifier [ TkComma TkIdentifier [ TkComma TkIdentifier ] ] ]  --->BuildMapWithAllChildren|
-BuiltinCmdDelete:=TkIdentifier { <HChunk> <HSimpleContainer> | <ObjectPart> }             --->BuildMapWithAllChildren|
-BuiltinCmdDisable:=TkIdentifier <ObjectBtn>                                                               --->BuildMapWithAllChildren|
-BuiltinCmdDivide:=TkIdentifier <HContainer> TkSyntaxMarker <ARITH>                   --->BuildMapWithAllChildren|
+BuiltinCmdDelete:=TkIdentifier { <HChunk> <HSimpleContainer> | <ObjectPart> }                                   --->BuildMapWithAllChildren|
+BuiltinCmdDisable:=TkIdentifier <ObjectBtn>                                                                     --->BuildMapWithAllChildren|
+BuiltinCmdDivide:=TkIdentifier <HContainer> TkSyntaxMarker <ARITH>                                              --->BuildMapWithAllChildren|
 BuiltinCmdDrag:=TkIdentifier TkIdentifier <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> to <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> [ TkSyntaxMarker TkIdentifier [ TkComma TkIdentifier [ TkComma TkIdentifier ] ] ]   --->BuildMapWithAllChildren|
-BuiltinCmdEnable:=TkIdentifier <ObjectBtn>                                 --->BuildMapWithAllChildren|
-BuiltinCmdGet:=TkIdentifier <Expr>                               --->BuildMapWithAllChildren|
-// TkIdentifier can be "back, forth"
+BuiltinCmdEnable:=TkIdentifier <ObjectBtn>                                                                      --->BuildMapWithAllChildren|
+BuiltinCmdGet:=TkIdentifier <Expr>                                                                              --->BuildMapWithAllChildren|
+
+// ideally this would accept "back" and "forth". but I think it gets eaten by NtDest because HPosition accepts any TkIdentifier
+// solution: during syntax rewriting, check if you were trying to say "go back" or "go forth".
 BuiltinCmdGoCard:=TkIdentifier [ to ] { <NtDest> | <HOrdinal> | <HPosition> }                               --->BuildMapWithAllChildren|
-BuiltinCmdHide:=TkIdentifier { <ObjectPart> | TkIdentifier }                                         --->BuildMapWithAllChildren|
-BuiltinCmdLock:=TkIdentifier TkIdentifier                                                                    --->BuildMapWithAllChildren|
-BuiltinCmdMultiply:=TkIdentifier <HContainer> TkSyntaxMarker <ARITH>              --->BuildMapWithAllChildren|
-// considered <Expr> [ TkIdentifier [ <HContainer> ]] which works for now, but breaks if an Expr can ever have 2 consecutive TkIdentifiers
-BuiltinCmdPut:=TkIdentifier <Expr> [ TkSyntaxMarker [ <HContainer> ]]                 --->BuildMapWithAllChildren|
-BuiltinCmdReset:=TkIdentifier TkIdentifier                                                        --->BuildMapWithAllChildren|
-BuiltinCmdSet:=TkIdentifier [the] <AnyPropertyName> [ TkOfOnly { <HChunk> <ObjectFld> | <Object> } ] to <AnyPropertyVal>          --->BuildMapWithAllChildren|
-BuiltinCmdShow:=TkIdentifier { <BuiltinCmdShow_1>  | <BuiltinCmdShow_2> | TkIdentifier }                  --->BuildMapWithAllChildren|
-BuiltinCmdShow_1:=<ObjectPart> [ TkSyntaxMarker  <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]        --->BuildMapWithAllChildren|
-BuiltinCmdShow_2:=[ TkIdentifier ] TkCardOrPluralSyn                --->BuildMapWithAllChildren|
+BuiltinCmdHide:=TkIdentifier { <ObjectPart> | TkIdentifier }                                                --->BuildMapWithAllChildren|
+BuiltinCmdLock:=TkIdentifier TkIdentifier                                                                   --->BuildMapWithAllChildren|
+BuiltinCmdMultiply:=TkIdentifier <HContainer> TkSyntaxMarker <ARITH>                                        --->BuildMapWithAllChildren|
+
+// TkIdentifier here is 'before' 'after' 'into'
+// the traditional <Expr> [ TkIdentifier [ <HContainer> ]] which works for now, but breaks if an Expr can ever have 2 consecutive TkIdentifiers
+// instead, add a TkSyntaxMarker during syntax rewrite
+BuiltinCmdPut:=TkIdentifier <Expr> [ TkSyntaxMarker TkIdentifier TkSyntaxMarker [ <HContainer> ]]           --->BuildMapWithAllChildren|
+
+BuiltinCmdReset:=TkIdentifier TkIdentifier                                                                  --->BuildMapWithAllChildren|
+BuiltinCmdSet:=TkIdentifier [the] <AnyPropertyName> [ TkOfOnly { <HChunk> <ObjectFld> | <Object> } ] to <AnyPropertyVal>    --->BuildMapWithAllChildren|
+BuiltinCmdShow:=TkIdentifier { <Show_1>  | <Show_2> | TkIdentifier }                                        --->BuildMapWithAllChildren|
+Show_1:=<ObjectPart> [ TkSyntaxMarker <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]                     --->BuildMapWithAllChildren|
+Show_2:=[ TkIdentifier ] TkCardOrPluralSyn                                                                  --->BuildMapWithAllChildren|
+
 //// we don't yet support sort by expression where the value of 'each' is set to each line -- might be too slow to be done synchronously. possible with syntax rewriting.
-BuiltinCmdSort:=TkIdentifier MANY{{ TkIdentifier }}ENDMANY TkCharOrWordOrItemOrLineOrPlural <Of> <HContainer>             --->BuildMapWithAllChildren|
-BuiltinCmdSubtract:=TkIdentifier <ARITH> TkSyntaxMarker <HContainer>                 --->BuildMapWithAllChildren|
-BuiltinCmdUnlock:=TkIdentifier TkIdentifier [ TkIdentifier <NtVisEffect> ]                --->BuildMapWithAllChildren|
-BuiltinCmdVisual:=TkIdentifier <NtVisEffect>                                                            --->BuildMapWithAllChildren|
-BuiltinCmdWait:=TkIdentifier [TkSyntaxMarker] <Expr> { TkIdentifier | TkOrdinal  }                      --->BuildMapWithAllChildren|
+BuiltinCmdSort:=TkIdentifier MANY{{ TkIdentifier }}ENDMANY TkCharOrWordOrItemOrLineOrPlural <Of> <HContainer> --->BuildMapWithAllChildren|
+BuiltinCmdSubtract:=TkIdentifier <ARITH> TkSyntaxMarker <HContainer>                                         --->BuildMapWithAllChildren|
+BuiltinCmdUnlock:=TkIdentifier TkIdentifier [ TkIdentifier <NtVisEffect> ]                                   --->BuildMapWithAllChildren|
+BuiltinCmdVisual:=TkIdentifier <NtVisEffect>                                                                 --->BuildMapWithAllChildren|
 
 //////////// syntax keywords
 // on handler -- interpretted before reaching the parser
@@ -201,7 +214,7 @@ BuiltinCmdWait:=TkIdentifier [TkSyntaxMarker] <Expr> { TkIdentifier | TkOrdinal 
 // end repeat -- interpretted before reaching the parser
 
 ///////// Properties
-AnyPropertyName:= {  id | TkIdentifier  }                                                                                        --->GetChildOrImageFromAlternatives
+AnyPropertyName:= {  id | TkIdentifier  }                                                                    --->string--->GetChildOrImageFromAlternatives
 
 // we want AnyPropertyVal to take many things
 // well TkIdentifier can be a MAYBE_ALLOW_ARITH (treated as variable)
@@ -212,19 +225,35 @@ AnyPropertyName:= {  id | TkIdentifier  }                                       
 // text style lists are in the form "bold, italic".
 // let's be simpler and accept an arbitarary amnt of terms.
 // point needs 2 terms, rect needs 4 terms, fonts need arbitrary number
-AnyPropertyVal:= ATLEASTONESEP{{ TkComma / <MAYBE_ALLOW_ARITH> }}ENDATLEASTONESEP
-Of:={TkOfonly|TkInOnly}                                                                                                            --->GetChildOrImageFromAlternatives
+AnyPropertyVal:= ATLEASTONESEP{{ TkComma / <MAYBE_ALLOW_ARITH> }}ENDATLEASTONESEP                           --->BuildMapWithAllChildren|
+Of:={TkOfonly|TkInOnly}                                                                                     --->string--->GetChildOrImageFromAlternatives
 
 ///////// Function calls
-FnCall:= { the length TkOfOnly <FACTOR> | <FnCallWithParens> | <FnCallAllowWithoutParensTarget> | <FnCallNumberOf> | <ExprThereIs>  }
+// These are the only functions or function-like calls we allow without params
+// the length of                 same as length("foo")
+// the number of                 (no equivalent)
+// the result                    same as result()
+// the paramcount                same as paramcount()
+// the params                    same as params()
+// the target                    (no equivalent)
+// the long target               (no equivalent)
+// nyi: the long time            (no equivalent)
+// then the global properties like
+// the itemdelim
+// the version
+
+FnCall:= { <FnCall_Length> | <FnCallWithParens> | <FnCallWithoutParensOrGlobalGetPropOrTarget> | <FnCallNumberOf> | <ExprThereIs>  }   --->VpcVal--->GetChildOrImageFromAlternatives
+FnCall_Length:=the length TkOfOnly <FACTOR>                                                                      --->VpcVal--->Custom
+FnCallWithParens:=[the] { TkIdentifier | length } TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP  TkRParen     --->VpcVal--->Custom
+
 // TkIdentifier should only be 'target,'result'   'params' or 'paramcount'
-FnCallAllowWithoutParensTarget:= the [ TkAdjective ] TkIdentifier
-FnCallNumberOf:= the number TkOfOnly { <FnCallNumberOf_1> | <FnCallNumberOf_2>  | <FnCallNumberOf_3> |  <FnCallNumberOf_4>  }
-FnCallNumberOf_1:= TkCharOrWordOrItemOrLineOrPlural <Of> <FACTOR>
-FnCallNumberOf_2:= {TkCardOrPluralSyn | TkBkgndOrPluralSyn} { TkBtnOrPluralSyn | TkFldOrPluralSyn }
-FnCallNumberOf_3:= TkCardOrPluralSyn [ <Of> <ObjectBg> ]  [ <Of> <ObjectStack> ]
-FnCallNumberOf_4:= TkBkgndOrPluralSyn [ <Of> <ObjectStack> ] 
-FnCallWithParens:=[the] [ TkAdjective ] { TkIdentifier | length } TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP  TkRParen 
+// note: this can also be a global property read. they look the same.
+FnCallWithoutParensOrGlobalGetPropOrTarget:= the [ TkAdjective ] TkIdentifier                                    --->VpcVal--->Custom
+FnCallNumberOf:= the number TkOfOnly { <FnCallNumberOf_1> | <FnCallNumberOf_2>  | <FnCallNumberOf_3> |  <FnCallNumberOf_4>  }   --->VpcVal--->GetChildOrImageFromAlternatives
+FnCallNumberOf_1:= TkCharOrWordOrItemOrLineOrPlural <Of> <FACTOR>                                                --->VpcVal--->Custom
+FnCallNumberOf_2:= {TkCardOrPluralSyn | TkBkgndOrPluralSyn} { TkBtnOrPluralSyn | TkFldOrPluralSyn }              --->VpcVal--->Custom
+FnCallNumberOf_3:= TkCardOrPluralSyn [ <Of> <ObjectBg> ] [ <Of> <ObjectStack> ]                                  --->VpcVal--->Custom
+FnCallNumberOf_4:= TkBkgndOrPluralSyn [ <Of> <ObjectStack> ]                                                     --->VpcVal--->Custom
 
 // I didn't quite get this before, here's my current understanding:
 // "lookahead" only comes into play when there is an OPTIONAL, OR, etc. block
@@ -243,36 +272,34 @@ FnCallWithParens:=[the] [ TkAdjective ] { TkIdentifier | length } TkLParen MANYS
 // we could add this if we wanted to, by skipping the call to visit().
 
 // ExprLiteral used to have TkIdentifier, but HSimpleContainer takes a TkIdentifier
-ExprSource:={ <ExprGetProperty>| <FnCall> | <HSimpleContainer> | TkStringLiteral | TkNumLiteral  }                                       --->Custom
-ExprGetProperty:=[the] [ TkAdjective ] <AnyPropertyName> TkOfOnly { <HChunk> <ObjectFld> | <Object> }                     --->Custom
-ExprThereIs:=there is [not] TknA <Object>                                                                                                                   --->Custom
-Expr:= <Lvl1Expression> MANY{{ <OpLogicalOrAnd> <Lvl1Expression> }}ENDMANY                                                             --->GenerateInfix|Lvl1Expression|OpLogicalOrAnd|VpcEvalHelpers.evalOp|,this.tmpar1,this.tmpar2
-Lvl1Expression:= <Lvl2Expression> MANY{{ <OpEqualityGreaterLessOrContains> <Lvl2Expression> }}ENDMANY                    --->GenerateInfix|Lvl2Expression|OpEqualityGreaterLessOrContains|VpcEvalHelpers.evalOp|,this.tmpar1,this.tmpar2
-Lvl2Expression:= <Lvl3Expression> MANY{{ is  <Lvl2Expression_0>  }}ENDMANY                                                                    --->Custom
-Lvl2Expression_0:= [not]  { <Lvl2Expression_1> | <Lvl2Expression_2> | <Lvl3Expression> }                              --->GetChildOrImage|Lvl2Expression_1[0]|Lvl2Expression_2[0]|Lvl3Expression[0]
-Lvl2Expression_1:= TknA { number  | TkIdentifier }                                                                                                  --->GetChildOrImageFromAlternatives
-Lvl2Expression_2:= {TkInOnly | within } <Lvl3Expression>                                                                                                    --->GetChildOrImage|Lvl3Expression[0]
-Lvl3Expression:= <Lvl4Expression> MANY{{ <OpStringConcat> <Lvl4Expression> }}ENDMANY                                             --->GenerateInfix|Lvl4Expression|OpStringConcat|VpcEvalHelpers.evalOp|,this.tmpar1,this.tmpar2
-Lvl4Expression:= <Lvl5Expression> MANY{{ <OpPlusMinus> <Lvl5Expression> }}ENDMANY                                                    --->GenerateInfix|Lvl5Expression|OpPlusMinus|VpcEvalHelpers.evalOp|,this.tmpar1,this.tmpar2
-Lvl5Expression:= <Lvl6Expression> MANY{{ <OpMultDivideExpDivMod> <Lvl6Expression> }}ENDMANY                                  --->GenerateInfix|Lvl6Expression|OpMultDivideExpDivMod|VpcEvalHelpers.evalOp|,this.tmpar1,this.tmpar2
-Lvl6Expression:= [ { TkPlusOrMinus | not } ] [<HChunk>] { <ExprSource> | TkLParen <Expr> TkRParen }                     --->Custom
+ExprSource:={ <ExprGetProperty>| <FnCall> | <HSimpleContainer> | TkStringLiteral | TkNumLiteral  }               --->VpcVal--->Custom
+ExprGetProperty:=[the] [ TkAdjective ] <AnyPropertyName> TkOfOnly { <HChunk> <ObjectFld> | <Object> }            --->VpcVal--->Custom
+ExprThereIs:=there is [not] TknA <Object>                                                                        --->VpcVal--->Custom
+Expr:= <Lvl1Expression> MANY{{ <OpLogicalOrAnd> <Lvl1Expression> }}ENDMANY                                       --->GenerateInfix|Lvl1Expression|OpLogicalOrAnd|this.evalHelp.evalOp|
+Lvl1Expression:= <Lvl2Expression> MANY{{ <OpEqualityGreaterLessOrContains> <Lvl2Expression> }}ENDMANY            --->GenerateInfix|Lvl2Expression|OpEqualityGreaterLessOrContains|this.evalHelp.evalOp|
+Lvl2Expression:= <Lvl3Expression> MANY{{ is  <Lvl2Sub>  }}ENDMANY                                                --->VpcVal--->Custom
+Lvl2Sub:= [not]  { <Lvl2TypeCheck> | <Lvl2Within> | <Lvl3Expression> }                                           --->NotReached
+Lvl2TypeCheck:= TknA { number  | TkIdentifier }                                                                  --->GetChildOrImageFromAlternatives
+Lvl2Within:= {TkInOnly | within } <Lvl3Expression>                                                               --->NotReached
+
+Lvl3Expression:= <Lvl4Expression> MANY{{ <OpStringConcat> <Lvl4Expression> }}ENDMANY                             --->GenerateInfix|Lvl4Expression|OpStringConcat|this.evalHelp.evalOp|
+Lvl4Expression:= <Lvl5Expression> MANY{{ <OpPlusMinus> <Lvl5Expression> }}ENDMANY                                --->GenerateInfix|Lvl5Expression|OpPlusMinus|this.evalHelp.evalOp|
+Lvl5Expression:= <Lvl6Expression> MANY{{ <OpMultDivideExpDivMod> <Lvl6Expression> }}ENDMANY                      --->GenerateInfix|Lvl6Expression|OpMultDivideExpDivMod|this.evalHelp.evalOp|
+Lvl6Expression:= [ { TkPlusOrMinus | not } ] [<HChunk>] { <ExprSource> | TkLParen <Expr> TkRParen }              --->Custom
 
 
 ////////////Operators
-OpLogicalOrAnd:= {or | and}                                                                                                           --->GetChildOrImageFromAlternatives
-OpEqualityGreaterLessOrContains:= { contains | TkGreaterOrLessEqualOrEqual  }                                 --->GetChildOrImageFromAlternatives
-OpStringConcat:= TkConcatDoubleOrSingle                                                                                           --->GetChildOrImage|TkConcatDoubleOrSingle[0]
-OpPlusMinus:= TkPlusOrMinus                                                                                                             --->GetChildOrImage|TkPlusOrMinus[0]
-OpMultDivideExpDivMod:= TkMultDivideExpDivMod                                                                                --->GetChildOrImage|TkMultDivideExpDivMod[0]
+OpLogicalOrAnd:= {or | and}                                                                                      --->GetChildOrImageFromAlternatives
+OpEqualityGreaterLessOrContains:= { contains | TkGreaterOrLessEqualOrEqual  }                                    --->GetChildOrImageFromAlternatives
+OpStringConcat:= TkConcatDoubleOrSingle                                                                          --->GetChildOrImage|TkConcatDoubleOrSingle[0]
+OpPlusMinus:= TkPlusOrMinus                                                                                      --->GetChildOrImage|TkPlusOrMinus[0]
+OpMultDivideExpDivMod:= TkMultDivideExpDivMod                                                                    --->GetChildOrImage|TkMultDivideExpDivMod[0]
 
 ///////////// top level, generated in 'lines.ts'
-TopLevelRequestEval:=TkIdentifier  <Expr>
-TopLevelRequestHandlerCall:=TkIdentifier   TkIdentifier MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP 
+TopLevelRequestEval:=TkIdentifier <Expr>                                                                       --->BuildMapWithAllChildren|
 
-// put myfn(1,2) into x
-// requestuserfncall^^ x myfn (1,2)
-TopLevelRequestUserFnCall:=TkIdentifier TkIdentifier TkIdentifier TkLParen MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP TkRParen
-
+// requesthandlerfncall^^ myhandler 45, 56
+TopLevelRequestHandlerCall:=TkIdentifier TkIdentifier MANYSEP{{ TkComma / <Expr> }}ENDMANYSEP                 --->BuildMapWithAllChildren|
 
 
 
@@ -309,17 +336,18 @@ Rule Should Accept Any Of These|NtVisEffectTerm|barn/door/open/close/cut/plain/d
 // done in processing
 //Rule Should Accept Any Of These|BuiltinCmdChoose|/browse/button/field/select/lasso/pencil/brush/eraser/line/spray/can/rect/round/rect/bucket/oval/curve/text/reg/regular/polygon/poly/|
 //Rule Should Accept Any Of These|BuiltinCmdChoose|tool|
-Rule Should Accept Any Of These|BuiltinCmdWait|ticks/tick/seconds/second/sec|
-Rule Should Accept Any Of These|BuiltinCmdWait|for|
+
 
 Rule Should Accept Any Of These|BuiltinCmdHide|menubar|
 Rule Should Accept Any Of These|BuiltinCmdReset|paint/menubar/printing|
 Rule Should Accept Any Of These|BuiltinCmdShow|menubar|
 Rule Should Accept Any Of These|BuiltinCmdLock|screen/messages/error/dialogs/recent|
-Rule Should Accept Any Of These|BuiltinCmdShow_2|all|
+Rule Should Accept Any Of These|Show_2|all|
 Rule Should Accept Any Of These|BuiltinCmdSort|ascending/descending/text/numeric/international/datetime/lines/items|::lines/ok/TkCharOrWordOrItemOrLineOrPlural:items/ok/TkCharOrWordOrItemOrLineOrPlural
+Rule Should Accept Any Of These|BuiltinCmdWait|ticks/tick/seconds/second/sec|
+Rule Should Accept Any Of These|BuiltinCmdWait|for|
 
-Rule Should Accept Any Of These|Lvl2Expression_1|number/integer/point/rect/logical|
+Rule Should Accept Any Of These|Lvl2TypeCheck|number/integer/point/rect/logical|
 
 Rule Should Accept Any Of These|BuiltinCmdUnlock|screen/with/visual/effect|
 // has tkidentifier via NtVisEffect
