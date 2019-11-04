@@ -85,6 +85,9 @@ def processTokens(tokens, allout):
     writeListTokens.append('];')
     allout.extend(writeListTokens)
     allout.extend(writeAllTokens)
+    allout.append('')
+    allout.append('Object.freeze(tks);')
+    allout.append('Object.freeze(listTokens);')
     return thetokens, theplainwordtokens
 
 def getFullTokenName(s, saveIndex= False):
@@ -318,7 +321,9 @@ def processRules(rules, thetokens, allout, helperGetTokens):
         rulename,b = rule.split(':=')
         rulename=rulename.strip()
         if '--->' in b:
-            b, visitor = b.split('--->')
+            spllbyarrow = b.split('--->')
+            b = spllbyarrow[0]
+            visitor = spllbyarrow[-1]
         else:
             visitor = None
         ruleparts = lexrule(thetokens, b, rule, rulesDefined, helperGetTokens)
@@ -345,60 +350,62 @@ def sendToFile(allout, foutname):
     fout.close()
 
 templateGenerateInfix = r'''
-%method%(ctx:VisitingContext) : string | VpcIntermedValBase {
-    if (!ctx.children.%child%.length || ctx.children.%operatorrule%.length + 1 !== ctx.children.%child%.length) {
-        throw makeVpcInternalErr(`in %method%. len operators=${ctx.children.%operatorrule%.length} but len children=${ctx.children.%child%.length}.`);
+%method%(ctx:VisitingContext) : %rettype% {
+    if (!ctx.%child%.length || ctx.%operatorrule%.length + 1 !== ctx.%child%.length) {
+        throw makeVpcInternalErr(`in %method%. len ops=${ctx.%operatorrule%.length} but len children=${ctx.%child%.length}.`);
     }
     
-    let total = this.visit(ctx.children.%child%[0]);
+    let total = this.visit(ctx.%child%[0]) as VpcVal;
+    checkThrow(total.isVpcVal, '%method%')
     const oprulename = `%operatorruleshort%`
-    for (let i = 0; i < ctx.children.%operatorrule%.length; i++) {
-        let whichop = this.visit(ctx.children.%operatorrule%[i]);
+    for (let i = 0; i < ctx.%operatorrule%.length; i++) {
+        let whichop = this.visit(ctx.%operatorrule%[i]);
         let val1 = total;
-        let val2 = this.visit(ctx.children.%child%[i + 1]);
+        let val2 = this.visit(ctx.%child%[i + 1]);
         total = %evalmethod%(val1, val2, oprulename, whichop %addedargs%);
+        checkThrow(total.isVpcVal, '%method%')
     }
 
     return total;
 }'''
 
 templateBuildMapWithAllChildren = r'''
-%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
+%method%(ctx: VisitingContext) : %rettype% {
     return this.Helper$BuildMapWithAllChildren(ctx)
 }'''
 
 templateNotYetImplemented = r'''
-%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
-    assertTrue(false, '%method% not yet implemented')
-    throw makeVpcInternalErr('%method% not yet implemented')
+%method%(ctx: VisitingContext) : %rettype% {
+    throw makeVpcInternalErr('%method%' + ' not yet implemented')
 }'''
 
 templateNotReached= r'''
-%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
-    throw makeVpcInternalErr('did not expect method %method% to be reached')
+%method%(ctx: VisitingContext) : %rettype% {
+    throw makeVpcInternalErr("method shouldn't be reached" + '%method%')
 }'''
 
 templateBuildList = r'''
-%method%(ctx: VisitingContext) : string | VpcIntermedValBase {
-    const ch = ctx.children
+%method%(ctx: VisitingContext) : %rettype% {
     let ret = new IntermedListOfIntermedVals()%pieces%
     return ret
 }'''
 
-templateBuildListRlPiece = r'''    ret.vals[%index%] = (ch.%child%) ? this.visit(ch.%child%) : undefined'''
-templateBuildListImPiece = r'''    ret.vals[%index%] = (ch.%child%) ? ch.%child%.image : undefined'''
+templateBuildListRlPiece = r'''    ret.vals[%index%] = (ctx.%child%) ? this.visit(ctx.%child%) : undefined'''
+templateBuildListImPiece = r'''    ret.vals[%index%] = (ctx.%child%) ? ctx.%child%.image : undefined'''
 
 templateGeneral = r'''
-%method%(ctx: VisitingContext) : string | VpcIntermedValBase {%pieces%
+%method%(ctx: VisitingContext) : %rettype% {%pieces%
     } else {
-        throw makeVpcInternalErr(`in %method%. all interesting children null.`);
+        throw makeVpcInternalErr('all choices null ' + '%method%');
     }
 }'''
 
-templateGeneralRlPiece = r'''    } else if (ctx.children.%child%) {
-        return this.visit(ctx.children.%child%);'''
-templateGeneralImPiece = r'''    } else if (ctx.children.%child%) {
-        return ctx.children.%child%.image;'''
+templateGeneralRlPiece = r'''    } else if (ctx.%child%) {
+        return this.visit(ctx.%child%);'''
+templateGeneralImPiece = r'''    } else if (ctx.%child%) {
+        return ctx.%child%.image;'''
+templateGeneralImPieceEnum = r'''    } else if (ctx.%child%) {
+        return VpcIntermedValEnum.init<%enum%>(%enum%, '%enum%', ctx.%child%.image);'''
 
 def readRuleParts(ruleparts, thetokens):
     rulesReferenced = []
@@ -411,13 +418,18 @@ def readRuleParts(ruleparts, thetokens):
             tokensReferenced.append(part)
     return rulesReferenced, tokensReferenced
 
+def doReplace(thetemplate, rulename, pieces='---'):
+    if not rulename.startswith('Rule'):
+        rulename = 'Rule'+rulename
+    return thetemplate.replace('%method%', rulename).replace('%rettype%', ruleReturnType(rulename)).replace('%pieces%', pieces)
+
 def generateBuildList(rulename, fullpartnames):
     pieces = ''
     for i, part in enumerate(fullpartnames):
         piece = templateBuildListRlPiece if part.startswith('Rule') else templateBuildListImPiece
         piece = piece.replace('%child%', part).replace('%index%', str(i))
         pieces += '\n' + piece
-    return templateBuildList.replace('%method%', 'Rule'+rulename).replace('%pieces%', pieces)
+    return doReplace(templateBuildList, rulename, pieces=pieces)
 
 def generateFromTemplate(rulename, tokensToSearch, subRulesToSearch):
     pieces = ''
@@ -429,7 +441,7 @@ def generateFromTemplate(rulename, tokensToSearch, subRulesToSearch):
         piece = templateGeneralRlPiece.replace('%child%', ruleReferenced)
         if not pieces: piece = piece.replace('} else if (', 'if (')
         pieces += '\n' + piece
-    return templateGeneral.replace('%method%', 'Rule'+rulename).replace('%pieces%', pieces)
+    return doReplace(templateGeneral, rulename, pieces=pieces)
 
 def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
     rulesReferenced, tokensReferenced = readRuleParts(ruleparts, thetokens)
@@ -437,14 +449,14 @@ def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
         vparts = [vpart.strip() for vpart in visitor.split('|')]
         assertEq(5, len(vparts), f'rule {rulename} and {ruleparts}')
         _, childrule, whichoprule, evalmethod, addedargs = vparts
-        return templateGenerateInfix.replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+childrule) \
+        return doReplace(templateGenerateInfix, rulename).replace('%method%', 'Rule'+rulename).replace('%child%', 'Rule'+childrule) \
             .replace('%operatorrule%', 'Rule'+whichoprule).replace('%operatorruleshort%', whichoprule).replace('%evalmethod%', evalmethod).replace('%addedargs%', addedargs)
     elif visitor.startswith('BuildMapWithAllChildren|'):
-        return templateBuildMapWithAllChildren.replace('%method%', 'Rule'+rulename)
+        return doReplace(templateBuildMapWithAllChildren, rulename)
     elif visitor == 'NotYetImplemented':
-        return templateNotYetImplemented.replace('%method%', 'Rule'+rulename)
+        return doReplace(templateNotYetImplemented, rulename)
     elif visitor == 'NotReached':
-        return templateNotReached.replace('%method%', 'Rule'+rulename)
+        return doReplace(templateNotReached, rulename)
     
     subrulesWanted = []
     tokensWanted = []
@@ -490,30 +502,38 @@ def processVisitor(rulename, ruleparts, visitor, thetokens, allout):
     
     return generateFromTemplate(rulename,tokensWanted,subrulesWanted)
     
-        
+def ruleReturnType(rulename):
+    if rulename.startswith('BuiltinCmd') or rulename.startswith('RuleBuiltinCmd') or rulename.startswith('TopLevel') or rulename.startswith('RuleTopLevel'):
+        return 'IntermedMapOfIntermedVals'
+    elif ('Expr' in rulename or 'Expression' in rulename):
+        return 'VpcVal'
+    else:
+        return 'string | VpcIntermedValBase'
 
 def writeHelperInterface(lexedRules, thetokens, allout):
     allout.append('')    
     allout.append('interface VisitingVisitor {')    
     for rulename, ruleparts, visitor in lexedRules:
-        allout.append(f'{tabs1}Rule{rulename}(ctx:VisitingContext): string | VpcIntermedValBase;')
-    #allout.append(f'{tabs1}visit(ctx:VisitingContext): string | VpcIntermedValBase;')    
-    allout.append('}')
-    allout.append('')    
-    allout.append('interface VisitingContext {')    
-    allout.append(f'{tabs1}name:string;')    
-    allout.append(f'{tabs1}children:VisitingContextChildren;')    
+        ruletype = ruleReturnType(rulename)
+        allout.append(f'{tabs1}Rule{rulename}(ctx:VisitingContext): {ruletype};')
+    
     allout.append('}')
     allout.append('')    
     # technically these are optional properties width?: number, but this would make users do null checks.
-    allout.append('interface VisitingContextChildren {') 
+    allout.append('interface VisitingContext {') 
+    # don't give it this, because then .foo.bar is allowed :( want to allow ['foo'] but not .foo. allout.append(f'{tabs1}[key:string]: any[];') 
     for rulename, ruleparts, visitor in lexedRules:
         if 'BuiltinCmd' not in rulename and 'TopLevel' not in rulename:
             allout.append(f'{tabs1}Rule{rulename}:any[];')
     for token in thetokens:
         allout.append(f'{tabs1}{token}:ChvIToken[];')
     allout.append('}')    
-    
+    allout.append('')    
+    allout.append('interface VisitingContextWithin {')    
+    allout.append(f'{tabs1}name:string;')    
+    allout.append(f'{tabs1}children:VisitingContext;')    
+    allout.append('}')
+    allout.append('')    
 
 def processVisitors(lexedRules, thetokens, allout):
     for rulename, ruleparts, visitor in lexedRules:
@@ -643,6 +663,8 @@ def listPlainWordTokens(theplainwordtokens, allout):
     for key in keys:
         allout.append(f"{tabs1}'{key}': true,")
     allout.append('}')
+    allout.append('')
+    allout.append('Object.freeze(partialReservedWordsList);')
     
 
 def goAllReady(fname, helperGetTokens = False):
@@ -655,7 +677,7 @@ def goAllReady(fname, helperGetTokens = False):
     thetokens, theplainwordtokens = processTokens(tokens, allout)
     listPlainWordTokens(theplainwordtokens, allout)
     allout.append('')
-    sendToFile(allout, '../../src/vpc/vpcgentokens.ts')
+    sendToFile(allout, '../../src/vpcscript/vpcgentokens.ts')
     
     allout = []
     allout.append(warnmsg)
@@ -665,14 +687,14 @@ def goAllReady(fname, helperGetTokens = False):
     lexedRules = processRules(rules, thetokens, allout, helperGetTokens)
     allout.append('}')
     allout.append('')
-    sendToFile(allout, '../../src/vpc/vpcgenrules.ts')
+    sendToFile(allout, '../../src/vpcscript/vpcgenrules.ts')
     
     areThereVisitors = any(p[2] is not None for p in lexedRules)
     if areThereVisitors:
         allout = []
         allout = processVisitors(lexedRules, thetokens, allout)
         allout.insert(0, warnmsg)
-        sendToFile(allout, '../../src/vpc/vpcgenvisitor.ts')
+        sendToFile(allout, '../../src/vpcscript/vpcgenvisitor.ts')
     
     checks = getSection(alllines, 'Checks', False)
     if checks:
