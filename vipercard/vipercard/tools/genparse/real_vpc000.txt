@@ -273,11 +273,13 @@ BuiltinCmdShow:=show { menubar | <BuiltinCmdShow_1>  | <BuiltinCmdShow_2>}
 BuiltinCmdShow_1:=<ObjectPart> [ at  <MAYBE_ALLOW_ARITH> TkComma <MAYBE_ALLOW_ARITH> ]
 BuiltinCmdShow_2:=[ {all  | <ARITH>} ] TkCardssyn
 // we don't yet support sort by expression where the value of 'each' is set to each line -- might be too slow to be done synchronously
-BuiltinCmdSort:=sort [ {ascending | descending} ] [ {text | numeric | international | datetime} ] { lines | items } of <HContainer>
+BuiltinCmdSort:=sort [ {ascending | descending} ] { lines | items } of <HContainer> [ {text | numeric | international | datetime} ]
 BuiltinCmdSubtract:=subtract <ARITH> from <HContainer>
 BuiltinCmdUnlock:=unlock screen [ with [ visual [ effect ] ] <NtVisEffect> ]
 BuiltinCmdVisual:=visual [ effect ] <NtVisEffect>
 BuiltinCmdWait:=wait [for] <Expr> { TkIdentifier | second }
+// wait supports  second,seconds,milliseconds,ms,ticks
+// a tick is 60th of second
 
 //////////// syntax keywords
 // on handler -- interpretted before reaching the parser

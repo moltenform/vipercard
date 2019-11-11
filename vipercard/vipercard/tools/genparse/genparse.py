@@ -1,9 +1,13 @@
 
 # genparse...
-# currently very basic -- doesn't support anything nested, which is fine
+# Ben Fisher, 2017
 
 from ben_python_common import *
 import re,os,sys
+sys.path.append('../..')
+sys.path.append('../BUILDING')
+import auto_assert_id
+
 def getSection(s, sectname, assumeExists=True):
     ss = f'\n----Begin:{sectname}--------\n'
     sse = f'\n----End:{sectname}--------\n'
@@ -24,14 +28,17 @@ tabs2 = tabs1 * 2
 
 
 
-def getDefaultPattern(s):
-    return s+'(?![a-zA-Z0-9_])'
+def getDefaultPattern(s, placeInGroup):
+    ret = s+'(?![a-zA-Z0-9_])'
+    if placeInGroup:
+        ret = '(?:' + ret + ')'
+    return ret
 
 def processTokens(tokens, allout):
     theplainwordtokens = {}
     thetokens = {}
-    writeAllTokens = ['export const tks = {']
-    writeListTokens = ['export const listTokens = [ // note: order matters here']
+    writeAllTokens = ['', 'export const tks = {']
+    writeListTokens = ['', 'export const listTokens = [ /* note: order matters here */']
     for line in tokens:
         line = line.strip()
         if not line or line.startswith('//'):
@@ -50,7 +57,7 @@ def processTokens(tokens, allout):
             # use lookahead --- otherwise incorrect matches 
             # if there are tokens "the", "then" -- "then" will be lexed as "the" "n" instead of "then"
             # positive lookahead (?=[^a-zA-Z0-9_]) almost works but fails at the end of string
-            pattern= '/' + getDefaultPattern(name) + '/i'
+            pattern= '/' + getDefaultPattern(name, False) + '/i'
             theplainwordtokens[name] = True
         elif pattern.startswith('OneOfWords('):
             inParens = pattern.split('(')[1].split(')')[0]
@@ -62,7 +69,18 @@ def processTokens(tokens, allout):
                 theplainwordtokens[itemwithoptional] = True
                 itemwithoutoptional = re.sub(r'.\?', '', item)
                 theplainwordtokens[itemwithoutoptional] = True
-            pattern= '/' + '|'.join([getDefaultPattern(x.strip()) for x in items]) + '/i'
+            
+            pattern= '/' + '|'.join([getDefaultPattern(x.strip(), True) for x in items]) + '/i'
+        elif pattern.startswith('OneOfOr('):
+            assertTrue(pattern.endswith(')'), pattern)
+            inParens = pattern.split('(',1)[1][0:-1]
+            parts = inParens.split(' <or> ')
+            built = '/'
+            for part in parts:
+                built += '(?:' + part + ')|'
+            built = built.rstrip('|')
+            built += '/i'
+            pattern= built
         if not pattern.startswith('new RegExp'):
             assertTrue(pattern.startswith('/'), line)
             assertTrue(pattern.endswith('/') or pattern.endswith('/i'), line)
@@ -71,10 +89,11 @@ def processTokens(tokens, allout):
         name = getFullTokenName(name)
         assertTrue(name not in thetokens, f'duplicate token {smallname}')
         thetokens[name] = False
-        writeAllTokens.append(f'{tabs1}{name}:{name},')
+        writeAllTokens.append(f'{tabs1}{name}: {name},')
         writeListTokens.append(f'{tabs1}{name},')
+        allout.append(f'')
         allout.append(f'class {name} extends ChvToken {{')
-        allout.append(f'{tabs1}static PATTERN = {pattern}')
+        allout.append(f'{tabs1}static PATTERN = {pattern};')
         if opts :
             opts = opts.replace(';', f';\n{tabs1}')
             allout.append(f'{tabs1}{opts}')
@@ -266,9 +285,9 @@ def recurseThroughRule(rulename, ruleparts):
         return recurseThroughRuleManyOrAtLeastOneSep(rulename, ruleparts, symAtLeastOneSepStart, symAtLeastOneSepEnd, 'this.AT_LEAST_ONE_SEP({ ')
     elif len(ruleparts[0]) > 2 and ruleparts[0].startswith('<'):
         ref = 'Rule' + ruleparts[0].replace('<', '').replace('>', '')
-        return [f'this.SUBRULE000(this.{ref})'] + recurseThroughRule(rulename, ruleparts[1:])
+        return [f'this.SUBRULE000(this.{ref});'] + recurseThroughRule(rulename, ruleparts[1:])
     elif len(ruleparts[0]) > 2:
-        return [f'this.CONSUME000(tks.{ruleparts[0]})'] + recurseThroughRule(rulename, ruleparts[1:])
+        return [f'this.CONSUME000(tks.{ruleparts[0]});'] + recurseThroughRule(rulename, ruleparts[1:])
     else:
         assertTrue(False, f'{rulename}: invalid rulepart {ruleparts[0]}', ruleparts)
 
@@ -331,20 +350,29 @@ def processRules(rules, thetokens, allout, helperGetTokens):
         got = recurseThroughRule(rulename, ruleparts)
         addNumerals(got)
         allout.append('')
-        allout.append(f'{tabs1}public Rule{rulename} = this.RULE("Rule{rulename}", () => {{')
+        allout.append(f'{tabs1}Rule{rulename} = this.RULE("Rule{rulename}", () => {{')
         allout.extend([f'{tabs1}{tabs1}'+ln for ln in got])
         allout.append(f'{tabs1}}})')
     return lexed
 
-warnmsg = '// generated code, any changes past this point will be lost:'
+tsMsgMarker1 = '/* generated code, any changes past this point will be lost: --------------- */'
+tsMsgMarker2 = '/* generated code, any changes above this point will be lost: --------------- */'
 def sendToFile(allout, foutname):
     print('writing to ' + foutname)
     fout = open(foutname, 'r', encoding='utf8')
     prevcontents = fout.read()
     fout.close()
-    pts = prevcontents.split(warnmsg)
+    
+    
+    pts = prevcontents.split(tsMsgMarker1)
     assertEq(2, len(pts), 'did not see warning in file.')
-    s = pts[0] + '\n'.join(allout)
+    secondpts = pts[1].split(tsMsgMarker2)
+    assertEq(2, len(secondpts), 'did not see closing warning in file.')
+    
+    alloutWithBgnEnd = list(allout)
+    alloutWithBgnEnd.insert(0, tsMsgMarker1)
+    alloutWithBgnEnd.append(tsMsgMarker2)
+    s = pts[0] +  '\n'.join(alloutWithBgnEnd) + secondpts[1]
     fout = open(foutname, 'w', encoding='utf8')
     fout.write(s)
     fout.close()
@@ -352,18 +380,18 @@ def sendToFile(allout, foutname):
 templateGenerateInfix = r'''
 %method%(ctx:VisitingContext) : %rettype% {
     if (!ctx.%child%.length || ctx.%operatorrule%.length + 1 !== ctx.%child%.length) {
-        throw makeVpcInternalErr(`in %method%. len ops=${ctx.%operatorrule%.length} but len children=${ctx.%child%.length}.`);
+        throw makeVpcInternalErr(`%atag1%,${ctx.%operatorrule%.length},${ctx.%child%.length}.`);
     }
     
     let total = this.visit(ctx.%child%[0]) as VpcVal;
-    checkThrow(total.isVpcVal, '%method%')
-    const oprulename = `%operatorruleshort%`
+    checkThrow(total.isVpcVal, "%atag2%")
+    const oprulename = VpcOpCtg.%operatorruleshort%
     for (let i = 0; i < ctx.%operatorrule%.length; i++) {
         let whichop = this.visit(ctx.%operatorrule%[i]);
         let val1 = total;
         let val2 = this.visit(ctx.%child%[i + 1]);
         total = %evalmethod%(val1, val2, oprulename, whichop %addedargs%);
-        checkThrow(total.isVpcVal, '%method%')
+        checkThrow(total.isVpcVal, "%atag3%")
     }
 
     return total;
@@ -371,17 +399,17 @@ templateGenerateInfix = r'''
 
 templateBuildMapWithAllChildren = r'''
 %method%(ctx: VisitingContext) : %rettype% {
-    return this.Helper$BuildMapWithAllChildren(ctx)
+    return this.H$BuildMap(ctx)
 }'''
 
 templateNotYetImplemented = r'''
 %method%(ctx: VisitingContext) : %rettype% {
-    throw makeVpcInternalErr('%method%' + ' not yet implemented')
+    throw makeVpcInternalErr("%atag1%nyi")
 }'''
 
 templateNotReached= r'''
 %method%(ctx: VisitingContext) : %rettype% {
-    throw makeVpcInternalErr("method shouldn't be reached" + '%method%')
+    throw makeVpcInternalErr("%atag2%reached")
 }'''
 
 templateBuildList = r'''
@@ -396,7 +424,7 @@ templateBuildListImPiece = r'''    ret.vals[%index%] = (ctx.%child%) ? ctx.%chil
 templateGeneral = r'''
 %method%(ctx: VisitingContext) : %rettype% {%pieces%
     } else {
-        throw makeVpcInternalErr('all choices null ' + '%method%');
+        throw makeVpcInternalErr("%atag1%null");
     }
 }'''
 
@@ -418,10 +446,19 @@ def readRuleParts(ruleparts, thetokens):
             tokensReferenced.append(part)
     return rulesReferenced, tokensReferenced
 
+countasserttags = 89*92
 def doReplace(thetemplate, rulename, pieces='---'):
+    global countasserttags
     if not rulename.startswith('Rule'):
         rulename = 'Rule'+rulename
-    return thetemplate.replace('%method%', rulename).replace('%rettype%', ruleReturnType(rulename)).replace('%pieces%', pieces)
+    ret = thetemplate.replace('%method%', rulename).replace('%rettype%', ruleReturnType(rulename)).replace('%pieces%', pieces)
+    for i in range(6):
+        lookfor = f'%atag{i}%'
+        if lookfor in ret:
+            newtag = auto_assert_id.toBase92(countasserttags)
+            countasserttags += 1
+            ret = ret.replace(lookfor, f'{newtag}|')
+    return ret
 
 def generateBuildList(rulename, fullpartnames):
     pieces = ''
@@ -512,30 +549,28 @@ def ruleReturnType(rulename):
 
 def writeHelperInterface(lexedRules, thetokens, allout):
     allout.append('')    
-    allout.append('interface VisitingVisitor {')    
+    allout.append('export interface VpcCompleteVisitor {')    
     for rulename, ruleparts, visitor in lexedRules:
         ruletype = ruleReturnType(rulename)
-        allout.append(f'{tabs1}Rule{rulename}(ctx:VisitingContext): {ruletype};')
+        allout.append(f'{tabs1}Rule{rulename}(ctx: VisitingContext): {ruletype};')
     
     allout.append('}')
     allout.append('')    
     # technically these are optional properties width?: number, but this would make users do null checks.
-    allout.append('interface VisitingContext {') 
-    # don't give it this, because then .foo.bar is allowed :( want to allow ['foo'] but not .foo. allout.append(f'{tabs1}[key:string]: any[];') 
+    allout.append('export interface VisitingContext {') 
+    allout.append(f'{tabs1}[index: string]: any;')
+    # originally I decided not to give it string index , because then .foo.bar is allowed :( want to allow ['foo'] but not .foo. allout.append(f'{tabs1}[key:string]: any[];') 
+    # but I am adding a string index now
     for rulename, ruleparts, visitor in lexedRules:
         if 'BuiltinCmd' not in rulename and 'TopLevel' not in rulename:
-            allout.append(f'{tabs1}Rule{rulename}:any[];')
+            allout.append(f'{tabs1}Rule{rulename}: any[];')
     for token in thetokens:
-        allout.append(f'{tabs1}{token}:ChvIToken[];')
+        allout.append(f'{tabs1}{token}: ChvIToken[];')
     allout.append('}')    
     allout.append('')    
-    allout.append('interface VisitingContextWithin {')    
-    allout.append(f'{tabs1}name:string;')    
-    allout.append(f'{tabs1}children:VisitingContext;')    
-    allout.append('}')
-    allout.append('')    
 
-def processVisitors(lexedRules, thetokens, allout):
+def processVisitors(lexedRules, thetokens):
+    allout = []
     for rulename, ruleparts, visitor in lexedRules:
         if not visitor or not visitor.strip():
             visitor = 'NotYetImplemented'
@@ -545,15 +580,14 @@ def processVisitors(lexedRules, thetokens, allout):
             allout.extend(txt.replace('\r\n', '\n').split('\n'))
             
     allout = [tabs2+line for line in allout]
-    allout.append(tabs1 + '}')
-    allout.append('')
-    a2 = []
-    writeHelperInterface(lexedRules, thetokens, a2)
-    allout.extend([tabs1 + line for line in a2])
-    allout.append('')
-    allout.append(tabs1 + 'return new VPCCustomVisitor();')
-    allout.append('}')
+    #~ allout.append(tabs1 + '}')
+    #~ allout.append('')
     allout.append('')    
+    return allout
+
+def processMakeHelperInterface(lexedRules, thetokens):
+    allout = []
+    writeHelperInterface(lexedRules, thetokens, allout)
     return allout
 
 def assertNotTokens(lexedRules, thetokens, line):
@@ -673,28 +707,28 @@ def goAllReady(fname, helperGetTokens = False):
     rules = getSection(alllines, 'Rules')
     tokens = tokens.split('\n')
     allout = []
-    allout.append(warnmsg)
     thetokens, theplainwordtokens = processTokens(tokens, allout)
     listPlainWordTokens(theplainwordtokens, allout)
     allout.append('')
-    sendToFile(allout, '../../src/vpcscript/vpcgentokens.ts')
+    sendToFile(allout, '../../vipercard/src/vpc/codeparse/vpcTokens.ts')
     
     allout = []
-    allout.append(warnmsg)
     checkSingleLetter(rules)
     rules = applyDirectives(alllines, rules)
     rules = rules.split('\n')
     lexedRules = processRules(rules, thetokens, allout, helperGetTokens)
-    allout.append('}')
     allout.append('')
-    sendToFile(allout, '../../src/vpcscript/vpcgenrules.ts')
+    sendToFile(allout, '../../vipercard/src/vpc/codeparse/vpcParser.ts')
     
     areThereVisitors = any(p[2] is not None for p in lexedRules)
     if areThereVisitors:
         allout = []
-        allout = processVisitors(lexedRules, thetokens, allout)
-        allout.insert(0, warnmsg)
-        sendToFile(allout, '../../src/vpcscript/vpcgenvisitor.ts')
+        allout = processVisitors(lexedRules, thetokens)
+        sendToFile(allout, '../../vipercard/src/vpc/codeparse/vpcVisitor.ts')
+        
+        allout = []
+        allout = processMakeHelperInterface(lexedRules, thetokens)
+        sendToFile(allout, '../../vipercard/src/vpc/codeparse/vpcVisitorMethods.ts')
     
     checks = getSection(alllines, 'Checks', False)
     if checks:

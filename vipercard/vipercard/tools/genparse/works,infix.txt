@@ -1,0 +1,397 @@
+
+----Begin:Tokens--------
+RequestEval=SAME
+Number=/-?[0-9]+(\.[0-9]+)?/
+Comma=/,/
+Divide=/\//
+LParen=/\(/
+RParen=/\)/
+Plus=/\+/
+Minus=/\-/
+Mult=/\*/
+GreaterThan=/>/
+LessThan=/</
+Four=SAME
+Five=SAME
+Identifier=/\w+/
+WhiteSpace=/\s+/|||||static GROUP = ChvLexer.SKIPPED;static LINE_BREAKS = true
+----End:Tokens--------
+
+
+
+----Begin:Rules--------
+TotalEval:=RequestEval <expression>
+expression:= <Lvl0Expression> 
+Lvl0Expression:= <Lvl1Expression> MANY{{ <PlusOrMinus> <Lvl1Expression> }}ENDMANY
+Lvl1Expression:= <Lvl2Expression> MANY{{ <MultOrDiv> <Lvl2Expression> }}ENDMANY
+Lvl2Expression:= <Lvl3Expression> MANY{{ <GreaterOrLess> <Lvl3Expression> }}ENDMANY
+Lvl3Expression:= { <FunctionCall> | <atomicExpression>  }
+atomicExpression:= { <parenthesisExpression> | Number | <Variable> }
+parenthesisExpression:= LParen <expression> RParen
+FunctionCall:=Identifier LParen MANYSEP{{ Comma / <expression> }}ENDMANYSEP RParen
+PlusOrMinus:={Plus|Minus}
+MultOrDiv:={Mult|Divide}
+GreaterOrLess:={GreaterThan|LessThan}
+Variable:={Four | Five | Identifier }
+
+----End:Rules--------
+
+
+I tried this from online,
+ParenExpr:= LParen <Expr> RParen
+P0Term:={<ParenExpr> | Number}
+P1Term:={ <P0Expr> | <ParenExpr> | Number}
+P2Term:={<P0Expr> | <P1Expr> | <ParenExpr> | Number}
+Expr:={<P2Expr> | <P1Expr> | <P0Expr> | <ParenExpr> | Number}
+but it didn't work, Chevrotain ran into runtime issues with it saying it created cycles or something.
+looked at an example of infix from
+from https://github.com/metabase/metabase/blob/136dfb17954f4e4302b3bf2fee99ff7b7b12fd7c/frontend/src/metabase/lib/expressions/parser.js
+whittled it down to
+      additionExpression:=<multiplicationExpression> many( AdditiveOperator <multiplicationExpression>)
+      multiplicationExpression:=<atomicExpression> many(MultiplicativeOperator <atomicExpression>)
+      nullaryCall:= LParen RParen
+      unaryCall:= LParen <expression> RParen
+      aggregationExpression:= { NullaryAggregation [nullaryCall] | UnaryAggregation [unaryCall] }
+      atomicExpression:= { <parenthesisExpression> | numberLiteral  }
+      parenthesisExpression:= LParen <expression> RParen
+
+
+
+
+RequestEval 3*(4+Five)*6
+tree created looks like this:
+{
+  "name": "RuleTotalEval",
+  "children": {
+    "TokenRequestEval": [
+      {
+        "image": "RequestEval",
+        "startOffset": 0,
+        "endOffset": 10,
+        "startLine": 1,
+        "endLine": 1,
+        "startColumn": 1,
+        "endColumn": 11,
+        "tokenType": 2
+      }
+    ],
+    "Ruleexpression": [
+      {
+        "name": "Ruleexpression",
+        "children": {
+          "RuleLvl0Expression": [
+            {
+              "name": "RuleLvl0Expression",
+              "children": {
+                "RuleLvl1Expression": [
+                  {
+                    "name": "RuleLvl1Expression",
+                    "children": {
+                      "RuleLvl2Expression": [
+                        {
+                          "name": "RuleLvl2Expression",
+                          "children": {
+                            "RuleLvl3Expression": [
+                              {
+                                "name": "RuleLvl3Expression",
+                                "children": {
+                                  "RuleFunctionCall": [],
+                                  "RuleatomicExpression": [
+                                    {
+                                      "name": "RuleatomicExpression",
+                                      "children": {
+                                        "RuleparenthesisExpression": [],
+                                        "TokenNumber": [
+                                          {
+                                            "image": "3",
+                                            "startOffset": 12,
+                                            "endOffset": 12,
+                                            "startLine": 1,
+                                            "endLine": 1,
+                                            "startColumn": 13,
+                                            "endColumn": 13,
+                                            "tokenType": 3
+                                          }
+                                        ],
+                                        "RuleVariable": []
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ],
+                            "RuleGreaterOrLess": []
+                          }
+                        },
+                        {
+                          "name": "RuleLvl2Expression",
+                          "children": {
+                            "RuleLvl3Expression": [
+                              {
+                                "name": "RuleLvl3Expression",
+                                "children": {
+                                  "RuleFunctionCall": [],
+                                  "RuleatomicExpression": [
+                                    {
+                                      "name": "RuleatomicExpression",
+                                      "children": {
+                                        "RuleparenthesisExpression": [
+                                          {
+                                            "name": "RuleparenthesisExpression",
+                                            "children": {
+                                              "TokenLParen": [
+                                                {
+                                                  "image": "(",
+                                                  "startOffset": 14,
+                                                  "endOffset": 14,
+                                                  "startLine": 1,
+                                                  "endLine": 1,
+                                                  "startColumn": 15,
+                                                  "endColumn": 15,
+                                                  "tokenType": 6
+                                                }
+                                              ],
+                                              "Ruleexpression": [
+                                                {
+                                                  "name": "Ruleexpression",
+                                                  "children": {
+                                                    "RuleLvl0Expression": [
+                                                      {
+                                                        "name": "RuleLvl0Expression",
+                                                        "children": {
+                                                          "RuleLvl1Expression": [
+                                                            {
+                                                              "name": "RuleLvl1Expression",
+                                                              "children": {
+                                                                "RuleLvl2Expression": [
+                                                                  {
+                                                                    "name": "RuleLvl2Expression",
+                                                                    "children": {
+                                                                      "RuleLvl3Expression": [
+                                                                        {
+                                                                          "name": "RuleLvl3Expression",
+                                                                          "children": {
+                                                                            "RuleFunctionCall": [],
+                                                                            "RuleatomicExpression": [
+                                                                              {
+                                                                                "name": "RuleatomicExpression",
+                                                                                "children": {
+                                                                                  "RuleparenthesisExpression": [],
+                                                                                  "TokenNumber": [
+                                                                                    {
+                                                                                      "image": "4",
+                                                                                      "startOffset": 15,
+                                                                                      "endOffset": 15,
+                                                                                      "startLine": 1,
+                                                                                      "endLine": 1,
+                                                                                      "startColumn": 16,
+                                                                                      "endColumn": 16,
+                                                                                      "tokenType": 3
+                                                                                    }
+                                                                                  ],
+                                                                                  "RuleVariable": []
+                                                                                }
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        }
+                                                                      ],
+                                                                      "RuleGreaterOrLess": []
+                                                                    }
+                                                                  }
+                                                                ],
+                                                                "RuleMultOrDiv": []
+                                                              }
+                                                            },
+                                                            {
+                                                              "name": "RuleLvl1Expression",
+                                                              "children": {
+                                                                "RuleLvl2Expression": [
+                                                                  {
+                                                                    "name": "RuleLvl2Expression",
+                                                                    "children": {
+                                                                      "RuleLvl3Expression": [
+                                                                        {
+                                                                          "name": "RuleLvl3Expression",
+                                                                          "children": {
+                                                                            "RuleFunctionCall": [],
+                                                                            "RuleatomicExpression": [
+                                                                              {
+                                                                                "name": "RuleatomicExpression",
+                                                                                "children": {
+                                                                                  "RuleparenthesisExpression": [],
+                                                                                  "TokenNumber": [],
+                                                                                  "RuleVariable": [
+                                                                                    {
+                                                                                      "name": "RuleVariable",
+                                                                                      "children": {
+                                                                                        "TokenFour": [],
+                                                                                        "TokenFive": [
+                                                                                          {
+                                                                                            "image": "Five",
+                                                                                            "startOffset": 17,
+                                                                                            "endOffset": 20,
+                                                                                            "startLine": 1,
+                                                                                            "endLine": 1,
+                                                                                            "startColumn": 18,
+                                                                                            "endColumn": 21,
+                                                                                            "tokenType": 14
+                                                                                          }
+                                                                                        ],
+                                                                                        "TokenIdentifier": []
+                                                                                      }
+                                                                                    }
+                                                                                  ]
+                                                                                }
+                                                                              }
+                                                                            ]
+                                                                          }
+                                                                        }
+                                                                      ],
+                                                                      "RuleGreaterOrLess": []
+                                                                    }
+                                                                  }
+                                                                ],
+                                                                "RuleMultOrDiv": []
+                                                              }
+                                                            }
+                                                          ],
+                                                          "RulePlusOrMinus": [
+                                                            {
+                                                              "name": "RulePlusOrMinus",
+                                                              "children": {
+                                                                "TokenPlus": [
+                                                                  {
+                                                                    "image": "+",
+                                                                    "startOffset": 16,
+                                                                    "endOffset": 16,
+                                                                    "startLine": 1,
+                                                                    "endLine": 1,
+                                                                    "startColumn": 17,
+                                                                    "endColumn": 17,
+                                                                    "tokenType": 8
+                                                                  }
+                                                                ],
+                                                                "TokenMinus": []
+                                                              }
+                                                            }
+                                                          ]
+                                                        }
+                                                      }
+                                                    ]
+                                                  }
+                                                }
+                                              ],
+                                              "TokenRParen": [
+                                                {
+                                                  "image": ")",
+                                                  "startOffset": 21,
+                                                  "endOffset": 21,
+                                                  "startLine": 1,
+                                                  "endLine": 1,
+                                                  "startColumn": 22,
+                                                  "endColumn": 22,
+                                                  "tokenType": 7
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ],
+                                        "TokenNumber": [],
+                                        "RuleVariable": []
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ],
+                            "RuleGreaterOrLess": []
+                          }
+                        },
+                        {
+                          "name": "RuleLvl2Expression",
+                          "children": {
+                            "RuleLvl3Expression": [
+                              {
+                                "name": "RuleLvl3Expression",
+                                "children": {
+                                  "RuleFunctionCall": [],
+                                  "RuleatomicExpression": [
+                                    {
+                                      "name": "RuleatomicExpression",
+                                      "children": {
+                                        "RuleparenthesisExpression": [],
+                                        "TokenNumber": [
+                                          {
+                                            "image": "6",
+                                            "startOffset": 23,
+                                            "endOffset": 23,
+                                            "startLine": 1,
+                                            "endLine": 1,
+                                            "startColumn": 24,
+                                            "endColumn": 24,
+                                            "tokenType": 3
+                                          }
+                                        ],
+                                        "RuleVariable": []
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ],
+                            "RuleGreaterOrLess": []
+                          }
+                        }
+                      ],
+                      "RuleMultOrDiv": [
+                        {
+                          "name": "RuleMultOrDiv",
+                          "children": {
+                            "TokenMult": [
+                              {
+                                "image": "*",
+                                "startOffset": 13,
+                                "endOffset": 13,
+                                "startLine": 1,
+                                "endLine": 1,
+                                "startColumn": 14,
+                                "endColumn": 14,
+                                "tokenType": 10
+                              }
+                            ],
+                            "TokenDivide": []
+                          }
+                        },
+                        {
+                          "name": "RuleMultOrDiv",
+                          "children": {
+                            "TokenMult": [
+                              {
+                                "image": "*",
+                                "startOffset": 22,
+                                "endOffset": 22,
+                                "startLine": 1,
+                                "endLine": 1,
+                                "startColumn": 23,
+                                "endColumn": 23,
+                                "tokenType": 10
+                              }
+                            ],
+                            "TokenDivide": []
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "RulePlusOrMinus": []
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
