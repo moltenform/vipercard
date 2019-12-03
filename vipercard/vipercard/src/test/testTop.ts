@@ -48,6 +48,7 @@ export class SimpleSensibleTests {
         mapSeen: Map<string, boolean>,
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
+        assertTrue(category.tests.length > 0, 'no tests in category')
         for (let i = 0; i < category.tests.length; i++) {
             let [tstname, tstfn] = category.tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {

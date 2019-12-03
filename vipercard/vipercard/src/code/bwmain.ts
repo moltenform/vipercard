@@ -4,17 +4,15 @@
 /* auto */ import { checkIsRelease } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512 } from './../util/benBaseUtils';
 
-///<reference path="./bowser.d.ts"/>
+import type {Bowser} from '../../external/bowser-2.9/bowser';
 declare const bowser: typeof Bowser;
 
-import { toWords } from 'number-to-words';
 
 function getTestString() {
     let s1 = Util512.repeat(4, 'a').join('_');
     let s2 = Util512.range(1, 5);
-    let s3 = toWords(13);
-    let s4 = checkIsRelease() ? 'release' : 'debug';
-    return [s1, s2, s3, s4].join('<br/>');
+    let s3 = checkIsRelease() ? 'release' : 'debug';
+    return [s1, s2, s3].join('<br/>');
 }
 
 export function setOutputToTestString() {
