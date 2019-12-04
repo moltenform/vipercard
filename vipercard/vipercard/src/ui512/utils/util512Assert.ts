@@ -1,5 +1,5 @@
 
-/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './util512Productname';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './util512Productname';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -432,6 +432,9 @@ export function checkThrow(condition: any, msg: string, s1: any = '', s2: any = 
     }
 }
 
+/**
+ * this will not exist at runtime, the string is rewritten
+ */
 declare const WEBPACK_PRODUCTION: boolean;
 
 /**
@@ -440,7 +443,7 @@ declare const WEBPACK_PRODUCTION: boolean;
 export function checkIsProductionBuild(): boolean {
     let ret = false;
     try {
-        // when webpack builds this file it will replace the symbol
+        // when webpack builds this file it will replace the string
         // with `true` or `false`
         ret = WEBPACK_PRODUCTION;
     } catch {

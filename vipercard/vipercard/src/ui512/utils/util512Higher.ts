@@ -1,6 +1,6 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, respondUI512Error } from './util512Assert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrowUI512, makeUI512Error, respondUI512Error, } from './util512Assert';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last, } from './util512';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -149,7 +149,6 @@ export class Util512Higher {
      * download json asynchronously, and return parsed js object.
      * chose to use an old-style Promise rather than async
      */
-    /* eslint-disable @typescript-eslint/promise-function-async */
     static asyncBeginLoadJson(url: string): Promise<AnyJson> {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
@@ -211,11 +210,20 @@ export class Util512Higher {
      * all code that goes from sync to async *must* use this method
      * so that errors can be shown, otherwise they might be invisible.
      */
-    static syncToAsyncTransition<T>(fn:() => Promise<T>, context: string) {
+    static syncToAsyncTransition<T>(fn: () => Promise<T>, context: string) {
         fn().then(
-            () => { /* fulfilled with no exceptions */ },
-            (err:unknown) => { 
-                let e = (err instanceof Error) ? err : new Error(`non-Error param ${err}`)
+            () => {
+                /* fulfilled with no exceptions */
+            },
+            (err: unknown) => {
+                if (!(err as any)?.isUi512Error) {
+                    UI512ErrorHandling.appendErrMsgToLogs(
+                        false,
+                        'unhandled in async ' + err,
+                    );
+                }
+
+                let e = err instanceof Error ? err : new Error(`non-Error param ${err}`);
                 respondUI512Error(e, context);
             },
         );
@@ -231,7 +239,6 @@ export class Util512Higher {
             setTimeout(resolve, ms);
         });
     }
-
 
     /**
      * get date as month day hh mm

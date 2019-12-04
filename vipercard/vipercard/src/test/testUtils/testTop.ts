@@ -1,13 +1,13 @@
 
 /* auto */ import { AsyncVoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error, } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
-/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../ui512/testUtil512Higher';
+/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher, } from './../ui512/testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './../ui512/testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './../ui512/testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './../ui512/testUtil512';
-/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../ui512/testExternalLibs';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs, } from './../ui512/testExternalLibs';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
@@ -73,16 +73,20 @@ export class SimpleUtil512Tests {
      * the first time hit, show a dialog asking if we should continue
      * subsequent hits, allow through without stopping
      */
-    static haveHitWarnAndAllowToContinue = false
+    static haveHitWarnAndAllowToContinue = false;
     static warnAndAllowToContinue(...message: any[]) {
-        console.error(...message)
+        console.error(...message);
 
         if (!SimpleUtil512Tests.haveHitWarnAndAllowToContinue) {
-            if (!window.confirm('test failed. see details in console. continue running tests?')) {
-                throw makeUI512Error('user chose to stop after failed test.')
+            if (
+                !window.confirm(
+                    'test failed. see details in console. continue running tests?',
+                )
+            ) {
+                throw makeUI512Error('user chose to stop after failed test.');
             }
 
-            SimpleUtil512Tests.haveHitWarnAndAllowToContinue = true
+            SimpleUtil512Tests.haveHitWarnAndAllowToContinue = true;
         }
     }
 }

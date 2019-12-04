@@ -1,6 +1,6 @@
 
 /* auto */ import { AsyncVoidFn, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../../ui512/utils/util512Assert';
 /* auto */ import { util512Sort } from './../../ui512/utils/util512';
 
 /**

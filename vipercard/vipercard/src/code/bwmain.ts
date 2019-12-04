@@ -53,13 +53,16 @@ export function runOnLoad() {
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');
     if (elBtnGoAsync) {
         elBtnGoAsync.addEventListener('click', () => {
-            Util512Higher.syncToAsyncTransition(onBtnGoAsync, "async example")
+            Util512Higher.syncToAsyncTransition(onBtnGoAsync, 'async example');
         });
     }
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            Util512Higher.syncToAsyncTransition(async () => SimpleUtil512Tests.runTests(true), "tests")
+            Util512Higher.syncToAsyncTransition(
+                async () => SimpleUtil512Tests.runTests(true),
+                'tests',
+            );
         }
     });
 
