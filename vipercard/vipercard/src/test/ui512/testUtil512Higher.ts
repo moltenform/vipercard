@@ -48,7 +48,7 @@ t = new SimpleUtil512TestCollection('testCollectionExampleAsyncTests', true);
 export let testCollectionExampleAsyncTests = t;
 
 /* ok to disable warning, we're intentionally only synchronous here */
-/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable-next-line @typescript-eslint/require-await */
 t.atest('canDoSimpleSynchronousActions', async () => {
     t.say('adding numbers');
     assertEq(4, 2 + 2, 'OA|');

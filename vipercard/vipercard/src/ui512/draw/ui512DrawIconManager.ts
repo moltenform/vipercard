@@ -15,7 +15,10 @@ export class UI512IconManager implements UI512IsDrawIconInterface {
         let cached = this.cachedIconGroups[iconGroupId];
         if (cached === undefined) {
             /* case 1) we haven't started loading this group yet. */
-            assertTrue(iconGroupId.match(/^[0-9A-Za-z_]+$/), `3F|icongroupid must be alphanumeric but got ${iconGroupId}`);
+            assertTrue(
+                iconGroupId.match(/^[0-9A-Za-z_]+$/),
+                `3F|icongroupid must be alphanumeric but got ${iconGroupId}`
+            );
             let iconGroup = new RenderIconGroup(iconGroupId);
             this.cachedIconGroups[iconGroupId] = iconGroup;
             let url = `/resources/images/${iconGroupId}.png`;

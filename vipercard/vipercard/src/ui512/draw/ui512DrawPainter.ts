@@ -9,7 +9,11 @@
  * paint into an array of raw pixel data
  */
 export class UI512PainterCvData extends UI512Painter {
-    constructor(public arr: Uint8ClampedArray, public widthParam: number, public heightParam: number) {
+    constructor(
+        public arr: Uint8ClampedArray,
+        public widthParam: number,
+        public heightParam: number
+    ) {
         super();
     }
 
@@ -18,7 +22,7 @@ export class UI512PainterCvData extends UI512Painter {
             return;
         }
 
-        let offset = 4 * ((y * this.widthParam) + x);
+        let offset = 4 * (y * this.widthParam + x);
         if (color === clrTransp) {
             this.arr[offset + 0] = 0;
             this.arr[offset + 1] = 0;
@@ -49,19 +53,29 @@ export class UI512PainterCvData extends UI512Painter {
 
     readPixel(x: number, y: number) {
         /* remember to use clrThreshold, since writing to a Canvas is lossy */
-        const i = ((y * this.widthParam) + x) * 4;
+        const i = (y * this.widthParam + x) * 4;
         const clrLarge = 256 - clrThreshold;
 
         if (this.arr[i + 3] < clrThreshold) {
             return clrTransp;
-        } else if (this.arr[i] > clrLarge && this.arr[i + 1] > clrLarge && this.arr[i + 2] > clrLarge) {
+        } else if (
+            this.arr[i] > clrLarge &&
+            this.arr[i + 1] > clrLarge &&
+            this.arr[i + 2] > clrLarge
+        ) {
             return clrWhite;
-        } else if (this.arr[i] < clrThreshold && this.arr[i + 1] < clrThreshold && this.arr[i + 2] < clrThreshold) {
+        } else if (
+            this.arr[i] < clrThreshold &&
+            this.arr[i + 1] < clrThreshold &&
+            this.arr[i + 2] < clrThreshold
+        ) {
             return clrBlack;
         } else {
             assertTrueWarn(
                 false,
-                `2||unknown color ${this.arr[i]},${this.arr[i + 1]},${this.arr[i + 2]},${this.arr[i + 3]}`
+                `2||unknown color ${this.arr[i]},${this.arr[i + 1]},${this.arr[i + 2]},${
+                    this.arr[i + 3]
+                }`
             );
             return clrBlack;
         }
@@ -140,7 +154,11 @@ export class UI512PainterCvData extends UI512Painter {
  * paint into an array of raw pixel data, supports drawing with a pattern
  */
 export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
-    constructor(public arr: Uint8ClampedArray, public widthParam: number, public heightParam: number) {
+    constructor(
+        public arr: Uint8ClampedArray,
+        public widthParam: number,
+        public heightParam: number
+    ) {
         super(arr, widthParam, heightParam);
     }
 
@@ -155,7 +173,7 @@ export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
             assertEq(dim * dim, slength(patternstring), '3B|');
             let xmod = (x + offsetpatternx) % dim;
             let ymod = (y + offsetpatterny) % dim;
-            let index = (ymod * dim) + xmod;
+            let index = ymod * dim + xmod;
             let c = patternstring.charCodeAt(index);
             color = c === UI512Patterns.c0 ? clrBlack : clrWhite;
         }
@@ -177,7 +195,11 @@ export class UI512PainterCvDataAndPatterns extends UI512PainterCvData {
  * efficiently draws rectangles, since it can call fillRect.
  */
 export class UI512PainterCvCanvas extends UI512Painter {
-    constructor(public cv: CanvasWrapper, public widthParam: number, public heightParam: number) {
+    constructor(
+        public cv: CanvasWrapper,
+        public widthParam: number,
+        public heightParam: number
+    ) {
         super();
     }
 
@@ -240,4 +262,3 @@ export class UI512PainterCvCanvas extends UI512Painter {
  * so use clrThreshold instead of doing a strict comparison
  */
 export const clrThreshold = 20;
-

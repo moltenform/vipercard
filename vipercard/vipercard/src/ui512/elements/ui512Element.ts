@@ -19,7 +19,13 @@ export abstract class UI512Element extends UI512Settable {
     protected _h = 0;
 
     /* simply a quick way to set x, y, w, and h in one line */
-    setDimensions(newX: number, newY: number, newW: number, newH: number, context = ChangeContext.Default) {
+    setDimensions(
+        newX: number,
+        newY: number,
+        newW: number,
+        newH: number,
+        context = ChangeContext.Default
+    ) {
         assertTrue(newW >= 0, `2 |width must be >= 0 but got ${newW}`);
         assertTrue(newH >= 0, `2z|height must be >= 0 but got ${newH}`);
         this.set('x', newX, context);
@@ -29,13 +35,22 @@ export abstract class UI512Element extends UI512Settable {
     }
 
     /* instead of setting by width and height, set by x1 and y1. */
-    setDimensionsX1Y1(newX0: number, newY0: number, newX1: number, newY1: number, context = ChangeContext.Default) {
+    setDimensionsX1Y1(
+        newX0: number,
+        newY0: number,
+        newX1: number,
+        newY1: number,
+        context = ChangeContext.Default
+    ) {
         this.setDimensions(newX0, newY0, newX1 - newX0, newY1 - newY0);
     }
 
     getFmTxt(): FormattedText {
-        let got = (this as any)['_' + UI512Settable.fmtTxtVarName] as FormattedText
-        assertTrue(got && got.isFormattedText, `2&|did not get formatted text as expected`);
+        let got = (this as any)['_' + UI512Settable.fmtTxtVarName] as FormattedText;
+        assertTrue(
+            got && got.isFormattedText,
+            `2&|did not get formatted text as expected`
+        );
 
         /* ensure the "lock" bit has been set before we allow access
         otherwise, you could make changes to the object and we'd never receive any change notification */
@@ -44,7 +59,7 @@ export abstract class UI512Element extends UI512Settable {
     }
 
     setFmTxt(newTxt: FormattedText, context = ChangeContext.Default) {
-        this.setImpl(UI512Settable.fmtTxtVarName, newTxt, undefined, context)
+        this.setImpl(UI512Settable.fmtTxtVarName, newTxt, undefined, context);
     }
 
     /* a few getters for convenience */

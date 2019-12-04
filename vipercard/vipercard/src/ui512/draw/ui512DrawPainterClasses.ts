@@ -3,8 +3,6 @@
 /* auto */ import { O, assertTrueWarn, makeUI512Error } from './../utils/util512Assert';
 /* auto */ import { UI512BasePainterUtils } from './ui512DrawPatterns';
 
-/* tslint:disable:no-unbound-method */
-
 /**
  * abstract painting class, can be attached to different surfaces
  * clr is generally clrBlack or clrWhite, but at this layer we support any color.
@@ -23,8 +21,9 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     /**
      * draw with a single pixel brush
      *
-     * a 'smear' is this: you're in say the pencil tool, and you drag to draw a jagged line on the screen
-     * internally, whenever the mouse moves, we add a line segment from previous point to next point
+     * a 'smear' is this: you're in say the pencil tool, and you drag to draw a jagged
+     * line on the screen. internally, whenever the mouse moves, we add a line segment
+     * from previous point to next point
      * to render what you drew, we'll draw each of these line segments.
      */
     publicSmearPencil(xPts: number[], yPts: number[], clrIn: number) {
@@ -37,10 +36,22 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     /**
      * draw with a solid rectangle brush, used for eraser tool.
      */
-    publicSmearRectangle(xPts: number[], yPts: number[], colorparam: number, diameterx: number, diametery: number) {
+    publicSmearRectangle(
+        xPts: number[],
+        yPts: number[],
+        colorparam: number,
+        diameterx: number,
+        diametery: number
+    ) {
         let realFillRect = this.fillRect.bind(this);
         this.smearShapeImpl(xPts, yPts, colorparam, (x, y, color) => {
-            realFillRect(x - Math.floor(diameterx / 2), y - Math.floor(diametery / 2), diameterx, diametery, color);
+            realFillRect(
+                x - Math.floor(diameterx / 2),
+                y - Math.floor(diametery / 2),
+                diameterx,
+                diametery,
+                color
+            );
         });
     }
 
@@ -100,14 +111,25 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     /**
      * draw a straight line
      */
-    publicStraightLine(x0: number, y0: number, x1in: number, y1in: number, clr: number, lineSize: number) {
+    publicStraightLine(
+        x0: number,
+        y0: number,
+        x1in: number,
+        y1in: number,
+        clr: number,
+        lineSize: number
+    ) {
         let w = x1in - x0;
         let h = y1in - y0;
-        return this.drawShapeAdjustableBorderImpl(0, lineSize, (fillColorInput, ofX, ofY) => {
-            let x1 = x0 + ofX + w;
-            let y1 = y0 + ofY + h;
-            this.plotLine(x0 + ofX, y0 + ofY, x1, y1, clr);
-        });
+        return this.drawShapeAdjustableBorderImpl(
+            0,
+            lineSize,
+            (fillColorInput, ofX, ofY) => {
+                let x1 = x0 + ofX + w;
+                let y1 = y0 + ofY + h;
+                this.plotLine(x0 + ofX, y0 + ofY, x1, y1, clr);
+            }
+        );
     }
 
     /**
@@ -124,9 +146,20 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     ) {
         let w = x1 - x0;
         let h = y1 - y0;
-        return this.drawShapeAdjustableBorderImpl(fillColor, lineSize, (fillColorInput, ofX, ofY) => {
-            this.drawvpcroundrectPorted(x0 + ofX, y0 + ofY, w, h, color, fillColorInput);
-        });
+        return this.drawShapeAdjustableBorderImpl(
+            fillColor,
+            lineSize,
+            (fillColorInput, ofX, ofY) => {
+                this.drawvpcroundrectPorted(
+                    x0 + ofX,
+                    y0 + ofY,
+                    w,
+                    h,
+                    color,
+                    fillColorInput
+                );
+            }
+        );
     }
 
     publicRectangle(
@@ -140,9 +173,20 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     ) {
         let w = x1 - x0;
         let h = y1 - y0;
-        return this.drawShapeAdjustableBorderImpl(fillColor, lineSize, (fillColorInput, ofX, ofY) => {
-            this.drawboxthinborderPorted(x0 + ofX, y0 + ofY, w, h, color, fillColorInput);
-        });
+        return this.drawShapeAdjustableBorderImpl(
+            fillColor,
+            lineSize,
+            (fillColorInput, ofX, ofY) => {
+                this.drawboxthinborderPorted(
+                    x0 + ofX,
+                    y0 + ofY,
+                    w,
+                    h,
+                    color,
+                    fillColorInput
+                );
+            }
+        );
     }
 
     publicCurve(
@@ -155,9 +199,21 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         color: number,
         lineSize: number
     ) {
-        return this.drawShapeAdjustableBorderImpl(0, lineSize, (fillColorInput, ofX, ofY) => {
-            this.plotQuadBezier(x0 + ofX, y0 + ofY, x1 + ofX, y1 + ofY, x2 + ofX, y2 + ofY, color);
-        });
+        return this.drawShapeAdjustableBorderImpl(
+            0,
+            lineSize,
+            (fillColorInput, ofX, ofY) => {
+                this.plotQuadBezier(
+                    x0 + ofX,
+                    y0 + ofY,
+                    x1 + ofX,
+                    y1 + ofY,
+                    x2 + ofX,
+                    y2 + ofY,
+                    color
+                );
+            }
+        );
     }
 
     publicPlotEllipse(
@@ -176,9 +232,20 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         let a = Math.floor(w / 2);
         let b = Math.floor(h / 2);
 
-        return this.drawShapeAdjustableBorderImpl(fillColor, lineSize, (fillColorInput, ofX, ofY) => {
-            this.plotEllipseAxis(centerx + ofX, centery + ofY, a, b, color, fillColorInput);
-        });
+        return this.drawShapeAdjustableBorderImpl(
+            fillColor,
+            lineSize,
+            (fillColorInput, ofX, ofY) => {
+                this.plotEllipseAxis(
+                    centerx + ofX,
+                    centery + ofY,
+                    a,
+                    b,
+                    color,
+                    fillColorInput
+                );
+            }
+        );
     }
 
     /**
@@ -214,7 +281,8 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
     /**
      * implementation to draw a shape
-     * optionally draw a "thicker" line by drawing the same shape 5 times, once in the center and all around it.
+     * optionally draw a "thicker" line by drawing the same shape 5 times,
+     * once in the center and all around it.
      */
     protected drawShapeAdjustableBorderImpl(
         fillColor: O<number>,
@@ -242,7 +310,8 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
      * flood fill ('bucket tool') implementation
      *
      * by Jared Updike
-     * http://stackoverflow.com/questions/1257117/does-anyone-have-a-working-non-recursive-floodfill-algorithm-written-in-c
+     * http://stackoverflow.com/questions/1257117/
+     * does-anyone-have-a-working-non-recursive-floodfill-algorithm-written-in-c
      * released under Creative Commons Attribution-Share Alike
      * ported to JavaScript by Ben Fisher, 2017
      */
@@ -282,12 +351,17 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
             let x = qx.pop() as number;
             let y = qy.pop() as number;
-            if (RectUtils.hasPoint(x, y, 0, 0, w, h) && this.readPixel(x, y) === targetColor) {
+            if (
+                RectUtils.hasPoint(x, y, 0, 0, w, h) &&
+                this.readPixel(x, y) === targetColor
+            ) {
                 countPixelsWritten += 1;
                 this.setPixel(x, y, tmpColor);
                 if (recordOutputX) {
                     recordOutputX.push(x);
-                    recordOutputY!.push(y);
+                }
+                if (recordOutputY) {
+                    recordOutputY.push(y);
                 }
 
                 qx.push(x + 1);
@@ -305,7 +379,14 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
     /**
      * plot ellipse fitting the rectangle, rather than with center+radius
      */
-    plotEllipse(xm: number, ym: number, w: number, h: number, color: number, fillColor: O<number>) {
+    plotEllipse(
+        xm: number,
+        ym: number,
+        w: number,
+        h: number,
+        color: number,
+        fillColor: O<number>
+    ) {
         this.plotEllipseAxis(
             xm + Math.floor(w / 2),
             ym + Math.floor(h / 2),
@@ -355,7 +436,17 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         }
     }
 
-    protected plotEllipseAxis(xm: number, ym: number, a: number, b: number, color: number, fillColor: O<number>) {
+    /* eslint no-mixed-operators: 0 */
+    /* eslint no-multi-assign: 0 */
+
+    protected plotEllipseAxis(
+        xm: number,
+        ym: number,
+        a: number,
+        b: number,
+        color: number,
+        fillColor: O<number>
+    ) {
         xm = Math.floor(xm);
         ym = Math.floor(ym);
         a = Math.floor(a);
@@ -392,7 +483,13 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
         while (y++ < b) {
             /* too early stop for flat ellipses with a=1, */
-            this.fillRectMightBeClear(xm, ym - Math.abs(y), 1, Math.abs(y) * 2, fillColor);
+            this.fillRectMightBeClear(
+                xm,
+                ym - Math.abs(y),
+                1,
+                Math.abs(y) * 2,
+                fillColor
+            );
             this.setPixel(xm, ym - y, color); /* -> finish tip of ellipse */
             this.setPixel(xm, ym + y, color);
         }
@@ -421,7 +518,15 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         } while (x < 0);
     }
 
-    plotQuadBezierSeg(x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, color: number) {
+    plotQuadBezierSeg(
+        x0: number,
+        y0: number,
+        x1: number,
+        y1: number,
+        x2: number,
+        y2: number,
+        color: number
+    ) {
         /* plot a limited quadratic Bezier segment */
 
         let sx = x2 - x1;
@@ -491,7 +596,15 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         this.plotLine(x0, y0, x2, y2, color); /* plot remaining part to end */
     }
 
-    plotQuadBezier(x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, color: number) {
+    plotQuadBezier(
+        x0: number,
+        y0: number,
+        x1: number,
+        y1: number,
+        x2: number,
+        y2: number,
+        color: number
+    ) {
         /* plot any quadratic Bezier curve */
         let x = x0 - x1;
         let y = y0 - y1;
@@ -501,7 +614,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         if (x * (x2 - x1) > 0) {
             /* horizontal cut at P4? */
             if (y * (y2 - y1) > 0) {
-                if (Math.abs((y0 - 2 * y1 + y2) / t * x) > Math.abs(y)) {
+                if (Math.abs(((y0 - 2 * y1 + y2) / t) * x) > Math.abs(y)) {
                     /* vertical cut at P6 too? */
                     /* which first? */
                     x0 = x2;
@@ -513,12 +626,12 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
             t = (x0 - x1) / t;
             r = (1 - t) * ((1 - t) * y0 + 2.0 * t * y1) + t * t * y2; /* By(t=P4) */
-            t = (x0 * x2 - x1 * x1) * t / (x0 - x1); /* gradient dP4/dx=0 */
+            t = ((x0 * x2 - x1 * x1) * t) / (x0 - x1); /* gradient dP4/dx=0 */
             x = Math.floor(t + 0.5);
             y = Math.floor(r + 0.5);
-            r = (y1 - y0) * (t - x0) / (x1 - x0) + y0; /* intersect P3 | P0 P1 */
+            r = ((y1 - y0) * (t - x0)) / (x1 - x0) + y0; /* intersect P3 | P0 P1 */
             this.plotQuadBezierSeg(x0, y0, x, Math.floor(r + 0.5), x, y, color);
-            r = (y1 - y2) * (t - x2) / (x1 - x2) + y2; /* intersect P4 | P1 P2 */
+            r = ((y1 - y2) * (t - x2)) / (x1 - x2) + y2; /* intersect P4 | P1 P2 */
             x0 = x1 = x;
             y0 = y;
             y1 = Math.floor(r + 0.5); /* P0 = P4, P1 = P8 */
@@ -528,12 +641,12 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
             t = y0 - 2 * y1 + y2;
             t = (y0 - y1) / t;
             r = (1 - t) * ((1 - t) * x0 + 2.0 * t * x1) + t * t * x2; /* Bx(t=P6) */
-            t = (y0 * y2 - y1 * y1) * t / (y0 - y1); /* gradient dP6/dy=0 */
+            t = ((y0 * y2 - y1 * y1) * t) / (y0 - y1); /* gradient dP6/dy=0 */
             x = Math.floor(r + 0.5);
             y = Math.floor(t + 0.5);
-            r = (x1 - x0) * (t - y0) / (y1 - y0) + x0; /* intersect P6 | P0 P1 */
+            r = ((x1 - x0) * (t - y0)) / (y1 - y0) + x0; /* intersect P6 | P0 P1 */
             this.plotQuadBezierSeg(x0, y0, Math.floor(r + 0.5), y, x, y, color);
-            r = (x1 - x2) * (t - y2) / (y1 - y2) + x2; /* intersect P7 | P1 P2 */
+            r = ((x1 - x2) * (t - y2)) / (y1 - y2) + x2; /* intersect P7 | P1 P2 */
             x0 = x;
             x1 = Math.floor(r + 0.5);
             y0 = y1 = y; /* P0 = P6, P1 = P7 */

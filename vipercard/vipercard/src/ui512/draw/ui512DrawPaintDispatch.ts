@@ -2,7 +2,7 @@
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { O, assertTrue, assertTrueWarn } from './../utils/util512Assert';
-/* auto */ import { assertEq } from './../utils/util512';
+/* auto */ import { Util512, assertEq } from './../utils/util512';
 /* auto */ import { clrWhite, needsPatternSupport, simplifyPattern } from './ui512DrawPatterns';
 /* auto */ import { UI512Painter } from './ui512DrawPainterClasses';
 /* auto */ import { UI512PainterCvDataAndPatterns } from './ui512DrawPainter';
@@ -59,12 +59,20 @@ export class UI512PaintDispatch {
             isFilled = true;
             fill = 0;
             if (pattern.startsWith('pattern')) {
-                let npattern = parseInt(pattern.substr('pattern'.length), base10);
+                let npattern = Util512.parseInt(pattern.substr('pattern'.length));
                 fill = isFinite(npattern) ? npattern : 0;
             }
         }
 
-        let ret = new UI512PaintDispatch(shape, [], [], fromOptsLineColor, fill, isFilled, fromOptsWide ? 5 : 1);
+        let ret = new UI512PaintDispatch(
+            shape,
+            [],
+            [],
+            fromOptsLineColor,
+            fill,
+            isFilled,
+            fromOptsWide ? 5 : 1
+        );
         if (isErase) {
             ret.color = clrWhite;
             ret.fillColor = clrWhite;
@@ -116,32 +124,77 @@ export class UI512PaintDispatch {
             case UI512PaintDispatchShapes.ShapeLine: {
                 assertEq(2, xPts.length, 'I<|ShapeLine');
                 assertEq(2, yPts.length, 'I;|ShapeLine');
-                return painter.publicStraightLine(xPts[0], yPts[0], xPts[1], yPts[1], color, args.lineSize);
+                return painter.publicStraightLine(
+                    xPts[0],
+                    yPts[0],
+                    xPts[1],
+                    yPts[1],
+                    color,
+                    args.lineSize
+                );
             }
             case UI512PaintDispatchShapes.ShapeRectangle: {
                 assertEq(2, xPts.length, 'I:|ShapeRectangle');
                 assertEq(2, yPts.length, 'I/|ShapeRectangle');
-                return painter.publicRectangle(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
+                return painter.publicRectangle(
+                    xPts[0],
+                    yPts[0],
+                    xPts[1],
+                    yPts[1],
+                    color,
+                    fill,
+                    args.lineSize
+                );
             }
             case UI512PaintDispatchShapes.ShapeEllipse: {
                 assertEq(2, xPts.length, 'I.|ShapeEllipse');
                 assertEq(2, yPts.length, 'I-|ShapeEllipse');
-                return painter.publicPlotEllipse(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
+                return painter.publicPlotEllipse(
+                    xPts[0],
+                    yPts[0],
+                    xPts[1],
+                    yPts[1],
+                    color,
+                    fill,
+                    args.lineSize
+                );
             }
             case UI512PaintDispatchShapes.ShapeRoundRect: {
                 assertEq(2, xPts.length, 'I,|ShapeRoundRect');
                 assertEq(2, yPts.length, 'I+|ShapeRoundRect');
-                return painter.publicRoundRect(xPts[0], yPts[0], xPts[1], yPts[1], color, fill, args.lineSize);
+                return painter.publicRoundRect(
+                    xPts[0],
+                    yPts[0],
+                    xPts[1],
+                    yPts[1],
+                    color,
+                    fill,
+                    args.lineSize
+                );
             }
             case UI512PaintDispatchShapes.ShapeCurve: {
                 assertEq(3, xPts.length, 'I*|ShapeCurve');
                 assertEq(3, yPts.length, 'I)|ShapeCurve');
-                return painter.publicCurve(xPts[0], yPts[0], xPts[1], yPts[1], xPts[2], yPts[2], color, args.lineSize);
+                return painter.publicCurve(
+                    xPts[0],
+                    yPts[0],
+                    xPts[1],
+                    yPts[1],
+                    xPts[2],
+                    yPts[2],
+                    color,
+                    args.lineSize
+                );
             }
             case UI512PaintDispatchShapes.Bucket: {
                 assertEq(1, xPts.length, 'I(|Bucket');
                 assertEq(1, yPts.length, 'I&|Bucket');
-                return UI512PaintDispatch.paintBucketSlowButWorks(painter, xPts[0], yPts[0], fill || 0);
+                return UI512PaintDispatch.paintBucketSlowButWorks(
+                    painter,
+                    xPts[0],
+                    yPts[0],
+                    fill ?? 0
+                );
             }
             default: {
                 assertTrueWarn(false, 'I%|unknown shape', args.shape);
@@ -153,12 +206,18 @@ export class UI512PaintDispatch {
      * the other shapes work against either a canvas or against raw data
      * this one needs to be against raw data, so might need to call getImageData.
      */
-    static paintBucketSlowButWorks(painter: UI512Painter, x: number, y: number, fillPattern: number) {
+    static paintBucketSlowButWorks(
+        painter: UI512Painter,
+        x: number,
+        y: number,
+        fillPattern: number
+    ) {
         fillPattern = simplifyPattern(fillPattern);
         if (painter.readPixelSupported()) {
             painter.floodFill(x, y, fillPattern);
         } else {
-            /* unfortunately, we'll have to make a new painter that supports reading pixels */
+            /* unfortunately, we'll have to make a new painter that
+            supports reading pixels */
             let cv: CanvasWrapper = painter.getBackingSurface();
             assertTrue(cv instanceof CanvasWrapper, 'I$|cv instanceof CanvasWrapper');
             const w = cv.canvas.width;
