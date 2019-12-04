@@ -1,5 +1,5 @@
 
-/* auto */ import { sleep } from './../ui512/utils/util512Higher';
+/* auto */ import { Util512Higher } from './../ui512/utils/util512Higher';
 /* auto */ import { checkIsRelease } from './../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../ui512/utils/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testUtils/testTop';
@@ -25,9 +25,9 @@ async function onBtnGoAsync() {
     let el = document.getElementById('output');
     if (el) {
         el.innerHTML += '1... ';
-        await sleep(1000);
+        await Util512Higher.sleep(1000);
         el.innerHTML += '2... ';
-        await sleep(1000);
+        await Util512Higher.sleep(1000);
         el.innerHTML += '3';
     }
 }
@@ -53,19 +53,13 @@ export function runOnLoad() {
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');
     if (elBtnGoAsync) {
         elBtnGoAsync.addEventListener('click', () => {
-            onBtnGoAsync().then(
-                () => {},
-                () => {},
-            );
+            Util512Higher.syncToAsyncTransition(onBtnGoAsync, "async example")
         });
     }
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            SimpleUtil512Tests.runTests(true).then(
-                () => {},
-                () => {},
-            );
+            Util512Higher.syncToAsyncTransition(async () => SimpleUtil512Tests.runTests(true), "tests")
         }
     });
 

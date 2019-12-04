@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error } from './util512Assert';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
 
 // moltenform.com(Ben Fisher)
@@ -208,6 +208,32 @@ export class Util512Higher {
     }
 
     /**
+     * all code that goes from sync to async *must* use this method
+     * so that errors can be shown, otherwise they might be invisible.
+     */
+    static syncToAsyncTransition<T>(fn:() => Promise<T>, context: string) {
+        fn().then(
+            () => { /* fulfilled with no exceptions */ },
+            (err:unknown) => { 
+                let e = (err instanceof Error) ? err : new Error(`non-Error param ${err}`)
+                respondUI512Error(e, context);
+            },
+        );
+    }
+
+    /**
+     * call this in an async function: await sleep(1000) to wait one second.
+     */
+    static sleep(ms: number) {
+        return new Promise<void>(resolve => {
+            /* it's ok to use an old-style promise, we're not going from sync to async */
+            /* eslint-disable ban/ban */
+            setTimeout(resolve, ms);
+        });
+    }
+
+
+    /**
      * get date as month day hh mm
      */
     static getdatestring(includeSeconds = false) {
@@ -303,16 +329,6 @@ export class RenderComplete {
     andB(other: boolean) {
         this.complete = this.complete && other;
     }
-}
-
-/**
- * sleep, if called in an async function.
- * await sleep(1000) to wait one second.
- */
-export function sleep(ms: number) {
-    return new Promise<void>(resolve => {
-        setTimeout(resolve, ms);
-    });
 }
 
 /**

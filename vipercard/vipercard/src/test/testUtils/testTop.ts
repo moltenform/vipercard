@@ -1,5 +1,5 @@
 
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { AVoidFn, SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
 /* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../ui512/testUtil512Higher';
@@ -65,6 +65,23 @@ export class SimpleUtil512Tests {
             } else {
                 tstfn();
             }
+        }
+    }
+
+    /**
+     * the first time hit, show a dialog asking if we should continue
+     * subsequent hits, allow through without stopping
+     */
+    static haveHitWarnAndAllowToContinue = false
+    static warnAndAllowToContinue(...message: any[]) {
+        console.error(...message)
+
+        if (!SimpleUtil512Tests.haveHitWarnAndAllowToContinue) {
+            if (!window.confirm('test failed. see details in console. continue running tests?')) {
+                throw makeUI512Error('user chose to stop after failed test.')
+            }
+
+            SimpleUtil512Tests.haveHitWarnAndAllowToContinue = true
         }
     }
 }
