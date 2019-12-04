@@ -2,6 +2,8 @@
 /* auto */ import { AsyncVoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
+/* auto */ import { testCollectionUtilsDraw } from './../ui512/testUtilsDraw';
+/* auto */ import { testCollectionUtilsCanvasWrapper } from './../ui512/testUtilsCanvasWrapper';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
 /* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../ui512/testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './../ui512/testUtil512Class';
@@ -12,9 +14,12 @@
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');
+        console.log('Running tests...O');
         UI512ErrorHandling.runningTests = true;
         let colls = [
             testCollectionExternalLibs,
+            testCollectionUtilsCanvasWrapper,
+            testCollectionUtilsDraw,
             testCollectionExampleAsyncTests,
             testCollectionUtil512Assert,
             testCollectionUtil512,
