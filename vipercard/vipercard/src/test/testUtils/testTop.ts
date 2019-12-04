@@ -1,12 +1,12 @@
 
 /* auto */ import { AVoidFn, SimpleUtil512TestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
-/* auto */ import { testBenBaseLessUsefulLibs, testExternalLibs, } from './testExternalLibs';
-/* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './testBenBaseUtilsHigher';
-/* auto */ import { testBenBaseUtilsClass } from './testBenBaseUtilsClass';
-/* auto */ import { testBenBaseUtilsAssert } from './testBenBaseUtilsAssert';
-/* auto */ import { testBenBaseUtils } from './testBenBaseUtils';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { Util512, ValHolder } from './../util/benBaseUtils';
+/* auto */ import { testBenBaseLessUsefulLibs, testExternalLibs, } from './../ui512/testExternalLibs';
+/* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './../ui512/testBenBaseUtilsHigher';
+/* auto */ import { testBenBaseUtilsClass } from './../ui512/testBenBaseUtilsClass';
+/* auto */ import { testBenBaseUtilsAssert } from './../ui512/testBenBaseUtilsAssert';
+/* auto */ import { testBenBaseUtils } from './../ui512/testBenBaseUtils';
+/* auto */ import { UI512ErrorHandling, assertTrue, } from './../../ui512/utils/benBaseUtilsAssert';
+/* auto */ import { Util512, ValHolder } from './../../ui512/utils/benBaseUtils';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {

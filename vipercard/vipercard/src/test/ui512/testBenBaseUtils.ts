@@ -1,7 +1,7 @@
 
-/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted } from './testUtils';
-/* auto */ import { UI512ErrorHandling, assertTrue, bool, } from './../util/benBaseUtilsAssert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort, } from './../util/benBaseUtils';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted, } from './../testUtils/testUtils';
+/* auto */ import { UI512ErrorHandling, assertTrue, bool, } from './../../ui512/utils/benBaseUtilsAssert';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort, } from './../../ui512/utils/benBaseUtils';
 
 let t = new SimpleUtil512TestCategory('testBenBaseUtils');
 export let testBenBaseUtils = t;

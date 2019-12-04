@@ -1,7 +1,7 @@
 
-/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted } from './testUtils';
-/* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr, } from './../util/benBaseUtils';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted, } from './../testUtils/testUtils';
+/* auto */ import { assertTrue } from './../../ui512/utils/benBaseUtilsAssert';
+/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr, } from './../../ui512/utils/benBaseUtils';
 
 let t = new SimpleUtil512TestCategory('testBenBaseUtilsClass');
 export let testBenBaseUtilsClass = t;

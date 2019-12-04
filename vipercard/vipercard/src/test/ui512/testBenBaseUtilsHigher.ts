@@ -1,8 +1,8 @@
 
-/* auto */ import { SimpleUtil512TestCategory } from './testUtils';
-/* auto */ import { Util512Higher, sleep } from './../util/benBaseUtilsHigher';
-/* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
+/* auto */ import { SimpleUtil512TestCategory } from './../testUtils/testUtils';
+/* auto */ import { Util512Higher, sleep } from './../../ui512/utils/benBaseUtilsHigher';
+/* auto */ import { assertTrue } from './../../ui512/utils/benBaseUtilsAssert';
+/* auto */ import { Util512, assertEq } from './../../ui512/utils/benBaseUtils';
 
 let t = new SimpleUtil512TestCategory('testBenBaseUtilsHigher');
 export let testBenBaseUtilsHigher = t;
