@@ -4,7 +4,7 @@
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 
-export class HigherTestUtils {
+export class TestUtilsCanvas {
     /**
      * compare an image to a known-good expected image.
      * uses a temporary in-memory canvas to read pixels of the image
@@ -35,7 +35,7 @@ export class HigherTestUtils {
         let dataGot = imageGot.context.getImageData(0, 0, width, height);
         assertEq(dataExpected.data.length, dataGot.data.length, '3w|');
         assertEq(dataExpected.data.length, 4 * width * height, '3v|');
-        let countDifferences = HigherTestUtils.drawDifferencesInRed(
+        let countDifferences = TestUtilsCanvas.drawDifferencesInRed(
             dataExpected,
             dataGot,
             drawRed,
@@ -57,8 +57,8 @@ export class HigherTestUtils {
     ) {
         let countDifferences = 0;
         for (let i = 0; i < dataExpected.data.length; i += 4) {
-            let expected = HigherTestUtils.getColorFromCanvasData(dataExpected.data, i);
-            let got = HigherTestUtils.getColorFromCanvasData(dataGot.data, i);
+            let expected = TestUtilsCanvas.getColorFromCanvasData(dataExpected.data, i);
+            let got = TestUtilsCanvas.getColorFromCanvasData(dataGot.data, i);
 
             /* for these tests, white and transparent compare equal */
             expected = expected === 't' ? 'w' : expected;
@@ -119,14 +119,14 @@ export class HigherTestUtils {
      * render image an compare it with expected
      * if different, offer to download an image showing differences in red
      */
-    private static async UI512RenderAndCompareImage(
+    private static async RenderAndCompareImage(
         download: boolean,
         fnGetDrawParams: GetDrawParams,
     ) {
         let p = fnGetDrawParams();
         let imExpected = new Image();
         Util512Higher.beginLoadImage(p.urlImgExpected, imExpected, () => {});
-        let imGot = await HigherTestUtils.callDrawUntilRenderComplete(p, imExpected);
+        let imGot = await TestUtilsCanvas.callDrawUntilRenderComplete(p, imExpected);
 
         if (download) {
             console.log('Image sent to download, test complete.');
@@ -134,7 +134,7 @@ export class HigherTestUtils {
                 saveAs(blob, 'test' + p.testName + '.png');
             });
         } else {
-            let countDifferences = HigherTestUtils.compareCanvas(
+            let countDifferences = TestUtilsCanvas.compareCanvas(
                 imExpected,
                 imGot,
                 p.width,
@@ -162,19 +162,19 @@ export class HigherTestUtils {
     }
 
     /**
-     * run UI512RenderAndCompareImage on an array
+     * run RenderAndCompareImage on an array
      */
-    static async UI512RenderAndCompareImages(
+    static async RenderAndCompareImages(
         download: boolean,
         fnGetDrawParams: GetDrawParams | GetDrawParams[],
     ) {
         if (fnGetDrawParams instanceof Array) {
             let promises = fnGetDrawParams.map(f =>
-                HigherTestUtils.UI512RenderAndCompareImage(download, f),
+                TestUtilsCanvas.RenderAndCompareImage(download, f),
             );
             await Promise.all(promises);
         } else {
-            await HigherTestUtils.UI512RenderAndCompareImage(download, fnGetDrawParams);
+            await TestUtilsCanvas.RenderAndCompareImage(download, fnGetDrawParams);
         }
     }
 
