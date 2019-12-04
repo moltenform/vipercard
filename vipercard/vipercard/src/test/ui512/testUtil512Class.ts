@@ -1,10 +1,10 @@
 
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr, } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted, } from './../testUtils/testUtils';
+/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
-let t = new SimpleUtil512TestCategory('testBenBaseUtilsClass');
-export let testBenBaseUtilsClass = t;
+let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
+export let testCollectionUtil512Class = t;
 
 t.test('isValidNumber', () => {
     assertTrue(Util512.isValidNumber(123), 'O9|');

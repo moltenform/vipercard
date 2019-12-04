@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, bool, checkThrowUI512, makeUI512Error, throwIfUndefined, tostring, } from './util512Assert';
+/* auto */ import { O, assertTrue, bool, checkThrowUI512, makeUI512Error, throwIfUndefined, tostring } from './util512Assert';
 
 // moltenform.com(Ben Fisher)
 // MIT license

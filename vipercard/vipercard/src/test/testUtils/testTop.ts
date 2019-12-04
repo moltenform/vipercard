@@ -1,36 +1,36 @@
 
-/* auto */ import { UI512ErrorHandling, assertTrue, } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
-/* auto */ import { AVoidFn, SimpleUtil512TestCategory, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
-/* auto */ import { testBenBaseUtilsHigher, testExampleAsyncTests, } from './../ui512/testUtil512Higher';
-/* auto */ import { testBenBaseUtilsClass } from './../ui512/testUtil512Class';
-/* auto */ import { testBenBaseUtilsAssert } from './../ui512/testUtil512Assert';
-/* auto */ import { testBenBaseUtils } from './../ui512/testUtil512';
-/* auto */ import { testBenBaseLessUsefulLibs, testExternalLibs, } from './../ui512/testExternalLibs';
+/* auto */ import { AVoidFn, SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../ui512/testUtil512Higher';
+/* auto */ import { testCollectionUtil512Class } from './../ui512/testUtil512Class';
+/* auto */ import { testCollectionUtil512Assert } from './../ui512/testUtil512Assert';
+/* auto */ import { testCollectionUtil512 } from './../ui512/testUtil512';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../ui512/testExternalLibs';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');
         UI512ErrorHandling.runningTests = true;
-        let categories = [
-            testExternalLibs,
-            testExampleAsyncTests,
-            testBenBaseUtilsAssert,
-            testBenBaseUtils,
-            testBenBaseUtilsClass,
-            testBenBaseLessUsefulLibs,
-            testBenBaseUtilsHigher,
+        let colls = [
+            testCollectionExternalLibs,
+            testCollectionExampleAsyncTests,
+            testCollectionUtil512Assert,
+            testCollectionUtil512,
+            testCollectionUtil512Class,
+            testCollectionUtil512LessUsefulLibs,
+            testCollectionUtil512Higher,
         ];
 
         let mapSeen = new Map<string, boolean>();
-        let countTotal = categories.map(item => item.tests.length).reduce(Util512.add);
-        countTotal += categories.map(item => item.atests.length).reduce(Util512.add);
+        let countTotal = colls.map(item => item.tests.length).reduce(Util512.add);
+        countTotal += colls.map(item => item.atests.length).reduce(Util512.add);
         let counter = new ValHolder(1);
-        for (let category of categories) {
-            console.log(`Category: ${category.name}`);
-            if (includeSlow || !category.slow) {
-                await SimpleUtil512Tests.runCategory(
-                    category,
+        for (let coll of colls) {
+            console.log(`Collection: ${coll.name}`);
+            if (includeSlow || !coll.slow) {
+                await SimpleUtil512Tests.runCollection(
+                    coll,
                     countTotal,
                     counter,
                     mapSeen,
@@ -42,15 +42,15 @@ export class SimpleUtil512Tests {
         console.log(`All tests complete.`);
     }
 
-    static async runCategory(
-        category: SimpleUtil512TestCategory,
+    static async runCollection(
+        coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
         mapSeen: Map<string, boolean>,
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
-        let tests = category.async ? category.atests : category.tests;
-        assertTrue(tests.length > 0, 'no tests in category');
+        let tests = coll.async ? coll.atests : coll.tests;
+        assertTrue(tests.length > 0, 'no tests in collection');
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {
@@ -60,7 +60,7 @@ export class SimpleUtil512Tests {
             mapSeen.set(tstname, true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
-            if (category.async) {
+            if (coll.async) {
                 await (tstfn as AVoidFn)();
             } else {
                 tstfn();

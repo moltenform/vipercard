@@ -1,5 +1,5 @@
 
-/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './util512Productname';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './util512Productname';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -291,6 +291,14 @@ export function bool(x: unknown): boolean {
 }
 
 /**
+ * cast to string.
+ */
+export function tostring(s: unknown): string {
+    /* eslint-disable no-implicit-coercion */
+    return '' + s;
+}
+
+/**
  * sometimes when showing exception message, don't need to show prefix
  */
 export function cleanExceptionMsg(s: string) {
@@ -361,14 +369,6 @@ function recordAndShowErr(firstMsg: string, msg: string) {
     } else {
         UI512ErrorHandling.appendErrMsgToLogs(false, msg);
     }
-}
-
-/**
- * cast to string.
- */
-export function tostring(s: unknown): string {
-    /* eslint-disable no-implicit-coercion */
-    return '' + s;
 }
 
 /**

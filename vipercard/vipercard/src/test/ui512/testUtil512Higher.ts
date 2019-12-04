@@ -2,10 +2,10 @@
 /* auto */ import { Util512Higher, sleep } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCategory } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
-let t = new SimpleUtil512TestCategory('testBenBaseUtilsHigher');
-export let testBenBaseUtilsHigher = t;
+let t = new SimpleUtil512TestCollection('testCollectionUtil512Higher');
+export let testCollectionUtil512Higher = t;
 
 t.test('WeakUuid', () => {
     let uid1 = Util512Higher.weakUuid();
@@ -44,8 +44,8 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
 
-t = new SimpleUtil512TestCategory('testExampleAsyncTests', true);
-export let testExampleAsyncTests = t;
+t = new SimpleUtil512TestCollection('testCollectionExampleAsyncTests', true);
+export let testCollectionExampleAsyncTests = t;
 
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable @typescript-eslint/require-await */

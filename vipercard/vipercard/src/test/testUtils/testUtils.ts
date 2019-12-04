@@ -1,5 +1,5 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { util512Sort } from './../../ui512/utils/util512';
 
 /**
@@ -74,7 +74,7 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 export type VoidFn = () => void;
 export type AVoidFn = () => Promise<void>;
 
-export class SimpleUtil512TestCategory {
+export class SimpleUtil512TestCollection {
     constructor(public name: string, public async = false, public slow = false) {}
     tests: [string, VoidFn][] = [];
     atests: [string, AVoidFn][] = [];

@@ -1,6 +1,6 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, } from './util512Assert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last, } from './util512';
+/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error } from './util512Assert';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
 
 // moltenform.com(Ben Fisher)
 // MIT license
