@@ -229,7 +229,8 @@ export class GridLayout<RowType, ColType> {
         labelBasedOnCol = false
     ) {
         this.combinations((n, a, b, bnds) => {
-            /* use either row data or col data, whichever is a string we can use as part of the id. */
+            /* use either row data or col data, whichever is a string
+            we can use as part of the id. */
             let cellIdSuffix = typeof a === 'string' ? a : b;
             let id = idBasedOnCol ? `${idPrefix}${cellIdSuffix}` : `${idPrefix}_${n}`;
             let el = new ctor(id);

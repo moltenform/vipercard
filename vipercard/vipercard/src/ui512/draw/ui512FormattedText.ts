@@ -197,7 +197,8 @@ export class FormattedText {
     }
 
     /**
-     * when outputting our text to external os (Edit->Paste), translate from os-roman to utf16
+     * when outputting our text to external os (Edit->Paste),
+     * translate from os-roman to utf16
      */
     static toExternalCharset(s: string, info: BrowserOSInfo, fallback = '?') {
         s = FormattedText.filterAndConvertNewlines(s);

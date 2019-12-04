@@ -109,11 +109,9 @@ export abstract class UI512BasePainterUtils {
                     (yPts[i] < pixelY && yPts[j] >= pixelY) ||
                     (yPts[j] < pixelY && yPts[i] >= pixelY)
                 ) {
-                    nodeX[nodes++] = Math.floor(
-                        xPts[i] +
-                            ((pixelY - yPts[i]) / (yPts[j] - yPts[i])) *
-                                (xPts[j] - xPts[i])
-                    );
+                    let div1 = (pixelY - yPts[i]) / (yPts[j] - yPts[i]);
+                    let sub1 = xPts[j] - xPts[i];
+                    nodeX[nodes++] = Math.floor(xPts[i] + div1 * sub1);
                 }
 
                 j = i;

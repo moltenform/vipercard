@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue, makeUI512Error } from './../utils/util512Assert';
-/* auto */ import { Util512, longstr, assertEq } from './../utils/util512';
+/* auto */ import { Util512, longstr } from './../utils/util512';
 
 /* Bitmap-font-drawing
 Extraction and rendering by Ben Fisher, 2017 */

@@ -53,7 +53,8 @@ export abstract class UI512Element extends UI512Settable {
         );
 
         /* ensure the "lock" bit has been set before we allow access
-        otherwise, you could make changes to the object and we'd never receive any change notification */
+        otherwise, you could make changes to the object and we'd never
+        receive any change notification */
         got.lock();
         return got;
     }
