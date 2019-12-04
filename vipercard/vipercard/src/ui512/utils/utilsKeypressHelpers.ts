@@ -8,7 +8,7 @@ export enum ModifierKeys {
     None = 0,
     Shift = 1 << 0,
     Cmd = 1 << 1,
-    Opt = 1 << 2,
+    Opt = 1 << 2
 }
 
 /**
@@ -19,7 +19,7 @@ export function ui512TranslateModifiers(
     ctrlKey: boolean,
     shiftKey: boolean,
     altKey: boolean,
-    metaKey: boolean,
+    metaKey: boolean
 ) {
     let ret = ModifierKeys.None;
     if (shiftKey) {

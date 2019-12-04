@@ -1,13 +1,13 @@
 
 /* auto */ import { AsyncVoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error, } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions, } from './testUtils';
-/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher, } from './../ui512/testUtil512Higher';
+/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../ui512/testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './../ui512/testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './../ui512/testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './../ui512/testUtil512';
-/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs, } from './../ui512/testExternalLibs';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../ui512/testExternalLibs';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
@@ -20,7 +20,7 @@ export class SimpleUtil512Tests {
             testCollectionUtil512,
             testCollectionUtil512Class,
             testCollectionUtil512LessUsefulLibs,
-            testCollectionUtil512Higher,
+            testCollectionUtil512Higher
         ];
 
         let mapSeen = new Map<string, boolean>();
@@ -34,7 +34,7 @@ export class SimpleUtil512Tests {
                     coll,
                     countTotal,
                     counter,
-                    mapSeen,
+                    mapSeen
                 );
             }
         }
@@ -47,7 +47,7 @@ export class SimpleUtil512Tests {
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
-        mapSeen: Map<string, boolean>,
+        mapSeen: Map<string, boolean>
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
         let tests = coll.async ? coll.atests : coll.tests;
@@ -80,7 +80,7 @@ export class SimpleUtil512Tests {
         if (!SimpleUtil512Tests.haveHitWarnAndAllowToContinue) {
             if (
                 !window.confirm(
-                    'test failed. see details in console. continue running tests?',
+                    'test failed. see details in console. continue running tests?'
                 )
             ) {
                 throw makeUI512Error('user chose to stop after failed test.');

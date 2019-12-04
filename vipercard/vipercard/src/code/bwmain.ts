@@ -61,7 +61,7 @@ export function runOnLoad() {
         if (evt.code === 'KeyT' && evt.altKey) {
             Util512Higher.syncToAsyncTransition(
                 async () => SimpleUtil512Tests.runTests(true),
-                'tests',
+                'tests'
             );
         }
     });

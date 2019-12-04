@@ -1,7 +1,7 @@
 
-/* auto */ import { UI512ErrorHandling, assertTrue, bool, } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort, } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted, } from './../testUtils/testUtils';
+/* auto */ import { UI512ErrorHandling, assertTrue, bool } from './../../ui512/utils/util512Assert';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512');
 export let testCollectionUtil512 = t;
@@ -77,17 +77,17 @@ t.test('getEnumToStr.AlternatesHaveSameVal', () => {
     assertEq(
         'first',
         getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__TheFirst),
-        'DZ|',
+        'DZ|'
     );
     assertEq(
         'second',
         getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Scnd),
-        'DY|',
+        'DY|'
     );
     assertEq(
         'third',
         getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Thd),
-        'DX|',
+        'DX|'
     );
 });
 t.test('getEnumToStr.NotFound', () => {
@@ -99,7 +99,7 @@ t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
     assertEq(
         'Unknown',
         getEnumToStrOrUnknown(TestEnum, TestEnum.__UI512EnumCapitalize),
-        'DT|',
+        'DT|'
     );
 });
 t.test('getStrToEnum.FoundPrimary', () => {
@@ -198,7 +198,7 @@ t.test('util512Sort.StringWithNonAscii', () => {
     assertEq(
         -1,
         util512Sort('accented\u0065\u0301letter', 'accented\u00e9letter'),
-        '1B|',
+        '1B|'
     );
 });
 t.test('util512Sort.Bool', () => {
@@ -300,39 +300,39 @@ t.test('util512Sort.ArrayNested', () => {
         util512Sort(
             [
                 [10, 20],
-                [1, 30],
+                [1, 30]
             ],
             [
                 [10, 20],
-                [1, -30],
-            ],
+                [1, -30]
+            ]
         ),
-        '0)|',
+        '0)|'
     );
     assertEq(
         -1,
         util512Sort(
             [
                 [10, 20],
-                [1, -30],
+                [1, -30]
             ],
             [
                 [10, 20],
-                [1, 30],
-            ],
+                [1, 30]
+            ]
         ),
-        '0(|',
+        '0(|'
     );
     assertEq(
         1,
         util512Sort(
             [
                 [10, 20],
-                [30, 31],
+                [30, 31]
             ],
-            [[10, 20], [30]],
+            [[10, 20], [30]]
         ),
-        '0&|',
+        '0&|'
     );
     assertEq(
         -1,
@@ -340,10 +340,10 @@ t.test('util512Sort.ArrayNested', () => {
             [[10, 20], [30]],
             [
                 [10, 20],
-                [30, 31],
-            ],
+                [30, 31]
+            ]
         ),
-        '0%|',
+        '0%|'
     );
     assertEq(0, util512Sort([[10, 20], 50, [30]], [[10, 20], 50, [30]]), '0$|');
     assertEq(1, util512Sort([[10, 20], 60, [30]], [[10, 20], 50, [30]]), '0#|');
@@ -500,5 +500,5 @@ enum TestEnum {
     Third,
     __AlternateForm__TheFirst = First,
     __AlternateForm__Scnd = Second,
-    __AlternateForm__Thd = Third,
+    __AlternateForm__Thd = Third
 }

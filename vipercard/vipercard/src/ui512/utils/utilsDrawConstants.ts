@@ -13,7 +13,7 @@ export enum MenuConsts {
     SecondLabelDistance = 24,
     TopHeaderMargin1 = 11,
     TopHeaderMargin2 = 500,
-    BarHeight = 21,
+    BarHeight = 21
 }
 
 export enum ScrollConsts {
@@ -25,7 +25,7 @@ export enum ScrollConsts {
     WindowCaptionSpacing = 12,
     WindowCaptionAdjustTextY = 1,
     ChoiceListDefaultWidth = 130,
-    ChoiceListDefaultHeight = 117,
+    ChoiceListDefaultHeight = 117
 }
 
 export enum ScreenConsts {
@@ -40,7 +40,7 @@ export enum ScreenConsts {
     yAreaHeight = 342,
     yLowerMargin = 7,
     ScreenWidth = 928,
-    ScreenHeight = 416,
+    ScreenHeight = 416
 }
 
 /**
@@ -51,7 +51,7 @@ export function getUI512WindowBounds() {
         ScreenConsts.xLeftMargin,
         ScreenConsts.yTopMargin,
         ScreenConsts.ScreenWidth - (ScreenConsts.xLeftMargin + ScreenConsts.xRightMargin),
-        ScreenConsts.ScreenHeight - (ScreenConsts.yTopMargin + ScreenConsts.yLowerMargin),
+        ScreenConsts.ScreenHeight - (ScreenConsts.yTopMargin + ScreenConsts.yLowerMargin)
     ];
 }
 
@@ -62,10 +62,10 @@ assertEq(
     ScreenConsts.ScreenWidth,
     ScreenConsts.xLeftMargin +
         ScreenConsts.xAreaWidth +
-        (ScreenConsts.xToolWidth * ScreenConsts.xToolCount) +
+        ScreenConsts.xToolWidth * ScreenConsts.xToolCount +
         ScreenConsts.xToolMargin +
         ScreenConsts.xRightMargin,
-    '3 |',
+    '3 |'
 );
 
 /**
@@ -77,7 +77,7 @@ assertEq(
         ScreenConsts.yMenuBar +
         ScreenConsts.yAreaHeight +
         ScreenConsts.yLowerMargin,
-    '3z|',
+    '3z|'
 );
 
 /**

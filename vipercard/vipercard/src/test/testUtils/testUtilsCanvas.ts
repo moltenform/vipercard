@@ -1,6 +1,6 @@
 
-/* auto */ import { CanvasWrapper, DrawableImage, } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, Util512Higher, } from './../../ui512/utils/util512Higher';
+/* auto */ import { CanvasWrapper, DrawableImage } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { RenderComplete, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 
@@ -15,7 +15,7 @@ export class TestUtilsCanvas {
         imageGot: CanvasWrapper,
         width: number,
         height: number,
-        drawRed: boolean,
+        drawRed: boolean
     ) {
         let cvExpected = CanvasWrapper.createMemoryCanvas(width, height);
         cvExpected.drawFromImage(
@@ -29,7 +29,7 @@ export class TestUtilsCanvas {
             0,
             0,
             width,
-            height,
+            height
         );
         let dataExpected = cvExpected.context.getImageData(0, 0, width, height);
         let dataGot = imageGot.context.getImageData(0, 0, width, height);
@@ -38,7 +38,7 @@ export class TestUtilsCanvas {
         let countDifferences = TestUtilsCanvas.drawDifferencesInRed(
             dataExpected,
             dataGot,
-            drawRed,
+            drawRed
         );
         if (drawRed) {
             imageGot.context.putImageData(dataGot, 0, 0);
@@ -53,7 +53,7 @@ export class TestUtilsCanvas {
     private static drawDifferencesInRed(
         dataExpected: ImageData,
         dataGot: ImageData,
-        drawRed: boolean,
+        drawRed: boolean
     ) {
         let countDifferences = 0;
         for (let i = 0; i < dataExpected.data.length; i += 4) {
@@ -84,7 +84,7 @@ export class TestUtilsCanvas {
      */
     private static async callDrawUntilRenderComplete(
         p: CanvasTestParams,
-        imExpected: HTMLImageElement,
+        imExpected: HTMLImageElement
     ) {
         let imGot = CanvasWrapper.createMemoryCanvas(p.width, p.height);
         let finished = false;
@@ -94,7 +94,7 @@ export class TestUtilsCanvas {
                 let ret = p.draw(imGot, complete);
                 assertTrue(
                     ret === undefined || ret === null,
-                    "3u|please don't return anything from fnDraw",
+                    "3u|please don't return anything from fnDraw"
                 );
                 if (complete.complete) {
                     finished = true;
@@ -121,7 +121,7 @@ export class TestUtilsCanvas {
      */
     private static async RenderAndCompareImage(
         download: boolean,
-        fnGetDrawParams: GetDrawParams,
+        fnGetDrawParams: GetDrawParams
     ) {
         let p = fnGetDrawParams();
         let imExpected = new Image();
@@ -139,7 +139,7 @@ export class TestUtilsCanvas {
                 imGot,
                 p.width,
                 p.height,
-                true,
+                true
             );
             if (countDifferences === p.expectDifferentPixels) {
                 console.log(`\t\ttest ${p.testName} passed`);
@@ -148,7 +148,7 @@ export class TestUtilsCanvas {
                 console.log(
                     `${p.testName} failed, ${countDifferences} pixels ${
                         100 * ratioWrong
-                    }% do not match.`,
+                    }% do not match.`
                 );
 
                 console.log('Delta image sent to download, failures marked in red.');
@@ -166,11 +166,11 @@ export class TestUtilsCanvas {
      */
     static async RenderAndCompareImages(
         download: boolean,
-        fnGetDrawParams: GetDrawParams | GetDrawParams[],
+        fnGetDrawParams: GetDrawParams | GetDrawParams[]
     ) {
         if (fnGetDrawParams instanceof Array) {
             let promises = fnGetDrawParams.map(f =>
-                TestUtilsCanvas.RenderAndCompareImage(download, f),
+                TestUtilsCanvas.RenderAndCompareImage(download, f)
             );
             await Promise.all(promises);
         } else {
@@ -205,7 +205,7 @@ export class TestUtilsCanvas {
 }
 
 /**
- * browsers can change the colors written, see 
+ * browsers can change the colors written, see
  * https://en.wikipedia.org/wiki/Canvas_fingerprinting
  * so use clrThreshold instead of doing a strict comparison
  */
@@ -222,11 +222,11 @@ export class CanvasTestParams {
         public draw: (canvas: CanvasWrapper, complete: RenderComplete) => void,
         public width: number,
         public height: number,
-        /* is this a unit test, or did user start the test explicitly 
+        /* is this a unit test, or did user start the test explicitly
         by clicking on a button? */
         public uiContext: boolean,
         /* used for testing the test infrastructure */
-        public expectDifferentPixels = 0,
+        public expectDifferentPixels = 0
     ) {}
 
     readonly maxCalls = 500;

@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, bool, checkThrowUI512, makeUI512Error, throwIfUndefined, tostring, } from './util512Assert';
+/* auto */ import { O, assertTrue, bool, checkThrowUI512, makeUI512Error, throwIfUndefined, tostring } from './util512Assert';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -202,12 +202,12 @@ export class Util512 {
         me: any,
         s: string,
         args: unknown[],
-        okIfNotExists: boolean,
+        okIfNotExists: boolean
     ) {
         checkThrowUI512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
             'K@|callAsMethodOnClass requires alphanumeric no spaces',
-            s,
+            s
         );
 
         let method = me[s];
@@ -217,7 +217,7 @@ export class Util512 {
                 me.hasOwnProperty(s) || me.__proto__.hasOwnProperty(s),
                 '4H|cannot use parent classes',
                 clsname,
-                s,
+                s
             );
 
             assertTrue(args.length < 100, 'Ox|too many args', clsname, s);
@@ -498,7 +498,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
 export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
     assertTrue(
         Enm['__isUI512Enum'] !== undefined,
-        '4F|must provide an enum type with __isUI512Enum defined.',
+        '4F|must provide an enum type with __isUI512Enum defined.'
     );
     if (s.startsWith('__')) {
         return undefined;
@@ -526,7 +526,7 @@ export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
 export function getStrToEnum<E>(
     Enm: TypeLikeAnEnum<E>,
     msgContext: string,
-    s: string,
+    s: string
 ): E {
     let found = findStrToEnum(Enm, s);
     if (found !== undefined) {
@@ -551,7 +551,7 @@ export function getStrToEnum<E>(
 export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
     assertTrue(
         Enm['__isUI512Enum'] !== undefined,
-        '4D|must provide an enum type with __isUI512Enum defined.',
+        '4D|must provide an enum type with __isUI512Enum defined.'
     );
 
     /* using e[n] would work, but it's fragile if enum implementation changes. */
@@ -577,7 +577,7 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
 export function getEnumToStrOrUnknown<E>(
     Enm: TypeLikeAnEnum<E>,
     n: number,
-    fallback = 'Unknown',
+    fallback = 'Unknown'
 ): string {
     return findEnumToStr(Enm, n) ?? fallback;
 }
@@ -597,7 +597,7 @@ export function slength(s: string | null | undefined) {
 export function cast<T>(
     instance: unknown,
     ctor: AnyParameterCtor<T>,
-    context?: string,
+    context?: string
 ): T {
     if (instance instanceof ctor) {
         return instance;
@@ -754,7 +754,7 @@ export enum BrowserOSInfo {
     Unknown,
     Windows,
     Linux,
-    Mac,
+    Mac
 }
 
 /**
@@ -822,11 +822,11 @@ export function checkThrowEq<T>(
     got: unknown,
     msg: string,
     c1: unknown = '',
-    c2: unknown = '',
+    c2: unknown = ''
 ): asserts got is T {
     if (util512Sort(expected, got) !== 0) {
         throw makeUI512Error(
-            `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`,
+            `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`
         );
     }
 }
@@ -840,7 +840,7 @@ export function assertEq(
     received: unknown,
     c1: string,
     c2?: unknown,
-    c3?: unknown,
+    c3?: unknown
 ) {
     if (util512Sort(expected, received) !== 0) {
         let msgAssertEq = longstr(`assertion failed in assertEq,
@@ -858,7 +858,7 @@ export function assertEqWarn(
     received: unknown,
     c1: string,
     c2?: unknown,
-    c3?: unknown,
+    c3?: unknown
 ) {
     if (util512Sort(expected, received) !== 0) {
         let msgInAssertEqWarn = longstr(`warning, assertion failed in assertEqWarn,

@@ -1,6 +1,6 @@
 
 /* auto */ import { AsyncVoidFn, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { util512Sort } from './../../ui512/utils/util512';
 
 /**
@@ -9,7 +9,7 @@
 export async function assertThrowsAsync<T>(
     msgWithMark: string,
     expectedErr: string,
-    fn: () => Promise<T>,
+    fn: () => Promise<T>
 ) {
     let msg: O<string>;
     let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
@@ -25,7 +25,7 @@ export async function assertThrowsAsync<T>(
     assertTrue(msg !== undefined, `JC|did not throw ${msgWithMark}`);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `JB|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
+        `JB|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`
     );
 }
 
@@ -47,7 +47,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: Funct
     assertTrue(msg !== undefined, `3{|did not throw ${msgWithMark}`);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `9d|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
+        `9d|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`
     );
 }
 

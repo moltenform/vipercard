@@ -1,7 +1,7 @@
 
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionExternalLibs');
 export let testCollectionExternalLibs = t;
@@ -46,7 +46,7 @@ t.test('keepOnlyUnique', () => {
     assertEq(
         ['11', '12', '13', '14', '15'],
         Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15']),
-        'OB|',
+        'OB|'
     );
 });
 

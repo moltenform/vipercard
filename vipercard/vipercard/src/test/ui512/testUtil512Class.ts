@@ -1,7 +1,7 @@
 
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr, } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted, } from './../testUtils/testUtils';
+/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
 export let testCollectionUtil512Class = t;
@@ -259,39 +259,39 @@ t.test('capitalizeFirst.Alphabet', () => {
 t.test('callAsMethod.BadCharInMethodName', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lo|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, '', [true, 1], true)
     );
 
     assertThrows('Ln|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a b', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a b', [true, 1], true)
     );
 
     assertThrows('Lm|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a', [true, 1], true)
     );
 
     assertThrows('Ll|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '?', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, '?', [true, 1], true)
     );
 
     assertThrows('Lk|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '1a', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, '1a', [true, 1], true)
     );
 
     assertThrows('Lj|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '_c', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, '_c', [true, 1], true)
     );
 
     assertThrows('Li|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '__c', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, '__c', [true, 1], true)
     );
 
     assertThrows('Lh|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, '.', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, '.', [true, 1], true)
     );
 
     assertThrows('Lg|', 'requires alphanumeric', () =>
-        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a.b', [true, 1], true),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'a.b', [true, 1], true)
     );
 });
 t.test('callAsMethod.MissingMethodWhenAllowed', () => {
@@ -301,13 +301,7 @@ t.test('callAsMethod.MissingMethodWhenAllowed', () => {
 t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lf|', 'could not find', () =>
-        Util512.callAsMethodOnClass(
-            'TestClsWithMethods',
-            o,
-            'notExist',
-            [true, 1],
-            false,
-        ),
+        Util512.callAsMethodOnClass('TestClsWithMethods', o, 'notExist', [true, 1], false)
     );
 });
 t.test('callAsMethod.ValidMethod', () => {
@@ -347,7 +341,7 @@ t.test('getMapKeys.Class', () => {
     assertEq(
         ['aSingleAdded', 'aSingleProp'],
         sorted(Util512.getMapKeys(cls2 as any)),
-        'E6|',
+        'E6|'
     );
 });
 t.test('getMapVals.PlainObject', () => {

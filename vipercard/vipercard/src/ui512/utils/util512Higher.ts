@@ -1,6 +1,6 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrowUI512, makeUI512Error, respondUI512Error, } from './util512Assert';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last, } from './util512';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrowUI512, makeUI512Error, respondUI512Error } from './util512Assert';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -44,7 +44,7 @@ export class Util512Higher {
         let nRange = max - min;
         assertTrue(
             nRange > 1 && nRange < 255,
-            'O(|getRandIntInclusiveStrong too wide range',
+            'O(|getRandIntInclusiveStrong too wide range'
         );
         let nextPowerOf2 = 1;
         while (nextPowerOf2 < nRange) {
@@ -118,7 +118,7 @@ export class Util512Higher {
         url: string,
         req: XMLHttpRequest,
         callback: (s: string) => void,
-        callbackOnErr?: () => void,
+        callbackOnErr?: () => void
     ) {
         req.overrideMimeType('application/json');
         req.open('GET', url, true);
@@ -165,7 +165,7 @@ export class Util512Higher {
 
                     resolve(parsed);
                 },
-                () => reject(new Error(`4K|failed to load ${url}, status=${req.status}`)),
+                () => reject(new Error(`4K|failed to load ${url}, status=${req.status}`))
             );
         });
     }
@@ -219,13 +219,13 @@ export class Util512Higher {
                 if (!(err as any)?.isUi512Error) {
                     UI512ErrorHandling.appendErrMsgToLogs(
                         false,
-                        'unhandled in async ' + err,
+                        'unhandled in async ' + err
                     );
                 }
 
                 let e = err instanceof Error ? err : new Error(`non-Error param ${err}`);
                 respondUI512Error(e, context);
-            },
+            }
         );
     }
 
@@ -360,7 +360,7 @@ export enum CharClass {
     Space,
     NewLine,
     Word,
-    Punctuation,
+    Punctuation
 }
 
 /**
@@ -426,7 +426,7 @@ export class GetCharClass {
         n: number,
         isLeft: boolean,
         isUntilWord: boolean,
-        includeTrailingSpace: boolean,
+        includeTrailingSpace: boolean
     ) {
         if (len === 0) {
             return n;

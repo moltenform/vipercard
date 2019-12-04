@@ -1,7 +1,7 @@
 
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring, } from './../../ui512/utils/util512Assert';
+/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Assert');
 export let testCollectionUtil512Assert = t;
@@ -81,17 +81,17 @@ t.test('CompressString', () => {
     assertEq(
         '\u10E6\u4866\u4AEA  ',
         UI512Compress.compressString('aaaaaaaabbbbbbbb'),
-        'CW|',
+        'CW|'
     );
     assertEq(
         '\u10E6\u4866\u4AE8\u31B0 ',
         UI512Compress.compressString('aaaaaaaabbbbbbbbc'),
-        'CV|',
+        'CV|'
     );
     assertEq(
         '\u10E6\u7070\u0256\u4CF0 ',
         UI512Compress.compressString('aaaaaaa\nbbbbbbbbb'),
-        'CU|',
+        'CU|'
     );
 });
 t.test('DecompressString', () => {
@@ -100,17 +100,17 @@ t.test('DecompressString', () => {
     assertEq(
         'aaaaaaaabbbbbbbb',
         UI512Compress.decompressString('\u10E6\u4866\u4AEA  '),
-        'CR|',
+        'CR|'
     );
     assertEq(
         'aaaaaaaabbbbbbbbc',
         UI512Compress.decompressString('\u10E6\u4866\u4AE8\u31B0 '),
-        'CQ|',
+        'CQ|'
     );
     assertEq(
         'aaaaaaa\nbbbbbbbbb',
         UI512Compress.decompressString('\u10E6\u7070\u0256\u4CF0 '),
-        'CP|',
+        'CP|'
     );
 });
 t.test('RingBufferSizeRemainsConstant', () => {

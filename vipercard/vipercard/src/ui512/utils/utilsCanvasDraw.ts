@@ -57,7 +57,7 @@ export class CanvasWrapper {
         boxW: number,
         boxH: number,
         fillStyle: string,
-        assertWithin?: boolean,
+        assertWithin?: boolean
     ) {
         if (x >= boxX0 && x < boxX0 + boxW && y >= boxY0 && y < boxY0 + boxH) {
             this.context.fillStyle = fillStyle;
@@ -77,7 +77,7 @@ export class CanvasWrapper {
         y0: number,
         width: number,
         height: number,
-        fillStyle: string,
+        fillStyle: string
     ) {
         assertTrue(width >= 0, '3;|invalid width ' + width.toString());
         assertTrue(height >= 0, '3:|invalid height ' + height.toString());
@@ -86,7 +86,7 @@ export class CanvasWrapper {
                 Util512.isValidNumber(y0) &&
                 Util512.isValidNumber(width) &&
                 Util512.isValidNumber(height),
-            '3/|dimensions must be numeric',
+            '3/|dimensions must be numeric'
         );
 
         /* to visualize bugs with unnecessary redraws, use random colors in this mode */
@@ -116,7 +116,7 @@ export class CanvasWrapper {
         boxW: number,
         boxH: number,
         fillStyle: string,
-        assertWithin?: boolean,
+        assertWithin?: boolean
     ) {
         let rectClipped = RectUtils.getRectClipped(
             x0,
@@ -126,7 +126,7 @@ export class CanvasWrapper {
             boxX0,
             boxY0,
             boxW,
-            boxH,
+            boxH
         );
         if (assertWithin) {
             assertTrue(
@@ -134,7 +134,7 @@ export class CanvasWrapper {
                     rectClipped[1] === y0 &&
                     rectClipped[2] === width &&
                     rectClipped[3] === height,
-                '3.|not within',
+                '3.|not within'
             );
         }
 
@@ -143,7 +143,7 @@ export class CanvasWrapper {
             rectClipped[1],
             rectClipped[2],
             rectClipped[3],
-            fillStyle,
+            fillStyle
         );
         return rectClipped;
     }
@@ -160,7 +160,7 @@ export class CanvasWrapper {
         boxY0: number,
         boxW: number,
         boxH: number,
-        fillStyle: string,
+        fillStyle: string
     ) {
         this.fillRect(x0, y0, width, 1, boxX0, boxY0, boxW, boxH, fillStyle);
         this.fillRect(x0, y0 + height, width, 1, boxX0, boxY0, boxW, boxH, fillStyle);
@@ -176,7 +176,7 @@ export class CanvasWrapper {
         x0: number,
         y0: number,
         width: number,
-        height: number,
+        height: number
     ) {
         assertTrue(width >= 0, '3-|invalid width ' + width.toString());
         assertTrue(height >= 0, '3,|invalid height ' + height.toString());
@@ -185,7 +185,7 @@ export class CanvasWrapper {
                 Util512.isValidNumber(y0) &&
                 Util512.isValidNumber(width) &&
                 Util512.isValidNumber(height),
-            '3+|dimensions must be numeric',
+            '3+|dimensions must be numeric'
         );
 
         if (CanvasWrapper.debugRenderingWithChangingColors && Math.random() > 0.75) {
@@ -212,7 +212,7 @@ export class CanvasWrapper {
         boxY0: number,
         boxW: number,
         boxH: number,
-        assertWithin?: boolean,
+        assertWithin?: boolean
     ) {
         let rectClipped = RectUtils.getRectClipped(
             x0,
@@ -222,7 +222,7 @@ export class CanvasWrapper {
             boxX0,
             boxY0,
             boxW,
-            boxH,
+            boxH
         );
         if (assertWithin) {
             assertTrue(
@@ -230,7 +230,7 @@ export class CanvasWrapper {
                     rectClipped[1] === y0 &&
                     rectClipped[2] === width &&
                     rectClipped[3] === height,
-                '3*|not within',
+                '3*|not within'
             );
         }
 
@@ -238,7 +238,7 @@ export class CanvasWrapper {
             rectClipped[0],
             rectClipped[1],
             rectClipped[2],
-            rectClipped[3],
+            rectClipped[3]
         );
         return rectClipped;
     }
@@ -253,7 +253,7 @@ export class CanvasWrapper {
         srcWidth: number,
         srcHeight: number,
         destX: number,
-        destY: number,
+        destY: number
     ) {
         assertTrue(srcWidth >= 0, '3)|invalid sWidth ' + srcWidth.toString());
         assertTrue(srcHeight >= 0, '3(|invalid height ' + srcHeight.toString());
@@ -264,7 +264,7 @@ export class CanvasWrapper {
                 Util512.isValidNumber(srcHeight) &&
                 Util512.isValidNumber(destX) &&
                 Util512.isValidNumber(destY),
-            '3&|dimensions must be numeric',
+            '3&|dimensions must be numeric'
         );
 
         if (CanvasWrapper.debugRenderingWithChangingColors && Math.random() > 0.8) {
@@ -279,7 +279,7 @@ export class CanvasWrapper {
                 destX,
                 destY,
                 srcWidth,
-                srcHeight,
+                srcHeight
             );
         }
     }
@@ -300,7 +300,7 @@ export class CanvasWrapper {
         boxX: number,
         boxY: number,
         boxW: number,
-        boxH: number,
+        boxH: number
     ) {
         let rectClipped = RectUtils.getRectClipped(
             destX,
@@ -310,7 +310,7 @@ export class CanvasWrapper {
             boxX,
             boxY,
             boxW,
-            boxH,
+            boxH
         );
         if (rectClipped[2] === 0 || rectClipped[3] === 0) {
             return [destX, destY, 0, 0];
@@ -324,7 +324,7 @@ export class CanvasWrapper {
                 rectClipped[2],
                 rectClipped[3],
                 rectClipped[0],
-                rectClipped[1],
+                rectClipped[1]
             );
             return rectClipped;
         }
@@ -344,7 +344,7 @@ export class CanvasWrapper {
         boxX0: number,
         boxY0: number,
         boxW: number,
-        boxH: number,
+        boxH: number
     ) {
         const destx0 = boxX0 + Math.trunc((boxW - width) / 2) + adjustx;
         const desty0 = boxY0 + Math.trunc((boxH - height) / 2) + adjusty;
@@ -359,12 +359,12 @@ export class CanvasWrapper {
             boxX0,
             boxY0,
             boxW,
-            boxH,
+            boxH
         );
     }
 
     /**
-     * use a try/finally block to ensure that the mode is reset, 
+     * use a try/finally block to ensure that the mode is reset,
      * even if an exception is thrown.
      */
     temporarilyChangeCompositeMode(s: string, fn: () => void) {
@@ -403,7 +403,7 @@ export class CanvasWrapper {
 
     /**
      * use this mode to visually see where redrawing is occurring,
-     * if a region is rapidly flickering rainbow colors, there is a bug 
+     * if a region is rapidly flickering rainbow colors, there is a bug
      * causing extra re-draws.
      */
     static debugRenderingWithChangingColors = false;
@@ -424,7 +424,7 @@ export class RectUtils {
         boxX0: number,
         boxY0: number,
         boxW: number,
-        boxH: number,
+        boxH: number
     ) {
         const x1 = x0 + w;
         const y1 = y0 + h;
@@ -467,14 +467,14 @@ export class RectUtils {
                 newX0 + newW <= boxX0 + boxW &&
                 newY0 >= boxY0 &&
                 newY0 + newH <= boxY0 + boxH,
-            '3>|dimensions must be numeric',
+            '3>|dimensions must be numeric'
         );
 
         return [newX0, newY0, newW, newH];
     }
 
     /**
-     * same as getRectClipped, but just return the type of overlap rather 
+     * same as getRectClipped, but just return the type of overlap rather
      * than resulting rectangle.
      */
     static getOverlap(
@@ -487,7 +487,7 @@ export class RectUtils {
         _unused_boxW: number,
         _unused_boxH: number,
         boxX1: number,
-        boxY1: number,
+        boxY1: number
     ): RectOverlapType {
         const x1 = x0 + w;
         const y1 = y0 + h;
@@ -515,7 +515,7 @@ export class RectUtils {
         boxX0: number,
         boxY0: number,
         boxW: number,
-        boxH: number,
+        boxH: number
     ) {
         return x >= boxX0 && x < boxX0 + boxW && y >= boxY0 && y < boxY0 + boxH;
     }
@@ -529,10 +529,10 @@ export class RectUtils {
         w: number,
         h: number,
         padX: number,
-        padY: number,
+        padY: number
     ) {
         if (w > padX * 2 && h > padY * 2) {
-            return [x + padX, y + padY, w - (padX * 2), h - (padY * 2)];
+            return [x + padX, y + padY, w - padX * 2, h - padY * 2];
         } else {
             return undefined;
         }
@@ -547,5 +547,5 @@ export enum RectOverlapType {
     NoOverlap,
     PartialOverlap,
     BoxCompletelyCovers,
-    BoxCompletelyWithin,
+    BoxCompletelyWithin
 }
