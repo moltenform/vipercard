@@ -19,7 +19,12 @@ export class UI512ElGroup {
     protected elements = new OrderedHash<UI512Element>();
     protected visible = true;
     enableMouseInteraction = true;
-    mouseInteractionBounds: [number, number, number, number] = [0, 0, largeArea, largeArea];
+    mouseInteractionBounds: [number, number, number, number] = [
+        0,
+        0,
+        largeArea,
+        largeArea
+    ];
 
     constructor(id: string, observer: ElementObserver = elementObserverDefault) {
         this.id = id;
@@ -130,7 +135,10 @@ export class UI512ElGroup {
     ) {
         /* disallow any duplicates */
         for (let grp of parent.iterGrps()) {
-            checkThrowUI512(!grp.findEl(elemIn.id), `2x|dup ${elemIn.id} found in grp ${grp.id}`);
+            checkThrowUI512(
+                !grp.findEl(elemIn.id),
+                `2x|dup ${elemIn.id} found in grp ${grp.id}`
+            );
         }
 
         /* for convenience, copy our observer onto the new element */
@@ -167,7 +175,11 @@ export class UI512ElGroup {
     /**
      * add an element to the group.
      */
-    addElement(parent: UI512ApplicationInterface, elemIn: UI512Element, context = ChangeContext.Default) {
+    addElement(
+        parent: UI512ApplicationInterface,
+        elemIn: UI512Element,
+        context = ChangeContext.Default
+    ) {
         return this.addElementAfter(parent, elemIn, undefined, context);
     }
 

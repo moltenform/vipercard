@@ -222,7 +222,7 @@ class RingBufferLocalStorage extends RingBuffer {
         let sLatest = window.localStorage['ui512LogPtr'] ?? '0';
 
         /* ok to use here, we remembered to say base 10 */
-        /* eslint-disable ban/ban */
+        /* eslint-disable-next-line ban/ban */
         let ptrLatest = parseInt(sLatest, 10);
         return Number.isFinite(ptrLatest) ? ptrLatest : 0;
     }
@@ -286,7 +286,7 @@ export class UI512ErrorHandling {
  * is it truthy? anything except false, 0, "", null, undefined, and NaN
  */
 export function bool(x: unknown): boolean {
-    /* eslint-disable no-implicit-coercion */
+    /* eslint-disable-next-line no-implicit-coercion */
     return !!x;
 }
 
@@ -294,7 +294,7 @@ export function bool(x: unknown): boolean {
  * cast to string.
  */
 export function tostring(s: unknown): string {
-    /* eslint-disable no-implicit-coercion */
+    /* eslint-disable-next-line no-implicit-coercion */
     return '' + s;
 }
 

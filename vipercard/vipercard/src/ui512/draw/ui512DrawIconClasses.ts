@@ -21,7 +21,14 @@ export class IconInfo {
  */
 export class RenderIcon {
     constructor(public set: RenderIconGroup, public srcRect: number[]) {}
-    drawIntoBox(canvas: CanvasWrapper, info: IconInfo, boxX0: number, boxY0: number, boxW: number, boxH: number) {
+    drawIntoBox(
+        canvas: CanvasWrapper,
+        info: IconInfo,
+        boxX0: number,
+        boxY0: number,
+        boxW: number,
+        boxH: number
+    ) {
         let srcRect = [
             this.srcRect[0] + info.adjustSrcX,
             this.srcRect[1] + info.adjustSrcY,
@@ -92,6 +99,8 @@ export class RenderIconGroup {
         }
     }
 
+    /* eslint no-mixed-operators: 0 */
+
     /* get source rectangle */
     getRectangle(iconNumber: number) {
         if (iconNumber < 0 || iconNumber >= this.totalIcons) {
@@ -123,7 +132,15 @@ export class RenderIconGroup {
     /* get icon, throws if not found */
     getIcon(iconNumber: number): RenderIcon {
         let rect = this.getRectangle(iconNumber);
-        return new RenderIcon(this, throwIfUndefined(rect, '3G|could not load icon number', iconNumber, this.groupId));
+        return new RenderIcon(
+            this,
+            throwIfUndefined(
+                rect,
+                '3G|could not load icon number',
+                iconNumber,
+                this.groupId
+            )
+        );
     }
 
     /* get icon, return undefined if not found  */

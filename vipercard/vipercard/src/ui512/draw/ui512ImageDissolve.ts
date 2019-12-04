@@ -12,7 +12,12 @@
 export class UI512ImageDissolve {
     readonly iconGroup = 'fordissolvet';
     readonly countstages = 12;
-    blendAtStage(c1: CanvasWrapper, c2: CanvasWrapper, stage: number, comp: RenderComplete) {
+    blendAtStage(
+        c1: CanvasWrapper,
+        c2: CanvasWrapper,
+        stage: number,
+        comp: RenderComplete
+    ) {
         /* note: is destructive to c2, */
         /* changes written to c1 */
         if (stage <= 0) {
@@ -38,7 +43,9 @@ export class UI512ImageDissolve {
                 for (let tileX = 0; tileX < Math.ceil(c2.canvas.width / tileW); tileX++) {
                     let destX = tileX * tileW;
                     let destY = tileY * tileH;
-                    icon!.drawIntoBox(c2, info, destX, destY, tileX, tileY);
+                    if (icon) {
+                        icon.drawIntoBox(c2, info, destX, destY, tileX, tileY);
+                    }
                 }
             }
         });

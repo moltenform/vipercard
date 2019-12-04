@@ -235,7 +235,7 @@ export class Util512Higher {
     static sleep(ms: number) {
         return new Promise<void>(resolve => {
             /* it's ok to use an old-style promise, we're not going from sync to async */
-            /* eslint-disable ban/ban */
+            /* eslint-disable-next-line ban/ban */
             setTimeout(resolve, ms);
         });
     }
@@ -341,6 +341,30 @@ export class RenderComplete {
 
     andB(other: boolean) {
         this.complete = this.complete && other;
+    }
+}
+
+/**
+ * can be used to build a periodic timer.
+ */
+export class RepeatingTimer {
+    periodInMilliseconds = 0;
+    lasttimeseen = 0;
+    started = 0;
+    constructor(periodInMilliseconds: number) {
+        this.periodInMilliseconds = periodInMilliseconds;
+    }
+
+    update(ms: number) {
+        this.lasttimeseen = ms;
+    }
+
+    isDue(): boolean {
+        return this.lasttimeseen - this.started > this.periodInMilliseconds;
+    }
+
+    reset() {
+        this.started = this.lasttimeseen;
     }
 }
 

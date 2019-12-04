@@ -14,7 +14,7 @@ export class UI512ElCanvasPiece extends UI512Element {
     protected _srcX = 0;
     protected _srcY = 0;
     protected _incrementUntilLoaded = 0;
-    
+
     /**
      * set which canvas the image will be drawn from.
      * we need to bump the other property, to signal to our Observer that something has changed.
@@ -28,7 +28,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     setCanvas(cv: CanvasWrapper) {
-        this.signalChange()
+        this.signalChange();
         this.canvas = cv;
     }
 
@@ -37,7 +37,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     getCanvasForWrite() {
-        this.signalChange()
+        this.signalChange();
         return this.canvas;
     }
 
@@ -67,7 +67,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     setCachedPainter(pnter: UI512Painter) {
-        this.signalChange()
+        this.signalChange();
         this.cachedPainter = pnter;
     }
 
@@ -77,7 +77,7 @@ export class UI512ElCanvasPiece extends UI512Element {
      * we need to bump the other property, to signal to our Observer that something has changed.
      */
     getCachedPainterForWrite() {
-        this.signalChange()
+        this.signalChange();
         return this.cachedPainter;
     }
 }

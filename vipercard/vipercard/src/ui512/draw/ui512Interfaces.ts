@@ -1,6 +1,6 @@
 
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, VoidFn } from './../utils/util512Higher';
+/* auto */ import { RenderComplete, RepeatingTimer, VoidFn } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Assert';
 
 /**
@@ -86,13 +86,13 @@ export interface UI512PresenterInterface {
     timerSlowIdle: RepeatingTimer;
     useOSClipboard: boolean;
     mouseDragStatus: number;
-    removeEl(grpId: string, elId: string, context?: ChangeContext): void;
+    removeEl(grpId: string, elId: string, context: ChangeContext): void;
     rebuildFieldScrollbars(): void;
     trackMouse: number[];
     trackPressedBtns: boolean[];
     trackClickedIds: O<string>[];
     listeners: { [t: number]: Function[] };
-    callbackQueueFromAsyncs: (O<VoidFn>)[];
+    callbackQueueFromAsyncs: O<VoidFn>[];
     needRedraw: boolean;
     inited: boolean;
     openState: MenuOpenState;
@@ -105,6 +105,4 @@ export interface UI512PresenterInterface {
     render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete): void;
     invalidateAll(): void;
     placeCallbackInQueue(cb: () => void): void;
-    removeEl(grpId: string, elId: string, context: ChangeContext): void;
-    rebuildFieldScrollbars(): void;
 }

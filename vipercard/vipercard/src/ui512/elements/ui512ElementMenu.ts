@@ -61,7 +61,11 @@ export class UI512MenuRoot extends UI512Element {
 /**
  * calls getElByID on a list of ids.
  */
-function idsToList<T extends UI512Element>(app: UI512Application, childIds: string, grpId: string): T[] {
+function idsToList<T extends UI512Element>(
+    app: UI512Application,
+    childIds: string,
+    grpId: string
+): T[] {
     let list = childIds.split('|');
     if (list.length) {
         let grp = app.getGroup(grpId);
