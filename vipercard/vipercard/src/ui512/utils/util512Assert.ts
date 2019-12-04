@@ -352,7 +352,7 @@ export interface UI512AttachableErr {}
  * statement, so separate it here.
  */
 function breakIntoDebugger() {
-    if (!checkIsRelease()) {
+    if (!checkIsProductionBuild()) {
         debugger;
     }
 }
@@ -437,7 +437,7 @@ declare const WEBPACK_PRODUCTION: boolean;
 /**
  * check if we are in a production build.
  */
-export function checkIsRelease(): boolean {
+export function checkIsProductionBuild(): boolean {
     let ret = false;
     try {
         // when webpack builds this file it will replace the symbol

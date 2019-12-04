@@ -1,6 +1,6 @@
 
 /* auto */ import { Util512Higher } from './../ui512/utils/util512Higher';
-/* auto */ import { checkIsRelease } from './../ui512/utils/util512Assert';
+/* auto */ import { checkIsProductionBuild } from './../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../ui512/utils/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testUtils/testTop';
 
@@ -10,7 +10,7 @@ declare const bowser: typeof Bowser;
 function getTestString() {
     let s1 = Util512.repeat(4, 'a').join('_');
     let s2 = Util512.range(1, 5);
-    let s3 = checkIsRelease() ? 'release' : 'debug';
+    let s3 = checkIsProductionBuild() ? 'release' : 'debug';
     return [s1, s2, s3].join('<br/>');
 }
 

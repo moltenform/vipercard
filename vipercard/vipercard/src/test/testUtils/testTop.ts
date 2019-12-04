@@ -1,7 +1,8 @@
 
+/* auto */ import { AsyncVoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
-/* auto */ import { AVoidFn, SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
 /* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../ui512/testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './../ui512/testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './../ui512/testUtil512Assert';
@@ -61,7 +62,7 @@ export class SimpleUtil512Tests {
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
             if (coll.async) {
-                await (tstfn as AVoidFn)();
+                await (tstfn as AsyncVoidFn)();
             } else {
                 tstfn();
             }

@@ -257,6 +257,12 @@ export class Util512Higher {
 }
 
 /**
+ * easier-to-read type aliases
+ */
+export type VoidFn = () => void;
+export type AsyncVoidFn = () => Promise<void>;
+
+/**
  * root (top-level) object
  */
 export interface UI512IsDrawTextInterface {}
