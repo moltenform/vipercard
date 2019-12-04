@@ -1,0 +1,50 @@
+
+
+test manually:
+---------------------
+	copy/paste
+	clicking on scrollbar to go up/down, in text area, click+hold
+	click/drag to select text in field
+	menu interactions
+	paint tools
+
+pencil tool
+draw with pencil
+draw with pencil
+button tool
+make new button
+change type to shadow
+line tool
+draw a line
+button tool
+select button
+type 2 in icon (icon won't change until you hit enter or click)
+hit ctrl z
+field should go back to 0
+type 2 in icon field and hit Enter
+(icon should show)
+uncheck enabled
+hit ctrl z, should go back
+uncheck enabled
+go to button label field, type New Button3 and hit enter
+go to button label field, type New Button345 and hit ctrl z
+(should go back to New Button3)
+pencil tool
+draw with pencil
+button tool
+select button
+click Script
+type answer "the button was clicked2."
+hit ctrl z, should go back to answer "the button was clicked."
+type answer "the button was clicked2." hit save script
+type answer "the button was clicked23."
+hit ctrl z, should go back to answer "the button was clicked2."
+type answer "the button was clicked2."<enter>answer "a"<enter>answer "b"
+hit ctrl z, should go back to answer "the button was clicked2."<enter>answer "a"
+
+
+undo back through everything.
+make sure icon is unset.
+
+
+

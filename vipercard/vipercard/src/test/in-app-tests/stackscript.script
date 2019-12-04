@@ -1,0 +1,16 @@
+
+on log s
+	go to card 1
+	put cd fld "log" into prevs
+	put prevs & cr & s into cd fld "log"
+end log
+
+on openStack
+	global openStackWasCalled
+	put true into openStackWasCalled
+end openStack
+
+on openBackground
+	global openBgWasCalled
+	put true into openBgWasCalled
+end openBackground
