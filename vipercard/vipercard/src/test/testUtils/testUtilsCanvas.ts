@@ -3,6 +3,7 @@
 /* auto */ import { RenderComplete, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
+/* auto */ import { clrThreshold } from './../../ui512/draw/ui512DrawPainter';
 
 export class TestUtilsCanvas {
     /**
@@ -203,13 +204,6 @@ export class TestUtilsCanvas {
         }
     }
 }
-
-/**
- * browsers can change the colors written, see
- * https://en.wikipedia.org/wiki/Canvas_fingerprinting
- * so use clrThreshold instead of doing a strict comparison
- */
-export const clrThreshold = 20;
 
 /**
  * a test that compares the results with a known-good png

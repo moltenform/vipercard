@@ -10,7 +10,7 @@
 let t = new SimpleUtil512TestCollection('testCollectionUtilsDraw');
 export let testCollectionUtilsDraw = t;
 
-t.test('testUtilsDrawGetRectClipped.FullyContained', () => {
+t.test('GetRectClipped.FullyContained', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -23,7 +23,7 @@ t.test('testUtilsDrawGetRectClipped.FullyContained', () => {
     let expected = [x0, y0, w, h];
     assertEq(expected, got, '0S|');
 });
-t.test('testUtilsDrawGetRectClipped.SidesAreTheSame', () => {
+t.test('GetRectClipped.SidesAreTheSame', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -38,7 +38,7 @@ t.test('testUtilsDrawGetRectClipped.SidesAreTheSame', () => {
     let expected = [x0, y0, w, h];
     assertEq(expected, got, '0R|');
 });
-t.test('testUtilsDrawGetRectClipped.TopsAreTheSame', () => {
+t.test('GetRectClipped.TopsAreTheSame', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -53,7 +53,7 @@ t.test('testUtilsDrawGetRectClipped.TopsAreTheSame', () => {
     let expected = [x0, y0, w, h];
     assertEq(expected, got, '0Q|');
 });
-t.test('testUtilsDrawGetRectClipped.ProtrudesLeft', () => {
+t.test('GetRectClipped.ProtrudesLeft', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -67,7 +67,7 @@ t.test('testUtilsDrawGetRectClipped.ProtrudesLeft', () => {
     let expected = [10, y0, 30 - (10 - 6), h];
     assertEq(expected, got, '0P|');
 });
-t.test('testUtilsDrawGetRectClipped.ProtrudesTop', () => {
+t.test('GetRectClipped.ProtrudesTop', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -81,7 +81,7 @@ t.test('testUtilsDrawGetRectClipped.ProtrudesTop', () => {
     let expected = [x0, 60, w, 22 - (60 - 50)];
     assertEq(expected, got, '0O|');
 });
-t.test('testUtilsDrawGetRectClipped.ProtrudesRight', () => {
+t.test('GetRectClipped.ProtrudesRight', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -95,7 +95,7 @@ t.test('testUtilsDrawGetRectClipped.ProtrudesRight', () => {
     let expected = [x0, y0, 200 + 10 - 15, h];
     assertEq(expected, got, '0N|');
 });
-t.test('testUtilsDrawGetRectClipped.ProtrudesBottom', () => {
+t.test('GetRectClipped.ProtrudesBottom', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -109,7 +109,7 @@ t.test('testUtilsDrawGetRectClipped.ProtrudesBottom', () => {
     let expected = [x0, y0, w, 130 + 60 - 65];
     assertEq(expected, got, '0M|');
 });
-t.test('testUtilsDrawGetRectClipped.CompletelyCovers', () => {
+t.test('GetRectClipped.CompletelyCovers', () => {
     let boxX0 = 10;
     let boxY0 = 60;
     let boxW = 200;
@@ -122,7 +122,7 @@ t.test('testUtilsDrawGetRectClipped.CompletelyCovers', () => {
     let expected = [boxX0, boxY0, boxW, boxH];
     assertEq(expected, got, '0L|');
 });
-t.test('testUtilsDrawGetRectClipped.OutsideLeft', () => {
+t.test('GetRectClipped.OutsideLeft', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -137,7 +137,7 @@ t.test('testUtilsDrawGetRectClipped.OutsideLeft', () => {
     let expected = [boxX0, boxY0, 0, 0];
     assertEq(expected, got, '0K|');
 });
-t.test('testUtilsDrawGetRectClipped.OutsideLeftTouches', () => {
+t.test('GetRectClipped.OutsideLeftTouches', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -152,7 +152,7 @@ t.test('testUtilsDrawGetRectClipped.OutsideLeftTouches', () => {
     let expected = [boxX0, y0, 0, h];
     assertEq(expected, got, '0J|');
 });
-t.test('testUtilsDrawGetRectClipped.BarelyInsideLeft', () => {
+t.test('GetRectClipped.BarelyInsideLeft', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -167,7 +167,7 @@ t.test('testUtilsDrawGetRectClipped.BarelyInsideLeft', () => {
     let expected = [boxX0, y0, 1, h];
     assertEq(expected, got, '0I|');
 });
-t.test('testUtilsDrawGetRectClipped.OutsideTop', () => {
+t.test('GetRectClipped.OutsideTop', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -182,7 +182,7 @@ t.test('testUtilsDrawGetRectClipped.OutsideTop', () => {
     let expected = [boxX0, boxY0, 0, 0];
     assertEq(expected, got, '0H|');
 });
-t.test('testUtilsDrawGetRectClipped.OutsideTopTouches', () => {
+t.test('GetRectClipped.OutsideTopTouches', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -197,7 +197,7 @@ t.test('testUtilsDrawGetRectClipped.OutsideTopTouches', () => {
     let expected = [x0, boxY0, w, 0];
     assertEq(expected, got, '0G|');
 });
-t.test('testUtilsDrawGetRectClipped.BarelyInsideTop', () => {
+t.test('GetRectClipped.BarelyInsideTop', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -212,7 +212,7 @@ t.test('testUtilsDrawGetRectClipped.BarelyInsideTop', () => {
     let expected = [x0, boxY0, w, 1];
     assertEq(expected, got, '0F|');
 });
-t.test('testUtilsDrawGetRectClipped.OutsideRight', () => {
+t.test('GetRectClipped.OutsideRight', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -226,7 +226,7 @@ t.test('testUtilsDrawGetRectClipped.OutsideRight', () => {
     let expected = [boxX0, boxY0, 0, 0];
     assertEq(expected, got, '0E|');
 });
-t.test('testUtilsDrawGetRectClipped.OutsideBottom', () => {
+t.test('GetRectClipped.OutsideBottom', () => {
     let x0 = 15;
     let y0 = 65;
     let w = 30;
@@ -240,7 +240,7 @@ t.test('testUtilsDrawGetRectClipped.OutsideBottom', () => {
     let expected = [boxX0, boxY0, 0, 0];
     assertEq(expected, got, '0D|');
 });
-t.test('testUtilsDrawGetSubRectRaw.EnoughSpace', () => {
+t.test('GetSubRectRaw.EnoughSpace', () => {
     assertEq(
         [105, 206, 290, 388],
         RectUtils.getSubRectRaw(100, 200, 300, 400, 5, 6),
@@ -262,12 +262,12 @@ t.test('testUtilsDrawGetSubRectRaw.EnoughSpace', () => {
         'D9|'
     );
 });
-t.test('testUtilsDrawGetSubRectRaw.NotEnoughSpace', () => {
+t.test('GetSubRectRaw.NotEnoughSpace', () => {
     assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 11), 'D8|');
     assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 10, 200), 'D7|');
     assertEq(undefined, RectUtils.getSubRectRaw(100, 200, 300, 400, 150, 200), 'D6|');
 });
-t.test('testUtilsTranslateModifiers', () => {
+t.test('TranslateModifiers', () => {
     let shift: number = ModifierKeys.Shift;
     let cmd: number = ModifierKeys.Cmd;
     let opt: number = ModifierKeys.Opt;
@@ -302,7 +302,7 @@ t.test('testUtilsTranslateModifiers', () => {
         'D0|'
     );
 });
-t.test('testUtilsToShortcutString.TypicalShortcut', () => {
+t.test('ToShortcutString.TypicalShortcut', () => {
     let shift: number = ModifierKeys.Shift;
     let cmd: number = ModifierKeys.Cmd;
     let opt: number = ModifierKeys.Opt;
@@ -313,7 +313,7 @@ t.test('testUtilsToShortcutString.TypicalShortcut', () => {
     assertEq('Cmd+Opt+a', toShortcutString(cmd + opt, 'a'), 'C`|');
     assertEq('Opt+a', toShortcutString(opt, 'a'), 'C_|');
 });
-t.test('testUtilsToShortcutString.TruncateKey', () => {
+t.test('ToShortcutString.TruncateKey', () => {
     let cmd: number = ModifierKeys.Cmd;
     assertEq('Cmd+A', toShortcutString(cmd, 'KeyA'), 'C^|');
     assertEq('Cmd+Keya', toShortcutString(cmd, 'Keya'), 'C]|');
@@ -326,7 +326,7 @@ t.test('testUtilsToShortcutString.TruncateKey', () => {
     assertEq('Cmd+Key', toShortcutString(cmd, 'Key'), 'C;|');
     assertEq('Cmd+KeyAA', toShortcutString(cmd, 'KeyAA'), 'C:|');
 });
-t.test('testUtilsToShortcutString.TruncateDigit', () => {
+t.test('ToShortcutString.TruncateDigit', () => {
     let cmd: number = ModifierKeys.Cmd;
     assertEq('Cmd+1', toShortcutString(cmd, 'Digit1'), 'C/|');
     assertEq('Cmd+1', toShortcutString(cmd, 'digit1'), 'C.|');
@@ -337,7 +337,7 @@ t.test('testUtilsToShortcutString.TruncateDigit', () => {
     assertEq('Cmd+Digit', toShortcutString(cmd, 'Digit'), 'C)|');
     assertEq('Cmd+Digit11', toShortcutString(cmd, 'Digit11'), 'C(|');
 });
-t.test('testUtilsTranslateModifiers.Windows', () => {
+t.test('TranslateModifiers.Windows', () => {
     assertEq(
         ModifierKeys.None,
         ui512TranslateModifiers(BrowserOSInfo.Windows, false, false, false, false),
@@ -364,7 +364,7 @@ t.test('testUtilsTranslateModifiers.Windows', () => {
         'C!|'
     );
 });
-t.test('testUtilsTranslateModifiers.Linux', () => {
+t.test('TranslateModifiers.Linux', () => {
     assertEq(
         ModifierKeys.None,
         ui512TranslateModifiers(BrowserOSInfo.Linux, false, false, false, false),
@@ -391,7 +391,7 @@ t.test('testUtilsTranslateModifiers.Linux', () => {
         'Cw|'
     );
 });
-t.test('testUtilsTranslateModifiers.Mac', () => {
+t.test('TranslateModifiers.Mac', () => {
     assertEq(
         ModifierKeys.None,
         ui512TranslateModifiers(BrowserOSInfo.Mac, false, false, false, false),
