@@ -2241,20 +2241,8 @@ export class UI512ViewDrawBorders {
             /* draw borders */
             this.dr(this.bx, this.by, this.w, realbordersize, cB);
             this.dr(this.bx, this.by, realbordersize, this.h, cB);
-            this.dr(
-                this.bx,
-                this.by + this.h - realbordersize,
-                this.w,
-                realbordersize,
-                cB
-            );
-            this.dr(
-                this.bx + this.w - realbordersize,
-                this.by,
-                realbordersize,
-                this.h,
-                cB
-            );
+            this.dr(this.bx, this.by + this.h - realbordersize, this.w, realbordersize, cB);
+            this.dr(this.bx + this.w - realbordersize, this.by, realbordersize, this.h, cB);
         }
     }
 

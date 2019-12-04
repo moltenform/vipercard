@@ -35,17 +35,7 @@ export class UI512ViewDraw {
      */
     drawFillIfDefined(b: UI512ViewDrawBorders, rect: number[], fillStyle: string) {
         if (rect) {
-            b.canvas.fillRect(
-                rect[0],
-                rect[1],
-                rect[2],
-                rect[3],
-                b.bx,
-                b.by,
-                b.w,
-                b.h,
-                fillStyle
-            );
+            b.canvas.fillRect(rect[0], rect[1], rect[2], rect[3], b.bx, b.by, b.w, b.h, fillStyle);
         }
     }
 
@@ -54,16 +44,7 @@ export class UI512ViewDraw {
      */
     drawInvertIfDefined(b: UI512ViewDrawBorders, rect: number[]) {
         if (rect) {
-            b.canvas.invertColorsRect(
-                rect[0],
-                rect[1],
-                rect[2],
-                rect[3],
-                b.bx,
-                b.by,
-                b.w,
-                b.h
-            );
+            b.canvas.invertColorsRect(rect[0], rect[1], rect[2], rect[3], b.bx, b.by, b.w, b.h);
         }
     }
 
@@ -80,15 +61,7 @@ export class UI512ViewDraw {
         styleEnabled: boolean
     ) {
         if (rect) {
-            let opts = new DrawTextArgs(
-                rect[0],
-                rect[1],
-                rect[2],
-                rect[3],
-                hAlign,
-                vAlign,
-                wrap
-            );
+            let opts = new DrawTextArgs(rect[0], rect[1], rect[2], rect[3], hAlign, vAlign, wrap);
             return this.drawText(b, text, opts, styleEnabled);
         } else {
             return undefined;
@@ -98,11 +71,7 @@ export class UI512ViewDraw {
     /**
      * draw text in a rectangle from element, no-op if rect isn't set
      */
-    drawTextIfDefinedFromEl(
-        b: UI512ViewDrawBorders,
-        rect: O<number[]>,
-        el: UI512Element
-    ) {
+    drawTextIfDefinedFromEl(b: UI512ViewDrawBorders, rect: O<number[]>, el: UI512Element) {
         return this.drawTextIfDefined(
             b,
             rect,
@@ -117,12 +86,7 @@ export class UI512ViewDraw {
     /**
      * draw text in a rectangle
      */
-    drawText(
-        b: UI512ViewDrawBorders,
-        text: string,
-        opts: DrawTextArgs,
-        styleEnabled: boolean
-    ) {
+    drawText(b: UI512ViewDrawBorders, text: string, opts: DrawTextArgs, styleEnabled: boolean) {
         let drawText = cast(getRoot().getDrawText(), UI512DrawText);
         if (!styleEnabled) {
             text = UI512DrawText.makeInitialTextDisabled(text);
@@ -140,15 +104,9 @@ export class UI512ViewDraw {
     /**
      * draw icon in a rectangle, no-op if rect isn't set
      */
-    drawIconIfDefined(
-        b: UI512ViewDrawBorders,
-        rect: O<number[]>,
-        iconInfo: IconInfo,
-        overrideCentered?: boolean
-    ) {
+    drawIconIfDefined(b: UI512ViewDrawBorders, rect: O<number[]>, iconInfo: IconInfo, overrideCentered?: boolean) {
         if (rect) {
-            const iconCentered =
-                overrideCentered === undefined ? iconInfo.centered : overrideCentered;
+            const iconCentered = overrideCentered === undefined ? iconInfo.centered : overrideCentered;
             let iconManager = cast(getRoot().getDrawIcon(), UI512IconManager);
             let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
             if (icon) {
@@ -162,12 +120,7 @@ export class UI512ViewDraw {
     /**
      * render a button
      */
-    renderButtonImpl(
-        b: UI512ViewDrawBorders,
-        el: UI512ElementButtonBase,
-        padX: number,
-        padY: number
-    ) {
+    renderButtonImpl(b: UI512ViewDrawBorders, el: UI512ElementButtonBase, padX: number, padY: number) {
         assertTrue(b.w >= 2 * padX, '4h|too small');
         assertTrue(b.h >= 2 * padY, '4g|too small');
 
@@ -183,13 +136,7 @@ export class UI512ViewDraw {
             this.drawIconIfDefined(b, subRect, iconInfo);
         } else if (slength(el.getS('labeltext')) && iconInfo) {
             /* case 4) both icon and label */
-            this.drawBothTextAndIcon(
-                b,
-                subRect,
-                iconInfo,
-                el.getS('labeltext'),
-                el.getB('enabledstyle')
-            );
+            this.drawBothTextAndIcon(b, subRect, iconInfo, el.getS('labeltext'), el.getB('enabledstyle'));
         }
     }
 
@@ -205,25 +152,16 @@ export class UI512ViewDraw {
     ) {
         const lineHeight = 12;
         const marginBetween = 0;
-        let srcRect = RenderIconGroup.lookupRectangle(
-            iconInfo.iconGroup,
-            iconInfo.iconNumber
-        );
+        let srcRect = RenderIconGroup.lookupRectangle(iconInfo.iconGroup, iconInfo.iconNumber);
         if (rect && srcRect) {
             let iconH = srcRect[3] + iconInfo.adjustHeight;
             let boxIconAndTextWidth = rect[2];
             let boxIconAndTextHeight = iconH + marginBetween + lineHeight;
             let boxIconAndTextX = rect[0];
-            let boxIconAndTextY =
-                rect[1] + Math.trunc((rect[3] - boxIconAndTextHeight) / 2);
+            let boxIconAndTextY = rect[1] + Math.trunc((rect[3] - boxIconAndTextHeight) / 2);
 
             if (boxIconAndTextWidth <= rect[2] && boxIconAndTextHeight <= rect[3]) {
-                let boxIconOnly = [
-                    boxIconAndTextX,
-                    boxIconAndTextY,
-                    boxIconAndTextWidth,
-                    iconH
-                ];
+                let boxIconOnly = [boxIconAndTextX, boxIconAndTextY, boxIconAndTextWidth, iconH];
                 this.drawIconIfDefined(b, boxIconOnly, iconInfo);
                 let boxTextOnlyX = boxIconAndTextX;
                 let boxTextOnlyY = boxIconAndTextY + iconH + marginBetween;
@@ -236,12 +174,7 @@ export class UI512ViewDraw {
 
                 /* Follow what HC does and strip out any newlines */
                 labelSmall = labelSmall.replace(/\r|\n/g, '');
-                let boxText = [
-                    boxTextOnlyX,
-                    boxTextOnlyY,
-                    boxTextOnlyWidth,
-                    boxTextOnlyWidth
-                ];
+                let boxText = [boxTextOnlyX, boxTextOnlyY, boxTextOnlyWidth, boxTextOnlyWidth];
 
                 /* Follow what HC does and do not wrap the label text, even if asked to */
                 this.drawTextIfDefined(
@@ -324,7 +257,6 @@ export class UI512ViewDraw {
     ) {
         if (el.getB('highlightactive') && el.getN('iconnumberwhenhighlight') === -1) {
             /* draw the border */
-            /* eslint-disable-next-line ban/ban */
             fnHighlight.apply(b);
             let subRect = this.getSubRect(b, decorationSize, decorationSize);
             if (subRect && !b.didFallbackToSimpleRect) {
@@ -337,13 +269,8 @@ export class UI512ViewDraw {
             }
         } else {
             /* draw the border */
-            /* eslint-disable-next-line ban/ban */
             fnNotHighlight.apply(b);
-            if (
-                !b.didFallbackToSimpleRect &&
-                b.w > decorationSize * 2 &&
-                b.h > decorationSize * 2
-            ) {
+            if (!b.didFallbackToSimpleRect && b.w > decorationSize * 2 && b.h > decorationSize * 2) {
                 /* draw the label */
                 this.renderButtonImpl(b, el, decorationSize, decorationSize);
             }
@@ -367,51 +294,28 @@ export class UI512ViewDraw {
      * draw a button
      */
     goUI512ElementButtonBase(b: UI512ViewDrawBorders, el: UI512ElementButtonBase) {
+        /* tslint:disable:no-unbound-method */
         switch (el.getN('style')) {
             case UI512BtnStyle.Transparent:
                 this.renderButtonTransparent(b, el);
                 break;
             case UI512BtnStyle.Opaque:
-                this.renderOpaqueButton(
-                    b,
-                    el,
-                    b.drawboxnoborder,
-                    b.drawboxnoborderclicked,
-                    1
-                );
+                this.renderOpaqueButton(b, el, b.drawboxnoborder, b.drawboxnoborderclicked, 1);
                 break;
             case UI512BtnStyle.RoundRect:
                 this.renderOpaqueButton(b, el, b.drawvpcbtn, b.drawvpcbtnclicked, 7);
                 break;
             case UI512BtnStyle.Plain:
-                this.renderOpaqueButton(
-                    b,
-                    el,
-                    b.drawvpcroundrect,
-                    b.drawvpcroundrectclicked,
-                    7
-                );
+                this.renderOpaqueButton(b, el, b.drawvpcroundrect, b.drawvpcroundrectclicked, 7);
                 break;
             case UI512BtnStyle.Shadow:
-                this.renderOpaqueButton(
-                    b,
-                    el,
-                    b.drawosboxshadow,
-                    b.drawosboxshadowclicked,
-                    4
-                );
+                this.renderOpaqueButton(b, el, b.drawosboxshadow, b.drawosboxshadowclicked, 4);
                 break;
             case UI512BtnStyle.OSStandard:
                 this.renderOpaqueButton(b, el, b.drawosbtn, b.drawosbtnclicked, 5);
                 break;
             case UI512BtnStyle.OSDefault:
-                this.renderOpaqueButton(
-                    b,
-                    el,
-                    b.drawosdefaultbtn,
-                    b.drawosdefaultbtnclicked,
-                    9
-                );
+                this.renderOpaqueButton(b, el, b.drawosdefaultbtn, b.drawosdefaultbtnclicked, 9);
                 break;
             case UI512BtnStyle.OSBoxModal:
                 this.renderOpaqueButton(b, el, b.drawosboxmodal, b.drawosboxmodal, 7);
@@ -423,23 +327,11 @@ export class UI512ViewDraw {
                 this.renderButtonCheckbox(b, el);
                 break;
             case UI512BtnStyle.Rectangle:
-                this.renderOpaqueButton(
-                    b,
-                    el,
-                    b.drawboxthinborder,
-                    b.drawboxthinborderclicked,
-                    1
-                );
+                this.renderOpaqueButton(b, el, b.drawboxthinborder, b.drawboxthinborderclicked, 1);
                 break;
             default:
                 assertTrueWarn(false, `4f|unknown button style ${el.getN('style')}`);
-                this.renderOpaqueButton(
-                    b,
-                    el,
-                    b.drawboxthinborder,
-                    b.drawboxthinborderclicked,
-                    2
-                );
+                this.renderOpaqueButton(b, el, b.drawboxthinborder, b.drawboxthinborderclicked, 2);
                 break;
         }
     }
@@ -454,26 +346,12 @@ export class UI512ViewDraw {
         let measured = drawText.measureString(el.getS('labeltext'));
         if (measured && subrectAlmostAll) {
             /* get the smaller rectangle that will contain the text */
-            let shrinkx = Math.floor(
-                (el.w -
-                    (measured.rightmostPixelDrawn + ScrollConsts.WindowCaptionSpacing)) /
-                    2
-            );
+            let shrinkx = Math.floor((el.w - (measured.rightmostPixelDrawn + ScrollConsts.WindowCaptionSpacing)) / 2);
 
             /* the white rectangle should cover the horizontal lines but not the outer border */
             let subRect = this.getSubRect(b, Math.max(0, shrinkx), 1);
             if (subRect) {
-                b.canvas.fillRect(
-                    subRect[0],
-                    subRect[1],
-                    subRect[2],
-                    subRect[3],
-                    b.bx,
-                    b.by,
-                    b.w,
-                    b.h,
-                    'white'
-                );
+                b.canvas.fillRect(subRect[0], subRect[1], subRect[2], subRect[3], b.bx, b.by, b.w, b.h, 'white');
                 subrectAlmostAll[1] += ScrollConsts.WindowCaptionAdjustTextY;
                 this.drawTextIfDefinedFromEl(b, subrectAlmostAll, el);
             }
@@ -501,17 +379,7 @@ export class UI512ViewDraw {
     goUI512MenuRoot(b: UI512ViewDrawBorders, el: UI512MenuRoot) {
         if (el.getS('childids').length > 0) {
             b.drawboxnoborder();
-            b.canvas.fillRect(
-                el.x,
-                el.bottom - 1,
-                el.w,
-                1,
-                el.x,
-                el.y,
-                el.w,
-                el.h,
-                'black'
-            );
+            b.canvas.fillRect(el.x, el.bottom - 1, el.w, 1, el.x, el.y, el.w, el.h, 'black');
         }
     }
 
@@ -532,10 +400,7 @@ export class UI512ViewDraw {
     renderMenuItemDivider(b: UI512ViewDrawBorders, el: UI512MenuItem) {
         /* faster than drawing lots of dots, draw a carefully sized slice of an image */
         let iconInfo = new IconInfo('001', 145);
-        let srcRect = RenderIconGroup.lookupRectangle(
-            iconInfo.iconGroup,
-            iconInfo.iconNumber
-        );
+        let srcRect = RenderIconGroup.lookupRectangle(iconInfo.iconGroup, iconInfo.iconNumber);
         assertTrueWarn(srcRect, '4e|expected to get srcRect');
         if (srcRect) {
             /* adjust so that the icon width is exactly the width we want */
@@ -573,40 +438,14 @@ export class UI512ViewDraw {
 
         /* draw the first text */
         if (el.w > MenuConsts.FirstLabelPadding) {
-            let boxMain = [
-                b.bx + MenuConsts.FirstLabelPadding,
-                b.by,
-                el.w - MenuConsts.FirstLabelPadding,
-                el.h
-            ];
-            this.drawTextIfDefined(
-                b,
-                boxMain,
-                el.getS('labeltext'),
-                false,
-                false,
-                true,
-                el.getB('enabledstyle')
-            );
+            let boxMain = [b.bx + MenuConsts.FirstLabelPadding, b.by, el.w - MenuConsts.FirstLabelPadding, el.h];
+            this.drawTextIfDefined(b, boxMain, el.getS('labeltext'), false, false, true, el.getB('enabledstyle'));
         }
 
         /* draw the second text (cmd shortcut) */
         if (el.w > MenuConsts.SecondLabelDistance) {
-            let boxRight = [
-                b.bx + el.w - MenuConsts.SecondLabelDistance,
-                b.by,
-                MenuConsts.SecondLabelDistance,
-                el.h
-            ];
-            this.drawTextIfDefined(
-                b,
-                boxRight,
-                el.getS('labelhotkey'),
-                false,
-                false,
-                true,
-                el.getB('enabledstyle')
-            );
+            let boxRight = [b.bx + el.w - MenuConsts.SecondLabelDistance, b.by, MenuConsts.SecondLabelDistance, el.h];
+            this.drawTextIfDefined(b, boxRight, el.getS('labelhotkey'), false, false, true, el.getB('enabledstyle'));
         }
 
         /* highlight it */
@@ -639,10 +478,7 @@ export class UI512ViewDraw {
     /**
      * different styles have different borders and margins
      */
-    protected getBorderAndMarginForField(
-        b: UI512ViewDrawBorders,
-        style: number
-    ): [O<Function>, number, number] {
+    protected getBorderAndMarginForField(b: UI512ViewDrawBorders, style: number): [O<Function>, number, number] {
         switch (style) {
             case UI512FldStyle.Transparent:
                 return [undefined, 3, 1];
@@ -661,10 +497,7 @@ export class UI512ViewDraw {
     /**
      * shrink a rectangle by a defined amount of padding, and keep it centered.
      */
-    getSubRectForField(
-        b: UI512ViewDrawBorders,
-        el: UI512ElTextField
-    ): [O<Function>, O<number[]>] {
+    getSubRectForField(b: UI512ViewDrawBorders, el: UI512ElTextField): [O<Function>, O<number[]>] {
         let [fnborder, padX, padY] = this.getBorderAndMarginForField(b, el.getN('style'));
         if (el.getB('scrollbar')) {
             /* make it smaller to make room for the scrollbar */
@@ -679,14 +512,9 @@ export class UI512ViewDraw {
     /**
      * render a text field
      */
-    protected goUI512ElTextField(
-        b: UI512ViewDrawBorders,
-        el: UI512ElTextField,
-        hasFocus: boolean
-    ) {
+    protected goUI512ElTextField(b: UI512ViewDrawBorders, el: UI512ElTextField, hasFocus: boolean) {
         let [fnborder, subRect] = this.getSubRectForField(b, el);
         if (fnborder) {
-            /* eslint-disable-next-line ban/ban */
             fnborder.apply(b);
         }
 
@@ -732,12 +560,7 @@ export class UI512ViewDraw {
      * if something can't be rendered, e.g. font isn't loaded yet,
      * the RenderComplete flag will be set to false
      */
-    renderElement(
-        canvas: CanvasWrapper,
-        el: UI512Element,
-        hasFocus: boolean,
-        complete: RenderComplete
-    ) {
+    renderElement(canvas: CanvasWrapper, el: UI512Element, hasFocus: boolean, complete: RenderComplete) {
         assertTrueWarn(el.w >= 0, '4b|too small');
         assertTrueWarn(el.h >= 0, '4a|too small');
         if (el.w === 0 && el.h === 0) {
@@ -750,13 +573,7 @@ export class UI512ViewDraw {
         let b = new UI512ViewDrawBorders(canvas, el.x, el.y, el.w, el.h, complete);
         hasFocus = hasFocus || this.allowMultipleFocus;
         let methodName = 'go' + el.typename;
-        Util512.callAsMethodOnClass(
-            'UI512ViewDraw',
-            this,
-            methodName,
-            [b, el, hasFocus],
-            false
-        );
+        Util512.callAsMethodOnClass('UI512ViewDraw', this, methodName, [b, el, hasFocus], false);
     }
 
     /**
@@ -773,14 +590,7 @@ export class UI512ViewDraw {
         let needDrawBorders = false;
         if (needRedraw) {
             needDrawBorders = true;
-            this.renderAllElements(
-                canvas,
-                app,
-                app.bounds,
-                cmpTotal,
-                currentFocus,
-                clearBefore
-            );
+            this.renderAllElements(canvas, app, app.bounds, cmpTotal, currentFocus, clearBefore);
         }
 
         if (needDrawBorders && clearBefore) {
@@ -894,14 +704,7 @@ export class UI512ViewDraw {
             rect[1] = screenH - rect[3] - marginB;
         }
 
-        let b = new UI512ViewDrawBorders(
-            canvas,
-            rect[0],
-            rect[1],
-            rect[2],
-            rect[3],
-            complete
-        );
+        let b = new UI512ViewDrawBorders(canvas, rect[0], rect[1], rect[2], rect[3], complete);
         b.drawCorners(corner);
     }
 }

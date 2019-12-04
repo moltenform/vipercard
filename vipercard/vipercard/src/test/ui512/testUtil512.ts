@@ -166,7 +166,7 @@ t.test('isString', () => {
     assertTrue(!isString(undefined), 'N3|');
     assertTrue(!isString(['a']), 'N2|');
     /* ok to disable the warning, intentionally making a Object-style-string */
-    /* eslint-disable-next-line no-new-wrappers */
+    /* eslint-disable no-new-wrappers */
     assertTrue(isString(new String('abc')), 'N6|');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {

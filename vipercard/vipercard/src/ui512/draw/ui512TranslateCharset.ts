@@ -489,11 +489,7 @@ export class TranslateCharset {
     /**
      * translate a string to different character set
      */
-    protected static translate(
-        s: string,
-        map: { [key: number]: string },
-        fallback: string
-    ) {
+    protected static translate(s: string, map: { [key: number]: string }, fallback: string) {
         let ret = '';
         for (let i = 0; i < s.length; i++) {
             let found = map[s.charCodeAt(i)];

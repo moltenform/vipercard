@@ -38,14 +38,9 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     }
 
     /**
-     * draws a (plain text) string, returns undefined if still waiting
-     * for the font to load.
+     * draws a (plain text) string, returns undefined if still waiting for the font to load.
      */
-    drawStringIntoBox(
-        s: string,
-        canvas: O<CanvasWrapper>,
-        args: DrawTextArgs
-    ): O<DrawCharResult> {
+    drawStringIntoBox(s: string, canvas: O<CanvasWrapper>, args: DrawTextArgs): O<DrawCharResult> {
         if (s === null || s === undefined) {
             assertTrue(false, '3M|tried to draw null string...');
             return new DrawCharResult(args.boxX, args.boxX + 1, args.boxY + 1);
@@ -57,23 +52,15 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     }
 
     /**
-     * draws a (formatted) string, returns undefined if still waiting for
-     * the font to load.
+     * draws a (formatted) string, returns undefined if still waiting for the font to load.
      */
-    drawFormattedStringIntoBox(
-        text: FormattedText,
-        canvas: O<CanvasWrapper>,
-        args: DrawTextArgs
-    ): O<DrawCharResult> {
+    drawFormattedStringIntoBox(text: FormattedText, canvas: O<CanvasWrapper>, args: DrawTextArgs): O<DrawCharResult> {
         if (!text) {
             return new DrawCharResult(args.boxX, args.boxX + 1, args.boxY + 1);
         }
 
         /* the default font must be available */
-        if (
-            !this.cache.findFont(UI512DrawText.defaultFont) ||
-            !this.cache.findFont(args.defaultFont)
-        ) {
+        if (!this.cache.findFont(UI512DrawText.defaultFont) || !this.cache.findFont(args.defaultFont)) {
             return undefined;
         }
 
@@ -100,10 +87,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         measurements: DrawCharResult[],
         curX: number
     ) {
-        if (
-            curX + measurements[charNum].newLogicalX >= boxW &&
-            ret[ret.length - 1].text.len() > 0
-        ) {
+        if (curX + measurements[charNum].newLogicalX >= boxW && ret[ret.length - 1].text.len() > 0) {
             ret.push(new LineTextToRender());
             retStarts.push(charNum);
             curX = 0;
@@ -133,10 +117,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
      * 3) add placeholder at end of string
      * 4) place words into LineTextToRender
      */
-    protected wrapTextIntoLines(
-        s: FormattedText,
-        args: DrawTextArgs
-    ): [LineTextToRender[], DrawCharResult[]] {
+    protected wrapTextIntoLines(s: FormattedText, args: DrawTextArgs): [LineTextToRender[], DrawCharResult[]] {
         let measurements: DrawCharResult[] = [];
         let words: FormattedText[] = [new FormattedText()];
         let wordStarts: number[] = [0];
@@ -146,26 +127,12 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             let c = s.charAt(i);
             let font = s.fontAt(i);
             let fontObj = this.cache.getFont(font);
-            measurements[i] = UI512DrawChar.draw(
-                fontObj,
-                c,
-                0,
-                largeArea / 2,
-                0,
-                0,
-                largeArea,
-                largeArea,
-                undefined
-            );
+            measurements[i] = UI512DrawChar.draw(fontObj, c, 0, largeArea / 2, 0, 0, largeArea, largeArea, undefined);
 
             /* 2) split by words */
             if (i > 0) {
                 let prevC = s.charAt(i - 1);
-                if (
-                    prevC === specialCharNumNewline ||
-                    prevC === space ||
-                    prevC === dash
-                ) {
+                if (prevC === specialCharNumNewline || prevC === space || prevC === dash) {
                     words.push(new FormattedText());
                     wordStarts.push(i);
                 }
@@ -203,11 +170,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             /* measure the text, unless it's the placeholder at the end */
             let wordMeasured = 0;
             if (nWord < words.length - 1) {
-                wordMeasured = this.measureSpanOfText(
-                    measurements,
-                    wordStarts[nWord],
-                    wordStarts[nWord + 1]
-                );
+                wordMeasured = this.measureSpanOfText(measurements, wordStarts[nWord], wordStarts[nWord + 1]);
             }
 
             let nextX = curX + wordMeasured;
@@ -236,20 +199,8 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
                 }
 
                 /* then add chars 1 by 1 */
-                for (
-                    let charNum = wordStarts[nWord];
-                    charNum < wordStarts[nWord + 1];
-                    charNum++
-                ) {
-                    curX = this.wrapTextIntoLinesOneCharAtATime(
-                        s,
-                        boxW,
-                        ret,
-                        retStarts,
-                        charNum,
-                        measurements,
-                        curX
-                    );
+                for (let charNum = wordStarts[nWord]; charNum < wordStarts[nWord + 1]; charNum++) {
+                    curX = this.wrapTextIntoLinesOneCharAtATime(s, boxW, ret, retStarts, charNum, measurements, curX);
                 }
             }
         }
@@ -262,11 +213,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         for (let lineNum = 0; lineNum < ret.length; lineNum++) {
             let line = ret[lineNum];
             line.charIndices = [];
-            for (
-                let charnum = retStarts[lineNum];
-                charnum < retStarts[lineNum] + line.text.len();
-                charnum++
-            ) {
+            for (let charnum = retStarts[lineNum]; charnum < retStarts[lineNum] + line.text.len(); charnum++) {
                 line.charIndices.push(charnum);
             }
         }
@@ -278,43 +225,18 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
      * draw the caret, a vertical line
      */
     protected drawCaret(args: DrawTextArgs, canvas: CanvasWrapper, bounds: number[]) {
-        canvas.fillRect(
-            bounds[0],
-            bounds[1],
-            1,
-            bounds[3],
-            args.boxX,
-            args.boxY,
-            args.boxW,
-            args.boxH,
-            'black'
-        );
+        canvas.fillRect(bounds[0], bounds[1], 1, bounds[3], args.boxX, args.boxY, args.boxW, args.boxH, 'black');
     }
 
     /**
      * show text as selected by inverting the colors
      */
-    protected drawSelected(
-        args: DrawTextArgs,
-        canvas: CanvasWrapper,
-        bounds: number[],
-        type: CharRectType
-    ) {
-        canvas.invertColorsRect(
-            bounds[0],
-            bounds[1],
-            bounds[2],
-            bounds[3],
-            args.boxX,
-            args.boxY,
-            args.boxW,
-            args.boxH
-        );
+    protected drawSelected(args: DrawTextArgs, canvas: CanvasWrapper, bounds: number[], type: CharRectType) {
+        canvas.invertColorsRect(bounds[0], bounds[1], bounds[2], bounds[3], args.boxX, args.boxY, args.boxW, args.boxH);
     }
 
     /**
-     * for each character, run the callback, draw the caret,
-     * highlight the letter if it should be selected
+     * for each character, run the callback, draw the caret, highlight the letter if it should be selected
      */
     protected callPerChar(
         args: DrawTextArgs,
@@ -324,35 +246,20 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         bounds: number[]
     ): ShouldContinueDrawing {
         /* run the callback and see if it's telling us to stop looping */
-        if (
-            args.callbackPerChar &&
-            args.callbackPerChar(charIndex, type, bounds) === false
-        ) {
+        if (args.callbackPerChar && args.callbackPerChar(charIndex, type, bounds) === false) {
             return ShouldContinueDrawing.No;
         }
 
         if (canvas && args.selCaret === args.selEnd) {
             /* draw the caret */
-            if (
-                args.showCaret &&
-                args.selCaret === charIndex &&
-                type === CharRectType.Char
-            ) {
+            if (args.showCaret && args.selCaret === charIndex && type === CharRectType.Char) {
                 this.drawCaret(args, canvas, bounds);
             }
         } else if (canvas) {
             /* highlight the selected text */
-            if (
-                args.selCaret < args.selEnd &&
-                charIndex >= args.selCaret &&
-                charIndex < args.selEnd
-            ) {
+            if (args.selCaret < args.selEnd && charIndex >= args.selCaret && charIndex < args.selEnd) {
                 this.drawSelected(args, canvas, bounds, type);
-            } else if (
-                args.selEnd < args.selCaret &&
-                charIndex >= args.selEnd &&
-                charIndex < args.selCaret
-            ) {
+            } else if (args.selEnd < args.selCaret && charIndex >= args.selEnd && charIndex < args.selCaret) {
                 this.drawSelected(args, canvas, bounds, type);
             }
         }
@@ -373,14 +280,8 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         line: LineTextToRender,
         ret: DrawCharResult
     ) {
-        assertTrue(
-            args.selCaret !== undefined && args.selCaret !== null,
-            '3L|invalid selection'
-        );
-        assertTrue(
-            args.selEnd !== undefined && args.selEnd !== null,
-            '3K|invalid selection'
-        );
+        assertTrue(args.selCaret !== undefined && args.selCaret !== null, '3L|invalid selection');
+        assertTrue(args.selEnd !== undefined && args.selEnd !== null, '3K|invalid selection');
         for (let i = 0; i < text.len(); i++) {
             let fontObj = this.cache.getFont(text.fontAt(i));
             let drawn = UI512DrawChar.draw(
@@ -403,42 +304,21 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
 
             /* the "logical" bounds is the full area surrounding the character,
             the area that is highlighted when char is selected */
-            let cbounds = [
-                prevXForBounds,
-                curY,
-                curXForBounds - prevXForBounds,
-                line.tallestLineHeight
-            ];
+            let cbounds = [prevXForBounds, curY, curXForBounds - prevXForBounds, line.tallestLineHeight];
             if (
-                this.callPerChar(
-                    args,
-                    canvas,
-                    line.charIndices[i],
-                    CharRectType.Char,
-                    cbounds
-                ) === ShouldContinueDrawing.No
+                this.callPerChar(args, canvas, line.charIndices[i], CharRectType.Char, cbounds) ===
+                ShouldContinueDrawing.No
             ) {
                 return ret;
             }
 
-            /* region to the left of the text on this line (can be large if
-            field is haligned) */
+            /* region to the left of the text on this line (can be large if field is haligned) */
             if (i === 0) {
-                let bounds = [
-                    args.boxX,
-                    curY,
-                    prevXForBounds - args.boxX,
-                    line.tallestLineHeight
-                ];
+                let bounds = [args.boxX, curY, prevXForBounds - args.boxX, line.tallestLineHeight];
                 if (bounds[2] >= 0 && bounds[3] >= 0) {
                     if (
-                        this.callPerChar(
-                            args,
-                            canvas,
-                            line.charIndices[i],
-                            CharRectType.SpaceToLeft,
-                            bounds
-                        ) === ShouldContinueDrawing.No
+                        this.callPerChar(args, canvas, line.charIndices[i], CharRectType.SpaceToLeft, bounds) ===
+                        ShouldContinueDrawing.No
                     ) {
                         return ret;
                     }
@@ -447,21 +327,11 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
 
             /* region to the right of the text on this line */
             if (i === text.len() - 1) {
-                let bounds = [
-                    curXForBounds,
-                    curY,
-                    args.boxX + args.boxW - curXForBounds,
-                    line.tallestLineHeight
-                ];
+                let bounds = [curXForBounds, curY, args.boxX + args.boxW - curXForBounds, line.tallestLineHeight];
                 if (bounds[2] >= 0 && bounds[3] >= 0) {
                     if (
-                        this.callPerChar(
-                            args,
-                            canvas,
-                            line.charIndices[i],
-                            CharRectType.SpaceToRight,
-                            bounds
-                        ) === ShouldContinueDrawing.No
+                        this.callPerChar(args, canvas, line.charIndices[i], CharRectType.SpaceToRight, bounds) ===
+                        ShouldContinueDrawing.No
                     ) {
                         return ret;
                     }
@@ -511,12 +381,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         for (let i = 0, len = lines.length; i < len; i++) {
             let line = lines[i];
             line.measureWidth(this.cache, measurements);
-            line.measureHeight(
-                this.cache,
-                args.addVSpacing,
-                lastHeightMeasured,
-                lastCapHeightMeasured
-            );
+            line.measureHeight(this.cache, args.addVSpacing, lastHeightMeasured, lastCapHeightMeasured);
             totalWidth += line.width;
             totalHeight += line.tallestLineHeight;
             lastHeightMeasured = line.tallestLineHeight;
@@ -549,23 +414,11 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             if (!args.drawBeyondVisible && curY > args.boxY + args.boxH) {
                 /* perf optimization, don't need to keep drawing chars beyond the field */
                 return ret;
-            } else if (
-                !args.drawBeyondVisible &&
-                curY + lines[lineno].tallestLineHeight < args.boxY
-            ) {
+            } else if (!args.drawBeyondVisible && curY + lines[lineno].tallestLineHeight < args.boxY) {
                 /* perf optimization, skip this line since it is above visible text */
             } else {
                 /* draw this line of text */
-                let r = this.drawStringIntoBoxImplLine(
-                    curX,
-                    curY,
-                    baseline,
-                    text,
-                    canvas,
-                    args,
-                    lines[lineno],
-                    ret
-                );
+                let r = this.drawStringIntoBoxImplLine(curX, curY, baseline, text, canvas, args, lines[lineno], ret);
                 if (r !== ShouldContinueDrawing.Yes) {
                     return r;
                 }
@@ -586,21 +439,18 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
 
     /**
      * disabled buttons should have the text grayed out,
-     * this function will set the font to disabled if there aren't other
-     * font customizations.
+     * this function will set the font to disabled if there aren't other font customizations.
      */
     static makeInitialTextDisabled(s: string) {
-        let search1 =
-            specialCharFontChange + 'chicago_12_biuosdce' + specialCharFontChange;
-        let repl1 =
-            specialCharFontChange + 'chicago_12_biuos+dce' + specialCharFontChange;
+        let search1 = specialCharFontChange + 'chicago_12_biuosdce' + specialCharFontChange;
+        let repl1 = specialCharFontChange + 'chicago_12_biuos+dce' + specialCharFontChange;
         let search2 = specialCharFontChange + 'geneva_9_biuosdce' + specialCharFontChange;
         let repl2 = specialCharFontChange + 'geneva_9_biuos+dce' + specialCharFontChange;
 
         if (s.length === 0) {
             /* empty string, no point in changing style */
             return s;
-        } else if (!s.startsWith(specialCharFontChange)) {
+        } else if (s.charAt(0) !== specialCharFontChange) {
             /* text uses the default font, so add disabled style */
             return repl1 + s;
         } else {
@@ -647,14 +497,8 @@ class LineTextToRender {
 
         for (let i = 0; i < this.text.len(); i++) {
             currentFont = cache.getFont(this.text.fontAt(i));
-            this.tallestLineHeight = Math.max(
-                this.tallestLineHeight,
-                currentFont.grid.getLineHeight()
-            );
-            this.tallestCapHeight = Math.max(
-                this.tallestCapHeight,
-                currentFont.grid.getCapHeight()
-            );
+            this.tallestLineHeight = Math.max(this.tallestLineHeight, currentFont.grid.getLineHeight());
+            this.tallestCapHeight = Math.max(this.tallestCapHeight, currentFont.grid.getCapHeight());
         }
 
         this.tallestLineHeight += addVSpacing;

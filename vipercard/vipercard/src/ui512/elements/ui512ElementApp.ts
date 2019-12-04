@@ -1,6 +1,6 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { O, throwIfUndefined, tostring } from './../utils/util512Assert';
+/* auto */ import { O, throwIfUndefined } from './../utils/util512Assert';
 /* auto */ import { OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { UI512ApplicationInterface, UI512ElGroup } from './ui512ElementGroup';
@@ -238,7 +238,7 @@ export class GridLayout<RowType, ColType> {
             fn(a, b, el);
 
             if (labelBasedOnCol) {
-                el.set('labeltext', tostring(cellIdSuffix).toLowerCase());
+                el.set('labeltext', cellIdSuffix.toString().toLowerCase());
             }
         });
     }

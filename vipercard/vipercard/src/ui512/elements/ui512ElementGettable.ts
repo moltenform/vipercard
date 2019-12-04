@@ -14,25 +14,25 @@ export type ElementObserverVal = string | boolean | number | FormattedText;
  */
 export abstract class UI512Gettable {
     getN(s: string): number {
-        let v = (this as any)['_' + s]; /* gettable */
+        let v = (this as any)['_' + s]; /* gettable */;
         assertEq(typeof 0, typeof v, `2+|${s} expected type ${typeof 0}`);
         return v;
     }
 
     getS(s: string): string {
-        let v = (this as any)['_' + s]; /* gettable */
+        let v = (this as any)['_' + s]; /* gettable */;
         assertEqWarn(typeof '', typeof v, `2*|${s} expected type ${typeof ''}`);
         return v;
     }
 
     getB(s: string): boolean {
-        let v = (this as any)['_' + s]; /* gettable */
+        let v = (this as any)['_' + s]; /* gettable */;
         assertEq('boolean', typeof v, `2)|${s} expected type 'boolean'}`);
         return v;
     }
 
     getGeneric(s: string): ElementObserverVal {
-        let v = (this as any)['_' + s]; /* gettable */
+        let v = (this as any)['_' + s]; /* gettable */;
         assertTrue(v !== null && v !== undefined, `2(|${s} undefined`);
         return v;
     }
@@ -60,22 +60,14 @@ export abstract class UI512Settable extends UI512Gettable {
     constructor(id: string, observer: ElementObserver = elementObserverDefault) {
         super();
         assertTrue(slength(id), '2%|invalid id');
-        assertTrue(!id.includes('|'), '2$|invalid id');
+        assertTrue(!scontains(id, '|'), '2$|invalid id');
         this.id = id;
         this.observer = observer;
-        UI512Settable.emptyFmTxt.lock();
+        UI512Settable.emptyFmTxt.lock()
     }
 
-    protected setImpl(
-        s: string,
-        newVal: ElementObserverVal,
-        defaultVal: O<ElementObserverVal>,
-        context: ChangeContext
-    ) {
-        checkThrowUI512(
-            !this.locked,
-            'tried to set value when locked. setting during refresh()?'
-        );
+    protected setImpl(s: string, newVal: ElementObserverVal, defaultVal: O<ElementObserverVal>, context: ChangeContext) {
+        checkThrowUI512(!this.locked, 'tried to set value when locked. setting during refresh()?');
         let prevVal = (this as any)['_' + s];
         (this as any)['_' + s] = newVal; /* gettable */
         if (prevVal !== newVal) {
@@ -85,13 +77,13 @@ export abstract class UI512Settable extends UI512Gettable {
             } else {
                 /* skip the type check, since the prev val might be undefined */
                 if (prevVal === undefined || prevVal === null) {
-                    prevVal = defaultVal;
+                    prevVal = defaultVal
                 }
             }
 
             this.dirty = true;
             if ((newVal as FormattedText).isFormattedText) {
-                (newVal as FormattedText).lock();
+                (newVal as FormattedText).lock()
             }
 
             this.observer.changeSeen(context, this.id, s, prevVal, newVal);
@@ -99,7 +91,7 @@ export abstract class UI512Settable extends UI512Gettable {
     }
 
     set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
-        this.setImpl(s, newVal, undefined, context);
+        this.setImpl(s, newVal, undefined, context)
     }
 
     getDirty() {

@@ -1,6 +1,5 @@
 
 /* auto */ import { assertTrue, makeUI512Error } from './../utils/util512Assert';
-/* auto */ import { Util512, longstr } from './../utils/util512';
 
 /* Bitmap-font-drawing
 Extraction and rendering by Ben Fisher, 2017 */
@@ -30,17 +29,10 @@ export const specialCharNumNonBreakingSpace = specialCharNonBreakingSpace.charCo
  * metadata returned after a single character has been drawn.
  */
 export class DrawCharResult {
-    constructor(
-        public newLogicalX: number,
-        public rightmostPixelDrawn: number,
-        public lowestPixelDrawn: number
-    ) {}
+    constructor(public newLogicalX: number, public rightmostPixelDrawn: number, public lowestPixelDrawn: number) {}
     update(drawn: DrawCharResult) {
         this.lowestPixelDrawn = Math.max(this.lowestPixelDrawn, drawn.lowestPixelDrawn);
-        this.rightmostPixelDrawn = Math.max(
-            this.rightmostPixelDrawn,
-            drawn.rightmostPixelDrawn
-        );
+        this.rightmostPixelDrawn = Math.max(this.rightmostPixelDrawn, drawn.rightmostPixelDrawn);
         this.newLogicalX = drawn.newLogicalX;
     }
 }
@@ -69,8 +61,7 @@ export class UI512FontGrid {
     getLineHeight() {
         if (!this.metrics || !this.metrics.lineheight) {
             throw makeUI512Error(
-                longstr(`3U|invalid metrics for font ${this.spec.typefacename}
-                    ${this.spec.size} ${this.spec.style}`)
+                `3U|invalid metrics for font ${this.spec.typefacename} ${this.spec.size} ${this.spec.style}`
             );
         }
 
@@ -80,8 +71,7 @@ export class UI512FontGrid {
     getCapHeight() {
         if (!this.metrics || !this.metrics.capHeight) {
             throw makeUI512Error(
-                longstr(`3T|invalid metrics for font ${this.spec.typefacename}
-                    ${this.spec.size} ${this.spec.style}`)
+                `3T|invalid metrics for font ${this.spec.typefacename} ${this.spec.size} ${this.spec.style}`
             );
         }
 
@@ -257,15 +247,11 @@ export function typefacenameToTypefaceIdFull(s: string): string {
  * 3) style
  */
 export class TextFontSpec {
-    constructor(
-        public typefacename: string,
-        public style: TextFontStyling,
-        public size: number
-    ) {}
+    constructor(public typefacename: string, public style: TextFontStyling, public size: number) {}
     static fromString(s: string) {
         let parts = s.split('_');
         let typefacename = parts[0];
-        let size = Util512.parseInt(parts[1]);
+        let size = parseInt(parts[1], base10);
         let style = stringToTextFontStyling(parts[2]);
         return new TextFontSpec(typefacename, style, size);
     }
@@ -291,28 +277,19 @@ export class TextFontSpec {
 
     static setTypeface(s: string, snext: string) {
         let parts = s.split('_');
-        assertTrue(
-            !snext.includes('_'),
-            '3X|parts of a font cannot contain the "_" character'
-        );
+        assertTrue(!scontains(snext, '_'), '3X|parts of a font cannot contain the "_" character');
         return [snext, parts[1], parts[2]].join('_');
     }
 
     static setFontSize(s: string, snext: string) {
         let parts = s.split('_');
-        assertTrue(
-            !snext.includes('_'),
-            '3W|parts of a font cannot contain the "_" character'
-        );
+        assertTrue(!scontains(snext, '_'), '3W|parts of a font cannot contain the "_" character');
         return [parts[0], snext, parts[2]].join('_');
     }
 
     static setFontStyle(s: string, snext: string) {
         let parts = s.split('_');
-        assertTrue(
-            !snext.includes('_'),
-            '3V|parts of a font cannot contain the "_" character'
-        );
+        assertTrue(!scontains(snext, '_'), '3V|parts of a font cannot contain the "_" character');
         return [parts[0], parts[1], snext].join('_');
     }
 }

@@ -62,7 +62,7 @@ assertEq(
     ScreenConsts.ScreenWidth,
     ScreenConsts.xLeftMargin +
         ScreenConsts.xAreaWidth +
-        ScreenConsts.xToolWidth * ScreenConsts.xToolCount +
+        (ScreenConsts.xToolWidth * ScreenConsts.xToolCount) +
         ScreenConsts.xToolMargin +
         ScreenConsts.xRightMargin,
     '3 |'

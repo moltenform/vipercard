@@ -91,7 +91,7 @@ export class Util512 {
     static parseInt(s: O<string>) {
         if (s) {
             /* ok to use here, we remembered to say base 10 */
-            /* eslint-disable-next-line ban/ban */
+            /* eslint-disable ban/ban */
             return parseInt(s, 10);
         } else {
             return NaN;
@@ -222,7 +222,7 @@ export class Util512 {
 
             assertTrue(args.length < 100, 'Ox|too many args', clsname, s);
 
-            /* eslint-disable-next-line ban/ban */
+            /* eslint-disable ban/ban */
             return method.apply(me, args);
         } else if (okIfNotExists) {
             return undefined;
@@ -425,7 +425,7 @@ export namespace Util512 {
  * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
  */
 if (!String.prototype.includes) {
-    /* eslint-disable-next-line no-extend-native */
+    /* eslint-disable no-extend-native */
     String.prototype.includes = function (search: string | RegExp, start?: number) {
         if (search instanceof RegExp) {
             throw TypeError('first argument must not be a RegExp');
@@ -434,7 +434,7 @@ if (!String.prototype.includes) {
             start = 0;
         }
 
-        /* eslint-disable-next-line @typescript-eslint/prefer-includes */
+        /* eslint-disable @typescript-eslint/prefer-includes */
         return this.indexOf(search, start) !== -1;
     };
 }

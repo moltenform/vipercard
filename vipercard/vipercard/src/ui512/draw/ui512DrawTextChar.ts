@@ -31,17 +31,7 @@ export class UI512DrawChar {
             /* to draw a tab, just draw 4 spaces */
             let ret = new DrawCharResult(0, 0, 0);
             for (let i = 0; i < ScrollConsts.TabSize; i++) {
-                ret = UI512DrawChar.draw(
-                    font,
-                    space,
-                    x,
-                    baseline,
-                    destX0,
-                    destY0,
-                    destW,
-                    destH,
-                    canvas
-                );
+                ret = UI512DrawChar.draw(font, space, x, baseline, destX0, destY0, destW, destH, canvas);
                 x = ret.newLogicalX;
             }
 
@@ -57,25 +47,14 @@ export class UI512DrawChar {
             /* character is a zero-pixel placeholder, so empty fields remember the font */
             return new DrawCharResult(x, x, baseline);
         } else if (n === specialCharNumNonBreakingSpace) {
-            /* draw a nbsp as a space, the only place nbsp is different is in
-            GetCharClass */
+            /* draw a nbsp as a space, the only place nbsp is different is in GetCharClass */
             n = space;
         } else if (n < 32 || n >= font.grid.metrics.bounds.length) {
             /* invalid characters drawn as '?' */
             n = '?'.charCodeAt(0);
         }
 
-        return UI512DrawChar.drawImpl(
-            font,
-            n,
-            x,
-            baseline,
-            destX0,
-            destY0,
-            destW,
-            destH,
-            canvas
-        );
+        return UI512DrawChar.drawImpl(font, n, x, baseline, destX0, destY0, destW, destH, canvas);
     }
 
     /**
@@ -92,20 +71,10 @@ export class UI512DrawChar {
         destH: number,
         canvas?: O<CanvasWrapper>
     ): DrawCharResult {
-        /* these decorations are flags on the TextRendererFont
-        rather than part of the grid. */
-        assertTrue(
-            (font.grid.spec.style & TextFontStyling.Underline) === 0,
-            '3S|style should have been removed'
-        );
-        assertTrue(
-            (font.grid.spec.style & TextFontStyling.Condense) === 0,
-            '3R|style should have been removed'
-        );
-        assertTrue(
-            (font.grid.spec.style & TextFontStyling.Extend) === 0,
-            '3Q|style should have been removed'
-        );
+        /* these decorations are flags on the TextRendererFont rather than part of the grid. */
+        assertTrue((font.grid.spec.style & TextFontStyling.Underline) === 0, '3S|style should have been removed');
+        assertTrue((font.grid.spec.style & TextFontStyling.Condense) === 0, '3R|style should have been removed');
+        assertTrue((font.grid.spec.style & TextFontStyling.Extend) === 0, '3Q|style should have been removed');
 
         /* get dimensions of the subset from source image */
         let bounds = font.grid.metrics.bounds[n] as number[];
@@ -128,10 +97,9 @@ export class UI512DrawChar {
         let destY = baseline + verticalOffset - font.grid.metrics.capHeight;
 
         /* get logical spacing */
-        /* for example, when drawing italics,
-        the spacing < the width of the character drawn */
+        /* for example, when drawing italics, the spacing < the width of the character drawn */
         let spacing = logicalHorizontalSpace - font.grid.metrics.leftmost;
-        spacing += font.grid.adjustSpacing ?? 0;
+        spacing += font.grid.adjustSpacing || 0;
         if (font.extend && !font.condense) {
             spacing = Math.max(1, spacing + 1);
         } else if (font.condense && !font.extend) {
@@ -141,35 +109,12 @@ export class UI512DrawChar {
         }
 
         if (canvas) {
-            canvas.drawFromImage(
-                font.grid.image,
-                srcX,
-                srcY,
-                srcW,
-                srcH,
-                destX,
-                destY,
-                destX0,
-                destY0,
-                destW,
-                destH
-            );
+            canvas.drawFromImage(font.grid.image, srcX, srcY, srcW, srcH, destX, destY, destX0, destY0, destW, destH);
 
-            /* following original os, underline follows the drawn width
-            if longer than the logical width */
+            /* following original os, underline follows the drawn width if longer than the logical width */
             if (font.underline) {
                 let underlinelength = Math.max(srcW + 1, spacing);
-                canvas.fillRect(
-                    destX,
-                    baseline + 1,
-                    underlinelength,
-                    1,
-                    destX0,
-                    destY0,
-                    destW,
-                    destH,
-                    'black'
-                );
+                canvas.fillRect(destX, baseline + 1, underlinelength, 1, destX0, destY0, destW, destH, 'black');
             }
         }
 

@@ -8,11 +8,7 @@
 export class UI512ElLabel extends UI512ElementWithText {
     readonly typename: string = 'UI512ElLabel';
     protected _transparentExceptChars = false;
-    constructor(
-        idString: string,
-        labeltext = '',
-        observer: ElementObserver = elementObserverDefault
-    ) {
+    constructor(idString: string, labeltext = '', observer: ElementObserver = elementObserverDefault) {
         super(idString, observer);
         this._labeltext = labeltext;
         this._labelvalign = false;

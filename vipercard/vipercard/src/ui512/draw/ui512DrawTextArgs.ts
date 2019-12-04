@@ -27,9 +27,7 @@ export class DrawTextArgs {
     drawBeyondVisible = true;
     asteriskOnly = false;
     defaultFont = UI512FontRequest.defaultFont;
-    callbackPerChar: O<
-        (charIndex: number, type: CharRectType, bounds: number[]) => boolean
-    >;
+    callbackPerChar: O<(charIndex: number, type: CharRectType, bounds: number[]) => boolean>;
 }
 
 /**

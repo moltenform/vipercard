@@ -37,12 +37,8 @@ export class UI512ImageSerialization {
         let uncompressed = UI512Compress.decompressString(compressed);
         if (uncompressed.length * 4 !== data.data.length) {
             let loc = window.location.href;
-            if (loc.includes('U3ZcVJ')) {
-                console.error(
-                    `length mismatch, expected, got ${data.data.length} wanted ${
-                        uncompressed.length * 4
-                    }`
-                );
+            if (scontains(loc, 'U3ZcVJ')) {
+                console.error('length mismatch, expected, got' + data.data.length + 'wanted' + uncompressed.length * 4);
                 console.error('not throwing due to special stack.');
                 return;
             }

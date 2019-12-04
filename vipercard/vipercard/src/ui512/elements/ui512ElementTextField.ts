@@ -120,13 +120,7 @@ export class UI512ElTextField extends UI512Element {
     /**
      * helper function for a choicebox list of choices
      */
-    static makeChoiceBox(
-        app: UI512Application,
-        grp: UI512ElGroup,
-        id: string,
-        x: number,
-        y: number
-    ) {
+    static makeChoiceBox(app: UI512Application, grp: UI512ElGroup, id: string, x: number, y: number) {
         let fld = new UI512ElTextField(id);
         grp.addElement(app, fld);
         fld.set('scrollbar', true);
@@ -135,12 +129,7 @@ export class UI512ElTextField extends UI512Element {
         fld.set('canselecttext', true);
         fld.set('canedit', false);
         fld.set('labelwrap', false);
-        fld.setDimensions(
-            x,
-            y,
-            ScrollConsts.ChoiceListDefaultWidth,
-            ScrollConsts.ChoiceListDefaultHeight
-        );
+        fld.setDimensions(x, y, ScrollConsts.ChoiceListDefaultWidth, ScrollConsts.ChoiceListDefaultHeight);
         return fld;
     }
 }

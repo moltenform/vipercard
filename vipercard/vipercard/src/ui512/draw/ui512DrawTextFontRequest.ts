@@ -24,14 +24,12 @@ export class UI512FontRequest {
     adjustspacing: { [key: string]: number } = {};
     constructor() {
         /* pre-specify which fonts can be loaded */
-        let fnts = '00,01,02,03,04'.split(/,/g);
-        let sizes = '10,12,14,18,24'.split(/,/g);
-        let styls = 'biuosdce,+biuosdce,b+iuosdce,biu+osdce,+b+iuosdce,b+iu+osdce'.split(
-            /,/g
-        );
-        for (let fnt of fnts) {
-            for (let style of styls) {
-                for (let sz of sizes) {
+        let listFonts = '00,01,02,03,04'.split(/,/g);
+        let listSizes = '10,12,14,18,24'.split(/,/g);
+        let listStyles = 'biuosdce,+biuosdce,b+iuosdce,biu+osdce,+b+iuosdce,b+iu+osdce'.split(/,/g);
+        for (let fnt of listFonts) {
+            for (let style of listStyles) {
+                for (let sz of listSizes) {
                     let keyname = `${fnt}_${sz}_${style}`;
                     this.cachedGrids[keyname] = CacheState.NotYetLoaded;
                     this.loadSpacingAdjustments(keyname);
@@ -75,8 +73,7 @@ export class UI512FontRequest {
         }
 
         if (found === CacheState.NotYetLoaded) {
-            /* case 2) you asked for a supported font that has never been asked
-            to be loaded */
+            /* case 2) you asked for a supported font that has never been asked to be loaded */
             let pendingGrid = new UI512FontGrid();
             pendingGrid.spec = TextFontSpec.fromString(gridkey);
             pendingGrid.adjustSpacing = this.adjustspacing[gridkey];
@@ -116,7 +113,7 @@ export class UI512FontRequest {
      */
     loadSpacingAdjustments(keyname: string) {
         if (
-            keyname.includes('+o') &&
+            scontains(keyname, '+o') &&
             (keyname.startsWith('00_') ||
                 keyname.startsWith('01_') ||
                 keyname.startsWith('02_') ||
@@ -139,8 +136,7 @@ export class UI512FontRequest {
         }
 
         /* different fonts share the same grid */
-        /* for example an "underline" variant of font has the same grid,
-        just different flag */
+        /* for example an "underline" variant of font has the same grid, just different flag */
         let grid = this.findGrid(font);
         if (grid) {
             let spec = TextFontSpec.fromString(font);
@@ -159,11 +155,7 @@ export class UI512FontRequest {
      * find font and throw if not present.
      */
     getFont(font: string): TextRendererFont {
-        return throwIfUndefined(
-            this.findFont(font),
-            '3O|font should have been cached',
-            font
-        );
+        return throwIfUndefined(this.findFont(font), '3O|font should have been cached', font);
     }
 
     /**

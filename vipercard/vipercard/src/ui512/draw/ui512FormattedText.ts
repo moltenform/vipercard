@@ -36,10 +36,8 @@ export class FormattedText {
         assertTrueWarn(s.length > 0, 'I||');
         assertTrue(!this.locked, '3q|locked');
         assertTrue(
-            !s.includes(specialCharFontChange),
-            `3p|invalid character ${specialCharFontChange.charCodeAt(
-                0
-            )} in font description`
+            !scontains(s, specialCharFontChange),
+            `3p|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
         );
 
         this.fontArray[i] = s;
@@ -54,10 +52,8 @@ export class FormattedText {
         assertTrueWarn(s.length > 0, 'I{|');
         assertTrue(!this.locked, '3n|locked');
         assertTrue(
-            !s.includes(specialCharFontChange),
-            `3m|invalid character ${specialCharFontChange.charCodeAt(
-                0
-            )} in font description`
+            !scontains(s, specialCharFontChange),
+            `3m|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
         );
 
         for (let i = 0; i < this.fontArray.length; i++) {
@@ -69,10 +65,8 @@ export class FormattedText {
         assertTrueWarn(font.length > 0, 'I`|');
         assertTrue(!this.locked, '3l|locked');
         assertTrue(
-            !font.includes(specialCharFontChange),
-            `3k|invalid character ${specialCharFontChange.charCodeAt(
-                0
-            )} in font description`
+            !scontains(font, specialCharFontChange),
+            `3k|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
         );
         this.charArray.push(char);
         this.fontArray.push(font);
@@ -121,22 +115,13 @@ export class FormattedText {
      * adds a string (of constant font) to the string
      * works like array.splice.
      */
-    static byInsertion(
-        t: FormattedText,
-        n: number,
-        nDelete: number,
-        insert: string,
-        font: string
-    ) {
+    static byInsertion(t: FormattedText, n: number, nDelete: number, insert: string, font: string) {
         /* previously used splice() and fn.apply() to do this in a few lines,
-        but if done with long strings might hit the javascript engine's argument
-        count limit */
+        but if done with long strings might hit the javascript engine's argument count limit */
         let tNew = new FormattedText();
         assertTrue(
-            !font.includes(specialCharFontChange),
-            `3g|invalid character ${specialCharFontChange.charCodeAt(
-                0
-            )} in font description`
+            !scontains(font, specialCharFontChange),
+            `3g|invalid character ${specialCharFontChange.charCodeAt(0)} in font description`
         );
         assertTrue(n >= 0, 'I_|invalid n', n);
         assertTrue(nDelete >= 0, 'I^|invalid nDelete', nDelete);
@@ -170,11 +155,8 @@ export class FormattedText {
      */
     static filterAndConvertNewlines(s: string) {
         s = s.replace(new RegExp(specialCharFontChange, 'g'), '');
-        /* eslint-disable-next-line no-control-regex */
         s = s.replace(new RegExp('\x00', 'g'), '');
-        /* eslint-disable-next-line no-control-regex */
         s = s.replace(new RegExp('\r\n', 'g'), '\n');
-        /* eslint-disable-next-line no-control-regex */
         s = s.replace(new RegExp('\r', 'g'), '\n');
         return s;
     }
@@ -203,7 +185,6 @@ export class FormattedText {
         s = FormattedText.filterAndConvertNewlines(s);
         s = TranslateCharset.translateRomanToUn(s, fallback);
         if (info === BrowserOSInfo.Windows) {
-            /* eslint-disable-next-line no-control-regex */
             s = s.replace(new RegExp('\n', 'g'), '\r\n');
         }
 
@@ -269,11 +250,7 @@ export class FormattedText {
 
         /* add a default font if no font was specified. */
         if (!s.startsWith(specialCharFontChange)) {
-            s =
-                specialCharFontChange +
-                UI512FontRequest.defaultFont +
-                specialCharFontChange +
-                s;
+            s = specialCharFontChange + UI512FontRequest.defaultFont + specialCharFontChange + s;
         }
 
         let parts = s.split(new RegExp(specialCharFontChange, 'g'));
