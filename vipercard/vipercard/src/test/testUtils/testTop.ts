@@ -23,11 +23,17 @@ export class SimpleUtil512Tests {
             testCollectionUtil512Higher
         ];
 
+        let colNamesSeen = new Map<string, boolean>();
         let mapSeen = new Map<string, boolean>();
         let countTotal = colls.map(item => item.tests.length).reduce(Util512.add);
         countTotal += colls.map(item => item.atests.length).reduce(Util512.add);
         let counter = new ValHolder(1);
         for (let coll of colls) {
+            if (colNamesSeen.has(coll.name.toLowerCase())) {
+                assertTrue(false, 'duplicate collection name', coll.name);
+            }
+
+            colNamesSeen.set(coll.name.toLowerCase(), true);
             console.log(`Collection: ${coll.name}`);
             if (includeSlow || !coll.slow) {
                 await SimpleUtil512Tests.runCollection(
@@ -36,6 +42,8 @@ export class SimpleUtil512Tests {
                     counter,
                     mapSeen
                 );
+            } else {
+                console.log('(Skipped)');
             }
         }
 
@@ -58,7 +66,7 @@ export class SimpleUtil512Tests {
                 assertTrue(false, 'Or|duplicate test name', tstname);
             }
 
-            mapSeen.set(tstname, true);
+            mapSeen.set(tstname.toLowerCase(), true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
             if (coll.async) {
