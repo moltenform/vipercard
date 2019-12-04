@@ -1,5 +1,5 @@
 
-/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './benBaseUtilsProductname';
+/* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr, } from './util512Productname';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -290,7 +290,6 @@ export function bool(x: unknown): boolean {
     return !!x;
 }
 
-
 /**
  * sometimes when showing exception message, don't need to show prefix
  */
@@ -365,6 +364,14 @@ function recordAndShowErr(firstMsg: string, msg: string) {
 }
 
 /**
+ * cast to string.
+ */
+export function tostring(s: unknown): string {
+    /* eslint-disable no-implicit-coercion */
+    return '' + s;
+}
+
+/**
  * we add two-digit markers to most asserts, so that if a bug report comes in,
  * we have more context about the site of failure.
  * assert markers are in the form xx|; this fn extracts them from a string.
@@ -407,7 +414,7 @@ export function markUI512Err(
     vpc?: boolean,
     internal?: boolean,
     script?: boolean,
-    attachErr?: UI512AttachableErr
+    attachErr?: UI512AttachableErr,
 ) {
     (e as any).isUi512Error = true; /* assert.ts */
     (e as any).isVpcError = vpc ? true : undefined; /* assert.ts */
@@ -442,4 +449,3 @@ export function checkIsRelease(): boolean {
 
     return ret;
 }
-

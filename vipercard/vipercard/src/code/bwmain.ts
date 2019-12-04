@@ -1,8 +1,8 @@
 
+/* auto */ import { sleep } from './../ui512/utils/util512Higher';
+/* auto */ import { checkIsRelease } from './../ui512/utils/util512Assert';
+/* auto */ import { Util512 } from './../ui512/utils/util512';
 /* auto */ import { SimpleUtil512Tests } from './../test/testUtils/testTop';
-/* auto */ import { sleep } from './../ui512/utils/benBaseUtilsHigher';
-/* auto */ import { checkIsRelease } from './../ui512/utils/benBaseUtilsAssert';
-/* auto */ import { Util512 } from './../ui512/utils/benBaseUtils';
 
 import type { Bowser } from '../../external/bowser-2.9/bowser';
 declare const bowser: typeof Bowser;

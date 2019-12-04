@@ -1,7 +1,7 @@
 
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCategory, assertThrows, } from './../testUtils/testUtils';
-/* auto */ import { assertTrue } from './../../ui512/utils/benBaseUtilsAssert';
-/* auto */ import { Util512, assertEq } from './../../ui512/utils/benBaseUtils';
 
 let t = new SimpleUtil512TestCategory('testExternalLibs');
 export let testExternalLibs = t;
