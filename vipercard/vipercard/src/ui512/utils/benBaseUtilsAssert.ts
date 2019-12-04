@@ -18,6 +18,7 @@ function makeUI512ErrorGeneric(
     let msg = joinIntoMessage(firstMsg, prefix, s1, s2, s3);
     let err = new Error(msg);
     try {
+        markUI512Err(err);
         recordAndShowErr(firstMsg, msg + '\n' + err.stack);
     } catch (e) {
         console.error('could not record err ' + e.message);
@@ -246,7 +247,7 @@ export function showWarningIfExceptionThrown(fn: () => void) {
  * store logs. user can choose "send err report" to send us error context.
  */
 export class UI512ErrorHandling {
-    static shouldRecordErrors = false;
+    static shouldRecordErrors = true;
     static breakOnThrow = true;
     static runningTests = false;
     static readonly maxEntryLength = 512;
@@ -289,13 +290,6 @@ export function bool(x: unknown): boolean {
     return !!x;
 }
 
-/**
- * cast to string.
- */
-export function tostring(s: unknown): string {
-    /* eslint-disable no-implicit-coercion */
-    return '' + s;
-}
 
 /**
  * sometimes when showing exception message, don't need to show prefix
@@ -386,8 +380,56 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
     }
 }
 
+/**
+ * make an error at the Vpc level
+ */
+export function makeVpcScriptErr(s: string) {
+    let err = makeUI512ErrorGeneric(s, msgScriptErr);
+    markUI512Err(err, true, false, true);
+    return err;
+}
+
+/**
+ * make an error that is labeled as "internal"
+ */
+export function makeVpcInternalErr(s: string) {
+    let err = makeUI512ErrorGeneric(s, msgInternalErr);
+    markUI512Err(err, true, true, false);
+    return err;
+}
+
+/**
+ * stamp the error object with our flags
+ * we'd rather make a subclass of Error but some browsers don't like that.
+ */
+export function markUI512Err(
+    e: Error,
+    vpc?: boolean,
+    internal?: boolean,
+    script?: boolean,
+    attachErr?: UI512AttachableErr
+) {
+    (e as any).isUi512Error = true; /* assert.ts */
+    (e as any).isVpcError = vpc ? true : undefined; /* assert.ts */
+    (e as any).isVpcScriptError = script ? true : undefined; /* assert.ts */
+    (e as any).isVpcInternalError = internal ? true : undefined; /* assert.ts */
+    (e as any).attachErr = attachErr ? attachErr : undefined; /* assert.ts */
+}
+
+/**
+ * a quick way to throw an exception if condition is false, for vpc layer
+ */
+export function checkThrow(condition: any, msg: string, s1: any = '', s2: any = '') {
+    if (!condition) {
+        throw makeVpcScriptErr(`${msg} ${s1} ${s2}`);
+    }
+}
+
 declare const WEBPACK_PRODUCTION: boolean;
 
+/**
+ * check if we are in a production build.
+ */
 export function checkIsRelease(): boolean {
     let ret = false;
     try {
@@ -400,3 +442,4 @@ export function checkIsRelease(): boolean {
 
     return ret;
 }
+
