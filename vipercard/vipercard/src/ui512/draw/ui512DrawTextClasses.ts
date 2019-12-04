@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue, makeUI512Error } from './../utils/util512Assert';
-/* auto */ import { Util512, longstr } from './../utils/util512';
+/* auto */ import { Util512, longstr, assertEq } from './../utils/util512';
 
 /* Bitmap-font-drawing
 Extraction and rendering by Ben Fisher, 2017 */
@@ -69,7 +69,8 @@ export class UI512FontGrid {
     getLineHeight() {
         if (!this.metrics || !this.metrics.lineheight) {
             throw makeUI512Error(
-                longstr(`3U|invalid metrics for font ${this.spec.typefacename}
+                '3U|invalid metrics for font ' +
+                    longstr(`${this.spec.typefacename}
                     ${this.spec.size} ${this.spec.style}`)
             );
         }
@@ -80,7 +81,8 @@ export class UI512FontGrid {
     getCapHeight() {
         if (!this.metrics || !this.metrics.capHeight) {
             throw makeUI512Error(
-                longstr(`3T|invalid metrics for font ${this.spec.typefacename}
+                '3T|invalid metrics for font' +
+                    longstr(`${this.spec.typefacename}
                     ${this.spec.size} ${this.spec.style}`)
             );
         }

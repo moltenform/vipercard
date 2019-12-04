@@ -74,7 +74,7 @@ export abstract class UI512Settable extends UI512Gettable {
     ) {
         checkThrowUI512(
             !this.locked,
-            'tried to set value when locked. setting during refresh()?'
+            'O:|tried to set value when locked. setting during refresh()?'
         );
         let prevVal = (this as any)['_' + s];
         (this as any)['_' + s] = newVal; /* gettable */

@@ -35,7 +35,7 @@ export class SimpleUtil512Tests {
         let counter = new ValHolder(1);
         for (let coll of colls) {
             if (colNamesSeen.has(coll.name.toLowerCase())) {
-                assertTrue(false, 'duplicate collection name', coll.name);
+                assertTrue(false, 'O.|duplicate collection name', coll.name);
             }
 
             colNamesSeen.set(coll.name.toLowerCase(), true);
@@ -64,7 +64,7 @@ export class SimpleUtil512Tests {
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
         let tests = coll.async ? coll.atests : coll.tests;
-        assertTrue(tests.length > 0, 'no tests in collection');
+        assertTrue(tests.length > 0, 'O-|no tests in collection');
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {
@@ -96,7 +96,7 @@ export class SimpleUtil512Tests {
                     'test failed. see details in console. continue running tests?'
                 )
             ) {
-                throw makeUI512Error('user chose to stop after failed test.');
+                throw makeUI512Error('O,|user chose to stop after failed test.');
             }
 
             SimpleUtil512Tests.haveHitWarnAndAllowToContinue = true;

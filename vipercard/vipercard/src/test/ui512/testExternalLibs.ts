@@ -7,7 +7,7 @@ let t = new SimpleUtil512TestCollection('testCollectionExternalLibs');
 export let testCollectionExternalLibs = t;
 
 t.test('PizzicatoExists', () => {
-    assertTrue(Pizzicato, 'pizzicato not found');
+    assertTrue(Pizzicato, 'O/|pizzicato not found');
 });
 
 t = new SimpleUtil512TestCollection('testCollectionUtil512LessUsefulLibs');
