@@ -1,15 +1,16 @@
 
-/* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
-/* auto */ import { O, assertTrue } from './../util/benBaseUtilsAssert';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows } from './testUtils';
+/* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
 
-let t = new SimpleSensibleTestCategory('testExternalLibs');
+let t = new SimpleUtil512TestCategory('testExternalLibs');
 export let testExternalLibs = t;
+
 t.test('PizzicatoExists', () => {
     assertTrue(Pizzicato, 'pizzicato not found');
-})
+});
 
-t = new SimpleSensibleTestCategory('testsBenBaseLessUsefulLibs');
+t = new SimpleUtil512TestCategory('testsBenBaseLessUsefulLibs');
 export let testBenBaseLessUsefulLibs = t;
 
 t.test('LockableArr', () => {
@@ -49,7 +50,4 @@ t.test('keepOnlyUnique', () => {
     );
 });
 
-declare let Pizzicato:any;
-
-
-
+declare let Pizzicato: any;

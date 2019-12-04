@@ -148,7 +148,7 @@ declare let LZString: any;
 export class UI512Compress {
     protected static stringEscapeNewline = '##Newline##';
     protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
-    protected static reNewline = new RegExp('\n', 'g');
+    protected static reNewline = /\n/g;
     static compressString(s: string): string {
         let compressed = LZString.compressToUTF16(s);
         return compressed;
@@ -218,7 +218,11 @@ class RingBufferLocalStorage extends RingBuffer {
     }
 
     getLatestIndex() {
-        let ptrLatest = parseInt(window.localStorage['ui512LogPtr'] ?? '0', 10);
+        let sLatest = window.localStorage['ui512LogPtr'] ?? '0';
+
+        /* ok to use here, we remembered to say base 10 */
+        /* eslint-disable ban/ban */
+        let ptrLatest = parseInt(sLatest, 10);
         return Number.isFinite(ptrLatest) ? ptrLatest : 0;
     }
 
@@ -262,8 +266,8 @@ export class UI512ErrorHandling {
         if (UI512ErrorHandling.shouldRecordErrors) {
             if (
                 !UI512ErrorHandling.runningTests &&
-                !!window.localStorage &&
-                !scontains(s, msgNotification)
+                bool(window.localStorage) &&
+                !s.includes(msgNotification)
             ) {
                 let severity = showedDialog ? '1' : '2';
                 let encoded = severity + UI512ErrorHandling.encodeErrMsg(s);
@@ -278,10 +282,19 @@ export class UI512ErrorHandling {
 }
 
 /**
- * string-contains
+ * is it truthy? anything except false, 0, "", null, undefined, and NaN
  */
-export function scontains(haystack: string, needle: string) {
-    return haystack.indexOf(needle) !== -1;
+export function bool(x: unknown): boolean {
+    /* eslint-disable no-implicit-coercion */
+    return !!x;
+}
+
+/**
+ * cast to string.
+ */
+export function tostring(s: unknown): string {
+    /* eslint-disable no-implicit-coercion */
+    return '' + s;
 }
 
 /**
@@ -347,7 +360,7 @@ function breakIntoDebugger() {
  * record and show an unhandled exception
  */
 function recordAndShowErr(firstMsg: string, msg: string) {
-    if (UI512ErrorHandling.breakOnThrow || scontains(firstMsg, 'assertion failed')) {
+    if (UI512ErrorHandling.breakOnThrow || firstMsg.includes('assertion failed')) {
         UI512ErrorHandling.appendErrMsgToLogs(true, msg);
         console.error(msg);
         breakIntoDebugger();
@@ -369,7 +382,7 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
     } else if (!s) {
         return undefined;
     } else {
-        return '' + s;
+        return tostring(s);
     }
 }
 

@@ -1,9 +1,9 @@
 
-/* auto */ import { SimpleSensibleTestCategory, assertThrows, sorted } from './testUtils';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../util/benBaseUtilsAssert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, bool, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, sensibleSort, slength, } from './../util/benBaseUtils';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted } from './testUtils';
+/* auto */ import { UI512ErrorHandling, assertTrue, bool, } from './../util/benBaseUtilsAssert';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort, } from './../util/benBaseUtils';
 
-let t = new SimpleSensibleTestCategory('testBenBaseUtils');
+let t = new SimpleUtil512TestCategory('testBenBaseUtils');
 export let testBenBaseUtils = t;
 
 t.test('ValHolder.param', () => {
@@ -119,7 +119,7 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
     }
 
     let pts = excMessage.split(',');
-    pts.sort();
+    pts.sort(util512Sort);
     assertEq(pts[0], ` first`, 'DP|');
     assertEq(pts[1], ` second`, 'DO|');
     assertEq(pts[2], ` third (4E)`, 'DN|');
@@ -161,11 +161,13 @@ t.test('isString', () => {
     assertTrue(isString(''), 'N9|');
     assertTrue(isString('abc'), 'N8|');
     assertTrue(isString(String('abc')), 'N7|');
-    assertTrue(isString(new String('abc')), 'N6|');
     assertTrue(!isString(123), 'N5|');
     assertTrue(!isString(null), 'N4|');
     assertTrue(!isString(undefined), 'N3|');
     assertTrue(!isString(['a']), 'N2|');
+    /* ok to disable the warning, intentionally making a Object-style-string */
+    /* eslint-disable no-new-wrappers */
+    assertTrue(isString(new String('abc')), 'N6|');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');
@@ -179,127 +181,123 @@ t.test('fitIntoInclusive.NeedToTruncate', () => {
     assertEq(1, fitIntoInclusive(0, 1, 3), 'DF|');
     assertEq(3, fitIntoInclusive(4, 1, 3), 'DE|');
 });
-t.test('sensibleSort.String', () => {
-    assertEq(0, sensibleSort('', ''), '1M|');
-    assertEq(0, sensibleSort('a', 'a'), '1L|');
-    assertEq(1, sensibleSort('abc', 'abb'), '1K|');
-    assertEq(-1, sensibleSort('abb', 'abc'), '1J|');
-    assertEq(1, sensibleSort('abcd', 'abc'), '1I|');
-    assertEq(-1, sensibleSort('abc', 'abcd'), '1H|');
+t.test('util512Sort.String', () => {
+    assertEq(0, util512Sort('', ''), '1M|');
+    assertEq(0, util512Sort('a', 'a'), '1L|');
+    assertEq(1, util512Sort('abc', 'abb'), '1K|');
+    assertEq(-1, util512Sort('abb', 'abc'), '1J|');
+    assertEq(1, util512Sort('abcd', 'abc'), '1I|');
+    assertEq(-1, util512Sort('abc', 'abcd'), '1H|');
 });
-t.test('sensibleSort.StringWithNonAscii', () => {
-    assertEq(0, sensibleSort('aunicode\u2666char', 'aunicode\u2666char'), '1G|');
-    assertEq(1, sensibleSort('aunicode\u2667char', 'aunicode\u2666char'), '1F|');
-    assertEq(-1, sensibleSort('aunicode\u2666char', 'aunicode\u2667char'), '1E|');
-    assertEq(0, sensibleSort('accented\u00e9letter', 'accented\u00e9letter'), '1D|');
-    assertEq(
-        1,
-        sensibleSort('accented\u00e9letter', 'accented\u0065\u0301letter'),
-        '1C|',
-    );
+t.test('util512Sort.StringWithNonAscii', () => {
+    assertEq(0, util512Sort('aunicode\u2666char', 'aunicode\u2666char'), '1G|');
+    assertEq(1, util512Sort('aunicode\u2667char', 'aunicode\u2666char'), '1F|');
+    assertEq(-1, util512Sort('aunicode\u2666char', 'aunicode\u2667char'), '1E|');
+    assertEq(0, util512Sort('accented\u00e9letter', 'accented\u00e9letter'), '1D|');
+    assertEq(1, util512Sort('accented\u00e9letter', 'accented\u0065\u0301letter'), '1C|');
     assertEq(
         -1,
-        sensibleSort('accented\u0065\u0301letter', 'accented\u00e9letter'),
+        util512Sort('accented\u0065\u0301letter', 'accented\u00e9letter'),
         '1B|',
     );
 });
-t.test('sensibleSort.Bool', () => {
-    assertEq(0, sensibleSort(false, false), '1A|');
-    assertEq(0, sensibleSort(true, true), '19|');
-    assertEq(1, sensibleSort(true, false), '18|');
-    assertEq(-1, sensibleSort(false, true), '17|');
+t.test('util512Sort.Bool', () => {
+    assertEq(0, util512Sort(false, false), '1A|');
+    assertEq(0, util512Sort(true, true), '19|');
+    assertEq(1, util512Sort(true, false), '18|');
+    assertEq(-1, util512Sort(false, true), '17|');
 });
-t.test('sensibleSort.Number', () => {
-    assertEq(0, sensibleSort(0, 0), '16|');
-    assertEq(0, sensibleSort(1, 1), '15|');
-    assertEq(0, sensibleSort(12345, 12345), '14|');
-    assertEq(0, sensibleSort(-11.15, -11.15), '13|');
-    assertEq(-1, sensibleSort(0, 1), '12|');
-    assertEq(1, sensibleSort(1, 0), '11|');
-    assertEq(1, sensibleSort(1.4, 1.3), '10|');
-    assertEq(1, sensibleSort(0, -1), '0~|');
-    assertEq(1, sensibleSort(Number.POSITIVE_INFINITY, 12345), '0}|');
-    assertEq(-1, sensibleSort(Number.NEGATIVE_INFINITY, -12345), '0||');
+t.test('util512Sort.Number', () => {
+    assertEq(0, util512Sort(0, 0), '16|');
+    assertEq(0, util512Sort(1, 1), '15|');
+    assertEq(0, util512Sort(12345, 12345), '14|');
+    assertEq(0, util512Sort(-11.15, -11.15), '13|');
+    assertEq(-1, util512Sort(0, 1), '12|');
+    assertEq(1, util512Sort(1, 0), '11|');
+    assertEq(1, util512Sort(1.4, 1.3), '10|');
+    assertEq(1, util512Sort(0, -1), '0~|');
+    assertEq(1, util512Sort(Number.POSITIVE_INFINITY, 12345), '0}|');
+    assertEq(-1, util512Sort(Number.NEGATIVE_INFINITY, -12345), '0||');
 });
-t.test('sensibleSort.Nullish', () => {
-    assertEq(0, sensibleSort(undefined, undefined), 'N1|');
-    assertEq(0, sensibleSort(null, null), 'N0|');
-    assertThrows('M~|', 'not compare', () => sensibleSort(null, undefined));
-    assertThrows('M}|', 'not compare', () => sensibleSort(undefined, null));
+t.test('util512Sort.Nullish', () => {
+    assertEq(0, util512Sort(undefined, undefined), 'N1|');
+    assertEq(0, util512Sort(null, null), 'N0|');
+    assertThrows('M~|', 'not compare', () => util512Sort(null, undefined));
+    assertThrows('M}|', 'not compare', () => util512Sort(undefined, null));
 });
-t.test('sensibleSort.DiffTypesShouldThrow', () => {
-    assertThrows('Le|', 'not compare', () => sensibleSort('a', 1));
-    assertThrows('Ld|', 'not compare', () => sensibleSort('a', true));
-    assertThrows('Lc|', 'not compare', () => sensibleSort('a', undefined));
-    assertThrows('Lb|', 'not compare', () => sensibleSort('a', []));
-    assertThrows('La|', 'not compare', () => sensibleSort(1, 'a'));
-    assertThrows('LZ|', 'not compare', () => sensibleSort(1, true));
-    assertThrows('LY|', 'not compare', () => sensibleSort(1, undefined));
-    assertThrows('LX|', 'not compare', () => sensibleSort(1, []));
-    assertThrows('LW|', 'not compare', () => sensibleSort(true, 'a'));
-    assertThrows('LV|', 'not compare', () => sensibleSort(true, 1));
-    assertThrows('LU|', 'not compare', () => sensibleSort(true, undefined));
-    assertThrows('LT|', 'not compare', () => sensibleSort(true, []));
-    assertThrows('LS|', 'not compare', () => sensibleSort(undefined, 'a'));
-    assertThrows('LR|', 'not compare', () => sensibleSort(undefined, 1));
-    assertThrows('LQ|', 'not compare', () => sensibleSort(undefined, true));
-    assertThrows('LP|', 'not compare', () => sensibleSort(undefined, []));
-    assertThrows('LO|', 'not compare', () => sensibleSort([], 'a'));
-    assertThrows('LN|', 'not compare', () => sensibleSort([], 1));
-    assertThrows('LM|', 'not compare', () => sensibleSort([], true));
-    assertThrows('LL|', 'not compare', () => sensibleSort([], undefined));
+t.test('util512Sort.DiffTypesShouldThrow', () => {
+    assertThrows('Le|', 'not compare', () => util512Sort('a', 1));
+    assertThrows('Ld|', 'not compare', () => util512Sort('a', true));
+    assertThrows('Lc|', 'not compare', () => util512Sort('a', undefined));
+    assertThrows('Lb|', 'not compare', () => util512Sort('a', []));
+    assertThrows('La|', 'not compare', () => util512Sort(1, 'a'));
+    assertThrows('LZ|', 'not compare', () => util512Sort(1, true));
+    assertThrows('LY|', 'not compare', () => util512Sort(1, undefined));
+    assertThrows('LX|', 'not compare', () => util512Sort(1, []));
+    assertThrows('LW|', 'not compare', () => util512Sort(true, 'a'));
+    assertThrows('LV|', 'not compare', () => util512Sort(true, 1));
+    assertThrows('LU|', 'not compare', () => util512Sort(true, undefined));
+    assertThrows('LT|', 'not compare', () => util512Sort(true, []));
+    assertThrows('LS|', 'not compare', () => util512Sort(undefined, 'a'));
+    assertThrows('LR|', 'not compare', () => util512Sort(undefined, 1));
+    assertThrows('LQ|', 'not compare', () => util512Sort(undefined, true));
+    assertThrows('LP|', 'not compare', () => util512Sort(undefined, []));
+    assertThrows('LO|', 'not compare', () => util512Sort([], 'a'));
+    assertThrows('LN|', 'not compare', () => util512Sort([], 1));
+    assertThrows('LM|', 'not compare', () => util512Sort([], true));
+    assertThrows('LL|', 'not compare', () => util512Sort([], undefined));
 });
-t.test('sensibleSort.DiffTypesInArrayShouldThrow', () => {
-    assertThrows('LK|', 'not compare', () => sensibleSort(['a', 'a'], ['a', 1]));
-    assertThrows('LJ|', 'not compare', () => sensibleSort(['a', 'a'], ['a', true]));
-    assertThrows('LI|', 'not compare', () => sensibleSort(['a', 'a'], ['a', undefined]));
-    assertThrows('LH|', 'not compare', () => sensibleSort(['a', 'a'], ['a', []]));
-    assertThrows('LG|', 'not compare', () => sensibleSort(['a', 1], ['a', 'a']));
-    assertThrows('LF|', 'not compare', () => sensibleSort(['a', 1], ['a', true]));
-    assertThrows('LE|', 'not compare', () => sensibleSort(['a', 1], ['a', undefined]));
-    assertThrows('LD|', 'not compare', () => sensibleSort(['a', 1], ['a', []]));
-    assertThrows('LC|', 'not compare', () => sensibleSort(['a', true], ['a', 'a']));
-    assertThrows('LB|', 'not compare', () => sensibleSort(['a', true], ['a', 1]));
-    assertThrows('LA|', 'not compare', () => sensibleSort(['a', true], ['a', undefined]));
-    assertThrows('L9|', 'not compare', () => sensibleSort(['a', true], ['a', []]));
-    assertThrows('L8|', 'not compare', () => sensibleSort(['a', undefined], ['a', 'a']));
-    assertThrows('L7|', 'not compare', () => sensibleSort(['a', undefined], ['a', 1]));
-    assertThrows('L6|', 'not compare', () => sensibleSort(['a', undefined], ['a', true]));
-    assertThrows('L5|', 'not compare', () => sensibleSort(['a', undefined], ['a', []]));
-    assertThrows('L4|', 'not compare', () => sensibleSort(['a', []], ['a', 'a']));
-    assertThrows('L3|', 'not compare', () => sensibleSort(['a', []], ['a', 1]));
-    assertThrows('L2|', 'not compare', () => sensibleSort(['a', []], ['a', true]));
-    assertThrows('L1|', 'not compare', () => sensibleSort(['a', []], ['a', undefined]));
+t.test('util512Sort.DiffTypesInArrayShouldThrow', () => {
+    assertThrows('LK|', 'not compare', () => util512Sort(['a', 'a'], ['a', 1]));
+    assertThrows('LJ|', 'not compare', () => util512Sort(['a', 'a'], ['a', true]));
+    assertThrows('LI|', 'not compare', () => util512Sort(['a', 'a'], ['a', undefined]));
+    assertThrows('LH|', 'not compare', () => util512Sort(['a', 'a'], ['a', []]));
+    assertThrows('LG|', 'not compare', () => util512Sort(['a', 1], ['a', 'a']));
+    assertThrows('LF|', 'not compare', () => util512Sort(['a', 1], ['a', true]));
+    assertThrows('LE|', 'not compare', () => util512Sort(['a', 1], ['a', undefined]));
+    assertThrows('LD|', 'not compare', () => util512Sort(['a', 1], ['a', []]));
+    assertThrows('LC|', 'not compare', () => util512Sort(['a', true], ['a', 'a']));
+    assertThrows('LB|', 'not compare', () => util512Sort(['a', true], ['a', 1]));
+    assertThrows('LA|', 'not compare', () => util512Sort(['a', true], ['a', undefined]));
+    assertThrows('L9|', 'not compare', () => util512Sort(['a', true], ['a', []]));
+    assertThrows('L8|', 'not compare', () => util512Sort(['a', undefined], ['a', 'a']));
+    assertThrows('L7|', 'not compare', () => util512Sort(['a', undefined], ['a', 1]));
+    assertThrows('L6|', 'not compare', () => util512Sort(['a', undefined], ['a', true]));
+    assertThrows('L5|', 'not compare', () => util512Sort(['a', undefined], ['a', []]));
+    assertThrows('L4|', 'not compare', () => util512Sort(['a', []], ['a', 'a']));
+    assertThrows('L3|', 'not compare', () => util512Sort(['a', []], ['a', 1]));
+    assertThrows('L2|', 'not compare', () => util512Sort(['a', []], ['a', true]));
+    assertThrows('L1|', 'not compare', () => util512Sort(['a', []], ['a', undefined]));
 });
-t.test('sensibleSort.ArrayThreeElements', () => {
-    assertEq(0, sensibleSort([5, 'a', 'abcdef'], [5, 'a', 'abcdef']), '0@|');
-    assertEq(1, sensibleSort([5, 'a', 'abc'], [5, 'a', 'abb']), '0?|');
-    assertEq(-1, sensibleSort([5, 'a', 'abb'], [5, 'a', 'abc']), '0>|');
+t.test('util512Sort.ArrayThreeElements', () => {
+    assertEq(0, util512Sort([5, 'a', 'abcdef'], [5, 'a', 'abcdef']), '0@|');
+    assertEq(1, util512Sort([5, 'a', 'abc'], [5, 'a', 'abb']), '0?|');
+    assertEq(-1, util512Sort([5, 'a', 'abb'], [5, 'a', 'abc']), '0>|');
 });
-t.test('sensibleSort.ArraySameLength', () => {
-    assertEq(0, sensibleSort([], []), '0{|');
-    assertEq(0, sensibleSort([5, 'a'], [5, 'a']), '0`|');
-    assertEq(1, sensibleSort([5, 'a', 7], [5, 'a', 6]), '0_|');
-    assertEq(-1, sensibleSort([5, 'a', 6], [5, 'a', 7]), '0^|');
-    assertEq(1, sensibleSort([5, 7, 'a'], [5, 6, 'a']), '0]|');
-    assertEq(1, sensibleSort([5, 7, 'a', 600], [5, 6, 'a', 700]), '0[|');
+t.test('util512Sort.ArraySameLength', () => {
+    assertEq(0, util512Sort([], []), '0{|');
+    assertEq(0, util512Sort([5, 'a'], [5, 'a']), '0`|');
+    assertEq(1, util512Sort([5, 'a', 7], [5, 'a', 6]), '0_|');
+    assertEq(-1, util512Sort([5, 'a', 6], [5, 'a', 7]), '0^|');
+    assertEq(1, util512Sort([5, 7, 'a'], [5, 6, 'a']), '0]|');
+    assertEq(1, util512Sort([5, 7, 'a', 600], [5, 6, 'a', 700]), '0[|');
 });
-t.test('sensibleSort.ArrayDifferentLength', () => {
-    assertEq(1, sensibleSort([1], []), '0=|');
-    assertEq(-1, sensibleSort([], [1]), '0<|');
-    assertEq(1, sensibleSort([10, 20], [10]), '0;|');
-    assertEq(-1, sensibleSort([10], [10, 20]), '0:|');
+t.test('util512Sort.ArrayDifferentLength', () => {
+    assertEq(1, util512Sort([1], []), '0=|');
+    assertEq(-1, util512Sort([], [1]), '0<|');
+    assertEq(1, util512Sort([10, 20], [10]), '0;|');
+    assertEq(-1, util512Sort([10], [10, 20]), '0:|');
 });
-t.test('sensibleSort.ArrayNested', () => {
-    assertEq(0, sensibleSort([[]], [[]]), '0/|');
-    assertEq(0, sensibleSort([[], []], [[], []]), '0.|');
-    assertEq(0, sensibleSort([[1, 2], []], [[1, 2], []]), '0-|');
-    assertEq(0, sensibleSort([[10, 20], [30]], [[10, 20], [30]]), '0,|');
-    assertEq(1, sensibleSort([[10, 20], [30]], [[10, 20], [-30]]), '0+|');
-    assertEq(-1, sensibleSort([[10, 20], [-30]], [[10, 20], [30]]), '0*|');
+t.test('util512Sort.ArrayNested', () => {
+    assertEq(0, util512Sort([[]], [[]]), '0/|');
+    assertEq(0, util512Sort([[], []], [[], []]), '0.|');
+    assertEq(0, util512Sort([[1, 2], []], [[1, 2], []]), '0-|');
+    assertEq(0, util512Sort([[10, 20], [30]], [[10, 20], [30]]), '0,|');
+    assertEq(1, util512Sort([[10, 20], [30]], [[10, 20], [-30]]), '0+|');
+    assertEq(-1, util512Sort([[10, 20], [-30]], [[10, 20], [30]]), '0*|');
     assertEq(
         1,
-        sensibleSort(
+        util512Sort(
             [
                 [10, 20],
                 [1, 30],
@@ -313,7 +311,7 @@ t.test('sensibleSort.ArrayNested', () => {
     );
     assertEq(
         -1,
-        sensibleSort(
+        util512Sort(
             [
                 [10, 20],
                 [1, -30],
@@ -327,7 +325,7 @@ t.test('sensibleSort.ArrayNested', () => {
     );
     assertEq(
         1,
-        sensibleSort(
+        util512Sort(
             [
                 [10, 20],
                 [30, 31],
@@ -338,7 +336,7 @@ t.test('sensibleSort.ArrayNested', () => {
     );
     assertEq(
         -1,
-        sensibleSort(
+        util512Sort(
             [[10, 20], [30]],
             [
                 [10, 20],
@@ -347,9 +345,9 @@ t.test('sensibleSort.ArrayNested', () => {
         ),
         '0%|',
     );
-    assertEq(0, sensibleSort([[10, 20], 50, [30]], [[10, 20], 50, [30]]), '0$|');
-    assertEq(1, sensibleSort([[10, 20], 60, [30]], [[10, 20], 50, [30]]), '0#|');
-    assertEq(-1, sensibleSort([[10, 20], 50, [30]], [[10, 20], 60, [30]]), '0!|');
+    assertEq(0, util512Sort([[10, 20], 50, [30]], [[10, 20], 50, [30]]), '0$|');
+    assertEq(1, util512Sort([[10, 20], 60, [30]], [[10, 20], 50, [30]]), '0#|');
+    assertEq(-1, util512Sort([[10, 20], 50, [30]], [[10, 20], 60, [30]]), '0!|');
 });
 t.test('forOf', () => {
     let ar = [11, 22, 33];

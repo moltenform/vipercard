@@ -1,10 +1,10 @@
 
-/* auto */ import { SimpleSensibleTestCategory } from './testUtils';
+/* auto */ import { SimpleUtil512TestCategory } from './testUtils';
 /* auto */ import { Util512Higher, sleep } from './../util/benBaseUtilsHigher';
-/* auto */ import { assertTrue, scontains } from './../util/benBaseUtilsAssert';
+/* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512, assertEq } from './../util/benBaseUtils';
 
-let t = new SimpleSensibleTestCategory('testBenBaseUtilsHigher');
+let t = new SimpleUtil512TestCategory('testBenBaseUtilsHigher');
 export let testBenBaseUtilsHigher = t;
 
 t.test('WeakUuid', () => {
@@ -19,7 +19,7 @@ t.test('WeakUuid', () => {
         if (i === 23 || i === 18 || i === 13 || i === 8) {
             assertEq('-', c, 'EY|');
         } else {
-            assertTrue(scontains('0123456789abcdef', c), 'EX|');
+            assertTrue('0123456789abcdef'.includes(c), 'EX|');
         }
     }
 });
@@ -44,9 +44,11 @@ t.test('generateUniqueBase64UrlSafe', () => {
     assertEq('!', Util512.fromBase64UrlSafe(generated2)[0], 'D%|');
 });
 
-t = new SimpleSensibleTestCategory('testExampleAsyncTests', 'async');
+t = new SimpleUtil512TestCategory('testExampleAsyncTests', true);
 export let testExampleAsyncTests = t;
 
+/* ok to disable warning, we're intentionally only synchronous here */
+/* eslint-disable @typescript-eslint/require-await */
 t.atest('canDoSimpleSynchronousActions', async () => {
     t.say('adding numbers');
     assertEq(4, 2 + 2, 'OA|');
@@ -56,6 +58,8 @@ t.atest('canAwaitACall', async () => {
     await exampleAsyncFn();
     t.say('3');
 });
+/* ok to disable warning, we're intentionally returning a promise */
+/* eslint-disable @typescript-eslint/promise-function-async */
 t.atest('canChainACall', () => {
     return exampleAsyncFn();
 });

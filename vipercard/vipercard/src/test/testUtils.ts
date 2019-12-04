@@ -1,5 +1,6 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, scontains, } from './../util/benBaseUtilsAssert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error, } from './../util/benBaseUtilsAssert';
+/* auto */ import { util512Sort } from './../util/benBaseUtils';
 
 /**
  * assert that an exception is thrown, with a certain message
@@ -22,7 +23,7 @@ export async function assertThrowsAsync<T>(
 
     assertTrue(msg !== undefined, `JC|did not throw ${msgWithMark}`);
     assertTrue(
-        msg !== undefined && scontains(msg, expectedErr),
+        msg !== undefined && msg.includes(expectedErr),
         `JB|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
     );
 }
@@ -44,7 +45,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: Funct
 
     assertTrue(msg !== undefined, `3{|did not throw ${msgWithMark}`);
     assertTrue(
-        msg !== undefined && scontains(msg, expectedErr),
+        msg !== undefined && msg.includes(expectedErr),
         `9d|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`,
     );
 }
@@ -54,7 +55,7 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: Funct
  */
 export function sorted(ar: any[]) {
     let arCopy = ar.slice();
-    arCopy.sort();
+    arCopy.sort(util512Sort);
     return arCopy;
 }
 
@@ -70,21 +71,22 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
     });
 }
 
-type VoidFn = () => void;
-type AVoidFn = () => Promise<void>;
+export type VoidFn = () => void;
+export type AVoidFn = () => Promise<void>;
 
-export class SimpleSensibleTestCategory {
-    constructor(public name: string, public type: '' | 'async' | 'slow+async' = '') {}
-    tests: [string, VoidFn | AVoidFn][] = [];
+export class SimpleUtil512TestCategory {
+    constructor(public name: string, public async = false, public slow = false) {}
+    tests: [string, VoidFn][] = [];
+    atests: [string, AVoidFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
-        assertTrue(!scontains(this.type, 'async'), 'Ot|');
+        assertTrue(!this.async, 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
     public atest(s: string, fn: AVoidFn) {
-        assertTrue(scontains(this.type, 'async'), 'Os|');
-        this.tests.push([s, fn]);
+        assertTrue(this.async, 'Os|');
+        this.atests.push([s, fn]);
         return this;
     }
     public say(context: string) {

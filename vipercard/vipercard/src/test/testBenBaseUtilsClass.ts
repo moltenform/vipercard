@@ -1,9 +1,9 @@
 
-/* auto */ import { SimpleSensibleTestCategory, assertThrows, sorted } from './testUtils';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows, sorted } from './testUtils';
 /* auto */ import { assertTrue } from './../util/benBaseUtilsAssert';
 /* auto */ import { BrowserOSInfo, Util512, assertEq, longstr, } from './../util/benBaseUtils';
 
-let t = new SimpleSensibleTestCategory('testBenBaseUtilsClass');
+let t = new SimpleUtil512TestCategory('testBenBaseUtilsClass');
 export let testBenBaseUtilsClass = t;
 
 t.test('isValidNumber', () => {

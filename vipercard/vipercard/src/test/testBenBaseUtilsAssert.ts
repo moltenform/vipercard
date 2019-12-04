@@ -1,9 +1,9 @@
 
-/* auto */ import { SimpleSensibleTestCategory, assertThrows } from './testUtils';
-/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, scontains, throwIfUndefined, } from './../util/benBaseUtilsAssert';
+/* auto */ import { SimpleUtil512TestCategory, assertThrows } from './testUtils';
+/* auto */ import { RingBuffer, UI512Compress, assertTrue, checkThrowUI512, joinIntoMessage, makeUI512Error, throwIfUndefined, tostring, } from './../util/benBaseUtilsAssert';
 /* auto */ import { assertEq } from './../util/benBaseUtils';
 
-let t = new SimpleSensibleTestCategory('testBenBaseUtilsAssert');
+let t = new SimpleUtil512TestCategory('testBenBaseUtilsAssert');
 export let testBenBaseUtilsAssert = t;
 
 t.test('AssertThrows', () => {
@@ -148,19 +148,19 @@ t.test('RingBuffer.CorrectlyWrapsAroundWhenNegative', () => {
     buf.append('g');
     assertEq(['g', 'f'], buf.retrieve(2), 'C9|');
 });
-t.test('scontains', () => {
+t.test('built-in includes', () => {
     t.say(/*——————————*/ 'typical usage');
-    assertTrue(scontains('a test string', 'e'), 'Nh|');
-    assertTrue(scontains('a test string', 'test'), 'Ng|');
-    assertTrue(scontains('a test string', 'a test'), 'Nf|');
-    assertTrue(scontains('a test string', 'a test string'), 'Ne|');
-    assertTrue(!scontains('a test string', 'a test string '), 'Nd|');
-    assertTrue(!scontains('a test string', 'x'), 'Nc|');
+    assertTrue('a test string'.includes('e'), 'Nh|');
+    assertTrue('a test string'.includes('test'), 'Ng|');
+    assertTrue('a test string'.includes('a test'), 'Nf|');
+    assertTrue('a test string'.includes('a test string'), 'Ne|');
+    assertTrue(!'a test string'.includes('a test string '), 'Nd|');
+    assertTrue(!'a test string'.includes('x'), 'Nc|');
     t.say(/*——————————*/ 'edge cases');
-    assertTrue(scontains('test', 'test'), 'Nb|');
-    assertTrue(scontains('test', ''), 'Na|');
-    assertTrue(!scontains('', 'test'), 'NZ|');
-    assertTrue(scontains('', ''), 'NY|');
+    assertTrue('test'.includes('test'), 'Nb|');
+    assertTrue('test'.includes(''), 'Na|');
+    assertTrue(!''.includes('test'), 'NZ|');
+    assertTrue(''.includes(''), 'NY|');
 });
 t.test('unknownToString', () => {
     class CustomToString {
@@ -175,12 +175,12 @@ t.test('unknownToString', () => {
     let d: unknown = undefined;
     let e: unknown = null;
     let f: unknown = false;
-    assertEq('abc', '' + a, 'NX|');
-    assertEq('a string', '' + b, 'NW|');
-    assertEq('123', '' + c, 'NV|');
-    assertEq('undefined', '' + d, 'NU|');
-    assertEq('null', '' + e, 'NT|');
-    assertEq('false', '' + f, 'NS|');
+    assertEq('abc', tostring(a), 'NX|');
+    assertEq('a string', tostring(b), 'NW|');
+    assertEq('123', tostring(c), 'NV|');
+    assertEq('undefined', tostring(d), 'NU|');
+    assertEq('null', tostring(e), 'NT|');
+    assertEq('false', tostring(f), 'NS|');
 });
 
 /**

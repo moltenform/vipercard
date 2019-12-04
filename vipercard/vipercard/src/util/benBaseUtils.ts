@@ -1,5 +1,5 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512, makeUI512Error, scontains, throwIfUndefined, } from './benBaseUtilsAssert';
+/* auto */ import { O, assertTrue, bool, checkThrowUI512, makeUI512Error, throwIfUndefined, tostring, } from './benBaseUtilsAssert';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -79,7 +79,20 @@ export class Util512 {
 
         s = s.trim();
         if (s.match(/^\d+$/)) {
-            return parseInt(s, base10);
+            return Util512.parseInt(s);
+        } else {
+            return NaN;
+        }
+    }
+
+    /*
+     * use this, not parseInt where you might forget to specify base 10
+     */
+    static parseInt(s: O<string>) {
+        if (s) {
+            /* ok to use here, we remembered to say base 10 */
+            /* eslint-disable ban/ban */
+            return parseInt(s, 10);
         } else {
             return NaN;
         }
@@ -96,11 +109,11 @@ export class Util512 {
      * guess OS based on navstring.
      */
     static getBrowserOS(navString: string): BrowserOSInfo {
-        if (scontains(navString, 'Windows')) {
+        if (navString.includes('Windows')) {
             return BrowserOSInfo.Windows;
         } else if (
             /(iPhone|iPad|iPod)/.test(navString) ||
-            /Mac OS X/.test(navString) ||
+            navString.includes('Mac OS X') ||
             /(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/.test(navString)
         ) {
             return BrowserOSInfo.Mac;
@@ -161,7 +174,7 @@ export class Util512 {
      * like Python's re.escape.
      */
     static escapeForRegex(s: string) {
-        return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 
     /**
@@ -258,7 +271,7 @@ export class Util512 {
      * from 1 to 001.
      */
     static padStart(sIn: string | number, targetLength: number, padString: string) {
-        let s = '' + sIn;
+        let s = tostring(sIn);
         padString = typeof padString !== 'undefined' ? padString : ' ';
         if (s.length > targetLength) {
             return s;
@@ -290,10 +303,7 @@ export class Util512 {
      * note: strips off final = padding
      */
     static toBase64UrlSafe(s: string) {
-        return btoa(s)
-            .replace(/\//g, '_')
-            .replace(/\+/g, '-')
-            .replace(/\=+$/, '');
+        return btoa(s).replace(/\//g, '_').replace(/\+/g, '-').replace(/=+$/, '');
     }
 
     /**
@@ -342,7 +352,7 @@ export class Util512 {
         // 1) decorate
         let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
         // 2) sort
-        decorated.sort((a, b) => sensibleSort(a[0], b[0]));
+        decorated.sort((a, b) => util512Sort(a[0], b[0]));
         // 3) undecorate
         return decorated.map(val => val[1]);
     }
@@ -411,6 +421,25 @@ export namespace Util512 {
 }
 
 /**
+ * polyfill for String.includes, from http://developer.mozilla.org
+ * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+ */
+if (!String.prototype.includes) {
+    /* eslint-disable no-extend-native */
+    String.prototype.includes = function (search: string | RegExp, start?: number) {
+        if (search instanceof RegExp) {
+            throw TypeError('first argument must not be a RegExp');
+        }
+        if (start === undefined) {
+            start = 0;
+        }
+
+        /* eslint-disable @typescript-eslint/prefer-includes */
+        return this.indexOf(search, start) !== -1;
+    };
+}
+
+/**
  * holds a value. useful for out-parameters.
  */
 export class ValHolder<T> {
@@ -453,7 +482,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
             isString(enumMember) &&
             !enumMember.startsWith('__') &&
             !enumMember.startsWith('__AlternateForm__') &&
-            !scontains('0123456789', enumMember[0].toString())
+            !'0123456789'.includes(enumMember[0].toString())
         ) {
             s += ', ' + (makeLowercase ? enumMember.toLowerCase() : enumMember);
         }
@@ -599,7 +628,7 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
  * works on arbitrarily nested array structures.
  * can be used in .sort() or just to compare values.
  */
-export function sensibleSort(a: unknown, b: unknown): number {
+export function util512Sort(a: unknown, b: unknown): number {
     if (a === undefined && b === undefined) {
         return 0;
     } else if (a === null && b === null) {
@@ -619,7 +648,7 @@ export function sensibleSort(a: unknown, b: unknown): number {
         }
         let howManyElementsToSort = a.length;
         for (let i = 0; i < howManyElementsToSort; i++) {
-            let cmp = sensibleSort(a[i], b[i]);
+            let cmp = util512Sort(a[i], b[i]);
             if (cmp !== 0) {
                 return cmp;
             }
@@ -729,11 +758,6 @@ export enum BrowserOSInfo {
 }
 
 /**
- * just to avoid magic number in parseInt(x, 10)
- */
-export const base10 = 10;
-
-/**
  * map a key to object, does not allow setting a value twice.
  */
 export class MapKeyToObject<T> {
@@ -800,7 +824,7 @@ export function checkThrowEq<T>(
     c1: unknown = '',
     c2: unknown = '',
 ): asserts got is T {
-    if (sensibleSort(expected, got) !== 0) {
+    if (util512Sort(expected, got) !== 0) {
         throw makeUI512Error(
             `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`,
         );
@@ -818,7 +842,7 @@ export function assertEq(
     c2?: unknown,
     c3?: unknown,
 ) {
-    if (sensibleSort(expected, received) !== 0) {
+    if (util512Sort(expected, received) !== 0) {
         let msgAssertEq = longstr(`assertion failed in assertEq,
             expected '${expected}' but got '${received}'.`);
         throw makeUI512Error(msgAssertEq, c1, c2, c3);
@@ -836,7 +860,7 @@ export function assertEqWarn(
     c2?: unknown,
     c3?: unknown,
 ) {
-    if (sensibleSort(expected, received) !== 0) {
+    if (util512Sort(expected, received) !== 0) {
         let msgInAssertEqWarn = longstr(`warning, assertion failed in assertEqWarn,
             expected '${expected}' but got '${received}'.`);
         let er = makeUI512Error(msgInAssertEqWarn, c1, c2, c3);
@@ -852,13 +876,6 @@ get last of an array
 export function last<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'Ou|empty array');
     return ar[ar.length - 1];
-}
-
-/**
- * is it truthy? anything except false, 0, "", null, undefined, and NaN
- */
-export function bool(x: unknown): boolean {
-    return !!x;
 }
 
 /**

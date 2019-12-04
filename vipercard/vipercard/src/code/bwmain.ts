@@ -1,12 +1,11 @@
 
-/* auto */ import { SimpleSensibleTests } from './../test/testTop';
+/* auto */ import { SimpleUtil512Tests } from './../test/testTop';
 /* auto */ import { sleep } from './../util/benBaseUtilsHigher';
 /* auto */ import { checkIsRelease } from './../util/benBaseUtilsAssert';
 /* auto */ import { Util512 } from './../util/benBaseUtils';
 
-import type {Bowser} from '../../external/bowser-2.9/bowser';
+import type { Bowser } from '../../external/bowser-2.9/bowser';
 declare const bowser: typeof Bowser;
-
 
 function getTestString() {
     let s1 = Util512.repeat(4, 'a').join('_');
@@ -53,12 +52,20 @@ export function runOnLoad() {
 
     let elBtnGoAsync = document.getElementById('idBtnGoAsync');
     if (elBtnGoAsync) {
-        elBtnGoAsync.addEventListener('click', onBtnGoAsync);
+        elBtnGoAsync.addEventListener('click', () => {
+            onBtnGoAsync().then(
+                () => {},
+                () => {},
+            );
+        });
     }
 
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
-            SimpleSensibleTests.runTests(true);
+            SimpleUtil512Tests.runTests(true).then(
+                () => {},
+                () => {},
+            );
         }
     });
 
