@@ -4,6 +4,7 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { bridgedBase64Js } from './../../bridge/bridgeBase64Js';
 
 /**
  * serialization of VPC objects, preparing them for JSON.serialize
@@ -211,21 +212,21 @@ export class VpcGettableSerialization {
      * space-efficient for dense unicode data like this.
      */
     static jsBinaryStringToUtf16Base64(str: string) {
-        let bytes: number[] = [];
+        let bytes: Uint8Array = new Uint8Array(str.length * 2);
         for (let i = 0, len = str.length; i < len; i++) {
             let n = str.charCodeAt(i) | 0;
-            bytes.push(n % 256);
-            bytes.push(n >> 8);
+            bytes[i*2] = (n % 256);
+            bytes[i*2+1] = (n >> 8);
         }
 
-        return base64js.fromByteArray(bytes);
+        return bridgedBase64Js.fromByteArray(bytes);
     }
 
     /**
      * decode a string encoded by jsBinaryStringToUtf16Base64
      */
     static Base64Utf16ToJsBinaryString(str: string) {
-        let bytes = base64js.toByteArray(str);
+        let bytes = bridgedBase64Js.toByteArray(str);
         let s = '';
         for (let i = 0, len = bytes.length; i < len; i += 2) {
             let n = bytes[i] + (bytes[i + 1] << 8);
@@ -236,5 +237,3 @@ export class VpcGettableSerialization {
     }
 }
 
-/* the 3rd party base64js library */
-declare let base64js: any;

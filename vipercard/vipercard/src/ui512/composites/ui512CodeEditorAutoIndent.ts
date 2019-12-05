@@ -1,7 +1,7 @@
 
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { O, assertTrue, assertTrueWarn } from './../utils/util512Assert';
-/* auto */ import { Util512, assertEqWarn, slength } from './../utils/util512';
+/* auto */ import { Util512, assertEqWarn, last, slength } from './../utils/util512';
 /* auto */ import { UI512Lines } from './../textedit/ui512TextLines';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';

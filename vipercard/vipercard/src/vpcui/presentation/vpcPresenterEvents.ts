@@ -11,7 +11,7 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, assertTrueWarn, bool, showWarningIfExceptionThrown, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { cast, coalesceIfFalseLike, slength } from './../../ui512/utils/util512';
+/* auto */ import { cast, coalesceIfFalseLike, last, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { ScrollbarImpl } from './../../ui512/textedit/ui512Scrollbar';
 /* auto */ import { MenuListeners } from './../../ui512/menu/ui512MenuListeners';

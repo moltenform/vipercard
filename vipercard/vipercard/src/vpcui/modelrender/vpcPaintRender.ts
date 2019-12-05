@@ -6,7 +6,7 @@
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { O } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, cast } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, cast, last } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { UI512ImageSerialization } from './../../ui512/draw/ui512ImageSerialization';

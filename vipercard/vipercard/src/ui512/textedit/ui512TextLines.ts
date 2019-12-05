@@ -1,6 +1,6 @@
 
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
-/* auto */ import { Util512, fitIntoInclusive } from './../utils/util512';
+/* auto */ import { Util512, fitIntoInclusive, last } from './../utils/util512';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 

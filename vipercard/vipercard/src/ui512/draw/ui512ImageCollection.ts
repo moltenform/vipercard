@@ -1,7 +1,7 @@
 
 /* auto */ import { Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O, assertTrue } from './../utils/util512Assert';
-/* auto */ import { Util512 } from './../utils/util512';
+/* auto */ import { Util512, last } from './../utils/util512';
 
 /**
  * an array of UI512ImageCollections.
