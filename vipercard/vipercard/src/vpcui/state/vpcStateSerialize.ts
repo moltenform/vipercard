@@ -5,7 +5,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { vpcversion } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson, checkThrowEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { AnyJson, UnshapedJsonAny, checkThrowEq, longstr } from './../../ui512/utils/util512';
 
 /**
  * from a stack to a plain JSON object, and vice-versa
@@ -42,7 +42,7 @@ export class VpcStateSerialize {
      * serialize a vel
      */
     serializeVel(vel: VpcElBase) {
-        let ret: AnyJson = {};
+        let ret: UnshapedJsonAny = {};
         ret.type = vel.getType();
         ret.id = vel.id;
         ret.parent_id = vel.parentId;
@@ -54,7 +54,7 @@ export class VpcStateSerialize {
     /**
      * deserialize an entire project, from a plain JSON object
      */
-    deserializeAll(building: VpcStateInterface, incoming: AnyJson) {
+    deserializeAll(building: VpcStateInterface, incoming: UnshapedJsonAny) {
         building.doWithoutAbilityToUndo(() => {
             checkThrowEq('vpc', incoming.product, 'K |');
             checkThrow(
@@ -62,14 +62,12 @@ export class VpcStateSerialize {
                 'Kz|file comes from a future version, cannot open'
             );
             console.log(
-                `opening a document format ${incoming.fileformatmajor}.${incoming.fileformatminor},
-                my version is ${this.latestMajor}.${this.latestMinor}`
+                `opening a document format ${incoming.fileformatmajor}.
+                ${incoming.fileformatminor}, my version is 
+                ${this.latestMajor}.${this.latestMinor}`
             );
-            console.log(
-                deleteThis.longstr(
-                     deleteThis.longstr(`opening a document made by buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`, ''),
-                    ''
-                )
+            console.log(longstr(`opening a document made by 
+                buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`),
             );
 
             building.getModel().uuid = incoming.uuid;
@@ -86,7 +84,7 @@ export class VpcStateSerialize {
     /**
      * deserialize a vel, from a plain JSON object
      */
-    deserializeVel(building: VpcStateInterface, incoming: AnyJson) {
+    deserializeVel(building: VpcStateInterface, incoming: UnshapedJsonAny) {
         if (incoming.type === VpcElType.Stack) {
             /* don't create a new element, just copy over the attrs */
             VpcGettableSerialization.deserializeSettable(
