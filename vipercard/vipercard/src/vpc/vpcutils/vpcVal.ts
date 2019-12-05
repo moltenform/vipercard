@@ -34,9 +34,18 @@ export class VpcVal extends VpcIntermedValBase {
     constructor(v: string, token: unknown) {
         super();
 
-        assertTrue(token === allowUsingVpcValConstructor, "66|please don't use the VpcVal constructor directly");
-        assertTrue(v !== null && v !== undefined, '65|tried to set string as null or undefined');
-        checkThrow(v.length < CodeLimits.MaxStringLength, '8w|exceeded max string length');
+        assertTrue(
+            token === allowUsingVpcValConstructor,
+            "66|please don't use the VpcVal constructor directly"
+        );
+        assertTrue(
+            v !== null && v !== undefined,
+            '65|tried to set string as null or undefined'
+        );
+        checkThrow(
+            v.length < CodeLimits.MaxStringLength,
+            '8w|exceeded max string length'
+        );
         this.v = v;
     }
 
@@ -93,7 +102,8 @@ export class VpcVal extends VpcIntermedValBase {
 
     /**
      * parse scientific notation into a number
-     * note that scientific notation is allowed only for numeric literals, when you're first setting it.
+     * note that scientific notation is allowed only for
+     *      numeric literals, when you're first setting it.
      * put 2.34e6 into x --valid, seen as number
      * put x * 2 into y --valid
      *
@@ -232,7 +242,7 @@ export function VpcValS(s: string) {
 export function VpcValN(f: number) {
     checkThrow(isFinite(f) && f < 1e18 && f > -1e18, '8v|not a number, or > 1e18');
     let s = f.toString();
-    if (s.includes( 'e')) {
+    if (s.includes('e')) {
         /* toFixed returns a string representation that does not use exponential notation */
         return new VpcVal(f.toFixed(20), allowUsingVpcValConstructor);
     } else {

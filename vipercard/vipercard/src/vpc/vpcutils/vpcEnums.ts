@@ -1,6 +1,7 @@
 
+/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, fitIntoInclusive } from './../../ui512/utils/util512';
+/* auto */ import { fitIntoInclusive } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
@@ -291,28 +292,43 @@ export function toolToDispatchShapes(tl: VpcTool) {
 /**
  * for backwards compatibility: the original tool numbers
  */
-export function originalToolNumberToTool(n:number):VpcTool {
-    switch(n) {
-        case 1: return VpcTool.Browse
-case 2: return VpcTool.Button
-case 3: return VpcTool.Field
-case 4: return VpcTool.Select
-case 5: return VpcTool.Lasso
-case 6: return VpcTool.Pencil
-case 7: return VpcTool.Brush
-case 8: return VpcTool.Eraser
-case 9: return VpcTool.Line
-case 10: return VpcTool.Spray
-case 11: return VpcTool.Rect
-case 12: return VpcTool.Roundrect
-case 13: return VpcTool.Bucket
-case 14: return VpcTool.Oval
-case 15: return VpcTool.Curve
-/* 16: text tool, not yet implemented */
-/* 17: regular polygon tool, not yet implemented */
-/* 18: polygon tool, not yet implemented */
-     default:
-     throw makeVpcScriptErr(`unknown or unsupported tool ${n}`)
+export function originalToolNumberToTool(n: number): VpcTool {
+    switch (n) {
+        case 1:
+            return VpcTool.Browse;
+        case 2:
+            return VpcTool.Button;
+        case 3:
+            return VpcTool.Field;
+        case 4:
+            return VpcTool.Select;
+        case 5:
+            return VpcTool.Lasso;
+        case 6:
+            return VpcTool.Pencil;
+        case 7:
+            return VpcTool.Brush;
+        case 8:
+            return VpcTool.Eraser;
+        case 9:
+            return VpcTool.Line;
+        case 10:
+            return VpcTool.Spray;
+        case 11:
+            return VpcTool.Rect;
+        case 12:
+            return VpcTool.Roundrect;
+        case 13:
+            return VpcTool.Bucket;
+        case 14:
+            return VpcTool.Oval;
+        case 15:
+            return VpcTool.Curve;
+        /* 16: text tool, not yet implemented */
+        /* 17: regular polygon tool, not yet implemented */
+        /* 18: polygon tool, not yet implemented */
+        default:
+            throw makeVpcScriptErr(`unknown or unsupported tool ${n}`);
     }
 }
 
@@ -413,7 +429,7 @@ export function getPositionFromOrdinalOrPosition(
                 /* confirmed in emulator that this rounds to highest */
                 return Math.ceil((min + max) / 2);
             case OrdinalOrPosition.Any:
-                return Util512.getRandIntInclusiveWeak(min, max);
+                return Util512Higher.getRandIntInclusiveWeak(min, max);
             case OrdinalOrPosition.First:
                 return min;
             case OrdinalOrPosition.Second:
@@ -437,12 +453,14 @@ export function getPositionFromOrdinalOrPosition(
             case OrdinalOrPosition.Next: {
                 /* cycle back to the beginning */
                 let tmp = current + 1;
-                return (tmp > max) ? min : tmp
-            } case OrdinalOrPosition.Previous: {
+                return tmp > max ? min : tmp;
+            }
+            case OrdinalOrPosition.Previous: {
                 /* cycle back to the end */
                 let tmp = current - 1;
-                return (tmp < min) ? max : tmp
-            } case OrdinalOrPosition.This:
+                return tmp < min ? max : tmp;
+            }
+            case OrdinalOrPosition.This:
                 return current;
             default:
                 throw makeVpcScriptErr(`4-|unknown ordinal ${rel}`);

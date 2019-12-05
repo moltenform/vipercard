@@ -48,12 +48,21 @@ export class UI512AutoIndent {
     /**
      * does this line open a new block, for this specific prefix?
      */
-    getLevelChangeIsStartNewBlock(s: string, stack: AutoIndentMatch[], st: RegExp, end: RegExp, endText: string) {
+    getLevelChangeIsStartNewBlock(
+        s: string,
+        stack: AutoIndentMatch[],
+        st: RegExp,
+        end: RegExp,
+        endText: string
+    ) {
         let matched = s.match(st);
         if (matched) {
             let nextWord = '';
-            if (endText.includes( '%MATCH%')) {
-                assertTrue(matched.length > 1, '2s|the regex should have a 2nd group to capture next word');
+            if (endText.includes('%MATCH%')) {
+                assertTrue(
+                    matched.length > 1,
+                    '2s|the regex should have a 2nd group to capture next word'
+                );
                 if (matched[1].match(/^\w+$/)) {
                     nextWord = matched[1];
                 }
@@ -61,7 +70,9 @@ export class UI512AutoIndent {
 
             let store = new AutoIndentMatch();
             store.startPattern = st;
-            store.desiredEndPattern = new RegExp(end.source.replace(/%MATCH%/g, nextWord));
+            store.desiredEndPattern = new RegExp(
+                end.source.replace(/%MATCH%/g, nextWord)
+            );
             store.desiredEndText = endText.replace(/%MATCH%/g, nextWord);
             stack.push(store);
             return 1;
@@ -87,7 +98,10 @@ export class UI512AutoIndent {
     /**
      * does this line start a new block, or end a block?
      */
-    protected getLevelChange(sTrimmed: string, stack: AutoIndentMatch[]): [boolean, boolean] {
+    protected getLevelChange(
+        sTrimmed: string,
+        stack: AutoIndentMatch[]
+    ): [boolean, boolean] {
         let isBlockStart = false;
         let isBlockEnd = false;
         sTrimmed = sTrimmed.trim();
@@ -97,7 +111,13 @@ export class UI512AutoIndent {
 
         /* are we starting a new block? */
         for (let [st, end, endInsert] of this.linesCauseIndent) {
-            let rt = this.getLevelChangeIsStartNewBlock(sTrimmed, stack, st, end, endInsert);
+            let rt = this.getLevelChangeIsStartNewBlock(
+                sTrimmed,
+                stack,
+                st,
+                end,
+                endInsert
+            );
             if (rt !== 0) {
                 isBlockStart = true;
                 break;
@@ -156,7 +176,9 @@ export class UI512AutoIndent {
      */
     protected lineSetIndent(s: string, n: number) {
         s = s.replace(/^[ \t]+/g, '');
-        let space = this.useTabs ? '\t' : Util512.repeat(ScrollConsts.TabSize, ' ').join('');
+        let space = this.useTabs
+            ? '\t'
+            : Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         for (let i = 0; i < n; i++) {
             s = space + s;
         }
@@ -202,7 +224,10 @@ export class UI512AutoIndent {
                 level -= 1;
             }
 
-            s = this.lineSetIndent(s, overrideLevel !== undefined ? overrideLevel : level);
+            s = this.lineSetIndent(
+                s,
+                overrideLevel !== undefined ? overrideLevel : level
+            );
             s = UI512DrawText.setFont(s, UI512CompCodeEditorFont.font);
             lnsOut.lns[i] = FormattedText.newFromSerialized(s);
             overrideLevel = isContinuation ? level + 1 : undefined;
@@ -215,10 +240,23 @@ export class UI512AutoIndent {
 
         /* if phrases are unbalanced, let's see if we can auto-fix the problem! */
         if (level !== 0 && attemptInsertText) {
-            if (this.createAutoBlock(lnsOut, currentline, lastUnclosedMatch, lastUnclosedDelta)) {
+            if (
+                this.createAutoBlock(
+                    lnsOut,
+                    currentline,
+                    lastUnclosedMatch,
+                    lastUnclosedDelta
+                )
+            ) {
                 /* do a second pass on indentation */
                 let newselcaret = lnsOut.lineNumberToLineEndIndex(currentline);
-                return this.runAutoIndentImpl(lnsOut, newselcaret, newselcaret, lnsOut.length(), false);
+                return this.runAutoIndentImpl(
+                    lnsOut,
+                    newselcaret,
+                    newselcaret,
+                    lnsOut.length(),
+                    false
+                );
             }
         }
 
@@ -245,11 +283,17 @@ export class UI512AutoIndent {
         }
 
         /* we'll do a second pass later to correct the indentation */
-        let s = UI512DrawText.setFont(lastEncounteredDesiredMatch.desiredEndText, UI512CompCodeEditorFont.font);
+        let s = UI512DrawText.setFont(
+            lastEncounteredDesiredMatch.desiredEndText,
+            UI512CompCodeEditorFont.font
+        );
 
         /* are we on the very last line? then don't add a newline character */
         if (currentLine >= lnsOut.lns.length - 1) {
-            lnsOut.lns[currentLine].push(specialCharNumNewline, UI512CompCodeEditorFont.font);
+            lnsOut.lns[currentLine].push(
+                specialCharNumNewline,
+                UI512CompCodeEditorFont.font
+            );
         } else {
             s += '\n';
         }
@@ -267,9 +311,9 @@ export class UI512CompCodeEditorFont {
     static face = 'monaco';
     static style = TextFontStyling.Default;
     static size = 9;
-    static font = `${UI512CompCodeEditorFont.face}_${UI512CompCodeEditorFont.size}_${textFontStylingToString(
-        UI512CompCodeEditorFont.style
-    )}`;
+    static font = `${UI512CompCodeEditorFont.face}_${
+        UI512CompCodeEditorFont.size
+    }_${textFontStylingToString(UI512CompCodeEditorFont.style)}`;
 }
 
 /**

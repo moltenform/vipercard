@@ -34,10 +34,12 @@ export class UI512CompModalDialog extends UI512CompBase {
     labelText = '';
     btnLabels = ['', '', ''];
 
-    /* caller can provide rectangle of a button that, if clicked on, exits out of the dialog */
+    /* caller can provide rectangle of a button that, if clicked on,
+    exits out of the dialog */
     cancelBtnBounds: number[][] = [];
 
-    /* we normally mute all events, since it is modal. this callback lets a mouseup event through. */
+    /* we normally mute all events, since it is modal. this callback
+    lets a mouseup event through. */
     cbOnMouseUp: O<(btn: number) => void>;
 
     /* provide default text */
@@ -105,7 +107,10 @@ export class UI512CompModalDialog extends UI512CompBase {
     ) {
         if (this.btnLabels[n]) {
             let btn = this.genBtn(app, grp, `choicebtn${n}`);
-            btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
+            btn.set(
+                'style',
+                n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard
+            );
             btn.set('autohighlight', true);
             btn.set('labeltext', this.btnLabels[n]);
             btn.setDimensions(x + dims[0], y + dims[1], w, h);
@@ -165,7 +170,8 @@ export class UI512CompModalDialog extends UI512CompBase {
         );
 
         /* draw buttons */
-        this.btnLabels[0] = this.btnLabels[0] || lng('lngOK');
+        this.btnLabels[0] =
+            this.btnLabels[0].length > 0 ? this.btnLabels[0] : lng('lngOK');
         if (this.dlgType === UI512CompStdDialogType.Answer) {
             this.drawBtn(app, grp, dims, 0, 230, 105, 99, 28);
             this.drawBtn(app, grp, dims, 1, 126, 108, 91, 20);
@@ -186,13 +192,21 @@ export class UI512CompModalDialog extends UI512CompBase {
      * we'll temporarily replace *all* current listeners with the default UI512Presenter listeners.
      * because we replaced the idle event listener, we've basically frozen the app in its place.
      */
-    showStandardModalDialog(pr: UI512Presenter, app: UI512Application, fnGetResult: (n: number) => void) {
+    showStandardModalDialog(
+        pr: UI512Presenter,
+        app: UI512Application,
+        fnGetResult: (n: number) => void
+    ) {
         /* record the state, to be restored after dialog closes */
         let savedFocus = pr.getCurrentFocus();
         let savedCursor = UI512CursorAccess.getCursor();
 
         pr.mouseDragStatus = MouseDragStatus.None;
-        pr.setCurrentFocus(this.dlgType === UI512CompStdDialogType.Ask ? this.getElId(`inputfld`) : undefined);
+        pr.setCurrentFocus(
+            this.dlgType === UI512CompStdDialogType.Ask
+                ? this.getElId(`inputfld`)
+                : undefined
+        );
         UI512CursorAccess.setCursor(UI512Cursors.Arrow);
         let nChosen = UI512CompStdDialogResult.NotChosen;
         let whenComplete = () => {
@@ -248,12 +262,21 @@ export class UI512CompModalDialog extends UI512CompBase {
      */
     protected isCancelRect(x: number, y: number) {
         for (let cancelBtnBound of this.cancelBtnBounds) {
-            if (RectUtils.hasPoint(x, y, cancelBtnBound[0], cancelBtnBound[1], cancelBtnBound[2], cancelBtnBound[3])) {
+            if (
+                RectUtils.hasPoint(
+                    x,
+                    y,
+                    cancelBtnBound[0],
+                    cancelBtnBound[1],
+                    cancelBtnBound[2],
+                    cancelBtnBound[3]
+                )
+            ) {
                 return true;
             }
         }
 
-        return false
+        return false;
     }
 
     /**

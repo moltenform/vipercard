@@ -33,7 +33,11 @@ export class UI512CompCodeEditor extends UI512CompBase {
      */
     createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpId);
-        let headerHeight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
+        let headerHeight = this.drawWindowDecoration(
+            app,
+            new WndBorderDecorationConsts(),
+            this.hasCloseBtn
+        );
 
         let curY = this.y + headerHeight - 1;
         const spacerHeight = headerHeight;
@@ -47,7 +51,12 @@ export class UI512CompCodeEditor extends UI512CompBase {
         this.el.set('labelwrap', false);
         this.el.set('scrollbar', true);
         this.el.set('defaultFont', UI512CompCodeEditorFont.font);
-        this.el.setDimensionsX1Y1(this.x, curY, this.x + this.logicalWidth, this.y + this.logicalHeight);
+        this.el.setDimensionsX1Y1(
+            this.x,
+            curY,
+            this.x + this.logicalWidth,
+            this.y + this.logicalHeight
+        );
     }
 
     /**

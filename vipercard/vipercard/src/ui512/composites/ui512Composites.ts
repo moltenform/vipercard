@@ -101,7 +101,11 @@ export abstract class UI512CompBase {
      * create the UI of this composite
      */
     create(pr: UI512PresenterBase, app: UI512Application) {
-        assertEq(0, this.children.length, `2v|creating composite twice? ${this.compositeId}`);
+        assertEq(
+            0,
+            this.children.length,
+            `2v|creating composite twice? ${this.compositeId}`
+        );
         if (!app.findGroup(this.grpId)) {
             let grp = new UI512ElGroup(this.grpId, app.observer);
             app.addGroup(grp);
@@ -124,7 +128,11 @@ export abstract class UI512CompBase {
     /**
      * creates UI buttons+fields to draw window decoration
      */
-    protected drawWindowDecoration(app: UI512Application, pr: BorderDecorationConsts, hasCloseBtn: boolean) {
+    protected drawWindowDecoration(
+        app: UI512Application,
+        pr: BorderDecorationConsts,
+        hasCloseBtn: boolean
+    ) {
         let grp = app.getGroup(this.grpId);
 
         /* draw background+shadow */
@@ -167,13 +175,24 @@ export abstract class UI512CompBase {
             let closeBtnBg = this.genBtn(app, grp, 'closebtnbg');
             closeBtnBg.set('style', UI512BtnStyle.Opaque);
             closeBtnBg.set('autohighlight', false);
-            let clX = pr.closeBtnX - Math.floor((pr.closeBtnBgWidth - pr.closeBtnWidth) / 2);
-            closeBtnBg.setDimensions(this.x + clX, this.y + 1, pr.closeBtnBgWidth, pr.headHeight - 2);
+            let clX =
+                pr.closeBtnX - Math.floor((pr.closeBtnBgWidth - pr.closeBtnWidth) / 2);
+            closeBtnBg.setDimensions(
+                this.x + clX,
+                this.y + 1,
+                pr.closeBtnBgWidth,
+                pr.headHeight - 2
+            );
 
             /* draw close button */
             let closeBtn = this.genBtn(app, grp, 'closebtn');
             closeBtn.set('autohighlight', true);
-            closeBtn.setDimensions(this.x + pr.closeBtnX, this.y + pr.closeBtnY, pr.closeBtnWidth, pr.closeBtnHeight);
+            closeBtn.setDimensions(
+                this.x + pr.closeBtnX,
+                this.y + pr.closeBtnY,
+                pr.closeBtnWidth,
+                pr.closeBtnHeight
+            );
         }
 
         /* draw caption */

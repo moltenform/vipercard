@@ -1,8 +1,8 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './vpcVal';
 /* auto */ import { VpcOpCtg } from './vpcEnums';
-/* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq } from './../../ui512/utils/util512';
+/* auto */ import { bool, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { checkThrowEq, longstr } from './../../ui512/utils/util512';
 
 /**
  * used by the interpreter to evaluate operations
@@ -36,7 +36,8 @@ export class VpcEvalHelpers {
                 numExpected = 4;
             } else {
                 throw makeVpcScriptErr(
-                    `5}|expected "if x is a number" but got "if x is a ${sType}" needs one of {number|integer|point|rect|logical}`
+                    longstr(`5}|expected "if x is a number" but got "if x is a
+                      ${sType}" needs one of {number|integer|point|rect|logical}`)
                 );
             }
 
@@ -65,7 +66,9 @@ export class VpcEvalHelpers {
             let f = a.readAsStrictNumeric(this.tmp1);
             return VpcValN(-f);
         } else if (op === '+') {
-            throw makeVpcScriptErr(`5{|syntax error, "+" in the wrong place. we can't evaluate something like 2*(+3)`);
+            throw makeVpcScriptErr(
+                `5{|syntax error, "+" in the wrong place. we can't evaluate something like 2*(+3)`
+            );
         } else {
             throw makeVpcInternalErr(`9f|unknown unary operation ${op}`);
         }
@@ -78,12 +81,17 @@ export class VpcEvalHelpers {
         let a = aIn as VpcVal;
         let b = bIn as VpcVal;
         if (!a || !b || !a.isVpcVal || !b.isVpcVal) {
-            throw makeVpcInternalErr(`5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`);
+            throw makeVpcInternalErr(
+                `5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`
+            );
         }
 
         if (opClass === VpcOpCtg.OpLogicalOrAnd) {
             return this.evalOpLogicalOrAnd(a, b, op, opClass);
-        } else if (opClass === VpcOpCtg.OpEqualityGreaterLessOrContains && op !== 'contains') {
+        } else if (
+            opClass === VpcOpCtg.OpEqualityGreaterLessOrContains &&
+            op !== 'contains'
+        ) {
             a.isItNumericImpl(this.tmp1);
             b.isItNumericImpl(this.tmp2);
             if (this.tmp1[0] && this.tmp2[0]) {
@@ -91,9 +99,16 @@ export class VpcEvalHelpers {
             } else {
                 return this.evalOpStringComparison(a, b, op, opClass);
             }
-        } else if (opClass === VpcOpCtg.OpStringConcat || opClass === VpcOpCtg.OpStringWithin || op === 'contains') {
+        } else if (
+            opClass === VpcOpCtg.OpStringConcat ||
+            opClass === VpcOpCtg.OpStringWithin ||
+            op === 'contains'
+        ) {
             return this.evalOpStrings(a, b, op, opClass);
-        } else if (opClass === VpcOpCtg.OpPlusMinus || opClass === VpcOpCtg.OpMultDivideExpDivMod) {
+        } else if (
+            opClass === VpcOpCtg.OpPlusMinus ||
+            opClass === VpcOpCtg.OpMultDivideExpDivMod
+        ) {
             return this.evalOpMath(a, b, op, opClass);
         } else {
             throw makeVpcInternalErr(`5>|unknown opClass ${opClass} ${op}`);
@@ -138,9 +153,9 @@ export class VpcEvalHelpers {
             case '&':
                 return VpcValS(av + bv);
             case 'contains':
-                return VpcValBool(av.includes( bv));
+                return VpcValBool(av.includes(bv));
             case 'is within':
-                return VpcValBool(bv.includes( av));
+                return VpcValBool(bv.includes(av));
             default:
                 throw makeVpcInternalErr(`5@|unknown operator. ${opClass} ${op}`);
         }
@@ -149,7 +164,12 @@ export class VpcEvalHelpers {
     /**
      * evaluate string comparison (both arguments strings)
      */
-    protected evalOpStringComparison(a: VpcVal, b: VpcVal, op: string, opClass: VpcOpCtg) {
+    protected evalOpStringComparison(
+        a: VpcVal,
+        b: VpcVal,
+        op: string,
+        opClass: VpcOpCtg
+    ) {
         let av = a.readAsString();
         let bv = b.readAsString();
         switch (op) {
@@ -220,7 +240,7 @@ export class VpcEvalHelpers {
         let bv = b.readAsStrictBoolean(this.tmp2);
         switch (op) {
             case 'or':
-                return VpcValBool(av || bv);
+                return VpcValBool(bool(av) || bool(bv));
             case 'and':
                 return VpcValBool(av && bv);
             default:
@@ -232,7 +252,10 @@ export class VpcEvalHelpers {
      * get list of numbers from a list of strings
      */
     protected numberListFromStrings(fnname: string, sAr: string[]): number[] {
-        checkThrow(sAr.length > 0, `8s|Wrong number of arguments given to ${fnname}, need at least 1`);
+        checkThrow(
+            sAr.length > 0,
+            `8s|Wrong number of arguments given to ${fnname}, need at least 1`
+        );
         return sAr.map(s => {
             if (s.trim().length === 0) {
                 return 0.0;
@@ -249,7 +272,10 @@ export class VpcEvalHelpers {
      * should do the same thing.
      */
     numberListFromArgsGiven(fnname: string, vAr: VpcVal[], sep: string): number[] {
-        checkThrow(vAr.length > 0, `8r|Wrong number of arguments given to ${fnname}, need at least 1`);
+        checkThrow(
+            vAr.length > 0,
+            `8r|Wrong number of arguments given to ${fnname}, need at least 1`
+        );
         checkThrowEq(1, sep.length, `8q|numberListFromArgsGiven`);
         if (vAr.length === 1 && !vAr[0].isItNumeric()) {
             /* following what the emulator seems to do. */
@@ -262,7 +288,10 @@ export class VpcEvalHelpers {
             /* then, split by comma and treat empty items as zero. */
             return this.numberListFromStrings(fnname, s.split(sep));
         } else {
-            return this.numberListFromStrings(fnname, vAr.map(v => v.readAsString()));
+            return this.numberListFromStrings(
+                fnname,
+                vAr.map(v => v.readAsString())
+            );
         }
     }
 }

@@ -17,10 +17,12 @@
  * updates Models accordingly,
  * and sends Models to ElementsView to be drawn.
  *
- * UI512PresenterBase can draw a UI not including indirectly constructed elements (scrollbars and menus).
+ * UI512PresenterBase can draw a UI not including indirectly constructed
+ * elements (scrollbars and menus).
  * for those, use the full _UI512Presenter_ class.
  */
-export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterface, UI512IsPresenterInterface {
+export abstract class UI512PresenterBase
+    implements UI512PresenterWithMenuInterface, UI512IsPresenterInterface {
     readonly defaultPriority = 10;
     readonly maxMouseButtons = 5;
     private currentFocus: O<string>;
@@ -29,7 +31,7 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
     listeners: { [t: number]: Function[] } = {};
-    callbackQueueFromAsyncs: (O<VoidFn>)[] = [];
+    callbackQueueFromAsyncs: O<VoidFn>[] = [];
     needRedraw = true;
     inited = false;
     openState = MenuOpenState.MenusClosed;
@@ -62,10 +64,10 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     /**
      * set element with the focus
      */
-    setCurrentFocus(next: O<string>, skipCloseFieldMsg=false) {
+    setCurrentFocus(next: O<string>, skipCloseFieldMsg = false) {
         if (next !== this.currentFocus) {
             let evt = new FocusChangedEventDetails(this.currentFocus, next);
-            evt.skipCloseFieldMsg = skipCloseFieldMsg
+            evt.skipCloseFieldMsg = skipCloseFieldMsg;
 
             try {
                 this.rawEvent(evt);
@@ -81,8 +83,14 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
             let nextFocus = this.app.findEl(next);
             if (nextFocus && nextFocus instanceof UI512ElTextField) {
                 let txt = nextFocus.getFmTxt();
-                nextFocus.set('selcaret', fitIntoInclusive(nextFocus.getN('selcaret'), 0, txt.len()));
-                nextFocus.set('selend', fitIntoInclusive(nextFocus.getN('selend'), 0, txt.len()));
+                nextFocus.set(
+                    'selcaret',
+                    fitIntoInclusive(nextFocus.getN('selcaret'), 0, txt.len())
+                );
+                nextFocus.set(
+                    'selend',
+                    fitIntoInclusive(nextFocus.getN('selend'), 0, txt.len())
+                );
             }
         }
     }
@@ -90,7 +98,10 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     /**
      * register to listen for an event
      */
-    listenEvent(type: UI512EventType, fn: (pr: UI512PresenterInterface, d: EventDetails) => void) {
+    listenEvent(
+        type: UI512EventType,
+        fn: (pr: UI512PresenterInterface, d: EventDetails) => void
+    ) {
         let ar = this.listeners[type.valueOf()];
         if (ar !== undefined) {
             ar.push(fn);
@@ -183,7 +194,13 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
             this.setPositionsForRender(cmpTotal);
         }
 
-        this.view.renderApp(canvas, cmpTotal, this.app, this.currentFocus, this.needRedraw);
+        this.view.renderApp(
+            canvas,
+            cmpTotal,
+            this.app,
+            this.currentFocus,
+            this.needRedraw
+        );
         if (cmpTotal.complete) {
             this.needRedraw = false;
         }
@@ -194,7 +211,8 @@ export abstract class UI512PresenterBase implements UI512PresenterWithMenuInterf
     }
 
     /**
-     * this is a way to run code asynchronously, while still having UI512 in the callback, to get error-handling.
+     * this is a way to run code asynchronously, while still having UI512
+     * in the callback, to get error-handling.
      */
     placeCallbackInQueue(cb: () => void) {
         this.callbackQueueFromAsyncs.push(cb);

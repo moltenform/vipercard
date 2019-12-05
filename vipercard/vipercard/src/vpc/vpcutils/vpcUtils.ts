@@ -23,7 +23,7 @@ export interface ReadableContainer {
 export interface WritableContainer extends ReadableContainer {
     setAll(newText: string): void;
     splice(insertion: number, lenToDelete: number, newText: string): void;
-    replaceAll(search:string, replaceWith:string):void;
+    replaceAll(search: string, replaceWith: string): void;
 }
 
 /**
@@ -45,9 +45,6 @@ export class VpcScriptErrorBase implements UI512AttachableErr {
  */
 export class VpcScriptRuntimeError extends VpcScriptErrorBase {
     isVpcScriptRuntimeError = true;
-
-    /* planned, but not yet implemented */
-    callstack = [];
 }
 
 /**
@@ -145,23 +142,24 @@ export enum CodeLimits {
  * the user can log to the message box
  */
 export class LogToReplMsgBox {
-    static redirectThisVariableToMsgBox = 'vpc__internal__msgbox'
+    static redirectThisVariableToMsgBox = 'vpc__internal__msgbox';
 
-    static processScript(script:string) {
+    static processScript(script: string) {
         /* warning: also replaces within string literals */
-        script = script.replace(/\b(the )?(message|msg) (box|window)\b/g,
-            LogToReplMsgBox.redirectThisVariableToMsgBox)
-        return script
+        script = script.replace(
+            /\b(the )?(message|msg) (box|window)\b/g,
+            LogToReplMsgBox.redirectThisVariableToMsgBox
+        );
+        return script;
     }
 }
-
 
 /**
  * record what you submit to the repl, for history
  */
 export class RememberHistory {
     pointer = 0;
-    keepBeforeEnd = false
+    keepBeforeEnd = false;
     list: string[] = [];
 
     /**
@@ -204,4 +202,3 @@ export class RememberHistory {
         }
     }
 }
-

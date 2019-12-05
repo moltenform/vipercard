@@ -29,7 +29,11 @@ export class UI512CompToolbox extends UI512CompBase {
     createSpecific(app: UI512Application) {
         Util512.freezeRecurse(this.items);
         let grp = app.getGroup(this.grpId);
-        let headerHeight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasCloseBtn);
+        let headerHeight = this.drawWindowDecoration(
+            app,
+            new PalBorderDecorationConsts(),
+            this.hasCloseBtn
+        );
 
         let curX = this.x;
         let curY = this.y + headerHeight - 1;
@@ -103,7 +107,10 @@ export class UI512CompToolbox extends UI512CompBase {
                         this.callbackOnChange(this.whichChosen);
                     }
                 } else {
-                    assertTrueWarn(false, `2t|did not find ${userId} in ${this.idPrefix}`);
+                    assertTrueWarn(
+                        false,
+                        `2t|did not find ${userId} in ${this.idPrefix}`
+                    );
                 }
             }
         }

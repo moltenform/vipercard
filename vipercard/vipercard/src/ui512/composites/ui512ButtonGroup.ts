@@ -32,7 +32,10 @@ export class UI512CompButtonGroup extends UI512CompBase {
         for (let item of this.items) {
             /* create a button for each item */
             let el = this.genBtn(app, grp, item[0]);
-            el.set('style', this.isExclusive ? UI512BtnStyle.Radio : UI512BtnStyle.Checkbox);
+            el.set(
+                'style',
+                this.isExclusive ? UI512BtnStyle.Radio : UI512BtnStyle.Checkbox
+            );
             el.set('labelhalign', false);
             el.set('labelvalign', true);
             el.setDimensions(this.x, curY, this.logicalWidth, this.itemHeight);
@@ -46,7 +49,7 @@ export class UI512CompButtonGroup extends UI512CompBase {
      * returns short id of the chosen item(s), or empty array
      */
     getWhichChecked(app: UI512Application) {
-        let ret = [];
+        let ret: string[] = [];
         let grp = app.getGroup(this.grpId);
         for (let item of this.items) {
             let el = grp.getEl(this.getElId(item[0]));
