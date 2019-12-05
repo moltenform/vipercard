@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
@@ -23,6 +23,7 @@
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { isAllScriptingDisabled } from './../../vpc/codeexec/placeholder__codeexec';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
@@ -99,20 +100,21 @@ export class VpcPresenter extends VpcPresenterInit {
             this.vci.setOption('currentCardId', nextId);
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
 
-            if (wasCard !== nextId) {
-                /* remember history, for go back and go forth */
-                let suspended = this.vci
-                    .getCodeExec()
-                    .globals.find('internalvpcgocardimplsuspendhistory');
-                if (suspended === undefined || suspended.readAsString() !== '1') {
-                    this.vci.getCodeExec().cardHistory.append(nextId);
-                }
-            }
+            let NoteThisIsDisabledCode = 1;
+            //~ if (wasCard !== nextId) {
+                //~ /* remember history, for go back and go forth */
+                //~ let suspended = this.vci
+                    //~ .getCodeExec()
+                    //~ .globals.find('internalvpcgocardimplsuspendhistory');
+                //~ if (suspended === undefined || suspended.readAsString() !== '1') {
+                    //~ this.vci.getCodeExec().cardHistory.append(nextId);
+                //~ }
+            //~ }
 
-            /* turn this off, so it's never stuck on indefinitely */
-            this.vci
-                .getCodeExec()
-                .globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0));
+            //~ /* turn this off, so it's never stuck on indefinitely */
+            //~ this.vci
+                //~ .getCodeExec()
+                //~ .globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0));
         });
     }
 
@@ -182,35 +184,39 @@ export class VpcPresenter extends VpcPresenterInit {
      * schedule the closefield event(s)
      */
     beginScheduleFldOpenCloseEventClose(prevElId: string) {
-        /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
-        since people's closeField scripts probably assume we are on the card anyways */
-        let prevVel = this.lyrModelRender.findElIdToVel(prevElId);
-        if (prevVel && prevVel.getType() === VpcElType.Fld) {
-            if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
-                /* closefield called if changes made in the field */
-                let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
-                this.vci.getCodeExec().scheduleCodeExec(msg);
+        let NoteThisIsDisabledCode = 1;
 
-                this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false;
-            } else {
-                /* exitfield called if no changes were made in the field */
-                let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
-                this.vci.getCodeExec().scheduleCodeExec(msg);
-            }
-        }
+        //~ /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
+        //~ since people's closeField scripts probably assume we are on the card anyways */
+        //~ let prevVel = this.lyrModelRender.findElIdToVel(prevElId);
+        //~ if (prevVel && prevVel.getType() === VpcElType.Fld) {
+            //~ if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
+                //~ /* closefield called if changes made in the field */
+                //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
+                //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+
+                //~ this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false;
+            //~ } else {
+                //~ /* exitfield called if no changes were made in the field */
+                //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
+                //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+            //~ }
+        //~ }
     }
 
     /**
      * schedule the openfield event
      */
     beginScheduleFldOpenCloseEventOpen(nextId: string) {
-        /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
-        since people's openField scripts probably assume we are on the card anyways */
-        let vel = this.lyrModelRender.findElIdToVel(nextId);
-        if (vel && vel.getType() === VpcElType.Fld) {
-            let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
-            this.vci.getCodeExec().scheduleCodeExec(msg);
-        }
+        let NoteThisIsDisabledCode = 1;
+
+        //~ /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
+        //~ since people's openField scripts probably assume we are on the card anyways */
+        //~ let vel = this.lyrModelRender.findElIdToVel(nextId);
+        //~ if (vel && vel.getType() === VpcElType.Fld) {
+            //~ let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
+            //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ }
     }
 
     /**
@@ -444,7 +450,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * returns true if code is currently running
      */
     isCodeRunning() {
-        return (
+        return isAllScriptingDisabled ? false :(
             this &&
             this.vci &&
             this.vci.getCodeExec &&
