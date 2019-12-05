@@ -1,6 +1,6 @@
 
 /* auto */ import { RepeatingTimer, getRoot } from './../utils/util512Higher';
-/* auto */ import { assertTrue } from './../utils/util512Assert';
+/* auto */ import { assertTrue, tostring } from './../utils/util512Assert';
 /* auto */ import { ClipManagerInterface } from './../draw/ui512Interfaces';
 /* auto */ import { PasteTextEventDetails } from './../menu/ui512Events';
 
@@ -17,10 +17,10 @@ export class ClipManager implements ClipManagerInterface {
     isClipManager = true;
     simClipboard = '';
     readonly ensureClipboardReady = 2000;
-    timerClipboardReady:RepeatingTimer;
+    timerClipboardReady: RepeatingTimer;
 
     constructor() {
-        this.timerClipboardReady = new RepeatingTimer(this.ensureClipboardReady)
+        this.timerClipboardReady = new RepeatingTimer(this.ensureClipboardReady);
     }
 
     /**
@@ -124,13 +124,19 @@ export class ClipManager implements ClipManagerInterface {
 
             /* register events */
             let setFocusToHiddenInput = () => {
-                ClipManager.ensureReadyForPasteImpl(hiddenInput);
+                try {
+                    ClipManager.ensureReadyForPasteImpl(hiddenInput);
+                } catch (e) {
+                    console.error(tostring(e));
+                }
             };
 
             /* keep the hidden text area focused, no matter what... */
             window.document.addEventListener('mouseup', setFocusToHiddenInput);
             window.document.addEventListener('keyup', setFocusToHiddenInput);
             hiddenInput.addEventListener('input', e => {
+                /* ok to use setTimeout, there's no error we need to record from this */
+                /* eslint-disable-next-line ban/ban */
                 setTimeout(setFocusToHiddenInput, 0);
             });
 
@@ -138,7 +144,10 @@ export class ClipManager implements ClipManagerInterface {
             window.document.addEventListener('paste', (e: ClipboardEvent) => {
                 setFocusToHiddenInput();
                 e.preventDefault();
-                if (e.clipboardData && e.clipboardData.types.indexOf('text/plain') !== -1) {
+                if (
+                    e.clipboardData &&
+                    e.clipboardData.types.indexOf('text/plain') !== -1
+                ) {
                     let plainText = e.clipboardData.getData('text/plain');
                     if (plainText) {
                         let details = new PasteTextEventDetails(0, plainText, true);

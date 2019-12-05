@@ -2,7 +2,7 @@
 /* auto */ import { MenuConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
 /* auto */ import { O, assertTrueWarn, checkThrowUI512 } from './../utils/util512Assert';
-/* auto */ import { assertEq, cast, slength } from './../utils/util512';
+/* auto */ import { Util512, assertEq, cast, slength } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from './../elements/ui512ElementMenu';
 /* auto */ import { UI512ElGroup } from './../elements/ui512ElementGroup';
@@ -315,8 +315,8 @@ export class MenuPositioning {
                 ':'
             );
             dropdn.set('icongroupid', iconGroupId);
-            dropdn.set('iconnumber', parseInt(iconNumber, base10));
-            dropdn.set('fixedwidth', parseInt(fixWidth, base10));
+            dropdn.set('iconnumber', Util512.parseInt(iconNumber));
+            dropdn.set('fixedwidth', Util512.parseInt(fixWidth));
             dropdn.set('labeltext', '');
         } else {
             dropdn.set('labeltext', lng(headerLabelUntranslated));

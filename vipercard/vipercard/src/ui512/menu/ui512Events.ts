@@ -24,7 +24,7 @@ export abstract class EventDetails {
     }
 
     getAffectedElements() {
-        let ret:UI512Element[] = []
+        let ret: UI512Element[] = [];
         return ret;
     }
 }
@@ -85,7 +85,7 @@ export class MouseMoveEventDetails extends EventDetails {
     }
 
     getAffectedElements() {
-        let ret:UI512Element[] = [];
+        let ret: UI512Element[] = [];
         if (this.elPrev) {
             ret.push(this.elPrev);
         }

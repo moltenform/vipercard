@@ -2,7 +2,7 @@
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
-/* auto */ import { O, assertTrue } from './../utils/util512Assert';
+/* auto */ import { O, assertTrue, bool } from './../utils/util512Assert';
 /* auto */ import { Util512, assertEqWarn, cast, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';
@@ -107,7 +107,7 @@ export class ScrollbarImpl {
 
         assertEqWarn(
             el.getB('scrollbar'),
-            !!grp.findEl(fldIdToScrollbarPartId(el.id, 'arrowUp')),
+            bool(grp.findEl(fldIdToScrollbarPartId(el.id, 'arrowUp'))),
             'J3|forgot to call rebuildFieldScrollbars? ' + el.id
         );
 
@@ -451,6 +451,8 @@ export class ScrollbarImpl {
                 return scroll;
             }
         }
+
+        return undefined;
     }
 
     /**

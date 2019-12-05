@@ -1,6 +1,8 @@
 
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModifyImpl } from './../../ui512/textedit/ui512TextSelModifyImpl';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { TextFontStyling, specialCharFontChange, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
@@ -573,17 +575,57 @@ function testChangeText(
 ) {
     expected = expected.replace(/\|/g, '\n');
     input = input.replace(/\|/g, '\n');
-    let [t, selcaret, selend] = TestUI512TextSelectEvents.fromPlainText(input);
+    let [t, selcaret, selend] = FormattedTextFromPlainText.fromPlainText(input);
     let args = [t, selcaret, selend, ...moreargs];
-    let [gotTxt, gotSelCaret, gotSelEnd] = fn.apply(null, args);
+    assertTrue(args.length < 100, 'too many args passed to testChangeText');
+    let [gotTxt, gotSelCaret, gotSelEnd] = fn(...args);
     let [
         expectedTxt,
         expectedCaret,
         expectedEnd
-    ] = TestUI512TextSelectEvents.fromPlainText(expected);
+    ] = FormattedTextFromPlainText.fromPlainText(expected);
     assertEq(expectedTxt.toSerialized(), gotTxt.toSerialized(), '1p|');
     assertEq(expectedCaret, gotSelCaret, '1o|ncorrect caret position');
     assertEq(expectedEnd, gotSelEnd, '1n|incorrect select-end position');
+}
+
+export class FormattedTextFromPlainText {
+    /**
+     * From one string with ^ and # markers,
+     * to [FormattedText, selcaret, selend]
+     *
+     * To make the tests easier to read, we use the symbol
+     * ^ to mean the selcaret (start of selection)
+     * # to mean the selend (end of selection)
+     */
+    static fromPlainText(s: string): [FormattedText, number, number] {
+        /* step 1) get a string without the font changes */
+        let tToGetUnformatted = FormattedText.newFromSerialized(s);
+        let sUnformatted = tToGetUnformatted.toUnformatted();
+        assertTrue(
+            sUnformatted.includes('^') && sUnformatted.includes('#'),
+            `1m|string "${sUnformatted}" needs ^ and #`
+        );
+
+        /* step 2) get caret positions */
+        let selCaret;
+        let selEnd;
+        if (sUnformatted.indexOf('^') < sUnformatted.indexOf('#')) {
+            selCaret = sUnformatted.indexOf('^');
+            sUnformatted = sUnformatted.replace(/\^/g, '');
+            selEnd = sUnformatted.indexOf('#');
+            sUnformatted = sUnformatted.replace(/#/g, '');
+        } else {
+            selEnd = sUnformatted.indexOf('#');
+            sUnformatted = sUnformatted.replace(/#/g, '');
+            selCaret = sUnformatted.indexOf('^');
+            sUnformatted = sUnformatted.replace(/\^/g, '');
+        }
+
+        /* step 3) create formatted text */
+        let t = FormattedText.newFromSerialized(s.replace(/#/g, '').replace(/\^/g, ''));
+        return [t, selCaret, selEnd];
+    }
 }
 
 /**

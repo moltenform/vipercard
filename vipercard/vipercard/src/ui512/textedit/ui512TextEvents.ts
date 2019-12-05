@@ -249,7 +249,7 @@ export class UI512TextEvents {
             case 'Shift+ArrowUp':
                 TextSelModify.changeSelArrowKeyUpDownVisual(gel, true, true);
                 break;
-            case 'Cmd+ArrowUp':
+            case 'Cmd+ArrowUp': {
                 let arrowbtnup = fldIdToScrollbarPartId(el.id, 'arrowUp');
                 this.getScrollbarImpl().onScrollArrowClicked(
                     pr,
@@ -257,13 +257,14 @@ export class UI512TextEvents {
                     -1 * UI512TextEvents.amtScrollArrowClicked
                 );
                 break;
+            }
             case 'ArrowDown':
                 TextSelModify.changeSelArrowKeyUpDownVisual(gel, false, false);
                 break;
             case 'Shift+ArrowDown':
                 TextSelModify.changeSelArrowKeyUpDownVisual(gel, false, true);
                 break;
-            case 'Cmd+ArrowDown':
+            case 'Cmd+ArrowDown': {
                 let arrowbtndn = fldIdToScrollbarPartId(el.id, 'arrowDn');
                 this.getScrollbarImpl().onScrollArrowClicked(
                     pr,
@@ -271,7 +272,7 @@ export class UI512TextEvents {
                     UI512TextEvents.amtScrollArrowClicked
                 );
                 break;
-            case 'Return':
+            } case 'Return':
                 TextSelModify.changeTextInsert(gel, '\n');
                 break;
             case 'Enter':
