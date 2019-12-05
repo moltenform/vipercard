@@ -272,7 +272,8 @@ export class UI512TextEvents {
                     UI512TextEvents.amtScrollArrowClicked
                 );
                 break;
-            } case 'Return':
+            }
+            case 'Return':
                 TextSelModify.changeTextInsert(gel, '\n');
                 break;
             case 'Enter':
