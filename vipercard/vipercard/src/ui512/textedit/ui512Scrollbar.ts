@@ -307,7 +307,8 @@ export class ScrollbarImpl {
     }
 
     /**
-     * when you click on a letter in a field, or the margin to left or right, which letter does it correspond with?
+     * when you click on a letter in a field, or the margin to left or right,
+     * which letter does it correspond with?
      */
     fromMouseCoordsToCaretPosition(el: UI512ElTextField, x: number, y: number) {
         let [found, lowest] = this.getCoordToCharInField(
@@ -318,8 +319,9 @@ export class ScrollbarImpl {
         );
         if (found) {
             if (found.type === CharRectType.Char) {
-                /* split each letter in half. if you clicked on the left side of the letter, go left */
-                /* if you clicked on the right side of the letter, go right. */
+                /* split each letter in half. if you clicked on the
+                left side of the letter, go left.
+                if you clicked on the right side of the letter, go right. */
                 let midpoint = found.x + Math.floor(found.w / 2);
                 let ret = x > midpoint ? found.charIndex + 1 : found.charIndex;
                 ret = fitIntoInclusive(ret, 0, el.getFmTxt().len());
@@ -480,7 +482,8 @@ export class ScrollbarImpl {
     }
 
     /**
-     * the value 'scrollamt' is in pixels, but we want to get the ratio from 0.0 (top) to 1.0 (bottom)
+     * the value 'scrollamt' is in pixels, but we want to get the
+     * ratio from 0.0 (top) to 1.0 (bottom)
      */
     repositionScrollbarGetThumbPos(el: UI512ElTextField) {
         let contentHeightInPixels = this.getCachedHeightOfField(el);

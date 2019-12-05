@@ -97,9 +97,8 @@ export class TextSelModify {
             let [nextCaret, nextEnd] = fn(t, ncaretBefore, nEndBefore);
             el.setSel(nextCaret, nextEnd);
             TextSelModify.fixSelection(el);
-            let amt = TextSelModify.readOnlyScrollbarImpl.getScrollPosThatWouldMakeStartCaretVisible(
-                el.getReadOnlyUI512()
-            );
+            let o = TextSelModify.readOnlyScrollbarImpl;
+            let amt = o.getScrollPosThatWouldMakeStartCaretVisible(el.getReadOnlyUI512());
             el.setScrollAmt(amt);
         }
     }
@@ -171,7 +170,8 @@ export class TextSelModify {
     }
 
     /**
-     * add or remove a prefix from any number of selected lines, e.g. hitting Cmd+Q to comment out lines
+     * add or remove a prefix from any number of selected lines,
+     * e.g. hitting Cmd+Q to comment out lines
      */
     static changeTextToggleLinePrefix(el: GenericTextField, prefix: string) {
         TextSelModify.changeTextInField(el, (t, nCaret, nEnd) =>

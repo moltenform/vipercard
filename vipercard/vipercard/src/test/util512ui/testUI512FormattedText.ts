@@ -177,9 +177,12 @@ t.test('testFormattedText.AppendSubstring', () => {
     assertEq('abde', txt1.toUnformatted(), 'A=|');
 });
 t.test('testFormattedText.SpliceDeletesTwoCharacters', () => {
-    let ser =  longstr(`a${specialCharFontChange}font2
+    let ser = longstr(
+        `a${specialCharFontChange}font2
         ${specialCharFontChange}bc${specialCharFontChange}
-        font3${specialCharFontChange}d`, '');
+        font3${specialCharFontChange}d`,
+        ''
+    );
     let txt = FormattedText.newFromSerialized(ser);
     assertEq(4, txt.len(), 'A<|');
     txt.splice(1, 2);
@@ -207,10 +210,13 @@ t.test('testFormattedText.ByInsertion, from 2 chars -> 1 char', () => {
     let txt1 = FormattedText.newFromUnformatted('abcde');
     txt1.setFontEverywhere('f1');
     let txt2 = FormattedText.byInsertion(txt1, 2, 2, 'x', 'f2');
-    let expected =  longstr(`${specialCharFontChange}
+    let expected = longstr(
+        `${specialCharFontChange}
         f1${specialCharFontChange}ab${specialCharFontChange}f2
         ${specialCharFontChange}x${specialCharFontChange}f1
-        ${specialCharFontChange}e`, '');
+        ${specialCharFontChange}e`,
+        ''
+    );
     assertEq(4, txt2.len(), 'A(|');
     assertEq(expected, txt2.toSerialized(), 'A&|');
 });
@@ -218,10 +224,13 @@ t.test('testFormattedText.ByInsertion, from 2 chars -> 2 chars', () => {
     let txt1 = FormattedText.newFromUnformatted('abcde');
     txt1.setFontEverywhere('f1');
     let txt2 = FormattedText.byInsertion(txt1, 2, 2, 'xy', 'f2');
-    let expected =  longstr(`${specialCharFontChange}f1
+    let expected = longstr(
+        `${specialCharFontChange}f1
         ${specialCharFontChange}ab${specialCharFontChange}f2
         ${specialCharFontChange}xy${specialCharFontChange}f1
-        ${specialCharFontChange}e`, '');
+        ${specialCharFontChange}e`,
+        ''
+    );
     assertEq(5, txt2.len(), 'A%|');
     assertEq(expected, txt2.toSerialized(), 'A$|');
 });
@@ -229,10 +238,13 @@ t.test('testFormattedText.ByInsertion, from 2 chars -> 3 chars', () => {
     let txt1 = FormattedText.newFromUnformatted('abcde');
     txt1.setFontEverywhere('f1');
     let txt2 = FormattedText.byInsertion(txt1, 2, 2, 'xyz', 'f2');
-    let expected =  longstr(`${specialCharFontChange}f1
+    let expected = longstr(
+        `${specialCharFontChange}f1
         ${specialCharFontChange}ab${specialCharFontChange}
         f2${specialCharFontChange}xyz${specialCharFontChange}
-        f1${specialCharFontChange}e`, '');
+        f1${specialCharFontChange}e`,
+        ''
+    );
     assertEq(6, txt2.len(), 'A#|');
     assertEq(expected, txt2.toSerialized(), 'A!|');
 });

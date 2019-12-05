@@ -136,8 +136,9 @@ export class MenuListeners {
             return;
         }
 
-        /* for normal buttons, a full click needs mouseDown and mouseUp on the same element
-           for menu items, it only matters where the mouseUp is, i.e. use elRaw instead of elFullClick */
+        /* for normal btns, a full click needs mouseDn and mouseUp on the same element
+           for menu items, it only matters where the mouseUp is, i.e.
+                use elRaw instead of elFullClick */
 
         if (d.elRaw && MenuListeners.canHighlightMenuItem(d.elRaw)) {
             MenuListeners.respondToMenuItemClick(pr, cast(d.elRaw, UI512MenuItem), d);

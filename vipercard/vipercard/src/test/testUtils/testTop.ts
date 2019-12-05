@@ -9,6 +9,8 @@
 /* auto */ import { testCollectionUtil512Class } from './../util512/testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './../util512/testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './../util512/testUtil512';
+/* auto */ import { testCollectionUI512TextModify } from './../util512ui/testUI512TextModify';
+/* auto */ import { testCollectionUI512FormattedText } from './../util512ui/testUI512FormattedText';
 /* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../util512/testExternalLibs';
 
 export class SimpleUtil512Tests {
@@ -16,18 +18,24 @@ export class SimpleUtil512Tests {
         console.log('Running tests...');
         console.log('Running tests...O');
         UI512ErrorHandling.runningTests = true;
+
+        // order tests from high to low
         let colls = [
-            testCollectionExternalLibs,
+            testCollectionUI512TextModify,
+            testCollectionUI512FormattedText,
             testCollectionUtilsCanvasWrapper,
             testCollectionUtilsDraw,
             testCollectionExampleAsyncTests,
-            testCollectionUtil512Assert,
-            testCollectionUtil512,
-            testCollectionUtil512Class,
             testCollectionUtil512LessUsefulLibs,
-            testCollectionUtil512Higher
+            testCollectionUtil512Higher,
+            testCollectionUtil512Class,
+            testCollectionUtil512,
+            testCollectionUtil512Assert,
+            testCollectionExternalLibs
         ];
 
+        // run tests from low level to high level
+        colls.reverse();
         let colNamesSeen = new Map<string, boolean>();
         let mapSeen = new Map<string, boolean>();
         let countTotal = colls.map(item => item.tests.length).reduce(Util512.add);

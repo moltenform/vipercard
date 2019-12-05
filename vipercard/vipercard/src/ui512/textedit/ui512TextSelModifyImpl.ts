@@ -309,7 +309,8 @@ export class TextSelModifyImpl {
     }
 
     /**
-     * add or remove a prefix from any number of selected lines, e.g. hitting Cmd+Q to comment out lines
+     * add or remove a prefix from any number of selected lines,
+     * e.g. hitting Cmd+Q to comment out lines
      */
     static changeTextToggleLinePrefix(
         t: FormattedText,
