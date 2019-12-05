@@ -444,6 +444,6 @@ export enum VpcFldStyleInclScroll {
     Transparent = UI512FldStyle.Transparent,
     Rectangle = UI512FldStyle.Rectangle,
     Shadow = UI512FldStyle.Shadow,
-    AlternateFormsRect = UI512FldStyle.Rectangle,
+    __AlternateForm__Rect = UI512FldStyle.Rectangle,
     Scrolling = 200
 }

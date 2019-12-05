@@ -30,8 +30,8 @@ export enum PropAdjective {
     Abbrev,
     Long,
     Short,
-    AlternateFormAbbreviated = Abbrev,
-    AlternateFormAbbr = Abbrev
+    __AlternateForm__Abbreviated = Abbrev,
+    __AlternateForm__Abbr = Abbrev
 }
 
 /**
@@ -56,8 +56,8 @@ export enum OrdinalOrPosition {
     Next,
     Previous,
     This,
-    AlternateFormMid = Middle,
-    AlternateFormPrev = Previous
+    __AlternateForm__Mid = Middle,
+    __AlternateForm__Prev = Previous
 }
 
 /**
@@ -72,12 +72,12 @@ export enum VpcChunkType {
     Words,
     Items,
     Lines,
-    AlternateFormChar = Chars,
-    AlternateFormCharacter = Chars,
-    AlternateFormCharacters = Chars,
-    AlternateFormWord = Words,
-    AlternateFormItem = Items,
-    AlternateFormLine = Lines
+    __AlternateForm__Char = Chars,
+    __AlternateForm__Character = Chars,
+    __AlternateForm__Characters = Chars,
+    __AlternateForm__Word = Words,
+    __AlternateForm__Item = Items,
+    __AlternateForm__Line = Lines
 }
 
 /**
@@ -195,8 +195,8 @@ export enum VpcTool {
     Spray,
     __first = Browse,
     __last = Spray,
-    AlternateFormSpray_can = Spray,
-    AlternateFormRound_rect = Roundrect
+    __AlternateForm__Spray_can = Spray,
+    __AlternateForm__Round_rect = Roundrect
 }
 
 /**

@@ -223,7 +223,7 @@ export enum VpcBtnStyle {
     Osboxmodal = UI512BtnStyle.OSBoxModal,
     Checkbox = UI512BtnStyle.Checkbox,
     Radio = UI512BtnStyle.Radio,
-    AlternateFormStandard = UI512BtnStyle.OSStandard,
-    AlternateFormDefault = UI512BtnStyle.OSDefault,
-    AlternateFormRect = UI512BtnStyle.Rectangle
+    __AlternateForm__Standard = UI512BtnStyle.OSStandard,
+    __AlternateForm__Default = UI512BtnStyle.OSDefault,
+    __AlternateForm__Rect = UI512BtnStyle.Rectangle
 }

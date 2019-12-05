@@ -88,7 +88,7 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn3) {
-                let redirectWindow = window.open('/0.2/html/terms.html', '_blank');
+                let redirectWindow = window.open('/0.3/html/terms.html', '_blank');
             }
         };
 

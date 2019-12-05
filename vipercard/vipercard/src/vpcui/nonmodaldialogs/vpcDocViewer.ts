@@ -437,7 +437,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             if (ctg !== undefined && this.examplesInfo[ctg]) {
                 let num = this.examplesInfo[ctg][0].replace(/vid/g, '');
                 let redirectWindow = window.open(
-                    '/0.2/html/video' + num + '.html',
+                    '/0.3/html/video' + num + '.html',
                     '_blank'
                 );
             }

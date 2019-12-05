@@ -119,7 +119,9 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * is code currently running
      */
     isCodeRunning(): boolean {
-        return this.vcstate.runtime.codeExec.isCodeRunning();
+        let NoteThisIsDisabledCode = 1;
+        return false;
+        //~ return this.vcstate.runtime.codeExec.isCodeRunning();
     }
 
     /**
@@ -348,7 +350,9 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get top code execution object
      */
     getCodeExec(): VpcExecTop {
-        return this.vcstate.runtime.codeExec;
+        let NoteThisIsDisabledCode = 1;
+        return new VpcExecTop();
+        //~ return this.vcstate.runtime.codeExec;
     }
 
     /**

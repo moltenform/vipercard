@@ -17,7 +17,7 @@ export class VpcGettableSerialization {
         let keys = Util512.getMapKeys(vel as any);
         for (let i = 0, len = keys.length; i < len; i++) {
             let propName = keys[i];
-            if (propName.startsWith('__')) {
+            if (propName.startsWith('_') && propName[1] !== '_') {
                 propName = propName.slice(1);
                 let v = vel.getGeneric(propName);
                 assertTrueWarn(v !== undefined, propName, 'J||');
@@ -88,7 +88,8 @@ export class VpcGettableSerialization {
                 let prpSliced = prp.slice(1);
                 if (
                     !whichWereSet[prpSliced] &&
-                    prp.startsWith('__') &&
+                    prp.startsWith('_') &&
+                    prp[1] !== '_' &&
                     !VpcGettableSerialization.okNotToSee[prpSliced]
                 ) {
                     throw makeVpcInternalErr(`in obj ${vel.id} did not see ${prpSliced}`);

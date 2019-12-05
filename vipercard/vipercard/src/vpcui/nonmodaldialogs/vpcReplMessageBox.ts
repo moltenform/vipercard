@@ -1,8 +1,8 @@
 
-/* auto */ import { RememberHistory, VpcScriptErrorBase, VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { RememberHistory, VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcBuiltinMsg, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { O, cleanExceptionMsg } from './../../ui512/utils/util512Assert';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
@@ -196,9 +196,12 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
             this.rememberedTool = this.vci.getTool();
             this.vci.setTool(VpcTool.Browse);
 
-            /* do this last because it could throw synchronously and call onScriptErr right away */
-            let msg = new VpcScriptMessage(curCard, VpcBuiltinMsg.__Custom, handler);
-            this.vci.getCodeExec().scheduleCodeExec(msg);
+            let NoteThisIsDisabledCode = 1;
+            //~ /* do this last because it could throw 
+            //~ synchronously and call onScriptErr right away */
+            //~ let msg = new VpcScriptMessage(curCard,
+            //~ VpcBuiltinMsg.__Custom, handler);
+            //~ this.vci.getCodeExec().scheduleCodeExec(msg);
         }
     }
 

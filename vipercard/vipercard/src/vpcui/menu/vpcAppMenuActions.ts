@@ -432,11 +432,10 @@ export class VpcMenuActions {
             .getModel()
             .stack.bgs.map(bg => bg.cards.length)
             .reduce(Util512.add);
-        let msg = lng(
-            longstr(`lngYou are at the last-most card. You can create
-            a new card by selecting 'New Card' from the Edit menu.`)
-        );
+
         if (cardNum >= totalCardNum - 1) {
+            let msg = longstr(`lngYou are at the last-most card. You can create
+            a new card by selecting 'New Card' from the Edit menu.`);
             this.showModal(msg);
         } else {
             this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined);

@@ -287,7 +287,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let keys = Util512.getMapKeys(vel as any);
         for (let i = 0, len = keys.length; i < len; i++) {
             let prop = keys[i];
-            if (prop.startsWith('__')) {
+            if (prop.startsWith('_') && prop[1] !== '_') {
                 prop = prop.slice(1);
                 let newVal = vel.getGeneric(prop);
                 this.applyOneChange(vel, prop, newVal, true);
@@ -304,7 +304,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let keys = Util512.getMapKeys(vel as any);
         for (let i = 0, len = keys.length; i < len; i++) {
             let prop = keys[i];
-            if (prop.startsWith('__')) {
+            if (prop.startsWith('_') && prop[1] !== '_') {
                 prop = prop.slice(1);
                 let newVal = vel.getGeneric(prop);
                 this.applyOneChange(vel, prop, newVal, true);
