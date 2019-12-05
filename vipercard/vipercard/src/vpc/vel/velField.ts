@@ -157,12 +157,12 @@ export class VpcElField extends VpcElSizable {
         setters['style'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string, cardId: string) => {
-                let styl = getStrToEnum(
+                let styl = getStrToEnum<VpcFldStyleInclScroll>(
                     VpcFldStyleInclScroll,
                     'Field style or "scrolling"',
                     s
                 );
-                me.set('style', castVerifyIsNum(styl));
+                me.set('style', styl);
 
                 /* changing style resets scroll amount */
                 me.setProp('scroll', VpcValN(0), cardId);

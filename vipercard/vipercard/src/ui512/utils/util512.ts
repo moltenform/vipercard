@@ -511,7 +511,7 @@ export function listEnumVals<T>(Enm: T, makeLowercase: boolean) {
  * string to enum.
  * accepts synonyms ("alternate forms") if enum contains __isUI512Enum
  */
-export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
+export function findStrToEnum<T>(Enm: any, s: string): O<T> {
     assertTrue(
         Enm['__isUI512Enum'] !== undefined,
         '4F|must provide an enum type with __isUI512Enum defined.'
@@ -539,12 +539,8 @@ export function findStrToEnum<E>(Enm: TypeLikeAnEnum<E>, s: string): O<E> {
 /**
  * same as findStrToEnum, but throws if not found, showing possible values.
  */
-export function getStrToEnum<E>(
-    Enm: TypeLikeAnEnum<E>,
-    msgContext: string,
-    s: string
-): E {
-    let found = findStrToEnum(Enm, s);
+export function getStrToEnum<T>(Enm: any, msgContext: string, s: string): T {
+    let found = findStrToEnum<T>(Enm, s);
     if (found !== undefined) {
         return found;
     } else {

@@ -118,12 +118,12 @@ export class VpcElButton extends VpcElSizable {
         setters['style'] = [
             PrpTyp.Str,
             (me: VpcElButton, s: string) => {
-                let styl = getStrToEnum(VpcBtnStyle, 'Button style', s);
+                let styl = getStrToEnum<VpcBtnStyle>(VpcBtnStyle, 'Button style', s);
                 checkThrow(
                     (styl as any) !== VpcBtnStyle.Osboxmodal,
                     '7D|this style is only supported internally'
                 );
-                me.set('style', castVerifyIsNum(styl));
+                me.set('style', styl);
             }
         ];
 

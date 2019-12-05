@@ -140,8 +140,8 @@ export class VpcElProductOpts extends VpcElBase {
                     s = 'watch';
                 }
 
-                let n = getStrToEnum(VpcCursors, `cursor ${s} not supported`, s);
-                UI512CursorAccess.setCursor(castVerifyIsNum(n.valueOf()));
+                let n = getStrToEnum<VpcCursors>(VpcCursors, `cursor ${s} not supported`, s);
+                UI512CursorAccess.setCursor(n.valueOf());
             }
         ];
 
