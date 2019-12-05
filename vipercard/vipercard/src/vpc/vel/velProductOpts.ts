@@ -10,7 +10,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Productname';
 /* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, castVerifyIsNumber, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { Util512, castVerifyIsNum, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Patterns } from './../../ui512/draw/ui512DrawPatterns';
@@ -141,7 +141,7 @@ export class VpcElProductOpts extends VpcElBase {
                 }
 
                 let n = getStrToEnum(VpcCursors, `cursor ${s} not supported`, s);
-                UI512CursorAccess.setCursor(castVerifyIsNumber(n.valueOf()));
+                UI512CursorAccess.setCursor(castVerifyIsNum(n.valueOf()));
             }
         ];
 
@@ -153,7 +153,10 @@ export class VpcElProductOpts extends VpcElBase {
                 } else if (!s || s === 'default') {
                     me.set('suggestedIdleRate', 'default');
                 } else {
-                    checkThrow(false, `Js|unsupported idlerate, try "faster" or "default"`);
+                    checkThrow(
+                        false,
+                        `Js|unsupported idlerate, try "faster" or "default"`
+                    );
                 }
             }
         ];
@@ -178,7 +181,10 @@ export class VpcElProductOpts extends VpcElBase {
      */
     static canGetProductProp(propName: string) {
         VpcElProductOpts.prodInit();
-        return bool(VpcElProductOpts.cachedGetters[propName]) || bool(VpcElProductOpts.cachedSetters[propName]);
+        return (
+            bool(VpcElProductOpts.cachedGetters[propName]) ||
+            bool(VpcElProductOpts.cachedSetters[propName])
+        );
     }
 
     /**
@@ -245,7 +251,7 @@ on internalvpcbeginsetcurcardwithopencardevt
     global internalvpcbeginsetcurcardwithopencardevtparam
     go to card id internalvpcbeginsetcurcardwithopencardevtparam
 end internalvpcbeginsetcurcardwithopencardevt
-    `
+    `;
 }
 
 /**

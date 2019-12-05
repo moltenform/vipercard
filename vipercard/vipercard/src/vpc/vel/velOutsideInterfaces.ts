@@ -19,7 +19,8 @@
  * we've decided that when a script evaluates an expression, this should be pure,
  * with no side effects, and so when evaluating we only provide an interface with read-only ability.
  *
- * this interface helps with testability; a test can provide make a mock implementation of this interface.
+ * this interface helps with testability; a test can provide make a 
+ * mock implementation of this interface.
  */
 export interface OutsideWorldRead {
     /**
@@ -51,7 +52,12 @@ export interface OutsideWorldRead {
     /**
      * high-level get property of a vel, returns VpcVal
      */
-    GetProp(ref: O<RequestedVelRef>, prop: string, adjective: PropAdjective, chunk: O<RequestedChunk>): VpcVal;
+    GetProp(
+        ref: O<RequestedVelRef>,
+        prop: string,
+        adjective: PropAdjective,
+        chunk: O<RequestedChunk>
+    ): VpcVal;
 
     /**
      * is this a runtime property on the 'product' object?
@@ -96,14 +102,15 @@ export interface OutsideWorldRead {
     /**
      * get the current card
      */
-    GetCurrentCardId(): string
+    GetCurrentCardId(): string;
 }
 
 /**
  * OutsideWorldReadWrite:
  * provides scripts with access to the outside "world".
  *
- * this interface helps with testability; a test can provide make a mock implementation of this interface.
+ * this interface helps with testability; a test can provide make a 
+ * mock implementation of this interface.
  */
 export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**
@@ -155,7 +162,11 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**
      * write to a container
      */
-    ContainerWrite(contRef: RequestedContainerRef, newContent: string, prep: VpcChunkPreposition): void;
+    ContainerWrite(
+        contRef: RequestedContainerRef,
+        newContent: string,
+        prep: VpcChunkPreposition
+    ): void;
 
     /**
      * modify a container
@@ -165,7 +176,12 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**
      * high-level property set on a vel
      */
-    SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void;
+    SetProp(
+        ref: O<RequestedVelRef>,
+        prop: string,
+        v: VpcVal,
+        chunk: O<RequestedChunk>
+    ): void;
 
     /**
      * find element by id
@@ -195,7 +211,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**
      * go straight to a card without calling closecard or opencard
      */
-    SetCurCardNoOpenCardEvt(id: string):void
+    SetCurCardNoOpenCardEvt(id: string): void;
 
     /**
      * draw paint on the screen by simulating a click
@@ -211,7 +227,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    WriteToReplMessageBox(s:string):void;
+    WriteToReplMessageBox(s: string): void;
 
     /**
      * get access to FieldsRecentlyEdited, used to determine

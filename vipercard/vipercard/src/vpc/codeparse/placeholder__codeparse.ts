@@ -1,4 +1,2 @@
 
-export class placeholder__codeparse {
-
-}
+export class placeholder__codeparse {}

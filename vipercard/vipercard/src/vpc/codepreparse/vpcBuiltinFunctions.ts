@@ -8,7 +8,7 @@
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq, findEnumToStr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, checkThrowEq, findEnumToStr, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Lines } from './../../ui512/textedit/ui512TextLines';
 
 /**
@@ -133,13 +133,29 @@ export class VpcBuiltinFunctions {
         if (asSimpleFns !== undefined) {
             /* it's a "simpleFns" one */
             if (asSimpleFns === VpcBuiltinFunctions.indicateVarArgs) {
-                checkThrow(args.length > 0, '7$|function requires at least one arg', name);
+                checkThrow(
+                    args.length > 0,
+                    '7$|function requires at least one arg',
+                    name
+                );
             } else {
-                checkThrowEq(asSimpleFns, args.length, '7#|function recieved incorrect # of args', name, asSimpleFns);
+                checkThrowEq(
+                    asSimpleFns,
+                    args.length,
+                    '7#|function recieved incorrect # of args',
+                    name,
+                    asSimpleFns
+                );
             }
 
             let method = 'call' + Util512.capitalizeFirst(name);
-            let ret = Util512.callAsMethodOnClass('VpcBuiltinFunctions', this, method, [args], false);
+            let ret = Util512.callAsMethodOnClass(
+                'VpcBuiltinFunctions',
+                this,
+                method,
+                [args],
+                false
+            );
             assertTrue(ret.isVpcVal, '5m|did not return a vpcval');
             return ret;
         }
@@ -361,7 +377,8 @@ export class VpcBuiltinFunctions {
     callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.cmdKey === undefined) {
             throw makeVpcScriptErr(
-                "Ja|not a key event - function can only be called in a handler like 'on afterkeydown'"
+                longstr(`Ja|not a key event - function can only be
+                    called in a handler like 'on afterkeydown'`)
             );
         } else {
             return VpcValBool(frmMsg && frmMsg.cmdKey);
@@ -375,7 +392,8 @@ export class VpcBuiltinFunctions {
     callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.optionKey === undefined) {
             throw makeVpcScriptErr(
-                "JZ|not a key event - function can only be called in a handler like 'on afterkeydown'"
+                longstr(`JZ|not a key event - function can only be called
+                    in a handler like 'on afterkeydown'`)
             );
         } else {
             return VpcValBool(frmMsg && frmMsg.optionKey);
@@ -389,7 +407,8 @@ export class VpcBuiltinFunctions {
     callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.shiftKey === undefined) {
             throw makeVpcScriptErr(
-                "JY|not a key event - function can only be called in a handler like 'on afterkeydown'"
+                longstr(`JY|not a key event - function can only be called
+                    in a handler like 'on afterkeydown'`)
             );
         } else {
             return VpcValBool(frmMsg && frmMsg.shiftKey);
@@ -403,7 +422,8 @@ export class VpcBuiltinFunctions {
     callKeychar(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyChar === undefined) {
             throw makeVpcScriptErr(
-                "JX|not a key event - function can only be called in a handler like 'on afterkeydown'"
+                longstr(`JX|not a key event - function can only be called
+                    in a handler like 'on afterkeydown'`)
             );
         } else {
             return VpcValS(frmMsg.keyChar);
@@ -416,7 +436,8 @@ export class VpcBuiltinFunctions {
     callKeyrepeated(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyRepeated === undefined) {
             throw makeVpcScriptErr(
-                "JW|not a key event - function can only be called in a handler like 'on afterkeydown'"
+                longstr(`JW|not a key event - function can only be called
+                    in a handler like 'on afterkeydown'`)
             );
         } else {
             return VpcValBool(frmMsg && frmMsg.keyRepeated);
@@ -427,14 +448,18 @@ export class VpcBuiltinFunctions {
      * In a mousedown or mouseup handler, get click x coordinate.
      */
     callClickh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[0]) : VpcVal.Empty;
+        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1
+            ? VpcValN(frmMsg.clickLoc[0])
+            : VpcVal.Empty;
     }
 
     /**
      * In a mousedown or mouseup handler, get click y coordinate.
      */
     callClickv(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[1]) : VpcVal.Empty;
+        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1
+            ? VpcValN(frmMsg.clickLoc[1])
+            : VpcVal.Empty;
     }
 
     /**
@@ -521,7 +546,11 @@ export class VpcBuiltinFunctions {
     callSelectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
-            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(
+                fld.id,
+                PropAdjective.Abbrev,
+                VpcElType.Fld
+            );
             return VpcValS(container);
         } else {
             return VpcVal.Empty;
@@ -537,7 +566,11 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = this.toOneBased(fld.getN('selcaret'));
             let end = this.toOneBased(fld.getN('selend'));
-            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
+            let container = this.getFullNameById(
+                fld.id,
+                PropAdjective.Abbrev,
+                VpcElType.Fld
+            );
             return VpcValS(`char ${start} to ${end} of ${container}`);
         } else {
             return VpcVal.Empty;
@@ -552,7 +585,9 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = fld.getN('selcaret');
             let end = fld.getN('selend');
-            let s = fld.getCardFmTxt(this.readoutside.GetCurrentCardId()).toUnformattedSubstr(start, end - start);
+            let s = fld
+                .getCardFmTxt(this.readoutside.GetCurrentCardId())
+                .toUnformattedSubstr(start, end - start);
             return VpcValS(s);
         } else {
             return VpcVal.Empty;
@@ -566,7 +601,9 @@ export class VpcBuiltinFunctions {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = fld.getN('selcaret');
-            let lines = new UI512Lines(fld.getCardFmTxt(this.readoutside.GetCurrentCardId()));
+            let lines = new UI512Lines(
+                fld.getCardFmTxt(this.readoutside.GetCurrentCardId())
+            );
             return VpcValN(lines.indexToLineNumber(start));
         } else {
             return VpcVal.Empty;
@@ -614,7 +651,11 @@ export class VpcBuiltinFunctions {
     /**
      * variadic functions can take either sum(1,2,3) or sum("1,2,3")
      */
-    protected mathVariadic(args: VpcVal[], name: string, fn: (ar: number[]) => number): VpcVal {
+    protected mathVariadic(
+        args: VpcVal[],
+        name: string,
+        fn: (ar: number[]) => number
+    ): VpcVal {
         let h = new VpcEvalHelpers();
         let numlist = h.numberListFromArgsGiven(name, args, VpcBuiltinFunctions.sep);
         return VpcValN(fn(numlist));

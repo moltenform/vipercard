@@ -446,8 +446,8 @@ if (!String.prototype.includes) {
 if (!String.prototype.startsWith) {
     /* eslint-disable-next-line no-extend-native */
     Object.defineProperty(String.prototype, 'startsWith', {
-        value: function(search:string, rawPos:number) {
-            let pos = rawPos > 0 ? rawPos|0 : 0;
+        value: function (search: string, rawPos: number) {
+            let pos = rawPos > 0 ? rawPos | 0 : 0;
             return this.substring(pos, pos + search.length) === search;
         }
     });
@@ -624,10 +624,7 @@ export function cast<T>(
 /**
  * safe cast, throws if cast would fail.
  */
-export function castVerifyIsNumber(
-    instance: unknown,
-    context?: string
-): number {
+export function castVerifyIsNum(instance: unknown, context?: string): number {
     if (typeof instance === 'number') {
         return instance;
     }
@@ -638,15 +635,19 @@ export function castVerifyIsNumber(
 /**
  * safe cast, throws if cast would fail.
  */
-export function castVerifyIsstring(
-    instance: unknown,
-    context?: string
-): string {
+export function castVerifyIsStr(instance: unknown, context?: string): string {
     if (isString(instance)) {
         return instance;
     }
 
     throw makeUI512Error('J7|type cast exception', context);
+}
+
+/**
+ * safe cast, throws if cast would fail.
+ */
+export function coalesceIfFalseLike<T>(instance: unknown, defaultval: T) {
+    return instance ? instance : defaultval;
 }
 
 /**

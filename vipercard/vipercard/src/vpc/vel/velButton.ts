@@ -3,8 +3,8 @@
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
-/* auto */ import { checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { bool, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, castVerifyIsNum, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
 
@@ -51,8 +51,11 @@ export class VpcElButton extends VpcElSizable {
     }
 
     /* e.g. a background btn can have a different hilite on every card */
-    isCardSpecificContent(key:string) {
-        return !this.getB('sharedhilite') && (key === 'hilite' || key === 'checkmark')
+    isCardSpecificContent(key: string) {
+        return (
+            !this.getB('sharedhilite') &&
+            (bool(key === 'hilite') || bool(key === 'checkmark'))
+        );
     }
 
     /**
@@ -70,26 +73,31 @@ export class VpcElButton extends VpcElSizable {
     static btnGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
         getters['script'] = [PrpTyp.Str, 'script'];
-        getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => SubstringStyleComplex.vpcStyleFromInt(me._textstyle)];
+        getters['textstyle'] = [
+            PrpTyp.Str,
+            (me: VpcElButton) => SubstringStyleComplex.vpcStyleFromInt(me._textstyle)
+        ];
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElButton) => {
                 let ret = getEnumToStrOrUnknown(VpcBtnStyle, me._style);
-                return ret.replace(/osstandard/g, 'standard').replace(/osdefault/g, 'default');
+                return ret
+                    .replace(/osstandard/g, 'standard')
+                    .replace(/osdefault/g, 'default');
             }
         ];
 
         getters['hilite'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, cardId:string) => {
-                return me.getPossiblyCardSpecific('hilite', false, cardId) as boolean
+            (me: VpcElButton, cardId: string) => {
+                return me.getPossiblyCardSpecific('hilite', false, cardId) as boolean;
             }
         ];
 
         getters['checkmark'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, cardId:string) => {
-                return me.getPossiblyCardSpecific('checkmark', false, cardId) as boolean
+            (me: VpcElButton, cardId: string) => {
+                return me.getPossiblyCardSpecific('checkmark', false, cardId) as boolean;
             }
         ];
     }
@@ -111,8 +119,11 @@ export class VpcElButton extends VpcElSizable {
             PrpTyp.Str,
             (me: VpcElButton, s: string) => {
                 let styl = getStrToEnum(VpcBtnStyle, 'Button style', s);
-                checkThrow(styl !== VpcBtnStyle.Osboxmodal, '7D|this style is only supported internally');
-                me.set('style', styl);
+                checkThrow(
+                    (styl as any) !== VpcBtnStyle.Osboxmodal,
+                    '7D|this style is only supported internally'
+                );
+                me.set('style', castVerifyIsNum(styl));
             }
         ];
 
@@ -125,24 +136,26 @@ export class VpcElButton extends VpcElSizable {
                 } else if (s === 'center') {
                     me.set('textalign', 'center');
                 } else {
-                    throw makeVpcScriptErr(`4z|we don't currently support setting text align to ${s}`);
+                    throw makeVpcScriptErr(
+                        `4z|we don't currently support setting text align to ${s}`
+                    );
                 }
             }
         ];
 
         setters['hilite'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, cardId:string) => {
-                me.setPossiblyCardSpecific('hilite', v, false, cardId )
+            (me: VpcElButton, v: boolean, cardId: string) => {
+                me.setPossiblyCardSpecific('hilite', v, false, cardId);
             }
-        ]
+        ];
 
         setters['checkmark'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, cardId:string) => {
-                me.setPossiblyCardSpecific('checkmark', v, false, cardId )
+            (me: VpcElButton, v: boolean, cardId: string) => {
+                me.setPossiblyCardSpecific('checkmark', v, false, cardId);
             }
-        ]
+        ];
     }
 
     static simpleBtnGetSet(): [string, PrpTyp][] {
@@ -166,7 +179,11 @@ export class VpcElButton extends VpcElSizable {
         if (!VpcElButton.cachedGetters || !VpcElButton.cachedSetters) {
             VpcElButton.cachedGetters = {};
             VpcElButton.cachedSetters = {};
-            VpcElBase.simpleGetSet(VpcElButton.cachedGetters, VpcElButton.cachedSetters, VpcElButton.simpleBtnGetSet());
+            VpcElBase.simpleGetSet(
+                VpcElButton.cachedGetters,
+                VpcElButton.cachedSetters,
+                VpcElButton.simpleBtnGetSet()
+            );
             VpcElButton.btnGetters(VpcElButton.cachedGetters);
             VpcElSizable.initSizeGetters(VpcElButton.cachedGetters);
             VpcElButton.btnSetters(VpcElButton.cachedSetters);
@@ -180,7 +197,11 @@ export class VpcElButton extends VpcElSizable {
      * from internal textfont to "geneva_12_biuosdce"
      */
     getFontAsUI512() {
-        let spec = new TextFontSpec(this.getS('textfont'), this.getN('textstyle'), this.getN('textsize'));
+        let spec = new TextFontSpec(
+            this.getS('textfont'),
+            this.getN('textstyle'),
+            this.getN('textsize')
+        );
         return spec.toSpecString();
     }
 }

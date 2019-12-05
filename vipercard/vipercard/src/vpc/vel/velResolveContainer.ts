@@ -47,7 +47,8 @@ export class ReadableContainerVar implements ReadableContainer {
 /**
  * a writable container
  */
-export class WritableContainerVar extends ReadableContainerVar implements WritableContainer {
+export class WritableContainerVar extends ReadableContainerVar
+    implements WritableContainer {
     constructor(protected outsideWritable: OutsideWorldReadWrite, varName: string) {
         super(outsideWritable, varName);
     }
@@ -66,21 +67,23 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
         this.outsideWritable.SetVarContents(this.varName, VpcValS(newText));
     }
 
-    replaceAll(search:string, replaceWith:string) {
-        let s = this.getRawString()
-        let result = WritableContainerVar.replaceAll(s, search, replaceWith)
-        this.setAll(result)
+    replaceAll(search: string, replaceWith: string) {
+        let s = this.getRawString();
+        let result = WritableContainerVar.replaceAll(s, search, replaceWith);
+        this.setAll(result);
     }
 
-    static replaceAll(s:string, search:string, replace:string) {
-        checkThrow(slength(search) > 0,
-            'you cannot search for an empty string, replace "" with "" in s is not allowed.')
+    static replaceAll(s: string, search: string, replace: string) {
+        checkThrow(
+            slength(search) > 0,
+            'you cannot search for an empty string, replace "" with "" in s is not allowed.'
+        );
 
         /* regular expressions would be faster, but we'd need to escape
         all metacharacters in the search string (hard to know if any metacharacters missed)
         and also need to be careful about special strings like $& in the replace string.
         so, until there's a standardized re.escape, use this. */
-        return s.split(search).join(replace)
+        return s.split(search).join(replace);
     }
 }
 
@@ -88,8 +91,7 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
  * reading content from a field
  */
 export class ReadableContainerField implements ReadableContainer {
-    constructor(protected fld: VpcElField, protected parentCardId:string) {
-    }
+    constructor(protected fld: VpcElField, protected parentCardId: string) {}
 
     isDefined() {
         return true;
@@ -97,7 +99,7 @@ export class ReadableContainerField implements ReadableContainer {
 
     len() {
         /* this is fast, it's the reason we have a len() and not just getRawString().length */
-        return this.fld.getCardFmTxt(this.parentCardId).len()
+        return this.fld.getCardFmTxt(this.parentCardId).len();
     }
 
     getRawString(): string {
@@ -108,17 +110,27 @@ export class ReadableContainerField implements ReadableContainer {
 /**
  * writing content to a field
  */
-export class WritableContainerField extends ReadableContainerField implements WritableContainer {
+export class WritableContainerField extends ReadableContainerField
+    implements WritableContainer {
     splice(insertion: number, lenToDelete: number, newstring: string) {
         let txt = this.fld.getCardFmTxt(this.parentCardId);
         if (insertion === 0 && lenToDelete >= txt.len()) {
-            /* follow emulator, there is different behavior (lose formatting) when replacing all text */
+            /* follow emulator, there is different behavior 
+            (lose formatting) when replacing all text */
             this.fld.setProp('alltext', VpcValS(newstring), this.parentCardId);
         } else {
             let font =
-                insertion >= 0 && insertion < txt.len() ? txt.fontAt(insertion) : this.fld.getDefaultFontAsUi512();
-            let newTxt = FormattedText.byInsertion(txt, insertion, lenToDelete, newstring, font);
-            this.fld.setCardFmTxt(this.parentCardId, newTxt)
+                insertion >= 0 && insertion < txt.len()
+                    ? txt.fontAt(insertion)
+                    : this.fld.getDefaultFontAsUi512();
+            let newTxt = FormattedText.byInsertion(
+                txt,
+                insertion,
+                lenToDelete,
+                newstring,
+                font
+            );
+            this.fld.setCardFmTxt(this.parentCardId, newTxt);
         }
     }
 
@@ -127,10 +139,10 @@ export class WritableContainerField extends ReadableContainerField implements Wr
         this.fld.setProp('alltext', VpcValS(newText), this.parentCardId);
     }
 
-    replaceAll(search:string, replaceWith:string) {
+    replaceAll(search: string, replaceWith: string) {
         /* currently loses all formatting. this feature could be added if desired. */
-        let s = this.getRawString()
-        let result = WritableContainerVar.replaceAll(s, search, replaceWith)
-        this.setAll(result)
+        let s = this.getRawString();
+        let result = WritableContainerVar.replaceAll(s, search, replaceWith);
+        this.setAll(result);
     }
 }
