@@ -1,8 +1,8 @@
 
-/* auto */ import { Util512, fitIntoInclusive } from '../../ui512/utils/utils512.js';
-/* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
+/* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
+/* auto */ import { Util512, fitIntoInclusive } from './../utils/util512';
+/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 
 /* small perf opt to reduce calls to charCodeAt */
 const space = ' '.charCodeAt(0);

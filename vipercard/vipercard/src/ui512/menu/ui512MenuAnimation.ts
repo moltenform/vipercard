@@ -1,6 +1,6 @@
 
-/* auto */ import { UI512MenuItem } from '../../ui512/elements/ui512ElementMenu.js';
-/* auto */ import { TemporarilySuspendEvents } from '../../ui512/menu/ui512SuspendEvents.js';
+/* auto */ import { TemporarilySuspendEvents } from './ui512SuspendEvents';
+/* auto */ import { UI512MenuItem } from './../elements/ui512ElementMenu';
 
 /**
  * right when you choose a menu item, suspend all other events while we blink the menu item

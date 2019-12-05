@@ -1,10 +1,11 @@
 
-/* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { GetCharClass, Util512 } from '../../ui512/utils/utils512.js';
-/* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512Lines } from '../../ui512/textedit/ui512TextLines.js';
+/* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
+/* auto */ import { GetCharClass } from './../utils/util512Higher';
+/* auto */ import { assertTrue } from './../utils/util512Assert';
+/* auto */ import { Util512 } from './../utils/util512';
+/* auto */ import { UI512Lines } from './ui512TextLines';
+/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 
 /**
  * modifications of selection and content within a text field
@@ -26,7 +27,11 @@ export class TextSelModifyImpl {
      * select all
      * returns the tuple [newSelCaret, newSelEnd]
      */
-    static changeSelSelectAll(t: FormattedText, nCaret: number, nEnd: number): [number, number] {
+    static changeSelSelectAll(
+        t: FormattedText,
+        nCaret: number,
+        nEnd: number
+    ): [number, number] {
         return [0, t.len()];
     }
 
@@ -63,8 +68,11 @@ export class TextSelModifyImpl {
         if (isLeft) {
             /* if you press Home on an indented line, go to first non-whitepace */
             let startOfLine = lines.lineNumberToIndex(lineNumber);
-            let startOfLineNonSpace = startOfLine + UI512Lines.getNonSpaceStartOfLine(lines.lns[lineNumber], true);
-            let nextCaret = nCaret <= startOfLineNonSpace ? startOfLine : startOfLineNonSpace;
+            let startOfLineNonSpace =
+                startOfLine +
+                UI512Lines.getNonSpaceStartOfLine(lines.lns[lineNumber], true);
+            let nextCaret =
+                nCaret <= startOfLineNonSpace ? startOfLine : startOfLineNonSpace;
             let nextEnd = isExtend ? nEnd : nextCaret;
             return [nextCaret, nextEnd];
         } else {
@@ -85,7 +93,13 @@ export class TextSelModifyImpl {
         isExtend: boolean,
         isUntilWord: boolean
     ): [number, number] {
-        let nextCaret = TextSelModifyImpl.getLeftRight(t, nCaret, isLeft, isUntilWord, true);
+        let nextCaret = TextSelModifyImpl.getLeftRight(
+            t,
+            nCaret,
+            isLeft,
+            isUntilWord,
+            true
+        );
         let nextEnd = isExtend ? nEnd : nextCaret;
         return [nextCaret, nextEnd];
     }
@@ -93,7 +107,11 @@ export class TextSelModifyImpl {
     /**
      * when you, say, double click on a word, select the word
      */
-    static changeSelCurrentWord(t: FormattedText, nCaret: number, nEnd: number): [number, number] {
+    static changeSelCurrentWord(
+        t: FormattedText,
+        nCaret: number,
+        nEnd: number
+    ): [number, number] {
         /* essentially emulate hitting Ctrl-Right then Ctrl-Shift-Left */
         /* except that the intitial Ctrl-Right does not include trailing space */
         let endword = TextSelModifyImpl.getLeftRight(t, nCaret, false, true, false);
@@ -132,7 +150,11 @@ export class TextSelModifyImpl {
     /**
      * what happens when there's selected text and you hit delete?
      */
-    static changeTextDeleteSelection(t: FormattedText, nCaret: number, nEnd: number): [FormattedText, number, number] {
+    static changeTextDeleteSelection(
+        t: FormattedText,
+        nCaret: number,
+        nEnd: number
+    ): [FormattedText, number, number] {
         let higher = Math.max(nCaret, nEnd);
         let lower = Math.min(nCaret, nEnd);
         t.splice(lower, higher - lower);
@@ -155,7 +177,14 @@ export class TextSelModifyImpl {
 
         if (nCaret === nEnd) {
             /* hitting backspace is equal to hitting shift-left and deleting the selection */
-            [nCaret, nEnd] = TextSelModifyImpl.changeSelLeftRight(t, nCaret, nEnd, isLeft, true, isUntilWord);
+            [nCaret, nEnd] = TextSelModifyImpl.changeSelLeftRight(
+                t,
+                nCaret,
+                nEnd,
+                isLeft,
+                true,
+                isUntilWord
+            );
         }
 
         return TextSelModifyImpl.changeTextDeleteSelection(t, nCaret, nEnd);
@@ -164,7 +193,11 @@ export class TextSelModifyImpl {
     /**
      * duplicate the current line
      */
-    static changeTextDuplicate(t: FormattedText, nCaret: number, nEnd: number): [FormattedText, number, number] {
+    static changeTextDuplicate(
+        t: FormattedText,
+        nCaret: number,
+        nEnd: number
+    ): [FormattedText, number, number] {
         if (t.len() === 0) {
             return [t, nCaret, nEnd];
         }
@@ -192,7 +225,11 @@ export class TextSelModifyImpl {
     /**
      * delete the current line
      */
-    static changeTextDeleteLine(t: FormattedText, nCaret: number, nEnd: number): [FormattedText, number, number] {
+    static changeTextDeleteLine(
+        t: FormattedText,
+        nCaret: number,
+        nEnd: number
+    ): [FormattedText, number, number] {
         if (t.len() === 0) {
             return [t, nCaret, nEnd];
         }
@@ -215,7 +252,12 @@ export class TextSelModifyImpl {
     /**
      * for a single line, add or remove whitespace
      */
-    static setIndentLevel(t: FormattedText, level: number, preferTab: boolean, defaultFont: string) {
+    static setIndentLevel(
+        t: FormattedText,
+        level: number,
+        preferTab: boolean,
+        defaultFont: string
+    ) {
         let space = preferTab ? '\t' : Util512.repeat(ScrollConsts.TabSize, ' ').join('');
         /* 1) erase all current whitespace */
         let countCharsToDelete = UI512Lines.getNonSpaceStartOfLine(t, true);
@@ -224,7 +266,13 @@ export class TextSelModifyImpl {
         /* 2) add spaces */
         assertTrue(level >= 0, '2;|negative level');
         let added = Util512.repeat(level, space).join('');
-        let [tNew, p1, p2] = TextSelModifyImpl.changeTextInsert(t, 0, 0, added, defaultFont);
+        let [tNew, p1, p2] = TextSelModifyImpl.changeTextInsert(
+            t,
+            0,
+            0,
+            added,
+            defaultFont
+        );
         return tNew;
     }
 
@@ -247,7 +295,12 @@ export class TextSelModifyImpl {
             let level = UI512Lines.getIndentLevel(line);
             level += isLeft ? -1 : 1;
             level = Math.max(0, level);
-            let newline = TextSelModifyImpl.setIndentLevel(line, level, true, defaultFont);
+            let newline = TextSelModifyImpl.setIndentLevel(
+                line,
+                level,
+                true,
+                defaultFont
+            );
             line.deleteAll();
             line.append(newline);
         };
@@ -266,7 +319,9 @@ export class TextSelModifyImpl {
         defaultFont: string
     ): [FormattedText, number, number] {
         assertTrue(
-            !prefix.startsWith(' ') && !prefix.startsWith('\t') && !prefix.startsWith('\n'),
+            !prefix.startsWith(' ') &&
+                !prefix.startsWith('\t') &&
+                !prefix.startsWith('\n'),
             `2:|we don't support prefix that starts with whitespace but got ${prefix}`
         );
 
@@ -279,7 +334,11 @@ export class TextSelModifyImpl {
             let existingPrefix = line.toUnformattedSubstr(lineStart, prefix.length);
             if (existingPrefix === prefix) {
                 /* prefix is there, remove it */
-                TextSelModifyImpl.changeTextDeleteSelection(line, lineStart, lineStart + prefix.length);
+                TextSelModifyImpl.changeTextDeleteSelection(
+                    line,
+                    lineStart,
+                    lineStart + prefix.length
+                );
             } else {
                 /* no prefix, add it */
                 let [tNew, p1, p2] = TextSelModifyImpl.changeTextInsert(

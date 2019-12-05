@@ -1,10 +1,10 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512PresenterInterface } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { EventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { UI512PresenterInterface } from './../draw/ui512Interfaces';
+/* auto */ import { EventDetails } from './ui512Events';
+/* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
+/* auto */ import { UI512Application } from './../elements/ui512ElementApp';
+/* auto */ import { UI512Element } from './../elements/ui512Element';
 
 /**
  * forward-declare more of the Presenter class

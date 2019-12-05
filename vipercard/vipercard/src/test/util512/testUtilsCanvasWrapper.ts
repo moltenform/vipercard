@@ -1,9 +1,9 @@
 
-/* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete } from '../../ui512/utils/util512Higher';
-/* auto */ import { longstr } from '../../ui512/utils/util512';
-/* auto */ import { CanvasTestParams, TestUtilsCanvas } from '../testUtils/testUtilsCanvas';
-/* auto */ import { SimpleUtil512TestCollection } from '../testUtils/testUtils';
+/* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { RenderComplete } from './../../ui512/utils/util512Higher';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /**
  * testing fillRect, getColorFromCanvasData, and

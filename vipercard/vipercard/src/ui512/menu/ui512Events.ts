@@ -1,9 +1,9 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Root, UI512IsEventInterface } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys, toShortcutString } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
+/* auto */ import { ModifierKeys, toShortcutString } from './../utils/utilsKeypressHelpers';
+/* auto */ import { UI512IsEventInterface } from './../utils/util512Higher';
+/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { UI512EventType } from './../draw/ui512Interfaces';
+/* auto */ import { UI512Element } from './../elements/ui512Element';
 
 /**
  * event details base class
@@ -23,8 +23,9 @@ export abstract class EventDetails {
         this._handled = true;
     }
 
-    getAffectedElements(): UI512Element[] {
-        return [];
+    getAffectedElements() {
+        let ret:UI512Element[] = []
+        return ret;
     }
 }
 
@@ -83,14 +84,15 @@ export class MouseMoveEventDetails extends EventDetails {
         return UI512EventType.MouseMove;
     }
 
-    getAffectedElements(): UI512Element[] {
-        let ret = [];
+    getAffectedElements() {
+        let ret:UI512Element[] = [];
         if (this.elPrev) {
             ret.push(this.elPrev);
         }
         if (this.elNext) {
             ret.push(this.elNext);
         }
+
         return ret;
     }
 }
@@ -123,8 +125,8 @@ export class MouseEnterDetails extends EventDetails {
         return UI512EventType.MouseEnter;
     }
 
-    getAffectedElements(): UI512Element[] {
-        let ret = [];
+    getAffectedElements() {
+        let ret: UI512Element[] = [];
         if (this.el) {
             ret.push(this.el);
         }
@@ -146,8 +148,8 @@ export class MouseLeaveDetails extends EventDetails {
         return UI512EventType.MouseLeave;
     }
 
-    getAffectedElements(): UI512Element[] {
-        let ret = [];
+    getAffectedElements() {
+        let ret: UI512Element[] = [];
         if (this.el) {
             ret.push(this.el);
         }
@@ -189,7 +191,13 @@ export class KeyUpEventDetails extends KeyEventDetails {
 export class KeyDownEventDetails extends KeyEventDetails {
     isKeyDownEventDetails = true;
     readonly readableShortcut: string;
-    constructor(timestamp: number, keyCode: string, keyChar: string, repeated: boolean, mods: ModifierKeys) {
+    constructor(
+        timestamp: number,
+        keyCode: string,
+        keyChar: string,
+        repeated: boolean,
+        mods: ModifierKeys
+    ) {
         super(timestamp, keyCode, keyChar, repeated, mods);
         this.readableShortcut = toShortcutString(mods, keyCode);
     }
@@ -215,8 +223,8 @@ export class MouseUpEventDetails extends MouseEventDetails {
         return UI512EventType.MouseUp;
     }
 
-    getAffectedElements(): UI512Element[] {
-        let ret = [];
+    getAffectedElements() {
+        let ret: UI512Element[] = [];
         if (this.elRaw) {
             ret.push(this.elRaw);
         }
@@ -239,8 +247,8 @@ export class MouseDownEventDetails extends MouseEventDetails {
     type() {
         return UI512EventType.MouseDown;
     }
-    getAffectedElements(): UI512Element[] {
-        let ret = [];
+    getAffectedElements() {
+        let ret: UI512Element[] = [];
         if (this.el) {
             ret.push(this.el);
         }
@@ -260,8 +268,8 @@ export class MouseDownDoubleEventDetails extends MouseEventDetails {
         return UI512EventType.MouseDownDouble;
     }
 
-    getAffectedElements(): UI512Element[] {
-        let ret = [];
+    getAffectedElements() {
+        let ret: UI512Element[] = [];
         if (this.el) {
             ret.push(this.el);
         }
@@ -275,7 +283,11 @@ export class MouseDownDoubleEventDetails extends MouseEventDetails {
  */
 export class PasteTextEventDetails extends EventDetails implements UI512IsEventInterface {
     isPasteTextEventDetails = true;
-    constructor(public readonly timestamp: number, public readonly text: string, public readonly fromOS: boolean) {
+    constructor(
+        public readonly timestamp: number,
+        public readonly text: string,
+        public readonly fromOS: boolean
+    ) {
         super();
     }
 

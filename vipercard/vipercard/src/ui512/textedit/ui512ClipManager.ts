@@ -1,8 +1,8 @@
 
-/* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RepeatingTimer, getRoot } from '../../ui512/utils/utils512.js';
-/* auto */ import { ClipManagerInterface } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
+/* auto */ import { RepeatingTimer, getRoot } from './../utils/util512Higher';
+/* auto */ import { assertTrue } from './../utils/util512Assert';
+/* auto */ import { ClipManagerInterface } from './../draw/ui512Interfaces';
+/* auto */ import { PasteTextEventDetails } from './../menu/ui512Events';
 
 /**
  * ClipManager
@@ -17,7 +17,11 @@ export class ClipManager implements ClipManagerInterface {
     isClipManager = true;
     simClipboard = '';
     readonly ensureClipboardReady = 2000;
-    timerClipboardReady = new RepeatingTimer(this.ensureClipboardReady);
+    timerClipboardReady:RepeatingTimer;
+
+    constructor() {
+        this.timerClipboardReady = new RepeatingTimer(this.ensureClipboardReady)
+    }
 
     /**
      * every 2 seconds, set the browser focus to
@@ -91,7 +95,9 @@ export class ClipManager implements ClipManagerInterface {
      * a hidden input box, required for the browser to let us copy/paste
      */
     protected getOrCreateHidden() {
-        let hiddenInput = window.document.getElementById('hidden-dom-input') as HTMLTextAreaElement;
+        let hiddenInput = window.document.getElementById(
+            'hidden-dom-input'
+        ) as HTMLTextAreaElement;
         if (!hiddenInput) {
             const isRTL = window.document.documentElement.getAttribute('dir') === 'rtl';
             hiddenInput = window.document.createElement('textarea');
@@ -110,7 +116,8 @@ export class ClipManager implements ClipManagerInterface {
             hiddenInput.style[isRTL ? 'right' : 'left'] = '-99999px';
 
             /* move element to the same position vertically */
-            let yPosition = window.pageYOffset || window.document.documentElement.scrollTop;
+            let yPosition =
+                window.pageYOffset ?? window.document.documentElement.scrollTop;
             hiddenInput.style.top = `${yPosition}px`;
             hiddenInput.setAttribute('readonly', '');
             window.document.body.appendChild(hiddenInput);
@@ -131,7 +138,7 @@ export class ClipManager implements ClipManagerInterface {
             window.document.addEventListener('paste', (e: ClipboardEvent) => {
                 setFocusToHiddenInput();
                 e.preventDefault();
-                if (e.clipboardData.types.indexOf('text/plain') !== -1) {
+                if (e.clipboardData && e.clipboardData.types.indexOf('text/plain') !== -1) {
                     let plainText = e.clipboardData.getData('text/plain');
                     if (plainText) {
                         let details = new PasteTextEventDetails(0, plainText, true);

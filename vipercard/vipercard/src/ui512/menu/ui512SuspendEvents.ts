@@ -1,14 +1,15 @@
 
-/* auto */ import { assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { TemporarilySuspendEventsInterface } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
+/* auto */ import { assertTrue } from './../utils/util512Assert';
+/* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
+/* auto */ import { TemporarilySuspendEventsInterface } from './../draw/ui512Interfaces';
 
 /**
  * temporarily suspend (ignore) events.
  * replace all listeners with a different set of listeners,
  * until shouldRestore() returns true, then return to normal
  */
-export abstract class TemporarilySuspendEvents implements TemporarilySuspendEventsInterface {
+export abstract class TemporarilySuspendEvents
+    implements TemporarilySuspendEventsInterface {
     savedListeners: { [t: number]: Function[] } = {};
     isStarted = false;
 

@@ -1,21 +1,22 @@
 
-/* auto */ import { O, assertTrue } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, Util512, assertEqWarn, cast, fitIntoInclusive, getRoot } from '../../ui512/utils/utils512.js';
-/* auto */ import { ScrollConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { CharRectType, FoundCharByLocation, largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { DrawTextArgs, drawTextArgsFromEl } from '../../ui512/draw/ui512DrawTextArgs.js';
-/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512ViewDrawBorders } from '../../ui512/draw/ui512DrawBorders.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { UI512ViewDraw } from '../../ui512/elements/ui512ElementView.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
-/* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
+/* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
+/* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
+/* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
+/* auto */ import { O, assertTrue } from './../utils/util512Assert';
+/* auto */ import { Util512, assertEqWarn, cast, fitIntoInclusive } from './../utils/util512';
+/* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
+/* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';
+/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { UI512ViewDraw } from './../elements/ui512ElementView';
+/* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
+/* auto */ import { UI512ElGroup } from './../elements/ui512ElementGroup';
+/* auto */ import { UI512ElButton } from './../elements/ui512ElementButton';
+/* auto */ import { UI512Application } from './../elements/ui512ElementApp';
+/* auto */ import { UI512Element } from './../elements/ui512Element';
+/* auto */ import { CharRectType, FoundCharByLocation, largeArea } from './../draw/ui512DrawTextClasses';
+/* auto */ import { DrawTextArgs, drawTextArgsFromEl } from './../draw/ui512DrawTextArgs';
+/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { UI512ViewDrawBorders } from './../draw/ui512DrawBorders';
 
 /**
  * creation and positioning of scrollbar elements
@@ -25,32 +26,49 @@ export class ScrollbarImpl {
      * if calling set(), you should always use a GenericTextField and not the UI512Element
      */
     protected gelFromEl(el: O<UI512Element>): O<GenericTextField> {
-        return el && el instanceof UI512ElTextField ? new UI512ElTextFieldAsGeneric(el) : undefined;
+        return el && el instanceof UI512ElTextField
+            ? new UI512ElTextFieldAsGeneric(el)
+            : undefined;
     }
 
     /**
      * construct elements for scrollbar
      */
     buildScrollbar(app: UI512Application, grp: UI512ElGroup, el: UI512ElTextField) {
-        let arrowUp = new UI512ElButton(fldIdToScrollbarPartId(el.id, 'arrowUp'), el.observer);
+        let arrowUp = new UI512ElButton(
+            fldIdToScrollbarPartId(el.id, 'arrowUp'),
+            el.observer
+        );
         arrowUp.set('visible', false);
         arrowUp.set('icongroupid', '001');
         arrowUp.set('iconnumber', 23);
 
-        let arrowDn = new UI512ElButton(fldIdToScrollbarPartId(el.id, 'arrowDn'), el.observer);
+        let arrowDn = new UI512ElButton(
+            fldIdToScrollbarPartId(el.id, 'arrowDn'),
+            el.observer
+        );
         arrowDn.set('visible', false);
         arrowDn.set('icongroupid', '001');
         arrowDn.set('iconnumber', 24);
 
-        let scrollBgUp = new UI512ElButton(fldIdToScrollbarPartId(el.id, 'scrollBgUp'), el.observer);
+        let scrollBgUp = new UI512ElButton(
+            fldIdToScrollbarPartId(el.id, 'scrollBgUp'),
+            el.observer
+        );
         scrollBgUp.set('visible', false);
         scrollBgUp.set('autohighlight', false);
 
-        let scrollBgDn = new UI512ElButton(fldIdToScrollbarPartId(el.id, 'scrollBgDn'), el.observer);
+        let scrollBgDn = new UI512ElButton(
+            fldIdToScrollbarPartId(el.id, 'scrollBgDn'),
+            el.observer
+        );
         scrollBgDn.set('visible', false);
         scrollBgDn.set('autohighlight', false);
 
-        let scrollThm = new UI512ElButton(fldIdToScrollbarPartId(el.id, 'scrollThm'), el.observer);
+        let scrollThm = new UI512ElButton(
+            fldIdToScrollbarPartId(el.id, 'scrollThm'),
+            el.observer
+        );
         scrollThm.set('visible', false);
         scrollThm.set('autohighlight', false);
 
@@ -77,7 +95,12 @@ export class ScrollbarImpl {
      * position scrollbar elements.
      * if the font has not yet loaded, returns early and doesn't set the RenderComplete flag.
      */
-    setPositions(app: UI512Application, grp: UI512ElGroup, el: UI512ElTextField, complete: RenderComplete) {
+    setPositions(
+        app: UI512Application,
+        grp: UI512ElGroup,
+        el: UI512ElTextField,
+        complete: RenderComplete
+    ) {
         if (!el) {
             return;
         }
@@ -126,7 +149,12 @@ export class ScrollbarImpl {
 
         /* set position of arrow up and down */
         let sbX = el.right - ScrollConsts.BarWidth;
-        pieces.arrowUp.setDimensions(sbX, el.y, ScrollConsts.BoxHeight, ScrollConsts.BoxHeight);
+        pieces.arrowUp.setDimensions(
+            sbX,
+            el.y,
+            ScrollConsts.BoxHeight,
+            ScrollConsts.BoxHeight
+        );
         pieces.arrowDn.setDimensions(
             sbX,
             el.bottom - ScrollConsts.BoxHeight,
@@ -139,7 +167,12 @@ export class ScrollbarImpl {
             /* make the scrollbar look "disabled" and hide the thumb */
             pieces.scrollThm.setDimensions(0, 0, 0, 0);
             pieces.scrollBgDn.setDimensions(0, 0, 0, 0);
-            pieces.scrollBgUp.setDimensions(pieces.arrowUp.x, pieces.arrowUp.y, ScrollConsts.BarWidth, el.h);
+            pieces.scrollBgUp.setDimensions(
+                pieces.arrowUp.x,
+                pieces.arrowUp.y,
+                ScrollConsts.BarWidth,
+                el.h
+            );
             pieces.scrollBgUp.set('icongroupid', '');
             pieces.scrollBgUp.set('iconnumber', 0);
             pieces.scrollBgDn.set('icongroupid', '');
@@ -150,15 +183,31 @@ export class ScrollbarImpl {
             pieces.arrowDn.set('iconnumberwhenhighlight', -1);
         } else {
             /* content is long enough, so enable the scrollbar */
-            let spaceBetween = pieces.arrowDn.y - pieces.arrowUp.bottom - ScrollConsts.BoxHeight;
+            let spaceBetween =
+                pieces.arrowDn.y - pieces.arrowUp.bottom - ScrollConsts.BoxHeight;
             let thumbPos = Math.floor(scrollRatio * spaceBetween) + pieces.arrowUp.bottom;
             let midpoint = thumbPos + Math.floor(ScrollConsts.BoxHeight / 2);
 
             /* make it an even number */
-            midpoint = midpoint + midpoint % 2;
-            pieces.scrollBgUp.setDimensions(sbX, el.y, ScrollConsts.BarWidth, midpoint - el.y);
-            pieces.scrollBgDn.setDimensions(sbX, midpoint, ScrollConsts.BarWidth, el.bottom - midpoint);
-            pieces.scrollThm.setDimensions(sbX + 1, thumbPos, ScrollConsts.BoxHeight - 2, ScrollConsts.BoxHeight);
+            midpoint = midpoint + (midpoint % 2);
+            pieces.scrollBgUp.setDimensions(
+                sbX,
+                el.y,
+                ScrollConsts.BarWidth,
+                midpoint - el.y
+            );
+            pieces.scrollBgDn.setDimensions(
+                sbX,
+                midpoint,
+                ScrollConsts.BarWidth,
+                el.bottom - midpoint
+            );
+            pieces.scrollThm.setDimensions(
+                sbX + 1,
+                thumbPos,
+                ScrollConsts.BoxHeight - 2,
+                ScrollConsts.BoxHeight
+            );
 
             /* set icons and properties */
             pieces.scrollBgUp.set('icongroupid', '001');
@@ -179,7 +228,10 @@ export class ScrollbarImpl {
     /**
      * just a convenient way to call getElemById on all the pieces
      */
-    protected getScrollbarPieces(app: UI512Application, el: UI512Element): { [key: string]: UI512Element } {
+    protected getScrollbarPieces(
+        app: UI512Application,
+        el: UI512Element
+    ): { [key: string]: UI512Element } {
         return {
             arrowUp: app.getEl(fldIdToScrollbarPartId(el.id, 'arrowUp')),
             arrowDn: app.getEl(fldIdToScrollbarPartId(el.id, 'arrowDn')),
@@ -216,10 +268,19 @@ export class ScrollbarImpl {
         el: UI512ElTextField,
         measureHeight: boolean,
         drawBeyondVisible: boolean,
-        callbackPerChar: O<(charindex: number, type: CharRectType, bounds: number[]) => boolean>
+        callbackPerChar: O<
+            (charindex: number, type: CharRectType, bounds: number[]) => boolean
+        >
     ) {
         /* mimic the logic in elementView */
-        let b = new UI512ViewDrawBorders(new CanvasWrapper(undefined), el.x, el.y, el.w, el.h, new RenderComplete());
+        let b = new UI512ViewDrawBorders(
+            new CanvasWrapper(undefined),
+            el.x,
+            el.y,
+            el.w,
+            el.h,
+            new RenderComplete()
+        );
         let view = new UI512ViewDraw();
         let [_, subRect] = view.getSubRectForField(b, el);
         if (!subRect) {
@@ -249,7 +310,12 @@ export class ScrollbarImpl {
      * when you click on a letter in a field, or the margin to left or right, which letter does it correspond with?
      */
     fromMouseCoordsToCaretPosition(el: UI512ElTextField, x: number, y: number) {
-        let [found, lowest] = this.getCoordToCharInField(el, x, y, false /* draw beyond visible */);
+        let [found, lowest] = this.getCoordToCharInField(
+            el,
+            x,
+            y,
+            false /* draw beyond visible */
+        );
         if (found) {
             if (found.type === CharRectType.Char) {
                 /* split each letter in half. if you clicked on the left side of the letter, go left */
@@ -262,7 +328,11 @@ export class ScrollbarImpl {
                 /* padding area always belongs to its adjacent character */
                 return found.charIndex;
             }
-        } else if (RectUtils.hasPoint(x, y, el.x, el.y, el.w, el.h) && lowest !== undefined && y >= lowest) {
+        } else if (
+            RectUtils.hasPoint(x, y, el.x, el.y, el.w, el.h) &&
+            lowest !== undefined &&
+            y >= lowest
+        ) {
             /* user clicked below all of the text */
             return el.getFmTxt().len();
         } else {
@@ -286,7 +356,15 @@ export class ScrollbarImpl {
         let cb = (charindex: number, type: CharRectType, bounds: number[]) => {
             lowest = Math.max(lowest, bounds[1] + bounds[3]);
             if (RectUtils.hasPoint(x, y, bounds[0], bounds[1], bounds[2], bounds[3])) {
-                found = new FoundCharByLocation(bounds[0], bounds[1], bounds[2], bounds[3], charindex, type, 0);
+                found = new FoundCharByLocation(
+                    bounds[0],
+                    bounds[1],
+                    bounds[2],
+                    bounds[3],
+                    charindex,
+                    type,
+                    0
+                );
 
                 /* signal that we can stop iterating */
                 return false;
@@ -295,7 +373,12 @@ export class ScrollbarImpl {
             }
         };
 
-        let drawn = this.simulateDrawField(el, false /* measure height */, drawBeyondVisible, cb);
+        let drawn = this.simulateDrawField(
+            el,
+            false /* measure height */,
+            drawBeyondVisible,
+            cb
+        );
         return drawn ? [found, lowest] : [undefined, undefined];
     }
 
@@ -315,7 +398,12 @@ export class ScrollbarImpl {
             }
         };
 
-        let drawn = this.simulateDrawField(el, false /* measure height */, true /* beyond visible */, cb);
+        let drawn = this.simulateDrawField(
+            el,
+            false /* measure height */,
+            true /* beyond visible */,
+            cb
+        );
         return drawn ? found : undefined;
     }
 
@@ -373,7 +461,12 @@ export class ScrollbarImpl {
         if (cachedHeight && cachedHeight !== -1) {
             return cachedHeight;
         } else {
-            let drawn = this.simulateDrawField(el, true /* measure height */, true /* beyond visible */, undefined);
+            let drawn = this.simulateDrawField(
+                el,
+                true /* measure height */,
+                true /* beyond visible */,
+                undefined
+            );
             if (drawn) {
                 let ret = drawn.lowestPixelDrawn + ScrollConsts.PadBottomOfField;
                 el.set('contentHeightInPixels', ret);
@@ -406,7 +499,11 @@ export class ScrollbarImpl {
     /**
      * set scroll amount when clicking scroll bar
      */
-    onScrollArrowClicked(pr: UI512PresenterWithMenuInterface, arrowId: string, amt: number) {
+    onScrollArrowClicked(
+        pr: UI512PresenterWithMenuInterface,
+        arrowId: string,
+        amt: number
+    ) {
         let fldid = scrollbarPartIdToFldId(arrowId);
         let el = pr.app.findEl(fldid);
         let gel = this.gelFromEl(el);

@@ -1,8 +1,8 @@
 
-/* auto */ import { Util512Higher } from '../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue } from '../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq } from '../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection } from '../testUtils/testUtils';
+/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Higher');
 export let testCollectionUtil512Higher = t;

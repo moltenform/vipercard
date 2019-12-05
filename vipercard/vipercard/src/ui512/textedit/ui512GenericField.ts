@@ -1,8 +1,8 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
+/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
+/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
 
 /**
  * IGenericTextField, a generic text-field-like object.

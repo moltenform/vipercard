@@ -1,15 +1,15 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, fitIntoInclusive } from '../../ui512/utils/utils512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
-/* auto */ import { UI512Lines } from '../../ui512/textedit/ui512TextLines.js';
-/* auto */ import { GenericTextField } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { ScrollbarImpl } from '../../ui512/textedit/ui512Scrollbar.js';
-/* auto */ import { TextSelModifyImpl } from '../../ui512/textedit/ui512TextSelModifyImpl.js';
+/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { assertEq, fitIntoInclusive } from './../utils/util512';
+/* auto */ import { TextSelModifyImpl } from './ui512TextSelModifyImpl';
+/* auto */ import { UI512Lines } from './ui512TextLines';
+/* auto */ import { ScrollbarImpl } from './ui512Scrollbar';
+/* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
+/* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
+/* auto */ import { GenericTextField } from './ui512GenericField';
+/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
+/* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 
 /**
  * modifications of selection and content within a text field
@@ -44,7 +44,11 @@ export class TextSelModify {
      */
     protected static changeTextInField(
         el: GenericTextField,
-        fn: (t: FormattedText, nCaret: number, nEnd: number) => [FormattedText, number, number]
+        fn: (
+            t: FormattedText,
+            nCaret: number,
+            nEnd: number
+        ) => [FormattedText, number, number]
     ) {
         if (!el.canEdit() || !el.canSelectText()) {
             return;
@@ -67,7 +71,9 @@ export class TextSelModify {
             );
         }
 
-        let amt = TextSelModify.readOnlyScrollbarImpl.getScrollPosThatWouldMakeStartCaretVisible(el.getReadOnlyUI512());
+        let amt = TextSelModify.readOnlyScrollbarImpl.getScrollPosThatWouldMakeStartCaretVisible(
+            el.getReadOnlyUI512()
+        );
         el.setScrollAmt(amt);
     }
 
@@ -119,7 +125,11 @@ export class TextSelModify {
     /**
      * delete leftwards if you hit backspace
      */
-    static changeTextBackspace(el: GenericTextField, isLeft: boolean, isUntilWord: boolean) {
+    static changeTextBackspace(
+        el: GenericTextField,
+        isLeft: boolean,
+        isUntilWord: boolean
+    ) {
         TextSelModify.changeTextInField(el, (t, nCaret, nEnd) =>
             TextSelModifyImpl.changeTextBackspace(t, nCaret, nEnd, isLeft, isUntilWord)
         );
@@ -150,7 +160,13 @@ export class TextSelModify {
      */
     static changeTextIndentation(el: GenericTextField, isLeft: boolean) {
         TextSelModify.changeTextInField(el, (t, nCaret, nEnd) =>
-            TextSelModifyImpl.changeTextIndentation(t, nCaret, nEnd, isLeft, el.getDefaultFont())
+            TextSelModifyImpl.changeTextIndentation(
+                t,
+                nCaret,
+                nEnd,
+                isLeft,
+                el.getDefaultFont()
+            )
         );
     }
 
@@ -159,7 +175,13 @@ export class TextSelModify {
      */
     static changeTextToggleLinePrefix(el: GenericTextField, prefix: string) {
         TextSelModify.changeTextInField(el, (t, nCaret, nEnd) =>
-            TextSelModifyImpl.changeTextToggleLinePrefix(t, nCaret, nEnd, prefix, el.getDefaultFont())
+            TextSelModifyImpl.changeTextToggleLinePrefix(
+                t,
+                nCaret,
+                nEnd,
+                prefix,
+                el.getDefaultFont()
+            )
         );
     }
 
@@ -179,9 +201,21 @@ export class TextSelModify {
     /**
      * when you press left or right, change selection
      */
-    static changeSelLeftRight(el: GenericTextField, isLeft: boolean, isExtend: boolean, isUntilWord: boolean) {
+    static changeSelLeftRight(
+        el: GenericTextField,
+        isLeft: boolean,
+        isExtend: boolean,
+        isUntilWord: boolean
+    ) {
         TextSelModify.changeSelInField(el, (t, nCaret, nEnd) =>
-            TextSelModifyImpl.changeSelLeftRight(t, nCaret, nEnd, isLeft, isExtend, isUntilWord)
+            TextSelModifyImpl.changeSelLeftRight(
+                t,
+                nCaret,
+                nEnd,
+                isLeft,
+                isExtend,
+                isUntilWord
+            )
         );
     }
 
@@ -197,7 +231,11 @@ export class TextSelModify {
     /**
      * when you press Home, go to first char in the line
      */
-    static changeSelGoLineHomeEnd(el: GenericTextField, isLeft: boolean, isExtend: boolean) {
+    static changeSelGoLineHomeEnd(
+        el: GenericTextField,
+        isLeft: boolean,
+        isExtend: boolean
+    ) {
         TextSelModify.changeSelInField(el, (t, nCaret, nEnd) =>
             TextSelModifyImpl.changeSelGoLineHomeEnd(t, nCaret, nEnd, isLeft, isExtend)
         );
@@ -206,7 +244,11 @@ export class TextSelModify {
     /**
      * when you press Cmd+Home, go to first char in the field
      */
-    static changeSelGoDocHomeEnd(el: GenericTextField, isLeft: boolean, isExtend: boolean) {
+    static changeSelGoDocHomeEnd(
+        el: GenericTextField,
+        isLeft: boolean,
+        isExtend: boolean
+    ) {
         TextSelModify.changeSelInField(el, (t, nCaret, nEnd) =>
             TextSelModifyImpl.changeSelGoDocHomeEnd(t, nCaret, nEnd, isLeft, isExtend)
         );
@@ -217,7 +259,10 @@ export class TextSelModify {
      */
     static changeSelPageUpDown(el: GenericTextField, isUp: boolean, isExtend: boolean) {
         let [nCaret, nEnd] = el.getSel();
-        let approxLineHeight = TextSelModify.readOnlyScrollbarImpl.getApproxLineHeight(el.getReadOnlyUI512(), nCaret);
+        let approxLineHeight = TextSelModify.readOnlyScrollbarImpl.getApproxLineHeight(
+            el.getReadOnlyUI512(),
+            nCaret
+        );
         if (approxLineHeight) {
             /* go about one line less than the amount of lines per page, and minimum of one line */
             let linesPerPage = Math.floor(el.getHeight() / approxLineHeight);
@@ -231,9 +276,18 @@ export class TextSelModify {
     /**
      * clicking in a text field, where to set the caret
      */
-    static mouseClickCoordsToSetCaret(el: GenericTextField, x: number, y: number, isExtend: boolean) {
+    static mouseClickCoordsToSetCaret(
+        el: GenericTextField,
+        x: number,
+        y: number,
+        isExtend: boolean
+    ) {
         TextSelModify.changeSelInField(el, (t, nCaret, nEnd) => {
-            let index = TextSelModify.readOnlyScrollbarImpl.fromMouseCoordsToCaretPosition(el.getReadOnlyUI512(), x, y);
+            let index = TextSelModify.readOnlyScrollbarImpl.fromMouseCoordsToCaretPosition(
+                el.getReadOnlyUI512(),
+                x,
+                y
+            );
             if (index !== undefined) {
                 if (isExtend) {
                     return [index, nEnd];
@@ -251,7 +305,11 @@ export class TextSelModify {
      */
     static mouseClickCoordsAdjustSelection(el: GenericTextField, x: number, y: number) {
         TextSelModify.changeSelInField(el, (t, nCaret, nEnd) => {
-            let index = TextSelModify.readOnlyScrollbarImpl.fromMouseCoordsToCaretPosition(el.getReadOnlyUI512(), x, y);
+            let index = TextSelModify.readOnlyScrollbarImpl.fromMouseCoordsToCaretPosition(
+                el.getReadOnlyUI512(),
+                x,
+                y
+            );
             if (index !== undefined) {
                 return [index, nEnd];
             } else {
@@ -267,7 +325,10 @@ export class TextSelModify {
         let [selcaretBefore, selendBefore] = el.getSel();
         this.mouseClickCoordsToSetCaret(el, x, y, false);
         TextSelModify.changeSelInField(el, (t, nCaret, nEnd) => {
-            if (el.getFmtTxt().len() > 0 && (nCaret !== selcaretBefore || nEnd !== selendBefore)) {
+            if (
+                el.getFmtTxt().len() > 0 &&
+                (nCaret !== selcaretBefore || nEnd !== selendBefore)
+            ) {
                 let lines = new UI512Lines(el.getFmtTxt());
                 let lineNumber = lines.indexToLineNumber(nCaret);
                 let [newncaret, newnend] = [
@@ -328,7 +389,11 @@ export class TextSelModify {
      * it looks like most text editors use method b)
      * so use that here.
      */
-    static changeSelArrowKeyUpDownVisual(gel: GenericTextField, isUp: boolean, isExtend: boolean) {
+    static changeSelArrowKeyUpDownVisual(
+        gel: GenericTextField,
+        isUp: boolean,
+        isExtend: boolean
+    ) {
         TextSelModify.changeSelInField(gel, (t, nCaret, nEnd) => {
             let bounds = TextSelModify.readOnlyScrollbarImpl.getCharacterInFieldToCoords(
                 gel.getReadOnlyUI512(),
@@ -339,8 +404,13 @@ export class TextSelModify {
                 /* find a location above the middle of the letter */
                 const pixelsExtendedPast = 4;
                 let middle = bounds[0] + Math.floor(bounds[2] / 2);
-                let above = isUp ? bounds[1] - pixelsExtendedPast : bounds[1] + bounds[3] + pixelsExtendedPast;
-                let [found, lowest] = TextSelModify.readOnlyScrollbarImpl.getCoordToCharInField(
+                let above = isUp
+                    ? bounds[1] - pixelsExtendedPast
+                    : bounds[1] + bounds[3] + pixelsExtendedPast;
+                let [
+                    found,
+                    lowest
+                ] = TextSelModify.readOnlyScrollbarImpl.getCoordToCharInField(
                     gel.getReadOnlyUI512(),
                     middle,
                     above,

@@ -1,14 +1,15 @@
 
-/* auto */ import { O, assertTrueWarn, checkThrowUI512 } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { RenderComplete, assertEq, base10, cast, getRoot, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { MenuConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementMenu.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
+/* auto */ import { MenuConsts } from './../utils/utilsDrawConstants';
+/* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
+/* auto */ import { O, assertTrueWarn, checkThrowUI512 } from './../utils/util512Assert';
+/* auto */ import { assertEq, cast, slength } from './../utils/util512';
+/* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
+/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from './../elements/ui512ElementMenu';
+/* auto */ import { UI512ElGroup } from './../elements/ui512ElementGroup';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from './../elements/ui512ElementButton';
+/* auto */ import { UI512Application } from './../elements/ui512ElementApp';
+/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { lng } from './../lang/langBase';
 
 /**
  * you can build a menu in code,
@@ -25,7 +26,11 @@ export class MenuPositioning {
     /**
      * create menu helper elements. must be called when adding a menubar.
      */
-    static createMenuHelperEls(app: UI512Application, grpItems: UI512ElGroup, menuRoot: UI512MenuRoot) {
+    static createMenuHelperEls(
+        app: UI512Application,
+        grpItems: UI512ElGroup,
+        menuRoot: UI512MenuRoot
+    ) {
         let dropdownBgId = menuRoot.id + '##dropdownBg';
         if (!grpItems.findEl(dropdownBgId)) {
             let dropdownBg = new UI512ElButton(dropdownBgId, menuRoot.observer);
@@ -38,7 +43,11 @@ export class MenuPositioning {
     /**
      * remove helper elements. call when removing a menubar.
      */
-    static removeMenuHelperObjects(app: UI512Application, grpItems: UI512ElGroup, menuRoot: UI512MenuRoot) {
+    static removeMenuHelperObjects(
+        app: UI512Application,
+        grpItems: UI512ElGroup,
+        menuRoot: UI512MenuRoot
+    ) {
         let dropdownBgId = menuRoot.id + '##dropdownBg';
         grpItems.removeElement(dropdownBgId);
     }
@@ -46,7 +55,11 @@ export class MenuPositioning {
     /**
      * remove a menu
      */
-    static removeMenuRoot(app: UI512Application, grp: UI512ElGroup, menuRoot: UI512MenuRoot) {
+    static removeMenuRoot(
+        app: UI512Application,
+        grp: UI512ElGroup,
+        menuRoot: UI512MenuRoot
+    ) {
         let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app, false);
         assertEq(grp.id, grpBar.id, '2]|');
         MenuPositioning.removeMenuHelperObjects(app, grpItems, menuRoot);
@@ -150,7 +163,12 @@ export class MenuPositioning {
 
         /* the emulator has a 1 pixel margin between top of screen and menu, */
         /* but we'll not do that because it doesn't look good against black background */
-        header.setDimensions(curX - 4, app.bounds[1], curwidth + 5, MenuConsts.BarHeight - 1);
+        header.setDimensions(
+            curX - 4,
+            app.bounds[1],
+            curwidth + 5,
+            MenuConsts.BarHeight - 1
+        );
         curX += curwidth;
 
         /* draw active one */
@@ -173,15 +191,27 @@ export class MenuPositioning {
     /**
      * set all menu positions
      */
-    static setMenuPositions(app: UI512Application, menuRoot: UI512MenuRoot, complete: RenderComplete) {
+    static setMenuPositions(
+        app: UI512Application,
+        menuRoot: UI512MenuRoot,
+        complete: RenderComplete
+    ) {
         if (!menuRoot || !menuRoot.visible || !menuRoot.getS('childids')) {
             return;
         }
 
         /* top bar */
         let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
-        menuRoot.setDimensions(app.bounds[0], app.bounds[1], app.bounds[2], MenuConsts.BarHeight - 1);
-        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'J0|forgot to call createMenuHelperEls?');
+        menuRoot.setDimensions(
+            app.bounds[0],
+            app.bounds[1],
+            app.bounds[2],
+            MenuConsts.BarHeight - 1
+        );
+        assertTrueWarn(
+            grpItems.findEl(menuRoot.id + '##dropdownBg'),
+            'J0|forgot to call createMenuHelperEls?'
+        );
 
         /* draw menu headers */
         /* interesting fact: the headers overlap each other. confirmed in emulator */
@@ -192,7 +222,14 @@ export class MenuPositioning {
         for (let i = 0; i < dropDowns.length; i++) {
             let header = dropDowns[i];
             let open = menuRoot.getN('whichIsExpanded') === i;
-            curX = MenuPositioning.setMenuDropdownPosition(app, menuRoot, header, curX, open, complete);
+            curX = MenuPositioning.setMenuDropdownPosition(
+                app,
+                menuRoot,
+                header,
+                curX,
+                open,
+                complete
+            );
         }
     }
 
@@ -274,7 +311,9 @@ export class MenuPositioning {
         grpBar.addElementAfter(app, dropdn, menuRoot.id);
         dropdn.set('fixedoffset', fixedOffset);
         if (headerLabelUntranslated.startsWith('icon:')) {
-            let [_, iconGroupId, iconNumber, fixWidth] = headerLabelUntranslated.split(':');
+            let [_, iconGroupId, iconNumber, fixWidth] = headerLabelUntranslated.split(
+                ':'
+            );
             dropdn.set('icongroupid', iconGroupId);
             dropdn.set('iconnumber', parseInt(iconNumber, base10));
             dropdn.set('fixedwidth', parseInt(fixWidth, base10));
@@ -283,7 +322,10 @@ export class MenuPositioning {
             dropdn.set('labeltext', lng(headerLabelUntranslated));
         }
 
-        assertTrueWarn(grpItems.findEl(menuRoot.id + '##dropdownBg'), 'I~|forgot to call createMenuHelperEls?');
+        assertTrueWarn(
+            grpItems.findEl(menuRoot.id + '##dropdownBg'),
+            'I~|forgot to call createMenuHelperEls?'
+        );
         for (let menuString of arMenu) {
             let [itemId, itemUntranslated, hotkey] = menuString.split('|');
             itemId = slength(itemId) ? itemId : 'unnamedmenu' + Math.random();
@@ -291,7 +333,10 @@ export class MenuPositioning {
 
             grpItems.addElement(app, item);
             childIds.push(itemId);
-            item.set('labeltext', itemUntranslated === '---' ? itemUntranslated : lng(itemUntranslated));
+            item.set(
+                'labeltext',
+                itemUntranslated === '---' ? itemUntranslated : lng(itemUntranslated)
+            );
             item.set('labelhotkey', hotkey.replace(/ /g, ''));
             item.set('visible', false);
         }
@@ -302,7 +347,10 @@ export class MenuPositioning {
     /**
      * get groups for menus
      */
-    static getMenuGroups(app: UI512Application, createIfNeeded = true): [UI512ElGroup, UI512ElGroup] {
+    static getMenuGroups(
+        app: UI512Application,
+        createIfNeeded = true
+    ): [UI512ElGroup, UI512ElGroup] {
         return [
             MenuPositioning.getOrCreateGrp(app, '$$grpmenubar', createIfNeeded),
             MenuPositioning.getOrCreateGrp(app, '$$grpmenuitems', createIfNeeded)

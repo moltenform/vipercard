@@ -1,7 +1,7 @@
 
-/* auto */ import { assertTrue } from '../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from '../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from '../testUtils/testUtils';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
 export let testCollectionUtil512Class = t;

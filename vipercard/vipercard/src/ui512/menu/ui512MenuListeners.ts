@@ -1,13 +1,13 @@
 
-/* auto */ import { respondUI512Error } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast } from '../../ui512/utils/utils512.js';
-/* auto */ import { ChangeContext, MenuOpenState } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from '../../ui512/elements/ui512ElementMenu.js';
-/* auto */ import { MenuItemClickedDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
-/* auto */ import { MenuPositioning } from '../../ui512/menu/ui512MenuPositioning.js';
-/* auto */ import { SuspendEventsForMenuBlinkAnimation } from '../../ui512/menu/ui512MenuAnimation.js';
+/* auto */ import { respondUI512Error } from './../utils/util512Assert';
+/* auto */ import { cast } from './../utils/util512';
+/* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
+/* auto */ import { MenuPositioning } from './ui512MenuPositioning';
+/* auto */ import { SuspendEventsForMenuBlinkAnimation } from './ui512MenuAnimation';
+/* auto */ import { ChangeContext, MenuOpenState } from './../draw/ui512Interfaces';
+/* auto */ import { MenuItemClickedDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseUpEventDetails } from './ui512Events';
+/* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from './../elements/ui512ElementMenu';
+/* auto */ import { UI512Element } from './../elements/ui512Element';
 
 /**
  * menu listeners+behaviors, opening the menu when you click on it and so on.
@@ -84,7 +84,11 @@ export class MenuListeners {
      * when clicking a menu item,
      * queue the MenuItemClicked event and start the animation
      */
-    static respondToMenuItemClick(pr: UI512PresenterWithMenuInterface, item: UI512MenuItem, d: MouseUpEventDetails) {
+    static respondToMenuItemClick(
+        pr: UI512PresenterWithMenuInterface,
+        item: UI512MenuItem,
+        d: MouseUpEventDetails
+    ) {
         let cbAfterAnim = () => {
             MenuListeners.closeAllActiveMenus(pr);
             pr.openState = MenuOpenState.MenusClosed;
@@ -164,7 +168,11 @@ export class MenuListeners {
             d.el.set('highlightactive', true);
         }
 
-        if (d.el && d.el instanceof UI512MenuDropdown && pr.openState !== MenuOpenState.MenusClosed) {
+        if (
+            d.el &&
+            d.el instanceof UI512MenuDropdown &&
+            pr.openState !== MenuOpenState.MenusClosed
+        ) {
             if (d.el.id === 'topClock') {
                 MenuListeners.closeAllActiveMenus(pr);
             } else {

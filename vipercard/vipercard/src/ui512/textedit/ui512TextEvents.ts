@@ -1,19 +1,19 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { getRoot } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { MouseDragStatus, UI512EventType } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512PresenterWithMenuInterface } from '../../ui512/menu/ui512PresenterWithMenu.js';
-/* auto */ import { MenuListeners } from '../../ui512/menu/ui512MenuListeners.js';
-/* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { ScrollbarImpl, fldIdToScrollbarPartId, getAmountIfScrollArrowClicked } from '../../ui512/textedit/ui512Scrollbar.js';
-/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
-/* auto */ import { BasicHandlers } from '../../ui512/textedit/ui512BasicHandlers.js';
+/* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
+/* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
+/* auto */ import { getRoot } from './../utils/util512Higher';
+/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { TextSelModify } from './ui512TextSelModify';
+/* auto */ import { ScrollbarImpl, fldIdToScrollbarPartId, getAmountIfScrollArrowClicked } from './ui512Scrollbar';
+/* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
+/* auto */ import { MenuListeners } from './../menu/ui512MenuListeners';
+/* auto */ import { MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
+/* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';
+/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from './../menu/ui512Events';
+/* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
+/* auto */ import { UI512ElButton } from './../elements/ui512ElementButton';
+/* auto */ import { BasicHandlers } from './ui512BasicHandlers';
 
 /**
  * Base class for text events
@@ -75,7 +75,12 @@ export class UI512TextEvents {
                 TextSelModify.mouseClickSelectByLines(gel, d.mouseX, d.mouseY);
             } else {
                 let isShift = (d.mods & ModifierKeys.Shift) !== 0;
-                TextSelModify.mouseClickCoordsToSetCaret(gel, d.mouseX, d.mouseY, isShift);
+                TextSelModify.mouseClickCoordsToSetCaret(
+                    gel,
+                    d.mouseX,
+                    d.mouseY,
+                    isShift
+                );
                 if (!isShift) {
                     pr.mouseDragStatus = MouseDragStatus.SelectingText;
                 }
@@ -87,7 +92,10 @@ export class UI512TextEvents {
      * onMouseMove, see if we should select text
      */
     onMouseMoveSelect(pr: UI512PresenterWithMenuInterface, d: MouseMoveEventDetails) {
-        if (pr.mouseDragStatus === MouseDragStatus.SelectingText && pr.trackPressedBtns[0]) {
+        if (
+            pr.mouseDragStatus === MouseDragStatus.SelectingText &&
+            pr.trackPressedBtns[0]
+        ) {
             let el = pr.app.findEl(pr.trackClickedIds[0]);
             if (
                 el &&
@@ -99,7 +107,11 @@ export class UI512TextEvents {
                 let gel = this.gelFromEl(el);
                 if (gel) {
                     if (RectUtils.hasPoint(d.mouseX, d.mouseY, el.x, el.y, el.w, el.h)) {
-                        TextSelModify.mouseClickCoordsAdjustSelection(gel, d.mouseX, d.mouseY);
+                        TextSelModify.mouseClickCoordsAdjustSelection(
+                            gel,
+                            d.mouseX,
+                            d.mouseY
+                        );
                     }
                 }
             }
@@ -109,7 +121,10 @@ export class UI512TextEvents {
     /**
      * onMouseDoubleDown, select the current word
      */
-    onMouseDoubleDown(pr: UI512PresenterWithMenuInterface, d: MouseDownDoubleEventDetails) {
+    onMouseDoubleDown(
+        pr: UI512PresenterWithMenuInterface,
+        d: MouseDownDoubleEventDetails
+    ) {
         if (d.button === 0) {
             if (
                 d.el &&
@@ -250,7 +265,11 @@ export class UI512TextEvents {
                 break;
             case 'Cmd+ArrowDown':
                 let arrowbtndn = fldIdToScrollbarPartId(el.id, 'arrowDn');
-                this.getScrollbarImpl().onScrollArrowClicked(pr, arrowbtndn, UI512TextEvents.amtScrollArrowClicked);
+                this.getScrollbarImpl().onScrollArrowClicked(
+                    pr,
+                    arrowbtndn,
+                    UI512TextEvents.amtScrollArrowClicked
+                );
                 break;
             case 'Return':
                 TextSelModify.changeTextInsert(gel, '\n');
@@ -279,11 +298,22 @@ export class UI512TextEvents {
 
         if (wasShortcut) {
             d.setHandled();
-        } else if ((d.mods === 0 || d.mods === ModifierKeys.Shift) && d.keyChar.length === 1) {
+        } else if (
+            (d.mods === 0 || d.mods === ModifierKeys.Shift) &&
+            d.keyChar.length === 1
+        ) {
             let char = d.keyChar;
             let charcode = d.keyChar.charCodeAt(0);
-            let toRoman = FormattedText.fromHostCharsetStrict(char, getRoot().getBrowserInfo());
-            if (toRoman && toRoman.length === 1 && toRoman.charCodeAt(0) >= 32 && charcode >= 32) {
+            let toRoman = FormattedText.fromHostCharsetStrict(
+                char,
+                getRoot().getBrowserInfo()
+            );
+            if (
+                toRoman &&
+                toRoman.length === 1 &&
+                toRoman.charCodeAt(0) >= 32 &&
+                charcode >= 32
+            ) {
                 if (gel) {
                     /* insert the char into the field */
                     TextSelModify.changeTextInsert(gel, toRoman);
@@ -298,27 +328,29 @@ export class UI512TextEvents {
      */
     static keyDownProbablyCausesTextChange(d: KeyDownEventDetails) {
         if ((d.mods === 0 || d.mods === ModifierKeys.Shift) && d.keyChar.length === 1) {
-            return true
+            return true;
         }
 
-        if (d.readableShortcut.search(/\bBackspace\b/) !== -1 ||
-        d.readableShortcut.search(/\bDelete\b/) !== -1) {
-            return true
+        if (
+            d.readableShortcut.search(/\bBackspace\b/) !== -1 ||
+            d.readableShortcut.search(/\bDelete\b/) !== -1
+        ) {
+            return true;
         }
 
-        switch(d.readableShortcut) {
+        switch (d.readableShortcut) {
             case 'Return':
-                return true
+                return true;
             case 'Enter':
-                return true
+                return true;
             case 'NumpadEnter':
-                return true
+                return true;
             case 'Cmd+V':
-                return true
+                return true;
             case 'Cmd+X':
-                return true
+                return true;
             default:
-                return false
+                return false;
         }
     }
 
@@ -328,7 +360,9 @@ export class UI512TextEvents {
     onPasteText(pr: UI512PresenterWithMenuInterface, d: PasteTextEventDetails) {
         let el = TextSelModify.getSelectedField(pr);
         if (el && !(d.fromOS && !pr.useOSClipboard)) {
-            let text = d.fromOS ? FormattedText.fromExternalCharset(d.text, getRoot().getBrowserInfo()) : d.text;
+            let text = d.fromOS
+                ? FormattedText.fromExternalCharset(d.text, getRoot().getBrowserInfo())
+                : d.text;
             let gel = this.gelFromEl(el);
             if (gel) {
                 TextSelModify.changeTextInsert(gel, text);
@@ -339,7 +373,11 @@ export class UI512TextEvents {
     /**
      * cut or copy text
      */
-    sendCutOrCopy(pr: UI512PresenterWithMenuInterface, el: UI512ElTextField, isCut: boolean) {
+    sendCutOrCopy(
+        pr: UI512PresenterWithMenuInterface,
+        el: UI512ElTextField,
+        isCut: boolean
+    ) {
         if (el) {
             let gel = this.gelFromEl(el);
             if (!gel) {
@@ -353,7 +391,9 @@ export class UI512TextEvents {
 
             let sel = TextSelModify.getSelectedText(gel);
             if (sel && sel.length > 0) {
-                let text = pr.useOSClipboard ? FormattedText.toExternalCharset(sel, getRoot().getBrowserInfo()) : sel;
+                let text = pr.useOSClipboard
+                    ? FormattedText.toExternalCharset(sel, getRoot().getBrowserInfo())
+                    : sel;
                 let succeeded = pr.clipManager.copy(text, pr.useOSClipboard);
                 if (succeeded && isCut && sel.length > 0) {
                     TextSelModify.changeTextBackspace(gel, false, false);
@@ -390,7 +430,17 @@ export class UI512TextEvents {
             let moveAmt = getAmountIfScrollArrowClicked(clickedid);
             if (moveAmt) {
                 let el = pr.app.findEl(clickedid);
-                if (el && RectUtils.hasPoint(pr.trackMouse[0], pr.trackMouse[1], el.x, el.y, el.w, el.h)) {
+                if (
+                    el &&
+                    RectUtils.hasPoint(
+                        pr.trackMouse[0],
+                        pr.trackMouse[1],
+                        el.x,
+                        el.y,
+                        el.w,
+                        el.h
+                    )
+                ) {
                     this.getScrollbarImpl().onScrollArrowClicked(pr, clickedid, moveAmt);
                 }
             }
@@ -457,5 +507,7 @@ export function addDefaultListeners(listeners: { [t: number]: Function[] }) {
         editTextBehavior.onMouseDoubleDown.bind(editTextBehavior)
     ];
 
-    listeners[UI512EventType.PasteText.valueOf()] = [editTextBehavior.onPasteText.bind(editTextBehavior)];
+    listeners[UI512EventType.PasteText.valueOf()] = [
+        editTextBehavior.onPasteText.bind(editTextBehavior)
+    ];
 }
