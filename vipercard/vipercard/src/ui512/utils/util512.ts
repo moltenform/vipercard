@@ -643,7 +643,7 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
 /**
  * safe cast, throws if cast would fail.
  */
-export function coalesceIfFalseLike<T>(instance: T | null | undefined, defaultval: T) : T {
+export function coalesceIfFalseLike<T>(instance: T | null | undefined, defaultval: T): T {
     return instance ? instance : defaultval;
 }
 
@@ -923,5 +923,6 @@ export function last<T>(ar: T[]): T {
  * conveniently write a long string
  */
 export function longstr(s: string, newlinesBecome = ' ') {
-    return s.replace(/\s*(\r\n|\n)\s*/g, newlinesBecome);
+    s = s.replace(/\s*(\r\n|\n)\s*/g, newlinesBecome);
+    return s.replace(/\s*{{NEWLINE}}\s*/g, '\n');
 }

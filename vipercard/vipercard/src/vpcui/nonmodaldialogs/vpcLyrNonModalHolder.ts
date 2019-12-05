@@ -147,13 +147,25 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
         const fldVerticalMargin = 5;
         const totalWidthForCenter = this.lblWidth + this.fldWidth + this.lblMarginSpace;
         const totalHeightForCenter =
-            this.fields.length * fldVerticalMargin + this.fields.map(t => t[2] * this.fldHeight).reduce(Util512.add);
+            this.fields.length * fldVerticalMargin +
+            this.fields.map(t => t[2] * this.fldHeight).reduce(Util512.add);
         const startX = this.x + Math.round((this.logicalWidth - totalWidthForCenter) / 2);
-        const startY = this.y + Math.round((this.logicalHeight - totalHeightForCenter) / 2);
+        const startY =
+            this.y + Math.round((this.logicalHeight - totalHeightForCenter) / 2);
         let curX;
         let curY = startY;
         for (let [fldId, fldUntransed, heightMult] of this.fields) {
-            curY = this.createFormFld(heightMult, curX, startX, app, grp, fldId, curY, fldUntransed, fldVerticalMargin);
+            curY = this.createFormFld(
+                heightMult,
+                curX,
+                startX,
+                app,
+                grp,
+                fldId,
+                curY,
+                fldUntransed,
+                fldVerticalMargin
+            );
         }
 
         curY += fldVerticalMargin * 2;
@@ -167,8 +179,18 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
         curX = startX;
         curY += 30;
 
-        this.lblStatus = this.genChild<UI512ElLabel>(app, grp, 'lblStatusOfForm', UI512ElLabel);
-        this.lblStatus.setDimensionsX1Y1(curX, curY, this.x + this.logicalWidth - 1, curY + 27);
+        this.lblStatus = this.genChild<UI512ElLabel>(
+            app,
+            grp,
+            'lblStatusOfForm',
+            UI512ElLabel
+        );
+        this.lblStatus.setDimensionsX1Y1(
+            curX,
+            curY,
+            this.x + this.logicalWidth - 1,
+            curY + 27
+        );
     }
 
     /**
@@ -177,7 +199,8 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
     protected createHeaderAndBg(app: UI512Application, grp: UI512ElGroup) {
         let headHeight = 0;
         if (this.showHeader) {
-            headHeight = this.drawWindowDecoration(app, this.decorations, this.hasCloseBtn) - 1;
+            headHeight =
+                this.drawWindowDecoration(app, this.decorations, this.hasCloseBtn) - 1;
             let caption = grp.getEl(this.getElId('caption'));
             caption.set('labeltext', lng(this.captionText));
         }
@@ -185,7 +208,12 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.set('style', this.showHeader ? UI512BtnStyle.Rectangle : UI512BtnStyle.Opaque);
-        bg.setDimensions(this.x, this.y + headHeight, this.logicalWidth, this.logicalHeight - headHeight);
+        bg.setDimensions(
+            this.x,
+            this.y + headHeight,
+            this.logicalWidth,
+            this.logicalHeight - headHeight
+        );
     }
 
     /**
@@ -208,7 +236,12 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
         lbl.setDimensions(curX, curY, this.lblWidth, h);
         lbl.set('labeltext', lng(fldUntransed));
         curX += this.lblWidth + this.lblMarginSpace;
-        let rght = this.genChild<UI512ElTextField>(app, grp, 'fld' + fldId, UI512ElTextField);
+        let rght = this.genChild<UI512ElTextField>(
+            app,
+            grp,
+            'fld' + fldId,
+            UI512ElTextField
+        );
         rght.setDimensions(curX, curY, this.fldWidth, h);
         rght.set('style', UI512FldStyle.Rectangle);
         rght.set('multiline', heightMult > 1);
@@ -216,7 +249,12 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
         if (this.fieldsThatAreLabels[fldId]) {
             /* instead of having an entry box, this is
             a wide label that uses the space where the entry box would be */
-            lbl.setDimensionsX1Y1(lbl.x, lbl.y, rght.right, rght.bottom + fldVerticalMargin);
+            lbl.setDimensionsX1Y1(
+                lbl.x,
+                lbl.y,
+                rght.right,
+                rght.bottom + fldVerticalMargin
+            );
             rght.set('visible', false);
         }
 
@@ -263,10 +301,21 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
     /**
      * draw one of the OK or Cancel buttons at the bottom
      */
-    protected drawBtn(app: UI512Application, grp: UI512ElGroup, n: number, x: number, y: number, w: number, h: number) {
+    protected drawBtn(
+        app: UI512Application,
+        grp: UI512ElGroup,
+        n: number,
+        x: number,
+        y: number,
+        w: number,
+        h: number
+    ) {
         if (this.btns[n]) {
             let btn = this.genBtn(app, grp, `btn${this.btns[n][0]}`);
-            btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
+            btn.set(
+                'style',
+                n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard
+            );
             btn.set('autohighlight', true);
             btn.set('labeltext', lng(this.btns[n][1]));
             btn.setDimensions(x, y, w, h);

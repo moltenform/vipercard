@@ -71,9 +71,10 @@ export class VpcPresenter extends VpcPresenterInit {
             this.lyrPaintRender.deleteTempPaintEls();
             this.setCurrentFocus(undefined);
 
-            /* especially important when going from edit to browse, */
-            /* let's say you've set the enabled of a button to false, */
-            /* need to redo modelRender so that it is actually enabled==false not just enabledstyle */
+            /* especially important when going from edit to browse, 
+            let's say you've set the enabled of a button to false, 
+            need to redo modelRender so that it is actually
+                enabled==false not just enabledstyle */
             this.lyrModelRender.fullRedrawNeeded();
 
             this.vci.getModel().productOpts.allowSetCurrentTool = true;
@@ -87,43 +88,62 @@ export class VpcPresenter extends VpcPresenterInit {
     /**
      * set the current card, without sending any closecard or opencard events
      */
-    setCurCardNoOpenCardEvt(nextId:string) {
+    setCurCardNoOpenCardEvt(nextId: string) {
         this.vci.undoableAction(() => {
             /* verify card exists */
-            this.vci.getModel().getById(nextId, VpcElCard)
+            this.vci.getModel().getById(nextId, VpcElCard);
 
             /* go to the card */
-            let wasCard = this.vci.getOptionS('currentCardId')
+            let wasCard = this.vci.getOptionS('currentCardId');
             this.vci.getModel().productOpts.allowSetCurrentCard = true;
             this.vci.setOption('currentCardId', nextId);
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
 
             if (wasCard !== nextId) {
                 /* remember history, for go back and go forth */
-                let suspended = this.vci.getCodeExec().globals.find('internalvpcgocardimplsuspendhistory')
+                let suspended = this.vci
+                    .getCodeExec()
+                    .globals.find('internalvpcgocardimplsuspendhistory');
                 if (suspended === undefined || suspended.readAsString() !== '1') {
-                    this.vci.getCodeExec().cardHistory.append(nextId)
+                    this.vci.getCodeExec().cardHistory.append(nextId);
                 }
             }
 
             /* turn this off, so it's never stuck on indefinitely */
-            this.vci.getCodeExec().globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0))
+            this.vci
+                .getCodeExec()
+                .globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0));
         });
     }
 
     /**
-     * schedules an event that will eventually set the current card, including sending closecard + opencard events
+     * schedules an event that will eventually set the current card,
+     * including sending closecard + opencard events
      */
-    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific:O<string>) {
-        assertTrue(!idSpecific || pos === OrdinalOrPosition.This, "specifying an id, should set to This")
-        let targetCardId = idSpecific ? idSpecific : this.vci.getModel().getCardRelative(pos)
+    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
+        assertTrue(
+            !idSpecific || pos === OrdinalOrPosition.This,
+            'specifying an id, should set to This'
+        );
+        let targetCardId = idSpecific
+            ? idSpecific
+            : this.vci.getModel().getCardRelative(pos);
         if (this.getTool() === VpcTool.Browse) {
-            this.vci.getCodeExec().globals.set('internalvpcbeginsetcurcardwithopencardevtparam', VpcValS(targetCardId))
-            let stack = this.vci.getModel().stack
-            let msg = new VpcScriptMessage(stack.id, VpcBuiltinMsg.__Custom, "internalvpcbeginsetcurcardwithopencardevt");
+            this.vci
+                .getCodeExec()
+                .globals.set(
+                    'internalvpcbeginsetcurcardwithopencardevtparam',
+                    VpcValS(targetCardId)
+                );
+            let stack = this.vci.getModel().stack;
+            let msg = new VpcScriptMessage(
+                stack.id,
+                VpcBuiltinMsg.__Custom,
+                'internalvpcbeginsetcurcardwithopencardevt'
+            );
             this.vci.getCodeExec().scheduleCodeExec(msg);
         } else {
-            this.setCurCardNoOpenCardEvt(targetCardId)
+            this.setCurCardNoOpenCardEvt(targetCardId);
         }
     }
 
@@ -137,19 +157,24 @@ export class VpcPresenter extends VpcPresenterInit {
      * go to a different card
      * press Cmd+Z to undo (not yet implemented)
      * quitting the program (not yet implemented)
-     * select command  (implemented, unless a script selects a different field and comes back quickly)
+     * select command  (implemented, unless a script selects a
+     *      different field and comes back quickly)
      */
     beginScheduleFldOpenCloseEvent(evt: FocusChangedEventDetails) {
-        if (evt.idPrev === evt.idNext || this.getTool() !== VpcTool.Browse || evt.skipCloseFieldMsg) {
-            return
+        if (
+            evt.idPrev === evt.idNext ||
+            this.getTool() !== VpcTool.Browse ||
+            evt.skipCloseFieldMsg
+        ) {
+            return;
         }
 
         if (evt.idPrev) {
-            this.beginScheduleFldOpenCloseEventClose(evt.idPrev)
+            this.beginScheduleFldOpenCloseEventClose(evt.idPrev);
         }
 
         if (evt.idNext) {
-            this.beginScheduleFldOpenCloseEventOpen(evt.idNext)
+            this.beginScheduleFldOpenCloseEventOpen(evt.idNext);
         }
     }
 
@@ -159,14 +184,14 @@ export class VpcPresenter extends VpcPresenterInit {
     beginScheduleFldOpenCloseEventClose(prevElId: string) {
         /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
         since people's closeField scripts probably assume we are on the card anyways */
-        let prevVel = this.lyrModelRender.findElIdToVel(prevElId)
+        let prevVel = this.lyrModelRender.findElIdToVel(prevElId);
         if (prevVel && prevVel.getType() === VpcElType.Fld) {
             if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
                 /* closefield called if changes made in the field */
                 let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
                 this.vci.getCodeExec().scheduleCodeExec(msg);
 
-                this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false
+                this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false;
             } else {
                 /* exitfield called if no changes were made in the field */
                 let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
@@ -178,10 +203,10 @@ export class VpcPresenter extends VpcPresenterInit {
     /**
      * schedule the openfield event
      */
-    beginScheduleFldOpenCloseEventOpen(nextId:string) {
+    beginScheduleFldOpenCloseEventOpen(nextId: string) {
         /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
         since people's openField scripts probably assume we are on the card anyways */
-        let vel = this.lyrModelRender.findElIdToVel(nextId)
+        let vel = this.lyrModelRender.findElIdToVel(nextId);
         if (vel && vel.getType() === VpcElType.Fld) {
             let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
             this.vci.getCodeExec().scheduleCodeExec(msg);
@@ -191,9 +216,12 @@ export class VpcPresenter extends VpcPresenterInit {
     /**
      * from script error, to an appropriate site of the error location
      */
-    static commonRespondToError(vci: VpcStateInterface, scriptErr: VpcScriptErrorBase):[string, number, string, number] {
+    static commonRespondToError(
+        vci: VpcStateInterface,
+        scriptErr: VpcScriptErrorBase
+    ): [string, number, string, number] {
         let NoteThisIsDisabledCode = 1;
-        return ['', 0, '', 0]
+        return ['', 0, '', 0];
         //~ /* use current card if velId is unknown */
         //~ let origVelId = scriptErr.velId;
         //~ origVelId = coalesceIfFalseLike(origVelId, vci.getModel().getCurrentCard().id);
@@ -217,14 +245,13 @@ export class VpcPresenter extends VpcPresenterInit {
         //~ so we're not stuck with bad syntax,
         //~ and we don't show temp code in editor */
         //~ for (let vid of [origVelId, redirredVelId]) {
-            //~ let v = vci.getModel().getByIdUntyped(vid);
-            //~ if (v.getType() !== VpcElType.Product) {
-                //~ let s = v.getS('script')
-                //~ s = VpcExecFrame.filterTemporaryFromScript(s)
-                //~ v.set('script', s)
-            //~ }
+        //~ let v = vci.getModel().getByIdUntyped(vid);
+        //~ if (v.getType() !== VpcElType.Product) {
+        //~ let s = v.getS('script')
+        //~ s = VpcExecFrame.filterTemporaryFromScript(s)
+        //~ v.set('script', s)
         //~ }
-
+        //~ }
 
         //~ return [origVelId, origLine, redirredVelId, redirredLine]
     }
@@ -238,7 +265,10 @@ export class VpcPresenter extends VpcPresenterInit {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
-            let [origVelId, origLine, velId, line] = VpcPresenter.commonRespondToError(this.vci, scriptErr)
+            let [origVelId, origLine, velId, line] = VpcPresenter.commonRespondToError(
+                this.vci,
+                scriptErr
+            );
 
             /* did this come from the messagebox? */
             if (line === VpcNonModalReplBox.markMessageBox) {
@@ -256,8 +286,8 @@ export class VpcPresenter extends VpcPresenterInit {
             /* for example "send myevent to btn 4 of cd 5" */
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
             let vel = this.vci.getModel().getByIdUntyped(velId);
-            let parentCard = this.vci.getModel().getParentCardOfElement(vel)
-            this.vci.setCurCardNoOpenCardEvt(parentCard.id)
+            let parentCard = this.vci.getModel().getParentCardOfElement(vel);
+            this.vci.setCurCardNoOpenCardEvt(parentCard.id);
 
             /* set the runtime flags */
             this.vci.getCodeExec().lastEncounteredScriptErr = scriptErr;
@@ -275,7 +305,10 @@ export class VpcPresenter extends VpcPresenterInit {
      * create modal dialog instance
      */
     protected getModalDlg() {
-        checkThrow(!this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Kj|dialog box already shown');
+        checkThrow(
+            !this.app.findEl('mainModalDlg##modaldialog##dlgprompt'),
+            'Kj|dialog box already shown'
+        );
 
         let modalDlg = new UI512CompModalDialog('mainModalDlg');
         let stopBtnElId = this.lyrToolboxes.toolsNav.getElId('choice##cardNumOrStop');
@@ -302,12 +335,29 @@ export class VpcPresenter extends VpcPresenterInit {
      * since all the event handlers are suspended, and accidentally causing another
      * dialog will show an assert in getModalDlg()
      */
-    answerMsg(prompt: string, fnOnResult?: (n: number) => void, choice1?: string, choice2?: string, choice3?: string) {
+    answerMsg(
+        prompt: string,
+        fnOnResult?: (n: number) => void,
+        choice1?: string,
+        choice2?: string,
+        choice3?: string
+    ) {
         let tl = this.getToolResponse(this.getTool());
         tl.cancelCurrentToolAction();
         let dlg = this.getModalDlg();
-        dlg.standardAnswer(this, this.app, prompt, fnOnResult, choice1 ?? '', choice2 ?? '', choice3 ?? '');
-        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Ki|expect to have been created');
+        dlg.standardAnswer(
+            this,
+            this.app,
+            prompt,
+            fnOnResult,
+            choice1 ?? '',
+            choice2 ?? '',
+            choice3 ?? ''
+        );
+        assertTrueWarn(
+            this.app.findEl('mainModalDlg##modaldialog##dlgprompt'),
+            'Ki|expect to have been created'
+        );
     }
 
     /**
@@ -317,18 +367,30 @@ export class VpcPresenter extends VpcPresenterInit {
      * since all the event handlers are suspended, and accidentally causing another
      * dialog will show an assert in getModalDlg()
      */
-    askMsg(prompt: string, defText: string, fnOnResult: (ret: O<string>, n: number) => void) {
+    askMsg(
+        prompt: string,
+        defText: string,
+        fnOnResult: (ret: O<string>, n: number) => void
+    ) {
         let tl = this.getToolResponse(this.getTool());
         tl.cancelCurrentToolAction();
         let dlg = this.getModalDlg();
         dlg.standardAsk(this, this.app, prompt, defText, fnOnResult);
-        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Kh|expect to have been created');
+        assertTrueWarn(
+            this.app.findEl('mainModalDlg##modaldialog##dlgprompt'),
+            'Kh|expect to have been created'
+        );
     }
 
     /**
      * wrapper around answerMsg as async
      */
-    answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number> {
+    answerMsgAsync(
+        prompt: string,
+        choice1?: string,
+        choice2?: string,
+        choice3?: string
+    ): Promise<number> {
         return new Promise<number>((resolve, reject) => {
             try {
                 this.answerMsg(
@@ -382,7 +444,11 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     isCodeRunning() {
         return (
-            this && this.vci && this.vci.getCodeExec && this.vci.getCodeExec() && this.vci.getCodeExec().isCodeRunning()
+            this &&
+            this.vci &&
+            this.vci.getCodeExec &&
+            this.vci.getCodeExec() &&
+            this.vci.getCodeExec().isCodeRunning()
         );
     }
 
@@ -391,7 +457,8 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete) {
         this.lyrModelRender.checkIfScreenWasJustUnlocked();
-        let shouldUpdate = this.lyrModelRender.needUIToolsRedraw || this.lyrModelRender.needFullRedraw;
+        let shouldUpdate =
+            this.lyrModelRender.needUIToolsRedraw || this.lyrModelRender.needFullRedraw;
 
         /* set flags saying we don't need to render again -- even if render() fails.
         so we don't get stuck in any annoying assert loops.
@@ -414,8 +481,13 @@ export class VpcPresenter extends VpcPresenterInit {
      * refresh the cursor, looks up mouse position
      */
     refreshCursor() {
-        let elUnderCursor = this.app.coordsToElement(this.trackMouse[0], this.trackMouse[1]);
-        let isCursorWithinDocument = trueIfDefinedAndNotNull(elUnderCursor) && this.lyrModelRender.isVelOrBg(elUnderCursor.id);
+        let elUnderCursor = this.app.coordsToElement(
+            this.trackMouse[0],
+            this.trackMouse[1]
+        );
+        let isCursorWithinDocument =
+            trueIfDefinedAndNotNull(elUnderCursor) &&
+            this.lyrModelRender.isVelOrBg(elUnderCursor.id);
         this.refreshCursorElemKnown(elUnderCursor, isCursorWithinDocument);
     }
 
@@ -494,12 +566,20 @@ export class VpcPresenter extends VpcPresenterInit {
     pasteVel() {
         let id = this.vci.getOptionS('copiedVelId');
         let found = this.vci.getModel().findByIdUntyped(id);
-        if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
+        if (
+            found &&
+            (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)
+        ) {
             this.pasteVelImpl(id);
         } else if (id && id.length) {
-            throw makeVpcInternalErr(msgNotification + lng('lngPasting this type of element is not yet supported.'));
+            throw makeVpcInternalErr(
+                msgNotification +
+                    lng('lngPasting this type of element is not yet supported.')
+            );
         } else {
-            throw makeVpcInternalErr(msgNotification + lng('lngNothing has been copied.'));
+            throw makeVpcInternalErr(
+                msgNotification + lng('lngNothing has been copied.')
+            );
         }
     }
 
@@ -529,25 +609,41 @@ export class VpcPresenter extends VpcPresenterInit {
         let vel = this.vci.getOutside().CreatePart(type, newX, newY, w, h);
         vel.set(
             'name',
-            `my ${vpcElTypeShowInUI(vel.getType())} ${this.vci.getModel().stack.getNextNumberForElemName()}`
+            `my ${vpcElTypeShowInUI(
+                vel.getType()
+            )} ${this.vci.getModel().stack.getNextNumberForElemName()}`
         );
 
         if (type === VpcElType.Btn) {
             /* give it a style and initial script */
-            vel.setProp('style', VpcValS('roundrect'), this.vci.getOptionS('currentCardId'));
+            vel.setProp(
+                'style',
+                VpcValS('roundrect'),
+                this.vci.getOptionS('currentCardId')
+            );
             vel.set('label', lng('lngNew Button'));
             vel.set('showlabel', true);
-            vel.set('script', 'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp');
+            vel.set(
+                'script',
+                'on mouseUp\n\tanswer "the button was clicked."\nend mouseUp'
+            );
         } else {
             /* need to give it content, since we don't currently
             draw the lines, otherwise you'd see nothing there */
             let velFld = vel as VpcElField;
             let newTxt = FormattedText.newFromSerialized(
-                UI512DrawText.setFont('abcde\nabcde\nabcde', velFld.getDefaultFontAsUi512())
+                UI512DrawText.setFont(
+                    'abcde\nabcde\nabcde',
+                    velFld.getDefaultFontAsUi512()
+                )
             );
 
             velFld.setCardFmTxt(this.vci.getOptionS('currentCardId'), newTxt);
-            velFld.setProp('style', VpcValS('scrolling'), this.vci.getOptionS('currentCardId'));
+            velFld.setProp(
+                'style',
+                VpcValS('scrolling'),
+                this.vci.getOptionS('currentCardId')
+            );
         }
 
         /* save *before* setting selectedVelId */
@@ -567,7 +663,10 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     pasteVelImpl(originalid: string) {
         let orig = this.vci.getModel().findByIdUntyped(originalid);
-        if (orig && (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)) {
+        if (
+            orig &&
+            (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)
+        ) {
             let dupe = this.makePart(orig.getType());
             let dupeSizable = dupe as VpcElSizable;
             checkThrow(dupeSizable && dupeSizable.isVpcElSizable, 'Ke|');
@@ -593,10 +692,16 @@ export class VpcPresenter extends VpcPresenterInit {
      * the state, and we should still treat those as undoable.
      */
     protected runUndoOrRedo(fn: () => boolean, msgIfFalse: string, isUndo: boolean) {
-        /* if we selected/moved something, it "feels" like we moved it even though we */
-        /* haven't committed anything. so calling undo in this case should just cancel selection and not step backwards. */
+        /* if we selected/moved something, it "feels" like we moved 
+        it even though we haven't committed anything. so calling undo
+        in this case should just cancel selection and not step backwards. */
         let tl = this.getToolResponse(this.getTool());
-        if (isUndo && tl instanceof VpcAppUIToolSelectBase && tl.st && tl.st.mode !== SelectToolMode.SelectingRegion) {
+        if (
+            isUndo &&
+            tl instanceof VpcAppUIToolSelectBase &&
+            tl.st &&
+            tl.st.mode !== SelectToolMode.SelectingRegion
+        ) {
             this.vci.doWithoutAbilityToUndoExpectingNoChanges(() => {
                 tl.cancelCurrentToolAction();
                 this.lyrModelRender.uiRedrawNeeded();
@@ -634,9 +739,14 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
                 let currentCard = this.vci.getModel().findById(currentCardId, VpcElCard);
                 if (!currentCard) {
-                    assertTrueWarn(false, "card has been deleted, going to card 1 instead.")
-                    let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.First);
-                    this.vci.setCurCardNoOpenCardEvt(card)
+                    assertTrueWarn(
+                        false,
+                        'card has been deleted, going to card 1 instead.'
+                    );
+                    let card = this.vci
+                        .getModel()
+                        .getCardRelative(OrdinalOrPosition.First);
+                    this.vci.setCurCardNoOpenCardEvt(card);
                 }
 
                 /* refresh everything */
@@ -656,14 +766,22 @@ export class VpcPresenter extends VpcPresenterInit {
             return;
         }
 
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
         UI512ErrorHandling.breakOnThrow = false;
 
         try {
             if (s === 'mnuUndo') {
-                this.runUndoOrRedo(() => this.vci.performUndo(), 'lngNothing to undo.', true);
+                this.runUndoOrRedo(
+                    () => this.vci.performUndo(),
+                    'lngNothing to undo.',
+                    true
+                );
             } else if (s === 'mnuRedo') {
-                this.runUndoOrRedo(() => this.vci.performRedo(), 'lngNothing to redo.', false);
+                this.runUndoOrRedo(
+                    () => this.vci.performRedo(),
+                    'lngNothing to redo.',
+                    false
+                );
             } else if (s === 'mnuClear') {
                 this.vci.undoableAction(() => this.performMenuActionImpl(s));
             } else {
@@ -684,7 +802,10 @@ export class VpcPresenter extends VpcPresenterInit {
      * dispatch the menu action
      */
     performMenuActionImpl(s: string) {
-        let method = Util512.isMethodOnClass(this.menuActions, 'go' + Util512.capitalizeFirst(s));
+        let method = Util512.isMethodOnClass(
+            this.menuActions,
+            'go' + Util512.capitalizeFirst(s)
+        );
         if (method !== undefined) {
             /* eslint-disable-next-line ban/ban */
             method.apply(this.menuActions, [this.vci]);
@@ -721,12 +842,12 @@ export class VpcPresenter extends VpcPresenterInit {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    writeToReplMessageBox(s:string):void {
+    writeToReplMessageBox(s: string): void {
         if (
             this.lyrNonModalDlgHolder.current &&
             this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
         ) {
-            this.lyrNonModalDlgHolder.current.appendToOutput(s, false)
+            this.lyrNonModalDlgHolder.current.appendToOutput(s, false);
         }
     }
 }

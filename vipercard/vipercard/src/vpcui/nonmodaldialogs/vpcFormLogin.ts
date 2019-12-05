@@ -20,7 +20,11 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
     autoFillUsername: O<string>;
     autoShowNeedEmailCode = false;
     waitingForVerifyCode: O<ArrayBuffer>;
-    btns: [string, string][] = [['ok', 'lngOK'], ['close', 'lngClose'], ['newAccount', 'lngNew User']];
+    btns: [string, string][] = [
+        ['ok', 'lngOK'],
+        ['close', 'lngClose'],
+        ['newAccount', 'lngNew User']
+    ];
 
     fields: [string, string, number][] = [
         ['username', 'lngUsername:', 1],
@@ -58,7 +62,9 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
                     this.setStatus('lngDid not log in, ' + result.toString());
                 } else if (result[0] === 'needEmailVerify' && result.length === 3) {
                     /* login needs email verification */
-                    this.setStatus('lngPlease enter the verification code sent via e-mail.');
+                    this.setStatus(
+                        'lngPlease enter the verification code sent via e-mail.'
+                    );
                     let grp = vci.UI512App().getGroup(this.grpId);
                     let fldEmailVerify = grp.getEl(this.getElId('fldcodeEmailVerify'));
                     fldEmailVerify.set('visible', true);
@@ -78,7 +84,12 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
     doLoginVerifyCode(vci: VpcStateInterface, keybuffer: ArrayBuffer) {
         let paramFields = this.readFields(vci.UI512App());
         UI512BeginAsync(
-            () => vpcUsersEnterEmailVerifyCode(paramFields['username'], keybuffer, paramFields['codeEmailVerify']),
+            () =>
+                vpcUsersEnterEmailVerifyCode(
+                    paramFields['username'],
+                    keybuffer,
+                    paramFields['codeEmailVerify']
+                ),
             (result: Error | VpcSession) => {
                 if (this.children.length === 0) {
                     /* user hit cancel */
@@ -148,9 +159,16 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
         }
 
         let btnnewAccount = grp.getEl(this.getElId('btnnewAccount'));
-        btnnewAccount.setDimensions(btnnewAccount.x - 10, btnnewAccount.y, btnnewAccount.w + 10, btnnewAccount.h);
+        btnnewAccount.setDimensions(
+            btnnewAccount.x - 10,
+            btnnewAccount.y,
+            btnnewAccount.w + 10,
+            btnnewAccount.h
+        );
         if (this.autoFillUsername) {
-            grp.getEl(this.getElId('fldusername')).setFmTxt(FormattedText.newFromUnformatted(this.autoFillUsername));
+            grp.getEl(this.getElId('fldusername')).setFmTxt(
+                FormattedText.newFromUnformatted(this.autoFillUsername)
+            );
         }
 
         /* sometimes it makes more sense not to allow creating new users,

@@ -21,8 +21,8 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
     fields: [string, string, number][] = [
         [
             'header',
-            longstr(`lngThank you for reporting a potential area\nof improvement. 
-                We will notify you of any\nupdates or fixes\nby posting to 
+            longstr(`lngThank you for reporting a potential area\nof improvement.
+                We will notify you of any\nupdates or fixes\nby posting to
                 \ngroups.google.com/forum/#!forum/vipercard' `),
             4
         ],
@@ -36,9 +36,16 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
         super('VpcNonModalFormSendReport' + Math.random());
         VpcNonModalFormBase.standardWindowBounds(this, vci);
         if (checkIsProductionBuild()) {
-            this.btns = [['ok', 'lngSend'], ['close', 'lngClose']];
+            this.btns = [
+                ['ok', 'lngSend'],
+                ['close', 'lngClose']
+            ];
         } else {
-            this.btns = [['ok', 'lngSend'], ['close', 'lngClose'], ['errorlogs', 'lngGet Logs']];
+            this.btns = [
+                ['ok', 'lngSend'],
+                ['close', 'lngClose'],
+                ['errorlogs', 'lngGet Logs']
+            ];
         }
     }
 
@@ -55,7 +62,12 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
 
         let descHeader = grp.findEl(this.getElId('lblFordesc'));
         if (descHeader) {
-            descHeader.setDimensions(descHeader.x - 20, descHeader.y, descHeader.w + 40, descHeader.h);
+            descHeader.setDimensions(
+                descHeader.x - 20,
+                descHeader.y,
+                descHeader.w + 40,
+                descHeader.h
+            );
         }
 
         let fld = grp.findEl(this.getElId('flddesc'));
@@ -83,7 +95,10 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
     protected downloadJsonLogs() {
         const amountToGet = 50;
         let lastClientLogs = UI512ErrorHandling.getLatestErrLogs(amountToGet);
-        let obj: AnyJson = { logs: ['(logs are compressed with lz-string)', lastClientLogs], version: vpcversion };
+        let obj: AnyJson = {
+            logs: ['(logs are compressed with lz-string)', lastClientLogs],
+            version: vpcversion
+        };
         let s = JSON.stringify(obj);
         let defaultFilename = 'vpc logs.json';
         let blob = new Blob([s], { type: 'text/plain;charset=utf-8' });
@@ -96,16 +111,16 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
     doSendErrReport(vci: VpcStateInterface) {
         let params = this.readFields(vci.UI512App());
         let ses = VpcSession.fromRoot() as VpcSession;
-        let fn = async() => {
+        let fn = async () => {
             try {
                 await this.asyncSendErrReport(this.vci, params['desc']);
-            } catch(e) {
-                if (e.toString().includes( 'could not create log entry')) {
+            } catch (e) {
+                if (e.toString().includes('could not create log entry')) {
                     this.setStatus('lngAlready sent.');
                 } else {
                     this.setStatus('lng ' + e.toString());
                 }
-                return
+                return;
             }
 
             if (this.children.length === 0) {
@@ -114,9 +129,9 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
             } else {
                 this.setStatus('lngSent report.');
             }
-        }
+        };
 
-        Util512Higher.syncToAsyncTransition(fn, "doSendErrReport")
+        Util512Higher.syncToAsyncTransition(fn, 'doSendErrReport');
     }
 
     /**

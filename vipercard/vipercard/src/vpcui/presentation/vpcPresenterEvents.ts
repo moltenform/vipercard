@@ -141,7 +141,9 @@ export class VpcPresenterEvents {
      */
     static cancelEvtIfCodeRunning(pr: VpcPresenterInterface, d: EventDetails) {
         if (pr.vci.isCodeRunning()) {
-            let isElemStopRunning = d.getAffectedElements().some(el => pr.lyrToolboxes.isElemStopRunning(el));
+            let isElemStopRunning = d
+                .getAffectedElements()
+                .some(el => pr.lyrToolboxes.isElemStopRunning(el));
             if (!isElemStopRunning) {
                 d.setHandled();
             }
@@ -155,7 +157,9 @@ export class VpcPresenterEvents {
      * you are in the pencil tool
      */
     static cancelEvtIfNotBrowseTool(pr: VpcPresenterInterface, d: EventDetails) {
-        let isVel = d.getAffectedElements().some(item => bool(pr.lyrModelRender.elIdToVelId(item.id)));
+        let isVel = d
+            .getAffectedElements()
+            .some(item => bool(pr.lyrModelRender.elIdToVelId(item.id)));
         if (isVel && pr.vci.getTool() !== VpcTool.Browse) {
             d.setHandled();
         }
@@ -164,7 +168,10 @@ export class VpcPresenterEvents {
     /**
      * double-click the eraser tool to erase all paint on the screen
      */
-    static respondMouseDoubleDown(pr: VpcPresenterInterface, d: MouseDownDoubleEventDetails) {
+    static respondMouseDoubleDown(
+        pr: VpcPresenterInterface,
+        d: MouseDownDoubleEventDetails
+    ) {
         pr.vci.undoableAction(() => {
             if (d.el && d.el.id) {
                 let short = pr.lyrToolboxes.toolsMain.fromFullId(d.el.id);
@@ -183,8 +190,14 @@ export class VpcPresenterEvents {
     static respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = trueIfDefinedAndNotNull(d.el) && bool(pr.lyrModelRender.isVelOrBg(d.el.id));
-                pr.getToolResponse(pr.vci.getTool()).respondMouseDown(pr.vci.getTool(), d, isUserElOrBg);
+                let isUserElOrBg =
+                    trueIfDefinedAndNotNull(d.el) &&
+                    bool(pr.lyrModelRender.isVelOrBg(d.el.id));
+                pr.getToolResponse(pr.vci.getTool()).respondMouseDown(
+                    pr.vci.getTool(),
+                    d,
+                    isUserElOrBg
+                );
                 pr.lyrNonModalDlgHolder.respondMouseDown(d);
 
                 /* change focus on click, to make the property panel commit */
@@ -192,10 +205,16 @@ export class VpcPresenterEvents {
                 pr.setCurrentFocus(undefined, true);
                 pr.setCurrentFocus(focused, true);
 
-                /* according to docs closefield should be called when user clicks outside the field */
-                let elClicked = d.el ? d.el.id : undefined
-                if (!d.handled() && pr.vci.getTool() === VpcTool.Browse && focused && focused !== elClicked) {
-                    pr.beginScheduleFldOpenCloseEventClose(focused)
+                /* according to docs closefield should be called when
+                user clicks outside the field */
+                let elClicked = d.el ? d.el.id : undefined;
+                if (
+                    !d.handled() &&
+                    pr.vci.getTool() === VpcTool.Browse &&
+                    focused &&
+                    focused !== elClicked
+                ) {
+                    pr.beginScheduleFldOpenCloseEventClose(focused);
                 }
             }
         });
@@ -207,8 +226,14 @@ export class VpcPresenterEvents {
     static respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
-                pr.getToolResponse(pr.vci.getTool()).respondMouseUp(pr.vci.getTool(), d, isUserElOrBg);
+                let isUserElOrBg = d
+                    .getAffectedElements()
+                    .some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
+                pr.getToolResponse(pr.vci.getTool()).respondMouseUp(
+                    pr.vci.getTool(),
+                    d,
+                    isUserElOrBg
+                );
                 pr.lyrNonModalDlgHolder.respondMouseUp(d);
                 pr.lyrToolboxes.toolsMain.respondMouseUp(pr.app, d);
                 pr.lyrToolboxes.toolsPatterns.respondMouseUp(pr.app, d);
@@ -222,9 +247,17 @@ export class VpcPresenterEvents {
      * send mousemove event t ocurrent tool
      */
     static respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
-        let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
-        pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBg);
-        let isNextAVelOrBg = trueIfDefinedAndNotNull(d.elNext) && bool(pr.lyrModelRender.isVelOrBg(d.elNext.id));
+        let isUserElOrBg = d
+            .getAffectedElements()
+            .some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
+        pr.getToolResponse(pr.vci.getTool()).respondMouseMove(
+            pr.vci.getTool(),
+            d,
+            isUserElOrBg
+        );
+        let isNextAVelOrBg =
+            trueIfDefinedAndNotNull(d.elNext) &&
+            bool(pr.lyrModelRender.isVelOrBg(d.elNext.id));
         if (d.elNext !== d.elPrev) {
             pr.refreshCursorElemKnown(d.elNext, isNextAVelOrBg);
         }
@@ -249,7 +282,11 @@ export class VpcPresenterEvents {
     /**
      * respond to keydown event
      */
-    static respondKeyDown(pr: VpcPresenterInterface, d: KeyDownEventDetails, ed: EditTextBehaviorSendToVel) {
+    static respondKeyDown(
+        pr: VpcPresenterInterface,
+        d: KeyDownEventDetails,
+        ed: EditTextBehaviorSendToVel
+    ) {
         VpcPresenterEvents.checkIfUndoRedo(pr, d);
         if (d.handled()) {
             return;
@@ -279,7 +316,7 @@ export class VpcPresenterEvents {
                 !pr.vci.isCodeRunning() &&
                 !d.handled() &&
                 currentFocus &&
-                currentFocus.includes( 'VpcPanelScriptEditor##editor') &&
+                currentFocus.includes('VpcPanelScriptEditor##editor') &&
                 getToolCategory(pr.vci.getTool()) === VpcToolCtg.CtgEdit &&
                 slength(pr.vci.getOptionS('viewingScriptVelId'))
             ) {
@@ -292,18 +329,27 @@ export class VpcPresenterEvents {
                 pr.lyrNonModalDlgHolder.respondKeyDown(d);
             }
 
-            if (!pr.vci.isCodeRunning() && !d.handled() && getToolCategory(pr.vci.getTool()) === VpcToolCtg.CtgEdit) {
+            if (
+                !pr.vci.isCodeRunning() &&
+                !d.handled() &&
+                getToolCategory(pr.vci.getTool()) === VpcToolCtg.CtgEdit
+            ) {
                 /* prop panel keyboard shortcuts */
                 pr.lyrPropPanel.respondKeydown(d);
             }
 
-             if (!d.handled() && pr.vci.getTool() === VpcTool.Browse && currentFocus && (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')) {
+            if (
+                !d.handled() &&
+                pr.vci.getTool() === VpcTool.Browse &&
+                currentFocus &&
+                (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')
+            ) {
                 /* according to docs, closefield should be called when user hits Enter in a field */
-                pr.beginScheduleFldOpenCloseEventClose(currentFocus)
+                pr.beginScheduleFldOpenCloseEventClose(currentFocus);
             }
 
             if (!pr.vci.isCodeRunning() && !d.handled()) {
-                VpcPresenterEvents.updateFieldsRecentlyEdited(pr, d)
+                VpcPresenterEvents.updateFieldsRecentlyEdited(pr, d);
             }
 
             if (!pr.vci.isCodeRunning() && !d.handled()) {
@@ -311,7 +357,11 @@ export class VpcPresenterEvents {
                 ed.onKeyDown(pr, d);
             }
 
-            if (!pr.vci.isCodeRunning() && !d.handled() && pr.vci.getTool() === VpcTool.Browse) {
+            if (
+                !pr.vci.isCodeRunning() &&
+                !d.handled() &&
+                pr.vci.getTool() === VpcTool.Browse
+            ) {
                 VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d);
             }
 
@@ -329,9 +379,9 @@ export class VpcPresenterEvents {
         if (UI512TextEvents.keyDownProbablyCausesTextChange(d)) {
             let el = TextSelModify.getSelectedField(pr);
             if (el) {
-                let vel = pr.lyrModelRender.findElIdToVel(el.id)
+                let vel = pr.lyrModelRender.findElIdToVel(el.id);
                 if (vel && vel.getType() === VpcElType.Fld && !vel.getB('locktext')) {
-                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id] = true
+                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id] = true;
                 }
             }
         }
@@ -371,7 +421,7 @@ export class VpcPresenterEvents {
      */
     static respondFocusChanged(pr: VpcPresenterInterface, d: FocusChangedEventDetails) {
         if (!d.handled()) {
-            pr.beginScheduleFldOpenCloseEvent(d)
+            pr.beginScheduleFldOpenCloseEvent(d);
         }
     }
 
@@ -381,7 +431,11 @@ export class VpcPresenterEvents {
     static respondIdle(pr: VpcPresenterInterface, d: IdleEventDetails) {
         let curtool = pr.vci.getTool();
         let codeRunning = pr.vci.isCodeRunning();
-        if (pr.cursorRefreshPending && pr.trackMouse[0] !== -1 && pr.trackMouse[1] !== -1) {
+        if (
+            pr.cursorRefreshPending &&
+            pr.trackMouse[0] !== -1 &&
+            pr.trackMouse[1] !== -1
+        ) {
             pr.refreshCursor();
             pr.cursorRefreshPending = false;
         }
@@ -407,13 +461,20 @@ export class VpcPresenterEvents {
         }
 
         if (!d.handled()) {
-            /* mousewithin events are currently only sent a few times a second to not overwhelm system with events */
+            /* mousewithin events are currently only sent a few times
+            a second to not overwhelm system with events */
             pr.timerSendMouseWithin.update(d.milliseconds);
             if (pr.timerSendMouseWithin.isDue()) {
                 pr.timerSendMouseWithin.reset();
                 if (curtool === VpcTool.Browse) {
                     /* send mousewithin */
-                    VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d, pr.trackMouse[0], pr.trackMouse[1]);
+                    VpcPresenterEvents.scheduleScriptMsg(
+                        pr,
+                        pr.vci,
+                        d,
+                        pr.trackMouse[0],
+                        pr.trackMouse[1]
+                    );
                 }
             }
         }
@@ -442,22 +503,29 @@ export class VpcPresenterEvents {
             if (pr.timerRunMaintenance.isDue()) {
                 pr.timerRunMaintenance.reset();
                 if (!pr.vci.isCurrentlyUndoing()) {
-                    VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance())
-                    VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance())
-                    VpcPresenterEvents.showWarningIfExceptionThrown(() => VpcPresenterEvents.filterTemporaryFromAllScripts(pr))
+                    VpcPresenterEvents.showWarningIfExceptionThrown(() =>
+                        pr.lyrPaintRender.doMaintenance()
+                    );
+                    VpcPresenterEvents.showWarningIfExceptionThrown(() =>
+                        pr.vci.getCodeExec().doMaintenance()
+                    );
+                    VpcPresenterEvents.showWarningIfExceptionThrown(() =>
+                        VpcPresenterEvents.filterTemporaryFromAllScripts(pr)
+                    );
                 }
             }
         }
     }
-    
+
     /**
-     * shows a browser alert dialog on exception, it's the only thing we can do if rendering is failing
+     * shows a browser alert dialog on exception,
+     * it's the only thing we can do if rendering is failing
      */
-    static showWarningIfExceptionThrown(fn: ()=> void) {
+    static showWarningIfExceptionThrown(fn: () => void) {
         try {
-            fn()
-        } catch(e) {
-            assertTrueWarn(false, e.toString())
+            fn();
+        } catch (e) {
+            assertTrueWarn(false, e.toString());
         }
     }
 
@@ -467,7 +535,8 @@ export class VpcPresenterEvents {
     static filterTemporaryFromAllScripts(pr: VpcPresenterInterface) {
         if (!pr.vci.isCodeRunning()) {
             pr.vci.undoableAction(() =>
-                VpcExecFrame.filterTemporaryFromAllScripts(pr.vci.getModel()))
+                VpcExecFrame.filterTemporaryFromAllScripts(pr.vci.getModel())
+            );
         }
     }
 
@@ -483,7 +552,7 @@ export class VpcPresenterEvents {
             }
         }
 
-        return false
+        return false;
     }
 
     /**
@@ -491,22 +560,28 @@ export class VpcPresenterEvents {
      */
     static sendInitialOpenStackAndOpenCard(
         pr: VpcPresenterInterface,
-        vci: VpcStateInterface) {
-
-        { /* send openstack */
-            let msg = new VpcScriptMessage(vci.getModel().stack.id, VpcBuiltinMsg.Openstack);
+        vci: VpcStateInterface
+    ) {
+        {
+            /* send openstack */
+            let msg = new VpcScriptMessage(
+                vci.getModel().stack.id,
+                VpcBuiltinMsg.Openstack
+            );
             pr.vci.getCodeExec().scheduleCodeExec(msg);
         }
 
-        { /* send openbackground */
-            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard)
-            let currentBg = vci.getModel().getOwner(currentCard, VpcElBg)
+        {
+            /* send openbackground */
+            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard);
+            let currentBg = vci.getModel().getOwner(currentCard, VpcElBg);
             let msg = new VpcScriptMessage(currentBg.id, VpcBuiltinMsg.Openbackground);
             pr.vci.getCodeExec().scheduleCodeExec(msg);
         }
 
-        { /* send opencard */
-            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard)
+        {
+            /* send opencard */
+            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard);
             let msg = new VpcScriptMessage(currentCard.id, VpcBuiltinMsg.Opencard);
             pr.vci.getCodeExec().scheduleCodeExec(msg);
         }
@@ -515,12 +590,17 @@ export class VpcPresenterEvents {
     /**
      * send messages when card changes
      */
-    static sendCardChangeMsgs(pr: VpcPresenterInterface,
-        vci: VpcStateInterface, before:boolean, wasCardId:string, nextCardId:string) {
-        let wasCard = vci.getModel().getById(wasCardId, VpcElCard)
-        let nextCard = vci.getModel().getById(nextCardId, VpcElCard)
-        let wasBgId = wasCard.parentId
-        let nextBgId = nextCard.parentId
+    static sendCardChangeMsgs(
+        pr: VpcPresenterInterface,
+        vci: VpcStateInterface,
+        before: boolean,
+        wasCardId: string,
+        nextCardId: string
+    ) {
+        let wasCard = vci.getModel().getById(wasCardId, VpcElCard);
+        let nextCard = vci.getModel().getById(nextCardId, VpcElCard);
+        let wasBgId = wasCard.parentId;
+        let nextBgId = nextCard.parentId;
 
         if (before) {
             /* send closing messages */
@@ -565,7 +645,11 @@ export class VpcPresenterEvents {
         if (pr.lyrNonModalDlgHolder.current) {
             /* don't let 'on idle' run when you are running a msg box command */
             let cur = pr.lyrNonModalDlgHolder.current as VpcNonModalReplBox;
-            if (cur.isVpcNonModalReplBox && cur.busy && !(d instanceof MouseUpEventDetails)) {
+            if (
+                cur.isVpcNonModalReplBox &&
+                cur.busy &&
+                !(d instanceof MouseUpEventDetails)
+            ) {
                 return;
             }
         }
@@ -576,7 +660,11 @@ export class VpcPresenterEvents {
             if (d.elClick) {
                 target = d.elClick.id;
             }
-        } else if (d instanceof MouseEventDetails || d instanceof MouseEnterDetails || d instanceof MouseLeaveDetails) {
+        } else if (
+            d instanceof MouseEventDetails ||
+            d instanceof MouseEnterDetails ||
+            d instanceof MouseLeaveDetails
+        ) {
             let affected = d.getAffectedElements();
             if (affected.length) {
                 target = affected[affected.length - 1].id;
@@ -605,7 +693,10 @@ export class VpcPresenterEvents {
         }
 
         if (target) {
-            let velId = coalesceIfFalseLike(pr.lyrModelRender.elIdToVelId(target), pr.vci.getOptionS('currentCardId'));
+            let velId = coalesceIfFalseLike(
+                pr.lyrModelRender.elIdToVelId(target),
+                pr.vci.getOptionS('currentCardId')
+            );
             VpcPresenterEvents.scheduleScriptMsgImpl(pr, d, velId, isOnIdleEvent);
         }
     }
@@ -626,7 +717,10 @@ export class VpcPresenterEvents {
 
         let whichMsg = isOnIdleEvent ? VpcBuiltinMsg.Idle : getMsgFromEvtType(d.type());
         let msg = new VpcScriptMessage(targetVelId, whichMsg);
-        msg.mouseLoc = [pr.trackMouse[0] - pr.userBounds[0], pr.trackMouse[1] - pr.userBounds[1]];
+        msg.mouseLoc = [
+            pr.trackMouse[0] - pr.userBounds[0],
+            pr.trackMouse[1] - pr.userBounds[1]
+        ];
         msg.mouseIsDown = pr.trackPressedBtns[0];
         msg.cardWhenFired = pr.vci.getOptionS('currentCardId');
         msg.causedByUserAction = true;
@@ -676,13 +770,18 @@ export class EditTextBehaviorSendToVel extends UI512TextEvents {
     /**
      * get the vel, if it exists, else return the el
      */
-    static gelFromEl(pr: VpcPresenterInterface, el: O<UI512ElTextField>): O<GenericTextField> {
+    static gelFromEl(
+        pr: VpcPresenterInterface,
+        el: O<UI512ElTextField>
+    ): O<GenericTextField> {
         if (el) {
             let vel = pr.lyrModelRender.findElIdToVel(el.id);
             if (vel) {
                 let velFld = cast(vel, VpcElField);
-                let cardId = pr.vci.getOptionS('currentCardId')
-                return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld, cardId) : undefined;
+                let cardId = pr.vci.getOptionS('currentCardId');
+                return VpcModelRender.canFieldHaveFocus(velFld)
+                    ? new VpcTextFieldAsGeneric(el, velFld, cardId)
+                    : undefined;
             } else {
                 return new UI512ElTextFieldAsGeneric(el);
             }

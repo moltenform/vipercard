@@ -14,10 +14,30 @@ export class VpcAppMenu extends VpcAppMenuStructure {
      */
     init() {
         MenuPositioning.buildFromArray(this.vci.getPresenter(), this.getMenuStruct());
-        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsHideProduct', undefined, false);
-        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsHideOthers', undefined, false);
-        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsShowAll', undefined, false);
-        MenuPositioning.setItemStatus(this.vci.UI512App(), 'mnuSysAppsCheckProduct', true, true);
+        MenuPositioning.setItemStatus(
+            this.vci.UI512App(),
+            'mnuSysAppsHideProduct',
+            undefined,
+            false
+        );
+        MenuPositioning.setItemStatus(
+            this.vci.UI512App(),
+            'mnuSysAppsHideOthers',
+            undefined,
+            false
+        );
+        MenuPositioning.setItemStatus(
+            this.vci.UI512App(),
+            'mnuSysAppsShowAll',
+            undefined,
+            false
+        );
+        MenuPositioning.setItemStatus(
+            this.vci.UI512App(),
+            'mnuSysAppsCheckProduct',
+            true,
+            true
+        );
     }
 
     /**
@@ -94,11 +114,23 @@ export class VpcAppMenu extends VpcAppMenuStructure {
         let toolCtg = getToolCategory(currentTool);
         for (let i = VpcTool.__first; i <= VpcTool.__last; i++) {
             let check = i === currentTool;
-            MenuPositioning.setItemStatus(this.vci.UI512App(), `mnuItemTool${i}`, check, true);
+            MenuPositioning.setItemStatus(
+                this.vci.UI512App(),
+                `mnuItemTool${i}`,
+                check,
+                true
+            );
         }
 
-        let selectedId = toolCtg === VpcToolCtg.CtgEdit ? this.vci.getOptionS('selectedVelId') : '';
-        this.refreshCopyPasteMnuItem(selectedId, 'mnuCopyCardOrVel', 'lngCopy Card', 'lngCopy Button', 'lngCopy Field');
+        let selectedId =
+            toolCtg === VpcToolCtg.CtgEdit ? this.vci.getOptionS('selectedVelId') : '';
+        this.refreshCopyPasteMnuItem(
+            selectedId,
+            'mnuCopyCardOrVel',
+            'lngCopy Card',
+            'lngCopy Button',
+            'lngCopy Field'
+        );
         let copiedId = this.vci.getOptionS('copiedVelId');
         this.refreshCopyPasteMnuItem(
             copiedId,
@@ -112,13 +144,34 @@ export class VpcAppMenu extends VpcAppMenuStructure {
     /**
      * should we show 'copy button' or 'copy field'?
      */
-    refreshCopyPasteMnuItem(id: string, menuId: string, fallback: string, txtBtn: string, txtFld: string) {
+    refreshCopyPasteMnuItem(
+        id: string,
+        menuId: string,
+        fallback: string,
+        txtBtn: string,
+        txtFld: string
+    ) {
         let found = this.vci.getModel().findByIdUntyped(id);
-        if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
+        if (
+            found &&
+            (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)
+        ) {
             let txt = found.getType() === VpcElType.Btn ? txtBtn : txtFld;
-            MenuPositioning.setItemStatus(this.vci.UI512App(), menuId, undefined, undefined, lng(txt));
+            MenuPositioning.setItemStatus(
+                this.vci.UI512App(),
+                menuId,
+                undefined,
+                undefined,
+                lng(txt)
+            );
         } else {
-            MenuPositioning.setItemStatus(this.vci.UI512App(), menuId, undefined, undefined, lng(fallback));
+            MenuPositioning.setItemStatus(
+                this.vci.UI512App(),
+                menuId,
+                undefined,
+                undefined,
+                lng(fallback)
+            );
         }
     }
 

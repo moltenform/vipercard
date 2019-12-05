@@ -189,7 +189,9 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
     }
 
     /* map key to either a menu id, or a custom function */
-    keyMappings: { [key: string]: ((self: VpcAppMenuStructure) => O<string>) | string } = {};
+    keyMappings: {
+        [key: string]: ((self: VpcAppMenuStructure) => O<string>) | string;
+    } = {};
 
     /**
      * populate keyMappings
@@ -208,7 +210,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardPrev';
             }
-            return undefined
+            return undefined;
         };
 
         this.keyMappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
@@ -216,7 +218,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardNext';
             }
-            return undefined
+            return undefined;
         };
 
         this.keyMappings['Home'] = 'onlyIfNotInTextField/mnuGoCardFirst';

@@ -49,14 +49,24 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     createSpecific(app: UI512Application) {
         let headheight = 0;
         if (this.showHeader) {
-            headheight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasCloseBtn) - 1;
+            headheight =
+                this.drawWindowDecoration(
+                    app,
+                    new PalBorderDecorationConsts(),
+                    this.hasCloseBtn
+                ) - 1;
         }
 
         let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.set('style', this.showHeader ? UI512BtnStyle.Rectangle : UI512BtnStyle.Opaque);
-        bg.setDimensions(this.x, this.y + headheight, this.logicalWidth, this.logicalHeight - headheight);
+        bg.setDimensions(
+            this.x,
+            this.y + headheight,
+            this.logicalWidth,
+            this.logicalHeight - headheight
+        );
 
         this.showResults = this.genChild(app, grp, 'scrollGot', UI512ElTextField);
         this.showResults.setDimensions(this.x + 14 + 5, this.y + 50 + 5, 460 + 15, 50);
@@ -102,7 +112,9 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     setFontAndText(el: UI512ElTextField, s: string, typfacename: string, pts: number) {
         let spec = new TextFontSpec(typfacename, TextFontStyling.Default, pts);
         el.set('defaultFont', spec.toSpecString());
-        let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
+        let t = FormattedText.newFromSerialized(
+            UI512DrawText.setFont(s, spec.toSpecString())
+        );
         el.setFmTxt(t);
     }
 
@@ -124,7 +136,10 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * use the arrow keys up and down to view history
      */
     onKeyDown(elId: O<string>, short: O<string>, d: KeyDownEventDetails): void {
-        if (short === 'entry' && (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')) {
+        if (
+            short === 'entry' &&
+            (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')
+        ) {
             this.launchScript(this.entry.getFmTxt().toUnformatted());
             d.setHandled();
         } else if (short === 'entry' && d.readableShortcut === 'ArrowUp') {
@@ -170,8 +185,14 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
 
             /* prepare to run the code */
             let codeBody = VpcNonModalReplBox.transformText(scr);
-            let curCard = this.vci.getOptionS('currentCardId')
-            let handler = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.vci.getOutside(), curCard, codeBody, curCard, VpcNonModalReplBox.markMessageBox)
+            let curCard = this.vci.getOptionS('currentCardId');
+            let handler = VpcExecFrame.appendTemporaryDynamicCodeToScript(
+                this.vci.getOutside(),
+                curCard,
+                codeBody,
+                curCard,
+                VpcNonModalReplBox.markMessageBox
+            );
             this.rememberedTool = this.vci.getTool();
             this.vci.setTool(VpcTool.Browse);
 
@@ -220,18 +241,22 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
 
         /* filter out any dynamic code,
         otherwise we could be stuck with a syntax error in the card's script */
-        let curCardId = this.vci.getOptionS('currentCardId')
-        let curCard = this.vci.getModel().getById(curCardId, VpcElCard)
-        let script = curCard.getS('script')
-        let scriptNew = VpcExecFrame.filterTemporaryFromScript(script)
+        let curCardId = this.vci.getOptionS('currentCardId');
+        let curCard = this.vci.getModel().getById(curCardId, VpcElCard);
+        let script = curCard.getS('script');
+        let scriptNew = VpcExecFrame.filterTemporaryFromScript(script);
         this.vci.undoableAction(() => {
-            curCard.set('script', scriptNew)
-        })
+            curCard.set('script', scriptNew);
+        });
 
         /* go back to the previous tool */
         this.vci.setTool(this.rememberedTool);
 
-        if (scriptErr && scriptErr.details && scriptErr.details.includes( VpcNonModalReplBox.markIntentionalErr)) {
+        if (
+            scriptErr &&
+            scriptErr.details &&
+            scriptErr.details.includes(VpcNonModalReplBox.markIntentionalErr)
+        ) {
             /* it wasn't actually an error, we internally caused it */
         } else if (scriptErr) {
             this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);

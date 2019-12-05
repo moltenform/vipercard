@@ -54,7 +54,9 @@ export class VpcChangeSelectedFont {
     protected setAlign(v: string) {
         let worked = this.setAlignImpl(v);
         if (!worked) {
-            throw makeVpcInternalErr(msgNotification + lng('lngNo selection found. Select a button or field.'));
+            throw makeVpcInternalErr(
+                msgNotification + lng('lngNo selection found. Select a button or field.')
+            );
         }
     }
 
@@ -64,7 +66,7 @@ export class VpcChangeSelectedFont {
     protected setAlignImpl(v: string) {
         v = v.toLowerCase();
         let vel = this.cbGetEditToolSelectedFldOrBtn();
-        let currentCardId = this.vci.getOptionS('currentCardId')
+        let currentCardId = this.vci.getOptionS('currentCardId');
 
         if (vel) {
             vel.setProp('textalign', VpcValS(v), currentCardId);
@@ -86,7 +88,10 @@ export class VpcChangeSelectedFont {
         let worked = this.setFontImpl(v, type);
         if (!worked) {
             let msg = lng(
-                'lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.'
+                deleteThis.longstr(
+                     deleteThis.longstr(`lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.`, ''),
+                    ''
+                )
             );
 
             throw makeVpcInternalErr(msgNotification + msg);
@@ -143,9 +148,17 @@ export class VpcChangeSelectedFont {
         if (vel) {
             /* note: get from focused, not vel, since it's more up to date? */
             /* no, since we're acting on the vel, get everything from one for consistency */
-            let currentCardId = this.vci.getOptionS('currentCardId')
-            let selcaret = fitIntoInclusive(vel.getN('selcaret'), 0, vel.getCardFmTxt(currentCardId).len());
-            let selend = fitIntoInclusive(vel.getN('selend'), 0, vel.getCardFmTxt(currentCardId).len());
+            let currentCardId = this.vci.getOptionS('currentCardId');
+            let selcaret = fitIntoInclusive(
+                vel.getN('selcaret'),
+                0,
+                vel.getCardFmTxt(currentCardId).len()
+            );
+            let selend = fitIntoInclusive(
+                vel.getN('selend'),
+                0,
+                vel.getCardFmTxt(currentCardId).len()
+            );
             if (selcaret !== selend) {
                 return [vel, Math.min(selcaret, selend), Math.max(selcaret, selend)];
             }
@@ -157,7 +170,11 @@ export class VpcChangeSelectedFont {
     /**
      * set the font of a chunk of text
      */
-    protected setFontSelText(chunksel: [VpcElBase, number, number], v: string, typeOfChange: string) {
+    protected setFontSelText(
+        chunksel: [VpcElBase, number, number],
+        v: string,
+        typeOfChange: string
+    ) {
         let [vel, b1, b2] = chunksel;
         let chunk = new RequestedChunk(b1);
         chunk.last = b2;
@@ -191,7 +208,9 @@ export class VpcChangeSelectedFont {
                     .readAsString();
 
                 curStyle = this.toggleStyle(curStyle, v);
-                this.vci.getOutside().SetProp(velRef, typeOfChange, VpcValS(curStyle), subChunk);
+                this.vci
+                    .getOutside()
+                    .SetProp(velRef, typeOfChange, VpcValS(curStyle), subChunk);
             }
 
             return true;
@@ -202,7 +221,7 @@ export class VpcChangeSelectedFont {
      * set font of a vel
      */
     protected setFontBtnFld(vel: VpcElBase, v: string, typeOfChange: string) {
-        let currentCardId = this.vci.getOptionS('currentCardId')
+        let currentCardId = this.vci.getOptionS('currentCardId');
         if (typeOfChange !== 'textstyle') {
             vel.setProp(typeOfChange, VpcValS(v), currentCardId);
             return true;

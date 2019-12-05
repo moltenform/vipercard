@@ -61,7 +61,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         /* prettier-ignore */
         ['commands', 'lngCommands', ['add', 'answer', 'ask', 'beep', 'choose', 'click', 'create', 'delete', 'dial', 'disable', 'divide', 'do', 'drag', 'enable', 'exit', 'exit repeat', 'get', 'global', 'go', 'hide', 'if/then', 'lock screen', 'multiply', 'next repeat', 'pass', 'play', 'put', 'repeat', 'replace', 'return', 'send', 'set', 'show', 'sort', 'subtract', 'unlock screen', 'wait']],
         /* prettier-ignore */
-        ['properties', 'lngProperties', ['btn: abbrev id', 'btn: abbrev name', 'btn: autohilite', 'btn: botright', 'btn: bottom', 'btn: bottomright', 'btn: checkmark', 'btn: enabled', 'btn: height', 'btn: hilite', 'btn: icon', 'btn: id', 'btn: label', 'btn: left', 'btn: loc', 'btn: location', 'btn: long id', 'btn: long name', 'btn: name', 'btn: owner', 'btn: rect', 'btn: rectangle', 'btn: right', 'btn: script', 'btn: short id', 'btn: short name', 'btn: showlabel', 'btn: style', 'btn: textalign', 'btn: textfont', 'btn: textsize', 'btn: textstyle', 'btn: top', 'btn: topleft', 'btn: visible', 'btn: width', 'card: abbrev id', 'card: abbrev name', 'card: id', 'card: long id', 'card: long name', 'card: name', 'card: owner', 'card: short id', 'card: short name', 'fld: abbrev id', 'fld: abbrev name', 'fld: alltext', 'fld: botright', 'fld: bottom', 'fld: bottomright', 'fld: defaulttextfont', 'fld: defaulttextsize', 'fld: defaulttextstyle', 'fld: dontwrap', 'fld: enabled', 'fld: height', 'fld: id', 'fld: left', 'fld: loc', 'fld: location', 'fld: locktext', 'fld: long id', 'fld: long name', 'fld: name', 'fld: owner', 'fld: rect', 'fld: rectangle', 'fld: right', 'fld: scroll', 'fld: short id', 'fld: short name', 'fld: singleline', 'fld: style', 'fld: textalign', 'fld: textfont', 'fld: textsize', 'fld: textstyle', 'fld: top', 'fld: topleft', 'fld: visible', 'fld: width', 'global: environment', 'global: freesize', 'global: idlerate', 'global: itemdelimiter', 'global: long version', 'global: size', 'global: stacksinuse', 'global: suspended', 'global: version']],
+        ['properties', 'lngProperties', ['btn: abbrev id', 'btn: abbrev name', 'btn: autohilite', 'btn: botright', 'btn: bottom', 'btn: bottomright', 'btn: checkmark', 'btn: enabled', 'btn: height', 'btn: hilite', 'btn: icon', 'btn: id', 'btn: label', 'btn: left', 'btn: loc', 'btn: location', 'btn: long id', 'btn: long name', 'btn: name', 'btn: owner', 'btn: rect', 'btn: rectangle', 'btn: right', 'btn: script', 'btn: short id', 'btn: short name', 'btn: showlabel', 'btn: style', 'btn: textalign', 'btn: textfont', 'btn: textsize', 'btn: textstyle', 'btn: top', 'btn: topleft', 'btn: visible', 'btn: width', 'card: abbrev id', 'card: abbrev name', 'card: id', 'card: long id', 'card: long name', 'card: name', 'card: owner', 'card: short id', 'card: short name', 'fld: abbrev id', 'fld: abbrev name', 'fld: alltext', 'fld: botright', 'fld: bottom', 'fld: bottomright', 'fld: defaulttextfont', 'fld: defaulttextsize', 'fld: defaulttextstyle', 'fld: dontwrap', 'fld: enabled', 'fld: height', 'fld: id', 'fld: left', 'fld: loc', 'fld: location', 'fld: locktext', 'fld: long id', 'fld: long name', 'fld: name', 'fld: owner', 'fld: rect', 'fld: rectangle', 'fld: right', 'fld: scroll', 'fld: short id', 'fld: short name', 'fld: singleline', 'fld: style', 'fld: textalign', 'fld: textfont', 'fld: textsize', 'fld: textstyle', 'fld: top', 'fld: topleft', 'fld: visible', 'fld: width', 'global: environment', 'global: freesize', 'global: idlerate', 'global: itemdelimiter', 'global: long version', 'global: size', 'global: stacksinuse', 'global: suspended', 'global: version']]
     ];
 
     /**
@@ -193,7 +193,12 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * show the json data on the right side
      */
-    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: UnshapedJsonAny) {
+    protected referenceShowData(
+        grp: UI512ElGroup,
+        btm: UI512ElTextField,
+        ctg: number,
+        jsonData: UnshapedJsonAny
+    ) {
         let entryTitles = this.referenceInfo[ctg][2];
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);
@@ -202,7 +207,10 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             if (entryTitle) {
                 for (let i = 0, len = jsonData.entries.length; i < len; i++) {
                     let jsonEntry = jsonData.entries[i];
-                    if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
+                    if (
+                        jsonEntry.body &&
+                        jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()
+                    ) {
                         let txt = FormattedText.newFromSerialized(jsonEntry.body);
                         let rghtFld = grp.findEl(this.getElId('rghtFld'));
                         if (rghtFld) {
@@ -241,7 +249,11 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * user clicked on a reference item, begin async load if hasn't loaded yet
      */
-    protected onChooseReferenceItem(ctg: number, grp: UI512ElGroup, btm: UI512ElTextField) {
+    protected onChooseReferenceItem(
+        ctg: number,
+        grp: UI512ElGroup,
+        btm: UI512ElTextField
+    ) {
         let section = this.referenceInfo[ctg];
         if (section) {
             let sectionId = section[0];
@@ -266,7 +278,12 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * show the button linking to video
      */
-    protected examplesShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, sectionId: string) {
+    protected examplesShowData(
+        grp: UI512ElGroup,
+        btm: UI512ElTextField,
+        ctg: number,
+        sectionId: string
+    ) {
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);
         if (ln !== undefined && ln >= 0 && ln < this.examplesInfo[ctg][2]) {
@@ -290,7 +307,11 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
 
         let curY = this.y;
-        let headheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
+        let headheight = this.drawWindowDecoration(
+            app,
+            new WndBorderDecorationConsts(),
+            this.hasCloseBtn
+        );
         curY += headheight;
 
         let [top, btm] = this.createLayoutListboxes(curY, grp);
@@ -337,7 +358,9 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         rghtBtn.set('visible', this.type !== DialogDocsType.Reference);
         rghtBtn.set(
             'style',
-            this.type === DialogDocsType.Examples ? UI512BtnStyle.Rectangle : UI512BtnStyle.Transparent
+            this.type === DialogDocsType.Examples
+                ? UI512BtnStyle.Rectangle
+                : UI512BtnStyle.Transparent
         );
 
         let btnStartVid = this.genBtn(this.vci.UI512App(), grp, 'btnStartVid');
@@ -362,7 +385,12 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         headheight: number,
         btm: UI512ElTextField
     ) {
-        let rghtFld = this.genChild<UI512ElTextField>(this.vci.UI512App(), grp, 'rghtFld', UI512ElTextField);
+        let rghtFld = this.genChild<UI512ElTextField>(
+            this.vci.UI512App(),
+            grp,
+            'rghtFld',
+            UI512ElTextField
+        );
         if (this.type === DialogDocsType.Examples) {
             rghtFld.setDimensionsX1Y1(
                 top.x + top.w + 10,
@@ -370,12 +398,24 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
                 this.x + this.logicalWidth,
                 this.y + this.logicalHeight - 1
             );
-            let shrunk = RectUtils.getSubRectRaw(rghtFld.x, rghtFld.y, rghtFld.w, rghtFld.h, 7, 7);
+            let shrunk = RectUtils.getSubRectRaw(
+                rghtFld.x,
+                rghtFld.y,
+                rghtFld.w,
+                rghtFld.h,
+                7,
+                7
+            );
             if (shrunk) {
                 rghtFld.setDimensions(shrunk[0], shrunk[1], shrunk[2], shrunk[3]);
             }
         } else {
-            rghtFld.setDimensionsX1Y1(top.x + top.w + 10, top.y, this.x + this.logicalWidth, btm.bottom);
+            rghtFld.setDimensionsX1Y1(
+                top.x + top.w + 10,
+                top.y,
+                this.x + this.logicalWidth,
+                btm.bottom
+            );
         }
 
         rghtFld.set('style', UI512FldStyle.Rectangle);
@@ -396,7 +436,10 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             let ctg = this.getChosenCategoryNumber(top);
             if (ctg !== undefined && this.examplesInfo[ctg]) {
                 let num = this.examplesInfo[ctg][0].replace(/vid/g, '');
-                let redirectWindow = window.open('/0.2/html/video' + num + '.html', '_blank');
+                let redirectWindow = window.open(
+                    '/0.2/html/video' + num + '.html',
+                    '_blank'
+                );
             }
         }
     }
@@ -424,11 +467,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             let btm = cast(btmGeneric, UI512ElTextField);
             let gel = new UI512ElTextFieldAsGeneric(btm);
             let lnCurrent = TextSelModify.selectByLinesWhichLine(gel);
-            let lastLine =
-                btm
-                    .getFmTxt()
-                    .toUnformatted()
-                    .split('\n').length - 1;
+            let lastLine = btm.getFmTxt().toUnformatted().split('\n').length - 1;
             lastLine -= 1; /* compensate for last empty line */
             if (lastLine <= 1) {
                 return; /* looks like a "video" one */

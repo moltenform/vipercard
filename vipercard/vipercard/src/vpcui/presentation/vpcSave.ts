@@ -28,7 +28,10 @@ export class VpcSave implements VpcSaveInterface {
         if (ses) {
             this.busy = true;
 
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsAsync(throwIfUndefined(ses, 'Kr|')), 'goSaveAsAsync')
+            Util512Higher.syncToAsyncTransition(
+                () => this.goSaveAsAsync(throwIfUndefined(ses, 'Kr|')),
+                'goSaveAsAsync'
+            );
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -48,7 +51,10 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsync(throwIfUndefined(ses, 'Kq|')), 'beginSave async')
+            Util512Higher.syncToAsyncTransition(
+                () => this.goSaveAsync(throwIfUndefined(ses, 'Kq|')),
+                'beginSave async'
+            );
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -70,7 +76,9 @@ export class VpcSave implements VpcSaveInterface {
         try {
             let newStackData = this.pr.getSerializedStack();
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
-            didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
+            didSave = bool(
+                await this.goSaveAsWithNewName(ses, info.stackName, newStackData)
+            );
         } catch (e) {
             caught = true;
             this.busy = false;
@@ -85,7 +93,7 @@ export class VpcSave implements VpcSaveInterface {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
             Util512Higher.syncToAsyncTransition(async () => {
                 await Util512Higher.sleep(2000);
-                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''))
+                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
             }, 'hide succesful save msg');
         }
 
@@ -103,9 +111,18 @@ export class VpcSave implements VpcSaveInterface {
             let newStackData = this.pr.getSerializedStack();
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
             if (info.stackOwner === ses.username) {
-                didSave = bool(await this.goSaveQuietUpdate(ses, info.stackGuid, info.stackName, newStackData));
+                didSave = bool(
+                    await this.goSaveQuietUpdate(
+                        ses,
+                        info.stackGuid,
+                        info.stackName,
+                        newStackData
+                    )
+                );
             } else {
-                didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
+                didSave = bool(
+                    await this.goSaveAsWithNewName(ses, info.stackName, newStackData)
+                );
             }
         } catch (e) {
             caught = true;
@@ -120,7 +137,7 @@ export class VpcSave implements VpcSaveInterface {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
             Util512Higher.syncToAsyncTransition(async () => {
                 await Util512Higher.sleep(2000);
-                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''))
+                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
             }, 'hide succesful save msg');
         }
 
@@ -131,7 +148,12 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * stack was already saved, so we can quietly send our updated version
      */
-    protected async goSaveQuietUpdate(ses: VpcSession, stackId: string, stackName: string, newStackData: string) {
+    protected async goSaveQuietUpdate(
+        ses: VpcSession,
+        stackId: string,
+        stackName: string,
+        newStackData: string
+    ) {
         await ses.vpcStacksSave(stackId, newStackData);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
         return true;
@@ -162,10 +184,15 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * ask the user to choose a new name
      */
-    protected async goSaveAsWithNewName(ses: VpcSession, prevStackName: string, newStackData: string) {
+    protected async goSaveAsWithNewName(
+        ses: VpcSession,
+        prevStackName: string,
+        newStackData: string
+    ) {
         let prevStackNameToShow = prevStackName || 'untitled';
         if (prevStackNameToShow === 'untitled') {
-            prevStackNameToShow = 'Untitled ' + Util512Higher.getRandIntInclusiveWeak(1, 100);
+            prevStackNameToShow =
+                'Untitled ' + Util512Higher.getRandIntInclusiveWeak(1, 100);
         }
 
         let [newName, n] = await this.pr.askMsgAsync('Save as:', prevStackNameToShow);
@@ -182,7 +209,10 @@ export class VpcSave implements VpcSaveInterface {
                 /* a serialized stack -- with the new lineage */
                 newStackData = this.pr.getSerializedStack();
                 await ses.vpcStacksSaveAs(newPartialId, newName, newStackData);
-                this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
+                this.pr.vci.setOption(
+                    'lastSavedStateId',
+                    this.pr.vci.getCurrentStateId()
+                );
                 return true;
             } catch (e) {
                 /* something went wrong - revert the changes! */
@@ -191,7 +221,7 @@ export class VpcSave implements VpcSaveInterface {
             }
         }
 
-        return false
+        return false;
     }
 
     /**
@@ -222,7 +252,9 @@ export class VpcSave implements VpcSaveInterface {
         }
 
         let defaultFilename = 'my stack.json';
-        let blob = new Blob([this.pr.getSerializedStack()], { type: 'text/plain;charset=utf-8' });
+        let blob = new Blob([this.pr.getSerializedStack()], {
+            type: 'text/plain;charset=utf-8'
+        });
         saveAs(blob, defaultFilename);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
 
@@ -231,7 +263,10 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         let currentUsername = ses ? ses.username : '';
 
-        Util512Higher.syncToAsyncTransition(() => this.goCountJsonSaves(currentUsername, info.stackOwner, info.stackGuid), 'count json saves')
+        Util512Higher.syncToAsyncTransition(
+            () => this.goCountJsonSaves(currentUsername, info.stackOwner, info.stackGuid),
+            'count json saves'
+        );
 
         /* now rethrow if we got an error */
         if (eThrown) {
@@ -244,7 +279,11 @@ export class VpcSave implements VpcSaveInterface {
      */
     async goCountJsonSaves(currentUsername: string, stackOwner: string, stackId: string) {
         try {
-            await VpcSession.vpcStacksCountJsonSaves(stackOwner, stackId, currentUsername);
+            await VpcSession.vpcStacksCountJsonSaves(
+                stackOwner,
+                stackId,
+                currentUsername
+            );
         } catch (e) {
             console.error('could not count json saves ' + e.toString());
         }
@@ -254,20 +293,27 @@ export class VpcSave implements VpcSaveInterface {
      * export to gif
      */
     beginExportGif() {
-        this.pr.askMsg('Animation speed (1-10, where 10 is fastest):', '4', (typed, btnPressed) => {
-            if (btnPressed === 0) {
-                let speed = parseFloat(typed === undefined ? '' : typed);
-                speed = Number.isFinite(speed) ? speed : -1;
-                this.pr.lyrPaintRender.paintExportToGif(this.pr, speed);
+        this.pr.askMsg(
+            'Animation speed (1-10, where 10 is fastest):',
+            '4',
+            (typed, btnPressed) => {
+                if (btnPressed === 0) {
+                    let speed = parseFloat(typed === undefined ? '' : typed);
+                    speed = Number.isFinite(speed) ? speed : -1;
+                    this.pr.lyrPaintRender.paintExportToGif(this.pr, speed);
+                }
             }
-        });
+        );
     }
 
     /**
      * send mark to server to flag content
      */
     beginFlagContent() {
-        Util512Higher.syncToAsyncTransition(() => this.mnuGoFlagContentAsync(), 'beginFlagContent')
+        Util512Higher.syncToAsyncTransition(
+            () => this.mnuGoFlagContentAsync(),
+            'beginFlagContent'
+        );
     }
 
     /**
@@ -275,7 +321,9 @@ export class VpcSave implements VpcSaveInterface {
      */
     async mnuGoFlagContentAsync() {
         let choice = await this.pr.answerMsgAsync(
-            'We do not allow the hosting of malware, spam, phishing, obscene, libelous, defamatory, pornographic, or hateful content. Submit a report?',
+             longstr(`We do not allow the hosting of malware, spam,
+             phishing, obscene, libelous, defamatory, pornographic,
+             or hateful content. Submit a report?`),
             'Submit',
             'Cancel'
         );
@@ -289,10 +337,15 @@ export class VpcSave implements VpcSaveInterface {
                 if (
                     info.stackOwner &&
                     info.stackOwner.length &&
-                    info.stackOwner !== this.pr.vci.getModel().stack.lineageUsernameNull() &&
+                    info.stackOwner !==
+                        this.pr.vci.getModel().stack.lineageUsernameNull() &&
                     info.stackOwner !== currentUsername
                 ) {
-                    await vpcStacksFlagContent(info.stackOwner, info.stackGuid, currentUsername);
+                    await vpcStacksFlagContent(
+                        info.stackOwner,
+                        info.stackGuid,
+                        currentUsername
+                    );
                 } else {
                     let e = new Error('');
                     e.toString = () => '';
@@ -304,7 +357,9 @@ export class VpcSave implements VpcSaveInterface {
             }
 
             if (!caught) {
-                await this.pr.answerMsgAsync('Submitted a content report for this stack. Thank you.');
+                await this.pr.answerMsgAsync(
+                    'Submitted a content report for this stack. Thank you.'
+                );
             }
         }
     }
@@ -323,7 +378,10 @@ export class VpcSave implements VpcSaveInterface {
         let loc = location.href.split('?')[0];
         /* case 1) from a demo stack (perf optimization, 0 db hits) */
         if (this.pr.cameFromDemoSoNeverPromptSave.length) {
-            let url = loc + '?s=' + Util512.toBase64UrlSafe(this.pr.cameFromDemoSoNeverPromptSave);
+            let url =
+                loc +
+                '?s=' +
+                Util512.toBase64UrlSafe(this.pr.cameFromDemoSoNeverPromptSave);
             return url;
         } else {
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
@@ -333,7 +391,10 @@ export class VpcSave implements VpcSaveInterface {
                 !info.stackOwner.length ||
                 info.stackOwner === this.pr.vci.getModel().stack.lineageUsernameNull()
             ) {
-                throw makeVpcInternalErr(msgNotification + lng('lngFirst, go to File->Save to upload the stack.'));
+                throw makeVpcInternalErr(
+                    msgNotification +
+                        lng('lngFirst, go to File->Save to upload the stack.')
+                );
             }
 
             let ses = VpcSession.fromRoot();
@@ -341,15 +402,28 @@ export class VpcSave implements VpcSaveInterface {
 
             if (info.stackOwner !== currentUsername) {
                 /* case 3) from a stack we don't own -- don't check if changes need to be saved */
-                return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
+                return VpcSession.getUrlForOpeningStack(
+                    loc,
+                    info.stackOwner,
+                    info.stackGuid,
+                    info.stackName
+                );
             } else {
                 /* case 4) from a stack we do own */
                 if (this.pr.isDocDirty()) {
-                    let msg = lng("lngIt looks like you have unsaved changes, we're reminding you to hit Save first.")
+                    let msg = lng(
+                         longstr(`lngIt looks like you have unsaved
+                         changes, we're reminding you to hit Save first.`)
+                    );
                     throw makeVpcInternalErr(msgNotification + msg);
                 }
 
-                return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
+                return VpcSession.getUrlForOpeningStack(
+                    loc,
+                    info.stackOwner,
+                    info.stackGuid,
+                    info.stackName
+                );
             }
         }
     }

@@ -16,7 +16,10 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
     captionText = 'lngNew User';
     hasCloseBtn = true;
     compositeType = 'VpcNonModalFormNewUser';
-    btns: [string, string][] = [['ok', 'lngOK'], ['cancel', 'lngCancel']];
+    btns: [string, string][] = [
+        ['ok', 'lngOK'],
+        ['cancel', 'lngCancel']
+    ];
     fieldsThatAreLabels: { [key: string]: boolean } = { descrEmail: true };
     fields: [string, string, number][] = [
         ['username', 'lngUsername:', 1],
@@ -25,7 +28,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
         ['email', 'lngE-mail:', 1],
         [
             'descrEmail',
-            'lng(This e-mail address and all information\nprovided will not be shared with any\nthird party.)',
+             deleteThis.longstr(`lng(This e-mail address and all information\nprovided will not be shared with any\nthird party.)`, ''),
             2
         ]
     ];
@@ -33,7 +36,10 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
     /**
      * construct and set dimensions
      */
-    constructor(protected vci: VpcStateInterface, protected makeALoginClass: () => VpcNonModalFormLoginInterface) {
+    constructor(
+        protected vci: VpcStateInterface,
+        protected makeALoginClass: () => VpcNonModalFormLoginInterface
+    ) {
         super('VpcNonModalFormNewUser' + Math.random());
         VpcNonModalFormBase.standardWindowBounds(this, vci);
     }
@@ -80,13 +86,17 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
             return;
         }
 
-        let fn = async() => {
-            let result:boolean
+        let fn = async () => {
+            let result: boolean;
             try {
-                result = await vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email'])
+                result = await vpcUsersCreate(
+                    paramFields['username'],
+                    paramFields['pw'],
+                    paramFields['email']
+                );
             } catch (e) {
                 this.setStatus('lng ' + e.toString());
-                return
+                return;
             }
 
             if (this.children.length === 0) {
@@ -99,7 +109,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
             } else {
                 this.setStatus('lngDid create user, unknown.');
             }
-        }
+        };
 
         Util512Higher.syncToAsyncTransition(fn, 'vpcuserscreate');
     }

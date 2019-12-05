@@ -184,8 +184,13 @@ export class VpcMenuActions {
      * use internal-only clipboard in case connection with os-clipboard isn't working
      */
     goMnuUseHostClipboard() {
-        this.vci.setOption('optUseHostClipboard', !this.vci.getOptionB('optUseHostClipboard'));
-        this.vci.getPresenter().useOSClipboard = this.vci.getOptionB('optUseHostClipboard');
+        this.vci.setOption(
+            'optUseHostClipboard',
+            !this.vci.getOptionB('optUseHostClipboard')
+        );
+        this.vci.getPresenter().useOSClipboard = this.vci.getOptionB(
+            'optUseHostClipboard'
+        );
     }
 
     /**
@@ -196,8 +201,10 @@ export class VpcMenuActions {
         let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
         let currentBg = this.vci.getModel().getById(currentCard.parentId, VpcElBg);
         let currentIndex = VpcElBase.findIndexById(currentBg.cards, currentCardId);
-        let created = this.vci.getOutside().CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id)
+        let created = this.vci
+            .getOutside()
+            .CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id);
     }
 
     /**
@@ -221,7 +228,13 @@ export class VpcMenuActions {
      */
     goMnuPublishFeatured() {
         this.showModal(
-            "lngYour project could be featured on ViperCard's front page! Save the project, choose 'Share a link' from the File menu, and send the link to @ViperCardDotNet on Twitter."
+            deleteThis.longstr(
+                deleteThis.longstr(
+                     deleteThis.longstr(`lngYour project could be featured on ViperCard's front page! Save the project, choose 'Share a link' from the File menu, and send the link to @ViperCardDotNet on Twitter.`, ''),
+                    ''
+                ),
+                ''
+            )
         );
     }
 
@@ -348,7 +361,13 @@ export class VpcMenuActions {
     goMnuPaintManyCopies() {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Option' : 'Alt';
         this.showModal(
-            `lngTo make many of copies of a shape, first use the 'lasso' or 'select' tool to select the region. Then, hold the ${keyname} key, click within the region, and drag.`
+            deleteThis.longstr(
+                deleteThis.longstr(
+                     deleteThis.longstr(`lngTo make many of copies of a shape, first use the 'lasso' or 'select' tool to select the region. Then, hold the ${keyname} key, click within the region, and drag.`, ''),
+                    ''
+                ),
+                ''
+            )
         );
     }
 
@@ -365,7 +384,9 @@ export class VpcMenuActions {
      */
     goMnuCopy() {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
-        this.showModal(`lngPlease use the keyboard shortcut ${keyname}+C to \ncopy text.`);
+        this.showModal(
+            `lngPlease use the keyboard shortcut ${keyname}+C to \ncopy text.`
+        );
     }
 
     /**
@@ -373,7 +394,9 @@ export class VpcMenuActions {
      */
     goMnuPaste() {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
-        this.showModal(`lngPlease use the keyboard shortcut ${keyname}+V to \npaste text.`);
+        this.showModal(
+            `lngPlease use the keyboard shortcut ${keyname}+V to \npaste text.`
+        );
     }
 
     /**
@@ -394,12 +417,15 @@ export class VpcMenuActions {
      * go to previous card
      */
     goMnuGoCardPrev() {
-        let cardNum = this.vci.getCurrentCardNum()
-        let msg = 'lngYou are already at the first card.'
+        let cardNum = this.vci.getCurrentCardNum();
+        let msg = 'lngYou are already at the first card.';
         if (cardNum <= 0) {
             this.showModal(msg);
         } else {
-            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined)
+            this.vci.beginSetCurCardWithOpenCardEvt(
+                OrdinalOrPosition.Previous,
+                undefined
+            );
         }
     }
 
@@ -407,13 +433,22 @@ export class VpcMenuActions {
      * go to the next card
      */
     goMnuGoCardNext() {
-        let cardNum = this.vci.getCurrentCardNum()
-        let totalCardNum = this.vci.getModel().stack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
-        let msg = "lngYou are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
+        let cardNum = this.vci.getCurrentCardNum();
+        let totalCardNum = this.vci
+            .getModel()
+            .stack.bgs.map(bg => bg.cards.length)
+            .reduce(Util512.add);
+        let msg = deleteThis.longstr(
+            deleteThis.longstr(
+                 deleteThis.longstr(`lngYou are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu.`, ''),
+                ''
+            ),
+            ''
+        );
         if (cardNum >= totalCardNum - 1) {
             this.showModal(msg);
         } else {
-            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined)
+            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Next, undefined);
         }
     }
 

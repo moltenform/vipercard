@@ -24,17 +24,23 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn2) {
-                let redirectWindow = window.open('https://donorbox.org/vipercard', '_blank');
+                let redirectWindow = window.open(
+                    'https://donorbox.org/vipercard',
+                    '_blank'
+                );
             }
         };
 
         dlg.standardAnswer(
             pr,
             pr.app,
-            `@ViperCardDotNet\n` +
-                `Re-creating and re-imagining HyperCard, to make animations, games, and interactive art.\n` +
-                `https://github.com/moltenform/vipercard\n` +
-                `groups.google.com/forum/#!forum/vipercard\n`,
+            longstr(
+                `@ViperCardDotNet{{NEWLINE}} Re-creating and re-imagining HyperCard,
+                to make animations, games, and interactive art.{{NEWLINE}}` +
+                    `https://github.com/moltenform/vipercard{{NEWLINE}}` +
+                    `groups.google.com/forum/#!forum/vipercard{{NEWLINE}}`,
+                ' '
+            ),
             n => {
                 if (n === UI512CompStdDialogResult.Btn2) {
                     /* see cbOnMouseUp */
@@ -55,7 +61,10 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn1) {
-                let redirectWindow = window.open('https://donorbox.org/vipercard', '_blank');
+                let redirectWindow = window.open(
+                    'https://donorbox.org/vipercard',
+                    '_blank'
+                );
             }
         };
 
@@ -85,8 +94,13 @@ export class VpcAboutDialog {
         dlg.standardAnswer(
             pr,
             pr.app,
-            `ViperCard has a right to remove any content\nthat has been posted. Spam, obscene images, malware, and hateful content are disallowed.` +
-                `\nThis project is funded by donation and will not\nshare or sell any user data.`,
+            longstr(
+                `ViperCard has a right to remove any content{{NEWLINE}}
+            that has been posted. Spam, obscene images, malware, and hateful
+            content are disallowed.{{NEWLINE}}This project is funded by
+            donation and will not{{NEWLINE}}share or sell any user data.`,
+                ' '
+            ),
             n => {
                 if (n === UI512CompStdDialogResult.Btn2) {
                     VpcAboutDialog.showLibs(pr, dlg);
@@ -111,9 +125,13 @@ export class VpcAboutDialog {
         dlg.standardAnswer(
             pr,
             pr.app,
-            `ViperCard, by Ben Fisher.\n\n` +
-                'Uses Chevrotain (Apache), FileSaver.js (MIT),\nGolly (MIT), JSGIF (MIT), js-lru (MIT) ' +
-                ', lz-string,\nClipboard.js (MIT), and easy.filter.',
+            longstr(
+                `ViperCard, by Ben Fisher.{{NEWLINE}}{{NEWLINE}}
+                'Uses Chevrotain (Apache), FileSaver.js (MIT),
+                Golly (MIT), JSGIF (MIT), js-lru (MIT), lz-string,
+                Clipboard.js (MIT), and easy.filter.`,
+                ' '
+            ),
             n => {
                 VpcAboutDialog.show(pr, dlg);
             },
