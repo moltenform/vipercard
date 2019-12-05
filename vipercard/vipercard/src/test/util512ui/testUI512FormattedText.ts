@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, assertEq } from './../../ui512/utils/util512';
+/* auto */ import { BrowserOSInfo, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './../../ui512/draw/ui512DrawTextFontRequest';
 /* auto */ import { TextFontSpec, TextFontStyling, largeArea, specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
@@ -88,7 +88,9 @@ t.test('testFormattedTextNewFromUnformatted.ShouldStripSpecialCharFontChange', (
     assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), 'BP|');
 });
 t.test('testFormattedTextNewFromSerialized.Complex', () => {
-    let ser = `${specialCharFontChange}font1${specialCharFontChange}a${specialCharFontChange}font2${specialCharFontChange}bc${specialCharFontChange}font3${specialCharFontChange}d`;
+    let ser = longstr(`${specialCharFontChange}font1${specialCharFontChange}
+        a${specialCharFontChange}font2${specialCharFontChange}bc
+        ${specialCharFontChange}font3${specialCharFontChange}d`, '');
     let txt = FormattedText.newFromSerialized(ser);
     assertEq(4, txt.len(), 'BO|');
     assertEq('font1', txt.fontAt(0), 'BN|');
@@ -104,9 +106,13 @@ t.test('testFormattedTextNewFromSerialized.Complex', () => {
     assertEq(ser, roundTripped, 'BF|');
 });
 t.test(
-    'testFormattedTextNewFromSerialized.ImplicitDefaultFont,CoalesceNeighboringFontChanges,OKToEndWithFontChange',
+    'testFormattedTextNewFromSerialized and more',
     () => {
-        let ser = `a${specialCharFontChange}font1${specialCharFontChange}${specialCharFontChange}font2${specialCharFontChange}bcd${specialCharFontChange}font3${specialCharFontChange}`;
+        t.say(longstr(`testFormattedTextNewFromSerialized.ImplicitDefaultFont,
+            CoalesceNeighboringFontChanges,OKToEndWithFontChange`))
+        let ser = longstr(`a${specialCharFontChange}font1${specialCharFontChange}
+            ${specialCharFontChange}font2${specialCharFontChange}bcd
+            ${specialCharFontChange}font3${specialCharFontChange}`, '');
         let txt = FormattedText.newFromSerialized(ser);
         assertEq(4, txt.len(), 'BE|');
         assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), 'BD|');
@@ -118,7 +124,8 @@ t.test(
         assertEq('abcd'.charCodeAt(2), txt.charAt(2), 'B7|');
         assertEq('abcd'.charCodeAt(3), txt.charAt(3), 'B6|');
 
-        let expected = `${specialCharFontChange}${UI512FontRequest.defaultFont}${specialCharFontChange}a${specialCharFontChange}font2${specialCharFontChange}bcd`;
+        let expected = longstr(`${specialCharFontChange}${UI512FontRequest.defaultFont}
+            ${specialCharFontChange}a${specialCharFontChange}font2${specialCharFontChange}bcd`, '');
         assertEq(expected, txt.toSerialized(), 'B5|');
     }
 );
