@@ -12,6 +12,7 @@
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 /* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
+/* auto */ import { VpcExecFrame, VpcExecFrameStack, VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * interface,

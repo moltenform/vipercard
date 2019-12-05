@@ -1,6 +1,6 @@
 
 /* auto */ import { CodeLimits } from './vpcUtils';
-/* auto */ import { assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 
 /**
  * for the interpreter, when interpreting a script,
@@ -253,7 +253,7 @@ export function VpcValN(f: number) {
 /**
  * factory for VpcVal, create from a bool
  */
-export function VpcValBool(b: boolean) {
+export function VpcValBool(b: O<boolean>) {
     return b ? VpcVal.True : VpcVal.False;
 }
 

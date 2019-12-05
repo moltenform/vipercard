@@ -5,6 +5,7 @@
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VelResolveId, VelResolveName, VelResolveReference } from './../../vpc/vel/velResolveName';
 /* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
@@ -16,10 +17,11 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, slength } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
+/* auto */ import { CheckReservedWords, VpcExecFrame, VpcExecFrameStack } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * OutsideWorldReadWrite
@@ -83,7 +85,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let resolver = new VelResolveReference(this.vci.getModel());
         let ret = resolver.go(ref, me, target);
         checkThrow(ret && ret.length === 2, 'VelResolveReference invalid return')
-        checkThrow(!ret[0] || !ret[0]!.getS('name').includes( '$$'), `Kt|names with $$ are reserved for internal ViperCard objects.`)
+        let firstElem = ret[0]
+        checkThrow(!firstElem || !firstElem.getS('name').includes( '$$'), `Kt|names with $$ are reserved for internal ViperCard objects.`)
         return ret;
     }
 
@@ -144,7 +147,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     IsVarDefined(varName: string) {
         let [frStack, frame] = this.getExecFrameStack();
-        return !!(
+        return bool(
             frStack.constants.find(varName) ||
             (frame.declaredGlobals[varName] && frStack.globals.find(varName)) ||
             frame.locals.find(varName)

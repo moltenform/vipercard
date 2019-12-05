@@ -10,7 +10,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, bool, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq } from './../../ui512/utils/util512';
 
 /**
@@ -257,13 +257,13 @@ export class VelResolveReference {
         let parentCard:O<VpcElBase> = ref.parentCdInfo ? this.go(ref.parentCdInfo, me, target)[0] : undefined;
         let parentBg:O<VpcElBase> = ref.parentBgInfo ? this.go(ref.parentBgInfo, me, target)[0] : undefined;
         let methodName = 'go' + VpcElType[ref.type];
-        if ((ref.parentCdInfo && !parentCard) || (ref.parentBgInfo && !parentBg)) {
+        if (bool(ref.parentCdInfo && !parentCard) || bool(ref.parentBgInfo && !parentBg)) {
             /* you have specified a parent, but the parent does not exist! therefore the child does not exist */
             return [undefined, currentCard];
         } else if (ref.lookById && !ref.partIsBg) {
             /* looking up by id is very fast, and the same for every type */
             let ret = this.model.findByIdUntyped(ref.lookById.toString());
-            checkThrow(!ret || ret.getType() === ref.type, 'J+|wrong type', ref.type, ret ? ret.getType() : '');
+            checkThrow(!ret || bool(ret.getType() === ref.type), 'J+|wrong type', ref.type, ret ? ret.getType() : '');
             return [ret, currentCard];
         }
 
@@ -296,14 +296,15 @@ export class VelResolveReference {
     protected goBtnOrFld(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBgGiven: O<VpcElBg>, isBg: boolean): [O<VpcElBase>, VpcElCard] {
         checkThrow(!parentBgGiven, "J*|this type can't have a parent bg, specify card instead");
         checkThrow(!isBg, 'J)|not yet supported');
-        parentCd = parentCd || this.model.getCurrentCard();
+        parentCd = parentCd ?? this.model.getCurrentCard();
         let retBtnOrFld:O<VpcElBase>
         if (isBg) {
             let parentBgId = parentCd.parentId
             let parentBg = this.model.getById(parentBgId, VpcElBg)
             if (ref.lookById !== undefined) {
                 /* put the name of bg btn id 1234 into x */
-                retBtnOrFld = parentBg.parts.find(vel => vel.id === ref.lookById!.toString())
+                let reflookById = ref.lookById
+                retBtnOrFld = parentBg.parts.find(vel => vel.id === reflookById.toString())
             } else if (ref.lookByAbsolute !== undefined) {
                 /* put the name of bg btn 2 into x */
                 let arr = parentBg.parts.filter(vel => vel.getType() === ref.type);

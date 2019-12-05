@@ -1,6 +1,6 @@
 
 /* auto */ import { assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, isString } from './../../ui512/utils/util512';
+/* auto */ import { AnyJson, Util512, isString } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/draw/ui512DrawTextClasses';
@@ -17,7 +17,7 @@ export class VpcGettableSerialization {
         let keys = Util512.getMapKeys(vel as any)
         for (let i = 0, len = keys.length; i<len; i++) {
             let propName = keys[i];
-            if (propName[0] === '_' && propName[1] !== '_') {
+            if (propName.startsWith('__')) {
                 propName = propName.slice(1)
                 let v = vel.getGeneric(propName);
                 assertTrueWarn(v !== undefined, propName, 'J||');
@@ -37,7 +37,7 @@ export class VpcGettableSerialization {
     /**
      * deserialize a JS object to a Settable
      */
-    static deserializeSettable(vel: UI512Settable, vals: anyJson) {
+    static deserializeSettable(vel: UI512Settable, vals: AnyJson) {
         let savedObserver = vel.observer;
         try {
             vel.observer = new ElementObserverNoOp();
@@ -67,7 +67,7 @@ export class VpcGettableSerialization {
             ok to have seen extra ones, though, could have come from card-specific */
             for (let prp of expectToSee) {
                 let prpSliced = prp.slice(1)
-                if (!whichWereSet[prpSliced] && prp[0]==='_' && prp[1] !== '_' &&
+                if (!whichWereSet[prpSliced] && prp.startsWith('__') &&
             !VpcGettableSerialization.okNotToSee[prpSliced]) {
                     throw makeVpcInternalErr(`in obj ${vel.id} did not see ${prpSliced}`)
                 }
@@ -93,7 +93,7 @@ export class VpcGettableSerialization {
             vel.set(propName, v)
         } else if (isString(v)) {
             (vel as any)['_' + propName] = ''
-            vel.set(propName, (v as string).length === 0 ? ' ' : '')
+            vel.set(propName, v.length === 0 ? ' ' : '')
             vel.set(propName, v)
         } else if (v instanceof FormattedText) {
             (vel as any)['_' + propName] = new FormattedText()
@@ -194,4 +194,4 @@ export class VpcGettableSerialization {
 }
 
 /* the 3rd party base64js library */
-declare var base64js: any;
+declare let base64js: any;

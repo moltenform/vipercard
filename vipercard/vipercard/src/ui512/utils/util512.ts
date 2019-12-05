@@ -440,6 +440,20 @@ if (!String.prototype.includes) {
 }
 
 /**
+ * polyfill for String.startsWith, from http://developer.mozilla.org
+ * /en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+ */
+if (!String.prototype.startsWith) {
+    /* eslint-disable-next-line no-extend-native */
+    Object.defineProperty(String.prototype, 'startsWith', {
+        value: function(search:string, rawPos:number) {
+            let pos = rawPos > 0 ? rawPos|0 : 0;
+            return this.substring(pos, pos + search.length) === search;
+        }
+    });
+}
+
+/**
  * holds a value. useful for out-parameters.
  */
 export class ValHolder<T> {
@@ -461,6 +475,7 @@ type AnyJsonInner =
  * indicates that the value is a plain JS object
  */
 export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
+export type AnyUnshapedJson = any;
 export type NoParameterCtor<T> = { new (): T };
 export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
 
@@ -600,6 +615,34 @@ export function cast<T>(
     context?: string
 ): T {
     if (instance instanceof ctor) {
+        return instance;
+    }
+
+    throw makeUI512Error('J7|type cast exception', context);
+}
+
+/**
+ * safe cast, throws if cast would fail.
+ */
+export function castVerifyIsNumber(
+    instance: unknown,
+    context?: string
+): number {
+    if (typeof instance === 'number') {
+        return instance;
+    }
+
+    throw makeUI512Error('J7|type cast exception', context);
+}
+
+/**
+ * safe cast, throws if cast would fail.
+ */
+export function castVerifyIsstring(
+    instance: unknown,
+    context?: string
+): string {
+    if (isString(instance)) {
         return instance;
     }
 

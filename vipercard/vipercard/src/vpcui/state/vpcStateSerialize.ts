@@ -3,8 +3,9 @@
 /* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { vpcversion } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq } from './../../ui512/utils/util512';
+/* auto */ import { AnyJson, checkThrowEq } from './../../ui512/utils/util512';
 
 /**
  * from a stack to a plain JSON object, and vice-versa
@@ -21,7 +22,7 @@ export class VpcStateSerialize {
      * fileformatmajor 3, supports base64
      */
     serializeAll(vci: VpcStateInterface) {
-        let ret: anyJson = {};
+        let ret: AnyJson = {};
         ret.product = 'vpc';
         ret.fileformatmajor = this.latestMajor;
         ret.fileformatminor = this.latestMinor;
@@ -41,7 +42,7 @@ export class VpcStateSerialize {
      * serialize a vel
      */
     serializeVel(vel: VpcElBase) {
-        let ret: anyJson = {};
+        let ret: AnyJson = {};
         ret.type = vel.getType();
         ret.id = vel.id;
         ret.parent_id = vel.parentId;
@@ -53,7 +54,7 @@ export class VpcStateSerialize {
     /**
      * deserialize an entire project, from a plain JSON object
      */
-    deserializeAll(building: VpcStateInterface, incoming: anyJson) {
+    deserializeAll(building: VpcStateInterface, incoming: AnyJson) {
         building.doWithoutAbilityToUndo(() => {
             checkThrowEq('vpc', incoming.product, 'K |');
             checkThrow(
@@ -79,7 +80,7 @@ export class VpcStateSerialize {
     /**
      * deserialize a vel, from a plain JSON object
      */
-    deserializeVel(building: VpcStateInterface, incoming: anyJson) {
+    deserializeVel(building: VpcStateInterface, incoming: AnyJson) {
         if (incoming.type === VpcElType.Stack) {
             /* don't create a new element, just copy over the attrs */
             VpcGettableSerialization.deserializeSettable(

@@ -9,9 +9,10 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * holds all vipercard state
@@ -32,7 +33,7 @@ export class VpcState {
     /**
      * create an element and add it to the model
      */
-    createVel(parentId: string, type: VpcElType, insertIndex = -1, newId?: string) {
+    createVel(parentId: string, type: VpcElType, insertIndex = -1, newId: O<string> = undefined) {
         if (!newId) {
             let nextId = this.model.stack.getN('increasingnumberforid');
             this.model.stack.set('increasingnumberforid', nextId + 1);

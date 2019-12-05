@@ -8,9 +8,9 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { assertTrue, assertTrueWarn, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Productname';
+/* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, castVerifyIsNumber, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Patterns } from './../../ui512/draw/ui512DrawPatterns';
@@ -141,7 +141,7 @@ export class VpcElProductOpts extends VpcElBase {
                 }
 
                 let n = getStrToEnum(VpcCursors, `cursor ${s} not supported`, s);
-                UI512CursorAccess.setCursor(n.valueOf());
+                UI512CursorAccess.setCursor(castVerifyIsNumber(n.valueOf()));
             }
         ];
 
@@ -178,7 +178,7 @@ export class VpcElProductOpts extends VpcElBase {
      */
     static canGetProductProp(propName: string) {
         VpcElProductOpts.prodInit();
-        return !!VpcElProductOpts.cachedGetters[propName] || !!VpcElProductOpts.cachedSetters[propName];
+        return bool(VpcElProductOpts.cachedGetters[propName]) || bool(VpcElProductOpts.cachedSetters[propName]);
     }
 
     /**
@@ -192,18 +192,18 @@ export class VpcElProductOpts extends VpcElBase {
         VpcElStack.stackInit();
         VpcElProductOpts.prodInit();
         return (
-            !!VpcElButton.cachedGetters[propName] ||
-            !!VpcElButton.cachedSetters[propName] ||
-            !!VpcElField.cachedGetters[propName] ||
-            !!VpcElField.cachedSetters[propName] ||
-            !!VpcElCard.cachedGetters[propName] ||
-            !!VpcElCard.cachedSetters[propName] ||
-            !!VpcElBg.cachedGetters[propName] ||
-            !!VpcElBg.cachedSetters[propName] ||
-            !!VpcElStack.cachedGetters[propName] ||
-            !!VpcElStack.cachedSetters[propName] ||
-            !!VpcElProductOpts.cachedGetters[propName] ||
-            !!VpcElProductOpts.cachedSetters[propName]
+            bool(VpcElButton.cachedGetters[propName]) ||
+            bool(VpcElButton.cachedSetters[propName]) ||
+            bool(VpcElField.cachedGetters[propName]) ||
+            bool(VpcElField.cachedSetters[propName]) ||
+            bool(VpcElCard.cachedGetters[propName]) ||
+            bool(VpcElCard.cachedSetters[propName]) ||
+            bool(VpcElBg.cachedGetters[propName]) ||
+            bool(VpcElBg.cachedSetters[propName]) ||
+            bool(VpcElStack.cachedGetters[propName]) ||
+            bool(VpcElStack.cachedSetters[propName]) ||
+            bool(VpcElProductOpts.cachedGetters[propName]) ||
+            bool(VpcElProductOpts.cachedSetters[propName])
         );
     }
 
