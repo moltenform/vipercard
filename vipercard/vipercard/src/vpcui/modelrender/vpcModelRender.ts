@@ -1,21 +1,22 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, getRoot, isString } from '../../ui512/utils/utils512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { ElementObserver, ElementObserverVal, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
-/* auto */ import { UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { GenericTextField } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { VpcElType, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField, VpcFldStyleInclScroll } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcUILayer } from './../state/vpcInterface';
+/* auto */ import { VpcElType, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElField, VpcFldStyleInclScroll } from './../../vpc/vel/velField';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, isString } from './../../ui512/utils/util512';
+/* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
+/* auto */ import { GenericTextField } from './../../ui512/textedit/ui512GenericField';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
+/* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
+/* auto */ import { ElementObserver, ElementObserverVal, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { UI512ElButton } from './../../ui512/elements/ui512ElementButton';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 
 /**
  * loop through the vels on the page and create UI512elements to be rendered
@@ -278,7 +279,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let keys = Util512.getMapKeys(vel as any)
         for (let i = 0, len = keys.length; i<len; i++) {
             let prop = keys[i];
-            if (prop[0] === '_' && prop[1] !== '_') {
+            if (prop.startsWith('__')) {
                 prop = prop.slice(1)
                 let newVal = vel.getGeneric(prop);
                 this.applyOneChange(vel, prop, newVal, true);
@@ -295,7 +296,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let keys = Util512.getMapKeys(vel as any)
         for (let i = 0, len = keys.length; i<len; i++) {
             let prop = keys[i];
-            if (prop[0] === '_' && prop[1] !== '_') {
+            if (prop.startsWith('__')) {
                 prop = prop.slice(1)
                 let newVal = vel.getGeneric(prop);
                 this.applyOneChange(vel, prop, newVal, true);

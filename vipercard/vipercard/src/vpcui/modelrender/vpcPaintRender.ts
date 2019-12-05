@@ -1,21 +1,21 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObjectCanSet, cast } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrWhite } from '../../ui512/draw/ui512DrawPatterns.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPainter.js';
-/* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { UI512ImageSerialization } from '../../ui512/draw/ui512ImageSerialization.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementCanvasPiece.js';
-/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcStateInterface, VpcUILayer } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcOutsideImpl } from '../../vpcui/state/vpcOutsideImpl.js';
-/* auto */ import { PaintGifExport } from '../../vpcui/modelrender/vpcGifExport.js';
+/* auto */ import { VpcOutsideImpl } from './../state/vpcOutsideImpl';
+/* auto */ import { VpcStateInterface, VpcUILayer } from './../state/vpcInterface';
+/* auto */ import { PaintGifExport } from './vpcGifExport';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { MapKeyToObjectCanSet, cast } from './../../ui512/utils/util512';
+/* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
+/* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
+/* auto */ import { UI512ImageSerialization } from './../../ui512/draw/ui512ImageSerialization';
+/* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
+/* auto */ import { UI512ElCanvasPiece } from './../../ui512/elements/ui512ElementCanvasPiece';
+/* auto */ import { clrWhite } from './../../ui512/draw/ui512DrawPatterns';
+/* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
+/* auto */ import { UI512PainterCvCanvas } from './../../ui512/draw/ui512DrawPainter';
+/* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /**
  * drawing paint to the canvas

@@ -1,14 +1,14 @@
 
-/* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcAppLyrDragHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
+/* auto */ import { VpcAppLyrDragHandles } from './vpcLyrDragHandles';
+/* auto */ import { VpcUILayer } from './../state/vpcInterface';
+/* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
+/* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
  * text notifications to the user in the lower right of the screen

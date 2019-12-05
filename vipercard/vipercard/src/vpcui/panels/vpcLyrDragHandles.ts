@@ -1,11 +1,11 @@
 
-/* auto */ import { slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcUILayer } from './../state/vpcInterface';
+/* auto */ import { VpcTool, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { slength } from './../../ui512/utils/util512';
+/* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
+/* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
 /**
  * resize handles, for moving and resizing a vel

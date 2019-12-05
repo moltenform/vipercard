@@ -1,6 +1,6 @@
 
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcEditPanelsBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
+/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcEditPanelsBase } from './vpcEditPanelsBase';
 
 /**
  * properties panel, for editing a field's properties

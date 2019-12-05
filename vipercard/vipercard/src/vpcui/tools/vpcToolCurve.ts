@@ -1,7 +1,7 @@
 
-/* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { ShapeToolState, VpcAppUIToolShape } from '../../vpcui/tools/vpcToolShape.js';
+/* auto */ import { ShapeToolState, VpcAppUIToolShape } from './vpcToolShape';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 
 export class VpcAppUIToolCurve extends VpcAppUIToolShape {
     /**

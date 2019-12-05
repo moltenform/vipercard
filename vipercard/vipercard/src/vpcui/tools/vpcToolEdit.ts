@@ -1,12 +1,12 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcAppLyrPanels } from '../../vpcui/panels/vpcLyrPanels.js';
-/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
+/* auto */ import { VpcAppLyrPanels } from './../panels/vpcLyrPanels';
+/* auto */ import { VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
 /**
  * implementation for the button tool and field tool
@@ -25,7 +25,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
             this.vci.setOption('selectedVelId', '');
         } else if (d.el && d.el.id.startsWith('VpcModelRender$$')) {
             /* click on an item to select it */
-            let velId = this.cbModelRender().elIdToVelId(d.el.id) || '';
+            let velId = this.cbModelRender().elIdToVelId(d.el.id) ?? '';
             if (velId.length && d.el.typename === 'UI512ElTextField') {
                 this.vci.setTool(VpcTool.Field);
                 this.vci.setOption('selectedVelId', velId);

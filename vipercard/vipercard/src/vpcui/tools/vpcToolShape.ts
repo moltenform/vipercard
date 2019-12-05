@@ -1,14 +1,14 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPainter.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementCanvasPiece.js';
-/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
+/* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512ElCanvasPiece } from './../../ui512/elements/ui512ElementCanvasPiece';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
+/* auto */ import { UI512PainterCvCanvas } from './../../ui512/draw/ui512DrawPainter';
 
 /**
  * shape tool (rect, oval, etc)

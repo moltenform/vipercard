@@ -1,24 +1,25 @@
 
-/* auto */ import { O, msgNotification, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
-/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
-/* auto */ import { VpcEditPanels } from '../../vpcui/panels/vpcPanelsInterface.js';
-/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
-/* auto */ import { VpcEditPanelsBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
-/* auto */ import { VpcEditPanelsEmpty } from '../../vpcui/panels/vpcEditPanelsEmpty.js';
-/* auto */ import { VpcEditPanelsField } from '../../vpcui/panels/vpcEditPanelsFld.js';
-/* auto */ import { VpcEditPanelsBtn } from '../../vpcui/panels/vpcEditPanelsBtn.js';
-/* auto */ import { VpcEditPanelsCard } from '../../vpcui/panels/vpcEditPanelsCard.js';
-/* auto */ import { VpcEditPanelsStack } from '../../vpcui/panels/vpcEditPanelsStack.js';
-/* auto */ import { VpcAppLyrDragHandles } from '../../vpcui/panels/vpcLyrDragHandles.js';
-import { VpcElBase } from '../../vpc/vel/velBase.js';
+/* auto */ import { ToolboxDims } from './vpcToolboxPatterns';
+/* auto */ import { VpcPanelScriptEditor } from './vpcScriptEditor';
+/* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
+/* auto */ import { VpcAppLyrDragHandles } from './vpcLyrDragHandles';
+/* auto */ import { VpcUILayer } from './../state/vpcInterface';
+/* auto */ import { VpcElType, VpcTool, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcEditPanelsStack } from './vpcEditPanelsStack';
+/* auto */ import { VpcEditPanelsField } from './vpcEditPanelsFld';
+/* auto */ import { VpcEditPanelsEmpty } from './vpcEditPanelsEmpty';
+/* auto */ import { VpcEditPanelsCard } from './vpcEditPanelsCard';
+/* auto */ import { VpcEditPanelsBtn } from './vpcEditPanelsBtn';
+/* auto */ import { VpcEditPanelsBase } from './vpcEditPanelsBase';
+/* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
+/* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
+/* auto */ import { O, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { MapKeyToObject, slength } from './../../ui512/utils/util512';
+/* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
+/* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
 /**
  * layer that holds the property panels
@@ -86,7 +87,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
         } else if (!selected) {
             shouldBeActive = this.panelEmpty;
         } else {
-            shouldBeActive = this.panels.find(selected.getType().toString()) || this.panelEmpty;
+            shouldBeActive = this.panels.find(selected.getType().toString()) ?? this.panelEmpty;
             this.showOrHideCheckboxItems(selected, shouldBeActive)
         }
 

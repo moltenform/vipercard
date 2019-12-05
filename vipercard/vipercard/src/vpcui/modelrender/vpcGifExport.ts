@@ -1,13 +1,12 @@
 
-/* auto */ import { O, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, Util512Higher.sleep } from '../../ui512/utils/utils512.js';
-/* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { UI512BeginAsync } from '../../ui512/utils/utilsTestCanvas.js';
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
-/* auto */ import { TemporarilySuspendEvents } from '../../ui512/menu/ui512SuspendEvents.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
+/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
+/* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
+/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
  * export paint to GIF
@@ -24,7 +23,7 @@ export class PaintGifExport {
      */
     begin(speed: number) {
         this.init();
-        UI512BeginAsync(() => this.beginPaintExportToGif(speed));
+        Util512Higher.syncToAsyncTransition(() => this.beginPaintExportToGif(speed), "gif export")
     }
 
     /**
@@ -137,7 +136,7 @@ export class PaintGifExport {
 }
 
 /* js-gif library */
-declare var GIFEncoder: any;
+declare let GIFEncoder: any;
 
 /* filesaver.js library */
-declare var saveAs: any;
+declare let saveAs: any;

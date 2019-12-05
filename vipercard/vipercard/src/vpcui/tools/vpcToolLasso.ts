@@ -1,10 +1,11 @@
 
-/* auto */ import { cast } from '../../ui512/utils/utils512.js';
-/* auto */ import { CanvasWrapper } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { clrBlack } from '../../ui512/draw/ui512DrawPatterns.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
-/* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from '../../vpcui/tools/vpcToolSelectBase.js';
+/* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from './vpcToolSelectBase';
+/* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { bool } from './../../ui512/utils/util512Assert';
+/* auto */ import { cast } from './../../ui512/utils/util512';
+/* auto */ import { clrBlack } from './../../ui512/draw/ui512DrawPatterns';
+/* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
+/* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /**
  * lasso tool, for free-form selection
@@ -74,8 +75,8 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
      */
     protected checkTooSmall() {
         const minSize = 2;
-        return (
-            !!this.st &&
+        return bool(
+            this.st &&
             (this.st.maxX - this.st.minX <= minSize || this.st.maxY - this.st.minY <= minSize) &&
             this.st.recordXpts.length > minSize &&
             this.st.recordYpts.length > minSize

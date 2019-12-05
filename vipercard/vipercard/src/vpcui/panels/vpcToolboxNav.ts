@@ -1,10 +1,10 @@
 
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
+/* auto */ import { ToolboxDims } from './vpcToolboxPatterns';
+/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { UI512CompToolbox } from './../../ui512/composites/ui512Toolbox';
+/* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
+/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 
 /**
  * a tool palette for moving from card to card

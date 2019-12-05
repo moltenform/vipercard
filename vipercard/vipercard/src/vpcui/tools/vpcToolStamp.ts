@@ -1,21 +1,21 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { cast } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { UI512ImageCollection, UI512ImageCollectionCollection, UI512ImageCollectionImage } from '../../ui512/draw/ui512ImageCollection.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512ElGroup } from '../../ui512/elements/ui512ElementGroup.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
-/* auto */ import { UI512BtnStyle, UI512ElButton } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { UI512ElTextField } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { MouseDownEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
-/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { ToolboxDims } from './../panels/vpcToolboxPatterns';
+/* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { cast } from './../../ui512/utils/util512';
+/* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
+/* auto */ import { UI512ImageCollection, UI512ImageCollectionCollection, UI512ImageCollectionImage } from './../../ui512/draw/ui512ImageCollection';
+/* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
+/* auto */ import { MouseDownEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
+/* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
+/* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
+/* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
  * stamp tool, draw clip art stamps onto the card

@@ -1,16 +1,16 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { CanvasWrapper, RectUtils } from '../../ui512/utils/utilsDraw.js';
-/* auto */ import { largeArea } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512Painter } from '../../ui512/draw/ui512DrawPainterClasses.js';
-/* auto */ import { UI512PainterCvCanvas } from '../../ui512/draw/ui512DrawPainter.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512ElCanvasPiece } from '../../ui512/elements/ui512ElementCanvasPiece.js';
-/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
+/* auto */ import { CanvasWrapper, RectUtils } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512ElCanvasPiece } from './../../ui512/elements/ui512ElementCanvasPiece';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { largeArea } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
+/* auto */ import { UI512PainterCvCanvas } from './../../ui512/draw/ui512DrawPainter';
 
 /**
 select tool implementation
@@ -259,15 +259,16 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 );
 
             this.st.elMask.getCanvasForWrite().temporarilyChangeCompositeMode('source-in', () => {
-                this.st!.elMask.getCanvasForWrite().fillRect(
+                checkThrow(this.st, '')
+                this.st.elMask.getCanvasForWrite().fillRect(
                     0,
                     0,
-                    this.st!.elMask.getCvWidth(),
-                    this.st!.elMask.getCvHeight(),
+                    this.st.elMask.getCvWidth(),
+                    this.st.elMask.getCvHeight(),
                     0,
                     0,
-                    this.st!.elMask.getCvWidth(),
-                    this.st!.elMask.getCvHeight(),
+                    this.st.elMask.getCvWidth(),
+                    this.st.elMask.getCvHeight(),
                     'white'
                 );
             });
@@ -291,7 +292,8 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
             /* make cvPiece a cut-out of the main bg */
             let basePaint = this.cbPaintRender().getMainBg();
             this.st.cvPiece.temporarilyChangeCompositeMode('source-in', () => {
-                this.st!.cvPiece.drawFromImage(
+                checkThrow(this.st, '')
+                this.st.cvPiece.drawFromImage(
                     basePaint.getCanvasForWrite().canvas,
                     0,
                     0,
@@ -301,8 +303,8 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                     0,
                     0,
                     0,
-                    this.st!.cvPiece.canvas.width,
-                    this.st!.cvPiece.canvas.height
+                    this.st.cvPiece.canvas.width,
+                    this.st.cvPiece.canvas.height
                 );
             });
 

@@ -1,14 +1,14 @@
 
-/* auto */ import { O, assertTrueWarn, checkThrow, scontains } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { findEnumToStr, getStrToEnum, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { ScreenConsts } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcUILayer } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { ToolboxDims, VpcToolboxPatterns } from '../../vpcui/panels/vpcToolboxPatterns.js';
-/* auto */ import { VpcToolboxNav } from '../../vpcui/panels/vpcToolboxNav.js';
-/* auto */ import { VpcToolboxMain } from '../../vpcui/panels/vpcToolboxMain.js';
+/* auto */ import { ToolboxDims, VpcToolboxPatterns } from './vpcToolboxPatterns';
+/* auto */ import { VpcToolboxNav } from './vpcToolboxNav';
+/* auto */ import { VpcToolboxMain } from './vpcToolboxMain';
+/* auto */ import { VpcUILayer } from './../state/vpcInterface';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
+/* auto */ import { O, assertTrueWarn, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { findEnumToStr, getStrToEnum, slength } from './../../ui512/utils/util512';
+/* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
 /**
  * UI layer containing toolboxes

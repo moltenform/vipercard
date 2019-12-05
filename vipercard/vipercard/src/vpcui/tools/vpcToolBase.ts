@@ -1,13 +1,13 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { fitIntoInclusive } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { EventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcPaintRender } from '../../vpcui/modelrender/vpcPaintRender.js';
-/* auto */ import { VpcModelRender } from '../../vpcui/modelrender/vpcModelRender.js';
+/* auto */ import { VpcPaintRender } from './../modelrender/vpcPaintRender';
+/* auto */ import { VpcModelRender } from './../modelrender/vpcModelRender';
+/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { fitIntoInclusive } from './../../ui512/utils/util512';
+/* auto */ import { EventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
 /**
  * base class for VPC tools

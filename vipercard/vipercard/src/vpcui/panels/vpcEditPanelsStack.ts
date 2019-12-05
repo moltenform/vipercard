@@ -1,11 +1,11 @@
 
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcEditPanelsBase } from '../../vpcui/panels/vpcEditPanelsBase.js';
+/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcEditPanelsBase } from './vpcEditPanelsBase';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
+/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
  * properties panel, for editing a stack's properties

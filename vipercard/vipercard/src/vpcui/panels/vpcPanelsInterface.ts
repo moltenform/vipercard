@@ -1,9 +1,9 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
+/* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 
 /**
  * a property panel is a window on the right side of the screen,

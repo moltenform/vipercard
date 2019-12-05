@@ -1,8 +1,8 @@
 
-/* auto */ import { assertEq } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512CompToolbox } from '../../ui512/composites/ui512Toolbox.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { ToolboxDims } from '../../vpcui/panels/vpcToolboxPatterns.js';
+/* auto */ import { ToolboxDims } from './vpcToolboxPatterns';
+/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { assertEq } from './../../ui512/utils/util512';
+/* auto */ import { UI512CompToolbox } from './../../ui512/composites/ui512Toolbox';
 
 /**
  * the main tool palette

@@ -1,10 +1,10 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { UI512Element } from '../../ui512/elements/ui512Element.js';
-/* auto */ import { MouseDownEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcAppUIToolBase } from '../../vpcui/tools/vpcToolBase.js';
+/* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
+/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { MouseDownEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
 export class VpcAppUIToolBucket extends VpcAppUIToolBase {
     /**

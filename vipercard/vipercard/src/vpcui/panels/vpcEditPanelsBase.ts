@@ -1,23 +1,24 @@
 
-/* auto */ import { O, makeVpcInternalErr, msgNotification } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, base10, cast } from '../../ui512/utils/utils512.js';
-/* auto */ import { lng } from '../../ui512/lang/langBase.js';
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512DrawText } from '../../ui512/draw/ui512DrawText.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { UI512ElLabel } from '../../ui512/elements/ui512ElementLabel.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { UI512ElTextField, UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { UI512ElTextFieldAsGeneric } from '../../ui512/textedit/ui512GenericField.js';
-/* auto */ import { TextSelModify } from '../../ui512/textedit/ui512TextSelModify.js';
-/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
-/* auto */ import { VpcElType, vpcElTypeToString } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { VpcEditPanels } from '../../vpcui/panels/vpcPanelsInterface.js';
-/* auto */ import { VpcPanelScriptEditor } from '../../vpcui/panels/vpcScriptEditor.js';
+/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcPanelScriptEditor } from './vpcScriptEditor';
+/* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
+/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { VpcElType, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
+/* auto */ import { O, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, cast } from './../../ui512/utils/util512';
+/* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
+/* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
+/* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
+/* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
+/* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
+/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
+/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
  * base class for property panels,
