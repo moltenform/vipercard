@@ -60,7 +60,7 @@ export function runOnLoad() {
     document.body.addEventListener('keydown', evt => {
         if (evt.code === 'KeyT' && evt.altKey) {
             Util512Higher.syncToAsyncTransition(
-                async () => SimpleUtil512Tests.runTests(true),
+                () => SimpleUtil512Tests.runTests(true),
                 'tests'
             );
         }

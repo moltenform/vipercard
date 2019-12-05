@@ -2,7 +2,7 @@
 /* auto */ import { VpcSession, vpcUsersCheckLogin, vpcUsersEnterEmailVerifyCode } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormLoginInterface, VpcNonModalFormNewUser } from './vpcFormNewUser';
-/* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Assert';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
@@ -44,38 +44,44 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
      */
     doLogin(vci: VpcStateInterface) {
         let paramFields = this.readFields(vci.UI512App());
-        UI512BeginAsync(
-            () => vpcUsersCheckLogin(paramFields['username'], paramFields['pw']),
-            (result: Error | (string | ArrayBuffer)[] | VpcSession) => {
-                if (this.children.length === 0) {
-                    /* user hit cancel */
-                    return;
-                } else if (result instanceof VpcSession) {
-                    /* login was successful! */
-                    getRoot().setSession(result);
-                    this.setStatus('lngLogged in.');
-                    this.vci.setNonModalDialog(undefined);
-                    this.children = [];
-                    this.fnCbWhenSignedIn();
-                } else if (result instanceof Error) {
-                    /* login was not successful, no such user or wrong password */
-                    this.setStatus('lngDid not log in, ' + result.toString());
-                } else if (result[0] === 'needEmailVerify' && result.length === 3) {
-                    /* login needs email verification */
-                    this.setStatus(
-                        'lngPlease enter the verification code sent via e-mail.'
-                    );
-                    let grp = vci.UI512App().getGroup(this.grpId);
-                    let fldEmailVerify = grp.getEl(this.getElId('fldcodeEmailVerify'));
-                    fldEmailVerify.set('visible', true);
-                    let lblEmailVerify = grp.getEl(this.getElId('lblForcodeEmailVerify'));
-                    lblEmailVerify.set('visible', true);
-                    this.waitingForVerifyCode = result[2] as ArrayBuffer;
-                } else {
-                    this.setStatus('lngDid not log in, unknown.');
-                }
+
+        let fn = async() => {
+            let result:(string | ArrayBuffer)[] | VpcSession
+            try {
+                result = await vpcUsersCheckLogin(paramFields['username'], paramFields['pw'])
+            } catch (e) {
+                /* login was not successful, no such user or wrong password */
+                this.setStatus(`lngDid not log in, ${e}`);
+                return
             }
-        );
+
+            if (this.children.length === 0) {
+                /* user hit cancel */
+                return;
+            } else if (result instanceof VpcSession) {
+                /* login was successful! */
+                getRoot().setSession(result);
+                this.setStatus('lngLogged in.');
+                this.vci.setNonModalDialog(undefined);
+                this.children = [];
+                this.fnCbWhenSignedIn();
+            } else if (result[0] === 'needEmailVerify' && result.length === 3) {
+                /* login needs email verification */
+                this.setStatus(
+                    'lngPlease enter the verification code sent via e-mail.'
+                );
+                let grp = vci.UI512App().getGroup(this.grpId);
+                let fldEmailVerify = grp.getEl(this.getElId('fldcodeEmailVerify'));
+                fldEmailVerify.set('visible', true);
+                let lblEmailVerify = grp.getEl(this.getElId('lblForcodeEmailVerify'));
+                lblEmailVerify.set('visible', true);
+                this.waitingForVerifyCode = result[2] as ArrayBuffer;
+            } else {
+                this.setStatus('lngDid not log in, unknown.');
+            }
+        }
+
+        Util512Higher.syncToAsyncTransition(fn, 'doLogin');
     }
 
     /**
@@ -83,30 +89,37 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
      */
     doLoginVerifyCode(vci: VpcStateInterface, keybuffer: ArrayBuffer) {
         let paramFields = this.readFields(vci.UI512App());
-        UI512BeginAsync(
-            () =>
-                vpcUsersEnterEmailVerifyCode(
+        let fn = async () => {
+            let result:VpcSession
+            try {
+                result = await vpcUsersEnterEmailVerifyCode(
                     paramFields['username'],
                     keybuffer,
                     paramFields['codeEmailVerify']
-                ),
-            (result: Error | VpcSession) => {
-                if (this.children.length === 0) {
-                    /* user hit cancel */
-                    return;
-                } else if (result instanceof VpcSession) {
-                    /* login was successful! */
-                    getRoot().setSession(result);
-                    this.setStatus('lngLogged in.');
-                    this.vci.setNonModalDialog(undefined);
-                    this.children = [];
-                    this.fnCbWhenSignedIn();
-                } else {
-                    /* login was not successful -- prob wrong password */
-                    this.setStatus('lng ' + result.toString());
-                }
+                )
+            } catch (e) {
+                /* login was not successful -- prob wrong password */
+                this.setStatus(`${e}`);
+                return
             }
-        );
+
+            if (this.children.length === 0) {
+                /* user hit cancel */
+                return;
+            } else if (result instanceof VpcSession) {
+                /* login was successful! */
+                getRoot().setSession(result);
+                this.setStatus('lngLogged in.');
+                this.vci.setNonModalDialog(undefined);
+                this.children = [];
+                this.fnCbWhenSignedIn();
+            } else {
+                /* got unexpected type back*/
+                this.setStatus(`unexpected type ${result}`);
+            }
+        }
+
+        Util512Higher.syncToAsyncTransition(fn, 'doLoginVerifyCode');
     }
 
     /**
