@@ -33,7 +33,12 @@ export class VpcState {
     /**
      * create an element and add it to the model
      */
-    createVel(parentId: string, type: VpcElType, insertIndex = -1, newId: O<string> = undefined) {
+    createVel(
+        parentId: string,
+        type: VpcElType,
+        insertIndex = -1,
+        newId: O<string> = undefined
+    ) {
         if (!newId) {
             let nextId = this.model.stack.getN('increasingnumberforid');
             this.model.stack.set('increasingnumberforid', nextId + 1);
@@ -52,15 +57,21 @@ export class VpcState {
      */
     removeVel(vel: VpcElBase) {
         if (vel instanceof VpcElCard) {
-            let totalCardNum = this.vci.getModel().stack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
+            let totalCardNum = this.vci
+                .getModel()
+                .stack.bgs.map(bg => bg.cards.length)
+                .reduce(Util512.add);
             checkThrow(totalCardNum > 1, '8%|Cannot delete the only card of a stack');
-            let curCard = this.vci.getOptionS('currentCardId')
-            checkThrow(vel.id !== curCard, 'cannot delete the current card')
+            let curCard = this.vci.getOptionS('currentCardId');
+            checkThrow(vel.id !== curCard, 'cannot delete the current card');
 
             /* if deleting a card, first delete all of its children */
             let partsToRemove: VpcElBase[] = [];
             for (let part of vel.parts) {
-                assertTrue(part instanceof VpcElButton || part instanceof VpcElField, '6M|bad type');
+                assertTrue(
+                    part instanceof VpcElButton || part instanceof VpcElField,
+                    '6M|bad type'
+                );
                 partsToRemove.push(part);
             }
 

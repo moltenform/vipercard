@@ -14,15 +14,19 @@ export class VpcGettableSerialization {
      */
     static serializeGettable(vel: UI512Gettable) {
         let ret: { [key: string]: ElementObserverVal } = {};
-        let keys = Util512.getMapKeys(vel as any)
-        for (let i = 0, len = keys.length; i<len; i++) {
+        let keys = Util512.getMapKeys(vel as any);
+        for (let i = 0, len = keys.length; i < len; i++) {
             let propName = keys[i];
             if (propName.startsWith('__')) {
-                propName = propName.slice(1)
+                propName = propName.slice(1);
                 let v = vel.getGeneric(propName);
                 assertTrueWarn(v !== undefined, propName, 'J||');
                 if (v instanceof FormattedText) {
-                    assertTrueWarn(VpcGettableSerialization.propNameExpectFormattedText(propName), 'expected ftxt, got ', propName)
+                    assertTrueWarn(
+                        VpcGettableSerialization.propNameExpectFormattedText(propName),
+                        'expected ftxt, got ',
+                        propName
+                    );
                     assertTrue(v && v.isFormattedText, 'J{|invalid ftxt');
                     ret[propName] = v.toSerialized();
                 } else {
@@ -42,34 +46,52 @@ export class VpcGettableSerialization {
         try {
             vel.observer = new ElementObserverNoOp();
 
-            let expectToSee = Util512.getMapKeys(vel as any)
+            let expectToSee = Util512.getMapKeys(vel as any);
             let whichWereSet: { [key: string]: boolean } = {};
-            let keys = Util512.getMapKeys(vals as any)
-            for (let i = 0, len = keys.length; i<len; i++) {
+            let keys = Util512.getMapKeys(vals as any);
+            for (let i = 0, len = keys.length; i < len; i++) {
                 let propName = keys[i];
-                whichWereSet[propName] = true
+                whichWereSet[propName] = true;
                 let v = vals[propName];
                 if (VpcGettableSerialization.propNameExpectFormattedText(propName)) {
                     if (isString(v)) {
                         let vAsText = FormattedText.newFromSerialized(v);
-                        VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, vAsText)
+                        VpcGettableSerialization.setAnyAndSendChangeNotification(
+                            vel,
+                            propName,
+                            vAsText
+                        );
                     } else {
-                        assertTrue(v instanceof FormattedText, 'J`|not a string or FormattedText');
-                        VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, v)
+                        assertTrue(
+                            v instanceof FormattedText,
+                            'J`|not a string or FormattedText'
+                        );
+                        VpcGettableSerialization.setAnyAndSendChangeNotification(
+                            vel,
+                            propName,
+                            v
+                        );
                     }
                 } else {
-                    let decoded = VpcGettableSerialization.deserializePlain(v)
-                    VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, decoded)
+                    let decoded = VpcGettableSerialization.deserializePlain(v);
+                    VpcGettableSerialization.setAnyAndSendChangeNotification(
+                        vel,
+                        propName,
+                        decoded
+                    );
                 }
             }
 
             /* send an alert if the saved file didn't have a property.
             ok to have seen extra ones, though, could have come from card-specific */
             for (let prp of expectToSee) {
-                let prpSliced = prp.slice(1)
-                if (!whichWereSet[prpSliced] && prp.startsWith('__') &&
-            !VpcGettableSerialization.okNotToSee[prpSliced]) {
-                    throw makeVpcInternalErr(`in obj ${vel.id} did not see ${prpSliced}`)
+                let prpSliced = prp.slice(1);
+                if (
+                    !whichWereSet[prpSliced] &&
+                    prp.startsWith('__') &&
+                    !VpcGettableSerialization.okNotToSee[prpSliced]
+                ) {
+                    throw makeVpcInternalErr(`in obj ${vel.id} did not see ${prpSliced}`);
                 }
             }
         } finally {
@@ -77,54 +99,69 @@ export class VpcGettableSerialization {
         }
     }
 
-    protected static okNotToSee: { [key: string]: boolean } = { 'sharedtext':true, 'sharedhilite':true };
+    protected static okNotToSee: { [key: string]: boolean } = {
+        sharedtext: true,
+        sharedhilite: true
+    };
 
     /**
      * set a property, and set to 2 different values to ensure that the 'change' event is sent
      */
-    protected static setAnyAndSendChangeNotification(vel: UI512Settable, propName:string, v:ElementObserverVal) {
+    protected static setAnyAndSendChangeNotification(
+        vel: UI512Settable,
+        propName: string,
+        v: ElementObserverVal
+    ) {
         if (typeof v === 'boolean') {
-            (vel as any)['_' + propName] = false
-            vel.set(propName, !v)
-            vel.set(propName, v)
+            (vel as any)['_' + propName] = false;
+            vel.set(propName, !v);
+            vel.set(propName, v);
         } else if (typeof v === 'number') {
-            (vel as any)['_' + propName] = 0
-            vel.set(propName, v === 0 ? 1 : 0)
-            vel.set(propName, v)
+            (vel as any)['_' + propName] = 0;
+            vel.set(propName, v === 0 ? 1 : 0);
+            vel.set(propName, v);
         } else if (isString(v)) {
-            (vel as any)['_' + propName] = ''
-            vel.set(propName, v.length === 0 ? ' ' : '')
-            vel.set(propName, v)
+            (vel as any)['_' + propName] = '';
+            vel.set(propName, v.length === 0 ? ' ' : '');
+            vel.set(propName, v);
         } else if (v instanceof FormattedText) {
-            (vel as any)['_' + propName] = new FormattedText()
-            vel.set(propName, new FormattedText())
-            vel.set(propName, v)
+            (vel as any)['_' + propName] = new FormattedText();
+            vel.set(propName, new FormattedText());
+            vel.set(propName, v);
         } else {
-            assertTrueWarn(false, 'unknown data type for ' + v)
+            assertTrueWarn(false, 'unknown data type for ' + v);
         }
     }
 
     /**
      * do we expect the type of this property to be a formattedtext
      */
-    protected static propNameExpectFormattedText(propName:string) {
-        return propName === UI512Settable.fmtTxtVarName ||
+    protected static propNameExpectFormattedText(propName: string) {
+        return (
+            propName === UI512Settable.fmtTxtVarName ||
             propName.startsWith(UI512Settable.fmtTxtVarName + '_')
+        );
     }
 
     /**
      * copy over the prop values of one object onto another object
      */
     static copyPropsOver(getter: UI512Gettable, setter: UI512Settable) {
-        checkThrow(false, 'nyi -- use serialization instead')
+        checkThrow(false, 'nyi -- use serialization instead');
     }
 
     /**
      * use base64 if the string contains nonprintable or nonascii chars
      */
     static serializePlain(v: ElementObserverVal): ElementObserverVal {
-        if (isString(v) && VpcGettableSerialization.containsNonSimpleAscii(v.toString())) {
-            return 'b64``' + VpcGettableSerialization.jsBinaryStringToUtf16Base64(v.toString());
+        if (
+            isString(v) &&
+            VpcGettableSerialization.containsNonSimpleAscii(v.toString())
+        ) {
+            return (
+                'b64``' +
+                VpcGettableSerialization.jsBinaryStringToUtf16Base64(v.toString())
+            );
         } else {
             return v;
         }
@@ -136,7 +173,9 @@ export class VpcGettableSerialization {
     static deserializePlain(v: ElementObserverVal): ElementObserverVal {
         if (isString(v) && v.toString().startsWith('b64``')) {
             let s = v.toString();
-            return VpcGettableSerialization.Base64Utf16ToJsBinaryString(s.substr('b64``'.length));
+            return VpcGettableSerialization.Base64Utf16ToJsBinaryString(
+                s.substr('b64``'.length)
+            );
         } else {
             return v;
         }
@@ -149,7 +188,10 @@ export class VpcGettableSerialization {
         for (let i = 0, len = s.length; i < len; i++) {
             let c = s.charCodeAt(i);
             if (
-                (c < 32 && c !== specialCharNumTab && c !== specialCharNumNewline && c !== specialCharNumFontChange) ||
+                (c < 32 &&
+                    c !== specialCharNumTab &&
+                    c !== specialCharNumNewline &&
+                    c !== specialCharNumFontChange) ||
                 c >= 128
             ) {
                 return true;

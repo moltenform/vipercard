@@ -17,12 +17,19 @@
  */
 export abstract class UndoableActionCreateOrDelVel {
     isUndoableActionCreateOrDelVel = true;
-    constructor(public velId: string, public parentId: string, public type: VpcElType, public insertIndex: number) {}
+    constructor(
+        public velId: string,
+        public parentId: string,
+        public type: VpcElType,
+        public insertIndex: number
+    ) {}
 
     /**
      * from VpcElType to class object
      */
-    protected static getConstructor(type: VpcElType): { new (...args: any[]): VpcElBase } {
+    protected static getConstructor(
+        type: VpcElType
+    ): { new (...args: any[]): VpcElBase } {
         if (type === VpcElType.Btn) {
             return VpcElButton;
         } else if (type === VpcElType.Fld) {
@@ -41,7 +48,11 @@ export abstract class UndoableActionCreateOrDelVel {
     /**
      * get child array
      */
-    static getChildVelsArray(velId: string, vci: VpcStateInterface, type: VpcElType): VpcElBase[] {
+    static getChildVelsArray(
+        velId: string,
+        vci: VpcStateInterface,
+        type: VpcElType
+    ): VpcElBase[] {
         let vel = vci.getModel().getByIdUntyped(velId);
         let velAsCard = vel as VpcElCard;
         let velAsBg = vel as VpcElBg;
@@ -49,14 +60,19 @@ export abstract class UndoableActionCreateOrDelVel {
 
         if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsCard.isVpcElCard) {
             return velAsCard.parts;
-        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsBg.isVpcElBg) {
+        } else if (
+            (type === VpcElType.Btn || type === VpcElType.Fld) &&
+            velAsBg.isVpcElBg
+        ) {
             return velAsBg.parts;
         } else if (type === VpcElType.Card && velAsBg.isVpcElBg) {
             return velAsBg.cards;
         } else if (type === VpcElType.Bg && velAsStack.isVpcElStack) {
             return velAsStack.bgs;
         } else {
-            throw makeVpcInternalErr(`6e|incorrect type/parent. child is a ${type} and parent is a `);
+            throw makeVpcInternalErr(
+                `6e|incorrect type/parent. child is a ${type} and parent is a `
+            );
         }
     }
 
@@ -64,7 +80,11 @@ export abstract class UndoableActionCreateOrDelVel {
      * find index in array
      */
     protected determineIndexInAr(vel: VpcElBase, vci: VpcStateInterface) {
-        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, vel.getType());
+        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(
+            this.parentId,
+            vci,
+            vel.getType()
+        );
         for (let i = 0; i < ar.length; i++) {
             if (ar[i].id === vel.id) {
                 return i;
@@ -85,14 +105,21 @@ export abstract class UndoableActionCreateOrDelVel {
 
         let ctr = UndoableActionCreateOrDelVel.getConstructor(this.type);
         let el = vci.rawCreate(this.velId, this.parentId, ctr);
-        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, el.getType());
+        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(
+            this.parentId,
+            vci,
+            el.getType()
+        );
         if (this.insertIndex === -1) {
             /* note, save this for undo posterity */
             this.insertIndex = ar.length;
         }
 
         /* check bounds, note that it is ok to insert one past the end. */
-        assertTrueWarn(this.insertIndex >= 0 && this.insertIndex <= ar.length, '6c|incorrect insertion point');
+        assertTrueWarn(
+            this.insertIndex >= 0 && this.insertIndex <= ar.length,
+            '6c|incorrect insertion point'
+        );
         checkThrow(
             ar.length < CodeLimits.MaxVelChildren,
             `8)|exceeded maximum number of child elements (${CodeLimits.MaxVelChildren})`
@@ -111,9 +138,16 @@ export abstract class UndoableActionCreateOrDelVel {
 
         vci.causeFullRedraw();
         let el = vci.getModel().getByIdUntyped(this.velId);
-        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(el.parentId, vci, el.getType());
+        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(
+            el.parentId,
+            vci,
+            el.getType()
+        );
         assertEqWarn(el.id, ar[this.insertIndex].id, '6b|');
-        assertTrueWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
+        assertTrueWarn(
+            this.insertIndex >= 0 && this.insertIndex < ar.length,
+            '6a|incorrect insertion point'
+        );
         ar.splice(this.insertIndex, 1);
         vci.getModel().removeIdFromMapOfElements(el.id);
         vci.getCodeExec().removeScript(this.velId);
@@ -137,7 +171,11 @@ export abstract class UndoableActionCreateOrDelVel {
         if (!model.stack) {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
-                model.stack = vci.rawCreate(VpcElStack.initProductOptsId, model.productOpts.id, VpcElStack);
+                model.stack = vci.rawCreate(
+                    VpcElStack.initProductOptsId,
+                    model.productOpts.id,
+                    VpcElStack
+                );
                 if (createFirstCard) {
                     let firstBg = vci.createVel(model.stack.id, VpcElType.Bg, -1);
                     let firstCard = vci.createVel(firstBg.id, VpcElType.Card, -1);

@@ -351,7 +351,7 @@ export class ChunkResolution {
     ) {
         let self = new ChunkResolution();
 
-        /* in the public interface, change behavior to be 
+        /* in the public interface, change behavior to be
         closer(still not 100% match) to emulator */
         if (
             isPublicCall &&

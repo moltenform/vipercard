@@ -133,8 +133,10 @@ export class VpcElField extends VpcElSizable {
             }
         ];
 
-        /* interestingly, when calling these without providing a chunk, they always act on the default font */
-        /* confirmed in emulator that it won't even say 'mixed', and it will return default font even if no chars have it. */
+        /* interestingly, when calling these without providing a chunk,
+        they always act on the default font.
+        confirmed in emulator that it won't even say 'mixed',
+        and it will return default font even if no chars have it. */
         getters['textstyle'] = getters['defaulttextstyle'];
         getters['textfont'] = getters['defaulttextfont'];
         getters['textsize'] = getters['defaulttextsize'];
@@ -380,7 +382,8 @@ export class VpcElField extends VpcElSizable {
     }
 
     /**
-     * when you say set the textstyle of char 999 to 1000... how do we respond when outside content length
+     * when you say set the textstyle of char 999 to 1000...
+     * how do we respond when outside content length
      */
     protected resolveChunkBounds(cardId: string, chunk: RequestedChunk, itemDel: string) {
         let newChunk = chunk.getClone();

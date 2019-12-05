@@ -115,7 +115,7 @@ export class WritableContainerField extends ReadableContainerField
     splice(insertion: number, lenToDelete: number, newstring: string) {
         let txt = this.fld.getCardFmTxt(this.parentCardId);
         if (insertion === 0 && lenToDelete >= txt.len()) {
-            /* follow emulator, there is different behavior 
+            /* follow emulator, there is different behavior
             (lose formatting) when replacing all text */
             this.fld.setProp('alltext', VpcValS(newstring), this.parentCardId);
         } else {

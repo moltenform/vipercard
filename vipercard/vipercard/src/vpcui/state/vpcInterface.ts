@@ -78,12 +78,21 @@ export interface VpcStateInterface {
     /**
      * create a new vel on its own
      */
-    rawCreate<T extends VpcElBase>(velId: string, parentId: string, ctr: { new (...args: any[]): T }): T;
+    rawCreate<T extends VpcElBase>(
+        velId: string,
+        parentId: string,
+        ctr: { new (...args: any[]): T }
+    ): T;
 
     /**
      * create a new vel and add it to the model
      */
-    createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase;
+    createVel(
+        parentId: string,
+        type: VpcElType,
+        insertIndex: number,
+        specifyId?: string
+    ): VpcElBase;
 
     /**
      * remove vel from the model
@@ -108,7 +117,7 @@ export interface VpcStateInterface {
     /**
      * are we 'back in time' looking at a previous state?
      */
-    isCurrentlyUndoing():boolean
+    isCurrentlyUndoing(): boolean;
 
     /**
      * schedule event to be sent
@@ -154,12 +163,12 @@ export interface VpcStateInterface {
     /**
      * asynchronously go to a card, if browse tool calls closecard + opencard events
      */
-    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific:O<string>):void
+    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>): void;
 
     /**
      * go to a card without sending any closecard or opencard events
      */
-    setCurCardNoOpenCardEvt(id: string):void
+    setCurCardNoOpenCardEvt(id: string): void;
 
     /**
      * get the current tool
@@ -226,7 +235,7 @@ export interface VpcStateInterface {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    writeToReplMessageBox(s:string):void
+    writeToReplMessageBox(s: string): void;
 
     /**
      * releases memory by nulling out everything owned by the class
@@ -244,9 +253,10 @@ export abstract class VpcUILayer {
 }
 
 /**
- * it seems more intuitive if all modifications cause by a script are wrapped together into
- * one undoable block, even though the script is run in separate timeslices.
- * without this coalescing of undo events, user would have to hit Undo multiple times for no apparent reason
+ * it seems more intuitive if all modifications caused by a script are
+ * wrapped together into one undoable block, even though the script
+ * is run in separate timeslices. without this coalescing of undo
+ * events, user would have to hit Undo multiple times for no apparent reason
  */
 export enum TypeOfUndoAction {
     None,

@@ -5,7 +5,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { vpcversion } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson, checkThrowEq } from './../../ui512/utils/util512';
+/* auto */ import { AnyJson, checkThrowEq, longstr } from './../../ui512/utils/util512';
 
 /**
  * from a stack to a plain JSON object, and vice-versa
@@ -66,11 +66,17 @@ export class VpcStateSerialize {
                 my version is ${this.latestMajor}.${this.latestMinor}`
             );
             console.log(
-                `opening a document made by buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`
+                deleteThis.longstr(
+                     deleteThis.longstr(`opening a document made by buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`, ''),
+                    ''
+                )
             );
 
             building.getModel().uuid = incoming.uuid;
-            checkThrow(incoming.elements && incoming.elements.length > 0, 'Ky|elements missing or empty');
+            checkThrow(
+                incoming.elements && incoming.elements.length > 0,
+                'Ky|elements missing or empty'
+            );
             for (let i = 0; i < incoming.elements.length; i++) {
                 this.deserializeVel(building, incoming.elements[i]);
             }
@@ -93,7 +99,12 @@ export class VpcStateSerialize {
             incoming.type === VpcElType.Btn ||
             incoming.type === VpcElType.Fld
         ) {
-            let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);
+            let created = building.createVel(
+                incoming.parent_id,
+                incoming.type,
+                -1,
+                incoming.id
+            );
             VpcGettableSerialization.deserializeSettable(created, incoming.attrs);
         } else {
             assertTrueWarn(false, 'Kx|unsupported type', incoming.type);
@@ -103,7 +114,11 @@ export class VpcStateSerialize {
     /**
      * serialize to a string and compress
      */
-    serializeVelCompressed(building: VpcStateInterface, vel: VpcElBase, insertIndex: number): string {
+    serializeVelCompressed(
+        building: VpcStateInterface,
+        vel: VpcElBase,
+        insertIndex: number
+    ): string {
         let s = '';
         building.doWithoutAbilityToUndoExpectingNoChanges(() => {
             let obj = this.serializeVel(vel);
@@ -131,7 +146,12 @@ export class VpcStateSerialize {
                 incoming.type
             );
 
-            created = building.createVel(incoming.parent_id, incoming.type, incoming.insertIndex, incoming.id);
+            created = building.createVel(
+                incoming.parent_id,
+                incoming.type,
+                incoming.insertIndex,
+                incoming.id
+            );
             VpcGettableSerialization.deserializeSettable(created, incoming.attrs);
         });
 
