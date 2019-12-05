@@ -162,16 +162,16 @@ export class VpcEvalHelpers {
             case '<=':
                 return VpcValBool(av <= bv);
             case 'is':
-            /* fall-through */
+            // falls through
             case '==':
-            /* fall-through */
+            // falls through
             case '=':
                 /* string equality, no leniency for whitespace */
                 return VpcValBool(av === bv);
             case 'is not':
-            /* fall-through */
+            // falls through
             case '<>':
-            /* fall-through */
+            // falls through
             case '!=':
                 return VpcValBool(av !== bv);
             default:
@@ -195,16 +195,16 @@ export class VpcEvalHelpers {
             case '<=':
                 return VpcValBool(av <= bv);
             case 'is':
-            /* fall-through */
+            // falls through
             case '==':
-            /* fall-through */
+            // falls through
             case '=':
                 /* confirmed in emulator -- very close numbers compare equal */
                 return VpcValBool(Math.abs(av - bv) < VpcVal.epsilon);
             case 'is not':
-            /* fall-through */
+            // falls through
             case '<>':
-            /* fall-through */
+            // falls through
             case '!=':
                 return VpcValBool(Math.abs(av - bv) >= VpcVal.epsilon);
             default:
@@ -255,7 +255,7 @@ export class VpcEvalHelpers {
             /* following what the emulator seems to do. */
             /* first, a trailing comma is removed if present. */
             let s = vAr[0].readAsString();
-            if (s[s.length - 1] === sep) {
+            if (s.endsWith(sep)) {
                 s = s.substr(0, s.length - 1);
             }
 

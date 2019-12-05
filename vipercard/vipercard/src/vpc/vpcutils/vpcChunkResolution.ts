@@ -25,7 +25,7 @@ export class ChunkResolution {
      */
     protected getPositionsTable(s: string, re: RegExp, isWords: boolean): number[] {
         let positions: number[] = [];
-        if (!isWords || (s[0] !== ' ' && s[0] !== '\n')) {
+        if (!isWords || (!s.startsWith(' ') && !s.startsWith('\n'))) {
             positions.push(0);
         }
 
@@ -173,7 +173,8 @@ export class ChunkResolution {
 
         /* convert from one-based to zero-based */
         let start = first - 1;
-        let end = (last -= 1);
+        last -= 1;
+        let end = last;
 
         /* from inclusive to semiinclusive */
         end++;
@@ -219,7 +220,8 @@ export class ChunkResolution {
 
         /* convert from one-based to zero-based */
         let start = first - 1;
-        let end = (last -= 1);
+        last -= 1;
+        let end = last;
 
         /* from inclusive to semiinclusive */
         end++;
@@ -315,7 +317,7 @@ export class ChunkResolution {
         } else if (type === VpcChunkType.Items) {
             return self.getPositionsTable(sInput, self.regexpForDelim(itemDel), false).length;
         } else if (type === VpcChunkType.Lines) {
-            return self.getPositionsTable(sInput, new RegExp('\n', 'g'), false).length;
+            return self.getPositionsTable(sInput, /\n/g, false).length;
         } else if (type === VpcChunkType.Words) {
             return self.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
         } else {

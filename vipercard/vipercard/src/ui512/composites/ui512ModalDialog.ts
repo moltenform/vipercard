@@ -58,7 +58,7 @@ export class UI512CompModalDialog extends UI512CompBase {
         choice2 = '',
         choice3 = ''
     ) {
-        fnOnResult = fnOnResult || (() => {});
+        fnOnResult = fnOnResult ?? (() => {});
         this.dlgType = UI512CompStdDialogType.Answer;
         this.btnLabels = [choice1, choice2, choice3];
         this.labelText = prompt;
@@ -252,6 +252,8 @@ export class UI512CompModalDialog extends UI512CompBase {
                 return true;
             }
         }
+
+        return false
     }
 
     /**

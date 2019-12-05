@@ -1,6 +1,6 @@
 
 /* auto */ import { CodeLimits } from './vpcUtils';
-/* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 
 /**
  * for the interpreter, when interpreting a script,
@@ -129,7 +129,7 @@ export class VpcVal extends VpcIntermedValBase {
     isItNumericImpl(output: [boolean, any]) {
         output[0] = false;
         output[1] = undefined;
-        if (!!this.v && !!this.v.match(/^\s*-?[0-9]+(\.[0-9]*)?\s*$/)) {
+        if (bool(this.v) && bool(this.v.match(/^\s*-?[0-9]+(\.[0-9]*)?\s*$/))) {
             let ret = parseFloat(this.v);
             if (isFinite(ret) && ret < 1e18 && ret > -1e18) {
                 output[0] = true;
