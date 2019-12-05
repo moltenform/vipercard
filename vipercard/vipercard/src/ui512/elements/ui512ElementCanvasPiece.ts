@@ -16,16 +16,15 @@ export class UI512ElCanvasPiece extends UI512Element {
     protected _incrementUntilLoaded = 0;
 
     /**
-     * set which canvas the image will be drawn from.
-     * we need to bump the other property, to signal to our Observer that something has changed.
+     * signal to our Observer that something has changed.
      */
     protected signalChange() {
         this.set('incrementUntilLoaded', this.getN('incrementUntilLoaded') + 1);
     }
 
     /**
-     * set which canvas the image will be drawn from.
-     * we need to bump the other property, to signal to our Observer that something has changed.
+     * set which canvas the image will be drawn from. we need to bump
+     * the other property, to signal to our Observer that something has changed.
      */
     setCanvas(cv: CanvasWrapper) {
         this.signalChange();
@@ -33,8 +32,8 @@ export class UI512ElCanvasPiece extends UI512Element {
     }
 
     /**
-     * get the canvas in order to draw changes on the canvas.
-     * we need to bump the other property, to signal to our Observer that something has changed.
+     * get the canvas in order to draw changes on the canvas. we need to bump
+     * the other property, to signal to our Observer that something has changed.
      */
     getCanvasForWrite() {
         this.signalChange();
@@ -63,8 +62,8 @@ export class UI512ElCanvasPiece extends UI512Element {
     }
 
     /**
-     * we can cache a painter as a very minor perf improvement.
-     * we need to bump the other property, to signal to our Observer that something has changed.
+     * we can cache a painter as a very minor perf improvement. we need to bump
+     * the other property, to signal to our Observer that something has changed.
      */
     setCachedPainter(pnter: UI512Painter) {
         this.signalChange();
@@ -73,8 +72,8 @@ export class UI512ElCanvasPiece extends UI512Element {
 
     /**
      * get the cached painter.
-     * assumes that we'll use it to draw something soon, so
-     * we need to bump the other property, to signal to our Observer that something has changed.
+     * assumes that we'll use it to draw something soon, so we need to bump
+     * the other property, to signal to our Observer that something has changed.
      */
     getCachedPainterForWrite() {
         this.signalChange();

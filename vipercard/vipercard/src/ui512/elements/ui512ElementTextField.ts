@@ -42,10 +42,12 @@ export class UI512ElTextField extends UI512Element {
     protected _selcaret = 0;
 
     /* end of selection. 0-based. ok if past the length of content.
-    can be before selcaret if, say, you drag from right to left to select text, or hit shift-left. */
+    can be before selcaret if, say, you drag from right to left to
+    select text, or hit shift-left. */
     protected _selend = 0;
 
-    /* used for choice box. it's easiest to call makeChoiceBox instead of setting this directly */
+    /* used for choice box. it's easiest to call makeChoiceBox instead
+    of setting this directly */
     protected _selectbylines = false;
 
     /* a scrollbar is not part of the field, it is created separately.  */
@@ -107,9 +109,10 @@ export class UI512ElTextField extends UI512Element {
             let s = choices.map(item => ' ' + item).join('\n');
             let ftxt = FormattedText.newFromUnformatted(s);
 
-            /* little hack: add an ending newline so that selecting the last line looks right
-            logic elsewhere prevents this last ending line from being actually chosen/selected.
-            we'll add the ending newline in a small font so it won't affect the scrollbar much. */
+            /* little hack: add an ending newline so that selecting the last
+            line looks right. logic elsewhere prevents this last ending line
+            from being actually chosen/selected. we'll add the ending newline
+            in a small font so it won't affect the scrollbar much. */
             ftxt.push(specialCharNumNewline, UI512DrawText.smallestFont);
             el.setFmTxt(ftxt);
         } else {

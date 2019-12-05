@@ -2,7 +2,7 @@
 /* auto */ import { MenuConsts, ScreenConsts, ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
-/* auto */ import { O, assertTrue, assertTrueWarn } from './../utils/util512Assert';
+/* auto */ import { O, assertTrue, assertTrueWarn, bool } from './../utils/util512Assert';
 /* auto */ import { Util512, cast, slength } from './../utils/util512';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './ui512ElementTextField';
 /* auto */ import { UI512MenuItem, UI512MenuRoot } from './ui512ElementMenu';
@@ -230,7 +230,8 @@ export class UI512ViewDraw {
                 let boxTextOnlyWidth = boxIconAndTextWidth;
                 let boxTextOnlyHeight = Math.max(1, rect[3] - (boxTextOnlyY - rect[1]));
 
-                /* Follow what HC does and set the font to 9pt Geneva. in fact, in HC no other font is supported. */
+                /* Follow what HC does and set the font to 9pt Geneva.
+                in fact, in HC no other font is supported. */
                 let style = styleEnabled ? 'biuosdce' : 'biuos+dce';
                 let labelSmall = UI512DrawText.setFont(s, `geneva_9_${style}`);
 
@@ -460,7 +461,8 @@ export class UI512ViewDraw {
                     2
             );
 
-            /* the white rectangle should cover the horizontal lines but not the outer border */
+            /* the white rectangle should cover the horizontal lines
+            but not the outer border */
             let subRect = this.getSubRect(b, Math.max(0, shrinkx), 1);
             if (subRect) {
                 b.canvas.fillRect(
@@ -542,7 +544,8 @@ export class UI512ViewDraw {
             let resultingwidth = Math.min(el.w, srcRect[2]);
             let resultingheight = 1;
 
-            /* adjust by 1px so the pattern of dots and dashes looks correct against the black border */
+            /* adjust by 1px so the pattern of dots and dashes looks correct
+            against the black border */
             const shiftleft = 1;
             iconInfo.adjustWidth = shiftleft + resultingwidth - srcRect[2];
             iconInfo.adjustHeight = resultingheight - srcRect[3];
@@ -748,7 +751,7 @@ export class UI512ViewDraw {
 
         /* use the 'borders' argument to also store canvas and bounds */
         let b = new UI512ViewDrawBorders(canvas, el.x, el.y, el.w, el.h, complete);
-        hasFocus = hasFocus || this.allowMultipleFocus;
+        hasFocus = bool(hasFocus) || bool(this.allowMultipleFocus);
         let methodName = 'go' + el.typename;
         Util512.callAsMethodOnClass(
             'UI512ViewDraw',

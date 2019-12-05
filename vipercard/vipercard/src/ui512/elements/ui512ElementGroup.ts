@@ -10,7 +10,8 @@
  * a group of elements.
  * useful for say, a dialog box, because you can hide the entire group at once,
  * or close the entire group at once.
- * also, if mouseInteractionBounds is used, better perf to go from mouse coords to element.
+ * also, if mouseInteractionBounds is used, better perf
+ * when going from mouse coords to element.
  * this class has model state only: rendering logic should go in view, not here.
  */
 export class UI512ElGroup {
@@ -51,7 +52,8 @@ export class UI512ElGroup {
     /**
      * updateBoundsBasedOnChildren is a performance optimization:
      * to go from mouse coords to which element clicked, we loop through all elements
-     * but since a group is likely confined to one area, we can check and maybe skip everything in the group
+     * but since a group is likely confined to one area, we can check and maybe skip
+     * everything in the group
      */
     updateBoundsBasedOnChildren() {
         let setAtLeastOne = false;
@@ -148,8 +150,10 @@ export class UI512ElGroup {
 
         if (elToAddAfter) {
             /* if we are adding "elemC##test" and elToAddAfter=="elemC", and
-            already existing are "elemA", "elemB", "elemC", "elemC##1", "elemC##2", "elemD"
-            we want the order to be "elemA", "elemB", "elemC", "elemC##1", "elemC##2", "elemC##test", "elemD"
+            already existing are
+                "elemA", "elemB", "elemC", "elemC##1", "elemC##2", "elemD"
+            we want the order to be
+                "elemA", "elemB", "elemC", "elemC##1", "elemC##2", "elemC##test", "elemD"
             validated in testAddElementAfter */
             let index = this.elements.getIndex(elToAddAfter);
             let first = this.elements.atIndex(index);

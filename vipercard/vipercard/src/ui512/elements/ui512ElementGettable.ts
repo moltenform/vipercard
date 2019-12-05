@@ -132,7 +132,8 @@ export class ElementObserverToTwo implements ElementObserver {
     }
 }
 
-/* when properties are set on an Element, an Observer can be attached to receive a callback for all changes */
+/* when properties are set on an Element, an Observer can be attached
+to receive a callback for all changes */
 export interface ElementObserver {
     changeSeen(
         context: ChangeContext,
@@ -143,7 +144,8 @@ export interface ElementObserver {
     ): void;
 }
 
-/* all Elements must have an observer. so use this class if the observer truly isn't needed */
+/* all Elements must have an observer,
+so use this class if the observer truly isn't needed */
 export class ElementObserverNoOp implements ElementObserver {
     changeSeen(
         context: ChangeContext,
@@ -154,7 +156,7 @@ export class ElementObserverNoOp implements ElementObserver {
     ) {}
 }
 
-/* Elements have this observer by default, to remind you to attach to a better Observer. */
+/* Default to this, to remind you to attach to a better Observer. */
 export class ElementObserverDefault implements ElementObserver {
     changeSeen(
         context: ChangeContext,
