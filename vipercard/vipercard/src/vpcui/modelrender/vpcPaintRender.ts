@@ -352,10 +352,10 @@ export class VpcPaintRender extends VpcUILayer {
         let queuesPerCard: UI512PaintDispatch[][] = [];
         for (let item of queue) {
             if (item.cardId === currentCard) {
-                queuesPerCard[queuesPerCard.length - 1].push(item);
+                last(queuesPerCard).push(item);
             } else {
                 queuesPerCard.push([]);
-                queuesPerCard[queuesPerCard.length - 1].push(item);
+                last(queuesPerCard).push(item);
                 currentCard = item.cardId;
             }
         }

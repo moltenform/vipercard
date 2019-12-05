@@ -23,7 +23,7 @@ export class UI512Lines {
         /* include the '\n' characters at the end of the line like we do when rendering */
         /* if we strip the \n character we would lose the formatting of the \n character */
         for (let i = 0; i < txt.len(); i++) {
-            this.lns[this.lns.length - 1].push(txt.charAt(i), txt.fontAt(i));
+            last(this.lns).push(txt.charAt(i), txt.fontAt(i));
             if (txt.charAt(i) === specialCharNumNewline) {
                 this.lns.push(new FormattedText());
             }

@@ -669,7 +669,7 @@ export class VpcPresenterEvents {
         ) {
             let affected = d.getAffectedElements();
             if (affected.length) {
-                target = affected[affected.length - 1].id;
+                target = last(affected).id;
             }
         } else if (d instanceof KeyEventDetails) {
             let focus = pr.vci.getCurrentFocus();

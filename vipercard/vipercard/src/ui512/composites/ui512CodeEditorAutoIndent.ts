@@ -85,7 +85,7 @@ export class UI512AutoIndent {
      * does this line end a block, for this specific prefix?
      */
     getLevelChangeIsEndOfBlock(s: string, stack: AutoIndentMatch[]) {
-        let desiredMatch = stack[stack.length - 1];
+        let desiredMatch = last(stack);
         let matched = s.match(desiredMatch.desiredEndPattern);
         if (matched) {
             stack.pop();
@@ -216,7 +216,7 @@ export class UI512AutoIndent {
             /* make a record of the indentation state of the 'current' line where the caret it */
             if (i === currentline - 1 && !isContinuation && isBlockStart) {
                 lastUnclosedDelta = 1;
-                lastUnclosedMatch = stack[stack.length - 1];
+                lastUnclosedMatch = last(stack);
             }
 
             /* decrease the indentation if we ended a block */

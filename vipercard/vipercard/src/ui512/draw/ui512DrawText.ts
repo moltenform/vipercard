@@ -2,7 +2,7 @@
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { UI512IsDrawTextInterface } from './../utils/util512Higher';
 /* auto */ import { O, assertTrue } from './../utils/util512Assert';
-/* auto */ import { Util512 } from './../utils/util512';
+/* auto */ import { Util512, last } from './../utils/util512';
 /* auto */ import { FormattedText } from './ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { CharRectType, DrawCharResult, TextRendererFont, largeArea, specialCharFontChange, specialCharNumNewline, specialCharNumZeroPixelChar, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
@@ -102,14 +102,14 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     ) {
         if (
             curX + measurements[charNum].newLogicalX >= boxW &&
-            ret[ret.length - 1].text.len() > 0
+            last(ret).text.len() > 0
         ) {
             ret.push(new LineTextToRender());
             retStarts.push(charNum);
             curX = 0;
         }
 
-        ret[ret.length - 1].text.push(s.charAt(charNum), s.fontAt(charNum));
+        last(ret).text.push(s.charAt(charNum), s.fontAt(charNum));
         curX += measurements[charNum].newLogicalX;
         return curX;
     }
@@ -171,14 +171,14 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
                 }
             }
 
-            words[words.length - 1].push(c, font);
+            last(words).push(c, font);
         }
 
         /* 3) placeholder for the end of the string,
         for convenience drawing the selection when end of string is selected */
         let fontLast = s.len() === 0 ? args.defaultFont : s.fontAt(s.len() - 1);
         words.push(new FormattedText());
-        words[words.length - 1].push(specialCharNumZeroPixelChar, fontLast);
+        last(words).push(specialCharNumZeroPixelChar, fontLast);
         wordStarts.push(s.len());
 
         /* 4) place words into LineTextToRender */
@@ -213,23 +213,23 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             let nextX = curX + wordMeasured;
             if (nextX < boxW) {
                 /* it fits on the line */
-                ret[ret.length - 1].text.append(word);
+                last(ret).text.append(word);
                 curX = nextX;
             } else if (wordMeasured < boxW) {
                 /* it would fit on *a* line, just not this line */
-                if (ret[ret.length - 1].text.len()) {
+                if (last(ret).text.len()) {
                     ret.push(new LineTextToRender());
                     retStarts.push(wordStarts[nWord]);
                     curX = 0;
                 }
 
                 nextX = curX + wordMeasured;
-                ret[ret.length - 1].text.append(word);
+                last(ret).text.append(word);
                 curX = nextX;
             } else {
                 /* it won't fit on any line at all... */
                 /* first go down to the next line if we're not at the start of a line */
-                if (ret[ret.length - 1].text.len()) {
+                if (last(ret).text.len()) {
                     ret.push(new LineTextToRender());
                     retStarts.push(wordStarts[nWord]);
                     curX = 0;

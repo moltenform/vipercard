@@ -37,8 +37,8 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
 
             UI512PaintDispatch.go(args, painter);
             if (
-                prevTX !== this.st.recordXpts[this.st.recordXpts.length - 1] ||
-                prevTY !== this.st.recordYpts[this.st.recordYpts.length - 1]
+                prevTX !== last(this.st.recordXpts) ||
+                prevTY !== last(this.st.recordYpts)
             ) {
                 this.st.recordXpts.push(prevTX);
                 this.st.recordYpts.push(prevTY);

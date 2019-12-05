@@ -102,7 +102,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
         return [undefined, undefined];
         //~ let frStack = this.vcstate.runtime.codeExec.workQueue[0];
         //~ if (frStack) {
-        //~ return [frStack, frStack.stack[frStack.stack.length - 1]];
+        //~ return [frStack, last(frStack.stack)];
         //~ } else {
         //~ return [undefined, undefined];
         //~ }

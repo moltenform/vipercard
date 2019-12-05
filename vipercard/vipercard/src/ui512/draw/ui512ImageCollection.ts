@@ -22,7 +22,7 @@ export class UI512ImageCollection {
             let id = Util512.padStart(i, 2, '0');
             let name = 'lng' + i.toString();
             this.children.push(new UI512ImageCollectionImage(id, name));
-            this.children[this.children.length - 1].parent = this;
+            last(this.children).parent = this;
         }
     }
 }

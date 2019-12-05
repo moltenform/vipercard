@@ -93,8 +93,7 @@ export class VpcElStack extends VpcElBase {
         let lin = this.getS('stacklineage');
         if (slength(lin)) {
             let linParts = lin.split('||');
-            let last = linParts[linParts.length - 1];
-            return VpcElStackLineageEntry.fromSerialized(last);
+            return VpcElStackLineageEntry.fromSerialized(last(linParts));
         } else {
             throw makeVpcInternalErr('K5|stacklineage should never be empty');
         }
