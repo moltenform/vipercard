@@ -1,17 +1,17 @@
 
-/* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { checkThrowEq, isString } from '../../ui512/utils/utils512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ElementObserver, ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
-/* auto */ import { TypeOfUndoAction, VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { UndoableActionCreateOrDelVel } from '../../vpcui/state/vpcCreateOrDelVel.js';
-/* auto */ import { VpcStateSerialize } from '../../vpcui/state/vpcStateSerialize.js';
+/* auto */ import { VpcStateSerialize } from './vpcStateSerialize';
+/* auto */ import { TypeOfUndoAction, VpcStateInterface } from './vpcInterface';
+/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { UndoableActionCreateOrDelVel } from './vpcCreateOrDelVel';
+/* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { checkThrowEq, isString } from './../../ui512/utils/util512';
+/* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { ElementObserver, ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 
 /**
  * we put undoable options into _ProductOpts_, and non-undoable options into _VpcRuntimeOpts_

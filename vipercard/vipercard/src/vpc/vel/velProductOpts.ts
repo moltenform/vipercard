@@ -1,19 +1,19 @@
 
-/* auto */ import { vpcversion } from '../../config.js';
-/* auto */ import { assertTrue, assertTrueWarn, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utils512.js';
-/* auto */ import { UI512CursorAccess, UI512Cursors } from '../../ui512/utils/utilsCursors.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { UI512Patterns } from '../../ui512/draw/ui512DrawPatterns.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { VpcElType, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElStack } from './velStack';
+/* auto */ import { VpcElField } from './velField';
+/* auto */ import { VpcElCard } from './velCard';
+/* auto */ import { VpcElButton } from './velButton';
+/* auto */ import { VpcElBg } from './velBg';
+/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
+/* auto */ import { assertTrue, assertTrueWarn, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
+/* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { UI512Patterns } from './../../ui512/draw/ui512DrawPatterns';
 
 /**
  * product options class

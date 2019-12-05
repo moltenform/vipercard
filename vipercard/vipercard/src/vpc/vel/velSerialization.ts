@@ -1,9 +1,9 @@
 
-/* auto */ import { assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, anyJson, isString } from '../../ui512/utils/utils512.js';
-/* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
+/* auto */ import { assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, isString } from './../../ui512/utils/util512';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/draw/ui512DrawTextClasses';
 
 /**
  * serialization of VPC objects, preparing them for JSON.serialize

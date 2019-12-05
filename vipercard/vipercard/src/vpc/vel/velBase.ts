@@ -1,12 +1,12 @@
 
-/* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { checkThrowEq, isString, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { ChangeContext } from '../../ui512/draw/ui512Interfaces.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ElementObserverVal, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
+/* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { checkThrowEq, isString, slength } from './../../ui512/utils/util512';
+/* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { ElementObserverVal, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
 /**
  * base class for a vel (vpc element)

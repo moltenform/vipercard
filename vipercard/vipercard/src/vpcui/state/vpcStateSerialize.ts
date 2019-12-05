@@ -1,11 +1,10 @@
 
-/* auto */ import { vpcversion } from '../../config.js';
-/* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { anyJson, checkThrowEq } from '../../ui512/utils/utils512.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcGettableSerialization } from '../../vpc/vel/velSerialization.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcStateInterface } from './vpcInterface';
+/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { checkThrowEq } from './../../ui512/utils/util512';
 
 /**
  * from a stack to a plain JSON object, and vice-versa

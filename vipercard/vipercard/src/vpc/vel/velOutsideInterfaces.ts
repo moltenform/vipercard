@@ -1,17 +1,17 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ValHolder } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcVal } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
+/* auto */ import { VpcVal } from './../vpcutils/vpcVal';
+/* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from './../vpcutils/vpcUtils';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { VpcElField } from './velField';
+/* auto */ import { VpcElCard } from './velCard';
+/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { ValHolder } from './../../ui512/utils/util512';
+/* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /**
  * OutsideWorldRead:

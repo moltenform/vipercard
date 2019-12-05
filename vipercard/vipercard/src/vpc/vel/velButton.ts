@@ -1,12 +1,12 @@
 
-/* auto */ import { checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utils512.js';
-/* auto */ import { TextFontSpec } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { UI512BtnStyle } from '../../ui512/elements/ui512ElementButton.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { SubstringStyleComplex } from '../../vpc/vpcutils/vpcStyleComplex.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
+/* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElBase, VpcElSizable } from './velBase';
+/* auto */ import { checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
+/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
 
 /**
  * a vipercard "button"

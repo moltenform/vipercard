@@ -1,16 +1,17 @@
 
-/* auto */ import { O, cProductName, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq } from '../../ui512/utils/utils512.js';
-/* auto */ import { PropAdjective, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
-/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
-/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
+/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { PropAdjective, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElStack } from './velStack';
+/* auto */ import { VpcElProductOpts } from './velProductOpts';
+/* auto */ import { VpcModelTop } from './velModelTop';
+/* auto */ import { VpcElField } from './velField';
+/* auto */ import { VpcElCard } from './velCard';
+/* auto */ import { VpcElButton } from './velButton';
+/* auto */ import { VpcElBg } from './velBg';
+/* auto */ import { VpcElBase, VpcElSizable } from './velBase';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
+/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, checkThrowEq } from './../../ui512/utils/util512';
 
 /**
  * when a script asks for the name of an object

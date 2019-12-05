@@ -1,18 +1,17 @@
 
-/* auto */ import { assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512 } from '../../ui512/utils/utils512.js';
-/* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
-/* auto */ import { VpcExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
-/* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from '../../vpcui/state/vpcUndo.js';
-/* auto */ import { VpcOutsideImpl } from '../../vpcui/state/vpcOutsideImpl.js';
+/* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from './vpcUndo';
+/* auto */ import { VpcOutsideImpl } from './vpcOutsideImpl';
+/* auto */ import { VpcStateInterface } from './vpcInterface';
+/* auto */ import { VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
+/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
+/* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
 /**
  * holds all vipercard state

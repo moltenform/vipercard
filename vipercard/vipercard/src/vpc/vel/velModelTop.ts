@@ -1,15 +1,15 @@
 
-/* auto */ import { O, checkThrow, makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { MapKeyToObject, cast } from '../../ui512/utils/utils512.js';
-/* auto */ import { ElementObserverDefault } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { OrdinalOrPosition, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
-/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
+/* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElStack } from './velStack';
+/* auto */ import { VpcElProductOpts } from './velProductOpts';
+/* auto */ import { VpcElField } from './velField';
+/* auto */ import { VpcElCard } from './velCard';
+/* auto */ import { VpcElButton } from './velButton';
+/* auto */ import { VpcElBg } from './velBg';
+/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { O, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { MapKeyToObject, cast } from './../../ui512/utils/util512';
+/* auto */ import { ElementObserverDefault } from './../../ui512/elements/ui512ElementGettable';
 
 /**
  * owner of the stack model and productopts model

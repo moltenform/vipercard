@@ -1,16 +1,16 @@
 
-/* auto */ import { assertTrueWarn, checkThrow, makeVpcInternalErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEqWarn } from '../../ui512/utils/utils512.js';
-/* auto */ import { VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CodeLimits } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
-/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { CodeLimits } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcStateInterface } from './vpcInterface';
+/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
+/* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
+/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertEqWarn } from './../../ui512/utils/util512';
 
 /**
  * create or delete a vel

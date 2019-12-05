@@ -1,15 +1,15 @@
 
-/* auto */ import { makeVpcScriptErr } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum } from '../../ui512/utils/utils512.js';
-/* auto */ import { TextFontSpec, specialCharNumNewline } from '../../ui512/draw/ui512DrawTextClasses.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { UI512FldStyle } from '../../ui512/elements/ui512ElementTextField.js';
-/* auto */ import { VpcChunkType, VpcElType } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcVal, VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { SubstringStyleComplex } from '../../vpc/vpcutils/vpcStyleComplex.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
+/* auto */ import { VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { VpcChunkType, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { VpcElBase, VpcElSizable } from './velBase';
+/* auto */ import { makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, last } from './../../ui512/utils/util512';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
+/* auto */ import { TextFontSpec, specialCharNumNewline } from './../../ui512/draw/ui512DrawTextClasses';
 
 /**
  * vpc text field class.

@@ -1,28 +1,25 @@
 
-/* auto */ import { O, assertTrue, cProductName, checkThrow, makeVpcScriptErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, assertEq, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcVal, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { ChunkResolution, RequestedChunk } from '../../vpc/vpcutils/vpcChunkResolution.js';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase, VpcElSizable } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
-/* auto */ import { VpcElStack } from '../../vpc/vel/velStack.js';
-/* auto */ import { VpcElProductOpts } from '../../vpc/vel/velProductOpts.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
-/* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from '../../vpc/vel/velResolveContainer.js';
-/* auto */ import { VelResolveId, VelResolveName, VelResolveReference } from '../../vpc/vel/velResolveName.js';
-/* auto */ import { VpcBuiltinFunctions } from '../../vpc/codepreparse/vpcBuiltinFunctions.js';
-/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
-/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
-/* auto */ import { VpcExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
-/* auto */ import { VpcStateInterface } from '../../vpcui/state/vpcInterface.js';
+/* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
+/* auto */ import { VpcStateInterface } from './vpcInterface';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
+/* auto */ import { VelResolveId, VelResolveName, VelResolveReference } from './../../vpc/vel/velResolveName';
+/* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
+/* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
+/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
+/* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
+/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
+/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, assertEq, slength } from './../../ui512/utils/util512';
+/* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /**
  * OutsideWorldReadWrite

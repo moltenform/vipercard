@@ -1,12 +1,12 @@
 
-/* auto */ import { checkThrow, makeVpcInternalErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { Util512, checkThrowEq, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CountNumericIdNormal } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from '../../vpc/vpcutils/vpcRequestedReference.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElCard } from '../../vpc/vel/velCard.js';
-/* auto */ import { VpcElBg } from '../../vpc/vel/velBg.js';
+/* auto */ import { CountNumericIdNormal } from './../vpcutils/vpcUtils';
+/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElCard } from './velCard';
+/* auto */ import { VpcElBg } from './velBg';
+/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { checkThrow, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, checkThrowEq, last, slength } from './../../ui512/utils/util512';
 
 /**
  * a vipercard "stack"

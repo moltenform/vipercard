@@ -1,11 +1,11 @@
 
-/* auto */ import { checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { ReadableContainer, WritableContainer } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
+/* auto */ import { VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { ReadableContainer, WritableContainer } from './../vpcutils/vpcUtils';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './velOutsideInterfaces';
+/* auto */ import { VpcElField } from './velField';
+/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { slength } from './../../ui512/utils/util512';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 
 /**
  * a readable container for a simple string.

@@ -1,20 +1,17 @@
 
-/* auto */ import { O } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { UI512PaintDispatch } from '../../ui512/draw/ui512DrawPaintDispatch.js';
-/* auto */ import { ElementObserverVal } from '../../ui512/elements/ui512ElementGettable.js';
-/* auto */ import { UI512Application } from '../../ui512/elements/ui512ElementApp.js';
-/* auto */ import { EventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { UI512PresenterBase } from '../../ui512/presentation/ui512PresenterBase.js';
-/* auto */ import { UI512Presenter } from '../../ui512/presentation/ui512Presenter.js';
-/* auto */ import { UI512CompBase } from '../../ui512/composites/ui512Composites.js';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElField } from '../../vpc/vel/velField.js';
-/* auto */ import { VpcModelTop } from '../../vpc/vel/velModelTop.js';
-/* auto */ import { OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
-/* auto */ import { VpcExecFrame } from '../../vpc/codeexec/vpcScriptExecFrame.js';
-/* auto */ import { VpcExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
-/* auto */ import { VpcExecTop } from '../../vpc/codeexec/vpcScriptExecTop.js';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
+/* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
+/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
+/* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
+/* auto */ import { EventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
+/* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
+/* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
 
 /**
  * interface,
