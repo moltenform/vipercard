@@ -1,4 +1,6 @@
 
+export const isAllScriptingDisabled:boolean = true;
+
 export type VpcExecTop = any;
 export type VpcExecFrameStack = any;
 export class CheckReservedWords {

@@ -5,7 +5,7 @@
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { VpcAboutDialog } from './../menu/vpcAboutDialog';
-/* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, slength } from './../../ui512/utils/util512';
 /* auto */ import { IdleEventDetails } from './../../ui512/menu/ui512Events';
@@ -67,8 +67,8 @@ export class IntroPageFirst extends IntroPageBase {
             centeredY,
             btnWidth,
             btnHeight,
-            Util512.range(1) /* cols */,
-            Util512.range(numBtns) /* rows */,
+            Util512.range(0, 1) /* cols */,
+            Util512.range(0, numBtns) /* rows */,
             btnMargin,
             btnMargin
         );
@@ -115,8 +115,8 @@ export class IntroPageFirst extends IntroPageBase {
             this.y + 39,
             iconW,
             iconH,
-            Util512.range(7),
-            Util512.range(3),
+            Util512.range(0, 7),
+            Util512.range(0, 3),
             cellWidth - iconW,
             cellHeight - iconH
         );
@@ -126,8 +126,8 @@ export class IntroPageFirst extends IntroPageBase {
             this.y + 39 + cellHeight / 2,
             iconW,
             iconH,
-            Util512.range(7),
-            Util512.range(2),
+            Util512.range(0, 7),
+            Util512.range(0, 2),
             cellWidth - iconW,
             cellHeight - iconH
         );
@@ -143,7 +143,7 @@ export class IntroPageFirst extends IntroPageBase {
     respondIdle(pr: VpcIntroInterface, d: IdleEventDetails) {
         if (!IntroPageFirst.haveCheckedPageURLParams) {
             IntroPageFirst.haveCheckedPageURLParams = true;
-            UI512BeginAsync(() => this.checkPageUrlParams(pr), undefined, false);
+            Util512Higher.syncToAsyncTransition(() => this.checkPageUrlParams(pr), 'respondIdle')
         }
 
         super.respondIdle(pr, d);
@@ -152,6 +152,7 @@ export class IntroPageFirst extends IntroPageBase {
     /**
      * see if the url is taking to us to a stack, and load the stack if so
      */
+    /* eslint-disable-next-line @typescript-eslint/require-await */
     async checkPageUrlParams(pr: VpcIntroInterface) {
         let provider = IntroPageFirst.checkPageUrlParamsGetProvider(window.location.href);
         if (provider) {
@@ -181,6 +182,8 @@ export class IntroPageFirst extends IntroPageBase {
                 return new VpcIntroProvider(id, lng('lngstack'), VpcDocumentLocation.FromStackIdOnline);
             }
         }
+
+        return undefined
     }
 
     /**
@@ -199,6 +202,8 @@ export class IntroPageFirst extends IntroPageBase {
                 }
             }
         }
+
+        return undefined
     }
 
     /**

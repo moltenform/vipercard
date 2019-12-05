@@ -2,11 +2,13 @@
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './vpcIntroProvider';
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
+/* auto */ import { trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+import { isString } from '../../ui512/utils/util512';
 
 /**
  * opening from a json file on disk
@@ -45,7 +47,7 @@ export class IntroPagePickFile extends IntroPageBase {
         this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
 
         /* set the dimensions of the clickbounds based on position of the main <canvas> */
-        let elCanvas = window.document.getElementById('mainDomCanvas') || window.document.body;
+        let elCanvas = window.document.getElementById('mainDomCanvas') ?? window.document.body;
         let elCanvasBounds = elCanvas.getBoundingClientRect();
         let clickBounds = [
             elCanvasBounds.left + elCanvasBounds.width / 6,
@@ -159,12 +161,21 @@ export class IntroPagePickFile extends IntroPageBase {
      */
     onOpenFileCallback(reader: FileReader) {
         if (reader.readyState === reader.DONE) {
-            if (reader.error) {
-                alert('error reading the file contents. ' + reader.error ? reader.error.toString() : '');
+            if (!trueIfDefinedAndNotNull(reader) || trueIfDefinedAndNotNull(reader.error) || !trueIfDefinedAndNotNull(reader.result)) {
+                alert(`error reading the file contents. ${reader?.error?.toString()}`);
                 return;
             }
 
             let text = reader.result;
+            if (!text) {
+                alert('got no text from file')
+                return
+            }
+            if (!isString(text)) {
+                alert('text is not a string. got binary data?')
+                return
+            }
+
             let loader = new VpcIntroProvider(text, lng('lngfile from disk'), VpcDocumentLocation.FromJsonFile);
             this.pr.beginLoadDocument(loader);
         }

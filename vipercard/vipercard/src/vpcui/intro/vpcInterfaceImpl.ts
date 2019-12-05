@@ -173,8 +173,8 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     /**
      * record changes made for undo
      */
-    undoableAction(fn: () => void, typ?: TypeOfUndoAction) {
-        this.vcstate.undoManager.undoableAction(fn, typ || TypeOfUndoAction.StartNewAction);
+    undoableAction(fn: () => void, typ: O<TypeOfUndoAction>) {
+        this.vcstate.undoManager.undoableAction(fn, typ ?? TypeOfUndoAction.StartNewAction);
     }
 
     /**
