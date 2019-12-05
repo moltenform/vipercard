@@ -4,6 +4,7 @@
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
@@ -34,7 +35,13 @@ export class IntroPageOpen extends IntroPageBase {
         ['demo_spacegame.json', 'Spaceman Gamma']
     ];
 
-    constructor(compId: string, bounds: number[], x: number, y: number, protected openType: VpcDocumentLocation) {
+    constructor(
+        compId: string,
+        bounds: number[],
+        x: number,
+        y: number,
+        protected openType: VpcDocumentLocation
+    ) {
         super(compId, bounds, x, y);
     }
 
@@ -99,11 +106,18 @@ export class IntroPageOpen extends IntroPageBase {
             UI512ElTextField.setListChoices(this.listBox, sDocs);
 
             if (sDocs.length) {
-                TextSelModify.selectLineInField(new UI512ElTextFieldAsGeneric(this.listBox), 0);
+                TextSelModify.selectLineInField(
+                    new UI512ElTextFieldAsGeneric(this.listBox),
+                    0
+                );
             }
         } else {
             prompt.set('labeltext', 'Loading...');
-            UI512BeginAsync(() => this.getListChoicesAsync(prompt), undefined, true);
+            Util512Higher.syncToAsyncTransition(
+                () => this.getListChoicesAsync(prompt),
+                'respondIdle',
+                RespondToErr.Alert
+            );
         }
 
         this.drawCommonLast(app, grp);
@@ -129,10 +143,18 @@ export class IntroPageOpen extends IntroPageBase {
         if (ses) {
             try {
                 let stacks = await ses.vpcListMyStacks();
-                this.loadedFromOnline = stacks.map(item => [item.fullstackid, item.stackName] as [string, string]);
-                UI512ElTextField.setListChoices(this.listBox, this.loadedFromOnline.map(item => item[1]));
+                this.loadedFromOnline = stacks.map(
+                    item => [item.fullstackid, item.stackName] as [string, string]
+                );
+                UI512ElTextField.setListChoices(
+                    this.listBox,
+                    this.loadedFromOnline.map(item => item[1])
+                );
                 if (this.loadedFromOnline.length) {
-                    TextSelModify.selectLineInField(new UI512ElTextFieldAsGeneric(this.listBox), 0);
+                    TextSelModify.selectLineInField(
+                        new UI512ElTextFieldAsGeneric(this.listBox),
+                        0
+                    );
                 }
 
                 prompt.set('labeltext', 'Open from online stacks:');
@@ -147,7 +169,9 @@ export class IntroPageOpen extends IntroPageBase {
      */
     static getChosen(self: IntroPageOpen): O<string> {
         if (self.listBox) {
-            let whichLine = TextSelModify.selectByLinesWhichLine(new UI512ElTextFieldAsGeneric(self.listBox));
+            let whichLine = TextSelModify.selectByLinesWhichLine(
+                new UI512ElTextFieldAsGeneric(self.listBox)
+            );
             if (whichLine !== undefined) {
                 if (self.openType === VpcDocumentLocation.FromStaticDemo) {
                     let entry = self.hardCodedFeatured[whichLine];
@@ -162,6 +186,8 @@ export class IntroPageOpen extends IntroPageBase {
                 }
             }
         }
+
+        return undefined
     }
 
     /**
@@ -172,7 +198,11 @@ export class IntroPageOpen extends IntroPageBase {
             let chosenId = IntroPageOpen.getChosen(self);
             if (chosenId && slength(chosenId)) {
                 /* open the document */
-                let loader = new VpcIntroProvider(chosenId, lng('lngstack'), self.openType);
+                let loader = new VpcIntroProvider(
+                    chosenId,
+                    lng('lngstack'),
+                    self.openType
+                );
                 pr.beginLoadDocument(loader);
             }
         } else if (el.id.endsWith('choicebtn1')) {

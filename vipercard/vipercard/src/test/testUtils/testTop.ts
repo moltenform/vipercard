@@ -16,7 +16,6 @@
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');
-        console.log('Running tests...O');
         UI512ErrorHandling.runningTests = true;
 
         // order tests from high to low

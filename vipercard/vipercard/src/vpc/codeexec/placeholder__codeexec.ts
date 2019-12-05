@@ -1,11 +1,11 @@
 
-export const isAllScriptingDisabled:boolean = true;
+export const isAllScriptingDisabled: boolean = true;
 
 export type VpcExecTop = any;
 export type VpcExecFrameStack = any;
 export class CheckReservedWords {
     okLocalVar(...args: any[]) {
-        return true
+        return true;
     }
 }
 export class VpcExecFrame {
@@ -26,6 +26,6 @@ export class VpcExecFrame {
     }
     static filterTemporaryFromAllScripts(...args: any[]) {}
     static appendTemporaryDynamicCodeToScript(...args: any[]) {
-        return ''
+        return '';
     }
 }

@@ -46,8 +46,20 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(browserOSInfo, ctrlKey, shiftKey, altKey, metaKey);
-        let details = new KeyDownEventDetails(gly.milliseconds, keyCode, keyChar, repeated, mods);
+        let mods = ui512TranslateModifiers(
+            browserOSInfo,
+            ctrlKey,
+            shiftKey,
+            altKey,
+            metaKey
+        );
+        let details = new KeyDownEventDetails(
+            gly.milliseconds,
+            keyCode,
+            keyChar,
+            repeated,
+            mods
+        );
         root.event(details);
 
         /* let "paste" through, stop everything else */
@@ -66,8 +78,20 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(browserOSInfo, ctrlKey, shiftKey, altKey, metaKey);
-        let details = new KeyUpEventDetails(gly.milliseconds, keyCode, keyChar, false, mods);
+        let mods = ui512TranslateModifiers(
+            browserOSInfo,
+            ctrlKey,
+            shiftKey,
+            altKey,
+            metaKey
+        );
+        let details = new KeyUpEventDetails(
+            gly.milliseconds,
+            keyCode,
+            keyChar,
+            false,
+            mods
+        );
         root.event(details);
 
         /* let "paste" through, stop everything else */
@@ -87,7 +111,13 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         prevMouseX: number,
         prevMouseY: number
     ) => {
-        let details = new MouseMoveEventDetails(gly.milliseconds, mouseX, mouseY, prevMouseX, prevMouseY);
+        let details = new MouseMoveEventDetails(
+            gly.milliseconds,
+            mouseX,
+            mouseY,
+            prevMouseX,
+            prevMouseY
+        );
         root.event(details);
         if (buttons !== root.mouseButtonsExpected) {
             root.sendMissedEvents(buttons);
@@ -106,8 +136,20 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(browserOSInfo, ctrlKey, shiftKey, altKey, metaKey);
-        let details = new MouseUpEventDetails(gly.milliseconds, mouseX, mouseY, button, mods);
+        let mods = ui512TranslateModifiers(
+            browserOSInfo,
+            ctrlKey,
+            shiftKey,
+            altKey,
+            metaKey
+        );
+        let details = new MouseUpEventDetails(
+            gly.milliseconds,
+            mouseX,
+            mouseY,
+            button,
+            mods
+        );
         root.event(details);
         root.mouseButtonsExpected = buttons;
         return !details.handled();
@@ -123,8 +165,20 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(browserOSInfo, ctrlKey, shiftKey, altKey, metaKey);
-        let details = new MouseDownEventDetails(gly.milliseconds, mouseX, mouseY, button, mods);
+        let mods = ui512TranslateModifiers(
+            browserOSInfo,
+            ctrlKey,
+            shiftKey,
+            altKey,
+            metaKey
+        );
+        let details = new MouseDownEventDetails(
+            gly.milliseconds,
+            mouseX,
+            mouseY,
+            button,
+            mods
+        );
         root.event(details);
         root.mouseButtonsExpected = buttons;
         return !details.handled();
@@ -149,8 +203,11 @@ function mainOnResize(root: FullRootUI512, gly: any) {
 
     let elemMessageBelow = window.document.getElementById('elemMessageBelow');
     if (elemMessageBelow) {
-        if (Math.abs(window.devicePixelRatio - Math.round(window.devicePixelRatio)) > 0.01) {
-            elemMessageBelow.innerText = 'Please set your browser zoom level to 100% for the sharpest graphics...';
+        if (
+            Math.abs(window.devicePixelRatio - Math.round(window.devicePixelRatio)) > 0.01
+        ) {
+            elemMessageBelow.innerText =
+                'Please set your browser zoom level to 100% for the sharpest graphics...';
         } else {
             elemMessageBelow.innerText = '';
         }

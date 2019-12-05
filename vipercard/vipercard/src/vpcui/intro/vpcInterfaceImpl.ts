@@ -87,7 +87,11 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get state id, for undo/redo and seeing if a stack is dirty/needs to be saved
      */
     getCurrentStateId(): string {
-        return this.vcstate && this.vcstate.undoManager && this.vcstate.undoManager.getCurrentStateId();
+        return (
+            this.vcstate &&
+            this.vcstate.undoManager &&
+            this.vcstate.undoManager.getCurrentStateId()
+        );
     }
 
     /**
@@ -133,7 +137,11 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     /**
      * create a new vel on its own
      */
-    rawCreate<T extends VpcElBase>(velId: string, parentId: string, ctr: { new (...args: any[]): T }): T {
+    rawCreate<T extends VpcElBase>(
+        velId: string,
+        parentId: string,
+        ctr: { new (...args: any[]): T }
+    ): T {
         this.causeFullRedraw();
         let vel = new ctr(velId, parentId);
         checkThrow(vel && vel.isVpcElBase, `8*|must be a VpcElBase`);
@@ -145,7 +153,12 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     /**
      * create a new vel and add it to the model
      */
-    createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase {
+    createVel(
+        parentId: string,
+        type: VpcElType,
+        insertIndex: number,
+        specifyId?: string
+    ): VpcElBase {
         return this.vcstate.createVel(parentId, type, insertIndex, specifyId);
     }
 
@@ -174,14 +187,17 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * record changes made for undo
      */
     undoableAction(fn: () => void, typ: O<TypeOfUndoAction>) {
-        this.vcstate.undoManager.undoableAction(fn, typ ?? TypeOfUndoAction.StartNewAction);
+        this.vcstate.undoManager.undoableAction(
+            fn,
+            typ ?? TypeOfUndoAction.StartNewAction
+        );
     }
 
     /**
      * are we 'back in time' looking at a previous state?
      */
     isCurrentlyUndoing() {
-        return this.vcstate.undoManager.isCurrentlyUndoing()
+        return this.vcstate.undoManager.isCurrentlyUndoing();
     }
 
     /**
@@ -238,21 +254,21 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get current card id
      */
     getCurrentCardId() {
-        return this.getOptionS('currentCardId')
+        return this.getOptionS('currentCardId');
     }
 
     /**
      * asynchronously go to a card, if browse tool calls closecard + opencard events
      */
-    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific:O<string>) {
-        this.pr.beginSetCurCardWithOpenCardEvt(pos, idSpecific)
+    beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
+        this.pr.beginSetCurCardWithOpenCardEvt(pos, idSpecific);
     }
 
     /**
      * go to a card without sending any closecard or opencard events
      */
-    setCurCardNoOpenCardEvt(id: string):void {
-        return this.pr.setCurCardNoOpenCardEvt(id)
+    setCurCardNoOpenCardEvt(id: string): void {
+        return this.pr.setCurCardNoOpenCardEvt(id);
     }
 
     /**
@@ -344,8 +360,8 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    writeToReplMessageBox(s:string):void {
-        return this.pr.writeToReplMessageBox(s)
+    writeToReplMessageBox(s: string): void {
+        return this.pr.writeToReplMessageBox(s);
     }
 
     /**

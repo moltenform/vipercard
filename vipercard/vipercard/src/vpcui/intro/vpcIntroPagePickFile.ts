@@ -3,12 +3,12 @@
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
+/* auto */ import { isString, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
-import { isString } from '../../ui512/utils/util512';
 
 /**
  * opening from a json file on disk
@@ -17,7 +17,13 @@ export class IntroPagePickFile extends IntroPageBase {
     isIntroOpenFromDiskPage = true;
     compositeType = 'IntroPagePickFile';
     canDrag = false;
-    constructor(compId: string, bounds: number[], x: number, y: number, protected pr: VpcIntroInterface) {
+    constructor(
+        compId: string,
+        bounds: number[],
+        x: number,
+        y: number,
+        protected pr: VpcIntroInterface
+    ) {
         /* always display this window in the center, even if it was moved earlier */
         super(compId, bounds, undefined, undefined);
     }
@@ -33,7 +39,12 @@ export class IntroPagePickFile extends IntroPageBase {
         noteToUser.setDimensions(this.x + 30, this.y + 30, 300, 200);
         noteToUser.set(
             'labeltext',
-            lng('lngOpen from .json file.\n\n\nPlease click anywhere on this page\nto choose a .json file to open...')
+            lng(longstr(
+                    `lngOpen from .json file.{{NEWLINE}}{{NEWLINE}}
+                    {{NEWLINE}}Please click anywhere on this page{{NEWLINE}}
+                    to choose a .json file to open...`,
+                )
+            )
         );
 
         /* draw the ok button */
@@ -47,13 +58,14 @@ export class IntroPagePickFile extends IntroPageBase {
         this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
 
         /* set the dimensions of the clickbounds based on position of the main <canvas> */
-        let elCanvas = window.document.getElementById('mainDomCanvas') ?? window.document.body;
+        let elCanvas =
+            window.document.getElementById('mainDomCanvas') ?? window.document.body;
         let elCanvasBounds = elCanvas.getBoundingClientRect();
         let clickBounds = [
             elCanvasBounds.left + elCanvasBounds.width / 6,
             elCanvasBounds.top + elCanvasBounds.height / 16,
             elCanvasBounds.width - elCanvasBounds.width / 3,
-            3 * elCanvasBounds.height / 4
+            (3 * elCanvasBounds.height) / 4
         ];
 
         this.addPickerHtml(elCanvasBounds, clickBounds);
@@ -64,21 +76,28 @@ export class IntroPagePickFile extends IntroPageBase {
     /**
      * add html elements for file picker
      * one of the rare cases in ViperCard where we touch the real DOM
-     * we can't show any real input boxes, though, because the text will be smoothed, which looks wrong.
+     * we can't show any real input boxes, though, because the text
+     * will be smoothed, which looks wrong.
      */
     protected addPickerHtml(elCanvasBounds: ClientRect | DOMRect, clickBounds: number[]) {
-        /* v1: use a ui512button and send click() to an <input>. doesn't work in some browsers, */
-        /* and it seems like the type of thing browsers will think is clickjacking and disable */
-        /* v2: show the native <input>... can set opacity to 0 to hide the "no file chosen" text */
-        /* but, it's complicated to position (we sometimes scale all our content) and hitbox is really wonky+too wide */
-        /* v3: create a 64px by 64px image that is a rectangle with text 'click here', set as label. */
-        /* works but the position might not always be right and image looks ugly */
+        /* v1: use a ui512button and send click() to an <input>.
+        doesn't work in some browsers, and it seems like the type of thing
+        browsers will think is clickjacking and disable
 
-        /* v4: current */
-        /* make a real <input>, but hide it offscreen */
-        /* make a <label> for the input that contains an <img>, the image is a nearly-opaque png.  */
-        /* so, clicking the png triggers the <input>. we make the hitbox as big as possible (nearly entire */
-        /* screen) so that any rendering discrepencies won't affect too badly. */
+        v2: show the native <input>... can set opacity to 0 to hide the
+        "no file chosen" text but, it's complicated to position (we sometimes
+        scale all our content) and hitbox is really wonky+too wide
+
+        v3: create a 64px by 64px image that is a rectangle with text
+        'click here', set as label. works but the position might not always
+        be right and image looks ugly
+
+        v4: current
+        make a real <input>, but hide it offscreen
+        make a <label> for the input that contains an <img>, the image
+        is a nearly-opaque png. so, clicking the png triggers the <input>.
+        we make the hitbox as big as possible (nearly entire screen) so that
+        any rendering discrepencies won't affect too badly. */
 
         let pDiv = window.document.createElement('div');
         pDiv.setAttribute('id', 'divVpcFilePicker');
@@ -161,22 +180,30 @@ export class IntroPagePickFile extends IntroPageBase {
      */
     onOpenFileCallback(reader: FileReader) {
         if (reader.readyState === reader.DONE) {
-            if (!trueIfDefinedAndNotNull(reader) || trueIfDefinedAndNotNull(reader.error) || !trueIfDefinedAndNotNull(reader.result)) {
+            if (
+                !trueIfDefinedAndNotNull(reader) ||
+                trueIfDefinedAndNotNull(reader.error) ||
+                !trueIfDefinedAndNotNull(reader.result)
+            ) {
                 alert(`error reading the file contents. ${reader?.error?.toString()}`);
                 return;
             }
 
             let text = reader.result;
             if (!text) {
-                alert('got no text from file')
-                return
+                alert('got no text from file');
+                return;
             }
             if (!isString(text)) {
-                alert('text is not a string. got binary data?')
-                return
+                alert('text is not a string. got binary data?');
+                return;
             }
 
-            let loader = new VpcIntroProvider(text, lng('lngfile from disk'), VpcDocumentLocation.FromJsonFile);
+            let loader = new VpcIntroProvider(
+                text,
+                lng('lngfile from disk'),
+                VpcDocumentLocation.FromJsonFile
+            );
             this.pr.beginLoadDocument(loader);
         }
     }
@@ -196,7 +223,11 @@ export class IntroPagePickFile extends IntroPageBase {
     /**
      * respond to button click
      */
-    static respondBtnClick(pr: VpcIntroInterface, self: IntroPagePickFile, el: UI512Element) {
+    static respondBtnClick(
+        pr: VpcIntroInterface,
+        self: IntroPagePickFile,
+        el: UI512Element
+    ) {
         if (el.id.endsWith('choicebtn0') || el.id.endsWith('choicebtn1')) {
             /* user clicked cancel, go back to first screen */
             pr.goBackToFirstScreen();

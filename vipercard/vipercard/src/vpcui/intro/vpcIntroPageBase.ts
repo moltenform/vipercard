@@ -52,7 +52,11 @@ export abstract class IntroPageBase extends UI512CompBase {
         bg.setDimensions(this.x, this.y, this.logicalWidth + 1, this.logicalHeight + 2);
 
         /* draw header */
-        let headerHeight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
+        let headerHeight = this.drawWindowDecoration(
+            app,
+            new WndBorderDecorationConsts(),
+            this.hasCloseBtn
+        );
         let caption = grp.getEl(this.getElId('caption'));
         caption.set('labeltext', lng('lngWelcome to ViperCard'));
 
@@ -69,7 +73,7 @@ export abstract class IntroPageBase extends UI512CompBase {
     drawCommonLast(app: UI512Application, grp: UI512ElGroup) {
         /* 1 on left side, 1 on right side, 2 on top, 2 on bottom */
         const howManyFadesNeeded = 6;
-        for (let i of Util512.range(howManyFadesNeeded)) {
+        for (let i of Util512.range(0, howManyFadesNeeded)) {
             /* outlines of a faded window */
             this.fadedWindowDragging[i] = this.genBtn(app, grp, `faded${i}`);
             this.fadedWindowDragging[i].set('style', UI512BtnStyle.Transparent);
@@ -96,21 +100,36 @@ export abstract class IntroPageBase extends UI512CompBase {
     setFadedDragPositions(x: number, y: number) {
         /* vertical ones */
         this.fadedWindowDragging[0].setDimensions(x, y, 1, this.logicalHeight);
-        this.fadedWindowDragging[1].setDimensions(x + this.logicalWidth, y, 1, this.logicalHeight);
+        this.fadedWindowDragging[1].setDimensions(
+            x + this.logicalWidth,
+            y,
+            1,
+            this.logicalHeight
+        );
 
         /* horizontal ones */
         const half = Math.floor(this.logicalWidth / 2);
         this.fadedWindowDragging[2].setDimensions(x, y, half, 1);
         this.fadedWindowDragging[3].setDimensions(x + half, y, half, 1);
         this.fadedWindowDragging[4].setDimensions(x, y + this.logicalHeight, half, 1);
-        this.fadedWindowDragging[5].setDimensions(x + half, y + this.logicalHeight, half, 1);
+        this.fadedWindowDragging[5].setDimensions(
+            x + half,
+            y + this.logicalHeight,
+            half,
+            1
+        );
     }
 
     /**
      * begin dragging if you click on the top of the window
      */
     respondMouseDown(pr: UI512Presenter, d: MouseDownEventDetails) {
-        if (d.el && d.el.id === this.getElId('caption') && !this.isDraggingWindow && this.canDrag) {
+        if (
+            d.el &&
+            d.el.id === this.getElId('caption') &&
+            !this.isDraggingWindow &&
+            this.canDrag
+        ) {
             this.isDraggingWindow = true;
 
             this.setFadedDragPositions(this.x, this.y);
@@ -124,7 +143,10 @@ export abstract class IntroPageBase extends UI512CompBase {
      * if dragging, move faded window outline
      */
     respondMouseMove(pr: UI512Presenter, d: MouseMoveEventDetails) {
-        this.setFadedDragPositions(d.mouseX - this.dragOffsetX, d.mouseY - this.dragOffsetY);
+        this.setFadedDragPositions(
+            d.mouseX - this.dragOffsetX,
+            d.mouseY - this.dragOffsetY
+        );
     }
 
     /**
@@ -144,7 +166,11 @@ export abstract class IntroPageBase extends UI512CompBase {
                 this.screenBounds[0] + this.screenBounds[2] - this.logicalWidth
             );
 
-            nextY = fitIntoInclusive(nextY, this.screenBounds[1], this.screenBounds[1] + this.screenBounds[3] - 100);
+            nextY = fitIntoInclusive(
+                nextY,
+                this.screenBounds[1],
+                this.screenBounds[1] + this.screenBounds[3] - 100
+            );
             this.moveAllTo(nextX, nextY, pr.app);
         }
     }
@@ -152,7 +178,15 @@ export abstract class IntroPageBase extends UI512CompBase {
     /**
      * draw an os-style rounded rectangle button
      */
-    protected drawBtn(app: UI512Application, grp: UI512ElGroup, n: number, x: number, y: number, w: number, h: number) {
+    protected drawBtn(
+        app: UI512Application,
+        grp: UI512ElGroup,
+        n: number,
+        x: number,
+        y: number,
+        w: number,
+        h: number
+    ) {
         let btn = this.genBtn(app, grp, `choicebtn${n}`);
         let labeltext = n === 0 ? lng('lngOK') : lng('lngCancel');
         btn.set('style', n === 0 ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);

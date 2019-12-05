@@ -259,7 +259,7 @@ export abstract class VpcUILayer {
  * events, user would have to hit Undo multiple times for no apparent reason
  */
 export enum TypeOfUndoAction {
-    None=1,
+    None = 1,
 
     /* always create new action */
     StartNewAction,

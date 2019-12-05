@@ -45,14 +45,17 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
     doLogin(vci: VpcStateInterface) {
         let paramFields = this.readFields(vci.UI512App());
 
-        let fn = async() => {
-            let result:(string | ArrayBuffer)[] | VpcSession
+        let fn = async () => {
+            let result: (string | ArrayBuffer)[] | VpcSession;
             try {
-                result = await vpcUsersCheckLogin(paramFields['username'], paramFields['pw'])
+                result = await vpcUsersCheckLogin(
+                    paramFields['username'],
+                    paramFields['pw']
+                );
             } catch (e) {
                 /* login was not successful, no such user or wrong password */
                 this.setStatus(`lngDid not log in, ${e}`);
-                return
+                return;
             }
 
             if (this.children.length === 0) {
@@ -67,9 +70,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
                 this.fnCbWhenSignedIn();
             } else if (result[0] === 'needEmailVerify' && result.length === 3) {
                 /* login needs email verification */
-                this.setStatus(
-                    'lngPlease enter the verification code sent via e-mail.'
-                );
+                this.setStatus('lngPlease enter the verification code sent via e-mail.');
                 let grp = vci.UI512App().getGroup(this.grpId);
                 let fldEmailVerify = grp.getEl(this.getElId('fldcodeEmailVerify'));
                 fldEmailVerify.set('visible', true);
@@ -79,7 +80,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
             } else {
                 this.setStatus('lngDid not log in, unknown.');
             }
-        }
+        };
 
         Util512Higher.syncToAsyncTransition(fn, 'doLogin');
     }
@@ -90,17 +91,17 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
     doLoginVerifyCode(vci: VpcStateInterface, keybuffer: ArrayBuffer) {
         let paramFields = this.readFields(vci.UI512App());
         let fn = async () => {
-            let result:VpcSession
+            let result: VpcSession;
             try {
                 result = await vpcUsersEnterEmailVerifyCode(
                     paramFields['username'],
                     keybuffer,
                     paramFields['codeEmailVerify']
-                )
+                );
             } catch (e) {
                 /* login was not successful -- prob wrong password */
                 this.setStatus(`${e}`);
-                return
+                return;
             }
 
             if (this.children.length === 0) {
@@ -117,7 +118,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
                 /* got unexpected type back*/
                 this.setStatus(`unexpected type ${result}`);
             }
-        }
+        };
 
         Util512Higher.syncToAsyncTransition(fn, 'doLoginVerifyCode');
     }

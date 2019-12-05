@@ -4,13 +4,14 @@
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, RepeatingTimer, Root, UI512IsEventInterface, UI512IsSessionInterface } from './../utils/util512Higher';
+/* auto */ import { RenderComplete, RepeatingTimer, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O, assertTrueWarn, checkThrow, respondUI512Error } from './../utils/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512 } from './../utils/util512';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
+/* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
 
 export class FullRootUI512 implements Root {
     domCanvas: CanvasWrapper;
@@ -158,16 +159,21 @@ export class FullRootUI512 implements Root {
     }
 
     sendMissedEvents(buttons: number) {
-        /* observed behavior: let's say there is a button on the screen. you click the button, */
-        /* and it highlights as expected. you then, while holding the mouse button down, drag the */
-        /* cursor outside of the window. then release the mouse button when the cursor is outside. */
-        /* now, when you bring the cursor back into the window, it *incorrectly* thinks that */
-        /* the button should be re-highlighted, even though the mouse button is up, because */
-        /* we never got the mouseup event. */
+        /**
+         * observed behavior: let's say there is a button on the screen.
+         * you click the button, and it highlights as expected. you then, while
+         * holding the mouse button down, drag the cursor outside of the window.
+         * then release the mouse button when the cursor is outside. now,
+         * when you bring the cursor back into the window, it *incorrectly*
+         * thinks that the button should be re-highlighted, even though the mouse
+         * button is up, because we never got the mouseup event.
+         *
+         * so, I wrote this fix. if we see that the mouse buttons are
+         * different than we expected, send simulated "mouseup" events for
+         * each mouse button that is now up. (the same could be done for
+         * mousedown events, but we don't have any drag-into-window scenario now).
+         */
 
-        /* so, I wrote this fix. if we see that the mouse buttons are different than we */
-        /* expected, send simulated "mouseup" events for each mouse button that is now up. */
-        /* (the same could be done for mousedown events, but we don't have any drag-into-window scenario now). */
         const maxNumberOfMouseButtons = 10;
         let needToSendMouseUp = this.mouseButtonsExpected & ~buttons;
         this.mouseButtonsExpected = buttons;
@@ -200,6 +206,9 @@ export class FullRootUI512 implements Root {
     }
 
     runTests(all: boolean) {
-        runTestsImpl(all);
+        Util512Higher.syncToAsyncTransition(
+            () => SimpleUtil512Tests.runTests(all),
+            'tests'
+        );
     }
 }
