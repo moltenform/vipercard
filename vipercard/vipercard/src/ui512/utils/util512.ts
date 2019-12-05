@@ -643,7 +643,7 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
 /**
  * safe cast, throws if cast would fail.
  */
-export function coalesceIfFalseLike<T>(instance: unknown, defaultval: T) {
+export function coalesceIfFalseLike<T>(instance: T | null | undefined, defaultval: T) : T {
     return instance ? instance : defaultval;
 }
 

@@ -6,8 +6,8 @@
 /* auto */ import { VpcSaveInterface } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
-/* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { O, bool, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
@@ -27,7 +27,8 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            UI512BeginAsync(() => this.goSaveAsAsync(throwIfUndefined(ses, 'Kr|')), undefined, false);
+
+            Util512Higher.syncToAsyncTransition(() => this.goSaveAsAsync(throwIfUndefined(ses, 'Kr|')), 'goSaveAsAsync')
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -47,7 +48,7 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            UI512BeginAsync(() => this.goSaveAsync(throwIfUndefined(ses, 'Kq|')), undefined, false);
+            Util512Higher.syncToAsyncTransition(() => this.goSaveAsync(throwIfUndefined(ses, 'Kq|')), 'beginSave async')
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -69,7 +70,7 @@ export class VpcSave implements VpcSaveInterface {
         try {
             let newStackData = this.pr.getSerializedStack();
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
-            didSave = !!await this.goSaveAsWithNewName(ses, info.stackName, newStackData);
+            didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
         } catch (e) {
             caught = true;
             this.busy = false;
@@ -82,9 +83,10 @@ export class VpcSave implements VpcSaveInterface {
 
         if (didSave) {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
-            window.setTimeout(() => {
-                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
-            }, 2000);
+            Util512Higher.syncToAsyncTransition(async () => {
+                await Util512Higher.sleep(2000);
+                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''))
+            }, 'hide succesful save msg');
         }
 
         this.pr.cameFromDemoSoNeverPromptSave = '';
@@ -101,9 +103,9 @@ export class VpcSave implements VpcSaveInterface {
             let newStackData = this.pr.getSerializedStack();
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
             if (info.stackOwner === ses.username) {
-                didSave = !!await this.goSaveQuietUpdate(ses, info.stackGuid, info.stackName, newStackData);
+                didSave = bool(await this.goSaveQuietUpdate(ses, info.stackGuid, info.stackName, newStackData));
             } else {
-                didSave = !!await this.goSaveAsWithNewName(ses, info.stackName, newStackData);
+                didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
             }
         } catch (e) {
             caught = true;
@@ -116,9 +118,10 @@ export class VpcSave implements VpcSaveInterface {
 
         if (didSave) {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
-            window.setTimeout(() => {
-                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
-            }, 2000);
+            Util512Higher.syncToAsyncTransition(async () => {
+                await Util512Higher.sleep(2000);
+                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''))
+            }, 'hide succesful save msg');
         }
 
         this.pr.cameFromDemoSoNeverPromptSave = '';
@@ -162,7 +165,7 @@ export class VpcSave implements VpcSaveInterface {
     protected async goSaveAsWithNewName(ses: VpcSession, prevStackName: string, newStackData: string) {
         let prevStackNameToShow = prevStackName || 'untitled';
         if (prevStackNameToShow === 'untitled') {
-            prevStackNameToShow = 'Untitled ' + Util512.getRandIntInclusiveWeak(1, 100);
+            prevStackNameToShow = 'Untitled ' + Util512Higher.getRandIntInclusiveWeak(1, 100);
         }
 
         let [newName, n] = await this.pr.askMsgAsync('Save as:', prevStackNameToShow);
@@ -187,6 +190,8 @@ export class VpcSave implements VpcSaveInterface {
                 throw e;
             }
         }
+
+        return false
     }
 
     /**
@@ -225,11 +230,8 @@ export class VpcSave implements VpcSaveInterface {
         let info = this.pr.vci.getModel().stack.getLatestStackLineage();
         let ses = VpcSession.fromRoot();
         let currentUsername = ses ? ses.username : '';
-        UI512BeginAsync(
-            () => this.goCountJsonSaves(currentUsername, info.stackOwner, info.stackGuid),
-            undefined,
-            false
-        );
+
+        Util512Higher.syncToAsyncTransition(() => this.goCountJsonSaves(currentUsername, info.stackOwner, info.stackGuid), 'count json saves')
 
         /* now rethrow if we got an error */
         if (eThrown) {
@@ -265,7 +267,7 @@ export class VpcSave implements VpcSaveInterface {
      * send mark to server to flag content
      */
     beginFlagContent() {
-        UI512BeginAsync(() => this.mnuGoFlagContentAsync(), undefined, false);
+        Util512Higher.syncToAsyncTransition(() => this.mnuGoFlagContentAsync(), 'beginFlagContent')
     }
 
     /**
@@ -365,4 +367,4 @@ export class VpcSave implements VpcSaveInterface {
 /**
  * reference to filesaver.js
  */
-declare var saveAs: any;
+declare let saveAs: any;

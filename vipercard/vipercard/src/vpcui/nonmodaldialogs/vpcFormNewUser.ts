@@ -2,7 +2,8 @@
 /* auto */ import { vpcUsersCreate } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { O, bool, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
@@ -79,23 +80,28 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
             return;
         }
 
-        UI512BeginAsync(
-            () => vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email']),
-            (result: Error | boolean) => {
-                if (this.children.length === 0) {
-                    /* user hit cancel */
-                    return;
-                } else if (result === true) {
-                    /* create user was successful! */
-                    /* it sent an email to the place, now get recovery code */
-                    this.goBackToLogin(paramFields['username']);
-                } else if (result instanceof Error) {
-                    this.setStatus('lng ' + result.toString());
-                } else {
-                    this.setStatus('lngDid create user, unknown.');
-                }
+        let fn = async() => {
+            let result:boolean
+            try {
+                result = await vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email'])
+            } catch (e) {
+                this.setStatus('lng ' + e.toString());
+                return
             }
-        );
+
+            if (this.children.length === 0) {
+                /* user hit cancel */
+                return;
+            } else if (result === true) {
+                /* create user was successful! */
+                /* it sent an email to the place, now get recovery code */
+                this.goBackToLogin(paramFields['username']);
+            } else {
+                this.setStatus('lngDid create user, unknown.');
+            }
+        }
+
+        Util512Higher.syncToAsyncTransition(fn, 'vpcuserscreate');
     }
 
     /**
@@ -110,7 +116,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
         VpcNonModalFormBase.standardWindowBounds(newForm, this.vci);
         newForm.fnCbWhenSignedIn = this.fnCbWhenSignedIn;
         newForm.autoFillUsername = autoFillUsername;
-        newForm.autoShowNeedEmailCode = !!autoFillUsername;
+        newForm.autoShowNeedEmailCode = bool(autoFillUsername);
         this.vci.setNonModalDialog(newForm);
     }
 }

@@ -3,8 +3,8 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson, Util512, cast } from './../../ui512/utils/util512';
+/* auto */ import { O, assertTrue, tostring } from './../../ui512/utils/util512Assert';
+/* auto */ import { AnyJson, UnshapedJsonAny, Util512, cast } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -115,7 +115,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             let ctginfo = this.examplesInfo[ctg];
             if (ctginfo) {
                 let nTotal = ctginfo[2];
-                lns = Util512.range(nTotal).map(n => (n + 1).toString());
+                lns = Util512.range(0, nTotal).map(n => (n + 1).toString());
             }
         }
 
@@ -159,7 +159,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
 
             let btnStartVid = grp.getEl(this.getElId('btnStartVid'));
             btnStartVid.set('visible', ctginfo[0].startsWith('vid'));
-            btnStartVid.set('labeltext', '' + vidTitles[ctg]);
+            btnStartVid.set('labeltext', tostring(vidTitles[ctg]));
             if (ctginfo[0].startsWith('vid')) {
                 let rghtBtn = grp.getEl(this.getElId('rghtBtn'));
                 rghtBtn.set('labeltext', '');
@@ -193,7 +193,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * show the json data on the right side
      */
-    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: AnyJson) {
+    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: UnshapedJsonAny) {
         let entryTitles = this.referenceInfo[ctg][2];
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);

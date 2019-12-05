@@ -10,8 +10,8 @@
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { O, assertTrueWarn, showWarningIfExceptionThrown } from './../../ui512/utils/util512Assert';
-/* auto */ import { cast, slength } from './../../ui512/utils/util512';
+/* auto */ import { O, assertTrueWarn, bool, showWarningIfExceptionThrown, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
+/* auto */ import { cast, coalesceIfFalseLike, slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { ScrollbarImpl } from './../../ui512/textedit/ui512Scrollbar';
@@ -155,7 +155,7 @@ export class VpcPresenterEvents {
      * you are in the pencil tool
      */
     static cancelEvtIfNotBrowseTool(pr: VpcPresenterInterface, d: EventDetails) {
-        let isVel = d.getAffectedElements().some(item => !!pr.lyrModelRender.elIdToVelId(item.id));
+        let isVel = d.getAffectedElements().some(item => bool(pr.lyrModelRender.elIdToVelId(item.id)));
         if (isVel && pr.vci.getTool() !== VpcTool.Browse) {
             d.setHandled();
         }
@@ -183,7 +183,7 @@ export class VpcPresenterEvents {
     static respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = !!d.el && !!pr.lyrModelRender.isVelOrBg(d.el.id);
+                let isUserElOrBg = trueIfDefinedAndNotNull(d.el) && bool(pr.lyrModelRender.isVelOrBg(d.el.id));
                 pr.getToolResponse(pr.vci.getTool()).respondMouseDown(pr.vci.getTool(), d, isUserElOrBg);
                 pr.lyrNonModalDlgHolder.respondMouseDown(d);
 
@@ -207,7 +207,7 @@ export class VpcPresenterEvents {
     static respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = d.getAffectedElements().some(item => !!pr.lyrModelRender.isVelOrBg(item.id));
+                let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
                 pr.getToolResponse(pr.vci.getTool()).respondMouseUp(pr.vci.getTool(), d, isUserElOrBg);
                 pr.lyrNonModalDlgHolder.respondMouseUp(d);
                 pr.lyrToolboxes.toolsMain.respondMouseUp(pr.app, d);
@@ -222,9 +222,9 @@ export class VpcPresenterEvents {
      * send mousemove event t ocurrent tool
      */
     static respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
-        let isUserElOrBg = d.getAffectedElements().some(item => !!pr.lyrModelRender.isVelOrBg(item.id));
+        let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
         pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBg);
-        let isNextAVelOrBg = !!d.elNext && !!pr.lyrModelRender.isVelOrBg(d.elNext.id);
+        let isNextAVelOrBg = trueIfDefinedAndNotNull(d.elNext) && bool(pr.lyrModelRender.isVelOrBg(d.elNext.id));
         if (d.elNext !== d.elPrev) {
             pr.refreshCursorElemKnown(d.elNext, isNextAVelOrBg);
         }
@@ -482,6 +482,8 @@ export class VpcPresenterEvents {
                 return true;
             }
         }
+
+        return false
     }
 
     /**
@@ -603,7 +605,7 @@ export class VpcPresenterEvents {
         }
 
         if (target) {
-            let velId = pr.lyrModelRender.elIdToVelId(target) || pr.vci.getOptionS('currentCardId');
+            let velId = coalesceIfFalseLike(pr.lyrModelRender.elIdToVelId(target), pr.vci.getOptionS('currentCardId'));
             VpcPresenterEvents.scheduleScriptMsgImpl(pr, d, velId, isOnIdleEvent);
         }
     }

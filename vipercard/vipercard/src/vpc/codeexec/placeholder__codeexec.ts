@@ -13,4 +13,14 @@ export class VpcExecFrame {
     declaredGlobals:any
     locals:any
     args:any
+
+    getBetterLineNumberIfTemporary(s1:string, s2:string, n:number ) {
+        return ['', 0]
+    }
+    static getBetterLineNumberIfTemporary(s1:string, s2:string, n:number ) {
+        return ['', 0]
+    }
+    static filterTemporaryFromAllScripts(...args: any[]) {
+
+    }
 }

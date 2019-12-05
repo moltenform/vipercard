@@ -3,8 +3,9 @@
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { vpcversion } from './../../ui512/utils/util512Productname';
-/* auto */ import { UI512ErrorHandling } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson } from './../../ui512/utils/util512';
+/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { UI512ErrorHandling, checkIsProductionBuild } from './../../ui512/utils/util512Assert';
+/* auto */ import { AnyJson, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
@@ -20,9 +21,9 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
     fields: [string, string, number][] = [
         [
             'header',
-            'lngThank you for reporting a potential area\nof improvement. ' +
-                'We will notify you of any\nupdates or fixes\nby posting to \ngroups.google.com/forum/#!forum/vipercard' +
-                '',
+            longstr(`lngThank you for reporting a potential area\nof improvement. 
+                We will notify you of any\nupdates or fixes\nby posting to 
+                \ngroups.google.com/forum/#!forum/vipercard' `),
             4
         ],
         ['desc', 'lngDescription of\nbug or error\nmessage, incl.\ncontext:', 3]
@@ -34,7 +35,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
     constructor(protected vci: VpcStateInterface) {
         super('VpcNonModalFormSendReport' + Math.random());
         VpcNonModalFormBase.standardWindowBounds(this, vci);
-        if (isRelease) {
+        if (checkIsProductionBuild()) {
             this.btns = [['ok', 'lngSend'], ['close', 'lngClose']];
         } else {
             this.btns = [['ok', 'lngSend'], ['close', 'lngClose'], ['errorlogs', 'lngGet Logs']];
@@ -95,23 +96,27 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
     doSendErrReport(vci: VpcStateInterface) {
         let params = this.readFields(vci.UI512App());
         let ses = VpcSession.fromRoot() as VpcSession;
-        UI512BeginAsync(
-            () => this.asyncSendErrReport(this.vci, params['desc']),
-            (result: Error | boolean) => {
-                if (this.children.length === 0) {
-                    /* user hit cancel */
-                    return;
-                } else if (result instanceof Error) {
-                    if (result.toString().includes( 'could not create log entry')) {
-                        this.setStatus('lngAlready sent.');
-                    } else {
-                        this.setStatus('lng ' + result.toString());
-                    }
+        let fn = async() => {
+            try {
+                await this.asyncSendErrReport(this.vci, params['desc']);
+            } catch(e) {
+                if (e.toString().includes( 'could not create log entry')) {
+                    this.setStatus('lngAlready sent.');
                 } else {
-                    this.setStatus('lngSent report.');
+                    this.setStatus('lng ' + e.toString());
                 }
+                return
             }
-        );
+
+            if (this.children.length === 0) {
+                /* user hit cancel */
+                return;
+            } else {
+                this.setStatus('lngSent report.');
+            }
+        }
+
+        Util512Higher.syncToAsyncTransition(fn, "doSendErrReport")
     }
 
     /**
@@ -136,4 +141,4 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
 /**
  * reference to filesaver.js
  */
-declare var saveAs: any;
+declare let saveAs: any;

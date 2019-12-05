@@ -208,6 +208,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardPrev';
             }
+            return undefined
         };
 
         this.keyMappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
@@ -215,6 +216,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
             if (self.vci.getTool() !== VpcTool.Browse) {
                 return 'onlyIfNotInTextField/mnuGoCardNext';
             }
+            return undefined
         };
 
         this.keyMappings['Home'] = 'onlyIfNotInTextField/mnuGoCardFirst';
@@ -241,7 +243,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
         if (!d.repeated) {
             let mapped = this.keyMappings[d.readableShortcut];
             if (isString(mapped)) {
-                return mapped as string;
+                return mapped;
             } else if (typeof mapped === 'function') {
                 return mapped(this);
             } else {

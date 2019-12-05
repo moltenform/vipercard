@@ -15,15 +15,14 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
-/* auto */ import { RenderComplete } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { RenderComplete, Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/placeholder__codeexec';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
@@ -193,39 +192,41 @@ export class VpcPresenter extends VpcPresenterInit {
      * from script error, to an appropriate site of the error location
      */
     static commonRespondToError(vci: VpcStateInterface, scriptErr: VpcScriptErrorBase):[string, number, string, number] {
-        /* use current card if velId is unknown */
-        let origVelId = scriptErr.velId;
-        origVelId = origVelId || vci.getModel().getCurrentCard().id;
-        let origVel = vci.getModel().findByIdUntyped(origVelId);
-        origVel = origVel || vci.getModel().getCurrentCard();
-        let origLine = scriptErr.lineNumber
+        let NoteThisIsDisabledCode = 1;
+        return ['', 0, '', 0]
+        //~ /* use current card if velId is unknown */
+        //~ let origVelId = scriptErr.velId;
+        //~ origVelId = coalesceIfFalseLike(origVelId, vci.getModel().getCurrentCard().id);
+        //~ let origVel = vci.getModel().findByIdUntyped(origVelId);
+        //~ origVel = coalesceIfFalseLike(origVel, vci.getModel().getCurrentCard());
+        //~ let origLine = scriptErr.lineNumber
 
-        /* by leaving browse tool we won't execute closeCard or openCard */
-        vci.setTool(VpcTool.Button);
+        //~ /* by leaving browse tool we won't execute closeCard or openCard */
+        //~ vci.setTool(VpcTool.Button);
 
-        /* redirect line number if this came from 'send' or 'do' */
-        let script = origVel.getS('script')
-        let [redirredVelId, redirredLine] = VpcExecFrame.getBetterLineNumberIfTemporary(script, origVel.id, origLine)
-        let redirredVel = vci.getModel().findByIdUntyped(redirredVelId) || origVel;
+        //~ /* redirect line number if this came from 'send' or 'do' */
+        //~ let script = origVel.getS('script')
+        //~ let [redirredVelId, redirredLine] = VpcExecFrame.getBetterLineNumberIfTemporary(script, origVel.id, origLine)
+        //~ let redirredVel = vci.getModel().findByIdUntyped(redirredVelId) ?? origVel;
 
-        /* update the error object */
-        scriptErr.velId = redirredVel.id
-        scriptErr.lineNumber = redirredLine
+        //~ /* update the error object */
+        //~ scriptErr.velId = redirredVel.id
+        //~ scriptErr.lineNumber = redirredLine
 
-        /* strip temporary code from both locations:
-        so we're not stuck with bad syntax,
-        and we don't show temp code in editor */
-        for (let vid of [origVelId, redirredVelId]) {
-            let v = vci.getModel().getByIdUntyped(vid);
-            if (v.getType() !== VpcElType.Product) {
-                let s = v.getS('script')
-                s = VpcExecFrame.filterTemporaryFromScript(s)
-                v.set('script', s)
-            }
-        }
+        //~ /* strip temporary code from both locations:
+        //~ so we're not stuck with bad syntax,
+        //~ and we don't show temp code in editor */
+        //~ for (let vid of [origVelId, redirredVelId]) {
+            //~ let v = vci.getModel().getByIdUntyped(vid);
+            //~ if (v.getType() !== VpcElType.Product) {
+                //~ let s = v.getS('script')
+                //~ s = VpcExecFrame.filterTemporaryFromScript(s)
+                //~ v.set('script', s)
+            //~ }
+        //~ }
 
 
-        return [origVelId, origLine, redirredVelId, redirredLine]
+        //~ return [origVelId, origLine, redirredVelId, redirredLine]
     }
 
     /**
@@ -305,7 +306,7 @@ export class VpcPresenter extends VpcPresenterInit {
         let tl = this.getToolResponse(this.getTool());
         tl.cancelCurrentToolAction();
         let dlg = this.getModalDlg();
-        dlg.standardAnswer(this, this.app, prompt, fnOnResult, choice1 || '', choice2 || '', choice3 || '');
+        dlg.standardAnswer(this, this.app, prompt, fnOnResult, choice1 ?? '', choice2 ?? '', choice3 ?? '');
         assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Ki|expect to have been created');
     }
 
@@ -414,7 +415,7 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     refreshCursor() {
         let elUnderCursor = this.app.coordsToElement(this.trackMouse[0], this.trackMouse[1]);
-        let isCursorWithinDocument = !!elUnderCursor && this.lyrModelRender.isVelOrBg(elUnderCursor.id);
+        let isCursorWithinDocument = trueIfDefinedAndNotNull(elUnderCursor) && this.lyrModelRender.isVelOrBg(elUnderCursor.id);
         this.refreshCursorElemKnown(elUnderCursor, isCursorWithinDocument);
     }
 
@@ -523,8 +524,8 @@ export class VpcPresenter extends VpcPresenterInit {
             throw makeVpcInternalErr('6E|wrong type ' + type);
         }
 
-        let newX = this.userBounds[0] + Util512.getRandIntInclusiveWeak(20, 200);
-        let newY = this.userBounds[1] + Util512.getRandIntInclusiveWeak(20, 200);
+        let newX = this.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
+        let newY = this.userBounds[1] + Util512Higher.getRandIntInclusiveWeak(20, 200);
         let vel = this.vci.getOutside().CreatePart(type, newX, newY, w, h);
         vel.set(
             'name',
@@ -573,7 +574,7 @@ export class VpcPresenter extends VpcPresenterInit {
             VpcGettableSerialization.copyPropsOver(orig, dupe);
 
             /* move it a bit */
-            let amtToMove = Util512.getRandIntInclusiveWeak(10, 50);
+            let amtToMove = Util512Higher.getRandIntInclusiveWeak(10, 50);
             dupeSizable.setDimensions(
                 Math.min(ScreenConsts.xAreaWidth, dupe.getN('x') + amtToMove),
                 Math.min(ScreenConsts.yAreaHeight, dupe.getN('y') + amtToMove),
@@ -685,6 +686,7 @@ export class VpcPresenter extends VpcPresenterInit {
     performMenuActionImpl(s: string) {
         let method = Util512.isMethodOnClass(this.menuActions, 'go' + Util512.capitalizeFirst(s));
         if (method !== undefined) {
+            /* eslint-disable-next-line ban/ban */
             method.apply(this.menuActions, [this.vci]);
         } else if (s === 'mnuObjectsNewBtn') {
             this.makePart(VpcElType.Btn);
