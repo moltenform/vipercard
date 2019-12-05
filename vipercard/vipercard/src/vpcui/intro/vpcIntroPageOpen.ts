@@ -187,7 +187,7 @@ export class IntroPageOpen extends IntroPageBase {
             }
         }
 
-        return undefined
+        return undefined;
     }
 
     /**

@@ -13,7 +13,6 @@
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
 
-
 import type { Bowser } from '../../../external/bowser-2.9/bowser';
 declare const bowser: typeof Bowser;
 
@@ -219,5 +218,5 @@ export class FullRootUI512 implements Root {
 
 function doDetectBrowser() {
     let o = bowser.parse(window.navigator.userAgent);
-    return [o.browser.name, o.browser.version, o.platform.type]
+    return [o.browser.name, o.browser.version, o.platform.type];
 }

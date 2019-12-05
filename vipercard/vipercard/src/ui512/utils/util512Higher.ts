@@ -210,7 +210,11 @@ export class Util512Higher {
      * all code that goes from sync to async *must* use this method
      * so that errors can be shown, otherwise they might be invisible.
      */
-    static syncToAsyncTransition<T>(fn: () => Promise<T>, context: string, alertOnErr: RespondToErr=RespondToErr.Alert) {
+    static syncToAsyncTransition<T>(
+        fn: () => Promise<T>,
+        context: string,
+        alertOnErr: RespondToErr = RespondToErr.Alert
+    ) {
         fn().then(
             () => {
                 /* fulfilled with no exceptions */
@@ -227,7 +231,7 @@ export class Util512Higher {
                 if (alertOnErr === RespondToErr.Alert) {
                     respondUI512Error(e, context);
                 } else {
-                    console.error(e.toString())
+                    console.error(e.toString());
                 }
             }
         );

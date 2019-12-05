@@ -1,12 +1,11 @@
 
-/* auto */ import { VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, cleanExceptionMsg, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, Util512, slength } from './../../ui512/utils/util512';
+/* auto */ import { O, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { MapKeyToObjectCanSet, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
@@ -173,51 +172,52 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * shows the last error encountered by the codeExec object
      */
     protected refreshStatusLabels(app: UI512Application, vel: VpcElBase) {
-        let lastScriptErr = this.vci
-            ? this.vci.getCodeExec().lastEncounteredScriptErr
-            : undefined;
-        this.status2a.set('labeltext', '');
-        if (lastScriptErr && lastScriptErr.velId === vel.id) {
-            /* check for "encountered" err */
-            this.setStatusLabeltext(
-                'lngEncountered a script error:',
-                lastScriptErr.lineNumber,
-                cleanExceptionMsg(lastScriptErr.details),
-                cleanExceptionMsg(lastScriptErr.details)
-            );
-        } else {
-            /* check for syntax err */
-            let codeStatus = this.vci
-                .getCodeExec()
-                .getCompiledScript(vel.id, vel.getS('script'));
-            if (codeStatus instanceof VpcScriptErrorBase) {
-                this.setStatusLabeltext(
-                    'lngSyntax error:',
-                    codeStatus.lineNumber,
-                    cleanExceptionMsg(codeStatus.details),
-                    cleanExceptionMsg(codeStatus.details)
-                );
-            } else {
-                this.setStatusLabeltext('', undefined, '', '');
-            }
-        }
+        let NoteThisIsDisabledCode = 1;
+        //~ let lastScriptErr = this.vci
+        //~ ? this.vci.getCodeExec().lastEncounteredScriptErr
+        //~ : undefined;
+        //~ this.status2a.set('labeltext', '');
+        //~ if (lastScriptErr && lastScriptErr.velId === vel.id) {
+        //~ /* check for "encountered" err */
+        //~ this.setStatusLabeltext(
+        //~ 'lngEncountered a script error:',
+        //~ lastScriptErr.lineNumber,
+        //~ cleanExceptionMsg(lastScriptErr.details),
+        //~ cleanExceptionMsg(lastScriptErr.details)
+        //~ );
+        //~ } else {
+        //~ /* check for syntax err */
+        //~ let codeStatus = this.vci
+        //~ .getCodeExec()
+        //~ .getCompiledScript(vel.id, vel.getS('script'));
+        //~ if (codeStatus instanceof VpcScriptErrorBase) {
+        //~ this.setStatusLabeltext(
+        //~ 'lngSyntax error:',
+        //~ codeStatus.lineNumber,
+        //~ cleanExceptionMsg(codeStatus.details),
+        //~ cleanExceptionMsg(codeStatus.details)
+        //~ );
+        //~ } else {
+        //~ this.setStatusLabeltext('', undefined, '', '');
+        //~ }
+        //~ }
 
-        let grp = app.getGroup(this.grpId);
-        let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
-        if (
-            slength(this.status2a.getS('labeltext')) ||
-            this.needsCompilation.find(vel.id)
-        ) {
-            btnCompile.set(
-                'labeltext',
-                UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold)
-            );
-        } else {
-            btnCompile.set(
-                'labeltext',
-                UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain)
-            );
-        }
+        //~ let grp = app.getGroup(this.grpId);
+        //~ let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
+        //~ if (
+        //~ slength(this.status2a.getS('labeltext')) ||
+        //~ this.needsCompilation.find(vel.id)
+        //~ ) {
+        //~ btnCompile.set(
+        //~ 'labeltext',
+        //~ UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold)
+        //~ );
+        //~ } else {
+        //~ btnCompile.set(
+        //~ 'labeltext',
+        //~ UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain)
+        //~ );
+        //~ }
     }
 
     /**
@@ -248,29 +248,31 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * user has clicked 'Save Script'
      */
     protected onBtnCompile() {
-        let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
-        if (!vel) {
-            return;
-        }
+        let NoteThisIsDisabledCode = 1;
+        //~ let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
+        //~ if (!vel) {
+        //~ return;
+        //~ }
 
-        /* run compilation */
-        this.saveChangesToModel(this.vci.UI512App(), false);
-        let code = vel.getS('script');
-        this.vci.getCodeExec().updateChangedCode(vel, code);
+        //~ /* run compilation */
+        //~ this.saveChangesToModel(this.vci.UI512App(), false);
+        //~ let code = vel.getS('script');
+        //~ this.vci.getCodeExec().updateChangedCode(vel, code);
 
-        /* hide the "just encountered" message. */
-        /* seems ok to do -- also might be possible for user to click hide. */
-        let lastScriptErr = this.vci
-            ? this.vci.getCodeExec().lastEncounteredScriptErr
-            : undefined;
-        if (lastScriptErr && lastScriptErr.velId === vel.id) {
-            this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
-        }
+        //~ /* hide the "just encountered" message. */
+        //~ /* seems ok to do -- also might be possible for user to click hide. */
+        //~ let lastScriptErr = this.vci
+        //~ ? this.vci.getCodeExec().lastEncounteredScriptErr
+        //~ : undefined;
+        //~ if (lastScriptErr && lastScriptErr.velId === vel.id) {
+        //~ this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
+        //~ }
 
-        /* refresh. setting script does trigger uiredraw, but script has already been updated */
-        /* because saveChangesToModel was called in mousedown. so need to manually cause update */
-        this.needsCompilation.remove(vel.id);
-        this.vci.causeUIRedraw();
+        //~ /* refresh. setting script does trigger uiredraw, but script has already been updated */
+        //~ /* because saveChangesToModel was called in mousedown.
+        //~ so need to manually cause update */
+        //~ this.needsCompilation.remove(vel.id);
+        //~ this.vci.causeUIRedraw();
     }
 
     /**

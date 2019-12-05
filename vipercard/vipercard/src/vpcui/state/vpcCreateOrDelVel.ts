@@ -150,7 +150,8 @@ export abstract class UndoableActionCreateOrDelVel {
         );
         ar.splice(this.insertIndex, 1);
         vci.getModel().removeIdFromMapOfElements(el.id);
-        vci.getCodeExec().removeScript(this.velId);
+        let NoteThisIsDisabledCode = 1;
+        //~ vci.getCodeExec().removeScript(this.velId);
     }
 
     /**

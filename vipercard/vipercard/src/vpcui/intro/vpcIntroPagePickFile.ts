@@ -39,10 +39,11 @@ export class IntroPagePickFile extends IntroPageBase {
         noteToUser.setDimensions(this.x + 30, this.y + 30, 300, 200);
         noteToUser.set(
             'labeltext',
-            lng(longstr(
+            lng(
+                longstr(
                     `lngOpen from .json file.{{NEWLINE}}{{NEWLINE}}
                     {{NEWLINE}}Please click anywhere on this page{{NEWLINE}}
-                    to choose a .json file to open...`,
+                    to choose a .json file to open...`
                 )
             )
         );

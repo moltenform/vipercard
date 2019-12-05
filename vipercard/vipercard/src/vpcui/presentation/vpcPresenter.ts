@@ -1,12 +1,12 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
@@ -23,7 +23,6 @@
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
-/* auto */ import { isAllScriptingDisabled } from './../../vpc/codeexec/placeholder__codeexec';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
@@ -102,19 +101,19 @@ export class VpcPresenter extends VpcPresenterInit {
 
             let NoteThisIsDisabledCode = 1;
             //~ if (wasCard !== nextId) {
-                //~ /* remember history, for go back and go forth */
-                //~ let suspended = this.vci
-                    //~ .getCodeExec()
-                    //~ .globals.find('internalvpcgocardimplsuspendhistory');
-                //~ if (suspended === undefined || suspended.readAsString() !== '1') {
-                    //~ this.vci.getCodeExec().cardHistory.append(nextId);
-                //~ }
+            //~ /* remember history, for go back and go forth */
+            //~ let suspended = this.vci
+            //~ .getCodeExec()
+            //~ .globals.find('internalvpcgocardimplsuspendhistory');
+            //~ if (suspended === undefined || suspended.readAsString() !== '1') {
+            //~ this.vci.getCodeExec().cardHistory.append(nextId);
+            //~ }
             //~ }
 
             //~ /* turn this off, so it's never stuck on indefinitely */
             //~ this.vci
-                //~ .getCodeExec()
-                //~ .globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0));
+            //~ .getCodeExec()
+            //~ .globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0));
         });
     }
 
@@ -131,19 +130,21 @@ export class VpcPresenter extends VpcPresenterInit {
             ? idSpecific
             : this.vci.getModel().getCardRelative(pos);
         if (this.getTool() === VpcTool.Browse) {
-            this.vci
-                .getCodeExec()
-                .globals.set(
-                    'internalvpcbeginsetcurcardwithopencardevtparam',
-                    VpcValS(targetCardId)
-                );
-            let stack = this.vci.getModel().stack;
-            let msg = new VpcScriptMessage(
-                stack.id,
-                VpcBuiltinMsg.__Custom,
-                'internalvpcbeginsetcurcardwithopencardevt'
-            );
-            this.vci.getCodeExec().scheduleCodeExec(msg);
+            let NoteThisIsDisabledCode = 1;
+
+            //~ this.vci
+            //~ .getCodeExec()
+            //~ .globals.set(
+            //~ 'internalvpcbeginsetcurcardwithopencardevtparam',
+            //~ VpcValS(targetCardId)
+            //~ );
+            //~ let stack = this.vci.getModel().stack;
+            //~ let msg = new VpcScriptMessage(
+            //~ stack.id,
+            //~ VpcBuiltinMsg.__Custom,
+            //~ 'internalvpcbeginsetcurcardwithopencardevt'
+            //~ );
+            //~ this.vci.getCodeExec().scheduleCodeExec(msg);
         } else {
             this.setCurCardNoOpenCardEvt(targetCardId);
         }
@@ -190,17 +191,17 @@ export class VpcPresenter extends VpcPresenterInit {
         //~ since people's closeField scripts probably assume we are on the card anyways */
         //~ let prevVel = this.lyrModelRender.findElIdToVel(prevElId);
         //~ if (prevVel && prevVel.getType() === VpcElType.Fld) {
-            //~ if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
-                //~ /* closefield called if changes made in the field */
-                //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
-                //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
+        //~ /* closefield called if changes made in the field */
+        //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
+        //~ this.vci.getCodeExec().scheduleCodeExec(msg);
 
-                //~ this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false;
-            //~ } else {
-                //~ /* exitfield called if no changes were made in the field */
-                //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
-                //~ this.vci.getCodeExec().scheduleCodeExec(msg);
-            //~ }
+        //~ this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false;
+        //~ } else {
+        //~ /* exitfield called if no changes were made in the field */
+        //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
+        //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ }
         //~ }
     }
 
@@ -214,8 +215,8 @@ export class VpcPresenter extends VpcPresenterInit {
         //~ since people's openField scripts probably assume we are on the card anyways */
         //~ let vel = this.lyrModelRender.findElIdToVel(nextId);
         //~ if (vel && vel.getType() === VpcElType.Fld) {
-            //~ let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
-            //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
+        //~ this.vci.getCodeExec().scheduleCodeExec(msg);
         //~ }
     }
 
@@ -450,13 +451,15 @@ export class VpcPresenter extends VpcPresenterInit {
      * returns true if code is currently running
      */
     isCodeRunning() {
-        return isAllScriptingDisabled ? false :(
-            this &&
-            this.vci &&
-            this.vci.getCodeExec &&
-            this.vci.getCodeExec() &&
-            this.vci.getCodeExec().isCodeRunning()
-        );
+        let NoteThisIsDisabledCode = 1;
+        return false;
+        //~ return (
+        //~ this &&
+        //~ this.vci &&
+        //~ this.vci.getCodeExec &&
+        //~ this.vci.getCodeExec() &&
+        //~ this.vci.getCodeExec().isCodeRunning()
+        //~ );
     }
 
     /**

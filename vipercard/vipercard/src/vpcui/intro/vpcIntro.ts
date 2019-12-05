@@ -50,8 +50,8 @@ export class VpcUiIntro extends VpcIntroInterface {
             0,
             220,
             512,
-            Util512.range(0,5) /* cols */,
-            Util512.range(0,2) /* rows */,
+            Util512.range(0, 5) /* cols */,
+            Util512.range(0, 2) /* rows */,
             -4 /* negative margin so that the tiles overlap */,
             -4 /* negative margin so that the tiles overlap */
         );

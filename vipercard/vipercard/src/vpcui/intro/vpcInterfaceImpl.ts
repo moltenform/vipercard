@@ -12,7 +12,7 @@
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 /* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
-/* auto */ import { VpcExecFrame, VpcExecFrameStack, VpcExecTop, isAllScriptingDisabled } from './../../vpc/codeexec/placeholder__codeexec';
+/* auto */ import { VpcExecFrame, VpcExecFrameStack, VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * fulfill the VpcStateInterface interface
@@ -98,12 +98,14 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get current execution context, or undefined if script not running
      */
     findExecFrameStack(): [O<VpcExecFrameStack>, O<VpcExecFrame>] {
-        let frStack = this.vcstate.runtime.codeExec.workQueue[0];
-        if (frStack) {
-            return [frStack, frStack.stack[frStack.stack.length - 1]];
-        } else {
-            return [undefined, undefined];
-        }
+        let NoteThisIsDisabledCode = 1;
+        return [undefined, undefined];
+        //~ let frStack = this.vcstate.runtime.codeExec.workQueue[0];
+        //~ if (frStack) {
+        //~ return [frStack, frStack.stack[frStack.stack.length - 1]];
+        //~ } else {
+        //~ return [undefined, undefined];
+        //~ }
     }
 
     /**
@@ -117,7 +119,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * is code currently running
      */
     isCodeRunning(): boolean {
-        return isAllScriptingDisabled ? false : this.vcstate.runtime.codeExec.isCodeRunning();
+        return this.vcstate.runtime.codeExec.isCodeRunning();
     }
 
     /**

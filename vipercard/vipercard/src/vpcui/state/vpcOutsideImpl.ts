@@ -1,9 +1,9 @@
 
 /* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcBuiltinMsg, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
@@ -16,9 +16,8 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, ValHolder, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 /* auto */ import { CheckReservedWords, VpcExecFrame, VpcExecFrameStack } from './../../vpc/codeexec/placeholder__codeexec';
@@ -80,11 +79,12 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     ResolveVelRef(ref: RequestedVelRef): [O<VpcElBase>, VpcElCard] {
         let me: O<VpcElBase>;
         let target: O<VpcElBase>;
-        let [frStack, frame] = this.vci.findExecFrameStack();
-        if (frame) {
-            me = this.vci.getModel().findByIdUntyped(frame.codeSection.ownerId);
-            target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
-        }
+        let NoteThisIsDisabledCode = 1;
+        //~ let [frStack, frame] = this.vci.findExecFrameStack();
+        //~ if (frame) {
+        //~ me = this.vci.getModel().findByIdUntyped(frame.codeSection.ownerId);
+        //~ target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
+        //~ }
 
         let resolver = new VelResolveReference(this.vci.getModel());
         let ret = resolver.go(ref, me, target);
@@ -157,90 +157,97 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * declare a global
      */
     DeclareGlobal(varName: string) {
-        assertTrue(slength(varName), '6q|bad varName', varName);
-        let [frStack, frame] = this.getExecFrameStack();
-        frame.declaredGlobals[varName] = true;
+        let NoteThisIsDisabledCode = 1;
+        //~ assertTrue(slength(varName), '6q|bad varName', varName);
+        //~ let [frStack, frame] = this.getExecFrameStack();
+        //~ frame.declaredGlobals[varName] = true;
     }
 
     /**
      * is a variable defined
      */
     IsVarDefined(varName: string) {
-        let [frStack, frame] = this.getExecFrameStack();
-        return bool(
-            frStack.constants.find(varName) ||
-                (frame.declaredGlobals[varName] && frStack.globals.find(varName)) ||
-                frame.locals.find(varName)
-        );
+        let NoteThisIsDisabledCode = 1;
+        return false;
+        //~ let [frStack, frame] = this.getExecFrameStack();
+        //~ return bool(
+        //~ frStack.constants.find(varName) ||
+        //~ (frame.declaredGlobals[varName] && frStack.globals.find(varName)) ||
+        //~ frame.locals.find(varName)
+        //~ );
     }
 
     /**
      * read variable contents
      */
     ReadVarContents(varName: string): VpcVal {
-        assertTrue(slength(varName), '6p|bad varName', varName);
+        let NoteThisIsDisabledCode = 1;
+        return VpcVal.False;
+        //~ assertTrue(slength(varName), '6p|bad varName', varName);
 
-        if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
-            throw makeVpcScriptErr(
-                `in ${cProductName}, you can only write to the msg box, not read from it.`
-            );
-        }
+        //~ if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
+        //~ throw makeVpcScriptErr(
+        //~ `in ${cProductName}, you can only write to the msg box, not read from it.`
+        //~ );
+        //~ }
 
-        let [frStack, frame] = this.getExecFrameStack();
-        let found = frStack.constants.find(varName);
-        if (found) {
-            return found;
-        }
+        //~ let [frStack, frame] = this.getExecFrameStack();
+        //~ let found = frStack.constants.find(varName);
+        //~ if (found) {
+        //~ return found;
+        //~ }
 
-        found = frStack.globals.find(varName);
-        if (found && frame.declaredGlobals[varName] !== undefined) {
-            return found;
-        }
+        //~ found = frStack.globals.find(varName);
+        //~ if (found && frame.declaredGlobals[varName] !== undefined) {
+        //~ return found;
+        //~ }
 
-        found = frame.locals.find(varName);
-        return throwIfUndefined(
-            found,
-            '6o|no variable found with this name. please put contents into before reading from it.',
-            varName
-        );
+        //~ found = frame.locals.find(varName);
+        //~ return throwIfUndefined(
+        //~ found,
+        //~ '6o|no variable found with this name. please put contents into before reading from it.',
+        //~ varName
+        //~ );
     }
 
     /**
      * set variable contents
      */
     SetVarContents(varName: string, v: VpcVal): void {
-        assertTrue(slength(varName), '6n|bad varName', varName);
+        let NoteThisIsDisabledCode = 1;
+        //~ assertTrue(slength(varName), '6n|bad varName', varName);
 
-        if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
-            this.WriteToReplMessageBox(v.readAsString());
-            return;
-        }
+        //~ if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
+        //~ this.WriteToReplMessageBox(v.readAsString());
+        //~ return;
+        //~ }
 
-        let [frStack, frame] = this.getExecFrameStack();
-        let found = frStack.constants.find(varName);
-        if (found) {
-            throw makeVpcScriptErr(`6m|name not allowed ${varName}, it is a constant`);
-        }
+        //~ let [frStack, frame] = this.getExecFrameStack();
+        //~ let found = frStack.constants.find(varName);
+        //~ if (found) {
+        //~ throw makeVpcScriptErr(`6m|name not allowed ${varName}, it is a constant`);
+        //~ }
 
-        checkThrow(
-            this.check.okLocalVar(varName),
-            '8>|variable name not allowed',
-            varName
-        );
-        if (frame.declaredGlobals[varName] !== undefined) {
-            frStack.globals.set(varName, v);
-        } else {
-            frame.locals.set(varName, v);
-        }
+        //~ checkThrow(
+        //~ this.check.okLocalVar(varName),
+        //~ '8>|variable name not allowed',
+        //~ varName
+        //~ );
+        //~ if (frame.declaredGlobals[varName] !== undefined) {
+        //~ frStack.globals.set(varName, v);
+        //~ } else {
+        //~ frame.locals.set(varName, v);
+        //~ }
     }
 
     /**
      * set variable contents (allows access to special vars like "it")
      */
     SetSpecialVar(varName: string, v: VpcVal): void {
-        checkThrow(varName === 'it', '8=|only supported for it');
-        let [frStack, frame] = this.getExecFrameStack();
-        frame.locals.set(varName, v);
+        let NoteThisIsDisabledCode = 1;
+        //~ checkThrow(varName === 'it', '8=|only supported for it');
+        //~ let [frStack, frame] = this.getExecFrameStack();
+        //~ frame.locals.set(varName, v);
     }
 
     /**
@@ -467,8 +474,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * get code execution frame information
      */
     GetFrameInfo(): [VpcScriptMessage, VpcVal[]] {
-        let [frStack, frame] = this.getExecFrameStack();
-        return [frame.message, frame.args];
+        let NoteThisIsDisabledCode = 1;
+        return [new VpcScriptMessage('', VpcBuiltinMsg.Opencard), []];
+        //~ let [frStack, frame] = this.getExecFrameStack();
+        //~ return [frame.message, frame.args];
     }
 
     /**
@@ -517,23 +526,24 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * draw paint on the screen by simulating a click
      */
     SimulateClick(argsGiven: number[], mods: ModifierKeys): void {
-        let mimcTool = this.GetCurrentTool(false);
-        checkThrow(
-            mimcTool !== VpcTool.Browse,
-            longstr(
-                `7R|please first run something like 'choose
-                "pencil" tool' to specify which tool to draw with`,
-                ''
-            )
-        );
-        let args = this.MakeUI512PaintDispatchFromCurrentOptions(false, mods);
-        for (let i = 0; i < argsGiven.length; i += 2) {
-            args.xPts.push(argsGiven[i]);
-            args.yPts.push(argsGiven[i + 1]);
-        }
+        let NoteThisIsDisabledCode = 1;
+        //~ let mimcTool = this.GetCurrentTool(false);
+        //~ checkThrow(
+        //~ mimcTool !== VpcTool.Browse,
+        //~ longstr(
+        //~ `7R|please first run something like 'choose
+        //~ "pencil" tool' to specify which tool to draw with`,
+        //~ ''
+        //~ )
+        //~ );
+        //~ let args = this.MakeUI512PaintDispatchFromCurrentOptions(false, mods);
+        //~ for (let i = 0; i < argsGiven.length; i += 2) {
+        //~ args.xPts.push(argsGiven[i]);
+        //~ args.yPts.push(argsGiven[i + 1]);
+        //~ }
 
-        let [frStack, frame] = this.getExecFrameStack();
-        frStack.paintQueue.push(args);
+        //~ let [frStack, frame] = this.getExecFrameStack();
+        //~ frStack.paintQueue.push(args);
     }
 
     /**
@@ -579,7 +589,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * whether we should call openField or exitField
      */
     GetFieldsRecentlyEdited() {
-        return this.vci.getCodeExec().fieldsRecentlyEdited;
+        let NoteThisIsDisabledCode = 1;
+        let tmp: { [id: string]: boolean } = {};
+        return new ValHolder(tmp);
+        //~ return this.vci.getCodeExec().fieldsRecentlyEdited;
     }
 
     /**
