@@ -4,7 +4,7 @@
 /* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { bool, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, castVerifyIsNum, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
 
