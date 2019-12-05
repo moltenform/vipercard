@@ -39,7 +39,8 @@ export class VpcToolboxMain extends UI512CompToolbox {
         ];
 
         assertEq(16, toolsMain.items.length, '6y|');
-        toolsMain.logicalWidth = toolsMain.items.length * ToolboxDims.MainW - (toolsMain.items.length - 1);
+        toolsMain.logicalWidth =
+            toolsMain.items.length * ToolboxDims.MainW - (toolsMain.items.length - 1);
         toolsMain.logicalHeight = 1;
         toolsMain.hasCloseBtn = false;
         toolsMain.create(vci.getPresenter(), vci.UI512App());

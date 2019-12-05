@@ -476,7 +476,7 @@ type AnyJsonInner =
  */
 export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
 export type UnshapedJsonAny = any;
-export type FlatJson = { [key: string]: string | boolean | number; }
+export type FlatJson = { [key: string]: string | boolean | number };
 export type NoParameterCtor<T> = { new (): T };
 export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
 

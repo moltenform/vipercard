@@ -51,9 +51,14 @@ export class VpcPaintRender extends VpcUILayer {
      * use a UI512ElCanvasPiece to draw a piece of this canvas onto the main canvas
      */
     updateUI512Els(): void {
-        let mainPaint = cast(this.vci.UI512App().getEl('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
+        let mainPaint = cast(
+            this.vci.UI512App().getEl('VpcModelRender$$renderbg'),
+            UI512ElCanvasPiece
+        );
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let [currentlyCachedV, currentlyCachedIm] = this.refreshCachedPaintForCard(currentCardId);
+        let [currentlyCachedV, currentlyCachedIm] = this.refreshCachedPaintForCard(
+            currentCardId
+        );
         mainPaint.setCanvas(currentlyCachedIm);
     }
 
@@ -79,7 +84,10 @@ export class VpcPaintRender extends VpcUILayer {
         let currentlyCached = this.canvasesByCardId.find(cardId);
 
         if (!currentlyCached) {
-            currentlyCached = ['(placeholder)', CanvasWrapper.createMemoryCanvas(this.userPaintW, this.userPaintH)];
+            currentlyCached = [
+                '(placeholder)',
+                CanvasWrapper.createMemoryCanvas(this.userPaintW, this.userPaintH)
+            ];
             this.canvasesByCardId.set(cardId, currentlyCached);
         }
 
@@ -117,7 +125,10 @@ export class VpcPaintRender extends VpcUILayer {
      * get the main background paint hidden canvas piece
      */
     getMainBg(): UI512ElCanvasPiece {
-        return cast(this.vci.UI512App().getEl('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
+        return cast(
+            this.vci.UI512App().getEl('VpcModelRender$$renderbg'),
+            UI512ElCanvasPiece
+        );
     }
 
     /**
@@ -133,7 +144,10 @@ export class VpcPaintRender extends VpcUILayer {
             this.canvasesForPainting[n] = CanvasWrapper.createMemoryCanvas(w, h);
         }
 
-        if (this.canvasesForPainting[n].canvas.width !== w || this.canvasesForPainting[n].canvas.height !== h) {
+        if (
+            this.canvasesForPainting[n].canvas.width !== w ||
+            this.canvasesForPainting[n].canvas.height !== h
+        ) {
             this.canvasesForPainting[n].resizeAndClear(w, h);
         }
 
@@ -235,7 +249,13 @@ export class VpcPaintRender extends VpcUILayer {
     /**
      * commit an html image onto an image
      */
-    commitHtmlImageOntoImage(im: HTMLImageElement, offsetX: number, offsetY: number, srcw: number, srch: number) {
+    commitHtmlImageOntoImage(
+        im: HTMLImageElement,
+        offsetX: number,
+        offsetY: number,
+        srcw: number,
+        srch: number
+    ) {
         this.commitPaintOps((mainCanvas, painter) => {
             mainCanvas.drawFromImage(
                 im,
@@ -277,7 +297,12 @@ export class VpcPaintRender extends VpcUILayer {
     /**
      * draw a "shape" (oval/rectangle/etc tool)
      */
-    drawPartialShape(xPts: number[], yPts: number[], elPiece: UI512ElCanvasPiece, painter: UI512Painter) {
+    drawPartialShape(
+        xPts: number[],
+        yPts: number[],
+        elPiece: UI512ElCanvasPiece,
+        painter: UI512Painter
+    ) {
         elPiece.getCanvasForWrite();
         return this.drawPartialSmear(xPts, yPts, elPiece, painter);
     }
@@ -288,7 +313,10 @@ export class VpcPaintRender extends VpcUILayer {
     protected argsFromCurrentOptions(xPts: number[], yPts: number[]) {
         let outside = new VpcOutsideImpl();
         outside.vci = this.vci;
-        let args = outside.MakeUI512PaintDispatchFromCurrentOptions(true, ModifierKeys.None);
+        let args = outside.MakeUI512PaintDispatchFromCurrentOptions(
+            true,
+            ModifierKeys.None
+        );
         args.xPts = xPts;
         args.yPts = yPts;
         return args;
@@ -304,7 +332,11 @@ export class VpcPaintRender extends VpcUILayer {
         /* make sure we have the latest paint */
         this.updateUI512Els();
         let mainCanvas = this.getMainBg().getCanvasForWrite();
-        let painter = new UI512PainterCvCanvas(mainCanvas, mainCanvas.canvas.width, mainCanvas.canvas.height);
+        let painter = new UI512PainterCvCanvas(
+            mainCanvas,
+            mainCanvas.canvas.width,
+            mainCanvas.canvas.height
+        );
         fn(mainCanvas, painter);
         let serialized = new UI512ImageSerialization().writeToString(mainCanvas);
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
@@ -331,7 +363,11 @@ export class VpcPaintRender extends VpcUILayer {
         for (let queuePerCard of queuesPerCard) {
             let cd = this.vci.getModel().getById(queuePerCard[0].cardId, VpcElCard);
             let [v, cvs] = this.refreshCachedPaintForCard(cd.id);
-            let painter = new UI512PainterCvCanvas(cvs, cvs.canvas.width, cvs.canvas.height);
+            let painter = new UI512PainterCvCanvas(
+                cvs,
+                cvs.canvas.width,
+                cvs.canvas.height
+            );
 
             for (let item of queuePerCard) {
                 UI512PaintDispatch.go(item, painter);
@@ -346,7 +382,9 @@ export class VpcPaintRender extends VpcUILayer {
      * export to gif
      */
     paintExportToGif(pr: UI512Presenter, speed: number) {
-        let gif = new PaintGifExport(this.vci, cardId => this.refreshCachedPaintForCard(cardId));
+        let gif = new PaintGifExport(this.vci, cardId =>
+            this.refreshCachedPaintForCard(cardId)
+        );
         gif.begin(speed);
     }
 }

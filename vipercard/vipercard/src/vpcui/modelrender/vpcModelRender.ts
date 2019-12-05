@@ -25,7 +25,13 @@
 export class VpcModelRender extends VpcUILayer implements ElementObserver {
     grp: UI512ElGroup;
     directMapProperty: { [key: string]: string } = {};
-    indirectProperty: { [key: string]: (vel: VpcElBase, el: UI512Element, newVal: ElementObserverVal) => void } = {};
+    indirectProperty: {
+        [key: string]: (
+            vel: VpcElBase,
+            el: UI512Element,
+            newVal: ElementObserverVal
+        ) => void;
+    } = {};
     propertiesCouldUnFocus: { [key: string]: boolean } = {};
 
     /* cause VPC UI to be redrawn */
@@ -108,21 +114,21 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         }
     }
 
-    protected getCardSpecific(vel: VpcElBase, propName:string, currentCardId:string) {
-        let spl = propName.split('_oncard_')
+    protected getCardSpecific(vel: VpcElBase, propName: string, currentCardId: string) {
+        let spl = propName.split('_oncard_');
         if (spl.length > 1) {
-            let shortPropname = spl[0]
-            let propCardname = spl[1]
+            let shortPropname = spl[0];
+            let propCardname = spl[1];
             if (vel.isCardSpecificContent(shortPropname)) {
-                return propCardname === currentCardId ? shortPropname : '______'
+                return propCardname === currentCardId ? shortPropname : '______';
             } else {
-                return '______'
+                return '______';
             }
         } else {
             if (vel.isCardSpecificContent(propName)) {
-                return '______'
+                return '______';
             } else {
-                return propName
+                return propName;
             }
         }
     }
@@ -141,7 +147,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         let type = vel.getType();
         let currentCardId = this.vci.getOptionS('currentCardId');
         if (type === VpcElType.Btn || type === VpcElType.Fld) {
-            propName = this.getCardSpecific(vel, propName, currentCardId)
+            propName = this.getCardSpecific(vel, propName, currentCardId);
         }
 
         let screenlocked = this.vci.getOptionB('screenLocked');
@@ -172,7 +178,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      */
     protected refreshLabelWithFont(vel: VpcElBase, target: UI512Element) {
         if (vel instanceof VpcElButton) {
-            let lbl = vel.getB('showlabel') ? UI512DrawText.setFont(vel.getS('label'), vel.getFontAsUI512()) : '';
+            let lbl = vel.getB('showlabel')
+                ? UI512DrawText.setFont(vel.getS('label'), vel.getFontAsUI512())
+                : '';
             target.set('labeltext', lbl);
         } else {
             throw makeVpcInternalErr(`6+|expected button`);
@@ -217,14 +225,14 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * does this ui512element id belong to a vel or to the vpc background?
      */
     isVelOrBg(id: string) {
-        return id.startsWith('VpcModelRender$$') && !id.includes( '##sb##');
+        return id.startsWith('VpcModelRender$$') && !id.includes('##sb##');
     }
 
     /**
      * from ui512element id to vel id, or undefined
      */
     elIdToVelId(id: string): O<string> {
-        if (id.includes( '##sb##')) {
+        if (id.includes('##sb##')) {
             /* scrollbar parts aren't considered part of the vel */
             return undefined;
         } else if (id === 'VpcModelRender$$renderbg') {
@@ -273,14 +281,14 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     /**
      * build a button from scratch
      */
-    protected buildBtnFromScratch(vel: VpcElButton, currentCardId:string) {
+    protected buildBtnFromScratch(vel: VpcElButton, currentCardId: string) {
         let target = new UI512ElButton(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        let keys = Util512.getMapKeys(vel as any)
-        for (let i = 0, len = keys.length; i<len; i++) {
+        let keys = Util512.getMapKeys(vel as any);
+        for (let i = 0, len = keys.length; i < len; i++) {
             let prop = keys[i];
             if (prop.startsWith('__')) {
-                prop = prop.slice(1)
+                prop = prop.slice(1);
                 let newVal = vel.getGeneric(prop);
                 this.applyOneChange(vel, prop, newVal, true);
             }
@@ -290,14 +298,14 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     /**
      * build a field from scratch
      */
-    protected buildFldFromScratch(vel: VpcElField, currentCardId:string) {
+    protected buildFldFromScratch(vel: VpcElField, currentCardId: string) {
         let target = new UI512ElTextField(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        let keys = Util512.getMapKeys(vel as any)
-        for (let i = 0, len = keys.length; i<len; i++) {
+        let keys = Util512.getMapKeys(vel as any);
+        for (let i = 0, len = keys.length; i < len; i++) {
             let prop = keys[i];
             if (prop.startsWith('__')) {
-                prop = prop.slice(1)
+                prop = prop.slice(1);
                 let newVal = vel.getGeneric(prop);
                 this.applyOneChange(vel, prop, newVal, true);
             }
@@ -310,8 +318,16 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * apply one change,
      * mapping a vel change to a ui512element change
      */
-    protected applyOneChange(vel: VpcElBase, propName: string, newVal: ElementObserverVal, fromScratch: boolean) {
-        assertTrue(vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn, 'KU|');
+    protected applyOneChange(
+        vel: VpcElBase,
+        propName: string,
+        newVal: ElementObserverVal,
+        fromScratch: boolean
+    ) {
+        assertTrue(
+            vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn,
+            'KU|'
+        );
         let key = vel.getType().toString() + '/' + propName;
         let target = this.findVelIdToEl(vel.id);
         if (target) {
@@ -323,7 +339,11 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 target.set(ui512propname, newVal);
             } else if (propName === UI512Settable.fmtTxtVarName) {
                 let newvAsText = newVal as FormattedText;
-                assertTrue(newvAsText && newvAsText.isFormattedText, '6)|bad formatted text', vel.id);
+                assertTrue(
+                    newvAsText && newvAsText.isFormattedText,
+                    '6)|bad formatted text',
+                    vel.id
+                );
                 target.setFmTxt(newvAsText);
             } else {
                 /* it's a property that doesn't impact rendering. that's ok. */
@@ -418,7 +438,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         };
 
         this.indirectProperty[VpcElType.Fld + '/enabled'] = (vel, el, newVal) => {
-            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
+            let isEdit =
+                getToolCategory(this.vci.getOptionN('currentTool')) ===
+                VpcToolCtg.CtgEdit;
             el.set('enabledstyle', newVal);
             el.set('enabled', isEdit ? true : newVal);
         };
@@ -447,7 +469,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
 
         this.directMapProperty[VpcElType.Fld + '/scrollbar'] = 'scrollbar';
         this.indirectProperty[VpcElType.Fld + '/visible'] = (vel, el, newVal) => {
-            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
+            let isEdit =
+                getToolCategory(this.vci.getOptionN('currentTool')) ===
+                VpcToolCtg.CtgEdit;
             el.set('visible', isEdit ? true : newVal);
         };
 
@@ -467,7 +491,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected initButtonProps() {
         this.directMapProperty[VpcElType.Btn + '/autohilite'] = 'autohighlight';
         this.indirectProperty[VpcElType.Btn + '/enabled'] = (vel, el, newVal) => {
-            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
+            let isEdit =
+                getToolCategory(this.vci.getOptionN('currentTool')) ===
+                VpcToolCtg.CtgEdit;
             el.set('enabledstyle', newVal);
             el.set('enabled', isEdit ? true : newVal);
         };
@@ -506,7 +532,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         };
 
         this.indirectProperty[VpcElType.Btn + '/visible'] = (vel, el, newVal) => {
-            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
+            let isEdit =
+                getToolCategory(this.vci.getOptionN('currentTool')) ===
+                VpcToolCtg.CtgEdit;
             el.set('visible', isEdit ? true : newVal);
         };
     }
@@ -521,7 +549,11 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
  * we need to update the _VpcElField_ model first
  */
 export class VpcTextFieldAsGeneric implements GenericTextField {
-    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected cardId: string) {}
+    constructor(
+        protected el512: UI512ElTextField,
+        protected impl: VpcElField,
+        protected cardId: string
+    ) {}
 
     setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
         this.impl.setCardFmTxt(this.cardId, newTxt, context);
@@ -569,13 +601,13 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     }
 
     getScrollAmt(): number {
-        let got = this.impl.getPossiblyCardSpecific('scroll', 0, this.cardId)
-        return got as number
+        let got = this.impl.getPossiblyCardSpecific('scroll', 0, this.cardId);
+        return got as number;
     }
 
     setScrollAmt(n: O<number>): void {
         if (n !== undefined && n !== null) {
-            return this.impl.setPossiblyCardSpecific('scroll', n, 0, this.cardId)
+            return this.impl.setPossiblyCardSpecific('scroll', n, 0, this.cardId);
         }
     }
 }

@@ -53,7 +53,9 @@ export class VpcAppLyrNotification extends VpcUILayer {
     respondMouseUp(d: MouseUpEventDetails) {
         if (d.elClick) {
             if (d.elClick.id === 'grpAppHelperElemsShowTutorial') {
-                let grpHelperElems = VpcAppLyrDragHandles.getGrpHelperElems(this.vci.UI512App());
+                let grpHelperElems = VpcAppLyrDragHandles.getGrpHelperElems(
+                    this.vci.UI512App()
+                );
                 let lbl = grpHelperElems.findEl('grpAppHelperElemsShowTutorial');
                 if (lbl) {
                     if (this.vci.bounds()[0] + this.vci.bounds()[2] - d.mouseX < 55) {
@@ -96,7 +98,12 @@ export class VpcAppLyrNotification extends VpcUILayer {
         this.elems.nyiMsg.set('labelwrap', true);
         this.elems.nyiMsg.set('labelhalign', true);
         this.elems.nyiMsg.set('labelvalign', true);
-        this.elems.nyiMsg.setDimensions(this.elems.cover.x, this.elems.cover.y, this.elems.cover.w, this.elems.cover.h);
+        this.elems.nyiMsg.setDimensions(
+            this.elems.cover.x,
+            this.elems.cover.y,
+            this.elems.cover.w,
+            this.elems.cover.h
+        );
 
         /* a message to the user saying where tutorials are. */
         let s = lng('lngNew? Click here to see how to use ViperCard. (Close).');

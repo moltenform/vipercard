@@ -42,7 +42,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     protected status2b: UI512ElLabel;
     protected statusErrMoreDetails: string;
     readonly monaco = `monaco_9_${textFontStylingToString(TextFontStyling.Default)}`;
-    readonly genevaPlain = `geneva_10_${textFontStylingToString(TextFontStyling.Default)}`;
+    readonly genevaPlain = `geneva_10_${textFontStylingToString(
+        TextFontStyling.Default
+    )}`;
     readonly genevaBold = `geneva_10_${textFontStylingToString(TextFontStyling.Bold)}`;
     constructor(compositeId: string) {
         super(compositeId);
@@ -80,7 +82,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
 
         /* draw window decoration */
-        let headerHeight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
+        let headerHeight = this.drawWindowDecoration(
+            app,
+            new WndBorderDecorationConsts(),
+            this.hasCloseBtn
+        );
 
         /* draw spacer */
         let curY = this.y + headerHeight - 1;
@@ -96,7 +102,12 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.el.set('scrollbar', true);
         this.el.set('defaultFont', UI512CompCodeEditorFont.font);
         this.el.set('nudgey', 2);
-        this.el.setDimensions(this.x, curY, this.logicalWidth, this.y + this.logicalHeight - curY - footerHeight);
+        this.el.setDimensions(
+            this.x,
+            curY,
+            this.logicalWidth,
+            this.y + this.logicalHeight - curY - footerHeight
+        );
 
         /* draw status text row 1 */
         this.status1a = this.genChild(app, grp, 'status1a', UI512ElLabel);
@@ -132,11 +143,15 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         let grp = app.getGroup(this.grpId);
         if (!vel) {
             this.setStatusLabeltext('', undefined, '', '');
-            grp.getEl(this.getElId('caption')).set('labeltext', lng('lngElement not found.'));
+            grp.getEl(this.getElId('caption')).set(
+                'labeltext',
+                lng('lngElement not found.')
+            );
         } else {
             let caption = grp.getEl(this.getElId('caption'));
             let captionMsg = lng('lngScript of %c');
-            let velName = vpcElTypeToString(vel.getType(), true) + ` "${vel.getS('name')}"`;
+            let velName =
+                vpcElTypeToString(vel.getType(), true) + ` "${vel.getS('name')}"`;
             captionMsg = captionMsg.replace(/%c/g, velName);
             captionMsg = captionMsg.substr(0, 36);
             caption.set('labeltext', captionMsg);
@@ -158,7 +173,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * shows the last error encountered by the codeExec object
      */
     protected refreshStatusLabels(app: UI512Application, vel: VpcElBase) {
-        let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
+        let lastScriptErr = this.vci
+            ? this.vci.getCodeExec().lastEncounteredScriptErr
+            : undefined;
         this.status2a.set('labeltext', '');
         if (lastScriptErr && lastScriptErr.velId === vel.id) {
             /* check for "encountered" err */
@@ -170,7 +187,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             );
         } else {
             /* check for syntax err */
-            let codeStatus = this.vci.getCodeExec().getCompiledScript(vel.id, vel.getS('script'));
+            let codeStatus = this.vci
+                .getCodeExec()
+                .getCompiledScript(vel.id, vel.getS('script'));
             if (codeStatus instanceof VpcScriptErrorBase) {
                 this.setStatusLabeltext(
                     'lngSyntax error:',
@@ -185,10 +204,19 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
 
         let grp = app.getGroup(this.grpId);
         let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
-        if (slength(this.status2a.getS('labeltext')) || this.needsCompilation.find(vel.id)) {
-            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
+        if (
+            slength(this.status2a.getS('labeltext')) ||
+            this.needsCompilation.find(vel.id)
+        ) {
+            btnCompile.set(
+                'labeltext',
+                UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold)
+            );
         } else {
-            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
+            btnCompile.set(
+                'labeltext',
+                UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain)
+            );
         }
     }
 
@@ -197,7 +225,12 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * sType is untranslated,
      * sMsg and sMsgMore are already translated
      */
-    protected setStatusLabeltext(sType: string, n: O<number>, sMsg: string, sMsgMore: string) {
+    protected setStatusLabeltext(
+        sType: string,
+        n: O<number>,
+        sMsg: string,
+        sMsgMore: string
+    ) {
         this.status1a.set('labeltext', lng(sType));
         this.status2b.set('labeltext', UI512DrawText.setFont(sMsg, this.monaco));
 
@@ -227,7 +260,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
 
         /* hide the "just encountered" message. */
         /* seems ok to do -- also might be possible for user to click hide. */
-        let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
+        let lastScriptErr = this.vci
+            ? this.vci.getCodeExec().lastEncounteredScriptErr
+            : undefined;
         if (lastScriptErr && lastScriptErr.velId === vel.id) {
             this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
         }
@@ -303,9 +338,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 this.el.set('scrollamt', 0);
 
                 /* filter out all temporary code */
-                let script = validVel.getS('script')
-                script = VpcExecFrame.filterTemporaryFromScript(script)
-                validVel.set('script', script)
+                let script = validVel.getS('script');
+                script = VpcExecFrame.filterTemporaryFromScript(script);
+                validVel.set('script', script);
 
                 this.refreshFromModel(app);
             }
@@ -338,7 +373,8 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
 
     /**
      * save the script to the script property on the vel
-     * if onlyCheckIfDirty is set, skip saving the script and only check if there are unsaved changes
+     * if onlyCheckIfDirty is set, skip saving the script and only check if
+     * there are unsaved changes
      */
     saveChangesToModel(app: UI512Application, onlyCheckIfDirty: boolean) {
         /* note: here we will save the script text to the 'script' property */
@@ -353,7 +389,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         if (onlyCheckIfDirty) {
             let current = vel.getS('script');
             if (current !== newscript) {
-                throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
+                throw makeVpcInternalErr(
+                    msgNotification + VpcPanelScriptEditor.thereArePendingChanges
+                );
             }
         } else {
             vel.set('script', newscript);
@@ -363,5 +401,5 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     /**
      * not relevant, there's nothing different in a bg
      */
-    showOrHideBgSpecific(_app: UI512Application, _isBgPart:boolean) {}
+    showOrHideBgSpecific(_app: UI512Application, _isBgPart: boolean) {}
 }

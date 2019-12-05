@@ -40,8 +40,13 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
             let handle = this.lyrPanels.handles.whichHandle(d.el ? d.el.id : '');
             if (handle !== undefined && !this.dragStatus) {
                 let vel = this.lyrPanels.selectedVel('selectedVelId');
-                if (vel && (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld)) {
-                    let targetEl = this.vci.UI512App().findEl('VpcModelRender$$' + vel.id);
+                if (
+                    vel &&
+                    (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld)
+                ) {
+                    let targetEl = this.vci
+                        .UI512App()
+                        .findEl('VpcModelRender$$' + vel.id);
                     if (targetEl) {
                         /* distance from initial click to center of handle */
                         let distanceFromHandleCenterX =
@@ -92,12 +97,22 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
                 let centerY = d.mouseY - this.dragStatus.distanceFromHandleCenterY;
                 let newW = Math.max(minVelW, centerX - this.dragStatus.el.x);
                 let newH = Math.max(minVelH, centerY - this.dragStatus.el.y);
-                this.dragStatus.el.setDimensions(this.dragStatus.el.x, this.dragStatus.el.y, newW, newH);
+                this.dragStatus.el.setDimensions(
+                    this.dragStatus.el.x,
+                    this.dragStatus.el.y,
+                    newW,
+                    newH
+                );
             } else {
                 /* for the other handles, set the location */
                 let newX = d.mouseX - this.dragStatus.distanceFrom1stHandleCenterX;
                 let newY = d.mouseY - this.dragStatus.distanceFrom1stHandleCenterY;
-                this.dragStatus.el.setDimensions(newX, newY, this.dragStatus.el.w, this.dragStatus.el.h);
+                this.dragStatus.el.setDimensions(
+                    newX,
+                    newY,
+                    this.dragStatus.el.w,
+                    this.dragStatus.el.h
+                );
             }
 
             /* refresh ui */
@@ -116,7 +131,8 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
             if (
                 validatedVel &&
                 validatedVel.id === this.dragStatus.vel.id &&
-                (validatedVel.getType() === VpcElType.Btn || validatedVel.getType() === VpcElType.Fld)
+                (validatedVel.getType() === VpcElType.Btn ||
+                    validatedVel.getType() === VpcElType.Fld)
             ) {
                 /* commit the change to the vel */
                 let vel = this.dragStatus.vel;

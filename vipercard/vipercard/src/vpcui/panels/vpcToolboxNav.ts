@@ -48,7 +48,10 @@ export class VpcToolboxNav extends UI512CompToolbox {
         } else {
             btnCardNumOrStop.set('icongroupid', '');
             btnCardNumOrStop.set('iconnumber', -1);
-            btnCardNumOrStop.set('labeltext', UI512DrawText.setFont((cardnum + 1).toString(), this.geneva));
+            btnCardNumOrStop.set(
+                'labeltext',
+                UI512DrawText.setFont((cardnum + 1).toString(), this.geneva)
+            );
             btnCardNumOrStop.set('autohighlight', false);
             btnDupeCardOrStatus.set('iconnumber', 98); /* dupecard */
             btnDupeCardOrStatus.set('autohighlight', true);
@@ -75,7 +78,8 @@ export class VpcToolboxNav extends UI512CompToolbox {
             ['makeAnimOrStatus', black]
         ];
 
-        toolsNav.logicalWidth = toolsNav.items.length * ToolboxDims.NavW - (toolsNav.items.length - 1);
+        toolsNav.logicalWidth =
+            toolsNav.items.length * ToolboxDims.NavW - (toolsNav.items.length - 1);
         toolsNav.logicalHeight = 1;
         toolsNav.hasCloseBtn = false;
         toolsNav.create(vci.getPresenter(), vci.UI512App());

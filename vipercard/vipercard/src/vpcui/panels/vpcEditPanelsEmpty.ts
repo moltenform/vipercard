@@ -43,7 +43,8 @@ export class VpcEditPanelsEmpty extends VpcEditPanelsBase {
         let grp = app.getGroup(this.grpId);
         let btnGenPart = grp.getEl(this.getElId('btnGenPart'));
         let currentTool = this.vci.getOptionN('currentTool');
-        let lbl = currentTool === VpcTool.Button ? 'lngMake new button' : 'lngMake new field';
+        let lbl =
+            currentTool === VpcTool.Button ? 'lngMake new button' : 'lngMake new field';
         btnGenPart.set('labeltext', lng(lbl));
     }
 }

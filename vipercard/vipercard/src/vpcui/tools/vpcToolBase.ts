@@ -20,7 +20,11 @@ export abstract class VpcAppUIToolBase {
     cbScheduleScriptEventSend: (d: EventDetails) => void;
 
     constructor(protected bounds: number[], protected userBounds: number[]) {}
-    abstract respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void;
+    abstract respondMouseDown(
+        tl: VpcTool,
+        d: MouseDownEventDetails,
+        isVelOrBg: boolean
+    ): void;
     abstract cancelCurrentToolAction(): void;
     abstract whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors;
     respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {}

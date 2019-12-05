@@ -54,7 +54,10 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
      */
     protected makeBlack() {
         if (this.st) {
-            let cv = cast(this.st.elStage.getCachedPainterForWrite().getBackingSurface(), CanvasWrapper);
+            let cv = cast(
+                this.st.elStage.getCachedPainterForWrite().getBackingSurface(),
+                CanvasWrapper
+            );
             cv.clear();
 
             let args = new UI512PaintDispatch(
@@ -77,9 +80,10 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
         const minSize = 2;
         return bool(
             this.st &&
-            (this.st.maxX - this.st.minX <= minSize || this.st.maxY - this.st.minY <= minSize) &&
-            this.st.recordXpts.length > minSize &&
-            this.st.recordYpts.length > minSize
+                (this.st.maxX - this.st.minX <= minSize ||
+                    this.st.maxY - this.st.minY <= minSize) &&
+                this.st.recordXpts.length > minSize &&
+                this.st.recordYpts.length > minSize
         );
     }
 }

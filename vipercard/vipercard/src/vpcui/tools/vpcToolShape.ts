@@ -30,7 +30,9 @@ export class VpcAppUIToolShape extends VpcAppUIToolBase {
         if (!this.state) {
             let [tx, ty] = this.getTranslatedCoords(d.mouseX, d.mouseY);
             let state = new ShapeToolState();
-            let elStage = this.cbPaintRender().makeAndAddFullsizeEl('VpcAppUIToolShapeStage');
+            let elStage = this.cbPaintRender().makeAndAddFullsizeEl(
+                'VpcAppUIToolShapeStage'
+            );
             elStage.transparentToClicks = true;
             elStage.setCanvas(this.cbPaintRender().getTemporaryCanvas(1));
             state.elStage = elStage;
@@ -60,15 +62,32 @@ export class VpcAppUIToolShape extends VpcAppUIToolBase {
                 this.state.elStage.getCanvasForWrite().clear();
             }
 
-            this.drawPartial(this.state.elStage.getCanvasForWrite(), this.state, tl, tnx, tny);
+            this.drawPartial(
+                this.state.elStage.getCanvasForWrite(),
+                this.state,
+                tl,
+                tnx,
+                tny
+            );
         }
     }
 
     /**
      * draw the shape
      */
-    protected drawPartial(cv: CanvasWrapper, st: ShapeToolState, tl: VpcTool, x: number, y: number) {
-        this.cbPaintRender().drawPartialShape([st.startX, x], [st.startY, y], st.elStage, st.paStage);
+    protected drawPartial(
+        cv: CanvasWrapper,
+        st: ShapeToolState,
+        tl: VpcTool,
+        x: number,
+        y: number
+    ) {
+        this.cbPaintRender().drawPartialShape(
+            [st.startX, x],
+            [st.startY, y],
+            st.elStage,
+            st.paStage
+        );
     }
 
     /**
@@ -76,7 +95,11 @@ export class VpcAppUIToolShape extends VpcAppUIToolBase {
      */
     respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
         if (this.state && this.state.mode === ShapeToolMode.Dragging) {
-            this.cbPaintRender().commitImageOntoImage([this.state.elStage.getCanvasForWrite()], 0, 0);
+            this.cbPaintRender().commitImageOntoImage(
+                [this.state.elStage.getCanvasForWrite()],
+                0,
+                0
+            );
             this.onLeaveTool();
             this.onOpenTool();
         }

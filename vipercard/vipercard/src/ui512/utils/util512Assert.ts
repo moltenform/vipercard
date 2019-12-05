@@ -284,12 +284,11 @@ export class UI512ErrorHandling {
 
 /**
  * is it truthy? anything except false, 0, "", null, undefined, and NaN
-*/
+ */
 export function bool(x: unknown): boolean {
     /* eslint-disable-next-line no-implicit-coercion */
     return !!x;
 }
-
 
 /**
  * use as a type assertion
@@ -434,7 +433,12 @@ export function markUI512Err(
 /**
  * a quick way to throw an exception if condition is false, for vpc layer
  */
-export function checkThrow(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
+export function checkThrow(
+    condition: unknown,
+    msg: string,
+    s1: unknown = '',
+    s2: unknown = ''
+): asserts condition {
     if (!condition) {
         throw makeVpcScriptErr(`${msg} ${s1} ${s2}`);
     }

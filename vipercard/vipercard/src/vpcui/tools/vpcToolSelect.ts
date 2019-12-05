@@ -65,6 +65,10 @@ export class VpcAppUIToolSelect extends VpcAppUIToolSelectBase {
      */
     protected checkTooSmall() {
         const minSize = 2;
-        return trueIfDefinedAndNotNull(this.st) && (this.st.maxX - this.st.minX <= minSize || this.st.maxY - this.st.minY <= minSize);
+        return (
+            trueIfDefinedAndNotNull(this.st) &&
+            (this.st.maxX - this.st.minX <= minSize ||
+                this.st.maxY - this.st.minY <= minSize)
+        );
     }
 }

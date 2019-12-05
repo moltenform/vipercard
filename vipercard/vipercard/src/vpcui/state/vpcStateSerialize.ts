@@ -63,11 +63,12 @@ export class VpcStateSerialize {
             );
             console.log(
                 `opening a document format ${incoming.fileformatmajor}.
-                ${incoming.fileformatminor}, my version is 
+                ${incoming.fileformatminor}, my version is
                 ${this.latestMajor}.${this.latestMinor}`
             );
-            console.log(longstr(`opening a document made by 
-                buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`),
+            console.log(
+                longstr(`opening a document made by
+                buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`)
             );
 
             building.getModel().uuid = incoming.uuid;

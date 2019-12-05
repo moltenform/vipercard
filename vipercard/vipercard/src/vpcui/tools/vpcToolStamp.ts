@@ -60,11 +60,25 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
                 let [srcw, srch] = theimg.getSize();
                 tx -= Math.round(srcw / 2);
                 ty -= Math.round(srch / 2);
-                this.cbPaintRender().commitHtmlImageOntoImage(theimg.image, tx, ty, srcw, srch);
+                this.cbPaintRender().commitHtmlImageOntoImage(
+                    theimg.image,
+                    tx,
+                    ty,
+                    srcw,
+                    srch
+                );
             }
-        } else if (!isVelOrBg && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceLeft')) {
+        } else if (
+            !isVelOrBg &&
+            d.elRaw &&
+            d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceLeft')
+        ) {
             this.onChooseCategory();
-        } else if (!isVelOrBg && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceRight')) {
+        } else if (
+            !isVelOrBg &&
+            d.elRaw &&
+            d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceRight')
+        ) {
             this.onChoosePicture();
         }
     }
@@ -132,7 +146,9 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
                 this.currentImg = undefined;
                 if (el.getFmTxt().len() > 0) {
                     /* auto-choose the first one */
-                    let rghtgel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
+                    let rghtgel = new UI512ElTextFieldAsGeneric(
+                        cast(el, UI512ElTextField)
+                    );
                     TextSelModify.selectLineInField(rghtgel, 0);
                     this.onChoosePicture();
                 }
@@ -238,7 +254,10 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         grp.updateBoundsBasedOnChildren();
 
         /* set left choices */
-        UI512ElTextField.setListChoices(lft, this.directories.map(item => lng(item[1])));
+        UI512ElTextField.setListChoices(
+            lft,
+            this.directories.map(item => lng(item[1]))
+        );
 
         /* auto-choose the first entry in the list */
         let lftgel = new UI512ElTextFieldAsGeneric(cast(lft, UI512ElTextField));
