@@ -4,6 +4,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
@@ -28,7 +29,8 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
         ['email', 'lngE-mail:', 1],
         [
             'descrEmail',
-             deleteThis.longstr(`lng(This e-mail address and all information\nprovided will not be shared with any\nthird party.)`, ''),
+            longstr(`lng(This e-mail address and all information{{NEWLINE}}
+                provided will not be shared with any{{NEWLINE}}third party.)`),
             2
         ]
     ];

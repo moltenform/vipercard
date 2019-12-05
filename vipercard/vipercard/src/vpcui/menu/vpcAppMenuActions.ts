@@ -14,7 +14,7 @@
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512, last } from './../../ui512/utils/util512';
+/* auto */ import { BrowserOSInfo, Util512, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
@@ -71,8 +71,9 @@ export class VpcMenuActions {
      */
     goMnuReportSec() {
         this.showModal(
-            'lngSecurity issues are taken seriously. If you are aware of an issue that has security\n' +
-                'implications, please contact the developers\nat security@vipercard.net.'
+            longstr(`lngSecurity issues are taken seriously. If you are aware
+                of an issue that has security{{NEWLINE}}implications, please
+                contact the developers{{NEWLINE}}at security@vipercard.net.`)
         );
     }
 
@@ -143,7 +144,8 @@ export class VpcMenuActions {
      * export stack to json
      */
     goMnuExportStack() {
-        /* *don't* use this.busy with this. need a way to recover if save() hangs for some reason. */
+        /* *don't* use this.busy with this. need a way to
+        recover if save() hangs for some reason. */
         this.save.beginExportJson();
     }
 
@@ -228,13 +230,9 @@ export class VpcMenuActions {
      */
     goMnuPublishFeatured() {
         this.showModal(
-            deleteThis.longstr(
-                deleteThis.longstr(
-                     deleteThis.longstr(`lngYour project could be featured on ViperCard's front page! Save the project, choose 'Share a link' from the File menu, and send the link to @ViperCardDotNet on Twitter.`, ''),
-                    ''
-                ),
-                ''
-            )
+            longstr(`lngYour project could be featured on ViperCard's
+                front page! Save the project, choose 'Share a link' from
+                the File menu, and send the link to @ViperCardDotNet on Twitter.`)
         );
     }
 
@@ -361,13 +359,9 @@ export class VpcMenuActions {
     goMnuPaintManyCopies() {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Option' : 'Alt';
         this.showModal(
-            deleteThis.longstr(
-                deleteThis.longstr(
-                     deleteThis.longstr(`lngTo make many of copies of a shape, first use the 'lasso' or 'select' tool to select the region. Then, hold the ${keyname} key, click within the region, and drag.`, ''),
-                    ''
-                ),
-                ''
-            )
+            longstr(`lngTo make many of copies of a shape, first use the
+                'lasso' or 'select' tool to select the region. Then, hold
+                the ${keyname} key, click within the region, and drag.`)
         );
     }
 
@@ -438,12 +432,9 @@ export class VpcMenuActions {
             .getModel()
             .stack.bgs.map(bg => bg.cards.length)
             .reduce(Util512.add);
-        let msg = deleteThis.longstr(
-            deleteThis.longstr(
-                 deleteThis.longstr(`lngYou are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu.`, ''),
-                ''
-            ),
-            ''
+        let msg = lng(
+            longstr(`lngYou are at the last-most card. You can create
+            a new card by selecting 'New Card' from the Edit menu.`)
         );
         if (cardNum >= totalCardNum - 1) {
             this.showModal(msg);

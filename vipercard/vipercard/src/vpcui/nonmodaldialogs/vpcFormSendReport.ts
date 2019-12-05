@@ -146,7 +146,8 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
         let info = this.vci.getModel().stack.getLatestStackLineage();
         let fullStackId = VpcSession.getFullStackId(info.stackOwner, info.stackGuid);
 
-        /* ok to set props on lblStatus, since we have a firm reference, if form has been closed is a no-op */
+        /* ok to set props on lblStatus, since we have a
+        firm reference, if form has been closed is a no-op */
         this.setStatus('lngSending report...');
         await ses.vpcLogEntriesCreate(userdesc, lastClientLogs, fullStackId);
         return true;

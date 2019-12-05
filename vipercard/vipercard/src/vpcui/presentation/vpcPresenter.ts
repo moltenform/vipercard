@@ -16,7 +16,7 @@
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { RenderComplete, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, bool, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -71,8 +71,8 @@ export class VpcPresenter extends VpcPresenterInit {
             this.lyrPaintRender.deleteTempPaintEls();
             this.setCurrentFocus(undefined);
 
-            /* especially important when going from edit to browse, 
-            let's say you've set the enabled of a button to false, 
+            /* especially important when going from edit to browse,
+            let's say you've set the enabled of a button to false,
             need to redo modelRender so that it is actually
                 enabled==false not just enabledstyle */
             this.lyrModelRender.fullRedrawNeeded();
@@ -234,7 +234,8 @@ export class VpcPresenter extends VpcPresenterInit {
 
         //~ /* redirect line number if this came from 'send' or 'do' */
         //~ let script = origVel.getS('script')
-        //~ let [redirredVelId, redirredLine] = VpcExecFrame.getBetterLineNumberIfTemporary(script, origVel.id, origLine)
+        //~ let [redirredVelId, redirredLine] = VpcExecFrame.
+        //~ getBetterLineNumberIfTemporary(script, origVel.id, origLine)
         //~ let redirredVel = vci.getModel().findByIdUntyped(redirredVelId) ?? origVel;
 
         //~ /* update the error object */
@@ -458,7 +459,8 @@ export class VpcPresenter extends VpcPresenterInit {
     render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete) {
         this.lyrModelRender.checkIfScreenWasJustUnlocked();
         let shouldUpdate =
-            this.lyrModelRender.needUIToolsRedraw || this.lyrModelRender.needFullRedraw;
+            bool(this.lyrModelRender.needUIToolsRedraw) ||
+            bool(this.lyrModelRender.needFullRedraw);
 
         /* set flags saying we don't need to render again -- even if render() fails.
         so we don't get stuck in any annoying assert loops.
@@ -692,7 +694,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * the state, and we should still treat those as undoable.
      */
     protected runUndoOrRedo(fn: () => boolean, msgIfFalse: string, isUndo: boolean) {
-        /* if we selected/moved something, it "feels" like we moved 
+        /* if we selected/moved something, it "feels" like we moved
         it even though we haven't committed anything. so calling undo
         in this case should just cancel selection and not step backwards. */
         let tl = this.getToolResponse(this.getTool());

@@ -1,4 +1,5 @@
 
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { UI512CompModalDialog, UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { lng } from './../../ui512/lang/langBase';

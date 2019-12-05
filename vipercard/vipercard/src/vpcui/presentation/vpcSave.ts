@@ -8,7 +8,7 @@
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512 } from './../../ui512/utils/util512';
+/* auto */ import { BrowserOSInfo, Util512, coalesceIfFalseLike, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
@@ -83,8 +83,8 @@ export class VpcSave implements VpcSaveInterface {
             caught = true;
             this.busy = false;
             this.pr.answerMsg(
-                "Save did not complete. If you encounter repeated errors, you can use 'Save As Json' instead.\n" +
-                    e.toString(),
+                longstr(`Save did not complete. If you encounter repeated
+                 errors, you can use 'Save As Json' instead.\n${e}`),
                 n => {}
             );
         }
@@ -128,8 +128,8 @@ export class VpcSave implements VpcSaveInterface {
             caught = true;
             this.busy = false;
             await this.pr.answerMsgAsync(
-                "Save did not complete. If you encounter repeated errors, you can use 'Save As Json' instead.\n" +
-                    e.toString()
+                longstr(`Save did not complete. If you encounter repeated
+                    errors, you can use 'Save As Json' instead.\n${e}`)
             );
         }
 
@@ -189,7 +189,7 @@ export class VpcSave implements VpcSaveInterface {
         prevStackName: string,
         newStackData: string
     ) {
-        let prevStackNameToShow = prevStackName || 'untitled';
+        let prevStackNameToShow = coalesceIfFalseLike(prevStackName, 'untitled');
         if (prevStackNameToShow === 'untitled') {
             prevStackNameToShow =
                 'Untitled ' + Util512Higher.getRandIntInclusiveWeak(1, 100);
@@ -321,7 +321,7 @@ export class VpcSave implements VpcSaveInterface {
      */
     async mnuGoFlagContentAsync() {
         let choice = await this.pr.answerMsgAsync(
-             longstr(`We do not allow the hosting of malware, spam,
+            longstr(`We do not allow the hosting of malware, spam,
              phishing, obscene, libelous, defamatory, pornographic,
              or hateful content. Submit a report?`),
             'Submit',
@@ -412,7 +412,7 @@ export class VpcSave implements VpcSaveInterface {
                 /* case 4) from a stack we do own */
                 if (this.pr.isDocDirty()) {
                     let msg = lng(
-                         longstr(`lngIt looks like you have unsaved
+                        longstr(`lngIt looks like you have unsaved
                          changes, we're reminding you to hit Save first.`)
                     );
                     throw makeVpcInternalErr(msgNotification + msg);

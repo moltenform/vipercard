@@ -7,7 +7,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, fitIntoInclusive, last } from './../../ui512/utils/util512';
+/* auto */ import { Util512, fitIntoInclusive, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
@@ -79,6 +79,8 @@ export class VpcChangeSelectedFont {
                 return true;
             }
         }
+
+        return undefined;
     }
 
     /**
@@ -88,10 +90,9 @@ export class VpcChangeSelectedFont {
         let worked = this.setFontImpl(v, type);
         if (!worked) {
             let msg = lng(
-                deleteThis.longstr(
-                     deleteThis.longstr(`lngNo selection found. Either select a button or \nfield, or use the browse tool to select a few\n letters.`, ''),
-                    ''
-                )
+                longstr(`lngNo selection found. Either select a
+            button or {{NEWLINE}}field, or use the browse tool to select a
+            few{{NEWLINE}} letters.`)
             );
 
             throw makeVpcInternalErr(msgNotification + msg);
@@ -112,6 +113,8 @@ export class VpcChangeSelectedFont {
                 return this.setFontSelText(chunksel, v, typeOfChange);
             }
         }
+
+        return undefined;
     }
 
     /**
@@ -192,10 +195,12 @@ export class VpcChangeSelectedFont {
             this.vci.getOutside().SetProp(velRef, typeOfChange, VpcValS(v), chunk);
             return true;
         } else {
-            /* setting a style */
-            /* do this character by character, because styles can differ */
-            /* 1) if one of the letters was bold, setting the selection to italic shouldn't lose the bold of that one */
-            /* 2) besides, if we looked up current style of all the selection, it might return 'mixed' and we wouldn't know how to flip */
+            /* setting a style
+            do this character by character, because styles can differ
+            1) if one of the letters was bold, setting the selection
+                to italic shouldn't lose the bold of that one
+            2) besides, if we looked up current style of all the selection,
+                it might return 'mixed' and we wouldn't know how to flip */
             assertTrueWarn(chunk.first <= chunk.last, 'KN|', chunk.first, chunk.last);
             for (let i = chunk.first; i <= chunk.last; i++) {
                 let subChunk = new RequestedChunk(i);
