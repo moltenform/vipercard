@@ -10,6 +10,9 @@
 /* auto */ import { O, bool, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512, coalesceIfFalseLike, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+/* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
+
+
 
 /**
  * saving stacks
@@ -255,7 +258,7 @@ export class VpcSave implements VpcSaveInterface {
         let blob = new Blob([this.pr.getSerializedStack()], {
             type: 'text/plain;charset=utf-8'
         });
-        saveAs(blob, defaultFilename);
+        bridgedSaveAs(blob, defaultFilename);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
 
         /* count json saves */
@@ -437,8 +440,3 @@ export class VpcSave implements VpcSaveInterface {
         this.pr.vci.setNonModalDialog(form);
     }
 }
-
-/**
- * reference to filesaver.js
- */
-declare let saveAs: any;

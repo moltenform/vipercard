@@ -4,6 +4,7 @@
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { clrThreshold } from './../../ui512/draw/ui512DrawPainter';
+/* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
 export class TestUtilsCanvas {
     /**
@@ -132,7 +133,7 @@ export class TestUtilsCanvas {
         if (download) {
             console.log('Image sent to download, test complete.');
             imGot.canvas.toBlob((blob: any) => {
-                saveAs(blob, 'test' + p.testName + '.png');
+                bridgedSaveAs(blob, 'test' + p.testName + '.png');
             });
         } else {
             let countDifferences = TestUtilsCanvas.compareCanvas(
@@ -154,7 +155,7 @@ export class TestUtilsCanvas {
 
                 console.log('Delta image sent to download, failures marked in red.');
                 imGot.canvas.toBlob((blob: any) => {
-                    saveAs(blob, `failed${p.testName}.png`);
+                    bridgedSaveAs(blob, `failed${p.testName}.png`);
                 });
 
                 assertTrue(false, '3r|test failed');
@@ -230,8 +231,3 @@ export class CanvasTestParams {
  * a function that returns a CanvasTestParams
  */
 type GetDrawParams = () => CanvasTestParams;
-
-/**
- * from filesaver.js, lets user download a blob to disk
- */
-declare let saveAs: any;

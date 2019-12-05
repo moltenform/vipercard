@@ -7,6 +7,7 @@
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+/* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
 /**
  * export paint to GIF
@@ -113,7 +114,7 @@ export class PaintGifExport {
             await Util512Higher.sleep(100);
             encoder.finish();
             let blob = new Blob([encoder.getUint8Array()], { type: 'image/gif' });
-            saveAs(blob, `made with ${cProductName}.gif`);
+            bridgedSaveAs(blob, `made with ${cProductName}.gif`);
 
             return this.showMsgAndClose('lngCreating .gif complete.');
         } catch (e) {
@@ -154,5 +155,3 @@ export class PaintGifExport {
 /* js-gif library */
 declare let GIFEncoder: any;
 
-/* filesaver.js library */
-declare let saveAs: any;

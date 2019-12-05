@@ -8,6 +8,7 @@
 /* auto */ import { AnyJson, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
 /**
  * send a report
@@ -102,7 +103,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
         let s = JSON.stringify(obj);
         let defaultFilename = 'vpc logs.json';
         let blob = new Blob([s], { type: 'text/plain;charset=utf-8' });
-        saveAs(blob, defaultFilename);
+        bridgedSaveAs(blob, defaultFilename);
     }
 
     /**
@@ -153,8 +154,3 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
         return true;
     }
 }
-
-/**
- * reference to filesaver.js
- */
-declare let saveAs: any;
