@@ -1,8 +1,8 @@
 
-/* auto */ import { ModifierKeys, toShortcutString, ui512TranslateModifiers } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { BrowserOSInfo, assertEq } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { ModifierKeys, toShortcutString, ui512TranslateModifiers } from '../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { RectUtils } from '../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { BrowserOSInfo, assertEq } from '../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection } from '../testUtils/testUtils';
 
 /**
  * testing functions from utilsDraw

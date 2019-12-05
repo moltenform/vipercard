@@ -2,14 +2,14 @@
 /* auto */ import { AsyncVoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
-/* auto */ import { testCollectionUtilsDraw } from './../ui512/testUtilsDraw';
-/* auto */ import { testCollectionUtilsCanvasWrapper } from './../ui512/testUtilsCanvasWrapper';
+/* auto */ import { testCollectionUtilsDraw } from '../util512/testUtilsDraw';
+/* auto */ import { testCollectionUtilsCanvasWrapper } from '../util512/testUtilsCanvasWrapper';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
-/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../ui512/testUtil512Higher';
-/* auto */ import { testCollectionUtil512Class } from './../ui512/testUtil512Class';
-/* auto */ import { testCollectionUtil512Assert } from './../ui512/testUtil512Assert';
-/* auto */ import { testCollectionUtil512 } from './../ui512/testUtil512';
-/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../ui512/testExternalLibs';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from '../util512/testUtil512Higher';
+/* auto */ import { testCollectionUtil512Class } from '../util512/testUtil512Class';
+/* auto */ import { testCollectionUtil512Assert } from '../util512/testUtil512Assert';
+/* auto */ import { testCollectionUtil512 } from '../util512/testUtil512';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from '../util512/testExternalLibs';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
