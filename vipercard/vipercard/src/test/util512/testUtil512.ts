@@ -102,6 +102,14 @@ t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
         'DT|'
     );
 });
+t.test('getStrToEnum.HasExpectedReturnType', () => {
+    // check that the return value is the correct type.
+    // unfortunately this seems to require manually entering the type
+    // as a parameter, in the redundant form getStrToEnum<TestEnum>(TestEnum)
+    function takesEnumVal(__unused_v: TestEnum) {}
+    let r = getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'First');
+    takesEnumVal(r);
+});
 t.test('getStrToEnum.FoundPrimary', () => {
     assertEq(TestEnum.First, getStrToEnum(TestEnum, 'TestEnum', 'First'), 'DS|');
     assertEq(TestEnum.Second, getStrToEnum(TestEnum, 'TestEnum', 'Second'), 'DR|');

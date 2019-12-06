@@ -1,6 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { getRoot } from './../utils/util512Higher';
+/* auto */ import { checkIsProductionBuild } from './../utils/util512Assert';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElementWithHighlight } from './../elements/ui512Element';
@@ -174,6 +175,8 @@ export class BasicHandlers {
     ) {
         if (!d.repeated) {
             let wasShortcut = true;
+            let runTestsShortcut = checkIsProductionBuild() ? 'Opt+Shift+T' : 'Opt+T';
+            console.log(d.readableShortcut);
             switch (d.readableShortcut) {
                 case 'Cmd+Opt+Shift+Q':
                     pr.invalidateAll();
@@ -181,7 +184,7 @@ export class BasicHandlers {
                         !CanvasWrapper.debugRenderingWithChangingColors
                     );
                     break;
-                case 'Opt+Shift+T':
+                case runTestsShortcut:
                     getRoot().runTests(false);
                     break;
                 case 'Cmd+Opt+Shift+T':

@@ -1,5 +1,4 @@
 
-
 // it seems like the best way to use the chevrotain typings,
 // when potentially building as es6 modules,
 // is to add a reference in the "types" section of tsconfig.json.
@@ -9,8 +8,5 @@
 
 // this library is bundled into externalmanualbundle.js and exists on globalThis
 
-// in the past I had to have a custom chevrotain build because 
+// in the past I had to have a custom chevrotain build because
 // I made a change to avoid a call to new Function(); this has since been fixed.
-
-
-

@@ -50,13 +50,13 @@ export let testCollectionExampleAsyncTests = t;
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable-next-line @typescript-eslint/require-await */
 t.atest('canDoSimpleSynchronousActions', async () => {
-    t.say('adding numbers');
+    t.say(/*——————————*/ 'adding numbers');
     assertEq(4, 2 + 2, 'OA|');
 });
 t.atest('canAwaitACall', async () => {
-    t.say('0...');
+    t.say(/*——————————*/ '0...');
     await exampleAsyncFn();
-    t.say('3');
+    t.say(/*——————————*/ '3');
 });
 /* note that we're intentionally returning a promise */
 t.atest('canChainACall', () => {
@@ -64,7 +64,7 @@ t.atest('canChainACall', () => {
 });
 
 async function exampleAsyncFn() {
-    t.say('1...');
+    t.say(/*——————————*/ '1...');
     await Util512Higher.sleep(100);
-    t.say('2...');
+    t.say(/*——————————*/ '2...');
 }

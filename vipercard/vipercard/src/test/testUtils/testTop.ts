@@ -22,7 +22,7 @@ export class SimpleUtil512Tests {
             //~ testCollectionUtil512Class,
             //~ testCollectionUtil512,
             //~ testCollectionUtil512Assert,
-            testCollectionExternalChevrotain,
+            testCollectionExternalChevrotain
             //~ testCollectionExternalLibs
         ];
 
