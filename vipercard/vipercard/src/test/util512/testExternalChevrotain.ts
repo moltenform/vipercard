@@ -223,7 +223,7 @@ class SQLToAstVisitor extends BaseSQLVisitor {
 const toAstVisitorInstance = new SQLToAstVisitor();
 
 t.test('TestExampleChevrotain', () => {
-    let SelectLexer = new chevrotain.Lexer(allTokens);
+    let SelectLexer = new chevrotain.Lexer(allTokens, {ensureOptimizations:true});
 
     function toAst(inputText: string) {
         // Lex
