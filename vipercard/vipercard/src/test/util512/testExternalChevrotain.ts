@@ -1,14 +1,10 @@
 
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
-/* auto */ import { chevrotain } from './../../bridge/bridgeChevrotain';
-import { UI512Compress } from '../../ui512/utils/util512Assert';
 
 let t = new SimpleUtil512TestCollection('testCollectionExternalChevrotain');
 export let testCollectionExternalChevrotain = t;
 
 t.test('TestExampleChevrotain', () => {
-    first test lzstring
-    the lzstring pattern seems to work so lets copy it
     let Identifier = chevrotain.createToken({ name: 'Identifier', pattern: /[a-zA-Z]\w*/ });
     let allTokens = [
         chevrotain.createToken({
