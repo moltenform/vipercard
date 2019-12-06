@@ -12,6 +12,7 @@
 /* auto */ import { testCollectionUI512TextModify } from './../util512ui/testUI512TextModify';
 /* auto */ import { testCollectionUI512FormattedText } from './../util512ui/testUI512FormattedText';
 /* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../util512/testExternalLibs';
+/* auto */ import { testCollectionExternalChevrotain } from './../util512/testExternalChevrotain';
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
@@ -20,17 +21,18 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
-            testCollectionUI512TextModify,
-            testCollectionUI512FormattedText,
-            testCollectionUtilsCanvasWrapper,
-            testCollectionUtilsDraw,
-            testCollectionExampleAsyncTests,
-            testCollectionUtil512LessUsefulLibs,
-            testCollectionUtil512Higher,
-            testCollectionUtil512Class,
-            testCollectionUtil512,
-            testCollectionUtil512Assert,
-            testCollectionExternalLibs
+            //~ testCollectionUI512TextModify,
+            //~ testCollectionUI512FormattedText,
+            //~ testCollectionUtilsCanvasWrapper,
+            //~ testCollectionUtilsDraw,
+            //~ testCollectionExampleAsyncTests,
+            //~ testCollectionUtil512LessUsefulLibs,
+            //~ testCollectionUtil512Higher,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Assert,
+            testCollectionExternalChevrotain,
+            //~ testCollectionExternalLibs
         ];
 
         // run tests from low level to high level

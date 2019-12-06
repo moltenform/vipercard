@@ -14,6 +14,3 @@ export declare namespace Pizzicato {
     let context: any;
     let Util: any;
 }
-
-export const BridgedPizzicato = Pizzicato;
-export const BridgedPz = Pz;

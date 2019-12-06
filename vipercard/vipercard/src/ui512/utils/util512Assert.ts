@@ -152,7 +152,7 @@ export class UI512Compress {
     }
 
     static decompressString(s: string): string {
-        return BridgedLZString.decompressFromUTF16(s);
+        return BridgedLZString.decompressFromUTF16(s) ?? '';
     }
 }
 
