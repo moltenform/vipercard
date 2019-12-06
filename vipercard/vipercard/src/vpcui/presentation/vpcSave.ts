@@ -12,8 +12,6 @@
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
-
-
 /**
  * saving stacks
  * we limit to one async operation running at a time, so that the UI isn't confusing.

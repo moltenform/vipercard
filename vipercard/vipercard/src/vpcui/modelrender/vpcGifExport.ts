@@ -7,6 +7,7 @@
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+/* auto */ import { GIFEncoder } from './../../bridge/bridgeJsGif';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
 /**
@@ -86,7 +87,7 @@ export class PaintGifExport {
         try {
             this.setStatus('lngLoading .gif creation module...');
             await Util512Higher.asyncLoadJsIfNotAlreadyLoaded(
-                '/lib/jsgif/jsgifcombined.js'
+                '/external/jsgif-dynamic/jsgifcombined.js'
             );
             this.setStatus('lngBegin .gif export.');
 
@@ -151,7 +152,3 @@ export class PaintGifExport {
         this.teardown();
     }
 }
-
-/* js-gif library */
-declare let GIFEncoder: any;
-

@@ -197,7 +197,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
             this.vci.setTool(VpcTool.Browse);
 
             let NoteThisIsDisabledCode = 1;
-            //~ /* do this last because it could throw 
+            //~ /* do this last because it could throw
             //~ synchronously and call onScriptErr right away */
             //~ let msg = new VpcScriptMessage(curCard,
             //~ VpcBuiltinMsg.__Custom, handler);

@@ -12,7 +12,10 @@
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
+/* auto */ import { BridgedPizzicato, BridgedPz } from './../../bridge/bridgePizzicato';
 /* auto */ import { bridgedGetBrowserInfo } from './../../bridge/bridgeBrowserInfo';
+
+import { stringToTextFontStyling } from '../draw/ui512DrawTextClasses';
 
 export class FullRootUI512 implements Root {
     domCanvas: CanvasWrapper;

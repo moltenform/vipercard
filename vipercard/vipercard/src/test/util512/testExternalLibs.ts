@@ -2,12 +2,24 @@
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
+/* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
 let t = new SimpleUtil512TestCollection('testCollectionExternalLibs');
 export let testCollectionExternalLibs = t;
 
-t.test('PizzicatoExists', () => {
-    assertTrue(Pizzicato, 'O/|pizzicato not found');
+t.test('TestJsLru', () => {
+    let testmap = new BridgedLRUMap<string, number>(3);
+    testmap.set('a', 1);
+    testmap.set('b', 2);
+    testmap.set('c', 3);
+    assertTrue(testmap.has('a'), '2B|');
+    assertTrue(testmap.has('b'), '2A|');
+    assertTrue(testmap.has('c'), '29|');
+    testmap.set('d', 4);
+    assertTrue(testmap.has('b'), '27|');
+    assertTrue(testmap.has('c'), '26|');
+    assertTrue(testmap.has('d'), '25|');
+    assertTrue(!testmap.has('a'), '28|');
 });
 
 t = new SimpleUtil512TestCollection('testCollectionUtil512LessUsefulLibs');
@@ -49,5 +61,3 @@ t.test('keepOnlyUnique', () => {
         'OB|'
     );
 });
-
-declare let Pizzicato: any;

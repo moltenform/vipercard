@@ -1,5 +1,6 @@
 
 /* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './util512Productname';
+/* auto */ import { BridgedLZString } from './../../bridge/bridgeLzString';
 
 // moltenform.com(Ben Fisher)
 // MIT license
@@ -138,11 +139,6 @@ export function throwIfUndefined<T>(
 export type O<T> = T | undefined;
 
 /**
- * external LZString compression
- */
-declare let LZString: any;
-
-/**
  * LZString uses the fact that JS strings have 16 bit chars to compress data succinctly.
  * I use compressToUTF16() instead of compress() to use only valid utf sequences.
  */
@@ -151,12 +147,12 @@ export class UI512Compress {
     protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
     protected static reNewline = /\n/g;
     static compressString(s: string): string {
-        let compressed = LZString.compressToUTF16(s);
+        let compressed = BridgedLZString.compressToUTF16(s);
         return compressed;
     }
 
     static decompressString(s: string): string {
-        return LZString.decompressFromUTF16(s);
+        return BridgedLZString.decompressFromUTF16(s);
     }
 }
 

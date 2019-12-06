@@ -215,8 +215,8 @@ export class VpcGettableSerialization {
         let bytes: Uint8Array = new Uint8Array(str.length * 2);
         for (let i = 0, len = str.length; i < len; i++) {
             let n = str.charCodeAt(i) | 0;
-            bytes[i*2] = (n % 256);
-            bytes[i*2+1] = (n >> 8);
+            bytes[i * 2] = n % 256;
+            bytes[i * 2 + 1] = n >> 8;
         }
 
         return bridgedBase64Js.fromByteArray(bytes);
@@ -236,4 +236,3 @@ export class VpcGettableSerialization {
         return s;
     }
 }
-
