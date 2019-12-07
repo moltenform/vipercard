@@ -323,22 +323,22 @@ alsoReservedWordsList[cAltProductName.toLowerCase()] = true;
 
 alsoReservedWordsList['stack'] = true;
 alsoReservedWordsList['background'] = true;
-alsoReservedWordsList['backgrounds'] = true;
 alsoReservedWordsList['bkgnd'] = true;
-alsoReservedWordsList['bkgnds'] = true;
 alsoReservedWordsList['bg'] = true;
+alsoReservedWordsList['backgrounds'] = true;
+alsoReservedWordsList['bkgnds'] = true;
 alsoReservedWordsList['bgs'] = true;
 alsoReservedWordsList['card'] = true;
-alsoReservedWordsList['cards'] = true;
 alsoReservedWordsList['cd'] = true;
+alsoReservedWordsList['cards'] = true;
 alsoReservedWordsList['cds'] = true;
 alsoReservedWordsList['button'] = true;
-alsoReservedWordsList['buttons'] = true;
 alsoReservedWordsList['btn'] = true;
+alsoReservedWordsList['buttons'] = true;
 alsoReservedWordsList['btns'] = true;
 alsoReservedWordsList['field'] = true;
-alsoReservedWordsList['fields'] = true;
 alsoReservedWordsList['fld'] = true;
+alsoReservedWordsList['fields'] = true;
 alsoReservedWordsList['flds'] = true;
 alsoReservedWordsList['part'] = true;
 alsoReservedWordsList['parts'] = true;
@@ -378,6 +378,8 @@ alsoReservedWordsList['line'] = true;
 alsoReservedWordsList['lines'] = true;
 alsoReservedWordsList['in'] = true;
 alsoReservedWordsList['of'] = true;
+alsoReservedWordsList['a'] = true;
+alsoReservedWordsList['an'] = true;
 alsoReservedWordsList['not'] = true;
 alsoReservedWordsList['there'] = true;
 alsoReservedWordsList['is'] = true;
@@ -390,6 +392,7 @@ alsoReservedWordsList['the'] = true;
 alsoReservedWordsList['msg'] = true;
 alsoReservedWordsList['message'] = true;
 alsoReservedWordsList['window'] = true;
+alsoReservedWordsList['windows'] = true;
 alsoReservedWordsList['box'] = true;
 alsoReservedWordsList['me'] = true;
 alsoReservedWordsList['target'] = true;
@@ -399,6 +402,7 @@ alsoReservedWordsList['forth'] = true;
 alsoReservedWordsList['marked'] = true;
 alsoReservedWordsList['to'] = true;
 alsoReservedWordsList['menuitem'] = true;
+alsoReservedWordsList['menuitems'] = true;
 alsoReservedWordsList['menu'] = true;
 alsoReservedWordsList['id'] = true;
 alsoReservedWordsList['number'] = true;
@@ -510,25 +514,45 @@ export const tks = {
         name: 'tkStack',
         pattern: /(?:stack(?![a-zA-Z0-9_]))/i
     }),
-    tkBgOrPlural: chevrotain.createToken({
-        name: 'tkBgOrPlural',
-        pattern: /(?:backgrounds?(?![a-zA-Z0-9_]))|(?:bkgnds?(?![a-zA-Z0-9_]))|(?:bgs?(?![a-zA-Z0-9_]))/i
+    tkBg: chevrotain.createToken({
+        name: 'tkBg',
+        pattern: /(?:background(?![a-zA-Z0-9_]))|(?:bkgnd(?![a-zA-Z0-9_]))|(?:bg(?![a-zA-Z0-9_]))/i
     }),
-    tkCardOrPlural: chevrotain.createToken({
-        name: 'tkCardOrPlural',
-        pattern: /(?:cards?(?![a-zA-Z0-9_]))|(?:cds?(?![a-zA-Z0-9_]))/i
+    tkBgPlural: chevrotain.createToken({
+        name: 'tkBgPlural',
+        pattern: /(?:backgrounds(?![a-zA-Z0-9_]))|(?:bkgnds(?![a-zA-Z0-9_]))|(?:bgs(?![a-zA-Z0-9_]))/i
     }),
-    tkBtnOrPlural: chevrotain.createToken({
-        name: 'tkBtnOrPlural',
-        pattern: /(?:buttons?(?![a-zA-Z0-9_]))|(?:btns?(?![a-zA-Z0-9_]))/i
+    tkCard: chevrotain.createToken({
+        name: 'tkCard',
+        pattern: /(?:card(?![a-zA-Z0-9_]))|(?:cd(?![a-zA-Z0-9_]))/i
     }),
-    tkFldOrPlural: chevrotain.createToken({
-        name: 'tkFldOrPlural',
-        pattern: /(?:fields?(?![a-zA-Z0-9_]))|(?:flds?(?![a-zA-Z0-9_]))/i
+    tkCardPlural: chevrotain.createToken({
+        name: 'tkCardPlural',
+        pattern: /(?:cards(?![a-zA-Z0-9_]))|(?:cds(?![a-zA-Z0-9_]))/i
     }),
-    tkPartOrPlural: chevrotain.createToken({
-        name: 'tkPartOrPlural',
-        pattern: /(?:parts?(?![a-zA-Z0-9_]))/i
+    tkBtn: chevrotain.createToken({
+        name: 'tkBtn',
+        pattern: /(?:button(?![a-zA-Z0-9_]))|(?:btn(?![a-zA-Z0-9_]))/i
+    }),
+    tkBtnPlural: chevrotain.createToken({
+        name: 'tkBtnPlural',
+        pattern: /(?:buttons(?![a-zA-Z0-9_]))|(?:btns(?![a-zA-Z0-9_]))/i
+    }),
+    tkFld: chevrotain.createToken({
+        name: 'tkFld',
+        pattern: /(?:field(?![a-zA-Z0-9_]))|(?:fld(?![a-zA-Z0-9_]))/i
+    }),
+    tkFldPlural: chevrotain.createToken({
+        name: 'tkFldPlural',
+        pattern: /(?:fields(?![a-zA-Z0-9_]))|(?:flds(?![a-zA-Z0-9_]))/i
+    }),
+    tkPart: chevrotain.createToken({
+        name: 'tkPart',
+        pattern: /(?:part(?![a-zA-Z0-9_]))/i
+    }),
+    tkPartPlural: chevrotain.createToken({
+        name: 'tkPartPlural',
+        pattern: /(?:parts(?![a-zA-Z0-9_]))/i
     }),
     tkTopObject: chevrotain.createToken({
         name: 'tkTopObject',
@@ -557,6 +581,10 @@ export const tks = {
     tkOfOnly: chevrotain.createToken({
         name: 'tkOfOnly',
         pattern: /(?:of(?![a-zA-Z0-9_]))/i
+    }),
+    tkA: chevrotain.createToken({
+        name: 'tkA',
+        pattern: /(?:a(?![a-zA-Z0-9_]))|(?:an(?![a-zA-Z0-9_]))/i
     }),
     _not: chevrotain.createToken({
         name: '_not',
@@ -602,6 +630,10 @@ export const tks = {
         name: '_window',
         pattern: /(?:window(?![a-zA-Z0-9_]))/i
     }),
+    _windows: chevrotain.createToken({
+        name: '_windows',
+        pattern: /(?:windows(?![a-zA-Z0-9_]))/i
+    }),
     _box: chevrotain.createToken({
         name: '_box',
         pattern: /(?:box(?![a-zA-Z0-9_]))/i
@@ -636,7 +668,7 @@ export const tks = {
     }),
     _menuItem: chevrotain.createToken({
         name: '_menuItem',
-        pattern: /(?:menuitem(?![a-zA-Z0-9_]))/i
+        pattern: /(?:menuitems?(?![a-zA-Z0-9_]))/i
     }),
     _menu: chevrotain.createToken({
         name: '_menu',
@@ -708,11 +740,16 @@ export const allVpcTokens = [
     tks.tkSyntaxPlaceholder,
     tks.tkNumLiteral,
     tks.tkStack,
-    tks.tkBgOrPlural,
-    tks.tkCardOrPlural,
-    tks.tkBtnOrPlural,
-    tks.tkFldOrPlural,
-    tks.tkPartOrPlural,
+    tks.tkBg,
+    tks.tkBgPlural,
+    tks.tkCard,
+    tks.tkCardPlural,
+    tks.tkBtn,
+    tks.tkBtnPlural,
+    tks.tkFld,
+    tks.tkFldPlural,
+    tks.tkPart,
+    tks.tkPartPlural,
     tks.tkTopObject,
     tks.tkAdjective,
     tks.tkOrdinal,
@@ -720,6 +757,7 @@ export const allVpcTokens = [
     tks.tkChunkGranularity,
     tks.tkInOnly,
     tks.tkOfOnly,
+    tks.tkA,
     tks._not,
     tks._there,
     tks._is,
@@ -731,6 +769,7 @@ export const allVpcTokens = [
     tks._the,
     tks._message,
     tks._window,
+    tks._windows,
     tks._box,
     tks._me,
     tks._target,

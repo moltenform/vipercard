@@ -48,6 +48,11 @@ export interface VpcCompleteVisitor {
     RuleFnCallNumberOf_2(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf_3(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf_4(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallNumberOf_5(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallNumberOf_6(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallNumberOf_7(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallNumberOf_8(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallNumberOf_9(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallThereIs(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleAnyPropertyVal(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleExpr(ctx: VisitingContext): string | VpcIntermedValBase;
@@ -59,7 +64,7 @@ export interface VpcCompleteVisitor {
     RuleLvl6Expression(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleAndOrOr(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleIsExpresion(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleIsExpression(ctx: VisitingContext): string | VpcIntermedValBase;
 }
 
 export interface VisitingContext {
@@ -98,6 +103,11 @@ export interface VisitingContext {
     RuleFnCallNumberOf_2: any[];
     RuleFnCallNumberOf_3: any[];
     RuleFnCallNumberOf_4: any[];
+    RuleFnCallNumberOf_5: any[];
+    RuleFnCallNumberOf_6: any[];
+    RuleFnCallNumberOf_7: any[];
+    RuleFnCallNumberOf_8: any[];
+    RuleFnCallNumberOf_9: any[];
     RuleFnCallThereIs: any[];
     RuleAnyPropertyVal: any[];
     RuleExpr: any[];
@@ -109,7 +119,7 @@ export interface VisitingContext {
     RuleLvl6Expression: any[];
     RuleAndOrOr: any[];
     RuleContainsOrGreaterLessEqual: any[];
-    RuleIsExpresion: any[];
+    RuleIsExpression: any[];
     tkStringLiteral: chevrotain.IToken[];
     tkBlockComment: chevrotain.IToken[];
     tkLineComment: chevrotain.IToken[];
@@ -121,11 +131,16 @@ export interface VisitingContext {
     tkSyntaxPlaceholder: chevrotain.IToken[];
     tkNumLiteral: chevrotain.IToken[];
     tkStack: chevrotain.IToken[];
-    tkBgOrPlural: chevrotain.IToken[];
-    tkCardOrPlural: chevrotain.IToken[];
-    tkBtnOrPlural: chevrotain.IToken[];
-    tkFldOrPlural: chevrotain.IToken[];
-    tkPartOrPlural: chevrotain.IToken[];
+    tkBg: chevrotain.IToken[];
+    tkBgPlural: chevrotain.IToken[];
+    tkCard: chevrotain.IToken[];
+    tkCardPlural: chevrotain.IToken[];
+    tkBtn: chevrotain.IToken[];
+    tkBtnPlural: chevrotain.IToken[];
+    tkFld: chevrotain.IToken[];
+    tkFldPlural: chevrotain.IToken[];
+    tkPart: chevrotain.IToken[];
+    tkPartPlural: chevrotain.IToken[];
     tkTopObject: chevrotain.IToken[];
     tkAdjective: chevrotain.IToken[];
     tkOrdinal: chevrotain.IToken[];
@@ -133,6 +148,7 @@ export interface VisitingContext {
     tkChunkGranularity: chevrotain.IToken[];
     tkInOnly: chevrotain.IToken[];
     tkOfOnly: chevrotain.IToken[];
+    tkA: chevrotain.IToken[];
     _not: chevrotain.IToken[];
     _there: chevrotain.IToken[];
     _is: chevrotain.IToken[];
@@ -144,6 +160,7 @@ export interface VisitingContext {
     _the: chevrotain.IToken[];
     _message: chevrotain.IToken[];
     _window: chevrotain.IToken[];
+    _windows: chevrotain.IToken[];
     _box: chevrotain.IToken[];
     _me: chevrotain.IToken[];
     _target: chevrotain.IToken[];
