@@ -11,7 +11,7 @@
 
 export interface VpcCompleteVisitor {
     RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHAllPropertiesThatCouldBeNullary(
+    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(
         ctx: VisitingContext
     ): string | VpcIntermedValBase;
     RuleHAnyFnName(ctx: VisitingContext): string | VpcIntermedValBase;
@@ -36,13 +36,13 @@ export interface VpcCompleteVisitor {
     RuleHChunk(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHChunkAmt(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHSource(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHGenericFunctionCall(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHFnCallWParens(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHUnaryPropertyGet(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHOldStyleFnNonNullary(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHOldStyleFnNullaryOrNullaryPropGet(
         ctx: VisitingContext
     ): string | VpcIntermedValBase;
+    RuleHGenericFunctionCall(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf_1(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf_2(ctx: VisitingContext): string | VpcIntermedValBase;
@@ -70,7 +70,7 @@ export interface VpcCompleteVisitor {
 export interface VisitingContext {
     [index: string]: any;
     RuleHAllPropertiesThatCouldBeUnary: any[];
-    RuleHAllPropertiesThatCouldBeNullary: any[];
+    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];
     RuleHAnyAllowedVariableName: any[];
     RuleObject: any[];
@@ -93,11 +93,11 @@ export interface VisitingContext {
     RuleHChunk: any[];
     RuleHChunkAmt: any[];
     RuleHSource: any[];
-    RuleHGenericFunctionCall: any[];
     RuleHFnCallWParens: any[];
     RuleHUnaryPropertyGet: any[];
     RuleHOldStyleFnNonNullary: any[];
     RuleHOldStyleFnNullaryOrNullaryPropGet: any[];
+    RuleHGenericFunctionCall: any[];
     RuleFnCallNumberOf: any[];
     RuleFnCallNumberOf_1: any[];
     RuleFnCallNumberOf_2: any[];

@@ -53,8 +53,8 @@ export class VpcChvParser extends chevrotain.CstParser {
         }
     );
 
-    RuleHAllPropertiesThatCouldBeNullary = this.RULE(
-        'RuleHAllPropertiesThatCouldBeNullary',
+    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary = this.RULE(
+        'RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary',
         () => {
             this.OR1([
                 {
@@ -640,41 +640,6 @@ export class VpcChvParser extends chevrotain.CstParser {
         ]);
     });
 
-    RuleHGenericFunctionCall = this.RULE('RuleHGenericFunctionCall', () => {
-        this.OR1([
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleFnCallNumberOf);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleFnCallThereIs);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleHFnCallWParens);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleHUnaryPropertyGet);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleHOldStyleFnNonNullary);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleHOldStyleFnNullaryOrNullaryPropGet);
-                }
-            }
-        ]);
-    });
-
     RuleHFnCallWParens = this.RULE('RuleHFnCallWParens', () => {
         this.OR1([
             {
@@ -743,20 +708,47 @@ export class VpcChvParser extends chevrotain.CstParser {
             this.OPTION1(() => {
                 this.CONSUME1(tks.tkAdjective);
             });
-            this.OR1([
+            this.SUBRULE1(this.RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary);
+        }
+    );
+
+    RuleHGenericFunctionCall = this.RULE('RuleHGenericFunctionCall', () => {
+        this.OR1({
+            MAX_LOOKAHEAD: 5,
+            DEF: [
                 {
                     ALT: () => {
-                        this.SUBRULE1(this.RuleHAnyFnName);
+                        this.SUBRULE1(this.RuleFnCallNumberOf);
                     }
                 },
                 {
                     ALT: () => {
-                        this.SUBRULE1(this.RuleHAllPropertiesThatCouldBeNullary);
+                        this.SUBRULE1(this.RuleFnCallThereIs);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.SUBRULE1(this.RuleHFnCallWParens);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.SUBRULE1(this.RuleHUnaryPropertyGet);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.SUBRULE1(this.RuleHOldStyleFnNonNullary);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.SUBRULE1(this.RuleHOldStyleFnNullaryOrNullaryPropGet);
                     }
                 }
-            ]);
-        }
-    );
+            ]
+        });
+    });
 
     RuleFnCallNumberOf = this.RULE('RuleFnCallNumberOf', () => {
         this.CONSUME1(tks._the);
