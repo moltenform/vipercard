@@ -52,16 +52,14 @@ export interface VpcCompleteVisitor {
     RuleLvl5Expression(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleLvl6Expression(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleOpLogicalOrAnd(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOpEqualityGreaterLessOrContains(
-        ctx: VisitingContext
-    ): string | VpcIntermedValBase;
+    RuleOpEqualityGreaterLessOrContains(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleOpStringConcat(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleOpPlusMinus(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleOpMultDivideExpDivMod(ctx: VisitingContext): string | VpcIntermedValBase;
 }
 
 export interface VisitingContext {
-    [index: string]: any;
+[index: string]: any;
     RuleObject: any[];
     RuleObjectBtn: any[];
     RuleObjectFld: any[];

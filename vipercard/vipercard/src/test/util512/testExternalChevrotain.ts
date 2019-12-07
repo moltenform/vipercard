@@ -1,8 +1,6 @@
 
-/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
-
-import { assertTrue } from '../../ui512/utils/util512Assert';
 
 let t = new SimpleUtil512TestCollection('testCollectionExternalChevrotain');
 export let testCollectionExternalChevrotain = t;
@@ -65,20 +63,9 @@ class SelectParser extends chevrotain.CstParser {
             // would set to 6 but it can get exponentially slower
             // and i think we'll get a warning if it's too small
         });
-        if (SelectParser.wasInited) {
-            console.log(
-                longstr(
-                    `note: probably intended to only create
-                 one instance, it's fine to make two, just slow`,
-                    ''
-                )
-            );
-        }
-        SelectParser.wasInited = true;
+
         this.performSelfAnalysis();
     }
-
-    static wasInited = false;
 
     public selectStatement = this.RULE('selectStatement', () => {
         this.SUBRULE(this.selectClause);
@@ -133,8 +120,6 @@ class SelectParser extends chevrotain.CstParser {
         ]);
     });
 }
-
-// remember to cache a singleton parser, they
 
 // BaseVisitor constructors are accessed via a parser instance.
 const parserInstance = new SelectParser();
@@ -258,4 +243,28 @@ t.test('TestExampleChevrotain', () => {
 
     const inputText = 'SELECT column1 FROM table2';
     toAst(inputText);
+});
+
+function realParse(input: string) {
+    // Lex
+    let [lexer, parser, visitor] = getParsingObjects();
+    let lexResult = lexer.tokenize(input);
+    parser.input = lexResult.tokens;
+
+    // Automatic CST created when parsing
+    const cst = parser.RuleExpr();
+    if (parser.errors.length > 0) {
+        throw Error('got an error!\n' + parser.errors[0].message);
+    }
+
+    let a = 5;
+    let b = a;
+
+    // Visit
+    //const ast = visitor.visit(cst);
+    //return ast;
+}
+
+t.test('TestRealParser', () => {
+    realParse('1 + 1');
 });

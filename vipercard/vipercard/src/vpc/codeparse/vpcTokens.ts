@@ -321,6 +321,7 @@ alsoReservedWordsList[cAltProductName.toLowerCase()] = true;
 
 /* generated code, any changes past this point will be lost: --------------- */
 
+
 alsoReservedWordsList['stack'] = true;
 alsoReservedWordsList['background'] = true;
 alsoReservedWordsList['backgrounds'] = true;
@@ -408,297 +409,297 @@ alsoReservedWordsList['id'] = true;
 alsoReservedWordsList['number'] = true;
 alsoReservedWordsList['selection'] = true;
 
+
 export const tks = {
-    tkStringLiteral: chevrotain.createToken({
-        name: 'tkStringLiteral',
-        pattern: /"[^"\n]*"(?![a-zA-Z0-9_])/i
-    }),
-    tkBlockComment: chevrotain.createToken({
-        name: 'tkBlockComment',
-        pattern: /--\[\[[^\x5d]+\x5d/i,
-        group: chevrotain.Lexer.SKIPPED,
-        line_breaks: true
-    }),
-    tkLineComment: chevrotain.createToken({
-        name: 'tkLineComment',
-        pattern: /--[^\n]*/i,
-        group: chevrotain.Lexer.SKIPPED
-    }),
-    tkContinuedLineOrWhiteSpace: chevrotain.createToken({
-        name: 'tkContinuedLineOrWhiteSpace',
-        pattern: /(?:[ \t]+)|(?:[\\\xC2][ \t]*\n)/i,
-        group: chevrotain.Lexer.SKIPPED,
-        line_breaks: true
-    }),
-    tkCardAtEndOfLine: chevrotain.createToken({
-        name: 'tkCardAtEndOfLine',
-        pattern: /(?:card|cd)(?=\s*\n)/i
-    }),
-    tkBgAtEndOfLine: chevrotain.createToken({
-        name: 'tkBgAtEndOfLine',
-        pattern: /(?:background|bkgnd|bg)(?=\s*\n)/i
-    }),
-    tkStackAtEndOfLine: chevrotain.createToken({
-        name: 'tkStackAtEndOfLine',
-        pattern: /stack(?=\s*\n)/i
-    }),
-    tkNewLine: chevrotain.createToken({
-        name: 'tkNewLine',
-        pattern: /\n+/i,
-        line_breaks: true
-    }),
-    tkSyntaxPlaceholder: chevrotain.createToken({
-        name: 'tkSyntaxPlaceholder',
-        pattern: /\?{99}/i
-    }),
-    tkNumLiteral: chevrotain.createToken({
-        name: 'tkNumLiteral',
-        pattern: /[0-9]+(?:\.[0-9]*)?(?:e[-+]?[0-9]+)?(?![a-zA-Z0-9_])/i
-    }),
-    tkStack: chevrotain.createToken({
-        name: 'tkStack',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkBgOrPlural: chevrotain.createToken({
-        name: 'tkBgOrPlural',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkCardOrPlural: chevrotain.createToken({
-        name: 'tkCardOrPlural',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkBtnOrPlural: chevrotain.createToken({
-        name: 'tkBtnOrPlural',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkFldOrPlural: chevrotain.createToken({
-        name: 'tkFldOrPlural',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkPartOrPlural: chevrotain.createToken({
-        name: 'tkPartOrPlural',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkTopObject: chevrotain.createToken({
-        name: 'tkTopObject',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkAdjective: chevrotain.createToken({
-        name: 'tkAdjective',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkOtherWindowType: chevrotain.createToken({
-        name: 'tkOtherWindowType',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkOrdinal: chevrotain.createToken({
-        name: 'tkOrdinal',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkPosition: chevrotain.createToken({
-        name: 'tkPosition',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkChunkGranularity: chevrotain.createToken({
-        name: 'tkChunkGranularity',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkInOnly: chevrotain.createToken({
-        name: 'tkInOnly',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkOfOnly: chevrotain.createToken({
-        name: 'tkOfOnly',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _not: chevrotain.createToken({
-        name: '_not',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _there: chevrotain.createToken({
-        name: '_there',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _is: chevrotain.createToken({
-        name: '_is',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _no: chevrotain.createToken({
-        name: '_no',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _and: chevrotain.createToken({
-        name: '_and',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _or: chevrotain.createToken({
-        name: '_or',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _contains: chevrotain.createToken({
-        name: '_contains',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _within: chevrotain.createToken({
-        name: '_within',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _the: chevrotain.createToken({
-        name: '_the',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _message: chevrotain.createToken({
-        name: '_message',
-        pattern: /(?:item(?![a-zA-Z0-9_]))|(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _window: chevrotain.createToken({
-        name: '_window',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _box: chevrotain.createToken({
-        name: '_box',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _me: chevrotain.createToken({
-        name: '_me',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _target: chevrotain.createToken({
-        name: '_target',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _recent: chevrotain.createToken({
-        name: '_recent',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _back: chevrotain.createToken({
-        name: '_back',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _forth: chevrotain.createToken({
-        name: '_forth',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _marked: chevrotain.createToken({
-        name: '_marked',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _to: chevrotain.createToken({
-        name: '_to',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _menuItem: chevrotain.createToken({
-        name: '_menuItem',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _menu: chevrotain.createToken({
-        name: '_menu',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _id: chevrotain.createToken({
-        name: '_id',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _number: chevrotain.createToken({
-        name: '_number',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    _selection: chevrotain.createToken({
-        name: '_selection',
-        pattern: /(?:item(?![a-zA-Z0-9_]))/i
-    }),
-    tkComma: chevrotain.createToken({
-        name: 'tkComma',
-        pattern: /,/i
-    }),
-    tkLParen: chevrotain.createToken({
-        name: 'tkLParen',
-        pattern: /\(/i
-    }),
-    tkRParen: chevrotain.createToken({
-        name: 'tkRParen',
-        pattern: /\)/i
-    }),
-    tkPlusOrMinus: chevrotain.createToken({
-        name: 'tkPlusOrMinus',
-        pattern: /(?:item)|(?:item)/i
-    }),
-    tkMultDivideExpDivMod: chevrotain.createToken({
-        name: 'tkMultDivideExpDivMod',
-        pattern: /(?:item)|(?:item)|(?:item)|(?:item)|(?:item)/i
-    }),
-    tkStringConcat: chevrotain.createToken({
-        name: 'tkStringConcat',
-        pattern: /(?:item)|(?:item)/i
-    }),
-    tkGreaterOrLessEqualOrEqual: chevrotain.createToken({
-        name: 'tkGreaterOrLessEqualOrEqual',
-        pattern: /(?:item)|(?:item)|(?:item)|(?:item)|(?:item)|(?:item)|(?:item)|(?:item)/i
-    }),
-    tkIdentifier: chevrotain.createToken({
-        name: 'tkIdentifier',
-        pattern: /[a-zA-Z][0-9a-zA-Z_]*/i
-    })
-};
+tkStringLiteral: chevrotain.createToken({
+name: "tkStringLiteral",
+pattern: /"[^"\n]*"(?![a-zA-Z0-9_])/i,
+}),
+tkBlockComment: chevrotain.createToken({
+name: "tkBlockComment",
+pattern: /--\[\[[^\x5d]+\x5d/i,
+group: chevrotain.Lexer.SKIPPED,line_breaks:true,
+}),
+tkLineComment: chevrotain.createToken({
+name: "tkLineComment",
+pattern: /--[^\n]*/i,
+group: chevrotain.Lexer.SKIPPED,
+}),
+tkContinuedLineOrWhiteSpace: chevrotain.createToken({
+name: "tkContinuedLineOrWhiteSpace",
+pattern: /(?:[ \t]+)|(?:[\\\xC2][ \t]*\n)/i,
+group: chevrotain.Lexer.SKIPPED,line_breaks:true,
+}),
+tkCardAtEndOfLine: chevrotain.createToken({
+name: "tkCardAtEndOfLine",
+pattern: /(?:card|cd)(?=\s*\n)/i,
+}),
+tkBgAtEndOfLine: chevrotain.createToken({
+name: "tkBgAtEndOfLine",
+pattern: /(?:background|bkgnd|bg)(?=\s*\n)/i,
+}),
+tkStackAtEndOfLine: chevrotain.createToken({
+name: "tkStackAtEndOfLine",
+pattern: /stack(?=\s*\n)/i,
+}),
+tkNewLine: chevrotain.createToken({
+name: "tkNewLine",
+pattern: /\n+/i,
+line_breaks:true,
+}),
+tkSyntaxPlaceholder: chevrotain.createToken({
+name: "tkSyntaxPlaceholder",
+pattern: /\?{99}/i,
+}),
+tkNumLiteral: chevrotain.createToken({
+name: "tkNumLiteral",
+pattern: /[0-9]+(?:\.[0-9]*)?(?:e[-+]?[0-9]+)?(?![a-zA-Z0-9_])/i,
+}),
+tkStack: chevrotain.createToken({
+name: "tkStack",
+pattern: /(?:stack(?![a-zA-Z0-9_]))/i,
+}),
+tkBgOrPlural: chevrotain.createToken({
+name: "tkBgOrPlural",
+pattern: /(?:backgrounds?(?![a-zA-Z0-9_]))|(?:bkgnds?(?![a-zA-Z0-9_]))|(?:bgs?(?![a-zA-Z0-9_]))/i,
+}),
+tkCardOrPlural: chevrotain.createToken({
+name: "tkCardOrPlural",
+pattern: /(?:cards?(?![a-zA-Z0-9_]))|(?:cds?(?![a-zA-Z0-9_]))/i,
+}),
+tkBtnOrPlural: chevrotain.createToken({
+name: "tkBtnOrPlural",
+pattern: /(?:buttons?(?![a-zA-Z0-9_]))|(?:btns?(?![a-zA-Z0-9_]))/i,
+}),
+tkFldOrPlural: chevrotain.createToken({
+name: "tkFldOrPlural",
+pattern: /(?:fields?(?![a-zA-Z0-9_]))|(?:flds?(?![a-zA-Z0-9_]))/i,
+}),
+tkPartOrPlural: chevrotain.createToken({
+name: "tkPartOrPlural",
+pattern: /(?:parts?(?![a-zA-Z0-9_]))/i,
+}),
+tkTopObject: chevrotain.createToken({
+name: "tkTopObject",
+pattern: /(?:HyperCard(?![a-zA-Z0-9_]))|(?:ViperCard(?![a-zA-Z0-9_]))/i,
+}),
+tkAdjective: chevrotain.createToken({
+name: "tkAdjective",
+pattern: /(?:long(?![a-zA-Z0-9_]))|(?:short(?![a-zA-Z0-9_]))|(?:abbrev(?![a-zA-Z0-9_]))|(?:abbr(?![a-zA-Z0-9_]))|(?:abbreviated(?![a-zA-Z0-9_]))/i,
+}),
+tkOtherWindowType: chevrotain.createToken({
+name: "tkOtherWindowType",
+pattern: /(?:pattern(?![a-zA-Z0-9_]))|(?:tool(?![a-zA-Z0-9_]))|(?:scroll(?![a-zA-Z0-9_]))|(?:fatbits(?![a-zA-Z0-9_]))/i,
+}),
+tkOrdinal: chevrotain.createToken({
+name: "tkOrdinal",
+pattern: /(?:last(?![a-zA-Z0-9_]))|(?:mid(?![a-zA-Z0-9_]))|(?:middle(?![a-zA-Z0-9_]))|(?:any(?![a-zA-Z0-9_]))|(?:first(?![a-zA-Z0-9_]))|(?:second(?![a-zA-Z0-9_]))|(?:third(?![a-zA-Z0-9_]))|(?:fourth(?![a-zA-Z0-9_]))|(?:fifth(?![a-zA-Z0-9_]))|(?:sixth(?![a-zA-Z0-9_]))|(?:seventh(?![a-zA-Z0-9_]))|(?:eigth(?![a-zA-Z0-9_]))|(?:ninth(?![a-zA-Z0-9_]))|(?:tenth(?![a-zA-Z0-9_]))/i,
+}),
+tkPosition: chevrotain.createToken({
+name: "tkPosition",
+pattern: /(?:this(?![a-zA-Z0-9_]))|(?:prev(?![a-zA-Z0-9_]))|(?:next(?![a-zA-Z0-9_]))/i,
+}),
+tkChunkGranularity: chevrotain.createToken({
+name: "tkChunkGranularity",
+pattern: /(?:characters?(?![a-zA-Z0-9_]))|(?:chars?(?![a-zA-Z0-9_]))|(?:words?(?![a-zA-Z0-9_]))|(?:items?(?![a-zA-Z0-9_]))|(?:lines?(?![a-zA-Z0-9_]))/i,
+}),
+tkInOnly: chevrotain.createToken({
+name: "tkInOnly",
+pattern: /(?:in(?![a-zA-Z0-9_]))/i,
+}),
+tkOfOnly: chevrotain.createToken({
+name: "tkOfOnly",
+pattern: /(?:of(?![a-zA-Z0-9_]))/i,
+}),
+_not: chevrotain.createToken({
+name: "_not",
+pattern: /(?:not(?![a-zA-Z0-9_]))/i,
+}),
+_there: chevrotain.createToken({
+name: "_there",
+pattern: /(?:there(?![a-zA-Z0-9_]))/i,
+}),
+_is: chevrotain.createToken({
+name: "_is",
+pattern: /(?:is(?![a-zA-Z0-9_]))/i,
+}),
+_no: chevrotain.createToken({
+name: "_no",
+pattern: /(?:no(?![a-zA-Z0-9_]))/i,
+}),
+_and: chevrotain.createToken({
+name: "_and",
+pattern: /(?:and(?![a-zA-Z0-9_]))/i,
+}),
+_or: chevrotain.createToken({
+name: "_or",
+pattern: /(?:or(?![a-zA-Z0-9_]))/i,
+}),
+_contains: chevrotain.createToken({
+name: "_contains",
+pattern: /(?:contains(?![a-zA-Z0-9_]))/i,
+}),
+_within: chevrotain.createToken({
+name: "_within",
+pattern: /(?:within(?![a-zA-Z0-9_]))/i,
+}),
+_the: chevrotain.createToken({
+name: "_the",
+pattern: /(?:the(?![a-zA-Z0-9_]))/i,
+}),
+_message: chevrotain.createToken({
+name: "_message",
+pattern: /(?:msg(?![a-zA-Z0-9_]))|(?:message(?![a-zA-Z0-9_]))/i,
+}),
+_window: chevrotain.createToken({
+name: "_window",
+pattern: /(?:window(?![a-zA-Z0-9_]))/i,
+}),
+_box: chevrotain.createToken({
+name: "_box",
+pattern: /(?:box(?![a-zA-Z0-9_]))/i,
+}),
+_me: chevrotain.createToken({
+name: "_me",
+pattern: /(?:me(?![a-zA-Z0-9_]))/i,
+}),
+_target: chevrotain.createToken({
+name: "_target",
+pattern: /(?:target(?![a-zA-Z0-9_]))/i,
+}),
+_recent: chevrotain.createToken({
+name: "_recent",
+pattern: /(?:recent(?![a-zA-Z0-9_]))/i,
+}),
+_back: chevrotain.createToken({
+name: "_back",
+pattern: /(?:back(?![a-zA-Z0-9_]))/i,
+}),
+_forth: chevrotain.createToken({
+name: "_forth",
+pattern: /(?:forth(?![a-zA-Z0-9_]))/i,
+}),
+_marked: chevrotain.createToken({
+name: "_marked",
+pattern: /(?:marked(?![a-zA-Z0-9_]))/i,
+}),
+_to: chevrotain.createToken({
+name: "_to",
+pattern: /(?:to(?![a-zA-Z0-9_]))/i,
+}),
+_menuItem: chevrotain.createToken({
+name: "_menuItem",
+pattern: /(?:menuItem(?![a-zA-Z0-9_]))/i,
+}),
+_menu: chevrotain.createToken({
+name: "_menu",
+pattern: /(?:menu(?![a-zA-Z0-9_]))/i,
+}),
+_id: chevrotain.createToken({
+name: "_id",
+pattern: /(?:id(?![a-zA-Z0-9_]))/i,
+}),
+_number: chevrotain.createToken({
+name: "_number",
+pattern: /(?:number(?![a-zA-Z0-9_]))/i,
+}),
+_selection: chevrotain.createToken({
+name: "_selection",
+pattern: /(?:selection(?![a-zA-Z0-9_]))/i,
+}),
+tkComma: chevrotain.createToken({
+name: "tkComma",
+pattern: /,/i,
+}),
+tkLParen: chevrotain.createToken({
+name: "tkLParen",
+pattern: /\(/i,
+}),
+tkRParen: chevrotain.createToken({
+name: "tkRParen",
+pattern: /\)/i,
+}),
+tkPlusOrMinus: chevrotain.createToken({
+name: "tkPlusOrMinus",
+pattern: /(?:\+)|(?:-)/i,
+}),
+tkMultDivideExpDivMod: chevrotain.createToken({
+name: "tkMultDivideExpDivMod",
+pattern: /(?:\*)|(?:\/)|(?:\^)|(?:div(?![a-zA-Z0-9_]))|(?:mod(?![a-zA-Z0-9_]))/i,
+}),
+tkStringConcat: chevrotain.createToken({
+name: "tkStringConcat",
+pattern: /(?:&&)|(?:&)/i,
+}),
+tkGreaterOrLessEqualOrEqual: chevrotain.createToken({
+name: "tkGreaterOrLessEqualOrEqual",
+pattern: /(?:<>)|(?:>=?)|(?:<=?)|(?:!=)|(?:==?)|(?:\xB2)|(?:\xB3)|(?:\xAD)/i,
+}),
+tkIdentifier: chevrotain.createToken({
+name: "tkIdentifier",
+pattern: /[a-zA-Z][0-9a-zA-Z_]*/i,
+}),
+}
+
 
 export const allVpcTokens = [
-    tks.tkStringLiteral,
-    tks.tkBlockComment,
-    tks.tkLineComment,
-    tks.tkContinuedLineOrWhiteSpace,
-    tks.tkCardAtEndOfLine,
-    tks.tkBgAtEndOfLine,
-    tks.tkStackAtEndOfLine,
-    tks.tkNewLine,
-    tks.tkSyntaxPlaceholder,
-    tks.tkNumLiteral,
-    tks.tkStack,
-    tks.tkBgOrPlural,
-    tks.tkCardOrPlural,
-    tks.tkBtnOrPlural,
-    tks.tkFldOrPlural,
-    tks.tkPartOrPlural,
-    tks.tkTopObject,
-    tks.tkAdjective,
-    tks.tkOtherWindowType,
-    tks.tkOrdinal,
-    tks.tkPosition,
-    tks.tkChunkGranularity,
-    tks.tkInOnly,
-    tks.tkOfOnly,
-    tks._not,
-    tks._there,
-    tks._is,
-    tks._no,
-    tks._and,
-    tks._or,
-    tks._contains,
-    tks._within,
-    tks._the,
-    tks._message,
-    tks._window,
-    tks._box,
-    tks._me,
-    tks._target,
-    tks._recent,
-    tks._back,
-    tks._forth,
-    tks._marked,
-    tks._to,
-    tks._menuItem,
-    tks._menu,
-    tks._id,
-    tks._number,
-    tks._selection,
-    tks.tkComma,
-    tks.tkLParen,
-    tks.tkRParen,
-    tks.tkPlusOrMinus,
-    tks.tkMultDivideExpDivMod,
-    tks.tkStringConcat,
-    tks.tkGreaterOrLessEqualOrEqual,
-    tks.tkIdentifier
-];
+tks.tkStringLiteral,
+tks.tkBlockComment,
+tks.tkLineComment,
+tks.tkContinuedLineOrWhiteSpace,
+tks.tkCardAtEndOfLine,
+tks.tkBgAtEndOfLine,
+tks.tkStackAtEndOfLine,
+tks.tkNewLine,
+tks.tkSyntaxPlaceholder,
+tks.tkNumLiteral,
+tks.tkStack,
+tks.tkBgOrPlural,
+tks.tkCardOrPlural,
+tks.tkBtnOrPlural,
+tks.tkFldOrPlural,
+tks.tkPartOrPlural,
+tks.tkTopObject,
+tks.tkAdjective,
+tks.tkOtherWindowType,
+tks.tkOrdinal,
+tks.tkPosition,
+tks.tkChunkGranularity,
+tks.tkInOnly,
+tks.tkOfOnly,
+tks._not,
+tks._there,
+tks._is,
+tks._no,
+tks._and,
+tks._or,
+tks._contains,
+tks._within,
+tks._the,
+tks._message,
+tks._window,
+tks._box,
+tks._me,
+tks._target,
+tks._recent,
+tks._back,
+tks._forth,
+tks._marked,
+tks._to,
+tks._menuItem,
+tks._menu,
+tks._id,
+tks._number,
+tks._selection,
+tks.tkComma,
+tks.tkLParen,
+tks.tkRParen,
+tks.tkPlusOrMinus,
+tks.tkMultDivideExpDivMod,
+tks.tkStringConcat,
+tks.tkGreaterOrLessEqualOrEqual,
+tks.tkIdentifier,
+]
 
 /* generated code, any changes above this point will be lost: --------------- */
 
