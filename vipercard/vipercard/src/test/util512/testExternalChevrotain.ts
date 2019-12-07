@@ -1,4 +1,5 @@
 
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 import { assertTrue } from '../../ui512/utils/util512Assert';
@@ -59,11 +60,19 @@ class SelectParser extends chevrotain.CstParser {
     constructor() {
         super(allTokens, {
             recoveryEnabled: false,
-            outputCst: true
+            outputCst: true,
+            maxLookahead: 4 // better to set it definitely.
+            // would set to 6 but it can get exponentially slower
+            // and i think we'll get a warning if it's too small
         });
         if (SelectParser.wasInited) {
-            console.log('note: probably intended to only create one instance');
-            // assertTrue(false, "note: probably intended to only create one instance")
+            console.log(
+                longstr(
+                    `note: probably intended to only create
+                 one instance, it's fine to make two, just slow`,
+                    ''
+                )
+            );
         }
         SelectParser.wasInited = true;
         this.performSelfAnalysis();
@@ -124,6 +133,8 @@ class SelectParser extends chevrotain.CstParser {
         ]);
     });
 }
+
+// remember to cache a singleton parser, they
 
 // BaseVisitor constructors are accessed via a parser instance.
 const parserInstance = new SelectParser();
@@ -223,7 +234,8 @@ class SQLToAstVisitor extends BaseSQLVisitor {
 const toAstVisitorInstance = new SQLToAstVisitor();
 
 t.test('TestExampleChevrotain', () => {
-    let SelectLexer = new chevrotain.Lexer(allTokens, {ensureOptimizations:true});
+    // ensureOptimizations ensures the first-char can be found
+    let SelectLexer = new chevrotain.Lexer(allTokens, { ensureOptimizations: true });
 
     function toAst(inputText: string) {
         // Lex
