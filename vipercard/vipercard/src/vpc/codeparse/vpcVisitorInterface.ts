@@ -10,6 +10,12 @@
 /* generated code, any changes past this point will be lost: --------------- */
 
 export interface VpcCompleteVisitor {
+    RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleHAllPropertiesThatCouldBeNullary(
+        ctx: VisitingContext
+    ): string | VpcIntermedValBase;
+    RuleHAnyFnName(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleHAnyAllowedVariableName(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleObject(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleObjectBtn(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleObjectFld(ctx: VisitingContext): string | VpcIntermedValBase;
@@ -25,15 +31,18 @@ export interface VpcCompleteVisitor {
     RuleWindow1(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleWindow(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleMessageBox(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleAnyPropertyName(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHSimpleContainer(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHContainer(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHChunk(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHChunkAmt(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHSource(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHGenericFunctionCall(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHOldFnCallOrPropertyGet(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleHFnCallWParens(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleHUnaryPropertyGet(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleHOldStyleFnNonNullary(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleHOldStyleFnNullaryOrNullaryPropGet(
+        ctx: VisitingContext
+    ): string | VpcIntermedValBase;
     RuleFnCallNumberOf(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf_1(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallNumberOf_2(ctx: VisitingContext): string | VpcIntermedValBase;
@@ -41,9 +50,6 @@ export interface VpcCompleteVisitor {
     RuleFnCallNumberOf_4(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleFnCallThereIs(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleAnyPropertyVal(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleSubExpIs(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleSubExpIsTypeCheck(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleSubExpIsWithin(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleExpr(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleLvl1Expression(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleLvl2Expression(ctx: VisitingContext): string | VpcIntermedValBase;
@@ -51,15 +57,17 @@ export interface VpcCompleteVisitor {
     RuleLvl4Expression(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleLvl5Expression(ctx: VisitingContext): string | VpcIntermedValBase;
     RuleLvl6Expression(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOpLogicalOrAnd(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOpEqualityGreaterLessOrContains(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOpStringConcat(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOpPlusMinus(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOpMultDivideExpDivMod(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleAndOrOr(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleIsExpresion(ctx: VisitingContext): string | VpcIntermedValBase;
 }
 
 export interface VisitingContext {
-[index: string]: any;
+    [index: string]: any;
+    RuleHAllPropertiesThatCouldBeUnary: any[];
+    RuleHAllPropertiesThatCouldBeNullary: any[];
+    RuleHAnyFnName: any[];
+    RuleHAnyAllowedVariableName: any[];
     RuleObject: any[];
     RuleObjectBtn: any[];
     RuleObjectFld: any[];
@@ -75,15 +83,16 @@ export interface VisitingContext {
     RuleWindow1: any[];
     RuleWindow: any[];
     RuleMessageBox: any[];
-    RuleAnyPropertyName: any[];
     RuleHSimpleContainer: any[];
     RuleHContainer: any[];
     RuleHChunk: any[];
     RuleHChunkAmt: any[];
     RuleHSource: any[];
     RuleHGenericFunctionCall: any[];
-    RuleHOldFnCallOrPropertyGet: any[];
     RuleHFnCallWParens: any[];
+    RuleHUnaryPropertyGet: any[];
+    RuleHOldStyleFnNonNullary: any[];
+    RuleHOldStyleFnNullaryOrNullaryPropGet: any[];
     RuleFnCallNumberOf: any[];
     RuleFnCallNumberOf_1: any[];
     RuleFnCallNumberOf_2: any[];
@@ -91,9 +100,6 @@ export interface VisitingContext {
     RuleFnCallNumberOf_4: any[];
     RuleFnCallThereIs: any[];
     RuleAnyPropertyVal: any[];
-    RuleSubExpIs: any[];
-    RuleSubExpIsTypeCheck: any[];
-    RuleSubExpIsWithin: any[];
     RuleExpr: any[];
     RuleLvl1Expression: any[];
     RuleLvl2Expression: any[];
@@ -101,11 +107,9 @@ export interface VisitingContext {
     RuleLvl4Expression: any[];
     RuleLvl5Expression: any[];
     RuleLvl6Expression: any[];
-    RuleOpLogicalOrAnd: any[];
-    RuleOpEqualityGreaterLessOrContains: any[];
-    RuleOpStringConcat: any[];
-    RuleOpPlusMinus: any[];
-    RuleOpMultDivideExpDivMod: any[];
+    RuleAndOrOr: any[];
+    RuleContainsOrGreaterLessEqual: any[];
+    RuleIsExpresion: any[];
     tkStringLiteral: chevrotain.IToken[];
     tkBlockComment: chevrotain.IToken[];
     tkLineComment: chevrotain.IToken[];
@@ -124,7 +128,6 @@ export interface VisitingContext {
     tkPartOrPlural: chevrotain.IToken[];
     tkTopObject: chevrotain.IToken[];
     tkAdjective: chevrotain.IToken[];
-    tkOtherWindowType: chevrotain.IToken[];
     tkOrdinal: chevrotain.IToken[];
     tkPosition: chevrotain.IToken[];
     tkChunkGranularity: chevrotain.IToken[];
@@ -162,6 +165,8 @@ export interface VisitingContext {
     tkStringConcat: chevrotain.IToken[];
     tkGreaterOrLessEqualOrEqual: chevrotain.IToken[];
     tkIdentifier: chevrotain.IToken[];
+    tkAllUnaryPropertiesIfNotAlready: chevrotain.IToken[];
+    tkAllNullaryOrUnaryPropertiesIfNotAlready: chevrotain.IToken[];
 }
 /* generated code, any changes above this point will be lost: --------------- */
 

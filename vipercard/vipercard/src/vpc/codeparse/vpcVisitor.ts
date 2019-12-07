@@ -62,9 +62,9 @@ export function getParsingObjects(): [
 
     if (!CachedObjects.staticCache.visitor) {
         let NoteThisIsDisabledCode = 1;
-        CachedObjects.staticCache.visitor = createVisitor(
+        CachedObjects.staticCache.visitor = (createVisitor(
             CachedObjects.staticCache.parser
-        ) as any as VpcVisitorInterface;
+        ) as any) as VpcVisitorInterface;
     }
 
     return [

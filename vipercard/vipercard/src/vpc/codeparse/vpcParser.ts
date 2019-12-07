@@ -20,885 +20,958 @@ export class VpcChvParser extends chevrotain.CstParser {
 
     /* generated code, any changes past this point will be lost: --------------- */
 
-RuleObject = this.RULE('RuleObject', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkTopObject)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._me)
-}
-},
-{
-ALT: () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.CONSUME1(tks._target)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectBtn)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectFld)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectCard)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectBg)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectStack)
-}
-}
-]);
-});
+    RuleHAllPropertiesThatCouldBeUnary = this.RULE(
+        'RuleHAllPropertiesThatCouldBeUnary',
+        () => {
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkAllUnaryPropertiesIfNotAlready);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks._id);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks._marked);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks._number);
+                    }
+                }
+            ]);
+        }
+    );
 
-RuleObjectBtn = this.RULE('RuleObjectBtn', () => {
-this.OPTION1(() => {
-this.SUBRULE1(this.RuleOrdinal)
-});
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkCardOrPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkBgOrPlural)
-}
-}
-]);
-this.OR2([
-{
-ALT: () => {
-this.CONSUME1(tks.tkBtnOrPlural)
-this.CONSUME1(tks._id)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkBtnOrPlural)
-this.SUBRULE2(this.RuleLvl6Expression)
-}
-}
-]);
-this.OPTION2(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectCard)
-});
-});
+    RuleHAllPropertiesThatCouldBeNullary = this.RULE(
+        'RuleHAllPropertiesThatCouldBeNullary',
+        () => {
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.SUBRULE1(this.RuleHAnyFnName);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
+                    }
+                }
+            ]);
+        }
+    );
 
-RuleObjectFld = this.RULE('RuleObjectFld', () => {
-this.OPTION1(() => {
-this.SUBRULE1(this.RuleOrdinal)
-});
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkCardOrPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkBgOrPlural)
-}
-}
-]);
-this.OR2([
-{
-ALT: () => {
-this.CONSUME1(tks.tkFldOrPlural)
-this.CONSUME1(tks._id)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkFldOrPlural)
-this.SUBRULE2(this.RuleLvl6Expression)
-}
-}
-]);
-this.OPTION2(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectCard)
-});
-});
+    RuleHAnyFnName = this.RULE('RuleHAnyFnName', () => {
+        this.CONSUME1(tks.tkIdentifier);
+    });
 
-RuleObjectCard = this.RULE('RuleObjectCard', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks._recent)
-this.CONSUME1(tks.tkCardOrPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._back)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._forth)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkCardOrPlural)
-this.CONSUME1(tks._id)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME3(tks.tkCardOrPlural)
-this.SUBRULE2(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkCardAtEndOfLine)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
-this.OPTION1(() => {
-this.CONSUME1(tks._marked)
-});
-this.CONSUME4(tks.tkCardOrPlural)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RulePosition)
-this.OPTION2(() => {
-this.CONSUME2(tks._marked)
-});
-this.CONSUME5(tks.tkCardOrPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME3(tks._marked)
-this.CONSUME6(tks.tkCardOrPlural)
-this.SUBRULE3(this.RuleLvl6Expression)
-}
-}
-]);
-this.OPTION3(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectBg)
-});
-});
+    RuleHAnyAllowedVariableName = this.RULE('RuleHAnyAllowedVariableName', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkIdentifier);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._number);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkAllUnaryPropertiesIfNotAlready);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
+                }
+            }
+        ]);
+    });
 
-RuleObjectBg = this.RULE('RuleObjectBg', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkBgOrPlural)
-this.CONSUME1(tks._id)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkBgOrPlural)
-this.SUBRULE2(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkBgAtEndOfLine)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
-this.CONSUME3(tks.tkBgOrPlural)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RulePosition)
-this.CONSUME4(tks.tkBgOrPlural)
-}
-}
-]);
-this.OPTION1(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectStack)
-});
-});
+    RuleObject = this.RULE('RuleObject', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkTopObject);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._me);
+                }
+            },
+            {
+                ALT: () => {
+                    this.OPTION1(() => {
+                        this.CONSUME1(tks._the);
+                    });
+                    this.CONSUME1(tks._target);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectBtn);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectFld);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectCard);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectBg);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectStack);
+                }
+            }
+        ]);
+    });
 
-RuleObjectStack = this.RULE('RuleObjectStack', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkPosition)
-this.CONSUME1(tks.tkStack)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkStack)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkStackAtEndOfLine)
-}
-}
-]);
-});
+    RuleObjectBtn = this.RULE('RuleObjectBtn', () => {
+        this.OPTION1(() => {
+            this.SUBRULE1(this.RuleOrdinal);
+        });
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkCardOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkBgOrPlural);
+                }
+            }
+        ]);
+        this.OR2([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkBtnOrPlural);
+                    this.CONSUME1(tks._id);
+                    this.SUBRULE1(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.tkBtnOrPlural);
+                    this.SUBRULE2(this.RuleLvl6Expression);
+                }
+            }
+        ]);
+        this.OPTION2(() => {
+            this.SUBRULE1(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectCard);
+        });
+    });
 
-RuleObjectPart = this.RULE('RuleObjectPart', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectBtn)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectFld)
-}
-}
-]);
-});
+    RuleObjectFld = this.RULE('RuleObjectFld', () => {
+        this.OPTION1(() => {
+            this.SUBRULE1(this.RuleOrdinal);
+        });
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkCardOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkBgOrPlural);
+                }
+            }
+        ]);
+        this.OR2([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkFldOrPlural);
+                    this.CONSUME1(tks._id);
+                    this.SUBRULE1(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.tkFldOrPlural);
+                    this.SUBRULE2(this.RuleLvl6Expression);
+                }
+            }
+        ]);
+        this.OPTION2(() => {
+            this.SUBRULE1(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectCard);
+        });
+    });
 
-RuleOf = this.RULE('RuleOf', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkOfOnly)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkInOnly)
-}
-}
-]);
-});
+    RuleObjectCard = this.RULE('RuleObjectCard', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._recent);
+                    this.CONSUME1(tks.tkCardOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._back);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._forth);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.tkCardOrPlural);
+                    this.CONSUME1(tks._id);
+                    this.SUBRULE1(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME3(tks.tkCardOrPlural);
+                    this.SUBRULE2(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkCardAtEndOfLine);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleOrdinal);
+                    this.OPTION1(() => {
+                        this.CONSUME1(tks._marked);
+                    });
+                    this.CONSUME4(tks.tkCardOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RulePosition);
+                    this.OPTION2(() => {
+                        this.CONSUME2(tks._marked);
+                    });
+                    this.CONSUME5(tks.tkCardOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME3(tks._marked);
+                    this.CONSUME6(tks.tkCardOrPlural);
+                    this.SUBRULE3(this.RuleLvl6Expression);
+                }
+            }
+        ]);
+        this.OPTION3(() => {
+            this.SUBRULE1(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectBg);
+        });
+    });
 
-RuleOrdinal = this.RULE('RuleOrdinal', () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.CONSUME1(tks.tkOrdinal)
-});
+    RuleObjectBg = this.RULE('RuleObjectBg', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkBgOrPlural);
+                    this.CONSUME1(tks._id);
+                    this.SUBRULE1(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.tkBgOrPlural);
+                    this.SUBRULE2(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkBgAtEndOfLine);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleOrdinal);
+                    this.CONSUME3(tks.tkBgOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RulePosition);
+                    this.CONSUME4(tks.tkBgOrPlural);
+                }
+            }
+        ]);
+        this.OPTION1(() => {
+            this.SUBRULE1(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectStack);
+        });
+    });
 
-RulePosition = this.RULE('RulePosition', () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.CONSUME1(tks.tkPosition)
-});
+    RuleObjectStack = this.RULE('RuleObjectStack', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkPosition);
+                    this.CONSUME1(tks.tkStack);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.tkStack);
+                    this.SUBRULE1(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkStackAtEndOfLine);
+                }
+            }
+        ]);
+    });
 
-RuleMenuItem = this.RULE('RuleMenuItem', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
-this.CONSUME1(tks._menuItem)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks._menuItem)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-}
-]);
-});
+    RuleObjectPart = this.RULE('RuleObjectPart', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectBtn);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectFld);
+                }
+            }
+        ]);
+    });
 
-RuleMenu = this.RULE('RuleMenu', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
-this.CONSUME1(tks._menu)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks._menu)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-}
-]);
-});
+    RuleOf = this.RULE('RuleOf', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkOfOnly);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkInOnly);
+                }
+            }
+        ]);
+    });
 
-RuleWindow1 = this.RULE('RuleWindow1', () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkCardOrPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkOtherWindowType)
-}
-}
-]);
-this.CONSUME1(tks._window)
-});
+    RuleOrdinal = this.RULE('RuleOrdinal', () => {
+        this.OPTION1(() => {
+            this.CONSUME1(tks._the);
+        });
+        this.CONSUME1(tks.tkOrdinal);
+    });
 
-RuleWindow = this.RULE('RuleWindow', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleWindow1)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleMessageBox)
-}
-}
-]);
-});
+    RulePosition = this.RULE('RulePosition', () => {
+        this.OPTION1(() => {
+            this.CONSUME1(tks._the);
+        });
+        this.CONSUME1(tks.tkPosition);
+    });
 
-RuleMessageBox = this.RULE('RuleMessageBox', () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.CONSUME1(tks._message)
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks._box)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._window)
-}
-}
-]);
-});
+    RuleMenuItem = this.RULE('RuleMenuItem', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleOrdinal);
+                    this.CONSUME1(tks._menuItem);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks._menuItem);
+                    this.SUBRULE1(this.RuleLvl6Expression);
+                }
+            }
+        ]);
+    });
 
-RuleAnyPropertyName = this.RULE('RuleAnyPropertyName', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks._id)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkIdentifier)
-}
-}
-]);
-});
+    RuleMenu = this.RULE('RuleMenu', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleOrdinal);
+                    this.CONSUME1(tks._menu);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks._menu);
+                    this.SUBRULE1(this.RuleLvl6Expression);
+                }
+            }
+        ]);
+    });
 
-RuleHSimpleContainer = this.RULE('RuleHSimpleContainer', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleMenu)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleMessageBox)
-}
-},
-{
-ALT: () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.CONSUME1(tks._selection)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectPart)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkIdentifier)
-}
-}
-]);
-});
+    RuleWindow1 = this.RULE('RuleWindow1', () => {
+        this.OPTION1(() => {
+            this.CONSUME1(tks._the);
+        });
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkCardOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkIdentifier);
+                }
+            }
+        ]);
+        this.CONSUME1(tks._window);
+    });
 
-RuleHContainer = this.RULE('RuleHContainer', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHChunk)
-this.SUBRULE1(this.RuleHSimpleContainer)
-}
-},
-{
-ALT: () => {
-this.SUBRULE2(this.RuleHSimpleContainer)
-}
-}
-]);
-});
+    RuleWindow = this.RULE('RuleWindow', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleWindow1);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleMessageBox);
+                }
+            }
+        ]);
+    });
 
-RuleHChunk = this.RULE('RuleHChunk', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
-this.CONSUME1(tks.tkChunkGranularity)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkChunkGranularity)
-this.SUBRULE1(this.RuleHChunkAmt)
-this.OPTION1(() => {
-this.CONSUME1(tks._to)
-this.SUBRULE2(this.RuleHChunkAmt)
-});
-}
-}
-]);
-this.SUBRULE1(this.RuleOf)
-});
+    RuleMessageBox = this.RULE('RuleMessageBox', () => {
+        this.OPTION1(() => {
+            this.CONSUME1(tks._the);
+        });
+        this.CONSUME1(tks._message);
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._box);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._window);
+                }
+            }
+        ]);
+    });
 
-RuleHChunkAmt = this.RULE('RuleHChunkAmt', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHSource)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkLParen)
-this.SUBRULE1(this.RuleExpr)
-this.CONSUME1(tks.tkRParen)
-}
-}
-]);
-});
+    RuleHSimpleContainer = this.RULE('RuleHSimpleContainer', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleMenu);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleMessageBox);
+                }
+            },
+            {
+                ALT: () => {
+                    this.OPTION1(() => {
+                        this.CONSUME1(tks._the);
+                    });
+                    this.CONSUME1(tks._selection);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObjectPart);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHAnyAllowedVariableName);
+                }
+            }
+        ]);
+    });
 
-RuleHSource = this.RULE('RuleHSource', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkStringLiteral)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkNumLiteral)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHGenericFunctionCall)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHSimpleContainer)
-}
-}
-]);
-});
+    RuleHContainer = this.RULE('RuleHContainer', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHChunk);
+                    this.SUBRULE1(this.RuleHSimpleContainer);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE2(this.RuleHSimpleContainer);
+                }
+            }
+        ]);
+    });
 
-RuleHGenericFunctionCall = this.RULE('RuleHGenericFunctionCall', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallThereIs)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHOldFnCallOrPropertyGet)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHFnCallWParens)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._the)
-this.CONSUME1(tks.tkIdentifier)
-}
-}
-]);
-});
+    RuleHChunk = this.RULE('RuleHChunk', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleOrdinal);
+                    this.CONSUME1(tks.tkChunkGranularity);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.tkChunkGranularity);
+                    this.SUBRULE1(this.RuleHChunkAmt);
+                    this.OPTION1(() => {
+                        this.CONSUME1(tks._to);
+                        this.SUBRULE2(this.RuleHChunkAmt);
+                    });
+                }
+            }
+        ]);
+        this.SUBRULE1(this.RuleOf);
+    });
 
-RuleHOldFnCallOrPropertyGet = this.RULE('RuleHOldFnCallOrPropertyGet', () => {
-this.OPTION1(() => {
-this.CONSUME1(tks._the)
-});
-this.OPTION2(() => {
-this.CONSUME1(tks.tkAdjective)
-});
-this.SUBRULE1(this.RuleAnyPropertyName)
-this.SUBRULE1(this.RuleOf)
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObject)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleWindow)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleMenuItem)
-this.SUBRULE2(this.RuleOf)
-this.SUBRULE1(this.RuleMenu)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHChunk)
-this.SUBRULE1(this.RuleObjectFld)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-}
-]);
-});
+    RuleHChunkAmt = this.RULE('RuleHChunkAmt', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHSource);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkLParen);
+                    this.SUBRULE1(this.RuleExpr);
+                    this.CONSUME1(tks.tkRParen);
+                }
+            }
+        ]);
+    });
 
-RuleHFnCallWParens = this.RULE('RuleHFnCallWParens', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkIdentifier)
-this.CONSUME1(tks.tkLParen)
-this.MANY_SEP1({
-SEP: tks.tkComma,
-DEF: () => {
-this.SUBRULE1(this.RuleExpr);
-}
-});
-this.CONSUME1(tks.tkRParen)
-}
-}
-]);
-});
+    RuleHSource = this.RULE('RuleHSource', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkStringLiteral);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkNumLiteral);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHGenericFunctionCall);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHSimpleContainer);
+                }
+            }
+        ]);
+    });
 
-RuleFnCallNumberOf = this.RULE('RuleFnCallNumberOf', () => {
-this.CONSUME1(tks._the)
-this.CONSUME1(tks._number)
-this.CONSUME1(tks.tkOfOnly)
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_1)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_2)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_3)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_4)
-}
-}
-]);
-});
+    RuleHGenericFunctionCall = this.RULE('RuleHGenericFunctionCall', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleFnCallNumberOf);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleFnCallThereIs);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHFnCallWParens);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHUnaryPropertyGet);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHOldStyleFnNonNullary);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHOldStyleFnNullaryOrNullaryPropGet);
+                }
+            }
+        ]);
+    });
 
-RuleFnCallNumberOf_1 = this.RULE('RuleFnCallNumberOf_1', () => {
-this.CONSUME1(tks.tkChunkGranularity)
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleLvl6Expression)
-});
+    RuleHFnCallWParens = this.RULE('RuleHFnCallWParens', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHAnyFnName);
+                    this.CONSUME1(tks.tkLParen);
+                    this.MANY_SEP1({
+                        SEP: tks.tkComma,
+                        DEF: () => {
+                            this.SUBRULE1(this.RuleExpr);
+                        }
+                    });
+                    this.CONSUME1(tks.tkRParen);
+                }
+            }
+        ]);
+    });
 
-RuleFnCallNumberOf_2 = this.RULE('RuleFnCallNumberOf_2', () => {
-this.OPTION1(() => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkCardOrPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkBgOrPlural)
-}
-}
-]);
-});
-this.OR2([
-{
-ALT: () => {
-this.CONSUME1(tks.tkBtnOrPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkFldOrPlural)
-}
-}
-]);
-});
+    RuleHUnaryPropertyGet = this.RULE('RuleHUnaryPropertyGet', () => {
+        this.OPTION1(() => {
+            this.CONSUME1(tks._the);
+        });
+        this.OPTION2(() => {
+            this.CONSUME1(tks.tkAdjective);
+        });
+        this.SUBRULE1(this.RuleHAllPropertiesThatCouldBeUnary);
+        this.CONSUME1(tks.tkOfOnly);
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleObject);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleWindow);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleMenuItem);
+                    this.SUBRULE1(this.RuleOf);
+                    this.SUBRULE1(this.RuleMenu);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHChunk);
+                    this.SUBRULE1(this.RuleObjectFld);
+                }
+            }
+        ]);
+    });
 
-RuleFnCallNumberOf_3 = this.RULE('RuleFnCallNumberOf_3', () => {
-this.CONSUME1(tks.tkCardOrPlural)
-this.OPTION1(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectBg)
-});
-this.OPTION2(() => {
-this.SUBRULE2(this.RuleOf)
-this.SUBRULE1(this.RuleObjectStack)
-});
-});
+    RuleHOldStyleFnNonNullary = this.RULE('RuleHOldStyleFnNonNullary', () => {
+        this.CONSUME1(tks._the);
+        this.SUBRULE1(this.RuleHAnyFnName);
+        this.CONSUME1(tks.tkOfOnly);
+        this.SUBRULE1(this.RuleExpr);
+    });
 
-RuleFnCallNumberOf_4 = this.RULE('RuleFnCallNumberOf_4', () => {
-this.CONSUME1(tks.tkBgOrPlural)
-this.OPTION1(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectStack)
-});
-});
+    RuleHOldStyleFnNullaryOrNullaryPropGet = this.RULE(
+        'RuleHOldStyleFnNullaryOrNullaryPropGet',
+        () => {
+            this.CONSUME1(tks._the);
+            this.OPTION1(() => {
+                this.CONSUME1(tks.tkAdjective);
+            });
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.SUBRULE1(this.RuleHAnyFnName);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.SUBRULE1(this.RuleHAllPropertiesThatCouldBeNullary);
+                    }
+                }
+            ]);
+        }
+    );
 
-RuleFnCallThereIs = this.RULE('RuleFnCallThereIs', () => {
-this.CONSUME1(tks._there)
-this.CONSUME1(tks._is)
-this.OPTION1(() => {
-this.CONSUME1(tks._not)
-});
-this.CONSUME1(tks.tkIdentifier)
-this.SUBRULE1(this.RuleObject)
-});
+    RuleFnCallNumberOf = this.RULE('RuleFnCallNumberOf', () => {
+        this.CONSUME1(tks._the);
+        this.CONSUME1(tks._number);
+        this.CONSUME1(tks.tkOfOnly);
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleFnCallNumberOf_1);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleFnCallNumberOf_2);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleFnCallNumberOf_3);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleFnCallNumberOf_4);
+                }
+            }
+        ]);
+    });
 
-RuleAnyPropertyVal = this.RULE('RuleAnyPropertyVal', () => {
-this.AT_LEAST_ONE_SEP1({
-SEP: tks.tkComma,
-DEF: () => {
-this.SUBRULE1(this.RuleLvl1Expression);
-}
-});
-});
+    RuleFnCallNumberOf_1 = this.RULE('RuleFnCallNumberOf_1', () => {
+        this.CONSUME1(tks.tkChunkGranularity);
+        this.SUBRULE1(this.RuleOf);
+        this.SUBRULE1(this.RuleLvl6Expression);
+    });
 
-RuleSubExpIs = this.RULE('RuleSubExpIs', () => {
-this.CONSUME1(tks._is)
-this.OPTION1(() => {
-this.CONSUME1(tks._not)
-});
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleSubExpIsTypeCheck)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleSubExpIsWithin)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleLvl3Expression)
-}
-}
-]);
-});
+    RuleFnCallNumberOf_2 = this.RULE('RuleFnCallNumberOf_2', () => {
+        this.OPTION1(() => {
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkCardOrPlural);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkBgOrPlural);
+                    }
+                }
+            ]);
+        });
+        this.OR2([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkBtnOrPlural);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkFldOrPlural);
+                }
+            }
+        ]);
+    });
 
-RuleSubExpIsTypeCheck = this.RULE('RuleSubExpIsTypeCheck', () => {
-this.CONSUME1(tks.tkIdentifier)
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks._number)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkIdentifier)
-}
-}
-]);
-});
+    RuleFnCallNumberOf_3 = this.RULE('RuleFnCallNumberOf_3', () => {
+        this.CONSUME1(tks.tkCardOrPlural);
+        this.OPTION1(() => {
+            this.SUBRULE1(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectBg);
+        });
+        this.OPTION2(() => {
+            this.SUBRULE2(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectStack);
+        });
+    });
 
-RuleSubExpIsWithin = this.RULE('RuleSubExpIsWithin', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkInOnly)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._within)
-}
-}
-]);
-this.SUBRULE1(this.RuleLvl3Expression)
-});
+    RuleFnCallNumberOf_4 = this.RULE('RuleFnCallNumberOf_4', () => {
+        this.CONSUME1(tks.tkBgOrPlural);
+        this.OPTION1(() => {
+            this.SUBRULE1(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectStack);
+        });
+    });
 
-RuleExpr = this.RULE('RuleExpr', () => {
-this.SUBRULE1(this.RuleLvl1Expression)
-this.MANY1(() => {
-this.SUBRULE1(this.RuleOpLogicalOrAnd);
-this.SUBRULE2(this.RuleLvl1Expression);
-});
-});
+    RuleFnCallThereIs = this.RULE('RuleFnCallThereIs', () => {
+        this.CONSUME1(tks._there);
+        this.CONSUME1(tks._is);
+        this.OPTION1(() => {
+            this.CONSUME1(tks._not);
+        });
+        this.CONSUME1(tks.tkIdentifier);
+        this.SUBRULE1(this.RuleObject);
+    });
 
-RuleLvl1Expression = this.RULE('RuleLvl1Expression', () => {
-this.SUBRULE1(this.RuleLvl2Expression)
-this.MANY1(() => {
-this.SUBRULE1(this.RuleOpEqualityGreaterLessOrContains);
-this.SUBRULE2(this.RuleLvl2Expression);
-});
-});
+    RuleAnyPropertyVal = this.RULE('RuleAnyPropertyVal', () => {
+        this.AT_LEAST_ONE_SEP1({
+            SEP: tks.tkComma,
+            DEF: () => {
+                this.SUBRULE1(this.RuleLvl1Expression);
+            }
+        });
+    });
 
-RuleLvl2Expression = this.RULE('RuleLvl2Expression', () => {
-this.SUBRULE1(this.RuleLvl3Expression)
-this.MANY1(() => {
-this.SUBRULE1(this.RuleSubExpIs);
-});
-});
+    RuleExpr = this.RULE('RuleExpr', () => {
+        this.SUBRULE1(this.RuleLvl1Expression);
+        this.MANY1(() => {
+            this.SUBRULE1(this.RuleAndOrOr);
+            this.SUBRULE2(this.RuleLvl1Expression);
+        });
+    });
 
-RuleLvl3Expression = this.RULE('RuleLvl3Expression', () => {
-this.SUBRULE1(this.RuleLvl4Expression)
-this.MANY1(() => {
-this.SUBRULE1(this.RuleOpStringConcat);
-this.SUBRULE2(this.RuleLvl4Expression);
-});
-});
+    RuleLvl1Expression = this.RULE('RuleLvl1Expression', () => {
+        this.SUBRULE1(this.RuleLvl2Expression);
+        this.MANY1(() => {
+            this.SUBRULE1(this.RuleContainsOrGreaterLessEqual);
+            this.SUBRULE2(this.RuleLvl2Expression);
+        });
+    });
 
-RuleLvl4Expression = this.RULE('RuleLvl4Expression', () => {
-this.SUBRULE1(this.RuleLvl5Expression)
-this.MANY1(() => {
-this.SUBRULE1(this.RuleOpPlusMinus);
-this.SUBRULE2(this.RuleLvl5Expression);
-});
-});
+    RuleLvl2Expression = this.RULE('RuleLvl2Expression', () => {
+        this.SUBRULE1(this.RuleLvl3Expression);
+        this.MANY1(() => {
+            this.SUBRULE1(this.RuleIsExpresion);
+        });
+    });
 
-RuleLvl5Expression = this.RULE('RuleLvl5Expression', () => {
-this.SUBRULE1(this.RuleLvl6Expression)
-this.MANY1(() => {
-this.SUBRULE1(this.RuleOpMultDivideExpDivMod);
-this.SUBRULE2(this.RuleLvl6Expression);
-});
-});
+    RuleLvl3Expression = this.RULE('RuleLvl3Expression', () => {
+        this.SUBRULE1(this.RuleLvl4Expression);
+        this.MANY1(() => {
+            this.CONSUME1(tks.tkStringConcat);
+            this.SUBRULE2(this.RuleLvl4Expression);
+        });
+    });
 
-RuleLvl6Expression = this.RULE('RuleLvl6Expression', () => {
-this.OPTION1(() => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks.tkPlusOrMinus)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._not)
-}
-}
-]);
-});
-this.OPTION2(() => {
-this.SUBRULE1(this.RuleHChunk)
-});
-this.OR2([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleHSource)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkLParen)
-this.SUBRULE1(this.RuleExpr)
-this.CONSUME1(tks.tkRParen)
-}
-}
-]);
-});
+    RuleLvl4Expression = this.RULE('RuleLvl4Expression', () => {
+        this.SUBRULE1(this.RuleLvl5Expression);
+        this.MANY1(() => {
+            this.CONSUME1(tks.tkPlusOrMinus);
+            this.SUBRULE2(this.RuleLvl5Expression);
+        });
+    });
 
-RuleOpLogicalOrAnd = this.RULE('RuleOpLogicalOrAnd', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks._or)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks._and)
-}
-}
-]);
-});
+    RuleLvl5Expression = this.RULE('RuleLvl5Expression', () => {
+        this.SUBRULE1(this.RuleLvl6Expression);
+        this.MANY1(() => {
+            this.CONSUME1(tks.tkMultDivideExpDivMod);
+            this.SUBRULE2(this.RuleLvl6Expression);
+        });
+    });
 
-RuleOpEqualityGreaterLessOrContains = this.RULE('RuleOpEqualityGreaterLessOrContains', () => {
-this.OR1([
-{
-ALT: () => {
-this.CONSUME1(tks._contains)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkGreaterOrLessEqualOrEqual)
-}
-}
-]);
-});
+    RuleLvl6Expression = this.RULE('RuleLvl6Expression', () => {
+        this.OPTION1(() => {
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkPlusOrMinus);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks._not);
+                    }
+                }
+            ]);
+        });
+        this.OPTION2(() => {
+            this.SUBRULE1(this.RuleHChunk);
+        });
+        this.OR2([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHSource);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkLParen);
+                    this.SUBRULE1(this.RuleExpr);
+                    this.CONSUME1(tks.tkRParen);
+                }
+            }
+        ]);
+    });
 
-RuleOpStringConcat = this.RULE('RuleOpStringConcat', () => {
-this.CONSUME1(tks.tkStringConcat)
-});
+    RuleAndOrOr = this.RULE('RuleAndOrOr', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._or);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._and);
+                }
+            }
+        ]);
+    });
 
-RuleOpPlusMinus = this.RULE('RuleOpPlusMinus', () => {
-this.CONSUME1(tks.tkPlusOrMinus)
-});
+    RuleContainsOrGreaterLessEqual = this.RULE('RuleContainsOrGreaterLessEqual', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._contains);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkGreaterOrLessEqualOrEqual);
+                }
+            }
+        ]);
+    });
 
-RuleOpMultDivideExpDivMod = this.RULE('RuleOpMultDivideExpDivMod', () => {
-this.CONSUME1(tks.tkMultDivideExpDivMod)
-});
-/* generated code, any changes above this point will be lost: --------------- */
+    RuleIsExpresion = this.RULE('RuleIsExpresion', () => {
+        this.CONSUME1(tks._is);
+        this.OPTION1(() => {
+            this.CONSUME1(tks._not);
+        });
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkIdentifier);
+                    this.OR2([
+                        {
+                            ALT: () => {
+                                this.CONSUME1(tks._number);
+                            }
+                        },
+                        {
+                            ALT: () => {
+                                this.CONSUME2(tks.tkIdentifier);
+                            }
+                        }
+                    ]);
+                }
+            },
+            {
+                ALT: () => {
+                    this.OR3([
+                        {
+                            ALT: () => {
+                                this.CONSUME1(tks.tkInOnly);
+                            }
+                        },
+                        {
+                            ALT: () => {
+                                this.CONSUME1(tks._within);
+                            }
+                        }
+                    ]);
+                    this.SUBRULE1(this.RuleLvl3Expression);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE2(this.RuleLvl3Expression);
+                }
+            }
+        ]);
+    });
+    /* generated code, any changes above this point will be lost: --------------- */
 }
