@@ -1,7 +1,7 @@
 
 /* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { PropAdjective, VpcElType, OrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcModelTop } from './velModelTop';
@@ -12,7 +12,7 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, bool, checkThrow, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq, fitIntoInclusive } from './../../ui512/utils/util512';
+/* auto */ import { Util512, checkThrowEq } from './../../ui512/utils/util512';
 
 /**
  * when a script asks for the name of an object
@@ -261,8 +261,6 @@ export class VelResolveReference {
         const currentCard = this.model.getCurrentCard();
 
 
-        
-
         /* check that the types are consistent */
         checkThrow(ref.isRequestedVelRef, '76|invalid RequestedElRef');
         checkThrow(!ref.parentCdInfo || ref.parentCdInfo.type === VpcElType.Card, 'J/|');
@@ -285,34 +283,14 @@ export class VelResolveReference {
             checkThrowEq(VpcElType.Unknown, ref.type, '6||');
             return [target, currentCard];
         } else if (ref.cardIsRecentHistory) {
-            let refersTo:O<string>
-            let fallback = () => currentCard.id
-            let cardExists = (s:string) => {
-                let cd = this.model.findByIdUntyped(s)
-                return trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card
-            }
-            if (ref.cardIsRecentHistory === 'recent' || ref.cardIsRecentHistory === 'back') {
-                refersTo = cardHistory.walkPreviousWhileAcceptible(fallback, cardExists)
-                cardHistory.walkNextWhileAcceptible(fallback, cardExists)
-            } else if (ref.cardIsRecentHistory === 'forth') {
-                refersTo = cardHistory.walkNextWhileAcceptible(fallback, cardExists)
-                cardHistory.walkPreviousWhileAcceptible(fallback, cardExists)
-            }
-
-            checkThrow(refersTo, `can't see card "${ref.cardIsRecentHistory}"`);
-            let cd = this.model.findByIdUntyped(s)
-            checkThrow(
-                trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card,
-                'J+|wrong type',
-            );
-            return [cd, currentCard];
+            return this.getFromCardRecentHistory(currentCard, ref, cardHistory);
         }
 
         let parentCard: O<VpcElBase> = ref.parentCdInfo
-            ? this.go(ref.parentCdInfo, me, target)[0]
+            ? this.go(ref.parentCdInfo, me, target, cardHistory)[0]
             : undefined;
         let parentBg: O<VpcElBase> = ref.parentBgInfo
-            ? this.go(ref.parentBgInfo, me, target)[0]
+            ? this.go(ref.parentBgInfo, me, target, cardHistory)[0]
             : undefined;
         let methodName = 'go' + VpcElType[ref.type];
         if (
@@ -341,6 +319,30 @@ export class VelResolveReference {
             [ref, parentCard, parentBg, ref.partIsBg],
             false
         );
+    }
+
+    /**
+     * implement "back", "forth". match product behavior: if card no longer exists, keep going
+     */
+    private getFromCardRecentHistory(currentCard: VpcElCard, ref: RequestedVelRef, cardHistory: RememberHistory):[O<VpcElBase>, VpcElCard] {
+        let refersTo: O<string>;
+        let fallback = () => currentCard.id;
+        let cardExists = (s: string) => {
+            let cd = this.model.findByIdUntyped(s);
+            return trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card;
+        };
+        if (ref.cardIsRecentHistory === 'recent' || ref.cardIsRecentHistory === 'back') {
+            refersTo = cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
+            cardHistory.walkNextWhileAcceptible(fallback, cardExists);
+        }
+        else if (ref.cardIsRecentHistory === 'forth') {
+            refersTo = cardHistory.walkNextWhileAcceptible(fallback, cardExists);
+            cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
+        }
+        checkThrow(refersTo, `can't see card "${ref.cardIsRecentHistory}"`);
+        let cd = this.model.findByIdUntyped(refersTo);
+        checkThrow(trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card, 'J+|wrong type');
+        return [cd, currentCard];
     }
 
     /**
@@ -456,36 +458,37 @@ export class VelResolveReference {
                 );
             }
         } else if (ref.cardLookAtMarkedOnly) {
-            let arr:(VpcElCard|string)[] = []
+            let arrAllCards: VpcElCard[] = []
             for (let bg of this.model.stack.bgs) {
                 for (let cd of bg.cards) {
-                    if (cd.id === currentCard.id && ref.lookByRelative !== undefined) {
-                        arr.push("(current)")
-                    }
-                    if (cd.getB('marked')) {
-                        arr.push(cd)
-                    }
+                    arrAllCards.push(cd)
                 }
             }
             if (ref.lookByAbsolute !== undefined) {
-                retCard = arr[ref.lookByAbsolute - 1] as VpcElCard
-                checkThrow(trueIfDefinedAndNotNull(retCard) && retCard.isVpcElBase, "not found or got wrong type")
-            } else if (ref.lookByRelative !== undefined) {
-                let currentCardPos = arr.findIndex((item) => item==="(current)")
-                checkThrow(trueIfDefinedAndNotNull(currentCardPos !== -1), "")
-                if (ref.lookByRelative === OrdinalOrPosition.This) {
-                    if (currentCard.getB('marked')) {
-                        retCard = currentCard
-                    } else {
-                        checkThrow(false, "no such card")
-                    }
-                } else if (ref.lookByRelative === OrdinalOrPosition.Prev) {
-                    
+                let arrOnlyMarked = arrAllCards.filter(c=>c.getB('marked'))
+                retCard = arrOnlyMarked[ref.lookByAbsolute - 1]
+            } else if (ref.lookByRelative === OrdinalOrPosition.This) {
+                if (currentCard.getB('marked')) {
+                    retCard = currentCard
+                } else {
+                    checkThrow(false, "no such card")
                 }
-                currentCardPos = fitIntoInclusive(0, )
+            } else if (ref.lookByRelative === OrdinalOrPosition.Next || ref.lookByRelative === OrdinalOrPosition.Previous) {
+                let curPos = arrAllCards.findIndex(c=>c.id === currentCard.id)
+                checkThrow(curPos !== -1, "")
+                if (ref.lookByRelative === OrdinalOrPosition.Next) {
+                    let subArr = arrAllCards.slice(curPos)
+                    retCard = subArr.find(c=>c.getB('marked'))
+                } else if (ref.lookByRelative === OrdinalOrPosition.Previous) {
+                    let subArr = arrAllCards.splice(0, curPos + 1)
+                    subArr.reverse()
+                    retCard = subArr.find(c=>c.getB('marked'))
+                }
+            } else if (ref.lookByRelative) {
+                let arrOnlyMarked = arrAllCards.filter(c=>c.getB('marked'))
                 retCard = VpcElBase.findByOrdinal(
-                    arr,
-                    currentPos,
+                    arrOnlyMarked,
+                    0, // unused
                     ref.lookByRelative
                 );
             }

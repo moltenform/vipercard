@@ -58,7 +58,7 @@ export class RequestedVelRef extends VpcIntermedValBase {
  */
 export class RequestedContainerRef extends VpcIntermedValBase {
     isRequestedContainerRef = true;
-    vel: O<RequestedVelRef | "msgbox" | "menu" | "selection">;
+    vel: O<RequestedVelRef;
     variable: O<string>;
     chunk: O<RequestedChunk>;
 }

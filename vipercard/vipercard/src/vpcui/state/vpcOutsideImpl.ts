@@ -89,7 +89,17 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         
 
         let resolver = new VelResolveReference(this.vci.getModel());
-        let ret = resolver.go(ref, me, target, cardHistory);
+        let ret: [O<VpcElBase>, VpcElCard] 
+        try {
+            ret = resolver.go(ref, me, target, cardHistory);
+        } catch(e) {
+            if (e.isVpcError) {
+                ret = [undefined, this.vci.getModel().getCurrentCard()]
+            } else {
+                throw e;
+            }
+        }
+
         checkThrow(ret && ret.length === 2, 'VelResolveReference invalid return');
         let firstElem = ret[0];
         checkThrow(
@@ -110,6 +120,12 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * count the number of elements of a certain type
      */
     CountElements(type: VpcElType, parentRef: RequestedVelRef): number {
+        let countOnlyMarked = false;
+        if (parentRef.type === VpcElType.Stack && parentRef.cardLookAtMarkedOnly) {
+            countOnlyMarked = true
+            parentRef.cardLookAtMarkedOnly = false
+        }
+
         let parent = throwIfUndefined(
             this.ResolveVelRef(parentRef)[0],
             '6t|Cannot find this element'
@@ -124,7 +140,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         } else if (type === VpcElType.Bg && parentAsStack.isVpcElStack) {
             return parentAsStack.bgs.length;
         } else if (type === VpcElType.Card && parentAsStack.isVpcElStack) {
-            return parentAsStack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
+            if (countOnlyMarked) {
+                return parentAsStack.bgs.map(bg => bg.cards.filter(c=>c.getB('marked')).length).reduce(Util512.add);
+            } else {
+                return parentAsStack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
+            }
         } else if (type === VpcElType.Card && parentAsBg.isVpcElBg) {
             return parentAsBg.cards.length;
         } else if (
