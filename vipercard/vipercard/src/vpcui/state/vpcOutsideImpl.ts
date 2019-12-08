@@ -85,16 +85,15 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         //~ me = this.vci.getModel().findByIdUntyped(frame.codeSection.ownerId);
         //~ target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
         //~ }
-        let cardHistory: RememberHistory = undefined as RememberHistory
-        
+        let cardHistory: RememberHistory = (undefined as unknown) as RememberHistory;
 
         let resolver = new VelResolveReference(this.vci.getModel());
-        let ret: [O<VpcElBase>, VpcElCard] 
+        let ret: [O<VpcElBase>, VpcElCard];
         try {
             ret = resolver.go(ref, me, target, cardHistory);
-        } catch(e) {
+        } catch (e) {
             if (e.isVpcError) {
-                ret = [undefined, this.vci.getModel().getCurrentCard()]
+                ret = [undefined, this.vci.getModel().getCurrentCard()];
             } else {
                 throw e;
             }
@@ -122,8 +121,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     CountElements(type: VpcElType, parentRef: RequestedVelRef): number {
         let countOnlyMarked = false;
         if (parentRef.type === VpcElType.Stack && parentRef.cardLookAtMarkedOnly) {
-            countOnlyMarked = true
-            parentRef.cardLookAtMarkedOnly = false
+            countOnlyMarked = true;
+            parentRef.cardLookAtMarkedOnly = false;
         }
 
         let parent = throwIfUndefined(
@@ -141,7 +140,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return parentAsStack.bgs.length;
         } else if (type === VpcElType.Card && parentAsStack.isVpcElStack) {
             if (countOnlyMarked) {
-                return parentAsStack.bgs.map(bg => bg.cards.filter(c=>c.getB('marked')).length).reduce(Util512.add);
+                return parentAsStack.bgs
+                    .map(bg => bg.cards.filter(c => c.getB('marked')).length)
+                    .reduce(Util512.add);
             } else {
                 return parentAsStack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
             }
@@ -497,7 +498,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     GetFrameInfo(): [VpcScriptMessage, VpcVal[]] {
         let NoteThisIsDisabledCode = 1;
-        throw new Error("disabled")
+        throw new Error('disabled');
         //~ let [frStack, frame] = this.getExecFrameStack();
         //~ return [frame.message, frame.args];
     }

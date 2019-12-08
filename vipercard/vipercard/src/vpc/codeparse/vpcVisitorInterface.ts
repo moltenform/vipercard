@@ -1,5 +1,8 @@
 
-/* auto */ import { VpcIntermedValBase } from './../vpcutils/vpcVal';
+/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal } from './../vpcutils/vpcVal';
+/* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { OrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
 
 // the VpcCompleteVisitor interface will make it easier
 // to see that all visitor methods are there
@@ -10,61 +13,58 @@
 /* generated code, any changes past this point will be lost: --------------- */
 
 export interface VpcCompleteVisitor {
-    RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): chevrotain.IToken;
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(
         ctx: VisitingContext
-    ): string | VpcIntermedValBase;
-    RuleHAnyFnName(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHAnyAllowedVariableName(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleObject(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleObjectBtn(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleObjectFld(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleObjectCard(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleObjectBg(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleObjectStack(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleObjectPart(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOf(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleOrdinal(ctx: VisitingContext): string | VpcIntermedValBase;
-    RulePosition(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleMenuItem(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleMenu(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleWindow1(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleWindow(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleMessageBox(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHSimpleContainer(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHContainer(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHChunk(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHChunkAmt(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHSource(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHFnCallWParens(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHUnaryPropertyGet(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHOldStyleFnNonNullary(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleHOldStyleFnNullaryOrNullaryPropGet(
-        ctx: VisitingContext
-    ): string | VpcIntermedValBase;
-    RuleHGenericFunctionCall(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_1(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_2(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_3(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_4(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_5(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_6(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_7(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallNumberOf_8(ctx: VisitingContext): string | VpcIntermedValBase;
+    ): chevrotain.IToken;
+    RuleHAnyFnName(ctx: VisitingContext): chevrotain.IToken;
+    RuleHAnyAllowedVariableName(ctx: VisitingContext): chevrotain.IToken;
+    RuleObject(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectBtn(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectFld(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectCard(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectBg(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectStack(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectPart(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectSpecial(ctx: VisitingContext): RequestedVelRef;
+    RuleOf(ctx: VisitingContext): chevrotain.IToken;
+    RuleOrdinal(ctx: VisitingContext): OrdinalOrPosition;
+    RulePosition(ctx: VisitingContext): OrdinalOrPosition;
+    RuleMenuItem(ctx: VisitingContext): string;
+    RuleMenu(ctx: VisitingContext): string;
+    RuleWindow_1(ctx: VisitingContext): string;
+    RuleWindow(ctx: VisitingContext): string;
+    RuleMessageBox(ctx: VisitingContext): string;
+    RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef;
+    RuleHContainer(ctx: VisitingContext): RequestedContainerRef;
+    RuleHChunk(ctx: VisitingContext): RequestedChunk;
+    RuleHChunkAmt(ctx: VisitingContext): VpcVal;
+    RuleHSource(ctx: VisitingContext): VpcVal;
+    RuleHSource_1(ctx: VisitingContext): VpcVal;
+    RuleHFnCallWParens(ctx: VisitingContext): VpcVal;
+    RuleHUnaryPropertyGet(ctx: VisitingContext): VpcVal;
+    RuleHOldStyleFnNonNullary(ctx: VisitingContext): VpcVal;
+    RuleHOldStyleFnNullaryOrNullaryPropGet(ctx: VisitingContext): VpcVal;
+    RuleHGenericFunctionCall(ctx: VisitingContext): VpcVal;
+    RuleFnCallNumberOf(ctx: VisitingContext): VpcVal;
+    RuleFnCallNumberOf_1(ctx: VisitingContext): VpcVal;
+    RuleFnCallNumberOf_5(ctx: VisitingContext): VpcVal;
+    RuleFnCallNumberOf_6(ctx: VisitingContext): VpcVal;
+    RuleFnCallNumberOf_7(ctx: VisitingContext): VpcVal;
+    RuleFnCallNumberOf_8(ctx: VisitingContext): VpcVal;
     RuleFnCallNumberOf_9(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleFnCallThereIs(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallThereIs(ctx: VisitingContext): VpcVal;
     RuleAnyPropertyVal(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleExpr(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleLvl1Expression(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleLvl2Expression(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleLvl3Expression(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleLvl4Expression(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleLvl5Expression(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleLvl6Expression(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleAndOrOr(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string | VpcIntermedValBase;
-    RuleIsExpression(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleExpr(ctx: VisitingContext): VpcVal;
+    RuleLvl1Expression(ctx: VisitingContext): VpcVal;
+    RuleLvl2Expression(ctx: VisitingContext): VpcVal;
+    RuleLvl3Expression(ctx: VisitingContext): VpcVal;
+    RuleLvl4Expression(ctx: VisitingContext): VpcVal;
+    RuleLvl5Expression(ctx: VisitingContext): VpcVal;
+    RuleLvl6Expression(ctx: VisitingContext): VpcVal;
+    RuleAndOrOr(ctx: VisitingContext): string;
+    RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string;
+    RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals;
 }
 
 export interface VisitingContext {
@@ -80,12 +80,13 @@ export interface VisitingContext {
     RuleObjectBg: any[];
     RuleObjectStack: any[];
     RuleObjectPart: any[];
+    RuleObjectSpecial: any[];
     RuleOf: any[];
     RuleOrdinal: any[];
     RulePosition: any[];
     RuleMenuItem: any[];
     RuleMenu: any[];
-    RuleWindow1: any[];
+    RuleWindow_1: any[];
     RuleWindow: any[];
     RuleMessageBox: any[];
     RuleHSimpleContainer: any[];
@@ -93,6 +94,7 @@ export interface VisitingContext {
     RuleHChunk: any[];
     RuleHChunkAmt: any[];
     RuleHSource: any[];
+    RuleHSource_1: any[];
     RuleHFnCallWParens: any[];
     RuleHUnaryPropertyGet: any[];
     RuleHOldStyleFnNonNullary: any[];
@@ -100,9 +102,6 @@ export interface VisitingContext {
     RuleHGenericFunctionCall: any[];
     RuleFnCallNumberOf: any[];
     RuleFnCallNumberOf_1: any[];
-    RuleFnCallNumberOf_2: any[];
-    RuleFnCallNumberOf_3: any[];
-    RuleFnCallNumberOf_4: any[];
     RuleFnCallNumberOf_5: any[];
     RuleFnCallNumberOf_6: any[];
     RuleFnCallNumberOf_7: any[];
@@ -185,6 +184,7 @@ export interface VisitingContext {
     tkAllUnaryPropertiesIfNotAlready: chevrotain.IToken[];
     tkAllNullaryOrUnaryPropertiesIfNotAlready: chevrotain.IToken[];
 }
+
 /* generated code, any changes above this point will be lost: --------------- */
 
 interface VisitingContextWithin {

@@ -177,31 +177,34 @@ export class RememberHistory {
     /**
      * user pressed up, like pressing arrow key up in bash
      */
-    walkPrevious(fallback:()=>string) {
+    walkPrevious(fallback: () => string) {
         this.pointer -= 1;
         let ret = this.getAt();
-        return ret ?? fallback()
+        return ret ?? fallback();
     }
 
     /**
      * user pressed down, like pressing arrow key up in bash
      */
-    walkNext(fallback:()=>string) {
+    walkNext(fallback: () => string) {
         this.pointer += 1;
         let ret = this.getAt();
-        return ret ?? fallback()
+        return ret ?? fallback();
     }
 
     /**
      * you can reject candidates
      */
-    walkPreviousWhileAcceptible(fallback:()=>string, isAccepted:(s:string)=>boolean) {
-        while(true) {
-            let cand = this.walkPrevious(fallback)
+    walkPreviousWhileAcceptible(
+        fallback: () => string,
+        isAccepted: (s: string) => boolean
+    ) {
+        while (true) {
+            let cand = this.walkPrevious(fallback);
             if (isAccepted(cand)) {
-                return cand
+                return cand;
             } else if (this.pointer <= 0) {
-                return fallback()
+                return fallback();
             }
         }
     }
@@ -209,13 +212,13 @@ export class RememberHistory {
     /**
      * you can reject candidates
      */
-    walkNextWhileAcceptible(fallback:()=>string, isAccepted:(s:string)=>boolean) {
-        while(true) {
-            let cand = this.walkNext(fallback)
+    walkNextWhileAcceptible(fallback: () => string, isAccepted: (s: string) => boolean) {
+        while (true) {
+            let cand = this.walkNext(fallback);
             if (isAccepted(cand)) {
-                return cand
-            } else if (this.pointer >= this.list.length-1) {
-                return fallback()
+                return cand;
+            } else if (this.pointer >= this.list.length - 1) {
+                return fallback();
             }
         }
     }

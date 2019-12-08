@@ -31,7 +31,7 @@ export class RequestedVelRef extends VpcIntermedValBase {
     isReferenceToTarget = false;
     isReferenceToMe = false;
     cardLookAtMarkedOnly = false;
-    cardIsRecentHistory = ''
+    cardIsRecentHistory = '';
     constructor(type: VpcElType) {
         super();
         this.type = type;
@@ -58,7 +58,7 @@ export class RequestedVelRef extends VpcIntermedValBase {
  */
 export class RequestedContainerRef extends VpcIntermedValBase {
     isRequestedContainerRef = true;
-    vel: O<RequestedVelRef;
+    vel: O<RequestedVelRef>;
     variable: O<string>;
     chunk: O<RequestedChunk>;
 }

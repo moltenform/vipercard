@@ -120,20 +120,7 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.OR1([
             {
                 ALT: () => {
-                    this.CONSUME1(tks.tkTopObject);
-                }
-            },
-            {
-                ALT: () => {
-                    this.CONSUME1(tks._me);
-                }
-            },
-            {
-                ALT: () => {
-                    this.OPTION1(() => {
-                        this.CONSUME1(tks._the);
-                    });
-                    this.CONSUME1(tks._target);
+                    this.SUBRULE1(this.RuleObjectSpecial);
                 }
             },
             {
@@ -168,18 +155,20 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleOrdinal);
         });
-        this.OR1([
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkCard);
+        this.OPTION2(() => {
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkCard);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkBg);
+                    }
                 }
-            },
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkBg);
-                }
-            }
-        ]);
+            ]);
+        });
         this.OR2([
             {
                 ALT: () => {
@@ -195,7 +184,7 @@ export class VpcChvParser extends chevrotain.CstParser {
                 }
             }
         ]);
-        this.OPTION2(() => {
+        this.OPTION3(() => {
             this.SUBRULE1(this.RuleOf);
             this.SUBRULE1(this.RuleObjectCard);
         });
@@ -205,18 +194,20 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleOrdinal);
         });
-        this.OR1([
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkCard);
+        this.OPTION2(() => {
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkCard);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkBg);
+                    }
                 }
-            },
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkBg);
-                }
-            }
-        ]);
+            ]);
+        });
         this.OR2([
             {
                 ALT: () => {
@@ -232,7 +223,7 @@ export class VpcChvParser extends chevrotain.CstParser {
                 }
             }
         ]);
-        this.OPTION2(() => {
+        this.OPTION3(() => {
             this.SUBRULE1(this.RuleOf);
             this.SUBRULE1(this.RuleObjectCard);
         });
@@ -265,6 +256,9 @@ export class VpcChvParser extends chevrotain.CstParser {
             },
             {
                 ALT: () => {
+                    this.OPTION1(() => {
+                        this.CONSUME1(tks._marked);
+                    });
                     this.CONSUME3(tks.tkCard);
                     this.SUBRULE2(this.RuleLvl6Expression);
                 }
@@ -277,8 +271,8 @@ export class VpcChvParser extends chevrotain.CstParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleOrdinal);
-                    this.OPTION1(() => {
-                        this.CONSUME1(tks._marked);
+                    this.OPTION2(() => {
+                        this.CONSUME2(tks._marked);
                     });
                     this.CONSUME4(tks.tkCard);
                 }
@@ -286,21 +280,14 @@ export class VpcChvParser extends chevrotain.CstParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RulePosition);
-                    this.OPTION2(() => {
-                        this.CONSUME2(tks._marked);
+                    this.OPTION3(() => {
+                        this.CONSUME3(tks._marked);
                     });
                     this.CONSUME5(tks.tkCard);
                 }
-            },
-            {
-                ALT: () => {
-                    this.CONSUME3(tks._marked);
-                    this.CONSUME6(tks.tkCard);
-                    this.SUBRULE3(this.RuleLvl6Expression);
-                }
             }
         ]);
-        this.OPTION3(() => {
+        this.OPTION4(() => {
             this.SUBRULE1(this.RuleOf);
             this.SUBRULE1(this.RuleObjectBg);
         });
@@ -361,6 +348,13 @@ export class VpcChvParser extends chevrotain.CstParser {
             },
             {
                 ALT: () => {
+                    this.CONSUME3(tks.tkStack);
+                    this.CONSUME1(tks._id);
+                    this.SUBRULE2(this.RuleLvl6Expression);
+                }
+            },
+            {
+                ALT: () => {
                     this.CONSUME1(tks.tkStackAtEndOfLine);
                 }
             }
@@ -381,7 +375,21 @@ export class VpcChvParser extends chevrotain.CstParser {
             },
             {
                 ALT: () => {
-                    this.OR2([
+                    this.OPTION1(() => {
+                        this.OR2([
+                            {
+                                ALT: () => {
+                                    this.CONSUME1(tks.tkCard);
+                                }
+                            },
+                            {
+                                ALT: () => {
+                                    this.CONSUME1(tks.tkBg);
+                                }
+                            }
+                        ]);
+                    });
+                    this.OR3([
                         {
                             ALT: () => {
                                 this.CONSUME1(tks.tkPart);
@@ -402,10 +410,33 @@ export class VpcChvParser extends chevrotain.CstParser {
                             }
                         }
                     ]);
-                    this.OPTION1(() => {
+                    this.OPTION2(() => {
                         this.SUBRULE1(this.RuleOf);
                         this.SUBRULE1(this.RuleObjectCard);
                     });
+                }
+            }
+        ]);
+    });
+
+    RuleObjectSpecial = this.RULE('RuleObjectSpecial', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkTopObject);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._me);
+                }
+            },
+            {
+                ALT: () => {
+                    this.OPTION1(() => {
+                        this.CONSUME1(tks._the);
+                    });
+                    this.CONSUME1(tks._target);
                 }
             }
         ]);
@@ -474,7 +505,7 @@ export class VpcChvParser extends chevrotain.CstParser {
         ]);
     });
 
-    RuleWindow1 = this.RULE('RuleWindow1', () => {
+    RuleWindow_1 = this.RULE('RuleWindow_1', () => {
         this.OPTION1(() => {
             this.CONSUME1(tks._the);
         });
@@ -497,7 +528,7 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.OR1([
             {
                 ALT: () => {
-                    this.SUBRULE1(this.RuleWindow1);
+                    this.SUBRULE1(this.RuleWindow_1);
                 }
             },
             {
@@ -619,12 +650,7 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.OR1([
             {
                 ALT: () => {
-                    this.CONSUME1(tks.tkStringLiteral);
-                }
-            },
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkNumLiteral);
+                    this.SUBRULE1(this.RuleHSource_1);
                 }
             },
             {
@@ -635,6 +661,21 @@ export class VpcChvParser extends chevrotain.CstParser {
             {
                 ALT: () => {
                     this.SUBRULE1(this.RuleHSimpleContainer);
+                }
+            }
+        ]);
+    });
+
+    RuleHSource_1 = this.RULE('RuleHSource_1', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkStringLiteral);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkNumLiteral);
                 }
             }
         ]);
@@ -762,21 +803,6 @@ export class VpcChvParser extends chevrotain.CstParser {
             },
             {
                 ALT: () => {
-                    this.SUBRULE1(this.RuleFnCallNumberOf_2);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleFnCallNumberOf_3);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleFnCallNumberOf_4);
-                }
-            },
-            {
-                ALT: () => {
                     this.SUBRULE1(this.RuleFnCallNumberOf_5);
                 }
             },
@@ -805,9 +831,20 @@ export class VpcChvParser extends chevrotain.CstParser {
 
     RuleFnCallNumberOf_1 = this.RULE('RuleFnCallNumberOf_1', () => {
         this.OPTION1(() => {
-            this.CONSUME1(tks.tkCard);
+            this.OR1([
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkCard);
+                    }
+                },
+                {
+                    ALT: () => {
+                        this.CONSUME1(tks.tkBg);
+                    }
+                }
+            ]);
         });
-        this.OR1([
+        this.OR2([
             {
                 ALT: () => {
                     this.CONSUME1(tks.tkBtnPlural);
@@ -817,36 +854,17 @@ export class VpcChvParser extends chevrotain.CstParser {
                 ALT: () => {
                     this.CONSUME1(tks.tkPartPlural);
                 }
-            }
-        ]);
-    });
-
-    RuleFnCallNumberOf_2 = this.RULE('RuleFnCallNumberOf_2', () => {
-        this.CONSUME1(tks.tkBg);
-        this.OR1([
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkBtnPlural);
-                }
             },
             {
                 ALT: () => {
-                    this.CONSUME1(tks.tkPartPlural);
+                    this.CONSUME1(tks.tkFldPlural);
                 }
             }
         ]);
-    });
-
-    RuleFnCallNumberOf_3 = this.RULE('RuleFnCallNumberOf_3', () => {
-        this.CONSUME1(tks.tkCard);
-        this.CONSUME1(tks.tkFldPlural);
-    });
-
-    RuleFnCallNumberOf_4 = this.RULE('RuleFnCallNumberOf_4', () => {
-        this.OPTION1(() => {
-            this.CONSUME1(tks.tkBg);
+        this.OPTION2(() => {
+            this.SUBRULE1(this.RuleOf);
+            this.SUBRULE1(this.RuleObjectCard);
         });
-        this.CONSUME1(tks.tkFldPlural);
     });
 
     RuleFnCallNumberOf_5 = this.RULE('RuleFnCallNumberOf_5', () => {
@@ -859,10 +877,6 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleOf);
             this.SUBRULE1(this.RuleObjectBg);
-        });
-        this.OPTION2(() => {
-            this.SUBRULE2(this.RuleOf);
-            this.SUBRULE1(this.RuleObjectStack);
         });
     });
 
@@ -951,6 +965,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleLvl2Expression = this.RULE('RuleLvl2Expression', () => {
         this.SUBRULE1(this.RuleLvl3Expression);
         this.MANY1(() => {
+            this.CONSUME1(tks._is);
             this.SUBRULE1(this.RuleIsExpression);
         });
     });
@@ -1044,7 +1059,6 @@ export class VpcChvParser extends chevrotain.CstParser {
     });
 
     RuleIsExpression = this.RULE('RuleIsExpression', () => {
-        this.CONSUME1(tks._is);
         this.OPTION1(() => {
             this.CONSUME1(tks._not);
         });

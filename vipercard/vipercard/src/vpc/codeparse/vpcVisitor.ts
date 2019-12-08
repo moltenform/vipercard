@@ -2,12 +2,14 @@
 /* auto */ import { VpcVisitorAddMixinMethods, VpcVisitorInterface } from './vpcVisitorMixin';
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
-/* auto */ import { IntermedMapOfIntermedVals } from './../vpcutils/vpcVal';
+/* auto */ import { IntermedMapOfIntermedVals, VpcVal } from './../vpcutils/vpcVal';
 /* auto */ import { allVpcTokens } from './vpcTokens';
+/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcChvParser } from './vpcParser';
+/* auto */ import { VpcOpCtg } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
-/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { O, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { isString, longstr } from './../../ui512/utils/util512';
 
 /* check_long_lines_silence_subsequent */
 
@@ -22,7 +24,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         evalHelp = new VpcEvalHelpers();
         outside: OutsideWorldRead;
         tmpArr: [boolean, any] = [false, undefined];
-        public warningFlags : string[] = []
+        public warningFlags: string[] = [];
         constructor() {
             super();
             this.validateVisitor();
@@ -34,8 +36,15 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         visit(rule: any) {
             /* the default .visit() accepts arrays and silently only processes the first element, */
             /* this has a risk of accepting unintended results, let's throw instead */
-            checkThrow(!Array.isArray(rule), longstr(`9b|internal error, make sure you
-                say this.visit(ctx.RuleX[0]) not this.visit(ctx.RuleX)`, ''), rule);
+            checkThrow(
+                !Array.isArray(rule),
+                longstr(
+                    `9b|internal error, make sure you
+                say this.visit(ctx.RuleX[0]) not this.visit(ctx.RuleX)`,
+                    ''
+                ),
+                rule
+            );
 
             return super.visit(rule);
         }
@@ -75,6 +84,267 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
         /* generated code, any changes past this point will be lost: --------------- */
 
+        RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): chevrotain.IToken {
+            if (ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
+                return ctx.tkAllUnaryPropertiesIfNotAlready[0];
+            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
+            } else if (ctx._id[0]) {
+                return ctx._id[0];
+            } else if (ctx._marked[0]) {
+                return ctx._marked[0];
+            } else if (ctx._number[0]) {
+                return ctx._number[0];
+            } else {
+                throw makeVpcInternalErr('OR in HAllPropertiesThatCouldBeUnary, no branch found');
+            }
+        }
+
+        RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): chevrotain.IToken {
+            if (ctx.RuleHAnyFnName[0]) {
+                return this.visit(ctx.RuleHAnyFnName[0]);
+            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
+            } else {
+                throw makeVpcInternalErr('OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found');
+            }
+        }
+
+        RuleHAnyFnName(ctx: VisitingContext): chevrotain.IToken {
+            if (ctx.tkIdentifier[0]) {
+                return ctx.tkIdentifier[0];
+            } else if (ctx._windows[0]) {
+                return ctx._windows[0];
+            } else {
+                throw makeVpcInternalErr('OR in HAnyFnName, no branch found');
+            }
+        }
+
+        RuleHAnyAllowedVariableName(ctx: VisitingContext): chevrotain.IToken {
+            if (ctx.tkIdentifier[0]) {
+                return ctx.tkIdentifier[0];
+            } else if (ctx._number[0]) {
+                return ctx._number[0];
+            } else if (ctx.tkA[0]) {
+                return ctx.tkA[0];
+            } else if (ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
+                return ctx.tkAllUnaryPropertiesIfNotAlready[0];
+            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
+            } else {
+                throw makeVpcInternalErr('OR in HAnyAllowedVariableName, no branch found');
+            }
+        }
+
+        RuleObject(ctx: VisitingContext): RequestedVelRef {
+            if (ctx.RuleObjectSpecial[0]) {
+                return this.visit(ctx.RuleObjectSpecial[0]);
+            } else if (ctx.RuleObjectBtn[0]) {
+                return this.visit(ctx.RuleObjectBtn[0]);
+            } else if (ctx.RuleObjectFld[0]) {
+                return this.visit(ctx.RuleObjectFld[0]);
+            } else if (ctx.RuleObjectCard[0]) {
+                return this.visit(ctx.RuleObjectCard[0]);
+            } else if (ctx.RuleObjectBg[0]) {
+                return this.visit(ctx.RuleObjectBg[0]);
+            } else if (ctx.RuleObjectStack[0]) {
+                return this.visit(ctx.RuleObjectStack[0]);
+            } else {
+                throw makeVpcInternalErr('OR in Object, no branch found');
+            }
+        }
+
+        RuleOf(ctx: VisitingContext): chevrotain.IToken {
+            if (ctx.tkOfOnly[0]) {
+                return ctx.tkOfOnly[0];
+            } else if (ctx.tkInOnly[0]) {
+                return ctx.tkInOnly[0];
+            } else {
+                throw makeVpcInternalErr('OR in Of, no branch found');
+            }
+        }
+
+        RuleHChunkAmt(ctx: VisitingContext): VpcVal {
+            if (ctx.RuleHSource[0]) {
+                return this.visit(ctx.RuleHSource[0]);
+            } else if (ctx.RuleExpr[0]) {
+                return this.visit(ctx.RuleExpr[0]);
+            } else {
+                throw makeVpcInternalErr('OR in HChunkAmt, no branch found');
+            }
+        }
+
+        RuleHSource(ctx: VisitingContext): VpcVal {
+            if (ctx.RuleHSource_1[0]) {
+                return this.visit(ctx.RuleHSource_1[0]);
+            } else if (ctx.RuleHGenericFunctionCall[0]) {
+                return this.visit(ctx.RuleHGenericFunctionCall[0]);
+            } else if (ctx.RuleHSimpleContainer[0]) {
+                return this.visit(ctx.RuleHSimpleContainer[0]);
+            } else {
+                throw makeVpcInternalErr('OR in HSource, no branch found');
+            }
+        }
+
+        RuleHGenericFunctionCall(ctx: VisitingContext): VpcVal {
+            if (ctx.RuleFnCallNumberOf[0]) {
+                return this.visit(ctx.RuleFnCallNumberOf[0]);
+            } else if (ctx.RuleFnCallThereIs[0]) {
+                return this.visit(ctx.RuleFnCallThereIs[0]);
+            } else if (ctx.RuleHFnCallWParens[0]) {
+                return this.visit(ctx.RuleHFnCallWParens[0]);
+            } else if (ctx.RuleHUnaryPropertyGet[0]) {
+                return this.visit(ctx.RuleHUnaryPropertyGet[0]);
+            } else if (ctx.RuleHOldStyleFnNonNullary[0]) {
+                return this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
+            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
+                return this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
+            } else {
+                throw makeVpcInternalErr('OR in HGenericFunctionCall, no branch found');
+            }
+        }
+
+        RuleFnCallNumberOf(ctx: VisitingContext): VpcVal {
+            if (ctx.RuleFnCallNumberOf_1[0]) {
+                return this.visit(ctx.RuleFnCallNumberOf_1[0]);
+            } else if (ctx.RuleFnCallNumberOf_5[0]) {
+                return this.visit(ctx.RuleFnCallNumberOf_5[0]);
+            } else if (ctx.RuleFnCallNumberOf_6[0]) {
+                return this.visit(ctx.RuleFnCallNumberOf_6[0]);
+            } else if (ctx.RuleFnCallNumberOf_7[0]) {
+                return this.visit(ctx.RuleFnCallNumberOf_7[0]);
+            } else if (ctx.RuleFnCallNumberOf_8[0]) {
+                return this.visit(ctx.RuleFnCallNumberOf_8[0]);
+            } else if (ctx.RuleFnCallNumberOf_9[0]) {
+                return this.visit(ctx.RuleFnCallNumberOf_9[0]);
+            } else {
+                throw makeVpcInternalErr('OR in FnCallNumberOf, no branch found');
+            }
+        }
+
+        RuleExpr(ctx: VisitingContext): VpcVal {
+            if (!ctx.RuleLvl1Expression.length || ctx.RuleAndOrOr.length + 1 !== ctx.RuleLvl1Expression.length) {
+                throw makeVpcInternalErr(`RuleExpr:${ctx.RuleAndOrOr.length},${ctx.RuleLvl1Expression.length}.`);
+            }
+
+            let total = this.visit(ctx.RuleLvl1Expression[0]) as VpcVal;
+            checkThrow(total.isVpcVal, 'RuleExpr: first not a vpcval');
+            const oprulecategory = VpcOpCtg.OpLogicalOrAnd;
+            for (let i = 0; i < ctx.RuleAndOrOr.length; i++) {
+                let whichop = this.visit(ctx.RuleAndOrOr[i]);
+                checkThrow(isString(whichop), 'RuleExpr: op not a string');
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl1Expression[i + 1]);
+                total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
+                checkThrow(total.isVpcVal, 'RuleExpr: not a vpcval');
+            }
+
+            return total;
+        }
+
+        RuleLvl1Expression(ctx: VisitingContext): VpcVal {
+            if (!ctx.RuleLvl2Expression.length || ctx.RuleContainsOrGreaterLessEqual.length + 1 !== ctx.RuleLvl2Expression.length) {
+                throw makeVpcInternalErr(`RuleLvl1Expression:${ctx.RuleContainsOrGreaterLessEqual.length},${ctx.RuleLvl2Expression.length}.`);
+            }
+
+            let total = this.visit(ctx.RuleLvl2Expression[0]) as VpcVal;
+            checkThrow(total.isVpcVal, 'RuleLvl1Expression: first not a vpcval');
+            const oprulecategory = VpcOpCtg.OpEqualityGreaterLessOrContains;
+            for (let i = 0; i < ctx.RuleContainsOrGreaterLessEqual.length; i++) {
+                let whichop = this.visit(ctx.RuleContainsOrGreaterLessEqual[i]);
+                checkThrow(isString(whichop), 'RuleLvl1Expression: op not a string');
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl2Expression[i + 1]);
+                total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
+                checkThrow(total.isVpcVal, 'RuleLvl1Expression: not a vpcval');
+            }
+
+            return total;
+        }
+
+        RuleLvl3Expression(ctx: VisitingContext): VpcVal {
+            if (!ctx.RuleLvl4Expression.length || ctx.tkStringConcat.length + 1 !== ctx.RuleLvl4Expression.length) {
+                throw makeVpcInternalErr(`RuleLvl3Expression:${ctx.tkStringConcat.length},${ctx.RuleLvl4Expression.length}.`);
+            }
+
+            let total = this.visit(ctx.RuleLvl4Expression[0]) as VpcVal;
+            checkThrow(total.isVpcVal, 'RuleLvl3Expression: first not a vpcval');
+            const oprulecategory = VpcOpCtg.OpStringConcat;
+            for (let i = 0; i < ctx.tkStringConcat.length; i++) {
+                let whichop = ctx.tkStringConcat[i].image;
+                checkThrow(isString(whichop), 'RuleLvl3Expression: op not a string');
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl4Expression[i + 1]);
+                total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
+                checkThrow(total.isVpcVal, 'RuleLvl3Expression: not a vpcval');
+            }
+
+            return total;
+        }
+
+        RuleLvl4Expression(ctx: VisitingContext): VpcVal {
+            if (!ctx.RuleLvl5Expression.length || ctx.tkPlusOrMinus.length + 1 !== ctx.RuleLvl5Expression.length) {
+                throw makeVpcInternalErr(`RuleLvl4Expression:${ctx.tkPlusOrMinus.length},${ctx.RuleLvl5Expression.length}.`);
+            }
+
+            let total = this.visit(ctx.RuleLvl5Expression[0]) as VpcVal;
+            checkThrow(total.isVpcVal, 'RuleLvl4Expression: first not a vpcval');
+            const oprulecategory = VpcOpCtg.OpPlusMinus;
+            for (let i = 0; i < ctx.tkPlusOrMinus.length; i++) {
+                let whichop = ctx.tkPlusOrMinus[i].image;
+                checkThrow(isString(whichop), 'RuleLvl4Expression: op not a string');
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl5Expression[i + 1]);
+                total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
+                checkThrow(total.isVpcVal, 'RuleLvl4Expression: not a vpcval');
+            }
+
+            return total;
+        }
+
+        RuleLvl5Expression(ctx: VisitingContext): VpcVal {
+            if (!ctx.RuleLvl6Expression.length || ctx.tkMultDivideExpDivMod.length + 1 !== ctx.RuleLvl6Expression.length) {
+                throw makeVpcInternalErr(`RuleLvl5Expression:${ctx.tkMultDivideExpDivMod.length},${ctx.RuleLvl6Expression.length}.`);
+            }
+
+            let total = this.visit(ctx.RuleLvl6Expression[0]) as VpcVal;
+            checkThrow(total.isVpcVal, 'RuleLvl5Expression: first not a vpcval');
+            const oprulecategory = VpcOpCtg.OpMultDivideExpDivMod;
+            for (let i = 0; i < ctx.tkMultDivideExpDivMod.length; i++) {
+                let whichop = ctx.tkMultDivideExpDivMod[i].image;
+                checkThrow(isString(whichop), 'RuleLvl5Expression: op not a string');
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl6Expression[i + 1]);
+                total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
+                checkThrow(total.isVpcVal, 'RuleLvl5Expression: not a vpcval');
+            }
+
+            return total;
+        }
+
+        RuleAndOrOr(ctx: VisitingContext): string {
+            if (ctx._or[0]) {
+                return ctx._or[0].image;
+            } else if (ctx._and[0]) {
+                return ctx._and[0].image;
+            } else {
+                throw makeVpcInternalErr('OR in AndOrOr, no branch found');
+            }
+        }
+
+        RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string {
+            if (ctx._contains[0]) {
+                return ctx._contains[0].image;
+            } else if (ctx.tkGreaterOrLessEqualOrEqual[0]) {
+                return ctx.tkGreaterOrLessEqualOrEqual[0].image;
+            } else {
+                throw makeVpcInternalErr('OR in ContainsOrGreaterLessEqual, no branch found');
+            }
+        }
+
+        RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
         /* generated code, any changes above this point will be lost: --------------- */
     }
 

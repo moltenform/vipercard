@@ -260,7 +260,6 @@ export class VelResolveReference {
     ): [O<VpcElBase>, VpcElCard] {
         const currentCard = this.model.getCurrentCard();
 
-
         /* check that the types are consistent */
         checkThrow(ref.isRequestedVelRef, '76|invalid RequestedElRef');
         checkThrow(!ref.parentCdInfo || ref.parentCdInfo.type === VpcElType.Card, 'J/|');
@@ -273,8 +272,8 @@ export class VelResolveReference {
             !ref.parentStackInfo || ref.parentStackInfo.onlyThisSpecified(),
             `J,|we don't currently support referring to stacks other than "this stack"`
         );
-        checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, '')
-        checkThrow(!ref.cardIsRecentHistory || ref.type === VpcElType.Card, '')
+        checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, '');
+        checkThrow(!ref.cardIsRecentHistory || ref.type === VpcElType.Card, '');
 
         if (ref.isReferenceToMe) {
             checkThrowEq(VpcElType.Unknown, ref.type, '6}|');
@@ -324,7 +323,11 @@ export class VelResolveReference {
     /**
      * implement "back", "forth". match product behavior: if card no longer exists, keep going
      */
-    private getFromCardRecentHistory(currentCard: VpcElCard, ref: RequestedVelRef, cardHistory: RememberHistory):[O<VpcElBase>, VpcElCard] {
+    private getFromCardRecentHistory(
+        currentCard: VpcElCard,
+        ref: RequestedVelRef,
+        cardHistory: RememberHistory
+    ): [O<VpcElBase>, VpcElCard] {
         let refersTo: O<string>;
         let fallback = () => currentCard.id;
         let cardExists = (s: string) => {
@@ -334,14 +337,16 @@ export class VelResolveReference {
         if (ref.cardIsRecentHistory === 'recent' || ref.cardIsRecentHistory === 'back') {
             refersTo = cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
             cardHistory.walkNextWhileAcceptible(fallback, cardExists);
-        }
-        else if (ref.cardIsRecentHistory === 'forth') {
+        } else if (ref.cardIsRecentHistory === 'forth') {
             refersTo = cardHistory.walkNextWhileAcceptible(fallback, cardExists);
             cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
         }
         checkThrow(refersTo, `can't see card "${ref.cardIsRecentHistory}"`);
         let cd = this.model.findByIdUntyped(refersTo);
-        checkThrow(trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card, 'J+|wrong type');
+        checkThrow(
+            trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card,
+            'J+|wrong type'
+        );
         return [cd, currentCard];
     }
 
@@ -440,7 +445,10 @@ export class VelResolveReference {
         let currentCard = this.model.getCurrentCard();
         let retCard: O<VpcElBase>;
         if (parentBg) {
-            checkThrow(!ref.cardLookAtMarkedOnly, "can't look at only marked cds of a bg")
+            checkThrow(
+                !ref.cardLookAtMarkedOnly,
+                "can't look at only marked cds of a bg"
+            );
             let arr = parentBg.cards;
             if (ref.lookByAbsolute !== undefined) {
                 /* put the name of card 2 of bg "myBg" into x */
@@ -458,34 +466,37 @@ export class VelResolveReference {
                 );
             }
         } else if (ref.cardLookAtMarkedOnly) {
-            let arrAllCards: VpcElCard[] = []
+            let arrAllCards: VpcElCard[] = [];
             for (let bg of this.model.stack.bgs) {
                 for (let cd of bg.cards) {
-                    arrAllCards.push(cd)
+                    arrAllCards.push(cd);
                 }
             }
             if (ref.lookByAbsolute !== undefined) {
-                let arrOnlyMarked = arrAllCards.filter(c=>c.getB('marked'))
-                retCard = arrOnlyMarked[ref.lookByAbsolute - 1]
+                let arrOnlyMarked = arrAllCards.filter(c => c.getB('marked'));
+                retCard = arrOnlyMarked[ref.lookByAbsolute - 1];
             } else if (ref.lookByRelative === OrdinalOrPosition.This) {
                 if (currentCard.getB('marked')) {
-                    retCard = currentCard
+                    retCard = currentCard;
                 } else {
-                    checkThrow(false, "no such card")
+                    checkThrow(false, 'no such card');
                 }
-            } else if (ref.lookByRelative === OrdinalOrPosition.Next || ref.lookByRelative === OrdinalOrPosition.Previous) {
-                let curPos = arrAllCards.findIndex(c=>c.id === currentCard.id)
-                checkThrow(curPos !== -1, "")
+            } else if (
+                ref.lookByRelative === OrdinalOrPosition.Next ||
+                ref.lookByRelative === OrdinalOrPosition.Previous
+            ) {
+                let curPos = arrAllCards.findIndex(c => c.id === currentCard.id);
+                checkThrow(curPos !== -1, '');
                 if (ref.lookByRelative === OrdinalOrPosition.Next) {
-                    let subArr = arrAllCards.slice(curPos)
-                    retCard = subArr.find(c=>c.getB('marked'))
+                    let subArr = arrAllCards.slice(curPos);
+                    retCard = subArr.find(c => c.getB('marked'));
                 } else if (ref.lookByRelative === OrdinalOrPosition.Previous) {
-                    let subArr = arrAllCards.splice(0, curPos + 1)
-                    subArr.reverse()
-                    retCard = subArr.find(c=>c.getB('marked'))
+                    let subArr = arrAllCards.splice(0, curPos + 1);
+                    subArr.reverse();
+                    retCard = subArr.find(c => c.getB('marked'));
                 }
             } else if (ref.lookByRelative) {
-                let arrOnlyMarked = arrAllCards.filter(c=>c.getB('marked'))
+                let arrOnlyMarked = arrAllCards.filter(c => c.getB('marked'));
                 retCard = VpcElBase.findByOrdinal(
                     arrOnlyMarked,
                     0, // unused
