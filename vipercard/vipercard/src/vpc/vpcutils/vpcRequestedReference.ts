@@ -10,6 +10,9 @@
  * e.g. cd fld id 1234, or
  * cd btn "c" of second cd of bg "myBg"
  *
+ * note that bg fld 1 of cd 2 is not the same as bg fld 1 of cd 3,
+ * if it was accessed via different card it can change the meaning.
+ *
  * the vel might or might not exist, it hasn't been
  * "resolved", by _velResolveReference_.
  */
@@ -27,6 +30,9 @@ export class RequestedVelRef extends VpcIntermedValBase {
     partIsCd = false;
     isReferenceToTarget = false;
     isReferenceToMe = false;
+    isUnsupportedReferenceByPart = false;
+    cardLookAtMarkedOnly = false;
+    cardIsRecentHistory = ''
     constructor(type: VpcElType) {
         super();
         this.type = type;
