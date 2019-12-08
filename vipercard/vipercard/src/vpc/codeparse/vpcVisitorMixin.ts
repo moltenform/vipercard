@@ -1,13 +1,13 @@
 
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
-/* auto */ import { VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS, IntermedMapOfIntermedVals } from './../vpcutils/vpcVal';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { getStrToEnum, isString, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { getStrToEnum, isString, last, longstr, castVerifyIsStr } from './../../ui512/utils/util512';
 
 
 /* check_long_lines_silence_subsequent */
@@ -409,19 +409,44 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
 
         RuleLvl2Expression(ctx: VisitingContext): VpcVal {
-            checkThrow(ctx.RuleLvl3Expression.length > 0, '97|needs at least one');
-            let total = this.visit(ctx.RuleLvl3Expression[0]) as VpcVal;
-            checkThrow(total.isVpcVal, `96|visit of Lvl3Expression did not result in value`);
-            checkThrowEq(ctx.TokenIs.length, ctx.RuleLvl2Sub.length, '95|not equal');
-
-            for (let i = 0, len = ctx.RuleLvl2Sub.length; i < len; i++) {
-                let sub = ctx.RuleLvl2Sub[i];
-                let child = 
+            if (!ctx.RuleLvl3Expression.length || ctx.RuleIsExpression.length + 1 !== ctx.RuleLvl3Expression.length) {
+                throw makeVpcInternalErr(`|K|,${ctx.RuleIsExpression.length},${ctx.RuleLvl3Expression.length}.`);
             }
+        
+            let total = this.visit(ctx.RuleLvl3Expression[0]) as VpcVal;
+            checkThrow(total.isVpcVal, '|L|');
+            for (let i = 0; i < ctx.RuleIsExpression.length; i++) {
+                let map = this.visit(ctx.RuleIsExpression[i]);
+                let val1 = total;
+                let val2 = this.visit(ctx.RuleLvl3Expression[i + 1]);
+                total = this.help$RuleLvl2Expression(val1, val2, map)
+            }
+        
+            return total;
         }
 
-        help$RuleLvl2Expression(ctx: VisitingContext, total:VpcVal, ): VpcVal {
+        help$RuleLvl2Expression(total:VpcVal,val:VpcVal, map:IntermedMapOfIntermedVals ): VpcVal {
+            let typeCheck = ''
+            if (map.vals.tkIdentifier) {
+                typeCheck = castVerifyIsStr(map.vals.tkIdentifier[0])
+            } else if (map.vals._number) {
+                typeCheck = castVerifyIsStr(map.vals._number[0])
+            }
 
+            let checkIsWithin = bool(map.vals.tkInOnly) || bool(map.vals._within)
+            if (checkIsWithin) {
+                total = this.evalHelp.evalOp(total, val, VpcOpCtg.OpStringWithin, 'is within');
+            } else if (typeCheck) {
+                total = this.evalHelp.typeMatches(total, typeCheck);
+            } else {
+
+            }
+
+
+            let negated = map.vals._not.length > 0;
+            if (negated) {
+                total = VpcValBool(!total.readAsStrictBoolean());
+            }
         }
 
         RuleLvl6Expression(ctx: VisitingContext): VpcVal {
