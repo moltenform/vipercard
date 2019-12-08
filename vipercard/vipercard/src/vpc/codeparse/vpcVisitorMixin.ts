@@ -1,13 +1,13 @@
 
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
-/* auto */ import { VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcChunkType, VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { getStrToEnum, last } from './../../ui512/utils/util512';
 
 
 /* check_long_lines_silence_subsequent */
@@ -190,9 +190,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RuleObjectFld[0]) {
                 return this.RuleObjectFld(this.visit(ctx.RuleObjectFld[0]));
             } else {
-                let ret = new RequestedVelRef(VpcElType.Unknown);
-                ret.isUnsupportedReferenceByPart = true;
-                return ret;
+                checkThrow(false, "we don't yet support looking up an object by 'part'")
             }
         }
 
@@ -261,6 +259,45 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 throw makeVpcInternalErr('RuleHSource_1 no branch taken');
             }
         }
+
+        RuleExprThereIs(ctx: VisitingContext): VpcVal {
+            /* put there is a cd btn "myBtn" into x */
+            let requestRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
+            checkThrow(requestRef.isRequestedVelRef, `98|internal error, expected RuleObject to be a RequestedElRef`);
+            let velExists = this.outside.ElementExists(requestRef);
+            let ret = ctx.TokenNot.length ? !velExists : velExists;
+            return VpcValBool(ret);
+        }
+
+        FnCallNumberOf_1(ctx: VisitingContext): VpcVal {
+            checkThrow(!ctx.tkPartPlural[0], "we don't yet support looking up an object by 'part'")
+            let type:VpcElType
+            if (ctx.tkFldPlural) {
+                type = VpcElType.Fld
+            } else if (ctx.tkBtnPlural) {
+                type = VpcElType.Btn
+            } else {
+                checkThrow(false, "no branch taken")
+            }
+            let contextIsBg = type === VpcElType.Fld
+            if (ctx.tkBg[0]) {
+                contextIsBg = true
+            }
+            if (ctx.tkCard[0]) {
+                contextIsBg = false
+            }
+
+            let parentRef = new RequestedVelRef(contextIsBg ? VpcElType.Bg : VpcElType.Card);
+            if (ctx.RuleObjectCard[0]) {
+                checkThrow(!contextIsBg, "number of bg btns of card 3 doesn't really make sense")
+                parentRef = this.visit(ctx.RuleObjectCard[0])
+            } else {
+                parentRef.lookByRelative = OrdinalOrPosition.This
+            }
+            let count = this.outside.CountElements(type, parentRef);
+            return VpcValN(count);
+        }
+
 
 
 

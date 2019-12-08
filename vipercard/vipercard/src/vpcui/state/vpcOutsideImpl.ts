@@ -1,9 +1,9 @@
 
 /* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { ReadableContainer, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { ReadableContainer, RememberHistory, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcBuiltinMsg, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
@@ -85,9 +85,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         //~ me = this.vci.getModel().findByIdUntyped(frame.codeSection.ownerId);
         //~ target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
         //~ }
+        let cardHistory: RememberHistory = undefined as RememberHistory
+        
 
         let resolver = new VelResolveReference(this.vci.getModel());
-        let ret = resolver.go(ref, me, target);
+        let ret = resolver.go(ref, me, target, cardHistory);
         checkThrow(ret && ret.length === 2, 'VelResolveReference invalid return');
         let firstElem = ret[0];
         checkThrow(
@@ -475,7 +477,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     GetFrameInfo(): [VpcScriptMessage, VpcVal[]] {
         let NoteThisIsDisabledCode = 1;
-        return [new VpcScriptMessage('', VpcBuiltinMsg.Opencard), []];
+        throw new Error("disabled")
         //~ let [frStack, frame] = this.getExecFrameStack();
         //~ return [frame.message, frame.args];
     }

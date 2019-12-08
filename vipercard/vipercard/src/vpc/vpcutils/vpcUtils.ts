@@ -168,7 +168,7 @@ export class RememberHistory {
     protected getAt() {
         this.pointer = fitIntoInclusive(this.pointer, 0, this.list.length);
         if (this.pointer >= this.list.length) {
-            return '';
+            return undefined;
         } else {
             return this.list[this.pointer];
         }
@@ -177,17 +177,47 @@ export class RememberHistory {
     /**
      * user pressed up, like pressing arrow key up in bash
      */
-    walkPrevious() {
+    walkPrevious(fallback:()=>string) {
         this.pointer -= 1;
-        return this.getAt();
+        let ret = this.getAt();
+        return ret ?? fallback()
     }
 
     /**
      * user pressed down, like pressing arrow key up in bash
      */
-    walkNext() {
+    walkNext(fallback:()=>string) {
         this.pointer += 1;
-        return this.getAt();
+        let ret = this.getAt();
+        return ret ?? fallback()
+    }
+
+    /**
+     * you can reject candidates
+     */
+    walkPreviousWhileAcceptible(fallback:()=>string, isAccepted:(s:string)=>boolean) {
+        while(true) {
+            let cand = this.walkPrevious(fallback)
+            if (isAccepted(cand)) {
+                return cand
+            } else if (this.pointer <= 0) {
+                return fallback()
+            }
+        }
+    }
+
+    /**
+     * you can reject candidates
+     */
+    walkNextWhileAcceptible(fallback:()=>string, isAccepted:(s:string)=>boolean) {
+        while(true) {
+            let cand = this.walkNext(fallback)
+            if (isAccepted(cand)) {
+                return cand
+            } else if (this.pointer >= this.list.length-1) {
+                return fallback()
+            }
+        }
     }
 
     /**

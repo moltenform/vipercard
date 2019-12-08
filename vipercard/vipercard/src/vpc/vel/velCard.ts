@@ -14,6 +14,7 @@ export class VpcElCard extends VpcElBase {
     protected _script = '';
     protected _name = '';
     protected _paint = '';
+    protected _marked = false;
     constructor(id: string, parentId: string) {
         super(id, parentId);
     }
@@ -50,8 +51,10 @@ export class VpcElCard extends VpcElBase {
         if (!VpcElCard.cachedGetters || !VpcElCard.cachedSetters) {
             VpcElCard.cachedGetters = {};
             VpcElCard.cachedGetters['script'] = [PrpTyp.Str, 'script'];
+            VpcElCard.cachedGetters['marked'] = [PrpTyp.Bool, 'marked'];
             VpcElCard.cachedSetters = {};
             VpcElCard.cachedSetters['name'] = [PrpTyp.Str, 'name'];
+            VpcElCard.cachedSetters['marked'] = [PrpTyp.Bool, 'marked'];
             Util512.freezeRecurse(VpcElCard.cachedGetters);
             Util512.freezeRecurse(VpcElCard.cachedSetters);
         }
