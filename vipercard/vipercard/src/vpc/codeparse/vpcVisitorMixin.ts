@@ -4,11 +4,11 @@
 /* auto */ import { VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { getStrToEnum } from './../../ui512/utils/util512';
 
-import { getEnumToStrOrUnknown } from '../../ui512/utils/util512';
 
 /* check_long_lines_silence_subsequent */
 
@@ -206,15 +206,68 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RulePosition', image)
             return ret 
         }
+        HSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
+            let ret = new RequestedContainerRef()
+            if (ctx.RuleMenu[0]) {
+                ret.vel = 'menu'
+            } else if (ctx.RuleMessageBox[0]) {
+                ret.vel = 'msgbox'
+            } else if (ctx._selection[0]) {
+                ret.vel = 'selection'
+            } else if (ctx.RuleObjectPart[0]) {
+                ret.vel = this.visit(ctx.RuleObjectPart[0])
+            }else if (ctx.RuleHAnyAllowedVariableName[0]) {
+                let token = this.visit(ctx.RuleHAnyAllowedVariableName[0])
+                ret.variable = token.image;
+            } else {
+                throw makeVpcInternalErr('|3|HsimpleContainer no branch taken');
+            }
+            return ret;
+        }
+        RuleHContainer(ctx: VisitingContext): RequestedContainerRef {
+            let ret = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef
+            checkThrow(ret.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
+            if (ctx.RuleHChunk[0]) {
+                ret.chunk = this.visit(ctx.RuleHChunk[0])
+            }
+            return ret;
+        }
+        RuleHChunk(ctx: VisitingContext): RequestedChunk {
+            let ret = new RequestedChunk(-1)
+            checkThrow(ctx.tkChunkGranularity[0], 'RuleHChunk')
+            ret.type = getStrToEnum<VpcChunkType>(VpcChunkType, "RuleHChunk", ctx.tkChunkGranularity[0].image)
+            if (ctx.RuleHOrdinal[0]) {
+                ret.ordinal = this.visit(ctx.RuleHOrdinal[0])
+            } else {
+                ret.first = this.visit(ctx.RuleHChunkAmt[0])
+                if (ctx.RuleHChunkAmt[1]) {
+                    ret.last = this.visit(ctx.RuleHChunkAmt[1])
+                }
+            }
+            return ret
+        }
+
+        RuleHSource_1(ctx: VisitingContext): VpcVal {
+            if (ctx.tkNumLiteral[0]) {
+                /* here we allow scientific notation */
+                return VpcVal.getScientificNotation(ctx.tkNumLiteral[0].image);
+            } else if (ctx.tkStringLiteral[0]) {
+                /* example: put "abc" into x */
+                /* strip the opening and closing quotes */
+                let sLit = ctx.TokenTkstringliteral[0].image;
+                sLit = sLit.slice(1, -1);
+                return VpcValS(sLit);
+            } else {
+                throw makeVpcInternalErr('RuleHSource_1 no branch taken');
+            }
+        }
 
 
-        RuleHChunkAmt(ctx: VisitingContext): VpcVal {
+
+        RuleHChfghfghfghfghfghgfhunkAmt(ctx: VisitingContext): VpcVal {
             if (ctx.RuleExpr[0]) {
                 return this.visit(ctx.RuleExpr[0]);
-            } else if (ctx.TokenTknumliteral[0]) {
-                /* here we allow scientific notation */
-                return VpcVal.getScientificNotation(ctx.TokenTknumliteral[0].image);
-            } else if (ctx.RuleHSimpleContainer[0]) {
+            } else  else if (ctx.RuleHSimpleContainer[0]) {
                 let container = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
                 checkThrow(container.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
                 return VpcValS(this.outside.ContainerRead(container));
