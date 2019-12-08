@@ -179,6 +179,6 @@ export class UI512FontRequest {
 }
 
 enum CacheState {
-    FontDoesNotExist,
+    FontDoesNotExist = 1,
     NotYetLoaded
 }

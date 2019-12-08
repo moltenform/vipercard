@@ -164,6 +164,6 @@ class SmearToolState {
  * stage of the drawing lifecycle
  */
 enum SmearToolMode {
-    Inited,
+    Inited = 1,
     Dragging
 }

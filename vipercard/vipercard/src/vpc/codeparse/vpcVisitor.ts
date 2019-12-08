@@ -7,6 +7,7 @@
 /* auto */ import { VpcChvParser } from './vpcParser';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* check_long_lines_silence_subsequent */
 

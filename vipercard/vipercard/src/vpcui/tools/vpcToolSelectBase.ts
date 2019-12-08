@@ -507,7 +507,7 @@ export class SelectToolState {
  * which stage of the selecting lifecycle
  */
 export enum SelectToolMode {
-    SelectingRegion,
+    SelectingRegion = 1,
     SelectedRegion,
     MovingRegion
 }

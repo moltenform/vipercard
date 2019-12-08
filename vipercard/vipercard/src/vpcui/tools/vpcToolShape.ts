@@ -153,6 +153,6 @@ export class ShapeToolState {
  * stage of the drawing lifecycle
  */
 enum ShapeToolMode {
-    Inited,
+    Inited = 1,
     Dragging
 }

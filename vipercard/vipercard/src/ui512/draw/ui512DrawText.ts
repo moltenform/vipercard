@@ -689,7 +689,7 @@ class LineTextToRender {
  * indicate if we should continue drawing text
  */
 const enum ShouldContinueDrawing {
-    None,
+    None = 1,
     No,
     Yes
 }

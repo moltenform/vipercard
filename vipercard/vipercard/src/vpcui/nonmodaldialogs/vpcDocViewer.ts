@@ -510,7 +510,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
  * are we showing examples or script reference
  */
 export enum DialogDocsType {
-    None,
+    None = 1,
     Examples,
     Reference
 }

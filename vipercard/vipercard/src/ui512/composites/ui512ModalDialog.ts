@@ -380,7 +380,7 @@ class TemporarilyRedirectForModal extends TemporarilySuspendEvents {
  * which type of dialog
  */
 export enum UI512CompStdDialogType {
-    Ask,
+    Ask = 1,
     Answer
 }
 

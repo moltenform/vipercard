@@ -272,7 +272,7 @@ export class Util512Higher {
 }
 
 export enum RespondToErr {
-    Alert,
+    Alert = 1,
     ConsoleErrOnly
 }
 

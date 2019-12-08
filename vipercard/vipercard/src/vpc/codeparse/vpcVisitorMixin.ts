@@ -1,11 +1,14 @@
 
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
-/* auto */ import { VpcVal, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
-/* auto */ import { checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { getStrToEnum } from './../../ui512/utils/util512';
+
+import { getEnumToStrOrUnknown } from '../../ui512/utils/util512';
 
 /* check_long_lines_silence_subsequent */
 
@@ -192,6 +195,18 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 return ret;
             }
         }
+
+        RuleOrdinal(ctx: VisitingContext):OrdinalOrPosition  {
+            let image = ctx.tkOrdinal[0].image
+            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RuleOrdinal', image)
+            return ret 
+        }
+        RulePosition(ctx: VisitingContext):OrdinalOrPosition  {
+            let image = ctx.tkPosition[0].image
+            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RulePosition', image)
+            return ret 
+        }
+
 
         RuleHChunkAmt(ctx: VisitingContext): VpcVal {
             if (ctx.RuleExpr[0]) {
