@@ -2,13 +2,17 @@
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType, VpcOpCtg } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
+/* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
 /* auto */ import { bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { castVerifyIsStr, getStrToEnum, isString, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, castVerifyIsStr, getStrToEnum, isString, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
+/* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 
 /* check_long_lines_silence_subsequent */
 
@@ -201,18 +205,26 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RulePosition', image);
             return ret;
         }
-        HSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
+        RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = new RequestedContainerRef();
             if (ctx.RuleMenu[0]) {
                 checkThrow(false, "we don't yet support custom menus");
             } else if (ctx.RuleMessageBox[0]) {
-                let NoteThisIsDisabledCode = 1;
-                checkThrow(false, "todo:do something here");
-                //~ ret.vel = 'msgbox';
+                ret.variable = LogToReplMsgBox.redirectThisVariableToMsgBox
             } else if (ctx._selection[0]) {
-                let NoteThisIsDisabledCode = 1;
-                checkThrow(false, "todo:do something here");
-                //~ ret.vel = 'selection';
+                ret.vel = new RequestedVelRef(VpcElType.Fld)
+                ret.vel.lookByName = "there is no selection"
+                let selFld = this.outside.GetSelectedField()
+                if (selFld) {
+                    let generic = new VpcTextFieldAsGeneric(-1 as unknown as UI512ElTextField, selFld, this.outside.GetCurrentCardId())
+                    let bounds = TextSelModify.getSelectedTextBounds(generic)
+                    if (bounds) {
+                        ret.vel = new RequestedVelRef(VpcElType.Fld)
+                        ret.vel.lookById = Util512.parseIntStrict(selFld.id)
+                        ret.chunk = new RequestedChunk(bounds[0])
+                        ret.chunk.last = bounds[1]
+                    }
+                }
             } else if (ctx.RuleObjectPart[0]) {
                 ret.vel = this.visit(ctx.RuleObjectPart[0]);
             } else if (ctx.RuleHAnyAllowedVariableName[0]) {

@@ -3,10 +3,10 @@
 /* auto */ import { VpcAppUIToolSmear } from './../tools/vpcToolSmear';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
-/* auto */ import { VpcModelRender, VpcTextFieldAsGeneric } from './../modelrender/vpcModelRender';
+/* auto */ import { VpcModelRender } from './../modelrender/vpcModelRender';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';

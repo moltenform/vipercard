@@ -9,7 +9,6 @@
 /* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, isString } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
-/* auto */ import { GenericTextField } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
@@ -540,77 +539,6 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     }
 }
 
-/**
- * implementation of GenericTextField for vel text fields
- *
- * let's say you are typing on the keyboard to insert a letter into the text field.
- * if this is a UI512 text field, we can directly insert the letter.
- * but if it is a ViperCard text field,
- * we need to update the _VpcElField_ model first
- */
-export class VpcTextFieldAsGeneric implements GenericTextField {
-    constructor(
-        protected el512: UI512ElTextField,
-        protected impl: VpcElField,
-        protected cardId: string
-    ) {}
-
-    setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
-        this.impl.setCardFmTxt(this.cardId, newTxt, context);
-    }
-
-    getFmtTxt(): FormattedText {
-        return this.impl.getCardFmTxt(this.cardId);
-    }
-
-    canEdit() {
-        return !this.impl.getB('locktext');
-    }
-
-    canSelectText(): boolean {
-        return !this.impl.getB('locktext');
-    }
-
-    isMultiline(): boolean {
-        return !this.impl.getB('singleline');
-    }
-
-    setSel(a: number, b: number): void {
-        this.impl.set('selcaret', a);
-        this.impl.set('selend', b);
-    }
-
-    getSel(): [number, number] {
-        return [this.impl.getN('selcaret'), this.impl.getN('selend')];
-    }
-
-    getID(): string {
-        return this.impl.id;
-    }
-
-    getHeight(): number {
-        return this.impl.getN('h');
-    }
-
-    getDefaultFont(): string {
-        return this.impl.getDefaultFontAsUi512();
-    }
-
-    getReadOnlyUI512(): UI512ElTextField {
-        return this.el512;
-    }
-
-    getScrollAmt(): number {
-        let got = this.impl.getPossiblyCardSpecific('scroll', 0, this.cardId);
-        return got as number;
-    }
-
-    setScrollAmt(n: O<number>): void {
-        if (n !== undefined && n !== null) {
-            return this.impl.setPossiblyCardSpecific('scroll', n, 0, this.cardId);
-        }
-    }
-}
 
 /**
  * certain stacks, instead of using default icon set, use another icon set

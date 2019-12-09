@@ -431,15 +431,28 @@ export class TextSelModify {
      * what text is selected, unformatted
      */
     static getSelectedText(el: GenericTextField) {
-        if (el.canSelectText()) {
-            TextSelModify.fixSelection(el);
+        let bounds = TextSelModify.getSelectedTextBounds(el)
+        if (bounds) {
+            let [pp1, pp2] = bounds
             let t = el.getFmtTxt();
-            let [p1, p2] = el.getSel();
-            let pp1 = Math.min(p1, p2);
-            let pp2 = Math.max(p1, p2);
             return t.toUnformattedSubstr(pp1, pp2 - pp1);
         } else {
             return '';
+        }
+    }
+
+    /**
+     * what text is selected, unformatted
+     */
+    static getSelectedTextBounds(el: GenericTextField) :O<[number, number]> {
+        if (el.canSelectText()) {
+            TextSelModify.fixSelection(el);
+            let [p1, p2] = el.getSel();
+            let pp1 = Math.min(p1, p2);
+            let pp2 = Math.max(p1, p2);
+            return [pp1, pp2]
+        } else {
+            return undefined;
         }
     }
 }
