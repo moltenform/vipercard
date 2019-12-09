@@ -140,14 +140,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return ret;
         }
 
-        help$throwOnUnsupported(ctx: VisitingContext, unsupported: string[], context: string) {
-            for (let s of unsupported) {
-                if (ctx[s] && ctx[s][0]) {
-                    checkThrow(false, `we don't yet support a ${s} in the context of ${context}`);
-                }
-            }
-        }
-
         RuleObjectStack(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Stack);
             if (ctx._id[0]) {
@@ -185,6 +177,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
             return ret;
         }
+
         RuleObjectPart(ctx: VisitingContext): RequestedVelRef {
             if (ctx.RuleObjectBtn[0]) {
                 return this.RuleObjectBtn(this.visit(ctx.RuleObjectBtn[0]));
@@ -195,38 +188,55 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
         }
 
+        /*
+        something interesting about Chevtrotain:
+            The indices are not tied to the position in the grammar.
+            For example, let's say you have a rule like
+            MyRule := {<sub1> | <sub2>} {<sub1> | <sub3>}
+            you might imagine that results for
+            "Sub1" "Sub3" this would become tree.Sub1 = ["Sub1", null] tree.Sub2 = [null] tree.Sub3 = ["Sub3"]
+            "Sub2" "Sub1" this would become tree.Sub1 = [null, "Sub1"] tree.Sub2 = ["Sub2"] tree.Sub3 = [null]
+            the actual results are -- tree.Sub1 = ["Sub1"] in both cases...
+            --- you have to use the presence of <sub2> or <sub3> to know which branch was taken. ---
+            the rule results are pushed onto the array just from left to right as they come, they have no position information.
+        */
+
         RuleOrdinal(ctx: VisitingContext): OrdinalOrPosition {
             let image = ctx.tkOrdinal[0].image;
             let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RuleOrdinal', image);
             return ret;
         }
+
         RulePosition(ctx: VisitingContext): OrdinalOrPosition {
             let image = ctx.tkPosition[0].image;
             let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RulePosition', image);
             return ret;
         }
+
         RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = new RequestedContainerRef();
             if (ctx.RuleMenu[0]) {
                 checkThrow(false, "we don't yet support custom menus");
             } else if (ctx.RuleMessageBox[0]) {
-                ret.variable = LogToReplMsgBox.redirectThisVariableToMsgBox
+                ret.variable = LogToReplMsgBox.redirectThisVariableToMsgBox;
             } else if (ctx._selection[0]) {
-                ret.vel = new RequestedVelRef(VpcElType.Fld)
-                ret.vel.lookByName = "there is no selection"
-                let selFld = this.outside.GetSelectedField()
+                ret.vel = new RequestedVelRef(VpcElType.Fld);
+                ret.vel.lookByName = 'there is no selection';
+                let selFld = this.outside.GetSelectedField();
                 if (selFld) {
-                    let generic = new VpcTextFieldAsGeneric(-1 as unknown as UI512ElTextField, selFld, this.outside.GetCurrentCardId())
-                    let bounds = TextSelModify.getSelectedTextBounds(generic)
+                    let generic = new VpcTextFieldAsGeneric((-1 as unknown) as UI512ElTextField, selFld, this.outside.GetCurrentCardId());
+                    let bounds = TextSelModify.getSelectedTextBounds(generic);
                     if (bounds) {
-                        ret.vel = new RequestedVelRef(VpcElType.Fld)
-                        ret.vel.lookById = Util512.parseIntStrict(selFld.id)
-                        ret.chunk = new RequestedChunk(bounds[0])
-                        ret.chunk.last = bounds[1]
+                        ret.vel = new RequestedVelRef(VpcElType.Fld);
+                        ret.vel.lookById = Util512.parseIntStrict(selFld.id);
+                        ret.chunk = new RequestedChunk(bounds[0]);
+                        ret.chunk.last = bounds[1];
                     }
                 }
             } else if (ctx.RuleObjectPart[0]) {
                 ret.vel = this.visit(ctx.RuleObjectPart[0]);
+                checkThrow(ret.vel && ret.vel.isRequestedVelRef, `9a|internal error, not an element reference`);
+                checkThrow(ret.vel && ret.vel.type === VpcElType.Fld, `9Z|we do not currently allow placing text into btns, or retrieving text from btns, please fields instead`);
             } else if (ctx.RuleHAnyAllowedVariableName[0]) {
                 let token = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
                 ret.variable = token.image;
@@ -235,14 +245,18 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
             return ret;
         }
+
         RuleHContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
             checkThrow(ret.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
             if (ctx.RuleHChunk[0]) {
+                checkThrow(!ret.chunk, `a chunk has already been set. for example, we don't currently support 'put "a" into char 2 of the selection`);
                 ret.chunk = this.visit(ctx.RuleHChunk[0]);
+                checkThrow(ret.chunk && ret.chunk.isRequestedChunk, `9W|chunk not valid`);
             }
             return ret;
         }
+
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
             checkThrow(ctx.tkChunkGranularity[0], 'RuleHChunk');
@@ -250,12 +264,26 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.RuleHOrdinal[0]) {
                 ret.ordinal = this.visit(ctx.RuleHOrdinal[0]);
             } else {
-                ret.first = this.visit(ctx.RuleHChunkAmt[0]);
-                if (ctx.RuleHChunkAmt[1]) {
-                    ret.last = this.visit(ctx.RuleHChunkAmt[1]);
+                ret.first = this.visit(ctx.RuleHChunkBound[0]).readAsStrictNumeric(this.tmpArr);
+                if (ctx.RuleHChunkBound[1]) {
+                    ret.last = this.visit(ctx.RuleHChunkBound[1]).readAsStrictNumeric(this.tmpArr);
                 }
             }
             return ret;
+        }
+
+        RuleHChunkBound(ctx: VisitingContext): VpcVal {
+            if (ctx.RuleExpr[0]) {
+                return this.visit(ctx.RuleExpr[0]);
+            } else if (ctx.TokenTknumliteral[0]) {
+                return VpcVal.getScientificNotation(ctx.TokenTknumliteral[0].image);
+            } else if (ctx.RuleHSimpleContainer[0]) {
+                let container = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
+                checkThrow(container.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
+                return VpcValS(this.outside.ContainerRead(container));
+            } else {
+                throw makeVpcInternalErr('|3|null');
+            }
         }
 
         RuleHSource_1(ctx: VisitingContext): VpcVal {

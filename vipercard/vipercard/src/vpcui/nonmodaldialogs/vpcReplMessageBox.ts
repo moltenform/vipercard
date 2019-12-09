@@ -154,8 +154,10 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * like pressing arrow key up/down in bash
      */
     replHistory(upwards: boolean) {
-        let fallback = ()=>''
-        let retrieved = upwards ? this.history.walkPrevious(fallback) : this.history.walkNext(fallback);
+        let fallback = () => '';
+        let retrieved = upwards
+            ? this.history.walkPrevious(fallback)
+            : this.history.walkNext(fallback);
         this.setFontAndText(this.entry, retrieved, 'geneva', 12);
 
         /* set caret to the end */

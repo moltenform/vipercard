@@ -539,7 +539,6 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     }
 }
 
-
 /**
  * certain stacks, instead of using default icon set, use another icon set
  */

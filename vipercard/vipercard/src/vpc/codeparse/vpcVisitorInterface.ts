@@ -1,5 +1,5 @@
 
-/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal } from './../vpcutils/vpcVal';
+/* auto */ import { IntermedMapOfIntermedVals, VpcVal } from './../vpcutils/vpcVal';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
@@ -38,7 +38,7 @@ export interface VpcCompleteVisitor {
     RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef;
     RuleHContainer(ctx: VisitingContext): RequestedContainerRef;
     RuleHChunk(ctx: VisitingContext): RequestedChunk;
-    RuleHChunkAmt(ctx: VisitingContext): VpcVal;
+    RuleHChunkBound(ctx: VisitingContext): VpcVal;
     RuleHSource(ctx: VisitingContext): VpcVal;
     RuleHSource_1(ctx: VisitingContext): VpcVal;
     RuleHFnCallWParens(ctx: VisitingContext): VpcVal;
@@ -52,9 +52,9 @@ export interface VpcCompleteVisitor {
     RuleFnCallNumberOf_6(ctx: VisitingContext): VpcVal;
     RuleFnCallNumberOf_7(ctx: VisitingContext): VpcVal;
     RuleFnCallNumberOf_8(ctx: VisitingContext): VpcVal;
-    RuleFnCallNumberOf_9(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleFnCallNumberOf_9(ctx: VisitingContext): VpcVal;
     RuleFnCallThereIs(ctx: VisitingContext): VpcVal;
-    RuleAnyPropertyVal(ctx: VisitingContext): string | VpcIntermedValBase;
+    RuleAnyPropertyVal(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleExpr(ctx: VisitingContext): VpcVal;
     RuleLvl1Expression(ctx: VisitingContext): VpcVal;
     RuleLvl2Expression(ctx: VisitingContext): VpcVal;
@@ -92,7 +92,7 @@ export interface VisitingContext {
     RuleHSimpleContainer: any[];
     RuleHContainer: any[];
     RuleHChunk: any[];
-    RuleHChunkAmt: any[];
+    RuleHChunkBound: any[];
     RuleHSource: any[];
     RuleHSource_1: any[];
     RuleHFnCallWParens: any[];

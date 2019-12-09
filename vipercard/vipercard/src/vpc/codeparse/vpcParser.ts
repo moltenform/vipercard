@@ -592,19 +592,10 @@ export class VpcChvParser extends chevrotain.CstParser {
     });
 
     RuleHContainer = this.RULE('RuleHContainer', () => {
-        this.OR1([
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleHChunk);
-                    this.SUBRULE1(this.RuleHSimpleContainer);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE2(this.RuleHSimpleContainer);
-                }
-            }
-        ]);
+        this.OPTION1(() => {
+            this.SUBRULE1(this.RuleHChunk);
+        });
+        this.SUBRULE1(this.RuleHSimpleContainer);
     });
 
     RuleHChunk = this.RULE('RuleHChunk', () => {
@@ -618,10 +609,10 @@ export class VpcChvParser extends chevrotain.CstParser {
             {
                 ALT: () => {
                     this.CONSUME2(tks.tkChunkGranularity);
-                    this.SUBRULE1(this.RuleHChunkAmt);
+                    this.SUBRULE1(this.RuleHChunkBound);
                     this.OPTION1(() => {
                         this.CONSUME1(tks._to);
-                        this.SUBRULE2(this.RuleHChunkAmt);
+                        this.SUBRULE2(this.RuleHChunkBound);
                     });
                 }
             }
@@ -629,18 +620,23 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleOf);
     });
 
-    RuleHChunkAmt = this.RULE('RuleHChunkAmt', () => {
+    RuleHChunkBound = this.RULE('RuleHChunkBound', () => {
         this.OR1([
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleHSource);
-                }
-            },
             {
                 ALT: () => {
                     this.CONSUME1(tks.tkLParen);
                     this.SUBRULE1(this.RuleExpr);
                     this.CONSUME1(tks.tkRParen);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkNumLiteral);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHSimpleContainer);
                 }
             }
         ]);

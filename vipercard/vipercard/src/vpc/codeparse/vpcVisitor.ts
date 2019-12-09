@@ -164,16 +164,6 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
         }
 
-        RuleHChunkAmt(ctx: VisitingContext): VpcVal {
-            if (ctx.RuleHSource[0]) {
-                return this.visit(ctx.RuleHSource[0]);
-            } else if (ctx.RuleExpr[0]) {
-                return this.visit(ctx.RuleExpr[0]);
-            } else {
-                throw makeVpcInternalErr('OR in HChunkAmt, no branch found');
-            }
-        }
-
         RuleHSource(ctx: VisitingContext): VpcVal {
             if (ctx.RuleHSource_1[0]) {
                 return this.visit(ctx.RuleHSource_1[0]);
@@ -220,6 +210,10 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else {
                 throw makeVpcInternalErr('OR in FnCallNumberOf, no branch found');
             }
+        }
+
+        RuleAnyPropertyVal(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
         }
 
         RuleExpr(ctx: VisitingContext): VpcVal {
@@ -378,11 +372,11 @@ export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser, VpcVisitor
     }
 
     if (!CachedObjects.staticCache.visitor) {
-        let NoteThisIsDisabledCode = 1;
-        //CachedObjects.staticCache.visitor = (createVisitor(
-        //    CachedObjects.staticCache.parser
-        //) as any) as VpcVisitorInterface;
-        CachedObjects.staticCache.visitor = (12345 as any) as VpcVisitorInterface;
+        //~ let NoteThisIsDisabledCode = 1;
+        CachedObjects.staticCache.visitor = (createVisitor(
+           CachedObjects.staticCache.parser
+        ) as any) as VpcVisitorInterface;
+        //~ CachedObjects.staticCache.visitor = (12345 as any) as VpcVisitorInterface;
     }
 
     return [CachedObjects.staticCache.lexer, CachedObjects.staticCache.parser, CachedObjects.staticCache.visitor];
