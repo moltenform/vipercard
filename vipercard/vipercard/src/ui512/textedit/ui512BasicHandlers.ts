@@ -176,7 +176,6 @@ export class BasicHandlers {
         if (!d.repeated) {
             let wasShortcut = true;
             let runTestsShortcut = checkIsProductionBuild() ? 'Opt+Shift+T' : 'Opt+T';
-            console.log(d.readableShortcut);
             switch (d.readableShortcut) {
                 case 'Cmd+Opt+Shift+Q':
                     pr.invalidateAll();

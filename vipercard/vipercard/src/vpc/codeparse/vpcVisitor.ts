@@ -84,137 +84,270 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
         /* generated code, any changes past this point will be lost: --------------- */
 
-        RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): chevrotain.IToken {
-            if (ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllUnaryPropertiesIfNotAlready[0];
-            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
-            } else if (ctx._id[0]) {
-                return ctx._id[0];
-            } else if (ctx._marked[0]) {
-                return ctx._marked[0];
-            } else if (ctx._number[0]) {
-                return ctx._number[0];
-            } else {
-                throw makeVpcInternalErr('OR in HAllPropertiesThatCouldBeUnary, no branch found');
-            }
-        }
+RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): chevrotain.IToken {
+if (ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllUnaryPropertiesIfNotAlready[0]; 
+}
+ else 
+if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
+}
+ else 
+if (ctx._id[0]) {
+ return ctx._id[0]; 
+}
+ else 
+if (ctx._marked[0]) {
+ return ctx._marked[0]; 
+}
+ else 
+if (ctx._number[0]) {
+ return ctx._number[0]; 
+}
+ else { throw makeVpcInternalErr('OR in HAllPropertiesThatCouldBeUnary, no branch found'); }
+}
 
-        RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): chevrotain.IToken {
-            if (ctx.RuleHAnyFnName[0]) {
-                return this.visit(ctx.RuleHAnyFnName[0]);
-            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
-            } else {
-                throw makeVpcInternalErr('OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found');
-            }
-        }
 
-        RuleHAnyFnName(ctx: VisitingContext): chevrotain.IToken {
-            if (ctx.tkIdentifier[0]) {
-                return ctx.tkIdentifier[0];
-            } else if (ctx._windows[0]) {
-                return ctx._windows[0];
-            } else {
-                throw makeVpcInternalErr('OR in HAnyFnName, no branch found');
-            }
-        }
+RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): chevrotain.IToken {
+if (ctx.RuleHAnyFnName[0]) {
+ return this.visit(ctx.RuleHAnyFnName[0]); 
+}
+ else 
+if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
+}
+ else { throw makeVpcInternalErr('OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found'); }
+}
 
-        RuleHAnyAllowedVariableName(ctx: VisitingContext): chevrotain.IToken {
-            if (ctx.tkIdentifier[0]) {
-                return ctx.tkIdentifier[0];
-            } else if (ctx._number[0]) {
-                return ctx._number[0];
-            } else if (ctx.tkA[0]) {
-                return ctx.tkA[0];
-            } else if (ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllUnaryPropertiesIfNotAlready[0];
-            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
-            } else {
-                throw makeVpcInternalErr('OR in HAnyAllowedVariableName, no branch found');
-            }
-        }
 
-        RuleObject(ctx: VisitingContext): RequestedVelRef {
-            if (ctx.RuleObjectSpecial[0]) {
-                return this.visit(ctx.RuleObjectSpecial[0]);
-            } else if (ctx.RuleObjectBtn[0]) {
-                return this.visit(ctx.RuleObjectBtn[0]);
-            } else if (ctx.RuleObjectFld[0]) {
-                return this.visit(ctx.RuleObjectFld[0]);
-            } else if (ctx.RuleObjectCard[0]) {
-                return this.visit(ctx.RuleObjectCard[0]);
-            } else if (ctx.RuleObjectBg[0]) {
-                return this.visit(ctx.RuleObjectBg[0]);
-            } else if (ctx.RuleObjectStack[0]) {
-                return this.visit(ctx.RuleObjectStack[0]);
-            } else {
-                throw makeVpcInternalErr('OR in Object, no branch found');
-            }
-        }
+RuleHAnyFnName(ctx: VisitingContext): chevrotain.IToken {
+if (ctx.tkIdentifier[0]) {
+ return ctx.tkIdentifier[0]; 
+}
+ else 
+if (ctx._windows[0]) {
+ return ctx._windows[0]; 
+}
+ else { throw makeVpcInternalErr('OR in HAnyFnName, no branch found'); }
+}
 
-        RuleOf(ctx: VisitingContext): chevrotain.IToken {
-            if (ctx.tkOfOnly[0]) {
-                return ctx.tkOfOnly[0];
-            } else if (ctx.tkInOnly[0]) {
-                return ctx.tkInOnly[0];
-            } else {
-                throw makeVpcInternalErr('OR in Of, no branch found');
-            }
-        }
 
-        RuleHSource(ctx: VisitingContext): VpcVal {
-            if (ctx.RuleHSource_1[0]) {
-                return this.visit(ctx.RuleHSource_1[0]);
-            } else if (ctx.RuleHGenericFunctionCall[0]) {
-                return this.visit(ctx.RuleHGenericFunctionCall[0]);
-            } else if (ctx.RuleHSimpleContainer[0]) {
-                return this.visit(ctx.RuleHSimpleContainer[0]);
-            } else {
-                throw makeVpcInternalErr('OR in HSource, no branch found');
-            }
-        }
+RuleHAnyAllowedVariableName(ctx: VisitingContext): chevrotain.IToken {
+if (ctx.tkIdentifier[0]) {
+ return ctx.tkIdentifier[0]; 
+}
+ else 
+if (ctx._number[0]) {
+ return ctx._number[0]; 
+}
+ else 
+if (ctx.tkA[0]) {
+ return ctx.tkA[0]; 
+}
+ else 
+if (ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllUnaryPropertiesIfNotAlready[0]; 
+}
+ else 
+if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
+}
+ else { throw makeVpcInternalErr('OR in HAnyAllowedVariableName, no branch found'); }
+}
 
-        RuleHGenericFunctionCall(ctx: VisitingContext): VpcVal {
-            if (ctx.RuleFnCallNumberOf[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf[0]);
-            } else if (ctx.RuleFnCallThereIs[0]) {
-                return this.visit(ctx.RuleFnCallThereIs[0]);
-            } else if (ctx.RuleHFnCallWParens[0]) {
-                return this.visit(ctx.RuleHFnCallWParens[0]);
-            } else if (ctx.RuleHUnaryPropertyGet[0]) {
-                return this.visit(ctx.RuleHUnaryPropertyGet[0]);
-            } else if (ctx.RuleHOldStyleFnNonNullary[0]) {
-                return this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
-            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
-                return this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
-            } else {
-                throw makeVpcInternalErr('OR in HGenericFunctionCall, no branch found');
-            }
-        }
 
-        RuleFnCallNumberOf(ctx: VisitingContext): VpcVal {
-            if (ctx.RuleFnCallNumberOf_1[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_1[0]);
-            } else if (ctx.RuleFnCallNumberOf_5[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_5[0]);
-            } else if (ctx.RuleFnCallNumberOf_6[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_6[0]);
-            } else if (ctx.RuleFnCallNumberOf_7[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_7[0]);
-            } else if (ctx.RuleFnCallNumberOf_8[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_8[0]);
-            } else if (ctx.RuleFnCallNumberOf_9[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_9[0]);
-            } else {
-                throw makeVpcInternalErr('OR in FnCallNumberOf, no branch found');
-            }
-        }
+RuleObject(ctx: VisitingContext): RequestedVelRef {
+if (ctx.RuleObjectSpecial[0]) {
+ return this.visit(ctx.RuleObjectSpecial[0]); 
+}
+ else 
+if (ctx.RuleObjectBtn[0]) {
+ return this.visit(ctx.RuleObjectBtn[0]); 
+}
+ else 
+if (ctx.RuleObjectFld[0]) {
+ return this.visit(ctx.RuleObjectFld[0]); 
+}
+ else 
+if (ctx.RuleObjectCard[0]) {
+ return this.visit(ctx.RuleObjectCard[0]); 
+}
+ else 
+if (ctx.RuleObjectBg[0]) {
+ return this.visit(ctx.RuleObjectBg[0]); 
+}
+ else 
+if (ctx.RuleObjectStack[0]) {
+ return this.visit(ctx.RuleObjectStack[0]); 
+}
+ else { throw makeVpcInternalErr('OR in Object, no branch found'); }
+}
 
-        RuleAnyPropertyVal(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RuleOf(ctx: VisitingContext): chevrotain.IToken {
+if (ctx.tkOfOnly[0]) {
+ return ctx.tkOfOnly[0]; 
+}
+ else 
+if (ctx.tkInOnly[0]) {
+ return ctx.tkInOnly[0]; 
+}
+ else { throw makeVpcInternalErr('OR in Of, no branch found'); }
+}
+
+
+
+
+
+
+RuleMenuItem(ctx: VisitingContext): string {
+return "{menuitemExpr}";
+}
+
+
+RuleMenu(ctx: VisitingContext): string {
+return "{menuExpr}";
+}
+
+
+RuleWindow_1(ctx: VisitingContext): string {
+return "{windowExpr}";
+}
+
+
+RuleWindow(ctx: VisitingContext): string {
+return "{windowExpr}";
+}
+
+
+RuleMessageBox(ctx: VisitingContext): string {
+return "{msgBoxExpr}";
+}
+
+
+
+
+
+
+
+
+
+
+RuleHSource(ctx: VisitingContext): VpcVal {
+if (ctx.RuleHSource_1[0]) {
+ return this.visit(ctx.RuleHSource_1[0]); 
+}
+ else 
+if (ctx.RuleHGenericFunctionCall[0]) {
+ return this.visit(ctx.RuleHGenericFunctionCall[0]); 
+}
+ else 
+if (ctx.RuleHSimpleContainer[0]) {
+ return this.visit(ctx.RuleHSimpleContainer[0]); 
+}
+ else { throw makeVpcInternalErr('OR in HSource, no branch found'); }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+RuleHGenericFunctionCall(ctx: VisitingContext): VpcVal {
+if (ctx.RuleFnCallNumberOf[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf[0]); 
+}
+ else 
+if (ctx.RuleFnCallThereIs[0]) {
+ return this.visit(ctx.RuleFnCallThereIs[0]); 
+}
+ else 
+if (ctx.RuleHFnCallWParens[0]) {
+ return this.visit(ctx.RuleHFnCallWParens[0]); 
+}
+ else 
+if (ctx.RuleHUnaryPropertyGet[0]) {
+ return this.visit(ctx.RuleHUnaryPropertyGet[0]); 
+}
+ else 
+if (ctx.RuleHOldStyleFnNonNullary[0]) {
+ return this.visit(ctx.RuleHOldStyleFnNonNullary[0]); 
+}
+ else 
+if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
+ return this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]); 
+}
+ else { throw makeVpcInternalErr('OR in HGenericFunctionCall, no branch found'); }
+}
+
+
+RuleFnCallNumberOf(ctx: VisitingContext): VpcVal {
+if (ctx.RuleFnCallNumberOf_1[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_1[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_5[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_5[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_6[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_6[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_7[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_7[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_8[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_8[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_9[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_9[0]); 
+}
+ else { throw makeVpcInternalErr('OR in FnCallNumberOf, no branch found'); }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RuleAnyPropertyVal(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
 
         RuleExpr(ctx: VisitingContext): VpcVal {
             if (!ctx.RuleLvl1Expression.length || ctx.RuleAndOrOr.length + 1 !== ctx.RuleLvl1Expression.length) {
@@ -235,6 +368,9 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
 
         RuleLvl1Expression(ctx: VisitingContext): VpcVal {
             if (!ctx.RuleLvl2Expression.length || ctx.RuleContainsOrGreaterLessEqual.length + 1 !== ctx.RuleLvl2Expression.length) {
@@ -255,6 +391,11 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
+
+
 
         RuleLvl3Expression(ctx: VisitingContext): VpcVal {
             if (!ctx.RuleLvl4Expression.length || ctx.tkStringConcat.length + 1 !== ctx.RuleLvl4Expression.length) {
@@ -275,6 +416,9 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
 
         RuleLvl4Expression(ctx: VisitingContext): VpcVal {
             if (!ctx.RuleLvl5Expression.length || ctx.tkPlusOrMinus.length + 1 !== ctx.RuleLvl5Expression.length) {
@@ -295,6 +439,9 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
 
         RuleLvl5Expression(ctx: VisitingContext): VpcVal {
             if (!ctx.RuleLvl6Expression.length || ctx.tkMultDivideExpDivMod.length + 1 !== ctx.RuleLvl6Expression.length) {
@@ -315,31 +462,39 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
 
-        RuleAndOrOr(ctx: VisitingContext): string {
-            if (ctx._or[0]) {
-                return ctx._or[0].image;
-            } else if (ctx._and[0]) {
-                return ctx._and[0].image;
-            } else {
-                throw makeVpcInternalErr('OR in AndOrOr, no branch found');
-            }
-        }
 
-        RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string {
-            if (ctx._contains[0]) {
-                return ctx._contains[0].image;
-            } else if (ctx.tkGreaterOrLessEqualOrEqual[0]) {
-                return ctx.tkGreaterOrLessEqualOrEqual[0].image;
-            } else {
-                throw makeVpcInternalErr('OR in ContainsOrGreaterLessEqual, no branch found');
-            }
-        }
 
-        RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
-        /* generated code, any changes above this point will be lost: --------------- */
+
+RuleAndOrOr(ctx: VisitingContext): string {
+if (ctx._or[0]) {
+ return ctx._or[0].image; 
+}
+ else 
+if (ctx._and[0]) {
+ return ctx._and[0].image; 
+}
+ else { throw makeVpcInternalErr('OR in AndOrOr, no branch found'); }
+}
+
+
+RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string {
+if (ctx._contains[0]) {
+ return ctx._contains[0].image; 
+}
+ else 
+if (ctx.tkGreaterOrLessEqualOrEqual[0]) {
+ return ctx.tkGreaterOrLessEqualOrEqual[0].image; 
+}
+ else { throw makeVpcInternalErr('OR in ContainsOrGreaterLessEqual, no branch found'); }
+}
+
+
+RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+/* generated code, any changes above this point will be lost: --------------- */
     }
 
     let ComposedClass = VpcVisitorAddMixinMethods(VPCCustomVisitor);

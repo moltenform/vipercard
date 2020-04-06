@@ -1,0 +1,330 @@
+
+// ben fisher, 2018
+// some tips from http://www.jaedworks.com/hypercard/scripts/hypertalk-bnf.html
+// (viewing this file as C may highlight the syntax better)
+
+// extremely cutting down number of tokens is no longer necessary,
+// with the ensureOptimizations flag now chevrotain's lexing 
+// builds a map based on possible first character, so is much faster.
+
+// there are several semi-keywords, like "transparent". You can use the term transparent with no parens like set the style to transparent,
+// but also create a variable (put "abc" into transparent) with no problem. so is "transparent" a keyword or not?
+// (this might have to do with the product's behavior where unwritten to variables hold their names, e.g. get abc is "abc" if you've never written to abc)
+// the product is very lenient -- you can even assign over functions (put "abc" into cos; answer cos && cos)
+// note that if we made "transparent" et all a token, then it would be difficult to allow a variable named transparent. also, we'd have nearly 100 more tokens to deal with.
+// and when you wanted to set a property and had a typo like set the autohilite2 of cd btn 1, it would be a syntax error, which might be confusing
+// let's use this approach:
+//      certain terms are reserved keywords like "word", "item". defined as tokens, cannot be used as variable names at all.
+//      certain terms are built-in properties/functions. "cos", "mouseloc". not defined as tokens. if you try 'put "abc" into cos' we check at runtime (not compile time) and error then.
+//      certain terms are allowed as variable names but are also interpreted as a string in property-set contexts. like transparent or gray.
+
+// in this version we try to parse as much of the language as possible,
+// even for features like custom menus that we don't support yet,
+// so that old scripts can run without too many changes.
+
+// use (?:noncapturinggroups)
+// {{nothingdirectlyafter}} expands to (?![a-zA-Z0-9_]) which means that it can't be directly followed by a letter or numeral.
+// Be careful when lexing because tokens are greedy. If you have 3 tokens /fro/ /from/ /frome/,
+// the string "from frome" becomes [fro, m, fro, me].
+// the (?![a-zA-Z0-9_]) means to look ahead to make sure no other word/letters are there.
+// important, otherwise if you have tokens "the" and "then", you'd need to order everything right, or "then" would lex into "the", "n"
+
+// in a group of alternates, I think it's a good idea to put ones that will fail fast first
+// Bad parts about reducing number of tokens:
+//      more analysis needed at runtime. although we already need to do a lot of analysis there anyways, so it's not so bad. do need to confirm the right words use though.
+//      grammar is more fragile for chevrotain warning about ambiguities. the first time I stripped it down, see vpc001.txt, got a lot of Chev. warnings saying "same prefix" in both paths. unclear if actually a problem but I don't want to increase the lookahead.
+//      grammar might have actual true wrong parsing. consider "ask [password] <Expr>". if I made it "ask [TkIdentifier] <Expr>" to try to save a token, if the user typed "ask x-3" it would be parsed as (ask)(x)(-3) and mess up the expression.
+//      potentially slower parsing because there are potentially more routes the grammar can take as more keywords are moved to generic tkIdentifiers; might do more backtracking
+
+
+// changes from original product:
+//      you can't read from a variable you have never written to
+//      NEW FEATURE: numbers can be written as 1e10 and 1e-10
+//      NEW FEATURE: block comments  --[[ to ]
+//      NEW FEATURE: get the number of btns in cd 2
+//      continued lines can use either \ or logical not
+//      you can use != instead of <>, you can use == instead of =
+//     you can't say put "a" into char 1 of the selection
+
+// parse ok but aren't supported in software include:
+//      you can't say `part id 4`
+//      you can't say `btn 3` you have to say either `cd btn 3` or `bg btn 3`
+//      you can't refer to other stacks besides "this stack"
+//      you can't refer to marked card
+//      better to use "create btn" not "doMenu New Button"
+
+// changes from v1:
+//      put the sin of 4 into x is now supported
+//      put sin of 4 into x is now supported, and even the sin of cd fld 1
+//      continued lines can use logical not / cool os roman symbols
+
+
+// strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
+tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/
+// comments are highest precedence. similar but not the same as lua. --[[ to ] x5d is ]
+// not using .*? because that causes slow backtracking 
+tkBlockComment=/--\[\[[^\x5d]+\x5d/|||||group: chevrotain.Lexer.SKIPPED,line_breaks:true
+// line comment
+tkLineComment=/--[^\n]*/|||||group: chevrotain.Lexer.SKIPPED
+// whitespace or a line-continuation. \xC2 is logical not in mac-roman encoding
+tkContinuedLineOrWhiteSpace=/(?:[ \t]+)|(?:[\\\xC2][ \t]*\n)/|||||group: chevrotain.Lexer.SKIPPED,line_breaks:true
+// official grammar says this. lookahead to see if it's the last token on the line
+tkCardAtEndOfLine=/(?:card|cd)(?=\s*\n)/
+// official grammar says this. lookahead to see if it's the last token on the line
+tkBgAtEndOfLine=/(?:background|bkgnd|bg)(?=\s*\n)/
+// official grammar says this. lookahead to see if it's the last token on the line
+tkStackAtEndOfLine=/stack(?=\s*\n)/
+// a new line
+tkNewLine=/\n+/|||||line_breaks:true
+// never actually lexed from user input, but used as a marker while preparing code to be parsed
+tkSyntaxPlaceholder=/\?{99}/
+// numbers need to disallow letters right afterwards, otherwise 4a becomes ["4", "a"]. note that emulator supports 001 == 1.
+tkNumLiteral=/[0-9]+(?:\.[0-9]*)?(?:e[-+]?[0-9]+)?{{nothingdirectlyafter}}/
+
+
+// terms for objects. OneOfWords uses negative lookahead to force it to be a full word
+// used to combine plural and singular into one token. probably better to separate them
+// now that we support old-style functions so that "the number of cd btns" doesn't look similar to "the number of cd btn 1"
+tkStack=OneOfWords(stack)
+tkBg=OneOfWords(background,bkgnd,bg)
+tkBgPlural=OneOfWords(backgrounds,bkgnds,bgs)
+tkCard=OneOfWords(card,cd)
+tkCardPlural=OneOfWords(cards,cds)
+tkBtn=OneOfWords(button,btn)
+tkBtnPlural=OneOfWords(buttons,btns)
+tkFld=OneOfWords(field,fld)
+tkFldPlural=OneOfWords(fields,flds)
+tkPart=OneOfWords(part)
+tkPartPlural=OneOfWords(parts)
+tkTopObject=OneOfWords(hypercard,vipercard)
+tkAdjective=OneOfWords(long,short,abbrev,abbr,abbreviated)
+tkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eigth,ninth,tenth)
+tkPosition=OneOfWords(this,prev,next)
+tkChunkGranularity=OneOfWords(characters?,chars?,words?,items?,lines?)
+tkInOnly=OneOfWords(in)
+tkOfOnly=OneOfWords(of)
+tkA=OneOfWords(a,an)
+
+// more terms
+// this implies that the user cannot create a variable with these names.
+// tokens starting with an underscore should accept an image that is the same as their name minus the underscore
+_not=OneOfWords(not)
+_there=OneOfWords(there)
+_is=OneOfWords(is)
+_no=OneOfWords(no)
+_and=OneOfWords(and)
+_or=OneOfWords(or)
+_contains=OneOfWords(contains)
+_within=OneOfWords(within)
+_the=OneOfWords(the)
+_message=OneOfWords(msg,message)
+_window=OneOfWords(window)
+_windows=OneOfWords(windows)
+_box=OneOfWords(box)
+_me=OneOfWords(me)
+_target=OneOfWords(target)
+_recent=OneOfWords(recent)
+_back=OneOfWords(back)
+_forth=OneOfWords(forth)
+_marked=OneOfWords(marked)
+_to=OneOfWords(to)
+_menuItem=OneOfWords(menuitems?)
+_menu=OneOfWords(menu)
+_id=OneOfWords(id)
+_number=OneOfWords(number)
+_selection=OneOfWords(selection)
+
+// comma
+tkComma=/,/
+// open paren
+tkLParen=/\(/
+// close paren
+tkRParen=/\)/
+// plus or minus
+tkPlusOrMinus=OneOfOr(\+ |or| -)
+// mult, div, power, "div", "mod"
+tkMultDivideExpDivMod=OneOfOr(\* |or| \/ |or| \^ |or| div{{nothingdirectlyafter}} |or| mod{{nothingdirectlyafter}})
+// concat or concat with space
+tkStringConcat=OneOfOr(&& |or| &)
+// not-equal, greater than, less than
+// mac-roman encoding \xAD is not-equal \xB2 \xB3 are lessthan-or-equal
+tkGreaterOrLessEqualOrEqual=OneOfOr(<> |or| >=? |or| <=? |or| != |or| ==? |or| \xB2 |or| \xB3 |or| \xAD)
+// must be last, or it would take precedence over most of the rest
+tkIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
+
+// i think i will have to enumerate the property names in any case,
+// in order to distinguish between a prop lookup and an old style function call
+// could instead enumerate builtin functions but that wouldn't work for custom functions
+
+/* generated code, any changes past this point will be lost: --------------- */
+tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom,bottomright,cantabort,cantdelete,cantmodify,cantpeek,checkmark,commandchar,dontsearch,dontwrap,enabled,family,fixedlineheight,freesize,height,hilite,icon,left,location,locktext,markchar,menumessage,multiplelines,name,owner,partnumber,rectangle,reporttemplates,right,script,scroll,sharedhilite,sharedtext,showlines,showname,showpict,size,style,textalign,titlewidth,top,topleft,visible,widemargins,width,zoomed)
+
+tkAllNullaryOrUnaryPropertiesIfNotAlready=OneOfWords(scriptinglanguage,textfont,textheight,textsize,textstyle,version)
+
+// we've automatically searched through all word-like tokens to check for any overlap (like how _id is both a token and a property name)
+HAllPropertiesThatCouldBeUnary:={tkAllUnaryPropertiesIfNotAlready | tkAllNullaryOrUnaryPropertiesIfNotAlready |_id|_marked|_number}                      --->ProcessOr--->IToken
+HAnyFnNameOrAllPropertiesThatCouldBeNullary:={ <HAnyFnName> | tkAllNullaryOrUnaryPropertiesIfNotAlready }                      --->ProcessOr--->IToken
+HAnyFnName:= { tkIdentifier | _windows}                      --->ProcessOr--->IToken
+/* generated code, any changes above this point will be lost: --------------- */
+HAnyAllowedVariableName:={ tkIdentifier | _number | tkA | tkAllUnaryPropertiesIfNotAlready | tkAllNullaryOrUnaryPropertiesIfNotAlready }         --->ProcessOr--->IToken
+
+// a bit of a space/time tradeoff in rules:
+// when we cram everything into one rule, slightly less space in memory taken as CST has fewer branches
+// however, this also means slightly longer time in traversing as there are many conditionals to see which subrule is not null
+// also makes software more complex
+// another space/time tradeoff:
+// separating operators into different levels to implement operator precedence: makes a bigger parse tree and more parsing code
+// it's also possible to make all binary operators the same level and work out the precedence in software = smaller parse tree to hold in memory
+
+
+//////////// Objects
+// note use of Lvl6Expression - confirmed in product. you have to say 'cd btn (1+1)' and not 'cd btn 1+1'
+// note that "btn 1" refers to a card button and "fld 1" refers to a bg fld. so you should typically specify.
+// in software we'll stop you from saying "first cd btn 1"
+// note that saying "of card" just means "of this card". "fld 1 of this card" still refers to a bg fld.
+// you can't usually "skip levels". card 1 of this stack and fld 1 of this bg are not allowed. also "answer the id of back" works
+
+Object:={ <ObjectSpecial> |  <ObjectBtn> | <ObjectFld> | <ObjectCard> |    <ObjectBg> | <ObjectStack>     }                                                         --->ProcessOr--->RequestedVelRef
+ObjectBtn:=[<Ordinal>] {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6Expression> } [ <Of> <ObjectCard> ]                                       --->Custom--->RequestedVelRef
+ObjectFld:=[<Ordinal>] {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} [ <Of> <ObjectCard> ]                                      --->Custom--->RequestedVelRef
+ObjectCard:= { _recent tkCard | _back | _forth | tkCard _id <Lvl6Expression> | [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | <Ordinal> [_marked] tkCard | <Position> [_marked] tkCard } [ <Of> <ObjectBg> ]   --->Custom--->RequestedVelRef
+ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | tkBgAtEndOfLine | <Ordinal> tkBg | <Position> tkBg } [ <Of> <ObjectStack> ]                              --->Custom--->RequestedVelRef
+ObjectStack:={tkPosition tkStack | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                                                                 --->Custom--->RequestedVelRef  
+ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expression> | tkPart <Lvl6Expression> | <Ordinal> tkPart} [ <Of> <ObjectCard> ] }     --->Custom--->RequestedVelRef
+// in syntax transform we'll turn "the long target" into "the long name of the target"
+ObjectSpecial:={tkTopObject | _me | [ _the ] _target}       --->Custom--->RequestedVelRef
+
+// Testing in product:
+// This does work:
+// 	answer the name of cd btn fld 1
+// 	answer the name of cd btn -xx
+// 	answer the name of cd btn not true
+// This parses as two things:
+// 	answer the name of cd btn 5 - 4
+// 	answer the name of cd btn 2 * 1
+// so yes, it is a lvl6 expression that it wants
+// 
+// I used to say that a field could be defined as 
+//  [{tkCard | tkBg}] {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>}
+// because in the product you can say "put 4 into fld 2"
+// but this leads to an ambiguity 
+// "cd fld id 1"
+//which is truly ambiguous , it could mean cd (fld id 1) or (cd fld) id 1 and chevrotain says it doesn't know which.
+// so in the parser we'll require the cd or bg before a fld, and during syntax transformation, take any "fld" or "btn" that isn't preceded by "cd" or "bg" and add that. 
+// then we'll match the product's behavior because it will be parsed as (cd fld) id 1. and we'll still support a phrase like cd fld fld 1
+// 
+
+//////////// Helpers
+// docs say that unless it is ofOnly or inOnly, of/in are interchangeable
+Of:={tkOfOnly|tkInOnly}                         --->ProcessOr--->IToken
+Ordinal:=[_the] tkOrdinal                   --->Custom--->OrdinalOrPosition
+Position:=[_the] tkPosition                  --->Custom--->OrdinalOrPosition
+MenuItem:={<Ordinal> _menuItem | _menuItem <Lvl6Expression>}       --->Constant|"{menuitemExpr}"
+Menu:={<Ordinal> _menu | _menu <Lvl6Expression>}                             --->Constant|"{menuExpr}"
+// tkIdentifier is one of: pattern,tool,scroll,fatbits
+Window_1:=[_the] {tkCard | tkIdentifier } _window    --->Constant|"{windowExpr}"
+Window:={<Window_1> | <MessageBox>}             --->Constant|"{windowExpr}"
+MessageBox:=[_the] _message { _box | _window }      --->Constant|"{msgBoxExpr}"
+
+
+
+
+//////////// Containers
+// the emulator lets you put text into a button, doesn't seem to do anything
+// references to the messagebox are turned into references to a special global variable that is checked after every run
+// handling the selection is tricky... let's support "get the selection, get char 1 of the selection, put "abc" into the selection" but not "put "a" into char 1 of the selection"
+HSimpleContainer:={ <Menu> | <MessageBox> | [_the] _selection | <ObjectPart> | <HAnyAllowedVariableName> }  --->Custom--->RequestedContainerRef
+// fyi: HContainer is only used for 'put' command, never in expression evaluation
+HContainer:=[<HChunk>] <HSimpleContainer>                                                                                         --->Custom--->RequestedContainerRef
+HChunk:={ <Ordinal> tkChunkGranularity | tkChunkGranularity <HChunkBound> [_to <HChunkBound>] } <Of>        --->Custom--->RequestedChunk
+// we restrict what can be in chunkbounds to reduce the chances for parser ambiguity. this is just the "4" in get char 4 of "abcd", nothing special
+HChunkBound:= { tkLParen <Expr> tkRParen | tkNumLiteral  | <HSimpleContainer> }                --->Custom--->VpcVal
+
+//////////// Function Calls / Property Gets
+// problem: old-style function calls look like this: "the sin of 4"
+// so when you run into an expression like "get the sin of cd fld 1" is this looking up a property on the field,
+// or calling a function on the contents of the field? I confirmed in the product that this is valid code.
+
+// first approach was to support only the form "get the sin of (cd fld 1)" whereas "get the sin of cd fld 1" was always treated as a property lookup even if no such property
+// pros: don't need to enumerate lots of builtin functions or properties (which would slow down lexing + take away variable names), they're both just a tkIdentifier
+// pros: having a list of builtins is redundant since that list needs to exist in software too
+// but it's hard to distinguish those. <Of> { <Object> | ... | <Lvl6Expression> } I thought might work - it will pick Object or Lvl6Expression, depending on which comes first
+// but it's a lookahead parser--not backtracking--so once it goes into Object it can't come back out (unless backtracking is specifically turned on, which I don't want.)
+// and running this Chevrotain warned about the ambiguous alternatives detected: <1,5> in <OR1> 
+
+// so I'll do things a more complete way and have a list of all the possible properties
+// I'll support "get the sin of cd fld 1", since sin is not 
+// making a list of the properties, or a list of the functions, or both, could have worked, but I'll list just the properties, so that "get the myCustomFunction of cd fld 1" also works
+// in other words when you get something like "get the sin of cd fld 1" we'll know sin has to be a function call because it's not in our list of properties.
+
+// we'll also be able to distinguish between global property gets "get the lockScreen" and function calls "get the myCustomFunction"
+// note that "the target" and "the number of" look like function calls but they aren't, they need to be handled differently
+// note that "the length" is not handled specially, a phrase like "get the length of cd fld 1" should just work (previously we'd have trouble with it)
+// note that you can't use fn style to get global properties, "get the version" is valid but not "get version()"
+// note that we'll match the product and let you say "get the long sin of 4" and ignore the nonsensical adjective
+HSource:={<HSource_1> | <HGenericFunctionCall> | <HSimpleContainer>}   --->ProcessOr--->VpcVal
+HSource_1:=  {tkStringLiteral | tkNumLiteral}                 --->Custom--->VpcVal
+HFnCallWParens:={ <HAnyFnName> tkLParen MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP tkRParen  }         --->Custom--->VpcVal
+HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> <ObjectFld>}       --->Custom--->VpcVal
+HOldStyleFnNonNullary:=_the <HAnyFnName> tkOfOnly <Expr>                                                                             --->Custom--->VpcVal
+HOldStyleFnNullaryOrNullaryPropGet:= _the [ tkAdjective ] <HAnyFnNameOrAllPropertiesThatCouldBeNullary>             --->Custom--->VpcVal
+
+// I think it's legit to increase the lookahead. <_the, _number, tkOfOnly, tkCard> may appear as a prefix path in all these alternatives. 
+// but it is true, "the number of cd btn id 5" and "the number of cd btns" do have the same prefix
+HGenericFunctionCall:={ MAX_LOOKAHEAD=5 <FnCallNumberOf> | <FnCallThereIs> | <HFnCallWParens> | <HUnaryPropertyGet> | <HOldStyleFnNonNullary> | <HOldStyleFnNullaryOrNullaryPropGet> }   --->ProcessOr--->VpcVal
+
+// you can't say "there is a line 1000 of cd fld 1" or "there is a line 1000 of "abc"", confirmed in the product
+// you can't say "the number of cd btns of cd 2", confirmed in the product, but I'll add it, just for cards, because I'm generous
+// you can't say "the number of marked cds of bg 1", confirmed in the product
+FnCallNumberOf:= _the _number tkOfOnly { <FnCallNumberOf_1>|<FnCallNumberOf_5>|<FnCallNumberOf_6>|<FnCallNumberOf_7>|<FnCallNumberOf_8>|<FnCallNumberOf_9>  }      --->ProcessOr--->VpcVal
+FnCallNumberOf_1:=[{tkCard | tkBg}] { tkBtnPlural | tkPartPlural | tkFldPlural } [ <Of> <ObjectCard> ]     --->Custom--->VpcVal
+FnCallNumberOf_5:=_marked tkCardPlural                                                                                                  --->Custom--->VpcVal
+FnCallNumberOf_6:=tkCardPlural  [ <Of> <ObjectBg> ]                                                       --->Custom--->VpcVal
+FnCallNumberOf_7:=tkBgPlural [ <Of> <ObjectStack> ]                                                       --->Custom--->VpcVal
+FnCallNumberOf_8:={_windows | _menu | _menuItem <Of> <Menu>}                             --->Custom--->VpcVal
+FnCallNumberOf_9:=tkChunkGranularity <Of> <Lvl3Expression>                                        --->Custom--->VpcVal
+FnCallThereIs:= _there _is {_no | [_not] tkA} <Object>                   --->Custom--->VpcVal
+
+// we want AnyPropertyVal to take many things
+// well tkIdentifier can be a Lvl1Expression (treated as variable)
+// and shadow can be a Lvl1Expression (treated as variable)
+// text style lists are in the form "bold, italic".
+// let's be simpler and accept an arbitarary amnt of terms here, and check it at runtime.
+// point needs 2 terms, rect needs 4 terms, fonts need arbitrary number
+AnyPropertyVal:= ATLEASTONESEP{{ tkComma / <Lvl1Expression> }}ENDATLEASTONESEP              --->BuildMap
+
+
+//////////// Expressions
+
+// "lookahead" only comes into play when there is an OPTIONAL, OR, etc. block
+// otherwise we'll greedily eat whatever comes our way.
+// this issue arose when dealing with "x is y" versus "x is within y", had to make "within" a token so it wouldn't go the wrong way
+// if the grammar is
+// Expr1:= <Expr2> letterc Integer 
+// Expr2:= letterb [letterc lettera]
+// I would have hoped that "b c 123" would work, trying out Expr2 and then falling back to Expr1
+// but no, once we go into Expr2 we can never fall back into Expr1.
+// increasing the 'lookahead' parameter in general isn't a good solution.
+
+
+// placing in a tower like this is a good way to resolve left-recursion
+// you can't do something like Expr:= <Expr> + <Expr> because this is left-recursion
+// you might see Lvl6Expression referred to as "factor".
+// chevrotain documentation notes that you can also flatten the tower to two tiers and do operator precedence in software,
+// which reduces the size of parse trees in memory 
+// note: to match the original product, operations do not short-circuit, so "true or myFunction()" will call myFunction
+Expr:= <Lvl1Expression> MANY{{ <AndOrOr> <Lvl1Expression> }}ENDMANY                                                     --->BuildExpr|<AndOrOr>|<Lvl1Expression>|OpLogicalOrAnd
+Lvl1Expression:= <Lvl2Expression> MANY{{ <ContainsOrGreaterLessEqual> <Lvl2Expression> }}ENDMANY            --->BuildExpr|<ContainsOrGreaterLessEqual>|<Lvl2Expression>|OpEqualityGreaterLessOrContains
+Lvl2Expression:= <Lvl3Expression> MANY{{ _is <IsExpression> }}ENDMANY                                                           --->Custom--->VpcVal
+Lvl3Expression:= <Lvl4Expression> MANY{{ tkStringConcat <Lvl4Expression> }}ENDMANY                                    --->BuildExpr|tkStringConcat|<Lvl4Expression>|OpStringConcat
+Lvl4Expression:= <Lvl5Expression> MANY{{ tkPlusOrMinus <Lvl5Expression> }}ENDMANY                                       --->BuildExpr|tkPlusOrMinus|<Lvl5Expression>|OpPlusMinus
+Lvl5Expression:= <Lvl6Expression> MANY{{ tkMultDivideExpDivMod <Lvl6Expression> }}ENDMANY                         --->BuildExpr|tkMultDivideExpDivMod|<Lvl6Expression>|OpMultDivideExpDivMod
+Lvl6Expression:= [ { tkPlusOrMinus | _not } ] [<HChunk>] { <HSource> | tkLParen <Expr> tkRParen }                 --->Custom--->VpcVal
+//~ Lvl6ExpressionRestricted:=
+
+AndOrOr:={_or | _and}                                                                                                                       --->ProcessOr--->string
+ContainsOrGreaterLessEqual:={ _contains | tkGreaterOrLessEqualOrEqual  }                                            --->ProcessOr--->string
+
+// "x is a number" or "x is 1" or "x is within"
+IsExpression:= [_not]  { tkA { _number | tkIdentifier }  | { tkInOnly | _within } <Lvl3Expression> | <Lvl3Expression> }       --->BuildMap
+

@@ -1,9 +1,0 @@
-unsigned 8bit
-big endian
-mono
-22050
-
-
-ffmpeg -f s16le -ar 44.1k -ac 2 -i file.pcm file.wav
-ffmpeg -f u8 -ar 22.05k -ac 1 -i Aww-22.glide Aww-22r.flac
-

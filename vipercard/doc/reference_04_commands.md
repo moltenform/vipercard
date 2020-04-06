@@ -163,6 +163,27 @@ future version...
 
 
 
+## dial {number}
+
+The dial command generates touch-tone sounds for the digits in the number, through the speaker. To dial the phone from ViperCard, you must either hold the handset up to the speaker of your computer or use a device that feeds computer audio output to the telephone.
+
+Note: If you include a hypen in the number, place the entire expression in quotation marks. Otherwise, ViperCard performs a subtraction before dialing the number.
+
+The first time the `dial` command is run, the sounds might not be played because they might not have been loaded yet. Use `dial "" ` when your program starts to ensure that the sounds are loaded.
+
+
+Examples:
+
+```
+dial "" -- begin loading the dial tone sounds
+wait 4 seconds
+dial "555-1234"
+```
+
+
+
+
+
 ## disable {button}
 
 Disables a button (sets the "enabled" property to true, so that the

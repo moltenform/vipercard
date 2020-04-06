@@ -14,9 +14,7 @@
 
 export interface VpcCompleteVisitor {
     RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): chevrotain.IToken;
-    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(
-        ctx: VisitingContext
-    ): chevrotain.IToken;
+    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): chevrotain.IToken;
     RuleHAnyFnName(ctx: VisitingContext): chevrotain.IToken;
     RuleHAnyAllowedVariableName(ctx: VisitingContext): chevrotain.IToken;
     RuleObject(ctx: VisitingContext): RequestedVelRef;
@@ -68,7 +66,7 @@ export interface VpcCompleteVisitor {
 }
 
 export interface VisitingContext {
-    [index: string]: any;
+[index: string]: any;
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];

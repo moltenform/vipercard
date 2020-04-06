@@ -309,7 +309,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VpcValBool(ctx.TokenNot.length ? !velExists : velExists);
         }
 
-        FnCallNumberOf_1(ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_1(ctx: VisitingContext): VpcVal {
             checkThrow(!ctx.tkPartPlural[0], "we don't yet support looking up an object by 'part'");
             let type: VpcElType;
             if (ctx.tkFldPlural) {
@@ -338,7 +338,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VpcValN(this.outside.CountElements(type, parentRef));
         }
 
-        FnCallNumberOf_5(ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_5(ctx: VisitingContext): VpcVal {
             // number of marked cards
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.cardLookAtMarkedOnly = true;
@@ -346,7 +346,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VpcValN(this.outside.CountElements(VpcElType.Card, parentRef));
         }
 
-        FnCallNumberOf_6(ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_6(ctx: VisitingContext): VpcVal {
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.lookByRelative = OrdinalOrPosition.This;
             if (ctx.RuleObjectBg[0]) {
@@ -355,7 +355,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VpcValN(this.outside.CountElements(VpcElType.Card, parentRef));
         }
 
-        FnCallNumberOf_7(ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_7(ctx: VisitingContext): VpcVal {
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.lookByRelative = OrdinalOrPosition.This;
             if (ctx.RuleObjectStack[0]) {
@@ -364,7 +364,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VpcValN(this.outside.CountElements(VpcElType.Bg, parentRef));
         }
 
-        FnCallNumberOf_8(_ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_8(_ctx: VisitingContext): VpcVal {
             checkThrow(false, "we don't yet support getting the number of custom menus or windows");
         }
 
@@ -378,7 +378,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return VpcValN(result);
         }
 
-        HFnCallWParens(ctx: VisitingContext): VpcVal {
+        RuleHFnCallWParens(ctx: VisitingContext): VpcVal {
             // note: custom functions are handled separately
             let fnName = this.visit(ctx.HAnyFnName[0]).image;
             let args: VpcVal[] = [];
@@ -390,7 +390,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return this.outside.CallBuiltinFunction(fnName, args);
         }
 
-        HUnaryPropertyGet(ctx: VisitingContext): VpcVal {
+        RuleHUnaryPropertyGet(ctx: VisitingContext): VpcVal {
             let propName = this.visit(ctx.HAllPropertiesThatCouldBeUnary[0]).image;
             let adjective = ctx.tkAdjective[0] ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image) : PropAdjective.Empty;
             checkThrow(!ctx.RuleWindow[0], "don't yet support looking up property on window");

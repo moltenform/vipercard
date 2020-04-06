@@ -1,8 +1,20 @@
 {
   "name": "vipercard",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "vipercard",
-  "main": "./lib/vpcbundlemin.js",
+  "scripts": {
+    "prestart": "node ./tools/set_tsconfig_flavor.js --development",
+    "start": "webpack-dev-server --progress --color --mode development --config webpack.config.development.js",
+    "prebuild": "rimraf ./dist/* && node ./tools/set_tsconfig_flavor.js --production",
+    "build": "webpack --color --mode production --config webpack.config.production.js",
+    "buildstyle": "npx sass src/style:static/style",
+    "buildstylewatch": "npx sass --watch src/style:static/style",
+    "autoimportmodules": "cd tools/typescript-super-auto-import && main.py",
+    "prettierexceptlongimports": "cd tools/prettier-except-long-imports && main.py",
+    "addassertmarkers": "cd tools/add-assert-markers && main.py",
+    "lint": "node ./node_modules/eslint/bin/eslint.js -c .eslintrc.js src/**/*.ts",
+    "lint-rule-timings": "cross-env TIMING=1 node ./node_modules/eslint/bin/eslint.js -c .eslintrc.js src/**/*.ts"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/moltenform/vipercard"
@@ -10,12 +22,23 @@
   "author": "Ben Fisher",
   "license": "GPL-3.0",
   "devDependencies": {
-    "connect": "^3.6.6",
-    "prettier": "^1.12.0",
-    "rollup": "^0.57.1",
-    "serve-static": "^1.13.2",
-    "tslint": "^5.9.1",
-    "typescript": "^2.8.1",
-    "uglify-js": "^3.3.21"
+    "@typescript-eslint/eslint-plugin": "^2.26.0",
+    "@typescript-eslint/parser": "^2.26.0",
+    "cross-env": "^7.0.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-ban": "^1.4.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "fork-ts-checker-notifier-webpack-plugin": "^2.0.0",
+    "fork-ts-checker-webpack-plugin": "^4.1.2",
+    "html-webpack-plugin": "^4.0.3",
+    "prettier": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "sass": "^1.26.3",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
   }
 }

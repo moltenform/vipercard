@@ -1,0 +1,10 @@
+
+// ben fisher, 2018
+// some tips from http://www.jaedworks.com/hypercard/scripts/hypertalk-bnf.html
+// (viewing this file as C may highlight the syntax better)
+
+
+//      pop, push supports only simple constructs
+//      select supports only selecting chunk of a field
+//      sort only supports sorting text
+
