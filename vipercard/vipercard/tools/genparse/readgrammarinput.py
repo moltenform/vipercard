@@ -67,6 +67,12 @@ def processToken(result, line):
 def processRule(result, line):
     ret = Bucket()
     ruleName, ruleDefn = (s.strip() for s in line.split(':=', 1))
+    if ruleName.startswith('BuiltinCmd'):
+        assertTrue(ruleDefn.startswith('...'), line)
+        ruleDefn = ruleDefn.replace('...', 'tkSyntaxPlaceholder tkSyntaxPlaceholder ')
+        if not '--->' in ruleDefn:
+            ruleDefn += '    --->BuildMap'
+    
     ruleVisitor = ''
     ruleVisitorReturnType = ''
     if '--->' in ruleDefn:

@@ -45,18 +45,18 @@
 //      continued lines can use either \ or logical not
 //      you can use != instead of <>, you can use == instead of =
 //     you can't say put "a" into char 1 of the selection
+//      NEW FEATURE: drag from a,b to c,d to e,f
 
 // parse ok but aren't supported in software include:
 //      you can't say `part id 4`
-//      you can't say `btn 3` you have to say either `cd btn 3` or `bg btn 3`
 //      you can't refer to other stacks besides "this stack"
-//      you can't refer to marked card
 //      better to use "create btn" not "doMenu New Button"
 
 // changes from v1:
 //      put the sin of 4 into x is now supported
 //      put sin of 4 into x is now supported, and even the sin of cd fld 1
 //      continued lines can use logical not / cool os roman symbols
+//      put "a" into fld 1 and put "a" into bg fld 1 both work
 
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )

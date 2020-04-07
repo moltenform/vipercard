@@ -14,7 +14,9 @@
 
 export interface VpcCompleteVisitor {
     RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): chevrotain.IToken;
-    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): chevrotain.IToken;
+    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(
+        ctx: VisitingContext
+    ): chevrotain.IToken;
     RuleHAnyFnName(ctx: VisitingContext): chevrotain.IToken;
     RuleHAnyAllowedVariableName(ctx: VisitingContext): chevrotain.IToken;
     RuleObject(ctx: VisitingContext): RequestedVelRef;
@@ -63,10 +65,44 @@ export interface VpcCompleteVisitor {
     RuleAndOrOr(ctx: VisitingContext): string;
     RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string;
     RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdAdd(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdAnswer(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdArrowkey(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdAsk(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdBeep(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdChoose(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdClick(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdDelete(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdDial(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdDisable(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdDivide(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdDoMenu(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleHBuiltinCmdDrag_1(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdEnable(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdInternalVpcGoCardImpl(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleHBuiltinCmdGoDest(ctx: VisitingContext): RequestedVelRef;
+    RuleBuiltinCmdLikeGlobal(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdMultiply(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdPlay(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdPush(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdPut(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdSelect(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdShow(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdSortInternal(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdStart(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdStop(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdSubtract(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals;
 }
 
 export interface VisitingContext {
-[index: string]: any;
+    [index: string]: any;
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];
@@ -117,6 +153,40 @@ export interface VisitingContext {
     RuleAndOrOr: any[];
     RuleContainsOrGreaterLessEqual: any[];
     RuleIsExpression: any[];
+    RuleBuiltinCmdAdd: any[];
+    RuleBuiltinCmdAnswer: any[];
+    RuleBuiltinCmdArrowkey: any[];
+    RuleBuiltinCmdAsk: any[];
+    RuleBuiltinCmdBeep: any[];
+    RuleBuiltinCmdChoose: any[];
+    RuleBuiltinCmdClick: any[];
+    RuleBuiltinCmdDelete: any[];
+    RuleBuiltinCmdDial: any[];
+    RuleBuiltinCmdDisable: any[];
+    RuleBuiltinCmdDivide: any[];
+    RuleBuiltinCmdDoMenu: any[];
+    RuleBuiltinCmdDrag: any[];
+    RuleHBuiltinCmdDrag_1: any[];
+    RuleBuiltinCmdEnable: any[];
+    RuleBuiltinCmdInternalVpcGoCardImpl: any[];
+    RuleHBuiltinCmdGoDest: any[];
+    RuleBuiltinCmdLikeGlobal: any[];
+    RuleBuiltinCmdHide: any[];
+    RuleBuiltinCmdMark: any[];
+    RuleBuiltinCmdMultiply: any[];
+    RuleBuiltinCmdPlay: any[];
+    RuleBuiltinCmdPush: any[];
+    RuleBuiltinCmdPut: any[];
+    RuleBuiltinCmdReset: any[];
+    RuleBuiltinCmdSelect: any[];
+    RuleBuiltinCmdSend: any[];
+    RuleBuiltinCmdSet: any[];
+    RuleBuiltinCmdShow: any[];
+    RuleBuiltinCmdSortInternal: any[];
+    RuleBuiltinCmdStart: any[];
+    RuleBuiltinCmdStop: any[];
+    RuleBuiltinCmdSubtract: any[];
+    RuleBuiltinCmdWait: any[];
     tkStringLiteral: chevrotain.IToken[];
     tkBlockComment: chevrotain.IToken[];
     tkLineComment: chevrotain.IToken[];

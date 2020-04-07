@@ -3,8 +3,127 @@
 // some tips from http://www.jaedworks.com/hypercard/scripts/hypertalk-bnf.html
 // (viewing this file as C may highlight the syntax better)
 
+// not supported from product: ask file, answer file, close
 
 //      pop, push supports only simple constructs
 //      select supports only selecting chunk of a field
 //      sort only supports sorting text
+
+// syntax rewriting will change the syntax in some commands.
+
+// addition. supports customfns
+BuiltinCmdAdd:=... <Lvl1Expression> _to <HContainer>                                                             
+// show dialog. software rewrite "with" to tkSyntaxPlaceholder. it's a Lvl6Expression not an Expr so that Or works
+// during softwar rewrite, check for "answer file" and "answer program" and show NYI
+BuiltinCmdAnswer:=... <Expr> [tkSyntaxPlaceholder <Lvl6Expression> [ _or <Lvl6Expression> [ _or <Lvl6Expression>]]]                 
+// simply sends an arrow key message. if not handled, goes to next cd etc.
+BuiltinCmdArrowkey:=... tkIdentifier
+// show dialog. software rewrite "with" to tkSyntaxPlaceholder and "ask password" to "answer ," and "ask file" to NYI
+// original product lets you omit quotes ask "g" with why is this happening but I don't think i will
+BuiltinCmdAsk:=... [tkComma] <Expr> [tkSyntaxPlaceholder <Expr>]                                            
+// play beep sound.
+BuiltinCmdBeep:=... [<Expr>]
+// choose tool. the text form "choose brush tool" is done in software
+// in vipercard this only changes the tool for script running-simulated drawing purposes
+BuiltinCmdChoose:=... tkIdentifier [<Expr>]
+// simulate click. software rewrite "with" to tkSyntaxPlaceholder. supports click at x if x contains coords.
+BuiltinCmdClick:=... tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
+// close. show NYI in rewrite
+// commandKeyDown, a way to simulate a keypress like Cmd+A. show NYI in rewrite
+// controlkey: software rewrites to `send "controlkey" && <expr> to this cd`
+// convert. changes date/time formats show NYI in rewrite
+// copy. show NYI in rewrite
+// create.  show NYI in rewrite. say domenu "new button" to create a button etc.
+// debug. show NYI in rewrite
+// delete. in rewrite error on mention of "menu"
+BuiltinCmdDelete:=... { <HChunk> <HSimpleContainer> | <ObjectPart> }                                   
+// plays a phone dial number
+BuiltinCmdDial:=... <Expr>                                                                           
+// disable a button. in rewrite error on mention of "menu"
+BuiltinCmdDisable:=... <ObjectBtn>                                                                     
+// divide. the tkIdentifier is "by"
+BuiltinCmdDivide:=... <Lvl1Expression> tkIdentifier <HContainer>                                                             
+// domenu. currently supports New Card, Delete Card, Back, First, Prev, Next, Last, New Button, New Field, New Background 
+// and also support doMenu "New Card", "Object" like in the product
+// note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
+// in rewrite syntax say we don't support "without dialog" or "with keys"
+BuiltinCmdDoMenu:=... <Expr> [tkComma <Expr>]       
+// drag, simulate mouse drag
+// in rewrite syntax from "with" to tkSyntaxPlaceholder
+// BuiltinCmdDo handled separately (turned into send x to me)
+BuiltinCmdDrag:=... tkIdentifier MANYSEP{{ _to / <BuiltinCmdDrag_1> }}ENDMANYSEP [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]   
+HBuiltinCmdDrag_1:=<Lvl4Expression> [tkComma <Lvl4Expression>]                      --->BuildMap
+// edit. show NYI in rewrite
+// enable a button. in rewrite error on mention of "menu"
+BuiltinCmdEnable:=... <ObjectBtn>                
+// enterInField. sent up the message hierarchy, usually does nothing. takes no args
+// enterKey. sent up the message hierarchy, usually does nothing. takes no args
+// export. show NYI in rewrite
+// find. show NYI in rewrite
+// functionkey: software rewrites to `send "functionkey" && <expr> to this cd`
+// software rewrites "Get" to "Put"...into it
+// BuiltinCmdGet:=... <Expr>            
+BuiltinCmdInternalVpcGoCardImpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <HOrdinal> | <HPosition> }   
+// always goes to the first card that's there, e.g. go to bg 2 == go to cd 1 of bg 2
+HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->Custom--->RequestedVelRef
+// why not use the parser for this...
+BuiltinCmdLikeGlobal:=... MANYSEP{{ tkComma / <AnyVariableName> }}ENDMANYSEP           
+// help. show NYI in rewrite
+// hide. in rewrite error on mention of "menu"
+BuiltinCmdHide:=... <ObjectPart> 
+// import. show NYI in rewrite
+// keydown. show NYI in rewrite
+// lock. parse it in software.
+// mark. other parsing done in software
+BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCd> | tkComma <Expr> <Of> <ObjectFld> }
+// multiply. the tkIdentifier is "by"
+BuiltinCmdMultiply:=... <Lvl1Expression> tkIdentifier <HContainer>                                                             
+// open. show NYI in rewrite
+// play. "tempo" to tkSyntaxPlaceholder
+BuiltinCmdPlay:=... <Expr>  [tkSyntaxPlaceholder <Expr>]                                                       
+// push card. has a little stack to go to. use a stack like the back/forth one
+BuiltinCmdPush:=... <HBuiltinCmdGoDest>                                                  
+// put variable in. in rewrite, reject if "menu" is mentioned.
+// tkIdentifier here is 'before' 'after' 'into'
+// the traditional <Expr> [ tkIdentifier [ <HContainer> ]] does work for now, but breaks if an Expr can ever have 2 consecutive tkIdentifiers
+BuiltinCmdPut:=... <Expr> tkSyntaxPlaceholder tkIdentifier tkSyntaxPlaceholder [ <HContainer> ]           
+// read. show NYI in rewrite
+// reply. show NYI in rewrite
+// request. show NYI in rewrite
+// reset. reset paint | menubar | printing. reset paint might be useful, let's support that.
+BuiltinCmdReset:=... tkIdentifier
+// returnInField. sent up the message hierarchy, usually does nothing. takes no args
+// returnKey. sent up the message hierarchy, usually does nothing. takes no args
+// save. show NYI in rewrite
+// select. "select empty" is supported, "select button/fld" is not,
+// "select text of cd fld 1" is supported, in software we'll make sure it's not a variable.
+// however we currently don't support select char 2 of the selection
+BuiltinCmdSelect:=... { tkIdentifier | [tkIdentifier] tkIdentifier <Of> <HContainer> }
+// execute in context of another object
+BuiltinCmdSend:=... <Expr> _to <Object>                                                         
+// setting a property
+BuiltinCmdSet:=... [_the] <AnyPropertyName> [ tkOfOnly { <HChunk> <ObjectFld> | <Object> } ] _to <AnyPropertyVal>    
+// show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
+// tkSyntaxPlaceholder means "show object", tkComma means "show x cards"
+BuiltinCmdShow:=... { tkSyntaxPlaceholder <ObjectPart> [tkIdentifier] tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] | tkComma <Lvl4Expression> tkIdentifier }                                        
+// we'll build an actual sort in software. tkStringLiteral1 is "numeric/alphabetic" tkStringLiteral2 is ",\n" etc
+BuiltinCmdSortInternal:=... tkStringLiteral tkStringLiteral <AnyVariableName>
+// start using, currently a no-op
+BuiltinCmdStart:=... tkIdentifier <ObjectStack>
+// stop using, currently a no-op
+BuiltinCmdStop:=... tkIdentifier <ObjectStack>
+// subtraction. rewrite 'from' to syntaxmarker
+BuiltinCmdSubtract:=... <Lvl1Expression> tkSyntaxPlaceholder <HContainer>      
+// tabkey. sent up the message hierarchy, usually goes from one field to the next. takes no args
+// type. set NYI in software
+// unlock. parse it in software.
+// unmark, rewrite it to "mark", "_not"
+// visual effect, parse it in software. the visual effect seems to last until the end of the scope
+// wait supports  second,seconds,milliseconds,ms,ticks
+// defaults to a tick, which is 60th of second
+// or "wait until/while" which we should just expand into a while loop
+BuiltinCmdWait:=... <Expr> [tkIdentifier]
+// write. set NYI in software
+
+
 
