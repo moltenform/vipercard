@@ -32,7 +32,7 @@ export class VpcRewritesLoops {
 
             let loopVar = VpcSuperRewrite.generateUniqueVariable(line[0], '$repeatTimes');
             let firstExpr = [
-                BuildFakeTokens.inst.makeImpl(line[0], tks.tkNumLiteral, '1')
+                BuildFakeTokens.inst.makeTk(line[0], tks.tkNumLiteral, '1')
             ];
             let secondExpr = line.slice(1);
             return this.goWithImpl(firstExpr, secondExpr, loopVar, false);

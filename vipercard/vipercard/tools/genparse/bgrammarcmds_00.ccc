@@ -124,6 +124,7 @@ BuiltinCmdSubtract:=... <Lvl1Expression> tkSyntaxPlaceholder <HContainer>
 // or "wait until/while" which we should just expand into a while loop
 BuiltinCmdWait:=... <Expr> [tkIdentifier]
 // write. set NYI in software
-
+InternalCmdRequestEval:=tkIdentifier <Expr>             --->BuildMap
+InternalCmdUserHandler:=tkIdentifier <Expr>             --->BuildMap
 
 

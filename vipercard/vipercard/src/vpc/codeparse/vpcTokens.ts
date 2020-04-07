@@ -14,8 +14,6 @@ export class BuildFakeTokens {
     constructor() {
         this.knownImages[tks.tkNewLine.name] = '\n';
         this.knownImages[tks.tkComma.name] = ',';
-        this.knownImages[tks.tkLParen.name] = '(';
-        this.knownImages[tks.tkRParen.name] = ')';
         this.knownImages[tks.tkSyntaxPlaceholder.name] = Util512.repeat(99, '?').join('');
     }
 
@@ -23,45 +21,13 @@ export class BuildFakeTokens {
      * make a syntax marker token
      */
     makeSyntaxMarker(basis: chevrotain.IToken, whichMarker = '') {
-        if (whichMarker === '') {
+        if (whichMarker === ',') {
             return this.make(basis, tks.tkComma);
-        } else if (whichMarker === ',') {
+        } else if (whichMarker === '') {
             return this.make(basis, tks.tkSyntaxPlaceholder);
         } else {
             assertTrue(false, '8]|expected "" or ","', whichMarker);
         }
-    }
-
-    /**
-     * make a greater than, less than or equal token
-     */
-    makeGreaterLessThanEqual(
-        basis: chevrotain.IToken,
-        symbols: TypeGreaterLessThanEqual
-    ) {
-        return this.makeImpl(basis, tks.tkGreaterOrLessEqualOrEqual, symbols);
-    }
-
-    /**
-     * make a plus or minus token
-     */
-    makePlusMinus(basis: chevrotain.IToken, symbol: string) {
-        assertTrue(symbol === '+' || symbol === '-', '8[|expected + or -');
-        return this.makeImpl(basis, tks.tkPlusOrMinus, symbol);
-    }
-
-    /**
-     * make a numeric literal
-     */
-    makeNumLiteral(basis: chevrotain.IToken, n: number) {
-        return this.makeImpl(basis, tks.tkNumLiteral, n.toString());
-    }
-
-    /**
-     * make a string literal
-     */
-    makeStrLiteral(basis: chevrotain.IToken, s: string) {
-        return this.makeImpl(basis, tks.tkStringLiteral, '"' + s + '"');
     }
 
     /**
@@ -70,20 +36,13 @@ export class BuildFakeTokens {
     make(basis: chevrotain.IToken, type: chevrotain.TokenType) {
         let image = this.knownImages[type.name];
         assertTrue(trueIfDefinedAndNotNull(image), '8@|image is undefined', type.name);
-        return this.makeImpl(basis, type, image);
-    }
-
-    /**
-     * make a Tkidentifier
-     */
-    makeIdentifier(basis: chevrotain.IToken, s: string) {
-        return this.makeImpl(basis, tks.tkIdentifier, s);
+        return this.makeTk(basis, type, image);
     }
 
     /**
      * implementation
      */
-    makeImpl(basis: chevrotain.IToken, type: chevrotain.TokenType, image: string) {
+    makeTk(basis: chevrotain.IToken, type: chevrotain.TokenType, image: string) {
         let cloned = cloneToken(basis);
         cloned.image = image;
         cloned.endOffset = cloned.startOffset + image.length;
@@ -967,4 +926,5 @@ listOfAllWordLikeTokens['<='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['>'] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['>='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['=='] = tks.tkGreaterOrLessEqualOrEqual;
+listOfAllWordLikeTokens['\n'] = tks.tkNewLine;
 listOfAllWordLikeTokens['%SYNPLACEHOLDER%'] = tks.tkSyntaxPlaceholder;

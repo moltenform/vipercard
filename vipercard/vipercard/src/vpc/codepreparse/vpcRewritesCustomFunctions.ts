@@ -167,7 +167,7 @@ export class ExpandCustomFunctions {
         ret.push(stmtCall);
 
         /* rewrite the syntax, replacing the function call with the new variable! */
-        line.splice(start, end - start, this.buildToken.makeIdentifier(line[0], newvarname));
+        line.splice(start, end - start, VpcSuperRewrite.tokenFromEnglishTerm(newvarname, line[0]));
 
         /* put results of the call into the temporary variable */
         let template = `put result ( ) into %ARG0%`
@@ -176,76 +176,4 @@ export class ExpandCustomFunctions {
         checkThrowEq(1, fromTemplateLines.length , '')
         ret.push(fromTemplateLines[0]);
     }
-}
-
-function testonly() {
-    /*
-    think about conceptual "tab levels"
-    if 0 == 0 then
-        if 1 == 1 then
-            if 1a == 1a then
-            else if 2a == 2a then
-            else if 3a == 3a then
-            end if
-        else if 2 == 2 then
-            if 1b == 1b then
-            else if 2b == 2b then
-            else if 3b == 3b then
-            end if
-        else if 3 == 3 then
-            if 1c == 1c then
-            else if 2c == 2c then
-            else if 3c == 3c then
-            end if
-        end if
-    else
-        if 1 == 1 then
-            if 1d == 1d then
-            else if 2d == 2d then
-            else if 3d == 3d then
-            end if
-        else if 2 == 2 then
-            if 1e == 1e then
-            else if 2e == 2e then
-            else if 3e == 3e then
-            end if
-        else if 3 == 3 then
-            if 1f == 1f then
-            else if 2f == 2f then
-            else if 3f == 3f then
-            end if
-        end if
-    end if
-    ============
-     if 0 == 0 then
-        if 1 == 1 then
-            if 1a == 1a then
-            else 
-                if 2a == 2a then
-                else
-                    if 3a == 3a then
-            end if
-        else if 2 == 2 then
-            if 1b == 1b then
-            else if 2b == 2b then
-            else if 3b == 3b then
-            end if
-        else if 3 == 3 then
-        end if
-    else
-        if 1 == 1 then
-            if 1c == 1c then
-            else if 2c == 2c then
-            else if 3c == 3c then
-            end if
-        else if 2 == 2 then
-            if 1d == 1d then
-            else if 2d == 2d then
-            else if 3d == 3d then
-            end if
-        else if 3 == 3 then
-        end if
-    end if
-    */
-
 }
