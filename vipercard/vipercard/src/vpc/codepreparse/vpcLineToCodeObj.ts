@@ -1,4 +1,10 @@
 
+/* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
+/* auto */ import { isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
+/* auto */ import { CheckReservedWords } from './vpcCheckReserved';
+/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /**
  * determine the category of a line of code
@@ -11,9 +17,7 @@ export class DetermineCategory {
         protected parser: VpcChvParser,
         protected mapBuiltinCmds: MapBuiltinCmds,
         protected check: CheckReservedWords
-    ) {
-        
-    }
+    ) {}
 
     /**
      * some variable names can't be used because they are separate tokens in the lexer
@@ -28,14 +32,29 @@ export class DetermineCategory {
             `8f|we don't support variables named "short", "long", etc`
         );
 
-        checkThrow(!tk || !isTkType(tk, tks.TokenNumber), `8e|we don't support variables named "number"`);
-        checkThrow(!tk || !isTkType(tk, tks.TokenLength), `Jj|we don't support variables named "length"`);
-        checkThrow(!tk || !isTkType(tk, tks.TokenContains), `Ji|we don't support variables named "contains"`);
-        checkThrow(!tk || !isTkType(tk, tks.TokenWithin), `8d|we don't support variables named "within"`);
-        checkThrow(!tk || !isTkType(tk, tks.TokenId), `8c|we don't support variables named "id"`);
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenNumber),
+            `8e|we don't support variables named "number"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenLength),
+            `Jj|we don't support variables named "length"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenContains),
+            `Ji|we don't support variables named "contains"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenWithin),
+            `8d|we don't support variables named "within"`
+        );
+        checkThrow(
+            !tk || !isTkType(tk, tks.TokenId),
+            `8c|we don't support variables named "id"`
+        );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkordinal),
-            `Jh|we don't support variables with names like "first", "last", "second", "middle", "any"`
+             deleteThis.longstr(`Jh|we don't support variables with names like "first", "last", "second", "middle", "any"`, '')
         );
         checkThrow(
             !tk || !isTkType(tk, tks.TokenTkcharorwordoritemorlineorplural),
@@ -62,5 +81,4 @@ export class DetermineCategory {
             `8b|we don't support variables with names like "flds", "fields"`
         );
     }
-
 }

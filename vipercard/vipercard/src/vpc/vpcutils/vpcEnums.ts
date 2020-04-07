@@ -171,6 +171,58 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
 }
 
 /**
+ * note: for simplicity we use "barn" and not "barn door",
+ * and "venetian" and not "venetian blinds"
+ */
+export enum VpcVisualEffectType {
+    __isUI512Enum = 1,
+    barn,
+    cut,
+    plain,
+    dissolve,
+    venetian,
+    checkerboard,
+    iris,
+    scroll,
+    wipe,
+    zoom,
+    shrink,
+    stretch,
+    push
+}
+
+/**
+ * the direction of the effect
+ */
+export enum VpcVisualEffectTypeModifier {
+    __isUI512Enum = 1,
+    open,
+    close,
+    left,
+    right,
+    up,
+    down,
+    top,
+    bottom,
+    center
+}
+
+/**
+ * the direction of the effect
+ */
+export enum VpcVisualEffectTypeDestination {
+    __isUI512Enum = 1,
+    card,
+    black,
+    white,
+    gray,
+    inverse,
+    __AlternateForm__cd = card,
+    __AlternateForm__grey = gray
+}
+
+
+/**
  * a tool
  * you can use __first and __last to iterate all tools
  */

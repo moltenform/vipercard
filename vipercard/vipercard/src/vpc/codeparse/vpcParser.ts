@@ -1530,5 +1530,15 @@ export class VpcChvParser extends chevrotain.CstParser {
             this.CONSUME1(tks.tkIdentifier);
         });
     });
+
+    RuleInternalCmdRequestEval = this.RULE('RuleInternalCmdRequestEval', () => {
+        this.CONSUME1(tks.tkIdentifier);
+        this.SUBRULE1(this.RuleExpr);
+    });
+
+    RuleInternalCmdUserHandler = this.RULE('RuleInternalCmdUserHandler', () => {
+        this.CONSUME1(tks.tkIdentifier);
+        this.SUBRULE1(this.RuleExpr);
+    });
     /* generated code, any changes above this point will be lost: --------------- */
 }

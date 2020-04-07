@@ -1,8 +1,9 @@
 
-/* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, isTkType, listOfAllWordLikeTokens, tks, ChvITkType } from './../codeparse/vpcTokens';
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, last } from './../../ui512/utils/util512';
+/* auto */ import { CountNumericIdNormal } from './../vpcutils/vpcUtils';
+/* auto */ import { BuildFakeTokens, ChvITk, ChvITkType, listOfAllWordLikeTokens, tks } from './../codeparse/vpcTokens';
+/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, checkThrowEq, last } from './../../ui512/utils/util512';
+
 
 export class VpcRewritesGlobal {
     static rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
@@ -36,7 +37,6 @@ export class VpcRewritesGlobal {
     }
 }
 
-
 /**
  * helps rewrite code
    example:
@@ -52,18 +52,17 @@ export class VpcRewritesGlobal {
         %ARGMANY%
     end repeat`
  */
-export class VpcSuperRewrite {
-    static CounterForUniqueNames = 1000;
-    public static go(
+export namespace VpcSuperRewrite {
+    export const CounterForUniqueNames = new CountNumericIdNormal();
+    export function go(
         s: string,
         realTokenAsBasis: ChvITk,
         args: ChvITk[][],
         argMany?: ChvITk[][]
     ): ChvITk[][] {
         let ret: ChvITk[][] = [];
-        VpcSuperRewrite.CounterForUniqueNames += 1;
         s = s.trim();
-        s = s.replace(/%UNIQUE%/g, 'unique' + VpcSuperRewrite.CounterForUniqueNames);
+        s = s.replace(/%UNIQUE%/g, '$unique' + CounterForUniqueNames.nextAsStr());
         let lines = s.replace(/\r\n/g, '\n').split('\n');
         for (let line of lines) {
             if (line.trim() === '%ARGMANY%' && argMany) {
@@ -72,21 +71,21 @@ export class VpcSuperRewrite {
                 let terms = line.split(/\s+/);
                 ret.push([]);
                 for (let term of terms) {
-                    VpcSuperRewrite.addTerm(ret, term, args, realTokenAsBasis);
+                    addTerm(ret, term, args, realTokenAsBasis);
                 }
             }
         }
         return ret;
     }
 
-    static addTerm(
+    function addTerm(
         ret: ChvITk[][],
         term: string,
         args: ChvITk[][],
         realTokenAsBasis: ChvITk
     ) {
         if (term.startsWith('%ARG')) {
-            checkThrowEq('%', term[term.length - 1], '')
+            checkThrowEq('%', term[term.length - 1], '');
             let sn = term.replace(/%ARG/g, '').replace(/%/g, '');
             let n = Util512.parseIntStrict(sn);
             checkThrow(
@@ -95,12 +94,12 @@ export class VpcSuperRewrite {
             );
             Util512.extendArray(last(ret), args[n]);
         } else {
-            let newToken = VpcSuperRewrite.tokenFromEnglishTerm(term, realTokenAsBasis);
+            let newToken = tokenFromEnglishTerm(term, realTokenAsBasis);
             last(ret).push(newToken);
         }
     }
 
-    static tokenFromEnglishTerm(term: string, realTokenAsBasis: ChvITk) {
+    export function tokenFromEnglishTerm(term: string, realTokenAsBasis: ChvITk) {
         let tktype = listOfAllWordLikeTokens[term];
         if (!tktype && term.startsWith('"') && term.endsWith('"')) {
             // we can make a simple string literal, not one that contains spaces though.
@@ -118,42 +117,56 @@ export class VpcSuperRewrite {
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tktype, term);
     }
 
-    static replaceEnglishTermTokenOnceWithEnglishTermToken(
+    export function replaceEnglishTermTokenOnceWithEnglishTermToken(
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
         term1: string,
         term2: string
     ) {
-        let tk1 = VpcSuperRewrite.tokenFromEnglishTerm(term1, realTokenAsBasis);
+        let tk1 = tokenFromEnglishTerm(term1, realTokenAsBasis);
         let index = line.findIndex(
             t => t.tokenType === tk1.tokenType && t.image === tk1.image
         );
         if (index !== -1) {
-            let tk2 = VpcSuperRewrite.tokenFromEnglishTerm(term2, line[index]);
+            let tk2 = tokenFromEnglishTerm(term2, line[index]);
             line[index] = tk2;
             return true;
         }
         return false;
     }
 
-    static searchTokenGivenEnglishTerm(
+    export function replaceWithSyntaxMarkerAtLvl0(line: ChvITk[],
+        realTokenAsBasis: ChvITk,
+        term: string,
+        syntaxMarkerType='') {
+            let index = searchTokenGivenEnglishTermInParensLevel(0, line, realTokenAsBasis, term)
+            if (index === -1) {
+                return false
+            } else {
+                let marker = BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis, syntaxMarkerType)
+                line[index] = marker
+                return true
+            }
+        }
+
+        export function searchTokenGivenEnglishTerm(
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
         term: string
     ) {
-        let tk1 = VpcSuperRewrite.tokenFromEnglishTerm(term, realTokenAsBasis);
+        let tk1 = tokenFromEnglishTerm(term, realTokenAsBasis);
         return line.findIndex(
             t => t.tokenType === tk1.tokenType && t.image === tk1.image
         );
     }
 
-    static searchTokenGivenEnglishTermInParensLevel(
+    export function searchTokenGivenEnglishTermInParensLevel(
         wantedLevel: number,
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
         term: string
     ) {
-        let tk1 = VpcSuperRewrite.tokenFromEnglishTerm(term, realTokenAsBasis);
+        let tk1 = tokenFromEnglishTerm(term, realTokenAsBasis);
         let lvl = 0;
         for (let i = 0; i < line.length; i++) {
             let t = line[i];
@@ -172,9 +185,8 @@ export class VpcSuperRewrite {
         return -1;
     }
 
-    static generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
-        VpcSuperRewrite.CounterForUniqueNames += 1;
-        let image = '$unique_' + prefix + VpcSuperRewrite.CounterForUniqueNames;
+    export function generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
+        let image = '$unique_' + prefix + VpcSuperRewrite.CounterForUniqueNames.nextAsStr();
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tks.tkIdentifier, image);
     }
 }

@@ -491,6 +491,14 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
+
+        RuleInternalCmdRequestEval(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
+        RuleInternalCmdUserHandler(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
         /* generated code, any changes above this point will be lost: --------------- */
     }
 

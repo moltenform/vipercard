@@ -121,15 +121,16 @@ def addToListOfReservedWords(st, out, tokens):
         out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{v.split(' ')[0].lower()}'] = true;")
     out.append('')
     
-    out.append('export function couldTokenTypeBeAVariableName(t: ChvIToken) {')
+    out.append('export function couldTokenTypeBeAVariableName(t: chevrotain.IToken) {')
     for rule in st.rules:
         if rule.name == 'HAnyAllowedVariableName':
             s = 'return '
-            for item in re.split(rule.defn, r'\s+'):
+            for item in re.split(r'\s+', rule.val):
                 if item != '{' and item != '|' and item != '}' and item:
                     s += f't.tokenType === tks.{item} ||'
             s = s[0:-2]
             out.append(s)
+    out.append('}')
     out.append('')
     
 

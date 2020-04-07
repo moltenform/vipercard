@@ -1,12 +1,12 @@
 
-/* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, isTkType, listOfAllWordLikeTokens, tks, ChvITkType } from './../codeparse/vpcTokens';
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, last, checkThrowEq } from './../../ui512/utils/util512';
-import { VpcSuperRewrite } from './vpcPreparseCommon';
+/* auto */ import { BuildFakeTokens, ChvITk, couldTokenTypeBeAVariableName, tks } from './../codeparse/vpcTokens';
+/* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
+/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
-export class VpcRewritesLoops {
-    public static Go(line: ChvITk[]): ChvITk[][] {
+
+export namespace VpcRewritesLoops {
+    export function Go(line: ChvITk[]): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         if (line.length === 1) {
             return [line];
@@ -18,9 +18,9 @@ export class VpcRewritesLoops {
             );
             return [line.slice(0, 1)];
         } else if (line[1].image === 'until' || line[1].image === 'while') {
-            return VpcRewritesLoops.goUntilWhile(line);
+            return goUntilWhile(line);
         } else if (line[1].image === 'with') {
-            return VpcRewritesLoops.goWith(line);
+            return goWith(line);
         } else {
             let times = VpcSuperRewrite.tokenFromEnglishTerm('times', line[0]);
             if (
@@ -31,14 +31,12 @@ export class VpcRewritesLoops {
             }
 
             let loopVar = VpcSuperRewrite.generateUniqueVariable(line[0], '$repeatTimes');
-            let firstExpr = [
-                BuildFakeTokens.inst.makeTk(line[0], tks.tkNumLiteral, '1')
-            ];
+            let firstExpr = [BuildFakeTokens.inst.makeTk(line[0], tks.tkNumLiteral, '1')];
             let secondExpr = line.slice(1);
             return this.goWithImpl(firstExpr, secondExpr, loopVar, false);
         }
     }
-    private static goUntilWhile(line: ChvITk[]): ChvITk[][] {
+    function goUntilWhile(line: ChvITk[]): ChvITk[][] {
         let template = `
 repeat
     if %NOT% %ARG0% then
@@ -54,7 +52,7 @@ end repeat`;
         let conditionExpression = line.slice(2);
         return VpcSuperRewrite.go(template, line[0], [conditionExpression]);
     }
-    private static goWith(line: ChvITk[]): ChvITk[][] {
+    function goWith(line: ChvITk[]): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         checkThrowEq('with', line[1].image, '');
         checkThrow(couldTokenTypeBeAVariableName(line[2]), '');
@@ -75,9 +73,9 @@ end repeat`;
         }
         let firstExpr = line.slice(startFirstExpr, endFirstExpr);
         let secondExpr = line.slice(findTo + 1);
-        return VpcRewritesLoops.goWithImpl(firstExpr, secondExpr, line[2], isDown);
+        return goWithImpl(firstExpr, secondExpr, line[2], isDown);
     }
-    private static goWithImpl(
+    function goWithImpl(
         firstExpr: ChvITk[],
         secondExpr: ChvITk[],
         loopVar: ChvITk,

@@ -14,23 +14,23 @@
 // addition. supports customfns
 BuiltinCmdAdd:=... <Lvl1Expression> _to <HContainer>                                                             
 // show dialog. software rewrite "with" to tkSyntaxPlaceholder. it's a Lvl6Expression not an Expr so that Or works
-// during softwar rewrite, check for "answer file" and "answer program" and show NYI
+// during software rewrite, check for "answer file" and "answer program" and show NYI
 BuiltinCmdAnswer:=... <Expr> [tkSyntaxPlaceholder <Lvl6Expression> [ _or <Lvl6Expression> [ _or <Lvl6Expression>]]]                 
-// simply sends an arrow key message. if not handled, goes to next cd etc.
+// simply sends an arrow key message. if not handled, goes to next cd etc. left and right are constants, so you can say `arrowkey left`
 BuiltinCmdArrowkey:=... tkIdentifier
-// show dialog. software rewrite "with" to tkSyntaxPlaceholder and "ask password" to "answer ," and "ask file" to NYI
+// show dialog. software rewrite `with` to tkSyntaxPlaceholder and `ask password` to `ask ," and `ask file` to NYI
 // original product lets you omit quotes ask "g" with why is this happening but I don't think i will
 BuiltinCmdAsk:=... [tkComma] <Expr> [tkSyntaxPlaceholder <Expr>]                                            
 // play beep sound.
 BuiltinCmdBeep:=... [<Expr>]
-// choose tool. the text form "choose brush tool" is done in software
+// choose tool. rewrite will turn `choose brush tool` into `choose tool "brush"`
 // in vipercard this only changes the tool for script running-simulated drawing purposes
-BuiltinCmdChoose:=... tkIdentifier [<Expr>]
+BuiltinCmdChoose:=... tkSyntaxPlaceholder <Expr>
 // simulate click. software rewrite "with" to tkSyntaxPlaceholder. supports click at x if x contains coords.
 BuiltinCmdClick:=... tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
 // close. show NYI in rewrite
 // commandKeyDown, a way to simulate a keypress like Cmd+A. show NYI in rewrite
-// controlkey: software rewrites to `send "controlkey" && <expr> to this cd`
+// controlkey: goes up through message hierarchy, handled by vipercardstdlib
 // convert. changes date/time formats show NYI in rewrite
 // copy. show NYI in rewrite
 // create.  show NYI in rewrite. say domenu "new button" to create a button etc.
@@ -50,23 +50,24 @@ BuiltinCmdDivide:=... <Lvl1Expression> tkIdentifier <HContainer>
 BuiltinCmdDoMenu:=... <Expr> [tkComma <Expr>]       
 // drag, simulate mouse drag
 // in rewrite syntax from "with" to tkSyntaxPlaceholder
-// BuiltinCmdDo handled separately (turned into send x to me)
+// do. in rewrite, turned into send x to me
 BuiltinCmdDrag:=... tkIdentifier MANYSEP{{ _to / <BuiltinCmdDrag_1> }}ENDMANYSEP [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]   
 HBuiltinCmdDrag_1:=<Lvl4Expression> [tkComma <Lvl4Expression>]                      --->BuildMap
 // edit. show NYI in rewrite
 // enable a button. in rewrite error on mention of "menu"
 BuiltinCmdEnable:=... <ObjectBtn>                
-// enterInField. sent up the message hierarchy, usually does nothing. takes no args
-// enterKey. sent up the message hierarchy, usually does nothing. takes no args
+// enterInField. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
+// enterKey. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // export. show NYI in rewrite
 // find. show NYI in rewrite
-// functionkey: software rewrites to `send "functionkey" && <expr> to this cd`
+// functionkey: sent up the message hierarchy, usually does nothing, handled by vipercardstdlib.
 // software rewrites "Get" to "Put"...into it
 // BuiltinCmdGet:=... <Expr>            
 BuiltinCmdInternalVpcGoCardImpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <HOrdinal> | <HPosition> }   
 // always goes to the first card that's there, e.g. go to bg 2 == go to cd 1 of bg 2
+// note that `back` and `forth` are keywords so they don't need special handling
 HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->Custom--->RequestedVelRef
-// why not use the parser for this...
+// let's use the the parser for this, why not?
 BuiltinCmdLikeGlobal:=... MANYSEP{{ tkComma / <AnyVariableName> }}ENDMANYSEP           
 // help. show NYI in rewrite
 // hide. in rewrite error on mention of "menu"
@@ -75,6 +76,7 @@ BuiltinCmdHide:=... <ObjectPart>
 // keydown. show NYI in rewrite
 // lock. parse it in software.
 // mark. other parsing done in software
+// not supported yet but I'll leave this syntax here
 BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCd> | tkComma <Expr> <Of> <ObjectFld> }
 // multiply. the tkIdentifier is "by"
 BuiltinCmdMultiply:=... <Lvl1Expression> tkIdentifier <HContainer>                                                             
@@ -106,8 +108,8 @@ BuiltinCmdSet:=... [_the] <AnyPropertyName> [ tkOfOnly { <HChunk> <ObjectFld> | 
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
 // tkSyntaxPlaceholder means "show object", tkComma means "show x cards"
 BuiltinCmdShow:=... { tkSyntaxPlaceholder <ObjectPart> [tkIdentifier] tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] | tkComma <Lvl4Expression> tkIdentifier }                                        
-// we'll build an actual sort in software. tkStringLiteral1 is "numeric/alphabetic" tkStringLiteral2 is ",\n" etc
-BuiltinCmdSortInternal:=... tkStringLiteral tkStringLiteral <AnyVariableName>
+// we'll build an actual sort in software. tkStringLiteral1 is "items|lines" tkStringLiteral2 is "numeric|alphabetic" tkStringLiteral3 is "ascending|descending"
+BuiltinCmdInternalVpcSort:=... tkStringLiteral tkStringLiteral tkStringLiteral <AnyVariableName>
 // start using, currently a no-op
 BuiltinCmdStart:=... tkIdentifier <ObjectStack>
 // stop using, currently a no-op
@@ -116,15 +118,16 @@ BuiltinCmdStop:=... tkIdentifier <ObjectStack>
 BuiltinCmdSubtract:=... <Lvl1Expression> tkSyntaxPlaceholder <HContainer>      
 // tabkey. sent up the message hierarchy, usually goes from one field to the next. takes no args
 // type. set NYI in software
-// unlock. parse it in software.
+// unlock.
+BuiltinCmdInternalVpcUnlock:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
 // unmark, rewrite it to "mark", "_not"
 // visual effect, parse it in software. the visual effect seems to last until the end of the scope
-// wait supports  second,seconds,milliseconds,ms,ticks
-// defaults to a tick, which is 60th of second
+BuiltinCmdInternalVisualEffect:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
+// wait supports  second,seconds,milliseconds,ms,ticks. defaults to a tick, which is 60th of second
 // or "wait until/while" which we should just expand into a while loop
-BuiltinCmdWait:=... <Expr> [tkIdentifier]
+BuiltinCmdWait:=... <Expr> [tkStringLiteral]
 // write. set NYI in software
-InternalCmdRequestEval:=tkIdentifier <Expr>             --->BuildMap
-InternalCmdUserHandler:=tkIdentifier <Expr>             --->BuildMap
+InternalCmdRequestEval:=tkSyntaxPlaceholder tkSyntaxPlaceholder tkIdentifier <Expr>             --->BuildMap
+InternalCmdUserHandler:=tkSyntaxPlaceholder tkSyntaxPlaceholder tkIdentifier <Expr>             --->BuildMap
 
 

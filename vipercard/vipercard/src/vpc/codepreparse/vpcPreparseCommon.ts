@@ -1,8 +1,8 @@
 
-/* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, isTkType, listOfAllWordLikeTokens, tks } from './../codeparse/vpcTokens';
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, last } from './../../ui512/utils/util512';
+/* auto */ import { CodeLimits } from './../vpcutils/vpcUtils';
+/* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { O, assertTrue, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /**
  * make every symbol lowercase, because the language is case insensitive
@@ -23,7 +23,6 @@ export class SplitIntoLinesProducer {
     index = 0;
     constructor(
         protected instream: ChvITk[],
-        protected idGen: CountNumericId,
         protected makeLower: MakeLowerCase
     ) {}
 
@@ -105,8 +104,9 @@ export class LoopLimit {
     next() {
         this.count--;
         if (this.count < 0) {
-            throw makeVpcScriptErr(`5n|Unfortunately, we need to have limitations on scripts, in order to prevent denial of service.
-                for ${this.msg}, the limit is ${this.maxcount}`);
+            throw makeVpcScriptErr(longstr(`5n|Unfortunately, we need to have 
+            limitations on scripts, in order to prevent denial of service.
+                for ${this.msg}, the limit is ${this.maxcount}`));
         }
 
         return true;
@@ -181,7 +181,6 @@ export class VpcCodeLine {
         }
     }
 }
-
 
 /**
  * a weak reference to a line of code

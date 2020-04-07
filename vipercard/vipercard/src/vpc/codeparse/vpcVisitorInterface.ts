@@ -98,6 +98,8 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdStop(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdSubtract(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleInternalCmdRequestEval(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleInternalCmdUserHandler(ctx: VisitingContext): IntermedMapOfIntermedVals;
 }
 
 export interface VisitingContext {
@@ -186,6 +188,8 @@ export interface VisitingContext {
     RuleBuiltinCmdStop: any[];
     RuleBuiltinCmdSubtract: any[];
     RuleBuiltinCmdWait: any[];
+    RuleInternalCmdRequestEval: any[];
+    RuleInternalCmdUserHandler: any[];
     tkStringLiteral: ChvITk[];
     tkBlockComment: ChvITk[];
     tkLineComment: ChvITk[];

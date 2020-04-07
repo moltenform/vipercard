@@ -40,6 +40,13 @@ export class BuildFakeTokens {
     }
 
     /**
+     * make a string literal
+     */
+    makeStringLiteral(basis: chevrotain.IToken, unquoted: string) {
+        return this.makeTk(basis, tks.tkStringLiteral, '"' + unquoted + '"')
+    }
+
+    /**
      * implementation
      */
     makeTk(basis: chevrotain.IToken, type: chevrotain.TokenType, image: string) {
@@ -908,6 +915,16 @@ listOfAllBuiltinCommandsInOriginalProduct['unmark'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['visual'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['wait'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['write'] = true;
+
+export function couldTokenTypeBeAVariableName(t: chevrotain.IToken) {
+    return (
+        t.tokenType === tks.tkIdentifier ||
+        t.tokenType === tks._number ||
+        t.tokenType === tks.tkA ||
+        t.tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||
+        t.tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready
+    );
+}
 /* generated code, any changes above this point will be lost: --------------- */
 
 Object.freeze(alsoReservedWordsList);
