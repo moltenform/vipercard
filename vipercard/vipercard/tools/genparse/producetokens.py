@@ -6,9 +6,6 @@ def goTokensDefnOne(st):
     out = []
     out.append('')
     
-    # add to list of alsoReservedWordsList
-    addToListOfReservedWords(out, st.tokens)
-    
     # the map, and the creation
     out.append('export const tks = {')
     for tk in st.tokens:
@@ -29,6 +26,9 @@ def goTokensDefnOne(st):
     out.append(f']')
     out.append('')
     out.append('')
+    
+    # add to list of alsoReservedWordsList
+    addToListOfReservedWords(st, out, st.tokens)
     
     return out
 
@@ -70,8 +70,12 @@ def getPatternFromTk(tk):
     theRe += 'i' # everything is case insensitive
     return theRe
 
-def getListOfWordLikeTokens(tokens):
+def getListOfWordLikeTokens(tokens, includeLongListOfPropertyNames):
+    skipped = 0
     for tk in tokens:
+        if not includeLongListOfPropertyNames and (tk.name == 'tkAllUnaryPropertiesIfNotAlready' or tk.name == 'tkAllNullaryOrUnaryPropertiesIfNotAlready'):
+            skipped += 1
+            continue
         if tk.type == 'OneOfWords':
             for v in tk.val:
                 if v != v.lower():
@@ -82,9 +86,9 @@ def getListOfWordLikeTokens(tokens):
                     isPlural = v[-2]
                     v = v[0:-2]
                 assertTrue(v.isalnum(), "does not look like a word? we don't really yet support regex in OneOfWords", tk.origLine)
-                yield v
                 if isPlural:
-                    yield v + isPlural
+                    yield (v + isPlural, tk)
+                yield (v, tk)
         elif tk.type == 'OneOfOr':
             for v in tk.val:
                 if v.isalnum():
@@ -94,23 +98,47 @@ def getListOfWordLikeTokens(tokens):
                 warn(f'this looks like a word, maybe use OneOfWords and not regex?', tk.val, tk.origLine)
         else:
             assertTrue('unknown type', tk.type)
+    if not includeLongListOfPropertyNames:
+        assertEq(2, skipped, 'expected to skip two, were these renamed?')
+
+def addToListOfReservedWords(st, out, tokens):
+    out.append('')
+    out.append('')
+    for v, tk in getListOfWordLikeTokens(tokens, False):
+        out.append(f"alsoReservedWordsList['{v.lower()}'] = true;")
+    out.append('')
+    out.append('')
     
-
-def addToListOfReservedWords(out, tokens):
+    out.append('export const listOfAllWordLikeTokens:{ [key: string]: chevrotain.TokenType } = { }')
+    for v, tk in getListOfWordLikeTokens(tokens, True):
+        out.append(f"listOfAllWordLikeTokens['{v.lower()}'] = tks.{tk.name};")
     out.append('')
     out.append('')
-    for v in getListOfWordLikeTokens(tokens):
-        out.append(f"alsoReservedWordsList['{v}'] = true;")
+    
+    out.append('export const listOfAllBuiltinCommandsInOriginalProduct:{ [key: string]: boolean } = { }')
     out.append('')
+    for v in st.listCommands:
+        out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{v.split(' ')[0].lower()}'] = true;")
     out.append('')
-
+    
+    out.append('export function couldTokenTypeBeAVariableName(t: ChvIToken) {')
+    for rule in st.rules:
+        if rule.name == 'HAnyAllowedVariableName':
+            s = 'return '
+            for item in re.split(rule.defn, r'\s+'):
+                if item != '{' and item != '|' and item != '}' and item:
+                    s += f't.tokenType === tks.{item} ||'
+            s = s[0:-2]
+            out.append(s)
+    out.append('')
+    
 
 def writePropertiesListIntoGrammar(infiles):
     # a first pass without our generated ones
     tempst = readGrammarFiles(infiles, skipGenerated=True)
     tempst.listPropertiesUnary = tempst.listProperties
     alreadyAToken = {}
-    for wordLikeToken in getListOfWordLikeTokens(tempst.tokens):
+    for wordLikeToken, tk in getListOfWordLikeTokens(tempst.tokens, True):
         alreadyAToken[wordLikeToken] = True
         
     s = ''

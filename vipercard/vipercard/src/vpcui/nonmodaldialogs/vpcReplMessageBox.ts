@@ -3,6 +3,7 @@
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { O, cleanExceptionMsg } from './../../ui512/utils/util512Assert';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
@@ -16,7 +17,7 @@
 /* auto */ import { TextFontSpec, TextFontStyling } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { PalBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
-/* auto */ import { CheckReservedWords, VpcExecFrame } from './../../vpc/codeexec/placeholder__codeexec';
+/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * a "message box" where you can type in code and evaluate it

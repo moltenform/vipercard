@@ -11,12 +11,6 @@ export class VpcExecTop {
 
 export class VpcExecFrameStack {}
 
-export class CheckReservedWords {
-    okLocalVar(...args: any[]) {
-        return true;
-    }
-}
-
 export class VpcExecFrame {
     static filterTemporaryFromScript(script: string) {
         return script;

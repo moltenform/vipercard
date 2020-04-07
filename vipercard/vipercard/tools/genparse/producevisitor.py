@@ -17,7 +17,7 @@ def goForVisitorInterface(st):
     for rule in st.rules:
         out.append(f'    Rule{rule.name}: any[];')
     for tk in st.tokens:
-        out.append(f'    {tk.name}: chevrotain.IToken[];')
+        out.append(f'    {tk.name}: ChvITk[];')
     out.append('}')
     out.append('')
     out.append('')

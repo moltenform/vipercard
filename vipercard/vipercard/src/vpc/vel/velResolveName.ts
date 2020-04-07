@@ -404,10 +404,11 @@ export class VelResolveReference {
                 let arr = parentBg.parts.filter(vel => vel.getType() === ref.type);
                 retBtnOrFld = arr[ref.lookByAbsolute - 1];
             } else if (ref.lookByName !== undefined) {
-                /* put the name of cd btn "myBtn" into x */
+                /* put the name of bg btn "myBtn" into x */
                 retBtnOrFld = parentBg.parts.find(
                     vel =>
-                        vel.getType() === ref.type && vel.getS('name') === ref.lookByName
+                        vel.getType() === ref.type &&
+                        vel.getS('name').toLowerCase() === ref.lookByName?.toLowerCase()
                 );
             } else {
                 checkThrow(false, 'J(|unknown object reference');
@@ -421,7 +422,8 @@ export class VelResolveReference {
                 /* put the name of cd btn "myBtn" into x */
                 retBtnOrFld = parentCd.parts.find(
                     vel =>
-                        vel.getType() === ref.type && vel.getS('name') === ref.lookByName
+                        vel.getType() === ref.type &&
+                        vel.getS('name').toLowerCase() === ref.lookByName?.toLowerCase()
                 );
             } else {
                 checkThrow(false, 'J(|unknown object reference');
@@ -455,7 +457,10 @@ export class VelResolveReference {
                 retCard = arr[ref.lookByAbsolute - 1];
             } else if (ref.lookByName !== undefined) {
                 /* put the name of card "myCard" of bg "myBg" into x */
-                retCard = arr.find(vel => vel.getS('name') === ref.lookByName);
+                retCard = arr.find(
+                    vel =>
+                        vel.getS('name').toLowerCase() === ref.lookByName?.toLowerCase()
+                );
             } else if (ref.lookByRelative !== undefined) {
                 /* put the name of next card of bg "myBg" into x */
                 let currentPos = arr.findIndex(vel => vel.id === currentCard.id);
@@ -543,7 +548,9 @@ export class VelResolveReference {
             retBg = arr[ref.lookByAbsolute - 1];
         } else if (ref.lookByName !== undefined) {
             /* put the name of bkgnd "myBg" into x */
-            retBg = arr.find(vel => vel.getS('name') === ref.lookByName);
+            retBg = arr.find(
+                vel => vel.getS('name').toLowerCase() === ref.lookByName?.toLowerCase()
+            );
         } else if (ref.lookByRelative !== undefined) {
             /* put the name of next bkgnd into x */
             let currentCard = this.model.getCurrentCard();

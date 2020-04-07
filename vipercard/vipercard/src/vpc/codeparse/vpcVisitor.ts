@@ -3,7 +3,7 @@
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal } from './../vpcutils/vpcVal';
-/* auto */ import { allVpcTokens } from './vpcTokens';
+/* auto */ import { ChvITk, allVpcTokens } from './vpcTokens';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcChvParser } from './vpcParser';
 /* auto */ import { VpcOpCtg } from './../vpcutils/vpcEnums';
@@ -84,7 +84,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
         /* generated code, any changes past this point will be lost: --------------- */
 
-        RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): chevrotain.IToken {
+        RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): ChvITk {
             if (ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
                 return ctx.tkAllUnaryPropertiesIfNotAlready[0];
             } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
@@ -100,7 +100,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
         }
 
-        RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): chevrotain.IToken {
+        RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): ChvITk {
             if (ctx.RuleHAnyFnName[0]) {
                 return this.visit(ctx.RuleHAnyFnName[0]);
             } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
@@ -110,7 +110,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
         }
 
-        RuleHAnyFnName(ctx: VisitingContext): chevrotain.IToken {
+        RuleHAnyFnName(ctx: VisitingContext): ChvITk {
             if (ctx.tkIdentifier[0]) {
                 return ctx.tkIdentifier[0];
             } else if (ctx._windows[0]) {
@@ -120,7 +120,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
         }
 
-        RuleHAnyAllowedVariableName(ctx: VisitingContext): chevrotain.IToken {
+        RuleHAnyAllowedVariableName(ctx: VisitingContext): ChvITk {
             if (ctx.tkIdentifier[0]) {
                 return ctx.tkIdentifier[0];
             } else if (ctx._number[0]) {
@@ -154,7 +154,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
         }
 
-        RuleOf(ctx: VisitingContext): chevrotain.IToken {
+        RuleOf(ctx: VisitingContext): ChvITk {
             if (ctx.tkOfOnly[0]) {
                 return ctx.tkOfOnly[0];
             } else if (ctx.tkInOnly[0]) {

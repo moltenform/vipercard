@@ -5,6 +5,7 @@
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VelResolveId, VelResolveName, VelResolveReference } from './../../vpc/vel/velResolveName';
@@ -20,7 +21,7 @@
 /* auto */ import { Util512, ValHolder, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
-/* auto */ import { CheckReservedWords, VpcExecFrame, VpcExecFrameStack } from './../../vpc/codeexec/placeholder__codeexec';
+/* auto */ import { VpcExecFrame, VpcExecFrameStack } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * OutsideWorldReadWrite

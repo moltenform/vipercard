@@ -57,6 +57,7 @@
 //      put sin of 4 into x is now supported, and even the sin of cd fld 1
 //      continued lines can use logical not / cool os roman symbols
 //      put "a" into fld 1 and put "a" into bg fld 1 both work
+//      cd btn "abc" is now case insensitive
 
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )

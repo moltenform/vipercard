@@ -91,7 +91,7 @@ def processRule(result, line):
     if ret.ruleVisitorOpts and ret.ruleVisitorOpts[0] == 'BuildMap':
         ruleVisitorReturnType = 'IntermedMapOfIntermedVals'
     if ruleVisitorReturnType == 'IToken':
-        ruleVisitorReturnType = 'chevrotain.IToken'
+        ruleVisitorReturnType = 'ChvITk'
     if not ruleVisitorReturnType:
         ruleVisitorReturnType = 'string | VpcIntermedValBase'
     ret.ruleVisitorReturnType = ruleVisitorReturnType

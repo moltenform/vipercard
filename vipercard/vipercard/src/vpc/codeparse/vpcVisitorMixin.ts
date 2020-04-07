@@ -46,7 +46,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return evaledVpc;
         }
 
-        helper$SetByNumberOrName(ret: RequestedVelRef, ctx: VisitingContext, subrule: string) {
+        Helper$SetByNumberOrName(ret: RequestedVelRef, ctx: VisitingContext, subrule: string) {
             let val = this.Helper$ReadVpcVal(ctx, subrule, '');
             if (val.isItNumeric()) {
                 ret.lookByAbsolute = val.readAsStrictNumeric(this.tmpArr);
@@ -59,6 +59,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = new RequestedVelRef(VpcElType.Btn);
             return this.help$ObjBtnOrFld(ctx, 'tkBtn', ret);
         }
+
         RuleObjectFld(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Fld);
             return this.help$ObjBtnOrFld(ctx, 'tkFld', ret);
@@ -71,6 +72,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.parentCdInfo = new RequestedVelRef(VpcElType.Card);
                 ret.parentCdInfo.lookByRelative = OrdinalOrPosition.This;
             }
+
             let isBg = tokenName === 'tkFld';
             if (ctx.tkBg[0]) {
                 isBg = true;
@@ -87,7 +89,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
             } else {
-                this.helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
             }
 
             return ret;
@@ -107,7 +109,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else {
-                this.helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
             }
             return ret;
         }
@@ -135,7 +137,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else {
-                this.helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
             }
             return ret;
         }
@@ -149,7 +151,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else {
-                this.helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
             }
 
             checkThrow(
@@ -200,7 +202,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             --- you have to use the presence of <sub2> or <sub3> to know which branch was taken. ---
             the rule results are pushed onto the array just from left to right as they come, they have no position information.
         */
-
         RuleOrdinal(ctx: VisitingContext): OrdinalOrPosition {
             let image = ctx.tkOrdinal[0].image;
             let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RuleOrdinal', image);
