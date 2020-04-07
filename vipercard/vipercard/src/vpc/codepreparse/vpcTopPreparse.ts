@@ -1,20 +1,13 @@
 
 /* auto */ import { ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcRewritesLoops } from './vpcRewritesLoops';
-/* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
+/* auto */ import { VpcRewritesGlobal, VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { ExpandCustomFunctions } from './vpcRewritesCustomFunctions';
 /* auto */ import { VpcRewritesConditions, VpcRewritesConditionsNoElseIfClauses } from './vpcRewritesConditions';
+/* auto */ import { VpcRewriteForCommands } from './vpcRewritesCommands';
 /* auto */ import { MakeLowerCase, SplitIntoLinesProducer } from './vpcPreparseCommon';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
-
-import { SplitIntoLinesProducer, MakeLowerCase } from './vpcPreparseCommon';
-import { VpcRewritesConditionsNoElseIfClauses, VpcRewritesConditions } from './vpcRewritesConditions';
-import { VpcRewritesLoops } from './vpcRewritesLoops';
-import { ExpandCustomFunctions } from './vpcRewritesCustomFunctions';
-import { CountNumericIdNormal } from '../vpcutils/vpcUtils';
-import { CheckReservedWords } from './vpcCheckReserved';
-
 
 export namespace TopPreparse {
     function goAllLowerRewrites(lexed: ChvITk[]) {
@@ -26,6 +19,8 @@ export namespace TopPreparse {
             lines.push(next)
         }
 
+        // get rid of else-if clauses, they don't support custom function calls
+        // and make our branch-processing code a little more complex
         lines = VpcRewritesConditionsNoElseIfClauses.goNoElseIfClauses(lines)
         let nextLines:ChvITk[][] = []
         for (let line of lines) {
@@ -38,20 +33,29 @@ export namespace TopPreparse {
             }
         }
 
-        // commands
+        // global transforms and commands
+        let rewrites = new VpcRewriteForCommands()
         lines = nextLines
         nextLines = []
         for (let line of lines) {
-             else {
+            line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line)
+            let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image)
+            let got = Util512.callAsMethodOnClass('VpcRewriteForCommands', rewrites, methodName, [line], true)
+            if (got) {
+                Util512.extendArray(nextLines, got)
+            } else {
                 nextLines.push(line)
             }
         }
 
+        // expand custom function calls
         lines = nextLines
         nextLines = []
         let exp = new ExpandCustomFunctions(VpcSuperRewrite.CounterForUniqueNames, new CheckReservedWords())
         for (let line of lines) {
             Util512.extendArray(nextLines, exp.go(line))
         }
+
+        return nextLines
     }
 }

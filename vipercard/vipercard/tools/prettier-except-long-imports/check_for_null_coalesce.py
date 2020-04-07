@@ -40,12 +40,6 @@ def shouldWarnThisLine(line):
                 if not withoutComments.startswith('checkThrow'):
                     return True
 
-def shouldWarnArraysThisLine(line):
-    # let ar = []; silently gives you an array of type any!
-    # warn you to provide an explicit type
-    if re.search(r' [a-zA-Z0-9]+ = \[\]', line):
-        return True
-
 def checkText(f, lines):
     assertTrue(isinstance(f, str))
     assertTrue(isinstance(lines, list))
@@ -59,10 +53,7 @@ def checkText(f, lines):
                 trace(f'please use ?? instead or put /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */')
                 trace(f'on the prior line to silence this warning')
                 warn('')
-        if shouldWarnArraysThisLine(line):
-            showWarningGccStyle(f, i+1, f'saw a statement like "let ar = [];" but we dissallow implicit any[] arrays')
-            trace(f'use "let ar:any = [];" if this was intended')
-            warn('')
+
 
 def tests():
     assertEq('abefij', simpleStripComments('ab/* cd */ef/* gh */ij'))
@@ -117,11 +108,5 @@ def tests():
     assertTrue(not shouldWarnThisLine('    a || bool(b);'))
     assertTrue(not shouldWarnThisLine('    bool(a) || bool(b);'))
     
-    assertTrue(shouldWarnArraysThisLine('let ar = [];'))
-    assertTrue(not shouldWarnArraysThisLine('let ar:mytype = [];'))
-    assertTrue(not shouldWarnArraysThisLine('let ar:number[] = [];'))
-    assertTrue(shouldWarnArraysThisLine(' ar = [];'))
-    assertTrue(not shouldWarnArraysThisLine(' ar:mytype = [];'))
-    assertTrue(not shouldWarnArraysThisLine(' ar:number[] = [];'))
 
 tests()

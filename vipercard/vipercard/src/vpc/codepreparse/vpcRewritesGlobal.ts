@@ -58,7 +58,8 @@ export namespace VpcSuperRewrite {
         s: string,
         realTokenAsBasis: ChvITk,
         args: ChvITk[][],
-        argMany?: ChvITk[][]
+        argMany?: ChvITk[][],
+        needsToBePostProcess = true
     ): ChvITk[][] {
         let ret: ChvITk[][] = [];
         s = s.trim();
@@ -71,7 +72,7 @@ export namespace VpcSuperRewrite {
                 let terms = line.split(/\s+/);
                 ret.push([]);
                 for (let term of terms) {
-                    addTerm(ret, term, args, realTokenAsBasis);
+                    addTerm(ret, term, args, realTokenAsBasis, needsToBePostProcess);
                 }
             }
         }
@@ -82,7 +83,8 @@ export namespace VpcSuperRewrite {
         ret: ChvITk[][],
         term: string,
         args: ChvITk[][],
-        realTokenAsBasis: ChvITk
+        realTokenAsBasis: ChvITk,
+        needsToBePostProcess: boolean
     ) {
         if (term.startsWith('%ARG')) {
             checkThrowEq('%', term[term.length - 1], '');
@@ -93,7 +95,13 @@ export namespace VpcSuperRewrite {
                 'internal error in template'
             );
             Util512.extendArray(last(ret), args[n]);
+        } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
+            last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
+            let newToken = tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
+            last(ret).push(newToken);
+            last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
         } else {
+            checkThrow(!needsToBePostProcess || (term !== 'into' && term !== 'before' && term !=='after'), "it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead.")
             let newToken = tokenFromEnglishTerm(term, realTokenAsBasis);
             last(ret).push(newToken);
         }

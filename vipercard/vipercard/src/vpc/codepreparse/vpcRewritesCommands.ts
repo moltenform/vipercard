@@ -8,15 +8,18 @@
 /* auto */ import { checkThrowEq, findStrToEnum, last } from './../../ui512/utils/util512';
 
 
-/*
-on internalShowNyiMessage msg
-    answer "ViperCard does not yet support the feature:" && msg with "Stop Script" or "Continue"
-    if msg == "Stop Script" then
-        exit to ViperCard
-    end if 
-end internalShowNyiMessage
-*/
-
+/**
+ * important:
+ * replacements must be in raw form!
+ * you shouldn't write
+ *      'put 3 into x'
+ * you should write
+ *      'put 3 %MARK% into %MARK% x'
+ * since that's what the put-rewriter would do.
+ * 
+ * we will do a final pass for custom functions,
+ * but everything else needs to be output in finished form here.
+ */
 export class VpcRewriteForCommands {
     rewriteAnswer(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, "not enough args")
@@ -106,7 +109,7 @@ export class VpcRewriteForCommands {
         return [this.hBuildNyi("the find command", line[0])]
     }
     rewriteGet(line: ChvITk[]): ChvITk[][] {
-        let template = `put ( %ARG0% ) into it`
+        let template = `put ( %ARG0% ) %INTO% it`
         return VpcSuperRewrite.go(template, line[0], [line.slice(1)])
     }
     rewriteGo(line: ChvITk[]): ChvITk[][] {
@@ -123,10 +126,10 @@ builtinInternalVpcGoCardImpl "closefield" c%UNIQUE%
 builtinInternalVpcGoCardImpl "closecard" c%UNIQUE%
 builtinInternalVpcGoCardImpl "closebackground" c%UNIQUE%
 if %ARG1% then
-    put 1 into internalvpcgocardimplsuspendhistory
+    put 1 %INTO% internalvpcgocardimplsuspendhistory
 end if
 builtinInternalVpcGoCardImpl "set" c%UNIQUE%
-put 0 into internalvpcgocardimplsuspendhistory
+put 0 %INTO% internalvpcgocardimplsuspendhistory
 builtinInternalVpcGoCardImpl "openbackground" c%UNIQUE%
 builtinInternalVpcGoCardImpl "opencard" c%UNIQUE%
 builtinInternalVpcGoCardImpl "setresult" c%UNIQUE%
@@ -173,7 +176,6 @@ builtinInternalVpcGoCardImpl "setresult" c%UNIQUE%
         } else {
             /* you can say `put 1+1` to add to the message box */
             foundPreposition = line.length
-            
             line.push(VpcSuperRewrite.tokenFromEnglishTerm('into', line[0]))
             line.push(VpcSuperRewrite.tokenFromEnglishTerm(LogToReplMsgBox.redirectThisVariableToMsgBox, line[0]))
         }
@@ -241,7 +243,7 @@ builtinInternalVpcGoCardImpl "setresult" c%UNIQUE%
             containerExpression = line.slice(lastOpt, foundBy)
         }
 
-        let template = `internalvpcsort "${sortOptions['granularity']}" "${sortOptions['method']}" "${sortOptions['order']}" %ARGS0%`
+        let template = `internalvpcsort "${sortOptions['granularity']}" "${sortOptions['method']}" "${sortOptions['order']}" %ARG0%`
         let cmd = VpcSuperRewrite.go(template, line[0], [containerExpression])
         if (!foundBy) {
             return cmd
@@ -254,27 +256,27 @@ builtinInternalVpcGoCardImpl "setresult" c%UNIQUE%
             let byExpr = line.slice(foundBy + 1)
             let internalDelim = '\x01\x01\x01vpcinternal\x01\x01\x01'
             let template = `
-put ( %ARG0% ) into content%UNIQUE%
+put ( %ARG0% ) %INTO% content%UNIQUE%
 if length ( content%UNIQUE% ) then
     if "${internalDelim}" is in content%UNIQUE% then
         cantSortTextByExpressionThatHasThis
     end if
-    put "" into container%UNIQUE%
+    put "" %INTO% container%UNIQUE%
     repeat with loop%UNIQUE% = 1 to the number of ${sortOptions['granularity']} of content%UNIQUE%
-        put ${sortOptions['granularity']} loop%UNIQUE% of content%UNIQUE% into each
-        put ( %ARG1% ) into sortkey%UNIQUE%
-        put sortkey%UNIQUE% && "${internalDelim}" && each & ${delimExpr} after container%UNIQUE%
+        put ${sortOptions['granularity']} loop%UNIQUE% of content%UNIQUE% %INTO% each
+        put ( %ARG1% ) %INTO% sortkey%UNIQUE%
+        put sortkey%UNIQUE% && "${internalDelim}" && each & ${delimExpr} %AFTER% container%UNIQUE%
     end repeat
-    put char 1 to (the length of container%UNIQUE% - the length of ${delimExpr}) of container%UNIQUE% into container%UNIQUE%
+    put char 1 to (the length of container%UNIQUE% - the length of ${delimExpr}) of container%UNIQUE% %INTO% container%UNIQUE%
     %ARG2%
-    put "" into result%UNIQUE%
+    put "" %INTO% result%UNIQUE%
     repeat with loop%UNIQUE% = 1 to the number of ${sortOptions['granularity']} of container%UNIQUE%
-        put ${sortOptions['granularity']} loop%UNIQUE% of container%UNIQUE% into each
-        put char ( offset ( "${internalDelim}" , each ) + ${internalDelim.length} ) to ( the length of each ) of each into each
-        put each & ${delimExpr} after result%UNIQUE%
+        put ${sortOptions['granularity']} loop%UNIQUE% of container%UNIQUE% %INTO% each
+        put char ( offset ( "${internalDelim}" , each ) + ${internalDelim.length} ) to ( the length of each ) of each %INTO% each
+        put each & ${delimExpr} %AFTER% result%UNIQUE%
     end repeat
-    put char 1 to (the length of result%UNIQUE% - the length of ${delimExpr}) of result%UNIQUE% into result%UNIQUE%
-    put result%UNIQUE% into %ARG0%
+    put char 1 to (the length of result%UNIQUE% - the length of ${delimExpr}) of result%UNIQUE% %INTO% result%UNIQUE%
+    put result%UNIQUE% %INTO% %ARG0%
 end if`
             return VpcSuperRewrite.go(template, line[0], [containerExpression, byExpr, cmd[0]])
         }
@@ -321,7 +323,7 @@ repeat
     if ${isNegated} ( %ARG0% ) then
         exit repeat
     end if
-    wait 100 ms
+    wait 100 "ms"
 end repeat`
             return VpcSuperRewrite.go(template, line[0], [line.slice(2)])
         } else {
@@ -333,7 +335,6 @@ end repeat`
             return [line]
         }
     }
-
 
     hParseVisualEffect(line: ChvITk[], prefix:string) {
         let opts = new Map<string, string>()
@@ -371,6 +372,7 @@ end repeat`
         BuildFakeTokens.inst.makeStringLiteral(basis, msg)
         ]
     }
+
     hReturnNyiIfMenuMentionedOutsideParens(line: ChvITk[]):ChvITk[][] {
         let found = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'menu')
         if (found !== -1) {
@@ -379,8 +381,9 @@ end repeat`
             return [line]
         }
     }
+
     hReturnNoOp(line: ChvITk[]):ChvITk[][] {
-        let template = `put "no-op" into c%UNIQUE% `
+        let template = `put "no-op" %INTO% c%UNIQUE% `
         return VpcSuperRewrite.go(template, line[0], [])
     }
 }

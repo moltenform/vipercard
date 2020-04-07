@@ -6,6 +6,7 @@ from place_imports_one_line import *
 import check_for_null_coalesce
 import check_for_long_lines
 import check_tests_referenced
+import check_more
 import help_fix_long_lines
 
 doPlaceImportsOnOneLine = True
@@ -90,6 +91,7 @@ def doOperationsThatAskQuestions(srcdirectory, f, lines, prettierPath, prettierC
     check_tests_referenced.checkText(f, lines)
     check_for_null_coalesce.checkText(f, lines)
     check_for_long_lines.checkText(f, lines, prettierCfg)
+    check_more.checkText(f, lines)
 
 if __name__ == '__main__':
     dir = os.path.abspath('../../src')

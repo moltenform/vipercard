@@ -945,3 +945,4 @@ listOfAllWordLikeTokens['>='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['=='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['\n'] = tks.tkNewLine;
 listOfAllWordLikeTokens['%SYNPLACEHOLDER%'] = tks.tkSyntaxPlaceholder;
+listOfAllWordLikeTokens['%MARK%'] = tks.tkSyntaxPlaceholder;
