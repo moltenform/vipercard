@@ -4,7 +4,6 @@
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq, last } from './../../ui512/utils/util512';
 
-
 export class VpcRewritesGlobal {
     static rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
         let ret: ChvITk[] = [];
@@ -97,11 +96,18 @@ export namespace VpcSuperRewrite {
             Util512.extendArray(last(ret), args[n]);
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
             last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
-            let newToken = tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
+            let newToken = tokenFromEnglishTerm(
+                term.replace(/%/g, '').toLowerCase(),
+                realTokenAsBasis
+            );
             last(ret).push(newToken);
             last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
         } else {
-            checkThrow(!needsToBePostProcess || (term !== 'into' && term !== 'before' && term !=='after'), "it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead.")
+            checkThrow(
+                !needsToBePostProcess ||
+                    (term !== 'into' && term !== 'before' && term !== 'after'),
+                "it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead."
+            );
             let newToken = tokenFromEnglishTerm(term, realTokenAsBasis);
             last(ret).push(newToken);
         }
@@ -124,40 +130,34 @@ export namespace VpcSuperRewrite {
 
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tktype, term);
     }
-
-    export function replaceEnglishTermTokenOnceWithEnglishTermToken(
+    
+    export function replaceWithSyntaxMarkerAtLvl0(
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
-        term1: string,
-        term2: string
+        term: string,
+        mustExist: boolean,
+        syntaxMarkerType = ''
     ) {
-        let tk1 = tokenFromEnglishTerm(term1, realTokenAsBasis);
-        let index = line.findIndex(
-            t => t.tokenType === tk1.tokenType && t.image === tk1.image
+        let index = searchTokenGivenEnglishTermInParensLevel(
+            0,
+            line,
+            realTokenAsBasis,
+            term
         );
-        if (index !== -1) {
-            let tk2 = tokenFromEnglishTerm(term2, line[index]);
-            line[index] = tk2;
+        if (index === -1) {
+            checkThrow(!mustExist, `did not see ${term} in a ${line[0].image}`) 
+            return false;
+        } else {
+            let marker = BuildFakeTokens.inst.makeSyntaxMarker(
+                realTokenAsBasis,
+                syntaxMarkerType
+            );
+            line[index] = marker;
             return true;
         }
-        return false;
     }
 
-    export function replaceWithSyntaxMarkerAtLvl0(line: ChvITk[],
-        realTokenAsBasis: ChvITk,
-        term: string,
-        syntaxMarkerType='') {
-            let index = searchTokenGivenEnglishTermInParensLevel(0, line, realTokenAsBasis, term)
-            if (index === -1) {
-                return false
-            } else {
-                let marker = BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis, syntaxMarkerType)
-                line[index] = marker
-                return true
-            }
-        }
-
-        export function searchTokenGivenEnglishTerm(
+    export function searchTokenGivenEnglishTerm(
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
         term: string
@@ -194,7 +194,8 @@ export namespace VpcSuperRewrite {
     }
 
     export function generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
-        let image = '$unique_' + prefix + VpcSuperRewrite.CounterForUniqueNames.nextAsStr();
+        let image =
+            '$unique_' + prefix + VpcSuperRewrite.CounterForUniqueNames.nextAsStr();
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tks.tkIdentifier, image);
     }
 }

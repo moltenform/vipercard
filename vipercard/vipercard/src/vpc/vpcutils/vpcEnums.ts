@@ -221,7 +221,6 @@ export enum VpcVisualEffectTypeDestination {
     __AlternateForm__grey = gray
 }
 
-
 /**
  * a tool
  * you can use __first and __last to iterate all tools

@@ -47,7 +47,7 @@ BuiltinCmdDivide:=... <Lvl1Expression> tkIdentifier <HContainer>
 // and also support doMenu "New Card", "Object" like in the product
 // note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
 // in rewrite syntax say we don't support "without dialog" or "with keys"
-BuiltinCmdDoMenu:=... <Expr> [tkComma <Expr>]       
+BuiltinCmdDomenu:=... <Expr> [tkComma <Expr>]       
 // drag, simulate mouse drag
 // in rewrite syntax from "with" to tkSyntaxPlaceholder
 // do. in rewrite, turned into send x to me
@@ -63,12 +63,10 @@ BuiltinCmdEnable:=... <ObjectBtn>
 // functionkey: sent up the message hierarchy, usually does nothing, handled by vipercardstdlib.
 // software rewrites "Get" to "Put"...into it
 // BuiltinCmdGet:=... <Expr>            
-BuiltinCmdInternalVpcGoCardImpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <HOrdinal> | <HPosition> }   
+BuiltinCmdInternalvpcgocardimpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <HOrdinal> | <HPosition> }   
 // always goes to the first card that's there, e.g. go to bg 2 == go to cd 1 of bg 2
 // note that `back` and `forth` are keywords so they don't need special handling
-HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->Custom--->RequestedVelRef
-// let's use the the parser for this, why not?
-BuiltinCmdLikeGlobal:=... MANYSEP{{ tkComma / <AnyVariableName> }}ENDMANYSEP           
+HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->Custom--->RequestedVelRef           
 // help. show NYI in rewrite
 // hide. in rewrite error on mention of "menu"
 BuiltinCmdHide:=... <ObjectPart> 
@@ -94,6 +92,7 @@ BuiltinCmdPut:=... <Expr> tkSyntaxPlaceholder tkIdentifier tkSyntaxPlaceholder [
 // request. show NYI in rewrite
 // reset. reset paint | menubar | printing. reset paint might be useful, let's support that.
 BuiltinCmdReset:=... tkIdentifier
+BuiltinCmdReplace:=... <Expr> tkSyntaxPlaceholder <Expr> tkInOnly  <HSimpleContainer>
 // returnInField. sent up the message hierarchy, usually does nothing. takes no args
 // returnKey. sent up the message hierarchy, usually does nothing. takes no args
 // save. show NYI in rewrite
@@ -106,10 +105,10 @@ BuiltinCmdSend:=... <Expr> _to <Object>
 // setting a property
 BuiltinCmdSet:=... [_the] <AnyPropertyName> [ tkOfOnly { <HChunk> <ObjectFld> | <Object> } ] _to <AnyPropertyVal>    
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
-// tkSyntaxPlaceholder means "show object", tkComma means "show x cards"
-BuiltinCmdShow:=... { tkSyntaxPlaceholder <ObjectPart> [tkIdentifier] tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] | tkComma <Lvl4Expression> tkIdentifier }                                        
+// we don't yet support show all cards or show 6 cards
+BuiltinCmdShow:=...  <ObjectPart> tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>]                                        
 // we'll build an actual sort in software. tkStringLiteral1 is "items|lines" tkStringLiteral2 is "numeric|alphabetic" tkStringLiteral3 is "ascending|descending"
-BuiltinCmdInternalVpcSort:=... tkStringLiteral tkStringLiteral tkStringLiteral <AnyVariableName>
+BuiltinCmdInternalvpcsort:=... tkStringLiteral tkStringLiteral tkStringLiteral <AnyVariableName>
 // start using, currently a no-op
 BuiltinCmdStart:=... tkIdentifier <ObjectStack>
 // stop using, currently a no-op
@@ -119,15 +118,15 @@ BuiltinCmdSubtract:=... <Lvl1Expression> tkSyntaxPlaceholder <HContainer>
 // tabkey. sent up the message hierarchy, usually goes from one field to the next. takes no args
 // type. set NYI in software
 // unlock.
-BuiltinCmdInternalVpcUnlock:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
+BuiltinCmdUnlock:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
 // unmark, rewrite it to "mark", "_not"
 // visual effect, parse it in software. the visual effect seems to last until the end of the scope
-BuiltinCmdInternalVisualEffect:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
+BuiltinCmdVisual:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
 // wait supports  second,seconds,milliseconds,ms,ticks. defaults to a tick, which is 60th of second
+// we rewrite `wait for 2 ms` into `wait 2 "ms"`
 // or "wait until/while" which we should just expand into a while loop
 BuiltinCmdWait:=... <Expr> [tkStringLiteral]
 // write. set NYI in software
 InternalCmdRequestEval:=tkSyntaxPlaceholder tkSyntaxPlaceholder tkIdentifier <Expr>             --->BuildMap
 InternalCmdUserHandler:=tkSyntaxPlaceholder tkSyntaxPlaceholder tkIdentifier <Expr>             --->BuildMap
-
 

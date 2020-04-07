@@ -46,6 +46,7 @@
 //      you can use != instead of <>, you can use == instead of =
 //     you can't say put "a" into char 1 of the selection
 //      NEW FEATURE: drag from a,b to c,d to e,f
+//      NEW FEATURE: replace "a" with "b" in s
 
 // parse ok but aren't supported in software include:
 //      you can't say `part id 4`

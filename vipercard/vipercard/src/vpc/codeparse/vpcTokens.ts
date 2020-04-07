@@ -43,7 +43,7 @@ export class BuildFakeTokens {
      * make a string literal
      */
     makeStringLiteral(basis: chevrotain.IToken, unquoted: string) {
-        return this.makeTk(basis, tks.tkStringLiteral, '"' + unquoted + '"')
+        return this.makeTk(basis, tks.tkStringLiteral, '"' + unquoted + '"');
     }
 
     /**

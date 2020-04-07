@@ -202,8 +202,9 @@ export class Util512 {
         me: any,
         s: string,
         args: unknown[],
-        okIfNotExists: boolean
-    ) {
+        okIfNotExists: boolean,
+        returnIfNotExists = ''
+    ):unknown {
         checkThrowUI512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
             'K@|callAsMethodOnClass requires alphanumeric no spaces',
@@ -225,7 +226,7 @@ export class Util512 {
             /* eslint-disable-next-line ban/ban */
             return method.apply(me, args);
         } else if (okIfNotExists) {
-            return undefined;
+            return returnIfNotExists ? returnIfNotExists : undefined;
         } else {
             throw makeUI512Error(`4G|callAsMethodOnClass ${clsname} could not find ${s}`);
         }

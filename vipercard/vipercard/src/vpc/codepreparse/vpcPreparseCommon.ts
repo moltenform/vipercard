@@ -1,7 +1,7 @@
 
 /* auto */ import { CodeLimits } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
-/* auto */ import { O, assertTrue, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /**
@@ -21,10 +21,7 @@ export class MakeLowerCase {
  */
 export class SplitIntoLinesProducer {
     index = 0;
-    constructor(
-        protected instream: ChvITk[],
-        protected makeLower: MakeLowerCase
-    ) {}
+    constructor(protected instream: ChvITk[], protected makeLower: MakeLowerCase) {}
 
     nextWithNewlines(): O<ChvITk[]> {
         let currentLine: ChvITk[] = [];
@@ -82,12 +79,10 @@ export enum VpcLineCategory {
     RepeatExit,
     RepeatNext,
     RepeatForever,
-    RepeatUntil,
-    RepeatWhile,
     RepeatEnd,
     DeclareGlobal,
     Statement,
-    GoCardImpl,
+    // GoCardImpl,
     CallDynamic,
     CallHandler
 }
@@ -104,9 +99,11 @@ export class LoopLimit {
     next() {
         this.count--;
         if (this.count < 0) {
-            throw makeVpcScriptErr(longstr(`5n|Unfortunately, we need to have 
+            throw makeVpcScriptErr(
+                longstr(`5n|Unfortunately, we need to have
             limitations on scripts, in order to prevent denial of service.
-                for ${this.msg}, the limit is ${this.maxcount}`));
+                for ${this.msg}, the limit is ${this.maxcount}`)
+            );
         }
 
         return true;
@@ -203,4 +200,47 @@ export class VpcCodeLineReference {
 export enum CodeSymbols {
     RequestHandlerCall = '$requesthandlercall',
     RequestEval = '$requesteval'
+}
+
+/**
+ * some variable names can't be used because they are separate tokens in the lexer
+ * since a variable name must be a TkIdentifier token, if you tried to do this,
+ * you'd get a weird "syntax error" instead of just saying "you can't use this variable name"
+ *
+ * so let's do a few basic checks here to try to give you a better error message
+ */
+export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
+    checkThrow(
+        !tk || !isTkType(tk, tks.tkAdjective),
+        `8f|we don't support variables named "short", "long", etc`
+    );
+
+    checkThrow(
+        !tk || !isTkType(tk, tks._contains),
+        `Ji|we don't support variables named "contains"`
+    );
+    checkThrow(
+        !tk || !isTkType(tk, tks._within),
+        `8d|we don't support variables named "within"`
+    );
+    checkThrow(
+        !tk || !isTkType(tk, tks._to),
+        `8c|we don't support variables named "id"`
+    );
+    checkThrow(
+        !tk || !isTkType(tk, tks.tkOrdinal),
+        longstr(
+            `Jh|we don't support variables with names like
+            "first", "last", "second", "middle", "any"`,
+            ''
+        )
+    );
+    checkThrow(
+        !tk || !isTkType(tk, tks.tkChunkGranularity),
+        `Jg|we don't support variables with names like "char", "word", "item", "line"`
+    );
+    checkThrow(
+        !tk || !isTkType(tk, tks.tkMultDivideExpDivMod),
+        `Jf|we don't support variables with names like "div", "mod"`
+    );
 }

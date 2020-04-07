@@ -4,7 +4,6 @@
 /* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
-
 export namespace VpcRewritesLoops {
     export function Go(line: ChvITk[]): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');

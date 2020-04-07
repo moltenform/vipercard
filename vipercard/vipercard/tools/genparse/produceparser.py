@@ -8,6 +8,8 @@ def goForRules(st):
     for rule in st.rules:
         goForRule(out, rule)
     out.append("")
+    generateMapBuiltinCmds(out, st)
+    out.append("")
     return out
     
 def goForRule(out, rule):
@@ -210,8 +212,12 @@ def addNumerals(lines):
     addNumeralsIm(lines, 'MANY_SEP000', r'this\.MANY_SEP000\(')
     addNumeralsIm(lines, 'MANY000', r'this\.MANY000\(')
 
-
-
+def generateMapBuiltinCmds(out, st):
+    out.append('static mapBuiltinCmdNameToParserRule = {')
+    for rule in st.rules:
+        if rule.name.startswith('BuiltinCmd'):
+            out.append(f"{rule.name.replace('BuildinCmd', ''} : '{rule.name}',")
+    out.append('}')
    
 def writeIntoOutput(f, s):
     content = files.readall(f, encoding='utf-8')

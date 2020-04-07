@@ -155,7 +155,7 @@ export class VpcBuiltinFunctions {
                 method,
                 [args],
                 false
-            );
+            ) as VpcVal;
             assertTrue(ret.isVpcVal, '5m|did not return a vpcval');
             return ret;
         }
@@ -179,7 +179,7 @@ export class VpcBuiltinFunctions {
                 method,
                 [args, frameMsg, frameParams],
                 false
-            );
+            ) as VpcVal;
 
             assertTrue(ret.isVpcVal, '5l|did not return a vpcval');
             return ret;

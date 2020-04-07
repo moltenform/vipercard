@@ -4,7 +4,6 @@
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
-
 export namespace VpcRewritesConditions {
     export function splitSinglelineIf(line: ChvITk[]): ChvITk[][] {
         checkThrowEq('if', line[0].image, '');
@@ -219,6 +218,6 @@ function testonly() {
             end if
         end if
     end if
-   
+
     */
 }
