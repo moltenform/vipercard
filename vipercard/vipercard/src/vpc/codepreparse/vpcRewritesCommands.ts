@@ -47,7 +47,13 @@ export class VpcRewriteForCommands {
         if (line[1].image === 'file' || line[1].image === 'program') {
             return [this.hBuildNyi('ask ' + line[1].image, line[0])];
         }
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'password', false, ',');
+        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(
+            line,
+            line[0],
+            'password',
+            false,
+            ','
+        );
         VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
         return [line];
     }
@@ -136,9 +142,9 @@ export class VpcRewriteForCommands {
         /* remove the 'to' for easier parsing later */
         checkThrow(line.length > 1, 'exit: not enough args');
         if (line[1].image === 'to') {
-            line.splice(1, 1)
+            line.splice(1, 1);
         }
-        return [line]
+        return [line];
     }
     rewriteFind(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the find command', line[0])];
@@ -198,9 +204,13 @@ builtinInternalVpcGoCardImpl "setresult" c%UNIQUE%
     }
     rewritePass(line: ChvITk[]): ChvITk[][] {
         /* add a return statement afterwards, solely to make code exec simpler. */
-        return VpcSuperRewrite.go(`
+        return VpcSuperRewrite.go(
+            `
 %ARG0%
-return 0`, line[0], [line])
+return 0`,
+            line[0],
+            [line]
+        );
     }
     rewritePlay(line: ChvITk[]): ChvITk[][] {
         VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'tempo', false);
@@ -419,7 +429,7 @@ end if`;
     rewriteWait(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
         if (line[1].image === 'for') {
-            line.splice(1, 1)
+            line.splice(1, 1);
         }
 
         if (line[1].image === 'until' || line[1].image === 'while') {
@@ -493,7 +503,7 @@ end repeat`;
 
         let template = longstr(
             `${prefix} "${opts['speed']}" "${opts['speedmodify']}"
-            "${opts['method']}" "${opts['modifier']}" "${opts['dest']}" `,
+            "${opts['method']}" "${opts['modifier']}" "${opts['dest']}" `
         );
         return VpcSuperRewrite.go(template, line[0], []);
     }

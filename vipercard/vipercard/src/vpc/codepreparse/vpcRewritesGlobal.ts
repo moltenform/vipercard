@@ -130,7 +130,7 @@ export namespace VpcSuperRewrite {
 
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tktype, term);
     }
-    
+
     export function replaceWithSyntaxMarkerAtLvl0(
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
@@ -145,7 +145,7 @@ export namespace VpcSuperRewrite {
             term
         );
         if (index === -1) {
-            checkThrow(!mustExist, `did not see ${term} in a ${line[0].image}`) 
+            checkThrow(!mustExist, `did not see ${term} in a ${line[0].image}`);
             return false;
         } else {
             let marker = BuildFakeTokens.inst.makeSyntaxMarker(

@@ -120,6 +120,18 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
         }
 
+        RuleHCouldBeAPropertyToSet(ctx: VisitingContext): ChvITk {
+            if (ctx.tkIdentifier[0]) {
+                return ctx.tkIdentifier[0];
+            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
+            } else if (ctx.RuleHAllPropertiesThatCouldBeUnary[0]) {
+                return this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]);
+            } else {
+                throw makeVpcInternalErr('OR in HCouldBeAPropertyToSet, no branch found');
+            }
+        }
+
         RuleHAnyAllowedVariableName(ctx: VisitingContext): ChvITk {
             if (ctx.tkIdentifier[0]) {
                 return ctx.tkIdentifier[0];
@@ -404,7 +416,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdDoMenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
+        RuleBuiltinCmdDomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 
@@ -420,11 +432,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdInternalVpcGoCardImpl(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
-
-        RuleBuiltinCmdLikeGlobal(ctx: VisitingContext): IntermedMapOfIntermedVals {
+        RuleBuiltinCmdInternalvpcgocardimpl(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 
@@ -456,6 +464,10 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
+        RuleBuiltinCmdReplace(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
         RuleBuiltinCmdSelect(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
@@ -472,7 +484,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdSortInternal(ctx: VisitingContext): IntermedMapOfIntermedVals {
+        RuleBuiltinCmdInternalvpcsort(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 
@@ -485,6 +497,14 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         }
 
         RuleBuiltinCmdSubtract(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
+        RuleBuiltinCmdUnlock(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
+        RuleBuiltinCmdVisual(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 

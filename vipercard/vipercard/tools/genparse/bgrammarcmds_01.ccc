@@ -51,7 +51,7 @@ BuiltinCmdDomenu:=... <Expr> [tkComma <Expr>]
 // drag, simulate mouse drag
 // in rewrite syntax from "with" to tkSyntaxPlaceholder
 // do. in rewrite, turned into send x to me
-BuiltinCmdDrag:=... tkIdentifier MANYSEP{{ _to / <BuiltinCmdDrag_1> }}ENDMANYSEP [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]   
+BuiltinCmdDrag:=... tkIdentifier MANYSEP{{ _to / <HBuiltinCmdDrag_1> }}ENDMANYSEP [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]   
 HBuiltinCmdDrag_1:=<Lvl4Expression> [tkComma <Lvl4Expression>]                      --->BuildMap
 // edit. show NYI in rewrite
 // enable a button. in rewrite error on mention of "menu"
@@ -63,7 +63,7 @@ BuiltinCmdEnable:=... <ObjectBtn>
 // functionkey: sent up the message hierarchy, usually does nothing, handled by vipercardstdlib.
 // software rewrites "Get" to "Put"...into it
 // BuiltinCmdGet:=... <Expr>            
-BuiltinCmdInternalvpcgocardimpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <HOrdinal> | <HPosition> }   
+BuiltinCmdInternalvpcgocardimpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <Ordinal> | <Position> }   
 // always goes to the first card that's there, e.g. go to bg 2 == go to cd 1 of bg 2
 // note that `back` and `forth` are keywords so they don't need special handling
 HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->Custom--->RequestedVelRef           
@@ -75,7 +75,7 @@ BuiltinCmdHide:=... <ObjectPart>
 // lock. parse it in software.
 // mark. other parsing done in software
 // not supported yet but I'll leave this syntax here
-BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCd> | tkComma <Expr> <Of> <ObjectFld> }
+BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCard> | tkComma <Expr> <Of> <ObjectFld> }
 // multiply. the tkIdentifier is "by"
 BuiltinCmdMultiply:=... <Lvl1Expression> tkIdentifier <HContainer>                                                             
 // open. show NYI in rewrite
@@ -103,12 +103,12 @@ BuiltinCmdSelect:=... { tkIdentifier | [tkIdentifier] tkIdentifier <Of> <HContai
 // execute in context of another object
 BuiltinCmdSend:=... <Expr> _to <Object>                                                         
 // setting a property
-BuiltinCmdSet:=... [_the] <AnyPropertyName> [ tkOfOnly { <HChunk> <ObjectFld> | <Object> } ] _to <AnyPropertyVal>    
+BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> <ObjectFld> | <Object> } ] _to <AnyPropertyVal>    
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
 // we don't yet support show all cards or show 6 cards
 BuiltinCmdShow:=...  <ObjectPart> tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>]                                        
 // we'll build an actual sort in software. tkStringLiteral1 is "items|lines" tkStringLiteral2 is "numeric|alphabetic" tkStringLiteral3 is "ascending|descending"
-BuiltinCmdInternalvpcsort:=... tkStringLiteral tkStringLiteral tkStringLiteral <AnyVariableName>
+BuiltinCmdInternalvpcsort:=... tkStringLiteral tkStringLiteral tkStringLiteral <HAnyAllowedVariableName>
 // start using, currently a no-op
 BuiltinCmdStart:=... tkIdentifier <ObjectStack>
 // stop using, currently a no-op

@@ -60,10 +60,10 @@ export class CheckReservedWords {
         // new: local variables can be property names.
         checkThrow(slength(s), `7(|invalid identifier ${s}`);
         return (
-            (!this.isKeyword(s) &&
-                !this.isBuiltinHandler(s) &&
-                !this.isBuiltinFunction(s) &&
-                !this.isBuiltinVarOrConstant(s))
+            !this.isKeyword(s) &&
+            !this.isBuiltinHandler(s) &&
+            !this.isBuiltinFunction(s) &&
+            !this.isBuiltinVarOrConstant(s)
         );
     }
 

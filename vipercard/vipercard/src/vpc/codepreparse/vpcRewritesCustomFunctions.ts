@@ -1,13 +1,12 @@
 
 /* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { LoopLimit } from './vpcPreparseCommon';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { O, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { ValHolder, assertEq, checkThrowEq } from './../../ui512/utils/util512';
 
-import { checkThrowEq } from '../../ui512/utils/util512.js';
 
 /**
  * if a function call occurs inside an expression, we pull it outside:
@@ -48,7 +47,7 @@ export class ExpandCustomFunctions {
 
     /* expand function call in this line
     returns a list of resulting lines, since the result could be many lines */
-    go(line: ChvIToken[]): ChvIToken[][] {
+    go(line: ChvITk[]): ChvITk[][] {
         if (this.supportsCustomFnExpansion(line)) {
             return this.goImpl(line);
         } else {
@@ -59,7 +58,7 @@ export class ExpandCustomFunctions {
     /**
      * does this line support expansion?
      */
-    protected supportsCustomFnExpansion(line: ChvIToken[]) {
+    protected supportsCustomFnExpansion(line: ChvITk[]) {
         return line.length > 0 && !this.skipExpansion[line[0].image];
     }
 
@@ -67,7 +66,7 @@ export class ExpandCustomFunctions {
      * find a function call within interval [start, end)
      */
     findAFunctionCall(
-        ln: ChvIToken[],
+        ln: ChvITk[],
         start: number,
         end: number,
         filterCalls: (n: number, s: string) => boolean
@@ -116,8 +115,8 @@ export class ExpandCustomFunctions {
     /**
      * find all the custom function calls and put them on separate lines!
      */
-    protected goImpl(line: ChvIToken[]) {
-        let ret: ChvIToken[][] = [];
+    protected goImpl(line: ChvITk[]) {
+        let ret: ChvITk[][] = [];
         let limit = new LoopLimit(
             CodeLimits.MaxCustomFnCallsAllowedInLine,
             'maxCustomFnCallsAllowedInLine'
@@ -159,7 +158,7 @@ export class ExpandCustomFunctions {
     /**
      * create new line calling the function and putting the result in a temp var
      */
-    expandAFnCall(ret: ChvIToken[][], line: ChvIToken[], start: number, end: number) {
+    expandAFnCall(ret: ChvITk[][], line: ChvITk[], start: number, end: number) {
         assertTrue(
             isTkType(line[start], tks.tkIdentifier),
             '5 |line did not start w identifier'
@@ -169,8 +168,8 @@ export class ExpandCustomFunctions {
             '5z|line did not start w identifier('
         );
         assertTrue(isTkType(line[end - 1], tks.tkRParen), '5y|line did not end w )');
-        let stmtCall: ChvIToken[] = [];
-        let stmtPut: ChvIToken[] = [];
+        let stmtCall: ChvITk[] = [];
+        let stmtPut: ChvITk[] = [];
         let newvarname = `tmpvar^^${this.idgenThisScript.next()}`;
 
         /* create new line of code calling this fn */
@@ -194,7 +193,7 @@ export class ExpandCustomFunctions {
         );
 
         /* put results of the call into the temporary variable */
-        let template = `put result ( ) into %ARG0%`;
+        let template = `put result ( ) %INTO% %ARG0%`;
         let tokenNewVarname = VpcSuperRewrite.tokenFromEnglishTerm(newvarname, line[0]);
         let fromTemplateLines = VpcSuperRewrite.go(template, line[0], [
             [tokenNewVarname]

@@ -19,7 +19,7 @@ export class MakeLowerCase {
  * efficiently splits an array of tokens by line,
  * producing an iterator
  */
-export class SplitIntoLinesProducer {
+export class SplitIntoLinesAndMakeLowercase {
     index = 0;
     constructor(protected instream: ChvITk[], protected makeLower: MakeLowerCase) {}
 
@@ -82,7 +82,7 @@ export enum VpcLineCategory {
     RepeatEnd,
     DeclareGlobal,
     Statement,
-    // GoCardImpl,
+    GoCardImpl,
     CallDynamic,
     CallHandler
 }
@@ -223,10 +223,7 @@ export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
         !tk || !isTkType(tk, tks._within),
         `8d|we don't support variables named "within"`
     );
-    checkThrow(
-        !tk || !isTkType(tk, tks._to),
-        `8c|we don't support variables named "id"`
-    );
+    checkThrow(!tk || !isTkType(tk, tks._to), `8c|we don't support variables named "id"`);
     checkThrow(
         !tk || !isTkType(tk, tks.tkOrdinal),
         longstr(

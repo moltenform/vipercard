@@ -204,7 +204,7 @@ export class Util512 {
         args: unknown[],
         okIfNotExists: boolean,
         returnIfNotExists = ''
-    ):unknown {
+    ): unknown {
         checkThrowUI512(
             s.match(/^[a-zA-Z][0-9a-zA-Z_]+$/),
             'K@|callAsMethodOnClass requires alphanumeric no spaces',

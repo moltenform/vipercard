@@ -49,7 +49,7 @@ def go(dir, infiles, outfiles):
     
 if __name__ == '__main__':
     dir = os.path.abspath('../../src')
-    infiles = ['bgrammar_01.ccc', 'bgrammarcmds_00.ccc', 'list-all.ccc']
+    infiles = ['bgrammar_01.ccc', 'bgrammarcmds_01.ccc', 'list-all.ccc']
     outfiles = Bucket(
         parse = dir + '/vpc/codeparse/vpcParser.ts',
         tokens = dir + '/vpc/codeparse/vpcTokens.ts',
