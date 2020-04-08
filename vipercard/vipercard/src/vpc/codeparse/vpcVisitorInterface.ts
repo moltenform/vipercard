@@ -71,12 +71,18 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdAsk(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdBeep(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdChoose(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdVpccalluntrappablechoose(
+        ctx: VisitingContext
+    ): IntermedMapOfIntermedVals;
     RuleBuiltinCmdClick(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDelete(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDial(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDisable(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDivide(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDomenu(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdVpccalluntrappabledomenu(
+        ctx: VisitingContext
+    ): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleHBuiltinCmdDrag_1(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdEnable(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -164,12 +170,14 @@ export interface VisitingContext {
     RuleBuiltinCmdAsk: any[];
     RuleBuiltinCmdBeep: any[];
     RuleBuiltinCmdChoose: any[];
+    RuleBuiltinCmdVpccalluntrappablechoose: any[];
     RuleBuiltinCmdClick: any[];
     RuleBuiltinCmdDelete: any[];
     RuleBuiltinCmdDial: any[];
     RuleBuiltinCmdDisable: any[];
     RuleBuiltinCmdDivide: any[];
     RuleBuiltinCmdDomenu: any[];
+    RuleBuiltinCmdVpccalluntrappabledomenu: any[];
     RuleBuiltinCmdDrag: any[];
     RuleHBuiltinCmdDrag_1: any[];
     RuleBuiltinCmdEnable: any[];

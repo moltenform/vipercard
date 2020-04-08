@@ -219,37 +219,20 @@ export class VpcElProductOpts extends VpcElBase {
 
     /* provide script,
     1) we want to follow the product where 'send openCard to card 2'
-    is not an error even if card 2 does not handle openCard. */
+    is not an error even if card 2 does not handle openCard.
+
+    only need to put the "trappable" ones here,
+    the rest we'll handle by looking at listOfAllBuiltinEventsInOriginalProduct
+
+    */
     static productOptsScript = `
-on openbackground
-end openbackground
+on choose whichTool
+    vpccalluntrappablechoose whichTool
+end choose
 
-on opencard
-end opencard
-
-on openstack
-end openstack
-
-on openfield
-end openfield
-
-on closebackground
-end closebackground
-
-on closecard
-end closecard
-
-on closefield
-end closefield
-
-on exitfield
-end exitfield
-
-on afterkeydown
-end afterkeydown
-
-on afterkeyup
-end afterkeyup
+on domenu a, b
+    vpccalluntrappabledomenu a, b
+end domenu
 
 on internalvpcbeginsetcurcardwithopencardevt
     global internalvpcbeginsetcurcardwithopencardevtparam

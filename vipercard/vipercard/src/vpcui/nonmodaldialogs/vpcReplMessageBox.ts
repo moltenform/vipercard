@@ -167,11 +167,6 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     }
 
     /**
-     * a special id signifies the messagebox
-     */
-    static readonly markMessageBox = -99999;
-
-    /**
      * launch the script
      */
     launchScript(scr: string) {
@@ -190,18 +185,14 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
             /* prepare to run the code */
             let codeBody = VpcNonModalReplBox.transformText(scr);
             let curCard = this.vci.getOptionS('currentCardId');
-            let handler = VpcExecFrame.appendTemporaryDynamicCodeToScript(
-                this.vci.getOutside(),
-                curCard,
-                codeBody,
-                curCard,
-                VpcNonModalReplBox.markMessageBox
-            );
+
             this.rememberedTool = this.vci.getTool();
             this.vci.setTool(VpcTool.Browse);
 
             let NoteThisIsDisabledCode = 1;
+            // note: use a velid of 'messagebox'
             //~ /* do this last because it could throw
+            //~ this.vci.getCodeExec().runMsgBoxCode(codeBody)
             //~ synchronously and call onScriptErr right away */
             //~ let msg = new VpcScriptMessage(curCard,
             //~ VpcBuiltinMsg.__Custom, handler);
@@ -245,16 +236,6 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         it's how we get the signal back after running a script,
         we intentionally try to call a handler that doesn't exist. */
         this.busy = false;
-
-        /* filter out any dynamic code,
-        otherwise we could be stuck with a syntax error in the card's script */
-        let curCardId = this.vci.getOptionS('currentCardId');
-        let curCard = this.vci.getModel().getById(curCardId, VpcElCard);
-        let script = curCard.getS('script');
-        let scriptNew = VpcExecFrame.filterTemporaryFromScript(script);
-        this.vci.undoableAction(() => {
-            curCard.set('script', scriptNew);
-        });
 
         /* go back to the previous tool */
         this.vci.setTool(this.rememberedTool);

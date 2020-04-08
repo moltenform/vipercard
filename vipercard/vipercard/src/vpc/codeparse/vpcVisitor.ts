@@ -394,6 +394,10 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
+        RuleBuiltinCmdVpccalluntrappablechoose(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
         RuleBuiltinCmdClick(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
@@ -415,6 +419,10 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         }
 
         RuleBuiltinCmdDomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
+        RuleBuiltinCmdVpccalluntrappabledomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 

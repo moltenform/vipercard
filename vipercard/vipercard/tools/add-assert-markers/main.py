@@ -187,8 +187,8 @@ def tests():
 tests()
 
 if __name__=='__main__':
-    #~ previewOnly = True
-    previewOnly = False
+    previewOnly = True
+    # previewOnly = False
     dir = os.path.abspath('../../src')
     go(dir, previewOnly)
 

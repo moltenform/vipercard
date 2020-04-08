@@ -511,9 +511,6 @@ export class VpcPresenterEvents {
                     //~ VpcPresenterEvents.showWarningIfExceptionThrown(() =>
                     //~ pr.vci.getCodeExec().doMaintenance()
                     //~ );
-                    VpcPresenterEvents.showWarningIfExceptionThrown(() =>
-                        VpcPresenterEvents.filterTemporaryFromAllScripts(pr)
-                    );
                 }
             }
         }
@@ -528,17 +525,6 @@ export class VpcPresenterEvents {
             fn();
         } catch (e) {
             assertTrueWarn(false, e.toString());
-        }
-    }
-
-    /**
-     * remove temporary handlers from scripts, so they don't accumulate indefinitely
-     */
-    static filterTemporaryFromAllScripts(pr: VpcPresenterInterface) {
-        if (!pr.vci.isCodeRunning()) {
-            pr.vci.undoableAction(() =>
-                VpcExecFrame.filterTemporaryFromAllScripts(pr.vci.getModel())
-            );
         }
     }
 

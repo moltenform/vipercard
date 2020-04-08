@@ -158,22 +158,22 @@ export class VpcRewriteForCommands {
             line.length > 1,
             "8k|can't have just 'go' on its own. try 'go next' or 'go prev' "
         );
-        let shouldSuspendHistory = VpcSuperRewrite.tokenFromEnglishTerm('false', line[0]);
+        let shouldSuspendHistory = 'false';
         if (
             line[1].image === 'back' ||
             line[1].image === 'forth' ||
             line[1].image === 'recent'
         ) {
-            shouldSuspendHistory = VpcSuperRewrite.tokenFromEnglishTerm('true', line[0]);
+            shouldSuspendHistory = 'true';
         }
 
         let template = `
 global internalvpcgocardimplsuspendhistory
 builtinInternalVpcGoCardImpl "gettarget" c%UNIQUE% %ARG0%
-builtinInternalVpcGoCardImpl "closefield" c%UNIQUE%
+builtinInternalVpcGoCardImpl "closeorexitfield" c%UNIQUE%
 builtinInternalVpcGoCardImpl "closecard" c%UNIQUE%
 builtinInternalVpcGoCardImpl "closebackground" c%UNIQUE%
-if %ARG1% then
+if ${shouldSuspendHistory} then
     put 1 %INTO% internalvpcgocardimplsuspendhistory
 end if
 builtinInternalVpcGoCardImpl "set" c%UNIQUE%
@@ -182,16 +182,10 @@ builtinInternalVpcGoCardImpl "openbackground" c%UNIQUE%
 builtinInternalVpcGoCardImpl "opencard" c%UNIQUE%
 builtinInternalVpcGoCardImpl "setresult" c%UNIQUE%
         `;
-        return VpcSuperRewrite.go(template, line[0], [
-            line.slice(1),
-            [shouldSuspendHistory]
-        ]);
+        return VpcSuperRewrite.go(template, line[0], [line.slice(1), []]);
     }
     rewriteHide(line: ChvITk[]): ChvITk[][] {
         return this.hReturnNyiIfMenuMentionedOutsideParens(line);
-    }
-    rewriteHelp(line: ChvITk[]): ChvITk[][] {
-        return [this.hBuildNyi('the help command', line[0])];
     }
     rewriteImport(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the import command', line[0])];

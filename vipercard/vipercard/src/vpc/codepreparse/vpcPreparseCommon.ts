@@ -96,7 +96,7 @@ export class LoopLimit {
         this.count = maxcount;
     }
 
-    next() : true {
+    next(): true {
         this.count--;
         if (this.count < 0) {
             throw makeVpcScriptErr(

@@ -1172,6 +1172,16 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleExpr);
     });
 
+    RuleBuiltinCmdVpccalluntrappablechoose = this.RULE(
+        'RuleBuiltinCmdVpccalluntrappablechoose',
+        () => {
+            this.CONSUME1(tks.tkSyntaxPlaceholder);
+            this.CONSUME2(tks.tkSyntaxPlaceholder);
+            this.CONSUME3(tks.tkSyntaxPlaceholder);
+            this.SUBRULE1(this.RuleExpr);
+        }
+    );
+
     RuleBuiltinCmdClick = this.RULE('RuleBuiltinCmdClick', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
@@ -1242,6 +1252,19 @@ export class VpcChvParser extends chevrotain.CstParser {
             this.SUBRULE2(this.RuleExpr);
         });
     });
+
+    RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE(
+        'RuleBuiltinCmdVpccalluntrappabledomenu',
+        () => {
+            this.CONSUME1(tks.tkSyntaxPlaceholder);
+            this.CONSUME2(tks.tkSyntaxPlaceholder);
+            this.SUBRULE1(this.RuleExpr);
+            this.OPTION1(() => {
+                this.CONSUME1(tks.tkComma);
+                this.SUBRULE2(this.RuleExpr);
+            });
+        }
+    );
 
     RuleBuiltinCmdDrag = this.RULE('RuleBuiltinCmdDrag', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);

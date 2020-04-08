@@ -279,7 +279,7 @@ export class VpcPresenter extends VpcPresenterInit {
             );
 
             /* did this come from the messagebox? */
-            if (line === VpcNonModalReplBox.markMessageBox) {
+            if (origVelId === 'messagebox') {
                 if (
                     this.lyrNonModalDlgHolder.current &&
                     this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox

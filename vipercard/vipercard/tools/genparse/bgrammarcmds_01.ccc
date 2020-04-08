@@ -26,6 +26,7 @@ BuiltinCmdBeep:=... [<Expr>]
 // choose tool. rewrite will turn `choose brush tool` into `choose tool "brush"`
 // in vipercard this only changes the tool for script running-simulated drawing purposes
 BuiltinCmdChoose:=... tkSyntaxPlaceholder <Expr>
+BuiltinCmdVpccalluntrappablechoose:=... tkSyntaxPlaceholder <Expr>
 // simulate click. software rewrite "with" to tkSyntaxPlaceholder. supports click at x if x contains coords.
 BuiltinCmdClick:=... tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
 // close. show NYI in rewrite
@@ -48,6 +49,7 @@ BuiltinCmdDivide:=... <Lvl1Expression> tkIdentifier <HContainer>
 // note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
 // in rewrite syntax say we don't support "without dialog" or "with keys"
 BuiltinCmdDomenu:=... <Expr> [tkComma <Expr>]       
+BuiltinCmdVpccalluntrappabledomenu:=... <Expr> [tkComma <Expr>]       
 // drag, simulate mouse drag
 // in rewrite syntax from "with" to tkSyntaxPlaceholder
 // do. in rewrite, turned into send x to me
@@ -67,7 +69,7 @@ BuiltinCmdInternalvpcgocardimpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStr
 // always goes to the first card that's there, e.g. go to bg 2 == go to cd 1 of bg 2
 // note that `back` and `forth` are keywords so they don't need special handling
 HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->ProcessOr--->RequestedVelRef           
-// help. show NYI in rewrite
+// help. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // hide. in rewrite error on mention of "menu"
 BuiltinCmdHide:=... <ObjectPart> 
 // import. show NYI in rewrite

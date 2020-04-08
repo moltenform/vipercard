@@ -1,16 +1,16 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { ValHolder, slength } from '../../ui512/utils/utils512.js';
-/* auto */ import { VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VarCollection, VariableCollectionConstants } from '../../vpc/vpcutils/vpcVarCollection.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from '../../vpc/vel/velOutsideInterfaces.js';
-/* auto */ import { CheckReservedWords } from '../../vpc/codepreparse/vpcCheckReserved.js';
-/* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from '../../vpc/codeexec/vpcScriptCaches.js';
-/* auto */ import { ExecuteStatement } from '../../vpc/codeexec/vpcScriptExecStatement.js';
-/* auto */ import { VpcExecFrameStack } from '../../vpc/codeexec/vpcScriptExecFrameStack.js';
-import { getParsingObjects } from '../codeparse/vpcVisitor.js';
+/* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
+/* auto */ import { VarCollection, VariableCollectionConstants } from './../vpcutils/vpcVarCollection';
+/* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
+/* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
+/* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
+/* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
+/* auto */ import { VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
+/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
+/* auto */ import { VpcElBase } from './../vel/velBase';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { ValHolder, slength } from './../../ui512/utils/util512';
 
 /**
  * script execution in ViperCard
@@ -21,7 +21,7 @@ import { getParsingObjects } from '../codeparse/vpcVisitor.js';
  */
 export class VpcExecTop {
     globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
-    cardHistory = new RememberHistory()
+    cardHistory = new RememberHistory();
     constants = new VariableCollectionConstants();
     check = new CheckReservedWords();
     runStatements = new ExecuteStatement();
@@ -29,20 +29,20 @@ export class VpcExecTop {
     cbOnScriptError: O<(err: VpcScriptErrorBase) => void>;
     cbCauseUIRedraw: O<() => void>;
     lastEncounteredScriptErr: O<VpcScriptErrorBase>;
-    fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({})
+    fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({});
     protected justSawRepeatedMousedown = false;
     protected readonly cachedCST: VpcCacheParsedCST;
     protected readonly cachedAST: VpcCacheParsedAST;
     protected readonly outside: OutsideWorldReadWrite;
     constructor(idGen: CountNumericId, outside: OutsideWorldReadWrite) {
-        this.cachedAST = new VpcCacheParsedAST()
-        this.cachedCST = new VpcCacheParsedCST()
+        this.cachedAST = new VpcCacheParsedAST();
+        this.cachedCST = new VpcCacheParsedCST();
         this.outside = outside;
         this.runStatements.outside = outside;
-        this.cardHistory.keepBeforeEnd = true
-        
+        this.cardHistory.keepBeforeEnd = true;
+
         /* provide read-only access to the visitor */
-        let visitor = getParsingObjects()[2]
+        let visitor = getParsingObjects()[2];
         visitor.outside = outside as OutsideWorldRead;
     }
 
@@ -62,12 +62,15 @@ export class VpcExecTop {
             msg
         );
 
-        let isRepeatedKeydown = newWork.originalMsg.msgName === 'afterkeydown' && newWork.originalMsg.keyRepeated;
+        let isRepeatedKeydown =
+            newWork.originalMsg.msgName === 'afterkeydown' &&
+            newWork.originalMsg.keyRepeated;
         if (isRepeatedKeydown && this.workQueue.length > 2) {
             /* don't queue up a key that is held down at least beyond 3 evts */
             return;
         } else if (
-            (newWork.originalMsg.msgName === 'idle' || newWork.originalMsg.msgName === 'mousewithin') &&
+            (newWork.originalMsg.msgName === 'idle' ||
+                newWork.originalMsg.msgName === 'mousewithin') &&
             this.workQueue.length > 0
         ) {
             /* don't queue up an onidle */
@@ -86,7 +89,7 @@ export class VpcExecTop {
         }
 
         /* an error might be thrown, e.g. the script causes a lexer error  */
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
         UI512ErrorHandling.breakOnThrow = false;
 
         try {
@@ -101,13 +104,6 @@ export class VpcExecTop {
         } finally {
             UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
-    }
-
-    /**
-     * retrieve code for a vel
-     */
-    getCompiledScript(id: string, rawScript:string) {
-        return this.code.getCompiledScript(id, rawScript);
     }
 
     /**
@@ -174,7 +170,7 @@ export class VpcExecTop {
         }
 
         /* allow exceptions, because we will catch them here */
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
         UI512ErrorHandling.breakOnThrow = false;
 
         try {
@@ -195,36 +191,22 @@ export class VpcExecTop {
     }
 
     /**
-     * update a vel's code
-     */
-    updateChangedCode(owner: VpcElBase, code: string) {
-        checkThrow(!this.isCodeRunning(), "7y|we don't currently support changing code while code is running");
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
-        UI512ErrorHandling.breakOnThrow = false;
-        try {
-            this.code.updateCode(code, owner.id);
-        } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
-        }
-    }
-
-    /**
      * get an instance of VpcScriptErrorBase, or create if needed
      */
-    protected getOrGenerateScriptErr(e:any):VpcScriptErrorBase {
+    protected getOrGenerateScriptErr(e: any): VpcScriptErrorBase {
         if (e instanceof VpcScriptErrorBase) {
-            return e
+            return e;
         } else if (e.attachErr && e.attachErr instanceof VpcScriptErrorBase) {
-            return e.attachErr
+            return e.attachErr;
         } else if (e.vpcScriptErr && e.vpcScriptErr instanceof VpcScriptErrorBase) {
-            return e.vpcScriptErr
+            return e.vpcScriptErr;
         } else {
             let scrRuntime = new VpcScriptRuntimeError();
             scrRuntime.isScriptException = false;
             scrRuntime.isExternalException = !e.isUi512Error;
             scrRuntime.details = e.toString();
             scrRuntime.e = e;
-            return scrRuntime
+            return scrRuntime;
         }
     }
 
@@ -233,12 +215,15 @@ export class VpcExecTop {
      */
     protected respondScriptError(e: any) {
         this.forceStopRunning();
-        let err = this.getOrGenerateScriptErr(e)
+        let err = this.getOrGenerateScriptErr(e);
 
         if (this.cbOnScriptError) {
             this.cbOnScriptError(err);
         } else {
-            assertTrue(false, `5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
+            assertTrue(
+                false,
+                `5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`
+            );
         }
     }
 
@@ -246,7 +231,6 @@ export class VpcExecTop {
      * run maintenance
      */
     doMaintenance() {
-        this.code.doMaintenance(this.outside)
+        // currently has no maintenance
     }
 }
-

@@ -851,6 +851,59 @@ listOfAllBuiltinCommandsInOriginalProduct['visual'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['wait'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['write'] = true;
 
+export const listOfAllBuiltinEventsInOriginalProduct: { [key: string]: boolean } = {};
+
+listOfAllBuiltinEventsInOriginalProduct['choose'] = true;
+listOfAllBuiltinEventsInOriginalProduct['domenu'] = true;
+listOfAllBuiltinEventsInOriginalProduct['help'] = true;
+listOfAllBuiltinEventsInOriginalProduct['arrowkey'] = true;
+listOfAllBuiltinEventsInOriginalProduct['commandkeydown'] = true;
+listOfAllBuiltinEventsInOriginalProduct['controlkey'] = true;
+listOfAllBuiltinEventsInOriginalProduct['functionkey'] = true;
+listOfAllBuiltinEventsInOriginalProduct['keydown'] = true;
+listOfAllBuiltinEventsInOriginalProduct['returninfield'] = true;
+listOfAllBuiltinEventsInOriginalProduct['returnkey'] = true;
+listOfAllBuiltinEventsInOriginalProduct['tabkey'] = true;
+listOfAllBuiltinEventsInOriginalProduct['errordialog'] = true;
+listOfAllBuiltinEventsInOriginalProduct['appleevent'] = true;
+listOfAllBuiltinEventsInOriginalProduct['appleevent'] = true;
+listOfAllBuiltinEventsInOriginalProduct['closebackground'] = true;
+listOfAllBuiltinEventsInOriginalProduct['closecard'] = true;
+listOfAllBuiltinEventsInOriginalProduct['closefield'] = true;
+listOfAllBuiltinEventsInOriginalProduct['closestack'] = true;
+listOfAllBuiltinEventsInOriginalProduct['deletebackground'] = true;
+listOfAllBuiltinEventsInOriginalProduct['deletebutton'] = true;
+listOfAllBuiltinEventsInOriginalProduct['deletecard'] = true;
+listOfAllBuiltinEventsInOriginalProduct['deletefield'] = true;
+listOfAllBuiltinEventsInOriginalProduct['deletestack'] = true;
+listOfAllBuiltinEventsInOriginalProduct['errordialog'] = true;
+listOfAllBuiltinEventsInOriginalProduct['exitfield'] = true;
+listOfAllBuiltinEventsInOriginalProduct['idle'] = true;
+listOfAllBuiltinEventsInOriginalProduct['mousedoubleclick'] = true;
+listOfAllBuiltinEventsInOriginalProduct['mousedown'] = true;
+listOfAllBuiltinEventsInOriginalProduct['mouseenter'] = true;
+listOfAllBuiltinEventsInOriginalProduct['mouseleave'] = true;
+listOfAllBuiltinEventsInOriginalProduct['mousestilldown'] = true;
+listOfAllBuiltinEventsInOriginalProduct['mouseup'] = true;
+listOfAllBuiltinEventsInOriginalProduct['mousewithin'] = true;
+listOfAllBuiltinEventsInOriginalProduct['movewindow'] = true;
+listOfAllBuiltinEventsInOriginalProduct['newbackground'] = true;
+listOfAllBuiltinEventsInOriginalProduct['newbutton'] = true;
+listOfAllBuiltinEventsInOriginalProduct['newcard'] = true;
+listOfAllBuiltinEventsInOriginalProduct['newfield'] = true;
+listOfAllBuiltinEventsInOriginalProduct['newstack'] = true;
+listOfAllBuiltinEventsInOriginalProduct['openbackground'] = true;
+listOfAllBuiltinEventsInOriginalProduct['opencard'] = true;
+listOfAllBuiltinEventsInOriginalProduct['openfield'] = true;
+listOfAllBuiltinEventsInOriginalProduct['openstack'] = true;
+listOfAllBuiltinEventsInOriginalProduct['quit'] = true;
+listOfAllBuiltinEventsInOriginalProduct['resume'] = true;
+listOfAllBuiltinEventsInOriginalProduct['resumestack'] = true;
+listOfAllBuiltinEventsInOriginalProduct['sizewindow'] = true;
+listOfAllBuiltinEventsInOriginalProduct['startup'] = true;
+listOfAllBuiltinEventsInOriginalProduct['suspend'] = true;
+listOfAllBuiltinEventsInOriginalProduct['suspendstack'] = true;
+
 export function couldTokenTypeBeAVariableName(t: chevrotain.IToken) {
     return (
         t.tokenType === tks.tkIdentifier ||

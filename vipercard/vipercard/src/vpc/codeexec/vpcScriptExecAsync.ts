@@ -39,11 +39,11 @@ export class VpcScriptExecAsync {
     ) {
         let op = () => {
             let f = async () => {
-                await Util512Higher.sleep(milliseconds)
+                await Util512Higher.sleep(milliseconds);
                 pendingOps.markCompleted(asyncOpId, true);
-            }
+            };
 
-            Util512Higher.syncToAsyncTransition(f, 'goAsyncWait')
+            Util512Higher.syncToAsyncTransition(f, 'goAsyncWait');
         };
 
         pendingOps.go(asyncOpId, op, blocked);
@@ -61,8 +61,8 @@ export class VpcScriptExecAsync {
         numbersToDial: string
     ) {
         let op = () => {
-            let markComplete = () => pendingOps.markCompleted(asyncOpId, true)
-            VpcPhoneDial.goDial(numbersToDial, markComplete)
+            let markComplete = () => pendingOps.markCompleted(asyncOpId, true);
+            VpcPhoneDial.goDial(numbersToDial, markComplete);
         };
 
         pendingOps.go(asyncOpId, op, blocked);
@@ -151,7 +151,7 @@ export class VpcScriptExecAsync {
                 blocked.val = AsyncCodeOpState.DisallowNext;
             } else {
                 /* user can read the result by reading value of "it" */
-                let s = (typedText || '').toString();
+                let s = (typedText ?? '').toString();
                 outside.SetSpecialVar('it', VpcValS(s));
             }
         }
@@ -187,7 +187,8 @@ export class VpcPendingAsyncOps {
             ret = this.completed.get(asyncId);
             this.completed.remove(asyncId);
         } else {
-            /* case 1) described at the top of this file, this is the first time we've hit the line */
+            /* case 1) described at the top of this file,
+            this is the first time we've hit the line */
             this.waitingFor.add(asyncId, true);
             isblocked.val = AsyncCodeOpState.DisallowNext;
             op();

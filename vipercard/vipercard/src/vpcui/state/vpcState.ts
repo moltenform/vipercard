@@ -1,5 +1,6 @@
 
 /* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from './vpcUndo';
+/* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcOutsideImpl } from './vpcOutsideImpl';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
@@ -12,7 +13,6 @@
 /* auto */ import { O, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
-/* auto */ import { VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * holds all vipercard state

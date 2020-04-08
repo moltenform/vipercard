@@ -199,7 +199,7 @@ export namespace VpcCodeProcessor {
         code: string,
         velIdForErrMsg: string
     ): VpcScriptSyntaxError | VpcParsedCodeCollection {
-        assertTrue(!code.match(/^\s*$/), '')
+        assertTrue(!code.match(/^\s*$/), '');
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
         let syntaxError: O<VpcScriptSyntaxError>;

@@ -18,9 +18,6 @@
  * provides scripts with a read-only view of the "world".
  * we've decided that when a script evaluates an expression, this should be pure,
  * with no side effects, and so when evaluating we only provide an interface with read-only ability.
- *
- * this interface helps with testability; a test can provide make a
- * mock implementation of this interface.
  */
 export interface OutsideWorldRead {
     /**
@@ -109,8 +106,7 @@ export interface OutsideWorldRead {
  * OutsideWorldReadWrite:
  * provides scripts with access to the outside "world".
  *
- * this interface helps with testability; a test can provide make a
- * mock implementation of this interface.
+ * this interface helps with layering.
  */
 export interface OutsideWorldReadWrite extends OutsideWorldRead {
     /**

@@ -22,7 +22,7 @@
 export class VpcCacheParsedCST {
     cache = new BridgedLRUMap<string, VpcParsed>(CodeLimits.CacheThisManyParsedLines);
     parser: VpcChvParser;
-    static ensureNotChanged = true
+    static ensureNotChanged = true;
     constructor() {
         this.parser = getParsingObjects()[1];
     }
@@ -34,7 +34,11 @@ export class VpcCacheParsedCST {
         let rule = ln.getParseRule();
         assertEq(bool(rule), bool(ln.allImages), '4>|');
         if (rule && ln.allImages) {
-            assertTrue(ln.excerptToParse.length > 0, '4=|ln readyToParse is empty', ln.offset);
+            assertTrue(
+                ln.excerptToParse.length > 0,
+                '4=|ln readyToParse is empty',
+                ln.offset
+            );
             let key = ln.allImages;
             let foundInCache = this.cache.get(key);
             if (foundInCache !== undefined) {
@@ -43,7 +47,11 @@ export class VpcCacheParsedCST {
             } else {
                 /* call the parser to get a new cst */
                 let cst = this.callParser(ln, rule);
-                checkThrow(cst !== null && cst !== undefined, '4<|parse results null', ln.offset);
+                checkThrow(
+                    cst !== null && cst !== undefined,
+                    '4<|parse results null',
+                    ln.offset
+                );
                 this.cache.set(key, cst);
                 return cst;
             }
@@ -65,7 +73,7 @@ export class VpcCacheParsedCST {
             /* eslint-disable-next-line ban/ban */
             parsed = firstRule.apply(this.parser, []);
             if (VpcCacheParsedCST.ensureNotChanged) {
-                Util512.freezeRecurse(parsed)
+                Util512.freezeRecurse(parsed);
             }
         } catch (e) {
             /* don't expect error to be thrown here, but am checking this case out of caution */
@@ -83,31 +91,43 @@ export class VpcCacheParsedCST {
 }
 
 export class VpcCacheParsedAST {
-    cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyParsedLines);
-    getParsedCodeCollection(code:string, velIdForErrMsg:string): VpcParsedCodeCollection |VpcScriptSyntaxError  {
-        assertTrue(!code.match(/^\s*$/), '')
-        let found = this.cache.get(code)
+    cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(
+        CodeLimits.CacheThisManyParsedLines
+    );
+    getParsedCodeCollection(
+        code: string,
+        velIdForErrMsg: string
+    ): VpcParsedCodeCollection | VpcScriptSyntaxError {
+        assertTrue(!code.match(/^\s*$/), '');
+        let found = this.cache.get(code);
         if (found) {
-            return found
-        } else 
-        {
-            let got = VpcCodeProcessor.go(code, velIdForErrMsg)
+            return found;
+        } else {
+            let got = VpcCodeProcessor.go(code, velIdForErrMsg);
             if (!(got instanceof VpcParsedCodeCollection)) {
                 return got;
             }
 
-            this.cache.set(code, got)
+            this.cache.set(code, got);
             if (VpcCacheParsedCST.ensureNotChanged) {
-                Util512.freezeRecurse(got)
+                Util512.freezeRecurse(got);
             }
 
-            return got
+            let NoteThisIsDisabledCode = 1;
+            // the cache used to be able to store errors.
+            // do i want that?
+
+            return got;
         }
     }
 
-    findHandlerOrThrowIfVelScriptHasSyntaxError(code:string, handlername: string, velIdForErrMsg: string): O<[VpcParsedCodeCollection, VpcCodeLineReference]> {
-        assertTrue(!code.match(/^\s*$/), '')
-        let ret = this.getParsedCodeCollection(code, velIdForErrMsg)
+    findHandlerOrThrowIfVelScriptHasSyntaxError(
+        code: string,
+        handlername: string,
+        velIdForErrMsg: string
+    ): O<[VpcParsedCodeCollection, VpcCodeLineReference]> {
+        assertTrue(!code.match(/^\s*$/), '');
+        let ret = this.getParsedCodeCollection(code, velIdForErrMsg);
         let retAsErr = ret as VpcScriptErrorBase;
         let retAsCode = ret as VpcParsedCodeCollection;
         if (retAsCode.isVpcParsedCodeCollection) {
@@ -121,10 +141,11 @@ export class VpcCacheParsedAST {
             markUI512Err(err, true, false, true, retAsErr);
             throw err;
         } else {
-            throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
+            throw makeVpcScriptErr(
+                'JU|VpcCodeOfOneVel did not return expected type ' + ret
+            );
         }
 
-        return undefined
+        return undefined;
     }
 }
-

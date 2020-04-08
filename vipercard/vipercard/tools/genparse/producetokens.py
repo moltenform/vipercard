@@ -121,6 +121,12 @@ def addToListOfReservedWords(st, out, tokens):
         out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{v.split(' ')[0].lower()}'] = true;")
     out.append('')
     
+    out.append('export const listOfAllBuiltinEventsInOriginalProduct:{ [key: string]: boolean } = { }')
+    out.append('')
+    for v in st.listEvents:
+        out.append(f"listOfAllBuiltinEventsInOriginalProduct['{v.split(' ')[0].lower()}'] = true;")
+    out.append('')
+    
     out.append('export function couldTokenTypeBeAVariableName(t: chevrotain.IToken) {')
     for rule in st.rules:
         if rule.name == 'HAnyAllowedVariableName':

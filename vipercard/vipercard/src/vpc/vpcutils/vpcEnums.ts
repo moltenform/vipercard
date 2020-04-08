@@ -406,6 +406,7 @@ export enum VpcBuiltinMsg {
     Openfield,
     Closefield,
     Exitfield,
+    SendCode,
     __Custom
 }
 
