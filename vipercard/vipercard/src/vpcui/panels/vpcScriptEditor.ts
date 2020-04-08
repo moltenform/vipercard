@@ -1,5 +1,4 @@
 
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
@@ -339,11 +338,6 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 /* reset scroll, in case the last script we saw was really long */
                 this.el.set('scrollamt', 0);
 
-                /* filter out all temporary code */
-                let script = validVel.getS('script');
-                script = VpcExecFrame.filterTemporaryFromScript(script);
-                validVel.set('script', script);
-
                 this.refreshFromModel(app);
             }
         } else {
@@ -360,7 +354,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 this.scrollToErrorPosition(undefined);
             } else if (short === 'status2b') {
                 /* user clicked the error message, show the details */
-                if (this.statusErrMoreDetails.trim().length) {
+                if (!this.statusErrMoreDetails.match(/^\s*$/)) {
                     this.cbAnswerMsg(this.statusErrMoreDetails, () => {});
                     /* remember to not run other code after showing modal dialog */
                 }

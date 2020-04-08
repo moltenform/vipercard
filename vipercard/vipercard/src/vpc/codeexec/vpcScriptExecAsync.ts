@@ -33,7 +33,7 @@ export class VpcScriptExecAsync {
      */
     static goAsyncWait(
         pendingOps: VpcPendingAsyncOps,
-        blocked: ValHolder<number>,
+        blocked: ValHolder<AsyncCodeOpState>,
         asyncOpId: string,
         milliseconds: number
     ) {
@@ -56,7 +56,7 @@ export class VpcScriptExecAsync {
      */
     static goAsyncDial(
         pendingOps: VpcPendingAsyncOps,
-        blocked: ValHolder<number>,
+        blocked: ValHolder<AsyncCodeOpState>,
         asyncOpId: string,
         numbersToDial: string
     ) {
@@ -74,7 +74,7 @@ export class VpcScriptExecAsync {
      */
     static goAsyncAnswer(
         pendingOps: VpcPendingAsyncOps,
-        blocked: ValHolder<number>,
+        blocked: ValHolder<AsyncCodeOpState>,
         outside: OutsideWorldReadWrite,
         dlg: O<Function>,
         cbStopCodeRunning: O<Function>,
@@ -106,7 +106,7 @@ export class VpcScriptExecAsync {
 
                 /* this causes script to stop immediately,
                 which is necessary because cbStopCodeRunning nuked our parent stack frame */
-                blocked.val = 1;
+                blocked.val = AsyncCodeOpState.DisallowNext;
             } else {
                 /* user can read which button by reading value of "it" */
                 outside.SetSpecialVar('it', VpcValN(whichBtn + 1));
@@ -120,7 +120,7 @@ export class VpcScriptExecAsync {
      */
     static goAsyncAsk(
         pendingOps: VpcPendingAsyncOps,
-        blocked: ValHolder<number>,
+        blocked: ValHolder<AsyncCodeOpState>,
         outside: OutsideWorldReadWrite,
         dlg: O<Function>,
         cbStopCodeRunning: O<Function>,
@@ -148,7 +148,7 @@ export class VpcScriptExecAsync {
 
                 /* this causes script to stop immediately,
                 which is necessary because cbStopCodeRunning nuked our parent stack frame */
-                blocked.val = 1;
+                blocked.val = AsyncCodeOpState.DisallowNext;
             } else {
                 /* user can read the result by reading value of "it" */
                 let s = (typedText || '').toString();
@@ -177,11 +177,11 @@ export class VpcPendingAsyncOps {
      * when encountering code for an async operation,
      * do different actions based on if it is the first time we've encountered the action
      */
-    go(asyncId: string, op: () => void, isblocked: ValHolder<number>) {
+    go(asyncId: string, op: () => void, isblocked: ValHolder<AsyncCodeOpState>) {
         let ret: any = undefined;
         if (this.waitingFor.find(asyncId)) {
             /* case 2) described at the top of this file, we're still waiting */
-            isblocked.val = 1;
+            isblocked.val = AsyncCodeOpState.DisallowNext;
         } else if (this.completed.find(asyncId)) {
             /* case 3) described at the top of this file, we're done */
             ret = this.completed.get(asyncId);
@@ -189,7 +189,7 @@ export class VpcPendingAsyncOps {
         } else {
             /* case 1) described at the top of this file, this is the first time we've hit the line */
             this.waitingFor.add(asyncId, true);
-            isblocked.val = 1;
+            isblocked.val = AsyncCodeOpState.DisallowNext;
             op();
         }
 
@@ -198,6 +198,6 @@ export class VpcPendingAsyncOps {
 }
 
 export enum AsyncCodeOpState {
-    Waiting = 'waiting',
-    Ready = 'ready'
+    AllowNext = 'AllowNext0',
+    DisallowNext = 'DisallowNext1'
 }

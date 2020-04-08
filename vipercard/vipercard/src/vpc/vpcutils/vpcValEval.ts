@@ -257,7 +257,7 @@ export class VpcEvalHelpers {
             `8s|Wrong number of arguments given to ${fnname}, need at least 1`
         );
         return sAr.map(s => {
-            if (s.trim().length === 0) {
+            if (s.match(/^\s*$/)) {
                 return 0.0;
             } else {
                 return VpcValS(s).readAsStrictNumeric();

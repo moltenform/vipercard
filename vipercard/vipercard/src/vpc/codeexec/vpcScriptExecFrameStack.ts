@@ -2,22 +2,24 @@
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
+/* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecGoCardHelpers } from './vpcScriptExecGoCard';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
-/* auto */ import { VpcPendingAsyncOps } from './vpcScriptExecAsync';
-/* auto */ import { VpcCacheParsedAST } from './vpcScriptCaches';
+/* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
+/* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { LoopLimit, VpcCodeLine, VpcCodeLineReference, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcTool, VpcElType, OrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O, assertTrue, assertTrueWarn, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown, last, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
-import { VpcParsedCodeCollection } from '../codepreparse/vpcTopPreparse';
+import { VpcElStack } from '../vel/velStack';
+import { VpcElProductOpts } from '../vel/velProductOpts';
 
 /**
  * frame stack for the vipercard code-interpreter
@@ -69,10 +71,11 @@ export class VpcExecFrameStack {
         msg: VpcScriptMessage,
         code: VpcParsedCodeCollection,
         codeLine: VpcCodeLineReference,
-        meId: string
+        meId: string,
+        statedParentId: O<string>,
     ) {
         checkThrowEq(VpcTool.Browse, this.outside.GetCurrentTool(true), 'JI|not browse tool?');
-        let newFrame = new VpcExecFrame(msgName, msg, meId);
+        let newFrame = new VpcExecFrame(msgName, msg, meId, statedParentId);
         newFrame.codeSection = code;
         this.validatedGoto(newFrame, codeLine, true);
         this.stack.push(newFrame);
@@ -104,7 +107,7 @@ export class VpcExecFrameStack {
 
         /* code will set this to true if we're blocked on an async op
         there's no sense in spin-waiting if the code says "wait 4 seconds" */
-        let blocked = new ValHolder<number>(0);
+        let blocked = new ValHolder<AsyncCodeOpState>(AsyncCodeOpState.AllowNext);
 
         this.hasRunCode = true;
         let started = performance.now();
@@ -137,7 +140,7 @@ export class VpcExecFrameStack {
     /**
      * run one line of code, and catch exceptions
      */
-    protected runOneLine(blocked: ValHolder<number>): boolean {
+    protected runOneLine(blocked: ValHolder<AsyncCodeOpState>): boolean {
         let curFrame = last(this.stack);
         if (curFrame) {
             let curLine = curFrame.codeSection.lines[curFrame.getOffset()];
@@ -153,7 +156,7 @@ export class VpcExecFrameStack {
                 /* add error context and re-throw */
                 let scriptErr = new VpcScriptRuntimeError();
                 scriptErr.details = e.message;
-                scriptErr.lineNumber = curLine.firstToken.startLine || 0;
+                scriptErr.lineNumber = curLine.firstToken.startLine ?? 0;
                 scriptErr.velId = curFrame.codeSection.ownerId;
                 scriptErr.lineData = curLine;
                 scriptErr.isScriptException = e.isVpcError;
@@ -171,7 +174,7 @@ export class VpcExecFrameStack {
     /**
      * run one line of code
      */
-    protected runOneLineImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, blocked: ValHolder<number>) {
+    protected runOneLineImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, blocked: ValHolder<AsyncCodeOpState>) {
         let parsed = this.cacheParsedCST.getParsedLine(curLine);
         let methodName = 'visit' + getEnumToStrOrUnknown(VpcLineCategory, curLine.ctg);
         Util512.callAsMethodOnClass('VpcExecFrameStack', this, methodName, [curFrame, curLine, parsed, blocked], false);
@@ -220,35 +223,84 @@ export class VpcExecFrameStack {
     /**
      * look in the message hierarchy for a handler
      */
-    findHandlerUpwards(id: string, handlername: string, onlyParents: boolean) {
-        assertTrueWarn(id.match(/^[0-9]+$/), '')
+    findHandlerUpwards(velId: string, statedParent:O<string>, handlername: string, onlyParents: boolean) {
+        let chain = this.getMessageChain(velId, statedParent)
+        if (onlyParents && chain[0].id === velId) {
+            chain = chain.slice(1)
+        }
+
+        for (let vel of chain) {
+            let found = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(vel.getS('script'), handlername, vel.id)
+            if (found) {
+                return [found, vel]
+            }
+        }
+
+        return undefined
+    }
+
+    /**
+    get message chain
+    the stated parent let's us have snippets of code that run in the context of an element's script,
+    but aren't actually in that script. 
+     */
+    getMessageChain(velId: string, statedParent:O<string>):VpcElBase[] {
+        let ret:VpcElBase[] = []
+        let vel = this.outside.FindVelById(velId);
+        let haveUsedStatedParent = false;
+        let hasSeenStack = false
+        let hasSeenProduct = false
+        if (!vel && statedParent) {
+            vel = this.outside.FindVelById(statedParent)
+            haveUsedStatedParent = true
+        }
+        /* 
+        running code on a deleted object can happen: such as in an ondelete message.
+        in such cases this is a break in the chain--another good reason why we have a
+        statedParent. let's also, though, make sure the stack and product are in the chain
+        for the case where we're running code in and the background that has just been deleted.
+        */
+
         let loop = new LoopLimit(CodeLimits.MaxObjectsInMsgChain, 'maxObjectsInMsgChain');
-        let vel = this.outside.FindVelById(id);
-        let firstTimeInLoop = true
         while (loop.next()) {
             if (!vel) {
-                return undefined
-            }
-
-            if (!onlyParents || !firstTimeInLoop) {
-                let found = this.code.findHandlerInScript(vel.id, vel.getS('script'), handlername);
-                if (found) {
-                    return found
+                if (!hasSeenStack) {
+                    let r = new RequestedVelRef(VpcElType.Stack)
+                    r.lookByRelative = OrdinalOrPosition.This
+                    ret.push(throwIfUndefined(this.outside.ResolveVelRef(r)[0], ''))
                 }
+                if (!hasSeenProduct) {
+                    let r = new RequestedVelRef(VpcElType.Product)
+                    r.lookByRelative = OrdinalOrPosition.This
+                    ret.push(throwIfUndefined(this.outside.ResolveVelRef(r)[0], ''))
+                }
+                return ret
             }
 
-            vel = this.outside.FindVelById(vel.parentId)
-            firstTimeInLoop = false
+            if ((vel as VpcElStack). isVpcElStack) {
+                hasSeenStack = true
+            } else if ((vel as VpcElProductOpts).isVpcElProductOpts) {
+                hasSeenProduct = true
+            }
+
+            ret.push(vel)
+            if (!haveUsedStatedParent && statedParent && this.outside.FindVelById(statedParent)) {
+                vel = this.outside.FindVelById(statedParent)
+                haveUsedStatedParent = true
+            } else {
+                vel = this.outside.FindVelById(vel.parentId)
+            }
         }
+        checkThrow(false, "not reached.")
     }
 
     /**
      * run a builtin command
      */
-    visitStatement(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed, blocked: ValHolder<number>) {
+    visitStatement(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed, blocked: ValHolder<AsyncCodeOpState>) {
         let visited = parsed ? this.evalGeneralVisit(parsed, curLine) : VpcVal.Empty;
         this.execStatements.go(curLine, visited, blocked);
-        if (blocked.val === 0) {
+        if (blocked.val === AsyncCodeOpState.AllowNext) {
             curFrame.next();
         }
     }
@@ -439,22 +491,6 @@ export class VpcExecFrameStack {
     }
 
     /**
-     * run a "repeat while"
-     */
-    visitRepeatWhile(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        return this.repeatImpl(curFrame, curLine, parsed, false);
-    }
-
-    /**
-     * run a "repeat until"
-     */
-    visitRepeatUntil(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        return this.repeatImpl(curFrame, curLine, parsed, true);
-    }
-
-
-
-    /**
      * from a line like myHandler x,y,z, retrieve the VpcVals (value of x y and z)
      */
     protected helpGetEvaledArgs(parsed: VpcParsed, curLine: VpcCodeLine): VpcVal[] {
@@ -514,6 +550,9 @@ export class VpcExecFrameStack {
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
         checkThrow(val && val.isVpcVal, 'visitSendStatement expected a string.');
+        let newLineAndCode = '\n' + val.readAsString().toLowerCase()
+        checkThrow(!newLineAndCode.includes('\nfunction\n') && !newLineAndCode.includes('\non\n'), `defining custom handlers in dynamic code
+            is an interesting idea, but it's not supported yet.`)
 
         let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
         checkThrow(velRef && velRef.isRequestedVelRef, 'visitSendStatement expected vel reference.');
@@ -524,27 +563,37 @@ export class VpcExecFrameStack {
 
     /**
      * run dynamically-built code like 'send "answer 1+1" to cd btn "myBtn"'
-    
-    confirmed that when sending this, "the target" and "me" are both set to the receipient of the event
+        confirmed in the product when running `send`, "the target" and "me" are both set to the receipient of the event
      */
     visitCallDynamic(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        let me = last(this.stack)!.codeSection.ownerId
-        let lineNumber = curLine.excerptToParse[1].startLine || 0
-        let [val, vel] = this.visitSendStatement(curLine, parsed)
+        let [val, velTarget] = this.visitSendStatement(curLine, parsed)
         let codeToCompile = val.readAsString()
         curFrame.next()
 
         /* for compatibility with original product, if there's no return statement,
         return the last result that was computed. see the myCompute example in the docs. */
-        codeToCompile += '\n' + 'return the result'
-
         /* build a new temporary handler, then call it.
-        a bit "interesting" to be potentially modifying the same script we are currently running,
-        but because we are appending only, and because VpcExecFrame has its own copy of the code anyways,
-        this should be safe. */
-        let prevCode = vel.getS('script')
-        let newHandlerName = VpcExecFrame.appendTemporaryDynamicCodeToScript(this.outside, vel.id, codeToCompile, me, lineNumber)
-        this.callHandlerAndThrowIfNotExist(curFrame, [], vel.id, newHandlerName)
+        it's a bit inefficent because we might have to re-preparse everything in the file. */
+        let newHandlerName = 'vpcinternaltmpcode'
+        let code = `
+on ${newHandlerName}
+    ${codeToCompile}
+    return the result
+end ${newHandlerName}
+        `.replace(/\r\n/g, '\n')
+        
+        curFrame.locals.set('$result', VpcVal.Empty);
+        let compiled = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(code, newHandlerName, curFrame.meId)
+        checkThrow(compiled, "did not find the handler we just created")
+        /* this is a bit interesting: we are setting the "me" and the "StatedParent" to the
+        same object, so that calls in the new code can access the real object's code 
+        in the message chain. */
+        let meId = velTarget.id
+        let statedParentId = velTarget.id 
+        let newScriptMessage = Util512.shallowClone(curFrame.message) as VpcScriptMessage
+        newScriptMessage.targetId = velTarget.id
+        let newFrame = this.pushStackFrame(newHandlerName, newScriptMessage, compiled[0], compiled[1], meId, statedParentId);
+        newFrame.args = [];
     }
 
     /**
@@ -552,7 +601,7 @@ export class VpcExecFrameStack {
      */
     visitGoCardImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         assertTrue(
-            this.cacheParsedCST.parser.RuleBuiltinInternalVpcGoCardImpl === curLine.getParseRule(),
+            this.cacheParsedCST.parser.RuleBuiltinCmdInternalvpcgocardimpl === curLine.getParseRule(),
             'expected "goCardImpl" parse rule'
         );
 

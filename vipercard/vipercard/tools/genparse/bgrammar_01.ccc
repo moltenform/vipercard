@@ -60,6 +60,7 @@
 //      put "a" into fld 1 and put "a" into bg fld 1 both work
 //      cd btn "abc" is now case insensitive
 //      unsupported commands like "close" are not syntax errors, they will be shown at runtime
+//      "send" is more efficient, doesn't need to recompile the whole script, just the snippet
 
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )

@@ -11,7 +11,7 @@
 /* auto */ import { MakeLowerCase, SplitIntoLinesAndMakeLowercase, VpcCodeLine, VpcCodeLineReference } from './vpcPreparseCommon';
 /* auto */ import { VpcLineToCodeObj } from './vpcLineToCodeObj';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
-/* auto */ import { O, UI512ErrorHandling, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObject, Util512, ValHolder, util512Sort } from './../../ui512/utils/util512';
 
 /*
@@ -197,8 +197,9 @@ export namespace VpcCodeProcessor {
 
     export function go(
         code: string,
-        ownerVelId: string
+        velIdForErrMsg: string
     ): VpcScriptSyntaxError | VpcParsedCodeCollection {
+        assertTrue(!code.match(/^\s*$/), '')
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
         let syntaxError: O<VpcScriptSyntaxError>;
@@ -211,7 +212,7 @@ export namespace VpcCodeProcessor {
             syntaxError.isScriptException = e.isVpcError;
             syntaxError.isExternalException = !e.isUi512Error;
             syntaxError.lineNumber = latestSrcLineSeen.val;
-            syntaxError.velId = ownerVelId;
+            syntaxError.velId = velIdForErrMsg;
             syntaxError.lineData = latestDestLineSeen.val;
             syntaxError.details = e.message;
         } finally {

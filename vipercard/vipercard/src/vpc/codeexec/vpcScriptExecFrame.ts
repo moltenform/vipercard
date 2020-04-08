@@ -1,6 +1,6 @@
 
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
-/* auto */ import { VpcVal, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { VpcVal } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
@@ -17,10 +17,13 @@ export class VpcExecFrame {
     args: VpcVal[] = [];
     currentHandler: O<number>;
     protected offset: number;
-    constructor(public handlerName: string, public message: VpcScriptMessage, public meId: O<string>) {
+    constructor(public handlerName: string, public message: VpcScriptMessage, public meId: string, public statedParentId:O<string>) {
+        /* why require a value for "me" and "parent"? 
+        when executing code dynamically with 'send', 
+        "me" and "parent" might be the same.
+        */
         /* make special locals */
         this.locals.set('$result', VpcVal.Empty);
-        this.locals.set('$meId', VpcValS(meId ?? ""));
         this.locals.set('it', VpcVal.Empty);
         assertTrue(bool(this.message), '5N|message is null');
     }

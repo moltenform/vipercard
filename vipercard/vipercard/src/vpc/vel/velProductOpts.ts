@@ -31,7 +31,7 @@
  * these are runtime-only settings -- nothing here is persisted during save.
  */
 export class VpcElProductOpts extends VpcElBase {
-    isVpcElProduct = true;
+    isVpcElProductOpts = true;
     allowSetCurrentTool = false;
     allowSetCurrentCard = false;
     protected _itemDel = ',';

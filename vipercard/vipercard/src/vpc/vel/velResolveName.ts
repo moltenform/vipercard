@@ -172,7 +172,7 @@ export class VelResolveName {
      * interesting fact, in emulator the "long name" of product would return filepath of the app
      */
     protected goResolveNameProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElProduct, 'J;|');
+        checkThrow(vel.isVpcElProductOpts, 'J;|');
         return cProductName;
     }
 

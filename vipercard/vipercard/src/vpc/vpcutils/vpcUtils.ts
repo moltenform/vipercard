@@ -129,7 +129,7 @@ export enum CodeLimits {
     MaxLinesInScript = 32 * 1024,
     MaxCodeFrames = 1000,
     CacheThisManyParsedLines = 10 * 1000,
-    CacheThisManyScripts = 10,
+    CacheThisManyScripts = 20,
     MaxLocalVars = 256,
     MaxGlobalVars = 256,
     MaxStringLength = 64 * 1024,
