@@ -1,5 +1,6 @@
 
 /* auto */ import { RememberHistory, VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
@@ -17,7 +18,6 @@
 /* auto */ import { TextFontSpec, TextFontStyling } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { PalBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * a "message box" where you can type in code and evaluate it

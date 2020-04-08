@@ -1,6 +1,7 @@
 
 /* auto */ import { VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcAppUIToolSmear } from './../tools/vpcToolSmear';
+/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcModelRender } from './../modelrender/vpcModelRender';
@@ -21,7 +22,6 @@
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { BasicHandlers } from './../../ui512/textedit/ui512BasicHandlers';
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * ViperCard event handling

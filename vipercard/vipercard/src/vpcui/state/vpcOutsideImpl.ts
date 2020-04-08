@@ -1,6 +1,8 @@
 
 /* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { ReadableContainer, RememberHistory, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
+/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
@@ -21,7 +23,6 @@
 /* auto */ import { Util512, ValHolder, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
-/* auto */ import { VpcExecFrame, VpcExecFrameStack } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * OutsideWorldReadWrite
@@ -86,6 +87,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         //~ me = this.vci.getModel().findByIdUntyped(frame.codeSection.ownerId);
         //~ target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
         //~ }
+        me = frame.vars.$meid
         let cardHistory: RememberHistory = (undefined as unknown) as RememberHistory;
 
         let resolver = new VelResolveReference(this.vci.getModel());

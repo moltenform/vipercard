@@ -1,4 +1,6 @@
 
+/* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
+/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
@@ -12,7 +14,7 @@
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 /* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
-/* auto */ import { VpcExecFrame, VpcExecFrameStack, VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
+/* auto */ import { VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * interface,

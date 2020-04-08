@@ -1,5 +1,7 @@
 
 /* auto */ import { VpcState } from './../state/vpcState';
+/* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
+/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
@@ -12,7 +14,7 @@
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 /* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
-/* auto */ import { VpcExecFrame, VpcExecFrameStack, VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
+/* auto */ import { VpcExecTop } from './../../vpc/codeexec/placeholder__codeexec';
 
 /**
  * fulfill the VpcStateInterface interface

@@ -1,7 +1,7 @@
 
 /* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
 
 /**
  * support the "play" command in vipercard
@@ -90,39 +90,43 @@ export class VpcPhoneDial {
     /**
      * dials a number, and call cbWhenComplete when complete
      */
-    static goDial(__s: string, __cbWhenComplete: VoidFn) {
-        //~ let alreadyRun = new ValHolder(false)
-        //~ let runCallbackUnlessAlreadyRun = () => {
-        //~ if (!alreadyRun.val) {
-        //~ cbWhenComplete()
-        //~ alreadyRun.val = true
-        //~ }
-        //~ }
-        //~ /* fail-safe: continue running the script in 5 seconds even if everything else fails */
-        //~ let fiveSeconds = 5 * 1000
-        //~ window.setTimeout(runCallbackUnlessAlreadyRun, fiveSeconds)
-        //~ /* preload, so we'll at least have them available for next time */
-        //~ for (let i=0; i<10; i++) {
-        //~ let filename = `dial${i}`
-        //~ VpcAudio.preload(filename)
-        //~ }
-        //~ /* start playback */
-        //~ let padding = 30
-        //~ let arr = VpcPhoneDial.intoArray(s)
-        //~ if (!arr.length) {
-        //~ window.setTimeout(runCallbackUnlessAlreadyRun, 1)
-        //~ return
-        //~ }
-        //~ /* schedule playing each tone */
-        //~ let durations = arr.map(n=>VpcPhoneDial.mapDialDurations[n] + padding)
-        //~ for (let i=0; i<arr.length; i++) {
-        //~ let timeAt = durations.slice(0, i+1).reduce(Util512.add)
-        //~ let filename = `dial${arr[i]}`
-        //~ window.setTimeout(()=>VpcAudio.play(filename), timeAt)
-        //~ }
-        //~ /* schedule returing to the script */
-        //~ let totalTime = durations.reduce(Util512.add) + 500
-        //~ window.setTimeout(runCallbackUnlessAlreadyRun, totalTime)
+    static goDial(s: string, cbWhenComplete: VoidFn) {
+        let alreadyRun = new ValHolder(false)
+        let runCallbackUnlessAlreadyRun = () => {
+        if (!alreadyRun.val) {
+            cbWhenComplete()
+        alreadyRun.val = true
+        }
+        }
+        /* fail-safe: continue running the script in 5 seconds even if everything else fails */
+        let fiveSeconds = 5 * 1000
+        /* eslint-disable-next-line ban/ban */
+        window.setTimeout(runCallbackUnlessAlreadyRun, fiveSeconds)
+        /* preload, so we'll at least have them available for next time */
+        for (let i=0; i<10; i++) {
+        let filename = `dial${i}`
+        VpcAudio.preload(filename)
+        }
+        /* start playback */
+        let padding = 30
+        let arr = VpcPhoneDial.intoArray(s)
+        if (!arr.length) {
+        /* eslint-disable-next-line ban/ban */
+        window.setTimeout(runCallbackUnlessAlreadyRun, 1)
+        return
+        }
+        /* schedule playing each tone */
+        let durations = arr.map(n=>VpcPhoneDial.mapDialDurations[n] + padding)
+        for (let i=0; i<arr.length; i++) {
+        let timeAt = durations.slice(0, i+1).reduce(Util512.add)
+        let filename = `dial${arr[i]}`
+        /* eslint-disable-next-line ban/ban */
+        window.setTimeout(()=>VpcAudio.play(filename), timeAt)
+        }
+        /* schedule returing to the script */
+        let totalTime = durations.reduce(Util512.add) + 500
+        /* eslint-disable-next-line ban/ban */
+        window.setTimeout(runCallbackUnlessAlreadyRun, totalTime)
     }
 
     /**

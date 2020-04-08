@@ -197,7 +197,7 @@ export namespace VpcCodeProcessor {
 
     export function go(
         code: string,
-        ownerId: string
+        ownerVelId: string
     ): VpcScriptSyntaxError | VpcParsedCodeCollection {
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
@@ -211,7 +211,7 @@ export namespace VpcCodeProcessor {
             syntaxError.isScriptException = e.isVpcError;
             syntaxError.isExternalException = !e.isUi512Error;
             syntaxError.lineNumber = latestSrcLineSeen.val;
-            syntaxError.velId = ownerId;
+            syntaxError.velId = ownerVelId;
             syntaxError.lineData = latestDestLineSeen.val;
             syntaxError.details = e.message;
         } finally {

@@ -1,4 +1,5 @@
 
+/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
@@ -20,7 +21,6 @@
 /* auto */ import { WndBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
 /* auto */ import { UI512CompCodeEditorFont } from './../../ui512/composites/ui512CodeEditorAutoIndent';
 /* auto */ import { UI512CompCodeEditor } from './../../ui512/composites/ui512CodeEditor';
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/placeholder__codeexec';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /**
