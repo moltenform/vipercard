@@ -169,7 +169,7 @@ HAllPropertiesThatCouldBeUnary:={tkAllUnaryPropertiesIfNotAlready | tkAllNullary
 HAnyFnNameOrAllPropertiesThatCouldBeNullary:={ <HAnyFnName> | tkAllNullaryOrUnaryPropertiesIfNotAlready }                      --->ProcessOr--->IToken
 HAnyFnName:= { tkIdentifier | _windows}                      --->ProcessOr--->IToken
 /* generated code, any changes above this point will be lost: --------------- */
-HCouldBeAPropertyToSet:= { tkIdentifier | tkAllNullaryOrUnaryPropertiesIfNotAlready | <HAllPropertiesThatCouldBeUnary> }                 --->ProcessOr--->IToken
+HCouldBeAPropertyToSet:= { tkIdentifier | <HAllPropertiesThatCouldBeUnary> }                 --->ProcessOr--->IToken
 HAnyAllowedVariableName:={ tkIdentifier | _number | tkA | tkAllUnaryPropertiesIfNotAlready | tkAllNullaryOrUnaryPropertiesIfNotAlready }         --->ProcessOr--->IToken
 
 // a bit of a space/time tradeoff in rules:

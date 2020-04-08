@@ -15,11 +15,8 @@
 export class VpcLineToCodeObj {
     reusableRequestEval: ChvITk;
     reusableRequestUserHandler: ChvITk;
-    parser: VpcChvParser
-    constructor(
-        protected idGen: CountNumericId,
-        protected check: CheckReservedWords
-    ) {}
+    parser: VpcChvParser;
+    constructor(protected idGen: CountNumericId, protected check: CheckReservedWords) {}
 
     init(basis: ChvITk) {
         this.reusableRequestEval = BuildFakeTokens.inst.makeTk(
@@ -34,7 +31,7 @@ export class VpcLineToCodeObj {
         );
         this.parser = getParsingObjects()[1];
     }
-    
+
     toCodeLine(line: ChvITk[]) {
         checkThrow(line && line.length > 0, "8O|we don't allow empty lines of code");
         checkThrow(
@@ -53,7 +50,13 @@ export class VpcLineToCodeObj {
             let cmd = firstImage.replace(/\^/g, '');
             let method = 'go' + Util512.capitalizeFirst(cmd);
             method = Util512.isMethodOnClass(this, method) ? method : 'goCustomHandler';
-            let ret = Util512.callAsMethodOnClass('DetermineCategory', this, method, [line, output], false);
+            let ret = Util512.callAsMethodOnClass(
+                'DetermineCategory',
+                this,
+                method,
+                [line, output],
+                false
+            );
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {
                 if (output.ctg === VpcLineCategory.CallDynamic) {
@@ -66,7 +69,9 @@ export class VpcLineToCodeObj {
                     output.setParseRule(this.parser.RuleBuiltinCmdInternalvpcgocardimpl);
                 } else if (this.isParsingNeeded(output.ctg)) {
                     /* construct an array to be sent to the parser */
-                    output.excerptToParse = [this.reusableRequestEval].concat(output.excerptToParse);
+                    output.excerptToParse = [this.reusableRequestEval].concat(
+                        output.excerptToParse
+                    );
                     output.setParseRule(this.parser.RuleInternalCmdRequestEval);
                 }
             }
@@ -82,8 +87,10 @@ export class VpcLineToCodeObj {
      */
     goBuiltinCmd(firstImage: string, line: ChvITk[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.Statement;
-        output.excerptToParse = [BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
-            BuildFakeTokens.inst.makeSyntaxMarker(line[0])].concat(line.slice(1));
+        output.excerptToParse = [
+            BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
+            BuildFakeTokens.inst.makeSyntaxMarker(line[0])
+        ].concat(line.slice(1));
     }
 
     /**
@@ -107,7 +114,7 @@ export class VpcLineToCodeObj {
      * this line is a handler start like "on mouseUp"
      */
     goOn(line: ChvITk[], output: VpcCodeLine) {
-        let firstImage = line[0].image
+        let firstImage = line[0].image;
         output.ctg = VpcLineCategory.HandlerStart;
         checkThrow(line.length > 1, `8F|cannot have a line that is just "${firstImage}"`);
         checkCommonMistakenVarNames(line[1]);
@@ -185,7 +192,6 @@ export class VpcLineToCodeObj {
         );
     }
 
-
     /**
      * this line is declaring global variable(s)
      */
@@ -233,7 +239,10 @@ export class VpcLineToCodeObj {
         checkCommonMistakenVarNames(line[1]);
         checkThrow(
             this.check.okHandlerName(line[1].image),
-            `8A|we think you are trying to say '${s} myhandler', but name of handler is a reserved word.`
+            longstr(
+                `8A|we think you are trying to say '${s} myhandler', but
+                name of handler is a reserved word.`
+            )
         );
         checkThrowEq(
             tks.tkIdentifier,
@@ -266,7 +275,6 @@ export class VpcLineToCodeObj {
         output.excerptToParse = line.slice(1);
     }
 
-    
     /**
      * this line is ending a handler
      */
@@ -295,7 +303,7 @@ export class VpcLineToCodeObj {
      * by this point all loops have become just "repeat"
      */
     goRepeat(line: ChvITk[], output: VpcCodeLine) {
-        checkThrowEq(1, line.length, "all repeats should have already been transformed.")
+        checkThrowEq(1, line.length, 'all repeats should have already been transformed.');
     }
 
     /**
@@ -303,7 +311,11 @@ export class VpcLineToCodeObj {
      */
     goEnd(line: ChvITk[], output: VpcCodeLine) {
         checkThrow(line.length > 1, `7_|cannot have a line that is just "end"`);
-        checkThrowEq(2, line.length, `7^|wrong line length. expected "end if", "end repeat", "end handler"`);
+        checkThrowEq(
+            2,
+            line.length,
+            `7^|wrong line length. expected "end if", "end repeat", "end handler"`
+        );
         checkThrowEq(
             tks.tkIdentifier,
             line[1].tokenType,
@@ -326,7 +338,10 @@ export class VpcLineToCodeObj {
         checkThrow(line.length > 1, `7[|cannot have a line that is just "exit"`);
         checkThrow(
             line.length === 2,
-            `7@|wrong line length, expected "exit myhandler", "exit repeat", "exit to ${cProductName}"`
+            longstr(
+                `7@|wrong line length, expected "exit myhandler",
+                 "exit repeat", "exit to ${cProductName}"`
+            )
         );
         checkThrowEq(
             tks.tkIdentifier,
@@ -336,7 +351,10 @@ export class VpcLineToCodeObj {
 
         if (line[1].image === 'repeat') {
             return this.goExitRepeat(line, output);
-        } else if (line[1].image === cProductName.toLowerCase() || line[1].image === cAltProductName.toLowerCase()) {
+        } else if (
+            line[1].image === cProductName.toLowerCase() ||
+            line[1].image === cAltProductName.toLowerCase()
+        ) {
             return this.goExitProduct(line, output);
         } else {
             return this.goExitHandler(line, output);
@@ -351,7 +369,7 @@ export class VpcLineToCodeObj {
 
         /* other control blocks just parse a single expression,
         but this has to parse both an expression and an object */
-        output.excerptToParse = line.slice()
+        output.excerptToParse = line.slice();
         output.ctg = VpcLineCategory.CallDynamic;
     }
 
@@ -363,7 +381,7 @@ export class VpcLineToCodeObj {
 
         /* other control blocks just parse a single expression,
         but this has to parse a refrence to a card */
-        output.excerptToParse = line.slice()
+        output.excerptToParse = line.slice();
         output.ctg = VpcLineCategory.GoCardImpl;
     }
 

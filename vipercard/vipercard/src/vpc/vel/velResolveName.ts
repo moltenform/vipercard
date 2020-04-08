@@ -12,7 +12,7 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, bool, checkThrow, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq } from './../../ui512/utils/util512';
+/* auto */ import { Util512, castVerifyIsStr, checkThrowEq } from './../../ui512/utils/util512';
 
 /**
  * when a script asks for the name of an object
@@ -27,12 +27,14 @@ export class VelResolveName {
     go(vel: VpcElBase, adjective: PropAdjective): string {
         let type = vel.getType();
         let methodName = 'goResolveName' + VpcElType[type];
-        return Util512.callAsMethodOnClass(
-            'VelResolveName',
-            this,
-            methodName,
-            [vel, adjective],
-            false
+        return castVerifyIsStr(
+            Util512.callAsMethodOnClass(
+                'VelResolveName',
+                this,
+                methodName,
+                [vel, adjective],
+                false
+            )
         );
     }
 
@@ -311,13 +313,15 @@ export class VelResolveReference {
             return [ret, currentCard];
         }
 
-        return Util512.callAsMethodOnClass(
+        let ret = Util512.callAsMethodOnClass(
             'VelResolveReference',
             this,
             methodName,
             [ref, parentCard, parentBg, ref.partIsBg],
             false
-        );
+        ) as [O<VpcElBase>, VpcElCard];
+        checkThrow(Array.isArray(ret) && ret[1].isVpcElCard, '');
+        return ret;
     }
 
     /**

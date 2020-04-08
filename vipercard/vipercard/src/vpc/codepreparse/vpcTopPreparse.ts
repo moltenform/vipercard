@@ -27,17 +27,20 @@ Part 1: codepreparse
     1) To minimize number of tokens needed in the lexer (for faster lexing)
         for example:
         ask line 2 of x with "defaultText"
-        we could make 'with' a token so that it wouldn't get lumped into the expression line 2 of x.
+        we could make 'with' a token so that it wouldn't get lumped into the expression
+            line 2 of x.
         but we want to minimze number of tokens.
-        so instead, during codepreparse, if the command is ask, replace any tokens that are exactly 'with'.
+        so instead, during codepreparse, if the command is ask, replace any tokens
+            that are exactly 'with'.
         ask line 2 of x $syntaxmarker$ "defaultText"
         a $syntaxmarker$ is never part of an expression, and so the parser has no difficulty.
-    2) To transform "repeat with x=1 to 5" into a "repeat while" loop with the same functionality
+    2) Transform "repeat with x=1 to 5" into a "repeat while" loop with same functionality
     3) To simplify parsing for a few commands
     4) To expand custom function calls in an expression
-        We don't want a custom function call inside an expression, because the custom fn call could take
-        an arbitrarily long time to run, and we can't pause execution halfway through evaling an expression.
-        We also want evalling an expression to be a pure function with no side effects.
+        We don't want a custom function call inside an expression, because the custom
+        fn call could take an arbitrarily long time to run, and we can't pause
+        execution halfway through evaling an expression. We also want evalling an
+        expression to be a pure function with no side effects.
         So, if a function call occurs inside an expression, we pull it outside:
 
         put 2 * mycustomfunc(5 + mycustomfunc(7 + sin(x))) into x
@@ -53,42 +56,57 @@ Part 1: codepreparse
         put 2 * tmp002 into x
 
     Next, DetermineCategory determines if a line is a syntax element like "end repeat"
-    If the syntax element has an expression to evaluate, put the expression into the line's readyToParse
-    Otherwise, we can skip running the parser entirely on the line, for better perf
-    Run BranchProcessing so that syntax elements like "end repeat" see where to jump to the corresponding "repeat"
-    Run BranchProcessing to confirm hierarchical structure: an "else" must appear in a valid "if", "end myHandler" must follow "on myHandler"
+    If the syntax element has an expression to evaluate, put the expression into the
+    line's readyToParse. Otherwise, we can skip running the parser entirely on the line,
+    for better perf.
+    Run BranchProcessing so that syntax elements like "end repeat" see where to jump
+        to the corresponding "repeat"
+    Run BranchProcessing to confirm hierarchical structure: an "else" must appear in
+        a valid "if", "end myHandler" must follow "on myHandler"
 
-    The preparsed code is a list, loops work by telling the interpreter to jump to a different offset in the list.
+    The preparsed code is a list, loops work by telling the interpreter to jump to a
+        different offset in the list.
     The code is then stored in the VpcAllCode instance.
 
 Part 2: execution
     Code execution walks line-by-line through the list, running one line at a time
     It checks the type of the line:
-        If there is no expression to be parsed, run the line and continue (such as onMouseUp or end repeat)
-        Else if there is an expression to be parsed, see if it is in the _VpcCacheParsedLines_, and use that if possible
+        If there is no expression to be parsed, run the line and continue (such as
+            onMouseUp or end repeat)
+        Else if there is an expression to be parsed, see if it is in the
+            _VpcCacheParsedLines_, and use that if possible
         Otherwise, run the parser
             (we run the chevrotain parser at runtime right when the code is being executed)
             the parser creates a CST object, save the results to the _VpcCacheParsedLines_
         Use the _visitor_ class to recurse through the CST object and evaluate the result
-    Check how long we've been running the script, so that we're not stuck in a tight loop. if it's been too long,
+    Check how long we've been running the script, so that we're not stuck in a tight
+        loop. if it's been too long,
         save the instruction offset and all state
         exit, the scheduler will call into us again in a few ms
     If the stack of execution frames is empty, we've completed the script.
 */
 
-
 export namespace VpcCodeProcessor {
-    function goImpl(code:string, latestSrcLineSeen: ValHolder<number>, latestDestLineSeen: ValHolder<VpcCodeLine> ): VpcParsedCodeCollection {
+    function goImpl(
+        code: string,
+        latestSrcLineSeen: ValHolder<number>,
+        latestDestLineSeen: ValHolder<VpcCodeLine>
+    ): VpcParsedCodeCollection {
         /* lex the input */
         let lexer = getParsingObjects()[0];
         let lexed = lexer.tokenize(code);
         if (lexed.errors.length) {
             latestSrcLineSeen.val = lexed.errors[0].line;
-            let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErr);
+            let errmsg = lexed.errors[0].message
+                .toString()
+                .substr(0, CodeLimits.LimitChevErr);
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
-        
-        let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, new MakeLowerCase());
+
+        let splitter = new SplitIntoLinesAndMakeLowercase(
+            lexed.tokens,
+            new MakeLowerCase()
+        );
         let rewrites = new VpcRewriteForCommands();
         let exp = new ExpandCustomFunctions(
             VpcSuperRewrite.CounterForUniqueNames,
@@ -100,7 +118,7 @@ export namespace VpcCodeProcessor {
             if (!next) {
                 break;
             }
-            
+
             lines.push(next);
         }
 
@@ -113,18 +131,18 @@ export namespace VpcCodeProcessor {
         // by passing the result of one to the next, we're saving some allocations
         let totalOutput: VpcCodeLine[] = [];
         let checkReserved = new CheckReservedWords();
-        let idGen = VpcSuperRewrite.CounterForUniqueNames
-        let toCodeObj = new VpcLineToCodeObj(idGen, checkReserved )
-        toCodeObj.init(lines[0][0])
+        let idGen = VpcSuperRewrite.CounterForUniqueNames;
+        let toCodeObj = new VpcLineToCodeObj(idGen, checkReserved);
+        toCodeObj.init(lines[0][0]);
         let lineNumber = 0;
         let branchProcessor = new BranchProcessing(idGen);
 
         for (let line of lines) {
-            let nextLines1 = stage1Process(line) ?? [line]
+            let nextLines1 = stage1Process(line) ?? [line];
             for (let line1 of nextLines1) {
-                let nextLines2 = stage2Process(line1, rewrites) ?? [line1]
+                let nextLines2 = stage2Process(line1, rewrites) ?? [line1];
                 for (let line2 of nextLines2) {
-                    let nextLines3 = stage3Process(line2, exp)
+                    let nextLines3 = stage3Process(line2, exp);
                     for (let line3 of nextLines3) {
                         let lineObj = toCodeObj.toCodeLine(line3);
                         latestDestLineSeen.val = lineObj;
@@ -132,8 +150,11 @@ export namespace VpcCodeProcessor {
                         branchProcessor.go(lineObj);
                         totalOutput[lineNumber] = lineObj;
                         lineNumber += 1;
-                        checkThrow(lineNumber < CodeLimits.MaxLinesInScript, 'maxLinesInScript');
-    
+                        checkThrow(
+                            lineNumber < CodeLimits.MaxLinesInScript,
+                            'maxLinesInScript'
+                        );
+
                         /* save memory, we don't need this anymore */
                         lineObj.tmpEntireLine = undefined;
                     }
@@ -142,22 +163,23 @@ export namespace VpcCodeProcessor {
         }
 
         branchProcessor.ensureComplete();
-       return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput)
+        return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput);
     }
 
-    function stage1Process(line: ChvITk[]):O<ChvITk[][]>
-    {
+    function stage1Process(line: ChvITk[]): O<ChvITk[][]> {
         if (line.length && line[0].image === 'if') {
-            return VpcRewritesConditions.splitSinglelineIf(line)
+            return VpcRewritesConditions.splitSinglelineIf(line);
         } else if (line.length && line[0].image === 'repeat') {
             return VpcRewritesLoops.Go(line);
         } else {
-            return undefined
+            return undefined;
         }
     }
 
-    function stage2Process(line: ChvITk[], rewrites: VpcRewriteForCommands):O<ChvITk[][]>
-    {
+    function stage2Process(
+        line: ChvITk[],
+        rewrites: VpcRewriteForCommands
+    ): O<ChvITk[][]> {
         let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image);
         return Util512.callAsMethodOnClass(
             'VpcRewriteForCommands',
@@ -168,19 +190,22 @@ export namespace VpcCodeProcessor {
         ) as O<ChvITk[][]>;
     }
 
-    function stage3Process(line: ChvITk[], exp:ExpandCustomFunctions):ChvITk[][] {
+    function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions): ChvITk[][] {
         line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line);
-        return exp.go(line)
+        return exp.go(line);
     }
 
-    export function go(code:string, ownerId:string) : VpcScriptSyntaxError | VpcParsedCodeCollection {
+    export function go(
+        code: string,
+        ownerId: string
+    ): VpcScriptSyntaxError | VpcParsedCodeCollection {
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
         let syntaxError: O<VpcScriptSyntaxError>;
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow
+        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
         try {
-            UI512ErrorHandling.breakOnThrow = false
-            return goImpl(code, latestSrcLineSeen, latestDestLineSeen)
+            UI512ErrorHandling.breakOnThrow = false;
+            return goImpl(code, latestSrcLineSeen, latestDestLineSeen);
         } catch (e) {
             syntaxError = new VpcScriptSyntaxError();
             syntaxError.isScriptException = e.isVpcError;
@@ -190,18 +215,21 @@ export namespace VpcCodeProcessor {
             syntaxError.lineData = latestDestLineSeen.val;
             syntaxError.details = e.message;
         } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
 
-        return syntaxError
+        return syntaxError;
     }
 }
 
 export class VpcParsedCodeCollection {
-    isVpcParsedCodeCollection = true
-    protected _handlerStarts: number[]
-    protected _handlers: MapKeyToObject<VpcCodeLineReference>
-    constructor(protected map:MapKeyToObject<VpcCodeLineReference>, public lines: VpcCodeLine[]) {
+    isVpcParsedCodeCollection = true;
+    protected _handlerStarts: number[];
+    protected _handlers: MapKeyToObject<VpcCodeLineReference>;
+    constructor(
+        protected map: MapKeyToObject<VpcCodeLineReference>,
+        public lines: VpcCodeLine[]
+    ) {
         this._handlers = map;
         this._handlerStarts = map.getVals().map(h => h.offset);
         this._handlerStarts.sort(util512Sort);
@@ -225,9 +253,7 @@ export class VpcParsedCodeCollection {
     /**
      * store handlers
      */
-    setHandlers(map: MapKeyToObject<VpcCodeLineReference>) {
-        
-    }
+    setHandlers(map: MapKeyToObject<VpcCodeLineReference>) {}
 
     /**
      * given a code offset, which handler is it in?

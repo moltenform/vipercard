@@ -4,71 +4,6 @@
 /* auto */ import { Util512, last } from './../../ui512/utils/util512';
 
 /**
- * when re-writing syntax, sometimes we want to construct a token, and make it
- * look just as if it had come from the lexer.
- * use this class to build a fake token based on a real token
- */
-export class BuildFakeTokens {
-    readonly knownImages: { [tkname: string]: string } = {};
-    static inst = new BuildFakeTokens();
-    constructor() {
-        this.knownImages[tks.tkNewLine.name] = '\n';
-        this.knownImages[tks.tkComma.name] = ',';
-        this.knownImages[tks.tkSyntaxPlaceholder.name] = Util512.repeat(99, '?').join('');
-    }
-
-    /**
-     * make a syntax marker token
-     */
-    makeSyntaxMarker(basis: chevrotain.IToken, whichMarker = '') {
-        if (whichMarker === ',') {
-            return this.make(basis, tks.tkComma);
-        } else if (whichMarker === '') {
-            return this.make(basis, tks.tkSyntaxPlaceholder);
-        } else {
-            assertTrue(false, '8]|expected "" or ","', whichMarker);
-        }
-    }
-
-    /**
-     * make an arbitrary token, pass in the constructor
-     */
-    make(basis: chevrotain.IToken, type: chevrotain.TokenType) {
-        let image = this.knownImages[type.name];
-        assertTrue(trueIfDefinedAndNotNull(image), '8@|image is undefined', type.name);
-        return this.makeTk(basis, type, image);
-    }
-
-    /**
-     * make a string literal
-     */
-    makeStringLiteral(basis: chevrotain.IToken, unquoted: string) {
-        return this.makeTk(basis, tks.tkStringLiteral, '"' + unquoted + '"');
-    }
-
-    /**
-     * implementation
-     */
-    makeTk(basis: chevrotain.IToken, type: chevrotain.TokenType, image: string) {
-        let cloned = cloneToken(basis);
-        cloned.image = image;
-        cloned.endOffset = cloned.startOffset + image.length;
-        cloned.endColumn = trueIfDefinedAndNotNull(cloned.startColumn)
-            ? cloned.startColumn + image.length
-            : undefined;
-        cloned.endLine = cloned.startLine;
-        cloned.tokenType = type;
-        assertTrue(
-            trueIfDefinedAndNotNull(type.tokenTypeIdx),
-            'does not have a idx yet?',
-            type.name
-        );
-        cloned.tokenTypeIdx = type.tokenTypeIdx;
-        return cloned;
-    }
-}
-
-/**
  * check the type of a token
  */
 export function isTkType(tk: chevrotain.IToken, tkType: chevrotain.TokenType) {
@@ -946,3 +881,68 @@ listOfAllWordLikeTokens['=='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['\n'] = tks.tkNewLine;
 listOfAllWordLikeTokens['%SYNPLACEHOLDER%'] = tks.tkSyntaxPlaceholder;
 listOfAllWordLikeTokens['%MARK%'] = tks.tkSyntaxPlaceholder;
+
+/**
+ * when re-writing syntax, sometimes we want to construct a token, and make it
+ * look just as if it had come from the lexer.
+ * use this class to build a fake token based on a real token
+ */
+export class BuildFakeTokens {
+    readonly knownImages: { [tkname: string]: string } = {};
+    static inst = new BuildFakeTokens();
+    constructor() {
+        this.knownImages[tks.tkNewLine.name] = '\n';
+        this.knownImages[tks.tkComma.name] = ',';
+        this.knownImages[tks.tkSyntaxPlaceholder.name] = Util512.repeat(99, '?').join('');
+    }
+
+    /**
+     * make a syntax marker token
+     */
+    makeSyntaxMarker(basis: chevrotain.IToken, whichMarker = '') {
+        if (whichMarker === ',') {
+            return this.make(basis, tks.tkComma);
+        } else if (whichMarker === '') {
+            return this.make(basis, tks.tkSyntaxPlaceholder);
+        } else {
+            assertTrue(false, '8]|expected "" or ","', whichMarker);
+        }
+    }
+
+    /**
+     * make an arbitrary token, pass in the constructor
+     */
+    make(basis: chevrotain.IToken, type: chevrotain.TokenType) {
+        let image = this.knownImages[type.name];
+        assertTrue(trueIfDefinedAndNotNull(image), '8@|image is undefined', type.name);
+        return this.makeTk(basis, type, image);
+    }
+
+    /**
+     * make a string literal
+     */
+    makeStringLiteral(basis: chevrotain.IToken, unquoted: string) {
+        return this.makeTk(basis, tks.tkStringLiteral, '"' + unquoted + '"');
+    }
+
+    /**
+     * implementation
+     */
+    makeTk(basis: chevrotain.IToken, type: chevrotain.TokenType, image: string) {
+        let cloned = cloneToken(basis);
+        cloned.image = image;
+        cloned.endOffset = cloned.startOffset + image.length;
+        cloned.endColumn = trueIfDefinedAndNotNull(cloned.startColumn)
+            ? cloned.startColumn + image.length
+            : undefined;
+        cloned.endLine = cloned.startLine;
+        cloned.tokenType = type;
+        assertTrue(
+            trueIfDefinedAndNotNull(type.tokenTypeIdx),
+            'does not have a idx yet?',
+            type.name
+        );
+        cloned.tokenTypeIdx = type.tokenTypeIdx;
+        return cloned;
+    }
+}

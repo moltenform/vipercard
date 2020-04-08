@@ -95,11 +95,6 @@ export class VpcChvParser extends chevrotain.CstParser {
             },
             {
                 ALT: () => {
-                    this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
-                }
-            },
-            {
-                ALT: () => {
                     this.SUBRULE1(this.RuleHAllPropertiesThatCouldBeUnary);
                 }
             }
@@ -1426,23 +1421,10 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdSelect = this.RULE('RuleBuiltinCmdSelect', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.OR1([
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkIdentifier);
-                }
-            },
-            {
-                ALT: () => {
-                    this.OPTION1(() => {
-                        this.CONSUME2(tks.tkIdentifier);
-                    });
-                    this.CONSUME3(tks.tkIdentifier);
-                    this.SUBRULE1(this.RuleOf);
-                    this.SUBRULE1(this.RuleHContainer);
-                }
-            }
-        ]);
+        this.CONSUME1(tks.tkStringLiteral);
+        this.OPTION1(() => {
+            this.SUBRULE1(this.RuleHContainer);
+        });
     });
 
     RuleBuiltinCmdSend = this.RULE('RuleBuiltinCmdSend', () => {

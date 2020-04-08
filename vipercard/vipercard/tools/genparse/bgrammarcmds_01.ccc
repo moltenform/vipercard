@@ -66,7 +66,7 @@ BuiltinCmdEnable:=... <ObjectBtn>
 BuiltinCmdInternalvpcgocardimpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <Ordinal> | <Position> }   
 // always goes to the first card that's there, e.g. go to bg 2 == go to cd 1 of bg 2
 // note that `back` and `forth` are keywords so they don't need special handling
-HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->Custom--->RequestedVelRef           
+HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->ProcessOr--->RequestedVelRef           
 // help. show NYI in rewrite
 // hide. in rewrite error on mention of "menu"
 BuiltinCmdHide:=... <ObjectPart> 
@@ -96,10 +96,10 @@ BuiltinCmdReplace:=... <Expr> tkSyntaxPlaceholder <Expr> tkInOnly  <HSimpleConta
 // returnInField. sent up the message hierarchy, usually does nothing. takes no args
 // returnKey. sent up the message hierarchy, usually does nothing. takes no args
 // save. show NYI in rewrite
-// select. "select empty" is supported, "select button/fld" is not,
+// select. "select empty" is supported, "select button/fld" is not (takes you to the edit tool),
 // "select text of cd fld 1" is supported, in software we'll make sure it's not a variable.
 // however we currently don't support select char 2 of the selection
-BuiltinCmdSelect:=... { tkIdentifier | [tkIdentifier] tkIdentifier <Of> <HContainer> }
+BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]
 // execute in context of another object
 BuiltinCmdSend:=... <Expr> _to <Object>                                                         
 // setting a property

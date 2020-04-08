@@ -123,8 +123,6 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         RuleHCouldBeAPropertyToSet(ctx: VisitingContext): ChvITk {
             if (ctx.tkIdentifier[0]) {
                 return ctx.tkIdentifier[0];
-            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
             } else if (ctx.RuleHAllPropertiesThatCouldBeUnary[0]) {
                 return this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]);
             } else {
@@ -434,6 +432,18 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
         RuleBuiltinCmdInternalvpcgocardimpl(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
+        }
+
+        RuleHBuiltinCmdGoDest(ctx: VisitingContext): RequestedVelRef {
+            if (ctx.RuleObjectCard[0]) {
+                return this.visit(ctx.RuleObjectCard[0]);
+            } else if (ctx.RuleObjectBg[0]) {
+                return this.visit(ctx.RuleObjectBg[0]);
+            } else if (ctx.RuleObjectStack[0]) {
+                return this.visit(ctx.RuleObjectStack[0]);
+            } else {
+                throw makeVpcInternalErr('OR in HBuiltinCmdGoDest, no branch found');
+            }
         }
 
         RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals {

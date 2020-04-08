@@ -2,8 +2,7 @@
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcLineCategory } from './vpcPreparseCommon';
 /* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObject, checkThrowEq, last } from './../../ui512/utils/util512';
-
+/* auto */ import { MapKeyToObject, checkThrowEq, last, longstr } from './../../ui512/utils/util512';
 
 /**
  * in BranchProcessing we collect and validate the hierarchical structure of code,
@@ -32,14 +31,20 @@ export class BranchProcessing {
             }
         }
 
-        throw makeVpcScriptErr(`5r|cannot call 'exit repeat' or 'next repeat' outside of a loop`);
+        throw makeVpcScriptErr(
+            `5r|cannot call 'exit repeat' or 'next repeat' outside of a loop`
+        );
     }
 
     /**
      * you typed 'exit mouseUp', the handler must always be at the bottom of the stack
      */
     protected findCurrentHandler(): BranchBlockInfo {
-        checkThrowEq(VpcLineCategory.HandlerStart, this.stack[0].cat, `7>|could not find current handler`);
+        checkThrowEq(
+            VpcLineCategory.HandlerStart,
+            this.stack[0].cat,
+            `7>|could not find current handler`
+        );
         return this.stack[0];
     }
 
@@ -61,7 +66,11 @@ export class BranchProcessing {
      * hierarchical level should be down to 0 at the end.
      */
     ensureComplete() {
-        checkThrowEq(0, this.stack.length, `7=|missing 'end myHandler' at end of script.`);
+        checkThrowEq(
+            0,
+            this.stack.length,
+            `7=|missing 'end myHandler' at end of script.`
+        );
     }
 
     /**
@@ -70,13 +79,17 @@ export class BranchProcessing {
     go(line: VpcCodeLine) {
         let topOfStack = last(this.stack);
         if (this.stack.length === 0 && line.ctg !== VpcLineCategory.HandlerStart) {
-            throw makeVpcScriptErr(`5q|only 'on mouseup' and 'function myfunction' can exist at this scope`);
+            throw makeVpcScriptErr(
+                `5q|only 'on mouseup' and 'function myfunction' can exist at this scope`
+            );
         } else if (this.stack.length > 0 && line.ctg === VpcLineCategory.HandlerStart) {
-            throw makeVpcScriptErr(`5p|cannot begin a handler inside an existing handler`);
+            throw makeVpcScriptErr(
+                `5p|cannot begin a handler inside an existing handler`
+            );
         }
 
         switch (line.ctg) {
-            case VpcLineCategory.RepeatForever: /* fall-through */
+            case VpcLineCategory.RepeatForever /* fall-through */:
                 this.stack.push(new BranchBlockInfo(VpcLineCategory.RepeatForever, line));
                 break;
             case VpcLineCategory.RepeatNext: /* fall-through */
@@ -129,7 +142,10 @@ export class BranchProcessing {
                 let firstName = topOfStack.relevantLines[0].excerptToParse[1].image;
 
                 /* call add() so that we'll throw if there is a duplicate */
-                this.handlers.add(firstName, new VpcCodeLineReference(topOfStack.relevantLines[0]));
+                this.handlers.add(
+                    firstName,
+                    new VpcCodeLineReference(topOfStack.relevantLines[0])
+                );
                 this.finalizeBlock();
                 break;
             }
@@ -137,7 +153,10 @@ export class BranchProcessing {
             case VpcLineCategory.HandlerPass: {
                 /* if we're in "on mouseup", it's illegal to say "exit otherHandler" */
                 let currentHandlerStart = this.findCurrentHandler().relevantLines[0];
-                checkThrow(currentHandlerStart.excerptToParse.length > 1, '7.|expected on myHandler, not found');
+                checkThrow(
+                    currentHandlerStart.excerptToParse.length > 1,
+                    '7.|expected on myHandler, not found'
+                );
                 let currentHandlerName = currentHandlerStart.excerptToParse[1].image;
                 let gotName = line.excerptToParse[1].image;
                 checkThrowEq(
@@ -160,15 +179,24 @@ export class BranchProcessing {
      * on mouseUp must end with end mouseUp, and so on.
      */
     checkStartAndEndMatch(lines: VpcCodeLine[]) {
-        checkThrow(lines[0].excerptToParse.length > 1, '7,|on myHandler, missing name of handler');
+        checkThrow(
+            lines[0].excerptToParse.length > 1,
+            '7,|on myHandler, missing name of handler'
+        );
         let firstname = lines[0].excerptToParse[1].image;
         let lastline = last(lines);
-        checkThrow(lastline.excerptToParse.length > 1, '7+|end myHandler, missing name of handler');
+        checkThrow(
+            lastline.excerptToParse.length > 1,
+            '7+|end myHandler, missing name of handler'
+        );
         let lastname = lastline.excerptToParse[1].image;
         checkThrowEq(
             lastname,
             firstname,
-            `7*|handler names mismatch. start with with "on ${firstname}" ended with "end ${lastname}"`
+            longstr(
+                `7*|handler names mismatch. start with with
+                "on ${firstname}" ended with "end ${lastname}"`
+            )
         );
     }
 }

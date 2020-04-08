@@ -275,6 +275,43 @@ return 0`,
     rewriteSave(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the save command', line[0])];
     }
+    rewriteSelect(line: ChvITk[]): ChvITk[][] {
+        checkThrow(line.length > 1, 'not enough args');
+        if (line[1].image === 'empty') {
+            checkThrowEq(1, line.length, 'select empty should be alone');
+            return [[line[0], BuildFakeTokens.inst.makeStringLiteral(line[0], 'empty')]];
+        } else {
+            let startContainer = 1;
+            let ret = [line[0]];
+            let whereToSelect = 'all';
+            if (line[1].image === 'before') {
+                whereToSelect = 'before';
+                startContainer += 1;
+            } else if (line[1].image === 'after') {
+                whereToSelect = 'after';
+                startContainer += 1;
+            }
+
+            checkThrow(
+                line[startContainer].tokenType === tks.tkChunkGranularity ||
+                    'text' === line[startContainer].image,
+                'we only support `select *text* of` or `select char 2 of'
+            );
+            if ('text' === line[startContainer].image) {
+                startContainer += 1;
+                checkThrowEq(
+                    'of',
+                    line[startContainer].image,
+                    'we only support `select text *of*`'
+                );
+                startContainer += 1;
+            }
+
+            let container = line.slice(startContainer);
+            ret.push(BuildFakeTokens.inst.makeStringLiteral(line[0], whereToSelect));
+            return [ret.concat(container)];
+        }
+    }
     rewriteShow(line: ChvITk[]): ChvITk[][] {
         for (let unsupportedTerm of ['all', 'menu', 'picture', 'window']) {
             if (

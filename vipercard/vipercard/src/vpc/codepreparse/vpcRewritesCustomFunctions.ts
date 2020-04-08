@@ -7,7 +7,6 @@
 /* auto */ import { O, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { ValHolder, assertEq, checkThrowEq } from './../../ui512/utils/util512';
 
-
 /**
  * if a function call occurs inside an expression, we pull it outside:
 
@@ -110,6 +109,8 @@ export class ExpandCustomFunctions {
             );
             return [foundCall, foundEnd + 1];
         }
+
+        return undefined;
     }
 
     /**
