@@ -171,7 +171,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      */
     protected fullRedrawFromScratch() {
         let currentCardId = this.vci.getOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
+        let currentCard = this.vci.getModel().getCardById(currentCardId);
         this.grp.removeAllEls();
         for (let i = 0, len = currentCard.parts.length; i < len; i++) {
             let part = currentCard.parts[i];
@@ -360,13 +360,13 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             /* field not enabled/visible */
             this.vci.setCurrentFocus(undefined);
         } else {
-            let parent = this.vci.getModel().getById(focusedVel.parentId, VpcElCard);
+            let parent = this.vci.getModel().getCardById(focusedVel.parentId);
             let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
             if (parent.getType() === VpcElType.Card && parent.id !== currentCardId) {
                 /* field not on the current card */
                 this.vci.setCurrentFocus(undefined);
             } else if (parent.getType() === VpcElType.Bg) {
-                let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
+                let currentCard = this.vci.getModel().getCardById(currentCardId);
                 if (parent.id !== currentCard.parentId) {
                     /* field not on the current bg */
                     this.vci.setCurrentFocus(undefined);

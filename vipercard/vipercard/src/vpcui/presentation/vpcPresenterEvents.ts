@@ -497,7 +497,7 @@ export class VpcPresenterEvents {
 
         {
             /* send openbackground */
-            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard);
+            let currentCard = vci.getModel().getCardById(vci.getCurrentCardId());
             let currentBg = vci.getModel().getOwner(currentCard, VpcElBg);
             let msg = new VpcScriptMessage(currentBg.id, VpcBuiltinMsg.Openbackground);
             pr.vci.getCodeExec().scheduleCodeExec(msg);
@@ -505,7 +505,7 @@ export class VpcPresenterEvents {
 
         {
             /* send opencard */
-            let currentCard = vci.getModel().getById(vci.getCurrentCardId(), VpcElCard);
+            let currentCard = vci.getModel().getCardById(vci.getCurrentCardId());
             let msg = new VpcScriptMessage(currentCard.id, VpcBuiltinMsg.Opencard);
             pr.vci.getCodeExec().scheduleCodeExec(msg);
         }
@@ -521,8 +521,8 @@ export class VpcPresenterEvents {
         wasCardId: string,
         nextCardId: string
     ) {
-        let wasCard = vci.getModel().getById(wasCardId, VpcElCard);
-        let nextCard = vci.getModel().getById(nextCardId, VpcElCard);
+        let wasCard = vci.getModel().getCardById(wasCardId);
+        let nextCard = vci.getModel().getCardById(nextCardId);
         let wasBgId = wasCard.parentId;
         let nextBgId = nextCard.parentId;
 

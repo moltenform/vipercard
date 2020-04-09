@@ -74,7 +74,7 @@ export class VpcPaintRender extends VpcUILayer {
      * refresh cached paint for the card
      */
     refreshCachedPaintForCard(cardId: string) {
-        let cd = this.vci.getModel().getById(cardId, VpcElCard);
+        let cd = this.vci.getModel().getCardById(cardId);
         let currentVersion = cd.getS('paint');
         let currentlyCached = this.canvasesByCardId.find(cardId);
 
@@ -300,7 +300,7 @@ export class VpcPaintRender extends VpcUILayer {
         fn(mainCanvas, painter);
         let serialized = new UI512ImageSerialization().writeToString(mainCanvas);
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
+        let currentCard = this.vci.getModel().getCardById(currentCardId);
         currentCard.set('paint', serialized);
     }
 
@@ -321,7 +321,7 @@ export class VpcPaintRender extends VpcUILayer {
         }
 
         for (let queuePerCard of queuesPerCard) {
-            let cd = this.vci.getModel().getById(queuePerCard[0].cardId, VpcElCard);
+            let cd = this.vci.getModel().getCardById(queuePerCard[0].cardId);
             let [v, cvs] = this.refreshCachedPaintForCard(cd.id);
             let painter = new UI512PainterCvCanvas(cvs, cvs.canvas.width, cvs.canvas.height);
 

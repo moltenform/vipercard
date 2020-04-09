@@ -55,7 +55,7 @@ export class VelResolveName {
         if (name.length) {
             /* name exists, show the name */
             if (adjective === PropAdjective.Long) {
-                let parent = this.model.getById(vel.parentId, VpcElCard);
+                let parent = this.model.getCardById(vel.parentId);
                 return `card ${typ} "${name}" of ${this.goResolveNameCard(parent, adjective)}`;
             } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
@@ -65,7 +65,7 @@ export class VelResolveName {
         } else {
             /* no name, fall back to showing the id */
             if (adjective === PropAdjective.Long) {
-                let parent = this.model.getById(vel.parentId, VpcElCard);
+                let parent = this.model.getCardById(vel.parentId);
                 return `card ${typ} id ${vel.id} of ${this.goResolveNameCard(parent, adjective)}`;
             } else {
                 return `card ${typ} id ${vel.id}`;
@@ -336,7 +336,7 @@ export class VelResolveReference {
         let retBtnOrFld: O<VpcElBase>;
         if (isBg) {
             let parentBgId = parentCd.parentId;
-            let parentBg = this.model.getById(parentBgId, VpcElBg);
+            let parentBg = this.model.getById(VpcElBg, parentBgId);
             if (ref.lookById !== undefined) {
                 /* put the name of bg btn id 1234 into x */
                 let reflookById = ref.lookById;

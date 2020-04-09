@@ -91,7 +91,7 @@ export class VpcPresenter extends VpcPresenterInit {
     setCurCardNoOpenCardEvt(nextId: string) {
         this.vci.undoableAction(() => {
             /* verify card exists */
-            this.vci.getModel().getById(nextId, VpcElCard);
+            this.vci.getModel().getCardById(nextId);
 
             /* go to the card */
             let wasCard = this.vci.getOptionS('currentCardId');

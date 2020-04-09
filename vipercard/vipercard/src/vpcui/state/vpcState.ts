@@ -76,7 +76,7 @@ export class VpcState {
         this.removeElemImpl(vel);
 
         if (vel.getType() === VpcElType.Card) {
-            let parentBg = this.model.getById(vel.parentId, VpcElBg);
+            let parentBg = this.model.getById(VpcElBg, vel.parentId);
             if (parentBg && parentBg.cards.length === 0) {
                 /* if a bg has no remaining cards, let's remove the bg */
                 this.removeElemImpl(parentBg);

@@ -195,8 +195,8 @@ export class VpcMenuActions {
      */
     goMnuNewCard() {
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
-        let currentBg = this.vci.getModel().getById(currentCard.parentId, VpcElBg);
+        let currentCard = this.vci.getModel().getCardById(currentCardId);
+        let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentId);
         let currentIndex = VpcElBase.findIndexById(currentBg.cards, currentCardId);
         let created = this.vci.getOutside().CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
         this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id);
@@ -209,12 +209,12 @@ export class VpcMenuActions {
         /* can't use copy card/paste card since it's not yet impl'd */
         /* use this workaround instead (only copies the paint) */
         let currentCardId = this.vci.getOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
+        let currentCard = this.vci.getModel().getCardById(currentCardId);
         let paint = currentCard.getS('paint');
         this.vci.setOption('selectedVelId', '');
         this.goMnuNewCard();
         currentCardId = this.vci.getOptionS('currentCardId');
-        currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
+        currentCard = this.vci.getModel().getCardById(currentCardId);
         currentCard.set('paint', paint);
     }
 
@@ -286,7 +286,7 @@ export class VpcMenuActions {
 
         /* either go forwards or backwards, as long as we're somewhere else */
         let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let wasCurrentCard = this.vci.getModel().getById(wasCurrentCardId, VpcElCard);
+        let wasCurrentCard = this.vci.getModel().getCardById(wasCurrentCardId);
         let otherCardId = this.vci.getModel().getCardRelative(OrdinalOrPosition.Previous);
         if (otherCardId === wasCurrentCardId) {
             otherCardId = this.vci.getModel().getCardRelative(OrdinalOrPosition.Next);

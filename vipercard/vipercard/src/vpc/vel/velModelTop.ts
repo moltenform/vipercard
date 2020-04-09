@@ -52,7 +52,7 @@ export class VpcModelTop {
     /**
      * look for a vel of specified type by id, throws if not found
      */
-    getById<T extends VpcElBase>(id: string, ctor:AnyParameterCtor<T>): T {
+    getById<T extends VpcElBase>(ctor:AnyParameterCtor<T>, id: string, ): T {
         let vel = this.elements.get(id);
         return cast(ctor, vel, id);
     }
@@ -136,7 +136,7 @@ export class VpcModelTop {
      */
     getCurrentCard() {
         let cardId = this.productOpts.getS('currentCardId');
-        let found = this.getById(cardId, VpcElCard);
+        let found = this.getCardById(cardId);
         checkThrow(found && found.isVpcElCard && found.getType() === VpcElType.Card, '79|getCurrentCard failed');
         return found;
     }

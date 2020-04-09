@@ -41,7 +41,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     CreatePart(type: VpcElType, x: number, y: number, w: number, h: number) {
         let currentCardId = this.GetOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
+        let currentCard = this.vci.getModel().getCardById(currentCardId);
         let el = this.vci.createVel(currentCardId, type, -1) as VpcElSizable;
         assertTrue(el && el.isVpcElSizable, '6u|not VpcElSizable');
         el.setDimensions(x, y, w, h);
@@ -53,7 +53,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     CreateCard(indexRelativeToBg: number) {
         let currentCardId = this.GetOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
+        let currentCard = this.vci.getModel().getCardById(currentCardId);
         return this.vci.createVel(currentCard.parentId, VpcElType.Card, indexRelativeToBg);
     }
 
