@@ -613,7 +613,7 @@ export class VpcPresenter extends VpcPresenterInit {
             this.vci.doWithoutAbilityToUndo(() => {
                 /* check that the current card still exists, otherwise go to first card */
                 let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-                let currentCard = this.vci.getModel().findById(currentCardId, VpcElCard);
+                let currentCard = this.vci.getModel().findById(VpcElCard, currentCardId);
                 if (!currentCard) {
                     assertTrueWarn(false, 'card has been deleted, going to card 1 instead.');
                     let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.First);

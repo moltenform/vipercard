@@ -8,7 +8,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { O, bool, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObject, cast } from './../../ui512/utils/util512';
+/* auto */ import { AnyParameterCtor, MapKeyToObject, cast } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverDefault } from './../../ui512/elements/ui512ElementGettable';
 
 /**
@@ -44,7 +44,7 @@ export class VpcModelTop {
     /**
      * look for a vel of specified type by id, returns undefined if not found
      */
-    findById<T extends VpcElBase>(id: O<string>, ctor: { new (...args: any[]): T }): O<T> {
+    findById<T extends VpcElBase>(ctor: AnyParameterCtor<T>, id: O<string>)  {
         let vel = this.elements.find(id);
         return vel ? cast(ctor, vel, id) : undefined;
     }
@@ -52,9 +52,16 @@ export class VpcModelTop {
     /**
      * look for a vel of specified type by id, throws if not found
      */
-    getById<T extends VpcElBase>(id: string, ctor: { new (...args: any[]): T }): T {
+    getById<T extends VpcElBase>(id: string, ctor:AnyParameterCtor<T>): T {
         let vel = this.elements.get(id);
         return cast(ctor, vel, id);
+    }
+
+    /**
+     * look for a vel of specified type by id, throws if not found
+     */
+    getCardById(id: string) {
+        return this.getById(VpcElCard, id)
     }
 
     /**
@@ -92,7 +99,7 @@ export class VpcModelTop {
     /**
      * a convenient way to go from a vel to its owner, confirm type is as expected
      */
-    getOwner<T>(vel: VpcElBase, ctor: { new (...args: any[]): T }): T {
+    getOwner<T>(vel: VpcElBase, ctor:AnyParameterCtor<T>) {
         let found = this.getOwnerUntyped(vel);
         return cast(ctor, found);
     }

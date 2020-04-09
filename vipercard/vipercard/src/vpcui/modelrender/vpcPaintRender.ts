@@ -98,7 +98,7 @@ export class VpcPaintRender extends VpcUILayer {
     doMaintenance() {
         let keys = this.canvasesByCardId.getKeys().slice();
         for (let cardId of keys) {
-            if (!this.vci.getModel().findById(cardId, VpcElCard)) {
+            if (!this.vci.getModel().findById(VpcElCard, cardId)) {
                 this.canvasesByCardId.remove(cardId);
             }
         }

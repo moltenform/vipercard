@@ -605,7 +605,7 @@ export function slength(s: string | null | undefined) {
 /**
  * safe cast, throws if cast would fail.
  * ts inference lets us type simply
- * let myObj = cast(o, MyClass)
+ * let myObj = cast(MyClass, o)
    
  * instanceof is a little slow, so at one point I used a
  * class Foo {
