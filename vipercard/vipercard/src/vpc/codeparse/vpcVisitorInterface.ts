@@ -232,6 +232,7 @@ export interface VisitingContext {
     _box: ChvITk[];
     _me: ChvITk[];
     _target: ChvITk[];
+    _owner: ChvITk[];
     _recent: ChvITk[];
     _back: ChvITk[];
     _forth: ChvITk[];

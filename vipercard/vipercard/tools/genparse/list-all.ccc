@@ -57,7 +57,7 @@ multiSpace-nullary
 name
 number
 numberFormat-nullary
-owner
+// owner returns a true object, like target
 partNumber
 pattern-nullary
 polySides-nullary
@@ -236,7 +236,7 @@ mouseClick
 mouseH
 mouseV
 mouseLoc
-// number... not really a function since it takes an object
+// number... not really a function since it takes an object, it's more like a property
 numToChar
 offset
 optionKey
@@ -264,7 +264,7 @@ stackSpace
 sum
 systemVersion
 tan
-// target... not really a function since it takes an object
+// target... not really a function since it returns a true object
 ticks
 time
 tool

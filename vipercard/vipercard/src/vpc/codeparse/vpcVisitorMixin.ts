@@ -173,6 +173,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx._target[0]) {
                 ret = new RequestedVelRef(VpcElType.Unknown);
                 ret.isReferenceToTarget = true;
+            } else if (ctx._owner[0]) {
+                ret = this.visit(ctx.RuleObject[0]);
+                ret.isReferenceToOwner = true;
             } else {
                 throw makeVpcInternalErr('|3|null');
             }

@@ -27,6 +27,7 @@ export class RequestedVelRef extends VpcIntermedValBase {
     parentStackInfo: O<RequestedVelRef>;
     partIsBg = false;
     partIsCd = false;
+    isReferenceToOwner = false;
     isReferenceToTarget = false;
     isReferenceToMe = false;
     cardLookAtMarkedOnly = false;

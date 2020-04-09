@@ -159,14 +159,6 @@ export class VelResolveName {
         let parent = this.model.getByIdUntyped(part.parentId);
         return parent.getType() === VpcElType.Bg;
     }
-
-    /**
-     * implementation for "put the owner of cd 1 into x"
-     */
-    getOwnerName(vel: VpcElBase, adjective: PropAdjective) {
-        checkThrow(!(vel instanceof VpcElStack), 'J:|cannot get owner of stack');
-        return this.go(this.model.getOwnerUntyped(vel), adjective);
-    }
 }
 
 /**

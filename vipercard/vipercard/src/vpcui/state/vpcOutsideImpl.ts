@@ -104,6 +104,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             !firstElem || !firstElem.getS('name').includes('$$'),
             `Kt|names with $$ are reserved for internal ViperCard objects.`
         );
+
+        if (ref.isReferenceToOwner && ret[0]) {
+            ret[0] = this.vci.getModel().getOwnerUntyped(ret[0]);
+        }
         return ret;
     }
 
@@ -375,9 +379,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             let fld = vel as VpcElField;
             checkThrow(fld instanceof VpcElField, `8,|can only say 'get the (prop) of char 1 to 2' on fields.`);
             return fld.specialGetPropChunk(cardId, prop, chunk, this.GetItemDelim());
-        } else if (prop === 'owner') {
-            /* put the owner of card "myCard" into x */
-            return VpcValS(resolver.getOwnerName(vel, adjective));
         } else if (prop === 'name') {
             /* put the long name of card "myCard" into x */
             return VpcValS(resolver.go(vel, adjective));

@@ -443,6 +443,16 @@ export class VpcChvParser extends chevrotain.CstParser {
                     });
                     this.CONSUME1(tks._target);
                 }
+            },
+            {
+                ALT: () => {
+                    this.OPTION2(() => {
+                        this.CONSUME2(tks._the);
+                    });
+                    this.CONSUME1(tks._owner);
+                    this.CONSUME1(tks.tkOfOnly);
+                    this.SUBRULE1(this.RuleObject);
+                }
             }
         ]);
     });

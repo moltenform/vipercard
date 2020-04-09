@@ -129,6 +129,7 @@ _windows=OneOfWords(windows)
 _box=OneOfWords(box)
 _me=OneOfWords(me)
 _target=OneOfWords(target)
+_owner=OneOfWords(owner)
 _recent=OneOfWords(recent)
 _back=OneOfWords(back)
 _forth=OneOfWords(forth)
@@ -163,7 +164,7 @@ tkIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
 // could instead enumerate builtin functions but that wouldn't work for custom functions
 
 /* generated code, any changes past this point will be lost: --------------- */
-tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom,bottomright,cantabort,cantdelete,cantmodify,cantpeek,checkmark,commandchar,dontsearch,dontwrap,enabled,family,fixedlineheight,freesize,height,hilite,icon,left,location,locktext,markchar,menumessage,multiplelines,name,owner,partnumber,rectangle,reporttemplates,right,script,scroll,sharedhilite,sharedtext,showlines,showname,showpict,size,style,textalign,titlewidth,top,topleft,visible,widemargins,width,zoomed)
+tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom,bottomright,cantabort,cantdelete,cantmodify,cantpeek,checkmark,commandchar,dontsearch,dontwrap,enabled,family,fixedlineheight,freesize,height,hilite,icon,left,location,locktext,markchar,menumessage,multiplelines,name,partnumber,rectangle,reporttemplates,right,script,scroll,sharedhilite,sharedtext,showlines,showname,showpict,size,style,textalign,titlewidth,top,topleft,visible,widemargins,width,zoomed)
 
 tkAllNullaryOrUnaryPropertiesIfNotAlready=OneOfWords(scriptinglanguage,textfont,textheight,textsize,textstyle,version)
 
@@ -199,7 +200,7 @@ ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | tkBgAtEndOfLine |
 ObjectStack:={tkPosition tkStack | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                                                                 --->Custom--->RequestedVelRef  
 ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expression> | tkPart <Lvl6Expression> | <Ordinal> tkPart} [ <Of> <ObjectCard> ] }     --->Custom--->RequestedVelRef
 // in syntax transform we'll turn "the long target" into "the long name of the target"
-ObjectSpecial:={tkTopObject | _me | [ _the ] _target}       --->Custom--->RequestedVelRef
+ObjectSpecial:={tkTopObject | _me | [ _the ] _target | [ _the ] _owner tkOfOnly <Object> }       --->Custom--->RequestedVelRef
 
 // Testing in product:
 // This does work:
