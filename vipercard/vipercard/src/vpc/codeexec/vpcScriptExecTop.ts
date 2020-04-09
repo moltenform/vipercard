@@ -1,15 +1,14 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection, VariableCollectionConstants } from './../vpcutils/vpcVarCollection';
-/* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptMessageMsgBoxCode, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
-/* auto */ import { VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
-/* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { ValHolder, slength } from './../../ui512/utils/util512';
 
 /**
@@ -34,7 +33,7 @@ export class VpcExecTop {
     protected readonly cachedCST: VpcCacheParsedCST;
     protected readonly cachedAST: VpcCacheParsedAST;
     protected readonly outside: OutsideWorldReadWrite;
-    constructor(idGen: CountNumericId, outside: OutsideWorldReadWrite) {
+    constructor(outside: OutsideWorldReadWrite) {
         this.cachedAST = new VpcCacheParsedAST();
         this.cachedCST = new VpcCacheParsedCST();
         this.outside = outside;
@@ -232,5 +231,15 @@ export class VpcExecTop {
      */
     doMaintenance() {
         // currently has no maintenance
+    }
+
+    /**
+     * run messagebox code
+     */
+    runMsgBoxCodeOrThrow(codeBody: string, curCardId: string, addIntentionalError:boolean) {
+        let msg = new VpcScriptMessageMsgBoxCode(curCardId, VpcBuiltinMsg.SendCode)
+        msg.msgBoxCodeBody = codeBody
+        msg.addIntentionalError = addIntentionalError
+        this.scheduleCodeExec(msg)
     }
 }

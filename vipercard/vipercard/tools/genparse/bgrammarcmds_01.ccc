@@ -48,7 +48,7 @@ BuiltinCmdDivide:=... <Lvl1Expression> tkIdentifier <HContainer>
 // and also support doMenu "New Card", "Object" like in the product
 // note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
 // in rewrite syntax say we don't support "without dialog" or "with keys"
-BuiltinCmdDomenu:=... <Expr> [tkComma <Expr>]       
+BuiltinCmdDomenu:=... tkStringLiteral [tkComma tkStringLiteral]       
 BuiltinCmdVpccalluntrappabledomenu:=... <Expr> [tkComma <Expr>]       
 // drag, simulate mouse drag
 // in rewrite syntax from "with" to tkSyntaxPlaceholder
@@ -81,10 +81,12 @@ BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCard> | tkComma <Expr> <O
 // multiply. the tkIdentifier is "by"
 BuiltinCmdMultiply:=... <Lvl1Expression> tkIdentifier <HContainer>                                                             
 // open. show NYI in rewrite
+// pop card. has a little stack to go to. use a stack like the back/forth one
+// BuiltinCmdPop:=... into|before|after container 
 // play. "tempo" to tkSyntaxPlaceholder
 BuiltinCmdPlay:=... <Expr>  [tkSyntaxPlaceholder <Expr>]                                                       
 // push card. has a little stack to go to. use a stack like the back/forth one
-BuiltinCmdPush:=... <HBuiltinCmdGoDest>                                                  
+// rewritten to `go push`
 // put variable in. in rewrite, reject if "menu" is mentioned.
 // tkIdentifier here is 'before' 'after' 'into'
 // the traditional <Expr> [ tkIdentifier [ <HContainer> ]] does work for now, but breaks if an Expr can ever have 2 consecutive tkIdentifiers

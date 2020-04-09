@@ -122,7 +122,27 @@ export class VpcRewriteForCommands {
         } else if (allImages.includes('***without***dialog***')) {
             return [this.hBuildNyi('doMenu without dialog', line[0])];
         } else {
-            return [line];
+            if (line.length === 4) {
+                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b"`)
+                checkThrowEq(tks.tkStringLiteral, line[2].tokenType, `currently need string literals - doMenu "a", "b" not doMenu a, b`)
+            } else if (line.length !== 2) {
+                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b", unexpected length`)
+            }
+
+            // but if it has to be a string literal, we can't pass it and trap it. work needed.
+            checkThrowEq(tks.tkStringLiteral, line[2].tokenType, `currently need string literals - doMenu "a", "b" not doMenu a, b`)
+            let s = line[2].image.toLowerCase()
+            let isGoCard = { first:1, next:1, last:1, prev:1, previous:1, back:1, forth:1, push:2, pop:2 }
+            let isGoCardN = isGoCard[s]
+            if (isGoCardN) {
+                if (isGoCardN === 2) {
+                    s = '"' + s + '"'
+                }
+                let template = `go ${s}`
+                return VpcSuperRewrite.go(template, line[0], [])
+            }
+            checkThrow(false, "not yet implemented")
+            // rewrite domenu "delete card" to go
         }
     }
     rewriteDrag(line: ChvITk[]): ChvITk[][] {
@@ -166,21 +186,37 @@ export class VpcRewriteForCommands {
         ) {
             shouldSuspendHistory = 'true';
         }
+        let shouldSuspendHistoryPush = 'false';
+        if (
+            line[1].image.replace(/"/g, '') === 'push' ||
+            line[1].image.replace(/"/g, '') === 'pop'
+        ) {
+            shouldSuspendHistoryPush = 'true';
+        }
 
+        // why put it on different lines?
+        // so that each of these can be like function calls.
+        // pushing mutilple framestacks on one line is not supported
+        // don't just put this in the product, it will have wrong scope.
+        // note that if the card doesn't actually change, all the rest are no-ops
         let template = `
-global internalvpcgocardimplsuspendhistory
-builtinInternalVpcGoCardImpl "gettarget" c%UNIQUE% %ARG0%
-builtinInternalVpcGoCardImpl "closeorexitfield" c%UNIQUE%
-builtinInternalVpcGoCardImpl "closecard" c%UNIQUE%
-builtinInternalVpcGoCardImpl "closebackground" c%UNIQUE%
+global internalvpcmovecardimplsuspendhistory, internalvpcmovecardimplsuspendhistorypush
+builtinInternalVpcMoveCardImpl "gettarget" c%UNIQUE% %ARG0%
+builtinInternalVpcMoveCardImpl "closeorexitfield" c%UNIQUE%
+builtinInternalVpcMoveCardImpl "closecard" c%UNIQUE%
+builtinInternalVpcMoveCardImpl "closebackground" c%UNIQUE%
 if ${shouldSuspendHistory} then
-    put 1 %INTO% internalvpcgocardimplsuspendhistory
+    put 1 %INTO% internalvpcmovecardimplsuspendhistory
 end if
-builtinInternalVpcGoCardImpl "set" c%UNIQUE%
-put 0 %INTO% internalvpcgocardimplsuspendhistory
-builtinInternalVpcGoCardImpl "openbackground" c%UNIQUE%
-builtinInternalVpcGoCardImpl "opencard" c%UNIQUE%
-builtinInternalVpcGoCardImpl "setresult" c%UNIQUE%
+if ${shouldSuspendHistoryPush} then
+    put 1 %INTO% internalvpcmovecardimplsuspendhistorypush
+end if
+builtinInternalVpcMoveCardImpl "move" c%UNIQUE%
+put 0 %INTO% internalvpcmovecardimplsuspendhistory
+put 0 %INTO% internalvpcmovecardimplsuspendhistorypush
+builtinInternalVpcMoveCardImpl "openbackground" c%UNIQUE%
+builtinInternalVpcMoveCardImpl "opencard" c%UNIQUE%
+builtinInternalVpcMoveCardImpl "settheresult" c%UNIQUE%
         `;
         return VpcSuperRewrite.go(template, line[0], [line.slice(1), []]);
     }
@@ -206,9 +242,31 @@ return 0`,
             [line]
         );
     }
+    rewritePop(line: ChvITk[]): ChvITk[][] {
+        // two forms: only one actually moves it
+        checkThrow(line.length >= 2, 'not enough args');
+        checkThrowEq(tks.tkCard, line[1], 'must be pop *card*');
+        if (line.length === 2) {
+            let fakedCode = VpcSuperRewrite.go('go "pop"', line[0], [])
+            return this.rewriteGo(fakedCode[0])
+        } else {
+            let newCode = `
+builtinInternalVpcMoveCardImpl "gettarget" c%UNIQUE% "pop"
+put the result %ARG0%`
+            let gen = VpcSuperRewrite.go(newCode, line[0], [line.slice(2)])
+            let fixedPut = this.rewritePut(gen[1])
+            return [gen[0], fixedPut[0]]
+        }
+    }
     rewritePlay(line: ChvITk[]): ChvITk[][] {
         VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'tempo', false);
         return [line];
+    }
+    rewritePush(line: ChvITk[]): ChvITk[][] {
+        checkThrow(line.length === 2, 'expect 2 args');
+        checkThrowEq(tks.tkCard, line[1], 'must be push *card*');
+        let fakedCode = VpcSuperRewrite.go('go "push"', line[0], [])
+        return this.rewriteGo(fakedCode[0])
     }
     rewritePut(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');

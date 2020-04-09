@@ -117,6 +117,7 @@ export class VpcLineToCodeObj {
         let firstImage = line[0].image;
         output.ctg = VpcLineCategory.HandlerStart;
         checkThrow(line.length > 1, `8F|cannot have a line that is just "${firstImage}"`);
+        checkThrow(line[1].image !== 'keydown', "we support `on afterkeydown` but not `on keydown`")
         checkCommonMistakenVarNames(line[1]);
         checkThrow(
             this.check.okHandlerName(line[1].image),

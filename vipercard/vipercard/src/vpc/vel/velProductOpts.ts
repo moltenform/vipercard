@@ -1,4 +1,5 @@
 
+/* auto */ import { VpcStandardLibScript } from './../vpcutils/vpcStandardLibScript';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
@@ -217,28 +218,7 @@ export class VpcElProductOpts extends VpcElBase {
         );
     }
 
-    /* provide script,
-    1) we want to follow the product where 'send openCard to card 2'
-    is not an error even if card 2 does not handle openCard.
-
-    only need to put the "trappable" ones here,
-    the rest we'll handle by looking at listOfAllBuiltinEventsInOriginalProduct
-
-    */
-    static productOptsScript = `
-on choose whichTool
-    vpccalluntrappablechoose whichTool
-end choose
-
-on domenu a, b
-    vpccalluntrappabledomenu a, b
-end domenu
-
-on internalvpcbeginsetcurcardwithopencardevt
-    global internalvpcbeginsetcurcardwithopencardevtparam
-    go to card id internalvpcbeginsetcurcardwithopencardevtparam
-end internalvpcbeginsetcurcardwithopencardevt
-    `;
+    static productOptsScript = VpcStandardLibScript.script
 }
 
 /**

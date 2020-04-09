@@ -59,6 +59,7 @@ export class VpcScriptSyntaxError extends VpcScriptErrorBase {
  * includes both built-in messages "mouseUp" and custom messages "myHandler"
  */
 export class VpcScriptMessage {
+    isVpcScriptMessage = true
     clickLoc: O<number[]>;
     keyMods: O<ModifierKeys>;
     keyChar: O<string>;
@@ -84,6 +85,20 @@ export class VpcScriptMessage {
             assertTrue(slength(this.msgName), '4i|got', this.msgName);
         }
     }
+}
+
+/**
+ * for running code in the messagebox
+ */
+export class VpcScriptMessageMsgBoxCode extends VpcScriptMessage {
+    isVpcScriptMessageMsgBoxCode = true
+    addIntentionalError = true
+    msgBoxCodeBody = ''
+
+    /**
+     * use this unique marker to know if the error was intentional
+     */
+    static readonly markIntentionalErr = 'intentionalcausescripterrorleavingreplbox';
 }
 
 /**
@@ -224,6 +239,17 @@ export class RememberHistory {
             this.pointer = this.list.length - 1;
         } else {
             this.pointer = this.list.length;
+        }
+    }
+
+    /**
+     * pop from the list
+     */
+    pop(fallback: () => string):string {
+        if (!this.list.length) {
+            return fallback()
+        } else {
+            return this.list.pop() ?? fallback()
         }
     }
 }

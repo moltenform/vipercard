@@ -2,7 +2,7 @@
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
@@ -85,6 +85,10 @@ export class VpcExecFrameStack {
             undefined,
             this.outside
         );
+        if ((this.originalMsg as VpcScriptMessageMsgBoxCode).isVpcScriptMessageMsgBoxCode) {
+            return this.startHandlerMsgBox(this.originalMsg as VpcScriptMessageMsgBoxCode)
+        }
+
         let found = this.findHandlerUpwards(
             this.originalMsg.targetId,
             chain,
@@ -102,6 +106,29 @@ export class VpcExecFrameStack {
                 vel.parentId
             );
         }
+    }
+
+    /**
+     * start for the message box
+     */
+    startHandlerMsgBox(obj: VpcScriptMessageMsgBoxCode) {
+        let meId = 'messagebox'
+        let statedParentId = this.outside.GetCurrentCardId()
+        let targetId = this.outside.GetCurrentCardId()
+        let codeToCompile = obj.msgBoxCodeBody
+        if (obj.addIntentionalError) {
+            codeToCompile += '\n' + VpcScriptMessageMsgBoxCode.markIntentionalErr
+        }
+
+        let [[ast, lineRef], newHandlerName] = this.visitCallDynamicHelper(codeToCompile, meId, statedParentId, targetId)
+        this.pushStackFrame(
+            newHandlerName,
+            obj,
+            ast,
+            lineRef,
+            meId,
+            statedParentId
+        );
     }
 
     /**
@@ -691,16 +718,32 @@ export class VpcExecFrameStack {
         return [val, vel];
     }
 
+    visitCallDynamic(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
+        let [val, velTarget] = this.visitSendStatement(curLine, parsed);
+        let codeToCompile = val.readAsString();
+        curFrame.next();
+        let meId = velTarget.id;
+        let statedParentId = velTarget.id;
+        let [[ast, lineref], newHandlerName] = this.visitCallDynamicHelper(codeToCompile, meId, statedParentId, velTarget.id)
+        this.callCodeAtATarget(
+            curFrame,
+            ast,
+            lineref,
+            newHandlerName,
+            meId,
+            statedParentId,
+            velTarget.id,
+            VpcBuiltinMsg.SendCode
+        );
+    }
+
     /**
      * run dynamically-built code like 'send "answer 1+1" to cd btn "myBtn"'
         confirmed in the product when running `send`, "the target" and "me"
         are both set to the receipient of the event
      */
-    visitCallDynamic(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        let [val, velTarget] = this.visitSendStatement(curLine, parsed);
-        let codeToCompile = val.readAsString();
-        curFrame.next();
-
+    visitCallDynamicHelper(codeToCompile:string, meId:string, statedParentId:string, targetId:string):
+    [[VpcParsedCodeCollection, VpcCodeLineReference], string] {
         /* for compatibility with original product, if there's no return statement,
         return the last result that was computed. see the myCompute example in the docs. */
         /* build a new temporary handler, then call it.
@@ -716,21 +759,11 @@ end ${newHandlerName}
         let compiled = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(
             code,
             newHandlerName,
-            curFrame.meId
+            meId
         );
         checkThrow(compiled, 'did not find the handler we just created');
-        let meId = velTarget.id;
-        let statedParentId = velTarget.id;
-        this.callCodeAtATarget(
-            curFrame,
-            compiled[0],
-            compiled[1],
-            newHandlerName,
-            meId,
-            statedParentId,
-            velTarget.id,
-            VpcBuiltinMsg.SendCode
-        );
+        
+        return [compiled, newHandlerName]
     }
 
     private callCodeAtATarget(

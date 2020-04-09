@@ -1,11 +1,9 @@
 
-/* auto */ import { RememberHistory, VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
+/* auto */ import { RememberHistory, VpcScriptErrorBase, VpcScriptMessageMsgBoxCode } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
-/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { O, cleanExceptionMsg } from './../../ui512/utils/util512Assert';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
@@ -189,14 +187,9 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
             this.rememberedTool = this.vci.getTool();
             this.vci.setTool(VpcTool.Browse);
 
-            let NoteThisIsDisabledCode = 1;
-            // note: use a velid of 'messagebox'
-            //~ /* do this last because it could throw
-            //~ this.vci.getCodeExec().runMsgBoxCode(codeBody)
-            //~ synchronously and call onScriptErr right away */
-            //~ let msg = new VpcScriptMessage(curCard,
-            //~ VpcBuiltinMsg.__Custom, handler);
-            //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+            /* do this last because it could throw
+            synchronously and call onScriptErr right away */
+            this.vci.getCodeExec().runMsgBoxCodeOrThrow(codeBody, curCard, true)
         }
     }
 
@@ -243,7 +236,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         if (
             scriptErr &&
             scriptErr.details &&
-            scriptErr.details.includes(VpcNonModalReplBox.markIntentionalErr)
+            scriptErr.details.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)
         ) {
             /* it wasn't actually an error, we internally caused it */
         } else if (scriptErr) {
@@ -275,9 +268,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     }
 
     /**
-     * transform the script,
-     * letting us use the short syntax put "abc"
-     * and redirecting the output here
+     * transform the script, making all variables global
      */
     static transformText(scr: string) {
         let lines = scr.split(';');
@@ -291,7 +282,6 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
 
         let total = ``;
         total += linesOut.join('\n');
-        total += '\n' + VpcNonModalReplBox.markIntentionalErr;
         return total;
     }
 
@@ -301,9 +291,4 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     static removeStringLiterals(s: string) {
         return s.replace(/".*?"/g, '');
     }
-
-    /**
-     * use this unique marker to know if the error was intentional
-     */
-    static readonly markIntentionalErr = 'intentionalcausescripterrorleavingreplbox';
 }

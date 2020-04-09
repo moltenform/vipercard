@@ -1,7 +1,6 @@
 
 /* auto */ import { VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcAppUIToolSmear } from './../tools/vpcToolSmear';
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcModelRender } from './../modelrender/vpcModelRender';

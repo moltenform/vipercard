@@ -12,7 +12,10 @@ import help_fix_long_lines
 doPlaceImportsOnOneLine = True
 prettierCfg = '../../.prettierrc.js'
 prettierPath = '../../node_modules/prettier/bin-prettier.js'
-allowLongerLinesOn = ['../../src/vpc/codeparse/vpcVisitor.ts', '../../src/vpc/codeparse/vpcVisitorMixin.ts']
+allowLongerLinesOn = [
+    #'../../src/vpc/codeparse/vpcVisitor.ts', '../../src/vpc/codeparse/vpcVisitorMixin.ts',
+    '../../src/vpc/**/*.ts', '../../src/vpcui/**/*.ts', '../../src/test/vpc/**/*.ts',
+]
 
 def go(srcdirectory):
     global prettierCfg, prettierPath

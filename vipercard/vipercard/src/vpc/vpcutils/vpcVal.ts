@@ -1,5 +1,6 @@
 
 /* auto */ import { CodeLimits } from './vpcUtils';
+/* auto */ import { OrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 
 /**
@@ -292,5 +293,10 @@ export class IntermedMapOfIntermedVals extends VpcIntermedValBase {
         } else {
             this.vals[key].push(val);
         }
+    }
+
+    static getOrdinalOrPosition(v:IntermedMapOfIntermedVals, keyname:string) {
+        // rules like HOrdinal are actually an enum, not a string
+        return v.vals[keyname][0] as any as OrdinalOrPosition
     }
 }

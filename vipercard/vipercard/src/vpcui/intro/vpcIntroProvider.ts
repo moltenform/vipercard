@@ -1,8 +1,8 @@
 
-/* auto */ import { CountNumericIdNormal } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoManager } from './../state/vpcUndo';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
+/* auto */ import { VpcSuperRewrite } from './../../vpc/codepreparse/vpcRewritesGlobal';
 /* auto */ import { VpcSession, vpcStacksGetData } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
@@ -12,7 +12,7 @@
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UndoableActionCreateOrDelVel } from './../state/vpcCreateOrDelVel';
-/* auto */ import { VpcElStack, VpcElStackLineageEntry } from './../../vpc/vel/velStack';
+/* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow } from './../../ui512/utils/util512Assert';
@@ -74,10 +74,10 @@ export class VpcIntroProvider {
         let serialized = await this.getSerializedStackData();
 
         /* create pr and fullVci */
-        let { pr, fullVci, vpcState, idGen } = await this.getVpcState();
+        let { pr, fullVci, vpcState } = await this.getVpcState();
 
         /* load saved data */
-        await this.initPrUI(pr, serialized, fullVci, vpcState, idGen);
+        await this.initPrUI(pr, serialized, fullVci, vpcState);
 
         /* compile scripts, set stack lineage */
         try {
@@ -153,10 +153,8 @@ export class VpcIntroProvider {
         await this.yieldTime();
         vpcState.runtime.outside = new VpcOutsideImpl();
         await this.yieldTime();
-        let idGen = new CountNumericIdNormal(VpcElStack.initIncreasingNumberId);
-        await this.yieldTime();
         let NoteThisIsDisabledCode = 1;
-        //~ vpcState.runtime.codeExec = new VpcExecTop(idGen, vpcState.runtime.outside);
+        //~ vpcState.runtime.codeExec = new VpcExecTop(vpcState.runtime.outside);
         //~ await this.yieldTime();
         vpcState.model = new VpcModelTop();
         await this.yieldTime();
@@ -178,7 +176,7 @@ export class VpcIntroProvider {
         await this.yieldTime();
         pr.initPresenter(vpcState.undoManager);
         await this.yieldTime();
-        return { pr, fullVci, vpcState, idGen };
+        return { pr, fullVci, vpcState };
     }
 
     protected async initPrUI(
@@ -186,8 +184,8 @@ export class VpcIntroProvider {
         serializedSavedData: string,
         fullVci: VpcStateInterfaceImpl,
         vpcState: VpcState,
-        idGen: CountNumericIdNormal
     ) {
+        let idGen = VpcSuperRewrite.CounterForUniqueNames
         /* load saved data */
         if (serializedSavedData.length) {
             UndoableActionCreateOrDelVel.ensureModelNotEmpty(fullVci, false);

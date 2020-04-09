@@ -16,8 +16,8 @@
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { RenderComplete, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, bool, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512 } from './../../ui512/utils/util512';
+/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, bool, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, coalesceIfFalseLike } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
@@ -99,16 +99,15 @@ export class VpcPresenter extends VpcPresenterInit {
             this.vci.setOption('currentCardId', nextId);
             this.vci.getModel().productOpts.allowSetCurrentCard = false;
 
-            let NoteThisIsDisabledCode = 1;
-            //~ if (wasCard !== nextId) {
-            //~ /* remember history, for go back and go forth */
-            //~ let suspended = this.vci
-            //~ .getCodeExec()
-            //~ .globals.find('internalvpcgocardimplsuspendhistory');
-            //~ if (suspended === undefined || suspended.readAsString() !== '1') {
-            //~ this.vci.getCodeExec().cardHistory.append(nextId);
-            //~ }
-            //~ }
+            if (wasCard !== nextId) {
+                /* remember history, for go back and go forth */
+                let suspended = this.vci
+                .getCodeExec()
+                .globals.find('internalvpcgocardimplsuspendhistory');
+                if (suspended === undefined || suspended.readAsString() !== '1') {
+                this.vci.getCodeExec().cardHistory.append(nextId);
+                }
+            }
 
             //~ /* turn this off, so it's never stuck on indefinitely */
             //~ this.vci
@@ -130,21 +129,7 @@ export class VpcPresenter extends VpcPresenterInit {
             ? idSpecific
             : this.vci.getModel().getCardRelative(pos);
         if (this.getTool() === VpcTool.Browse) {
-            let NoteThisIsDisabledCode = 1;
-
-            //~ this.vci
-            //~ .getCodeExec()
-            //~ .globals.set(
-            //~ 'internalvpcbeginsetcurcardwithopencardevtparam',
-            //~ VpcValS(targetCardId)
-            //~ );
-            //~ let stack = this.vci.getModel().stack;
-            //~ let msg = new VpcScriptMessage(
-            //~ stack.id,
-            //~ VpcBuiltinMsg.__Custom,
-            //~ 'internalvpcbeginsetcurcardwithopencardevt'
-            //~ );
-            //~ this.vci.getCodeExec().scheduleCodeExec(msg);
+            this.vci.getCodeExec().runMsgBoxCodeOrThrow(`go to card id ${idSpecific}`, tostring(this.getCurrentCardNum()), false)
         } else {
             this.setCurCardNoOpenCardEvt(targetCardId);
         }
@@ -226,42 +211,16 @@ export class VpcPresenter extends VpcPresenterInit {
     static commonRespondToError(
         vci: VpcStateInterface,
         scriptErr: VpcScriptErrorBase
-    ): [string, number, string, number] {
-        let NoteThisIsDisabledCode = 1;
-        return ['', 0, '', 0];
-        //~ /* use current card if velId is unknown */
-        //~ let origVelId = scriptErr.velId;
-        //~ origVelId = coalesceIfFalseLike(origVelId, vci.getModel().getCurrentCard().id);
-        //~ let origVel = vci.getModel().findByIdUntyped(origVelId);
-        //~ origVel = coalesceIfFalseLike(origVel, vci.getModel().getCurrentCard());
-        //~ let origLine = scriptErr.lineNumber
+    ): [string, number] {
+        /* use current card if velId is unknown */
+        let velId = scriptErr.velId;
+        velId = coalesceIfFalseLike(velId, vci.getModel().getCurrentCard().id);
+        let line = scriptErr.lineNumber
 
-        //~ /* by leaving browse tool we won't execute closeCard or openCard */
-        //~ vci.setTool(VpcTool.Button);
+        /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
+        vci.setTool(VpcTool.Button);
 
-        //~ /* redirect line number if this came from 'send' or 'do' */
-        //~ let script = origVel.getS('script')
-        //~ let [redirredVelId, redirredLine] = VpcExecFrame.
-        //~ getBetterLineNumberIfTemporary(script, origVel.id, origLine)
-        //~ let redirredVel = vci.getModel().findByIdUntyped(redirredVelId) ?? origVel;
-
-        //~ /* update the error object */
-        //~ scriptErr.velId = redirredVel.id
-        //~ scriptErr.lineNumber = redirredLine
-
-        //~ /* strip temporary code from both locations:
-        //~ so we're not stuck with bad syntax,
-        //~ and we don't show temp code in editor */
-        //~ for (let vid of [origVelId, redirredVelId]) {
-        //~ let v = vci.getModel().getByIdUntyped(vid);
-        //~ if (v.getType() !== VpcElType.Product) {
-        //~ let s = v.getS('script')
-        //~ s = VpcExecFrame.filterTemporaryFromScript(s)
-        //~ v.set('script', s)
-        //~ }
-        //~ }
-
-        //~ return [origVelId, origLine, redirredVelId, redirredLine]
+        return [velId, line]
     }
 
     /**
@@ -273,13 +232,13 @@ export class VpcPresenter extends VpcPresenterInit {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
-            let [origVelId, origLine, velId, line] = VpcPresenter.commonRespondToError(
+            let [velId, line] = VpcPresenter.commonRespondToError(
                 this.vci,
                 scriptErr
             );
 
             /* did this come from the messagebox? */
-            if (origVelId === 'messagebox') {
+            if (velId === 'messagebox') {
                 if (
                     this.lyrNonModalDlgHolder.current &&
                     this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox
