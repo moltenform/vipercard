@@ -50,7 +50,8 @@
 //      we don't yet support `put "c" into char 2 of item 3 of line 2 of cd fld 1`
 //      or put "c" into char 2 of item 3 to 5 of line 2 of cd fld 1
 //      NEW FEATURE: typeOfObject(id)
-//      CHANGE: the "long id" of objects is now more useful
+//      CHANGE: the "long id" of objects is now more useful. 
+            // also, the string versions of "the target" and "the owner of" look a little different
 // aren't yet supported in software include:
 //      you can't say `part id 4`
 //      you can't refer to other stacks besides "this stack"
@@ -164,7 +165,7 @@ tkIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
 // could instead enumerate builtin functions but that wouldn't work for custom functions
 
 /* generated code, any changes past this point will be lost: --------------- */
-tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom,bottomright,cantabort,cantdelete,cantmodify,cantpeek,checkmark,commandchar,dontsearch,dontwrap,enabled,family,fixedlineheight,freesize,height,hilite,icon,left,location,locktext,markchar,menumessage,multiplelines,name,partnumber,rectangle,reporttemplates,right,script,scroll,sharedhilite,sharedtext,showlines,showname,showpict,size,style,textalign,titlewidth,top,topleft,visible,widemargins,width,zoomed)
+tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom,bottomright,cantabort,cantdelete,cantmodify,cantpeek,checkmark,commandchar,dontsearch,dontwrap,enabled,family,fixedlineheight,freesize,height,hilite,icon,left,location,locktext,markchar,menumessage,multiplelines,name,owner,partnumber,rectangle,reporttemplates,right,script,scroll,sharedhilite,sharedtext,showlines,showname,showpict,size,style,textalign,titlewidth,top,topleft,visible,widemargins,width,zoomed)
 
 tkAllNullaryOrUnaryPropertiesIfNotAlready=OneOfWords(scriptinglanguage,textfont,textheight,textsize,textstyle,version)
 
@@ -203,7 +204,17 @@ ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expr
 // note that "me" is different than "the target". the target returns a string that can be used as an object, but me refers to a true 
 ObjectSpecial:={tkTopObject | _me }       --->Custom--->RequestedVelRef
 // support variables, HOldStyleFnNonNullary (basically for the target), and HOldStyleFnNullaryOrNullaryPropGet (basically for the owner of),
-ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullary> |  <HOldStyleFnNullaryOrNullaryPropGet> }              --->Custom--->RequestedVelRef
+ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullary> |  <HOldStyleFnNullaryOrNullaryPropGet> | tkStringLiteral }              --->Custom--->RequestedVelRef
+
+// put "a" && the me into cd fld "myf" -- syntax error
+// put "a" && the target into cd fld "myf" -- treated as objectname
+// put "a" && the owner of this cd into cd fld "myf" -- treated as objectname
+// put "a" && the name of me into cd fld "myf" -- treated as object
+// put "a" && the name of the target into cd fld "myf" -- treated as object
+// put "a" && the name of the owner of this cd into cd fld "myf" -- treated as objectname
+// put "a" && me into cd fld "myf" -- treated as retrieving contents
+// put "a" && target into cd fld "myf" -- tries to read a variable called "target"
+// put "a" && owner of this cd into cd fld "myf" -- treated as objectname
 
 // Testing in product:
 // This does work:

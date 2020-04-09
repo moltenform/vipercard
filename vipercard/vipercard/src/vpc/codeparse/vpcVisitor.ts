@@ -149,6 +149,8 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         RuleObject(ctx: VisitingContext): RequestedVelRef {
             if (ctx.RuleObjectSpecial[0]) {
                 return this.visit(ctx.RuleObjectSpecial[0]);
+            } else if (ctx.RuleObjectInterpretedFromString[0]) {
+                return this.visit(ctx.RuleObjectInterpretedFromString[0]);
             } else if (ctx.RuleObjectBtn[0]) {
                 return this.visit(ctx.RuleObjectBtn[0]);
             } else if (ctx.RuleObjectFld[0]) {

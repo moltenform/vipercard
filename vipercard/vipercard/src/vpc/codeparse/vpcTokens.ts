@@ -397,14 +397,6 @@ export const tks = {
         name: '_me',
         pattern: /(?:me(?![a-zA-Z0-9_]))/i
     }),
-    _target: chevrotain.createToken({
-        name: '_target',
-        pattern: /(?:target(?![a-zA-Z0-9_]))/i
-    }),
-    _owner: chevrotain.createToken({
-        name: '_owner',
-        pattern: /(?:owner(?![a-zA-Z0-9_]))/i
-    }),
     _recent: chevrotain.createToken({
         name: '_recent',
         pattern: /(?:recent(?![a-zA-Z0-9_]))/i
@@ -479,7 +471,7 @@ export const tks = {
     }),
     tkAllUnaryPropertiesIfNotAlready: chevrotain.createToken({
         name: 'tkAllUnaryPropertiesIfNotAlready',
-        pattern: /(?:autohilite(?![a-zA-Z0-9_]))|(?:autoselect(?![a-zA-Z0-9_]))|(?:autotab(?![a-zA-Z0-9_]))|(?:bottom(?![a-zA-Z0-9_]))|(?:bottomright(?![a-zA-Z0-9_]))|(?:cantabort(?![a-zA-Z0-9_]))|(?:cantdelete(?![a-zA-Z0-9_]))|(?:cantmodify(?![a-zA-Z0-9_]))|(?:cantpeek(?![a-zA-Z0-9_]))|(?:checkmark(?![a-zA-Z0-9_]))|(?:commandchar(?![a-zA-Z0-9_]))|(?:dontsearch(?![a-zA-Z0-9_]))|(?:dontwrap(?![a-zA-Z0-9_]))|(?:enabled(?![a-zA-Z0-9_]))|(?:family(?![a-zA-Z0-9_]))|(?:fixedlineheight(?![a-zA-Z0-9_]))|(?:freesize(?![a-zA-Z0-9_]))|(?:height(?![a-zA-Z0-9_]))|(?:hilite(?![a-zA-Z0-9_]))|(?:icon(?![a-zA-Z0-9_]))|(?:left(?![a-zA-Z0-9_]))|(?:location(?![a-zA-Z0-9_]))|(?:locktext(?![a-zA-Z0-9_]))|(?:markchar(?![a-zA-Z0-9_]))|(?:menumessage(?![a-zA-Z0-9_]))|(?:multiplelines(?![a-zA-Z0-9_]))|(?:name(?![a-zA-Z0-9_]))|(?:partnumber(?![a-zA-Z0-9_]))|(?:rectangle(?![a-zA-Z0-9_]))|(?:reporttemplates(?![a-zA-Z0-9_]))|(?:right(?![a-zA-Z0-9_]))|(?:script(?![a-zA-Z0-9_]))|(?:scroll(?![a-zA-Z0-9_]))|(?:sharedhilite(?![a-zA-Z0-9_]))|(?:sharedtext(?![a-zA-Z0-9_]))|(?:showlines(?![a-zA-Z0-9_]))|(?:showname(?![a-zA-Z0-9_]))|(?:showpict(?![a-zA-Z0-9_]))|(?:size(?![a-zA-Z0-9_]))|(?:style(?![a-zA-Z0-9_]))|(?:textalign(?![a-zA-Z0-9_]))|(?:titlewidth(?![a-zA-Z0-9_]))|(?:top(?![a-zA-Z0-9_]))|(?:topleft(?![a-zA-Z0-9_]))|(?:visible(?![a-zA-Z0-9_]))|(?:widemargins(?![a-zA-Z0-9_]))|(?:width(?![a-zA-Z0-9_]))|(?:zoomed(?![a-zA-Z0-9_]))/i
+        pattern: /(?:autohilite(?![a-zA-Z0-9_]))|(?:autoselect(?![a-zA-Z0-9_]))|(?:autotab(?![a-zA-Z0-9_]))|(?:bottom(?![a-zA-Z0-9_]))|(?:bottomright(?![a-zA-Z0-9_]))|(?:cantabort(?![a-zA-Z0-9_]))|(?:cantdelete(?![a-zA-Z0-9_]))|(?:cantmodify(?![a-zA-Z0-9_]))|(?:cantpeek(?![a-zA-Z0-9_]))|(?:checkmark(?![a-zA-Z0-9_]))|(?:commandchar(?![a-zA-Z0-9_]))|(?:dontsearch(?![a-zA-Z0-9_]))|(?:dontwrap(?![a-zA-Z0-9_]))|(?:enabled(?![a-zA-Z0-9_]))|(?:family(?![a-zA-Z0-9_]))|(?:fixedlineheight(?![a-zA-Z0-9_]))|(?:freesize(?![a-zA-Z0-9_]))|(?:height(?![a-zA-Z0-9_]))|(?:hilite(?![a-zA-Z0-9_]))|(?:icon(?![a-zA-Z0-9_]))|(?:left(?![a-zA-Z0-9_]))|(?:location(?![a-zA-Z0-9_]))|(?:locktext(?![a-zA-Z0-9_]))|(?:markchar(?![a-zA-Z0-9_]))|(?:menumessage(?![a-zA-Z0-9_]))|(?:multiplelines(?![a-zA-Z0-9_]))|(?:name(?![a-zA-Z0-9_]))|(?:owner(?![a-zA-Z0-9_]))|(?:partnumber(?![a-zA-Z0-9_]))|(?:rectangle(?![a-zA-Z0-9_]))|(?:reporttemplates(?![a-zA-Z0-9_]))|(?:right(?![a-zA-Z0-9_]))|(?:script(?![a-zA-Z0-9_]))|(?:scroll(?![a-zA-Z0-9_]))|(?:sharedhilite(?![a-zA-Z0-9_]))|(?:sharedtext(?![a-zA-Z0-9_]))|(?:showlines(?![a-zA-Z0-9_]))|(?:showname(?![a-zA-Z0-9_]))|(?:showpict(?![a-zA-Z0-9_]))|(?:size(?![a-zA-Z0-9_]))|(?:style(?![a-zA-Z0-9_]))|(?:textalign(?![a-zA-Z0-9_]))|(?:titlewidth(?![a-zA-Z0-9_]))|(?:top(?![a-zA-Z0-9_]))|(?:topleft(?![a-zA-Z0-9_]))|(?:visible(?![a-zA-Z0-9_]))|(?:widemargins(?![a-zA-Z0-9_]))|(?:width(?![a-zA-Z0-9_]))|(?:zoomed(?![a-zA-Z0-9_]))/i
     }),
     tkAllNullaryOrUnaryPropertiesIfNotAlready: chevrotain.createToken({
         name: 'tkAllNullaryOrUnaryPropertiesIfNotAlready',
@@ -531,8 +523,6 @@ export const allVpcTokens = [
     tks._windows,
     tks._box,
     tks._me,
-    tks._target,
-    tks._owner,
     tks._recent,
     tks._back,
     tks._forth,
@@ -629,8 +619,6 @@ alsoReservedWordsList['window'] = true;
 alsoReservedWordsList['windows'] = true;
 alsoReservedWordsList['box'] = true;
 alsoReservedWordsList['me'] = true;
-alsoReservedWordsList['target'] = true;
-alsoReservedWordsList['owner'] = true;
 alsoReservedWordsList['recent'] = true;
 alsoReservedWordsList['back'] = true;
 alsoReservedWordsList['forth'] = true;
@@ -718,8 +706,6 @@ listOfAllWordLikeTokens['window'] = tks._window;
 listOfAllWordLikeTokens['windows'] = tks._windows;
 listOfAllWordLikeTokens['box'] = tks._box;
 listOfAllWordLikeTokens['me'] = tks._me;
-listOfAllWordLikeTokens['target'] = tks._target;
-listOfAllWordLikeTokens['owner'] = tks._owner;
 listOfAllWordLikeTokens['recent'] = tks._recent;
 listOfAllWordLikeTokens['back'] = tks._back;
 listOfAllWordLikeTokens['forth'] = tks._forth;
@@ -758,6 +744,7 @@ listOfAllWordLikeTokens['markchar'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['menumessage'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['multiplelines'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['name'] = tks.tkAllUnaryPropertiesIfNotAlready;
+listOfAllWordLikeTokens['owner'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['partnumber'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['rectangle'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['reporttemplates'] = tks.tkAllUnaryPropertiesIfNotAlready;

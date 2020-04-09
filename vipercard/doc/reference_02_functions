@@ -568,13 +568,23 @@ instead of a separate script within each button. This script in the
 card could check the target to see which, if any, of the buttons
 were clicked.
 
-Similar to, but distinct from 'me'.
+Related to 'me', but not the same.
 
 Examples:
 
 put the id of target into theTarget
 
 set the width of the target to 100
+
+=====
+number
+=====
+Get the number of an object. Probably not very useful.
+
+Examples:
+
+put the number of cd fld id 1234 into x
+put "abc" into cd fld x
 
 =====
 me

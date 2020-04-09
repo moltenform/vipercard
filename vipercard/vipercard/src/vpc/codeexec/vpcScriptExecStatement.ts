@@ -302,7 +302,6 @@ export class ExecuteStatement {
         }
     }
 
-    
     /**
      * implementation of add, subtract, etc
      */

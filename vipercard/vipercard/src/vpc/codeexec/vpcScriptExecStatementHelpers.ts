@@ -9,8 +9,6 @@
 export class VpcScriptExecuteStatementHelpers {
     outside: OutsideWorldReadWrite;
 
-    
-
     /**
      * click, drag implementation
      */

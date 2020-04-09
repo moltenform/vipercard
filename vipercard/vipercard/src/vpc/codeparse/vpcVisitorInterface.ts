@@ -27,6 +27,7 @@ export interface VpcCompleteVisitor {
     RuleObjectStack(ctx: VisitingContext): RequestedVelRef;
     RuleObjectPart(ctx: VisitingContext): RequestedVelRef;
     RuleObjectSpecial(ctx: VisitingContext): RequestedVelRef;
+    RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef;
     RuleOf(ctx: VisitingContext): ChvITk;
     RuleOrdinal(ctx: VisitingContext): OrdinalOrPosition;
     RulePosition(ctx: VisitingContext): OrdinalOrPosition;
@@ -116,6 +117,7 @@ export interface VisitingContext {
     RuleObjectStack: any[];
     RuleObjectPart: any[];
     RuleObjectSpecial: any[];
+    RuleObjectInterpretedFromString: any[];
     RuleOf: any[];
     RuleOrdinal: any[];
     RulePosition: any[];
@@ -231,8 +233,6 @@ export interface VisitingContext {
     _windows: ChvITk[];
     _box: ChvITk[];
     _me: ChvITk[];
-    _target: ChvITk[];
-    _owner: ChvITk[];
     _recent: ChvITk[];
     _back: ChvITk[];
     _forth: ChvITk[];

@@ -134,6 +134,11 @@ export class VpcChvParser extends chevrotain.CstParser {
             },
             {
                 ALT: () => {
+                    this.SUBRULE1(this.RuleObjectInterpretedFromString);
+                }
+            },
+            {
+                ALT: () => {
                     this.SUBRULE1(this.RuleObjectBtn);
                 }
             },
@@ -435,23 +440,30 @@ export class VpcChvParser extends chevrotain.CstParser {
                 ALT: () => {
                     this.CONSUME1(tks._me);
                 }
-            },
+            }
+        ]);
+    });
+
+    RuleObjectInterpretedFromString = this.RULE('RuleObjectInterpretedFromString', () => {
+        this.OR1([
             {
                 ALT: () => {
-                    this.OPTION1(() => {
-                        this.CONSUME1(tks._the);
-                    });
-                    this.CONSUME1(tks._target);
+                    this.SUBRULE1(this.RuleHAnyAllowedVariableName);
                 }
             },
             {
                 ALT: () => {
-                    this.OPTION2(() => {
-                        this.CONSUME2(tks._the);
-                    });
-                    this.CONSUME1(tks._owner);
-                    this.CONSUME1(tks.tkOfOnly);
-                    this.SUBRULE1(this.RuleObject);
+                    this.SUBRULE1(this.RuleHOldStyleFnNonNullary);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHOldStyleFnNullaryOrNullaryPropGet);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkStringLiteral);
                 }
             }
         ]);
@@ -528,11 +540,6 @@ export class VpcChvParser extends chevrotain.CstParser {
             {
                 ALT: () => {
                     this.CONSUME1(tks.tkCard);
-                }
-            },
-            {
-                ALT: () => {
-                    this.CONSUME1(tks.tkIdentifier);
                 }
             }
         ]);

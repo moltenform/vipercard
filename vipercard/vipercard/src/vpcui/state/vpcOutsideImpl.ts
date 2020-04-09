@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcVal, VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { ReadableContainer, RememberHistory, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
@@ -10,7 +10,8 @@
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
-/* auto */ import { VelResolveId, VelResolveName, VelResolveReference } from './../../vpc/vel/velResolveName';
+/* auto */ import { VelResolveReference } from './../../vpc/vel/velResolveReference';
+/* auto */ import { VelResolveId, VelResolveName, VelResolveNumber } from './../../vpc/vel/velResolveName';
 /* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
@@ -20,7 +21,7 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, assertEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
@@ -78,10 +79,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let target: O<VpcElBase>;
         let NoteThisIsDisabledCode = 1;
         let [frStack, frame] = this.vci.findExecFrameStack();
-        //~ if (frame) {
-        //~ me = this.vci.getModel().findByIdUntyped(frame.codeSection.ownerId);
-        //~ target = this.vci.getModel().findByIdUntyped(frame.message.targetId);
-        //~ }
         let me: O<VpcElBase> = this.FindVelById(frame?.meId);
 
         let cardHistory: RememberHistory = (undefined as unknown) as RememberHistory;
@@ -105,9 +102,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             `Kt|names with $$ are reserved for internal ViperCard objects.`
         );
 
-        if (ref.isReferenceToOwner && ret[0]) {
-            ret[0] = this.vci.getModel().getOwnerUntyped(ret[0]);
-        }
         return ret;
     }
 
@@ -374,6 +368,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let vel = throwIfUndefined(resolved[0], `8-|could not get ${prop} because could not find the specified element.`);
         let cardId = resolved[1].id;
         let resolver = new VelResolveName(this.vci.getModel());
+        /* handled here are the cases where "adjective" matters */
         if (chunk) {
             /* put the textstyle of char 2 to 4 of fld "myFld" into x */
             let fld = vel as VpcElField;
@@ -381,15 +376,25 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return fld.specialGetPropChunk(cardId, prop, chunk, this.GetItemDelim());
         } else if (prop === 'name') {
             /* put the long name of card "myCard" into x */
+            adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
             return VpcValS(resolver.go(vel, adjective));
         } else if (prop === 'id') {
             /* put the id of card "myCard" into x */
             let resolveId = new VelResolveId(this.vci.getModel());
+            adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
             return VpcValS(resolveId.go(vel, adjective));
+        } else if (prop === 'number') {
+            /* put the number of card "myCard" into x */
+            let resolveNum = new VelResolveNumber(this.vci.getModel());
+            return VpcValN(resolveNum.go(vel));
         } else if (prop === 'target') {
             /* put the long target into x */
-            checkThrow(!ref, "8+|must say 'get the target' and not 'get the target of cd btn 1");
-            return VpcValS(this.getTargetName(resolver, adjective));
+            checkThrow(!ref, "8+|must say 'get the target' and not 'get the target of cd btn 1'");
+            return VpcValS(this.getTargetFullString(adjective));
+        } else if (prop === 'owner') {
+            /* put the owner of cd btn 1 into x */
+            checkThrow(ref, "8+|must say 'get the owner of cd btn 1' and not 'get the owner'");
+            return VpcValS(this.getOwnerFullString(resolved, adjective));
         } else {
             if (prop === 'version' && adjective === PropAdjective.Long) {
                 /* the only other prop that accepts an adjective is version. */
@@ -557,23 +562,35 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * whether we should call openField or exitField
      */
     GetFieldsRecentlyEdited() {
-        let NoteThisIsDisabledCode = 1;
-        let tmp: { [id: string]: boolean } = {};
-        return new ValHolder(tmp);
-        //~ return this.vci.getCodeExec().fieldsRecentlyEdited;
+        return this.vci.getCodeExec().fieldsRecentlyEdited;
     }
 
     /**
-     * get the name of the 'target' (the vel that was interacted with)
+     * put the target into x (the vel that was interacted with)
      */
-    protected getTargetName(resolver: VelResolveName, adjective: PropAdjective) {
-        let newRef = new RequestedVelRef(VpcElType.Unknown);
-        newRef.isReferenceToTarget = true;
-        let velTarget = this.ResolveVelRef(newRef)[0];
-        if (velTarget) {
-            return resolver.go(velTarget, adjective);
+    protected getTargetFullString(adjective: PropAdjective) {
+        /* get a longer form of the id unless specifically said "short" */
+        let [frStack, frame] = this.vci.findExecFrameStack();
+        let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
+        checkThrow(target, 'the target was not found');
+        if (adjective === PropAdjective.Short) {
+            return target.getS('name') ?? '';
         } else {
-            return '';
+            return new VelResolveId(this.vci.getModel()).go(target, PropAdjective.Long);
+        }
+    }
+
+    /**
+     * put the owner of cd btn 1 into x, it returns a string, that can then be used as an object
+     */
+    protected getOwnerFullString(resolved: [O<VpcElBase>, VpcElCard], adjective: PropAdjective) {
+        /* get a longer form of the id unless specifically said "short" */
+        checkThrow(resolved[0], 'the object was not found');
+        let owner = this.vci.getModel().getOwnerUntyped(resolved[0]);
+        if (adjective === PropAdjective.Short) {
+            return owner.getS('name') ?? '';
+        } else {
+            return new VelResolveId(this.vci.getModel()).go(owner, PropAdjective.Long);
         }
     }
 

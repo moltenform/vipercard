@@ -108,7 +108,7 @@ export enum VpcElType {
     __AlternateForm__Field = Fld,
     __AlternateForm__Cd = Card,
     __AlternateForm__Background = Bg,
-    __AlternateForm__Bkgnd = Bg,
+    __AlternateForm__Bkgnd = Bg
 }
 
 /**

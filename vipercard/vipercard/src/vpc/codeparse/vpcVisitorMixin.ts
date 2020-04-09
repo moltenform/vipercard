@@ -6,6 +6,7 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType, VpcOpCtg } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { VelResolveId } from './../vel/velResolveName';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
@@ -170,17 +171,30 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx._me[0]) {
                 ret = new RequestedVelRef(VpcElType.Unknown);
                 ret.isReferenceToMe = true;
-            } else if (ctx._target[0]) {
-                ret = new RequestedVelRef(VpcElType.Unknown);
-                ret.isReferenceToTarget = true;
-            } else if (ctx._owner[0]) {
-                ret = this.visit(ctx.RuleObject[0]);
-                ret.isReferenceToOwner = true;
             } else {
                 throw makeVpcInternalErr('|3|null');
             }
 
             return ret;
+        }
+
+        RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef {
+            let val = VpcVal.Empty;
+            if (ctx.RuleHAnyAllowedVariableName[0]) {
+                val = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
+            } else if (ctx.RuleHOldStyleFnNonNullary[0]) {
+                val = this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
+            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
+                val = this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
+            } else if (ctx.tkStringLiteral[0]) {
+                let im = ctx.tkStringLiteral[0].image;
+                val = VpcValS(im.slice(1, -1));
+            } else {
+                checkThrow(false, 'no branch');
+            }
+
+            checkThrow(val instanceof VpcVal, '');
+            return VelResolveId.parseFromString(val.readAsString());
         }
 
         RuleObjectPart(ctx: VisitingContext): RequestedVelRef {
@@ -237,6 +251,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     if (bounds) {
                         ret.vel = new RequestedVelRef(VpcElType.Fld);
                         ret.vel.lookById = Util512.parseIntStrict(selFld.id);
+                        checkThrow(ret.vel.lookById, '');
                         ret.chunk = new RequestedChunk(bounds[0]);
                         ret.chunk.last = bounds[1];
                     }
