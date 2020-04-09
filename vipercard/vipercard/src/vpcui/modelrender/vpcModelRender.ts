@@ -177,9 +177,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             let part = currentCard.parts[i];
             let partAsBtn = part as VpcElButton;
             let partAsField = part as VpcElField;
-            if (partAsBtn && partAsBtn.isVpcElButton) {
+            if ((partAsBtn instanceof VpcElButton)) {
                 this.buildBtnFromScratch(partAsBtn, currentCardId);
-            } else if (partAsField && partAsField.isVpcElField) {
+            } else if ((partAsField instanceof VpcElField)) {
                 this.buildFldFromScratch(partAsField, currentCardId);
             } else {
                 throw makeVpcInternalErr('6*|invalid part type');

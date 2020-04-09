@@ -243,7 +243,7 @@ export class VpcExecFrameStack {
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleExpr[0], '7v|evalRequestedExpression no result of RuleExpr');
 
         let ret = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow(ret && ret.isVpcVal, '7u|evalRequestedExpression expected a number, string, or bool.');
+        checkThrow((ret instanceof VpcVal), '7u|evalRequestedExpression expected a number, string, or bool.');
         return ret;
     }
 
@@ -548,7 +548,7 @@ export class VpcExecFrameStack {
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleObject, 'visitSendStatement expected both RuleExpr and RuleObject');
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow(val && val.isVpcVal, 'visitSendStatement expected a string.');
+        checkThrow((val instanceof VpcVal), 'visitSendStatement expected a string.');
         let newLineAndCode = '\n' + val.readAsString().toLowerCase();
         checkThrow(
             !newLineAndCode.includes('\nfunction\n') && !newLineAndCode.includes('\non\n'),

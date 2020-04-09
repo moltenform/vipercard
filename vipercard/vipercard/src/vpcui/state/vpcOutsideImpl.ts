@@ -43,7 +43,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let currentCardId = this.GetOptionS('currentCardId');
         let currentCard = this.vci.getModel().getCardById(currentCardId);
         let el = this.vci.createVel(currentCardId, type, -1) as VpcElSizable;
-        assertTrue(el && el.isVpcElSizable, '6u|not VpcElSizable');
+        assertTrue((el instanceof VpcElSizable), '6u|not VpcElSizable');
         el.setDimensions(x, y, w, h);
         return el;
     }
@@ -266,10 +266,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (container.vel) {
             let resolved = this.ResolveVelRef(container.vel);
             let vel = resolved[0];
-            checkThrow(vel && vel.isVpcElBase, `8;|element not found`);
+            checkThrow((vel instanceof VpcElBase), `8;|element not found`);
             let asFld = vel as VpcElField;
             checkThrow(
-                asFld && asFld.isVpcElField,
+                (asFld instanceof VpcElField),
                 longstr(`6[|currently we only support reading text from a
                     fld. to read label of button, use 'the label of cd btn 1'`)
             );
@@ -289,10 +289,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (container.vel) {
             let resolved = this.ResolveVelRef(container.vel);
             let vel = resolved[0];
-            checkThrow(vel && vel.isVpcElBase, `8;|element not found`);
+            checkThrow((vel instanceof VpcElBase), `8;|element not found`);
             let asFld = vel as VpcElField;
             checkThrow(
-                asFld && asFld.isVpcElField,
+                (asFld instanceof VpcElField),
                 longstr(`currently we only support writing text to
                     a fld. to write label of button, use 'the label of cd btn 1'`)
             );

@@ -381,7 +381,7 @@ export class ExecuteStatement {
             let arVals = ar as VpcVal[];
             for (let i = 0, len = arVals.length; i < len; i++) {
                 let item = arVals[i];
-                assertTrue(item && item.isVpcVal, 'JO|every item must be a vpcval');
+                assertTrue((item instanceof VpcVal), 'JO|every item must be a vpcval');
                 argsGiven.push(item.readAsStrictInteger());
             }
         }
@@ -469,8 +469,8 @@ export class ExecuteStatement {
         let expr1 = exprs[0] as VpcVal;
         let expr2 = exprs[1] as VpcVal;
         checkThrowEq(2, exprs.length, '');
-        checkThrow(expr1 && expr1.isVpcVal, '');
-        checkThrow(expr2 && expr2.isVpcVal, '');
+        checkThrow((expr1 instanceof VpcVal), '');
+        checkThrow((expr2 instanceof VpcVal), '');
         let searchFor = expr1.readAsString();
         let replaceWith = expr2.readAsString();
 
@@ -544,7 +544,7 @@ export class ExecuteStatement {
             let arVals = ar as VpcVal[];
             for (let i = 0, len = arVals.length; i < len; i++) {
                 let item = arVals[i];
-                assertTrue(item && item.isVpcVal, '50|every item must be a vpcval');
+                assertTrue((item instanceof VpcVal), '50|every item must be a vpcval');
                 strings.push(item.readAsString());
             }
         }
@@ -580,7 +580,7 @@ export class ExecuteStatement {
             if (rule1.vals[nmExpr]) {
                 let val1 = rule1.vals[nmExpr][0] as VpcVal;
                 let val2 = rule1.vals[nmExpr][1] as VpcVal;
-                checkThrow(val1 && val1.isVpcVal && val2 && val2.isVpcVal, '7K|');
+                checkThrow((val1 instanceof VpcVal) && (val2 instanceof VpcVal), '7K|');
                 checkThrow(val1.isItInteger() && val2.isItInteger(), '7J|');
                 let coords = `${val1.readAsString()},${val2.readAsString()}`;
                 this.outside.SetProp(ref, 'loc', VpcValS(coords), undefined);

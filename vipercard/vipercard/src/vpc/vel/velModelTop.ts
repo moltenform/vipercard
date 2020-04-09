@@ -109,15 +109,15 @@ export class VpcModelTop {
      */
     getParentCardOfElement(vel: VpcElBase): VpcElBase {
         let cur = this.getCurrentCard();
-        if (velAsCard && velAsCard.isVpcElCard) {
+        if ((velAsCard instanceof VpcElCard)) {
             return velAsCard;
-        } else if (velAsBg && velAsBg.isVpcElBg) {
+        } else if ((velAsBg instanceof VpcElBg)) {
             if (velAsBg.id === cur.parentId) {
                 return cur;
             } else {
                 return velAsBg.cards[0];
             }
-        } else if ((velAsBtn && velAsBtn.isVpcElButton) || (velAsFld && velAsFld.isVpcElField)) {
+        } else if (((velAsBtn instanceof VpcElButton)) || ((velAsFld instanceof VpcElField))) {
             let parent = this.getByIdUntyped(vel.parentId);
             return this.getParentCardOfElement(parent);
         } else {
@@ -131,7 +131,7 @@ export class VpcModelTop {
     getCurrentCard() {
         let cardId = this.productOpts.getS('currentCardId');
         let found = this.getCardById(cardId);
-        checkThrow(found && found.isVpcElCard && found.getType() === VpcElType.Card, '79|getCurrentCard failed');
+        checkThrow((found instanceof VpcElCard) && found.getType() === VpcElType.Card, '79|getCurrentCard failed');
         return found;
     }
 
@@ -152,11 +152,11 @@ export class VpcModelTop {
         let velAsCard = vel as VpcElCard;
         let velAsBg = vel as VpcElBg;
         let velAsStack = vel as VpcElStack;
-        if (velAsCard && velAsCard.isVpcElCard) {
+        if ((velAsCard instanceof VpcElCard)) {
             return [velAsCard.parts];
-        } else if (velAsBg && velAsBg.isVpcElBg) {
+        } else if ((velAsBg instanceof VpcElBg)) {
             return [velAsBg.cards, velAsBg.parts];
-        } else if (velAsStack && velAsStack.isVpcElStack) {
+        } else if ((velAsStack instanceof VpcElStack)) {
             return [velAsStack.bgs];
         } else {
             return [];

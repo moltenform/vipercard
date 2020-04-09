@@ -93,7 +93,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
         assertTrue(bool(vci.getModel().findByIdUntyped(vel.id)), "6Z|deleting element that doesn't exist?", vel.id);
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
             throw makeVpcScriptErr('6Y|Cannot delete this type of element');
-        } else if (velAsCard && velAsCard.isVpcElCard) {
+        } else if ((velAsCard instanceof VpcElCard)) {
             let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
             checkThrow(ar.length > 1, '8%|Cannot delete the only card of a stack');
         } else if (vel.id === currentCard.id) {
