@@ -289,7 +289,7 @@ export class ScrollbarImpl {
 
         /* drawBeyondVisible is a perf optimization, telling text render to stop looping
         once it leaves visible area. */
-        let drawText = cast(UI512DrawText, getRoot().getDrawText() );
+        let drawText = cast(UI512DrawText, getRoot().getDrawText());
         let [args, fmtText] = drawTextArgsFromEl(el, subRect, false);
         args.callbackPerChar = callbackPerChar;
         args.drawBeyondVisible = drawBeyondVisible;

@@ -550,7 +550,7 @@ export class VpcPresenter extends VpcPresenterInit {
         if (orig && (orig.getType() === VpcElType.Btn || orig.getType() === VpcElType.Fld)) {
             let dupe = this.makePart(orig.getType());
             let dupeSizable = dupe as VpcElSizable;
-            checkThrow((dupeSizable instanceof VpcElSizable), 'Ke|');
+            checkThrow(dupeSizable instanceof VpcElSizable, 'Ke|');
             VpcGettableSerialization.copyPropsOver(orig, dupe);
 
             /* move it a bit */

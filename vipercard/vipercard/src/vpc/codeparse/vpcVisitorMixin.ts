@@ -474,7 +474,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 total = this.evalHelp.typeMatches(total, typeCheck);
             } else {
                 /* "is" or "is not" expression */
-                checkThrow(map.vals.Lvl3Expression && (map.vals.Lvl3Expression[0]) instanceof VpcVal, '');
+                checkThrow(map.vals.Lvl3Expression && map.vals.Lvl3Expression[0] instanceof VpcVal, '');
                 total = this.evalHelp.evalOp(total, map.vals.Lvl3Expression[0], VpcOpCtg.OpEqualityGreaterLessOrContains, 'is');
             }
 

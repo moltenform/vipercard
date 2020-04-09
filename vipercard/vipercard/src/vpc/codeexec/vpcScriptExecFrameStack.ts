@@ -243,7 +243,7 @@ export class VpcExecFrameStack {
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleExpr[0], '7v|evalRequestedExpression no result of RuleExpr');
 
         let ret = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow((ret instanceof VpcVal), '7u|evalRequestedExpression expected a number, string, or bool.');
+        checkThrow(ret instanceof VpcVal, '7u|evalRequestedExpression expected a number, string, or bool.');
         return ret;
     }
 
@@ -494,7 +494,7 @@ export class VpcExecFrameStack {
             let ret = evaluated.vals['RuleExpr'] as VpcVal[];
             assertTrue(ret !== undefined, '5Q|expected RuleExpr');
             assertTrue(
-                ret.every(v=>v instanceof VpcVal),
+                ret.every(v => v instanceof VpcVal),
                 '5P|every arg must be a VpcVal'
             );
             return ret;
@@ -548,7 +548,7 @@ export class VpcExecFrameStack {
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleObject, 'visitSendStatement expected both RuleExpr and RuleObject');
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow((val instanceof VpcVal), 'visitSendStatement expected a string.');
+        checkThrow(val instanceof VpcVal, 'visitSendStatement expected a string.');
         let newLineAndCode = '\n' + val.readAsString().toLowerCase();
         checkThrow(
             !newLineAndCode.includes('\nfunction\n') && !newLineAndCode.includes('\non\n'),
@@ -644,10 +644,16 @@ end ${newHandlerName}
         );
 
         let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
-        checkThrow(visited  instanceof  IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
+        checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
         curFrame.next();
 
-        let helper = new VpcExecGoCardHelpers(this.outside, this.globals, curFrame.locals, this.cardHistory, this.cardHistoryPush);
+        let helper = new VpcExecGoCardHelpers(
+            this.outside,
+            this.globals,
+            curFrame.locals,
+            this.cardHistory,
+            this.cardHistoryPush
+        );
         let [sendMsg, sendMsgTarget] = helper.execGoCard(curLine, visited);
         if (slength(sendMsg)) {
             // should be a "send opencard to this cd" type of thing

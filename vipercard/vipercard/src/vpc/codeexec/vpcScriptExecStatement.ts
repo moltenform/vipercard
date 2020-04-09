@@ -31,7 +31,10 @@ export class ExecuteStatement {
         let firstToken = line.excerptToParse[0];
         checkThrow(isTkType(firstToken, tks.tkIdentifier), `7g|expect built-in statement`);
         let vals = visitResult as IntermedMapOfIntermedVals;
-        checkThrow(vals instanceof IntermedMapOfIntermedVals, `7f|command ${firstToken.image} did not return IntermedMapOfIntermedVals`);
+        checkThrow(
+            vals instanceof IntermedMapOfIntermedVals,
+            `7f|command ${firstToken.image} did not return IntermedMapOfIntermedVals`
+        );
 
         let method = 'go' + Util512.capitalizeFirst(firstToken.image);
         Util512.callAsMethodOnClass('ExecuteStatement', this, method, [line, vals, blocked], false);
@@ -74,10 +77,7 @@ export class ExecuteStatement {
      */
     protected goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
         let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
-        let container = throwIfUndefined(
-            this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'),
-            '5L|'
-        );
+        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '5L|');
 
         let getResultAsString = (s: string) => {
             let f1 = VpcValS(s).readAsStrictNumeric();
@@ -153,7 +153,7 @@ export class ExecuteStatement {
      * retrieve an expected type of VpcIntermedValBase from the visitor result
      */
     protected findChildOther<T extends VpcIntermedValBase>(
-        ctor:AnyParameterCtor<T>,
+        ctor: AnyParameterCtor<T>,
         vals: IntermedMapOfIntermedVals,
         nm: string
     ): O<T> {
@@ -381,7 +381,7 @@ export class ExecuteStatement {
             let arVals = ar as VpcVal[];
             for (let i = 0, len = arVals.length; i < len; i++) {
                 let item = arVals[i];
-                assertTrue((item instanceof VpcVal), 'JO|every item must be a vpcval');
+                assertTrue(item instanceof VpcVal, 'JO|every item must be a vpcval');
                 argsGiven.push(item.readAsStrictInteger());
             }
         }
@@ -414,10 +414,7 @@ export class ExecuteStatement {
         if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
             throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
-            let contRef = throwIfUndefined(
-                this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'),
-                '5B|'
-            );
+            let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '5B|');
             let chunk = throwIfUndefined(this.findChildOther(RequestedChunk, vals, 'RuleHChunk'), '5A|');
 
             contRef.chunk = chunk;
@@ -469,15 +466,12 @@ export class ExecuteStatement {
         let expr1 = exprs[0] as VpcVal;
         let expr2 = exprs[1] as VpcVal;
         checkThrowEq(2, exprs.length, '');
-        checkThrow((expr1 instanceof VpcVal), '');
-        checkThrow((expr2 instanceof VpcVal), '');
+        checkThrow(expr1 instanceof VpcVal, '');
+        checkThrow(expr2 instanceof VpcVal, '');
         let searchFor = expr1.readAsString();
         let replaceWith = expr2.readAsString();
 
-        let contRef = throwIfUndefined(
-            this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'),
-            '53|'
-        );
+        let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '53|');
 
         let cont = this.outside.ResolveContainerWritable(contRef);
         cont.replaceAll(searchFor, replaceWith);
@@ -508,10 +502,7 @@ export class ExecuteStatement {
 
         let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[1]);
         let val = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '54|');
-        let contRef = throwIfUndefined(
-            this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'),
-            '53|'
-        );
+        let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '53|');
 
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
@@ -544,7 +535,7 @@ export class ExecuteStatement {
             let arVals = ar as VpcVal[];
             for (let i = 0, len = arVals.length; i < len; i++) {
                 let item = arVals[i];
-                assertTrue((item instanceof VpcVal), '50|every item must be a vpcval');
+                assertTrue(item instanceof VpcVal, '50|every item must be a vpcval');
                 strings.push(item.readAsString());
             }
         }
@@ -580,7 +571,7 @@ export class ExecuteStatement {
             if (rule1.vals[nmExpr]) {
                 let val1 = rule1.vals[nmExpr][0] as VpcVal;
                 let val2 = rule1.vals[nmExpr][1] as VpcVal;
-                checkThrow((val1 instanceof VpcVal) && (val2 instanceof VpcVal), '7K|');
+                checkThrow(val1 instanceof VpcVal && val2 instanceof VpcVal, '7K|');
                 checkThrow(val1.isItInteger() && val2.isItInteger(), '7J|');
                 let coords = `${val1.readAsString()},${val2.readAsString()}`;
                 this.outside.SetProp(ref, 'loc', VpcValS(coords), undefined);
@@ -630,10 +621,7 @@ export class ExecuteStatement {
 
         let strChunktype = throwIfUndefined(this.findChildStr(vals, 'TokenTkcharorwordoritemorlineorplural'), '4]|');
         let chunktype = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', strChunktype);
-        let contRef = throwIfUndefined(
-            this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'),
-            '4[|'
-        );
+        let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '4[|');
 
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();

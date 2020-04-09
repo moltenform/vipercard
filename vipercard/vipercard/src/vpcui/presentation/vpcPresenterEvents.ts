@@ -167,7 +167,7 @@ export class VpcPresenterEvents {
                 let short = pr.lyrToolboxes.toolsMain.fromFullId(d.el.id);
                 if (short && short.endsWith('##eraser')) {
                     pr.vci.setTool(VpcTool.Eraser);
-                    let tl = cast(VpcAppUIToolSmear, pr.getToolResponse(VpcTool.Eraser), );
+                    let tl = cast(VpcAppUIToolSmear, pr.getToolResponse(VpcTool.Eraser));
                     tl.clearAllPaint();
                 }
             }
@@ -673,7 +673,7 @@ export class EditTextBehaviorSendToVel extends UI512TextEvents {
         if (el) {
             let vel = pr.lyrModelRender.findElIdToVel(el.id);
             if (vel) {
-                let velFld = cast(VpcElField, vel, );
+                let velFld = cast(VpcElField, vel);
                 let cardId = pr.vci.getOptionS('currentCardId');
                 return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld, cardId) : undefined;
             } else {

@@ -450,7 +450,7 @@ export class UI512ViewDraw {
      */
     renderStaticLabelTransparentExceptChars(b: UI512ViewDrawBorders, el: UI512ElLabel) {
         /* measure the string so that we can white out the space before drawing letters */
-        let drawText = cast(UI512DrawText, getRoot().getDrawText(),);
+        let drawText = cast(UI512DrawText, getRoot().getDrawText());
         let subrectAlmostAll = this.getSubRect(b, 1, 1);
         let measured = drawText.measureString(el.getS('labeltext'));
         if (measured && subrectAlmostAll) {

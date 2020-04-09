@@ -91,7 +91,7 @@ export abstract class UI512Settable extends UI512Gettable {
 
             this.dirty = true;
             if (newVal instanceof FormattedText) {
-                (newVal).lock();
+                newVal.lock();
             }
 
             this.observer.changeSeen(context, this.id, s, prevVal, newVal);

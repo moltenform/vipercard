@@ -439,7 +439,7 @@ export class RequestedChunk extends VpcIntermedValBase {
      * an index must be a valid integer
      */
     confirmValidIndex(v: VpcVal, chunktype: string, tmpArr: [boolean, any]) {
-        checkThrow((v instanceof VpcVal), `8p|internal error in RuleHChunk`);
+        checkThrow(v instanceof VpcVal, `8p|internal error in RuleHChunk`);
         checkThrow(v.isItInteger(), `8o|when getting ${chunktype}, need to provide an integer but got ${v.readAsString()}`);
 
         let asInt = v.readAsStrictInteger(tmpArr);

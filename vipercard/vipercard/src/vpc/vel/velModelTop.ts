@@ -44,7 +44,7 @@ export class VpcModelTop {
     /**
      * look for a vel of specified type by id, returns undefined if not found
      */
-    findById<T extends VpcElBase>(ctor: AnyParameterCtor<T>, id: O<string>)  {
+    findById<T extends VpcElBase>(ctor: AnyParameterCtor<T>, id: O<string>) {
         let vel = this.elements.find(id);
         return vel ? cast(ctor, vel, id) : undefined;
     }
@@ -52,7 +52,7 @@ export class VpcModelTop {
     /**
      * look for a vel of specified type by id, throws if not found
      */
-    getById<T extends VpcElBase>(ctor:AnyParameterCtor<T>, id: string, ): T {
+    getById<T extends VpcElBase>(ctor: AnyParameterCtor<T>, id: string): T {
         let vel = this.elements.get(id);
         return cast(ctor, vel, id);
     }
@@ -61,7 +61,7 @@ export class VpcModelTop {
      * look for a vel of specified type by id, throws if not found
      */
     getCardById(id: string) {
-        return this.getById(VpcElCard, id)
+        return this.getById(VpcElCard, id);
     }
 
     /**
@@ -99,7 +99,7 @@ export class VpcModelTop {
     /**
      * a convenient way to go from a vel to its owner, confirm type is as expected
      */
-    getOwner<T>(ctor:AnyParameterCtor<T>, vel: VpcElBase) {
+    getOwner<T>(ctor: AnyParameterCtor<T>, vel: VpcElBase) {
         let found = this.getOwnerUntyped(vel);
         return cast(ctor, found);
     }
@@ -109,15 +109,15 @@ export class VpcModelTop {
      */
     getParentCardOfElement(vel: VpcElBase): VpcElBase {
         let cur = this.getCurrentCard();
-        if ((vel instanceof VpcElCard)) {
+        if (vel instanceof VpcElCard) {
             return vel;
-        } else if ((vel instanceof VpcElBg)) {
+        } else if (vel instanceof VpcElBg) {
             if (vel.id === cur.parentId) {
                 return cur;
             } else {
                 return vel.cards[0];
             }
-        } else if (((vel instanceof VpcElButton)) || ((vel instanceof VpcElField))) {
+        } else if (vel instanceof VpcElButton || vel instanceof VpcElField) {
             let parent = this.getByIdUntyped(vel.parentId);
             return this.getParentCardOfElement(parent);
         } else {
@@ -131,7 +131,7 @@ export class VpcModelTop {
     getCurrentCard() {
         let cardId = this.productOpts.getS('currentCardId');
         let found = this.getCardById(cardId);
-        checkThrow((found instanceof VpcElCard) && found.getType() === VpcElType.Card, '79|getCurrentCard failed');
+        checkThrow(found instanceof VpcElCard && found.getType() === VpcElType.Card, '79|getCurrentCard failed');
         return found;
     }
 
@@ -152,11 +152,11 @@ export class VpcModelTop {
         let velAsCard = vel as VpcElCard;
         let velAsBg = vel as VpcElBg;
         let velAsStack = vel as VpcElStack;
-        if ((velAsCard instanceof VpcElCard)) {
+        if (velAsCard instanceof VpcElCard) {
             return [velAsCard.parts];
-        } else if ((velAsBg instanceof VpcElBg)) {
+        } else if (velAsBg instanceof VpcElBg) {
             return [velAsBg.cards, velAsBg.parts];
-        } else if ((velAsStack instanceof VpcElStack)) {
+        } else if (velAsStack instanceof VpcElStack) {
             return [velAsStack.bgs];
         } else {
             return [];

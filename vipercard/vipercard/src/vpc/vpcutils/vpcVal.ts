@@ -7,8 +7,7 @@
  * for the interpreter, when interpreting a script,
  * an "intermedVal" is the result of part of an expression
  */
-export class VpcIntermedValBase {
-}
+export class VpcIntermedValBase {}
 
 /**
  * this token allows access for directly creating a VpcVal,

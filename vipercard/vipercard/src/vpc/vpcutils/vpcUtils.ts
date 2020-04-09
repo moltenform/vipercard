@@ -42,14 +42,12 @@ export class VpcScriptErrorBase implements UI512AttachableErr {
 /**
  * a script "runtime" error, meaning error happened during execution
  */
-export class VpcScriptRuntimeError extends VpcScriptErrorBase {
-}
+export class VpcScriptRuntimeError extends VpcScriptErrorBase {}
 
 /**
  * script "syntax" error, meaning error happened prior to execution
  */
-export class VpcScriptSyntaxError extends VpcScriptErrorBase {
-}
+export class VpcScriptSyntaxError extends VpcScriptErrorBase {}
 
 /**
  * a message sent to a script

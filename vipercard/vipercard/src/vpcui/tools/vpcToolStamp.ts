@@ -126,13 +126,13 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
             let lns = ctg.children.map(ch => lng(ch.name));
             let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
             if (el) {
-                UI512ElTextField.setListChoices(cast(UI512ElTextField, el, ), lns);
+                UI512ElTextField.setListChoices(cast(UI512ElTextField, el), lns);
                 el.set('selcaret', 0);
                 el.set('selend', 0);
                 this.currentImg = undefined;
                 if (el.getFmTxt().len() > 0) {
                     /* auto-choose the first one */
-                    let rghtgel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, el, ));
+                    let rghtgel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, el));
                     TextSelModify.selectLineInField(rghtgel, 0);
                     this.onChoosePicture();
                 }
