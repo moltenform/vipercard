@@ -3,7 +3,7 @@
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { PropAdjective, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcTool, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
@@ -82,7 +82,8 @@ export class VpcBuiltinFunctions {
         selectedfield: 0,
         selectedline: 0,
         selectedtext: 0,
-        tool: 0
+        tool: 0,
+        typeofobject: 1
     };
 
     /**
@@ -580,6 +581,17 @@ export class VpcBuiltinFunctions {
         let nTool = this.readoutside.GetCurrentTool(false);
         let s = findEnumToStr(VpcTool, nTool);
         return VpcValS(s ? s.toLowerCase() : '');
+    }
+
+    /**
+     * what is the type of this object?
+     */
+    callTypeofobject(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+        let id = args[0].readAsStrictNumeric();
+        let request = new RequestedVelRef(VpcElType.Unknown);
+        request.lookById = id;
+        let found = this.readoutside.ElementExists(request);
+        return VpcValS(found ? vpcElTypeShowInUI(found) : '');
     }
 
     /**

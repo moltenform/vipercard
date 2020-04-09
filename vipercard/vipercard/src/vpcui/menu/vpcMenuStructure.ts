@@ -1,6 +1,5 @@
 
 /* auto */ import { VpcUILayer } from './../state/vpcInterface';
-/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Assert';
 /* auto */ import { isString } from './../../ui512/utils/util512';
 /* auto */ import { UI512MenuDefn } from './../../ui512/menu/ui512MenuPositioning';

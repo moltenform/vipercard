@@ -316,7 +316,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             /* put there is a cd btn "myBtn" into x */
             let requestRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
             checkThrow(requestRef instanceof RequestedVelRef, `98|internal error, expected RuleObject to be a RequestedElRef`);
-            let velExists = this.outside.ElementExists(requestRef);
+            let velExists = bool(this.outside.ElementExists(requestRef));
             return VpcValBool(ctx.TokenNot.length ? !velExists : velExists);
         }
 

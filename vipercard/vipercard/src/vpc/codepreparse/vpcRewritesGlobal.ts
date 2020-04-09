@@ -52,10 +52,11 @@ export namespace VpcSuperRewrite {
     export function go(
         s: string,
         realTokenAsBasis: ChvITk,
-        args: ChvITk[][],
+        args?: ChvITk[][],
         argMany?: ChvITk[][],
         needsToBePostProcess = true
     ): ChvITk[][] {
+        args = args ?? [];
         let ret: ChvITk[][] = [];
         s = s.trim();
         s = s.replace(/%UNIQUE%/g, '$unique' + CounterForUniqueNames.nextAsStr());

@@ -1,5 +1,10 @@
 
+/* auto */ import { IntermedMapOfIntermedVals, VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { VpcCodeLine } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
+/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { assertTrue, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
 
 export class VpcScriptExecuteStatementHelpers {
     outside: OutsideWorldReadWrite;

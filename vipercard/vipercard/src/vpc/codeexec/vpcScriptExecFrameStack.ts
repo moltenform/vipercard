@@ -4,9 +4,8 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
-/* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct } from './../codeparse/vpcTokens';
+/* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct, tks } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
-/* auto */ import { VpcExecGoCardHelpers } from './vpcScriptExecGoCard';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
@@ -60,7 +59,6 @@ export class VpcExecFrameStack {
         public constants: VarCollection,
         public globals: VarCollection,
         public cardHistory: RememberHistory,
-        public cardHistoryPush: RememberHistory,
         public check: CheckReservedWords,
         public originalMsg: VpcScriptMessage
     ) {
@@ -636,28 +634,44 @@ end ${newHandlerName}
     }
 
     /**
-     * one of the goCardImpl pieces that result from a 'go next' call
+     * send a directive that can't be done solely in software
      */
-    visitGoCardImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        assertTrue(
-            this.cacheParsedCST.parser.RuleBuiltinCmdInternalvpcgocardimpl === curLine.getParseRule(),
-            'expected "goCardImpl" parse rule'
-        );
-
-        let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
-        checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
+    visitIsInternalvpcmessagesdirective(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         curFrame.next();
+        checkThrowEq(3, curLine.excerptToParse.length, '');
+        checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1], '');
+        checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2], '');
+        let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
+        let variable = curLine.excerptToParse[2].image;
+        let sendMsg = '';
+        let sendMsgTarget = '';
+        if (directive === 'closeorexit') {
+            let currentCardId = this.outside.GetOptionS('currentCardId');
+            let seld = this.outside.GetSelectedField();
+            if (seld && seld.parentId === currentCardId) {
+                let fieldsRecent = this.outside.GetFieldsRecentlyEdited().val;
+                if (fieldsRecent[seld.id]) {
+                    sendMsg = 'closefield';
+                    sendMsgTarget = seld.id;
+                    fieldsRecent[seld.id] = false;
+                } else {
+                    sendMsg = 'exitfield';
+                    sendMsgTarget = seld.id;
+                }
 
-        let helper = new VpcExecGoCardHelpers(
-            this.outside,
-            this.globals,
-            curFrame.locals,
-            this.cardHistory,
-            this.cardHistoryPush
-        );
-        let [sendMsg, sendMsgTarget] = helper.execGoCard(curLine, visited);
+                /* we're changing cards, so mark the other ones false too */
+                this.outside.GetFieldsRecentlyEdited().val = {};
+            }
+        } else if (directive === 'gotocardsendnomessages') {
+            let nextCardId = curFrame.locals.get(variable);
+            checkThrow(nextCardId && nextCardId.isItInteger(), '');
+            this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
+        } else {
+            checkThrow(false, 'unknown directive', directive);
+        }
+
         if (slength(sendMsg)) {
-            let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, 'visitGoCardImpl', sendMsg);
+            let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, 'sending message directive', sendMsg);
             let found = this.findHandlerUpwards(
                 this.originalMsg.targetId,
                 curFrame.messageChain,

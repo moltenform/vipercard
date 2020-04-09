@@ -21,7 +21,6 @@
 export class VpcExecTop {
     globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
     cardHistory = new RememberHistory();
-    cardHistoryPush = new RememberHistory();
     constants = new VariableCollectionConstants();
     check = new CheckReservedWords();
     runStatements = new ExecuteStatement();
@@ -69,7 +68,6 @@ export class VpcExecTop {
             this.constants,
             this.globals,
             this.cardHistory,
-            this.cardHistoryPush,
             this.check,
             msg
         );

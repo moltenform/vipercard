@@ -113,45 +113,14 @@ export class VpcRewriteForCommands {
         } else if (allImages.includes('***without***dialog***')) {
             return [this.hBuildNyi('doMenu without dialog', line[0])];
         } else {
-            if (line.length === 4) {
-                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b"`);
-                checkThrowEq(
-                    tks.tkStringLiteral,
-                    line[2].tokenType,
-                    `currently need string literals - doMenu "a", "b" not doMenu a, b`
-                );
-            } else if (line.length !== 2) {
-                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b", unexpected length`);
-            }
-
-            // but if it has to be a string literal, we can't pass it and trap it. work needed.
-            checkThrowEq(
-                tks.tkStringLiteral,
-                line[2].tokenType,
-                `currently need string literals - doMenu "a", "b" not doMenu a, b`
-            );
-            let s = line[2].image.toLowerCase();
-            let isGoCard = {
-                first: 1,
-                next: 1,
-                last: 1,
-                prev: 1,
-                previous: 1,
-                back: 1,
-                forth: 1,
-                push: 2,
-                pop: 2
-            };
-            let isGoCardN = isGoCard[s];
-            if (isGoCardN) {
-                if (isGoCardN === 2) {
-                    s = '"' + s + '"';
-                }
-                let template = `go ${s}`;
-                return VpcSuperRewrite.go(template, line[0], []);
-            }
-            checkThrow(false, 'not yet implemented');
-            // rewrite domenu "delete card" to go
+            /* before, we partially supported domenu by looking for string literals,
+            i.e. domenu "back" could be rewritten to go back.
+            that doesn't work if the domenu can be trapped, though.
+            current design is much better: in fact, many ui commands themselves
+            will call domenu, going through domenu will be the true implementation,
+            since it's simpler to call events like closecard and opencard.
+            see silenceMessagesForUIAction. */
+            return [line];
         }
     }
     rewriteDrag(line: ChvITk[]): ChvITk[][] {
@@ -189,27 +158,34 @@ export class VpcRewriteForCommands {
             shouldSuspendHistory = 'true';
         }
 
-        // why put it on different lines?
-        // so that each of these can be like function calls.
-        // pushing mutilple framestacks on one line is not supported
-        // don't just put this in the product, it will have wrong scope.
-        // note that if the card doesn't actually change, all the rest are no-ops
-        let template = `
-global internalvpcmovecardimplsuspendhistory
-internalvpcmovecardimpl "gettarget" c%UNIQUE% %ARG0%
-internalvpcmovecardimpl "closeorexitfield" c%UNIQUE%
-internalvpcmovecardimpl "closecard" c%UNIQUE%
-internalvpcmovecardimpl "closebackground" c%UNIQUE%
-if ${shouldSuspendHistory} then
-    put 1 %INTO% internalvpcmovecardimplsuspendhistory
-end if
-internalvpcmovecardimpl "move" c%UNIQUE%
-put 0 %INTO% internalvpcmovecardimplsuspendhistory
-internalvpcmovecardimpl "openbackground" c%UNIQUE%
-internalvpcmovecardimpl "opencard" c%UNIQUE%
-internalvpcmovecardimpl "settheresult" c%UNIQUE%
-        `;
-        return VpcSuperRewrite.go(template, line[0], [line.slice(1), []]);
+        // remove the "to"
+        if (line[1].image === 'to') {
+            line.splice(1, 1);
+        }
+
+        let allImages = line.map(t => t.image).join('***') + '***';
+        if (allImages.includes('***new***window***')) {
+            return [this.hBuildNyi(`go to new window`, line[0])];
+        } else if (allImages.includes('***without***dialog***')) {
+            return [this.hBuildNyi(`go without dialog`, line[0])];
+        }
+
+        let template = '';
+        if (line.length === 2 && (line[1].tokenType === tks.tkOrdinal || line[1].tokenType === tks.tkPosition)) {
+            template = `
+if there is a %ARG0% card then
+    internalvpcmovecardhelper (the id of %ARG0% card), ${shouldSuspendHistory}
+end if`;
+        } else {
+            /* the id might refer to a bg or stack, we will correctly handle that.
+            also note that `the id of back` is correctly understood. */
+
+            template = `
+if there is a %ARG0% then
+    internalvpcmovecardhelper (the id of %ARG0%), ${shouldSuspendHistory}
+end if`;
+        }
+        return VpcSuperRewrite.go(template, line[0], [line.slice(1)]);
     }
     rewriteHide(line: ChvITk[]): ChvITk[][] {
         return this.hReturnNyiIfMenuMentionedOutsideParens(line);
@@ -226,8 +202,7 @@ internalvpcmovecardimpl "settheresult" c%UNIQUE%
     rewritePass(line: ChvITk[]): ChvITk[][] {
         /* add a return statement afterwards, solely to make code exec simpler. */
         return VpcSuperRewrite.go(
-            `
-%ARG0%
+            `%ARG0%
 return 0`,
             line[0],
             [line]
@@ -238,11 +213,10 @@ return 0`,
         checkThrow(line.length >= 2, 'not enough args');
         checkThrowEq(tks.tkCard, line[1], 'must be pop *card*');
         if (line.length === 2) {
-            let fakedCode = VpcSuperRewrite.go('go "pop"', line[0], []);
-            return this.rewriteGo(fakedCode[0]);
+            return VpcSuperRewrite.go('pop true', line[0]);
         } else {
             let newCode = `
-builtinInternalVpcMoveCardImpl "gettarget" c%UNIQUE% "pop"
+pop false
 put the result %ARG0%`;
             let gen = VpcSuperRewrite.go(newCode, line[0], [line.slice(2)]);
             let fixedPut = this.rewritePut(gen[1]);
@@ -256,8 +230,7 @@ put the result %ARG0%`;
     rewritePush(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length === 2, 'expect 2 args');
         checkThrowEq(tks.tkCard, line[1], 'must be push *card*');
-        let fakedCode = VpcSuperRewrite.go('go "push"', line[0], []);
-        return this.rewriteGo(fakedCode[0]);
+        return VpcSuperRewrite.go('push "card"', line[0]);
     }
     rewritePut(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
@@ -523,7 +496,7 @@ end repeat`;
             `${prefix} "${opts['speed']}" "${opts['speedmodify']}"
             "${opts['method']}" "${opts['modifier']}" "${opts['dest']}" `
         );
-        return VpcSuperRewrite.go(template, line[0], []);
+        return VpcSuperRewrite.go(template, line[0]);
     }
 
     hBuildNyi(msg: string, basis: ChvITk) {
@@ -544,6 +517,6 @@ end repeat`;
 
     hReturnNoOp(line: ChvITk[]): ChvITk[][] {
         let template = `put "no-op" %INTO% c%UNIQUE% `;
-        return VpcSuperRewrite.go(template, line[0], []);
+        return VpcSuperRewrite.go(template, line[0]);
     }
 }

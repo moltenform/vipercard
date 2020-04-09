@@ -110,8 +110,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * try resolving a RequestedVelRef, and if resolution fails, return false
      */
-    ElementExists(vel: RequestedVelRef): boolean {
-        return this.ResolveVelRef(vel)[0] !== undefined;
+    ElementExists(vel: RequestedVelRef): O<VpcElType> {
+        let found = this.ResolveVelRef(vel);
+        return found[0]?.getType();
     }
 
     /**

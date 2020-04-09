@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';

@@ -1265,58 +1265,6 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleObjectBtn);
     });
 
-    RuleBuiltinCmdInternalVpcMoveCardImpl = this.RULE('RuleBuiltinCmdInternalVpcMoveCardImpl', () => {
-        this.CONSUME1(tks.tkSyntaxPlaceholder);
-        this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.CONSUME1(tks.tkStringLiteral);
-        this.CONSUME1(tks.tkIdentifier);
-        this.OPTION1(() => {
-            this.CONSUME1(tks._to);
-        });
-        this.OR1([
-            {
-                ALT: () => {
-                    this.CONSUME2(tks.tkStringLiteral);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleHBuiltinCmdGoDest);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleOrdinal);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RulePosition);
-                }
-            }
-        ]);
-    });
-
-    RuleHBuiltinCmdGoDest = this.RULE('RuleHBuiltinCmdGoDest', () => {
-        this.OR1([
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleObjectCard);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleObjectBg);
-                }
-            },
-            {
-                ALT: () => {
-                    this.SUBRULE1(this.RuleObjectStack);
-                }
-            }
-        ]);
-    });
-
     RuleBuiltinCmdHide = this.RULE('RuleBuiltinCmdHide', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);

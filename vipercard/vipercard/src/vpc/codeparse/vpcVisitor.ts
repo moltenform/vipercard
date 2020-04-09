@@ -433,22 +433,6 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdInternalVpcMoveCardImpl(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
-
-        RuleHBuiltinCmdGoDest(ctx: VisitingContext): RequestedVelRef {
-            if (ctx.RuleObjectCard[0]) {
-                return this.visit(ctx.RuleObjectCard[0]);
-            } else if (ctx.RuleObjectBg[0]) {
-                return this.visit(ctx.RuleObjectBg[0]);
-            } else if (ctx.RuleObjectStack[0]) {
-                return this.visit(ctx.RuleObjectStack[0]);
-            } else {
-                throw makeVpcInternalErr('OR in HBuiltinCmdGoDest, no branch found');
-            }
-        }
-
         RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }

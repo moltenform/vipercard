@@ -49,6 +49,7 @@
 //      NEW FEATURE: replace "a" with "b" in s
 //      we don't yet support `put "c" into char 2 of item 3 of line 2 of cd fld 1`
 //      or put "c" into char 2 of item 3 to 5 of line 2 of cd fld 1
+//      NEW FEATURE: typeOfObject(id)
 // aren't yet supported in software include:
 //      you can't say `part id 4`
 //      you can't refer to other stacks besides "this stack"

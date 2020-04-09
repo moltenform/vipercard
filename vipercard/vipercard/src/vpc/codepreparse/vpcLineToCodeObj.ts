@@ -49,11 +49,6 @@ export class VpcLineToCodeObj {
                     /* specify parsing for 'send' */
                     output.excerptToParse = output.excerptToParse.slice();
                     output.setParseRule(this.parser.RuleBuiltinCmdSend);
-                } else if (output.ctg === VpcLineCategory.InternalSendMessageImpl) {
-                    let NoteThisIsDisabledCode = 1;
-                    /* specify parsing for 'goCardImpl' */
-                    output.excerptToParse = output.excerptToParse.slice();
-                    output.setParseRule(this.parser.RuleBuiltinCmdInternalvpcgocardimpl);
                 } else if (this.isParsingNeeded(output.ctg)) {
                     /* construct an array to be sent to the parser */
                     output.excerptToParse = [this.reusableRequestEval].concat(output.excerptToParse);
@@ -331,27 +326,12 @@ export class VpcLineToCodeObj {
     }
 
     /**
-     * line begins with goCardImpl
+     * line begins with internalvpcmessagesdirective
      */
-    goInternalvpcmovecardimpl(line: ChvITk[], output: VpcCodeLine) {
-        checkThrow(line.length >= 2, `line is too short.`);
-
-        /* other control blocks just parse a single expression,
-        but this has to parse a refrence to a card */
+    goInternalvpcmessagesdirective(line: ChvITk[], output: VpcCodeLine) {
+        checkThrow(line.length === 3, `line must contain 3 tokens.`);
         output.excerptToParse = line.slice();
-        output.ctg = VpcLineCategory.InternalSendMessageImpl;
-    }
-
-    /**
-     * line begins with goCardImpl
-     */
-    goInternalVpcGoCardImpl(line: ChvITk[], output: VpcCodeLine) {
-        checkThrow(line.length >= 2, `line is too short.`);
-
-        /* other control blocks just parse a single expression,
-        but this has to parse a refrence to a card */
-        output.excerptToParse = line.slice();
-        output.ctg = VpcLineCategory.InternalSendMessageImpl;
+        output.ctg = VpcLineCategory.IsInternalvpcmessagesdirective;
     }
 
     /**
@@ -375,6 +355,7 @@ export class VpcLineToCodeObj {
             case VpcLineCategory.RepeatForever: /* fall-through */
             case VpcLineCategory.RepeatEnd: /* fall-through */
             case VpcLineCategory.DeclareGlobal /* fall-through */:
+            case VpcLineCategory.IsInternalvpcmessagesdirective /* fall-through */:
                 return false;
             default:
                 return true;

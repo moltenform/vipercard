@@ -860,7 +860,6 @@ listOfAllBuiltinCommandsInOriginalProduct['if'] = true;
 // ones we've defined
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappablechoose'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappabledomenu'] = true;
-listOfAllBuiltinCommandsInOriginalProduct['internalvpcmovecardimpl'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['replace'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['internalvpcsort'] = true;
 
