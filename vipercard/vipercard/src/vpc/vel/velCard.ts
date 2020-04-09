@@ -10,7 +10,6 @@
  * a vipercard "card"
  */
 export class VpcElCard extends VpcElBase {
-    isVpcElCard = true;
     protected _script = '';
     protected _name = '';
     protected _paint = '';

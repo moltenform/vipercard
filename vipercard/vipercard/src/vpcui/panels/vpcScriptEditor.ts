@@ -26,7 +26,6 @@
  * the ViperCard script editor
  */
 export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEditPanels {
-    isVpcPanelScriptEditor = true;
     hasCloseBtn = true;
     autoCreateBlock = true;
     compositeType = 'VpcPanelScriptEditor';

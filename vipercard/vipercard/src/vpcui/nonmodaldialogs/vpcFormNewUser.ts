@@ -130,7 +130,6 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
 to break the circular reference between login and new user,
 they used to both call each other.  */
 export abstract class VpcNonModalFormLoginInterface extends VpcNonModalFormBase {
-    isVpcNonModalFormLoginInterface = true;
     fnCbWhenSignedIn: () => void;
     showHeader: boolean;
     captionText: string;

@@ -6,7 +6,6 @@
  * properties panel, for editing a card's properties
  */
 export class VpcEditPanelsCard extends VpcEditPanelsBase {
-    isVpcEditPanelsCard = true;
     compositeType = 'VpcEditPanelsCard';
     readonly velTypeShortName = 'card';
     readonly velTypeLongName = 'lngcard';

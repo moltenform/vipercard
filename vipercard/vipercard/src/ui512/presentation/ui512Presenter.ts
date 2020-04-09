@@ -16,7 +16,6 @@
  * and sends Models to ElementsView to be drawn.
  */
 export abstract class UI512Presenter extends UI512PresenterBase {
-    isUI512Presenter = true;
     timerSlowIdlePeriod = 500;
     timerSlowIdle = new RepeatingTimer(this.timerSlowIdlePeriod);
     useOSClipboard = false;

@@ -14,7 +14,6 @@
  * for example, Paste basically has to come from a Cmd+V event and can't be triggered by us.
  */
 export class ClipManager implements ClipManagerInterface {
-    isClipManager = true;
     simClipboard = '';
     readonly ensureClipboardReady = 2000;
     timerClipboardReady: RepeatingTimer;

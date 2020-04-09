@@ -201,7 +201,6 @@ export namespace VpcCodeProcessor {
 }
 
 export class VpcParsedCodeCollection {
-    isVpcParsedCodeCollection = true;
     protected _handlerStarts: number[];
     protected _handlers: MapKeyToObject<VpcCodeLineReference>;
     constructor(protected map: MapKeyToObject<VpcCodeLineReference>, public lines: VpcCodeLine[]) {

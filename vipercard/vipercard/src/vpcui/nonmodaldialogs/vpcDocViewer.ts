@@ -25,7 +25,6 @@
  * "reference" (complete scriping reference)
  */
 export class VpcNonModalDocViewer extends VpcNonModalBase {
-    isVpcNonModalDocViewer = true;
     compositeType = 'VpcNonModalDocViewer';
     hasCloseBtn = true;
     constructor(protected vci: VpcStateInterface, public type: DialogDocsType) {

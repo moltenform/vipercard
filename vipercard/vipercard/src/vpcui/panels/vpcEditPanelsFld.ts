@@ -6,7 +6,6 @@
  * properties panel, for editing a field's properties
  */
 export class VpcEditPanelsField extends VpcEditPanelsBase {
-    isVpcEditPanelsField = true;
     compositeType = 'VpcEditPanelsField';
     readonly velTypeShortName = 'cd fld';
     readonly velTypeLongName = 'lngfield';

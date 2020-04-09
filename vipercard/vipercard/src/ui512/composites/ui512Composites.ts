@@ -14,7 +14,6 @@
  * to make it easier for many composites to be shown on the screen at a time.
  */
 export abstract class UI512CompBase {
-    isUI512CompBase = true;
     idPrefix = '';
     readonly grpId: string;
     readonly compositeId: string;

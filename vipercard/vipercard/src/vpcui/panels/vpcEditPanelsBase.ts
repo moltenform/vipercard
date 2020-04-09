@@ -25,7 +25,6 @@
  * for example, editing button and field properties
  */
 export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEditPanels {
-    isVpcEditPanelsBase = true;
     vci: VpcStateInterface;
     isExclusive = false;
     compositeType = 'VpcEditPanelsBase';

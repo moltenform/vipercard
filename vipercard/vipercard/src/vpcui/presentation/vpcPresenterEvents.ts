@@ -498,7 +498,7 @@ export class VpcPresenterEvents {
         {
             /* send openbackground */
             let currentCard = vci.getModel().getCardById(vci.getCurrentCardId());
-            let currentBg = vci.getModel().getOwner(currentCard, VpcElBg);
+            let currentBg = vci.getModel().getOwner(VpcElBg, currentCard);
             let msg = new VpcScriptMessage(currentBg.id, VpcBuiltinMsg.Openbackground);
             pr.vci.getCodeExec().scheduleCodeExec(msg);
         }

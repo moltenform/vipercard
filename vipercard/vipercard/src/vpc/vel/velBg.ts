@@ -12,7 +12,6 @@
  * a stack contains backgrounds, which contain cards
  */
 export class VpcElBg extends VpcElBase {
-    isVpcElBg = true;
     protected _script = '';
     protected _name = '';
     protected _paint = '';

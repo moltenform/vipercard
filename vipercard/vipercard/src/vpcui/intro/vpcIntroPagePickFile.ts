@@ -14,7 +14,6 @@
  * opening from a json file on disk
  */
 export class IntroPagePickFile extends IntroPageBase {
-    isIntroOpenFromDiskPage = true;
     compositeType = 'IntroPagePickFile';
     canDrag = false;
     constructor(compId: string, bounds: number[], x: number, y: number, protected pr: VpcIntroInterface) {

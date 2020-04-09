@@ -10,7 +10,6 @@
  * the loading page, essentially just shows a message on a white background
  */
 export class IntroPageLoading extends IntroPageBase {
-    isIntroWaitWhileLoadingPage = true;
     compositeType = 'IntroPageLoading';
     protected prompt: O<UI512ElLabel>;
     constructor(

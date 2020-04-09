@@ -51,7 +51,6 @@ export interface UndoableAction {
  * an action creating a vel, thin wrapper around UndoableActionCreateOrDelVel
  */
 export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implements UndoableAction {
-    isUndoableActionCreateVel = true;
     constructor(id: string, parentId: string, type: VpcElType, insertIndex = -1 /* default to add-to-end */) {
         super(id, parentId, type, insertIndex);
     }
@@ -76,7 +75,6 @@ export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implem
  * stores the removed vel in a string
  */
 export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implements UndoableAction {
-    isUndoableActionDeleteVel = true;
     storedVelData = '';
     constructor(vel: VpcElBase, vci: VpcStateInterface) {
         super(vel.id, vel.parentId, vel.getType(), -1);

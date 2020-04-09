@@ -13,7 +13,6 @@
  * base class for VPC tools
  */
 export abstract class VpcAppUIToolBase {
-    isVpcAppUIToolBase = true;
     vci: VpcStateInterface;
     cbModelRender: () => VpcModelRender;
     cbPaintRender: () => VpcPaintRender;

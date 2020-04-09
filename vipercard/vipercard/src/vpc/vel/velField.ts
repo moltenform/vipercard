@@ -17,7 +17,6 @@
  * vpc text field class.
  */
 export class VpcElField extends VpcElSizable {
-    isVpcElField = true;
     protected _dontwrap = false;
     protected _enabled = true;
     protected _locktext = false;

@@ -11,7 +11,6 @@
  * properties panel, for editing a stack's properties
  */
 export class VpcEditPanelsStack extends VpcEditPanelsBase {
-    isVpcEditPanelsStack = true;
     compositeType = 'VpcEditPanelsStack';
     readonly velTypeShortName = '';
     readonly velTypeLongName = '';

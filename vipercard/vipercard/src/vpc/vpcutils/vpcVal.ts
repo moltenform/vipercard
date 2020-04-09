@@ -8,7 +8,6 @@
  * an "intermedVal" is the result of part of an expression
  */
 export class VpcIntermedValBase {
-    isIntermedValBase = true;
 }
 
 /**
@@ -24,7 +23,6 @@ let allowUsingVpcValConstructor = new Object();
  * like in the original product, can hold a string, a number, or a boolean
  */
 export class VpcVal extends VpcIntermedValBase {
-    isVpcVal = true;
     static readonly epsilon = 0.000001;
     protected readonly v: string;
 
@@ -259,7 +257,6 @@ const minInt32 = -2147483648;
  * map of keys to intermediate values
  */
 export class IntermedMapOfIntermedVals extends VpcIntermedValBase {
-    isIntermedMapOfIntermedVals = true;
     vals: { [key: string]: (VpcIntermedValBase | string)[] } = {};
 
     /**

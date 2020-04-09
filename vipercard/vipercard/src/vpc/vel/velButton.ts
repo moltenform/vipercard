@@ -12,7 +12,6 @@
  * a vipercard "button"
  */
 export class VpcElButton extends VpcElSizable {
-    isVpcElButton = true;
     protected _autohilite = true;
     protected _enabled = true;
     protected _hilite = false;

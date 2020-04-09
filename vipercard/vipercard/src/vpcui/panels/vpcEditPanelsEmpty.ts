@@ -10,7 +10,6 @@
  * properties panel, for when no object is selected
  */
 export class VpcEditPanelsEmpty extends VpcEditPanelsBase {
-    isVpcEditPanelsEmpty = true;
     compositeType = 'VpcEditPanelsEmpty';
     readonly velTypeShortName = '';
     readonly velTypeLongName = '';

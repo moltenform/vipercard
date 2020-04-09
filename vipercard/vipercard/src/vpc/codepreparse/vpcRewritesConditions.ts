@@ -50,12 +50,10 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
         return undefined;
     }
     class IfConstructClause {
-        isIfConstructClause = true;
         children: (ChvITk[] | IfConstruct)[] = [];
         constructor(public condition: ChvITk[], public isFirst: boolean) {}
     }
     class IfConstruct {
-        isIfConstruct = true;
         clauses: IfConstructClause[];
         hasSeenPlainElse = false;
         isRoot = false;

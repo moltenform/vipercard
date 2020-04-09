@@ -414,7 +414,6 @@ export class ChunkResolution {
  * a requested chunk from a script.
  */
 export class RequestedChunk extends VpcIntermedValBase {
-    isRequestedChunk = true;
     type = VpcChunkType.Chars;
     first: number;
     last: O<number>;

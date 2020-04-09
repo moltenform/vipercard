@@ -16,7 +16,6 @@
  * create or delete a vel
  */
 export abstract class UndoableActionCreateOrDelVel {
-    isUndoableActionCreateOrDelVel = true;
     constructor(public velId: string, public parentId: string, public type: VpcElType, public insertIndex: number) {}
 
     /**

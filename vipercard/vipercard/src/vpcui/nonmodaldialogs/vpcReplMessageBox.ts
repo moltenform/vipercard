@@ -27,7 +27,6 @@
  * this way you can call card/bg/stack handlers.
  */
 export class VpcNonModalReplBox extends VpcNonModalBase {
-    isVpcNonModalReplBox = true;
     showHeader = true;
     captionText = '';
     hasCloseBtn = true;

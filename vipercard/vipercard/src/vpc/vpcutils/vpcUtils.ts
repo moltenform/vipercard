@@ -30,7 +30,6 @@ export interface WritableContainer extends ReadableContainer {
  * base class for script error
  */
 export class VpcScriptErrorBase implements UI512AttachableErr {
-    isVpcScriptErrorBase = true;
     velId = '';
     lineNumber = -1;
     details = '';
@@ -44,14 +43,12 @@ export class VpcScriptErrorBase implements UI512AttachableErr {
  * a script "runtime" error, meaning error happened during execution
  */
 export class VpcScriptRuntimeError extends VpcScriptErrorBase {
-    isVpcScriptRuntimeError = true;
 }
 
 /**
  * script "syntax" error, meaning error happened prior to execution
  */
 export class VpcScriptSyntaxError extends VpcScriptErrorBase {
-    isVpcScriptSyntaxError = true;
 }
 
 /**
@@ -59,7 +56,6 @@ export class VpcScriptSyntaxError extends VpcScriptErrorBase {
  * includes both built-in messages "mouseUp" and custom messages "myHandler"
  */
 export class VpcScriptMessage {
-    isVpcScriptMessage = true;
     clickLoc: O<number[]>;
     keyMods: O<ModifierKeys>;
     keyChar: O<string>;
@@ -91,7 +87,6 @@ export class VpcScriptMessage {
  * for running code in the messagebox
  */
 export class VpcScriptMessageMsgBoxCode extends VpcScriptMessage {
-    isVpcScriptMessageMsgBoxCode = true;
     addIntentionalError = true;
     msgBoxCodeBody = '';
 

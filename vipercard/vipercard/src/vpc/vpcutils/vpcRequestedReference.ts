@@ -17,7 +17,6 @@
  * "resolved", by _velResolveReference_.
  */
 export class RequestedVelRef extends VpcIntermedValBase {
-    isRequestedVelRef = true;
     type: VpcElType;
     lookById: O<number>;
     lookByName: O<string>;
@@ -57,7 +56,6 @@ export class RequestedVelRef extends VpcIntermedValBase {
  * the container might or might not exist, it hasn't been resolved
  */
 export class RequestedContainerRef extends VpcIntermedValBase {
-    isRequestedContainerRef = true;
     vel: O<RequestedVelRef>;
     variable: O<string>;
     chunk: O<RequestedChunk>;

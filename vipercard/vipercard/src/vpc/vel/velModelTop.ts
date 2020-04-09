@@ -99,7 +99,7 @@ export class VpcModelTop {
     /**
      * a convenient way to go from a vel to its owner, confirm type is as expected
      */
-    getOwner<T>(vel: VpcElBase, ctor:AnyParameterCtor<T>) {
+    getOwner<T>(ctor:AnyParameterCtor<T>, vel: VpcElBase) {
         let found = this.getOwnerUntyped(vel);
         return cast(ctor, found);
     }

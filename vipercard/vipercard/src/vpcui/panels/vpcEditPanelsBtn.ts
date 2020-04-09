@@ -6,7 +6,6 @@
  * properties panel, for editing a button's properties
  */
 export class VpcEditPanelsBtn extends VpcEditPanelsBase {
-    isVpcEditPanelsBtn = true;
     compositeType = 'VpcEditPanelsBtn';
     readonly velTypeShortName = 'cd btn';
     readonly velTypeLongName = 'lngbutton';

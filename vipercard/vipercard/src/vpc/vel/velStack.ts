@@ -12,7 +12,6 @@
  * a vipercard "stack"
  */
 export class VpcElStack extends VpcElBase {
-    isVpcElStack = true;
     protected _script = '';
     protected _name = '';
     constructor(id: string, parentId: string) {

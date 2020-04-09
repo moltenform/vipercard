@@ -21,7 +21,6 @@
  *      apart from vpc; vpc is persisted to disk, so harder to change w/o breaking compat
  */
 export abstract class VpcElBase extends UI512Settable {
-    isVpcElBase = true;
     readonly parentId: string;
     protected abstract _name: string;
     abstract getType(): VpcElType;
@@ -247,7 +246,6 @@ export abstract class VpcElBase extends UI512Settable {
  * base class for elements that can be resized.
  */
 export abstract class VpcElSizable extends VpcElBase {
-    isVpcElSizable = true;
     protected _x = 0;
     protected _y = 0;
     protected _w = 0;

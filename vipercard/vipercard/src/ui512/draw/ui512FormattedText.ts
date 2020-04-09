@@ -10,8 +10,6 @@
  * can be easily serialized to/from a plain string.
  */
 export class FormattedText {
-    isFormattedText = true;
-
     /* every character has an associated font. */
     protected charArray: number[] = [];
     protected fontArray: string[] = [];
