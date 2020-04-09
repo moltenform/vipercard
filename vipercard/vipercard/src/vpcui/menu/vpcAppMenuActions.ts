@@ -389,10 +389,22 @@ export class VpcMenuActions {
     }
 
     /**
-     * go to the last card
+     * go to last card
      */
     goMnuGoCardLast() {
         this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
+    }
+
+    /**
+     * go to the last card
+     */
+    goMnuGoCardLast__NewStyle() {
+        /* an example of the new style of UI events.
+        everything goes through running a script, even if the browse tool isn't active.
+        we won't let other events through, though, because of silenceMessagesForUIAction. */
+        this.vci.getCodeExec().silenceMessagesForUIAction.val = this.vci.getTool();
+        let whichCmd = this.vci.getTool() === VpcTool.Browse ? 'domenu' : 'vpccalluntrappabledomenu';
+        this.vci.getCodeExec().runMsgBoxCodeOrThrow(`${whichCmd} "last"`, this.vci.getCurrentCardId(), false);
     }
 
     /**

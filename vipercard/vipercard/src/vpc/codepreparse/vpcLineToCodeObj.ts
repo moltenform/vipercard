@@ -49,7 +49,8 @@ export class VpcLineToCodeObj {
                     /* specify parsing for 'send' */
                     output.excerptToParse = output.excerptToParse.slice();
                     output.setParseRule(this.parser.RuleBuiltinCmdSend);
-                } else if (output.ctg === VpcLineCategory.GoCardImpl) {
+                } else if (output.ctg === VpcLineCategory.InternalSendMessageImpl) {
+                    let NoteThisIsDisabledCode = 1;
                     /* specify parsing for 'goCardImpl' */
                     output.excerptToParse = output.excerptToParse.slice();
                     output.setParseRule(this.parser.RuleBuiltinCmdInternalvpcgocardimpl);
@@ -332,13 +333,25 @@ export class VpcLineToCodeObj {
     /**
      * line begins with goCardImpl
      */
-    goBuiltinInternalVpcGoCardImpl(line: ChvITk[], output: VpcCodeLine) {
+    goInternalvpcmovecardimpl(line: ChvITk[], output: VpcCodeLine) {
         checkThrow(line.length >= 2, `line is too short.`);
 
         /* other control blocks just parse a single expression,
         but this has to parse a refrence to a card */
         output.excerptToParse = line.slice();
-        output.ctg = VpcLineCategory.GoCardImpl;
+        output.ctg = VpcLineCategory.InternalSendMessageImpl;
+    }
+
+    /**
+     * line begins with goCardImpl
+     */
+    goInternalVpcGoCardImpl(line: ChvITk[], output: VpcCodeLine) {
+        checkThrow(line.length >= 2, `line is too short.`);
+
+        /* other control blocks just parse a single expression,
+        but this has to parse a refrence to a card */
+        output.excerptToParse = line.slice();
+        output.ctg = VpcLineCategory.InternalSendMessageImpl;
     }
 
     /**

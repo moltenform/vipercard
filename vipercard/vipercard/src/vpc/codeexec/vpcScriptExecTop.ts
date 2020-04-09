@@ -30,6 +30,7 @@ export class VpcExecTop {
     cbCauseUIRedraw: O<() => void>;
     lastEncounteredScriptErr: O<VpcScriptErrorBase>;
     fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({});
+    silenceMessagesForUIAction: ValHolder<O<VpcTool>> = new ValHolder(undefined);
     protected justSawRepeatedMousedown = false;
     protected readonly cachedCST: VpcCacheParsedCST;
     protected readonly cachedAST: VpcCacheParsedAST;
@@ -51,6 +52,15 @@ export class VpcExecTop {
      * add an entry to the queue, scheduling code execution
      */
     scheduleCodeExec(msg: VpcScriptMessage) {
+        if (
+            this.silenceMessagesForUIAction.val &&
+            this.silenceMessagesForUIAction.val !== VpcTool.Browse &&
+            !(msg instanceof VpcScriptMessageMsgBoxCode)
+        ) {
+            /* all messages are silenced  */
+            return;
+        }
+
         let newWork = new VpcExecFrameStack(
             this.outside,
             this.cachedCST,
@@ -127,6 +137,13 @@ export class VpcExecTop {
      * run code, and trigger UI refresh
      */
     runTimeslice(ms: number) {
+        if (this.silenceMessagesForUIAction.val && this.workQueue.length === 0) {
+            /* nyi: new style ui actions */
+            /* this.vci.setTool(this.silenceMessagesForUIAction.val) */
+            this.silenceMessagesForUIAction.val = undefined;
+            return;
+        }
+
         let codeRunningBefore = this.isCodeRunning();
         this.runTimesliceImpl(ms);
         let codeRunningAfter = this.isCodeRunning();

@@ -49,7 +49,6 @@ BuiltinCmdDivide:=... <Lvl1Expression> tkIdentifier <HContainer>
 // and also support doMenu "New Card", "Object" like in the product
 // note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
 // in rewrite syntax say we don't support "without dialog" or "with keys"
-BuiltinCmdDomenu:=... tkStringLiteral [tkComma tkStringLiteral]       
 BuiltinCmdVpccalluntrappabledomenu:=... <Expr> [tkComma <Expr>]       
 // drag, simulate mouse drag
 // in rewrite syntax from "with" to tkSyntaxPlaceholder
@@ -66,7 +65,7 @@ BuiltinCmdEnable:=... <ObjectBtn>
 // functionkey: sent up the message hierarchy, usually does nothing, handled by vipercardstdlib.
 // software rewrites "Get" to "Put"...into it
 // BuiltinCmdGet:=... <Expr>            
-BuiltinCmdInternalvpcgocardimpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <Ordinal> | <Position> }   
+BuiltinCmdInternalVpcMoveCardImpl:=... tkStringLiteral tkIdentifier [ _to ] {tkStringLiteral | <HBuiltinCmdGoDest> | <Ordinal> | <Position> }   
 // always goes to the first card that's there, e.g. go to bg 2 == go to cd 1 of bg 2
 // note that `back` and `forth` are keywords so they don't need special handling
 HBuiltinCmdGoDest:= { <ObjectCard> | <ObjectBg> | <ObjectStack> }           --->ProcessOr--->RequestedVelRef           

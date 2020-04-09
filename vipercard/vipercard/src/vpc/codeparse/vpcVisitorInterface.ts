@@ -75,12 +75,11 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdDial(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDisable(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDivide(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdDomenu(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdVpccalluntrappabledomenu(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleHBuiltinCmdDrag_1(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdEnable(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdInternalvpcgocardimpl(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdInternalVpcMoveCardImpl(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleHBuiltinCmdGoDest(ctx: VisitingContext): RequestedVelRef;
     RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -167,12 +166,11 @@ export interface VisitingContext {
     RuleBuiltinCmdDial: any[];
     RuleBuiltinCmdDisable: any[];
     RuleBuiltinCmdDivide: any[];
-    RuleBuiltinCmdDomenu: any[];
     RuleBuiltinCmdVpccalluntrappabledomenu: any[];
     RuleBuiltinCmdDrag: any[];
     RuleHBuiltinCmdDrag_1: any[];
     RuleBuiltinCmdEnable: any[];
-    RuleBuiltinCmdInternalvpcgocardimpl: any[];
+    RuleBuiltinCmdInternalVpcMoveCardImpl: any[];
     RuleHBuiltinCmdGoDest: any[];
     RuleBuiltinCmdHide: any[];
     RuleBuiltinCmdMark: any[];

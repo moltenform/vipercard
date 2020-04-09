@@ -137,7 +137,73 @@ export class ExecuteStatement {
      * Use the click command for programmatically drawing pictures.
      */
     goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        return this.clickOrDrag(line, vals, 'at');
+        return this.helpers.clickOrDrag(line, vals, 'at');
+    }
+    /**
+     * delete char {i} of {container}
+     */
+    goDelete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
+            throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
+        } else {
+            let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '5B|');
+            let chunk = throwIfUndefined(this.findChildOther(RequestedChunk, vals, 'RuleHChunk'), '5A|');
+
+            contRef.chunk = chunk;
+
+            /* it's not as simple as 'put "" into item 2 of x' because */
+            /* delete item 2 of "a,b,c" should be "a,c" not "a,,c" */
+            checkThrow(
+                chunk.type === VpcChunkType.Chars,
+                "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
+            );
+            this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.Into);
+        }
+    }
+    /**
+     * Dial a number with old touch tones
+     */
+    goDial(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
+
+        /* read as a string, since it could have embedded - or a leading zero */
+        let numbersToDial = args[0].readAsString();
+
+        /* because there is only 1 script execution thread, don't need to assign a unique id. */
+        let asyncOpId = 'singleThreadAsyncOpId';
+        VpcScriptExecAsync.goAsyncDial(this.pendingOps, blocked, asyncOpId, numbersToDial);
+    }
+    /**
+     * divide [chunk of] {container} by {number}
+     * Divides the number in a container by a number.
+     */
+    goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a / b);
+    }
+    /**
+     * disable a vel
+     */
+    goDisable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        this.setEnabled(line, vals, false);
+    }
+    /**
+     * simulate a menu command
+     */
+    goVpccalluntrappabledomenu(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        checkThrow(false, 'not yet implemented');
+    }
+    /**
+     * drag from {x1}, {y1} to {x2}, {y2}
+     * Use the drag command for programmatically drawing pictures.
+     */
+    goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        return this.helpers.clickOrDrag(line, vals, 'from');
+    }
+    /**
+     * enable a vel
+     */
+    goEnable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        this.setEnabled(line, vals, true);
     }
 
     /**
@@ -154,14 +220,6 @@ export class ExecuteStatement {
      */
     goMultiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         this.helpers.goMathAlter(line, vals, (a: number, b: number) => a * b);
-    }
-
-    /**
-     * divide [chunk of] {container} by {number}
-     * Divides the number in a container by a number.
-     */
-    goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a / b);
     }
 
     /**
@@ -280,20 +338,6 @@ export class ExecuteStatement {
     }
 
     /**
-     * Dial a number with old touch tones
-     */
-    goDial(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
-
-        /* read as a string, since it could have embedded - or a leading zero */
-        let numbersToDial = args[0].readAsString();
-
-        /* because there is only 1 script execution thread, don't need to assign a unique id. */
-        let asyncOpId = 'singleThreadAsyncOpId';
-        VpcScriptExecAsync.goAsyncDial(this.pendingOps, blocked, asyncOpId, numbersToDial);
-    }
-
-    /**
      * Play a sound effect.
      * Use
      *      play "mySound" load
@@ -343,99 +387,11 @@ export class ExecuteStatement {
     }
 
     /**
-     * drag from {x1}, {y1} to {x2}, {y2}
-     * Use the drag command for programmatically drawing pictures.
-     */
-    goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        return this.clickOrDrag(line, vals, 'from');
-    }
-
-    /**
-     * click, drag implementation
-     */
-    protected clickOrDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, expectSee: string) {
-        let nm = 'RuleLvl4Expression';
-        let argsGiven: number[] = [];
-        let ar = vals.vals[nm];
-        if (ar && ar.length) {
-            let arVals = ar as VpcVal[];
-            for (let i = 0, len = arVals.length; i < len; i++) {
-                let item = arVals[i];
-                assertTrue(item instanceof VpcVal, 'JO|every item must be a vpcval');
-                argsGiven.push(item.readAsStrictInteger());
-            }
-        }
-
-        checkThrow(argsGiven.length > 1, 'JN|not enough args');
-        let mods = ModifierKeys.None;
-        let allIdentifiers = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
-        let sawExpected = false;
-        for (let i = 0, len = allIdentifiers.length; i < len; i++) {
-            let id = allIdentifiers[i];
-            if (id === 'shiftkey') {
-                mods |= ModifierKeys.Shift;
-            } else if (id === 'optionkey') {
-                mods |= ModifierKeys.Opt;
-            } else if (id === 'commandkey' || id === 'cmdkey') {
-                mods |= ModifierKeys.Cmd;
-            } else if (id === expectSee) {
-                sawExpected = true;
-            }
-        }
-
-        checkThrow(sawExpected, 'JM|syntax error did not see ', expectSee);
-        this.outside.SimulateClick(argsGiven, mods);
-    }
-
-    /**
-     * delete char {i} of {container}
-     */
-    goDelete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
-            throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
-        } else {
-            let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '5B|');
-            let chunk = throwIfUndefined(this.findChildOther(RequestedChunk, vals, 'RuleHChunk'), '5A|');
-
-            contRef.chunk = chunk;
-
-            /* it's not as simple as 'put "" into item 2 of x' because */
-            /* delete item 2 of "a,b,c" should be "a,c" not "a,,c" */
-            checkThrow(
-                chunk.type === VpcChunkType.Chars,
-                "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
-            );
-            this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.Into);
-        }
-    }
-
-    /**
-     * This feature will arrive in a future version...
-     */
-    goCreate(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        throw makeVpcScriptErr("JL|the 'create' command is not yet supported.");
-    }
-
-    /**
      * set if a vel is enabled or not
      */
     protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
         let ref = throwIfUndefined(this.findChildVelRef(vals, 'RuleObjectBtn'), '59|');
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
-    }
-
-    /**
-     * enable a vel
-     */
-    goEnable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.setEnabled(line, vals, true);
-    }
-
-    /**
-     * disable a vel
-     */
-    goDisable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.setEnabled(line, vals, false);
     }
 
     /**

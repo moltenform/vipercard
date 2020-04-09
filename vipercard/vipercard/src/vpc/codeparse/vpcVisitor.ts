@@ -252,7 +252,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl1Expression[0]) as VpcVal;
-            checkThrow(total instanceof isVpcVal, 'RuleExpr: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleExpr: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpLogicalOrAnd;
             for (let i = 0; i < ctx.RuleAndOrOr.length; i++) {
                 let whichop = this.visit(ctx.RuleAndOrOr[i]);
@@ -277,7 +277,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl2Expression[0]) as VpcVal;
-            checkThrow(total instanceof isVpcVal, 'RuleLvl1Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl1Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpEqualityGreaterLessOrContains;
             for (let i = 0; i < ctx.RuleContainsOrGreaterLessEqual.length; i++) {
                 let whichop = this.visit(ctx.RuleContainsOrGreaterLessEqual[i]);
@@ -297,7 +297,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl4Expression[0]) as VpcVal;
-            checkThrow(total instanceof isVpcVal, 'RuleLvl3Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl3Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpStringConcat;
             for (let i = 0; i < ctx.tkStringConcat.length; i++) {
                 let whichop = ctx.tkStringConcat[i].image;
@@ -317,7 +317,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl5Expression[0]) as VpcVal;
-            checkThrow(total instanceof isVpcVal, 'RuleLvl4Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl4Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpPlusMinus;
             for (let i = 0; i < ctx.tkPlusOrMinus.length; i++) {
                 let whichop = ctx.tkPlusOrMinus[i].image;
@@ -339,7 +339,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl6Expression[0]) as VpcVal;
-            checkThrow(total instanceof isVpcVal, 'RuleLvl5Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl5Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpMultDivideExpDivMod;
             for (let i = 0; i < ctx.tkMultDivideExpDivMod.length; i++) {
                 let whichop = ctx.tkMultDivideExpDivMod[i].image;
@@ -417,10 +417,6 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdDomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
-
         RuleBuiltinCmdVpccalluntrappabledomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
@@ -437,7 +433,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdInternalvpcgocardimpl(ctx: VisitingContext): IntermedMapOfIntermedVals {
+        RuleBuiltinCmdInternalVpcMoveCardImpl(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 

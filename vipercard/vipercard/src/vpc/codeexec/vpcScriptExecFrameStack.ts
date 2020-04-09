@@ -32,12 +32,13 @@
  *      newBackground, newButton, newCard, newField, openBackground, openCard
  *      closeBackground, closeCard
  *
- * Orders:
+ * Orders: verified in product.
  * startup: startup, openStack, openBackground, openCard
- * new bg: closecard, closebg, newbg, newcard, openbg, opencard
- * new card: closecard, newcard, opencard
- * delete bg: closecard, closebg, deletecard, deletebg
- * delete cd: closecd, (closebg), deletecard (deletebg), (openbg), opencard
+ * new bg: closecard, closebg, *, newbg, newcard, openbg, opencard
+ * new card: closecard, *, newcard, opencard
+ * delete bg: closecard, closebg, deletecard, deletebg, *, [ (openbg), opencard ]
+ * delete cd: closecd, (closebg), deletecard (deletebg),* [ (openbg), opencard ]
+ * move cd: closeorexitfield, closecd, closebg, *, openbg, opencard
  * cut card: let's not support this
  * paste card: closecard newcard opencard (it's different if pasting into a
  * newbg, but unclear how that is possible)
@@ -656,7 +657,6 @@ end ${newHandlerName}
         );
         let [sendMsg, sendMsgTarget] = helper.execGoCard(curLine, visited);
         if (slength(sendMsg)) {
-            // should be a "send opencard to this cd" type of thing
             let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, 'visitGoCardImpl', sendMsg);
             let found = this.findHandlerUpwards(
                 this.originalMsg.targetId,

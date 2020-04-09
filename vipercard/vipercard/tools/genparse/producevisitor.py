@@ -141,7 +141,7 @@ class MakingVisitors(object):
             }
 
             let total = this.visit(ctx.%NEXTRULE%[0]) as VpcVal;
-            checkThrow(total instanceof isVpcVal, '%METHODNAME%: first not a vpcval');
+            checkThrow(total instanceof VpcVal, '%METHODNAME%: first not a vpcval');
             const oprulecategory = VpcOpCtg.%OPCATEGORY%;
             for (let i = 0; i < ctx.%OPERATORNAME%.length; i++) {
                 let whichop = %GETOPIMAGE%;

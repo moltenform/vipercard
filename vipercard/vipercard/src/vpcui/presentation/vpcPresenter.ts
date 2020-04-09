@@ -101,16 +101,14 @@ export class VpcPresenter extends VpcPresenterInit {
 
             if (wasCard !== nextId) {
                 /* remember history, for go back and go forth */
-                let suspended = this.vci.getCodeExec().globals.find('internalvpcgocardimplsuspendhistory');
+                let suspended = this.vci.getCodeExec().globals.find('internalvpcmovecardimplsuspendhistory');
                 if (suspended === undefined || suspended.readAsString() !== '1') {
                     this.vci.getCodeExec().cardHistory.append(nextId);
                 }
             }
 
-            //~ /* turn this off, so it's never stuck on indefinitely */
-            //~ this.vci
-            //~ .getCodeExec()
-            //~ .globals.set('internalvpcgocardimplsuspendhistory', VpcValN(0));
+            /* turn this off, so it's never stuck on indefinitely */
+            this.vci.getCodeExec().globals.set('internalvpcmovecardimplsuspendhistory', VpcValN(0));
         });
     }
 

@@ -1217,16 +1217,6 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleHContainer);
     });
 
-    RuleBuiltinCmdDomenu = this.RULE('RuleBuiltinCmdDomenu', () => {
-        this.CONSUME1(tks.tkSyntaxPlaceholder);
-        this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.CONSUME1(tks.tkStringLiteral);
-        this.OPTION1(() => {
-            this.CONSUME1(tks.tkComma);
-            this.CONSUME2(tks.tkStringLiteral);
-        });
-    });
-
     RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE('RuleBuiltinCmdVpccalluntrappabledomenu', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
@@ -1275,7 +1265,7 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleObjectBtn);
     });
 
-    RuleBuiltinCmdInternalvpcgocardimpl = this.RULE('RuleBuiltinCmdInternalvpcgocardimpl', () => {
+    RuleBuiltinCmdInternalVpcMoveCardImpl = this.RULE('RuleBuiltinCmdInternalVpcMoveCardImpl', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkStringLiteral);

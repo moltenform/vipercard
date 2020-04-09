@@ -188,10 +188,6 @@ export class VpcRewriteForCommands {
         if (line[1].image === 'back' || line[1].image === 'forth' || line[1].image === 'recent') {
             shouldSuspendHistory = 'true';
         }
-        let shouldSuspendHistoryPush = 'false';
-        if (line[1].image.replace(/"/g, '') === 'push' || line[1].image.replace(/"/g, '') === 'pop') {
-            shouldSuspendHistoryPush = 'true';
-        }
 
         // why put it on different lines?
         // so that each of these can be like function calls.
@@ -199,23 +195,19 @@ export class VpcRewriteForCommands {
         // don't just put this in the product, it will have wrong scope.
         // note that if the card doesn't actually change, all the rest are no-ops
         let template = `
-global internalvpcmovecardimplsuspendhistory, internalvpcmovecardimplsuspendhistorypush
-builtinInternalVpcMoveCardImpl "gettarget" c%UNIQUE% %ARG0%
-builtinInternalVpcMoveCardImpl "closeorexitfield" c%UNIQUE%
-builtinInternalVpcMoveCardImpl "closecard" c%UNIQUE%
-builtinInternalVpcMoveCardImpl "closebackground" c%UNIQUE%
+global internalvpcmovecardimplsuspendhistory
+internalvpcmovecardimpl "gettarget" c%UNIQUE% %ARG0%
+internalvpcmovecardimpl "closeorexitfield" c%UNIQUE%
+internalvpcmovecardimpl "closecard" c%UNIQUE%
+internalvpcmovecardimpl "closebackground" c%UNIQUE%
 if ${shouldSuspendHistory} then
     put 1 %INTO% internalvpcmovecardimplsuspendhistory
 end if
-if ${shouldSuspendHistoryPush} then
-    put 1 %INTO% internalvpcmovecardimplsuspendhistorypush
-end if
-builtinInternalVpcMoveCardImpl "move" c%UNIQUE%
+internalvpcmovecardimpl "move" c%UNIQUE%
 put 0 %INTO% internalvpcmovecardimplsuspendhistory
-put 0 %INTO% internalvpcmovecardimplsuspendhistorypush
-builtinInternalVpcMoveCardImpl "openbackground" c%UNIQUE%
-builtinInternalVpcMoveCardImpl "opencard" c%UNIQUE%
-builtinInternalVpcMoveCardImpl "settheresult" c%UNIQUE%
+internalvpcmovecardimpl "openbackground" c%UNIQUE%
+internalvpcmovecardimpl "opencard" c%UNIQUE%
+internalvpcmovecardimpl "settheresult" c%UNIQUE%
         `;
         return VpcSuperRewrite.go(template, line[0], [line.slice(1), []]);
     }

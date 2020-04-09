@@ -82,7 +82,7 @@ export enum VpcLineCategory {
     RepeatEnd,
     DeclareGlobal,
     Statement,
-    GoCardImpl,
+    InternalSendMessageImpl,
     CallDynamic,
     CallHandler
 }
