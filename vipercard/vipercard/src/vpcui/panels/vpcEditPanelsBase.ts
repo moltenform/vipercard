@@ -271,7 +271,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         if (elIcon && vel.getType() === VpcElType.Btn && !onlyCheckIfDirty) {
             let typed = elIcon.getFmTxt().toUnformatted();
             let n = Util512.parseInt(typed);
-            let nextIcon = isFinite(n) && n >= 0 ? n : 0;
+            let nextIcon = Math.max(0, n ?? 0);
             let curIcon = vel.getN('icon') ?? 0;
             if (nextIcon === 0 && curIcon !== 0) {
                 /* if you are adding/removing a button's icon, set font as appropriate */
@@ -295,7 +295,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             let typed = el.getFmTxt().toUnformatted();
             if (VpcEditPanelsBase.numeric[inId]) {
                 let n = Util512.parseInt(typed);
-                n = isFinite(n) && n >= 0 ? n : 0;
+                n = Math.max(0, n ?? 0);
                 this.saveChangesToModelSetProp(vel, inId, VpcValN(n), onlyCheckIfDirty);
             } else {
                 this.saveChangesToModelSetProp(vel, inId, VpcValS(typed), onlyCheckIfDirty);

@@ -60,7 +60,7 @@ export class UI512PaintDispatch {
             fill = 0;
             if (pattern.startsWith('pattern')) {
                 let npattern = Util512.parseInt(pattern.substr('pattern'.length));
-                fill = isFinite(npattern) ? npattern : 0;
+                fill = npattern ?? 0;
             }
         }
 

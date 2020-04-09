@@ -1,30 +1,15 @@
 
-/* auto */ import { IntermedMapOfIntermedVals, VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { IntermedMapOfIntermedVals, VpcVal } from './../vpcutils/vpcVal';
 /* auto */ import { VpcCodeLine } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { assertTrue, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { isString } from './../../ui512/utils/util512';
 
 export class VpcScriptExecuteStatementHelpers {
     outside: OutsideWorldReadWrite;
 
-    /**
-     * implementation of add, subtract, etc
-     */
-    goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
-        let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
-        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '5L|');
-
-        let getResultAsString = (s: string) => {
-            let f1 = VpcValS(s).readAsStrictNumeric();
-            let f2 = val.readAsStrictNumeric();
-            let res = fn(f1, f2);
-            return VpcValN(res).readAsString();
-        };
-
-        this.outside.ContainerModify(container, getResultAsString);
-    }
+    
 
     /**
      * click, drag implementation
@@ -61,5 +46,23 @@ export class VpcScriptExecuteStatementHelpers {
 
         checkThrow(sawExpected, 'JM|syntax error did not see ', expectSee);
         this.outside.SimulateClick(argsGiven, mods);
+    }
+
+    /**
+     * get all child strings
+     */
+    getAllChildStrs(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): string[] {
+        let ret: string[] = [];
+        if (vals.vals[nm]) {
+            for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
+                let child = vals.vals[nm][i];
+                checkThrow(isString(child), '7T|');
+                ret.push(child);
+            }
+        } else {
+            checkThrow(!atLeastOne, '7S|no child');
+        }
+
+        return ret;
     }
 }

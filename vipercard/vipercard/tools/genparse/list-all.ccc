@@ -57,7 +57,8 @@ multiSpace-nullary
 name
 number
 numberFormat-nullary
-// owner returns a true object, like target
+owner
+// owner returns a string that can be used as an object, but it isn't an object
 partNumber
 pattern-nullary
 polySides-nullary
@@ -264,7 +265,7 @@ stackSpace
 sum
 systemVersion
 tan
-// target... not really a function since it returns a true object
+target // returns a string, not a true object
 ticks
 time
 tool

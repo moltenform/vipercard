@@ -192,7 +192,7 @@ export class SubstringStyleComplex {
         let fn = (s: string) => TextFontSpec.getFontSize(s);
         let ret = SubstringStyleComplex.getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
         let n = Util512.parseInt(ret);
-        return ret === 'mixed' ? ret : isFinite(n) ? n : 0;
+        return ret === 'mixed' ? ret : n ?? 0;
     }
 
     /**

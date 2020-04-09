@@ -262,7 +262,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         if (this.el && lineNumberText.length > 0) {
             lineNumberText = lineNumberText.split(' ')[1].replace(/,/g, '');
             let lineNumber = Util512.parseInt(lineNumberText);
-            if (Number.isFinite(lineNumber)) {
+            if (lineNumber !== undefined) {
                 lineNumber = Math.max(0, lineNumber - 1); /* from 1-based to 0-based */
                 let gel = new UI512ElTextFieldAsGeneric(this.el);
                 TextSelModify.selectLineInField(gel, lineNumber);

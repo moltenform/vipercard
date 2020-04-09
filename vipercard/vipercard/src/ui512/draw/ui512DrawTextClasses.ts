@@ -267,7 +267,7 @@ export class TextFontSpec {
     static fromString(s: string) {
         let parts = s.split('_');
         let typefacename = parts[0];
-        let size = Util512.parseInt(parts[1]);
+        let size = Util512.parseInt(parts[1]) ?? 0;
         let style = stringToTextFontStyling(parts[2]);
         return new TextFontSpec(typefacename, style, size);
     }

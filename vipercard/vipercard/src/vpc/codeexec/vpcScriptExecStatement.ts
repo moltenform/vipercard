@@ -1,5 +1,5 @@
 
-/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
@@ -11,6 +11,8 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, assertTrue, checkIsProductionBuild, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyParameterCtor, Util512, ValHolder, checkThrowEq, getStrToEnum, isString, longstr } from './../../ui512/utils/util512';
+
+// make this a mixin?
 
 /**
  * execute a single line of code
@@ -46,7 +48,7 @@ export class ExecuteStatement {
      * Adds the value of number to the number in a container.
      */
     goAdd(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a + b);
+        this.goMathAlter(line, vals, (a: number, b: number) => a + b);
     }
     /**
      * Displays a dialog box.
@@ -177,7 +179,7 @@ export class ExecuteStatement {
      * Divides the number in a container by a number.
      */
     goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a / b);
+        this.goMathAlter(line, vals, (a: number, b: number) => a / b);
     }
     /**
      * disable a vel
@@ -210,7 +212,7 @@ export class ExecuteStatement {
      * Subtracts a number from the number in a container.
      */
     goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a - b);
+        this.goMathAlter(line, vals, (a: number, b: number) => a - b);
     }
 
     /**
@@ -218,7 +220,7 @@ export class ExecuteStatement {
      * Multiplies the number in a container by a number.
      */
     goMultiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a * b);
+        this.goMathAlter(line, vals, (a: number, b: number) => a * b);
     }
 
     /**
@@ -300,22 +302,22 @@ export class ExecuteStatement {
         }
     }
 
+    
     /**
-     * get all child strings
+     * implementation of add, subtract, etc
      */
-    protected getAllChildStrs(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): string[] {
-        let ret: string[] = [];
-        if (vals.vals[nm]) {
-            for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
-                let child = vals.vals[nm][i];
-                checkThrow(isString(child), '7T|');
-                ret.push(child);
-            }
-        } else {
-            checkThrow(!atLeastOne, '7S|no child');
-        }
+    goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
+        let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
+        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '5L|');
 
-        return ret;
+        let getResultAsString = (s: string) => {
+            let f1 = VpcValS(s).readAsStrictNumeric();
+            let f2 = val.readAsStrictNumeric();
+            let res = fn(f1, f2);
+            return VpcValN(res).readAsString();
+        };
+
+        this.outside.ContainerModify(container, getResultAsString);
     }
 
     /**
@@ -378,7 +380,7 @@ export class ExecuteStatement {
         s = s.replace(/ +/g, '_');
         checkThrow(s.length >= 1, 'JP|not a valid tool name.');
         let choseNumber = Util512.parseInt(s);
-        if (Number.isFinite(choseNumber)) {
+        if (choseNumber !== undefined) {
             return originalToolNumberToTool(choseNumber);
         } else {
             return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
@@ -426,7 +428,7 @@ export class ExecuteStatement {
      * Evaluates any expression and saves the result to a variable or container.
      */
     goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
         checkThrow(
             terms.length === 2,
             longstr(
@@ -489,7 +491,7 @@ export class ExecuteStatement {
      * show {button|field}
      */
     goShow(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let strs = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let strs = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let rule1 = this.findChildMap(vals, 'RuleShow_1');
         let rule2 = this.findChildMap(vals, 'RuleShow_1');
         if (strs.length > 1) {
@@ -541,7 +543,7 @@ export class ExecuteStatement {
      * sort [lines|items|chars] of {container}
      */
     goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let ascend = true;
         let sortType = SortType.Text;
         for (let i = 1; i < terms.length; i++) {
@@ -567,7 +569,7 @@ export class ExecuteStatement {
      * lock screen
      */
     goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
         checkThrow(
             terms.length === 2 && terms[0] === 'lock' && terms[1] === 'screen',
             '7N|the only thing we currently support here is lock screen.'
@@ -580,7 +582,7 @@ export class ExecuteStatement {
      * unlock screen
      */
     goUnlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
         checkThrow(
             terms.length === 2 && terms[0] === 'unlock' && terms[1] === 'screen',
             '7I|the only thing we currently support here is unlock screen.'

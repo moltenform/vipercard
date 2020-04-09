@@ -21,7 +21,7 @@ export enum SortType {
 
 /**
  * PropAdjective for properties, e.g.
- * get the long id of cd btn "btn1"
+ * get the long name of cd btn "btn1"
  */
 export enum PropAdjective {
     __isUI512Enum = 1,
@@ -96,13 +96,19 @@ export enum VpcChunkPreposition {
  */
 export enum VpcElType {
     __isUI512Enum = 1,
+    __UI512EnumCapitalize,
     Unknown,
     Btn,
     Fld,
     Card,
     Bg,
     Stack,
-    Product
+    Product,
+    __AlternateForm__Button = Btn,
+    __AlternateForm__Field = Fld,
+    __AlternateForm__Cd = Card,
+    __AlternateForm__Background = Bg,
+    __AlternateForm__Bkgnd = Bg,
 }
 
 /**

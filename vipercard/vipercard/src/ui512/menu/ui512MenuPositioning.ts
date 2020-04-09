@@ -315,8 +315,8 @@ export class MenuPositioning {
                 ':'
             );
             dropdn.set('icongroupid', iconGroupId);
-            dropdn.set('iconnumber', Util512.parseInt(iconNumber));
-            dropdn.set('fixedwidth', Util512.parseInt(fixWidth));
+            dropdn.set('iconnumber', Util512.parseInt(iconNumber) ?? 0);
+            dropdn.set('fixedwidth', Util512.parseInt(fixWidth) ?? 0);
             dropdn.set('labeltext', '');
         } else {
             dropdn.set('labeltext', lng(headerLabelUntranslated));

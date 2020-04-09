@@ -24,7 +24,7 @@ export class VpcChangeSelectedFont {
     runFontMenuActionsIfApplicable(s: string) {
         if (s.startsWith('mnuItemTool')) {
             let toolNumber = Util512.parseInt(s.substr('mnuItemTool'.length));
-            toolNumber = isFinite(toolNumber) ? toolNumber : VpcTool.Browse;
+            toolNumber = toolNumber ?? VpcTool.Browse;
             this.vci.setTool(toolNumber);
             return true;
         } else if (s.startsWith('mnuItemSetFontFace')) {
@@ -173,7 +173,7 @@ export class VpcChangeSelectedFont {
         chunk.type = VpcChunkType.Chars;
         let velRef = new RequestedVelRef(VpcElType.Fld);
         let idn = Util512.parseInt(vel.id);
-        checkThrow(isFinite(idn), 'KO|non numeric id?', vel.id);
+        checkThrow(idn, 'KO|non numeric id?', vel.id);
         velRef.lookById = idn;
 
         if (typeOfChange !== 'textstyle') {

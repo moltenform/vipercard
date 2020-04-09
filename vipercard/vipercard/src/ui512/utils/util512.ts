@@ -72,30 +72,32 @@ export class Util512 {
     /*
      * plain parseInt allows trailing text
      */
-    static parseIntStrict(s: O<string>) {
+    static parseIntStrict(s: O<string>) : O<number> {
         if (!s) {
-            return NaN;
+            return undefined;
         }
 
         s = s.trim();
         if (s.match(/^\d+$/)) {
             return Util512.parseInt(s);
         } else {
-            return NaN;
+            return undefined;
         }
     }
 
     /*
      * use this, not parseInt where you might forget to specify base 10
      */
-    static parseInt(s: O<string>) {
+    static parseInt(s: O<string>) : O<number> {
+        let ret = 0
         if (s) {
             /* ok to use here, we remembered to say base 10 */
             /* eslint-disable-next-line ban/ban */
-            return parseInt(s, 10);
+            ret = parseInt(s, 10);
         } else {
-            return NaN;
+            ret = NaN;
         }
+        return Number.isFinite(ret) ? ret : undefined
     }
 
     /**

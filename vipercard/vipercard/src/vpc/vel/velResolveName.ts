@@ -1,7 +1,7 @@
 
 /* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcModelTop } from './velModelTop';
@@ -12,7 +12,7 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, bool, checkThrow, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, castVerifyIsStr, checkThrowEq } from './../../ui512/utils/util512';
+/* auto */ import { Util512, castVerifyIsStr, checkThrowEq, last, getStrToEnum } from './../../ui512/utils/util512';
 
 /**
  * when a script asks for the name of an object
@@ -163,7 +163,7 @@ export class VelResolveName {
 
 /**
  * when a script asks for the id of an object
- * put the long id of cd btn "myBtn" into x
+ * put the long name of cd btn "myBtn" into x
  */
 export class VelResolveId {
     constructor(protected model: VpcModelTop) {}
@@ -189,13 +189,6 @@ export class VelResolveId {
     }
 
     /**
-     * the long id of a cd btn is the same as the short id of a cd btn
-     */
-    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective) {
-        return vel.id;
-    }
-
-    /**
      * confirmed in emulator that id of card is inconsistent,
      * and more verbose than other objects
      */
@@ -207,6 +200,55 @@ export class VelResolveId {
         } else {
             return `card id ${vel.id}`;
         }
+    }
+
+    /**
+     * the long id of a cd btn is the same as the short id of a cd btn
+     */
+    protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective) {
+        if (adjective === PropAdjective.Long) {
+            if (vel instanceof VpcElButton || vel instanceof VpcElField) {
+                let parent = this.model.getOwnerUntyped(vel)
+                if (parent instanceof VpcElBg) {
+                    checkThrow(false, `nyi. probably write something like "bg id 123 via cd id 567"`)
+                } else {
+                    return `${vpcElTypeShowInUI(VpcElType.Card)} ${vpcElTypeShowInUI(vel.getType())} id ${vel.id}`
+                }
+            } else {
+                return `${vpcElTypeShowInUI(vel.getType())} id ${vel.id}`
+            }
+        } else {
+            return vel.id;
+        }
+    }
+
+    static parseFromString(s:string) {
+        let words = s.split(/\s+/)
+        if (words.length >= 3 && last(words) === 'stack' && words[words.length-1] === 'this' && words[words.length-2] === 'of') {
+            words = words.slice(0, -3)
+        }
+        checkThrow(words.length === 3 || words.length === 4, "expected something like `card id 123`")
+        let getType = (s:string) => {
+            return getStrToEnum<VpcElType>(VpcElType, "expected something like `card id 123`", s);
+        }
+        let firstType = getType(words[0])
+        let realType = VpcElType.Unknown
+        if ((firstType === VpcElType.Card || firstType === VpcElType.Bg) && words[1] !== 'id') {
+            realType = getType(words[1])
+            words.splice(1, 1)
+        } else {
+            realType = firstType
+        }
+        checkThrow(words[1] === 'id', "expected something like `card id 123`")
+        let theId = Util512.parseInt(words[2])
+        checkThrow(theId, "invalid number. expected something like `card id 123`")
+        // VpcElType
+        // 'fld id 1234'
+        // 'cd fld id 1234'
+        // 'bg id 1234'
+        // 'cd id 1234'
+        // 'cd id 1234 of this stack'
+        
     }
 }
 
