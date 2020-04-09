@@ -111,7 +111,7 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
                 }
             }
             for (let item of clause.children) {
-                if ((item as IfConstruct).isIfConstruct) {
+                if (item instanceof IfConstruct) {
                     transformTreeRecurse(node, output);
                 } else {
                     output.push(item as ChvITk[]);

@@ -108,12 +108,6 @@ export class VpcModelTop {
      * get the parent card of an element
      */
     getParentCardOfElement(vel: VpcElBase): VpcElBase {
-        let velAsCard = vel as VpcElCard;
-        let velAsBg = vel as VpcElBg;
-        let velAsStack = vel as VpcElStack;
-        let velAsBtn = vel as VpcElButton;
-        let velAsFld = vel as VpcElField;
-        let velAsOpts = vel as VpcElProductOpts;
         let cur = this.getCurrentCard();
         if (velAsCard && velAsCard.isVpcElCard) {
             return velAsCard;

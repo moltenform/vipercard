@@ -149,8 +149,8 @@ class UndoableActionModifyVelement implements UndoableAction {
             } else {
                 throw makeVpcInternalErr('K&|both must be strings ' + propName + ' ' + velId);
             }
-        } else if ((prevVal as FormattedText).isFormattedText) {
-            if ((newVal as FormattedText).isFormattedText) {
+        } else if (prevVal instanceof FormattedText) {
+            if (newVal instanceof FormattedText) {
                 (prevVal as FormattedText).lock();
                 (newVal as FormattedText).lock();
                 prevVal = '@' + UI512Compress.compressString((prevVal as FormattedText).toSerialized());

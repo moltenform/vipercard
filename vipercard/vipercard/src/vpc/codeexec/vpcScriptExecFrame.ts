@@ -132,9 +132,9 @@ export class VpcExecFrame {
                 return ret;
             }
 
-            if ((vel as VpcElStack).isVpcElStack) {
+            if (vel instanceof VpcElStack) {
                 hasSeenStack = true;
-            } else if ((vel as VpcElProductOpts).isVpcElProductOpts) {
+            } else if (vel instanceof VpcElProductOpts) {
                 hasSeenProduct = true;
             }
 

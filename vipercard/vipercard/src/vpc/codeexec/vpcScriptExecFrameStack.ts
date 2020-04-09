@@ -82,7 +82,7 @@ export class VpcExecFrameStack {
      */
     findHandlerToExec() {
         let chain = VpcExecFrame.getMessageChain(this.originalMsg.targetId, undefined, this.outside);
-        if ((this.originalMsg as VpcScriptMessageMsgBoxCode).isVpcScriptMessageMsgBoxCode) {
+        if (this.originalMsg instanceof VpcScriptMessageMsgBoxCode) {
             return this.startHandlerMsgBox(this.originalMsg as VpcScriptMessageMsgBoxCode);
         }
 

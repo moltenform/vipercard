@@ -90,7 +90,7 @@ export abstract class UI512Settable extends UI512Gettable {
             }
 
             this.dirty = true;
-            if ((newVal as FormattedText).isFormattedText) {
+            if (newVal instanceof FormattedText) {
                 (newVal as FormattedText).lock();
             }
 
