@@ -132,19 +132,19 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return 1;
         } else if (type === VpcElType.Stack) {
             return 1;
-        } else if (type === VpcElType.Bg && parentAsStack.isVpcElStack) {
+        } else if (type === VpcElType.Bg && parentAsStack instanceof VpcElStack) {
             return parentAsStack.bgs.length;
-        } else if (type === VpcElType.Card && parentAsStack.isVpcElStack) {
+        } else if (type === VpcElType.Card && parentAsStack instanceof VpcElStack) {
             if (countOnlyMarked) {
                 return parentAsStack.bgs.map(bg => bg.cards.filter(c => c.getB('marked')).length).reduce(Util512.add);
             } else {
                 return parentAsStack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
             }
-        } else if (type === VpcElType.Card && parentAsBg.isVpcElBg) {
+        } else if (type === VpcElType.Card && parentAsBg instanceof VpcElBg) {
             return parentAsBg.cards.length;
-        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsBg.isVpcElBg) {
+        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsBg instanceof VpcElBg) {
             return parentAsBg.parts.filter(ch => ch.getType() === type).length;
-        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsCard.isVpcElCard) {
+        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsCard instanceof VpcElCard) {
             return parentAsCard.parts.filter(ch => ch.getType() === type).length;
         } else {
             throw makeVpcScriptErr(`6s|cannot count types ${type} parent of type ${parent.getType()} ${parent.id}`);
@@ -262,7 +262,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * throws if the requested vel does not exist
      */
     ResolveContainerReadable(container: RequestedContainerRef): ReadableContainer {
-        checkThrow(container.isRequestedContainerRef, '8<|not a valid container');
+        checkThrow(container instanceof RequestedContainerRef, '8<|not a valid container');
         if (container.vel) {
             let resolved = this.ResolveVelRef(container.vel);
             let vel = resolved[0];
@@ -348,7 +348,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let cardId = resolved[1].id;
         if (chunk) {
             let fld = vel as VpcElField;
-            checkThrow(fld.isVpcElField, `8.|can only say 'set the (prop) of char 1 to 2' on fields.`);
+            checkThrow(fld instanceof VpcElField, `8.|can only say 'set the (prop) of char 1 to 2' on fields.`);
             fld.specialSetPropChunk(cardId, prop, chunk, v, this.GetItemDelim());
         } else {
             vel.setProp(prop, v, cardId);
@@ -372,7 +372,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (chunk) {
             /* put the textstyle of char 2 to 4 of fld "myFld" into x */
             let fld = vel as VpcElField;
-            checkThrow(fld.isVpcElField, `8,|can only say 'get the (prop) of char 1 to 2' on fields.`);
+            checkThrow(fld instanceof VpcElField, `8,|can only say 'get the (prop) of char 1 to 2' on fields.`);
             return fld.specialGetPropChunk(cardId, prop, chunk, this.GetItemDelim());
         } else if (prop === 'owner') {
             /* put the owner of card "myCard" into x */

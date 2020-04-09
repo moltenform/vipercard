@@ -31,7 +31,7 @@ export class ExecuteStatement {
         let firstToken = line.excerptToParse[0];
         checkThrow(isTkType(firstToken, tks.tkIdentifier), `7g|expect built-in statement`);
         let vals = visitResult as IntermedMapOfIntermedVals;
-        checkThrow(vals.isIntermedMapOfIntermedVals, `7f|command ${firstToken.image} did not return IntermedMapOfIntermedVals`);
+        checkThrow(vals instanceof IntermedMapOfIntermedVals, `7f|command ${firstToken.image} did not return IntermedMapOfIntermedVals`);
 
         let method = 'go' + Util512.capitalizeFirst(firstToken.image);
         Util512.callAsMethodOnClass('ExecuteStatement', this, method, [line, vals, blocked], false);
@@ -97,7 +97,7 @@ export class ExecuteStatement {
         if (got) {
             let gotAsMap = got[0] as IntermedMapOfIntermedVals;
             checkThrowEq(1, got.length, '7d|expected length 1');
-            checkThrow(gotAsMap.isIntermedMapOfIntermedVals, '7c|wrong type');
+            checkThrow(gotAsMap instanceof IntermedMapOfIntermedVals, '7c|wrong type');
             return gotAsMap;
         } else {
             return undefined;
@@ -112,7 +112,7 @@ export class ExecuteStatement {
         if (got) {
             let gotAsVal = got[0] as VpcVal;
             checkThrowEq(1, got.length, '7b|expected length 1');
-            checkThrow(gotAsVal.isVpcVal, '7a|wrong type');
+            checkThrow(gotAsVal instanceof VpcVal, '7a|wrong type');
             return gotAsVal;
         } else {
             return undefined;
@@ -142,7 +142,7 @@ export class ExecuteStatement {
         if (got) {
             let gotAsVelRef = got[0] as RequestedVelRef;
             checkThrowEq(1, got.length, '7X|expected length 1');
-            checkThrow(gotAsVelRef.isRequestedVelRef, '7W|wrong type');
+            checkThrow(gotAsVelRef instanceof RequestedVelRef, '7W|wrong type');
             return gotAsVelRef;
         } else {
             return undefined;

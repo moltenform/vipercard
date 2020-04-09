@@ -563,7 +563,7 @@ export class VpcPresenterEvents {
         if (pr.lyrNonModalDlgHolder.current) {
             /* don't let 'on idle' run when you are running a msg box command */
             let cur = pr.lyrNonModalDlgHolder.current as VpcNonModalReplBox;
-            if (cur.isVpcNonModalReplBox && cur.busy && !(d instanceof MouseUpEventDetails)) {
+            if (cur instanceof VpcNonModalReplBox && cur.busy && !(d instanceof MouseUpEventDetails)) {
                 return;
             }
         }

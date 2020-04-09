@@ -83,7 +83,7 @@ export class VpcExecFrameStack {
     findHandlerToExec() {
         let chain = VpcExecFrame.getMessageChain(this.originalMsg.targetId, undefined, this.outside);
         if (this.originalMsg instanceof VpcScriptMessageMsgBoxCode) {
-            return this.startHandlerMsgBox(this.originalMsg as VpcScriptMessageMsgBoxCode);
+            return this.startHandlerMsgBox(this.originalMsg);
         }
 
         let found = this.findHandlerUpwards(this.originalMsg.targetId, chain, this.originalMsg.msgName, false);
@@ -239,7 +239,7 @@ export class VpcExecFrameStack {
         );
 
         let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
-        checkThrow(visited && visited.isIntermedMapOfIntermedVals, '7w|evalRequestedExpression wrong type');
+        checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|evalRequestedExpression wrong type');
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleExpr[0], '7v|evalRequestedExpression no result of RuleExpr');
 
         let ret = visited.vals.RuleExpr[0] as VpcVal;
@@ -489,12 +489,12 @@ export class VpcExecFrameStack {
      */
     protected helpGetEvaledArgs(parsed: VpcParsed, curLine: VpcCodeLine): VpcVal[] {
         let evaluated = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
-        checkThrow(evaluated.isIntermedMapOfIntermedVals, '7o|expected IntermedMapOfIntermedVals');
+        checkThrow(evaluated instanceof IntermedMapOfIntermedVals, '7o|expected IntermedMapOfIntermedVals');
         if (evaluated.vals['RuleExpr'] && evaluated.vals['RuleExpr'].length) {
             let ret = evaluated.vals['RuleExpr'] as VpcVal[];
             assertTrue(ret !== undefined, '5Q|expected RuleExpr');
             assertTrue(
-                ret.every(v => v.isVpcVal),
+                ret.every(v=>v instanceof VpcVal),
                 '5P|every arg must be a VpcVal'
             );
             return ret;
@@ -544,7 +544,7 @@ export class VpcExecFrameStack {
         assertTrue(this.cacheParsedCST.parser.RuleBuiltinCmdSend === curLine.getParseRule(), 'expected "send" parse rule');
 
         let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
-        checkThrow(visited && visited.isIntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
+        checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleObject, 'visitSendStatement expected both RuleExpr and RuleObject');
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
@@ -557,7 +557,7 @@ export class VpcExecFrameStack {
         );
 
         let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
-        checkThrow(velRef && velRef.isRequestedVelRef, 'visitSendStatement expected vel reference.');
+        checkThrow(velRef instanceof RequestedVelRef, 'visitSendStatement expected vel reference.');
         let vel = throwIfUndefined(this.outside.ResolveVelRef(velRef)[0], "target of 'send' not found");
 
         return [val, vel];
@@ -644,7 +644,7 @@ end ${newHandlerName}
         );
 
         let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
-        checkThrow(visited && visited.isIntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
+        checkThrow(visited  instanceof  IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
         curFrame.next();
 
         let helper = new VpcExecGoCardHelpers(this.outside, this.globals, curFrame.locals, this.cardHistory, this.cardHistoryPush);

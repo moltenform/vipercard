@@ -28,7 +28,7 @@ export class VpcGettableSerialization {
                         'expected ftxt, got ',
                         propName
                     );
-                    assertTrue(v && v.isFormattedText, 'J{|invalid ftxt');
+                    assertTrue(v instanceof FormattedText, 'J{|invalid ftxt');
                     ret[propName] = v.toSerialized();
                 } else {
                     ret[propName] = VpcGettableSerialization.serializePlain(v);

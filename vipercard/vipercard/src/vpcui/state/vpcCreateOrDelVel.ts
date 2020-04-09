@@ -46,13 +46,13 @@ export abstract class UndoableActionCreateOrDelVel {
         let velAsBg = vel as VpcElBg;
         let velAsStack = vel as VpcElStack;
 
-        if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsCard.isVpcElCard) {
+        if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsCard instanceof VpcElCard) {
             return velAsCard.parts;
-        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsBg.isVpcElBg) {
+        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsBg instanceof VpcElBg) {
             return velAsBg.parts;
-        } else if (type === VpcElType.Card && velAsBg.isVpcElBg) {
+        } else if (type === VpcElType.Card && velAsBg instanceof VpcElBg) {
             return velAsBg.cards;
-        } else if (type === VpcElType.Bg && velAsStack.isVpcElStack) {
+        } else if (type === VpcElType.Bg && velAsStack instanceof VpcElStack) {
             return velAsStack.bgs;
         } else {
             throw makeVpcInternalErr(`6e|incorrect type/parent. child is a ${type} and parent is a `);

@@ -151,10 +151,10 @@ class UndoableActionModifyVelement implements UndoableAction {
             }
         } else if (prevVal instanceof FormattedText) {
             if (newVal instanceof FormattedText) {
-                (prevVal as FormattedText).lock();
-                (newVal as FormattedText).lock();
-                prevVal = '@' + UI512Compress.compressString((prevVal as FormattedText).toSerialized());
-                newVal = '@' + UI512Compress.compressString((newVal as FormattedText).toSerialized());
+                (prevVal).lock();
+                (newVal).lock();
+                prevVal = '@' + UI512Compress.compressString((prevVal).toSerialized());
+                newVal = '@' + UI512Compress.compressString((newVal).toSerialized());
             } else {
                 throw makeVpcInternalErr('K%|both must be FormattedText ' + propName + ' ' + velId);
             }

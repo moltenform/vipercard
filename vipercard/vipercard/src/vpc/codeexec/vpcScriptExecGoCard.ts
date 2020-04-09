@@ -9,7 +9,7 @@
 /* auto */ import { VpcElBg } from './../vel/velBg';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { isString, slength } from './../../ui512/utils/util512';
+/* auto */ import { isString, slength, castVerifyIsStr } from './../../ui512/utils/util512';
 
 /**
  * implementation for the 'go' command
@@ -160,11 +160,11 @@ export class VpcExecGoCardHelpers {
             /* e.g. `go card 1` */
             /* this also includes `go back` since `back` is always a card */
             let ref = vals.vals.RuleHBuiltinCmdGoDest[0] as RequestedVelRef;
-            checkThrow(ref.isRequestedVelRef, '');
+            checkThrow(ref instanceof RequestedVelRef, '');
             vel = this.outside.ResolveVelRef(ref)[0];
         } else if (vals.vals.tkStringLiteral) {
             /* be kind and accept `go "back"` even though the product doesn't */
-            let s = vals.vals.tkStringLiteral[0];
+            let s = castVerifyIsStr(vals.vals.tkStringLiteral[0]);
             if (s === 'back' || s === 'forth' || s === 'recent') {
                 return this.goBackOrForth(s, currentCardId);
             } else if (s === 'push' || s === 'pop') {

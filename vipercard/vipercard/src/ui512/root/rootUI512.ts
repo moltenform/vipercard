@@ -84,7 +84,7 @@ export class FullRootUI512 implements Root {
 
     replaceCurrentPresenter(newPrIn: any) {
         let newPr = newPrIn as UI512Presenter;
-        checkThrow(newPr.isUI512Presenter, 'J2|');
+        checkThrow(newPr instanceof UI512Presenter, 'J2|');
         if (newPr.importMouseTracking) {
             newPr.importMouseTracking(this.presenter);
         }
@@ -95,7 +95,7 @@ export class FullRootUI512 implements Root {
 
     sendEvent(evt: UI512IsEventInterface) {
         let details = evt as EventDetails;
-        assertTrueWarn(details.isEventDetails, 'J1|');
+        assertTrueWarn(details instanceof EventDetails, 'J1|');
         return this.event(details);
     }
 

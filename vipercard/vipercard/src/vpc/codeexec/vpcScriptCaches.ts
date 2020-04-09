@@ -117,13 +117,13 @@ export class VpcCacheParsedAST {
         let ret = this.getParsedCodeCollection(code, velIdForErrMsg);
         let retAsErr = ret as VpcScriptErrorBase;
         let retAsCode = ret as VpcParsedCodeCollection;
-        if (retAsCode.isVpcParsedCodeCollection) {
+        if (retAsCode instanceof VpcParsedCodeCollection) {
             /* check in the cached map of handlers */
             let handler = retAsCode.handlers.find(handlername);
             if (handler) {
                 return [retAsCode, handler];
             }
-        } else if (retAsErr.isVpcScriptErrorBase) {
+        } else if (retAsErr instanceof VpcScriptErrorBase) {
             let err = makeVpcScriptErr('JV|$compilation error$');
             markUI512Err(err, true, false, true, retAsErr);
             throw err;

@@ -252,7 +252,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl1Expression[0]) as VpcVal;
-            checkThrow(total.isVpcVal, 'RuleExpr: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleExpr: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpLogicalOrAnd;
             for (let i = 0; i < ctx.RuleAndOrOr.length; i++) {
                 let whichop = this.visit(ctx.RuleAndOrOr[i]);
@@ -260,7 +260,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl1Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total.isVpcVal, 'RuleExpr: not a vpcval');
+                checkThrow(total instanceof VpcVal, 'RuleExpr: not a vpcval');
             }
 
             return total;
@@ -277,7 +277,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl2Expression[0]) as VpcVal;
-            checkThrow(total.isVpcVal, 'RuleLvl1Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl1Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpEqualityGreaterLessOrContains;
             for (let i = 0; i < ctx.RuleContainsOrGreaterLessEqual.length; i++) {
                 let whichop = this.visit(ctx.RuleContainsOrGreaterLessEqual[i]);
@@ -285,7 +285,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl2Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total.isVpcVal, 'RuleLvl1Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, 'RuleLvl1Expression: not a vpcval');
             }
 
             return total;
@@ -297,7 +297,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl4Expression[0]) as VpcVal;
-            checkThrow(total.isVpcVal, 'RuleLvl3Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl3Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpStringConcat;
             for (let i = 0; i < ctx.tkStringConcat.length; i++) {
                 let whichop = ctx.tkStringConcat[i].image;
@@ -305,7 +305,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl4Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total.isVpcVal, 'RuleLvl3Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, 'RuleLvl3Expression: not a vpcval');
             }
 
             return total;
@@ -317,7 +317,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl5Expression[0]) as VpcVal;
-            checkThrow(total.isVpcVal, 'RuleLvl4Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl4Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpPlusMinus;
             for (let i = 0; i < ctx.tkPlusOrMinus.length; i++) {
                 let whichop = ctx.tkPlusOrMinus[i].image;
@@ -325,7 +325,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl5Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total.isVpcVal, 'RuleLvl4Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, 'RuleLvl4Expression: not a vpcval');
             }
 
             return total;
@@ -339,7 +339,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             }
 
             let total = this.visit(ctx.RuleLvl6Expression[0]) as VpcVal;
-            checkThrow(total.isVpcVal, 'RuleLvl5Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, 'RuleLvl5Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpMultDivideExpDivMod;
             for (let i = 0; i < ctx.tkMultDivideExpDivMod.length; i++) {
                 let whichop = ctx.tkMultDivideExpDivMod[i].image;
@@ -347,7 +347,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl6Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total.isVpcVal, 'RuleLvl5Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, 'RuleLvl5Expression: not a vpcval');
             }
 
             return total;

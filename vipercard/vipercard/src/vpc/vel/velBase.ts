@@ -232,7 +232,7 @@ export abstract class VpcElBase extends UI512Settable {
     getCardFmTxt(cardId: string): FormattedText {
         let got = this.getPossiblyCardSpecific(UI512Settable.fmtTxtVarName, new FormattedText(), cardId);
         let gotAsTxt = got as FormattedText;
-        checkThrow(gotAsTxt && gotAsTxt.isFormattedText, 'not FormattedText');
+        checkThrow(gotAsTxt instanceof FormattedText, 'not FormattedText');
         return gotAsTxt;
     }
 

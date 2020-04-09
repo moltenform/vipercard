@@ -140,7 +140,7 @@ export class VpcBuiltinFunctions {
 
             let method = 'call' + Util512.capitalizeFirst(name);
             let ret = Util512.callAsMethodOnClass('VpcBuiltinFunctions', this, method, [args], false) as VpcVal;
-            assertTrue(ret.isVpcVal, '5m|did not return a vpcval');
+            assertTrue(ret instanceof VpcVal, '5m|did not return a vpcval');
             return ret;
         }
 
@@ -159,7 +159,7 @@ export class VpcBuiltinFunctions {
                 false
             ) as VpcVal;
 
-            assertTrue(ret.isVpcVal, '5l|did not return a vpcval');
+            assertTrue(ret instanceof VpcVal, '5l|did not return a vpcval');
             return ret;
         }
 

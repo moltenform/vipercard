@@ -42,7 +42,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let child = ctx[subrule];
             checkThrow(bool(child[0]), `9P|expected to have an expression ${context}`);
             let evaledVpc = this.visit(child[0]) as VpcVal;
-            checkThrow(evaledVpc.isVpcVal, `9O|expected a vpcval when looking up element id or name`);
+            checkThrow(evaledVpc instanceof VpcVal, `9O|expected a vpcval when looking up element id or name`);
             return evaledVpc;
         }
 
@@ -240,7 +240,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 }
             } else if (ctx.RuleObjectPart[0]) {
                 ret.vel = this.visit(ctx.RuleObjectPart[0]);
-                checkThrow(ret.vel && ret.vel.isRequestedVelRef, `9a|internal error, not an element reference`);
+                checkThrow(ret.vel instanceof RequestedVelRef, `9a|internal error, not an element reference`);
                 checkThrow(
                     ret.vel && ret.vel.type === VpcElType.Fld,
                     `9Z|we do not currently allow placing text into btns, or retrieving text from btns, please fields instead`
@@ -256,14 +256,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
-            checkThrow(ret.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
+            checkThrow(ret instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
             if (ctx.RuleHChunk[0]) {
                 checkThrow(
                     !ret.chunk,
                     `a chunk has already been set. for example, we don't currently support 'put "a" into char 2 of the selection`
                 );
                 ret.chunk = this.visit(ctx.RuleHChunk[0]);
-                checkThrow(ret.chunk && ret.chunk.isRequestedChunk, `9W|chunk not valid`);
+                checkThrow(ret.chunk && ret.chunk instanceof RequestedChunk, `9W|chunk not valid`);
             }
             return ret;
         }
@@ -290,7 +290,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 return VpcVal.getScientificNotation(ctx.TokenTknumliteral[0].image);
             } else if (ctx.RuleHSimpleContainer[0]) {
                 let container = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
-                checkThrow(container.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
+                checkThrow(container instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
                 return VpcValS(this.outside.ContainerRead(container));
             } else {
                 throw makeVpcInternalErr('|3|null');
@@ -315,7 +315,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleFnCallThereIs(ctx: VisitingContext): VpcVal {
             /* put there is a cd btn "myBtn" into x */
             let requestRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
-            checkThrow(requestRef.isRequestedVelRef, `98|internal error, expected RuleObject to be a RequestedElRef`);
+            checkThrow(requestRef instanceof RequestedVelRef, `98|internal error, expected RuleObject to be a RequestedElRef`);
             let velExists = this.outside.ElementExists(requestRef);
             return VpcValBool(ctx.TokenNot.length ? !velExists : velExists);
         }
@@ -395,7 +395,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let args: VpcVal[] = [];
             for (let i = 0; i < ctx.RuleExpr.length; i++) {
                 args.push(this.visit(ctx.RuleExpr[i]));
-                checkThrow(last(args).isVpcVal, '9H|did not get a vpc val, got', args[args.length - 1]);
+                checkThrow(last(args) instanceof VpcVal, '9H|did not get a vpc val, got', args[args.length - 1]);
             }
 
             return this.outside.CallBuiltinFunction(fnName, args);
@@ -413,14 +413,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.RuleHChunk[0]) {
                 /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
                 let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
-                checkThrow(chunk.isRequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
+                checkThrow(chunk instanceof RequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
                 let fld = this.visit(ctx.RuleObjectFld[0]) as RequestedVelRef;
-                checkThrow(fld.isRequestedVelRef, `9A|internal error, expected RuleObjectFld to be a RequestedElRef`);
+                checkThrow(fld instanceof RequestedVelRef, `9A|internal error, expected RuleObjectFld to be a RequestedElRef`);
                 return this.outside.GetProp(fld, propName, adjective, chunk);
             } else {
                 /* put the locktext of cd fld "myFld" into x */
                 let velRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
-                checkThrow(velRef.isRequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
+                checkThrow(velRef instanceof RequestedVelRef, `99|internal error, expected RuleObject to be a RequestedElRef`);
                 return this.outside.GetProp(velRef, propName, adjective, undefined);
             }
         }
@@ -448,7 +448,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleLvl2Expression(ctx: VisitingContext): VpcVal {
             let total = this.visit(ctx.RuleLvl3Expression[0]) as VpcVal;
-            checkThrow(total.isVpcVal, '|L|');
+            checkThrow(total instanceof VpcVal, '|L|');
             for (let i = 0; i < ctx.RuleIsExpression.length; i++) {
                 let map = this.visit(ctx.RuleIsExpression[i]);
                 total = this.help$RuleLvl2Expression(total, map);
@@ -474,7 +474,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 total = this.evalHelp.typeMatches(total, typeCheck);
             } else {
                 /* "is" or "is not" expression */
-                checkThrow(map.vals.Lvl3Expression && (map.vals.Lvl3Expression[0] as VpcVal).isVpcVal, '');
+                checkThrow(map.vals.Lvl3Expression && (map.vals.Lvl3Expression[0]) instanceof VpcVal, '');
                 total = this.evalHelp.evalOp(total, map.vals.Lvl3Expression[0], VpcOpCtg.OpEqualityGreaterLessOrContains, 'is');
             }
 
@@ -489,17 +489,17 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let val: VpcVal;
             if (ctx.RuleHSource[0]) {
                 val = this.visit(ctx.RuleHSource[0]);
-                checkThrow(val.isVpcVal, '8||not a vpcval', val);
+                checkThrow(val instanceof VpcVal, '8||not a vpcval', val);
             } else if (ctx.RuleExpr[0]) {
                 val = this.visit(ctx.RuleExpr[0]);
-                checkThrow(val.isVpcVal, '8{|not a vpcval', val);
+                checkThrow(val instanceof VpcVal, '8{|not a vpcval', val);
             } else {
                 throw makeVpcInternalErr(`80|in RuleLvl6Expression. all interesting children null.`);
             }
 
             if (ctx.RuleHChunk[0]) {
                 let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
-                checkThrow(chunk.isRequestedChunk, '8_|not a RequestedChunk', chunk);
+                checkThrow(chunk instanceof RequestedChunk, '8_|not a RequestedChunk', chunk);
                 let reader = new ReadableContainerStr(val.readAsString());
                 let result = ChunkResolution.applyRead(reader, chunk, this.outside.GetItemDelim());
                 val = VpcValS(result);

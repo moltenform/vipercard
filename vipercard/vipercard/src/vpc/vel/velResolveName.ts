@@ -34,7 +34,7 @@ export class VelResolveName {
      * re-use logic for buttons and fields
      */
     protected goResolveNameBtn(vel: VpcElButton, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElButton, 'J[|');
+        checkThrow(vel instanceof VpcElButton, 'J[|');
         return this.belongsToBg(vel) ? this.goResolveBgBtnOrFld(vel, adjective) : this.goResolveCdBtnOrFld(vel, adjective);
     }
 
@@ -42,7 +42,7 @@ export class VelResolveName {
      * re-use logic for buttons and fields
      */
     protected goResolveNameFld(vel: VpcElField, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElField, 'J@|');
+        checkThrow(vel instanceof VpcElField, 'J@|');
         return this.belongsToBg(vel) ? this.goResolveBgBtnOrFld(vel, adjective) : this.goResolveCdBtnOrFld(vel, adjective);
     }
 
@@ -84,7 +84,7 @@ export class VelResolveName {
      * get the name of a card
      */
     protected goResolveNameCard(vel: VpcElCard, adjective: PropAdjective): string {
-        checkThrow(vel.isVpcElCard, 'J>|');
+        checkThrow(vel instanceof VpcElCard, 'J>|');
         let name = vel.getS('name');
         if (name.length) {
             /* name exists, show the name */
@@ -109,7 +109,7 @@ export class VelResolveName {
      * get the name of a background
      */
     protected goResolveNameBg(vel: VpcElBg, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElBg, 'J=|');
+        checkThrow(vel instanceof VpcElBg, 'J=|');
         let name = vel.getS('name');
         if (name.length) {
             /* name exists, show the name */
@@ -135,7 +135,7 @@ export class VelResolveName {
      * interesting fact, in emulator the "long name" of stack would return filepath of the stack
      */
     protected goResolveNameStack(vel: VpcElStack, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElStack, 'J<|');
+        checkThrow(vel instanceof VpcElStack, 'J<|');
         if (adjective === PropAdjective.Short) {
             return vel.getS('name');
         } else {
@@ -148,7 +148,7 @@ export class VelResolveName {
      * interesting fact, in emulator the "long name" of product would return filepath of the app
      */
     protected goResolveNameProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
-        checkThrow(vel.isVpcElProductOpts, 'J;|');
+        checkThrow(vel instanceof VpcElProductOpts, 'J;|');
         return cProductName;
     }
 
@@ -164,7 +164,7 @@ export class VelResolveName {
      * implementation for "put the owner of cd 1 into x"
      */
     getOwnerName(vel: VpcElBase, adjective: PropAdjective) {
-        checkThrow(!(vel as VpcElStack).isVpcElStack, 'J:|cannot get owner of stack');
+        checkThrow(!(vel instanceof VpcElStack), 'J:|cannot get owner of stack');
         return this.go(this.model.getOwnerUntyped(vel), adjective);
     }
 }
@@ -234,7 +234,7 @@ export class VelResolveReference {
         const currentCard = this.model.getCurrentCard();
 
         /* check that the types are consistent */
-        checkThrow(ref.isRequestedVelRef, '76|invalid RequestedElRef');
+        checkThrow(ref instanceof RequestedVelRef, '76|invalid RequestedElRef');
         checkThrow(!ref.parentCdInfo || ref.parentCdInfo.type === VpcElType.Card, 'J/|');
         checkThrow(!ref.parentBgInfo || ref.parentBgInfo.type === VpcElType.Bg, 'J.|');
         checkThrow(!ref.parentStackInfo || ref.parentStackInfo.type === VpcElType.Stack, 'J-|');
@@ -276,7 +276,7 @@ export class VelResolveReference {
             [ref, parentCard, parentBg, ref.partIsBg],
             false
         ) as [O<VpcElBase>, VpcElCard];
-        checkThrow(Array.isArray(ret) && ret[1].isVpcElCard, '');
+        checkThrow(Array.isArray(ret) && ret[1] instanceof VpcElCard, '');
         return ret;
     }
 

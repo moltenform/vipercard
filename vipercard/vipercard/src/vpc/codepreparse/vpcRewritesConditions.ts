@@ -114,7 +114,7 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
                 if (item instanceof IfConstruct) {
                     transformTreeRecurse(node, output);
                 } else {
-                    output.push(item as ChvITk[]);
+                    output.push(item );
                 }
             }
         }

@@ -109,15 +109,15 @@ export class VpcModelTop {
      */
     getParentCardOfElement(vel: VpcElBase): VpcElBase {
         let cur = this.getCurrentCard();
-        if ((velAsCard instanceof VpcElCard)) {
-            return velAsCard;
-        } else if ((velAsBg instanceof VpcElBg)) {
-            if (velAsBg.id === cur.parentId) {
+        if ((vel instanceof VpcElCard)) {
+            return vel;
+        } else if ((vel instanceof VpcElBg)) {
+            if (vel.id === cur.parentId) {
                 return cur;
             } else {
-                return velAsBg.cards[0];
+                return vel.cards[0];
             }
-        } else if (((velAsBtn instanceof VpcElButton)) || ((velAsFld instanceof VpcElField))) {
+        } else if (((vel instanceof VpcElButton)) || ((vel instanceof VpcElField))) {
             let parent = this.getByIdUntyped(vel.parentId);
             return this.getParentCardOfElement(parent);
         } else {

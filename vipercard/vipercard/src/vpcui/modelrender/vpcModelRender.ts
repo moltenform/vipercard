@@ -310,7 +310,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 target.set(ui512propname, newVal);
             } else if (propName === UI512Settable.fmtTxtVarName) {
                 let newvAsText = newVal as FormattedText;
-                assertTrue(newvAsText && newvAsText.isFormattedText, '6)|bad formatted text', vel.id);
+                assertTrue( newvAsText instanceof FormattedText, '6)|bad formatted text', vel.id);
                 target.setFmTxt(newvAsText);
             } else {
                 /* it's a property that doesn't impact rendering. that's ok. */
@@ -352,11 +352,10 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         }
 
         let focusedVel = this.findElIdToVel(focusedId);
-        let focusedVelAsFld = focusedVel as VpcElField;
-        if (!focusedVel || !focusedVelAsFld.isVpcElField) {
+        if (!(focusedVel instanceof VpcElField)) {
             /* missing or non-field focus */
             this.vci.setCurrentFocus(undefined);
-        } else if (!VpcModelRender.canFieldHaveFocus(focusedVelAsFld)) {
+        } else if (!VpcModelRender.canFieldHaveFocus(focusedVel)) {
             /* field not enabled/visible */
             this.vci.setCurrentFocus(undefined);
         } else {

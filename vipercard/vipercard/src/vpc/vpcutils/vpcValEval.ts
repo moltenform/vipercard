@@ -78,7 +78,7 @@ export class VpcEvalHelpers {
     evalOp(aIn: any, bIn: any, opClass: VpcOpCtg, op: string): VpcVal {
         let a = aIn as VpcVal;
         let b = bIn as VpcVal;
-        if (!a || !b || !a.isVpcVal || !b.isVpcVal) {
+        if (!a || !b || !(a instanceof VpcVal) || !(b instanceof VpcVal)) {
             throw makeVpcInternalErr(`5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`);
         }
 
