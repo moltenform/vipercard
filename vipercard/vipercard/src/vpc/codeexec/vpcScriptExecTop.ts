@@ -39,7 +39,7 @@ export class VpcExecTop {
         this.cachedCST = new VpcCacheParsedCST();
         this.outside = outside;
         this.runStatements.outside = outside;
-        this.runStatements.helpers.outside = outside;
+        this.runStatements.h.outside = outside;
         this.cardHistory.keepBeforeEnd = true;
 
         /* provide read-only access to the visitor */

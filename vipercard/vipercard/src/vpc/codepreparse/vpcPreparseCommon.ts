@@ -210,22 +210,69 @@ export enum CodeSymbols {
  * so let's do a few basic checks here to try to give you a better error message
  */
 export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
-    checkThrow(!tk || !isTkType(tk, tks.tkAdjective), `8f|we don't support variables named "short", "long", etc`);
+    if (!tk) {
+        return;
+    }
+    if (
+        tk.tokenType === tks._number ||
+        tk.tokenType === tks.tkA ||
+        tk.tokenType === tks.tkIdentifier ||
+        tk.tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready ||
+        tk.tokenType === tks.tkAllUnaryPropertiesIfNotAlready
+    ) {
+        /* these ones we've explicitly said are ok variable names */
+        return;
+    }
 
-    checkThrow(!tk || !isTkType(tk, tks._contains), `Ji|we don't support variables named "contains"`);
-    checkThrow(!tk || !isTkType(tk, tks._within), `8d|we don't support variables named "within"`);
-    checkThrow(!tk || !isTkType(tk, tks._to), `8c|we don't support variables named "id"`);
+    /* regex from "([^=]+)=OneOfWords\(([^)]+)\)" to
+    checkThrow(tk.tokenType !== tks.\1, "we don't support variable names like \2");
+    */
+    checkThrow(tk.tokenType !== tks.tkStack, "we don't support variable names like stack");
+    checkThrow(tk.tokenType !== tks.tkBg, "we don't support variable names like background,bkgnd,bg");
+    checkThrow(tk.tokenType !== tks.tkBgPlural, "we don't support variable names like backgrounds,bkgnds,bgs");
+    checkThrow(tk.tokenType !== tks.tkCard, "we don't support variable names like card,cd");
+    checkThrow(tk.tokenType !== tks.tkCardPlural, "we don't support variable names like cards,cds");
+    checkThrow(tk.tokenType !== tks.tkBtn, "we don't support variable names like button,btn");
+    checkThrow(tk.tokenType !== tks.tkBtnPlural, "we don't support variable names like buttons,btns");
+    checkThrow(tk.tokenType !== tks.tkFld, "we don't support variable names like field,fld");
+    checkThrow(tk.tokenType !== tks.tkFldPlural, "we don't support variable names like fields,flds");
+    checkThrow(tk.tokenType !== tks.tkPart, "we don't support variable names like part");
+    checkThrow(tk.tokenType !== tks.tkPartPlural, "we don't support variable names like parts");
+    checkThrow(tk.tokenType !== tks.tkTopObject, "we don't support variable names like hypercard,vipercard");
+    checkThrow(tk.tokenType !== tks.tkAdjective, "we don't support variable names like long,short,abbrev,abbr,abbreviated");
     checkThrow(
-        !tk || !isTkType(tk, tks.tkOrdinal),
-        longstr(
-            `Jh|we don't support variables with names like
-            "first", "last", "second", "middle", "any"`,
-            ''
-        )
+        tk.tokenType !== tks.tkOrdinal,
+         deleteThis.longstr(`we don't support variable names like last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eigth,ninth,tenth`, '')
     );
+    checkThrow(tk.tokenType !== tks.tkPosition, "we don't support variable names like this,prev,next");
     checkThrow(
-        !tk || !isTkType(tk, tks.tkChunkGranularity),
-        `Jg|we don't support variables with names like "char", "word", "item", "line"`
+        tk.tokenType !== tks.tkChunkGranularity,
+        "we don't support variable names like characters,chars,words,items,lines"
     );
-    checkThrow(!tk || !isTkType(tk, tks.tkMultDivideExpDivMod), `Jf|we don't support variables with names like "div", "mod"`);
+    checkThrow(tk.tokenType !== tks.tkInOnly, "we don't support variable names like in");
+    checkThrow(tk.tokenType !== tks.tkOfOnly, "we don't support variable names like of");
+    checkThrow(tk.tokenType !== tks._not, "we don't support variable names like not");
+    checkThrow(tk.tokenType !== tks._there, "we don't support variable names like there");
+    checkThrow(tk.tokenType !== tks._is, "we don't support variable names like is");
+    checkThrow(tk.tokenType !== tks._no, "we don't support variable names like no");
+    checkThrow(tk.tokenType !== tks._and, "we don't support variable names like and");
+    checkThrow(tk.tokenType !== tks._or, "we don't support variable names like or");
+    checkThrow(tk.tokenType !== tks._contains, "we don't support variable names like contains");
+    checkThrow(tk.tokenType !== tks._within, "we don't support variable names like within");
+    checkThrow(tk.tokenType !== tks._the, "we don't support variable names like the");
+    checkThrow(tk.tokenType !== tks._message, "we don't support variable names like msg,message");
+    checkThrow(tk.tokenType !== tks._window, "we don't support variable names like window");
+    checkThrow(tk.tokenType !== tks._windows, "we don't support variable names like windows");
+    checkThrow(tk.tokenType !== tks._box, "we don't support variable names like box");
+    checkThrow(tk.tokenType !== tks._me, "we don't support variable names like me");
+    checkThrow(tk.tokenType !== tks._recent, "we don't support variable names like recent");
+    checkThrow(tk.tokenType !== tks._back, "we don't support variable names like back");
+    checkThrow(tk.tokenType !== tks._forth, "we don't support variable names like forth");
+    checkThrow(tk.tokenType !== tks._marked, "we don't support variable names like marked");
+    checkThrow(tk.tokenType !== tks._to, "we don't support variable names like to");
+    checkThrow(tk.tokenType !== tks._menuItem, "we don't support variable names like menuitems?");
+    checkThrow(tk.tokenType !== tks._menu, "we don't support variable names like menu");
+    checkThrow(tk.tokenType !== tks._id, "we don't support variable names like id");
+    checkThrow(tk.tokenType !== tks._number, "we don't support variable names like number");
+    checkThrow(tk.tokenType !== tks._selection, "we don't support variable names like selection");
 }

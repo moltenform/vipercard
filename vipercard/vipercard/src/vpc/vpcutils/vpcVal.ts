@@ -2,6 +2,7 @@
 /* auto */ import { CodeLimits } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+import { checkThrowEq } from '../../ui512/utils/util512';
 
 /**
  * for the interpreter, when interpreting a script,
@@ -191,6 +192,77 @@ export class VpcVal extends VpcIntermedValBase {
         } else {
             throw makeVpcScriptErr(`61|expected an integer here, got "${this.v}"`);
         }
+    }
+
+    /**
+     * is it a comma-delimited list of only integers?
+     */
+    isIntegerList(requireLength = -1): O<number[]> {
+        let found = this.isItNumberList(requireLength);
+        let tmp: [boolean, any] = [false, 0];
+        if (found) {
+            for (let i = 0; i < found.length; i++) {
+                let v = VpcValN(found[i]);
+                v.isItAStrictIntegerImpl(tmp);
+                if (tmp[0]) {
+                    /* make sure to get the rounded form */
+                    found[i] = tmp[1];
+                } else {
+                    return undefined;
+                }
+            }
+        }
+
+        /* we've already checked for required length */
+        return found;
+    }
+
+    /**
+     * is it a comma-delimited list of only numbers?
+     */
+    isItNumberList(requireLength = -1): O<number[]> {
+        let ret: number[] = [];
+        let tmp: [boolean, any] = [false, 0];
+        /* prob faster than calling trim on each */
+        let spl = this.v.split(/\s*,\s*/);
+        if (!this.v || spl.length <= 1) {
+            /* don't treat 123 as a list of length 1 */
+            return undefined;
+        }
+
+        for (let s of spl) {
+            if (!s.length) {
+                /* following what the emulator seems to do: treat an empty item as 0.*/
+                ret.push(0);
+            } else {
+                let v = VpcValS(s);
+                v.isItNumericImpl(tmp);
+                if (tmp[0]) {
+                    ret.push(tmp[1]);
+                } else {
+                    return undefined;
+                }
+            }
+        }
+
+        if (requireLength !== -1 && ret.length !== requireLength) {
+            return undefined;
+        } else {
+            return ret;
+        }
+    }
+
+    /**
+     * is it a list of coordinates?
+     */
+    readAsIntegerList(requireLength = -1): number[] {
+        let ret = this.isIntegerList(-1 /* don't enforce yet, so we'll get a better error message */);
+        checkThrow(ret, 'Not a list of integers');
+        checkThrow(
+            requireLength === -1 || requireLength === ret.length,
+            `expected ${requireLength} numbers but got ${ret.length}`
+        );
+        return ret;
     }
 
     /**

@@ -49,6 +49,7 @@
 //      NEW FEATURE: replace "a" with "b" in s
 //      we don't yet support `put "c" into char 2 of item 3 of line 2 of cd fld 1`
 //      or put "c" into char 2 of item 3 to 5 of line 2 of cd fld 1
+//      you can't omit items in a list, like average(1,2,,3)
 //      NEW FEATURE: typeOfObject(id)
 //      CHANGE: the "long id" of objects is now more useful. 
             // also, the string versions of "the target" and "the owner of" look a little different
@@ -66,6 +67,9 @@
 //      unsupported commands like "close" are not syntax errors, they will be shown at runtime
 //      "send" is more efficient, doesn't need to recompile the whole script, just the snippet
 //      NEW FEATURE:  put "bkgnd id 2590" into xx;   put the name of xx into cd fld "myf"
+//      you can use one val where most places coords are needed. 
+        // put "1,1" into cds; click at cds, to match product
+        // click at "1," missing items are treated as 0, to match product
 
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )

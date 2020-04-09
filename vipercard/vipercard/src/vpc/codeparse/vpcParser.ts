@@ -1288,6 +1288,12 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleObjectPart);
     });
 
+    RuleBuiltinCmdLock = this.RULE('RuleBuiltinCmdLock', () => {
+        this.CONSUME1(tks.tkSyntaxPlaceholder);
+        this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME1(tks.tkIdentifier);
+    });
+
     RuleBuiltinCmdMark = this.RULE('RuleBuiltinCmdMark', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);

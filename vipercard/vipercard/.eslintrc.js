@@ -68,6 +68,7 @@ module.exports = {
         '@typescript-eslint/no-inferrable-types': 'off',
         '@typescript-eslint/no-empty-interface': 'off',
         '@typescript-eslint/no-empty-function': 'off',
+        '@typescript-eslint/no-empty': 'off',
         '@typescript-eslint/no-namespace': 'off',
         '@typescript-eslint/prefer-regexp-exec': 'off',
         '@typescript-eslint/promise-function-async': 'off',

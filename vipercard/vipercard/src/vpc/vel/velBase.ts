@@ -298,29 +298,33 @@ export abstract class VpcElSizable extends VpcElBase {
         setters['bottom'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n - me._h, me._w, me._h)];
         setters['topleft'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) => me.setDimensions(coord(me, s, 0), coord(me, s, 1), me._w, me._h)
+            (me: VpcElSizable, s: string) => {
+                let coords = VpcValS(s).readAsIntegerList(2);
+                me.setDimensions(coords[0], coords[1], me._w, me._h);
+            }
         ];
         setters['botright'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) => me.setDimensions(me._x, me._y, coord(me, s, 0) - me._x, coord(me, s, 1) - me._y)
+            (me: VpcElSizable, s: string) => {
+                let coords = VpcValS(s).readAsIntegerList(2);
+                me.setDimensions(me._x, me._y, coords[0] - me._x, coords[1] - me._y);
+            }
         ];
         setters['rect'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) =>
-                me.setDimensions(
-                    coord(me, s, 0),
-                    coord(me, s, 1),
-                    coord(me, s, 2) - coord(me, s, 0),
-                    coord(me, s, 3) - coord(me, s, 1)
-                )
+            (me: VpcElSizable, s: string) => {
+                let coords = VpcValS(s).readAsIntegerList(4);
+                me.setDimensions(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1]);
+            }
         ];
         setters['loc'] = [
             PrpTyp.Str,
             (me: VpcElSizable, s: string) => {
+                let coords = VpcValS(s).readAsIntegerList(2);
                 let wasLocX = me._x + Math.trunc(me._w / 2);
                 let wasLocY = me._y + Math.trunc(me._h / 2);
-                let moveX = coord(me, s, 0) - wasLocX;
-                let moveY = coord(me, s, 1) - wasLocY;
+                let moveX = coords[0] - wasLocX;
+                let moveY = coords[1] - wasLocY;
                 me.setDimensions(me._x + moveX, me._y + moveY, me._w, me._h);
             }
         ];
@@ -328,16 +332,4 @@ export abstract class VpcElSizable extends VpcElBase {
         setters['rectangle'] = setters['rect'];
         setters['location'] = setters['loc'];
     }
-}
-
-/**
- * get a coordinate from a list of integers 1,2,3,4
- * splits the list and gets the nth coordinate
- */
-function coord(me: VpcElBase, s: string, whichCoord: number): number {
-    let pts = s.split(',');
-    checkThrow(whichCoord < pts.length, `7F|could not get coord ${whichCoord + 1} of ${s}`);
-    VpcValS(pts[whichCoord]).isItAStrictIntegerImpl(me.tmpArray);
-    checkThrow(me.tmpArray[0] && typeof me.tmpArray[1] === 'number', `7E|coord ${whichCoord + 1} of ${s} is not an integer`);
-    return me.tmpArray[1];
 }

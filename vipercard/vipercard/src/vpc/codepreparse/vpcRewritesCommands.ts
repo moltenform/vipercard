@@ -60,7 +60,7 @@ export class VpcRewriteForCommands {
                 .join(' ');
             return [[line[0], BuildFakeTokens.inst.makeStringLiteral(line[0], s)]];
         } else {
-            // erase the 'tool'
+            /* erase the 'tool' */
             let found = VpcSuperRewrite.searchTokenGivenEnglishTerm(line, line[0], 'tool');
             checkThrow(found !== -1, "expected to see something like 'choose brush tool'");
             line.splice(found, 1);
@@ -158,7 +158,7 @@ export class VpcRewriteForCommands {
             shouldSuspendHistory = 'true';
         }
 
-        // remove the "to"
+        /* remove the "to" */
         if (line[1].image === 'to') {
             line.splice(1, 1);
         }
@@ -195,6 +195,15 @@ end if`;
     }
     rewriteKeydown(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the keydown command', line[0])];
+    }
+    rewriteLock(line: ChvITk[]): ChvITk[][] {
+        checkThrow(line.length === 2, "we only support 'lock screen");
+        if (line[1].image !== 'screen') {
+            return [this.hBuildNyi('any type of unlock besides unlock screen', line[0])];
+        } else {
+            /* make it just "lock" */
+            return [[line[0]]];
+        }
     }
     rewriteMark(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the mark command', line[0])];
@@ -274,6 +283,14 @@ put the result %ARG0%`;
     }
     rewriteRequest(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the request command', line[0])];
+    }
+    rewriteReset(line: ChvITk[]): ChvITk[][] {
+        checkThrow(line.length === 2, "we only support 'reset paint");
+        if (line[1].image !== 'paint') {
+            return [this.hBuildNyi('any type of unlock besides reset paint', line[0])];
+        } else {
+            return [line];
+        }
     }
     rewriteSave(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the save command', line[0])];
@@ -422,7 +439,15 @@ end if`;
         checkThrow(line.length > 1, 'not enough args');
         if (line[1].image !== 'screen') {
             return [this.hBuildNyi('any type of unlock besides unlock screen', line[0])];
+        } else if (line.length === 2) {
+            return [line];
         } else {
+            /* strip any "with" */
+            let foundWith = VpcSuperRewrite.searchTokenGivenEnglishTerm(line, line[0], 'with');
+            if (foundWith !== -1) {
+                line.splice(foundWith, 1);
+            }
+
             return this.hParseVisualEffect(line, 'unlock screen');
         }
     }
@@ -444,7 +469,7 @@ end if`;
         }
 
         if (line[1].image === 'until' || line[1].image === 'while') {
-            // remember that the only type of repeat we can make is an unconditional one
+            /* remember that the only type of repeat we can make is an unconditional one */
             let isNegated = line[1].image === 'while' ? 'not' : '';
             let template = `
 repeat

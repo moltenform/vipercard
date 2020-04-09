@@ -1,18 +1,16 @@
 
-/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
-/* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcChunkType, VpcTool, VpcToolCtg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, assertTrue, checkIsProductionBuild, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyParameterCtor, Util512, ValHolder, checkThrowEq, getStrToEnum, isString, longstr } from './../../ui512/utils/util512';
-
-// make this a mixin?
+/* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString, longstr } from './../../ui512/utils/util512';
 
 /**
  * execute a single line of code
@@ -24,7 +22,7 @@ export class ExecuteStatement {
     outside: OutsideWorldReadWrite;
     cbStopCodeRunning: O<() => void>;
     pendingOps: VpcPendingAsyncOps;
-    helpers = new VpcScriptExecuteStatementHelpers();
+    h = new VpcScriptExecuteStatementHelpers();
 
     /**
      * execute a single line of code
@@ -48,7 +46,7 @@ export class ExecuteStatement {
      * Adds the value of number to the number in a container.
      */
     goAdd(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a + b);
+        this.h.goMathAlter(line, vals, (a: number, b: number) => a + b);
     }
     /**
      * Displays a dialog box.
@@ -56,10 +54,10 @@ export class ExecuteStatement {
      */
     goAnswer(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let ruleCaption = 'RuleExpr';
-        let captionVals = this.getAllChildVpcVals(vals, ruleCaption, true);
+        let captionVals = this.h.getAllChildVpcVals(vals, ruleCaption, true);
         let captionArgs = captionVals.map(item => item.readAsString());
         let ruleChoices = 'RuleLvl6Expression';
-        let choicesVals = this.getAllChildVpcVals(vals, ruleChoices, false);
+        let choicesVals = this.h.getAllChildVpcVals(vals, ruleChoices, false);
         let choicesArgs = choicesVals.map(item => item.readAsString());
 
         /* because there is only 1 script execution thread, don't need to assign a unique id. */
@@ -83,7 +81,7 @@ export class ExecuteStatement {
      * If the user clicks Cancel, the result will be an empty string "".
      */
     goAsk(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let argsVals = this.getAllChildVpcVals(vals, 'RuleExpr', true);
+        let argsVals = this.h.getAllChildVpcVals(vals, 'RuleExpr', true);
         let args = argsVals.map(item => item.readAsString());
         let closureGetAsyncOps = this.pendingOps;
 
@@ -112,7 +110,7 @@ export class ExecuteStatement {
      * Doesn't set the actual tool, which is always Browse when scripts are running.
      */
     goVpccalluntrappablechoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let term = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '5G|');
+        let term = throwIfUndefined(this.h.findChildVal(vals, 'RuleExpr'), '5G|');
         let tool = this.getWhichTool(term.readAsString());
         let ctg = getToolCategory(tool);
 
@@ -138,7 +136,7 @@ export class ExecuteStatement {
      * Use the click command for programmatically drawing pictures.
      */
     goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        return this.helpers.clickOrDrag(line, vals, 'at');
+        return this.h.clickOrDrag(line, vals, 'at');
     }
     /**
      * delete char {i} of {container}
@@ -147,8 +145,8 @@ export class ExecuteStatement {
         if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
             throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
-            let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '5B|');
-            let chunk = throwIfUndefined(this.findChildOther(RequestedChunk, vals, 'RuleHChunk'), '5A|');
+            let contRef = throwIfUndefined(this.h.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '5B|');
+            let chunk = throwIfUndefined(this.h.findChildOther(RequestedChunk, vals, 'RuleHChunk'), '5A|');
 
             contRef.chunk = chunk;
 
@@ -165,7 +163,7 @@ export class ExecuteStatement {
      * Dial a number with old touch tones
      */
     goDial(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
+        let args = this.h.getAllChildVpcVals(vals, 'RuleExpr', true);
 
         /* read as a string, since it could have embedded - or a leading zero */
         let numbersToDial = args[0].readAsString();
@@ -179,7 +177,7 @@ export class ExecuteStatement {
      * Divides the number in a container by a number.
      */
     goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a / b);
+        this.h.goMathAlter(line, vals, (a: number, b: number) => a / b);
     }
     /**
      * disable a vel
@@ -198,7 +196,7 @@ export class ExecuteStatement {
      * Use the drag command for programmatically drawing pictures.
      */
     goDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        return this.helpers.clickOrDrag(line, vals, 'from');
+        return this.h.clickOrDrag(line, vals, 'from');
     }
     /**
      * enable a vel
@@ -206,137 +204,44 @@ export class ExecuteStatement {
     goEnable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         this.setEnabled(line, vals, true);
     }
-
     /**
-     * subtract [chunk of] {container} from {number}
-     * Subtracts a number from the number in a container.
+     * hide {button|field}
      */
-    goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a - b);
+    goHide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let ref = this.h.findChildVelRef(vals, 'RuleObjectPart');
+        let identifier = this.h.findChildStr(vals, 'Tokentkidentifier');
+        if (ref) {
+            this.outside.SetProp(ref, 'visible', VpcVal.False, undefined);
+        } else if (identifier) {
+            if (identifier === 'menubar') {
+                this.outside.SetOption('fullScreen', true);
+            } else {
+                throw makeVpcScriptErr('4_|so far we only support hide menubar or hide cd btn 1');
+            }
+        } else {
+            throw makeVpcScriptErr('4^|all choices null');
+        }
     }
-
+    /**
+     * lock screen
+     */
+    goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        checkThrow(line.excerptToParse[1].image === 'screen', 'only support lock screen');
+        this.outside.SetOption('screenLocked', true);
+    }
+    /**
+     * mark cards
+     */
+    goMark(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        checkThrow(false, 'not yet implemented');
+    }
     /**
      * multiply [chunk of] {container} by {number}
      * Multiplies the number in a container by a number.
      */
     goMultiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a * b);
+        this.h.goMathAlter(line, vals, (a: number, b: number) => a * b);
     }
-
-    /**
-     * retrieve an expected IntermedMapOfIntermedVals from the visitor result
-     */
-    protected findChildMap(vals: IntermedMapOfIntermedVals, nm: string): O<IntermedMapOfIntermedVals> {
-        let got = vals.vals[nm];
-        if (got) {
-            let gotAsMap = got[0] as IntermedMapOfIntermedVals;
-            checkThrowEq(1, got.length, '7d|expected length 1');
-            checkThrow(gotAsMap instanceof IntermedMapOfIntermedVals, '7c|wrong type');
-            return gotAsMap;
-        } else {
-            return undefined;
-        }
-    }
-
-    /**
-     * retrieve an expected VpcVal from the visitor result
-     */
-    protected findChildVal(vals: IntermedMapOfIntermedVals, nm: string): O<VpcVal> {
-        let got = vals.vals[nm];
-        if (got) {
-            let gotAsVal = got[0] as VpcVal;
-            checkThrowEq(1, got.length, '7b|expected length 1');
-            checkThrow(gotAsVal instanceof VpcVal, '7a|wrong type');
-            return gotAsVal;
-        } else {
-            return undefined;
-        }
-    }
-
-    /**
-     * retrieve an expected string from the visitor result
-     */
-    protected findChildStr(vals: IntermedMapOfIntermedVals, nm: string): O<string> {
-        let got = vals.vals[nm];
-        if (got) {
-            let gotAsString = got[0] as string;
-            checkThrowEq(1, got.length, '7Z|expected length 1');
-            checkThrow(isString(gotAsString), '7Y|wrong type');
-            return gotAsString;
-        } else {
-            return undefined;
-        }
-    }
-
-    /**
-     * retrieve an expected RequestedVelRef from the visitor result
-     */
-    protected findChildVelRef(vals: IntermedMapOfIntermedVals, nm: string): O<RequestedVelRef> {
-        let got = vals.vals[nm];
-        if (got) {
-            let gotAsVelRef = got[0] as RequestedVelRef;
-            checkThrowEq(1, got.length, '7X|expected length 1');
-            checkThrow(gotAsVelRef instanceof RequestedVelRef, '7W|wrong type');
-            return gotAsVelRef;
-        } else {
-            return undefined;
-        }
-    }
-
-    /**
-     * retrieve an expected type of VpcIntermedValBase from the visitor result
-     */
-    protected findChildOther<T extends VpcIntermedValBase>(
-        ctor: AnyParameterCtor<T>,
-        vals: IntermedMapOfIntermedVals,
-        nm: string
-    ): O<T> {
-        let got = vals.vals[nm];
-        if (got) {
-            let gotAsT = got[0] as T;
-            checkThrowEq(1, got.length, '7V|expected length 1');
-            checkThrow((gotAsT as any)['is' + ctor.name] === true, '7U|wrong type');
-            return gotAsT;
-        } else {
-            return undefined;
-        }
-    }
-
-    /**
-     * implementation of add, subtract, etc
-     */
-    goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
-        let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
-        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '5L|');
-
-        let getResultAsString = (s: string) => {
-            let f1 = VpcValS(s).readAsStrictNumeric();
-            let f2 = val.readAsStrictNumeric();
-            let res = fn(f1, f2);
-            return VpcValN(res).readAsString();
-        };
-
-        this.outside.ContainerModify(container, getResultAsString);
-    }
-
-    /**
-     * get all child VpcVals
-     */
-    protected getAllChildVpcVals(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): VpcVal[] {
-        let ret: VpcVal[] = [];
-        if (vals.vals[nm]) {
-            for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
-                let child = vals.vals[nm][i];
-                checkThrow(child instanceof VpcVal, 'JS|');
-                ret.push(child);
-            }
-        } else {
-            checkThrow(!atLeastOne, 'JR|no child');
-        }
-
-        return ret;
-    }
-
     /**
      * Play a sound effect.
      * Use
@@ -345,7 +250,7 @@ export class ExecuteStatement {
      *      play "mySound"
      */
     goPlay(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
+        let args = this.h.getAllChildVpcVals(vals, 'RuleExpr', true);
         let whichSound = args[0].readAsString();
         let isJustLoadIdentifier =
             vals.vals['TokenTkidentifier'] && vals.vals['TokenTkidentifier'].length > 1
@@ -371,29 +276,35 @@ export class ExecuteStatement {
             }
         }
     }
-
     /**
-     * understands both "4" and "line"
+     * put {expression} into {container}
+     * Evaluates any expression and saves the result to a variable or container.
      */
-    protected getWhichTool(s: string): VpcTool {
-        s = s.replace(/ +/g, '_');
-        checkThrow(s.length >= 1, 'JP|not a valid tool name.');
-        let choseNumber = Util512.parseInt(s);
-        if (choseNumber !== undefined) {
-            return originalToolNumberToTool(choseNumber);
-        } else {
-            return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
-        }
-    }
+    goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let terms = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        checkThrow(
+            terms.length === 2,
+            longstr(
+                `7M|we don't support 'put "abc"' to use the message
+                box (missing into, before, or after).`
+            )
+        );
 
+        let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[1]);
+        let val = throwIfUndefined(this.h.findChildVal(vals, 'RuleExpr'), '54|');
+        let contRef = throwIfUndefined(this.h.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '53|');
+
+        let cont = this.outside.ResolveContainerWritable(contRef);
+        let itemDel = this.outside.GetItemDelim();
+        ChunkResolution.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);
+    }
     /**
-     * set if a vel is enabled or not
+     * reset paint/ menubar
      */
-    protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
-        let ref = throwIfUndefined(this.findChildVelRef(vals, 'RuleObjectBtn'), '59|');
-        this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
+    goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        checkThrow(line.excerptToParse[1].image === 'paint', 'only support reset paint');
+        throw makeVpcScriptErr("52|the 'reset' command is not yet implemented.");
     }
-
     /**
      * replace text
      */
@@ -407,64 +318,37 @@ export class ExecuteStatement {
         let searchFor = expr1.readAsString();
         let replaceWith = expr2.readAsString();
 
-        let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '53|');
+        let contRef = throwIfUndefined(this.h.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'), '53|');
 
         let cont = this.outside.ResolveContainerWritable(contRef);
         cont.replaceAll(searchFor, replaceWith);
     }
-
     /**
-     * get {expression}
-     * Evaluates any expression and saves the result to the variable "it".
+     * selects text
      */
-    goGet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let expr = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '58|');
-        this.outside.SetSpecialVar('it', expr);
+    goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        if (line.excerptToParse[1].image.toLowerCase().replace(/"/g, '') === 'empty') {
+            checkThrow(false, 'nyi: deselecting text');
+        } else {
+            let contRef = throwIfUndefined(this.h.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '53|');
+            let cont = this.outside.ResolveContainerWritable(contRef);
+            checkThrow(contRef.vel, 'has to be a field, not a variable');
+            checkThrow(false, 'nyi: selecting text');
+        }
     }
-
-    /**
-     * put {expression} into {container}
-     * Evaluates any expression and saves the result to a variable or container.
-     */
-    goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
-        checkThrow(
-            terms.length === 2,
-            longstr(
-                `7M|we don't support 'put "abc"' to use the message
-                box (missing into, before, or after).`
-            )
-        );
-
-        let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[1]);
-        let val = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '54|');
-        let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '53|');
-
-        let cont = this.outside.ResolveContainerWritable(contRef);
-        let itemDel = this.outside.GetItemDelim();
-        ChunkResolution.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);
-    }
-
-    /**
-     * reset menubar
-     */
-    goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        throw makeVpcScriptErr("52|the 'reset' command is not yet implemented.");
-    }
-
     /**
      * set the {property} of {button|field} to {value}
      */
     goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let velRef = this.findChildVelRef(vals, 'RuleObject');
-        let velRefFld = this.findChildVelRef(vals, 'RuleObjectFld');
-        let velRefChunk = this.findChildOther(RequestedChunk, vals, 'RuleHChunk');
-        let propName = throwIfUndefined(this.findChildStr(vals, 'RuleAnyPropertyName'), '51|');
+        let velRef = this.h.findChildVelRef(vals, 'RuleObject');
+        let velRefFld = this.h.findChildVelRef(vals, 'RuleObjectFld');
+        let velRefChunk = this.h.findChildOther(RequestedChunk, vals, 'RuleHChunk');
+        let propName = throwIfUndefined(this.h.findChildStr(vals, 'RuleAnyPropertyName'), '51|');
 
         /* let's concat all of the values together into one string separated by commas */
         /* that way we'll support coordinates "1,2" and text styles "plain, bold" */
         let strings: string[] = [];
-        let val = this.findChildMap(vals, 'RuleAnyPropertyVal');
+        let val = this.h.findChildMap(vals, 'RuleAnyPropertyVal');
         let nm = 'RuleLvl1Expression';
         let ar = val ? val.vals[nm] : undefined;
         if (ar && ar.length) {
@@ -487,12 +371,42 @@ export class ExecuteStatement {
     }
 
     /**
+     * subtract [chunk of] {container} from {number}
+     * Subtracts a number from the number in a container.
+     */
+    goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        this.h.goMathAlter(line, vals, (a: number, b: number) => a - b);
+    }
+
+    /**
+     * understands both "4" and "line"
+     */
+    protected getWhichTool(s: string): VpcTool {
+        s = s.replace(/ +/g, '_');
+        checkThrow(s.length >= 1, 'JP|not a valid tool name.');
+        let choseNumber = Util512.parseInt(s);
+        if (choseNumber !== undefined) {
+            return originalToolNumberToTool(choseNumber);
+        } else {
+            return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
+        }
+    }
+
+    /**
+     * set if a vel is enabled or not
+     */
+    protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
+        let ref = throwIfUndefined(this.h.findChildVelRef(vals, 'RuleObjectBtn'), '59|');
+        this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
+    }
+
+    /**
      * show {button|field}
      */
     goShow(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let strs = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
-        let rule1 = this.findChildMap(vals, 'RuleShow_1');
-        let rule2 = this.findChildMap(vals, 'RuleShow_1');
+        let strs = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let rule1 = this.h.findChildMap(vals, 'RuleShow_1');
+        let rule2 = this.h.findChildMap(vals, 'RuleShow_1');
         if (strs.length > 1) {
             if (strs[1] === 'menubar') {
                 this.outside.SetOption('fullScreen', false);
@@ -501,7 +415,7 @@ export class ExecuteStatement {
             }
         } else if (rule1) {
             /* show cd btn "myBtn" at 34,45 */
-            let ref = throwIfUndefined(this.findChildVelRef(rule1, 'RuleObjectPart'), '4||');
+            let ref = throwIfUndefined(this.h.findChildVelRef(rule1, 'RuleObjectPart'), '4||');
             this.outside.SetProp(ref, 'visible', VpcVal.True, undefined);
             let nmExpr = 'RuleLvl4Expression';
             if (rule1.vals[nmExpr]) {
@@ -520,29 +434,10 @@ export class ExecuteStatement {
     }
 
     /**
-     * hide {button|field}
-     */
-    goHide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let ref = this.findChildVelRef(vals, 'RuleObjectPart');
-        let identifier = this.findChildStr(vals, 'Tokentkidentifier');
-        if (ref) {
-            this.outside.SetProp(ref, 'visible', VpcVal.False, undefined);
-        } else if (identifier) {
-            if (identifier === 'menubar') {
-                this.outside.SetOption('fullScreen', true);
-            } else {
-                throw makeVpcScriptErr('4_|so far we only support hide menubar or hide cd btn 1');
-            }
-        } else {
-            throw makeVpcScriptErr('4^|all choices null');
-        }
-    }
-
-    /**
      * sort [lines|items|chars] of {container}
      */
     goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
         let ascend = true;
         let sortType = SortType.Text;
         for (let i = 1; i < terms.length; i++) {
@@ -555,9 +450,9 @@ export class ExecuteStatement {
             }
         }
 
-        let strChunktype = throwIfUndefined(this.findChildStr(vals, 'TokenTkcharorwordoritemorlineorplural'), '4]|');
+        let strChunktype = throwIfUndefined(this.h.findChildStr(vals, 'TokenTkcharorwordoritemorlineorplural'), '4]|');
         let chunktype = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', strChunktype);
-        let contRef = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '4[|');
+        let contRef = throwIfUndefined(this.h.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '4[|');
 
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
@@ -565,23 +460,10 @@ export class ExecuteStatement {
     }
 
     /**
-     * lock screen
-     */
-    goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
-        checkThrow(
-            terms.length === 2 && terms[0] === 'lock' && terms[1] === 'screen',
-            '7N|the only thing we currently support here is lock screen.'
-        );
-
-        this.outside.SetOption('screenLocked', true);
-    }
-
-    /**
      * unlock screen
      */
     goUnlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.helpers.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
         checkThrow(
             terms.length === 2 && terms[0] === 'unlock' && terms[1] === 'screen',
             '7I|the only thing we currently support here is unlock screen.'
@@ -602,7 +484,7 @@ export class ExecuteStatement {
      * Pauses the script.
      */
     goWait(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let args = this.getAllChildVpcVals(vals, 'RuleExpr', true);
+        let args = this.h.getAllChildVpcVals(vals, 'RuleExpr', true);
         let number = args[0].readAsStrictNumeric();
 
         let NoteThisIsDisabledCode = 1;

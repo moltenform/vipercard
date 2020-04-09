@@ -439,6 +439,10 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
+        RuleBuiltinCmdLock(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
         RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }

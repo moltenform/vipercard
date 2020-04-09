@@ -41,12 +41,7 @@ export class VpcEvalHelpers {
                 );
             }
 
-            let pts = v.readAsString().split(',');
-            if (numExpected !== pts.length) {
-                return VpcVal.False;
-            } else {
-                return VpcValBool(pts.every(s => VpcValS(s).isItInteger()));
-            }
+            return VpcValBool(bool(v.isIntegerList(numExpected)));
         }
     }
 
@@ -230,20 +225,6 @@ export class VpcEvalHelpers {
     }
 
     /**
-     * get list of numbers from a list of strings
-     */
-    protected numberListFromStrings(fnname: string, sAr: string[]): number[] {
-        checkThrow(sAr.length > 0, `8s|Wrong number of arguments given to ${fnname}, need at least 1`);
-        return sAr.map(s => {
-            if (s.match(/^\s*$/)) {
-                return 0.0;
-            } else {
-                return VpcValS(s).readAsStrictNumeric();
-            }
-        });
-    }
-
-    /**
      * get list of numbers... sometimes from a string, sometimes from args
      * e.g. put sum(1,2,3) into x
      * and put sum("1,2,3") into x
@@ -253,20 +234,22 @@ export class VpcEvalHelpers {
         checkThrow(vAr.length > 0, `8r|Wrong number of arguments given to ${fnname}, need at least 1`);
         checkThrowEq(1, sep.length, `8q|numberListFromArgsGiven`);
         if (vAr.length === 1 && !vAr[0].isItNumeric()) {
-            /* following what the emulator seems to do. */
-            /* first, a trailing comma is removed if present. */
+            /* first, a trailing comma is removed if present.
+            seems to only happen for numeric variadic functions.
+            for example, average("1,2,9") is the same as average("1,2,9,")
+            but in other contexts a trailing comma is treated as an item with val=0 */
+
             let s = vAr[0].readAsString();
             if (s.endsWith(sep)) {
                 s = s.substr(0, s.length - 1);
             }
 
-            /* then, split by comma and treat empty items as zero. */
-            return this.numberListFromStrings(fnname, s.split(sep));
+            let found = VpcValS(s).isItNumberList();
+            checkThrow(found, `8r|Wrong arguments given to ${fnname}, wanted numbers`);
+            checkThrow(found.length >= 1, `8r|Wrong arguments given to ${fnname}, wanted at least one number`);
+            return found;
         } else {
-            return this.numberListFromStrings(
-                fnname,
-                vAr.map(v => v.readAsString())
-            );
+            return vAr.map(v => v.readAsStrictNumeric());
         }
     }
 }

@@ -75,7 +75,8 @@ BuiltinCmdEnable:=... <ObjectBtn>
 BuiltinCmdHide:=... <ObjectPart> 
 // import. show NYI in rewrite
 // keydown. show NYI in rewrite
-// lock. parse it in software.
+// lock. parsed in software, takes no args.
+BuiltinCmdLock:=... tkIdentifier
 // mark. other parsing done in software
 // not supported yet but I'll leave this syntax here
 BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCard> | tkComma <Expr> <Of> <ObjectFld> }
