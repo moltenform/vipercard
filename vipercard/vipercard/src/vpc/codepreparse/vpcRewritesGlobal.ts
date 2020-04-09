@@ -12,14 +12,10 @@ export class VpcRewritesGlobal {
         for (let i = 0; i < copyLine.length - 1; i++) {
             let insertIt: O<ChvITkType>;
             let s = '';
-            if (
-                copyLine[i].tokenType === tks.tkBtn ||
-                copyLine[i].tokenType === tks.tkFld
-            ) {
+            if (copyLine[i].tokenType === tks.tkBtn || copyLine[i].tokenType === tks.tkFld) {
                 let next = copyLine[i + 1];
                 if (next.tokenType !== tks.tkCard && next.tokenType !== tks.tkBg) {
-                    insertIt =
-                        copyLine[i].tokenType === tks.tkFld ? tks.tkBg : tks.tkCard;
+                    insertIt = copyLine[i].tokenType === tks.tkFld ? tks.tkBg : tks.tkCard;
                     s = copyLine[i].tokenType === tks.tkFld ? 'bg' : 'cd';
                 }
             }
@@ -78,34 +74,21 @@ export namespace VpcSuperRewrite {
         return ret;
     }
 
-    function addTerm(
-        ret: ChvITk[][],
-        term: string,
-        args: ChvITk[][],
-        realTokenAsBasis: ChvITk,
-        needsToBePostProcess: boolean
-    ) {
+    function addTerm(ret: ChvITk[][], term: string, args: ChvITk[][], realTokenAsBasis: ChvITk, needsToBePostProcess: boolean) {
         if (term.startsWith('%ARG')) {
             checkThrowEq('%', term[term.length - 1], '');
             let sn = term.replace(/%ARG/g, '').replace(/%/g, '');
             let n = Util512.parseIntStrict(sn);
-            checkThrow(
-                typeof n === 'number' && n >= 0 && n < args.length,
-                'internal error in template'
-            );
+            checkThrow(typeof n === 'number' && n >= 0 && n < args.length, 'internal error in template');
             Util512.extendArray(last(ret), args[n]);
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
             last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
-            let newToken = tokenFromEnglishTerm(
-                term.replace(/%/g, '').toLowerCase(),
-                realTokenAsBasis
-            );
+            let newToken = tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
             last(ret).push(newToken);
             last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
         } else {
             checkThrow(
-                !needsToBePostProcess ||
-                    (term !== 'into' && term !== 'before' && term !== 'after'),
+                !needsToBePostProcess || (term !== 'into' && term !== 'before' && term !== 'after'),
                 "it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead."
             );
             let newToken = tokenFromEnglishTerm(term, realTokenAsBasis);
@@ -138,34 +121,20 @@ export namespace VpcSuperRewrite {
         mustExist: boolean,
         syntaxMarkerType = ''
     ) {
-        let index = searchTokenGivenEnglishTermInParensLevel(
-            0,
-            line,
-            realTokenAsBasis,
-            term
-        );
+        let index = searchTokenGivenEnglishTermInParensLevel(0, line, realTokenAsBasis, term);
         if (index === -1) {
             checkThrow(!mustExist, `did not see ${term} in a ${line[0].image}`);
             return false;
         } else {
-            let marker = BuildFakeTokens.inst.makeSyntaxMarker(
-                realTokenAsBasis,
-                syntaxMarkerType
-            );
+            let marker = BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis, syntaxMarkerType);
             line[index] = marker;
             return true;
         }
     }
 
-    export function searchTokenGivenEnglishTerm(
-        line: ChvITk[],
-        realTokenAsBasis: ChvITk,
-        term: string
-    ) {
+    export function searchTokenGivenEnglishTerm(line: ChvITk[], realTokenAsBasis: ChvITk, term: string) {
         let tk1 = tokenFromEnglishTerm(term, realTokenAsBasis);
-        return line.findIndex(
-            t => t.tokenType === tk1.tokenType && t.image === tk1.image
-        );
+        return line.findIndex(t => t.tokenType === tk1.tokenType && t.image === tk1.image);
     }
 
     export function searchTokenGivenEnglishTermInParensLevel(
@@ -182,11 +151,7 @@ export namespace VpcSuperRewrite {
                 lvl += 1;
             } else if (t.tokenType === tks.tkRParen) {
                 lvl -= 1;
-            } else if (
-                t.tokenType === tk1.tokenType &&
-                t.image === tk1.image &&
-                lvl === wantedLevel
-            ) {
+            } else if (t.tokenType === tk1.tokenType && t.image === tk1.image && lvl === wantedLevel) {
                 return i;
             }
         }
@@ -194,8 +159,7 @@ export namespace VpcSuperRewrite {
     }
 
     export function generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
-        let image =
-            '$unique_' + prefix + VpcSuperRewrite.CounterForUniqueNames.nextAsStr();
+        let image = '$unique_' + prefix + VpcSuperRewrite.CounterForUniqueNames.nextAsStr();
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tks.tkIdentifier, image);
     }
 }

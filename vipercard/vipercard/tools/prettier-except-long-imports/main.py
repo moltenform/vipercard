@@ -14,7 +14,7 @@ prettierCfg = '../../.prettierrc.js'
 prettierPath = '../../node_modules/prettier/bin-prettier.js'
 allowLongerLinesOn = [
     #'../../src/vpc/codeparse/vpcVisitor.ts', '../../src/vpc/codeparse/vpcVisitorMixin.ts',
-    '../../src/vpc/**/*.ts', '../../src/vpcui/**/*.ts', '../../src/test/vpc/**/*.ts',
+    '../../src/vpc/**/*.ts', '../../src/vpcui/**/*.ts'
 ]
 
 def go(srcdirectory):
@@ -93,7 +93,10 @@ def doOperationsThatMightChangeFile(srcdirectory, f, prettierPath, prettierCfg):
 def doOperationsThatAskQuestions(srcdirectory, f, lines, prettierPath, prettierCfg):
     check_tests_referenced.checkText(f, lines)
     check_for_null_coalesce.checkText(f, lines)
-    check_for_long_lines.checkText(f, lines, prettierCfg)
+    assertTrue('../../src/vpc/**/*.ts' in allowLongerLinesOn)
+    assertTrue('../../src/vpcui/**/*.ts' in allowLongerLinesOn)
+    if '/src/vpc/' not in f.lower().replace('\\', '/') and '/src/vpcui/' not in f.lower().replace('\\', '/'):
+        check_for_long_lines.checkText(f, lines, prettierCfg)
     check_more.checkText(f, lines)
 
 if __name__ == '__main__':

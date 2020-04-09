@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512, isString } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
@@ -57,29 +57,14 @@ export class VpcGettableSerialization {
                 if (VpcGettableSerialization.propNameExpectFormattedText(propName)) {
                     if (isString(v)) {
                         let vAsText = FormattedText.newFromSerialized(v);
-                        VpcGettableSerialization.setAnyAndSendChangeNotification(
-                            vel,
-                            propName,
-                            vAsText
-                        );
+                        VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, vAsText);
                     } else {
-                        assertTrue(
-                            v instanceof FormattedText,
-                            'J`|not a string or FormattedText'
-                        );
-                        VpcGettableSerialization.setAnyAndSendChangeNotification(
-                            vel,
-                            propName,
-                            v
-                        );
+                        assertTrue(v instanceof FormattedText, 'J`|not a string or FormattedText');
+                        VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, v);
                     }
                 } else {
                     let decoded = VpcGettableSerialization.deserializePlain(v);
-                    VpcGettableSerialization.setAnyAndSendChangeNotification(
-                        vel,
-                        propName,
-                        decoded
-                    );
+                    VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, decoded);
                 }
             }
 
@@ -109,11 +94,7 @@ export class VpcGettableSerialization {
     /**
      * set a property, and set to 2 different values to ensure that the 'change' event is sent
      */
-    protected static setAnyAndSendChangeNotification(
-        vel: UI512Settable,
-        propName: string,
-        v: ElementObserverVal
-    ) {
+    protected static setAnyAndSendChangeNotification(vel: UI512Settable, propName: string, v: ElementObserverVal) {
         if (typeof v === 'boolean') {
             (vel as any)['_' + propName] = false;
             vel.set(propName, !v);
@@ -139,10 +120,7 @@ export class VpcGettableSerialization {
      * do we expect the type of this property to be a formattedtext
      */
     protected static propNameExpectFormattedText(propName: string) {
-        return (
-            propName === UI512Settable.fmtTxtVarName ||
-            propName.startsWith(UI512Settable.fmtTxtVarName + '_')
-        );
+        return bool(propName === UI512Settable.fmtTxtVarName) || bool(propName.startsWith(UI512Settable.fmtTxtVarName + '_'));
     }
 
     /**
@@ -156,14 +134,8 @@ export class VpcGettableSerialization {
      * use base64 if the string contains nonprintable or nonascii chars
      */
     static serializePlain(v: ElementObserverVal): ElementObserverVal {
-        if (
-            isString(v) &&
-            VpcGettableSerialization.containsNonSimpleAscii(v.toString())
-        ) {
-            return (
-                'b64``' +
-                VpcGettableSerialization.jsBinaryStringToUtf16Base64(v.toString())
-            );
+        if (isString(v) && VpcGettableSerialization.containsNonSimpleAscii(v.toString())) {
+            return 'b64``' + VpcGettableSerialization.jsBinaryStringToUtf16Base64(v.toString());
         } else {
             return v;
         }
@@ -175,9 +147,7 @@ export class VpcGettableSerialization {
     static deserializePlain(v: ElementObserverVal): ElementObserverVal {
         if (isString(v) && v.toString().startsWith('b64``')) {
             let s = v.toString();
-            return VpcGettableSerialization.Base64Utf16ToJsBinaryString(
-                s.substr('b64``'.length)
-            );
+            return VpcGettableSerialization.Base64Utf16ToJsBinaryString(s.substr('b64``'.length));
         } else {
             return v;
         }
@@ -190,10 +160,7 @@ export class VpcGettableSerialization {
         for (let i = 0, len = s.length; i < len; i++) {
             let c = s.charCodeAt(i);
             if (
-                (c < 32 &&
-                    c !== specialCharNumTab &&
-                    c !== specialCharNumNewline &&
-                    c !== specialCharNumFontChange) ||
+                (c < 32 && c !== specialCharNumTab && c !== specialCharNumNewline && c !== specialCharNumFontChange) ||
                 c >= 128
             ) {
                 return true;

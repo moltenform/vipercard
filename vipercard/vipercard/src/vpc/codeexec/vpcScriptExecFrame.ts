@@ -38,11 +38,7 @@ export class VpcExecFrame {
         this.locals.set('$result', VpcVal.Empty);
         this.locals.set('it', VpcVal.Empty);
         assertTrue(bool(this.message), '5N|message is null');
-        this.messageChain = VpcExecFrame.getMessageChain(
-            meId,
-            statedParentId,
-            tmpOutside
-        );
+        this.messageChain = VpcExecFrame.getMessageChain(meId, statedParentId, tmpOutside);
     }
 
     /* use to mark when a branch has been taken */
@@ -60,10 +56,7 @@ export class VpcExecFrame {
      */
     next() {
         this.offset += 1;
-        checkThrow(
-            this.offset < this.codeSection.lines.length,
-            '7n|went past end of code'
-        );
+        checkThrow(this.offset < this.codeSection.lines.length, '7n|went past end of code');
         checkThrow(
             this.codeSection.lines[this.offset].ctg !== VpcLineCategory.HandlerStart,
             '7m|we should never walk onto a handler start'
@@ -75,13 +68,9 @@ export class VpcExecFrame {
      */
     jumpToOffset(newOffset: number, okToStartHandler?: boolean) {
         this.offset = newOffset;
+        checkThrow(this.offset < this.codeSection.lines.length, '7l|went past end of code');
         checkThrow(
-            this.offset < this.codeSection.lines.length,
-            '7l|went past end of code'
-        );
-        checkThrow(
-            bool(okToStartHandler) ||
-                this.codeSection.lines[this.offset].ctg !== VpcLineCategory.HandlerStart,
+            bool(okToStartHandler) || this.codeSection.lines[this.offset].ctg !== VpcLineCategory.HandlerStart,
             '7k|we should never walk onto a handler start'
         );
 
@@ -91,11 +80,7 @@ export class VpcExecFrame {
         if (this.currentHandler === undefined) {
             this.currentHandler = next;
         } else {
-            checkThrow(
-                next === this.currentHandler,
-                '7i|jumping into a different handler is not allowed',
-                next
-            );
+            checkThrow(next === this.currentHandler, '7i|jumping into a different handler is not allowed', next);
             this.currentHandler = next;
         }
     }
@@ -114,11 +99,7 @@ export class VpcExecFrame {
     the stated parent let's us have snippets of code that run in the context of an element's script,
     but aren't actually in that script.
      */
-    static getMessageChain(
-        velId: string,
-        statedParent: O<string>,
-        outside: OutsideWorldReadWrite
-    ): string[] {
+    static getMessageChain(velId: string, statedParent: O<string>, outside: OutsideWorldReadWrite): string[] {
         let ret: string[] = [];
         let vel = outside.FindVelById(velId);
         let haveUsedStatedParent = false;
@@ -158,11 +139,7 @@ export class VpcExecFrame {
             }
 
             ret.push(vel.id);
-            if (
-                !haveUsedStatedParent &&
-                statedParent &&
-                outside.FindVelById(statedParent)
-            ) {
+            if (!haveUsedStatedParent && statedParent && outside.FindVelById(statedParent)) {
                 vel = outside.FindVelById(statedParent);
                 haveUsedStatedParent = true;
             } else {

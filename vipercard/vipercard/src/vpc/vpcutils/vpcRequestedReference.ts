@@ -80,10 +80,7 @@ export enum PrpTyp {
  * or a
  * function (dynamic code to retrieve the property)
  */
-export type PropGetter<T extends UI512Gettable> = [
-    PrpTyp,
-    string | ((me: T, cardId: string) => string | number | boolean)
-];
+export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T, cardId: string) => string | number | boolean)];
 
 /**
  * a vel prop-setter can be either a

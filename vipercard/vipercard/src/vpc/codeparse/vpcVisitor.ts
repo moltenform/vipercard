@@ -267,8 +267,13 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         }
 
         RuleLvl1Expression(ctx: VisitingContext): VpcVal {
-            if (!ctx.RuleLvl2Expression.length || ctx.RuleContainsOrGreaterLessEqual.length + 1 !== ctx.RuleLvl2Expression.length) {
-                throw makeVpcInternalErr(`RuleLvl1Expression:${ctx.RuleContainsOrGreaterLessEqual.length},${ctx.RuleLvl2Expression.length}.`);
+            if (
+                !ctx.RuleLvl2Expression.length ||
+                ctx.RuleContainsOrGreaterLessEqual.length + 1 !== ctx.RuleLvl2Expression.length
+            ) {
+                throw makeVpcInternalErr(
+                    `RuleLvl1Expression:${ctx.RuleContainsOrGreaterLessEqual.length},${ctx.RuleLvl2Expression.length}.`
+                );
             }
 
             let total = this.visit(ctx.RuleLvl2Expression[0]) as VpcVal;
@@ -328,7 +333,9 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
         RuleLvl5Expression(ctx: VisitingContext): VpcVal {
             if (!ctx.RuleLvl6Expression.length || ctx.tkMultDivideExpDivMod.length + 1 !== ctx.RuleLvl6Expression.length) {
-                throw makeVpcInternalErr(`RuleLvl5Expression:${ctx.tkMultDivideExpDivMod.length},${ctx.RuleLvl6Expression.length}.`);
+                throw makeVpcInternalErr(
+                    `RuleLvl5Expression:${ctx.tkMultDivideExpDivMod.length},${ctx.RuleLvl6Expression.length}.`
+                );
             }
 
             let total = this.visit(ctx.RuleLvl6Expression[0]) as VpcVal;

@@ -28,40 +28,25 @@ export class VpcIntroProvider {
     cbExitToMainMenu: () => void;
     cbExitToNewDocument: () => void;
     cbExitToOpen: (mineOnly: boolean) => void;
-    constructor(
-        public identifier: string,
-        public readonly docName: string,
-        public readonly loc: VpcDocumentLocation
-    ) {}
+    constructor(public identifier: string, public readonly docName: string, public readonly loc: VpcDocumentLocation) {}
 
     /**
      * begin async operation
      */
     startLoadDocument(currentCntrl: UI512Presenter, cbSetStatus: (s: string) => void) {
-        Util512Higher.syncToAsyncTransition(
-            () => this.startLoadDocumentAsync(currentCntrl, cbSetStatus),
-            'startLoadDocument'
-        );
+        Util512Higher.syncToAsyncTransition(() => this.startLoadDocumentAsync(currentCntrl, cbSetStatus), 'startLoadDocument');
     }
 
     /**
      * loads the document, showing a message on the "loading" page
      * if an error occurs. we'll show the exception details.
      */
-    async startLoadDocumentAsync(
-        currentCntrl: UI512Presenter,
-        cbSetStatus: (s: string) => void
-    ) {
+    async startLoadDocumentAsync(currentCntrl: UI512Presenter, cbSetStatus: (s: string) => void) {
         try {
             await this.startLoadDocumentAsyncImpl(currentCntrl);
         } catch (e) {
             cbSetStatus(
-                lng(
-                    'lngPlease go to \nhttps://www.vipercard.net/0.3/\nto return to the main menu.'
-                ) +
-                    '\n' +
-                    e.message +
-                    '\n\n\n'
+                lng('lngPlease go to \nhttps://www.vipercard.net/0.3/\nto return to the main menu.') + '\n' + e.message + '\n\n\n'
             );
         }
     }
@@ -99,10 +84,7 @@ export class VpcIntroProvider {
      */
     protected async getSerializedStackData() {
         let serializedSavedData = '';
-        if (
-            this.loc === VpcDocumentLocation.NewDoc ||
-            this.loc === VpcDocumentLocation.ShowLoginForm
-        ) {
+        if (this.loc === VpcDocumentLocation.NewDoc || this.loc === VpcDocumentLocation.ShowLoginForm) {
             /* no serialized data needed */
             assertEqWarn('', this.identifier, 'KL|');
         } else if (this.loc === VpcDocumentLocation.FromStaticDemo) {
@@ -111,9 +93,7 @@ export class VpcIntroProvider {
             assertTrue(!this.identifier.includes('\\'), 'KJ|');
             assertTrue(!this.identifier.includes('..'), 'KI|');
             assertTrue(this.identifier.endsWith('.json'), 'KH|');
-            let got = await Util512Higher.asyncBeginLoadJson(
-                '/resources/docs/' + this.identifier
-            );
+            let got = await Util512Higher.asyncBeginLoadJson('/resources/docs/' + this.identifier);
             serializedSavedData = JSON.stringify(got);
         } else if (this.loc === VpcDocumentLocation.FromJsonFile) {
             /* we already have the json, it was given to us via identifier */
@@ -145,9 +125,7 @@ export class VpcIntroProvider {
         await this.yieldTime();
         vpcState.runtime = new VpcRuntime();
         await this.yieldTime();
-        vpcState.undoManager = new UndoManager(() =>
-            vpcState.model.productOpts.getS('currentCardId')
-        );
+        vpcState.undoManager = new UndoManager(() => vpcState.model.productOpts.getS('currentCardId'));
         await this.yieldTime();
         vpcState.runtime.opts.observer = new ElementObserverNoOp();
         await this.yieldTime();
@@ -179,13 +157,8 @@ export class VpcIntroProvider {
         return { pr, fullVci, vpcState };
     }
 
-    protected async initPrUI(
-        pr: VpcPresenter,
-        serializedSavedData: string,
-        fullVci: VpcStateInterfaceImpl,
-        vpcState: VpcState,
-    ) {
-        let idGen = VpcSuperRewrite.CounterForUniqueNames
+    protected async initPrUI(pr: VpcPresenter, serializedSavedData: string, fullVci: VpcStateInterfaceImpl, vpcState: VpcState) {
+        let idGen = VpcSuperRewrite.CounterForUniqueNames;
         /* load saved data */
         if (serializedSavedData.length) {
             UndoableActionCreateOrDelVel.ensureModelNotEmpty(fullVci, false);
@@ -221,11 +194,7 @@ export class VpcIntroProvider {
     /**
      * compile scripts, set stack lineage
      */
-    protected async initPrSettings(
-        pr: VpcPresenter,
-        vci: VpcState,
-        fullVci: VpcStateInterfaceImpl
-    ) {
+    protected async initPrSettings(pr: VpcPresenter, vci: VpcState, fullVci: VpcStateInterfaceImpl) {
         /* create a new stack lineage */
         if (!vci.model.stack.getS('stacklineage').length) {
             fullVci.doWithoutAbilityToUndo(() => {
@@ -241,9 +210,7 @@ export class VpcIntroProvider {
 
         /* set current tool */
         let hasContent =
-            vci.model.stack.bgs[0] &&
-            vci.model.stack.bgs[0].cards[0] &&
-            bool(vci.model.stack.bgs[0].cards[0].parts[0]);
+            vci.model.stack.bgs[0] && vci.model.stack.bgs[0].cards[0] && bool(vci.model.stack.bgs[0].cards[0].parts[0]);
 
         if (
             this.identifier === 'demo_graphics.json' ||

@@ -58,9 +58,6 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
      * respond to backspace and edit->clear
      */
     onDeleteSelection() {
-        throw makeVpcInternalErr(
-            msgNotification +
-                lng('lngPlease press Backspace on the keyboard to \ndelete text.')
-        );
+        throw makeVpcInternalErr(msgNotification + lng('lngPlease press Backspace on the keyboard to \ndelete text.'));
     }
 }

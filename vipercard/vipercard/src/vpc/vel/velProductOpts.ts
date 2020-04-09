@@ -141,11 +141,7 @@ export class VpcElProductOpts extends VpcElBase {
                     s = 'watch';
                 }
 
-                let n = getStrToEnum<VpcCursors>(
-                    VpcCursors,
-                    `cursor ${s} not supported`,
-                    s
-                );
+                let n = getStrToEnum<VpcCursors>(VpcCursors, `cursor ${s} not supported`, s);
                 UI512CursorAccess.setCursor(n.valueOf());
             }
         ];
@@ -158,10 +154,7 @@ export class VpcElProductOpts extends VpcElBase {
                 } else if (!s || s === 'default') {
                     me.set('suggestedIdleRate', 'default');
                 } else {
-                    checkThrow(
-                        false,
-                        `Js|unsupported idlerate, try "faster" or "default"`
-                    );
+                    checkThrow(false, `Js|unsupported idlerate, try "faster" or "default"`);
                 }
             }
         ];
@@ -186,10 +179,7 @@ export class VpcElProductOpts extends VpcElBase {
      */
     static canGetProductProp(propName: string) {
         VpcElProductOpts.prodInit();
-        return (
-            bool(VpcElProductOpts.cachedGetters[propName]) ||
-            bool(VpcElProductOpts.cachedSetters[propName])
-        );
+        return bool(VpcElProductOpts.cachedGetters[propName]) || bool(VpcElProductOpts.cachedSetters[propName]);
     }
 
     /**
@@ -218,7 +208,7 @@ export class VpcElProductOpts extends VpcElBase {
         );
     }
 
-    static productOptsScript = VpcStandardLibScript.script
+    static productOptsScript = VpcStandardLibScript.script;
 }
 
 /**

@@ -60,25 +60,11 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
                 let [srcw, srch] = theimg.getSize();
                 tx -= Math.round(srcw / 2);
                 ty -= Math.round(srch / 2);
-                this.cbPaintRender().commitHtmlImageOntoImage(
-                    theimg.image,
-                    tx,
-                    ty,
-                    srcw,
-                    srch
-                );
+                this.cbPaintRender().commitHtmlImageOntoImage(theimg.image, tx, ty, srcw, srch);
             }
-        } else if (
-            !isVelOrBg &&
-            d.elRaw &&
-            d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceLeft')
-        ) {
+        } else if (!isVelOrBg && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceLeft')) {
             this.onChooseCategory();
-        } else if (
-            !isVelOrBg &&
-            d.elRaw &&
-            d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceRight')
-        ) {
+        } else if (!isVelOrBg && d.elRaw && d.elRaw.id.endsWith('grpVpcAppUIToolStampChoiceRight')) {
             this.onChoosePicture();
         }
     }
@@ -146,9 +132,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
                 this.currentImg = undefined;
                 if (el.getFmTxt().len() > 0) {
                     /* auto-choose the first one */
-                    let rghtgel = new UI512ElTextFieldAsGeneric(
-                        cast(el, UI512ElTextField)
-                    );
+                    let rghtgel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
                     TextSelModify.selectLineInField(rghtgel, 0);
                     this.onChoosePicture();
                 }
@@ -221,20 +205,8 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         bg.setDimensions(px, py, pw, ph);
 
         /* draw category choices */
-        let lft = UI512ElTextField.makeChoiceBox(
-            this.vci.UI512App(),
-            grp,
-            'grpVpcAppUIToolStampChoiceLeft',
-            px + 15,
-            py + 15
-        );
-        let rght = UI512ElTextField.makeChoiceBox(
-            this.vci.UI512App(),
-            grp,
-            'grpVpcAppUIToolStampChoiceRight',
-            px + 170,
-            py + 15
-        );
+        let lft = UI512ElTextField.makeChoiceBox(this.vci.UI512App(), grp, 'grpVpcAppUIToolStampChoiceLeft', px + 15, py + 15);
+        let rght = UI512ElTextField.makeChoiceBox(this.vci.UI512App(), grp, 'grpVpcAppUIToolStampChoiceRight', px + 170, py + 15);
 
         /* draw status icon */
         let statusicon = new UI512ElButton('grpVpcAppUIToolStampStatus');

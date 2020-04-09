@@ -20,11 +20,7 @@ export abstract class VpcAppUIToolBase {
     cbScheduleScriptEventSend: (d: EventDetails) => void;
 
     constructor(protected bounds: number[], protected userBounds: number[]) {}
-    abstract respondMouseDown(
-        tl: VpcTool,
-        d: MouseDownEventDetails,
-        isVelOrBg: boolean
-    ): void;
+    abstract respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void;
     abstract cancelCurrentToolAction(): void;
     abstract whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors;
     respondMouseMove(tl: VpcTool, d: MouseMoveEventDetails, isVelOrBg: boolean): void {}
@@ -36,18 +32,12 @@ export abstract class VpcAppUIToolBase {
     protected getTranslatedCoords(mouseX: number, mouseY: number) {
         /* get coordinates relative to user area */
         let tmouseX =
-            fitIntoInclusive(
-                mouseX,
-                this.vci.userBounds()[0],
-                this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1
-            ) - this.vci.userBounds()[0];
+            fitIntoInclusive(mouseX, this.vci.userBounds()[0], this.vci.userBounds()[0] + this.vci.userBounds()[2] - 1) -
+            this.vci.userBounds()[0];
 
         let tmouseY =
-            fitIntoInclusive(
-                mouseY,
-                this.vci.userBounds()[1],
-                this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1
-            ) - this.vci.userBounds()[1];
+            fitIntoInclusive(mouseY, this.vci.userBounds()[1], this.vci.userBounds()[1] + this.vci.userBounds()[3] - 1) -
+            this.vci.userBounds()[1];
 
         return [tmouseX, tmouseY];
     }

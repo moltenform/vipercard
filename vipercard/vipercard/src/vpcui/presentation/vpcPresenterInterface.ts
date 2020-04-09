@@ -44,19 +44,10 @@ export abstract class VpcPresenterInterface extends UI512Presenter {
     lyrNonModalDlgHolder: VpcLyrNonModalHolder;
     cameFromDemoSoNeverPromptSave: string;
 
-    abstract askMsg(
-        prompt: string,
-        defText: string,
-        fnOnResult: (ret: O<string>, n: number) => void
-    ): void;
+    abstract askMsg(prompt: string, defText: string, fnOnResult: (ret: O<string>, n: number) => void): void;
     abstract exit(s: string): void;
     abstract askMsgAsync(prompt: string, defText: string): Promise<[O<string>, number]>;
-    abstract answerMsgAsync(
-        prompt: string,
-        choice1?: string,
-        choice2?: string,
-        choice3?: string
-    ): Promise<number>;
+    abstract answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number>;
     abstract isDocDirty(): boolean;
     abstract showError(scriptErr: VpcScriptErrorBase): void;
     abstract getSerializedStack(): string;

@@ -48,10 +48,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
         let fn = async () => {
             let result: (string | ArrayBuffer)[] | VpcSession;
             try {
-                result = await vpcUsersCheckLogin(
-                    paramFields['username'],
-                    paramFields['pw']
-                );
+                result = await vpcUsersCheckLogin(paramFields['username'], paramFields['pw']);
             } catch (e) {
                 /* login was not successful, no such user or wrong password */
                 this.setStatus(`lngDid not log in, ${e}`);
@@ -93,11 +90,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
         let fn = async () => {
             let result: VpcSession;
             try {
-                result = await vpcUsersEnterEmailVerifyCode(
-                    paramFields['username'],
-                    keybuffer,
-                    paramFields['codeEmailVerify']
-                );
+                result = await vpcUsersEnterEmailVerifyCode(paramFields['username'], keybuffer, paramFields['codeEmailVerify']);
             } catch (e) {
                 /* login was not successful -- prob wrong password */
                 this.setStatus(`${e}`);
@@ -173,16 +166,9 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
         }
 
         let btnnewAccount = grp.getEl(this.getElId('btnnewAccount'));
-        btnnewAccount.setDimensions(
-            btnnewAccount.x - 10,
-            btnnewAccount.y,
-            btnnewAccount.w + 10,
-            btnnewAccount.h
-        );
+        btnnewAccount.setDimensions(btnnewAccount.x - 10, btnnewAccount.y, btnnewAccount.w + 10, btnnewAccount.h);
         if (this.autoFillUsername) {
-            grp.getEl(this.getElId('fldusername')).setFmTxt(
-                FormattedText.newFromUnformatted(this.autoFillUsername)
-            );
+            grp.getEl(this.getElId('fldusername')).setFmTxt(FormattedText.newFromUnformatted(this.autoFillUsername));
         }
 
         /* sometimes it makes more sense not to allow creating new users,

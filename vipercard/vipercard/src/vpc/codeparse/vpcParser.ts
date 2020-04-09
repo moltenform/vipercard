@@ -20,56 +20,50 @@ export class VpcChvParser extends chevrotain.CstParser {
 
     /* generated code, any changes past this point will be lost: --------------- */
 
-    RuleHAllPropertiesThatCouldBeUnary = this.RULE(
-        'RuleHAllPropertiesThatCouldBeUnary',
-        () => {
-            this.OR1([
-                {
-                    ALT: () => {
-                        this.CONSUME1(tks.tkAllUnaryPropertiesIfNotAlready);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.CONSUME1(tks._id);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.CONSUME1(tks._marked);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.CONSUME1(tks._number);
-                    }
+    RuleHAllPropertiesThatCouldBeUnary = this.RULE('RuleHAllPropertiesThatCouldBeUnary', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkAllUnaryPropertiesIfNotAlready);
                 }
-            ]);
-        }
-    );
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._id);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._marked);
+                }
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks._number);
+                }
+            }
+        ]);
+    });
 
-    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary = this.RULE(
-        'RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary',
-        () => {
-            this.OR1([
-                {
-                    ALT: () => {
-                        this.SUBRULE1(this.RuleHAnyFnName);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
-                    }
+    RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary = this.RULE('RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary', () => {
+        this.OR1([
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHAnyFnName);
                 }
-            ]);
-        }
-    );
+            },
+            {
+                ALT: () => {
+                    this.CONSUME1(tks.tkAllNullaryOrUnaryPropertiesIfNotAlready);
+                }
+            }
+        ]);
+    });
 
     RuleHAnyFnName = this.RULE('RuleHAnyFnName', () => {
         this.OR1([
@@ -749,16 +743,13 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleExpr);
     });
 
-    RuleHOldStyleFnNullaryOrNullaryPropGet = this.RULE(
-        'RuleHOldStyleFnNullaryOrNullaryPropGet',
-        () => {
-            this.CONSUME1(tks._the);
-            this.OPTION1(() => {
-                this.CONSUME1(tks.tkAdjective);
-            });
-            this.SUBRULE1(this.RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary);
-        }
-    );
+    RuleHOldStyleFnNullaryOrNullaryPropGet = this.RULE('RuleHOldStyleFnNullaryOrNullaryPropGet', () => {
+        this.CONSUME1(tks._the);
+        this.OPTION1(() => {
+            this.CONSUME1(tks.tkAdjective);
+        });
+        this.SUBRULE1(this.RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary);
+    });
 
     RuleHGenericFunctionCall = this.RULE('RuleHGenericFunctionCall', () => {
         this.OR1({
@@ -1172,15 +1163,12 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleExpr);
     });
 
-    RuleBuiltinCmdVpccalluntrappablechoose = this.RULE(
-        'RuleBuiltinCmdVpccalluntrappablechoose',
-        () => {
-            this.CONSUME1(tks.tkSyntaxPlaceholder);
-            this.CONSUME2(tks.tkSyntaxPlaceholder);
-            this.CONSUME3(tks.tkSyntaxPlaceholder);
-            this.SUBRULE1(this.RuleExpr);
-        }
-    );
+    RuleBuiltinCmdVpccalluntrappablechoose = this.RULE('RuleBuiltinCmdVpccalluntrappablechoose', () => {
+        this.CONSUME1(tks.tkSyntaxPlaceholder);
+        this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
+        this.SUBRULE1(this.RuleExpr);
+    });
 
     RuleBuiltinCmdClick = this.RULE('RuleBuiltinCmdClick', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
@@ -1253,18 +1241,15 @@ export class VpcChvParser extends chevrotain.CstParser {
         });
     });
 
-    RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE(
-        'RuleBuiltinCmdVpccalluntrappabledomenu',
-        () => {
-            this.CONSUME1(tks.tkSyntaxPlaceholder);
-            this.CONSUME2(tks.tkSyntaxPlaceholder);
-            this.SUBRULE1(this.RuleExpr);
-            this.OPTION1(() => {
-                this.CONSUME1(tks.tkComma);
-                this.SUBRULE2(this.RuleExpr);
-            });
-        }
-    );
+    RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE('RuleBuiltinCmdVpccalluntrappabledomenu', () => {
+        this.CONSUME1(tks.tkSyntaxPlaceholder);
+        this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.SUBRULE1(this.RuleExpr);
+        this.OPTION1(() => {
+            this.CONSUME1(tks.tkComma);
+            this.SUBRULE2(this.RuleExpr);
+        });
+    });
 
     RuleBuiltinCmdDrag = this.RULE('RuleBuiltinCmdDrag', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
@@ -1304,40 +1289,37 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.SUBRULE1(this.RuleObjectBtn);
     });
 
-    RuleBuiltinCmdInternalvpcgocardimpl = this.RULE(
-        'RuleBuiltinCmdInternalvpcgocardimpl',
-        () => {
-            this.CONSUME1(tks.tkSyntaxPlaceholder);
-            this.CONSUME2(tks.tkSyntaxPlaceholder);
-            this.CONSUME1(tks.tkStringLiteral);
-            this.CONSUME1(tks.tkIdentifier);
-            this.OPTION1(() => {
-                this.CONSUME1(tks._to);
-            });
-            this.OR1([
-                {
-                    ALT: () => {
-                        this.CONSUME2(tks.tkStringLiteral);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.SUBRULE1(this.RuleHBuiltinCmdGoDest);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.SUBRULE1(this.RuleOrdinal);
-                    }
-                },
-                {
-                    ALT: () => {
-                        this.SUBRULE1(this.RulePosition);
-                    }
+    RuleBuiltinCmdInternalvpcgocardimpl = this.RULE('RuleBuiltinCmdInternalvpcgocardimpl', () => {
+        this.CONSUME1(tks.tkSyntaxPlaceholder);
+        this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME1(tks.tkStringLiteral);
+        this.CONSUME1(tks.tkIdentifier);
+        this.OPTION1(() => {
+            this.CONSUME1(tks._to);
+        });
+        this.OR1([
+            {
+                ALT: () => {
+                    this.CONSUME2(tks.tkStringLiteral);
                 }
-            ]);
-        }
-    );
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleHBuiltinCmdGoDest);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RuleOrdinal);
+                }
+            },
+            {
+                ALT: () => {
+                    this.SUBRULE1(this.RulePosition);
+                }
+            }
+        ]);
+    });
 
     RuleHBuiltinCmdGoDest = this.RULE('RuleHBuiltinCmdGoDest', () => {
         this.OR1([

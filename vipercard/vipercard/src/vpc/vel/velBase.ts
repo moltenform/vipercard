@@ -98,9 +98,7 @@ export abstract class VpcElBase extends UI512Settable {
                 throw makeVpcScriptErr(`4)|invalid PrpTyp ${type} for el id ${this.id}`);
             }
         } else {
-            throw makeVpcScriptErr(
-                `4(|unknown property ${propName} for el id ${this.id}`
-            );
+            throw makeVpcScriptErr(`4(|unknown property ${propName} for el id ${this.id}`);
         }
     }
 
@@ -137,9 +135,7 @@ export abstract class VpcElBase extends UI512Settable {
                 throw makeVpcScriptErr(`4#|invalid PrpTyp ${type} for el id ${this.id}`);
             }
         } else {
-            throw makeVpcScriptErr(
-                `4!|unknown property ${propName} for el id ${this.id}`
-            );
+            throw makeVpcScriptErr(`4!|unknown property ${propName} for el id ${this.id}`);
         }
     }
 
@@ -179,21 +175,13 @@ export abstract class VpcElBase extends UI512Settable {
      * throw if not found
      */
     static getIndexById<T extends VpcElBase>(list: T[], id: string) {
-        return throwIfUndefined(
-            VpcElBase.findIndexById(list, id),
-            '4 |id not found in this list',
-            id
-        );
+        return throwIfUndefined(VpcElBase.findIndexById(list, id), '4 |id not found in this list', id);
     }
 
     /**
      * find a child element by name
      */
-    static findByName<T extends VpcElBase>(
-        list: VpcElBase[],
-        name: string,
-        type: VpcElType
-    ) {
+    static findByName<T extends VpcElBase>(list: VpcElBase[], name: string, type: VpcElType) {
         for (let i = 0, len = list.length; i < len; i++) {
             let item = list[i];
             if (item._name === name) {
@@ -209,17 +197,8 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * look for a child element by ordinal ("first", "next")
      */
-    static findByOrdinal<T extends VpcElBase>(
-        list: VpcElBase[],
-        currentIndex: number,
-        pos: OrdinalOrPosition
-    ) {
-        let index = getPositionFromOrdinalOrPosition(
-            pos,
-            currentIndex,
-            0,
-            list.length - 1
-        );
+    static findByOrdinal<T extends VpcElBase>(list: VpcElBase[], currentIndex: number, pos: OrdinalOrPosition) {
+        let index = getPositionFromOrdinalOrPosition(pos, currentIndex, 0, list.length - 1);
         return list[index] ? (list[index] as T) : undefined;
     }
 
@@ -241,28 +220,18 @@ export abstract class VpcElBase extends UI512Settable {
         }
     }
 
-    getPossiblyCardSpecific(
-        key: string,
-        defaultVal: ElementObserverVal,
-        cardId: string
-    ): ElementObserverVal {
+    getPossiblyCardSpecific(key: string, defaultVal: ElementObserverVal, cardId: string): ElementObserverVal {
         if (this.isCardSpecificContent(key)) {
             let specificKey = key + '_oncard_' + cardId;
             let curVal = (this as any)['_' + specificKey];
-            return bool(curVal === null) || bool(curVal === undefined)
-                ? defaultVal
-                : curVal;
+            return bool(curVal === null) || bool(curVal === undefined) ? defaultVal : curVal;
         } else {
             return (this as any)['_' + key];
         }
     }
 
     getCardFmTxt(cardId: string): FormattedText {
-        let got = this.getPossiblyCardSpecific(
-            UI512Settable.fmtTxtVarName,
-            new FormattedText(),
-            cardId
-        );
+        let got = this.getPossiblyCardSpecific(UI512Settable.fmtTxtVarName, new FormattedText(), cardId);
         let gotAsTxt = got as FormattedText;
         checkThrow(gotAsTxt && gotAsTxt.isFormattedText, 'not FormattedText');
         return gotAsTxt;
@@ -270,12 +239,7 @@ export abstract class VpcElBase extends UI512Settable {
 
     setCardFmTxt(cardId: string, newTxt: FormattedText, context = ChangeContext.Default) {
         newTxt.lock();
-        this.setPossiblyCardSpecific(
-            UI512Settable.fmtTxtVarName,
-            newTxt,
-            new FormattedText(),
-            cardId
-        );
+        this.setPossiblyCardSpecific(UI512Settable.fmtTxtVarName, newTxt, new FormattedText(), cardId);
     }
 }
 
@@ -296,13 +260,7 @@ export abstract class VpcElSizable extends VpcElBase {
     /**
      * a quick way to set dimensions of an object
      */
-    setDimensions(
-        newX: number,
-        newY: number,
-        newW: number,
-        newH: number,
-        context = ChangeContext.Default
-    ) {
+    setDimensions(newX: number, newY: number, newW: number, newH: number, context = ChangeContext.Default) {
         checkThrow(newW >= 0, `7H|width must be >= 0 but got ${newW}`);
         checkThrow(newH >= 0, `7G|height must be >= 0 but got ${newH}`);
         this.set('x', newX, context);
@@ -322,19 +280,9 @@ export abstract class VpcElSizable extends VpcElBase {
         getters['right'] = [PrpTyp.Num, (me: VpcElSizable) => me._x + me._w];
         getters['bottom'] = [PrpTyp.Num, (me: VpcElSizable) => me._y + me._h];
         getters['topleft'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y}`];
-        getters['botright'] = [
-            PrpTyp.Str,
-            (me: VpcElSizable) => `${me._x + me._w},${me._y + me._h}`
-        ];
-        getters['rect'] = [
-            PrpTyp.Str,
-            (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`
-        ];
-        getters['loc'] = [
-            PrpTyp.Str,
-            (me: VpcElSizable) =>
-                `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`
-        ];
+        getters['botright'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + me._w},${me._y + me._h}`];
+        getters['rect'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`];
+        getters['loc'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`];
         getters['bottomright'] = getters['botright'];
         getters['rectangle'] = getters['rect'];
         getters['location'] = getters['loc'];
@@ -344,46 +292,19 @@ export abstract class VpcElSizable extends VpcElBase {
      * define size setters
      */
     static initSizeSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
-        setters['width'] = [
-            PrpTyp.Num,
-            (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, n, me._h)
-        ];
-        setters['height'] = [
-            PrpTyp.Num,
-            (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, me._w, n)
-        ];
-        setters['left'] = [
-            PrpTyp.Num,
-            (me: VpcElSizable, n: number) => me.setDimensions(n, me._y, me._w, me._h)
-        ];
-        setters['top'] = [
-            PrpTyp.Num,
-            (me: VpcElSizable, n: number) => me.setDimensions(me._x, n, me._w, me._h)
-        ];
-        setters['right'] = [
-            PrpTyp.Num,
-            (me: VpcElSizable, n: number) =>
-                me.setDimensions(n - me._w, me._y, me._w, me._h)
-        ];
-        setters['bottom'] = [
-            PrpTyp.Num,
-            (me: VpcElSizable, n: number) =>
-                me.setDimensions(me._x, n - me._h, me._w, me._h)
-        ];
+        setters['width'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, n, me._h)];
+        setters['height'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, me._w, n)];
+        setters['left'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(n, me._y, me._w, me._h)];
+        setters['top'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n, me._w, me._h)];
+        setters['right'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(n - me._w, me._y, me._w, me._h)];
+        setters['bottom'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n - me._h, me._w, me._h)];
         setters['topleft'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) =>
-                me.setDimensions(coord(me, s, 0), coord(me, s, 1), me._w, me._h)
+            (me: VpcElSizable, s: string) => me.setDimensions(coord(me, s, 0), coord(me, s, 1), me._w, me._h)
         ];
         setters['botright'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) =>
-                me.setDimensions(
-                    me._x,
-                    me._y,
-                    coord(me, s, 0) - me._x,
-                    coord(me, s, 1) - me._y
-                )
+            (me: VpcElSizable, s: string) => me.setDimensions(me._x, me._y, coord(me, s, 0) - me._x, coord(me, s, 1) - me._y)
         ];
         setters['rect'] = [
             PrpTyp.Str,
@@ -417,14 +338,8 @@ export abstract class VpcElSizable extends VpcElBase {
  */
 function coord(me: VpcElBase, s: string, whichCoord: number): number {
     let pts = s.split(',');
-    checkThrow(
-        whichCoord < pts.length,
-        `7F|could not get coord ${whichCoord + 1} of ${s}`
-    );
+    checkThrow(whichCoord < pts.length, `7F|could not get coord ${whichCoord + 1} of ${s}`);
     VpcValS(pts[whichCoord]).isItAStrictIntegerImpl(me.tmpArray);
-    checkThrow(
-        me.tmpArray[0] && typeof me.tmpArray[1] === 'number',
-        `7E|coord ${whichCoord + 1} of ${s} is not an integer`
-    );
+    checkThrow(me.tmpArray[0] && typeof me.tmpArray[1] === 'number', `7E|coord ${whichCoord + 1} of ${s} is not an integer`);
     return me.tmpArray[1];
 }

@@ -47,13 +47,7 @@ export class VpcRewriteForCommands {
         if (line[1].image === 'file' || line[1].image === 'program') {
             return [this.hBuildNyi('ask ' + line[1].image, line[0])];
         }
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(
-            line,
-            line[0],
-            'password',
-            false,
-            ','
-        );
+        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'password', false, ',');
         VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
         return [line];
     }
@@ -65,11 +59,7 @@ export class VpcRewriteForCommands {
                 .map(t => t.image)
                 .join(' ');
             return [
-                [
-                    line[0],
-                    BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
-                    BuildFakeTokens.inst.makeStringLiteral(line[0], s)
-                ]
+                [line[0], BuildFakeTokens.inst.makeSyntaxMarker(line[0]), BuildFakeTokens.inst.makeStringLiteral(line[0], s)]
             ];
         } else {
             VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'tool', true);
@@ -123,25 +113,43 @@ export class VpcRewriteForCommands {
             return [this.hBuildNyi('doMenu without dialog', line[0])];
         } else {
             if (line.length === 4) {
-                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b"`)
-                checkThrowEq(tks.tkStringLiteral, line[2].tokenType, `currently need string literals - doMenu "a", "b" not doMenu a, b`)
+                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b"`);
+                checkThrowEq(
+                    tks.tkStringLiteral,
+                    line[2].tokenType,
+                    `currently need string literals - doMenu "a", "b" not doMenu a, b`
+                );
             } else if (line.length !== 2) {
-                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b", unexpected length`)
+                checkThrowEq(tks.tkComma, line[2].tokenType, `syntax is doMenu "a", "b", unexpected length`);
             }
 
             // but if it has to be a string literal, we can't pass it and trap it. work needed.
-            checkThrowEq(tks.tkStringLiteral, line[2].tokenType, `currently need string literals - doMenu "a", "b" not doMenu a, b`)
-            let s = line[2].image.toLowerCase()
-            let isGoCard = { first:1, next:1, last:1, prev:1, previous:1, back:1, forth:1, push:2, pop:2 }
-            let isGoCardN = isGoCard[s]
+            checkThrowEq(
+                tks.tkStringLiteral,
+                line[2].tokenType,
+                `currently need string literals - doMenu "a", "b" not doMenu a, b`
+            );
+            let s = line[2].image.toLowerCase();
+            let isGoCard = {
+                first: 1,
+                next: 1,
+                last: 1,
+                prev: 1,
+                previous: 1,
+                back: 1,
+                forth: 1,
+                push: 2,
+                pop: 2
+            };
+            let isGoCardN = isGoCard[s];
             if (isGoCardN) {
                 if (isGoCardN === 2) {
-                    s = '"' + s + '"'
+                    s = '"' + s + '"';
                 }
-                let template = `go ${s}`
-                return VpcSuperRewrite.go(template, line[0], [])
+                let template = `go ${s}`;
+                return VpcSuperRewrite.go(template, line[0], []);
             }
-            checkThrow(false, "not yet implemented")
+            checkThrow(false, 'not yet implemented');
             // rewrite domenu "delete card" to go
         }
     }
@@ -174,23 +182,13 @@ export class VpcRewriteForCommands {
         return VpcSuperRewrite.go(template, line[0], [line.slice(1)]);
     }
     rewriteGo(line: ChvITk[]): ChvITk[][] {
-        checkThrow(
-            line.length > 1,
-            "8k|can't have just 'go' on its own. try 'go next' or 'go prev' "
-        );
+        checkThrow(line.length > 1, "8k|can't have just 'go' on its own. try 'go next' or 'go prev' ");
         let shouldSuspendHistory = 'false';
-        if (
-            line[1].image === 'back' ||
-            line[1].image === 'forth' ||
-            line[1].image === 'recent'
-        ) {
+        if (line[1].image === 'back' || line[1].image === 'forth' || line[1].image === 'recent') {
             shouldSuspendHistory = 'true';
         }
         let shouldSuspendHistoryPush = 'false';
-        if (
-            line[1].image.replace(/"/g, '') === 'push' ||
-            line[1].image.replace(/"/g, '') === 'pop'
-        ) {
+        if (line[1].image.replace(/"/g, '') === 'push' || line[1].image.replace(/"/g, '') === 'pop') {
             shouldSuspendHistoryPush = 'true';
         }
 
@@ -247,15 +245,15 @@ return 0`,
         checkThrow(line.length >= 2, 'not enough args');
         checkThrowEq(tks.tkCard, line[1], 'must be pop *card*');
         if (line.length === 2) {
-            let fakedCode = VpcSuperRewrite.go('go "pop"', line[0], [])
-            return this.rewriteGo(fakedCode[0])
+            let fakedCode = VpcSuperRewrite.go('go "pop"', line[0], []);
+            return this.rewriteGo(fakedCode[0]);
         } else {
             let newCode = `
 builtinInternalVpcMoveCardImpl "gettarget" c%UNIQUE% "pop"
-put the result %ARG0%`
-            let gen = VpcSuperRewrite.go(newCode, line[0], [line.slice(2)])
-            let fixedPut = this.rewritePut(gen[1])
-            return [gen[0], fixedPut[0]]
+put the result %ARG0%`;
+            let gen = VpcSuperRewrite.go(newCode, line[0], [line.slice(2)]);
+            let fixedPut = this.rewritePut(gen[1]);
+            return [gen[0], fixedPut[0]];
         }
     }
     rewritePlay(line: ChvITk[]): ChvITk[][] {
@@ -265,8 +263,8 @@ put the result %ARG0%`
     rewritePush(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length === 2, 'expect 2 args');
         checkThrowEq(tks.tkCard, line[1], 'must be push *card*');
-        let fakedCode = VpcSuperRewrite.go('go "push"', line[0], [])
-        return this.rewriteGo(fakedCode[0])
+        let fakedCode = VpcSuperRewrite.go('go "push"', line[0], []);
+        return this.rewriteGo(fakedCode[0]);
     }
     rewritePut(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
@@ -275,11 +273,7 @@ put the result %ARG0%`
         for (let i = 0; i < line.length; i++) {
             let tk = line[i];
             if (tk.image === 'into' || tk.image === 'before' || tk.image === 'after') {
-                checkThrowEq(
-                    -1,
-                    foundPreposition,
-                    '5#|expected to only see one of into, before, or after...'
-                );
+                checkThrowEq(-1, foundPreposition, '5#|expected to only see one of into, before, or after...');
                 foundPreposition = i;
             }
         }
@@ -294,20 +288,11 @@ put the result %ARG0%`
             /* you can say `put 1+1` to add to the message box */
             foundPreposition = line.length;
             line.push(VpcSuperRewrite.tokenFromEnglishTerm('into', line[0]));
-            line.push(
-                VpcSuperRewrite.tokenFromEnglishTerm(
-                    LogToReplMsgBox.redirectThisVariableToMsgBox,
-                    line[0]
-                )
-            );
+            line.push(VpcSuperRewrite.tokenFromEnglishTerm(LogToReplMsgBox.redirectThisVariableToMsgBox, line[0]));
         }
 
         /* transform to put "abc" (TkSyntaxMarker) into (TkSyntaxMarker) x */
-        line.splice(
-            foundPreposition + 1,
-            0,
-            BuildFakeTokens.inst.makeSyntaxMarker(line[0])
-        );
+        line.splice(foundPreposition + 1, 0, BuildFakeTokens.inst.makeSyntaxMarker(line[0]));
         line.splice(foundPreposition, 0, BuildFakeTokens.inst.makeSyntaxMarker(line[0]));
         return [line];
     }
@@ -345,17 +330,12 @@ put the result %ARG0%`
             }
 
             checkThrow(
-                line[startContainer].tokenType === tks.tkChunkGranularity ||
-                    'text' === line[startContainer].image,
+                line[startContainer].tokenType === tks.tkChunkGranularity || 'text' === line[startContainer].image,
                 'we only support `select *text* of` or `select char 2 of'
             );
             if ('text' === line[startContainer].image) {
                 startContainer += 1;
-                checkThrowEq(
-                    'of',
-                    line[startContainer].image,
-                    'we only support `select text *of*`'
-                );
+                checkThrowEq('of', line[startContainer].image, 'we only support `select text *of*`');
                 startContainer += 1;
             }
 
@@ -366,14 +346,7 @@ put the result %ARG0%`
     }
     rewriteShow(line: ChvITk[]): ChvITk[][] {
         for (let unsupportedTerm of ['all', 'menu', 'picture', 'window']) {
-            if (
-                VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(
-                    0,
-                    line,
-                    line[0],
-                    unsupportedTerm
-                ) !== -1
-            ) {
+            if (VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], unsupportedTerm) !== -1) {
                 return [this.hBuildNyi(`the show ${unsupportedTerm} command`, line[0])];
             }
         }
@@ -400,12 +373,7 @@ put the result %ARG0%`
             if (t.image === 'ascending' || t.image === 'descending') {
                 lastOpt = i;
                 sortOptions['order'] = t.image;
-            } else if (
-                t.image === 'text' ||
-                t.image === 'numeric' ||
-                t.image === 'international' ||
-                t.image === 'dateTime'
-            ) {
+            } else if (t.image === 'text' || t.image === 'numeric' || t.image === 'international' || t.image === 'dateTime') {
                 lastOpt = i;
                 sortOptions['method'] = t.image;
             } else if (t.image === 'lines' || t.image === 'items') {
@@ -437,16 +405,8 @@ put the result %ARG0%`
             return cmd;
         } else {
             // let's build a sort here! use decorate-sort-undecorate
-            if (
-                sortOptions['granularity'] !== 'items' &&
-                sortOptions['granularity'] !== 'lines'
-            ) {
-                return [
-                    this.hBuildNyi(
-                        'for expr, we only support sorting by lines or items',
-                        line[0]
-                    )
-                ];
+            if (sortOptions['granularity'] !== 'items' && sortOptions['granularity'] !== 'lines') {
+                return [this.hBuildNyi('for expr, we only support sorting by lines or items', line[0])];
             }
 
             /* check_long_lines_silence_subsequent */
@@ -476,11 +436,7 @@ if length ( content%UNIQUE% ) then
     put char 1 to (the length of result%UNIQUE% - the length of ${delimExpr}) of result%UNIQUE% %INTO% result%UNIQUE%
     put result%UNIQUE% %INTO% %ARG0%
 end if`;
-            return VpcSuperRewrite.go(template, line[0], [
-                containerExpression,
-                byExpr,
-                cmd[0]
-            ]);
+            return VpcSuperRewrite.go(template, line[0], [containerExpression, byExpr, cmd[0]]);
         }
     }
     rewriteStart(line: ChvITk[]): ChvITk[][] {
@@ -533,15 +489,9 @@ repeat
 end repeat`;
             return VpcSuperRewrite.go(template, line[0], [line.slice(2)]);
         } else {
-            let asQuantity = findStrToEnum<MapTermToMilliseconds>(
-                MapTermToMilliseconds,
-                last(line).image
-            );
+            let asQuantity = findStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, last(line).image);
             if (asQuantity) {
-                line[line.length - 1] = BuildFakeTokens.inst.makeStringLiteral(
-                    line[0],
-                    last(line).image
-                );
+                line[line.length - 1] = BuildFakeTokens.inst.makeStringLiteral(line[0], last(line).image);
             }
 
             return [line];
@@ -561,30 +511,16 @@ end repeat`;
             } else if (t.image === 'very') {
                 opts['speedmodify'] = t.image;
             } else {
-                let foundMethod = findStrToEnum<VpcVisualEffectType>(
-                    VpcVisualEffectType,
-                    t.image
-                );
-                let foundModifier = findStrToEnum<VpcVisualEffectTypeModifier>(
-                    VpcVisualEffectTypeModifier,
-                    t.image
-                );
-                let foundDest = findStrToEnum<VpcVisualEffectTypeDestination>(
-                    VpcVisualEffectTypeDestination,
-                    t.image
-                );
+                let foundMethod = findStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, t.image);
+                let foundModifier = findStrToEnum<VpcVisualEffectTypeModifier>(VpcVisualEffectTypeModifier, t.image);
+                let foundDest = findStrToEnum<VpcVisualEffectTypeDestination>(VpcVisualEffectTypeDestination, t.image);
                 if (foundMethod) {
                     opts['method'] = t.image;
                 } else if (foundModifier) {
                     opts['modifier'] = t.image;
                 } else if (foundDest) {
                     opts['dest'] = t.image;
-                } else if (
-                    t.image !== 'to' &&
-                    t.image !== 'from' &&
-                    t.image !== 'door' &&
-                    t.image !== 'blinds'
-                ) {
+                } else if (t.image !== 'to' && t.image !== 'from' && t.image !== 'door' && t.image !== 'blinds') {
                     checkThrow(false, 'unknown visual effect term', t.image);
                 }
             }
@@ -599,22 +535,13 @@ end repeat`;
 
     hBuildNyi(msg: string, basis: ChvITk) {
         return [
-            BuildFakeTokens.inst.makeTk(
-                basis,
-                tks.tkIdentifier,
-                'internalShowNyiMessage'
-            ),
+            BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, 'internalShowNyiMessage'),
             BuildFakeTokens.inst.makeStringLiteral(basis, msg)
         ];
     }
 
     hReturnNyiIfMenuMentionedOutsideParens(line: ChvITk[]): ChvITk[][] {
-        let found = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(
-            0,
-            line,
-            line[0],
-            'menu'
-        );
+        let found = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'menu');
         if (found !== -1) {
             return [this.hBuildNyi('deleting from a menu', line[0])];
         } else {

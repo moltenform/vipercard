@@ -35,18 +35,9 @@ export class VpcVal extends VpcIntermedValBase {
     constructor(v: string, token: unknown) {
         super();
 
-        assertTrue(
-            token === allowUsingVpcValConstructor,
-            "66|please don't use the VpcVal constructor directly"
-        );
-        assertTrue(
-            v !== null && v !== undefined,
-            '65|tried to set string as null or undefined'
-        );
-        checkThrow(
-            v.length < CodeLimits.MaxStringLength,
-            '8w|exceeded max string length'
-        );
+        assertTrue(token === allowUsingVpcValConstructor, "66|please don't use the VpcVal constructor directly");
+        assertTrue(v !== null && v !== undefined, '65|tried to set string as null or undefined');
+        checkThrow(v.length < CodeLimits.MaxStringLength, '8w|exceeded max string length');
         this.v = v;
     }
 
@@ -295,8 +286,8 @@ export class IntermedMapOfIntermedVals extends VpcIntermedValBase {
         }
     }
 
-    static getOrdinalOrPosition(v:IntermedMapOfIntermedVals, keyname:string) {
+    static getOrdinalOrPosition(v: IntermedMapOfIntermedVals, keyname: string) {
         // rules like HOrdinal are actually an enum, not a string
-        return v.vals[keyname][0] as any as OrdinalOrPosition
+        return (v.vals[keyname][0] as any) as OrdinalOrPosition;
     }
 }

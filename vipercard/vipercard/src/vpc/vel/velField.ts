@@ -58,9 +58,7 @@ export class VpcElField extends VpcElSizable {
 
     /* e.g. a background field has different content on every card */
     isCardSpecificContent(key: string): boolean {
-        return (
-            !this.getB('sharedtext') && (bool(key === 'scroll') || bool(key === 'ftxt'))
-        );
+        return !this.getB('sharedtext') && (bool(key === 'scroll') || bool(key === 'ftxt'));
     }
 
     /**
@@ -83,11 +81,7 @@ export class VpcElField extends VpcElSizable {
      * from internal textfont to "geneva_12_biuosdce"
      */
     getFontAsUI512() {
-        let spec = new TextFontSpec(
-            this.getS('textfont'),
-            this.getN('textstyle'),
-            this.getN('textsize')
-        );
+        let spec = new TextFontSpec(this.getS('textfont'), this.getN('textstyle'), this.getN('textsize'));
         return spec.toSpecString();
     }
 
@@ -95,11 +89,7 @@ export class VpcElField extends VpcElSizable {
      * for convenience, get the default font as ui512
      */
     getDefaultFontAsUi512() {
-        let spec = new TextFontSpec(
-            this.getS('defaulttextfont'),
-            this.getN('defaulttextstyle'),
-            this.getN('defaulttextsize')
-        );
+        let spec = new TextFontSpec(this.getS('defaulttextfont'), this.getN('defaulttextstyle'), this.getN('defaulttextsize'));
         return spec.toSpecString();
     }
 
@@ -119,14 +109,10 @@ export class VpcElField extends VpcElSizable {
     static fldGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['singleline'] = [PrpTyp.Bool, 'singleline'];
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
-        getters['alltext'] = [
-            PrpTyp.Str,
-            (me: VpcElField, cardId: string) => me.getCardFmTxt(cardId).toUnformatted()
-        ];
+        getters['alltext'] = [PrpTyp.Str, (me: VpcElField, cardId: string) => me.getCardFmTxt(cardId).toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField) =>
-                SubstringStyleComplex.vpcStyleFromInt(me._defaulttextstyle)
+            (me: VpcElField) => SubstringStyleComplex.vpcStyleFromInt(me._defaulttextstyle)
         ];
         getters['style'] = [
             PrpTyp.Str,
@@ -159,11 +145,7 @@ export class VpcElField extends VpcElSizable {
         setters['style'] = [
             PrpTyp.Str,
             (me: VpcElField, s: string, cardId: string) => {
-                let styl = getStrToEnum<VpcFldStyleInclScroll>(
-                    VpcFldStyleInclScroll,
-                    'Field style or "scrolling"',
-                    s
-                );
+                let styl = getStrToEnum<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, 'Field style or "scrolling"', s);
                 me.set('style', styl);
 
                 /* changing style resets scroll amount */
@@ -223,9 +205,7 @@ export class VpcElField extends VpcElSizable {
                 } else if (s === 'center') {
                     me.set('textalign', 'center');
                 } else {
-                    throw makeVpcScriptErr(
-                        `4y|we don't currently support setting text align to ${s}`
-                    );
+                    throw makeVpcScriptErr(`4y|we don't currently support setting text align to ${s}`);
                 }
             }
         ];
@@ -235,9 +215,7 @@ export class VpcElField extends VpcElSizable {
             (me: VpcElField, b: boolean, cardId: string) => {
                 me.set('singleline', b);
                 if (b) {
-                    let hasNewLine = me
-                        .getCardFmTxt(cardId)
-                        .indexOf(specialCharNumNewline);
+                    let hasNewLine = me.getCardFmTxt(cardId).indexOf(specialCharNumNewline);
                     if (hasNewLine !== -1) {
                         let newTxt = new FormattedText();
                         newTxt.appendSubstring(me.getCardFmTxt(cardId), 0, hasNewLine);
@@ -277,11 +255,7 @@ export class VpcElField extends VpcElSizable {
         if (!VpcElField.cachedGetters || !VpcElField.cachedSetters) {
             VpcElField.cachedGetters = {};
             VpcElField.cachedSetters = {};
-            VpcElBase.simpleGetSet(
-                VpcElField.cachedGetters,
-                VpcElField.cachedSetters,
-                VpcElField.simpleFldGetSet()
-            );
+            VpcElBase.simpleGetSet(VpcElField.cachedGetters, VpcElField.cachedSetters, VpcElField.simpleFldGetSet());
             VpcElField.fldGetters(VpcElField.cachedGetters);
             VpcElSizable.initSizeGetters(VpcElField.cachedGetters);
             VpcElField.fldSetters(VpcElField.cachedSetters);
@@ -294,41 +268,17 @@ export class VpcElField extends VpcElSizable {
     /**
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
-    specialSetPropChunkImpl(
-        cardId: string,
-        prop: string,
-        s: string,
-        charstart: number,
-        charend: number
-    ): void {
+    specialSetPropChunkImpl(cardId: string, prop: string, s: string, charstart: number, charend: number): void {
         let newTxt = this.getCardFmTxt(cardId).getUnlockedCopy();
         let len = charend - charstart;
         if (prop === 'textstyle') {
             let list = s.split(',').map(item => item.trim());
-            SubstringStyleComplex.setChunkTextStyle(
-                newTxt,
-                this.getDefaultFontAsUi512(),
-                charstart,
-                len,
-                list
-            );
+            SubstringStyleComplex.setChunkTextStyle(newTxt, this.getDefaultFontAsUi512(), charstart, len, list);
         } else if (prop === 'textfont') {
-            SubstringStyleComplex.setChunkTextFace(
-                newTxt,
-                this.getDefaultFontAsUi512(),
-                charstart,
-                len,
-                s
-            );
+            SubstringStyleComplex.setChunkTextFace(newTxt, this.getDefaultFontAsUi512(), charstart, len, s);
         } else if (prop === 'textsize') {
             let n = VpcValS(s).readAsStrictInteger();
-            SubstringStyleComplex.setChunkTextSize(
-                newTxt,
-                this.getDefaultFontAsUi512(),
-                charstart,
-                len,
-                n
-            );
+            SubstringStyleComplex.setChunkTextSize(newTxt, this.getDefaultFontAsUi512(), charstart, len, n);
         } else {
             throw makeVpcScriptErr(
                 longstr(`4x|can only say 'set the (prop) of char 1 to 2'
@@ -342,12 +292,7 @@ export class VpcElField extends VpcElSizable {
     /**
      * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
      */
-    specialGetPropChunkImpl(
-        cardId: string,
-        prop: string,
-        charstart: number,
-        charend: number
-    ): string {
+    specialGetPropChunkImpl(cardId: string, prop: string, charstart: number, charend: number): string {
         let len = charend - charstart;
         if (prop === 'textstyle') {
             /* returns comma-delimited styles, or the string 'mixed' */
@@ -411,13 +356,7 @@ export class VpcElField extends VpcElSizable {
     /**
      * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
      */
-    specialSetPropChunk(
-        cardId: string,
-        prop: string,
-        chunk: RequestedChunk,
-        val: VpcVal,
-        itemDel: string
-    ) {
+    specialSetPropChunk(cardId: string, prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
         let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
         return this.specialSetPropChunkImpl(cardId, prop, val.readAsString(), start, end);
     }
@@ -425,12 +364,7 @@ export class VpcElField extends VpcElSizable {
     /**
      * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
      */
-    specialGetPropChunk(
-        cardId: string,
-        prop: string,
-        chunk: RequestedChunk,
-        itemDel: string
-    ): VpcVal {
+    specialGetPropChunk(cardId: string, prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
         let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
         return VpcValS(this.specialGetPropChunkImpl(cardId, prop, start, end));
     }
@@ -445,11 +379,7 @@ export class VpcElField extends VpcElSizable {
  * we need to update the _VpcElField_ model first
  */
 export class VpcTextFieldAsGeneric implements GenericTextField {
-    constructor(
-        protected el512: UI512ElTextField,
-        protected impl: VpcElField,
-        protected cardId: string
-    ) {}
+    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected cardId: string) {}
 
     setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
         this.impl.setCardFmTxt(this.cardId, newTxt, context);

@@ -46,10 +46,7 @@ export class VpcAppLyrToolbox extends VpcUILayer {
         this.toolsPatterns.x = this.toolsMain.x;
         this.toolsPatterns.y = this.toolsNav.y + ToolboxDims.ToolbarHeight;
         this.toolsPatterns.callbackOnChange = s => this.toolsPatternsRespondClicked(s);
-        this.toolsPatternsDefaultLoc = VpcToolboxPatterns.layout(
-            this.toolsPatterns,
-            this.vci
-        );
+        this.toolsPatternsDefaultLoc = VpcToolboxPatterns.layout(this.toolsPatterns, this.vci);
     }
 
     /**
@@ -61,11 +58,7 @@ export class VpcAppLyrToolbox extends VpcUILayer {
 
         /* position toolboxes according to fullscreen mode */
         this.toolsMain.setVisible(this.vci.UI512App(), true);
-        this.toolsNav.moveAllTo(
-            this.toolsNavDefaultLoc[0],
-            this.toolsNavDefaultLoc[1],
-            this.vci.UI512App()
-        );
+        this.toolsNav.moveAllTo(this.toolsNavDefaultLoc[0], this.toolsNavDefaultLoc[1], this.vci.UI512App());
 
         /* main toolbox */
         this.toolsMain.setWhich(this.vci.UI512App(), findEnumToStr(VpcTool, currentTool));
@@ -76,14 +69,8 @@ export class VpcAppLyrToolbox extends VpcUILayer {
         this.toolsNav.refreshNavIcons(this.vci.UI512App(), codeRunning, cardNum);
 
         /* patterns toolbox */
-        this.toolsPatterns.setVisible(
-            this.vci.UI512App(),
-            currentTool === VpcTool.Bucket
-        );
-        this.toolsPatterns.setWhich(
-            this.vci.UI512App(),
-            this.vci.getOptionS('currentPattern')
-        );
+        this.toolsPatterns.setVisible(this.vci.UI512App(), currentTool === VpcTool.Bucket);
+        this.toolsPatterns.setWhich(this.vci.UI512App(), this.vci.getOptionS('currentPattern'));
     }
 
     /**
@@ -152,10 +139,7 @@ export class VpcAppLyrToolbox extends VpcUILayer {
             }
 
             short = this.toolsMain.fromFullId(el.id);
-            if (
-                short &&
-                (short.includes('choice##button') || short.includes('choice##field'))
-            ) {
+            if (short && (short.includes('choice##button') || short.includes('choice##field'))) {
                 return true;
             }
         }

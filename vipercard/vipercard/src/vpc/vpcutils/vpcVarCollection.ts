@@ -9,10 +9,7 @@
 export class VarCollection extends MapKeyToObjectCanSet<VpcVal> {
     protected length = 0;
     protected readonly limitReason: string;
-    constructor(
-        protected readonly limit: number,
-        protected readonly nameOfCollection: string
-    ) {
+    constructor(protected readonly limit: number, protected readonly nameOfCollection: string) {
         super();
         this.limitReason = `exceeded max ${nameOfCollection} vars ${limit}`;
     }
@@ -111,8 +108,6 @@ export class VariableCollectionConstants extends VarCollection {
     }
 
     set(varName: string, val: VpcVal) {
-        throw makeVpcInternalErr(
-            "5~|we don't support creating a new constant " + varName
-        );
+        throw makeVpcInternalErr("5~|we don't support creating a new constant " + varName);
     }
 }

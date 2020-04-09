@@ -89,11 +89,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get state id, for undo/redo and seeing if a stack is dirty/needs to be saved
      */
     getCurrentStateId(): string {
-        return (
-            this.vcstate &&
-            this.vcstate.undoManager &&
-            this.vcstate.undoManager.getCurrentStateId()
-        );
+        return this.vcstate && this.vcstate.undoManager && this.vcstate.undoManager.getCurrentStateId();
     }
 
     /**
@@ -130,10 +126,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * re-add a vel to the model
      */
     rawRevive(readded: VpcElBase) {
-        checkThrow(
-            !this.getCodeExec().isCodeRunning(),
-            "8#|currently can't add or remove an element while code is running"
-        );
+        checkThrow(!this.getCodeExec().isCodeRunning(), "8#|currently can't add or remove an element while code is running");
 
         this.causeFullRedraw();
         readded.observer = this.vcstate.runtime.useThisObserverForVpcEls;
@@ -143,11 +136,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     /**
      * create a new vel on its own
      */
-    rawCreate<T extends VpcElBase>(
-        velId: string,
-        parentId: string,
-        ctr: { new (...args: any[]): T }
-    ): T {
+    rawCreate<T extends VpcElBase>(velId: string, parentId: string, ctr: { new (...args: any[]): T }): T {
         this.causeFullRedraw();
         let vel = new ctr(velId, parentId);
         checkThrow(vel && vel.isVpcElBase, `8*|must be a VpcElBase`);
@@ -159,12 +148,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     /**
      * create a new vel and add it to the model
      */
-    createVel(
-        parentId: string,
-        type: VpcElType,
-        insertIndex: number,
-        specifyId?: string
-    ): VpcElBase {
+    createVel(parentId: string, type: VpcElType, insertIndex: number, specifyId?: string): VpcElBase {
         return this.vcstate.createVel(parentId, type, insertIndex, specifyId);
     }
 
@@ -193,10 +177,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * record changes made for undo
      */
     undoableAction(fn: () => void, typ: O<TypeOfUndoAction>) {
-        this.vcstate.undoManager.undoableAction(
-            fn,
-            typ ?? TypeOfUndoAction.StartNewAction
-        );
+        this.vcstate.undoManager.undoableAction(fn, typ ?? TypeOfUndoAction.StartNewAction);
     }
 
     /**

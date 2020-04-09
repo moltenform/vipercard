@@ -66,9 +66,7 @@ export class VpcEvalHelpers {
             let f = a.readAsStrictNumeric(this.tmp1);
             return VpcValN(-f);
         } else if (op === '+') {
-            throw makeVpcScriptErr(
-                `5{|syntax error, "+" in the wrong place. we can't evaluate something like 2*(+3)`
-            );
+            throw makeVpcScriptErr(`5{|syntax error, "+" in the wrong place. we can't evaluate something like 2*(+3)`);
         } else {
             throw makeVpcInternalErr(`9f|unknown unary operation ${op}`);
         }
@@ -81,17 +79,12 @@ export class VpcEvalHelpers {
         let a = aIn as VpcVal;
         let b = bIn as VpcVal;
         if (!a || !b || !a.isVpcVal || !b.isVpcVal) {
-            throw makeVpcInternalErr(
-                `5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`
-            );
+            throw makeVpcInternalErr(`5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`);
         }
 
         if (opClass === VpcOpCtg.OpLogicalOrAnd) {
             return this.evalOpLogicalOrAnd(a, b, op, opClass);
-        } else if (
-            opClass === VpcOpCtg.OpEqualityGreaterLessOrContains &&
-            op !== 'contains'
-        ) {
+        } else if (opClass === VpcOpCtg.OpEqualityGreaterLessOrContains && op !== 'contains') {
             a.isItNumericImpl(this.tmp1);
             b.isItNumericImpl(this.tmp2);
             if (this.tmp1[0] && this.tmp2[0]) {
@@ -99,16 +92,9 @@ export class VpcEvalHelpers {
             } else {
                 return this.evalOpStringComparison(a, b, op, opClass);
             }
-        } else if (
-            opClass === VpcOpCtg.OpStringConcat ||
-            opClass === VpcOpCtg.OpStringWithin ||
-            op === 'contains'
-        ) {
+        } else if (opClass === VpcOpCtg.OpStringConcat || opClass === VpcOpCtg.OpStringWithin || op === 'contains') {
             return this.evalOpStrings(a, b, op, opClass);
-        } else if (
-            opClass === VpcOpCtg.OpPlusMinus ||
-            opClass === VpcOpCtg.OpMultDivideExpDivMod
-        ) {
+        } else if (opClass === VpcOpCtg.OpPlusMinus || opClass === VpcOpCtg.OpMultDivideExpDivMod) {
             return this.evalOpMath(a, b, op, opClass);
         } else {
             throw makeVpcInternalErr(`5>|unknown opClass ${opClass} ${op}`);
@@ -164,12 +150,7 @@ export class VpcEvalHelpers {
     /**
      * evaluate string comparison (both arguments strings)
      */
-    protected evalOpStringComparison(
-        a: VpcVal,
-        b: VpcVal,
-        op: string,
-        opClass: VpcOpCtg
-    ) {
+    protected evalOpStringComparison(a: VpcVal, b: VpcVal, op: string, opClass: VpcOpCtg) {
         let av = a.readAsString();
         let bv = b.readAsString();
         switch (op) {
@@ -252,10 +233,7 @@ export class VpcEvalHelpers {
      * get list of numbers from a list of strings
      */
     protected numberListFromStrings(fnname: string, sAr: string[]): number[] {
-        checkThrow(
-            sAr.length > 0,
-            `8s|Wrong number of arguments given to ${fnname}, need at least 1`
-        );
+        checkThrow(sAr.length > 0, `8s|Wrong number of arguments given to ${fnname}, need at least 1`);
         return sAr.map(s => {
             if (s.match(/^\s*$/)) {
                 return 0.0;
@@ -272,10 +250,7 @@ export class VpcEvalHelpers {
      * should do the same thing.
      */
     numberListFromArgsGiven(fnname: string, vAr: VpcVal[], sep: string): number[] {
-        checkThrow(
-            vAr.length > 0,
-            `8r|Wrong number of arguments given to ${fnname}, need at least 1`
-        );
+        checkThrow(vAr.length > 0, `8r|Wrong number of arguments given to ${fnname}, need at least 1`);
         checkThrowEq(1, sep.length, `8q|numberListFromArgsGiven`);
         if (vAr.length === 1 && !vAr[0].isItNumeric()) {
             /* following what the emulator seems to do. */

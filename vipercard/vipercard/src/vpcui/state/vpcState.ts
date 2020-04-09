@@ -33,12 +33,7 @@ export class VpcState {
     /**
      * create an element and add it to the model
      */
-    createVel(
-        parentId: string,
-        type: VpcElType,
-        insertIndex = -1,
-        newId: O<string> = undefined
-    ) {
+    createVel(parentId: string, type: VpcElType, insertIndex = -1, newId: O<string> = undefined) {
         if (!newId) {
             let nextId = this.model.stack.getN('increasingnumberforid');
             this.model.stack.set('increasingnumberforid', nextId + 1);
@@ -68,10 +63,7 @@ export class VpcState {
             /* if deleting a card, first delete all of its children */
             let partsToRemove: VpcElBase[] = [];
             for (let part of vel.parts) {
-                assertTrue(
-                    part instanceof VpcElButton || part instanceof VpcElField,
-                    '6M|bad type'
-                );
+                assertTrue(part instanceof VpcElButton || part instanceof VpcElField, '6M|bad type');
                 partsToRemove.push(part);
             }
 

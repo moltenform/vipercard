@@ -7,7 +7,7 @@
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { O, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, bool, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObject, cast } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverDefault } from './../../ui512/elements/ui512ElementGettable';
 
@@ -44,10 +44,7 @@ export class VpcModelTop {
     /**
      * look for a vel of specified type by id, returns undefined if not found
      */
-    findById<T extends VpcElBase>(
-        id: O<string>,
-        ctor: { new (...args: any[]): T }
-    ): O<T> {
+    findById<T extends VpcElBase>(id: O<string>, ctor: { new (...args: any[]): T }): O<T> {
         let vel = this.elements.find(id);
         return vel ? cast(vel, ctor, id) : undefined;
     }
@@ -119,10 +116,7 @@ export class VpcModelTop {
             } else {
                 return velAsBg.cards[0];
             }
-        } else if (
-            (velAsBtn && velAsBtn.isVpcElButton) ||
-            (velAsFld && velAsFld.isVpcElField)
-        ) {
+        } else if ((velAsBtn && velAsBtn.isVpcElButton) || (velAsFld && velAsFld.isVpcElField)) {
             let parent = this.getByIdUntyped(vel.parentId);
             return this.getParentCardOfElement(parent);
         } else {
@@ -136,10 +130,7 @@ export class VpcModelTop {
     getCurrentCard() {
         let cardId = this.productOpts.getS('currentCardId');
         let found = this.getById(cardId, VpcElCard);
-        checkThrow(
-            found && found.isVpcElCard && found.getType() === VpcElType.Card,
-            '79|getCurrentCard failed'
-        );
+        checkThrow(found && found.isVpcElCard && found.getType() === VpcElType.Card, '79|getCurrentCard failed');
         return found;
     }
 
@@ -148,9 +139,7 @@ export class VpcModelTop {
      */
     getCardRelative(pos: OrdinalOrPosition) {
         let curcardid =
-            pos === OrdinalOrPosition.First || pos === OrdinalOrPosition.Last
-                ? ''
-                : this.getCurrentCard().id;
+            bool(pos === OrdinalOrPosition.First) || bool(pos === OrdinalOrPosition.Last) ? '' : this.getCurrentCard().id;
         let found = this.stack.getCardByOrdinal(curcardid, pos);
         return found.id;
     }

@@ -38,10 +38,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
     /**
      * construct and set dimensions
      */
-    constructor(
-        protected vci: VpcStateInterface,
-        protected makeALoginClass: () => VpcNonModalFormLoginInterface
-    ) {
+    constructor(protected vci: VpcStateInterface, protected makeALoginClass: () => VpcNonModalFormLoginInterface) {
         super('VpcNonModalFormNewUser' + Math.random());
         VpcNonModalFormBase.standardWindowBounds(this, vci);
     }
@@ -91,11 +88,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
         let fn = async () => {
             let result: boolean;
             try {
-                result = await vpcUsersCreate(
-                    paramFields['username'],
-                    paramFields['pw'],
-                    paramFields['email']
-                );
+                result = await vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email']);
             } catch (e) {
                 this.setStatus('lng ' + e.toString());
                 return;

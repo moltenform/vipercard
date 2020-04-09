@@ -21,9 +21,7 @@ export class CheckReservedWords {
 
     isBuiltinVarOrConstant(s: string): boolean {
         /* "pi", "result" */
-        return (
-            bool(this.constants.find(s)) || bool(s === 'result') || bool(s === '$result')
-        );
+        return bool(this.constants.find(s)) || bool(s === 'result') || bool(s === '$result');
     }
 
     isPropertyName(s: string): boolean {
@@ -38,8 +36,7 @@ export class CheckReservedWords {
 
     isKeyword(s: string): boolean {
         /* "put" "do" "replace" */
-        let isCmd =
-            listOfAllBuiltinCommandsInOriginalProduct[s.toLowerCase()] !== undefined;
+        let isCmd = listOfAllBuiltinCommandsInOriginalProduct[s.toLowerCase()] !== undefined;
 
         /* "from", "with", "to", "end" */
         return isCmd || bool(alsoReservedWordsList[s]);
@@ -49,22 +46,14 @@ export class CheckReservedWords {
         checkThrow(slength(s), `7)|invalid identifier ${s}`);
         return (
             this.isBuiltinHandler(s) ||
-            (!this.isKeyword(s) &&
-                !this.isPropertyName(s) &&
-                !this.isBuiltinFunction(s) &&
-                !this.isBuiltinVarOrConstant(s))
+            (!this.isKeyword(s) && !this.isPropertyName(s) && !this.isBuiltinFunction(s) && !this.isBuiltinVarOrConstant(s))
         );
     }
 
     okLocalVar(s: string) {
         // new: local variables can be property names.
         checkThrow(slength(s), `7(|invalid identifier ${s}`);
-        return (
-            !this.isKeyword(s) &&
-            !this.isBuiltinHandler(s) &&
-            !this.isBuiltinFunction(s) &&
-            !this.isBuiltinVarOrConstant(s)
-        );
+        return !this.isKeyword(s) && !this.isBuiltinHandler(s) && !this.isBuiltinFunction(s) && !this.isBuiltinVarOrConstant(s);
     }
 
     potentialUserFn(s: string) {

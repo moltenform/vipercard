@@ -29,9 +29,7 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
 
         if (!this.state) {
             let state = new SmearToolState();
-            let elStage = this.cbPaintRender().makeAndAddFullsizeEl(
-                'VpcAppUIToolSmearSelectStage'
-            );
+            let elStage = this.cbPaintRender().makeAndAddFullsizeEl('VpcAppUIToolSmearSelectStage');
             elStage.transparentToClicks = true;
             elStage.setCanvas(this.cbPaintRender().getTemporaryCanvas(1));
             state.elStage = elStage;
@@ -45,11 +43,7 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
 
         /* also draw where the user clicked. */
         this.state.mode = SmearToolMode.Dragging;
-        this.respondMouseMove(
-            tl,
-            new MouseMoveEventDetails(0, d.mouseX, d.mouseY, d.mouseX, d.mouseY),
-            true
-        );
+        this.respondMouseMove(tl, new MouseMoveEventDetails(0, d.mouseX, d.mouseY, d.mouseX, d.mouseY), true);
     }
 
     /**
@@ -64,12 +58,7 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
             let [tprevX, tprevY] = this.getTranslatedCoords(d.prevMouseX, d.prevMouseY);
             let [tnX, tnY] = this.getTranslatedCoords(d.mouseX, d.mouseY);
 
-            this.cbPaintRender().drawPartialSmear(
-                [tprevX, tnX],
-                [tprevY, tnY],
-                this.state.elStage,
-                this.state.paStage
-            );
+            this.cbPaintRender().drawPartialSmear([tprevX, tnX], [tprevY, tnY], this.state.elStage, this.state.paStage);
         }
     }
 
@@ -78,11 +67,7 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
      */
     respondMouseUp(tl: VpcTool, d: MouseUpEventDetails, isVelOrBg: boolean): void {
         if (this.state && this.state.mode === SmearToolMode.Dragging) {
-            this.cbPaintRender().commitImageOntoImage(
-                [this.state.elStage.getCanvasForWrite()],
-                0,
-                0
-            );
+            this.cbPaintRender().commitImageOntoImage([this.state.elStage.getCanvasForWrite()], 0, 0);
             this.onLeaveTool();
             this.onOpenTool();
         }

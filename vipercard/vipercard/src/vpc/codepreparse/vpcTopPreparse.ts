@@ -97,21 +97,13 @@ export namespace VpcCodeProcessor {
         let lexed = lexer.tokenize(code);
         if (lexed.errors.length) {
             latestSrcLineSeen.val = lexed.errors[0].line;
-            let errmsg = lexed.errors[0].message
-                .toString()
-                .substr(0, CodeLimits.LimitChevErr);
+            let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErr);
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
 
-        let splitter = new SplitIntoLinesAndMakeLowercase(
-            lexed.tokens,
-            new MakeLowerCase()
-        );
+        let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, new MakeLowerCase());
         let rewrites = new VpcRewriteForCommands();
-        let exp = new ExpandCustomFunctions(
-            VpcSuperRewrite.CounterForUniqueNames,
-            new CheckReservedWords()
-        );
+        let exp = new ExpandCustomFunctions(VpcSuperRewrite.CounterForUniqueNames, new CheckReservedWords());
         let lines: ChvITk[][] = [];
         while (true) {
             let next = splitter.next();
@@ -150,10 +142,7 @@ export namespace VpcCodeProcessor {
                         branchProcessor.go(lineObj);
                         totalOutput[lineNumber] = lineObj;
                         lineNumber += 1;
-                        checkThrow(
-                            lineNumber < CodeLimits.MaxLinesInScript,
-                            'maxLinesInScript'
-                        );
+                        checkThrow(lineNumber < CodeLimits.MaxLinesInScript, 'maxLinesInScript');
 
                         /* save memory, we don't need this anymore */
                         lineObj.tmpEntireLine = undefined;
@@ -176,18 +165,9 @@ export namespace VpcCodeProcessor {
         }
     }
 
-    function stage2Process(
-        line: ChvITk[],
-        rewrites: VpcRewriteForCommands
-    ): O<ChvITk[][]> {
+    function stage2Process(line: ChvITk[], rewrites: VpcRewriteForCommands): O<ChvITk[][]> {
         let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image);
-        return Util512.callAsMethodOnClass(
-            'VpcRewriteForCommands',
-            rewrites,
-            methodName,
-            [line],
-            true
-        ) as O<ChvITk[][]>;
+        return Util512.callAsMethodOnClass('VpcRewriteForCommands', rewrites, methodName, [line], true) as O<ChvITk[][]>;
     }
 
     function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions): ChvITk[][] {
@@ -195,10 +175,7 @@ export namespace VpcCodeProcessor {
         return exp.go(line);
     }
 
-    export function go(
-        code: string,
-        velIdForErrMsg: string
-    ): VpcScriptSyntaxError | VpcParsedCodeCollection {
+    export function go(code: string, velIdForErrMsg: string): VpcScriptSyntaxError | VpcParsedCodeCollection {
         assertTrue(!code.match(/^\s*$/), '');
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
@@ -227,10 +204,7 @@ export class VpcParsedCodeCollection {
     isVpcParsedCodeCollection = true;
     protected _handlerStarts: number[];
     protected _handlers: MapKeyToObject<VpcCodeLineReference>;
-    constructor(
-        protected map: MapKeyToObject<VpcCodeLineReference>,
-        public lines: VpcCodeLine[]
-    ) {
+    constructor(protected map: MapKeyToObject<VpcCodeLineReference>, public lines: VpcCodeLine[]) {
         this._handlers = map;
         this._handlerStarts = map.getVals().map(h => h.offset);
         this._handlerStarts.sort(util512Sort);

@@ -225,7 +225,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.vel.lookByName = 'there is no selection';
                 let selFld = this.outside.GetSelectedField();
                 if (selFld) {
-                    let generic = new VpcTextFieldAsGeneric((-1 as unknown) as UI512ElTextField, selFld, this.outside.GetCurrentCardId());
+                    let generic = new VpcTextFieldAsGeneric(
+                        (-1 as unknown) as UI512ElTextField,
+                        selFld,
+                        this.outside.GetCurrentCardId()
+                    );
                     let bounds = TextSelModify.getSelectedTextBounds(generic);
                     if (bounds) {
                         ret.vel = new RequestedVelRef(VpcElType.Fld);
@@ -237,7 +241,10 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RuleObjectPart[0]) {
                 ret.vel = this.visit(ctx.RuleObjectPart[0]);
                 checkThrow(ret.vel && ret.vel.isRequestedVelRef, `9a|internal error, not an element reference`);
-                checkThrow(ret.vel && ret.vel.type === VpcElType.Fld, `9Z|we do not currently allow placing text into btns, or retrieving text from btns, please fields instead`);
+                checkThrow(
+                    ret.vel && ret.vel.type === VpcElType.Fld,
+                    `9Z|we do not currently allow placing text into btns, or retrieving text from btns, please fields instead`
+                );
             } else if (ctx.RuleHAnyAllowedVariableName[0]) {
                 let token = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
                 ret.variable = token.image;
@@ -251,7 +258,10 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
             checkThrow(ret.isRequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
             if (ctx.RuleHChunk[0]) {
-                checkThrow(!ret.chunk, `a chunk has already been set. for example, we don't currently support 'put "a" into char 2 of the selection`);
+                checkThrow(
+                    !ret.chunk,
+                    `a chunk has already been set. for example, we don't currently support 'put "a" into char 2 of the selection`
+                );
                 ret.chunk = this.visit(ctx.RuleHChunk[0]);
                 checkThrow(ret.chunk && ret.chunk.isRequestedChunk, `9W|chunk not valid`);
             }
@@ -393,7 +403,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHUnaryPropertyGet(ctx: VisitingContext): VpcVal {
             let propName = this.visit(ctx.HAllPropertiesThatCouldBeUnary[0]).image;
-            let adjective = ctx.tkAdjective[0] ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image) : PropAdjective.Empty;
+            let adjective = ctx.tkAdjective[0]
+                ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
+                : PropAdjective.Empty;
             checkThrow(!ctx.RuleWindow[0], "don't yet support looking up property on window");
             checkThrow(!ctx.RuleMenuItem[0], "don't yet support looking up property on menuitem");
             checkThrow(!ctx.RuleMenu[0], "don't yet support looking up property on menu");
@@ -420,7 +432,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHOldStyleFnNullaryOrNullaryPropGet(ctx: VisitingContext): VpcVal {
-            let adjective = ctx.tkAdjective[0] ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image) : PropAdjective.Empty;
+            let adjective = ctx.tkAdjective[0]
+                ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
+                : PropAdjective.Empty;
             let fnOrPropName = this.visit(ctx.HAnyFnNameOrAllPropertiesThatCouldBeNullary[0]).image;
             if (this.outside.IsProductProp(fnOrPropName)) {
                 let refProductOps = new RequestedVelRef(VpcElType.Product);

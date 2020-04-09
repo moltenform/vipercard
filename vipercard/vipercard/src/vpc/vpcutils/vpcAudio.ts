@@ -61,9 +61,7 @@ export class VpcAudio {
      * will interrupt a sound that is currently playing
      */
     static play(key: string) {
-        let aud = window.document.getElementById(
-            'vpcaudiohtmlel' + key
-        ) as HTMLAudioElement;
+        let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
         if (aud) {
             VpcAudio.playAsyncImpl(aud);
             return true;
@@ -135,10 +133,7 @@ export class VpcPhoneDial {
     protected static intoArray(s: string): number[] {
         let ret: number[] = [];
         for (let i = 0; i < s.length; i++) {
-            if (
-                s.charCodeAt(i) >= '0'.charCodeAt(0) &&
-                s.charCodeAt(i) <= '9'.charCodeAt(0)
-            ) {
+            if (s.charCodeAt(i) >= '0'.charCodeAt(0) && s.charCodeAt(i) <= '9'.charCodeAt(0)) {
                 ret.push(s.charCodeAt(i) - '0'.charCodeAt(0));
             }
         }

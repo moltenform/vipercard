@@ -467,12 +467,7 @@ export enum VpcOpCtg {
 /**
  * evaulate an OrdinalOrPosition
  */
-export function getPositionFromOrdinalOrPosition(
-    rel: OrdinalOrPosition,
-    current: number,
-    min: number,
-    max: number
-): number {
+export function getPositionFromOrdinalOrPosition(rel: OrdinalOrPosition, current: number, min: number, max: number): number {
     let getPositionUnbounded = () => {
         switch (rel) {
             case OrdinalOrPosition.Last:

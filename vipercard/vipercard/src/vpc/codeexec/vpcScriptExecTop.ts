@@ -61,15 +61,12 @@ export class VpcExecTop {
             msg
         );
 
-        let isRepeatedKeydown =
-            newWork.originalMsg.msgName === 'afterkeydown' &&
-            newWork.originalMsg.keyRepeated;
+        let isRepeatedKeydown = newWork.originalMsg.msgName === 'afterkeydown' && newWork.originalMsg.keyRepeated;
         if (isRepeatedKeydown && this.workQueue.length > 2) {
             /* don't queue up a key that is held down at least beyond 3 evts */
             return;
         } else if (
-            (newWork.originalMsg.msgName === 'idle' ||
-                newWork.originalMsg.msgName === 'mousewithin') &&
+            (newWork.originalMsg.msgName === 'idle' || newWork.originalMsg.msgName === 'mousewithin') &&
             this.workQueue.length > 0
         ) {
             /* don't queue up an onidle */
@@ -219,10 +216,7 @@ export class VpcExecTop {
         if (this.cbOnScriptError) {
             this.cbOnScriptError(err);
         } else {
-            assertTrue(
-                false,
-                `5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`
-            );
+            assertTrue(false, `5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
         }
     }
 
@@ -236,10 +230,10 @@ export class VpcExecTop {
     /**
      * run messagebox code
      */
-    runMsgBoxCodeOrThrow(codeBody: string, curCardId: string, addIntentionalError:boolean) {
-        let msg = new VpcScriptMessageMsgBoxCode(curCardId, VpcBuiltinMsg.SendCode)
-        msg.msgBoxCodeBody = codeBody
-        msg.addIntentionalError = addIntentionalError
-        this.scheduleCodeExec(msg)
+    runMsgBoxCodeOrThrow(codeBody: string, curCardId: string, addIntentionalError: boolean) {
+        let msg = new VpcScriptMessageMsgBoxCode(curCardId, VpcBuiltinMsg.SendCode);
+        msg.msgBoxCodeBody = codeBody;
+        msg.addIntentionalError = addIntentionalError;
+        this.scheduleCodeExec(msg);
     }
 }

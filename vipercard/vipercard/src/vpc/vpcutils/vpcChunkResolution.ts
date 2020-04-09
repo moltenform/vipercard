@@ -59,11 +59,7 @@ export class ChunkResolution {
      * get positions of the chunk, for chars.
      * return semi-inclusive bounds [start, end)
      */
-    protected charsBoundsForGet(
-        sInput: string,
-        start: number,
-        end: number
-    ): O<[number, number]> {
+    protected charsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
         if (start >= sInput.length) {
             return undefined;
         } else {
@@ -76,12 +72,7 @@ export class ChunkResolution {
      * get positions of the chunk, for items.
      * return semi-inclusive bounds [start, end)
      */
-    protected itemsBoundsForGet(
-        sInput: string,
-        delim: string,
-        start: number,
-        end: number
-    ): O<[number, number]> {
+    protected itemsBoundsForGet(sInput: string, delim: string, start: number, end: number): O<[number, number]> {
         let table = this.getPositionsTable(sInput, this.regexpForDelim(delim), false);
         if (start >= table.length) {
             return undefined;
@@ -97,21 +88,14 @@ export class ChunkResolution {
      * confirmed in emulator: only spaces and newlines separate words, not punctuation.
      * return semi-inclusive bounds [start, end)
      */
-    protected wordsBoundsForGet(
-        sInput: string,
-        start: number,
-        end: number
-    ): O<[number, number]> {
+    protected wordsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
         let table = this.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true);
         if (start >= table.length) {
             return undefined;
         } else {
             let firstchar = table[start];
             let lastchar = end >= table.length ? sInput.length : table[end] - 1;
-            while (
-                lastchar > 0 &&
-                (sInput[lastchar - 1] === '\n' || sInput[lastchar - 1] === ' ')
-            ) {
+            while (lastchar > 0 && (sInput[lastchar - 1] === '\n' || sInput[lastchar - 1] === ' ')) {
                 lastchar--;
             }
 
@@ -134,22 +118,13 @@ export class ChunkResolution {
     /**
      * when you say put "abc" into item x to y of z, which positions should be replaced with "abc"?
      */
-    protected itemsBoundsForSet(
-        sInput: string,
-        delim: string,
-        start: number,
-        end: number
-    ): any {
+    protected itemsBoundsForSet(sInput: string, delim: string, start: number, end: number): any {
         let table = this.getPositionsTable(sInput, this.regexpForDelim(delim), false);
         if (start >= table.length) {
             /* you can set items beyond current content, add trailing commas! */
             let howmanytoadd = 1 + (start - table.length);
             let trailingCommas = Util512.repeat(howmanytoadd, delim).join('');
-            return [
-                sInput.length + howmanytoadd,
-                sInput.length + howmanytoadd,
-                trailingCommas
-            ];
+            return [sInput.length + howmanytoadd, sInput.length + howmanytoadd, trailingCommas];
         } else {
             let firstchar = table[start];
             let lastchar = end >= table.length ? sInput.length : table[end] - 1;
@@ -173,11 +148,7 @@ export class ChunkResolution {
      * we've been asked to get item x to y of z.
      * return semi-inclusive bounds [start, end)
      */
-    protected getBoundsForGet(
-        s: string,
-        itemDel: string,
-        ch: RequestedChunk
-    ): O<[number, number]> {
+    protected getBoundsForGet(s: string, itemDel: string, ch: RequestedChunk): O<[number, number]> {
         let first = ch.first;
         let last = ch.last;
         if (ch.ordinal !== undefined) {
@@ -191,10 +162,7 @@ export class ChunkResolution {
             return undefined;
         }
 
-        assertTrue(
-            first !== null && first !== undefined && last !== null,
-            '5=|invalid first or last'
-        );
+        assertTrue(first !== null && first !== undefined && last !== null, '5=|invalid first or last');
         last = last === undefined ? first : last;
         last = last < first ? first : last;
         if (first <= 0) {
@@ -229,11 +197,7 @@ export class ChunkResolution {
      * we've been asked to get item x to y of z.
      * return semi-inclusive bounds [start, end)
      */
-    protected getBoundsForSet(
-        sInput: string,
-        itemDel: string,
-        ch: RequestedChunk
-    ): [number, number, string] {
+    protected getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
         let first = ch.first;
         let last = ch.last;
         if (ch.ordinal !== undefined) {
@@ -242,10 +206,7 @@ export class ChunkResolution {
             last = first;
         }
 
-        assertTrue(
-            first !== null && first !== undefined && last !== null,
-            '5;|invalid first or last'
-        );
+        assertTrue(first !== null && first !== undefined && last !== null, '5;|invalid first or last');
         if (ch.type === VpcChunkType.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return [first - 1, first - 1, ''];
@@ -285,13 +246,7 @@ export class ChunkResolution {
      * numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
      * international sorting, compares text using current locale.
      */
-    static applySort(
-        cont: WritableContainer,
-        itemDel: string,
-        type: VpcChunkType,
-        sortType: SortType,
-        ascend: boolean
-    ) {
+    static applySort(cont: WritableContainer, itemDel: string, type: VpcChunkType, sortType: SortType, ascend: boolean) {
         let splitBy: string;
         if (type === VpcChunkType.Chars) {
             splitBy = '';
@@ -343,34 +298,23 @@ export class ChunkResolution {
      * count chunks, e.g.
      * 'put the number of words in x into y'
      */
-    static applyCount(
-        sInput: string,
-        itemDel: string,
-        type: VpcChunkType,
-        isPublicCall: boolean
-    ) {
+    static applyCount(sInput: string, itemDel: string, type: VpcChunkType, isPublicCall: boolean) {
         let self = new ChunkResolution();
 
         /* in the public interface, change behavior to be
         closer(still not 100% match) to emulator */
-        if (
-            isPublicCall &&
-            sInput === '' &&
-            (type === VpcChunkType.Items || VpcChunkType.Lines)
-        ) {
+        if (isPublicCall && sInput === '' && (type === VpcChunkType.Items || VpcChunkType.Lines)) {
             return 0;
         }
 
         if (type === VpcChunkType.Chars) {
             return sInput.length;
         } else if (type === VpcChunkType.Items) {
-            return self.getPositionsTable(sInput, self.regexpForDelim(itemDel), false)
-                .length;
+            return self.getPositionsTable(sInput, self.regexpForDelim(itemDel), false).length;
         } else if (type === VpcChunkType.Lines) {
             return self.getPositionsTable(sInput, /\n/g, false).length;
         } else if (type === VpcChunkType.Words) {
-            return self.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true)
-                .length;
+            return self.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
         } else {
             throw makeVpcScriptErr(`5-|unknown chunk type ${type}`);
         }
@@ -387,11 +331,7 @@ export class ChunkResolution {
     /**
      * calls getBoundsForGet and retrieves the text from a container
      */
-    static applyRead(
-        readContainer: ReadableContainer,
-        chunk: O<RequestedChunk>,
-        itemDel: string
-    ): string {
+    static applyRead(readContainer: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): string {
         if (chunk) {
             let s = readContainer.getRawString();
             let me = new ChunkResolution();
@@ -409,12 +349,7 @@ export class ChunkResolution {
     /**
      * apply a modification like 'add 1 to item 3 of x'
      */
-    static applyModify(
-        cont: WritableContainer,
-        chunk: O<RequestedChunk>,
-        itemDel: string,
-        fn: (s: string) => string
-    ) {
+    static applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, fn: (s: string) => string) {
         if (chunk) {
             /* confirmed in original product that modify uses "set" bounds not "get" bounds */
             /* so "multiply line 300 of x" extends the contents of x if necessary */
@@ -506,10 +441,7 @@ export class RequestedChunk extends VpcIntermedValBase {
      */
     confirmValidIndex(v: VpcVal, chunktype: string, tmpArr: [boolean, any]) {
         checkThrow(v && v.isVpcVal, `8p|internal error in RuleHChunk`);
-        checkThrow(
-            v.isItInteger(),
-            `8o|when getting ${chunktype}, need to provide an integer but got ${v.readAsString()}`
-        );
+        checkThrow(v.isItInteger(), `8o|when getting ${chunktype}, need to provide an integer but got ${v.readAsString()}`);
 
         let asInt = v.readAsStrictInteger(tmpArr);
         checkThrow(

@@ -47,8 +47,7 @@ export class ReadableContainerVar implements ReadableContainer {
 /**
  * a writable container
  */
-export class WritableContainerVar extends ReadableContainerVar
-    implements WritableContainer {
+export class WritableContainerVar extends ReadableContainerVar implements WritableContainer {
     constructor(protected outsideWritable: OutsideWorldReadWrite, varName: string) {
         super(outsideWritable, varName);
     }
@@ -74,10 +73,7 @@ export class WritableContainerVar extends ReadableContainerVar
     }
 
     static replaceAll(s: string, search: string, replace: string) {
-        checkThrow(
-            slength(search) > 0,
-            'you cannot search for an empty string, replace "" with "" in s is not allowed.'
-        );
+        checkThrow(slength(search) > 0, 'you cannot search for an empty string, replace "" with "" in s is not allowed.');
 
         /* regular expressions would be faster, but we'd need to escape
         all metacharacters in the search string (hard to know if any metacharacters missed)
@@ -110,8 +106,7 @@ export class ReadableContainerField implements ReadableContainer {
 /**
  * writing content to a field
  */
-export class WritableContainerField extends ReadableContainerField
-    implements WritableContainer {
+export class WritableContainerField extends ReadableContainerField implements WritableContainer {
     splice(insertion: number, lenToDelete: number, newstring: string) {
         let txt = this.fld.getCardFmTxt(this.parentCardId);
         if (insertion === 0 && lenToDelete >= txt.len()) {
@@ -119,17 +114,8 @@ export class WritableContainerField extends ReadableContainerField
             (lose formatting) when replacing all text */
             this.fld.setProp('alltext', VpcValS(newstring), this.parentCardId);
         } else {
-            let font =
-                insertion >= 0 && insertion < txt.len()
-                    ? txt.fontAt(insertion)
-                    : this.fld.getDefaultFontAsUi512();
-            let newTxt = FormattedText.byInsertion(
-                txt,
-                insertion,
-                lenToDelete,
-                newstring,
-                font
-            );
+            let font = insertion >= 0 && insertion < txt.len() ? txt.fontAt(insertion) : this.fld.getDefaultFontAsUi512();
+            let newTxt = FormattedText.byInsertion(txt, insertion, lenToDelete, newstring, font);
             this.fld.setCardFmTxt(this.parentCardId, newTxt);
         }
     }

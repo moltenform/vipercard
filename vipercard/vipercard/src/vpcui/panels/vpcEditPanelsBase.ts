@@ -89,8 +89,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         const inputX = 170;
         const inputH = 22;
         const inputMargin = 11;
-        let totalUsedH =
-            this.topInputs.length * inputH + (this.topInputs.length - 1) * inputMargin;
+        let totalUsedH = this.topInputs.length * inputH + (this.topInputs.length - 1) * inputMargin;
         let startY = this.y + Math.floor((this.firstSectionH - totalUsedH) / 2);
         let curY = startY;
         let grp = app.getGroup(this.grpId);
@@ -101,12 +100,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             lbl.set('labelvalign', true);
             lbl.setDimensions(this.x + lblX, curY, inputX - lblX, inputH);
 
-            let inp = this.genChild<UI512ElTextField>(
-                app,
-                grp,
-                `inp##${inId}`,
-                UI512ElTextField
-            );
+            let inp = this.genChild<UI512ElTextField>(app, grp, `inp##${inId}`, UI512ElTextField);
             inp.set('multiline', false);
             inp.set('labelwrap', false);
             inp.set('nudgey', 2);
@@ -124,16 +118,8 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         }
 
         let grp = app.getGroup(this.grpId);
-        let startY =
-            this.y +
-            this.firstSectionH +
-            Math.floor((this.secondSectionH - this.leftChoicesH) / 2);
-        let fld = this.genChild<UI512ElTextField>(
-            app,
-            grp,
-            `leftchoice`,
-            UI512ElTextField
-        );
+        let startY = this.y + this.firstSectionH + Math.floor((this.secondSectionH - this.leftChoicesH) / 2);
+        let fld = this.genChild<UI512ElTextField>(app, grp, `leftchoice`, UI512ElTextField);
         fld.set('scrollbar', true);
         fld.set('selectbylines', true);
         fld.set('multiline', true);
@@ -144,12 +130,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             fld,
             this.leftChoices.map(item => lng(item[0]))
         );
-        fld.setDimensions(
-            this.x + this.leftChoicesX,
-            startY,
-            this.leftChoicesW,
-            this.leftChoicesH
-        );
+        fld.setDimensions(this.x + this.leftChoicesX, startY, this.leftChoicesW, this.leftChoicesH);
     }
 
     /**
@@ -158,13 +139,8 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
     createRightOptions(app: UI512Application) {
         const inputH = 15;
         const inputMargin = 3;
-        let totalUsedH =
-            this.rightOptions.length * inputH +
-            (this.rightOptions.length - 1) * inputMargin;
-        let startY =
-            this.y +
-            this.firstSectionH +
-            Math.floor((this.secondSectionH - totalUsedH) / 2);
+        let totalUsedH = this.rightOptions.length * inputH + (this.rightOptions.length - 1) * inputMargin;
+        let startY = this.y + this.firstSectionH + Math.floor((this.secondSectionH - totalUsedH) / 2);
         let curY = startY;
         let grp = app.getGroup(this.grpId);
         for (let [lblTxt, inId] of this.rightOptions) {
@@ -173,12 +149,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             inp.set('labeltext', lng(lblTxt));
             inp.set('labelhalign', false);
             inp.set('labelvalign', true);
-            inp.setDimensions(
-                this.x + this.rightOptionsX,
-                curY,
-                this.logicalWidth - this.rightOptionsX,
-                inputH
-            );
+            inp.setDimensions(this.x + this.rightOptionsX, curY, this.logicalWidth - this.rightOptionsX, inputH);
             curY += inputH + inputMargin;
         }
     }
@@ -190,20 +161,10 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         let tipsX = this.leftChoicesX + 0;
         let tipsY = this.firstSectionH + this.secondSectionH - 9;
         let grp = app.getGroup(this.grpId);
-        this.lblNamingTip = this.genChild<UI512ElLabel>(
-            app,
-            grp,
-            `lbl##tip`,
-            UI512ElLabel
-        );
+        this.lblNamingTip = this.genChild<UI512ElLabel>(app, grp, `lbl##tip`, UI512ElLabel);
         this.lblNamingTip.set('labelhalign', false);
         this.lblNamingTip.set('labelvalign', false);
-        this.lblNamingTip.setDimensions(
-            this.x + tipsX,
-            this.y + tipsY,
-            this.logicalWidth - tipsX,
-            this.logicalHeight - tipsY
-        );
+        this.lblNamingTip.setDimensions(this.x + tipsX, this.y + tipsY, this.logicalWidth - tipsX, this.logicalHeight - tipsY);
 
         const spaceFromRight = 55;
         const spaceFromBottom = 17;
@@ -221,12 +182,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         );
 
         if (isEmpty) {
-            scriptBtn.setDimensions(
-                scriptBtn.x - 75,
-                scriptBtn.y,
-                scriptBtn.w + 75,
-                scriptBtn.h
-            );
+            scriptBtn.setDimensions(scriptBtn.x - 75, scriptBtn.y, scriptBtn.w + 75, scriptBtn.h);
         }
     }
 
@@ -250,15 +206,9 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
                 el.set('canselecttext', false);
                 el.set('h', 50);
                 el.set('x', grp.getEl(this.getElId(`inp##name`)).x - 3);
-                el.setFmTxt(
-                    FormattedText.newFromUnformatted(
-                        'To edit text, use the Browse\ntool and click on the field.'
-                    )
-                );
+                el.setFmTxt(FormattedText.newFromUnformatted('To edit text, use the Browse\ntool and click on the field.'));
             } else {
-                let s = VpcEditPanelsBase.numeric[inId]
-                    ? vel.getN(inId).toString()
-                    : vel.getS(inId);
+                let s = VpcEditPanelsBase.numeric[inId] ? vel.getN(inId).toString() : vel.getS(inId);
                 el.setFmTxt(FormattedText.newFromUnformatted(s));
             }
         }
@@ -266,9 +216,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         if (this.leftChoices.length) {
             let styl = vel.getProp('style', currentCardId).readAsString();
             let el = grp.getEl(this.getElId(`leftchoice`));
-            let found = this.leftChoices.findIndex(
-                item => item[1].toLowerCase() === styl.toLowerCase()
-            );
+            let found = this.leftChoices.findIndex(item => item[1].toLowerCase() === styl.toLowerCase());
             if (found !== -1) {
                 let wasScroll = el.getN('scrollamt');
                 let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
@@ -297,22 +245,12 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
     /**
      * save changes for one property
      */
-    protected saveChangesToModelSetProp(
-        vel: VpcElBase,
-        propName: string,
-        newVal: VpcVal,
-        onlyCheckIfDirty: boolean
-    ) {
+    protected saveChangesToModelSetProp(vel: VpcElBase, propName: string, newVal: VpcVal, onlyCheckIfDirty: boolean) {
         let currentCardId = this.vci.getOptionS('currentCardId');
         if (onlyCheckIfDirty) {
-            let current =
-                propName === 'name'
-                    ? VpcValS(vel.getS('name'))
-                    : vel.getProp(propName, currentCardId);
+            let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName, currentCardId);
             if (current.readAsString() !== newVal.readAsString()) {
-                throw makeVpcInternalErr(
-                    msgNotification + VpcPanelScriptEditor.thereArePendingChanges
-                );
+                throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
             vel.setProp(propName, newVal, currentCardId);
@@ -361,12 +299,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
                 n = isFinite(n) && n >= 0 ? n : 0;
                 this.saveChangesToModelSetProp(vel, inId, VpcValN(n), onlyCheckIfDirty);
             } else {
-                this.saveChangesToModelSetProp(
-                    vel,
-                    inId,
-                    VpcValS(typed),
-                    onlyCheckIfDirty
-                );
+                this.saveChangesToModelSetProp(vel, inId, VpcValS(typed), onlyCheckIfDirty);
             }
         }
 
@@ -375,12 +308,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
             let ln = TextSelModify.selectByLinesWhichLine(gel);
             if (ln !== undefined && ln >= 0 && ln < this.leftChoices.length) {
-                this.saveChangesToModelSetProp(
-                    vel,
-                    'style',
-                    VpcValS(this.leftChoices[ln][1]),
-                    onlyCheckIfDirty
-                );
+                this.saveChangesToModelSetProp(vel, 'style', VpcValS(this.leftChoices[ln][1]), onlyCheckIfDirty);
             }
         }
 
@@ -388,12 +316,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
             let checked = el.getB('checkmark');
             vel.setProp(inId, VpcValBool(checked), this.vci.getOptionS('currentCardId'));
-            this.saveChangesToModelSetProp(
-                vel,
-                inId,
-                VpcValBool(checked),
-                onlyCheckIfDirty
-            );
+            this.saveChangesToModelSetProp(vel, inId, VpcValBool(checked), onlyCheckIfDirty);
         }
     }
 
@@ -411,12 +334,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
     /**
      * e.g. certain properties only apply to bg items
      */
-    protected showOrHideBgSpecificImpl(
-        app: UI512Application,
-        prop: string,
-        basey: number,
-        isBgPart: boolean
-    ) {
+    protected showOrHideBgSpecificImpl(app: UI512Application, prop: string, basey: number, isBgPart: boolean) {
         let grp = app.getGroup(this.grpId);
         let chkbox = grp.getEl(this.getElId('toggle##' + prop));
         const inputH = 15;

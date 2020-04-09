@@ -60,19 +60,13 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
             st.elMask = this.cbPaintRender().makeAndAddFullsizeEl('UiSelectElMask');
             st.elStage = this.cbPaintRender().makeAndAddFullsizeEl('UiSelectElStage');
             st.elBorder = this.cbPaintRender().makeAndAddFullsizeEl('UiSelectElBorder');
-            st.elPlaceholderForCursor = this.cbPaintRender().makeAndAddFullsizeEl(
-                'UiSelectElPlaceholderForCursor'
-            );
+            st.elPlaceholderForCursor = this.cbPaintRender().makeAndAddFullsizeEl('UiSelectElPlaceholderForCursor');
             st.elMask.transparentToClicks = true;
             st.elStage.transparentToClicks = true;
             st.elBorder.transparentToClicks = true;
             st.elStage.setCanvas(this.cbPaintRender().getTemporaryCanvas(1));
             st.elStage.setCachedPainter(
-                new UI512PainterCvCanvas(
-                    st.elStage.getCanvasForWrite(),
-                    st.elStage.getCvWidth(),
-                    st.elStage.getCvHeight()
-                )
+                new UI512PainterCvCanvas(st.elStage.getCanvasForWrite(), st.elStage.getCvWidth(), st.elStage.getCvHeight())
             );
 
             st.rawStartX = d.mouseX;
@@ -85,11 +79,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
             this.st = st;
 
             /* draw where the user clicked. needed to get the right minx and miny */
-            this.respondMouseMove(
-                tl,
-                new MouseMoveEventDetails(0, d.mouseX, d.mouseY, d.mouseX, d.mouseY),
-                true
-            );
+            this.respondMouseMove(tl, new MouseMoveEventDetails(0, d.mouseX, d.mouseY, d.mouseX, d.mouseY), true);
         } else if (this.st && this.st.mode === SelectToolMode.SelectedRegion) {
             /* there's already a selection. */
             if (
@@ -107,8 +97,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 this.st.offsetForMoveY = d.mouseY - this.st.elBorder.y;
                 this.st.elBorder.set('visible', false);
                 this.st.isCopyMult = (d.mods & ModifierKeys.Opt) !== 0;
-                this.st.isCopy =
-                    bool(this.st.isCopyMult) || bool((d.mods & ModifierKeys.Cmd) !== 0);
+                this.st.isCopy = bool(this.st.isCopyMult) || bool((d.mods & ModifierKeys.Cmd) !== 0);
                 this.st.elMask.set('visible', !this.st.isCopy);
                 this.st.mode = SelectToolMode.MovingRegion;
             } else {
@@ -127,10 +116,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
         let [tnx, tny] = this.getTranslatedCoords(d.mouseX, d.mouseY);
 
         if (this.st && this.st.mode === SelectToolMode.SelectingRegion) {
-            if (
-                !isVelOrBg &&
-                !(d.elNext && d.elNext.id.endsWith('UiSelectElPlaceholderForCursor'))
-            ) {
+            if (!isVelOrBg && !(d.elNext && d.elNext.id.endsWith('UiSelectElPlaceholderForCursor'))) {
                 return;
             }
 
@@ -196,13 +182,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
             if (tl === VpcTool.Lasso) {
                 this.respondMouseMove(
                     tl,
-                    new MouseMoveEventDetails(
-                        0,
-                        d.mouseX,
-                        d.mouseY,
-                        this.st.rawStartX,
-                        this.st.rawStartY
-                    ),
+                    new MouseMoveEventDetails(0, d.mouseX, d.mouseY, this.st.rawStartX, this.st.rawStartY),
                     true
                 );
             }
@@ -223,16 +203,9 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
             this.st.elMask.setCanvas(this.cbPaintRender().getTemporaryCanvas(2));
 
             /* copy what we have sketched as the border to "border". */
-            this.st.elBorder.setDimensions(
-                rectx + this.vci.userBounds()[0],
-                recty + this.vci.userBounds()[1],
-                rectw,
-                recth
-            );
+            this.st.elBorder.setDimensions(rectx + this.vci.userBounds()[0], recty + this.vci.userBounds()[1], rectw, recth);
 
-            this.st.elBorder.setCanvas(
-                this.cbPaintRender().getTemporaryCanvas(3, rectw, recth)
-            );
+            this.st.elBorder.setCanvas(this.cbPaintRender().getTemporaryCanvas(3, rectw, recth));
             this.st.elBorder
                 .getCanvasForWrite()
                 .drawFromImage(
@@ -276,24 +249,22 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                     this.st.elMask.getCvHeight()
                 );
 
-            this.st.elMask
-                .getCanvasForWrite()
-                .temporarilyChangeCompositeMode('source-in', () => {
-                    checkThrow(this.st, '');
-                    this.st.elMask
-                        .getCanvasForWrite()
-                        .fillRect(
-                            0,
-                            0,
-                            this.st.elMask.getCvWidth(),
-                            this.st.elMask.getCvHeight(),
-                            0,
-                            0,
-                            this.st.elMask.getCvWidth(),
-                            this.st.elMask.getCvHeight(),
-                            'white'
-                        );
-                });
+            this.st.elMask.getCanvasForWrite().temporarilyChangeCompositeMode('source-in', () => {
+                checkThrow(this.st, '');
+                this.st.elMask
+                    .getCanvasForWrite()
+                    .fillRect(
+                        0,
+                        0,
+                        this.st.elMask.getCvWidth(),
+                        this.st.elMask.getCvHeight(),
+                        0,
+                        0,
+                        this.st.elMask.getCvWidth(),
+                        this.st.elMask.getCvHeight(),
+                        'white'
+                    );
+            });
 
             /* make cvPiece equal to cvMask */
             this.st.cvPiece = this.cbPaintRender().getTemporaryCanvas(4);
@@ -362,11 +333,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
      */
     onDeleteSelection() {
         if (this.st && this.st.mode === SelectToolMode.SelectedRegion) {
-            this.cbPaintRender().commitImageOntoImage(
-                [this.st.elMask.getCanvasForWrite()],
-                0,
-                0
-            );
+            this.cbPaintRender().commitImageOntoImage([this.st.elMask.getCanvasForWrite()], 0, 0);
             this.cbPaintRender().deleteTempPaintEls();
             this.st = undefined;
         }
@@ -397,10 +364,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 let basePaint = this.cbPaintRender().getMainBg();
                 let incoming = this.st.isCopy
                     ? [this.st.elStage.getCanvasForWrite()]
-                    : [
-                          this.st.elMask.getCanvasForWrite(),
-                          this.st.elStage.getCanvasForWrite()
-                      ];
+                    : [this.st.elMask.getCanvasForWrite(), this.st.elStage.getCanvasForWrite()];
                 this.cbPaintRender().commitImageOntoImage(incoming, 0, 0);
             }
 
@@ -423,8 +387,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
     whichCursor(tl: VpcTool, el: O<UI512Element>) {
         if (
             this.st &&
-            (this.st.mode === SelectToolMode.SelectedRegion ||
-                this.st.mode === SelectToolMode.MovingRegion) &&
+            (this.st.mode === SelectToolMode.SelectedRegion || this.st.mode === SelectToolMode.MovingRegion) &&
             el &&
             el.id.endsWith('PlaceholderForCursor')
         ) {
@@ -439,8 +402,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
      */
     blinkSelection() {
         if (
-            (this.vci.getTool() === VpcTool.Select ||
-                this.vci.getTool() === VpcTool.Lasso) &&
+            (this.vci.getTool() === VpcTool.Select || this.vci.getTool() === VpcTool.Lasso) &&
             this.st &&
             this.st.mode === SelectToolMode.SelectedRegion
         ) {

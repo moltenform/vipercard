@@ -45,18 +45,8 @@ export class VpcToolboxPatterns extends UI512CompToolbox {
                 if (this.hiliteSelected.length) {
                     this.hiliteSelected[0].setDimensions(subr[0], subr[1], subr[2], 2);
                     this.hiliteSelected[1].setDimensions(subr[0], subr[1], 2, subr[3]);
-                    this.hiliteSelected[2].setDimensions(
-                        subr[0] + subr[2],
-                        subr[1],
-                        2,
-                        subr[3]
-                    );
-                    this.hiliteSelected[3].setDimensions(
-                        subr[0],
-                        subr[1] + subr[3],
-                        subr[2],
-                        2
-                    );
+                    this.hiliteSelected[2].setDimensions(subr[0] + subr[2], subr[1], 2, subr[3]);
+                    this.hiliteSelected[3].setDimensions(subr[0], subr[1] + subr[3], subr[2], 2);
                 }
             }
         }
@@ -72,9 +62,7 @@ export class VpcToolboxPatterns extends UI512CompToolbox {
         };
 
         toolsPatterns.logicalHeight = 1;
-        toolsPatterns.logicalWidth =
-            ToolboxDims.PatternsPerRow * ToolboxDims.PatternsW -
-            (ToolboxDims.PatternsPerRow - 1);
+        toolsPatterns.logicalWidth = ToolboxDims.PatternsPerRow * ToolboxDims.PatternsW - (ToolboxDims.PatternsPerRow - 1);
 
         toolsPatterns.items = [
             ['pattern100', 76],

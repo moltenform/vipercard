@@ -28,12 +28,7 @@ export class VpcEditPanelsEmpty extends VpcEditPanelsBase {
         let s = lng('lngNothing is selected.');
         s = UI512DrawText.setFont(s, new TextFontSpec('monaco', 0, 9).toSpecString());
         this.lblNamingTip.set('labeltext', s);
-        this.lblNamingTip.setDimensions(
-            this.lblNamingTip.x,
-            this.lblNamingTip.y + 20,
-            this.lblNamingTip.w,
-            this.lblNamingTip.h
-        );
+        this.lblNamingTip.setDimensions(this.lblNamingTip.x, this.lblNamingTip.y + 20, this.lblNamingTip.w, this.lblNamingTip.h);
     }
 
     /**
@@ -43,8 +38,7 @@ export class VpcEditPanelsEmpty extends VpcEditPanelsBase {
         let grp = app.getGroup(this.grpId);
         let btnGenPart = grp.getEl(this.getElId('btnGenPart'));
         let currentTool = this.vci.getOptionN('currentTool');
-        let lbl =
-            currentTool === VpcTool.Button ? 'lngMake new button' : 'lngMake new field';
+        let lbl = currentTool === VpcTool.Button ? 'lngMake new button' : 'lngMake new field';
         btnGenPart.set('labeltext', lng(lbl));
     }
 }

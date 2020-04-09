@@ -29,10 +29,7 @@
 export class ExpandCustomFunctions {
     protected buildToken = new BuildFakeTokens();
     protected skipExpansion: { [key: string]: boolean } = {};
-    constructor(
-        protected idgenThisScript: CountNumericId,
-        protected check: CheckReservedWords
-    ) {
+    constructor(protected idgenThisScript: CountNumericId, protected check: CheckReservedWords) {
         /* we don't need to check for fn calls if the line starts with any of these symbols. */
         this.skipExpansion['global'] = true;
         this.skipExpansion['next'] = true;
@@ -102,11 +99,7 @@ export class ExpandCustomFunctions {
                 }
             }
 
-            checkThrow(
-                foundEnd !== -1,
-                '8Q|missing ) for function call?',
-                ln[foundCall].image
-            );
+            checkThrow(foundEnd !== -1, '8Q|missing ) for function call?', ln[foundCall].image);
             return [foundCall, foundEnd + 1];
         }
 
@@ -118,15 +111,11 @@ export class ExpandCustomFunctions {
      */
     protected goImpl(line: ChvITk[]) {
         let ret: ChvITk[][] = [];
-        let limit = new LoopLimit(
-            CodeLimits.MaxCustomFnCallsAllowedInLine,
-            'maxCustomFnCallsAllowedInLine'
-        );
+        let limit = new LoopLimit(CodeLimits.MaxCustomFnCallsAllowedInLine, 'maxCustomFnCallsAllowedInLine');
         let cantUseYetAr = new ValHolder<{ [key: number]: boolean }>({});
         while (limit.next()) {
             /* look for a custom function call */
-            let isPotentialUserFn = (n: number, s: string) =>
-                !cantUseYetAr.val[n] && this.check.potentialUserFn(s);
+            let isPotentialUserFn = (n: number, s: string) => !cantUseYetAr.val[n] && this.check.potentialUserFn(s);
             let found = this.findAFunctionCall(line, 1, line.length, isPotentialUserFn);
             if (!found) {
                 break;
@@ -134,12 +123,7 @@ export class ExpandCustomFunctions {
 
             /* is there a custom function call *within* this call? */
             let [callstart, callend] = found;
-            let foundInside = this.findAFunctionCall(
-                line,
-                callstart + 1,
-                callend,
-                isPotentialUserFn
-            );
+            let foundInside = this.findAFunctionCall(line, callstart + 1, callend, isPotentialUserFn);
             if (foundInside) {
                 /* there is a custom fn inside, can't process it yet */
                 cantUseYetAr.val[callstart] = true;
@@ -160,25 +144,15 @@ export class ExpandCustomFunctions {
      * create new line calling the function and putting the result in a temp var
      */
     expandAFnCall(ret: ChvITk[][], line: ChvITk[], start: number, end: number) {
-        assertTrue(
-            isTkType(line[start], tks.tkIdentifier),
-            '5 |line did not start w identifier'
-        );
-        assertTrue(
-            isTkType(line[start + 1], tks.tkLParen),
-            '5z|line did not start w identifier('
-        );
+        assertTrue(isTkType(line[start], tks.tkIdentifier), '5 |line did not start w identifier');
+        assertTrue(isTkType(line[start + 1], tks.tkLParen), '5z|line did not start w identifier(');
         assertTrue(isTkType(line[end - 1], tks.tkRParen), '5y|line did not end w )');
         let stmtCall: ChvITk[] = [];
         let stmtPut: ChvITk[] = [];
         let newvarname = `tmpvar^^${this.idgenThisScript.next()}`;
 
         /* create new line of code calling this fn */
-        checkThrow(
-            this.check.potentialUserFn(line[start].image),
-            '8P|must be valid userfn',
-            line[start].image
-        );
+        checkThrow(this.check.potentialUserFn(line[start].image), '8P|must be valid userfn', line[start].image);
         stmtCall.push(line[start]);
         assertEq(line[start + 1].image, '(', '5x|expected to start with lparen');
         assertEq(line[end - 1].image, ')', '5w|expected to end with rparen');
@@ -187,18 +161,12 @@ export class ExpandCustomFunctions {
         ret.push(stmtCall);
 
         /* rewrite the syntax, replacing the function call with the new variable! */
-        line.splice(
-            start,
-            end - start,
-            VpcSuperRewrite.tokenFromEnglishTerm(newvarname, line[0])
-        );
+        line.splice(start, end - start, VpcSuperRewrite.tokenFromEnglishTerm(newvarname, line[0]));
 
         /* put results of the call into the temporary variable */
         let template = `put result ( ) %INTO% %ARG0%`;
         let tokenNewVarname = VpcSuperRewrite.tokenFromEnglishTerm(newvarname, line[0]);
-        let fromTemplateLines = VpcSuperRewrite.go(template, line[0], [
-            [tokenNewVarname]
-        ]);
+        let fromTemplateLines = VpcSuperRewrite.go(template, line[0], [[tokenNewVarname]]);
         checkThrowEq(1, fromTemplateLines.length, '');
         ret.push(fromTemplateLines[0]);
     }

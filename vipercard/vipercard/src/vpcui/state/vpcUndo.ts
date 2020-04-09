@@ -50,15 +50,9 @@ export interface UndoableAction {
 /**
  * an action creating a vel, thin wrapper around UndoableActionCreateOrDelVel
  */
-export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel
-    implements UndoableAction {
+export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implements UndoableAction {
     isUndoableActionCreateVel = true;
-    constructor(
-        id: string,
-        parentId: string,
-        type: VpcElType,
-        insertIndex = -1 /* default to add-to-end */
-    ) {
+    constructor(id: string, parentId: string, type: VpcElType, insertIndex = -1 /* default to add-to-end */) {
         super(id, parentId, type, insertIndex);
     }
 
@@ -81,47 +75,28 @@ export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel
  * an action removing a vel
  * stores the removed vel in a string
  */
-export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel
-    implements UndoableAction {
+export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implements UndoableAction {
     isUndoableActionDeleteVel = true;
     storedVelData = '';
     constructor(vel: VpcElBase, vci: VpcStateInterface) {
         super(vel.id, vel.parentId, vel.getType(), -1);
         UndoableActionDeleteVel.checkIfCanDelete(vel, vci);
         this.insertIndex = this.determineIndexInAr(vel, vci);
-        this.storedVelData = new VpcStateSerialize().serializeVelCompressed(
-            vci,
-            vel,
-            this.insertIndex
-        );
+        this.storedVelData = new VpcStateSerialize().serializeVelCompressed(vci, vel, this.insertIndex);
     }
 
     /**
      * can this vel be deleted?
      */
     static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
-        let currentCard = vci
-            .getModel()
-            .getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
+        let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
         let velAsCard = vel as VpcElCard;
         let velAsBg = vel as VpcElBg;
-        assertTrue(
-            bool(vci.getModel().findByIdUntyped(vel.id)),
-            "6Z|deleting element that doesn't exist?",
-            vel.id
-        );
-        if (
-            vel.getType() === VpcElType.Stack ||
-            vel.getType() === VpcElType.Product ||
-            vel.getType() === VpcElType.Unknown
-        ) {
+        assertTrue(bool(vci.getModel().findByIdUntyped(vel.id)), "6Z|deleting element that doesn't exist?", vel.id);
+        if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
             throw makeVpcScriptErr('6Y|Cannot delete this type of element');
         } else if (velAsCard && velAsCard.isVpcElCard) {
-            let ar = UndoableActionCreateOrDelVel.getChildVelsArray(
-                vel.parentId,
-                vci,
-                vel.getType()
-            );
+            let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
             checkThrow(ar.length > 1, '8%|Cannot delete the only card of a stack');
         } else if (vel.id === currentCard.id) {
             throw makeVpcScriptErr('6X|Cannot delete the current card');
@@ -139,11 +114,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel
             childCount += arrs[i].length;
         }
 
-        checkThrowEq(
-            0,
-            childCount,
-            `K(|you must delete all children before deleting this object`
-        );
+        checkThrowEq(0, childCount, `K(|you must delete all children before deleting this object`);
     }
 
     /**
@@ -157,15 +128,9 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel
      * revive and re-add the vel
      */
     undo(vci: VpcStateInterface) {
-        checkThrow(
-            !vci.getCodeExec().isCodeRunning(),
-            "8$|currently can't do this while code is running"
-        );
+        checkThrow(!vci.getCodeExec().isCodeRunning(), "8$|currently can't do this while code is running");
 
-        let vel = new VpcStateSerialize().deserializeVelCompressed(
-            vci,
-            this.storedVelData
-        );
+        let vel = new VpcStateSerialize().deserializeVelCompressed(vci, this.storedVelData);
         vci.rawRevive(vel);
     }
 }
@@ -178,39 +143,22 @@ class UndoableActionModifyVelement implements UndoableAction {
     propName: string;
     prevVal: ElementObserverVal;
     newVal: ElementObserverVal;
-    constructor(
-        velId: string,
-        propName: string,
-        prevVal: ElementObserverVal,
-        newVal: ElementObserverVal
-    ) {
+    constructor(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
         if (isString(prevVal) && propName !== 'paint') {
             if (isString(newVal)) {
                 prevVal = '$' + UI512Compress.compressString(prevVal.toString());
                 newVal = '$' + UI512Compress.compressString(newVal.toString());
             } else {
-                throw makeVpcInternalErr(
-                    'K&|both must be strings ' + propName + ' ' + velId
-                );
+                throw makeVpcInternalErr('K&|both must be strings ' + propName + ' ' + velId);
             }
         } else if ((prevVal as FormattedText).isFormattedText) {
             if ((newVal as FormattedText).isFormattedText) {
                 (prevVal as FormattedText).lock();
                 (newVal as FormattedText).lock();
-                prevVal =
-                    '@' +
-                    UI512Compress.compressString(
-                        (prevVal as FormattedText).toSerialized()
-                    );
-                newVal =
-                    '@' +
-                    UI512Compress.compressString(
-                        (newVal as FormattedText).toSerialized()
-                    );
+                prevVal = '@' + UI512Compress.compressString((prevVal as FormattedText).toSerialized());
+                newVal = '@' + UI512Compress.compressString((newVal as FormattedText).toSerialized());
             } else {
-                throw makeVpcInternalErr(
-                    'K%|both must be FormattedText ' + propName + ' ' + velId
-                );
+                throw makeVpcInternalErr('K%|both must be FormattedText ' + propName + ' ' + velId);
             }
         }
 
@@ -282,12 +230,7 @@ class UndoableChangeSet {
     /**
      * record an action and add it to the list
      */
-    notifyPropChange(
-        velId: string,
-        propName: string,
-        prevVal: ElementObserverVal,
-        newVal: ElementObserverVal
-    ) {
+    notifyPropChange(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
         /* ignore selection and scroll changes. */
         if (
             propName === 'selcaret' ||
@@ -299,9 +242,7 @@ class UndoableChangeSet {
             return;
         }
 
-        this.list.push(
-            new UndoableActionModifyVelement(velId, propName, prevVal, newVal)
-        );
+        this.list.push(new UndoableActionModifyVelement(velId, propName, prevVal, newVal));
     }
 
     /**
@@ -459,10 +400,7 @@ export class UndoManager implements ElementObserver {
             return false;
         }
 
-        assertTrue(
-            !this.doWithoutAbilityToUndoActive,
-            "6S|can't call this during doWithoutAbilityToUndoActive"
-        );
+        assertTrue(!this.doWithoutAbilityToUndoActive, "6S|can't call this during doWithoutAbilityToUndoActive");
         assertTrue(!this.activeChangeSet, "6R|can't call this during undoable action");
         if (this.pos < 0) {
             /* you've hit undo() so many times you're at the beginning */
@@ -484,10 +422,7 @@ export class UndoManager implements ElementObserver {
             return false;
         }
 
-        assertTrue(
-            !this.doWithoutAbilityToUndoActive,
-            "6Q|can't call this during doWithoutAbilityToUndoActive"
-        );
+        assertTrue(!this.doWithoutAbilityToUndoActive, "6Q|can't call this during doWithoutAbilityToUndoActive");
         assertTrue(!this.activeChangeSet, "6P|can't call this during undoable action");
         if (this.pos >= this.history.length - 1) {
             /* you can't redo() if you are already at the most recent state */
@@ -504,13 +439,7 @@ export class UndoManager implements ElementObserver {
     /**
      * respond to an incoming change of state
      */
-    changeSeen(
-        context: ChangeContext,
-        elId: string,
-        propName: string,
-        prevVal: ElementObserverVal,
-        newVal: ElementObserverVal
-    ) {
+    changeSeen(context: ChangeContext, elId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
         assertTrueWarn(!this.expectNoChanges, 'K!|expected no changes');
         if (this.doWithoutAbilityToUndoActive) {
             return;
@@ -527,12 +456,7 @@ export class UndoManager implements ElementObserver {
         if (this.activeChangeSet) {
             this.activeChangeSet.notifyPropChange(elId, propName, prevVal, newVal);
         } else {
-            assertTrueWarn(
-                false,
-                '6O|must be done inside an undoable block ' + elId + ' ' + propName,
-                prevVal,
-                newVal
-            );
+            assertTrueWarn(false, '6O|must be done inside an undoable block ' + elId + ' ' + propName, prevVal, newVal);
         }
     }
 
@@ -548,12 +472,7 @@ export class UndoManager implements ElementObserver {
             if (this.activeChangeSet) {
                 this.activeChangeSet.notifyAction(action);
             } else {
-                assertTrueWarn(
-                    false,
-                    '6N|must be done inside an undoable block',
-                    action.velId,
-                    action.type
-                );
+                assertTrueWarn(false, '6N|must be done inside an undoable block', action.velId, action.type);
             }
         } else {
             throw new Error('not a known type of UndoableAction');

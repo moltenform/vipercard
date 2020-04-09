@@ -186,13 +186,8 @@ export class VpcMenuActions {
      * use internal-only clipboard in case connection with os-clipboard isn't working
      */
     goMnuUseHostClipboard() {
-        this.vci.setOption(
-            'optUseHostClipboard',
-            !this.vci.getOptionB('optUseHostClipboard')
-        );
-        this.vci.getPresenter().useOSClipboard = this.vci.getOptionB(
-            'optUseHostClipboard'
-        );
+        this.vci.setOption('optUseHostClipboard', !this.vci.getOptionB('optUseHostClipboard'));
+        this.vci.getPresenter().useOSClipboard = this.vci.getOptionB('optUseHostClipboard');
     }
 
     /**
@@ -203,9 +198,7 @@ export class VpcMenuActions {
         let currentCard = this.vci.getModel().getById(currentCardId, VpcElCard);
         let currentBg = this.vci.getModel().getById(currentCard.parentId, VpcElBg);
         let currentIndex = VpcElBase.findIndexById(currentBg.cards, currentCardId);
-        let created = this.vci
-            .getOutside()
-            .CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
+        let created = this.vci.getOutside().CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
         this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id);
     }
 
@@ -378,9 +371,7 @@ export class VpcMenuActions {
      */
     goMnuCopy() {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
-        this.showModal(
-            `lngPlease use the keyboard shortcut ${keyname}+C to \ncopy text.`
-        );
+        this.showModal(`lngPlease use the keyboard shortcut ${keyname}+C to \ncopy text.`);
     }
 
     /**
@@ -388,9 +379,7 @@ export class VpcMenuActions {
      */
     goMnuPaste() {
         let keyname = getRoot().getBrowserInfo() === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
-        this.showModal(
-            `lngPlease use the keyboard shortcut ${keyname}+V to \npaste text.`
-        );
+        this.showModal(`lngPlease use the keyboard shortcut ${keyname}+V to \npaste text.`);
     }
 
     /**
@@ -416,10 +405,7 @@ export class VpcMenuActions {
         if (cardNum <= 0) {
             this.showModal(msg);
         } else {
-            this.vci.beginSetCurCardWithOpenCardEvt(
-                OrdinalOrPosition.Previous,
-                undefined
-            );
+            this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Previous, undefined);
         }
     }
 

@@ -25,10 +25,7 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn2) {
-                let redirectWindow = window.open(
-                    'https://donorbox.org/vipercard',
-                    '_blank'
-                );
+                let redirectWindow = window.open('https://donorbox.org/vipercard', '_blank');
             }
         };
 
@@ -62,10 +59,7 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn1) {
-                let redirectWindow = window.open(
-                    'https://donorbox.org/vipercard',
-                    '_blank'
-                );
+                let redirectWindow = window.open('https://donorbox.org/vipercard', '_blank');
             }
         };
 

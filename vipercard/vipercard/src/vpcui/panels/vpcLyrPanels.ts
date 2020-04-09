@@ -87,8 +87,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
         } else if (!selected) {
             shouldBeActive = this.panelEmpty;
         } else {
-            shouldBeActive =
-                this.panels.find(selected.getType().toString()) ?? this.panelEmpty;
+            shouldBeActive = this.panels.find(selected.getType().toString()) ?? this.panelEmpty;
             this.showOrHideCheckboxItems(selected, shouldBeActive);
         }
 
@@ -160,11 +159,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
      * respond to keydown
      */
     respondKeydown(d: KeyDownEventDetails) {
-        if (
-            this.active &&
-            this.active instanceof VpcEditPanelsBase &&
-            d.readableShortcut === 'Enter'
-        ) {
+        if (this.active && this.active instanceof VpcEditPanelsBase && d.readableShortcut === 'Enter') {
             this.saveChangesToModel(false);
             d.setHandled();
         }
@@ -207,10 +202,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
                 } else if (d.elClick.id && this.active instanceof VpcPanelScriptEditor) {
                     this.editor.respondToClick(this.vci.UI512App(), d.elClick.id);
                 } else if (d.elClick.id && d.elClick.id.endsWith('##btnGenPart')) {
-                    let action =
-                        this.vci.getOptionN('currentTool') === VpcTool.Button
-                            ? 'mnuObjectsNewBtn'
-                            : 'mnuObjectsNewFld';
+                    let action = this.vci.getOptionN('currentTool') === VpcTool.Button ? 'mnuObjectsNewBtn' : 'mnuObjectsNewFld';
                     this.vci.performMenuAction(action);
                 }
             }
@@ -225,20 +217,13 @@ export class VpcAppLyrPanels extends VpcUILayer {
         this.panels.add(VpcElType.Btn.toString(), new VpcEditPanelsBtn('editPanelBtn'));
         this.panels.add(VpcElType.Card.toString(), new VpcEditPanelsCard('editPanelCd'));
         this.panels.add(VpcElType.Fld.toString(), new VpcEditPanelsField('editPanelFld'));
-        this.panels.add(
-            VpcElType.Stack.toString(),
-            new VpcEditPanelsStack('editPanelStack')
-        );
-        this.panels.add(
-            VpcElType.Unknown.toString(),
-            throwIfUndefined(this.panelEmpty, '6v|')
-        );
+        this.panels.add(VpcElType.Stack.toString(), new VpcEditPanelsStack('editPanelStack'));
+        this.panels.add(VpcElType.Unknown.toString(), throwIfUndefined(this.panelEmpty, '6v|'));
         this.panels.add(VpcElType.Product.toString(), this.editor);
         for (let panel of this.panels.getVals()) {
             panel.vci = this.vci;
             panel.x = this.vci.bounds()[0] + ScreenConsts.xAreaWidth + 1;
-            panel.y =
-                this.vci.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
+            panel.y = this.vci.bounds()[1] + ScreenConsts.yMenuBar + ToolboxDims.IconH + 8;
             panel.logicalWidth = ScreenConsts.ScreenWidth - (ScreenConsts.xAreaWidth + 1);
             panel.logicalHeight = ScreenConsts.yAreaHeight - ToolboxDims.IconH;
             panel.create(pr, this.vci.UI512App());

@@ -7,12 +7,7 @@
 export namespace VpcRewritesConditions {
     export function splitSinglelineIf(line: ChvITk[]): ChvITk[][] {
         checkThrowEq('if', line[0].image, '');
-        let findThen = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(
-            0,
-            line,
-            line[0],
-            'then'
-        );
+        let findThen = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
         checkThrow(findThen !== -1, 'if statement, no "then" found');
         if (findThen === line.length - 1) {
             // already on different lines, we are fine
@@ -35,15 +30,8 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
     }
     function isLineIf(l: ChvITk[]) {
         if (l.length >= 1 && l[0].image === 'if') {
-            checkThrow(
-                l.length >= 3,
-                "expect line starting with if to be 'if condition then'"
-            );
-            checkThrowEq(
-                'then',
-                last(l).image,
-                "expect line starting with else to be 'if condition *then*'"
-            );
+            checkThrow(l.length >= 3, "expect line starting with if to be 'if condition then'");
+            checkThrowEq('then', last(l).image, "expect line starting with else to be 'if condition *then*'");
             return l.slice(1, -1);
         }
 
@@ -54,20 +42,9 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
     }
     function isLineElseCondition(l: ChvITk[]) {
         if (l.length > 1 && l[0].image === 'else') {
-            checkThrow(
-                l.length >= 4,
-                "expect line starting with else to be 'else if condition then'"
-            );
-            checkThrowEq(
-                'if',
-                l[1].image,
-                "expect line starting with else to be 'else *if* condition then'"
-            );
-            checkThrowEq(
-                'then',
-                last(l).image,
-                "expect line starting with else to be 'else if condition *then*'"
-            );
+            checkThrow(l.length >= 4, "expect line starting with else to be 'else if condition then'");
+            checkThrowEq('if', l[1].image, "expect line starting with else to be 'else *if* condition then'");
+            checkThrowEq('then', last(l).image, "expect line starting with else to be 'else if condition *then*'");
             return l.slice(2, -1);
         }
         return undefined;
@@ -100,10 +77,7 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
                 current = construct;
             } else if (arisLineElseCondition) {
                 checkThrow(!current.isRoot, 'else outside of if?');
-                checkThrow(
-                    !current.hasSeenPlainElse,
-                    "can't have conditional else after plain else"
-                );
+                checkThrow(!current.hasSeenPlainElse, "can't have conditional else after plain else");
                 let clause = new IfConstructClause(arisLineElseCondition, false);
                 current.clauses.push(clause);
             } else if (isLineElsePlain(line)) {
@@ -111,10 +85,7 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
                 let clause = new IfConstructClause([], false);
                 current.clauses.push(clause);
             } else if (isLineEndIf(line)) {
-                checkThrow(
-                    !current.isRoot && current.parent,
-                    "can't have an end if outside an if"
-                );
+                checkThrow(!current.isRoot && current.parent, "can't have an end if outside an if");
                 current = current.parent;
             } else {
                 last(current.clauses).children.push(line);
@@ -126,35 +97,19 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
     function transformTreeRecurse(node: IfConstruct, output: ChvITk[][]) {
         let numberOfEndIfsNeeded = 0;
         if (!node.isRoot) {
-            let firstLine = VpcSuperRewrite.go(
-                'if %ARG0% then',
-                node.clauses[0].condition[0],
-                [node.clauses[0].condition]
-            );
+            let firstLine = VpcSuperRewrite.go('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
             output.push(firstLine[0]);
             numberOfEndIfsNeeded = 1;
         }
         for (let clause of node.clauses) {
             if (!clause.isFirst) {
                 if (clause.condition.length) {
-                    output.push([
-                        VpcSuperRewrite.tokenFromEnglishTerm(
-                            'else',
-                            node.clauses[0].condition[0]
-                        )
-                    ]);
-                    let line = VpcSuperRewrite.go('if %ARG0% then', clause.condition[0], [
-                        clause.condition
-                    ]);
+                    output.push([VpcSuperRewrite.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
+                    let line = VpcSuperRewrite.go('if %ARG0% then', clause.condition[0], [clause.condition]);
                     output.push(line[0]);
                     numberOfEndIfsNeeded += 1;
                 } else {
-                    output.push([
-                        VpcSuperRewrite.tokenFromEnglishTerm(
-                            'else',
-                            node.clauses[0].condition[0]
-                        )
-                    ]);
+                    output.push([VpcSuperRewrite.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
                 }
             }
             for (let item of clause.children) {

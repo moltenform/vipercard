@@ -773,8 +773,7 @@ listOfAllWordLikeTokens['visible'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['widemargins'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['width'] = tks.tkAllUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['zoomed'] = tks.tkAllUnaryPropertiesIfNotAlready;
-listOfAllWordLikeTokens['scriptinglanguage'] =
-    tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
+listOfAllWordLikeTokens['scriptinglanguage'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['textfont'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['textheight'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['textsize'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
@@ -985,16 +984,10 @@ export class BuildFakeTokens {
         let cloned = cloneToken(basis);
         cloned.image = image;
         cloned.endOffset = cloned.startOffset + image.length;
-        cloned.endColumn = trueIfDefinedAndNotNull(cloned.startColumn)
-            ? cloned.startColumn + image.length
-            : undefined;
+        cloned.endColumn = trueIfDefinedAndNotNull(cloned.startColumn) ? cloned.startColumn + image.length : undefined;
         cloned.endLine = cloned.startLine;
         cloned.tokenType = type;
-        assertTrue(
-            trueIfDefinedAndNotNull(type.tokenTypeIdx),
-            'does not have a idx yet?',
-            type.name
-        );
+        assertTrue(trueIfDefinedAndNotNull(type.tokenTypeIdx), 'does not have a idx yet?', type.name);
         cloned.tokenTypeIdx = type.tokenTypeIdx;
         return cloned;
     }

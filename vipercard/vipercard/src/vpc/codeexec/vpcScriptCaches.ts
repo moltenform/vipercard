@@ -34,11 +34,7 @@ export class VpcCacheParsedCST {
         let rule = ln.getParseRule();
         assertEq(bool(rule), bool(ln.allImages), '4>|');
         if (rule && ln.allImages) {
-            assertTrue(
-                ln.excerptToParse.length > 0,
-                '4=|ln readyToParse is empty',
-                ln.offset
-            );
+            assertTrue(ln.excerptToParse.length > 0, '4=|ln readyToParse is empty', ln.offset);
             let key = ln.allImages;
             let foundInCache = this.cache.get(key);
             if (foundInCache !== undefined) {
@@ -47,11 +43,7 @@ export class VpcCacheParsedCST {
             } else {
                 /* call the parser to get a new cst */
                 let cst = this.callParser(ln, rule);
-                checkThrow(
-                    cst !== null && cst !== undefined,
-                    '4<|parse results null',
-                    ln.offset
-                );
+                checkThrow(cst !== null && cst !== undefined, '4<|parse results null', ln.offset);
                 this.cache.set(key, cst);
                 return cst;
             }
@@ -91,13 +83,8 @@ export class VpcCacheParsedCST {
 }
 
 export class VpcCacheParsedAST {
-    cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(
-        CodeLimits.CacheThisManyParsedLines
-    );
-    getParsedCodeCollection(
-        code: string,
-        velIdForErrMsg: string
-    ): VpcParsedCodeCollection | VpcScriptSyntaxError {
+    cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyParsedLines);
+    getParsedCodeCollection(code: string, velIdForErrMsg: string): VpcParsedCodeCollection | VpcScriptSyntaxError {
         assertTrue(!code.match(/^\s*$/), '');
         let found = this.cache.get(code);
         if (found) {
@@ -141,9 +128,7 @@ export class VpcCacheParsedAST {
             markUI512Err(err, true, false, true, retAsErr);
             throw err;
         } else {
-            throw makeVpcScriptErr(
-                'JU|VpcCodeOfOneVel did not return expected type ' + ret
-            );
+            throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
         }
 
         return undefined;

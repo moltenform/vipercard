@@ -54,9 +54,7 @@ export class VpcChangeSelectedFont {
     protected setAlign(v: string) {
         let worked = this.setAlignImpl(v);
         if (!worked) {
-            throw makeVpcInternalErr(
-                msgNotification + lng('lngNo selection found. Select a button or field.')
-            );
+            throw makeVpcInternalErr(msgNotification + lng('lngNo selection found. Select a button or field.'));
         }
     }
 
@@ -152,16 +150,8 @@ export class VpcChangeSelectedFont {
             /* note: get from focused, not vel, since it's more up to date? */
             /* no, since we're acting on the vel, get everything from one for consistency */
             let currentCardId = this.vci.getOptionS('currentCardId');
-            let selcaret = fitIntoInclusive(
-                vel.getN('selcaret'),
-                0,
-                vel.getCardFmTxt(currentCardId).len()
-            );
-            let selend = fitIntoInclusive(
-                vel.getN('selend'),
-                0,
-                vel.getCardFmTxt(currentCardId).len()
-            );
+            let selcaret = fitIntoInclusive(vel.getN('selcaret'), 0, vel.getCardFmTxt(currentCardId).len());
+            let selend = fitIntoInclusive(vel.getN('selend'), 0, vel.getCardFmTxt(currentCardId).len());
             if (selcaret !== selend) {
                 return [vel, Math.min(selcaret, selend), Math.max(selcaret, selend)];
             }
@@ -173,11 +163,7 @@ export class VpcChangeSelectedFont {
     /**
      * set the font of a chunk of text
      */
-    protected setFontSelText(
-        chunksel: [VpcElBase, number, number],
-        v: string,
-        typeOfChange: string
-    ) {
+    protected setFontSelText(chunksel: [VpcElBase, number, number], v: string, typeOfChange: string) {
         let [vel, b1, b2] = chunksel;
         let chunk = new RequestedChunk(b1);
         chunk.last = b2;
@@ -207,15 +193,10 @@ export class VpcChangeSelectedFont {
                 subChunk.first = i;
                 subChunk.last = i;
                 subChunk.type = VpcChunkType.Chars;
-                let curStyle = this.vci
-                    .getOutside()
-                    .GetProp(velRef, typeOfChange, PropAdjective.Empty, subChunk)
-                    .readAsString();
+                let curStyle = this.vci.getOutside().GetProp(velRef, typeOfChange, PropAdjective.Empty, subChunk).readAsString();
 
                 curStyle = this.toggleStyle(curStyle, v);
-                this.vci
-                    .getOutside()
-                    .SetProp(velRef, typeOfChange, VpcValS(curStyle), subChunk);
+                this.vci.getOutside().SetProp(velRef, typeOfChange, VpcValS(curStyle), subChunk);
             }
 
             return true;
@@ -231,10 +212,7 @@ export class VpcChangeSelectedFont {
             vel.setProp(typeOfChange, VpcValS(v), currentCardId);
             return true;
         } else {
-            let curStyle = vel
-                .getProp('textstyle', currentCardId)
-                .readAsString()
-                .toLowerCase();
+            let curStyle = vel.getProp('textstyle', currentCardId).readAsString().toLowerCase();
             curStyle = this.toggleStyle(curStyle, v);
             vel.setProp('textstyle', VpcValS(curStyle), currentCardId);
             return true;

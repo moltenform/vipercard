@@ -133,29 +133,13 @@ export class VpcBuiltinFunctions {
         if (asSimpleFns !== undefined) {
             /* it's a "simpleFns" one */
             if (asSimpleFns === VpcBuiltinFunctions.indicateVarArgs) {
-                checkThrow(
-                    args.length > 0,
-                    '7$|function requires at least one arg',
-                    name
-                );
+                checkThrow(args.length > 0, '7$|function requires at least one arg', name);
             } else {
-                checkThrowEq(
-                    asSimpleFns,
-                    args.length,
-                    '7#|function recieved incorrect # of args',
-                    name,
-                    asSimpleFns
-                );
+                checkThrowEq(asSimpleFns, args.length, '7#|function recieved incorrect # of args', name, asSimpleFns);
             }
 
             let method = 'call' + Util512.capitalizeFirst(name);
-            let ret = Util512.callAsMethodOnClass(
-                'VpcBuiltinFunctions',
-                this,
-                method,
-                [args],
-                false
-            ) as VpcVal;
+            let ret = Util512.callAsMethodOnClass('VpcBuiltinFunctions', this, method, [args], false) as VpcVal;
             assertTrue(ret.isVpcVal, '5m|did not return a vpcval');
             return ret;
         }
@@ -163,13 +147,7 @@ export class VpcBuiltinFunctions {
         let asfnsNeedOutside = VpcBuiltinFunctions.fnsNeedOutside[name];
         if (asfnsNeedOutside !== undefined) {
             /* it's a "needs outside" one */
-            checkThrowEq(
-                asfnsNeedOutside,
-                args.length,
-                '7!|function recieved incorrect # of args',
-                name,
-                asfnsNeedOutside
-            );
+            checkThrowEq(asfnsNeedOutside, args.length, '7!|function recieved incorrect # of args', name, asfnsNeedOutside);
 
             let [frameMsg, frameParams] = this.readoutside.GetFrameInfo();
             let method = 'call' + Util512.capitalizeFirst(name);
@@ -448,18 +426,14 @@ export class VpcBuiltinFunctions {
      * In a mousedown or mouseup handler, get click x coordinate.
      */
     callClickh(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1
-            ? VpcValN(frmMsg.clickLoc[0])
-            : VpcVal.Empty;
+        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[0]) : VpcVal.Empty;
     }
 
     /**
      * In a mousedown or mouseup handler, get click y coordinate.
      */
     callClickv(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
-        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1
-            ? VpcValN(frmMsg.clickLoc[1])
-            : VpcVal.Empty;
+        return frmMsg && frmMsg.clickLoc && frmMsg.clickLoc.length > 1 ? VpcValN(frmMsg.clickLoc[1]) : VpcVal.Empty;
     }
 
     /**
@@ -546,11 +520,7 @@ export class VpcBuiltinFunctions {
     callSelectedfield(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
-            let container = this.getFullNameById(
-                fld.id,
-                PropAdjective.Abbrev,
-                VpcElType.Fld
-            );
+            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(container);
         } else {
             return VpcVal.Empty;
@@ -566,11 +536,7 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = this.toOneBased(fld.getN('selcaret'));
             let end = this.toOneBased(fld.getN('selend'));
-            let container = this.getFullNameById(
-                fld.id,
-                PropAdjective.Abbrev,
-                VpcElType.Fld
-            );
+            let container = this.getFullNameById(fld.id, PropAdjective.Abbrev, VpcElType.Fld);
             return VpcValS(`char ${start} to ${end} of ${container}`);
         } else {
             return VpcVal.Empty;
@@ -585,9 +551,7 @@ export class VpcBuiltinFunctions {
         if (fld) {
             let start = fld.getN('selcaret');
             let end = fld.getN('selend');
-            let s = fld
-                .getCardFmTxt(this.readoutside.GetCurrentCardId())
-                .toUnformattedSubstr(start, end - start);
+            let s = fld.getCardFmTxt(this.readoutside.GetCurrentCardId()).toUnformattedSubstr(start, end - start);
             return VpcValS(s);
         } else {
             return VpcVal.Empty;
@@ -601,9 +565,7 @@ export class VpcBuiltinFunctions {
         let fld = this.readoutside.GetSelectedField();
         if (fld) {
             let start = fld.getN('selcaret');
-            let lines = new UI512Lines(
-                fld.getCardFmTxt(this.readoutside.GetCurrentCardId())
-            );
+            let lines = new UI512Lines(fld.getCardFmTxt(this.readoutside.GetCurrentCardId()));
             return VpcValN(lines.indexToLineNumber(start));
         } else {
             return VpcVal.Empty;
@@ -651,11 +613,7 @@ export class VpcBuiltinFunctions {
     /**
      * variadic functions can take either sum(1,2,3) or sum("1,2,3")
      */
-    protected mathVariadic(
-        args: VpcVal[],
-        name: string,
-        fn: (ar: number[]) => number
-    ): VpcVal {
+    protected mathVariadic(args: VpcVal[], name: string, fn: (ar: number[]) => number): VpcVal {
         let h = new VpcEvalHelpers();
         let numlist = h.numberListFromArgsGiven(name, args, VpcBuiltinFunctions.sep);
         return VpcValN(fn(numlist));

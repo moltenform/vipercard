@@ -28,10 +28,7 @@ export class VpcExecGoCardHelpers {
      * run one of the goCardImpl pieces that result from a 'go next' call
      * we'll store our state in a local variable
      */
-    execGoCard(
-        curLine: VpcCodeLine,
-        visited: IntermedMapOfIntermedVals
-    ): [string, string] {
+    execGoCard(curLine: VpcCodeLine, visited: IntermedMapOfIntermedVals): [string, string] {
         let ret: [string, string] = ['', ''];
         let [directive, varName, cardId] = this.visitGoCardImplStatement(visited);
         let currentCardId = this.outside.GetOptionS('currentCardId');
@@ -70,7 +67,7 @@ export class VpcExecGoCardHelpers {
                     } else {
                         ret = ['exitfield', seld.id];
                     }
-    
+
                     /* we're changing cards, so mark the other ones false too */
                     this.outside.GetFieldsRecentlyEdited().val = {};
                 }
@@ -85,10 +82,7 @@ export class VpcExecGoCardHelpers {
     /**
      * prepare to send closecard, opencard, etc
      */
-    protected prepareOpenOrCloseEvent(
-        directive: string,
-        varName: string
-    ): [string, string] {
+    protected prepareOpenOrCloseEvent(directive: string, varName: string): [string, string] {
         let [cardFrom, cardTo] = this.locals.get(varName).readAsString().split('\n');
 
         let velFrom = this.outside.FindVelById(cardFrom);
@@ -120,9 +114,7 @@ export class VpcExecGoCardHelpers {
     /**
      * 'goCardImpl' can't use the same old evalRequestedExpression
      */
-    protected visitGoCardImplStatement(
-        vals: IntermedMapOfIntermedVals
-    ): [string, string, O<string>] {
+    protected visitGoCardImplStatement(vals: IntermedMapOfIntermedVals): [string, string, O<string>] {
         /* get the string */
         checkThrow(
             vals.vals.TokenTkstringliteral && vals.vals.TokenTkstringliteral[0],
@@ -153,55 +145,52 @@ export class VpcExecGoCardHelpers {
      */
     protected valsToReferencedCardId(vals: IntermedMapOfIntermedVals): O<string> {
         let currentCardId = this.outside.GetOptionS('currentCardId');
-        let vel:O<VpcElBase>
+        let vel: O<VpcElBase>;
         if (vals.vals.RuleHOrdinal) {
             /* e.g. `go second` */
-            let ref = new RequestedVelRef(VpcElType.Card)
-            ref.lookByRelative = IntermedMapOfIntermedVals.getOrdinalOrPosition(vals, 'RuleHOrdinal')
-            vel = this.outside.ResolveVelRef(ref)[0]
+            let ref = new RequestedVelRef(VpcElType.Card);
+            ref.lookByRelative = IntermedMapOfIntermedVals.getOrdinalOrPosition(vals, 'RuleHOrdinal');
+            vel = this.outside.ResolveVelRef(ref)[0];
         } else if (vals.vals.RuleHPosition) {
             /* e.g. `go first` */
-            let ref = new RequestedVelRef(VpcElType.Card)
-            ref.lookByRelative = IntermedMapOfIntermedVals.getOrdinalOrPosition(vals, 'RuleHPosition')
-            vel = this.outside.ResolveVelRef(ref)[0]
+            let ref = new RequestedVelRef(VpcElType.Card);
+            ref.lookByRelative = IntermedMapOfIntermedVals.getOrdinalOrPosition(vals, 'RuleHPosition');
+            vel = this.outside.ResolveVelRef(ref)[0];
         } else if (vals.vals.RuleHBuiltinCmdGoDest) {
             /* e.g. `go card 1` */
             /* this also includes `go back` since `back` is always a card */
-            let ref = vals.vals.RuleHBuiltinCmdGoDest[0] as RequestedVelRef
-            checkThrow(ref.isRequestedVelRef, '')
-            vel = this.outside.ResolveVelRef(ref)[0]
+            let ref = vals.vals.RuleHBuiltinCmdGoDest[0] as RequestedVelRef;
+            checkThrow(ref.isRequestedVelRef, '');
+            vel = this.outside.ResolveVelRef(ref)[0];
         } else if (vals.vals.tkStringLiteral) {
             /* be kind and accept `go "back"` even though the product doesn't */
-            let s = vals.vals.tkStringLiteral[0]
-            if (s === 'back'||s === 'forth' || s === 'recent') {
-                return this.goBackOrForth(s, currentCardId)
-            } else if (s === 'push'||s === 'pop') {
-                return this.goPushOrPop(s, currentCardId)
+            let s = vals.vals.tkStringLiteral[0];
+            if (s === 'back' || s === 'forth' || s === 'recent') {
+                return this.goBackOrForth(s, currentCardId);
+            } else if (s === 'push' || s === 'pop') {
+                return this.goPushOrPop(s, currentCardId);
             } else {
-                checkThrow(false, `unknown place to go to. did you mean 'go card "foo" instead?`)
+                checkThrow(false, `unknown place to go to. did you mean 'go card "foo" instead?`);
             }
         }
 
         if (vel) {
             if (vel.getType() === VpcElType.Card) {
-                return vel.id
+                return vel.id;
             } else if (vel.getType() === VpcElType.Bg) {
                 // if in same bg do not move
                 if (this.outside.FindVelById(currentCardId)?.parentId === vel.id) {
-                    return currentCardId
+                    return currentCardId;
                 } else {
-                    return (vel as VpcElBg)?.cards[0]?.id
+                    return (vel as VpcElBg)?.cards[0]?.id;
                 }
             } else {
-                return undefined
+                return undefined;
             }
         } else {
-            return undefined
+            return undefined;
         }
     }
-
-    
-
 
     /**
      * implement "go back" and "go forth"
@@ -215,7 +204,7 @@ export class VpcExecGoCardHelpers {
             ret = this.cardHistory.walkPrevious(fallback);
         } else if (s === 'forth') {
             ret = this.cardHistory.walkNext(fallback);
-        }  else {
+        } else {
             checkThrow(false, 'you can use go back or go forth, but not this', s);
         }
 
@@ -232,10 +221,10 @@ export class VpcExecGoCardHelpers {
         let ret = '';
         if (s === 'push') {
             this.cardHistoryPush.append(currentCardId);
-            ret = currentCardId
+            ret = currentCardId;
         } else if (s === 'pop') {
             ret = this.cardHistoryPush.pop(fallback);
-        }  else {
+        } else {
             checkThrow(false, 'you can use push or pop, but not this', s);
         }
 

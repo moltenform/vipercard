@@ -48,24 +48,14 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     createSpecific(app: UI512Application) {
         let headheight = 0;
         if (this.showHeader) {
-            headheight =
-                this.drawWindowDecoration(
-                    app,
-                    new PalBorderDecorationConsts(),
-                    this.hasCloseBtn
-                ) - 1;
+            headheight = this.drawWindowDecoration(app, new PalBorderDecorationConsts(), this.hasCloseBtn) - 1;
         }
 
         let grp = app.getGroup(this.grpId);
         let bg = this.genBtn(app, grp, 'bg');
         bg.set('autohighlight', false);
         bg.set('style', this.showHeader ? UI512BtnStyle.Rectangle : UI512BtnStyle.Opaque);
-        bg.setDimensions(
-            this.x,
-            this.y + headheight,
-            this.logicalWidth,
-            this.logicalHeight - headheight
-        );
+        bg.setDimensions(this.x, this.y + headheight, this.logicalWidth, this.logicalHeight - headheight);
 
         this.showResults = this.genChild(app, grp, 'scrollGot', UI512ElTextField);
         this.showResults.setDimensions(this.x + 14 + 5, this.y + 50 + 5, 460 + 15, 50);
@@ -111,9 +101,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     setFontAndText(el: UI512ElTextField, s: string, typfacename: string, pts: number) {
         let spec = new TextFontSpec(typfacename, TextFontStyling.Default, pts);
         el.set('defaultFont', spec.toSpecString());
-        let t = FormattedText.newFromSerialized(
-            UI512DrawText.setFont(s, spec.toSpecString())
-        );
+        let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
         el.setFmTxt(t);
     }
 
@@ -135,10 +123,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * use the arrow keys up and down to view history
      */
     onKeyDown(elId: O<string>, short: O<string>, d: KeyDownEventDetails): void {
-        if (
-            short === 'entry' &&
-            (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')
-        ) {
+        if (short === 'entry' && (d.readableShortcut === 'Enter' || d.readableShortcut === 'Return')) {
             this.launchScript(this.entry.getFmTxt().toUnformatted());
             d.setHandled();
         } else if (short === 'entry' && d.readableShortcut === 'ArrowUp') {
@@ -154,9 +139,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      */
     replHistory(upwards: boolean) {
         let fallback = () => '';
-        let retrieved = upwards
-            ? this.history.walkPrevious(fallback)
-            : this.history.walkNext(fallback);
+        let retrieved = upwards ? this.history.walkPrevious(fallback) : this.history.walkNext(fallback);
         this.setFontAndText(this.entry, retrieved, 'geneva', 12);
 
         /* set caret to the end */
@@ -189,7 +172,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
 
             /* do this last because it could throw
             synchronously and call onScriptErr right away */
-            this.vci.getCodeExec().runMsgBoxCodeOrThrow(codeBody, curCard, true)
+            this.vci.getCodeExec().runMsgBoxCodeOrThrow(codeBody, curCard, true);
         }
     }
 
@@ -233,11 +216,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         /* go back to the previous tool */
         this.vci.setTool(this.rememberedTool);
 
-        if (
-            scriptErr &&
-            scriptErr.details &&
-            scriptErr.details.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)
-        ) {
+        if (scriptErr && scriptErr.details && scriptErr.details.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)) {
             /* it wasn't actually an error, we internally caused it */
         } else if (scriptErr) {
             this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);

@@ -50,10 +50,7 @@ export class VpcAppLyrDragHandles extends VpcUILayer {
      */
     getSelectedUIElForHandles(currentTool: VpcTool) {
         let selectedVelId = this.vci.getOptionS('selectedVelId');
-        if (
-            getToolCategory(currentTool) === VpcToolCtg.CtgEdit &&
-            slength(selectedVelId)
-        ) {
+        if (getToolCategory(currentTool) === VpcToolCtg.CtgEdit && slength(selectedVelId)) {
             /* if the current card / stack is selected, */
             /* we won't find an element, that's ok, it will return undefined. */
             let grp = this.vci.UI512App().getGroup('VpcModelRender');

@@ -61,13 +61,7 @@ export class IntroPageFirst extends IntroPageBase {
         opaqueWhiteBehindBtns.setDimensions(btnX, centeredY, btnWidth, ySpacebtns);
 
         const btnKeywords = ['openStack', 'showFeatured', 'newStack', 'showAbout'];
-        const btnLabels = [
-            'lngOpen stack...',
-            'lngShow featured stacks...',
-            'lngNew stack',
-            'lngAbout...',
-            ''
-        ];
+        const btnLabels = ['lngOpen stack...', 'lngShow featured stacks...', 'lngNew stack', 'lngAbout...', ''];
         let layout = new GridLayout(
             btnX,
             centeredY,
@@ -84,12 +78,7 @@ export class IntroPageFirst extends IntroPageBase {
             let id = 'choice' + Util512.capitalizeFirst(btnKeywords[nRow]);
             let el = this.genBtn(app, grp, id);
             el.setDimensions(bnds[0], this.y + btnY[nRow], bnds[2], bnds[3]);
-            el.set(
-                'style',
-                btnKeywords[nRow] === 'showFeatured'
-                    ? UI512BtnStyle.OSDefault
-                    : UI512BtnStyle.OSStandard
-            );
+            el.set('style', btnKeywords[nRow] === 'showFeatured' ? UI512BtnStyle.OSDefault : UI512BtnStyle.OSStandard);
             el.set('labeltext', lng(btnLabels[nRow]));
             if (btnKeywords[nRow] === 'showFeatured') {
                 el.setDimensions(el.x, el.y, el.w, el.h + increaseHForLargerBtn);
@@ -154,10 +143,7 @@ export class IntroPageFirst extends IntroPageBase {
     respondIdle(pr: VpcIntroInterface, d: IdleEventDetails) {
         if (!IntroPageFirst.haveCheckedPageURLParams) {
             IntroPageFirst.haveCheckedPageURLParams = true;
-            Util512Higher.syncToAsyncTransition(
-                () => this.checkPageUrlParams(pr),
-                'respondIdle'
-            );
+            Util512Higher.syncToAsyncTransition(() => this.checkPageUrlParams(pr), 'respondIdle');
         }
 
         super.respondIdle(pr, d);
@@ -186,25 +172,14 @@ export class IntroPageFirst extends IntroPageBase {
                 /* sending reference to a demo stack is different */
                 /* saves some $ since no server code or even db hits need to be run */
                 let demoName = Util512.fromBase64UrlSafe(pts[0]);
-                if (
-                    demoName.startsWith('demo_') &&
-                    demoName.match(/^[a-zA-Z0-9_-]{1,100}$/)
-                ) {
+                if (demoName.startsWith('demo_') && demoName.match(/^[a-zA-Z0-9_-]{1,100}$/)) {
                     /* open the document */
                     let demoId = demoName + '.json';
-                    return new VpcIntroProvider(
-                        demoId,
-                        lng('lngfeatured stack'),
-                        VpcDocumentLocation.FromStaticDemo
-                    );
+                    return new VpcIntroProvider(demoId, lng('lngfeatured stack'), VpcDocumentLocation.FromStaticDemo);
                 }
             } else if (pts.length === 2) {
                 /* we're opening someone's online stack */
-                return new VpcIntroProvider(
-                    id,
-                    lng('lngstack'),
-                    VpcDocumentLocation.FromStackIdOnline
-                );
+                return new VpcIntroProvider(id, lng('lngstack'), VpcDocumentLocation.FromStackIdOnline);
             }
         }
 
@@ -234,11 +209,7 @@ export class IntroPageFirst extends IntroPageBase {
     /**
      * respond to button click
      */
-    static respondBtnClick(
-        pr: VpcIntroInterface,
-        self: O<IntroPageFirst>,
-        el: UI512Element
-    ) {
+    static respondBtnClick(pr: VpcIntroInterface, self: O<IntroPageFirst>, el: UI512Element) {
         if (el.id.endsWith('choiceNewStack')) {
             pr.beginNewDocument();
         } else if (el.id.endsWith('choiceShowAbout')) {
@@ -277,32 +248,16 @@ export class IntroPageFirst extends IntroPageBase {
             /* user clicked 'open from json' */
             let [x1, y1] = [pr.activePage.x, pr.activePage.y];
             pr.activePage.destroy(pr, pr.app);
-            pr.activePage = new IntroPagePickFile(
-                'IntroPagePickFile',
-                pr.bounds,
-                x1,
-                y1,
-                pr
-            );
+            pr.activePage = new IntroPagePickFile('IntroPagePickFile', pr.bounds, x1, y1, pr);
             pr.activePage.create(pr, pr.app);
         } else if (openType === VpcDocumentLocation.ShowLoginForm) {
             if (!getRoot().getSession()) {
                 /* we have to load the full ui, just to get the dialog to get then to log in */
-                let loader = new VpcIntroProvider(
-                    '',
-                    '',
-                    VpcDocumentLocation.ShowLoginForm
-                );
+                let loader = new VpcIntroProvider('', '', VpcDocumentLocation.ShowLoginForm);
                 pr.beginLoadDocument(loader);
             } else {
                 pr.activePage.destroy(pr, pr.app);
-                pr.activePage = new IntroPageOpen(
-                    'introOpenPage',
-                    pr.bounds,
-                    x,
-                    y,
-                    VpcDocumentLocation.FromStackIdOnline
-                );
+                pr.activePage = new IntroPageOpen('introOpenPage', pr.bounds, x, y, VpcDocumentLocation.FromStackIdOnline);
                 pr.activePage.create(pr, pr.app);
             }
         }

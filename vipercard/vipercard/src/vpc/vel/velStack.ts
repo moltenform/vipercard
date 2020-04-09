@@ -172,11 +172,7 @@ export class VpcElStack extends VpcElBase {
      * position of card within the stack. throw if card not found
      */
     getCardStackPosition(cardId: string) {
-        return throwIfUndefined(
-            this.findCardStackPosition(cardId),
-            '4v|card id not found',
-            cardId
-        );
+        return throwIfUndefined(this.findCardStackPosition(cardId), '4v|card id not found', cardId);
     }
 
     /**
@@ -202,11 +198,7 @@ export class VpcElStack extends VpcElBase {
      * "go to card 6", which card is it? throws if not exist
      */
     getFromCardStackPosition(pos: number) {
-        return throwIfUndefined(
-            this.findFromCardStackPosition(pos),
-            '4u|card number not found',
-            pos
-        );
+        return throwIfUndefined(this.findFromCardStackPosition(pos), '4u|card number not found', pos);
     }
 
     /**
@@ -224,12 +216,7 @@ export class VpcElStack extends VpcElBase {
         }
 
         let currentCdPosition = this.getCardStackPosition(currentCardId);
-        let nextCdPosition = getPositionFromOrdinalOrPosition(
-            pos,
-            currentCdPosition,
-            0,
-            lastCdPosition
-        );
+        let nextCdPosition = getPositionFromOrdinalOrPosition(pos, currentCdPosition, 0, lastCdPosition);
         return this.getFromCardStackPosition(nextCdPosition);
     }
 
@@ -261,11 +248,7 @@ export class VpcElStack extends VpcElBase {
  * when you hit save as, we remember the original stack info.
  */
 export class VpcElStackLineageEntry {
-    constructor(
-        public stackOwner: string,
-        public stackGuid: string,
-        public stackName: string
-    ) {
+    constructor(public stackOwner: string, public stackGuid: string, public stackName: string) {
         checkThrow(slength(stackOwner) > 0, 'K4|author is empty');
         checkThrow(slength(stackGuid) > 0, 'K3|guid is empty');
         checkThrow(slength(stackName) > 0, 'K2|name is empty');

@@ -104,8 +104,7 @@ export class VpcPresenterEvents {
 
         pr.listeners[UI512EventType.KeyDown.valueOf()] = [
             BasicHandlers.basicKeyShortcuts,
-            (_pr: VpcPresenterInterface, d: KeyDownEventDetails) =>
-                VpcPresenterEvents.respondKeyDown(_pr, d, editTextBehavior),
+            (_pr: VpcPresenterInterface, d: KeyDownEventDetails) => VpcPresenterEvents.respondKeyDown(_pr, d, editTextBehavior),
             VpcPresenterEvents.cancelEvtIfNotBrowseTool
         ];
 
@@ -139,9 +138,7 @@ export class VpcPresenterEvents {
      */
     static cancelEvtIfCodeRunning(pr: VpcPresenterInterface, d: EventDetails) {
         if (pr.vci.isCodeRunning()) {
-            let isElemStopRunning = d
-                .getAffectedElements()
-                .some(el => pr.lyrToolboxes.isElemStopRunning(el));
+            let isElemStopRunning = d.getAffectedElements().some(el => pr.lyrToolboxes.isElemStopRunning(el));
             if (!isElemStopRunning) {
                 d.setHandled();
             }
@@ -155,9 +152,7 @@ export class VpcPresenterEvents {
      * you are in the pencil tool
      */
     static cancelEvtIfNotBrowseTool(pr: VpcPresenterInterface, d: EventDetails) {
-        let isVel = d
-            .getAffectedElements()
-            .some(item => bool(pr.lyrModelRender.elIdToVelId(item.id)));
+        let isVel = d.getAffectedElements().some(item => bool(pr.lyrModelRender.elIdToVelId(item.id)));
         if (isVel && pr.vci.getTool() !== VpcTool.Browse) {
             d.setHandled();
         }
@@ -166,10 +161,7 @@ export class VpcPresenterEvents {
     /**
      * double-click the eraser tool to erase all paint on the screen
      */
-    static respondMouseDoubleDown(
-        pr: VpcPresenterInterface,
-        d: MouseDownDoubleEventDetails
-    ) {
+    static respondMouseDoubleDown(pr: VpcPresenterInterface, d: MouseDownDoubleEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.el && d.el.id) {
                 let short = pr.lyrToolboxes.toolsMain.fromFullId(d.el.id);
@@ -188,14 +180,8 @@ export class VpcPresenterEvents {
     static respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg =
-                    trueIfDefinedAndNotNull(d.el) &&
-                    bool(pr.lyrModelRender.isVelOrBg(d.el.id));
-                pr.getToolResponse(pr.vci.getTool()).respondMouseDown(
-                    pr.vci.getTool(),
-                    d,
-                    isUserElOrBg
-                );
+                let isUserElOrBg = trueIfDefinedAndNotNull(d.el) && bool(pr.lyrModelRender.isVelOrBg(d.el.id));
+                pr.getToolResponse(pr.vci.getTool()).respondMouseDown(pr.vci.getTool(), d, isUserElOrBg);
                 pr.lyrNonModalDlgHolder.respondMouseDown(d);
 
                 /* change focus on click, to make the property panel commit */
@@ -206,12 +192,7 @@ export class VpcPresenterEvents {
                 /* according to docs closefield should be called when
                 user clicks outside the field */
                 let elClicked = d.el ? d.el.id : undefined;
-                if (
-                    !d.handled() &&
-                    pr.vci.getTool() === VpcTool.Browse &&
-                    focused &&
-                    focused !== elClicked
-                ) {
+                if (!d.handled() && pr.vci.getTool() === VpcTool.Browse && focused && focused !== elClicked) {
                     pr.beginScheduleFldOpenCloseEventClose(focused);
                 }
             }
@@ -224,14 +205,8 @@ export class VpcPresenterEvents {
     static respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = d
-                    .getAffectedElements()
-                    .some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
-                pr.getToolResponse(pr.vci.getTool()).respondMouseUp(
-                    pr.vci.getTool(),
-                    d,
-                    isUserElOrBg
-                );
+                let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
+                pr.getToolResponse(pr.vci.getTool()).respondMouseUp(pr.vci.getTool(), d, isUserElOrBg);
                 pr.lyrNonModalDlgHolder.respondMouseUp(d);
                 pr.lyrToolboxes.toolsMain.respondMouseUp(pr.app, d);
                 pr.lyrToolboxes.toolsPatterns.respondMouseUp(pr.app, d);
@@ -245,17 +220,9 @@ export class VpcPresenterEvents {
      * send mousemove event t ocurrent tool
      */
     static respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
-        let isUserElOrBg = d
-            .getAffectedElements()
-            .some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
-        pr.getToolResponse(pr.vci.getTool()).respondMouseMove(
-            pr.vci.getTool(),
-            d,
-            isUserElOrBg
-        );
-        let isNextAVelOrBg =
-            trueIfDefinedAndNotNull(d.elNext) &&
-            bool(pr.lyrModelRender.isVelOrBg(d.elNext.id));
+        let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
+        pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBg);
+        let isNextAVelOrBg = trueIfDefinedAndNotNull(d.elNext) && bool(pr.lyrModelRender.isVelOrBg(d.elNext.id));
         if (d.elNext !== d.elPrev) {
             pr.refreshCursorElemKnown(d.elNext, isNextAVelOrBg);
         }
@@ -280,11 +247,7 @@ export class VpcPresenterEvents {
     /**
      * respond to keydown event
      */
-    static respondKeyDown(
-        pr: VpcPresenterInterface,
-        d: KeyDownEventDetails,
-        ed: EditTextBehaviorSendToVel
-    ) {
+    static respondKeyDown(pr: VpcPresenterInterface, d: KeyDownEventDetails, ed: EditTextBehaviorSendToVel) {
         VpcPresenterEvents.checkIfUndoRedo(pr, d);
         if (d.handled()) {
             return;
@@ -327,11 +290,7 @@ export class VpcPresenterEvents {
                 pr.lyrNonModalDlgHolder.respondKeyDown(d);
             }
 
-            if (
-                !pr.vci.isCodeRunning() &&
-                !d.handled() &&
-                getToolCategory(pr.vci.getTool()) === VpcToolCtg.CtgEdit
-            ) {
+            if (!pr.vci.isCodeRunning() && !d.handled() && getToolCategory(pr.vci.getTool()) === VpcToolCtg.CtgEdit) {
                 /* prop panel keyboard shortcuts */
                 pr.lyrPropPanel.respondKeydown(d);
             }
@@ -355,11 +314,7 @@ export class VpcPresenterEvents {
                 ed.onKeyDown(pr, d);
             }
 
-            if (
-                !pr.vci.isCodeRunning() &&
-                !d.handled() &&
-                pr.vci.getTool() === VpcTool.Browse
-            ) {
+            if (!pr.vci.isCodeRunning() && !d.handled() && pr.vci.getTool() === VpcTool.Browse) {
                 VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d);
             }
 
@@ -430,11 +385,7 @@ export class VpcPresenterEvents {
     static respondIdle(pr: VpcPresenterInterface, d: IdleEventDetails) {
         let curtool = pr.vci.getTool();
         let codeRunning = pr.vci.isCodeRunning();
-        if (
-            pr.cursorRefreshPending &&
-            pr.trackMouse[0] !== -1 &&
-            pr.trackMouse[1] !== -1
-        ) {
+        if (pr.cursorRefreshPending && pr.trackMouse[0] !== -1 && pr.trackMouse[1] !== -1) {
             pr.refreshCursor();
             pr.cursorRefreshPending = false;
         }
@@ -468,13 +419,7 @@ export class VpcPresenterEvents {
                 pr.timerSendMouseWithin.reset();
                 if (curtool === VpcTool.Browse) {
                     /* send mousewithin */
-                    VpcPresenterEvents.scheduleScriptMsg(
-                        pr,
-                        pr.vci,
-                        d,
-                        pr.trackMouse[0],
-                        pr.trackMouse[1]
-                    );
+                    VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d, pr.trackMouse[0], pr.trackMouse[1]);
                 }
             }
         }
@@ -503,9 +448,7 @@ export class VpcPresenterEvents {
             if (pr.timerRunMaintenance.isDue()) {
                 pr.timerRunMaintenance.reset();
                 if (!pr.vci.isCurrentlyUndoing()) {
-                    VpcPresenterEvents.showWarningIfExceptionThrown(() =>
-                        pr.lyrPaintRender.doMaintenance()
-                    );
+                    VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance());
                     let NoteThisIsDisabledCode = 1;
                     //~ VpcPresenterEvents.showWarningIfExceptionThrown(() =>
                     //~ pr.vci.getCodeExec().doMaintenance()
@@ -545,16 +488,10 @@ export class VpcPresenterEvents {
     /**
      * send the first opencard, openbackground, and openstack message
      */
-    static sendInitialOpenStackAndOpenCard(
-        pr: VpcPresenterInterface,
-        vci: VpcStateInterface
-    ) {
+    static sendInitialOpenStackAndOpenCard(pr: VpcPresenterInterface, vci: VpcStateInterface) {
         {
             /* send openstack */
-            let msg = new VpcScriptMessage(
-                vci.getModel().stack.id,
-                VpcBuiltinMsg.Openstack
-            );
+            let msg = new VpcScriptMessage(vci.getModel().stack.id, VpcBuiltinMsg.Openstack);
             pr.vci.getCodeExec().scheduleCodeExec(msg);
         }
 
@@ -618,13 +555,7 @@ export class VpcPresenterEvents {
      * finds target vel id and
      * schedules a script message (only if browse tool is active)
      */
-    static scheduleScriptMsg(
-        pr: VpcPresenterInterface,
-        vci: VpcStateInterface,
-        d: EventDetails,
-        mouseX = -1,
-        mouseY = -1
-    ) {
+    static scheduleScriptMsg(pr: VpcPresenterInterface, vci: VpcStateInterface, d: EventDetails, mouseX = -1, mouseY = -1) {
         if (d.handled() || vci.getTool() !== VpcTool.Browse) {
             return;
         }
@@ -632,11 +563,7 @@ export class VpcPresenterEvents {
         if (pr.lyrNonModalDlgHolder.current) {
             /* don't let 'on idle' run when you are running a msg box command */
             let cur = pr.lyrNonModalDlgHolder.current as VpcNonModalReplBox;
-            if (
-                cur.isVpcNonModalReplBox &&
-                cur.busy &&
-                !(d instanceof MouseUpEventDetails)
-            ) {
+            if (cur.isVpcNonModalReplBox && cur.busy && !(d instanceof MouseUpEventDetails)) {
                 return;
             }
         }
@@ -647,11 +574,7 @@ export class VpcPresenterEvents {
             if (d.elClick) {
                 target = d.elClick.id;
             }
-        } else if (
-            d instanceof MouseEventDetails ||
-            d instanceof MouseEnterDetails ||
-            d instanceof MouseLeaveDetails
-        ) {
+        } else if (d instanceof MouseEventDetails || d instanceof MouseEnterDetails || d instanceof MouseLeaveDetails) {
             let affected = d.getAffectedElements();
             if (affected.length) {
                 target = last(affected).id;
@@ -680,10 +603,7 @@ export class VpcPresenterEvents {
         }
 
         if (target) {
-            let velId = coalesceIfFalseLike(
-                pr.lyrModelRender.elIdToVelId(target),
-                pr.vci.getOptionS('currentCardId')
-            );
+            let velId = coalesceIfFalseLike(pr.lyrModelRender.elIdToVelId(target), pr.vci.getOptionS('currentCardId'));
             VpcPresenterEvents.scheduleScriptMsgImpl(pr, d, velId, isOnIdleEvent);
         }
     }
@@ -691,12 +611,7 @@ export class VpcPresenterEvents {
     /**
      * schedule a script message (only if browse tool is active)
      */
-    static scheduleScriptMsgImpl(
-        pr: VpcPresenterInterface,
-        d: EventDetails,
-        targetVelId: string,
-        isOnIdleEvent: boolean
-    ) {
+    static scheduleScriptMsgImpl(pr: VpcPresenterInterface, d: EventDetails, targetVelId: string, isOnIdleEvent: boolean) {
         /* don't start scripts if menu is open */
         if (VpcPresenterEvents.menuIsOpen(pr)) {
             return;
@@ -704,10 +619,7 @@ export class VpcPresenterEvents {
 
         let whichMsg = isOnIdleEvent ? VpcBuiltinMsg.Idle : getMsgFromEvtType(d.type());
         let msg = new VpcScriptMessage(targetVelId, whichMsg);
-        msg.mouseLoc = [
-            pr.trackMouse[0] - pr.userBounds[0],
-            pr.trackMouse[1] - pr.userBounds[1]
-        ];
+        msg.mouseLoc = [pr.trackMouse[0] - pr.userBounds[0], pr.trackMouse[1] - pr.userBounds[1]];
         msg.mouseIsDown = pr.trackPressedBtns[0];
         msg.cardWhenFired = pr.vci.getOptionS('currentCardId');
         msg.causedByUserAction = true;
@@ -757,18 +669,13 @@ export class EditTextBehaviorSendToVel extends UI512TextEvents {
     /**
      * get the vel, if it exists, else return the el
      */
-    static gelFromEl(
-        pr: VpcPresenterInterface,
-        el: O<UI512ElTextField>
-    ): O<GenericTextField> {
+    static gelFromEl(pr: VpcPresenterInterface, el: O<UI512ElTextField>): O<GenericTextField> {
         if (el) {
             let vel = pr.lyrModelRender.findElIdToVel(el.id);
             if (vel) {
                 let velFld = cast(vel, VpcElField);
                 let cardId = pr.vci.getOptionS('currentCardId');
-                return VpcModelRender.canFieldHaveFocus(velFld)
-                    ? new VpcTextFieldAsGeneric(el, velFld, cardId)
-                    : undefined;
+                return VpcModelRender.canFieldHaveFocus(velFld) ? new VpcTextFieldAsGeneric(el, velFld, cardId) : undefined;
             } else {
                 return new UI512ElTextFieldAsGeneric(el);
             }

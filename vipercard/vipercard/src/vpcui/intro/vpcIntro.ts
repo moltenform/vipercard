@@ -35,12 +35,7 @@ export class VpcUiIntro extends VpcIntroInterface {
         let fullBg = new UI512ElButton('bg');
         grp.addElement(this.app, fullBg);
         fullBg.set('style', UI512BtnStyle.Opaque);
-        fullBg.setDimensions(
-            this.bounds[0],
-            this.bounds[1],
-            this.bounds[2],
-            this.bounds[3]
-        );
+        fullBg.setDimensions(this.bounds[0], this.bounds[1], this.bounds[2], this.bounds[3]);
         fullBg.set('autohighlight', false);
 
         /* draw gray bg */
@@ -56,18 +51,12 @@ export class VpcUiIntro extends VpcIntroInterface {
             -4 /* negative margin so that the tiles overlap */
         );
 
-        layoutPatternBg.createElems(
-            this.app,
-            grp,
-            'bgpattern',
-            UI512ElButton,
-            (col, row, el) => {
-                el.set('icongroupid', 'logo');
-                el.set('iconnumber', 1);
-                el.set('style', UI512BtnStyle.Transparent);
-                el.set('autohighlight', false);
-            }
-        );
+        layoutPatternBg.createElems(this.app, grp, 'bgpattern', UI512ElButton, (col, row, el) => {
+            el.set('icongroupid', 'logo');
+            el.set('iconnumber', 1);
+            el.set('style', UI512BtnStyle.Transparent);
+            el.set('autohighlight', false);
+        });
 
         /* start the first page (a ui512composite object) */
         this.activePage = new IntroPageFirst('introFirstPage', this.bounds);
@@ -133,11 +122,7 @@ export class VpcUiIntro extends VpcIntroInterface {
      * create a new project and begin it, leaving the intro
      */
     beginNewDocument() {
-        let loader = new VpcIntroProvider(
-            '',
-            lng('lngnew stack'),
-            VpcDocumentLocation.NewDoc
-        );
+        let loader = new VpcIntroProvider('', lng('lngnew stack'), VpcDocumentLocation.NewDoc);
         this.beginLoadDocument(loader);
     }
 
@@ -147,20 +132,10 @@ export class VpcUiIntro extends VpcIntroInterface {
     beginLoadDocument(loader: VpcIntroProvider) {
         this.provideExitCallbacks(loader);
         let translatedLoadMessage = lng('lngLoading %docname');
-        translatedLoadMessage = translatedLoadMessage.replace(
-            /%docname/g,
-            loader.docName
-        );
+        translatedLoadMessage = translatedLoadMessage.replace(/%docname/g, loader.docName);
         let [x, y] = [this.activePage.x, this.activePage.y];
         this.activePage.destroy(this, this.app);
-        this.activePage = new IntroPageLoading(
-            'introWaitWhileLoadingPage',
-            this.bounds,
-            x,
-            y,
-            loader,
-            translatedLoadMessage
-        );
+        this.activePage = new IntroPageLoading('introWaitWhileLoadingPage', this.bounds, x, y, loader, translatedLoadMessage);
 
         this.activePage.create(this, this.app);
         this.rebuildFieldScrollbars();

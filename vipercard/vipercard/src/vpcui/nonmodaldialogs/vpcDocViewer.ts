@@ -193,12 +193,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * show the json data on the right side
      */
-    protected referenceShowData(
-        grp: UI512ElGroup,
-        btm: UI512ElTextField,
-        ctg: number,
-        jsonData: UnshapedJsonAny
-    ) {
+    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: UnshapedJsonAny) {
         let entryTitles = this.referenceInfo[ctg][2];
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);
@@ -207,10 +202,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             if (entryTitle) {
                 for (let i = 0, len = jsonData.entries.length; i < len; i++) {
                     let jsonEntry = jsonData.entries[i];
-                    if (
-                        jsonEntry.body &&
-                        jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()
-                    ) {
+                    if (jsonEntry.body && jsonEntry.title.toLowerCase() === entryTitle.toLowerCase()) {
                         let txt = FormattedText.newFromSerialized(jsonEntry.body);
                         let rghtFld = grp.findEl(this.getElId('rghtFld'));
                         if (rghtFld) {
@@ -249,11 +241,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * user clicked on a reference item, begin async load if hasn't loaded yet
      */
-    protected onChooseReferenceItem(
-        ctg: number,
-        grp: UI512ElGroup,
-        btm: UI512ElTextField
-    ) {
+    protected onChooseReferenceItem(ctg: number, grp: UI512ElGroup, btm: UI512ElTextField) {
         let section = this.referenceInfo[ctg];
         if (section) {
             let sectionId = section[0];
@@ -278,12 +266,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * show the button linking to video
      */
-    protected examplesShowData(
-        grp: UI512ElGroup,
-        btm: UI512ElTextField,
-        ctg: number,
-        sectionId: string
-    ) {
+    protected examplesShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, sectionId: string) {
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);
         if (ln !== undefined && ln >= 0 && ln < this.examplesInfo[ctg][2]) {
@@ -307,11 +290,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
 
         let curY = this.y;
-        let headheight = this.drawWindowDecoration(
-            app,
-            new WndBorderDecorationConsts(),
-            this.hasCloseBtn
-        );
+        let headheight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
         curY += headheight;
 
         let [top, btm] = this.createLayoutListboxes(curY, grp);
@@ -327,22 +306,10 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      */
     protected createLayoutListboxes(curY: number, grp: UI512ElGroup) {
         curY += 15;
-        let top = UI512ElTextField.makeChoiceBox(
-            this.vci.UI512App(),
-            grp,
-            this.getElId('topChoice'),
-            this.x + 15,
-            curY
-        );
+        let top = UI512ElTextField.makeChoiceBox(this.vci.UI512App(), grp, this.getElId('topChoice'), this.x + 15, curY);
         top.set('w', 131);
         curY += top.h + 15;
-        let btm = UI512ElTextField.makeChoiceBox(
-            this.vci.UI512App(),
-            grp,
-            this.getElId('btmChoice'),
-            this.x + 15,
-            curY
-        );
+        let btm = UI512ElTextField.makeChoiceBox(this.vci.UI512App(), grp, this.getElId('btmChoice'), this.x + 15, curY);
         btm.set('w', 131);
         return [top, btm];
     }
@@ -356,12 +323,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         rghtBtn.set('autohighlight', false);
         rghtBtn.setDimensions(rghtFld.x, rghtFld.y, rghtFld.w, rghtFld.h);
         rghtBtn.set('visible', this.type !== DialogDocsType.Reference);
-        rghtBtn.set(
-            'style',
-            this.type === DialogDocsType.Examples
-                ? UI512BtnStyle.Rectangle
-                : UI512BtnStyle.Transparent
-        );
+        rghtBtn.set('style', this.type === DialogDocsType.Examples ? UI512BtnStyle.Rectangle : UI512BtnStyle.Transparent);
 
         let btnStartVid = this.genBtn(this.vci.UI512App(), grp, 'btnStartVid');
         btnStartVid.set('style', UI512BtnStyle.OSStandard);
@@ -379,18 +341,8 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * the field that holds documentation content
      */
-    protected createLayoutRightFld(
-        grp: UI512ElGroup,
-        top: UI512ElTextField,
-        headheight: number,
-        btm: UI512ElTextField
-    ) {
-        let rghtFld = this.genChild<UI512ElTextField>(
-            this.vci.UI512App(),
-            grp,
-            'rghtFld',
-            UI512ElTextField
-        );
+    protected createLayoutRightFld(grp: UI512ElGroup, top: UI512ElTextField, headheight: number, btm: UI512ElTextField) {
+        let rghtFld = this.genChild<UI512ElTextField>(this.vci.UI512App(), grp, 'rghtFld', UI512ElTextField);
         if (this.type === DialogDocsType.Examples) {
             rghtFld.setDimensionsX1Y1(
                 top.x + top.w + 10,
@@ -398,24 +350,12 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
                 this.x + this.logicalWidth,
                 this.y + this.logicalHeight - 1
             );
-            let shrunk = RectUtils.getSubRectRaw(
-                rghtFld.x,
-                rghtFld.y,
-                rghtFld.w,
-                rghtFld.h,
-                7,
-                7
-            );
+            let shrunk = RectUtils.getSubRectRaw(rghtFld.x, rghtFld.y, rghtFld.w, rghtFld.h, 7, 7);
             if (shrunk) {
                 rghtFld.setDimensions(shrunk[0], shrunk[1], shrunk[2], shrunk[3]);
             }
         } else {
-            rghtFld.setDimensionsX1Y1(
-                top.x + top.w + 10,
-                top.y,
-                this.x + this.logicalWidth,
-                btm.bottom
-            );
+            rghtFld.setDimensionsX1Y1(top.x + top.w + 10, top.y, this.x + this.logicalWidth, btm.bottom);
         }
 
         rghtFld.set('style', UI512FldStyle.Rectangle);
@@ -436,10 +376,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             let ctg = this.getChosenCategoryNumber(top);
             if (ctg !== undefined && this.examplesInfo[ctg]) {
                 let num = this.examplesInfo[ctg][0].replace(/vid/g, '');
-                let redirectWindow = window.open(
-                    '/0.3/html/video' + num + '.html',
-                    '_blank'
-                );
+                let redirectWindow = window.open('/0.3/html/video' + num + '.html', '_blank');
             }
         }
     }

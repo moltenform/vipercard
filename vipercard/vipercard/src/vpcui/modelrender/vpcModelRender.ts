@@ -25,11 +25,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     grp: UI512ElGroup;
     directMapProperty: { [key: string]: string } = {};
     indirectProperty: {
-        [key: string]: (
-            vel: VpcElBase,
-            el: UI512Element,
-            newVal: ElementObserverVal
-        ) => void;
+        [key: string]: (vel: VpcElBase, el: UI512Element, newVal: ElementObserverVal) => void;
     } = {};
     propertiesCouldUnFocus: { [key: string]: boolean } = {};
 
@@ -92,18 +88,9 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     /**
      * a change has been seen
      */
-    changeSeen(
-        context: ChangeContext,
-        velId: string,
-        propName: string,
-        prev: ElementObserverVal,
-        newVal: ElementObserverVal
-    ) {
+    changeSeen(context: ChangeContext, velId: string, propName: string, prev: ElementObserverVal, newVal: ElementObserverVal) {
         if (!this.vci) {
-            checkThrow(
-                propName.startsWith('increasingnum'),
-                'KV|we only expect increasingnum to be changed before init()'
-            );
+            checkThrow(propName.startsWith('increasingnum'), 'KV|we only expect increasingnum to be changed before init()');
             return;
         }
 
@@ -136,12 +123,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * apply the change, if the vel type is one we listen to
      * for example, if change is to a vel on a different card, ignore the change
      */
-    protected applyOneChangeIfApplicable(
-        vel: VpcElBase,
-        propName: string,
-        newVal: ElementObserverVal,
-        fromScratch: boolean
-    ) {
+    protected applyOneChangeIfApplicable(vel: VpcElBase, propName: string, newVal: ElementObserverVal, fromScratch: boolean) {
         /* translate from card-specific content */
         let type = vel.getType();
         let currentCardId = this.vci.getOptionS('currentCardId');
@@ -177,9 +159,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      */
     protected refreshLabelWithFont(vel: VpcElBase, target: UI512Element) {
         if (vel instanceof VpcElButton) {
-            let lbl = vel.getB('showlabel')
-                ? UI512DrawText.setFont(vel.getS('label'), vel.getFontAsUI512())
-                : '';
+            let lbl = vel.getB('showlabel') ? UI512DrawText.setFont(vel.getS('label'), vel.getFontAsUI512()) : '';
             target.set('labeltext', lbl);
         } else {
             throw makeVpcInternalErr(`6+|expected button`);
@@ -317,16 +297,8 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * apply one change,
      * mapping a vel change to a ui512element change
      */
-    protected applyOneChange(
-        vel: VpcElBase,
-        propName: string,
-        newVal: ElementObserverVal,
-        fromScratch: boolean
-    ) {
-        assertTrue(
-            vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn,
-            'KU|'
-        );
+    protected applyOneChange(vel: VpcElBase, propName: string, newVal: ElementObserverVal, fromScratch: boolean) {
+        assertTrue(vel.getType() === VpcElType.Fld || vel.getType() === VpcElType.Btn, 'KU|');
         let key = vel.getType().toString() + '/' + propName;
         let target = this.findVelIdToEl(vel.id);
         if (target) {
@@ -338,11 +310,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 target.set(ui512propname, newVal);
             } else if (propName === UI512Settable.fmtTxtVarName) {
                 let newvAsText = newVal as FormattedText;
-                assertTrue(
-                    newvAsText && newvAsText.isFormattedText,
-                    '6)|bad formatted text',
-                    vel.id
-                );
+                assertTrue(newvAsText && newvAsText.isFormattedText, '6)|bad formatted text', vel.id);
                 target.setFmTxt(newvAsText);
             } else {
                 /* it's a property that doesn't impact rendering. that's ok. */
@@ -437,9 +405,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         };
 
         this.indirectProperty[VpcElType.Fld + '/enabled'] = (vel, el, newVal) => {
-            let isEdit =
-                getToolCategory(this.vci.getOptionN('currentTool')) ===
-                VpcToolCtg.CtgEdit;
+            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('enabledstyle', newVal);
             el.set('enabled', isEdit ? true : newVal);
         };
@@ -468,9 +434,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
 
         this.directMapProperty[VpcElType.Fld + '/scrollbar'] = 'scrollbar';
         this.indirectProperty[VpcElType.Fld + '/visible'] = (vel, el, newVal) => {
-            let isEdit =
-                getToolCategory(this.vci.getOptionN('currentTool')) ===
-                VpcToolCtg.CtgEdit;
+            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('visible', isEdit ? true : newVal);
         };
 
@@ -490,9 +454,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected initButtonProps() {
         this.directMapProperty[VpcElType.Btn + '/autohilite'] = 'autohighlight';
         this.indirectProperty[VpcElType.Btn + '/enabled'] = (vel, el, newVal) => {
-            let isEdit =
-                getToolCategory(this.vci.getOptionN('currentTool')) ===
-                VpcToolCtg.CtgEdit;
+            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('enabledstyle', newVal);
             el.set('enabled', isEdit ? true : newVal);
         };
@@ -531,9 +493,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         };
 
         this.indirectProperty[VpcElType.Btn + '/visible'] = (vel, el, newVal) => {
-            let isEdit =
-                getToolCategory(this.vci.getOptionN('currentTool')) ===
-                VpcToolCtg.CtgEdit;
+            let isEdit = getToolCategory(this.vci.getOptionN('currentTool')) === VpcToolCtg.CtgEdit;
             el.set('visible', isEdit ? true : newVal);
         };
     }

@@ -40,9 +40,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     protected status2b: UI512ElLabel;
     protected statusErrMoreDetails: string;
     readonly monaco = `monaco_9_${textFontStylingToString(TextFontStyling.Default)}`;
-    readonly genevaPlain = `geneva_10_${textFontStylingToString(
-        TextFontStyling.Default
-    )}`;
+    readonly genevaPlain = `geneva_10_${textFontStylingToString(TextFontStyling.Default)}`;
     readonly genevaBold = `geneva_10_${textFontStylingToString(TextFontStyling.Bold)}`;
     constructor(compositeId: string) {
         super(compositeId);
@@ -80,11 +78,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         bg.setDimensions(this.x, this.y, this.logicalWidth, this.logicalHeight);
 
         /* draw window decoration */
-        let headerHeight = this.drawWindowDecoration(
-            app,
-            new WndBorderDecorationConsts(),
-            this.hasCloseBtn
-        );
+        let headerHeight = this.drawWindowDecoration(app, new WndBorderDecorationConsts(), this.hasCloseBtn);
 
         /* draw spacer */
         let curY = this.y + headerHeight - 1;
@@ -100,12 +94,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.el.set('scrollbar', true);
         this.el.set('defaultFont', UI512CompCodeEditorFont.font);
         this.el.set('nudgey', 2);
-        this.el.setDimensions(
-            this.x,
-            curY,
-            this.logicalWidth,
-            this.y + this.logicalHeight - curY - footerHeight
-        );
+        this.el.setDimensions(this.x, curY, this.logicalWidth, this.y + this.logicalHeight - curY - footerHeight);
 
         /* draw status text row 1 */
         this.status1a = this.genChild(app, grp, 'status1a', UI512ElLabel);
@@ -141,15 +130,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         let grp = app.getGroup(this.grpId);
         if (!vel) {
             this.setStatusLabeltext('', undefined, '', '');
-            grp.getEl(this.getElId('caption')).set(
-                'labeltext',
-                lng('lngElement not found.')
-            );
+            grp.getEl(this.getElId('caption')).set('labeltext', lng('lngElement not found.'));
         } else {
             let caption = grp.getEl(this.getElId('caption'));
             let captionMsg = lng('lngScript of %c');
-            let velName =
-                vpcElTypeToString(vel.getType(), true) + ` "${vel.getS('name')}"`;
+            let velName = vpcElTypeToString(vel.getType(), true) + ` "${vel.getS('name')}"`;
             captionMsg = captionMsg.replace(/%c/g, velName);
             captionMsg = captionMsg.substr(0, 36);
             caption.set('labeltext', captionMsg);
@@ -224,12 +209,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * sType is untranslated,
      * sMsg and sMsgMore are already translated
      */
-    protected setStatusLabeltext(
-        sType: string,
-        n: O<number>,
-        sMsg: string,
-        sMsgMore: string
-    ) {
+    protected setStatusLabeltext(sType: string, n: O<number>, sMsg: string, sMsgMore: string) {
         this.status1a.set('labeltext', lng(sType));
         this.status2b.set('labeltext', UI512DrawText.setFont(sMsg, this.monaco));
 
@@ -385,9 +365,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         if (onlyCheckIfDirty) {
             let current = vel.getS('script');
             if (current !== newscript) {
-                throw makeVpcInternalErr(
-                    msgNotification + VpcPanelScriptEditor.thereArePendingChanges
-                );
+                throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
             vel.set('script', newscript);

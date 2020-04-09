@@ -63,12 +63,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
 
         let descHeader = grp.findEl(this.getElId('lblFordesc'));
         if (descHeader) {
-            descHeader.setDimensions(
-                descHeader.x - 20,
-                descHeader.y,
-                descHeader.w + 40,
-                descHeader.h
-            );
+            descHeader.setDimensions(descHeader.x - 20, descHeader.y, descHeader.w + 40, descHeader.h);
         }
 
         let fld = grp.findEl(this.getElId('flddesc'));

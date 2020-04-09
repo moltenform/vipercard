@@ -17,13 +17,7 @@ export class IntroPagePickFile extends IntroPageBase {
     isIntroOpenFromDiskPage = true;
     compositeType = 'IntroPagePickFile';
     canDrag = false;
-    constructor(
-        compId: string,
-        bounds: number[],
-        x: number,
-        y: number,
-        protected pr: VpcIntroInterface
-    ) {
+    constructor(compId: string, bounds: number[], x: number, y: number, protected pr: VpcIntroInterface) {
         /* always display this window in the center, even if it was moved earlier */
         super(compId, bounds, undefined, undefined);
     }
@@ -59,8 +53,7 @@ export class IntroPagePickFile extends IntroPageBase {
         this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
 
         /* set the dimensions of the clickbounds based on position of the main <canvas> */
-        let elCanvas =
-            window.document.getElementById('mainDomCanvas') ?? window.document.body;
+        let elCanvas = window.document.getElementById('mainDomCanvas') ?? window.document.body;
         let elCanvasBounds = elCanvas.getBoundingClientRect();
         let clickBounds = [
             elCanvasBounds.left + elCanvasBounds.width / 6,
@@ -200,11 +193,7 @@ export class IntroPagePickFile extends IntroPageBase {
                 return;
             }
 
-            let loader = new VpcIntroProvider(
-                text,
-                lng('lngfile from disk'),
-                VpcDocumentLocation.FromJsonFile
-            );
+            let loader = new VpcIntroProvider(text, lng('lngfile from disk'), VpcDocumentLocation.FromJsonFile);
             this.pr.beginLoadDocument(loader);
         }
     }
@@ -224,11 +213,7 @@ export class IntroPagePickFile extends IntroPageBase {
     /**
      * respond to button click
      */
-    static respondBtnClick(
-        pr: VpcIntroInterface,
-        self: IntroPagePickFile,
-        el: UI512Element
-    ) {
+    static respondBtnClick(pr: VpcIntroInterface, self: IntroPagePickFile, el: UI512Element) {
         if (el.id.endsWith('choicebtn0') || el.id.endsWith('choicebtn1')) {
             /* user clicked cancel, go back to first screen */
             pr.goBackToFirstScreen();

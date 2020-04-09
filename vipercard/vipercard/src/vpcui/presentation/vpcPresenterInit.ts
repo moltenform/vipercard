@@ -48,11 +48,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
     cbExitToMainMenu: () => void;
     cbExitToNewDocument: () => void;
     cbExitToOpen: (mystacksonly: boolean) => void;
-    cbSaveToBrowserStorage: (
-        s: string,
-        identifier: O<string>,
-        humanName: O<string>
-    ) => string;
+    cbSaveToBrowserStorage: (s: string, identifier: O<string>, humanName: O<string>) => string;
 
     /* higher level has told us this is a demo stack */
     cameFromDemoSoNeverPromptSave = '';
@@ -172,8 +168,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
 
         /* provide a callback to menuActions */
         this.menuActions.save = new VpcSave(this);
-        this.menuActions.fontChanger.cbGetEditToolSelectedFldOrBtn = () =>
-            this.lyrPropPanel.selectedFldOrBtn();
+        this.menuActions.fontChanger.cbGetEditToolSelectedFldOrBtn = () => this.lyrPropPanel.selectedFldOrBtn();
         this.setUpUnbeforeloadWarning();
     }
 
@@ -200,8 +195,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
             tlresp.vci = this.vci;
             tlresp.cbModelRender = () => this.lyrModelRender;
             tlresp.cbPaintRender = () => this.lyrPaintRender;
-            tlresp.cbScheduleScriptEventSend = a =>
-                VpcPresenterEvents.scheduleScriptMsg(this, this.vci, a);
+            tlresp.cbScheduleScriptEventSend = a => VpcPresenterEvents.scheduleScriptMsg(this, this.vci, a);
         }
 
         /* make a map of tool number to tool response */
@@ -236,8 +230,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
                 cb();
             });
 
-        this.lyrToolboxes.cbStopCodeRunning = () =>
-            this.vci.getCodeExec().forceStopRunning();
+        this.lyrToolboxes.cbStopCodeRunning = () => this.vci.getCodeExec().forceStopRunning();
         this.lyrNonModalDlgHolder.pr = this as UI512PresenterBase;
 
         if (
@@ -286,15 +279,8 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
             window.onbeforeunload = () => {
                 if (weakRef.has(key)) {
                     let pr = weakRef.get(key);
-                    if (
-                        pr &&
-                        pr.isDocDirty() &&
-                        checkIsProductionBuild() &&
-                        !pr.cameFromDemoSoNeverPromptSave.length
-                    ) {
-                        return lng(
-                            'lngReminder that unsaved changes will be lost.\nContinue?'
-                        );
+                    if (pr && pr.isDocDirty() && checkIsProductionBuild() && !pr.cameFromDemoSoNeverPromptSave.length) {
+                        return lng('lngReminder that unsaved changes will be lost.\nContinue?');
                     }
                 }
 

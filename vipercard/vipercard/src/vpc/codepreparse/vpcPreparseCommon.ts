@@ -210,19 +210,10 @@ export enum CodeSymbols {
  * so let's do a few basic checks here to try to give you a better error message
  */
 export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
-    checkThrow(
-        !tk || !isTkType(tk, tks.tkAdjective),
-        `8f|we don't support variables named "short", "long", etc`
-    );
+    checkThrow(!tk || !isTkType(tk, tks.tkAdjective), `8f|we don't support variables named "short", "long", etc`);
 
-    checkThrow(
-        !tk || !isTkType(tk, tks._contains),
-        `Ji|we don't support variables named "contains"`
-    );
-    checkThrow(
-        !tk || !isTkType(tk, tks._within),
-        `8d|we don't support variables named "within"`
-    );
+    checkThrow(!tk || !isTkType(tk, tks._contains), `Ji|we don't support variables named "contains"`);
+    checkThrow(!tk || !isTkType(tk, tks._within), `8d|we don't support variables named "within"`);
     checkThrow(!tk || !isTkType(tk, tks._to), `8c|we don't support variables named "id"`);
     checkThrow(
         !tk || !isTkType(tk, tks.tkOrdinal),
@@ -236,8 +227,5 @@ export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
         !tk || !isTkType(tk, tks.tkChunkGranularity),
         `Jg|we don't support variables with names like "char", "word", "item", "line"`
     );
-    checkThrow(
-        !tk || !isTkType(tk, tks.tkMultDivideExpDivMod),
-        `Jf|we don't support variables with names like "div", "mod"`
-    );
+    checkThrow(!tk || !isTkType(tk, tks.tkMultDivideExpDivMod), `Jf|we don't support variables with names like "div", "mod"`);
 }

@@ -25,10 +25,7 @@ export class PaintGifExport {
      */
     begin(speed: number) {
         this.init();
-        Util512Higher.syncToAsyncTransition(
-            () => this.beginPaintExportToGif(speed),
-            'gif export'
-        );
+        Util512Higher.syncToAsyncTransition(() => this.beginPaintExportToGif(speed), 'gif export');
     }
 
     /**
@@ -44,12 +41,7 @@ export class PaintGifExport {
         let labelElemId = 'labelPaintExportToGif' + Math.random();
         this.elStatus = new UI512ElLabel(labelElemId);
         grp.addElement(this.vci.UI512App(), this.elStatus);
-        this.elStatus.setDimensions(
-            this.vci.userBounds()[0] + this.vci.userBounds()[2] + 10,
-            300,
-            40,
-            40
-        );
+        this.elStatus.setDimensions(this.vci.userBounds()[0] + this.vci.userBounds()[2] + 10, 300, 40, 40);
         this.elStatus.set('w', this.vci.bounds()[2] - this.elStatus.x);
     }
 
@@ -86,9 +78,7 @@ export class PaintGifExport {
     async beginPaintExportToGif(speed: number) {
         try {
             this.setStatus('lngLoading .gif creation module...');
-            await Util512Higher.asyncLoadJsIfNotAlreadyLoaded(
-                '/external/jsgif-dynamic/jsgifcombined.js'
-            );
+            await Util512Higher.asyncLoadJsIfNotAlreadyLoaded('/external/jsgif-dynamic/jsgifcombined.js');
             this.setStatus('lngBegin .gif export.');
 
             if (speed < 1 || speed > 10) {
@@ -102,14 +92,8 @@ export class PaintGifExport {
                 await Util512Higher.sleep(100);
                 let cds = this.vci.getModel().stack.bgs[0].cards;
                 let cardId = cds[i].id;
-                let [
-                    currentlyCachedV,
-                    currentlyCachedIm
-                ] = this.cbRefreshCachedPaintForCard(cardId);
-                checkThrow(
-                    encoder.addFrame(currentlyCachedIm.context),
-                    `KT|addFrame() returned false on cd ${i + 1}.`
-                );
+                let [currentlyCachedV, currentlyCachedIm] = this.cbRefreshCachedPaintForCard(cardId);
+                checkThrow(encoder.addFrame(currentlyCachedIm.context), `KT|addFrame() returned false on cd ${i + 1}.`);
             }
 
             await Util512Higher.sleep(100);

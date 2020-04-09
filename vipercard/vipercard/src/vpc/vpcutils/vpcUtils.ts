@@ -59,7 +59,7 @@ export class VpcScriptSyntaxError extends VpcScriptErrorBase {
  * includes both built-in messages "mouseUp" and custom messages "myHandler"
  */
 export class VpcScriptMessage {
-    isVpcScriptMessage = true
+    isVpcScriptMessage = true;
     clickLoc: O<number[]>;
     keyMods: O<ModifierKeys>;
     keyChar: O<string>;
@@ -91,9 +91,9 @@ export class VpcScriptMessage {
  * for running code in the messagebox
  */
 export class VpcScriptMessageMsgBoxCode extends VpcScriptMessage {
-    isVpcScriptMessageMsgBoxCode = true
-    addIntentionalError = true
-    msgBoxCodeBody = ''
+    isVpcScriptMessageMsgBoxCode = true;
+    addIntentionalError = true;
+    msgBoxCodeBody = '';
 
     /**
      * use this unique marker to know if the error was intentional
@@ -202,10 +202,7 @@ export class RememberHistory {
     /**
      * you can reject candidates
      */
-    walkPreviousWhileAcceptible(
-        fallback: () => string,
-        isAccepted: (s: string) => boolean
-    ) {
+    walkPreviousWhileAcceptible(fallback: () => string, isAccepted: (s: string) => boolean) {
         while (true) {
             let cand = this.walkPrevious(fallback);
             if (isAccepted(cand)) {
@@ -245,11 +242,11 @@ export class RememberHistory {
     /**
      * pop from the list
      */
-    pop(fallback: () => string):string {
+    pop(fallback: () => string): string {
         if (!this.list.length) {
-            return fallback()
+            return fallback();
         } else {
-            return this.list.pop() ?? fallback()
+            return this.list.pop() ?? fallback();
         }
     }
 }

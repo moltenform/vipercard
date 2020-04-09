@@ -19,16 +19,8 @@ export class VpcLineToCodeObj {
     constructor(protected idGen: CountNumericId, protected check: CheckReservedWords) {}
 
     init(basis: ChvITk) {
-        this.reusableRequestEval = BuildFakeTokens.inst.makeTk(
-            basis,
-            tks.tkIdentifier,
-            CodeSymbols.RequestEval
-        );
-        this.reusableRequestUserHandler = BuildFakeTokens.inst.makeTk(
-            basis,
-            tks.tkIdentifier,
-            CodeSymbols.RequestHandlerCall
-        );
+        this.reusableRequestEval = BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, CodeSymbols.RequestEval);
+        this.reusableRequestUserHandler = BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, CodeSymbols.RequestHandlerCall);
         this.parser = getParsingObjects()[1];
     }
 
@@ -50,13 +42,7 @@ export class VpcLineToCodeObj {
             let cmd = firstImage.replace(/\^/g, '');
             let method = 'go' + Util512.capitalizeFirst(cmd);
             method = Util512.isMethodOnClass(this, method) ? method : 'goCustomHandler';
-            let ret = Util512.callAsMethodOnClass(
-                'DetermineCategory',
-                this,
-                method,
-                [line, output],
-                false
-            );
+            let ret = Util512.callAsMethodOnClass('DetermineCategory', this, method, [line, output], false);
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {
                 if (output.ctg === VpcLineCategory.CallDynamic) {
@@ -69,9 +55,7 @@ export class VpcLineToCodeObj {
                     output.setParseRule(this.parser.RuleBuiltinCmdInternalvpcgocardimpl);
                 } else if (this.isParsingNeeded(output.ctg)) {
                     /* construct an array to be sent to the parser */
-                    output.excerptToParse = [this.reusableRequestEval].concat(
-                        output.excerptToParse
-                    );
+                    output.excerptToParse = [this.reusableRequestEval].concat(output.excerptToParse);
                     output.setParseRule(this.parser.RuleInternalCmdRequestEval);
                 }
             }
@@ -97,10 +81,7 @@ export class VpcLineToCodeObj {
      * requestEvals are only added later
      */
     goRequestEval(line: ChvITk[], output: VpcCodeLine) {
-        checkThrow(
-            false,
-            `8J|we shouldn't reach this yet, we don't add them until after this step.`
-        );
+        checkThrow(false, `8J|we shouldn't reach this yet, we don't add them until after this step.`);
     }
 
     /**
@@ -117,12 +98,9 @@ export class VpcLineToCodeObj {
         let firstImage = line[0].image;
         output.ctg = VpcLineCategory.HandlerStart;
         checkThrow(line.length > 1, `8F|cannot have a line that is just "${firstImage}"`);
-        checkThrow(line[1].image !== 'keydown', "we support `on afterkeydown` but not `on keydown`")
+        checkThrow(line[1].image !== 'keydown', 'we support `on afterkeydown` but not `on keydown`');
         checkCommonMistakenVarNames(line[1]);
-        checkThrow(
-            this.check.okHandlerName(line[1].image),
-            `8E|name of handler is a reserved word.`
-        );
+        checkThrow(this.check.okHandlerName(line[1].image), `8E|name of handler is a reserved word.`);
         checkThrowEq(
             tks.tkIdentifier,
             line[1].tokenType,
@@ -187,10 +165,7 @@ export class VpcLineToCodeObj {
     goNext(line: ChvITk[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.RepeatNext;
         checkThrowEq(2, line.length, `7}|line should be just 'next repeat'`);
-        checkThrow(
-            isTkType(line[1], tks.tkIdentifier) && line[1].image === 'repeat',
-            `7||line should be just 'next repeat'`
-        );
+        checkThrow(isTkType(line[1], tks.tkIdentifier) && line[1].image === 'repeat', `7||line should be just 'next repeat'`);
     }
 
     /**
@@ -209,14 +184,9 @@ export class VpcLineToCodeObj {
         if (line.length > 1) {
             /* kind reminders to the user */
             let firstToken = line[0];
+            checkThrow(line[1].image !== '=', `8M|this isn't C... you need to use 'put 1 into x' not 'x = 1'`);
             checkThrow(
-                line[1].image !== '=',
-                `8M|this isn't C... you need to use 'put 1 into x' not 'x = 1'`
-            );
-            checkThrow(
-                !firstToken.endOffset ||
-                    line[1].image !== '(' ||
-                    line[1].startOffset > firstToken.endOffset + 1,
+                !firstToken.endOffset || line[1].image !== '(' || line[1].startOffset > firstToken.endOffset + 1,
                 longstr(`8L|this isn't C... you need to say
                  'put fn() into x' or 'get fn()' but not 'fn()' alone`)
             );
@@ -245,11 +215,7 @@ export class VpcLineToCodeObj {
                 name of handler is a reserved word.`
             )
         );
-        checkThrowEq(
-            tks.tkIdentifier,
-            line[1].tokenType,
-            `89|expected "end myhandler" but name of my handler is not valid`
-        );
+        checkThrowEq(tks.tkIdentifier, line[1].tokenType, `89|expected "end myhandler" but name of my handler is not valid`);
 
         output.excerptToParse.push(line[0]);
         output.excerptToParse.push(line[1]);
@@ -312,16 +278,8 @@ export class VpcLineToCodeObj {
      */
     goEnd(line: ChvITk[], output: VpcCodeLine) {
         checkThrow(line.length > 1, `7_|cannot have a line that is just "end"`);
-        checkThrowEq(
-            2,
-            line.length,
-            `7^|wrong line length. expected "end if", "end repeat", "end handler"`
-        );
-        checkThrowEq(
-            tks.tkIdentifier,
-            line[1].tokenType,
-            `7]|expected one of: "end if", "end repeat", "end handler"`
-        );
+        checkThrowEq(2, line.length, `7^|wrong line length. expected "end if", "end repeat", "end handler"`);
+        checkThrowEq(tks.tkIdentifier, line[1].tokenType, `7]|expected one of: "end if", "end repeat", "end handler"`);
 
         if (line[1].image === 'if') {
             return this.goEndIf(line, output);
@@ -352,10 +310,7 @@ export class VpcLineToCodeObj {
 
         if (line[1].image === 'repeat') {
             return this.goExitRepeat(line, output);
-        } else if (
-            line[1].image === cProductName.toLowerCase() ||
-            line[1].image === cAltProductName.toLowerCase()
-        ) {
+        } else if (line[1].image === cProductName.toLowerCase() || line[1].image === cAltProductName.toLowerCase()) {
             return this.goExitProduct(line, output);
         } else {
             return this.goExitHandler(line, output);
@@ -417,17 +372,10 @@ export class VpcLineToCodeObj {
      * for a line like "on myHandler a,b,c"
      * note that in this version, variable names aren't always a tkIdentifier
      */
-    protected getListOfValidVariableNames(
-        line: ChvITk[],
-        output: VpcCodeLine,
-        index: number
-    ) {
+    protected getListOfValidVariableNames(line: ChvITk[], output: VpcCodeLine, index: number) {
         for (let i = index; i < line.length; i++) {
             checkCommonMistakenVarNames(line[i]);
-            checkThrow(
-                this.check.okLocalVar(line[i].image),
-                `8I|name of parameter is a reserved word.`
-            );
+            checkThrow(this.check.okLocalVar(line[i].image), `8I|name of parameter is a reserved word.`);
 
             if ((i - index) % 2 === 1) {
                 checkThrowEq(
