@@ -139,7 +139,7 @@ export class VpcUiIntro extends VpcIntroInterface {
 
         this.activePage.create(this, this.app);
         this.rebuildFieldScrollbars();
-        cast(this.activePage, IntroPageLoading).go(this);
+        cast(IntroPageLoading, this.activePage).go(this);
     }
 
     /**

@@ -80,7 +80,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
     protected getChosenCategory() {
         let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceLeft');
         if (el) {
-            let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
+            let gel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, el));
             let ln = TextSelModify.selectByLinesWhichLine(gel);
             if (ln !== undefined && ln >= 0 && ln < this.directories.length) {
                 let ctg = this.images.children[ln];
@@ -101,7 +101,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         if (ctg) {
             let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
             if (el && el.getFmTxt().len() > 0) {
-                let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
+                let gel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, el));
                 let ln = TextSelModify.selectByLinesWhichLine(gel);
                 if (ln !== undefined && ln >= 0) {
                     let img = ctg.children[ln];
@@ -126,13 +126,13 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
             let lns = ctg.children.map(ch => lng(ch.name));
             let el = this.vci.UI512App().findEl('grpVpcAppUIToolStampChoiceRight');
             if (el) {
-                UI512ElTextField.setListChoices(cast(el, UI512ElTextField), lns);
+                UI512ElTextField.setListChoices(cast(UI512ElTextField, el, ), lns);
                 el.set('selcaret', 0);
                 el.set('selend', 0);
                 this.currentImg = undefined;
                 if (el.getFmTxt().len() > 0) {
                     /* auto-choose the first one */
-                    let rghtgel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
+                    let rghtgel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, el, ));
                     TextSelModify.selectLineInField(rghtgel, 0);
                     this.onChoosePicture();
                 }
@@ -232,11 +232,11 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         );
 
         /* auto-choose the first entry in the list */
-        let lftgel = new UI512ElTextFieldAsGeneric(cast(lft, UI512ElTextField));
+        let lftgel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, lft));
         TextSelModify.selectLineInField(lftgel, 0);
         this.onChooseCategory();
         if (rght.getFmTxt().len() > 0) {
-            let rghtgel = new UI512ElTextFieldAsGeneric(cast(rght, UI512ElTextField));
+            let rghtgel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, rght));
             TextSelModify.selectLineInField(rghtgel, 0);
             this.onChoosePicture();
         }

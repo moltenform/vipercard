@@ -219,7 +219,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             let found = this.leftChoices.findIndex(item => item[1].toLowerCase() === styl.toLowerCase());
             if (found !== -1) {
                 let wasScroll = el.getN('scrollamt');
-                let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
+                let gel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, el, ));
                 TextSelModify.selectLineInField(gel, found);
                 el.set('scrollamt', wasScroll);
             } else {
@@ -305,7 +305,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
 
         if (this.leftChoices.length) {
             let el = grp.getEl(this.getElId(`leftchoice`));
-            let gel = new UI512ElTextFieldAsGeneric(cast(el, UI512ElTextField));
+            let gel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, el, ));
             let ln = TextSelModify.selectByLinesWhichLine(gel);
             if (ln !== undefined && ln >= 0 && ln < this.leftChoices.length) {
                 this.saveChangesToModelSetProp(vel, 'style', VpcValS(this.leftChoices[ln][1]), onlyCheckIfDirty);

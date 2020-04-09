@@ -51,7 +51,7 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
      */
     protected makeBlack() {
         if (this.st) {
-            let cv = cast(this.st.elStage.getCachedPainterForWrite().getBackingSurface(), CanvasWrapper);
+            let cv = cast(CanvasWrapper, this.st.elStage.getCachedPainterForWrite().getBackingSurface(), );
             cv.clear();
 
             let args = new UI512PaintDispatch(

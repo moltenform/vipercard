@@ -51,7 +51,7 @@ export class VpcPaintRender extends VpcUILayer {
      * use a UI512ElCanvasPiece to draw a piece of this canvas onto the main canvas
      */
     updateUI512Els(): void {
-        let mainPaint = cast(this.vci.UI512App().getEl('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
+        let mainPaint = cast(UI512ElCanvasPiece, this.vci.UI512App().getEl('VpcModelRender$$renderbg'), );
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         let [currentlyCachedV, currentlyCachedIm] = this.refreshCachedPaintForCard(currentCardId);
         mainPaint.setCanvas(currentlyCachedIm);
@@ -117,7 +117,7 @@ export class VpcPaintRender extends VpcUILayer {
      * get the main background paint hidden canvas piece
      */
     getMainBg(): UI512ElCanvasPiece {
-        return cast(this.vci.UI512App().getEl('VpcModelRender$$renderbg'), UI512ElCanvasPiece);
+        return cast(UI512ElCanvasPiece, this.vci.UI512App().getEl('VpcModelRender$$renderbg'), );
     }
 
     /**

@@ -59,6 +59,7 @@ export class VpcExecFrameStack {
         public constants: VarCollection,
         public globals: VarCollection,
         public cardHistory: RememberHistory,
+        public cardHistoryPush: RememberHistory,
         public check: CheckReservedWords,
         public originalMsg: VpcScriptMessage
     ) {
@@ -646,7 +647,7 @@ end ${newHandlerName}
         checkThrow(visited && visited.isIntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
         curFrame.next();
 
-        let helper = new VpcExecGoCardHelpers(this.outside, this.globals, curFrame.locals, this.cardHistory);
+        let helper = new VpcExecGoCardHelpers(this.outside, this.globals, curFrame.locals, this.cardHistory, this.cardHistoryPush);
         let [sendMsg, sendMsgTarget] = helper.execGoCard(curLine, visited);
         if (slength(sendMsg)) {
             // should be a "send opencard to this cd" type of thing

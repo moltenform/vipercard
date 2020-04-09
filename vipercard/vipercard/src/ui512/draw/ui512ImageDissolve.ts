@@ -25,7 +25,7 @@ export class UI512ImageDissolve {
         }
 
         const iconnumber = 12; /* stage - 1 */
-        let iconManager = cast(getRoot().getDrawIcon(), UI512IconManager);
+        let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
         let icon = iconManager.findIcon(this.iconGroup, iconnumber);
         if (!icon) {
             comp.complete = false;

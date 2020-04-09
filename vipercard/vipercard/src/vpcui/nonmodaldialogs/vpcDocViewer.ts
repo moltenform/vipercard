@@ -75,7 +75,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     initialPopulate() {
         let grp = this.vci.UI512App().getGroup(this.grpId);
         let topGeneric = grp.getEl(this.getElId('topChoice'));
-        let top = cast(topGeneric, UI512ElTextField);
+        let top = cast(UI512ElTextField, topGeneric);
         if (this.type === DialogDocsType.Reference) {
             let choices = this.referenceInfo.map(item => lng(item[1]));
             UI512ElTextField.setListChoices(top, choices);
@@ -96,7 +96,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      * which line of a listbox is selected
      */
     protected getChosenCategoryNumber(top: UI512ElTextField): O<number> {
-        let gel = new UI512ElTextFieldAsGeneric(cast(top, UI512ElTextField));
+        let gel = new UI512ElTextFieldAsGeneric(cast(UI512ElTextField, top));
         return TextSelModify.selectByLinesWhichLine(gel);
     }
 
@@ -130,7 +130,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
                 this.onChooseExampleVid(ctg, grp);
             }
 
-            let btm = cast(btmGeneric, UI512ElTextField);
+            let btm = cast(UI512ElTextField, btmGeneric);
             UI512ElTextField.setListChoices(btm, lns);
             btm.set('selcaret', 0);
             btm.set('selend', 0);
@@ -221,7 +221,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     protected onChooseItem(btm: UI512ElTextField) {
         let grp = this.vci.UI512App().getGroup(this.grpId);
         let topGeneric = grp.getEl(this.getElId('topChoice'));
-        let top = cast(topGeneric, UI512ElTextField);
+        let top = cast(UI512ElTextField, topGeneric);
         let ctg = this.getChosenCategoryNumber(top);
         this.resetRightSide(grp, true);
 
@@ -372,7 +372,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
         if (this.type === DialogDocsType.Examples) {
             let grp = this.vci.UI512App().getGroup(this.grpId);
             let btmGeneric = grp.getEl(this.getElId('btmChoice'));
-            let top = cast(grp.getEl(this.getElId('topChoice')), UI512ElTextField);
+            let top = cast(UI512ElTextField, grp.getEl(this.getElId('topChoice')));
             let ctg = this.getChosenCategoryNumber(top);
             if (ctg !== undefined && this.examplesInfo[ctg]) {
                 let num = this.examplesInfo[ctg][0].replace(/vid/g, '');
@@ -401,7 +401,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
             /* advance to the next picture, if applicable. */
             let grp = this.vci.UI512App().getGroup(this.grpId);
             let btmGeneric = grp.getEl(this.getElId('btmChoice'));
-            let btm = cast(btmGeneric, UI512ElTextField);
+            let btm = cast(UI512ElTextField, btmGeneric);
             let gel = new UI512ElTextFieldAsGeneric(btm);
             let lnCurrent = TextSelModify.selectByLinesWhichLine(gel);
             let lastLine = btm.getFmTxt().toUnformatted().split('\n').length - 1;
@@ -427,9 +427,9 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      */
     onClickBtn(short: string, el: UI512Element, vci: VpcStateInterface): void {
         if (short === 'topChoice') {
-            this.onChooseCategory(cast(el, UI512ElTextField));
+            this.onChooseCategory(cast(UI512ElTextField, el));
         } else if (short === 'btmChoice') {
-            this.onChooseItem(cast(el, UI512ElTextField));
+            this.onChooseItem(cast(UI512ElTextField, el));
         } else if (short === 'rghtBtn') {
             this.clickedRightBtn(el);
         } else if (short === 'btnStartVid') {

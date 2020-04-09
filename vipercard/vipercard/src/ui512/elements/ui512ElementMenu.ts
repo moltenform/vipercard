@@ -15,6 +15,9 @@ export class UI512MenuItem extends UI512Element {
     protected _labelhotkey = '';
     protected _checkmark = false;
     protected _enabled = true;
+    constructor(id: string, observer: ElementObserver = elementObserverDefault) {
+        super(id, observer);
+    }
 }
 
 /**

@@ -141,7 +141,7 @@ export class MenuListeners {
                 use elRaw instead of elFullClick */
 
         if (d.elRaw && MenuListeners.canHighlightMenuItem(d.elRaw)) {
-            MenuListeners.respondToMenuItemClick(pr, cast(d.elRaw, UI512MenuItem), d);
+            MenuListeners.respondToMenuItemClick(pr, cast(UI512MenuItem, d.elRaw), d);
         } else if (d.elRaw && d.elRaw instanceof UI512MenuDropdown) {
             if (pr.openState === MenuOpenState.MenusClosed) {
                 /* do nothing, the menu is closed */

@@ -46,7 +46,7 @@ export class VpcModelTop {
      */
     findById<T extends VpcElBase>(id: O<string>, ctor: { new (...args: any[]): T }): O<T> {
         let vel = this.elements.find(id);
-        return vel ? cast(vel, ctor, id) : undefined;
+        return vel ? cast(ctor, vel, id) : undefined;
     }
 
     /**
@@ -54,7 +54,7 @@ export class VpcModelTop {
      */
     getById<T extends VpcElBase>(id: string, ctor: { new (...args: any[]): T }): T {
         let vel = this.elements.get(id);
-        return cast(vel, ctor, id);
+        return cast(ctor, vel, id);
     }
 
     /**
@@ -94,7 +94,7 @@ export class VpcModelTop {
      */
     getOwner<T>(vel: VpcElBase, ctor: { new (...args: any[]): T }): T {
         let found = this.getOwnerUntyped(vel);
-        return cast(found, ctor);
+        return cast(ctor, found);
     }
 
     /**

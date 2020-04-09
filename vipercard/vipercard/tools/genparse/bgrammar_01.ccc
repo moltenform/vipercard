@@ -47,11 +47,11 @@
 //     you can't say put "a" into char 1 of the selection
 //      NEW FEATURE: drag from a,b to c,d to e,f
 //      NEW FEATURE: replace "a" with "b" in s
-
-// parse ok but aren't supported in software include:
+//      we don't yet support `put "c" into char 2 of item 3 of line 2 of cd fld 1`
+//      or put "c" into char 2 of item 3 to 5 of line 2 of cd fld 1
+// aren't yet supported in software include:
 //      you can't say `part id 4`
 //      you can't refer to other stacks besides "this stack"
-//      better to use "create btn" not "doMenu New Button"
 
 // changes from v1:
 //      put the sin of 4 into x is now supported
@@ -325,7 +325,6 @@ Lvl3Expression:= <Lvl4Expression> MANY{{ tkStringConcat <Lvl4Expression> }}ENDMA
 Lvl4Expression:= <Lvl5Expression> MANY{{ tkPlusOrMinus <Lvl5Expression> }}ENDMANY                                       --->BuildExpr|tkPlusOrMinus|<Lvl5Expression>|OpPlusMinus
 Lvl5Expression:= <Lvl6Expression> MANY{{ tkMultDivideExpDivMod <Lvl6Expression> }}ENDMANY                         --->BuildExpr|tkMultDivideExpDivMod|<Lvl6Expression>|OpMultDivideExpDivMod
 Lvl6Expression:= [ { tkPlusOrMinus | _not } ] [<HChunk>] { <HSource> | tkLParen <Expr> tkRParen }                 --->Custom--->VpcVal
-//~ Lvl6ExpressionRestricted:=
 
 AndOrOr:={_or | _and}                                                                                                                       --->ProcessOr--->string
 ContainsOrGreaterLessEqual:={ _contains | tkGreaterOrLessEqualOrEqual  }                                            --->ProcessOr--->string

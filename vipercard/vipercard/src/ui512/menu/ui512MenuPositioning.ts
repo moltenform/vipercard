@@ -379,7 +379,7 @@ export class MenuPositioning {
         let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app, createIfNeeded);
         let elem = grpBar.findEl('$$menubarforapp');
         if (elem) {
-            return cast(elem, UI512MenuRoot);
+            return cast(UI512MenuRoot, elem, );
         } else {
             checkThrowUI512(createIfNeeded, '2[|menubar group expected but not found');
             let mb = new UI512MenuRoot('$$menubarforapp', app.observer);

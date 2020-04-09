@@ -123,7 +123,7 @@ export class UI512ViewDraw {
         opts: DrawTextArgs,
         styleEnabled: boolean
     ) {
-        let drawText = cast(getRoot().getDrawText(), UI512DrawText);
+        let drawText = cast(UI512DrawText, getRoot().getDrawText());
         if (!styleEnabled) {
             text = UI512DrawText.makeInitialTextDisabled(text);
         }
@@ -149,7 +149,7 @@ export class UI512ViewDraw {
         if (rect) {
             const iconCentered =
                 overrideCentered === undefined ? iconInfo.centered : overrideCentered;
-            let iconManager = cast(getRoot().getDrawIcon(), UI512IconManager);
+            let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
             let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
             if (icon) {
                 icon.drawIntoBox(b.canvas, iconInfo, rect[0], rect[1], rect[2], rect[3]);
@@ -450,7 +450,7 @@ export class UI512ViewDraw {
      */
     renderStaticLabelTransparentExceptChars(b: UI512ViewDrawBorders, el: UI512ElLabel) {
         /* measure the string so that we can white out the space before drawing letters */
-        let drawText = cast(getRoot().getDrawText(), UI512DrawText);
+        let drawText = cast(UI512DrawText, getRoot().getDrawText(),);
         let subrectAlmostAll = this.getSubRect(b, 1, 1);
         let measured = drawText.measureString(el.getS('labeltext'));
         if (measured && subrectAlmostAll) {
@@ -697,7 +697,7 @@ export class UI512ViewDraw {
             let [args, rtext] = drawTextArgsFromEl(el, subRect, hasFocus);
             args.drawBeyondVisible = false;
 
-            let drawText = cast(getRoot().getDrawText(), UI512DrawText);
+            let drawText = cast(UI512DrawText, getRoot().getDrawText());
             if (!drawText.drawFormattedStringIntoBox(rtext, b.canvas, args)) {
                 b.complete.complete = false;
             }

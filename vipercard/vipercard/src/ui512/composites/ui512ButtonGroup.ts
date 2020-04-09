@@ -53,7 +53,7 @@ export class UI512CompButtonGroup extends UI512CompBase {
         let grp = app.getGroup(this.grpId);
         for (let item of this.items) {
             let el = grp.getEl(this.getElId(item[0]));
-            let btn = cast(el, UI512ElButton);
+            let btn = cast(UI512ElButton, el);
             if (btn.getB('checkmark')) {
                 ret.push(item[0]);
             }

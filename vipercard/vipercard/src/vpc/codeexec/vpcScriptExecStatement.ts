@@ -10,7 +10,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, assertTrue, checkIsProductionBuild, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString, longstr } from './../../ui512/utils/util512';
+/* auto */ import { AnyParameterCtor, Util512, ValHolder, checkThrowEq, getStrToEnum, isString, longstr } from './../../ui512/utils/util512';
 
 /**
  * execute a single line of code
@@ -75,7 +75,7 @@ export class ExecuteStatement {
     protected goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
         let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
         let container = throwIfUndefined(
-            this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
+            this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'),
             '5L|'
         );
 
@@ -153,7 +153,7 @@ export class ExecuteStatement {
      * retrieve an expected type of VpcIntermedValBase from the visitor result
      */
     protected findChildOther<T extends VpcIntermedValBase>(
-        typeAsString: string,
+        ctor:AnyParameterCtor<T>,
         vals: IntermedMapOfIntermedVals,
         nm: string
     ): O<T> {
@@ -161,7 +161,7 @@ export class ExecuteStatement {
         if (got) {
             let gotAsT = got[0] as T;
             checkThrowEq(1, got.length, '7V|expected length 1');
-            checkThrow((gotAsT as any)['is' + typeAsString] === true, '7U|wrong type');
+            checkThrow((gotAsT as any)['is' + ctor.name] === true, '7U|wrong type');
             return gotAsT;
         } else {
             return undefined;
@@ -415,10 +415,10 @@ export class ExecuteStatement {
             throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
             let contRef = throwIfUndefined(
-                this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHSimpleContainer'),
+                this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'),
                 '5B|'
             );
-            let chunk = throwIfUndefined(this.findChildOther<RequestedChunk>('RequestedChunk', vals, 'RuleHChunk'), '5A|');
+            let chunk = throwIfUndefined(this.findChildOther(RequestedChunk, vals, 'RuleHChunk'), '5A|');
 
             contRef.chunk = chunk;
 
@@ -475,7 +475,7 @@ export class ExecuteStatement {
         let replaceWith = expr2.readAsString();
 
         let contRef = throwIfUndefined(
-            this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHSimpleContainer'),
+            this.findChildOther(RequestedContainerRef, vals, 'RuleHSimpleContainer'),
             '53|'
         );
 
@@ -509,7 +509,7 @@ export class ExecuteStatement {
         let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[1]);
         let val = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '54|');
         let contRef = throwIfUndefined(
-            this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
+            this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'),
             '53|'
         );
 
@@ -531,7 +531,7 @@ export class ExecuteStatement {
     goSet(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let velRef = this.findChildVelRef(vals, 'RuleObject');
         let velRefFld = this.findChildVelRef(vals, 'RuleObjectFld');
-        let velRefChunk = this.findChildOther<RequestedChunk>('RequestedChunk', vals, 'RuleHChunk');
+        let velRefChunk = this.findChildOther(RequestedChunk, vals, 'RuleHChunk');
         let propName = throwIfUndefined(this.findChildStr(vals, 'RuleAnyPropertyName'), '51|');
 
         /* let's concat all of the values together into one string separated by commas */
@@ -631,7 +631,7 @@ export class ExecuteStatement {
         let strChunktype = throwIfUndefined(this.findChildStr(vals, 'TokenTkcharorwordoritemorlineorplural'), '4]|');
         let chunktype = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', strChunktype);
         let contRef = throwIfUndefined(
-            this.findChildOther<RequestedContainerRef>('RequestedContainerRef', vals, 'RuleHContainer'),
+            this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'),
             '4[|'
         );
 

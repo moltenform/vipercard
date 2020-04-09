@@ -606,10 +606,17 @@ export function slength(s: string | null | undefined) {
  * safe cast, throws if cast would fail.
  * ts inference lets us type simply
  * let myObj = cast(o, MyClass)
+   
+ * instanceof is a little slow, so at one point I used a
+ * class Foo {
+ *  isFoo = true
+ * }
+ * and could type check by doing (obj as Foo).isFoo,
+ * but it looked clumsy, and didn't type-guard.
  */
 export function cast<T>(
-    instance: unknown,
     ctor: AnyParameterCtor<T>,
+    instance: unknown,
     context?: string
 ): T {
     if (instance instanceof ctor) {

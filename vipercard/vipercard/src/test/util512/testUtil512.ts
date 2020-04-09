@@ -157,12 +157,12 @@ t.test('cast', () => {
     }
 
     let o1: unknown = new Parent();
-    assertEq('parent', cast(o1, Parent).a(), 'NC|');
+    assertEq('parent', cast(Parent, o1).a(), 'NC|');
     o1 = new Child();
-    assertEq('child', cast(o1, Parent).a(), 'NB|');
+    assertEq('child', cast(Parent, o1).a(), 'NB|');
     o1 = new Other();
     assertThrows('NA|', 'type cast exception', () => {
-        cast(o1, Parent);
+        cast(Parent, o1);
     });
 });
 t.test('isString', () => {
