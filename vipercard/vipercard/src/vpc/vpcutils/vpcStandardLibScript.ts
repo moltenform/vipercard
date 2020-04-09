@@ -11,9 +11,14 @@ export class VpcStandardLibScript {
        vpccalluntrappablechoose whichTool
    end choose
 
-   on domenu a, b
-       vpccalluntrappabledomenu a, b
-   end domenu
+   on arrowkey direction
+    if direction == "right" then
+        go next
+    end if
+    if direction == "left" then
+        go prev
+    end if
+   end arrowkey
 
        `;
 }

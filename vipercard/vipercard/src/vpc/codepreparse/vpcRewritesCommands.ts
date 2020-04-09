@@ -58,11 +58,12 @@ export class VpcRewriteForCommands {
                 .slice(1, -1)
                 .map(t => t.image)
                 .join(' ');
-            return [
-                [line[0], BuildFakeTokens.inst.makeSyntaxMarker(line[0]), BuildFakeTokens.inst.makeStringLiteral(line[0], s)]
-            ];
+            return [[line[0], BuildFakeTokens.inst.makeStringLiteral(line[0], s)]];
         } else {
-            VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'tool', true);
+            // erase the 'tool'
+            let found = VpcSuperRewrite.searchTokenGivenEnglishTerm(line, line[0], 'tool');
+            checkThrow(found !== -1, "expected to see something like 'choose brush tool'");
+            line.splice(found, 1);
             return [line];
         }
     }
@@ -535,7 +536,7 @@ end repeat`;
 
     hBuildNyi(msg: string, basis: ChvITk) {
         return [
-            BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, 'internalShowNyiMessage'),
+            BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, 'internalshownyimessage'),
             BuildFakeTokens.inst.makeStringLiteral(basis, msg)
         ];
     }

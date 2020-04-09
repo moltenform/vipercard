@@ -16,17 +16,18 @@ BuiltinCmdAdd:=... <Lvl1Expression> _to <HContainer>
 // show dialog. software rewrite "with" to tkSyntaxPlaceholder. it's a Lvl6Expression not an Expr so that Or works
 // during software rewrite, check for "answer file" and "answer program" and show NYI
 BuiltinCmdAnswer:=... <Expr> [tkSyntaxPlaceholder <Lvl6Expression> [ _or <Lvl6Expression> [ _or <Lvl6Expression>]]]                 
-// simply sends an arrow key message. if not handled, goes to next cd etc. left and right are constants, so you can say `arrowkey left`
-BuiltinCmdArrowkey:=... tkIdentifier
+// arrowkey. simply sends an arrow key message. if not trapped, goes to next cd etc. 
+// left and right are constants, so you can say `arrowkey left`, we don't need to rewrite syntax
+// we have the default arrowkey in standardlib but user can override
 // show dialog. software rewrite `with` to tkSyntaxPlaceholder and `ask password` to `ask ," and `ask file` to NYI
 // original product lets you omit quotes ask "g" with why is this happening but I don't think i will
 BuiltinCmdAsk:=... [tkComma] <Expr> [tkSyntaxPlaceholder <Expr>]                                            
 // play beep sound.
 BuiltinCmdBeep:=... [<Expr>]
 // choose tool. rewrite will turn `choose brush tool` into `choose tool "brush"`
+// then it will get passed up to the top, where default is to actually change the tool
 // in vipercard this only changes the tool for script running-simulated drawing purposes
-BuiltinCmdChoose:=... tkSyntaxPlaceholder <Expr>
-BuiltinCmdVpccalluntrappablechoose:=... tkSyntaxPlaceholder <Expr>
+BuiltinCmdVpccalluntrappablechoose:=... <Expr>
 // simulate click. software rewrite "with" to tkSyntaxPlaceholder. supports click at x if x contains coords.
 BuiltinCmdClick:=... tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
 // close. show NYI in rewrite

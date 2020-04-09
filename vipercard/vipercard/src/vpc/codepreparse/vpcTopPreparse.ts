@@ -101,7 +101,8 @@ export namespace VpcCodeProcessor {
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
 
-        let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, new MakeLowerCase());
+        let lowercase = new MakeLowerCase();
+        let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, lowercase);
         let rewrites = new VpcRewriteForCommands();
         let exp = new ExpandCustomFunctions(VpcSuperRewrite.CounterForUniqueNames, new CheckReservedWords());
         let lines: ChvITk[][] = [];
@@ -136,6 +137,11 @@ export namespace VpcCodeProcessor {
                 for (let line2 of nextLines2) {
                     let nextLines3 = stage3Process(line2, exp);
                     for (let line3 of nextLines3) {
+                        /* make it lowercase again, just in case */
+                        for (let item of line3) {
+                            lowercase.go(item);
+                        }
+
                         let lineObj = toCodeObj.toCodeLine(line3);
                         latestDestLineSeen.val = lineObj;
                         lineObj.offset = lineNumber;

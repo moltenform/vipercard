@@ -117,8 +117,17 @@ def addToListOfReservedWords(st, out, tokens):
     
     out.append('export const listOfAllBuiltinCommandsInOriginalProduct:{ [key: string]: boolean } = { }')
     out.append('')
+    did = {}
     for v in st.listCommands:
-        out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{v.split(' ')[0].lower()}'] = true;")
+        s = v.split(' ')[0].lower()
+        did[s] = True
+        out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{s}'] = true;")
+    out.append("// ones we've defined")
+    for rule in st.rules:
+        if rule.name.startswith('BuiltinCmd'):
+            s = rule.name[len('BuiltinCmd'):].lower()
+            if s not in did:
+                out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{s}'] = true;")
     out.append('')
     
     out.append('export const listOfAllBuiltinEventsInOriginalProduct:{ [key: string]: boolean } = { }')

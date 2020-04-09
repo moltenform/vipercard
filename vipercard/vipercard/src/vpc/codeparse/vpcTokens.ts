@@ -849,6 +849,20 @@ listOfAllBuiltinCommandsInOriginalProduct['unmark'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['visual'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['wait'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['write'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['do'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['exit'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['global'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['next'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['pass'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['return'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['send'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['if'] = true;
+// ones we've defined
+listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappablechoose'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappabledomenu'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['internalvpcgocardimpl'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['replace'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['internalvpcsort'] = true;
 
 export const listOfAllBuiltinEventsInOriginalProduct: { [key: string]: boolean } = {};
 

@@ -202,25 +202,10 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                 Ctrl-T
                 Ctrl-W
                 Ctrl-N
-                Ctrl-Shift-Q
         */
 
-        this.keyMappings['ArrowLeft'] = (self: VpcAppMenuStructure) => {
-            /* a game might want to use arrowkeys, so don't handle here yet */
-            if (self.vci.getTool() !== VpcTool.Browse) {
-                return 'onlyIfNotInTextField/mnuGoCardPrev';
-            }
-            return undefined;
-        };
-
-        this.keyMappings['ArrowRight'] = (self: VpcAppMenuStructure) => {
-            /* a game might want to use arrowkeys, so don't handle here yet */
-            if (self.vci.getTool() !== VpcTool.Browse) {
-                return 'onlyIfNotInTextField/mnuGoCardNext';
-            }
-            return undefined;
-        };
-
+        this.keyMappings['ArrowLeft'] = 'onlyIfNotInTextField/mnuOnArrowLeft';
+        this.keyMappings['ArrowRight'] = 'onlyIfNotInTextField/mnuOnArrowRight';
         this.keyMappings['Home'] = 'onlyIfNotInTextField/mnuGoCardFirst';
         this.keyMappings['End'] = 'onlyIfNotInTextField/mnuGoCardLast';
         this.keyMappings['Backspace'] = 'onlyIfNotInTextField/mnuClear';

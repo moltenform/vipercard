@@ -187,6 +187,15 @@ unmark
 visual
 wait
 write
+// technically these are syntax not commands, but I'll put them here just in case
+do
+exit
+global
+next
+pass
+return
+send
+if
 /////////////////////////////////////////
 begin-functions
 /////////////////////////////////////////

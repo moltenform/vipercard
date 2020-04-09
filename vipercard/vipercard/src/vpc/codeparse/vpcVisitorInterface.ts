@@ -67,10 +67,8 @@ export interface VpcCompleteVisitor {
     RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdAdd(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdAnswer(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdArrowkey(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdAsk(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdBeep(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdChoose(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdVpccalluntrappablechoose(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdClick(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdDelete(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -88,7 +86,6 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdMultiply(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdPlay(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdPush(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdPut(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdReplace(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -162,10 +159,8 @@ export interface VisitingContext {
     RuleIsExpression: any[];
     RuleBuiltinCmdAdd: any[];
     RuleBuiltinCmdAnswer: any[];
-    RuleBuiltinCmdArrowkey: any[];
     RuleBuiltinCmdAsk: any[];
     RuleBuiltinCmdBeep: any[];
-    RuleBuiltinCmdChoose: any[];
     RuleBuiltinCmdVpccalluntrappablechoose: any[];
     RuleBuiltinCmdClick: any[];
     RuleBuiltinCmdDelete: any[];
@@ -183,7 +178,6 @@ export interface VisitingContext {
     RuleBuiltinCmdMark: any[];
     RuleBuiltinCmdMultiply: any[];
     RuleBuiltinCmdPlay: any[];
-    RuleBuiltinCmdPush: any[];
     RuleBuiltinCmdPut: any[];
     RuleBuiltinCmdReset: any[];
     RuleBuiltinCmdReplace: any[];

@@ -1,6 +1,7 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
@@ -22,6 +23,7 @@ export class ExecuteStatement {
     outside: OutsideWorldReadWrite;
     cbStopCodeRunning: O<() => void>;
     pendingOps: VpcPendingAsyncOps;
+    helpers = new VpcScriptExecuteStatementHelpers();
 
     /**
      * execute a single line of code
@@ -45,7 +47,97 @@ export class ExecuteStatement {
      * Adds the value of number to the number in a container.
      */
     goAdd(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a + b);
+        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a + b);
+    }
+    /**
+     * Displays a dialog box.
+     * The button that is pressed (1, 2, or 3) will be assigned to the variable "it".
+     */
+    goAnswer(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let ruleCaption = 'RuleExpr';
+        let captionVals = this.getAllChildVpcVals(vals, ruleCaption, true);
+        let captionArgs = captionVals.map(item => item.readAsString());
+        let ruleChoices = 'RuleLvl6Expression';
+        let choicesVals = this.getAllChildVpcVals(vals, ruleChoices, false);
+        let choicesArgs = choicesVals.map(item => item.readAsString());
+
+        /* because there is only 1 script execution thread, don't need to assign a unique id. */
+        let asyncOpId = 'singleThreadAsyncOpId';
+        VpcScriptExecAsync.goAsyncAnswer(
+            this.pendingOps,
+            blocked,
+            this.outside,
+            this.cbAnswerMsg,
+            this.cbStopCodeRunning,
+            asyncOpId,
+            captionArgs[0] || '',
+            choicesArgs[0] || '',
+            choicesArgs[1] || '',
+            choicesArgs[2] || ''
+        );
+    }
+    /**
+     * Displays a dialog box allowing the user to type in a response.
+     * The text typed will be assigned to the variable "it".
+     * If the user clicks Cancel, the result will be an empty string "".
+     */
+    goAsk(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let argsVals = this.getAllChildVpcVals(vals, 'RuleExpr', true);
+        let args = argsVals.map(item => item.readAsString());
+        let closureGetAsyncOps = this.pendingOps;
+
+        /* because there is only 1 script execution thread, don't need to assign a unique id. */
+        let asyncOpId = 'singleThreadAsyncOpId';
+        VpcScriptExecAsync.goAsyncAsk(
+            this.pendingOps,
+            blocked,
+            this.outside,
+            this.cbAskMsg,
+            this.cbStopCodeRunning,
+            asyncOpId,
+            args[0] || '',
+            args[1] || ''
+        );
+    }
+    /**
+     * Play the system beep sound.
+     */
+    goBeep(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        VpcAudio.beep();
+    }
+    /**
+     * choose {toolname} tool
+     * Use the choose command for programmatically drawing pictures.
+     * Doesn't set the actual tool, which is always Browse when scripts are running.
+     */
+    goVpccalluntrappablechoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let term = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '5G|');
+        let tool = this.getWhichTool(term.readAsString());
+        let ctg = getToolCategory(tool);
+
+        /* see if we support setting to this tool */
+        if (
+            ctg === VpcToolCtg.CtgShape ||
+            ctg === VpcToolCtg.CtgSmear ||
+            ctg === VpcToolCtg.CtgBucket ||
+            ctg === VpcToolCtg.CtgCurve ||
+            ctg === VpcToolCtg.CtgBrowse
+        ) {
+            this.outside.SetOption('mimicCurrentTool', tool);
+        } else {
+            throw makeVpcScriptErr(
+                longstr(`5F|the choose command is currently used for
+                simulating drawing only, so it must be one of the
+                paint tools like "pencil" or "brush" chosen`)
+            );
+        }
+    }
+    /**
+     * click at {x}, {y}
+     * Use the click command for programmatically drawing pictures.
+     */
+    goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        return this.clickOrDrag(line, vals, 'at');
     }
 
     /**
@@ -53,7 +145,7 @@ export class ExecuteStatement {
      * Subtracts a number from the number in a container.
      */
     goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a - b);
+        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a - b);
     }
 
     /**
@@ -61,7 +153,7 @@ export class ExecuteStatement {
      * Multiplies the number in a container by a number.
      */
     goMultiply(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a * b);
+        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a * b);
     }
 
     /**
@@ -69,24 +161,7 @@ export class ExecuteStatement {
      * Divides the number in a container by a number.
      */
     goDivide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        this.goMathAlter(line, vals, (a: number, b: number) => a / b);
-    }
-
-    /**
-     * implementation of add, subtract, etc
-     */
-    protected goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
-        let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
-        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '5L|');
-
-        let getResultAsString = (s: string) => {
-            let f1 = VpcValS(s).readAsStrictNumeric();
-            let f2 = val.readAsStrictNumeric();
-            let res = fn(f1, f2);
-            return VpcValN(res).readAsString();
-        };
-
-        this.outside.ContainerModify(container, getResultAsString);
+        this.helpers.goMathAlter(line, vals, (a: number, b: number) => a / b);
     }
 
     /**
@@ -205,65 +280,6 @@ export class ExecuteStatement {
     }
 
     /**
-     * Displays a dialog box.
-     * The button that is pressed (1, 2, or 3) will be assigned to the variable "it".
-     */
-    goAnswer(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let ruleCaption = 'RuleExpr';
-        let captionVals = this.getAllChildVpcVals(vals, ruleCaption, true);
-        let captionArgs = captionVals.map(item => item.readAsString());
-        let ruleChoices = 'RuleLvl6Expression';
-        let choicesVals = this.getAllChildVpcVals(vals, ruleChoices, false);
-        let choicesArgs = choicesVals.map(item => item.readAsString());
-
-        /* because there is only 1 script execution thread, don't need to assign a unique id. */
-        let asyncOpId = 'singleThreadAsyncOpId';
-        VpcScriptExecAsync.goAsyncAnswer(
-            this.pendingOps,
-            blocked,
-            this.outside,
-            this.cbAnswerMsg,
-            this.cbStopCodeRunning,
-            asyncOpId,
-            captionArgs[0] || '',
-            choicesArgs[0] || '',
-            choicesArgs[1] || '',
-            choicesArgs[2] || ''
-        );
-    }
-
-    /**
-     * Displays a dialog box allowing the user to type in a response.
-     * The text typed will be assigned to the variable "it".
-     * If the user clicks Cancel, the result will be an empty string "".
-     */
-    goAsk(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let argsVals = this.getAllChildVpcVals(vals, 'RuleExpr', true);
-        let args = argsVals.map(item => item.readAsString());
-        let closureGetAsyncOps = this.pendingOps;
-
-        /* because there is only 1 script execution thread, don't need to assign a unique id. */
-        let asyncOpId = 'singleThreadAsyncOpId';
-        VpcScriptExecAsync.goAsyncAsk(
-            this.pendingOps,
-            blocked,
-            this.outside,
-            this.cbAskMsg,
-            this.cbStopCodeRunning,
-            asyncOpId,
-            args[0] || '',
-            args[1] || ''
-        );
-    }
-
-    /**
-     * Play the system beep sound.
-     */
-    goBeep(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        VpcAudio.beep();
-    }
-
-    /**
      * Dial a number with old touch tones
      */
     goDial(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
@@ -313,34 +329,6 @@ export class ExecuteStatement {
     }
 
     /**
-     * choose {toolname} tool
-     * Use the choose command for programmatically drawing pictures.
-     * Doesn't set the actual tool, which is always Browse when scripts are running.
-     */
-    goChoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let term = throwIfUndefined(this.findChildVal(vals, 'RuleExpr'), '5G|');
-        let tool = this.getWhichTool(term.readAsString());
-        let ctg = getToolCategory(tool);
-
-        /* see if we support setting to this tool */
-        if (
-            ctg === VpcToolCtg.CtgShape ||
-            ctg === VpcToolCtg.CtgSmear ||
-            ctg === VpcToolCtg.CtgBucket ||
-            ctg === VpcToolCtg.CtgCurve ||
-            ctg === VpcToolCtg.CtgBrowse
-        ) {
-            this.outside.SetOption('mimicCurrentTool', tool);
-        } else {
-            throw makeVpcScriptErr(
-                longstr(`5F|the choose command is currently used for
-                simulating drawing only, so it must be one of the
-                paint tools like "pencil" or "brush" chosen`)
-            );
-        }
-    }
-
-    /**
      * understands both "4" and "line"
      */
     protected getWhichTool(s: string): VpcTool {
@@ -352,14 +340,6 @@ export class ExecuteStatement {
         } else {
             return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
         }
-    }
-
-    /**
-     * click at {x}, {y}
-     * Use the click command for programmatically drawing pictures.
-     */
-    goClick(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        return this.clickOrDrag(line, vals, 'at');
     }
 
     /**

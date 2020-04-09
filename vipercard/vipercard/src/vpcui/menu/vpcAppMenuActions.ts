@@ -8,7 +8,6 @@
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { VpcChangeSelectedFont } from './vpcChangeSelectedFont';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
-/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
@@ -394,6 +393,28 @@ export class VpcMenuActions {
      */
     goMnuGoCardLast() {
         this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.Last, undefined);
+    }
+
+    /**
+     * left arrow, usually go left but user can override
+     */
+    mnuOnArrowLeft() {
+        if (this.vci.getTool() === VpcTool.Browse) {
+            this.vci.getCodeExec().runMsgBoxCodeOrThrow('arrowkey "left"', this.vci.getCurrentCardId(), false);
+        } else {
+            this.goMnuGoCardNext();
+        }
+    }
+
+    /**
+     * right arrow, usually go right but user can override
+     */
+    mnuOnArrowRight() {
+        if (this.vci.getTool() === VpcTool.Browse) {
+            this.vci.getCodeExec().runMsgBoxCodeOrThrow('arrowkey "right"', this.vci.getCurrentCardId(), false);
+        } else {
+            this.goMnuGoCardNext();
+        }
     }
 
     /**

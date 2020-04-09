@@ -1129,12 +1129,6 @@ export class VpcChvParser extends chevrotain.CstParser {
         });
     });
 
-    RuleBuiltinCmdArrowkey = this.RULE('RuleBuiltinCmdArrowkey', () => {
-        this.CONSUME1(tks.tkSyntaxPlaceholder);
-        this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.CONSUME1(tks.tkIdentifier);
-    });
-
     RuleBuiltinCmdAsk = this.RULE('RuleBuiltinCmdAsk', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
@@ -1156,17 +1150,9 @@ export class VpcChvParser extends chevrotain.CstParser {
         });
     });
 
-    RuleBuiltinCmdChoose = this.RULE('RuleBuiltinCmdChoose', () => {
-        this.CONSUME1(tks.tkSyntaxPlaceholder);
-        this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.CONSUME3(tks.tkSyntaxPlaceholder);
-        this.SUBRULE1(this.RuleExpr);
-    });
-
     RuleBuiltinCmdVpccalluntrappablechoose = this.RULE('RuleBuiltinCmdVpccalluntrappablechoose', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
     });
 
@@ -1234,10 +1220,10 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdDomenu = this.RULE('RuleBuiltinCmdDomenu', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.SUBRULE1(this.RuleExpr);
+        this.CONSUME1(tks.tkStringLiteral);
         this.OPTION1(() => {
             this.CONSUME1(tks.tkComma);
-            this.SUBRULE2(this.RuleExpr);
+            this.CONSUME2(tks.tkStringLiteral);
         });
     });
 
@@ -1387,12 +1373,6 @@ export class VpcChvParser extends chevrotain.CstParser {
             this.CONSUME3(tks.tkSyntaxPlaceholder);
             this.SUBRULE2(this.RuleExpr);
         });
-    });
-
-    RuleBuiltinCmdPush = this.RULE('RuleBuiltinCmdPush', () => {
-        this.CONSUME1(tks.tkSyntaxPlaceholder);
-        this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.SUBRULE1(this.RuleHBuiltinCmdGoDest);
     });
 
     RuleBuiltinCmdPut = this.RULE('RuleBuiltinCmdPut', () => {

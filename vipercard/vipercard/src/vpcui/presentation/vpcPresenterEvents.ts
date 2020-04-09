@@ -7,7 +7,6 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
-/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, assertTrueWarn, bool, showWarningIfExceptionThrown, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';

@@ -9,7 +9,7 @@
 /* auto */ import { VpcElBg } from './../vel/velBg';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { isString, slength, castVerifyIsStr } from './../../ui512/utils/util512';
+/* auto */ import { castVerifyIsStr, isString, slength } from './../../ui512/utils/util512';
 
 /**
  * implementation for the 'go' command

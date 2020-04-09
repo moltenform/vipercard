@@ -2,7 +2,6 @@
 /* auto */ import { VpcUILayer } from './../state/vpcInterface';
 /* auto */ import { VpcElType, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElField, VpcFldStyleInclScroll } from './../../vpc/vel/velField';
-/* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
