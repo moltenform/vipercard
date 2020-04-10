@@ -1,6 +1,6 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
-/* auto */ import { CodeLimits, VpcScriptSyntaxError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId, VpcScriptSyntaxError } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcRewritesLoops } from './vpcRewritesLoops';
 /* auto */ import { VpcRewritesGlobal, VpcSuperRewrite } from './vpcRewritesGlobal';
@@ -90,7 +90,8 @@ export namespace VpcCodeProcessor {
     function goImpl(
         code: string,
         latestSrcLineSeen: ValHolder<number>,
-        latestDestLineSeen: ValHolder<VpcCodeLine>
+        latestDestLineSeen: ValHolder<VpcCodeLine>,
+        idGen: CountNumericId
     ): VpcParsedCodeCollection {
         /* lex the input */
         let lexer = getParsingObjects()[0];
@@ -101,10 +102,11 @@ export namespace VpcCodeProcessor {
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
 
+        let rw = new VpcSuperRewrite(idGen)
         let lowercase = new MakeLowerCase();
         let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, lowercase);
-        let rewrites = new VpcRewriteForCommands();
-        let exp = new ExpandCustomFunctions(VpcSuperRewrite.CounterForUniqueNames, new CheckReservedWords());
+        let rewrites = new VpcRewriteForCommands(rw);
+        let exp = new ExpandCustomFunctions(idGen, new CheckReservedWords());
         let lines: ChvITk[][] = [];
         while (true) {
             let next = splitter.next();
@@ -118,20 +120,19 @@ export namespace VpcCodeProcessor {
         // get rid of else-if clauses, they don't support custom function calls
         // and make our branch-processing code a little more complex
         // this one needs access to the entire array.
-        lines = VpcRewritesConditionsNoElseIfClauses.goNoElseIfClauses(lines);
+        lines = VpcRewritesConditionsNoElseIfClauses.goNoElseIfClauses(lines, rw);
 
         // now do these as stages, they don't need access to the entire array
         // by passing the result of one to the next, we're saving some allocations
         let totalOutput: VpcCodeLine[] = [];
         let checkReserved = new CheckReservedWords();
-        let idGen = VpcSuperRewrite.CounterForUniqueNames;
         let toCodeObj = new VpcLineToCodeObj(idGen, checkReserved);
         toCodeObj.init(lines[0][0]);
         let lineNumber = 0;
         let branchProcessor = new BranchProcessing(idGen);
 
         for (let line of lines) {
-            let nextLines1 = stage1Process(line) ?? [line];
+            let nextLines1 = stage1Process(line, rw) ?? [line];
             for (let line1 of nextLines1) {
                 let nextLines2 = stage2Process(line1, rewrites) ?? [line1];
                 for (let line2 of nextLines2) {
@@ -161,11 +162,11 @@ export namespace VpcCodeProcessor {
         return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput);
     }
 
-    function stage1Process(line: ChvITk[]): O<ChvITk[][]> {
+    function stage1Process(line: ChvITk[], rw:VpcSuperRewrite): O<ChvITk[][]> {
         if (line.length && line[0].image === 'if') {
-            return VpcRewritesConditions.splitSinglelineIf(line);
+            return VpcRewritesConditions.splitSinglelineIf(line, rw);
         } else if (line.length && line[0].image === 'repeat') {
-            return VpcRewritesLoops.Go(line);
+            return VpcRewritesLoops.Go(line, rw);
         } else {
             return undefined;
         }
@@ -181,7 +182,7 @@ export namespace VpcCodeProcessor {
         return exp.go(line);
     }
 
-    export function go(code: string, velIdForErrMsg: string): VpcScriptSyntaxError | VpcParsedCodeCollection {
+    export function go(code: string, velIdForErrMsg: string, idGen:CountNumericId): VpcScriptSyntaxError | VpcParsedCodeCollection {
         assertTrue(!code.match(/^\s*$/), '');
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
@@ -189,7 +190,7 @@ export namespace VpcCodeProcessor {
         let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
         try {
             UI512ErrorHandling.breakOnThrow = false;
-            return goImpl(code, latestSrcLineSeen, latestDestLineSeen);
+            return goImpl(code, latestSrcLineSeen, latestDestLineSeen, idGen);
         } catch (e) {
             syntaxError = new VpcScriptSyntaxError();
             syntaxError.isScriptException = e.isVpcError;

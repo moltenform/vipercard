@@ -106,7 +106,9 @@ export interface CountNumericId {
  * a provider of unique numeric ids, counts upwards 1 at a time
  */
 export class CountNumericIdNormal implements CountNumericId {
-    constructor(protected counter = 1000) {}
+    constructor(protected counter = 1000) {
+        console.log("hi");
+    }
     next() {
         let ret = this.counter;
         this.counter += 1;

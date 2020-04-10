@@ -5,7 +5,7 @@
 /* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
 export namespace VpcRewritesLoops {
-    export function Go(line: ChvITk[]): ChvITk[][] {
+    export function Go(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         if (line.length === 1) {
             return [line];
@@ -13,22 +13,22 @@ export namespace VpcRewritesLoops {
             checkThrowEq(2, line.length, "didn't expect to see anything after 'repeat forever'");
             return [line.slice(0, 1)];
         } else if (line[1].image === 'until' || line[1].image === 'while') {
-            return goUntilWhile(line);
+            return goUntilWhile(line, rw);
         } else if (line[1].image === 'with') {
-            return goWith(line);
+            return goWith(line, rw);
         } else {
-            let times = VpcSuperRewrite.tokenFromEnglishTerm('times', line[0]);
+            let times = rw.tokenFromEnglishTerm('times', line[0]);
             if (last(line).tokenType === times.tokenType && last(line).image === times.image) {
                 line.pop();
             }
 
-            let loopVar = VpcSuperRewrite.generateUniqueVariable(line[0], '$repeatTimes');
+            let loopVar = rw.generateUniqueVariable(line[0], '$repeatTimes');
             let firstExpr = [BuildFakeTokens.inst.makeTk(line[0], tks.tkNumLiteral, '1')];
             let secondExpr = line.slice(1);
-            return goWithImpl(firstExpr, secondExpr, loopVar, false);
+            return goWithImpl(firstExpr, secondExpr, loopVar, false, rw);
         }
     }
-    function goUntilWhile(line: ChvITk[]): ChvITk[][] {
+    function goUntilWhile(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
         let template = `
 repeat
     if %NOT% %ARG0% then
@@ -42,14 +42,14 @@ end repeat`;
         }
 
         let conditionExpression = line.slice(2);
-        return VpcSuperRewrite.go(template, line[0], [conditionExpression]);
+        return rw.go(template, line[0], [conditionExpression]);
     }
-    function goWith(line: ChvITk[]): ChvITk[][] {
+    function goWith(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         checkThrowEq('with', line[1].image, '');
         checkThrow(couldTokenTypeBeAVariableName(line[2]), '');
         checkThrowEq('=', line[3].image, '');
-        let findTo = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'to');
+        let findTo = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'to');
         checkThrow(findTo !== -1, 'repeat with, no "to" found');
         let startFirstExpr = 4;
         let endFirstExpr = findTo - 1;
@@ -60,9 +60,9 @@ end repeat`;
         }
         let firstExpr = line.slice(startFirstExpr, endFirstExpr);
         let secondExpr = line.slice(findTo + 1);
-        return goWithImpl(firstExpr, secondExpr, line[2], isDown);
+        return goWithImpl(firstExpr, secondExpr, line[2], isDown, rw);
     }
-    function goWithImpl(firstExpr: ChvITk[], secondExpr: ChvITk[], loopVar: ChvITk, isDown: boolean): ChvITk[][] {
+    function goWithImpl(firstExpr: ChvITk[], secondExpr: ChvITk[], loopVar: ChvITk, isDown: boolean, rw:VpcSuperRewrite): ChvITk[][] {
         let template = `
 put ( %ARG1% ) - ( %ADJUST% ) into %ARG0%
 put %ARG2% into $loopbound%UNIQUE%
@@ -80,6 +80,6 @@ repeat
             template = template.replace(/%CMPARE%/g, ' >= ');
         }
 
-        return VpcSuperRewrite.go(template, firstExpr[0], [[loopVar], firstExpr, secondExpr]);
+        return rw.go(template, firstExpr[0], [[loopVar], firstExpr, secondExpr]);
     }
 }

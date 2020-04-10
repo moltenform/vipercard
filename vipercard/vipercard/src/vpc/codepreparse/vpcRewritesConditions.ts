@@ -5,9 +5,9 @@
 /* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
 export namespace VpcRewritesConditions {
-    export function splitSinglelineIf(line: ChvITk[]): ChvITk[][] {
+    export function splitSinglelineIf(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('if', line[0].image, '');
-        let findThen = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
+        let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
         checkThrow(findThen !== -1, 'if statement, no "then" found');
         if (findThen === line.length - 1) {
             // already on different lines, we are fine
@@ -19,7 +19,7 @@ export namespace VpcRewritesConditions {
 %ARG0%
     %ARG1%
 end if`;
-            return VpcSuperRewrite.go(template, line[0], [firstPart, secondPart]);
+            return rw.go(template, line[0], [firstPart, secondPart]);
         }
     }
 }
@@ -92,27 +92,27 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
         return root;
     }
 
-    function transformTreeRecurse(node: IfConstruct, output: ChvITk[][]) {
+    function transformTreeRecurse(node: IfConstruct, rw:VpcSuperRewrite, output: ChvITk[][]) {
         let numberOfEndIfsNeeded = 0;
         if (!node.isRoot) {
-            let firstLine = VpcSuperRewrite.go('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
+            let firstLine = rw.go('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
             output.push(firstLine[0]);
             numberOfEndIfsNeeded = 1;
         }
         for (let clause of node.clauses) {
             if (!clause.isFirst) {
                 if (clause.condition.length) {
-                    output.push([VpcSuperRewrite.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
-                    let line = VpcSuperRewrite.go('if %ARG0% then', clause.condition[0], [clause.condition]);
+                    output.push([rw.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
+                    let line = rw.go('if %ARG0% then', clause.condition[0], [clause.condition]);
                     output.push(line[0]);
                     numberOfEndIfsNeeded += 1;
                 } else {
-                    output.push([VpcSuperRewrite.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
+                    output.push([rw.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
                 }
             }
             for (let item of clause.children) {
                 if (item instanceof IfConstruct) {
-                    transformTreeRecurse(node, output);
+                    transformTreeRecurse(node, rw, output);
                 } else {
                     output.push(item);
                 }
@@ -120,16 +120,16 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
         }
         for (let i = 0; i < numberOfEndIfsNeeded; i++) {
             output.push([
-                VpcSuperRewrite.tokenFromEnglishTerm('end', node.clauses[0].condition[0]),
-                VpcSuperRewrite.tokenFromEnglishTerm('if', node.clauses[0].condition[0])
+                rw.tokenFromEnglishTerm('end', node.clauses[0].condition[0]),
+                rw.tokenFromEnglishTerm('if', node.clauses[0].condition[0])
             ]);
         }
     }
 
-    export function goNoElseIfClauses(lines: ChvITk[][]) {
+    export function goNoElseIfClauses(lines: ChvITk[][], rw:VpcSuperRewrite) {
         let construct = buildTree(lines);
         let ret: ChvITk[][] = [];
-        transformTreeRecurse(construct, ret);
+        transformTreeRecurse(construct, rw, ret);
         return ret;
     }
 }

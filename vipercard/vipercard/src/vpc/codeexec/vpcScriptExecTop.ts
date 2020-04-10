@@ -1,7 +1,7 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection, VariableCollectionConstants } from './../vpcutils/vpcVarCollection';
-/* auto */ import { CodeLimits, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptMessageMsgBoxCode, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptErrorBase, VpcScriptMessage, VpcScriptMessageMsgBoxCode, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
@@ -37,8 +37,8 @@ export class VpcExecTop {
     protected readonly cachedCST: VpcCacheParsedCST;
     readonly cachedAST: VpcCacheParsedAST;
     protected readonly outside: OutsideWorldReadWrite;
-    constructor(outside: OutsideWorldReadWrite) {
-        this.cachedAST = new VpcCacheParsedAST();
+    constructor(outside: OutsideWorldReadWrite, public idGen: CountNumericId) {
+        this.cachedAST = new VpcCacheParsedAST(this.idGen);
         this.cachedCST = new VpcCacheParsedCST();
         this.outside = outside;
         this.runStatements.outside = outside;

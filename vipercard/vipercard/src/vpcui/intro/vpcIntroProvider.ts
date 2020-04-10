@@ -1,9 +1,9 @@
 
+/* auto */ import { CountNumericIdNormal } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoManager } from './../state/vpcUndo';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
-/* auto */ import { VpcSuperRewrite } from './../../vpc/codepreparse/vpcRewritesGlobal';
 /* auto */ import { VpcSession, vpcStacksGetData } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
@@ -21,6 +21,7 @@
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+
 
 /**
  * download, construct, and initialize a ViperCard project
@@ -122,6 +123,8 @@ export class VpcIntroProvider {
      */
     async getVpcState() {
         await this.yieldTime();
+        let idGen = new CountNumericIdNormal()
+        await this.yieldTime();
         let vpcState = new VpcState();
         await this.yieldTime();
         vpcState.runtime = new VpcRuntime();
@@ -132,7 +135,7 @@ export class VpcIntroProvider {
         await this.yieldTime();
         vpcState.runtime.outside = new VpcOutsideImpl();
         await this.yieldTime();
-        vpcState.runtime.codeExec = new VpcExecTop(vpcState.runtime.outside);
+        vpcState.runtime.codeExec = new VpcExecTop(vpcState.runtime.outside, idGen);
         await this.yieldTime();
         vpcState.model = new VpcModelTop();
         await this.yieldTime();
@@ -158,7 +161,6 @@ export class VpcIntroProvider {
     }
 
     protected async initPrUI(pr: VpcPresenter, serializedSavedData: string, fullVci: VpcStateInterfaceImpl, vpcState: VpcState) {
-        let idGen = VpcSuperRewrite.CounterForUniqueNames;
         /* load saved data */
         if (serializedSavedData.length) {
             UndoableActionCreateOrDelVel.ensureModelNotEmpty(fullVci, false);
@@ -177,7 +179,7 @@ export class VpcIntroProvider {
             await this.yieldTime();
         }
 
-        vpcState.model.stack.increasingnumber = idGen;
+        vpcState.model.stack.increasingnumber = vpcState.runtime.codeExec.idGen;
         await this.yieldTime();
         pr.initUI();
         await this.yieldTime();

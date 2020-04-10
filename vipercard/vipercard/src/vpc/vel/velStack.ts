@@ -1,5 +1,5 @@
 
-/* auto */ import { CountNumericIdNormal } from './../vpcutils/vpcUtils';
+/* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElCard } from './velCard';
@@ -49,7 +49,7 @@ export class VpcElStack extends VpcElBase {
     bgs: VpcElBg[] = [];
 
     /* counter used for internal script line numbers. */
-    increasingnumber: CountNumericIdNormal;
+    increasingnumber: CountNumericId;
 
     /**
      * get next id for created element

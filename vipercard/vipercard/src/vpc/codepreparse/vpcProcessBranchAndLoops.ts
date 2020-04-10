@@ -67,12 +67,12 @@ export class BranchProcessing {
      * process one line.
      */
     go(line: VpcCodeLine) {
-        let topOfStack = last(this.stack);
         if (this.stack.length === 0 && line.ctg !== VpcLineCategory.HandlerStart) {
             throw makeVpcScriptErr(`5q|only 'on mouseup' and 'function myfunction' can exist at this scope`);
         } else if (this.stack.length > 0 && line.ctg === VpcLineCategory.HandlerStart) {
             throw makeVpcScriptErr(`5p|cannot begin a handler inside an existing handler`);
         }
+
 
         switch (line.ctg) {
             case VpcLineCategory.RepeatForever /* fall-through */:
@@ -85,12 +85,11 @@ export class BranchProcessing {
                 break;
             }
             case VpcLineCategory.RepeatEnd: {
-                checkThrowEq(
-                    VpcLineCategory.RepeatForever,
-                    topOfStack.cat,
+                checkThrow(
+                    this.stack.length && VpcLineCategory.RepeatForever === last(this.stack).cat,
                     `7<|cannot "end repeat" interleaved within some other block.`
                 );
-                topOfStack.add(line);
+                last(this.stack).add(line);
                 this.finalizeBlock();
                 break;
             }
@@ -98,26 +97,29 @@ export class BranchProcessing {
                 this.stack.push(new BranchBlockInfo(VpcLineCategory.IfStart, line));
                 break;
             case VpcLineCategory.IfElsePlain:
-                checkThrowEq(
-                    VpcLineCategory.IfStart,
-                    topOfStack.cat,
+                checkThrow(
+                    this.stack.length && 
+                    VpcLineCategory.IfStart ===
+                    last(this.stack).cat,
                     `7;|cannot have an "else" interleaved within some other block.`
                 );
-                topOfStack.add(line);
+                last(this.stack).add(line);
                 break;
             case VpcLineCategory.IfEnd:
-                checkThrowEq(
-                    VpcLineCategory.IfStart,
-                    topOfStack.cat,
-                    `7:|cannot have an "end if" interleaved within some other block.`
+                checkThrow(
+                    this.stack.length && 
+                    VpcLineCategory.IfStart ===
+                    last(this.stack).cat,
+                    `7;|cannot have an "else" interleaved within some other block.`
                 );
-                topOfStack.add(line);
+                last(this.stack).add(line);
                 this.finalizeBlock();
                 break;
             case VpcLineCategory.HandlerStart:
                 this.stack.push(new BranchBlockInfo(VpcLineCategory.HandlerStart, line));
                 break;
             case VpcLineCategory.HandlerEnd: {
+                let topOfStack = last(this.stack);
                 checkThrowEq(
                     VpcLineCategory.HandlerStart,
                     topOfStack.cat,

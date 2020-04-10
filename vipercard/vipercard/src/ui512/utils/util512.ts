@@ -875,7 +875,7 @@ export function checkThrowEq<T>(
     c1: unknown = '',
     c2: unknown = ''
 ): asserts got is T {
-    if (util512Sort(expected, got) !== 0) {
+    if (expected !== got && util512Sort(expected, got) !== 0) {
         throw makeUI512Error(
             `Ov|${msg} expected "${expected}" but got "${got}" ${c1} ${c2}`
         );

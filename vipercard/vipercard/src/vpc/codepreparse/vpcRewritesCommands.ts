@@ -34,12 +34,13 @@
  * but everything else needs to be output in finished form here.
  */
 export class VpcRewriteForCommands {
+    constructor(protected rw:VpcSuperRewrite) { }
     rewriteAnswer(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
         if (line[1].image === 'file' || line[1].image === 'program') {
             return [this.hBuildNyi('answer ' + line[1].image, line[0])];
         }
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
         return [line];
     }
     rewriteAsk(line: ChvITk[]): ChvITk[][] {
@@ -47,8 +48,8 @@ export class VpcRewriteForCommands {
         if (line[1].image === 'file' || line[1].image === 'program') {
             return [this.hBuildNyi('ask ' + line[1].image, line[0])];
         }
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'password', false, ',');
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'password', false, ',');
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
         return [line];
     }
     rewriteChoose(line: ChvITk[]): ChvITk[][] {
@@ -61,14 +62,14 @@ export class VpcRewriteForCommands {
             return [[line[0], BuildFakeTokens.inst.makeStringLiteral(line[0], s)]];
         } else {
             /* erase the 'tool' */
-            let found = VpcSuperRewrite.searchTokenGivenEnglishTerm(line, line[0], 'tool');
+            let found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'tool');
             checkThrow(found !== -1, "expected to see something like 'choose brush tool'");
             line.splice(found, 1);
             return [line];
         }
     }
     rewriteClick(line: ChvITk[]): ChvITk[][] {
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
         return [line];
     }
     rewriteClose(line: ChvITk[]): ChvITk[][] {
@@ -104,7 +105,7 @@ export class VpcRewriteForCommands {
     }
     rewriteDo(line: ChvITk[]): ChvITk[][] {
         let template = `send ( %ARG0% ) to me`;
-        return VpcSuperRewrite.go(template, line[0], [line.slice(1)]);
+        return this.rw.go(template, line[0], [line.slice(1)]);
     }
     rewriteDoMenu(line: ChvITk[]): ChvITk[][] {
         let allImages = line.map(t => t.image).join('***') + '***';
@@ -124,7 +125,7 @@ export class VpcRewriteForCommands {
         }
     }
     rewriteDrag(line: ChvITk[]): ChvITk[][] {
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
         return [line];
     }
     rewriteEdit(line: ChvITk[]): ChvITk[][] {
@@ -149,7 +150,7 @@ export class VpcRewriteForCommands {
     }
     rewriteGet(line: ChvITk[]): ChvITk[][] {
         let template = `put ( %ARG0% ) %INTO% it`;
-        return VpcSuperRewrite.go(template, line[0], [line.slice(1)]);
+        return this.rw.go(template, line[0], [line.slice(1)]);
     }
     rewriteGo(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, "8k|can't have just 'go' on its own. try 'go next' or 'go prev' ");
@@ -185,7 +186,7 @@ if there is a %ARG0% then
     internalvpcmovecardhelper (the id of %ARG0%), ${shouldSuspendHistory}
 end if`;
         }
-        return VpcSuperRewrite.go(template, line[0], [line.slice(1)]);
+        return this.rw.go(template, line[0], [line.slice(1)]);
     }
     rewriteHide(line: ChvITk[]): ChvITk[][] {
         return this.hReturnNyiIfMenuMentionedOutsideParens(line);
@@ -210,7 +211,7 @@ end if`;
     }
     rewritePass(line: ChvITk[]): ChvITk[][] {
         /* add a return statement afterwards, solely to make code exec simpler. */
-        return VpcSuperRewrite.go(
+        return this.rw.go(
             `%ARG0%
 return 0`,
             line[0],
@@ -222,24 +223,24 @@ return 0`,
         checkThrow(line.length >= 2, 'not enough args');
         checkThrowEq(tks.tkCard, line[1], 'must be pop *card*');
         if (line.length === 2) {
-            return VpcSuperRewrite.go('pop true', line[0]);
+            return this.rw.go('pop true', line[0]);
         } else {
             let newCode = `
 pop false
 put the result %ARG0%`;
-            let gen = VpcSuperRewrite.go(newCode, line[0], [line.slice(2)]);
+            let gen = this.rw.go(newCode, line[0], [line.slice(2)]);
             let fixedPut = this.rewritePut(gen[1]);
             return [gen[0], fixedPut[0]];
         }
     }
     rewritePlay(line: ChvITk[]): ChvITk[][] {
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'tempo', false);
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'tempo', false);
         return [line];
     }
     rewritePush(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length === 2, 'expect 2 args');
         checkThrowEq(tks.tkCard, line[1], 'must be push *card*');
-        return VpcSuperRewrite.go('push "card"', line[0]);
+        return this.rw.go('push "card"', line[0]);
     }
     rewritePut(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
@@ -262,8 +263,8 @@ put the result %ARG0%`;
         } else {
             /* you can say `put 1+1` to add to the message box */
             foundPreposition = line.length;
-            line.push(VpcSuperRewrite.tokenFromEnglishTerm('into', line[0]));
-            line.push(VpcSuperRewrite.tokenFromEnglishTerm(LogToReplMsgBox.redirectThisVariableToMsgBox, line[0]));
+            line.push(this.rw.tokenFromEnglishTerm('into', line[0]));
+            line.push(this.rw.tokenFromEnglishTerm(LogToReplMsgBox.redirectThisVariableToMsgBox, line[0]));
         }
 
         /* transform to put "abc" (TkSyntaxMarker) into (TkSyntaxMarker) x */
@@ -275,7 +276,7 @@ put the result %ARG0%`;
         return [this.hBuildNyi('the read command', line[0])];
     }
     rewriteReplace(line: ChvITk[]): ChvITk[][] {
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', true);
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', true);
         return [line];
     }
     rewriteReply(line: ChvITk[]): ChvITk[][] {
@@ -329,7 +330,7 @@ put the result %ARG0%`;
     }
     rewriteShow(line: ChvITk[]): ChvITk[][] {
         for (let unsupportedTerm of ['all', 'menu', 'picture', 'window']) {
-            if (VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], unsupportedTerm) !== -1) {
+            if (this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], unsupportedTerm) !== -1) {
                 return [this.hBuildNyi(`the show ${unsupportedTerm} command`, line[0])];
             }
         }
@@ -383,7 +384,7 @@ put the result %ARG0%`;
             "${sortOptions['method']}"
             "${sortOptions['order']}" %ARG0%`
         );
-        let cmd = VpcSuperRewrite.go(template, line[0], [containerExpression]);
+        let cmd = this.rw.go(template, line[0], [containerExpression]);
         if (!foundBy) {
             return cmd;
         } else {
@@ -419,7 +420,7 @@ if length ( content%UNIQUE% ) then
     put char 1 to (the length of result%UNIQUE% - the length of ${delimExpr}) of result%UNIQUE% %INTO% result%UNIQUE%
     put result%UNIQUE% %INTO% %ARG0%
 end if`;
-            return VpcSuperRewrite.go(template, line[0], [containerExpression, byExpr, cmd[0]]);
+            return this.rw.go(template, line[0], [containerExpression, byExpr, cmd[0]]);
         }
     }
     rewriteStart(line: ChvITk[]): ChvITk[][] {
@@ -429,7 +430,7 @@ end if`;
         return this.hReturnNoOp(line);
     }
     rewriteSubtract(line: ChvITk[]): ChvITk[][] {
-        VpcSuperRewrite.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'from', true);
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'from', true);
         return [line];
     }
     rewriteType(line: ChvITk[]): ChvITk[][] {
@@ -443,7 +444,7 @@ end if`;
             return [line];
         } else {
             /* strip any "with" */
-            let foundWith = VpcSuperRewrite.searchTokenGivenEnglishTerm(line, line[0], 'with');
+            let foundWith = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'with');
             if (foundWith !== -1) {
                 line.splice(foundWith, 1);
             }
@@ -478,7 +479,7 @@ repeat
     end if
     wait 100 "ms"
 end repeat`;
-            return VpcSuperRewrite.go(template, line[0], [line.slice(2)]);
+            return this.rw.go(template, line[0], [line.slice(2)]);
         } else {
             let asQuantity = findStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, last(line).image);
             if (asQuantity) {
@@ -521,7 +522,7 @@ end repeat`;
             `${prefix} "${opts['speed']}" "${opts['speedmodify']}"
             "${opts['method']}" "${opts['modifier']}" "${opts['dest']}" `
         );
-        return VpcSuperRewrite.go(template, line[0]);
+        return this.rw.go(template, line[0]);
     }
 
     hBuildNyi(msg: string, basis: ChvITk) {
@@ -532,7 +533,7 @@ end repeat`;
     }
 
     hReturnNyiIfMenuMentionedOutsideParens(line: ChvITk[]): ChvITk[][] {
-        let found = VpcSuperRewrite.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'menu');
+        let found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'menu');
         if (found !== -1) {
             return [this.hBuildNyi('deleting from a menu', line[0])];
         } else {
@@ -542,6 +543,6 @@ end repeat`;
 
     hReturnNoOp(line: ChvITk[]): ChvITk[][] {
         let template = `put "no-op" %INTO% c%UNIQUE% `;
-        return VpcSuperRewrite.go(template, line[0]);
+        return this.rw.go(template, line[0]);
     }
 }

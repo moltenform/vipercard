@@ -5,7 +5,7 @@
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcChunkType, VpcTool, VpcToolCtg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
+/* auto */ import { SortType, VpcChunkPreposition, VpcChunkType, VpcTool, VpcToolCtg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
@@ -481,18 +481,17 @@ export class ExecuteStatement {
      * Pauses the script.
      */
     goWait(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let args = this.h.getAllChildVpcVals(vals, tkstr.RuleExpr, true);
-        let number = args[0].readAsStrictNumeric();
+        //~ let args = this.h.getAllChildVpcVals(vals, tkstr.RuleExpr, true);
+        //~ let number = args[0].readAsStrictNumeric();
 
-        let NoteThisIsDisabledCode = 1;
-        let unitRaw = 'ms';
+        //~ let unitRaw = 'ms';
 
-        /* because there is only 1 script execution thread, don't need to assign a unique id. */
-        let asyncOpId = 'singleThreadAsyncOpId';
+        //~ /* because there is only 1 script execution thread, don't need to assign a unique id. */
+        //~ let asyncOpId = 'singleThreadAsyncOpId';
 
-        /* getStrToEnum will conveniently show a list of valid alternatives on error */
-        let multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, '', unitRaw);
-        let milliseconds = Math.max(0, Math.round(number * multiply));
-        VpcScriptExecAsync.goAsyncWait(this.pendingOps, blocked, asyncOpId, milliseconds);
+        //~ /* getStrToEnum will conveniently show a list of valid alternatives on error */
+        //~ let multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, '', unitRaw);
+        //~ let milliseconds = Math.max(0, Math.round(number * multiply));
+        //~ VpcScriptExecAsync.goAsyncWait(this.pendingOps, blocked, asyncOpId, milliseconds);
     }
 }

@@ -1,6 +1,6 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
-/* auto */ import { CodeLimits, VpcScriptErrorBase, VpcScriptSyntaxError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptSyntaxError } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcCodeProcessor, VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed } from './../codeparse/vpcTokens';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference } from './../codepreparse/vpcPreparseCommon';
@@ -84,13 +84,14 @@ export class VpcCacheParsedCST {
 
 export class VpcCacheParsedAST {
     cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyParsedLines);
+    constructor(protected idGen: CountNumericId) {}
     getParsedCodeCollection(code: string, velIdForErrMsg: string): VpcParsedCodeCollection | VpcScriptSyntaxError {
         assertTrue(!code.match(/^\s*$/), '');
         let found = this.cache.get(code);
         if (found) {
             return found;
         } else {
-            let got = VpcCodeProcessor.go(code, velIdForErrMsg);
+            let got = VpcCodeProcessor.go(code, velIdForErrMsg, this.idGen);
             if (!(got instanceof VpcParsedCodeCollection)) {
                 return got;
             }
@@ -99,10 +100,6 @@ export class VpcCacheParsedAST {
             if (VpcCacheParsedCST.ensureNotChanged) {
                 Util512.freezeRecurse(got);
             }
-
-            let NoteThisIsDisabledCode = 1;
-            // the cache used to be able to store errors.
-            // do i want that?
 
             return got;
         }

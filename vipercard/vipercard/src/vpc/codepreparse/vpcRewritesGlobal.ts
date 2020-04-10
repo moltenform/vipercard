@@ -1,5 +1,5 @@
 
-/* auto */ import { CountNumericIdNormal } from './../vpcutils/vpcUtils';
+/* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, ChvITkType, listOfAllWordLikeTokens, tks } from './../codeparse/vpcTokens';
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq, last } from './../../ui512/utils/util512';
@@ -47,9 +47,11 @@ export class VpcRewritesGlobal {
         %ARGMANY%
     end repeat`
  */
-export namespace VpcSuperRewrite {
-    export const CounterForUniqueNames = new CountNumericIdNormal();
-    export function go(
+export class VpcSuperRewrite {
+    constructor(protected idGen:CountNumericId) {
+    }
+
+    go(
         s: string,
         realTokenAsBasis: ChvITk,
         args?: ChvITk[][],
@@ -59,7 +61,7 @@ export namespace VpcSuperRewrite {
         args = args ?? [];
         let ret: ChvITk[][] = [];
         s = s.trim();
-        s = s.replace(/%UNIQUE%/g, '$unique' + CounterForUniqueNames.nextAsStr());
+        s = s.replace(/%UNIQUE%/g, '$unique' + this.idGen.nextAsStr());
         let lines = s.replace(/\r\n/g, '\n').split('\n');
         for (let line of lines) {
             if (line.trim() === '%ARGMANY%' && argMany) {
@@ -68,14 +70,14 @@ export namespace VpcSuperRewrite {
                 let terms = line.split(/\s+/);
                 ret.push([]);
                 for (let term of terms) {
-                    addTerm(ret, term, args, realTokenAsBasis, needsToBePostProcess);
+                    this.addTerm(ret, term, args, realTokenAsBasis, needsToBePostProcess);
                 }
             }
         }
         return ret;
     }
 
-    function addTerm(ret: ChvITk[][], term: string, args: ChvITk[][], realTokenAsBasis: ChvITk, needsToBePostProcess: boolean) {
+    protected addTerm(ret: ChvITk[][], term: string, args: ChvITk[][], realTokenAsBasis: ChvITk, needsToBePostProcess: boolean) {
         if (term.startsWith('%ARG')) {
             checkThrowEq('%', term[term.length - 1], '');
             let sn = term.replace(/%ARG/g, '').replace(/%/g, '');
@@ -84,7 +86,7 @@ export namespace VpcSuperRewrite {
             Util512.extendArray(last(ret), args[n]);
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
             last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
-            let newToken = tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
+            let newToken = this.tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
             last(ret).push(newToken);
             last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
         } else {
@@ -92,12 +94,12 @@ export namespace VpcSuperRewrite {
                 !needsToBePostProcess || (term !== 'into' && term !== 'before' && term !== 'after'),
                 "it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead."
             );
-            let newToken = tokenFromEnglishTerm(term, realTokenAsBasis);
+            let newToken = this.tokenFromEnglishTerm(term, realTokenAsBasis);
             last(ret).push(newToken);
         }
     }
 
-    export function tokenFromEnglishTerm(term: string, realTokenAsBasis: ChvITk) {
+    tokenFromEnglishTerm(term: string, realTokenAsBasis: ChvITk) {
         let tktype = listOfAllWordLikeTokens[term];
         if (!tktype && term.startsWith('"') && term.endsWith('"')) {
             // we can make a simple string literal, not one that contains spaces though.
@@ -115,14 +117,14 @@ export namespace VpcSuperRewrite {
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tktype, term);
     }
 
-    export function replaceWithSyntaxMarkerAtLvl0(
+    replaceWithSyntaxMarkerAtLvl0(
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
         term: string,
         mustExist: boolean,
         syntaxMarkerType = ''
     ) {
-        let index = searchTokenGivenEnglishTermInParensLevel(0, line, realTokenAsBasis, term);
+        let index = this.searchTokenGivenEnglishTermInParensLevel(0, line, realTokenAsBasis, term);
         if (index === -1) {
             checkThrow(!mustExist, `did not see ${term} in a ${line[0].image}`);
             return false;
@@ -133,18 +135,18 @@ export namespace VpcSuperRewrite {
         }
     }
 
-    export function searchTokenGivenEnglishTerm(line: ChvITk[], realTokenAsBasis: ChvITk, term: string) {
-        let tk1 = tokenFromEnglishTerm(term, realTokenAsBasis);
+    searchTokenGivenEnglishTerm(line: ChvITk[], realTokenAsBasis: ChvITk, term: string) {
+        let tk1 = this.tokenFromEnglishTerm(term, realTokenAsBasis);
         return line.findIndex(t => t.tokenType === tk1.tokenType && t.image === tk1.image);
     }
 
-    export function searchTokenGivenEnglishTermInParensLevel(
+    searchTokenGivenEnglishTermInParensLevel(
         wantedLevel: number,
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
         term: string
     ) {
-        let tk1 = tokenFromEnglishTerm(term, realTokenAsBasis);
+        let tk1 = this.tokenFromEnglishTerm(term, realTokenAsBasis);
         let lvl = 0;
         for (let i = 0; i < line.length; i++) {
             let t = line[i];
@@ -159,8 +161,8 @@ export namespace VpcSuperRewrite {
         return -1;
     }
 
-    export function generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
-        let image = '$unique_' + prefix + VpcSuperRewrite.CounterForUniqueNames.nextAsStr();
+    generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
+        let image = '$unique_' + prefix + this.idGen.nextAsStr();
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tks.tkIdentifier, image);
     }
 }

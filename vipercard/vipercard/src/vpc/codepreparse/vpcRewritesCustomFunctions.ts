@@ -29,6 +29,7 @@
 export class ExpandCustomFunctions {
     protected buildToken = new BuildFakeTokens();
     protected skipExpansion: { [key: string]: boolean } = {};
+    protected rw:VpcSuperRewrite
     constructor(protected idgenThisScript: CountNumericId, protected check: CheckReservedWords) {
         /* we don't need to check for fn calls if the line starts with any of these symbols. */
         this.skipExpansion['global'] = true;
@@ -39,6 +40,8 @@ export class ExpandCustomFunctions {
         this.skipExpansion['on'] = true;
         this.skipExpansion['function'] = true;
         this.skipExpansion['pass'] = true;
+
+        this.rw = new VpcSuperRewrite(idgenThisScript)
     }
 
     /* expand function call in this line
@@ -161,12 +164,12 @@ export class ExpandCustomFunctions {
         ret.push(stmtCall);
 
         /* rewrite the syntax, replacing the function call with the new variable! */
-        line.splice(start, end - start, VpcSuperRewrite.tokenFromEnglishTerm(newvarname, line[0]));
+        line.splice(start, end - start, this.rw.tokenFromEnglishTerm(newvarname, line[0]));
 
         /* put results of the call into the temporary variable */
         let template = `put result ( ) %INTO% %ARG0%`;
-        let tokenNewVarname = VpcSuperRewrite.tokenFromEnglishTerm(newvarname, line[0]);
-        let fromTemplateLines = VpcSuperRewrite.go(template, line[0], [[tokenNewVarname]]);
+        let tokenNewVarname = this.rw.tokenFromEnglishTerm(newvarname, line[0]);
+        let fromTemplateLines = this.rw.go(template, line[0], [[tokenNewVarname]]);
         checkThrowEq(1, fromTemplateLines.length, '');
         ret.push(fromTemplateLines[0]);
     }

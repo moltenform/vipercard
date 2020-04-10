@@ -1,7 +1,7 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { BuildFakeTokens, ChvITk, isTkType, listOfAllBuiltinCommandsInOriginalProduct, tks } from './../codeparse/vpcTokens';
 /* auto */ import { CodeSymbols, VpcCodeLine, VpcLineCategory, checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
@@ -32,7 +32,7 @@ export class VpcLineToCodeObj {
             line[0].image
         );
         let firstImage = line[0].image;
-        let ruleAsBuiltin = 'RuleBuiltinCmd' + firstImage;
+        let ruleAsBuiltin = 'RuleBuiltinCmd' + Util512.capitalizeFirst(firstImage);
         let output = new VpcCodeLine(this.idGen.next(), line);
         if (this.parser[ruleAsBuiltin] !== undefined) {
             this.goBuiltinCmd(firstImage, line, output);
@@ -42,6 +42,10 @@ export class VpcLineToCodeObj {
             let cmd = firstImage.replace(/\^/g, '');
             let method = 'go' + Util512.capitalizeFirst(cmd);
             method = Util512.isMethodOnClass(this, method) ? method : 'goCustomHandler';
+            if (method === 'goCustomHandler' && listOfAllBuiltinCommandsInOriginalProduct[cmd.toLowerCase()]) {
+                checkThrow(false, "It looks like we haven't implemented this command yet.")
+            }
+
             let ret = Util512.callAsMethodOnClass('DetermineCategory', this, method, [line, output], false);
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {
