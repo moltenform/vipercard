@@ -3,6 +3,9 @@
 /* auto */ import { RenderComplete, RepeatingTimer, VoidFn } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Assert';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * in original os, you had to hold mouse down on the menus the entire time
  * in ours, you can click once and the menu stays open

@@ -1,6 +1,9 @@
 
 /* auto */ import { O } from './../utils/util512Assert';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export const clrBlack = 0;
 export const clrWhite = 1;
 export const clrTransp = 2;

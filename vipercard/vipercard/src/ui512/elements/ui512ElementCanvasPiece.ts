@@ -3,6 +3,9 @@
 /* auto */ import { UI512Element } from './ui512Element';
 /* auto */ import { UI512Painter } from './../draw/ui512DrawPainterClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the model for a UI image element,
  * the image is drawn from a region of a canvas.

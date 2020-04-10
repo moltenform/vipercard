@@ -5,6 +5,9 @@
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
 /* auto */ import { testCollectionExternalChevrotain } from './../util512/testExternalChevrotain';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         console.log('Running tests...');

@@ -4,6 +4,9 @@
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 let t = new SimpleUtil512TestCollection('testCollectionExternalLibs');
 export let testCollectionExternalLibs = t;
 

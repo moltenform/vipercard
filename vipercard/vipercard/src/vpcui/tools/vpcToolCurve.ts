@@ -3,6 +3,9 @@
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export class VpcAppUIToolCurve extends VpcAppUIToolShape {
     /**
      * draw one bezier curve

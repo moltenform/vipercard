@@ -5,6 +5,9 @@
 /* auto */ import { OrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 // the VpcCompleteVisitor interface will make it easier
 // to see that all visitor methods are there
 

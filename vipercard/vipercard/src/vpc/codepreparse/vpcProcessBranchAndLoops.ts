@@ -4,6 +4,9 @@
 /* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObject, checkThrowEq, last, longstr } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * in BranchProcessing we collect and validate the hierarchical structure of code,
  * e.g. collecting all of the if/else lines so that goto points can be set,

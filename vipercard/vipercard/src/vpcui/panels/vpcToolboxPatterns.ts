@@ -5,6 +5,9 @@
 /* auto */ import { UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a tool palette showing the available fill patterns
  */

@@ -7,6 +7,9 @@
 /* auto */ import { bool, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { findStrToEnum, slength } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * provides ways to see if a certain term is ok to use as a variable name,
  * or if it is a reserved term that is disallowed

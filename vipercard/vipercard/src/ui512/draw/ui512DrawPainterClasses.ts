@@ -3,6 +3,9 @@
 /* auto */ import { O, assertTrueWarn, makeUI512Error } from './../utils/util512Assert';
 /* auto */ import { UI512BasePainterUtils } from './ui512DrawPatterns';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * abstract painting class, can be attached to different surfaces
  * clr is generally clrBlack or clrWhite, but at this layer we support any color.

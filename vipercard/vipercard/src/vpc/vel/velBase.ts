@@ -8,6 +8,9 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverVal, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * base class for a vel (vpc element)
  *

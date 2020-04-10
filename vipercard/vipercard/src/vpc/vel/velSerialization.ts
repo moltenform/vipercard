@@ -6,6 +6,9 @@
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { bridgedBase64Js } from './../../bridge/bridgeBase64Js';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * serialization of VPC objects, preparing them for JSON.serialize
  */

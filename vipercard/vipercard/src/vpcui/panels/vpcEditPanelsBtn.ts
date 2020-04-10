@@ -2,6 +2,9 @@
 /* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcEditPanelsBase } from './vpcEditPanelsBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * properties panel, for editing a button's properties
  */

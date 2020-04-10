@@ -4,6 +4,9 @@
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /* properties can be any one of these types */
 export type ElementObserverVal = string | boolean | number | FormattedText;
 

@@ -7,6 +7,9 @@
 /* auto */ import { UI512Painter } from './ui512DrawPainterClasses';
 /* auto */ import { UI512PainterCvDataAndPatterns } from './ui512DrawPainter';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * painted shapes supported
  */

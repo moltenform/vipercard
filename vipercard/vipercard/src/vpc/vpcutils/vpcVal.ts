@@ -3,6 +3,9 @@
 /* auto */ import { OrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 import { checkThrowEq } from '../../ui512/utils/util512';
 
 /**

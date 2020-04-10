@@ -11,6 +11,9 @@
 /* auto */ import { AnyParameterCtor, MapKeyToObject, cast } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverDefault } from './../../ui512/elements/ui512ElementGettable';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * owner of the stack model and productopts model
  */

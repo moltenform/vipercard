@@ -1,4 +1,7 @@
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 export class VpcStandardLibScript {
     static script = `
 -- we don't need default handlers for "on mousedown" etc...

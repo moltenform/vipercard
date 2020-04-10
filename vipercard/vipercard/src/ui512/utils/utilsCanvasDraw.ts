@@ -2,6 +2,9 @@
 /* auto */ import { O, assertTrue, checkThrowUI512 } from './util512Assert';
 /* auto */ import { Util512 } from './util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export type DrawableImage = HTMLCanvasElement | HTMLImageElement;
 
 /**

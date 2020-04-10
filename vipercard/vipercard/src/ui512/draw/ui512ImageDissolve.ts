@@ -5,6 +5,9 @@
 /* auto */ import { UI512IconManager } from './ui512DrawIconManager';
 /* auto */ import { IconInfo } from './ui512DrawIconClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * dissolve from one image to another
  * we can cleverly use composition modes to do this very efficiently.

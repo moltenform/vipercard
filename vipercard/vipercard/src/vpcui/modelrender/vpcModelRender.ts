@@ -16,6 +16,9 @@
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * loop through the vels on the page and create UI512elements to be rendered
  * map changes to a vel to a change in the corresponding UI512element

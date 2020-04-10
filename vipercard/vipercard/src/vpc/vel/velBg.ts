@@ -7,6 +7,9 @@
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a vipercard "background"
  * a stack contains backgrounds, which contain cards

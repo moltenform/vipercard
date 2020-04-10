@@ -9,6 +9,9 @@
 /* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from './../elements/ui512ElementMenu';
 /* auto */ import { UI512Element } from './../elements/ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * menu listeners+behaviors, opening the menu when you click on it and so on.
  */

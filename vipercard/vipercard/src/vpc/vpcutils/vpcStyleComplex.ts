@@ -4,6 +4,9 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * tools for dealing with formatted substrings, e.g.
  * set the textstyle of char 2 to 4 of cd fld "fld1" to bold

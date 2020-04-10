@@ -1,6 +1,7 @@
 
 import type { LRUMap } from '../../external/js-lru/js-lru';
 
+// [js-lru](https://github.com/rsms/js-lru)
 // this library is bundled into externalmanualbundle.js and exists on globalThis
 
 // note: vscode sometimes warns about this saying "LRUMap" cannot be used as a value

@@ -17,6 +17,9 @@
 /* auto */ import { UI512PainterCvCanvas } from './../../ui512/draw/ui512DrawPainter';
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * drawing paint to the canvas
  *

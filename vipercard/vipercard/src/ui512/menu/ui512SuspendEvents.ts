@@ -3,6 +3,9 @@
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { TemporarilySuspendEventsInterface } from './../draw/ui512Interfaces';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * temporarily suspend (ignore) events.
  * replace all listeners with a different set of listeners,

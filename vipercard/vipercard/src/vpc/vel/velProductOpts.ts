@@ -16,6 +16,9 @@
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Patterns } from './../../ui512/draw/ui512DrawPatterns';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * product options class
  *

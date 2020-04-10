@@ -21,6 +21,9 @@
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * layer that holds the property panels
  */

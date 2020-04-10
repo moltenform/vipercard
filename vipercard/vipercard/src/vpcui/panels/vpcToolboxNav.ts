@@ -6,6 +6,9 @@
 /* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a tool palette for moving from card to card
  */

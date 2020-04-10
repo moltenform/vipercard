@@ -9,6 +9,9 @@
 /* auto */ import { assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq, last, longstr } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * determine the category of a line of code
  */

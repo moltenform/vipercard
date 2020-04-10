@@ -7,6 +7,9 @@
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { FullRootUI512 } from './rootUI512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 let mainVPCStartCanvasStarted = false;
 
 function mainVPCStartCanvas(fnMakeGolly: any) {

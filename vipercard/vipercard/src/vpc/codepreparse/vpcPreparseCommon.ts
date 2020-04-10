@@ -4,6 +4,9 @@
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { last, longstr } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * make every symbol lowercase, because the language is case insensitive
  */

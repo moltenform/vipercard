@@ -12,6 +12,9 @@
 /* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
 /* auto */ import { UI512PainterCvCanvas } from './../../ui512/draw/ui512DrawPainter';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
 select tool implementation
 

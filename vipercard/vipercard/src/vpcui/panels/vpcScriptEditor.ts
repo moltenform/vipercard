@@ -22,6 +22,9 @@
 /* auto */ import { UI512CompCodeEditor } from './../../ui512/composites/ui512CodeEditor';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the ViperCard script editor
  */

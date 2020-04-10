@@ -2,6 +2,7 @@
 import type { Bowser } from '../../external/bowser-2.9/bowser';
 declare const bowser: typeof Bowser;
 
+// [Bowser](https://github.com/lancedikson/bowser)
 // this library is bundled into externalmanualbundle.js and exists on globalThis
 
 export function bridgedGetBrowserInfo(): [

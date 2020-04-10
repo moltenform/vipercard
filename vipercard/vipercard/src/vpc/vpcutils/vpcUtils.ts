@@ -4,6 +4,9 @@
 /* auto */ import { O, UI512AttachableErr, assertTrue, assertTrueWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * container that can be read from.
  * for example, a field is a readable container because you can say

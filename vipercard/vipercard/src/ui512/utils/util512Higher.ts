@@ -2,8 +2,8 @@
 /* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrowUI512, makeUI512Error, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
 
-// moltenform.com(Ben Fisher)
-// MIT license
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the MIT license */
 
 export class Util512Higher {
     /**

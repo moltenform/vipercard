@@ -20,6 +20,9 @@
 /* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * base class for property panels,
  * for example, editing button and field properties

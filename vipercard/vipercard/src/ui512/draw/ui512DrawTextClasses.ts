@@ -2,6 +2,9 @@
 /* auto */ import { assertTrue, makeUI512Error } from './../utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /* Bitmap-font-drawing
 Extraction and rendering by Ben Fisher, 2017 */
 

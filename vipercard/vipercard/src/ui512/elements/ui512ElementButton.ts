@@ -1,6 +1,9 @@
 
 /* auto */ import { UI512ElementWithHighlight } from './ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * general button class, rendering logic will render anything inheriting
  * from this class as a button.

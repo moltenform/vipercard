@@ -2,6 +2,9 @@
 /* auto */ import { ElementObserver, elementObserverDefault } from './ui512ElementGettable';
 /* auto */ import { UI512ElementWithText } from './ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the model for a UI label element
  */

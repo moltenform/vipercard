@@ -1,4 +1,5 @@
 
+// [JSGIF](https://github.com/antimatter15/jsgif)
 // jsgif bare-bones typing
 // by Ben Fisher
 

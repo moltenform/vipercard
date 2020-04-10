@@ -6,6 +6,9 @@
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the loading page, essentially just shows a message on a white background
  */

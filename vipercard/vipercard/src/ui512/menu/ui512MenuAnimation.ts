@@ -2,6 +2,9 @@
 /* auto */ import { TemporarilySuspendEvents } from './ui512SuspendEvents';
 /* auto */ import { UI512MenuItem } from './../elements/ui512ElementMenu';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * right when you choose a menu item, suspend all other events while we blink the menu item
  */

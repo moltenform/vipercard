@@ -4,6 +4,9 @@
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export namespace VpcRewritesConditions {
     export function splitSinglelineIf(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('if', line[0].image, '');

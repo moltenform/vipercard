@@ -17,6 +17,9 @@
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { PalBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a "message box" where you can type in code and evaluate it
  * redesigned by Ben Fisher, you can now see previous entries,

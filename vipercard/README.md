@@ -17,7 +17,7 @@ Source code:
     
 To learn about building from source, see [building.md](vipercard/building.md).
 
-Dependencies:
+Libraries:
 
 - [chevrotain](https://github.com/SAP/chevrotain)
     
@@ -34,6 +34,12 @@ Dependencies:
 - [JSGIF](https://github.com/antimatter15/jsgif)
 
 - [Bresenham easy.filter](http://members.chello.at/easyfilter/bresenham.html)
+
+- [lz-string](https://github.com/pieroxy/lz-string)
+
+- [Pizzicato](https://github.com/alemangui/pizzicato)
+
+- [Bowser](https://github.com/lancedikson/bowser)
 
 - Wikipedia's [description of Mac OS Roman](https://en.wikipedia.org/wiki/Mac_OS_Roman)
 

@@ -9,6 +9,9 @@
 /* auto */ import { UI512DrawChar } from './ui512DrawTextChar';
 /* auto */ import { DrawTextArgs } from './ui512DrawTextArgs';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 const space = ' '.charCodeAt(0);
 const dash = '-'.charCodeAt(0);
 

@@ -19,6 +19,9 @@
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * forward-declare methods on the presenter class, solely
  * to break circular dependencies

@@ -1,6 +1,9 @@
 
 /* auto */ import { assertEq } from './util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export enum MenuConsts {
     AddToWidth = 45 + 6,
     ShadowSizeLeft = 1,

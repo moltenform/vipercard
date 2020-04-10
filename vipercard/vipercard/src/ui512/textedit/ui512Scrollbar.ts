@@ -18,6 +18,9 @@
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { UI512ViewDrawBorders } from './../draw/ui512DrawBorders';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * creation and positioning of scrollbar elements
  */

@@ -7,6 +7,9 @@
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * execute an asynchronous statement
  *

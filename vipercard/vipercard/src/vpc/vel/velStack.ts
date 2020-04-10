@@ -7,6 +7,9 @@
 /* auto */ import { checkThrow, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq, last, slength } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a vipercard "stack"
  */

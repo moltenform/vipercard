@@ -7,6 +7,9 @@
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, UnshapedJsonAny, checkThrowEq, longstr } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * from a stack to a plain JSON object, and vice-versa
  */

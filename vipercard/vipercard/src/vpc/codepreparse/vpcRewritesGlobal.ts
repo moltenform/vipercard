@@ -4,6 +4,9 @@
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq, last } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export class VpcRewritesGlobal {
     static rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
         let ret: ChvITk[] = [];

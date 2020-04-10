@@ -18,6 +18,9 @@
 /* auto */ import { UI512CompBase } from './ui512Composites';
 /* auto */ import { lng } from './../lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a modal dialog
  * "answer", like an alert() box

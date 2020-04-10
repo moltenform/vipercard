@@ -2,6 +2,9 @@
 /* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 let t = new SimpleUtil512TestCollection('testCollectionExternalChevrotain');
 export let testCollectionExternalChevrotain = t;
 

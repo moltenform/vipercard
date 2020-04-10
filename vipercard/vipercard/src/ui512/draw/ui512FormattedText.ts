@@ -5,6 +5,9 @@
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { specialCharFontChange } from './ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the formatted text class for UI512.
  * can be easily serialized to/from a plain string.

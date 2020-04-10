@@ -17,6 +17,9 @@
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 /* auto */ import { UI512CompBase } from './../../ui512/composites/ui512Composites';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * fulfill the VpcStateInterface interface
  */

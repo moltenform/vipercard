@@ -8,6 +8,9 @@
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * implementation for the button tool and field tool
  */

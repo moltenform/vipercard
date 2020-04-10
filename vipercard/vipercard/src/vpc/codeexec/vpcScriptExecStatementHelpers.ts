@@ -8,6 +8,9 @@
 /* auto */ import { O, assertTrue, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyParameterCtor, Util512, checkThrowEq, isString } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export class VpcScriptExecuteStatementHelpers {
     outside: OutsideWorldReadWrite;
 

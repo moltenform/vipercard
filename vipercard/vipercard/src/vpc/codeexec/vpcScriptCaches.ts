@@ -9,6 +9,9 @@
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * cache the CST from a parsed line of code, for better perf.
  * it can be re-evaluated by calling visit() again.

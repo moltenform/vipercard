@@ -4,6 +4,9 @@
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /* small perf opt to reduce calls to charCodeAt */
 const space = ' '.charCodeAt(0);
 const dash = '-'.charCodeAt(0);

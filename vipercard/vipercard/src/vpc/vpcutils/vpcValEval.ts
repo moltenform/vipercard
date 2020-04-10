@@ -4,6 +4,9 @@
 /* auto */ import { bool, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { checkThrowEq, longstr } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * used by the interpreter to evaluate operations
  * tested in vpcTestScriptEval

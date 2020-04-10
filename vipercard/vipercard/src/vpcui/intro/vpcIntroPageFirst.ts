@@ -15,6 +15,9 @@
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * first page shown when you open ViperCard
  */

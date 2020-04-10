@@ -6,6 +6,9 @@
 /* auto */ import { clrThreshold } from './../../ui512/draw/ui512DrawPainter';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export class TestUtilsCanvas {
     /**
      * compare an image to a known-good expected image.

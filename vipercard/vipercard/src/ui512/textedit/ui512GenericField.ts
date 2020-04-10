@@ -4,6 +4,9 @@
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * IGenericTextField, a generic text-field-like object.
  *

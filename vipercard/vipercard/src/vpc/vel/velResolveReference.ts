@@ -10,6 +10,9 @@
 /* auto */ import { O, bool, checkThrow, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a script refers to an object that might or might not exist,
  * go from a RequestedVelRef to a concrete VpcElBase

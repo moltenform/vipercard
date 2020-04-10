@@ -5,6 +5,9 @@
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq, last, longstr, util512Sort } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * it turns out to be kind of complicated to evaluate something like
  * put item x to y of myList into z,

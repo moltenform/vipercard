@@ -15,6 +15,9 @@
 /* auto */ import { UI512ElButton } from './../elements/ui512ElementButton';
 /* auto */ import { BasicHandlers } from './ui512BasicHandlers';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * Base class for text events
  */

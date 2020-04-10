@@ -5,6 +5,9 @@
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the Vpc menu
  */

@@ -3,6 +3,9 @@
 /* auto */ import { checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512 } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a collection of variables
  */

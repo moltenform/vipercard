@@ -4,6 +4,9 @@
 /* auto */ import { O, assertTrue } from './../utils/util512Assert';
 /* auto */ import { DrawCharResult, TextFontStyling, TextRendererFont, specialCharNumNewline, specialCharNumNonBreakingSpace, specialCharNumOnePixelSpace, specialCharNumTab, specialCharNumZeroPixelChar } from './ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 const space = ' '.charCodeAt(0);
 const dash = '-'.charCodeAt(0);
 

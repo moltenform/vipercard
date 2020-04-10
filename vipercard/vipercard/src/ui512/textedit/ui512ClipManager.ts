@@ -4,6 +4,9 @@
 /* auto */ import { ClipManagerInterface } from './../draw/ui512Interfaces';
 /* auto */ import { PasteTextEventDetails } from './../menu/ui512Events';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * ClipManager
  * Ben Fisher, 2017

@@ -3,6 +3,9 @@
 /* auto */ import { BrowserOSInfo, Util512, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 let t = new SimpleUtil512TestCollection('testCollectionUtil512Class');
 export let testCollectionUtil512Class = t;
 

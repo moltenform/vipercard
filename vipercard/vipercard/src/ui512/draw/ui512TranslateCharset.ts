@@ -1,6 +1,9 @@
 
 /* auto */ import { O } from './../utils/util512Assert';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * translate back and forth between mac-os-roman and utf16.
  * all text shown in a UI512 text field is in mac-os-roman encoding,

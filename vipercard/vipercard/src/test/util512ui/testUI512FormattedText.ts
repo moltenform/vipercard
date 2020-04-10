@@ -8,6 +8,9 @@
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * tests on FormattedText
  */

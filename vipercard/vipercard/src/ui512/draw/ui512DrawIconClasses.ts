@@ -2,6 +2,9 @@
 /* auto */ import { CanvasWrapper, DrawableImage } from './../utils/utilsCanvasDraw';
 /* auto */ import { O, assertTrue, throwIfUndefined } from './../utils/util512Assert';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * arguments for drawing icon into a box
  */

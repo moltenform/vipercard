@@ -5,6 +5,9 @@
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a property panel is a window on the right side of the screen,
  * for editing vel properties.

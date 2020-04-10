@@ -10,6 +10,9 @@
 /* auto */ import { GIFEncoder } from './../../bridge/bridgeJsGif';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * export paint to GIF
  */

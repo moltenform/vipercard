@@ -9,6 +9,9 @@
 /* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the model for a UI text field element
  */

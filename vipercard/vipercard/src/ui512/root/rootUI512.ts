@@ -14,6 +14,9 @@
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
 /* auto */ import { bridgedGetBrowserInfo } from './../../bridge/bridgeBrowserInfo';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export class FullRootUI512 implements Root {
     domCanvas: CanvasWrapper;
     presenter: UI512Presenter;

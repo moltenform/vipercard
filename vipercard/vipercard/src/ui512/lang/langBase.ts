@@ -1,6 +1,9 @@
 
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 const lngPrefix = 'lng';
 const lngPrefixLength = 'lng'.length;
 

@@ -4,6 +4,9 @@
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompToolbox } from './../../ui512/composites/ui512Toolbox';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the main tool palette
  */

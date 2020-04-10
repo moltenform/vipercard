@@ -10,6 +10,9 @@
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * send a report
  */

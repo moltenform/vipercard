@@ -11,6 +11,9 @@
 /* auto */ import { O, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { isString, longstr } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /* check_long_lines_silence_subsequent */
 
 /**

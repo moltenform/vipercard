@@ -5,6 +5,9 @@
 /* auto */ import { O } from './../../ui512/utils/util512Assert';
 /* auto */ import { UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a script is requesting a reference to a vel element.
  * e.g. cd fld id 1234, or

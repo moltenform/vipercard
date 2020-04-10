@@ -6,6 +6,9 @@
 /* auto */ import { UI512Element } from './ui512Element';
 /* auto */ import { largeArea } from './../draw/ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a group of elements.
  * useful for say, a dialog box, because you can hide the entire group at once,

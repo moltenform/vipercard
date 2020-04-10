@@ -14,6 +14,9 @@
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * holds all vipercard state
  */

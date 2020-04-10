@@ -11,6 +11,9 @@
 /* auto */ import { Util512, checkThrowEq, findEnumToStr, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Lines } from './../../ui512/textedit/ui512TextLines';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * built-in functions
  */

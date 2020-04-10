@@ -5,6 +5,9 @@
 /* auto */ import { UI512Patterns, clrBlack, clrTransp, clrWhite, needsPatternSupport, simplifyPattern } from './ui512DrawPatterns';
 /* auto */ import { UI512Painter } from './ui512DrawPainterClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * paint into an array of raw pixel data
  */

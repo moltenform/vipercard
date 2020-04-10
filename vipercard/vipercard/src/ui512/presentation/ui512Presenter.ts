@@ -10,6 +10,9 @@
 /* auto */ import { UI512Element } from './../elements/ui512Element';
 /* auto */ import { ClipManager } from './../textedit/ui512ClipManager';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a Presenter receives Events,
  * updates Models accordingly,

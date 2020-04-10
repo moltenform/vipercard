@@ -1,6 +1,9 @@
 
 /* auto */ import { assertEq } from './util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * assign a number to cursor
  * must correlate with canvas.classCursor in style.css

@@ -3,6 +3,9 @@
 /* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { util512Sort } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 /**
  * assert that an exception is thrown, with a certain message
  */

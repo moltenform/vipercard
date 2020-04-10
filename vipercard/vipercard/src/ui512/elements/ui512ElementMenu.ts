@@ -4,6 +4,9 @@
 /* auto */ import { UI512Application } from './ui512ElementApp';
 /* auto */ import { UI512Element } from './ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * the model for a UI menu item
  * you can use specialCharCmdSymbol in the hotkey to make the symbol.

@@ -14,6 +14,9 @@
 /* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObject, Util512, ValHolder, util512Sort } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /*
 ==========================================================
 How Code Compilation + Execution Works In ViperCard

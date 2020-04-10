@@ -6,6 +6,9 @@
 /* auto */ import { MouseDownEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export class VpcAppUIToolBucket extends VpcAppUIToolBase {
     /**
      * respond to mouse down event

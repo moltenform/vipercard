@@ -5,6 +5,9 @@
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * SortType for the "sort" command
  * text sorting (default), compares text, not case sensitive.

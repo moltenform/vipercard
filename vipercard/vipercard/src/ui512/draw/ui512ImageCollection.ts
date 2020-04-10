@@ -3,6 +3,9 @@
 /* auto */ import { O, assertTrue } from './../utils/util512Assert';
 /* auto */ import { Util512, last } from './../utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * an array of UI512ImageCollections.
  */

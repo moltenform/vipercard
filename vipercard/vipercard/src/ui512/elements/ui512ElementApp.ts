@@ -7,6 +7,9 @@
 /* auto */ import { ElementObserver, elementObserverDefault } from './ui512ElementGettable';
 /* auto */ import { UI512Element } from './ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a class that contains all groups shown on the current form
  * this class has model state only: rendering logic should go in view, not here.

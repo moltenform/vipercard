@@ -3,6 +3,9 @@
 /* auto */ import { assertTrue, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, last } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * check the type of a token
  */

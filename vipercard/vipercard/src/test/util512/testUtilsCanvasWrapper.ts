@@ -5,6 +5,9 @@
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * testing fillRect, getColorFromCanvasData, and
  * TestUtilsCanvas.RenderAndCompareImages itself

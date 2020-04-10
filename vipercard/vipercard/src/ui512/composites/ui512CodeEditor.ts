@@ -9,6 +9,9 @@
 /* auto */ import { UI512CompBase, WndBorderDecorationConsts } from './ui512Composites';
 /* auto */ import { UI512AutoIndent, UI512CompCodeEditorFont } from './ui512CodeEditorAutoIndent';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a code editor
  * to use this composite,

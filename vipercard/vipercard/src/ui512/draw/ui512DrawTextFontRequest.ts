@@ -3,6 +3,9 @@
 /* auto */ import { O, assertTrue, throwIfUndefined } from './../utils/util512Assert';
 /* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, UI512FontGrid, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * cache the font data that has been loaded
  */

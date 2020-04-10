@@ -7,6 +7,9 @@
 /* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { checkThrowEq, findStrToEnum, last, longstr } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * SyntaxRewriter rewrites syntax for some lines:
     1) To minimize number of tokens needed in the lexer (for faster lexing)

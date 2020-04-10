@@ -1,7 +1,4 @@
 
-// moltenform.com(Ben Fisher)
-// MIT license
-
 /**
  * change these as appropriate for your product
  */

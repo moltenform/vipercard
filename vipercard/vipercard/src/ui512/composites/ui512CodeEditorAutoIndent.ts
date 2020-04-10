@@ -8,6 +8,9 @@
 /* auto */ import { TextFontStyling, specialCharNumNewline, textFontStylingToString } from './../draw/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * automatically indent code,
  * to make editing code more convenient

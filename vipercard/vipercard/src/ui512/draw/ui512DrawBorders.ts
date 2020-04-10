@@ -3,6 +3,9 @@
 /* auto */ import { RenderComplete } from './../utils/util512Higher';
 /* auto */ import { assertEq } from './../utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /* go straight to these, which are passed to the Canvas context object */
 const cW = 'white';
 const cB = 'black';

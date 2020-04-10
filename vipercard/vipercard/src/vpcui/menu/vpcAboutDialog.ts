@@ -4,6 +4,9 @@
 /* auto */ import { UI512CompModalDialog, UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * ViperCard's about dialog
  */

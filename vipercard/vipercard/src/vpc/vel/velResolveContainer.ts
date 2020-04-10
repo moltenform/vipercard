@@ -7,6 +7,9 @@
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a readable container for a simple string.
  * (some readable containers are more complex, like a field that has formatted text)

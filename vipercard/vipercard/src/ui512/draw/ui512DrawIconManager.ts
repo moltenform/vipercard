@@ -3,6 +3,9 @@
 /* auto */ import { O, assertTrue } from './../utils/util512Assert';
 /* auto */ import { RenderIcon, RenderIconGroup } from './ui512DrawIconClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * main icon class.
  * give it a group id and number,

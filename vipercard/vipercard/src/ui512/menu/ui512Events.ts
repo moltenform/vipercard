@@ -5,6 +5,9 @@
 /* auto */ import { UI512EventType } from './../draw/ui512Interfaces';
 /* auto */ import { UI512Element } from './../elements/ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * event details base class
  */

@@ -1,6 +1,9 @@
 
 /* auto */ import { BrowserOSInfo } from './util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * ModifierKeys bitfield.
  */

@@ -4,6 +4,9 @@
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { UI512Settable } from './ui512ElementGettable';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * base class for UI model classes (button, label, etc)
  */

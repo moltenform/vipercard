@@ -11,6 +11,9 @@
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { lng } from './../lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * you can build a menu in code,
  * but for convenience we have a way to build menu from an array

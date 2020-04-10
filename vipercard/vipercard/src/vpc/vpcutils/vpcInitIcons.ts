@@ -2,6 +2,9 @@
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { IconGroupInfo, RenderIconGroup } from './../../ui512/draw/ui512DrawIconClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 export class VpcInitIcons {
     /**
      * specify the icon dimensions for ViperCard-specific icons.

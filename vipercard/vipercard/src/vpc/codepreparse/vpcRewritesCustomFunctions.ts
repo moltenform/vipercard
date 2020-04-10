@@ -7,6 +7,9 @@
 /* auto */ import { O, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { ValHolder, assertEq, checkThrowEq } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * if a function call occurs inside an expression, we pull it outside:
 

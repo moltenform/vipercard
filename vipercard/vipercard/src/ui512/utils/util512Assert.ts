@@ -2,8 +2,8 @@
 /* auto */ import { msgInternalErr, msgNotification, msgScriptErr, ui512InternalErr } from './util512Productname';
 /* auto */ import { BridgedLZString } from './../../bridge/bridgeLzString';
 
-// moltenform.com(Ben Fisher)
-// MIT license
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the MIT license */
 
 /**
  * make an error object, record the error, and depending on severity, show alert box

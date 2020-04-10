@@ -12,6 +12,9 @@
 /* auto */ import { UI512Application } from './../elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../elements/ui512Element';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * a Presenter receives Events,
  * updates Models accordingly,

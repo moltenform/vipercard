@@ -13,6 +13,9 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserver, ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * we put undoable options into _ProductOpts_, and non-undoable options into _VpcRuntimeOpts_
  *

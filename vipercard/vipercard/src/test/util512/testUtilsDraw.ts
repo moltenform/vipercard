@@ -4,6 +4,9 @@
 /* auto */ import { BrowserOSInfo, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * testing functions from utilsDraw
  */

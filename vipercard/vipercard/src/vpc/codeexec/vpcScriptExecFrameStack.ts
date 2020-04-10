@@ -49,7 +49,7 @@
 
 /**
  * frame stack for the vipercard code-interpreter
- * like C, entering a function pushes a frame onto this stack,
+ * entering a function pushes a frame onto this stack,
  * returning from a function pops a frame from this stack
  */
 export class VpcExecFrameStack {

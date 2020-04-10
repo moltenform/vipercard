@@ -11,6 +11,9 @@
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
 /* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * modifications of selection and content within a text field
  *

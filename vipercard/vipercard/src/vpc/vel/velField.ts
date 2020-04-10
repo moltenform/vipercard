@@ -13,6 +13,9 @@
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { TextFontSpec, specialCharNumNewline } from './../../ui512/draw/ui512DrawTextClasses';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * vpc text field class.
  */

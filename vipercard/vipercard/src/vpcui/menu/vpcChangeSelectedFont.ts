@@ -10,6 +10,9 @@
 /* auto */ import { Util512, fitIntoInclusive, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * apply changes when the user chooses something from the Font or Style menu
  */

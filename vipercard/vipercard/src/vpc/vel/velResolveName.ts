@@ -13,6 +13,9 @@
 /* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, castVerifyIsStr, getStrToEnum, last } from './../../ui512/utils/util512';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * when a script asks for the name of an object
  * put the long name of cd btn "myBtn" into x

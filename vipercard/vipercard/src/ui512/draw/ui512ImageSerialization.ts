@@ -5,6 +5,9 @@
 /* auto */ import { clrBlack, clrTransp, clrWhite } from './ui512DrawPatterns';
 /* auto */ import { UI512PainterCvData } from './ui512DrawPainter';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * serialize an image to a string
  *

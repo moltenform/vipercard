@@ -16,6 +16,9 @@
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /* check_long_lines_silence_subsequent */
 
 /**
