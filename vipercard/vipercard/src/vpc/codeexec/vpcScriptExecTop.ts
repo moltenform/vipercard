@@ -5,11 +5,14 @@
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
-/* auto */ import { VpcBuiltinMsg, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
+/* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { ValHolder, slength } from './../../ui512/utils/util512';
+/* auto */ import { ValHolder, cast, slength } from './../../ui512/utils/util512';
+
 
 /**
  * script execution in ViperCard
@@ -242,7 +245,12 @@ export class VpcExecTop {
      * run maintenance
      */
     doMaintenance() {
-        // currently has no maintenance
+        let refStack = new RequestedVelRef(VpcElType.Stack)
+        refStack.lookByRelative = OrdinalOrPosition.This
+        let got = this.outside.ResolveVelRef(refStack)
+        if (got && got[0]) {
+            VpcExecTop.checkNoRepeatedIds( cast(VpcElStack, got[0]))
+        }
     }
 
     /**
@@ -253,5 +261,19 @@ export class VpcExecTop {
         msg.msgBoxCodeBody = codeBody;
         msg.addIntentionalError = addIntentionalError;
         this.scheduleCodeExec(msg);
+    }
+
+    /**
+     * make sure there are no repeated ids
+     */
+    static checkNoRepeatedIds(stack:VpcElStack) {
+        let idsSeen = new Map<string, boolean>()
+        for (let vel of stack.iterEntireStack()) {
+            if (idsSeen.has(vel.id)) {
+                alert("duplicate id seen: " + vel.id)
+            }
+
+            idsSeen.set(vel.id, true)
+        }
     }
 }

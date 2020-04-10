@@ -68,11 +68,19 @@ export class VpcAppLyrPanels extends VpcUILayer {
                 }
             } else if (vel.getType() === VpcElType.Stack) {
                 return vel;
+            } else {
+                if (!this.hasSentDontSupportMessage) {
+                alert("we don't support selecting this type of object, so going to the current card instead")
+                this.hasSentDontSupportMessage = true
+                }
+                return this.vci.getModel().getCurrentCard()
             }
         }
 
         return undefined;
     }
+
+    hasSentDontSupportMessage = false
 
     /**
      * update UI
@@ -88,7 +96,9 @@ export class VpcAppLyrPanels extends VpcUILayer {
             shouldBeActive = this.panelEmpty;
         } else {
             shouldBeActive = this.panels.find(selected.getType().toString()) ?? this.panelEmpty;
-            this.showOrHideCheckboxItems(selected, shouldBeActive);
+            if (shouldBeActive !== this.panelEmpty) {
+                this.showOrHideCheckboxItems(selected, shouldBeActive);
+            }
         }
 
         let arPanels = this.panels.getVals();

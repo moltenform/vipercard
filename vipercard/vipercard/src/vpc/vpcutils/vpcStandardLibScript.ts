@@ -1,6 +1,9 @@
 
 export class VpcStandardLibScript {
     static script = `
+    `
+
+    static scriptFull = `
 -- we don't need default handlers for "on mousedown" etc...
 -- we have a list of handlers where it's always ok if they are missing (equivalent).
 -- perhaps a slight benefit, because events like "idle" won't create a stack frame

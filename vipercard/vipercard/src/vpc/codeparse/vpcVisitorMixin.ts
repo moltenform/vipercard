@@ -42,7 +42,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
     return class extends Base {
         Helper$ReadVpcVal(ctx: VisitingContext, subrule: string, context: string): VpcVal {
             let child = ctx[subrule];
-            checkThrow(bool(child[0]), `9P|expected to have an expression ${context}`);
+            checkThrow(bool(child && child[0]), `9P|expected to have an expression ${context}`);
             let evaledVpc = this.visit(child[0]) as VpcVal;
             checkThrow(evaledVpc instanceof VpcVal, `9O|expected a vpcval when looking up element id or name`);
             return evaledVpc;
@@ -68,7 +68,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         help$ObjBtnOrFld(ctx: VisitingContext, tokenName: string, ret: RequestedVelRef): RequestedVelRef {
-            if (ctx.RuleObjectCard[0]) {
+            if (ctx.RuleObjectCard && ctx.RuleObjectCard[0]) {
                 ret.parentCdInfo = this.visit(ctx.RuleObjectCard[0]);
             } else {
                 ret.parentCdInfo = new RequestedVelRef(VpcElType.Card);
@@ -76,19 +76,19 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             }
 
             let isBg = tokenName === tkstr.tkFld;
-            if (ctx.tkBg[0]) {
+            if (ctx.tkBg && ctx.tkBg[0]) {
                 isBg = true;
             }
-            if (ctx.tkCard[0]) {
+            if (ctx.tkCard && ctx.tkCard[0]) {
                 isBg = false;
             }
             ret.partIsBg = isBg;
             ret.partIsCd = !isBg;
-            if (ctx.RuleOrdinal[0] && ctx.RuleLvl6Expression[0]) {
+            if (ctx.RuleOrdinal && ctx.RuleOrdinal[0] && ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 checkThrow(false, "you can't say 'the first cd btn 1'");
-            } else if (ctx.RuleOrdinal[0]) {
+            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
-            } else if (ctx._id[0]) {
+            } else if (ctx._id && ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
             } else {
                 this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
@@ -99,16 +99,16 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectBg(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Bg);
-            if (ctx.RuleObjectStack[0]) {
+            if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
                 ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
             }
-            if (ctx._id[0]) {
+            if (ctx._id && ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
-            } else if (ctx.tkBgAtEndOfLine[0]) {
+            } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
-            } else if (ctx.RuleOrdinal[0]) {
+            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
-            } else if (ctx.RulePosition[0]) {
+            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else {
                 this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
@@ -118,25 +118,25 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectCard(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Card);
-            if (ctx.RuleObjectBg[0]) {
+            if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
                 ret.parentBgInfo = this.visit(ctx.RuleObjectBg[0]);
             }
-            if (ctx._marked[0]) {
+            if (ctx._marked && ctx._marked[0]) {
                 ret.cardLookAtMarkedOnly = true;
             }
-            if (ctx._recent[0]) {
+            if (ctx._recent && ctx._recent[0]) {
                 ret.cardIsRecentHistory = 'recent';
-            } else if (ctx._back[0]) {
+            } else if (ctx._back && ctx._back[0]) {
                 ret.cardIsRecentHistory = 'back';
-            } else if (ctx._forth[0]) {
+            } else if (ctx._forth && ctx._forth[0]) {
                 ret.cardIsRecentHistory = 'forth';
-            } else if (ctx._id[0]) {
+            } else if (ctx._id && ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
-            } else if (ctx.tkCardAtEndOfLine[0]) {
+            } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
-            } else if (ctx.RuleOrdinal[0]) {
+            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
-            } else if (ctx.RulePosition[0]) {
+            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else {
                 this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
@@ -146,11 +146,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectStack(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Stack);
-            if (ctx._id[0]) {
+            if (ctx._id && ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
-            } else if (ctx.tkBgAtEndOfLine[0]) {
+            } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
-            } else if (ctx.RulePosition[0]) {
+            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else {
                 this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
@@ -166,10 +166,10 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectSpecial(ctx: VisitingContext): RequestedVelRef {
             let ret: RequestedVelRef;
-            if (ctx.tkTopObject[0]) {
+            if (ctx.tkTopObject && ctx.tkTopObject[0]) {
                 ret = new RequestedVelRef(VpcElType.Product);
                 ret.lookByRelative = OrdinalOrPosition.This;
-            } else if (ctx._me[0]) {
+            } else if (ctx._me && ctx._me[0]) {
                 ret = new RequestedVelRef(VpcElType.Unknown);
                 ret.isReferenceToMe = true;
             } else {
@@ -181,13 +181,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef {
             let val = VpcVal.Empty;
-            if (ctx.RuleHAnyAllowedVariableName[0]) {
+            if (ctx.RuleHAnyAllowedVariableName && ctx.RuleHAnyAllowedVariableName[0]) {
                 val = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
-            } else if (ctx.RuleHOldStyleFnNonNullary[0]) {
+            } else if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
                 val = this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
-            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
+            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
                 val = this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
-            } else if (ctx.tkStringLiteral[0]) {
+            } else if (ctx.tkStringLiteral && ctx.tkStringLiteral[0]) {
                 let im = ctx.tkStringLiteral[0].image;
                 val = VpcValS(im.slice(1, -1));
             } else {
@@ -199,9 +199,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleObjectPart(ctx: VisitingContext): RequestedVelRef {
-            if (ctx.RuleObjectBtn[0]) {
+            if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
                 return this.RuleObjectBtn(this.visit(ctx.RuleObjectBtn[0]));
-            } else if (ctx.RuleObjectFld[0]) {
+            } else if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
                 return this.RuleObjectFld(this.visit(ctx.RuleObjectFld[0]));
             } else {
                 checkThrow(false, "we don't yet support looking up an object by 'part'");
@@ -234,11 +234,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = new RequestedContainerRef();
-            if (ctx.RuleMenu[0]) {
+            if (ctx.RuleMenu && ctx.RuleMenu[0]) {
                 checkThrow(false, "we don't yet support custom menus");
-            } else if (ctx.RuleMessageBox[0]) {
+            } else if (ctx.RuleMessageBox && ctx.RuleMessageBox[0]) {
                 ret.variable = LogToReplMsgBox.redirectThisVariableToMsgBox;
-            } else if (ctx._selection[0]) {
+            } else if (ctx._selection && ctx._selection[0]) {
                 ret.vel = new RequestedVelRef(VpcElType.Fld);
                 ret.vel.lookByName = 'there is no selection';
                 let selFld = this.outside.GetSelectedField();
@@ -257,14 +257,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                         ret.chunk.last = bounds[1];
                     }
                 }
-            } else if (ctx.RuleObjectPart[0]) {
+            } else if (ctx.RuleObjectPart && ctx.RuleObjectPart[0]) {
                 ret.vel = this.visit(ctx.RuleObjectPart[0]);
                 checkThrow(ret.vel instanceof RequestedVelRef, `9a|internal error, not an element reference`);
                 checkThrow(
                     ret.vel && ret.vel.type === VpcElType.Fld,
                     `9Z|we do not currently allow placing text into btns, or retrieving text from btns, please fields instead`
                 );
-            } else if (ctx.RuleHAnyAllowedVariableName[0]) {
+            } else if (ctx.RuleHAnyAllowedVariableName && ctx.RuleHAnyAllowedVariableName[0]) {
                 let token = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
                 ret.variable = token.image;
             } else {
@@ -276,7 +276,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleHContainer(ctx: VisitingContext): RequestedContainerRef {
             let ret = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
             checkThrow(ret instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
-            if (ctx.RuleHChunk[0]) {
+            if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 checkThrow(
                     !ret.chunk,
                     `a chunk has already been set. for example, we don't currently support 'put "a" into char 2 of the selection`
@@ -289,9 +289,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
-            checkThrow(ctx.tkChunkGranularity[0], tkstr.RuleHChunk);
+            checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], tkstr.RuleHChunk);
             ret.type = getStrToEnum<VpcChunkType>(VpcChunkType, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
-            if (ctx.RuleOrdinal[0]) {
+            if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.ordinal = this.visit(ctx.RuleOrdinal[0]);
             } else {
                 ret.first = this.visit(ctx.RuleHChunkBound[0]).readAsStrictNumeric(this.tmpArr);
@@ -303,11 +303,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHChunkBound(ctx: VisitingContext): VpcVal {
-            if (ctx.RuleExpr[0]) {
+            if (ctx.RuleExpr && ctx.RuleExpr[0]) {
                 return this.visit(ctx.RuleExpr[0]);
-            } else if (ctx.tkNumLiteral[0]) {
+            } else if (ctx.tkNumLiteral && ctx.tkNumLiteral[0]) {
                 return VpcVal.getScientificNotation(ctx.tkNumLiteral[0].image);
-            } else if (ctx.RuleHSimpleContainer[0]) {
+            } else if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
                 let container = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
                 checkThrow(container instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
                 return VpcValS(this.outside.ContainerRead(container));
@@ -317,10 +317,10 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHSource_1(ctx: VisitingContext): VpcVal {
-            if (ctx.tkNumLiteral[0]) {
+            if (ctx.tkNumLiteral && ctx.tkNumLiteral[0]) {
                 /* here we allow scientific notation */
                 return VpcVal.getScientificNotation(ctx.tkNumLiteral[0].image);
-            } else if (ctx.tkStringLiteral[0]) {
+            } else if (ctx.tkStringLiteral && ctx.tkStringLiteral[0]) {
                 /* example: put "abc" into x */
                 /* strip the opening and closing quotes */
                 let sLit = ctx.tkStringLiteral[0].image;
@@ -336,11 +336,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let requestRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
             checkThrow(requestRef instanceof RequestedVelRef, `98|internal error, expected RuleObject to be a RequestedElRef`);
             let velExists = bool(this.outside.ElementExists(requestRef));
-            return VpcValBool(ctx._not.length ? !velExists : velExists);
+            return VpcValBool((ctx._not && ctx._not.length) ? !velExists : velExists);
         }
 
         RuleFnCallNumberOf_1(ctx: VisitingContext): VpcVal {
-            checkThrow(!ctx.tkPartPlural[0], "we don't yet support looking up an object by 'part'");
+            checkThrow(!ctx.tkPartPlural || !ctx.tkPartPlural[0], "we don't yet support looking up an object by 'part'");
             let type: VpcElType;
             if (ctx.tkFldPlural) {
                 type = VpcElType.Fld;
@@ -350,15 +350,15 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 checkThrow(false, 'no branch taken');
             }
             let contextIsBg = type === VpcElType.Fld;
-            if (ctx.tkBg[0]) {
+            if (ctx.tkBg && ctx.tkBg[0]) {
                 contextIsBg = true;
             }
-            if (ctx.tkCard[0]) {
+            if (ctx.tkCard && ctx.tkCard[0]) {
                 contextIsBg = false;
             }
 
             let parentRef = new RequestedVelRef(contextIsBg ? VpcElType.Bg : VpcElType.Card);
-            if (ctx.RuleObjectCard[0]) {
+            if (ctx.RuleObjectCard && ctx.RuleObjectCard[0]) {
                 checkThrow(!contextIsBg, "number of bg btns of card 3 doesn't really make sense");
                 parentRef = this.visit(ctx.RuleObjectCard[0]);
             } else {
@@ -379,7 +379,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleFnCallNumberOf_6(ctx: VisitingContext): VpcVal {
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.lookByRelative = OrdinalOrPosition.This;
-            if (ctx.RuleObjectBg[0]) {
+            if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
                 parentRef = this.visit(ctx.RuleObjectBg[0]);
             }
             return VpcValN(this.outside.CountElements(VpcElType.Card, parentRef));
@@ -388,7 +388,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleFnCallNumberOf_7(ctx: VisitingContext): VpcVal {
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.lookByRelative = OrdinalOrPosition.This;
-            if (ctx.RuleObjectStack[0]) {
+            if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
                 parentRef = this.visit(ctx.RuleObjectStack[0]);
             }
             return VpcValN(this.outside.CountElements(VpcElType.Bg, parentRef));
@@ -412,9 +412,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             // note: custom functions are handled separately
             let fnName = this.visit(ctx.RuleHAnyFnName[0]).image;
             let args: VpcVal[] = [];
-            for (let i = 0; i < ctx.RuleExpr.length; i++) {
-                args.push(this.visit(ctx.RuleExpr[i]));
-                checkThrow(last(args) instanceof VpcVal, '9H|did not get a vpc val, got', args[args.length - 1]);
+            if (ctx.RuleExpr) {
+                for (let i = 0; i < ctx.RuleExpr.length; i++) {
+                    args.push(this.visit(ctx.RuleExpr[i]));
+                    checkThrow(last(args) instanceof VpcVal, '9H|did not get a vpc val, got', last(args));
+                }
             }
 
             return this.outside.CallBuiltinFunction(fnName, args);
@@ -425,11 +427,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let adjective = ctx.tkAdjective[0]
                 ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
                 : PropAdjective.Empty;
-            checkThrow(!ctx.RuleWindow[0], "don't yet support looking up property on window");
-            checkThrow(!ctx.RuleMenuItem[0], "don't yet support looking up property on menuitem");
-            checkThrow(!ctx.RuleMenu[0], "don't yet support looking up property on menu");
+            checkThrow(!ctx.RuleWindow || !ctx.RuleWindow[0], "don't yet support looking up property on window");
+            checkThrow(!ctx.RuleMenuItem || !ctx.RuleMenuItem[0], "don't yet support looking up property on menuitem");
+            checkThrow(!ctx.RuleMenu || !ctx.RuleMenu[0], "don't yet support looking up property on menu");
             checkThrow(isString(propName), `9C|internal error, expected AnyPropertyName to be a string`);
-            if (ctx.RuleHChunk[0]) {
+            if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
                 let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
                 checkThrow(chunk instanceof RequestedChunk, `9B|internal error, expected RuleHChunk to be a chunk`);
@@ -451,7 +453,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHOldStyleFnNullaryOrNullaryPropGet(ctx: VisitingContext): VpcVal {
-            let adjective = ctx.tkAdjective[0]
+            let adjective = (ctx.tkAdjective && ctx.tkAdjective[0])
                 ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
                 : PropAdjective.Empty;
             let fnOrPropName = this.visit(ctx.RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary[0]).image;
@@ -468,9 +470,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleLvl2Expression(ctx: VisitingContext): VpcVal {
             let total = this.visit(ctx.RuleLvl3Expression[0]) as VpcVal;
             checkThrow(total instanceof VpcVal, '|L|');
-            for (let i = 0; i < ctx.RuleIsExpression.length; i++) {
-                let map = this.visit(ctx.RuleIsExpression[i]);
-                total = this.help$RuleLvl2Expression(total, map);
+            if (ctx.RuleIsExpression) {
+                for (let i = 0; i < ctx.RuleIsExpression.length; i++) {
+                    let map = this.visit(ctx.RuleIsExpression[i]);
+                    total = this.help$RuleLvl2Expression(total, map);
+                }
             }
 
             return total;
@@ -478,9 +482,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         help$RuleLvl2Expression(total: VpcVal, map: IntermedMapOfIntermedVals): VpcVal {
             let typeCheck = '';
-            if (map.vals.tkIdentifier) {
+            if (map.vals.tkIdentifier && map.vals.tkIdentifier[0]) {
                 typeCheck = castVerifyIsStr(map.vals.tkIdentifier[0]);
-            } else if (map.vals._number) {
+            } else if (map.vals._number && map.vals._number[0]) {
                 typeCheck = castVerifyIsStr(map.vals._number[0]);
             }
 
@@ -497,26 +501,27 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 total = this.evalHelp.evalOp(total, map.vals.Lvl3Expression[0], VpcOpCtg.OpEqualityGreaterLessOrContains, 'is');
             }
 
-            let negated = map.vals._not.length > 0;
+            let negated = map.vals._not && map.vals._not.length > 0;
             if (negated) {
                 total = VpcValBool(!total.readAsStrictBoolean());
             }
+
             return total;
         }
 
         RuleLvl6Expression(ctx: VisitingContext): VpcVal {
             let val: VpcVal;
-            if (ctx.RuleHSource[0]) {
+            if (ctx.RuleHSource && ctx.RuleHSource[0]) {
                 val = this.visit(ctx.RuleHSource[0]);
                 checkThrow(val instanceof VpcVal, '8||not a vpcval', val);
-            } else if (ctx.RuleExpr[0]) {
+            } else if (ctx.RuleExpr && ctx.RuleExpr[0]) {
                 val = this.visit(ctx.RuleExpr[0]);
                 checkThrow(val instanceof VpcVal, '8{|not a vpcval', val);
             } else {
                 throw makeVpcInternalErr(`80|in RuleLvl6Expression. all interesting children null.`);
             }
 
-            if (ctx.RuleHChunk[0]) {
+            if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
                 checkThrow(chunk instanceof RequestedChunk, '8_|not a RequestedChunk', chunk);
                 let reader = new ReadableContainerStr(val.readAsString());
@@ -524,9 +529,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 val = VpcValS(result);
             }
 
-            if (ctx.tkPlusOrMinus[0]) {
+            if (ctx.tkPlusOrMinus && ctx.tkPlusOrMinus[0]) {
                 val = this.evalHelp.evalUnary(val, ctx.tkPlusOrMinus[0].image);
-            } else if (ctx._not[0]) {
+            } else if (ctx._not && ctx._not[0]) {
                 val = this.evalHelp.evalUnary(val, ctx._not[0].image);
             }
 

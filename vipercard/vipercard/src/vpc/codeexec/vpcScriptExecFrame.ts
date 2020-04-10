@@ -119,17 +119,7 @@ export class VpcExecFrame {
         let loop = new LoopLimit(CodeLimits.MaxObjectsInMsgChain, 'maxObjectsInMsgChain');
         while (loop.next()) {
             if (!vel) {
-                if (!hasSeenStack) {
-                    let r = new RequestedVelRef(VpcElType.Stack);
-                    r.lookByRelative = OrdinalOrPosition.This;
-                    ret.push(throwIfUndefined(outside.ResolveVelRef(r)[0], '').id);
-                }
-                if (!hasSeenProduct) {
-                    let r = new RequestedVelRef(VpcElType.Product);
-                    r.lookByRelative = OrdinalOrPosition.This;
-                    ret.push(throwIfUndefined(outside.ResolveVelRef(r)[0], '').id);
-                }
-                return ret;
+                break;
             }
 
             if (vel instanceof VpcElStack) {
@@ -146,6 +136,18 @@ export class VpcExecFrame {
                 vel = outside.FindVelById(vel.parentId);
             }
         }
-        checkThrow(false, 'not reached.');
+        
+        if (!hasSeenStack) {
+            let r = new RequestedVelRef(VpcElType.Stack);
+            r.lookByRelative = OrdinalOrPosition.This;
+            ret.push(throwIfUndefined(outside.ResolveVelRef(r)[0], '').id);
+        }
+        if (!hasSeenProduct) {
+            let r = new RequestedVelRef(VpcElType.Product);
+            r.lookByRelative = OrdinalOrPosition.This;
+            ret.push(throwIfUndefined(outside.ResolveVelRef(r)[0], '').id);
+        }
+
+        return ret
     }
 }

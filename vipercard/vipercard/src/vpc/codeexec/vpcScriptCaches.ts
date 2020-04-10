@@ -113,7 +113,10 @@ export class VpcCacheParsedAST {
         handlername: string,
         velIdForErrMsg: string
     ): O<[VpcParsedCodeCollection, VpcCodeLineReference]> {
-        assertTrue(!code.match(/^\s*$/), '');
+        if (code.match(/^\s*$/)) {
+            return undefined
+        }
+        
         let ret = this.getParsedCodeCollection(code, velIdForErrMsg);
         let retAsErr = ret as VpcScriptErrorBase;
         let retAsCode = ret as VpcParsedCodeCollection;

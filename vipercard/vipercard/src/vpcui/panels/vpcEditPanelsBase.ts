@@ -169,7 +169,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         const spaceFromBottom = 17;
         const btnW = 68;
         const btnH = 23;
-        let isEmpty = (this as any).isVpcEditPanelsEmpty;
+        let isEmpty = this.compositeType === 'VpcEditPanelsEmpty';
         let scriptBtn = this.genBtn(app, grp, isEmpty ? 'btnGenPart' : 'btnScript');
         scriptBtn.set('labeltext', lng('lngScript...'));
         scriptBtn.set('style', UI512BtnStyle.OSStandard);
@@ -324,9 +324,9 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
      */
     showOrHideBgSpecific(app: UI512Application, isBgPart: boolean) {
         if (this.velType === VpcElType.Btn) {
-            this.showOrHideBgSpecificImpl(app, 'sharedtext', 200, isBgPart);
+            this.showOrHideBgSpecificImpl(app, 'sharedhilite', 200, isBgPart);
         } else if (this.velType === VpcElType.Fld) {
-            this.showOrHideBgSpecificImpl(app, 'sharedhilite', 180, isBgPart);
+            this.showOrHideBgSpecificImpl(app, 'sharedtext', 180, isBgPart);
         }
     }
 

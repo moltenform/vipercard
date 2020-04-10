@@ -419,11 +419,11 @@ export function markUI512Err(
     script?: boolean,
     attachErr?: UI512AttachableErr
 ) {
-    (e as any).isUi512Error = true; /* assert.ts */
-    (e as any).isVpcError = vpc ? true : undefined; /* assert.ts */
-    (e as any).isVpcScriptError = script ? true : undefined; /* assert.ts */
-    (e as any).isVpcInternalError = internal ? true : undefined; /* assert.ts */
-    (e as any).attachErr = attachErr ? attachErr : undefined; /* assert.ts */
+    (e as any).isUi512Error = true;
+    (e as any).isVpcError = vpc ? true : undefined;
+    (e as any).isVpcScriptError = script ? true : undefined;
+    (e as any).isVpcInternalError = internal ? true : undefined;
+    (e as any).attachErr = attachErr ? attachErr : undefined;
 }
 
 /**
