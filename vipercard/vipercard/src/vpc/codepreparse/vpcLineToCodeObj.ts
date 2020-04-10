@@ -2,7 +2,7 @@
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, isTkType, listOfAllBuiltinCommandsInOriginalProduct, tks } from './../codeparse/vpcTokens';
-/* auto */ import { CodeSymbols, VpcCodeLine, VpcLineCategory, checkCommonMistakenVarNames } from './vpcPreparseCommon';
+/* auto */ import { VpcCodeLine, VpcLineCategory, checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Productname';
@@ -13,15 +13,19 @@
  * determine the category of a line of code
  */
 export class VpcLineToCodeObj {
-    reusableRequestEval: ChvITk;
-    reusableRequestUserHandler: ChvITk;
     parser: VpcChvParser;
+    cachedStartOnes: ChvITk[];
     constructor(protected idGen: CountNumericId, protected check: CheckReservedWords) {}
 
     init(basis: ChvITk) {
-        this.reusableRequestEval = BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, CodeSymbols.RequestEval);
-        this.reusableRequestUserHandler = BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, CodeSymbols.RequestHandlerCall);
         this.parser = getParsingObjects()[1];
+
+        /* the offsets here won't be right, but we shouldn't encounter errs here anyways */
+        this.cachedStartOnes = [
+            BuildFakeTokens.inst.makeSyntaxMarker(basis),
+            BuildFakeTokens.inst.makeSyntaxMarker(basis),
+            BuildFakeTokens.inst.makeSyntaxMarker(basis)
+        ];
     }
 
     toCodeLine(line: ChvITk[]) {
@@ -41,21 +45,18 @@ export class VpcLineToCodeObj {
             /* this is either a syntax structure (like end repeat) or a custom handler call */
             let cmd = firstImage.replace(/\^/g, '');
             let method = 'go' + Util512.capitalizeFirst(cmd);
-            method = Util512.isMethodOnClass(this, method) ? method : 'goCustomHandler';
-            if (method === 'goCustomHandler' && listOfAllBuiltinCommandsInOriginalProduct[cmd.toLowerCase()]) {
-                checkThrow(false, "It looks like we haven't implemented this command yet.")
+            let ret: unknown;
+            if (Util512.isMethodOnClass(this, method)) {
+                ret = Util512.callAsMethodOnClass('VpcLineToCodeObj', this, method, [line, output], false);
+            } else {
+                ret = this.goCustomHandler(line, output);
             }
 
-            let ret = Util512.callAsMethodOnClass('DetermineCategory', this, method, [line, output], false);
             assertTrue(ret === undefined, '5v|expected undefined but got', ret);
             if (!output.getParseRule() && output.excerptToParse.length > 0) {
-                if (output.ctg === VpcLineCategory.CallDynamic) {
-                    /* specify parsing for 'send' */
-                    output.excerptToParse = output.excerptToParse.slice();
-                    output.setParseRule(this.parser.RuleBuiltinCmdSend);
-                } else if (this.isParsingNeeded(output.ctg)) {
+                if (this.isParsingNeeded(output.ctg)) {
                     /* construct an array to be sent to the parser */
-                    output.excerptToParse = [this.reusableRequestEval].concat(output.excerptToParse);
+                    output.excerptToParse = this.cachedStartOnes.concat(output.excerptToParse);
                     output.setParseRule(this.parser.RuleInternalCmdRequestEval);
                 }
             }
@@ -71,10 +72,7 @@ export class VpcLineToCodeObj {
      */
     goBuiltinCmd(firstImage: string, line: ChvITk[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.Statement;
-        output.excerptToParse = [
-            BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
-            BuildFakeTokens.inst.makeSyntaxMarker(line[0])
-        ].concat(line.slice(1));
+        output.excerptToParse = this.cachedStartOnes.concat(line.slice(1));
     }
 
     /**
@@ -181,6 +179,10 @@ export class VpcLineToCodeObj {
      * this line is a call to a custom handler "myHandler 1,2,3"
      */
     goCustomHandler(line: ChvITk[], output: VpcCodeLine) {
+        if (listOfAllBuiltinCommandsInOriginalProduct[line[0].image.toLowerCase()]) {
+            checkThrow(false, "It looks like we haven't implemented this command yet.");
+        }
+
         if (line.length > 1) {
             /* kind reminders to the user */
             let firstToken = line[0];
@@ -198,7 +200,7 @@ export class VpcLineToCodeObj {
             longstr(`8K|it looked like you were calling a
              handler like mouseUp or myHandler, but this is a reserved word.`)
         );
-        output.excerptToParse = [this.reusableRequestUserHandler].concat(line);
+        output.excerptToParse = this.cachedStartOnes.concat(line);
         output.setParseRule(this.parser.RuleInternalCmdUserHandler);
     }
 
@@ -324,8 +326,10 @@ export class VpcLineToCodeObj {
         checkThrow(line.length >= 2, `line is too short.`);
 
         /* other control blocks just parse a single expression,
-        but this has to parse both an expression and an object */
-        output.excerptToParse = line.slice();
+        but this has to parse both an expression and an object,
+        so use a separate parse rule */
+        output.setParseRule(this.parser.RuleCmdSend);
+        output.excerptToParse = this.cachedStartOnes.concat(line.slice(1));
         output.ctg = VpcLineCategory.CallDynamic;
     }
 

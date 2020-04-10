@@ -35,9 +35,7 @@ export class VpcState {
      */
     createVel(parentId: string, type: VpcElType, insertIndex = -1, newId: O<string> = undefined) {
         if (!newId) {
-            let nextId = this.model.stack.getN('increasingnumberforid');
-            this.model.stack.set('increasingnumberforid', nextId + 1);
-            newId = nextId.toString();
+            newId = this.model.stack.getNextId();
         }
 
         checkThrow(newId.match(/^[0-9]+$/), 'Ku|id should be purely numeric', newId);

@@ -495,10 +495,6 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
-
         RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
@@ -532,6 +528,10 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         }
 
         RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals {
+            return this.H$BuildMap(ctx);
+        }
+
+        RuleCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 

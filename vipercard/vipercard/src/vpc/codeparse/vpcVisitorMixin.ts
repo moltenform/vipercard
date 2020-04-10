@@ -336,7 +336,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let requestRef = this.visit(ctx.RuleObject[0]) as RequestedVelRef;
             checkThrow(requestRef instanceof RequestedVelRef, `98|internal error, expected RuleObject to be a RequestedElRef`);
             let velExists = bool(this.outside.ElementExists(requestRef));
-            return VpcValBool((ctx._not && ctx._not.length) ? !velExists : velExists);
+            return VpcValBool(ctx._not && ctx._not.length ? !velExists : velExists);
         }
 
         RuleFnCallNumberOf_1(ctx: VisitingContext): VpcVal {
@@ -453,9 +453,10 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHOldStyleFnNullaryOrNullaryPropGet(ctx: VisitingContext): VpcVal {
-            let adjective = (ctx.tkAdjective && ctx.tkAdjective[0])
-                ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
-                : PropAdjective.Empty;
+            let adjective =
+                ctx.tkAdjective && ctx.tkAdjective[0]
+                    ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
+                    : PropAdjective.Empty;
             let fnOrPropName = this.visit(ctx.RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary[0]).image;
             if (this.outside.IsProductProp(fnOrPropName)) {
                 let refProductOps = new RequestedVelRef(VpcElType.Product);

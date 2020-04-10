@@ -136,7 +136,7 @@ export class VpcExecFrame {
                 vel = outside.FindVelById(vel.parentId);
             }
         }
-        
+
         if (!hasSeenStack) {
             let r = new RequestedVelRef(VpcElType.Stack);
             r.lookByRelative = OrdinalOrPosition.This;
@@ -148,6 +148,6 @@ export class VpcExecFrame {
             ret.push(throwIfUndefined(outside.ResolveVelRef(r)[0], '').id);
         }
 
-        return ret
+        return ret;
     }
 }

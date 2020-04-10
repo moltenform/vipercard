@@ -34,7 +34,7 @@
  * but everything else needs to be output in finished form here.
  */
 export class VpcRewriteForCommands {
-    constructor(protected rw:VpcSuperRewrite) { }
+    constructor(protected rw: VpcSuperRewrite) {}
     rewriteAnswer(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
         if (line[1].image === 'file' || line[1].image === 'program') {

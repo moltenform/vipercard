@@ -1,7 +1,7 @@
 
 export class VpcStandardLibScript {
     static script = `
-    `
+    `;
 
     static scriptFull = `
 -- we don't need default handlers for "on mousedown" etc...

@@ -73,7 +73,6 @@ export class BranchProcessing {
             throw makeVpcScriptErr(`5p|cannot begin a handler inside an existing handler`);
         }
 
-
         switch (line.ctg) {
             case VpcLineCategory.RepeatForever /* fall-through */:
                 this.stack.push(new BranchBlockInfo(VpcLineCategory.RepeatForever, line));
@@ -98,18 +97,14 @@ export class BranchProcessing {
                 break;
             case VpcLineCategory.IfElsePlain:
                 checkThrow(
-                    this.stack.length && 
-                    VpcLineCategory.IfStart ===
-                    last(this.stack).cat,
+                    this.stack.length && VpcLineCategory.IfStart === last(this.stack).cat,
                     `7;|cannot have an "else" interleaved within some other block.`
                 );
                 last(this.stack).add(line);
                 break;
             case VpcLineCategory.IfEnd:
                 checkThrow(
-                    this.stack.length && 
-                    VpcLineCategory.IfStart ===
-                    last(this.stack).cat,
+                    this.stack.length && VpcLineCategory.IfStart === last(this.stack).cat,
                     `7;|cannot have an "else" interleaved within some other block.`
                 );
                 last(this.stack).add(line);

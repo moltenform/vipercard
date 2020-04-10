@@ -89,7 +89,6 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdReplace(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdSelect(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdShow(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdInternalvpcsort(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -99,6 +98,7 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdUnlock(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdVisual(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleInternalCmdRequestEval(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleInternalCmdUserHandler(ctx: VisitingContext): IntermedMapOfIntermedVals;
 }
@@ -181,7 +181,6 @@ export interface VisitingContext {
     RuleBuiltinCmdReset: any[];
     RuleBuiltinCmdReplace: any[];
     RuleBuiltinCmdSelect: any[];
-    RuleBuiltinCmdSend: any[];
     RuleBuiltinCmdSet: any[];
     RuleBuiltinCmdShow: any[];
     RuleBuiltinCmdInternalvpcsort: any[];
@@ -191,6 +190,7 @@ export interface VisitingContext {
     RuleBuiltinCmdUnlock: any[];
     RuleBuiltinCmdVisual: any[];
     RuleBuiltinCmdWait: any[];
+    RuleCmdSend: any[];
     RuleInternalCmdRequestEval: any[];
     RuleInternalCmdUserHandler: any[];
     tkStringLiteral: ChvITk[];

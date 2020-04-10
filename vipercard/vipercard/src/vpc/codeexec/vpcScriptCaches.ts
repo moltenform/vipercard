@@ -111,9 +111,9 @@ export class VpcCacheParsedAST {
         velIdForErrMsg: string
     ): O<[VpcParsedCodeCollection, VpcCodeLineReference]> {
         if (code.match(/^\s*$/)) {
-            return undefined
+            return undefined;
         }
-        
+
         let ret = this.getParsedCodeCollection(code, velIdForErrMsg);
         let retAsErr = ret as VpcScriptErrorBase;
         let retAsCode = ret as VpcParsedCodeCollection;

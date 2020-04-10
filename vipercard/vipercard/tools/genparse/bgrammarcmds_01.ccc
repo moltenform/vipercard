@@ -9,7 +9,7 @@
 //      select supports only selecting chunk of a field
 //      sort only supports sorting text
 
-// syntax rewriting will change the syntax in some commands.
+// all commands start with ..., which means 3 tkSyntaxPlaceholder tokens
 
 // addition. supports customfns
 BuiltinCmdAdd:=... <Lvl1Expression> _to <HContainer>                                                             
@@ -104,9 +104,7 @@ BuiltinCmdReplace:=... <Expr> tkSyntaxPlaceholder <Expr> tkInOnly  <HSimpleConta
 // select. "select empty" is supported, "select button/fld" is not (takes you to the edit tool),
 // "select text of cd fld 1" is supported, in software we'll make sure it's not a variable.
 // however we currently don't support select char 2 of the selection
-BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]
-// execute in context of another object
-BuiltinCmdSend:=... <Expr> _to <Object>                                                         
+BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]                                         
 // setting a property
 BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> <ObjectFld> | <Object> } ] _to <AnyPropertyVal>    
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
@@ -131,7 +129,9 @@ BuiltinCmdVisual:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLit
 // we rewrite `wait for 2 ms` into `wait 2 "ms"`
 // or "wait until/while" which we should just expand into a while loop
 BuiltinCmdWait:=... <Expr> [tkStringLiteral]
+// execute in context of another object
+CmdSend:=... <Expr> _to <Object>                    --->BuildMap
 // write. set NYI in software
-InternalCmdRequestEval:=tkSyntaxPlaceholder tkSyntaxPlaceholder tkIdentifier <Expr>             --->BuildMap
-InternalCmdUserHandler:=tkSyntaxPlaceholder tkSyntaxPlaceholder tkIdentifier <Expr>             --->BuildMap
+InternalCmdRequestEval:=... <Expr>             --->BuildMap
+InternalCmdUserHandler:=... <Expr>             --->BuildMap
 

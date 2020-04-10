@@ -1,11 +1,10 @@
 
-/* auto */ import { VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, cleanExceptionMsg, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, cleanExceptionMsg, makeVpcInternalErr, tostring } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
@@ -176,19 +175,13 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 err = e;
             }
 
-            if (err instanceof VpcScriptErrorBase) {
+            if (err) {
+                let errGot = this.vci.getCodeExec().getOrGenerateScriptErr(err);
                 this.setStatusLabeltext(
                     'lngSyntax error:',
-                    err.lineNumber,
-                    cleanExceptionMsg(err.details),
-                    cleanExceptionMsg(err.details)
-                );
-            } else if (err) {
-                this.setStatusLabeltext(
-                    'lngFindhandler unknown error:',
-                    1,
-                    cleanExceptionMsg(err.toString()),
-                    cleanExceptionMsg(err.toString())
+                    errGot.lineNumber,
+                    cleanExceptionMsg(errGot.details),
+                    cleanExceptionMsg(errGot.details)
                 );
             } else {
                 this.setStatusLabeltext('', undefined, '', '');
@@ -211,9 +204,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      */
     protected setStatusLabeltext(sType: string, n: O<number>, sMsg: string, sMsgMore: string) {
         this.status1a.set('labeltext', lng(sType));
-        this.status2b.set('labeltext', UI512DrawText.setFont(sMsg, this.monaco));
+        this.status2b.set('labeltext', UI512DrawText.setFont(tostring(sMsg), this.monaco));
 
-        this.statusErrMoreDetails = sMsgMore;
+        this.statusErrMoreDetails = tostring(sMsgMore);
         if (n === undefined) {
             this.status2a.set('labeltext', '');
         } else {

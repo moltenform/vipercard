@@ -29,7 +29,7 @@
 export class ExpandCustomFunctions {
     protected buildToken = new BuildFakeTokens();
     protected skipExpansion: { [key: string]: boolean } = {};
-    protected rw:VpcSuperRewrite
+    protected rw: VpcSuperRewrite;
     constructor(protected idgenThisScript: CountNumericId, protected check: CheckReservedWords) {
         /* we don't need to check for fn calls if the line starts with any of these symbols. */
         this.skipExpansion['global'] = true;
@@ -41,7 +41,7 @@ export class ExpandCustomFunctions {
         this.skipExpansion['function'] = true;
         this.skipExpansion['pass'] = true;
 
-        this.rw = new VpcSuperRewrite(idgenThisScript)
+        this.rw = new VpcSuperRewrite(idgenThisScript);
     }
 
     /* expand function call in this line

@@ -69,7 +69,6 @@ def processRule(result, line):
     ruleName, ruleDefn = (s.strip() for s in line.split(':=', 1))
     if ruleName.startswith('BuiltinCmd'):
         assertTrue(ruleDefn.startswith('...'), line)
-        ruleDefn = ruleDefn.replace('...', 'tkSyntaxPlaceholder tkSyntaxPlaceholder ')
         if not '--->' in ruleDefn:
             ruleDefn += '    --->BuildMap'
     
@@ -82,7 +81,6 @@ def processRule(result, line):
     else:
         warn("---> not seen. this is fine if you're not making visitors yet", line)
     
-    
     ret.ruleVisitorOpts = [s.strip() for s in ruleVisitor.split('|') if s.strip()]
     if ret.ruleVisitorOpts and ret.ruleVisitorOpts[0] == 'Constant' and (ret.ruleVisitorOpts[1].startswith("'") or ret.ruleVisitorOpts[1].startswith('"')) and not ruleVisitorReturnType:
         ruleVisitorReturnType = 'string'
@@ -94,6 +92,7 @@ def processRule(result, line):
         ruleVisitorReturnType = 'ChvITk'
     if not ruleVisitorReturnType:
         ruleVisitorReturnType = 'string | VpcIntermedValBase'
+    ruleDefn = ruleDefn.replace('...', 'tkSyntaxPlaceholder tkSyntaxPlaceholder tkSyntaxPlaceholder ')
     ret.ruleVisitorReturnType = ruleVisitorReturnType
     ret.origLine = line
     ret.name = ruleName

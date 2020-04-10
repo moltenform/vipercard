@@ -252,7 +252,7 @@ export class VpcExecFrameStack {
     protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine): VpcIntermedValBase {
         if (parsed !== null && parsed !== undefined) {
             let visited = getParsingObjects()[2].visit(parsed);
-            checkThrow(visited.isIntermedValBase, '7t|did not get isIntermedValBase when running', curLine.allImages);
+            checkThrow(visited instanceof VpcIntermedValBase, '7t|did not get IntermedValBase when running', curLine.allImages);
             return visited;
         } else {
             throw makeVpcScriptErr('5Z|no expression was parsed');
@@ -315,7 +315,7 @@ export class VpcExecFrameStack {
     }
 
     /**
-     * start a handler
+     * beginning of a handler, like "on mouseup"
      */
     visitHandlerStart(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         /* confirm handler name */
@@ -506,7 +506,7 @@ export class VpcExecFrameStack {
      * run custom handler like doMyHandler
      */
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        let newHandlerName = curLine.excerptToParse[1].image;
+        let newHandlerName = curLine.excerptToParse[3].image;
         let args = this.helpGetEvaledArgs(parsed, curLine);
         curFrame.next();
         this.callHandlerAndThrowIfNotExist(curFrame, args, newHandlerName);
@@ -540,7 +540,7 @@ export class VpcExecFrameStack {
      * so can't use the same old evalRequestedExpression
      */
     protected visitSendStatement(curLine: VpcCodeLine, parsed: VpcParsed): [VpcVal, VpcElBase] {
-        assertTrue(this.cacheParsedCST.parser.RuleBuiltinCmdSend === curLine.getParseRule(), 'expected "send" parse rule');
+        assertTrue(this.cacheParsedCST.parser.RuleCmdSend === curLine.getParseRule(), 'expected "send" parse rule');
 
         let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
         checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
@@ -548,9 +548,9 @@ export class VpcExecFrameStack {
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
         checkThrow(val instanceof VpcVal, 'visitSendStatement expected a string.');
-        let newLineAndCode = '\n' + val.readAsString().toLowerCase();
+        let newLineAndLowercaseCode = '\n' + val.readAsString().toLowerCase();
         checkThrow(
-            !newLineAndCode.includes('\nfunction\n') && !newLineAndCode.includes('\non\n'),
+            !newLineAndLowercaseCode.includes('\nfunction\n') && !newLineAndLowercaseCode.includes('\non\n'),
             `defining custom handlers in dynamic code
             is an interesting idea, but it's not supported yet.`
         );

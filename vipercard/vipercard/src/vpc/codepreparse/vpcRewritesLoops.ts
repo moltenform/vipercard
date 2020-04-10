@@ -5,7 +5,7 @@
 /* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
 export namespace VpcRewritesLoops {
-    export function Go(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
+    export function Go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         if (line.length === 1) {
             return [line];
@@ -28,7 +28,7 @@ export namespace VpcRewritesLoops {
             return goWithImpl(firstExpr, secondExpr, loopVar, false, rw);
         }
     }
-    function goUntilWhile(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
+    function goUntilWhile(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         let template = `
 repeat
     if %NOT% %ARG0% then
@@ -44,7 +44,7 @@ end repeat`;
         let conditionExpression = line.slice(2);
         return rw.go(template, line[0], [conditionExpression]);
     }
-    function goWith(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
+    function goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         checkThrowEq('with', line[1].image, '');
         checkThrow(couldTokenTypeBeAVariableName(line[2]), '');
@@ -62,7 +62,13 @@ end repeat`;
         let secondExpr = line.slice(findTo + 1);
         return goWithImpl(firstExpr, secondExpr, line[2], isDown, rw);
     }
-    function goWithImpl(firstExpr: ChvITk[], secondExpr: ChvITk[], loopVar: ChvITk, isDown: boolean, rw:VpcSuperRewrite): ChvITk[][] {
+    function goWithImpl(
+        firstExpr: ChvITk[],
+        secondExpr: ChvITk[],
+        loopVar: ChvITk,
+        isDown: boolean,
+        rw: VpcSuperRewrite
+    ): ChvITk[][] {
         let template = `
 put ( %ARG1% ) - ( %ADJUST% ) into %ARG0%
 put %ARG2% into $loopbound%UNIQUE%

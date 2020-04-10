@@ -48,16 +48,9 @@ export class VpcRewritesGlobal {
     end repeat`
  */
 export class VpcSuperRewrite {
-    constructor(protected idGen:CountNumericId) {
-    }
+    constructor(protected idGen: CountNumericId) {}
 
-    go(
-        s: string,
-        realTokenAsBasis: ChvITk,
-        args?: ChvITk[][],
-        argMany?: ChvITk[][],
-        needsToBePostProcess = true
-    ): ChvITk[][] {
+    go(s: string, realTokenAsBasis: ChvITk, args?: ChvITk[][], argMany?: ChvITk[][], needsToBePostProcess = true): ChvITk[][] {
         args = args ?? [];
         let ret: ChvITk[][] = [];
         s = s.trim();
@@ -140,12 +133,7 @@ export class VpcSuperRewrite {
         return line.findIndex(t => t.tokenType === tk1.tokenType && t.image === tk1.image);
     }
 
-    searchTokenGivenEnglishTermInParensLevel(
-        wantedLevel: number,
-        line: ChvITk[],
-        realTokenAsBasis: ChvITk,
-        term: string
-    ) {
+    searchTokenGivenEnglishTermInParensLevel(wantedLevel: number, line: ChvITk[], realTokenAsBasis: ChvITk, term: string) {
         let tk1 = this.tokenFromEnglishTerm(term, realTokenAsBasis);
         let lvl = 0;
         for (let i = 0; i < line.length; i++) {

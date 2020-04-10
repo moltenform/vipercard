@@ -1123,6 +1123,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdAdd = this.RULE('RuleBuiltinCmdAdd', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleLvl1Expression);
         this.CONSUME1(tks._to);
         this.SUBRULE1(this.RuleHContainer);
@@ -1131,9 +1132,10 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdAnswer = this.RULE('RuleBuiltinCmdAnswer', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
         this.OPTION1(() => {
-            this.CONSUME3(tks.tkSyntaxPlaceholder);
+            this.CONSUME4(tks.tkSyntaxPlaceholder);
             this.SUBRULE1(this.RuleLvl6Expression);
             this.OPTION2(() => {
                 this.CONSUME1(tks._or);
@@ -1149,12 +1151,13 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdAsk = this.RULE('RuleBuiltinCmdAsk', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.OPTION1(() => {
             this.CONSUME1(tks.tkComma);
         });
         this.SUBRULE1(this.RuleExpr);
         this.OPTION2(() => {
-            this.CONSUME3(tks.tkSyntaxPlaceholder);
+            this.CONSUME4(tks.tkSyntaxPlaceholder);
             this.SUBRULE2(this.RuleExpr);
         });
     });
@@ -1162,6 +1165,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdBeep = this.RULE('RuleBuiltinCmdBeep', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleExpr);
         });
@@ -1170,12 +1174,14 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdVpccalluntrappablechoose = this.RULE('RuleBuiltinCmdVpccalluntrappablechoose', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
     });
 
     RuleBuiltinCmdClick = this.RULE('RuleBuiltinCmdClick', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
         this.SUBRULE1(this.RuleLvl4Expression);
         this.OPTION1(() => {
@@ -1183,7 +1189,7 @@ export class VpcChvParser extends chevrotain.CstParser {
             this.SUBRULE2(this.RuleLvl4Expression);
         });
         this.OPTION2(() => {
-            this.CONSUME3(tks.tkSyntaxPlaceholder);
+            this.CONSUME4(tks.tkSyntaxPlaceholder);
             this.CONSUME2(tks.tkIdentifier);
             this.OPTION3(() => {
                 this.CONSUME2(tks.tkComma);
@@ -1199,6 +1205,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdDelete = this.RULE('RuleBuiltinCmdDelete', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.OR1([
             {
                 ALT: () => {
@@ -1217,18 +1224,21 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdDial = this.RULE('RuleBuiltinCmdDial', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
     });
 
     RuleBuiltinCmdDisable = this.RULE('RuleBuiltinCmdDisable', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleObjectBtn);
     });
 
     RuleBuiltinCmdDivide = this.RULE('RuleBuiltinCmdDivide', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleLvl1Expression);
         this.CONSUME1(tks.tkIdentifier);
         this.SUBRULE1(this.RuleHContainer);
@@ -1237,6 +1247,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE('RuleBuiltinCmdVpccalluntrappabledomenu', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
         this.OPTION1(() => {
             this.CONSUME1(tks.tkComma);
@@ -1247,6 +1258,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdDrag = this.RULE('RuleBuiltinCmdDrag', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
         this.MANY_SEP1({
             SEP: tks._to,
@@ -1255,7 +1267,7 @@ export class VpcChvParser extends chevrotain.CstParser {
             }
         });
         this.OPTION1(() => {
-            this.CONSUME3(tks.tkSyntaxPlaceholder);
+            this.CONSUME4(tks.tkSyntaxPlaceholder);
             this.CONSUME2(tks.tkIdentifier);
             this.OPTION2(() => {
                 this.CONSUME1(tks.tkComma);
@@ -1279,31 +1291,35 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdEnable = this.RULE('RuleBuiltinCmdEnable', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleObjectBtn);
     });
 
     RuleBuiltinCmdHide = this.RULE('RuleBuiltinCmdHide', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleObjectPart);
     });
 
     RuleBuiltinCmdLock = this.RULE('RuleBuiltinCmdLock', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
     });
 
     RuleBuiltinCmdMark = this.RULE('RuleBuiltinCmdMark', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.OPTION1(() => {
             this.CONSUME1(tks._not);
         });
         this.OR1([
             {
                 ALT: () => {
-                    this.CONSUME3(tks.tkSyntaxPlaceholder);
+                    this.CONSUME4(tks.tkSyntaxPlaceholder);
                     this.SUBRULE1(this.RuleObjectCard);
                 }
             },
@@ -1321,6 +1337,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdMultiply = this.RULE('RuleBuiltinCmdMultiply', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleLvl1Expression);
         this.CONSUME1(tks.tkIdentifier);
         this.SUBRULE1(this.RuleHContainer);
@@ -1329,9 +1346,10 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdPlay = this.RULE('RuleBuiltinCmdPlay', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
         this.OPTION1(() => {
-            this.CONSUME3(tks.tkSyntaxPlaceholder);
+            this.CONSUME4(tks.tkSyntaxPlaceholder);
             this.SUBRULE2(this.RuleExpr);
         });
     });
@@ -1339,10 +1357,11 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdPut = this.RULE('RuleBuiltinCmdPut', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.SUBRULE1(this.RuleExpr);
         this.CONSUME3(tks.tkSyntaxPlaceholder);
-        this.CONSUME1(tks.tkIdentifier);
+        this.SUBRULE1(this.RuleExpr);
         this.CONSUME4(tks.tkSyntaxPlaceholder);
+        this.CONSUME1(tks.tkIdentifier);
+        this.CONSUME5(tks.tkSyntaxPlaceholder);
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleHContainer);
         });
@@ -1351,14 +1370,16 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdReset = this.RULE('RuleBuiltinCmdReset', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
     });
 
     RuleBuiltinCmdReplace = this.RULE('RuleBuiltinCmdReplace', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.SUBRULE1(this.RuleExpr);
         this.CONSUME3(tks.tkSyntaxPlaceholder);
+        this.SUBRULE1(this.RuleExpr);
+        this.CONSUME4(tks.tkSyntaxPlaceholder);
         this.SUBRULE2(this.RuleExpr);
         this.CONSUME1(tks.tkInOnly);
         this.SUBRULE1(this.RuleHSimpleContainer);
@@ -1367,23 +1388,17 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdSelect = this.RULE('RuleBuiltinCmdSelect', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkStringLiteral);
         this.OPTION1(() => {
             this.SUBRULE1(this.RuleHContainer);
         });
     });
 
-    RuleBuiltinCmdSend = this.RULE('RuleBuiltinCmdSend', () => {
-        this.CONSUME1(tks.tkSyntaxPlaceholder);
-        this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.SUBRULE1(this.RuleExpr);
-        this.CONSUME1(tks._to);
-        this.SUBRULE1(this.RuleObject);
-    });
-
     RuleBuiltinCmdSet = this.RULE('RuleBuiltinCmdSet', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.OPTION1(() => {
             this.CONSUME1(tks._the);
         });
@@ -1411,6 +1426,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdShow = this.RULE('RuleBuiltinCmdShow', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleObjectPart);
         this.CONSUME1(tks.tkIdentifier);
         this.SUBRULE1(this.RuleLvl4Expression);
@@ -1423,6 +1439,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdInternalvpcsort = this.RULE('RuleBuiltinCmdInternalvpcsort', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkStringLiteral);
         this.CONSUME2(tks.tkStringLiteral);
         this.CONSUME3(tks.tkStringLiteral);
@@ -1432,6 +1449,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdStart = this.RULE('RuleBuiltinCmdStart', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
         this.SUBRULE1(this.RuleObjectStack);
     });
@@ -1439,6 +1457,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdStop = this.RULE('RuleBuiltinCmdStop', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
         this.SUBRULE1(this.RuleObjectStack);
     });
@@ -1446,14 +1465,16 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdSubtract = this.RULE('RuleBuiltinCmdSubtract', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.SUBRULE1(this.RuleLvl1Expression);
         this.CONSUME3(tks.tkSyntaxPlaceholder);
+        this.SUBRULE1(this.RuleLvl1Expression);
+        this.CONSUME4(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleHContainer);
     });
 
     RuleBuiltinCmdUnlock = this.RULE('RuleBuiltinCmdUnlock', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
         this.OPTION1(() => {
             this.CONSUME1(tks.tkStringLiteral);
@@ -1467,6 +1488,7 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdVisual = this.RULE('RuleBuiltinCmdVisual', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.CONSUME1(tks.tkIdentifier);
         this.OPTION1(() => {
             this.CONSUME1(tks.tkStringLiteral);
@@ -1480,23 +1502,33 @@ export class VpcChvParser extends chevrotain.CstParser {
     RuleBuiltinCmdWait = this.RULE('RuleBuiltinCmdWait', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
         this.OPTION1(() => {
             this.CONSUME1(tks.tkStringLiteral);
         });
     });
 
+    RuleCmdSend = this.RULE('RuleCmdSend', () => {
+        this.CONSUME1(tks.tkSyntaxPlaceholder);
+        this.CONSUME2(tks.tkSyntaxPlaceholder);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
+        this.SUBRULE1(this.RuleExpr);
+        this.CONSUME1(tks._to);
+        this.SUBRULE1(this.RuleObject);
+    });
+
     RuleInternalCmdRequestEval = this.RULE('RuleInternalCmdRequestEval', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.CONSUME1(tks.tkIdentifier);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
     });
 
     RuleInternalCmdUserHandler = this.RULE('RuleInternalCmdUserHandler', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
-        this.CONSUME1(tks.tkIdentifier);
+        this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
     });
     /* generated code, any changes above this point will be lost: --------------- */

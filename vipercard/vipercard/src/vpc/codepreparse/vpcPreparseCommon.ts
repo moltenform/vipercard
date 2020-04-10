@@ -119,7 +119,9 @@ export class VpcCodeLine {
     /* unique id for this line */
     readonly lineId: number;
 
-    /* first token of the code in the line */
+    /* first token of the code in the line. useful to keep because
+    it points to the current line, and stores original command in
+    case transformations are done later. */
     readonly firstToken: ChvITk;
 
     /* parsing entry point */

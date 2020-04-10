@@ -29,8 +29,7 @@ export class ExecuteStatement {
      */
     go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<AsyncCodeOpState>) {
         checkThrowEq(VpcLineCategory.Statement, line.ctg, '7h|not a statement');
-        let firstToken = line.excerptToParse[0];
-        checkThrow(isTkType(firstToken, tks.tkIdentifier), `7g|expect built-in statement`);
+        let firstToken = line.firstToken;
         let vals = visitResult as IntermedMapOfIntermedVals;
         checkThrow(
             vals instanceof IntermedMapOfIntermedVals,
@@ -226,7 +225,7 @@ export class ExecuteStatement {
      * lock screen
      */
     goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        checkThrow(line.excerptToParse[1].image === 'screen', 'only support lock screen');
+        checkThrow(line.excerptToParse[3].image === 'screen', 'only support lock screen');
         this.outside.SetOption('screenLocked', true);
     }
     /**
@@ -302,7 +301,7 @@ export class ExecuteStatement {
      * reset paint/ menubar
      */
     goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        checkThrow(line.excerptToParse[1].image === 'paint', 'only support reset paint');
+        checkThrow(line.excerptToParse[3].image === 'paint', 'only support reset paint');
         throw makeVpcScriptErr("52|the 'reset' command is not yet implemented.");
     }
     /**
@@ -327,7 +326,7 @@ export class ExecuteStatement {
      * selects text
      */
     goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        if (line.excerptToParse[1].image.toLowerCase().replace(/"/g, '') === 'empty') {
+        if (line.excerptToParse[3].image.toLowerCase().replace(/"/g, '') === 'empty') {
             checkThrow(false, 'nyi: deselecting text');
         } else {
             let contRef = throwIfUndefined(this.h.findChildOther(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
@@ -483,12 +482,9 @@ export class ExecuteStatement {
     goWait(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         //~ let args = this.h.getAllChildVpcVals(vals, tkstr.RuleExpr, true);
         //~ let number = args[0].readAsStrictNumeric();
-
         //~ let unitRaw = 'ms';
-
         //~ /* because there is only 1 script execution thread, don't need to assign a unique id. */
         //~ let asyncOpId = 'singleThreadAsyncOpId';
-
         //~ /* getStrToEnum will conveniently show a list of valid alternatives on error */
         //~ let multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, '', unitRaw);
         //~ let milliseconds = Math.max(0, Math.round(number * multiply));

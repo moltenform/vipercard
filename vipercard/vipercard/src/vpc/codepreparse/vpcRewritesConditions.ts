@@ -5,7 +5,7 @@
 /* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
 
 export namespace VpcRewritesConditions {
-    export function splitSinglelineIf(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[][] {
+    export function splitSinglelineIf(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('if', line[0].image, '');
         let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
         checkThrow(findThen !== -1, 'if statement, no "then" found');
@@ -92,7 +92,7 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
         return root;
     }
 
-    function transformTreeRecurse(node: IfConstruct, rw:VpcSuperRewrite, output: ChvITk[][]) {
+    function transformTreeRecurse(node: IfConstruct, rw: VpcSuperRewrite, output: ChvITk[][]) {
         let numberOfEndIfsNeeded = 0;
         if (!node.isRoot) {
             let firstLine = rw.go('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
@@ -126,7 +126,7 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
         }
     }
 
-    export function goNoElseIfClauses(lines: ChvITk[][], rw:VpcSuperRewrite) {
+    export function goNoElseIfClauses(lines: ChvITk[][], rw: VpcSuperRewrite) {
         let construct = buildTree(lines);
         let ret: ChvITk[][] = [];
         transformTreeRecurse(construct, rw, ret);

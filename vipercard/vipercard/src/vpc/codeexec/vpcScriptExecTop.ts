@@ -13,7 +13,6 @@
 /* auto */ import { O, UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { ValHolder, cast, slength } from './../../ui512/utils/util512';
 
-
 /**
  * script execution in ViperCard
  *
@@ -210,7 +209,7 @@ export class VpcExecTop {
     /**
      * get an instance of VpcScriptErrorBase, or create if needed
      */
-    protected getOrGenerateScriptErr(e: any): VpcScriptErrorBase {
+    getOrGenerateScriptErr(e: any): VpcScriptErrorBase {
         if (e instanceof VpcScriptErrorBase) {
             return e;
         } else if (e.attachErr && e.attachErr instanceof VpcScriptErrorBase) {
@@ -245,11 +244,11 @@ export class VpcExecTop {
      * run maintenance
      */
     doMaintenance() {
-        let refStack = new RequestedVelRef(VpcElType.Stack)
-        refStack.lookByRelative = OrdinalOrPosition.This
-        let got = this.outside.ResolveVelRef(refStack)
+        let refStack = new RequestedVelRef(VpcElType.Stack);
+        refStack.lookByRelative = OrdinalOrPosition.This;
+        let got = this.outside.ResolveVelRef(refStack);
         if (got && got[0]) {
-            VpcExecTop.checkNoRepeatedIds( cast(VpcElStack, got[0]))
+            VpcExecTop.checkNoRepeatedIds(cast(VpcElStack, got[0]));
         }
     }
 
@@ -266,14 +265,14 @@ export class VpcExecTop {
     /**
      * make sure there are no repeated ids
      */
-    static checkNoRepeatedIds(stack:VpcElStack) {
-        let idsSeen = new Map<string, boolean>()
+    static checkNoRepeatedIds(stack: VpcElStack) {
+        let idsSeen = new Map<string, boolean>();
         for (let vel of stack.iterEntireStack()) {
             if (idsSeen.has(vel.id)) {
-                alert("duplicate id seen: " + vel.id)
+                alert('duplicate id seen: ' + vel.id);
             }
 
-            idsSeen.set(vel.id, true)
+            idsSeen.set(vel.id, true);
         }
     }
 }

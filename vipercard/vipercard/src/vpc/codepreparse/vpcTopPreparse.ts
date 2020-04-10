@@ -102,7 +102,7 @@ export namespace VpcCodeProcessor {
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
 
-        let rw = new VpcSuperRewrite(idGen)
+        let rw = new VpcSuperRewrite(idGen);
         let lowercase = new MakeLowerCase();
         let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, lowercase);
         let rewrites = new VpcRewriteForCommands(rw);
@@ -162,7 +162,7 @@ export namespace VpcCodeProcessor {
         return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput);
     }
 
-    function stage1Process(line: ChvITk[], rw:VpcSuperRewrite): O<ChvITk[][]> {
+    function stage1Process(line: ChvITk[], rw: VpcSuperRewrite): O<ChvITk[][]> {
         if (line.length && line[0].image === 'if') {
             return VpcRewritesConditions.splitSinglelineIf(line, rw);
         } else if (line.length && line[0].image === 'repeat') {
@@ -182,7 +182,11 @@ export namespace VpcCodeProcessor {
         return exp.go(line);
     }
 
-    export function go(code: string, velIdForErrMsg: string, idGen:CountNumericId): VpcScriptSyntaxError | VpcParsedCodeCollection {
+    export function go(
+        code: string,
+        velIdForErrMsg: string,
+        idGen: CountNumericId
+    ): VpcScriptSyntaxError | VpcParsedCodeCollection {
         assertTrue(!code.match(/^\s*$/), '');
         let latestSrcLineSeen = new ValHolder(0);
         let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));

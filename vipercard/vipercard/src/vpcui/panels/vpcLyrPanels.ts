@@ -70,17 +70,17 @@ export class VpcAppLyrPanels extends VpcUILayer {
                 return vel;
             } else {
                 if (!this.hasSentDontSupportMessage) {
-                alert("we don't support selecting this type of object, so going to the current card instead")
-                this.hasSentDontSupportMessage = true
+                    alert("we don't support selecting this type of object, so going to the current card instead");
+                    this.hasSentDontSupportMessage = true;
                 }
-                return this.vci.getModel().getCurrentCard()
+                return this.vci.getModel().getCurrentCard();
             }
         }
 
         return undefined;
     }
 
-    hasSentDontSupportMessage = false
+    hasSentDontSupportMessage = false;
 
     /**
      * update UI

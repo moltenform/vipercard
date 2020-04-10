@@ -22,7 +22,6 @@
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
-
 /**
  * download, construct, and initialize a ViperCard project
  */
@@ -123,7 +122,7 @@ export class VpcIntroProvider {
      */
     async getVpcState() {
         await this.yieldTime();
-        let idGen = new CountNumericIdNormal()
+        let idGen = new CountNumericIdNormal(10000);
         await this.yieldTime();
         let vpcState = new VpcState();
         await this.yieldTime();
@@ -179,7 +178,6 @@ export class VpcIntroProvider {
             await this.yieldTime();
         }
 
-        vpcState.model.stack.increasingnumber = vpcState.runtime.codeExec.idGen;
         await this.yieldTime();
         pr.initUI();
         await this.yieldTime();
