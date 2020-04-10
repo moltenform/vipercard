@@ -1,21 +1,24 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn, makeVpcInternalErr, scontains, throwIfUndefined } from '../../ui512/utils/utilsAssert.js';
-/* auto */ import { assertEq, assertEqWarn, base10, getRoot } from '../../ui512/utils/utils512.js';
-/* auto */ import { ModifierKeys } from '../../ui512/utils/utilsDrawConstants.js';
-/* auto */ import { UI512TestBase } from '../../ui512/utils/utilsTest.js';
-/* auto */ import { FormattedText } from '../../ui512/draw/ui512FormattedText.js';
-/* auto */ import { MouseUpEventDetails } from '../../ui512/menu/ui512Events.js';
-/* auto */ import { VpcElType, VpcOpCtg, VpcTool } from '../../vpc/vpcutils/vpcEnums.js';
-/* auto */ import { VpcScriptSyntaxError } from '../../vpc/vpcutils/vpcUtils.js';
-/* auto */ import { VpcValN, VpcValS } from '../../vpc/vpcutils/vpcVal.js';
-/* auto */ import { VpcEvalHelpers } from '../../vpc/vpcutils/vpcValEval.js';
-/* auto */ import { VpcElBase } from '../../vpc/vel/velBase.js';
-/* auto */ import { VpcElButton } from '../../vpc/vel/velButton.js';
-/* auto */ import { ExpLRUMap } from '../../vpc/codeexec/bridgeJSLru.js';
-/* auto */ import { VpcState } from '../../vpcui/state/vpcState.js';
-/* auto */ import { VpcPresenterEvents } from '../../vpcui/presentation/vpcPresenterEvents.js';
-/* auto */ import { VpcPresenter } from '../../vpcui/presentation/vpcPresenter.js';
-/* auto */ import { VpcDocumentLocation, VpcIntroProvider } from '../../vpcui/intro/vpcIntroProvider.js';
+/* auto */ import { VpcEvalHelpers } from './../../vpc/vpcutils/vpcValEval';
+/* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { VpcScriptSyntaxError } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcState } from './../../vpcui/state/vpcState';
+/* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
+/* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
+/* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
+/* auto */ import { VpcElType, VpcOpCtg, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
+/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { assertTrue, assertTrueWarn, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { Util512, assertEq, assertEqWarn } from './../../ui512/utils/util512';
+/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 
 /**
  * infrastructure to set up a mock ViperCard environment
@@ -44,7 +47,9 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         if (!this.initedAppl) {
             [this.pr, this.vcstate] = await this.startEnvironment();
             this.vcstate.vci.doWithoutAbilityToUndo(() => this.populateModel());
-            this.vcstate.vci.doWithoutAbilityToUndo(() => this.pr.setTool(VpcTool.Browse));
+            this.vcstate.vci.doWithoutAbilityToUndo(() =>
+                this.pr.setTool(VpcTool.Browse)
+            );
 
             /* make showError a no-op instead of opening the script. */
             this.pr.showError = a => {};
@@ -121,12 +126,12 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         btn_b_d_1.set('name', 'p1');
         fld_c_d_1.set('name', 'p1');
         btn_c_d_1.set('name', 'p1');
-        bgfld_b_1.set('name', 'p1')
-        bgfld_b_2.set('name', 'p2')
-        bgfld_c_1.set('name', 'p1')
-        bgbtn_b_1.set('name', 'p1')
-        bgbtn_b_2.set('name', 'p2')
-        bgbtn_c_1.set('name', 'p1')
+        bgfld_b_1.set('name', 'p1');
+        bgfld_b_2.set('name', 'p2');
+        bgfld_c_1.set('name', 'p1');
+        bgbtn_b_1.set('name', 'p1');
+        bgbtn_b_2.set('name', 'p2');
+        bgbtn_c_1.set('name', 'p1');
         btn_go.set('name', 'go');
 
         this.elIds = {
@@ -155,11 +160,11 @@ export class TestVpcScriptRunBase extends UI512TestBase {
             bgbtn_b_1: bgbtn_b_1.id,
             bgbtn_b_2: bgbtn_b_2.id,
             bgbtn_c_1: bgbtn_c_1.id,
-            btn_go: btn_go.id,
+            btn_go: btn_go.id
         };
 
         let b = btn_go as VpcElButton;
-        assertTrue((b instanceof VpcElButton), '2c|not a button');
+        assertTrue(b instanceof VpcElButton, '2c|not a button');
         let userBounds = this.pr.userBounds;
 
         /* make the button location more realistic, it should be within userBounds */
@@ -172,7 +177,10 @@ export class TestVpcScriptRunBase extends UI512TestBase {
 
     protected updateChangedCodeAndCheckForSyntaxError(owner: VpcElBase, code: string) {
         this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
-        let fnd = this.vcstate.runtime.codeExec.getCompiledScript(owner.id, owner.getS('script'));
+        let fnd = this.vcstate.runtime.codeExec.getCompiledScript(
+            owner.id,
+            owner.getS('script')
+        );
         if (fnd && fnd instanceof VpcScriptSyntaxError) {
             throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
         }
@@ -207,26 +215,40 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         let isCompilationStage = true;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
             let msg = scriptErr.details;
-            let velId = ''
-            let line = -1
+            let velId = '';
+            let line = -1;
             this.vcstate.vci.undoableAction(() => {
-                let [origVelId, origLine, reVelId, reLine] = VpcPresenter.commonRespondToError(this.vcstate.vci, scriptErr)
-                velId = reVelId
-                line = reLine
+                let [
+                    origVelId,
+                    origLine,
+                    reVelId,
+                    reLine
+                ] = VpcPresenter.commonRespondToError(this.vcstate.vci, scriptErr);
+                velId = reVelId;
+                line = reLine;
                 this.vcstate.vci.setTool(VpcTool.Browse);
-            })
+            });
 
             if (expectCompErr !== undefined && isCompilationStage !== expectCompErr) {
                 let lns = built.split('\n');
                 let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-                assertTrueWarn(false, '2a|got error at the wrong stage', culpritLine, msg);
+                assertTrueWarn(
+                    false,
+                    '2a|got error at the wrong stage',
+                    culpritLine,
+                    msg
+                );
             } else if (expectErrMsg) {
                 assertEqWarn(expectErrLine, line, codeBefore, codeIn, '2Z|');
-                if (!msg.includes( expectErrMsg)) {
+                if (!msg.includes(expectErrMsg)) {
                     UI512TestBase.warnAndAllowToContinue(
                         'DIFFERENT ERR MSG for input ' +
-                            codeBefore.replace(/\n/g, '; ').replace(/global testresult; ;/g, '') +
-                            codeIn.replace(/\n/g, '; ').replace(/global testresult; ;/g, '') +
+                            codeBefore
+                                .replace(/\n/g, '; ')
+                                .replace(/global testresult; ;/g, '') +
+                            codeIn
+                                .replace(/\n/g, '; ')
+                                .replace(/global testresult; ;/g, '') +
                             ` expected ${expectErrMsg} and got`
                     );
 
@@ -237,7 +259,11 @@ export class TestVpcScriptRunBase extends UI512TestBase {
             } else {
                 let lns = built.split('\n');
                 let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-                assertTrue(false, `2X|script error, looks like <${culpritLine}> ${line}`, msg);
+                assertTrue(
+                    false,
+                    `2X|script error, looks like <${culpritLine}> ${line}`,
+                    msg
+                );
             }
 
             caughtErr = true;
@@ -258,19 +284,35 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         if (caughtErr) {
             return;
         } else if (expectErrMsg && expectCompErr) {
-            assertTrueWarn(false, "2W|we expected it to throw error but it didn't", codeBefore, codeIn);
+            assertTrueWarn(
+                false,
+                "2W|we expected it to throw error but it didn't",
+                codeBefore,
+                codeIn
+            );
         }
 
         /* fake a click inside btnGo */
         assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');
         this.pr.trackMouse = [this.simMouseX, this.simMouseY];
-        let fakeEvent = new MouseUpEventDetails(1, this.simClickX, this.simClickY, 0, ModifierKeys.None);
+        let fakeEvent = new MouseUpEventDetails(
+            1,
+            this.simClickX,
+            this.simClickY,
+            0,
+            ModifierKeys.None
+        );
         VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id, false);
 
         /* message should now be in the queue */
-        assertTrue(this.vcstate.runtime.codeExec.workQueue.length > 0, '2V|should be in queue');
+        assertTrue(
+            this.vcstate.runtime.codeExec.workQueue.length > 0,
+            '2V|should be in queue'
+        );
         isCompilationStage = false;
-        this.vcstate.vci.doWithoutAbilityToUndo(() => this.vcstate.runtime.codeExec.runTimeslice(Infinity));
+        this.vcstate.vci.doWithoutAbilityToUndo(() =>
+            this.vcstate.runtime.codeExec.runTimeslice(Infinity)
+        );
 
         if (caughtErr) {
             return;
@@ -278,7 +320,10 @@ export class TestVpcScriptRunBase extends UI512TestBase {
             assertTrueWarn(false, '2U|error not seen', codeBefore, codeIn);
         }
 
-        assertTrue(this.vcstate.runtime.codeExec.workQueue.length === 0, '2T|script took too long to execute');
+        assertTrue(
+            this.vcstate.runtime.codeExec.workQueue.length === 0,
+            '2T|script took too long to execute'
+        );
     }
 
     assertCompileError(s: string, expectErrMsg?: string, expectErrLine?: number) {
@@ -293,7 +338,12 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         return this.runGeneralCode('', s, expectErrMsg, expectErrLine, false);
     }
 
-    testOneEvaluate(beforeLine: string, s: string, expectErrMsg?: string, expectErrLine?: number) {
+    testOneEvaluate(
+        beforeLine: string,
+        s: string,
+        expectErrMsg?: string,
+        expectErrLine?: number
+    ) {
         this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
         let codeIn = `global testresult
 ${beforeLine}
@@ -304,10 +354,10 @@ put ${s} into testresult`;
 
     testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
         let getBeforeLine = (s: string): [string, string] => {
-            let ptsWithRes = s.split('{RESULT}')
+            let ptsWithRes = s.split('{RESULT}');
             if (ptsWithRes.length > 1) {
                 assertTrue(ptsWithRes.length === 2, 'too many {RESULT}');
-                return [ptsWithRes[0], ptsWithRes[1]]
+                return [ptsWithRes[0], ptsWithRes[1]];
             } else {
                 let pts = s.split('\\');
                 assertTrue(pts.length === 1 || pts.length === 2, '2S|too many \\');
@@ -320,7 +370,10 @@ put ${s} into testresult`;
         this.vcstate.runtime.codeExec.globals.set('donewithbatch', VpcValS('0'));
         let codeIn = `global donewithbatch\nput 0 into donewithbatch\n`;
         for (let i = 0; i < testsNoErr.length; i++) {
-            this.vcstate.runtime.codeExec.globals.set(`testresult${i}`, VpcValS('(placeholder)'));
+            this.vcstate.runtime.codeExec.globals.set(
+                `testresult${i}`,
+                VpcValS('(placeholder)')
+            );
             let [beforeLine, expr] = getBeforeLine(testsNoErr[i][0]);
             codeIn += `global testresult${i}\n`;
             codeIn += `${beforeLine}\n`;
@@ -336,15 +389,29 @@ put ${s} into testresult`;
             let got = this.vcstate.runtime.codeExec.globals.get(`testresult${i}`);
             if (floatingPoint) {
                 assertTrue(got.isItNumeric(), '2Q|not numeric', got.readAsString());
-                assertEq(got.readAsString().trim(), got.readAsString(), '2P|why does it have whitespace');
+                assertEq(
+                    got.readAsString().trim(),
+                    got.readAsString(),
+                    '2P|why does it have whitespace'
+                );
                 let expectString = testsNoErr[i][1];
                 assertTrue(isFinite(parseFloat(expectString)), '2O|not numeric');
                 if (
                     this.evalHelpers
-                        .evalOp(VpcValN(parseFloat(expectString)), got, VpcOpCtg.OpEqualityGreaterLessOrContains, '==')
+                        .evalOp(
+                            VpcValN(parseFloat(expectString)),
+                            got,
+                            VpcOpCtg.OpEqualityGreaterLessOrContains,
+                            '=='
+                        )
                         .readAsString() !== 'true'
                 ) {
-                    UI512TestBase.warnAndAllowToContinue(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
+                    UI512TestBase.warnAndAllowToContinue(
+                        `DIFF RESULT input=${testsNoErr[i][0].replace(
+                            /\n/g,
+                            '; '
+                        )} expected=`
+                    );
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
                 }
@@ -352,7 +419,12 @@ put ${s} into testresult`;
                 let gt = got.readAsString();
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
-                    UI512TestBase.warnAndAllowToContinue(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
+                    UI512TestBase.warnAndAllowToContinue(
+                        `DIFF RESULT input=${testsNoErr[i][0].replace(
+                            /\n/g,
+                            '; '
+                        )} expected=`
+                    );
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
                 }
@@ -363,7 +435,10 @@ put ${s} into testresult`;
             let [beforeLine, expr] = getBeforeLine(testsErr[i][0]);
             let errOnLine = beforeLine.length ? 4 : 5;
             let expectErr = testsErr[i][1].replace(/ERR:/g, '');
-            if (expectErr.includes( ':') && isFinite(Util512.parseInt(expectErr.split(':')[0], base10))) {
+            if (
+                expectErr.includes(':') &&
+                isFinite(Util512.parseInt(expectErr.split(':')[0], base10))
+            ) {
                 errOnLine = Util512.parseInt(expectErr.split(':')[0]);
                 expectErr = expectErr.split(':')[1];
             }
@@ -474,7 +549,10 @@ put ${s} into testresult`;
             let expected = item[1];
             let pts = item[0].split('_');
             assertEq(3, pts.length, '2D|');
-            return [pts[0] + ' ' + flipOperation(pts[1])[1] + ' ' + pts[2], this.flipBool(expected)];
+            return [
+                pts[0] + ' ' + flipOperation(pts[1])[1] + ' ' + pts[2],
+                this.flipBool(expected)
+            ];
         });
 
         let testsInvertAndOrder = tests.map((item): [string, string] => {

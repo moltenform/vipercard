@@ -38,13 +38,16 @@ def runPrettier(args):
         s = (stdout + b'\n' + stderr).decode('utf-8')
         # make links clickable
         # example [error] ..\..\src\test\util512ui\testUI512Composites.ts: SyntaxError: ',' expected. (6:54)
-        search = r' ([^ ]+\.ts): ([\w]+Error: [^]n]+)\(([^)]+)\)'
+        search = r'\[error\] ([^ ]+\.ts): ([\w]+Error: [^\n]+)\(([^)]+)\)'
         def getReplaced(r):
             result = '\n$1:$3 error $2'
             result = result.replace('$1', os.path.abspath(r.group(1))).replace('\\', '/')
             result = result.replace('$2', r.group(2))
-            result = result.replace('$3', r.group(3))
+            lineInfo = r.group(3) if len(r.groups()) >= 3 else '1:1'
+            result = result.replace('$3', lineInfo)
             return result
+        s = re.sub(search, getReplaced, s)
+        search = r'\[error\] ([^ ]+\.ts): ([\w]+Error: [^\n]+)'
         s = re.sub(search, getReplaced, s)
         trace(s)
         assertTrueMsg(False, "prettier returned failure", file=os.path.abspath(__file__), linenum=4)

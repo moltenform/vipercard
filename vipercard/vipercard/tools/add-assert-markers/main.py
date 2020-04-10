@@ -55,7 +55,8 @@ def go(srcdirectory, previewOnly):
     try:
         for f, short in files.recursefiles(srcdirectory):
             if short.lower().endswith('.ts') and not short in skipFiles:
-                goForFile(f, previewOnly, state, marksAleadySeen)
+                if not '/test/' in f and not '\\test\\' in f:
+                    goForFile(f, previewOnly, state, marksAleadySeen)
     finally:
         if not previewOnly:
             trace(f'first={firstNum} last={state.latestMarker}')
