@@ -12,11 +12,8 @@
 /* auto */ import { UI512CompCodeEditor } from './../../ui512/composites/ui512CodeEditor';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
-import { longstr } from '../../ui512/utils/util512.js';
 
 /**
  * testing the code editor's auto-formatting and
@@ -534,8 +531,8 @@ function createFakeEd() {
  * mimic hitting Enter at the current caret location
  */
 function testAutoFormat(ed: UI512CompCodeEditor, initial: string, expected: string) {
-    initial = initial.replace(/\r\n/g, '\n').replace(/    /g, '\t');
-    expected = expected.replace(/\r\n/g, '\n').replace(/    /g, '\t');
+    initial = initial.replace(/\r\n/g, '\n').replace(/ {4}/g, '\t');
+    expected = expected.replace(/\r\n/g, '\n').replace(/ {4}/g, '\t');
 
     assertTrue(!initial.includes('#'), "9n|don't need to mark selend");
     assertTrue(!expected.includes('#'), "9m|don't need to mark selend");

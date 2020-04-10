@@ -15,11 +15,11 @@
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange, specialCharNonBreakingSpace, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { TestTextEventInteractions } from './testUI512TextEditInteractions';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * TestDrawUI512TextEdit
@@ -32,7 +32,11 @@
  * referencing _UI512DemoTextEdit_) to confirm that manually
  * interacting with the text fields has the expected behavior
  */
-export class TestDrawUI512TextEdit extends UI512TestBase {
+
+let t = new SimpleUtil512TestCollection('testCollectionUI512TextEdit');
+export let testCollectionUI512TextEdit = t;
+
+export class TestDrawUI512TextEdit {
     uiContext = false;
     tests = [
         'async/Test Drawing Text Edits',
@@ -42,11 +46,6 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
             );
         }
     ];
-
-    runTest(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawTextEdit());
-    }
-
     addElements(pr: UI512Presenter, bounds: number[]) {
         const b0 = 45;
         const b1 = 45;
@@ -125,8 +124,8 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
             80,
             80,
             20,
-            Util512.range(5),
-            Util512.range(2),
+            Util512.range(0,5),
+            Util512.range(0,2),
             10,
             100 - 20
         );
@@ -140,8 +139,8 @@ export class TestDrawUI512TextEdit extends UI512TestBase {
             100,
             80,
             60,
-            Util512.range(5),
-            Util512.range(2),
+            Util512.range(0,5),
+            Util512.range(0,2),
             10,
             40
         );

@@ -62,7 +62,7 @@ t.atest('canAwaitACall', async () => {
     t.say(/*——————————*/ '3');
 });
 /* note that we're intentionally returning a promise */
-t.atest('canChainACall', () => {
+t.atest('canChainACall', async () => {
     return exampleAsyncFn();
 });
 

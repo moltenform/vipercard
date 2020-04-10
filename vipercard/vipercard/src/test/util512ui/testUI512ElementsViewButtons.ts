@@ -9,10 +9,10 @@
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * TestDrawUI512Buttons
@@ -26,7 +26,11 @@
  * referencing _UI512DemoButtons_) to confirm that manually
  * interacting with the buttons has the expected behavior
  */
-export class TestDrawUI512Buttons extends UI512TestBase {
+
+let t = new SimpleUtil512TestCollection('testCollectionUI512ElementsViewButtons');
+export let testCollectionUI512ElementsViewButtons = t;
+
+export class TestDrawUI512Buttons {
     uiContext = false;
     tests = [
         'async/Test Drawing Buttons',
@@ -205,10 +209,6 @@ export class TestDrawUI512Buttons extends UI512TestBase {
             imHeight,
             this.uiContext
         );
-    }
-
-    runTest(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawButtons());
     }
 }
 

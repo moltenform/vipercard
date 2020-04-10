@@ -1,15 +1,15 @@
 
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, VoidFn, getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { RenderComplete, getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { assertTrue, bool } from './../../ui512/utils/util512Assert';
 /* auto */ import { TextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { DrawTextArgs } from './../../ui512/draw/ui512DrawTextArgs';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * TestDrawUI512Text
@@ -23,9 +23,10 @@
  * of styles and fonts, by clicking the buttons like Bold and Italic
  */
 
-//this is a "slow" test--------------
+let t = new SimpleUtil512TestCollection('testCollectionUI512DrawText', true, true);
+export let testCollectionUI512DrawText = t;
 
-export class TestDrawUI512Text extends UI512TestBase {
+export class TestDrawUI512Text {
     uiContext = false;
     readonly margin = 1;
     tests = [
@@ -84,11 +85,11 @@ export class TestDrawUI512Text extends UI512TestBase {
         );
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            complete.complete = !!drawText.drawStringIntoBox(
+            complete.complete = bool(drawText.drawStringIntoBox(
                 this.getFormattedText(list, true),
                 canvas,
                 new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
-            );
+            ));
         };
 
         return new CanvasTestParams(
@@ -124,11 +125,11 @@ export class TestDrawUI512Text extends UI512TestBase {
         this.addFonts(list, 'symbol', '12', 'biuosdce');
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            complete.complete = !!drawText.drawStringIntoBox(
+            complete.complete = bool(drawText.drawStringIntoBox(
                 this.getFormattedText(list, true),
                 canvas,
                 new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
-            );
+            ));
         };
 
         return new CanvasTestParams(
@@ -154,7 +155,7 @@ export class TestDrawUI512Text extends UI512TestBase {
         );
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            complete.complete = !!drawText.drawStringIntoBox(
+            complete.complete = bool(drawText.drawStringIntoBox(
                 this.getFormattedText(list, false),
                 canvas,
                 new DrawTextArgs(
@@ -166,7 +167,7 @@ export class TestDrawUI512Text extends UI512TestBase {
                     true,
                     true
                 )
-            );
+            ));
         };
 
         return new CanvasTestParams(
@@ -197,7 +198,7 @@ export class TestDrawUI512Text extends UI512TestBase {
                     imHeight,
                     '#dddddd'
                 );
-                complete.andB(!!drawText.drawStringIntoBox(s, canvas, args));
+                complete.andB(bool(drawText.drawStringIntoBox(s, canvas, args)));
             };
 
             let margin = 10;
@@ -323,16 +324,5 @@ export class TestDrawUI512Text extends UI512TestBase {
             imHeight,
             this.uiContext
         );
-    }
-
-    runTest(testnum: number, dldimage: boolean, callback?: VoidFn) {
-        let tests = [
-            () => this.draw1(),
-            () => this.draw2(),
-            () => this.draw3(),
-            () => this.draw4()
-        ];
-        let testToRun = testnum === -1 ? tests : tests[testnum - 1];
-        testUtilCompareCanvasWithExpected(dldimage, testToRun, callback);
     }
 }

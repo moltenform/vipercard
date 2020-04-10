@@ -19,10 +19,10 @@
 /* auto */ import { UI512CompButtonGroup } from './../../ui512/composites/ui512ButtonGroup';
 /* auto */ import { BasicHandlers } from './../../ui512/textedit/ui512BasicHandlers';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * TestDrawUI512Composites
@@ -36,17 +36,18 @@
  * (uncomment the line referencing _UI512DemoComposites_) to confirm that manually
  * interacting with the buttons has the expected behavior
  */
-export class TestDrawUI512Composites extends UI512TestBase {
-    uiContext = false;
-    tests = [
-        'async/Test Drawing Composites',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                this.testDrawComposites()
-            );
-        }
-    ];
 
+let t = new SimpleUtil512TestCollection('testCollectionUI512Composites', true);
+export let testCollectionUI512Composites = t;
+
+t.atest('async/Test Drawing Composites', async ()=> {
+    return TestUtilsCanvas.RenderAndCompareImages(false, () =>
+        new TestDrawUI512Composites().testDrawComposites()
+    );
+})
+
+export class TestDrawUI512Composites {
+    uiContext = false;
     addElements(pr: UI512TestCompositesPresenter, bounds: number[]) {
         let grp = new UI512ElGroup('grp');
         pr.app.addGroup(grp);
@@ -198,7 +199,7 @@ end1`.replace(/\r\n/g, '\n')
 
         pr.useOSClipboard = false;
         let clipManager = pr.clipManager as ClipManager;
-        assertTrue(clipManager.isClipManager, '9p|');
+        assertTrue(clipManager instanceof ClipManager, '9p|');
         clipManager.simClipboard = '';
         this.simulateKey(pr, 'C', 'c', false, true);
         assertEq('\n', clipManager.simClipboard, '1R|');
@@ -287,10 +288,6 @@ end1`.replace(/\r\n/g, '\n')
         for (let chr of s) {
             this.simulateKey(pr, chr, chr, false, false);
         }
-    }
-
-    runTest(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawComposites());
     }
 }
 

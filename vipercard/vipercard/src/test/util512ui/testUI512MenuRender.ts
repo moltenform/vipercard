@@ -10,10 +10,10 @@
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * TestDrawUI512Menus
@@ -26,7 +26,11 @@
  * line referencing _UI512DemoMenus_) to confirm that manually
  * interacting with the menus has the expected behavior
  */
-export class TestDrawUI512Menus extends UI512TestBase {
+
+let t = new SimpleUtil512TestCollection('testCollectionUI512MenuRender');
+export let testCollectionUI512MenuRender = t;
+
+export class TestDrawUI512Menus {
     uiContext = false;
     tests = [
         'async/Test Drawing Menus',
@@ -237,10 +241,6 @@ export class TestDrawUI512Menus extends UI512TestBase {
             totalH,
             this.uiContext
         );
-    }
-
-    runTest(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawMenus());
     }
 }
 

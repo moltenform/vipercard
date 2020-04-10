@@ -5,10 +5,13 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+let t = new SimpleUtil512TestCollection('testCollectionUI512TextEditInteractions');
+export let testCollectionUI512TextEditInteractions = t;
 
 /**
  * send simulated events,
@@ -72,7 +75,7 @@ export class TestTextEventInteractions {
         }
 
         /* make it big enough to have a scrollbar */
-        let smallFld = cast(pr.app.getEl('testCases_9'), UI512ElTextField);
+        let smallFld = cast(UI512ElTextField, pr.app.getEl('testCases_9'), );
         smallFld.setDimensions(smallFld.x, smallFld.y, smallFld.w, 120);
         smallFld.setFmTxt(FormattedText.newFromSerialized('now ok'));
     }

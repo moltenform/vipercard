@@ -12,7 +12,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * tests on TextSelModifyImpl
  *

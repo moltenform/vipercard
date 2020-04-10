@@ -16,11 +16,11 @@
 /* auto */ import { UI512PainterCvCanvas, UI512PainterCvData, UI512PainterCvDataAndPatterns } from './../../ui512/draw/ui512DrawPainter';
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { FloodFillTest } from './testUI512PaintFlood';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * TestDrawUI512Paint
@@ -33,7 +33,11 @@
  * (uncomment the line referencing _UI512DemoPaint_), and test drag/drop,
  * and click Download Image to update the test
  */
-export class TestDrawUI512Paint extends UI512TestBase {
+
+let t = new SimpleUtil512TestCollection('testCollectionUI512Paint');
+export let testCollectionUI512Paint = t;
+
+export class TestDrawUI512Paint {
     uiContext = false;
     tests = [
         'async/Test Shape',
@@ -230,12 +234,12 @@ export class TestDrawUI512Paint extends UI512TestBase {
             50,
             80,
             60,
-            Util512.range(lineColors.length),
+            Util512.range(0, lineColors.length),
             types,
             5,
             5
         );
-        layout.combinations((n, column, type, bnds) => {
+        layout.combinations((n, column:any, type, bnds) => {
             let lineColor = lineColors[column];
             let fillColor = fillColors[column];
             let lineSize = lineSizes[column];
@@ -301,8 +305,8 @@ export class TestDrawUI512Paint extends UI512TestBase {
             0,
             68,
             68,
-            Util512.range(20),
-            Util512.range(20),
+            Util512.range(0, 20),
+            Util512.range(0,20),
             30,
             30
         );
@@ -420,11 +424,11 @@ export class TestDrawUI512Paint extends UI512TestBase {
     }
 
     runtestFloodFill(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawFloodFill());
+        TestUtilsCanvas.RenderAndCompareImages(dldimage, () => this.testDrawFloodFill());
     }
 
     runtestShape(dldimage: boolean) {
-        testUtilCompareCanvasWithExpected(dldimage, () => this.testDrawShape());
+        TestUtilsCanvas.RenderAndCompareImages(dldimage, () => this.testDrawShape());
     }
 }
 
@@ -441,3 +445,4 @@ export class UI512TestPaintPresenter extends UI512Presenter {
         addDefaultListeners(this.listeners);
     }
 }
+
