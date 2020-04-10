@@ -5,14 +5,13 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
 /**
  * no test cases need to be here, it's used by testUI512TextEdit
- * 
+ *
  * send simulated events,
  * and we'll then compare a screenshot of the current state
  * with a known-good screenshot to see if we rendered what was expected
@@ -74,7 +73,7 @@ export class TestTextEventInteractions {
         }
 
         /* make it big enough to have a scrollbar */
-        let smallFld = cast(UI512ElTextField, pr.app.getEl('testCases_9'), );
+        let smallFld = cast(UI512ElTextField, pr.app.getEl('testCases_9'));
         smallFld.setDimensions(smallFld.x, smallFld.y, smallFld.w, 120);
         smallFld.setFmTxt(FormattedText.newFromSerialized('now ok'));
     }

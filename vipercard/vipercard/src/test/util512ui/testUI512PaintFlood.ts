@@ -7,21 +7,19 @@
 /* auto */ import { UI512PainterCvDataAndPatterns } from './../../ui512/draw/ui512DrawPainter';
 /* auto */ import { UI512IconManager } from './../../ui512/draw/ui512DrawIconManager';
 /* auto */ import { IconInfo } from './../../ui512/draw/ui512DrawIconClasses';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
 /**
  * no test cases here, used by testUI512paint
- * 
+ *
  * Test flood fill (paint bucket)
  *
  * We'll draw some 32x32 icons onto the screen,
  * run floodfill for solid black solid white and pattern,
  * and then compare the results with expected results.
  */
-
 
 export class FloodFillTest {
     readonly columns = [true, true, true, true, true];
@@ -64,7 +62,7 @@ export class FloodFillTest {
     }
 
     floodFillTest(canvas: CanvasWrapper) {
-        let iconManager = cast(UI512IconManager, getRoot().getDrawIcon(), );
+        let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
         let readyToLoad = true;
 
         /* draw a grid of icons onto the canvas */

@@ -15,7 +15,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * UI512DemoPaint
  *
@@ -44,13 +43,35 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         let grp = this.app.getGroup('grp');
 
         let testBtns = ['RunTest', 'DldImage', 'RunTestFill', 'DldImageFill', 'TestDrag'];
-        let layoutTestBtns = new GridLayout(clientRect[0] + 10, clientRect[1] + 330, 100, 15, testBtns, [1], 5, 5);
-        layoutTestBtns.createElems(this.app, grp, 'btn', UI512ElButton, () => {}, true, true);
+        let layoutTestBtns = new GridLayout(
+            clientRect[0] + 10,
+            clientRect[1] + 330,
+            100,
+            15,
+            testBtns,
+            [1],
+            5,
+            5
+        );
+        layoutTestBtns.createElems(
+            this.app,
+            grp,
+            'btn',
+            UI512ElButton,
+            () => {},
+            true,
+            true
+        );
 
         let elfloodtest = new UI512ElCanvasPiece('elfloodtest');
         grp.addElement(this.app, elfloodtest);
         elfloodtest.setCanvas(this.fltest.start());
-        elfloodtest.setDimensions(700, 50, elfloodtest.getCvWidth(), elfloodtest.getCvHeight());
+        elfloodtest.setDimensions(
+            700,
+            50,
+            elfloodtest.getCvWidth(),
+            elfloodtest.getCvHeight()
+        );
 
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseDown, UI512DemoPaint.respondMouseDown);
@@ -73,13 +94,41 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         pr.isDragging = false;
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawShape()), 'demopaint', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                            pr.test.testDrawShape()
+                        ),
+                    'demopaint',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnRunTest') {
-        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawShape()), 'demopaint', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                            pr.test.testDrawShape()
+                        ),
+                    'demopaint',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnDldImageFill') {
-        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawFloodFill()), 'demopaint', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                            pr.test.testDrawFloodFill()
+                        ),
+                    'demopaint',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnRunTestFill') {
-        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawFloodFill()), 'demopaint', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                            pr.test.testDrawFloodFill()
+                        ),
+                    'demopaint',
+                    RespondToErr.Alert
+                );
             }
         }
 
@@ -89,7 +138,7 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
     protected static respondOnIdle(pr: UI512DemoPaint, d: IdleEventDetails) {
         if (!pr.fltest.isDone) {
             let grp = pr.app.getGroup('grp');
-            let elfloodtest = cast(UI512ElCanvasPiece, grp.getEl('elfloodtest'), );
+            let elfloodtest = cast(UI512ElCanvasPiece, grp.getEl('elfloodtest'));
             pr.fltest.floodFillTest(elfloodtest.getCanvasForWrite());
         }
     }

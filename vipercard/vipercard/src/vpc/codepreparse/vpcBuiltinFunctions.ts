@@ -93,7 +93,7 @@ export class VpcBuiltinFunctions {
      * define the # of parameters for a "simpleMath"
      * a simplemath returns a number which we'll call a VpcValN on
      */
-    protected static simpleMath: { [key: string]: Function } = {
+    protected static simpleMath: { [key: string]: (f: number) => number } = {
         abs: (f: number) => Math.abs(f),
         atan: (f: number) => Math.atan(f),
         sin: (f: number) => Math.sin(f),

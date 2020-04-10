@@ -3,7 +3,7 @@
 /* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptSyntaxError } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcCodeProcessor, VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed } from './../codeparse/vpcTokens';
-/* auto */ import { VpcCodeLine, VpcCodeLineReference } from './../codepreparse/vpcPreparseCommon';
+/* auto */ import { ChvRuleFnType, VpcCodeLine, VpcCodeLineReference } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, markUI512Err } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
@@ -59,7 +59,7 @@ export class VpcCacheParsedCST {
     /**
      * call the parser to get a new cst
      */
-    protected callParser(ln: VpcCodeLine, firstRule: Function) {
+    protected callParser(ln: VpcCodeLine, firstRule: ChvRuleFnType) {
         let parsed: VpcParsed;
         try {
             /* setting input again is documented to reset the parser state */

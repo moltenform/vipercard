@@ -1,6 +1,6 @@
 
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { Util512, cast, castVerifyIsNum } from './../../ui512/utils/util512';
+/* auto */ import { Util512, cast, castVerifyIsNum, longstr } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
@@ -16,7 +16,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * UI512DemoText
  *
@@ -30,7 +29,8 @@
 export class UI512DemoText extends UI512Presenter {
     typeface = 'geneva';
     style: TextFontStyling = TextFontStyling.Default;
-    demoText = 'File Edit Tools\n123 This is really good, it looks right to me! :) ^^ ### mniv';
+    demoText =
+        'File Edit Tools\n123 This is really good, it looks right to me! :) ^^ ### mniv';
     mixSizes = false;
     testrunner: TestDrawUI512Text;
     init() {
@@ -46,19 +46,49 @@ export class UI512DemoText extends UI512Presenter {
         this.inited = true;
 
         /* choose a font */
-        let fonts = 'chicago,courier,geneva,new york,times,helvetica,monaco,symbol'.split(/,/);
+        let fonts = 'chicago,courier,geneva,new york,times,helvetica,monaco,symbol'.split(
+            /,/
+        );
         let layout = new GridLayout(65, 70, 70, 15, fonts, [1], 5, 5);
-        layout.createElems(this.app, grp, 'btnSetFont:', UI512ElButton, () => {}, true, true);
+        layout.createElems(
+            this.app,
+            grp,
+            'btnSetFont:',
+            UI512ElButton,
+            () => {},
+            true,
+            true
+        );
 
         /* choose a style */
         let styles = 'biuosdce'.split('');
         let layoutv = new GridLayout(70, 90, 40, 15, [1], styles, 5, 5);
-        layoutv.createElems(this.app, grp, 'btnSetStyle:', UI512ElButton, () => {}, true, true);
+        layoutv.createElems(
+            this.app,
+            grp,
+            'btnSetStyle:',
+            UI512ElButton,
+            () => {},
+            true,
+            true
+        );
 
         /* choose alteration */
-        let attributes = 'narrow,valign,halign,wrap,mixsizes,test,testdld1,testdld2,testdld3,testdld4'.split(/,/);
+        let attributes = longstr(
+            `narrow,valign,halign,wrap,mixsizes,
+        test,testdld1,testdld2,testdld3,testdld4`,
+            ''
+        ).split(/,/);
         layoutv = new GridLayout(130, 90, 65, 15, [1], attributes, 5, 5);
-        layoutv.createElems(this.app, grp, 'btnSetAttr:', UI512ElButton, () => {}, true, true);
+        layoutv.createElems(
+            this.app,
+            grp,
+            'btnSetAttr:',
+            UI512ElButton,
+            () => {},
+            true,
+            true
+        );
 
         /* caption: */
         let caption = new UI512ElButton('caption');
@@ -98,15 +128,16 @@ export class UI512DemoText extends UI512Presenter {
         }
 
         for (let size of listSizes) {
-            let font = this.typeface + '_' + size + '_' + textFontStylingToString(this.style);
+            let font =
+                this.typeface + '_' + size + '_' + textFontStylingToString(this.style);
             demo += UI512DrawText.setFont(this.demoText, font);
             demo += delim;
         }
 
-        let caption = cast(UI512ElButton, this.app.getEl('caption'), );
+        let caption = cast(UI512ElButton, this.app.getEl('caption'));
         caption.set('labeltext', s);
 
-        let mainfield = cast(UI512ElButton, this.app.getEl('mainfield'), );
+        let mainfield = cast(UI512ElButton, this.app.getEl('mainfield'));
         mainfield.set('labeltext', demo);
     }
 
@@ -119,13 +150,13 @@ export class UI512DemoText extends UI512Presenter {
             return;
         }
 
-        let mainfield = cast(UI512ElButton, pr.app.getEl('mainfield'), );
+        let mainfield = cast(UI512ElButton, pr.app.getEl('mainfield'));
         if (d.elClick.id.startsWith('btnSetFont:')) {
             pr.typeface = d.elClick.id.split(':')[1];
         } else if (d.elClick.id.startsWith('btnSetStyle:')) {
             let styleletter = d.elClick.id.split(':')[1];
             let curStyle = textFontStylingToString(pr.style);
-            if (curStyle.includes( '+' + styleletter)) {
+            if (curStyle.includes('+' + styleletter)) {
                 curStyle = curStyle.replace(new RegExp('\\+' + styleletter), styleletter);
             } else {
                 curStyle = curStyle.replace(new RegExp(styleletter), '+' + styleletter);
@@ -145,7 +176,11 @@ export class UI512DemoText extends UI512Presenter {
                 let newwidth = mainfield.w === 400 ? 100 : 400;
                 mainfield.setDimensions(mainfield.x, mainfield.y, newwidth, mainfield.h);
             } else if (attr.startsWith('test')) {
-                Util512Higher.syncToAsyncTransition(() => pr.runTest(attr), 'demotext', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () => pr.runTest(attr),
+                    'demotext',
+                    RespondToErr.Alert
+                );
             }
         }
 
@@ -161,10 +196,12 @@ export class UI512DemoText extends UI512Presenter {
         ];
 
         if (params.startsWith('testdld')) {
-            let testNumber = castVerifyIsNum(Util512.parseInt(params.substr('testdld'.length)));
-            return TestUtilsCanvas.RenderAndCompareImages(true, tests[testNumber])
+            let testNumber = castVerifyIsNum(
+                Util512.parseInt(params.substr('testdld'.length))
+            );
+            return TestUtilsCanvas.RenderAndCompareImages(true, tests[testNumber]);
         } else {
-            return TestUtilsCanvas.RenderAndCompareImages(false, tests)
+            return TestUtilsCanvas.RenderAndCompareImages(false, tests);
         }
     }
 }

@@ -1,7 +1,7 @@
 
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
-/* auto */ import { TemporarilySuspendEventsInterface } from './../draw/ui512Interfaces';
+/* auto */ import { FnEventCallback, TemporarilySuspendEventsInterface } from './../draw/ui512Interfaces';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -13,7 +13,7 @@
  */
 export abstract class TemporarilySuspendEvents
     implements TemporarilySuspendEventsInterface {
-    savedListeners: { [t: number]: Function[] } = {};
+    savedListeners: { [t: number]: FnEventCallback[] } = {};
     isStarted = false;
 
     /**

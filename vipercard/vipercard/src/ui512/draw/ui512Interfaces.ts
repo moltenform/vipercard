@@ -1,6 +1,6 @@
 
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, RepeatingTimer, VoidFn } from './../utils/util512Higher';
+/* auto */ import { RenderComplete, RepeatingTimer, UI512IsEventInterface, UI512IsPresenterInterface, VoidFn } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -80,6 +80,14 @@ export interface TemporarilySuspendEventsInterface {
 }
 
 /**
+ * stronger typing for event callbacks
+ */
+export type FnEventCallback = (
+    pr: UI512IsPresenterInterface,
+    d: UI512IsEventInterface
+) => void;
+
+/**
  * a Presenter receives Events,
  * updates Models accordingly,
  * and sends Models to ElementsView to be drawn.
@@ -94,7 +102,7 @@ export interface UI512PresenterInterface {
     trackMouse: number[];
     trackPressedBtns: boolean[];
     trackClickedIds: O<string>[];
-    listeners: { [t: number]: Function[] };
+    listeners: { [t: number]: FnEventCallback[] };
     callbackQueueFromAsyncs: O<VoidFn>[];
     needRedraw: boolean;
     inited: boolean;
@@ -103,7 +111,7 @@ export interface UI512PresenterInterface {
     importMouseTracking(other: UI512PresenterInterface): void;
     getCurrentFocus(): O<string>;
     setCurrentFocus(next: O<string>): void;
-    listenEvent(type: UI512EventType, fn: Function): void;
+    listenEvent(type: UI512EventType, fn: FnEventCallback): void;
     changeSeen(context: ChangeContext): void;
     render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete): void;
     invalidateAll(): void;

@@ -187,7 +187,7 @@ export class Util512 {
     }
 
     /**
-     * instead of a switch() or a map string->Function,
+     * instead of a switch() or a map string->function,
      * use the class itself. (we'll need to tell js minifiers not to minify method names).
      * example:
      * class MyClass {
@@ -244,7 +244,8 @@ export class Util512 {
     /**
      * returns list of keys.
      */
-    static getMapKeys<U>(map: { [key: string]: U }): string[] {
+    static getMapKeys(map: object): string[] {
+        // map: { [key: string]: U }
         let ret: string[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -586,7 +587,7 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
     /* using e[n] would work, but it's fragile if enum implementation changes. */
     for (let enumMember in Enm) {
         if (
-            (Enm[enumMember] as any) === n &&
+            (Enm[enumMember] as unknown) === n &&
             !enumMember.startsWith('__') &&
             !enumMember.startsWith('__AlternateForm__')
         ) {
@@ -936,8 +937,8 @@ export function assertEqWarn(
 }
 
 /**
-* get last of an array
-*/
+ * get last of an array
+ */
 export function last<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'Ou|empty array');
     return ar[ar.length - 1];

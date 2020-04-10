@@ -94,7 +94,7 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdSelect(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdShow(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdInternalvpcsort(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdSort(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdStart(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdStop(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdSubtract(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -186,7 +186,7 @@ export interface VisitingContext {
     RuleBuiltinCmdSelect: any[];
     RuleBuiltinCmdSet: any[];
     RuleBuiltinCmdShow: any[];
-    RuleBuiltinCmdInternalvpcsort: any[];
+    RuleBuiltinCmdSort: any[];
     RuleBuiltinCmdStart: any[];
     RuleBuiltinCmdStop: any[];
     RuleBuiltinCmdSubtract: any[];

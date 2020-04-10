@@ -506,7 +506,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             return this.H$BuildMap(ctx);
         }
 
-        RuleBuiltinCmdInternalvpcsort(ctx: VisitingContext): IntermedMapOfIntermedVals {
+        RuleBuiltinCmdSort(ctx: VisitingContext): IntermedMapOfIntermedVals {
             return this.H$BuildMap(ctx);
         }
 

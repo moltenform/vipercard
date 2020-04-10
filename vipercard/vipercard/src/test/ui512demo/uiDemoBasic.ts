@@ -14,7 +14,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * UI512DemoBasic
  *
@@ -61,8 +60,13 @@ export class UI512DemoBasic extends UI512Presenter {
             this.timer.update(d.milliseconds);
             if (this.timer.isDue()) {
                 this.timer.reset();
-                let getbtn2 = cast(UI512ElButton, this.app.getEl('btn2'), );
-                getbtn2.set('labeltext', getbtn2.getS('labeltext') === 'pulsating' ? 'pulsating...' : 'pulsating');
+                let getbtn2 = cast(UI512ElButton, this.app.getEl('btn2'));
+                getbtn2.set(
+                    'labeltext',
+                    getbtn2.getS('labeltext') === 'pulsating'
+                        ? 'pulsating...'
+                        : 'pulsating'
+                );
             }
         });
 
@@ -80,7 +84,7 @@ export class UI512DemoBasic extends UI512Presenter {
             if (d.elClick.id === 'btn1') {
                 pr.counter += 1;
 
-                let btn1 = cast(UI512ElButton, d.elClick, );
+                let btn1 = cast(UI512ElButton, d.elClick);
                 btn1.set('labeltext', 'counter: ' + pr.counter.toString());
                 btn1.setDimensions(btn1.x + 10, btn1.y + 10, btn1.w, btn1.h);
             }

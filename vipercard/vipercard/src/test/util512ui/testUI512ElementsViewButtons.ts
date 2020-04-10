@@ -30,9 +30,11 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512ElementsViewButtons', true);
 export let testCollectionUI512ElementsViewButtons = t;
 
-t.atest('async/Test Drawing Buttons', ()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
-new TestDrawUI512Buttons().testDrawButtons()
-))
+t.atest('async/Test Drawing Buttons', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+        new TestDrawUI512Buttons().testDrawButtons()
+    )
+);
 
 export class TestDrawUI512Buttons {
     uiContext = false;

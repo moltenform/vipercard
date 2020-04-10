@@ -1431,15 +1431,17 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.CONSUME2(tks.tkSyntaxPlaceholder);
         this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleObjectPart);
-        this.CONSUME1(tks.tkIdentifier);
-        this.SUBRULE1(this.RuleLvl4Expression);
         this.OPTION1(() => {
-            this.CONSUME1(tks.tkComma);
-            this.SUBRULE2(this.RuleLvl4Expression);
+            this.CONSUME1(tks.tkIdentifier);
+            this.SUBRULE1(this.RuleLvl4Expression);
+            this.OPTION2(() => {
+                this.CONSUME1(tks.tkComma);
+                this.SUBRULE2(this.RuleLvl4Expression);
+            });
         });
     });
 
-    RuleBuiltinCmdInternalvpcsort = this.RULE('RuleBuiltinCmdInternalvpcsort', () => {
+    RuleBuiltinCmdSort = this.RULE('RuleBuiltinCmdSort', () => {
         this.CONSUME1(tks.tkSyntaxPlaceholder);
         this.CONSUME2(tks.tkSyntaxPlaceholder);
         this.CONSUME3(tks.tkSyntaxPlaceholder);
@@ -1484,7 +1486,6 @@ export class VpcChvParser extends chevrotain.CstParser {
             this.CONSUME2(tks.tkStringLiteral);
             this.CONSUME3(tks.tkStringLiteral);
             this.CONSUME4(tks.tkStringLiteral);
-            this.CONSUME5(tks.tkStringLiteral);
         });
     });
 
@@ -1498,7 +1499,6 @@ export class VpcChvParser extends chevrotain.CstParser {
             this.CONSUME2(tks.tkStringLiteral);
             this.CONSUME3(tks.tkStringLiteral);
             this.CONSUME4(tks.tkStringLiteral);
-            this.CONSUME5(tks.tkStringLiteral);
         });
     });
 
@@ -1508,7 +1508,7 @@ export class VpcChvParser extends chevrotain.CstParser {
         this.CONSUME3(tks.tkSyntaxPlaceholder);
         this.SUBRULE1(this.RuleExpr);
         this.OPTION1(() => {
-            this.CONSUME1(tks.tkStringLiteral);
+            this.CONSUME1(tks.tkIdentifier);
         });
     });
 

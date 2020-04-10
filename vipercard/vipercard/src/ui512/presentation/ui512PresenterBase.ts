@@ -5,7 +5,7 @@
 /* auto */ import { Util512, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { TemporarilySuspendEvents } from './../menu/ui512SuspendEvents';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
-/* auto */ import { ChangeContext, ClipManagerInterface, MenuOpenState, UI512EventType, UI512PresenterInterface } from './../draw/ui512Interfaces';
+/* auto */ import { ChangeContext, ClipManagerInterface, FnEventCallback, MenuOpenState, UI512EventType, UI512PresenterInterface } from './../draw/ui512Interfaces';
 /* auto */ import { EventDetails, FocusChangedEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ViewDraw } from './../elements/ui512ElementView';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
@@ -33,7 +33,7 @@ export abstract class UI512PresenterBase
     trackMouse = [-1, -1];
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
-    listeners: { [t: number]: Function[] } = {};
+    listeners: { [t: number]: FnEventCallback[] } = {};
     callbackQueueFromAsyncs: O<VoidFn>[] = [];
     needRedraw = true;
     inited = false;

@@ -2,7 +2,7 @@
 /* auto */ import { VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcPhoneDial } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
-/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';
@@ -79,8 +79,8 @@ export class VpcScriptExecAsync {
         pendingOps: VpcPendingAsyncOps,
         blocked: ValHolder<AsyncCodeOpState>,
         outside: OutsideWorldReadWrite,
-        dlg: O<Function>,
-        cbStopCodeRunning: O<Function>,
+        dlg: O<FnAnswerMsgCallback>,
+        cbStopCodeRunning: O<VoidFn>,
         asyncOpId: string,
         prmpt: string,
         opt1: string,
@@ -125,8 +125,8 @@ export class VpcScriptExecAsync {
         pendingOps: VpcPendingAsyncOps,
         blocked: ValHolder<AsyncCodeOpState>,
         outside: OutsideWorldReadWrite,
-        dlg: O<Function>,
-        cbStopCodeRunning: O<Function>,
+        dlg: O<FnAskMsgCallback>,
+        cbStopCodeRunning: O<VoidFn>,
         asyncOpId: string,
         prmpt: string,
         defval: string
@@ -200,6 +200,15 @@ export class VpcPendingAsyncOps {
         return ret;
     }
 }
+
+export type FnAnswerMsgCallback = (
+    prompt: string,
+    fnOnResult: (n: number) => void,
+    choice1: string,
+    choice2: string,
+    choice3: string
+) => void;
+export type FnAskMsgCallback = (prompt: string, deftxt: string, fnOnResult: (ret: O<string>, n: number) => void) => void;
 
 export enum AsyncCodeOpState {
     AllowNext = 'AllowNext0',

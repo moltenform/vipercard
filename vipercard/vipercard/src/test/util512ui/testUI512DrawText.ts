@@ -26,13 +26,17 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512DrawText', true, true);
 export let testCollectionUI512DrawText = t;
 
-t.atest('async/Text Core Fonts', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw1())
+t.atest('async/Text Core Fonts', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw1())
 );
-t.atest('async/Text All Fonts', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw2())
+t.atest('async/Text All Fonts', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw2())
 );
-t.atest('async/Text Wrap, align, underlign', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw3())
+t.atest('async/Text Wrap, align, underlign', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw3())
 );
-t.atest('async/Text corner cases', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw4())
+t.atest('async/Text corner cases', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw4())
 );
 
 export class TestDrawUI512Text {
@@ -76,11 +80,13 @@ export class TestDrawUI512Text {
         );
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            complete.complete = bool(drawText.drawStringIntoBox(
-                this.getFormattedText(list, true),
-                canvas,
-                new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
-            ));
+            complete.complete = bool(
+                drawText.drawStringIntoBox(
+                    this.getFormattedText(list, true),
+                    canvas,
+                    new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
+                )
+            );
         };
 
         return new CanvasTestParams(
@@ -116,11 +122,13 @@ export class TestDrawUI512Text {
         this.addFonts(list, 'symbol', '12', 'biuosdce');
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            complete.complete = bool(drawText.drawStringIntoBox(
-                this.getFormattedText(list, true),
-                canvas,
-                new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
-            ));
+            complete.complete = bool(
+                drawText.drawStringIntoBox(
+                    this.getFormattedText(list, true),
+                    canvas,
+                    new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
+                )
+            );
         };
 
         return new CanvasTestParams(
@@ -146,19 +154,21 @@ export class TestDrawUI512Text {
         );
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
-            complete.complete = bool(drawText.drawStringIntoBox(
-                this.getFormattedText(list, false),
-                canvas,
-                new DrawTextArgs(
-                    this.margin,
-                    this.margin,
-                    imWidth - 5,
-                    imHeight - 5,
-                    true,
-                    true,
-                    true
+            complete.complete = bool(
+                drawText.drawStringIntoBox(
+                    this.getFormattedText(list, false),
+                    canvas,
+                    new DrawTextArgs(
+                        this.margin,
+                        this.margin,
+                        imWidth - 5,
+                        imHeight - 5,
+                        true,
+                        true,
+                        true
+                    )
                 )
-            ));
+            );
         };
 
         return new CanvasTestParams(

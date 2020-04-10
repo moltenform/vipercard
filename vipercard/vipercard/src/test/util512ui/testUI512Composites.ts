@@ -40,10 +40,11 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512Composites', true);
 export let testCollectionUI512Composites = t;
 
-t.atest('async/Test Drawing Composites', ()=>  TestUtilsCanvas.RenderAndCompareImages(false, () =>
+t.atest('async/Test Drawing Composites', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512Composites().testDrawComposites()
     )
-)
+);
 
 export class TestDrawUI512Composites {
     uiContext = false;

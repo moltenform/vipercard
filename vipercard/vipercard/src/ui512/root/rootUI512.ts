@@ -38,12 +38,12 @@ export class FullRootUI512 implements Root {
         this.domCanvas = new CanvasWrapper(domCanvas);
 
         /* this.presenter = new UI512DemoBasic(); */
-       /*  this.presenter = new UI512DemoButtons(); */
+        /*  this.presenter = new UI512DemoButtons(); */
         /*  this.presenter = new UI512DemoComposites(); */
         /*  this.presenter = new UI512DemoMenus();  */
-       /*  this.presenter = new UI512DemoPaint();  */
+        /*  this.presenter = new UI512DemoPaint();  */
         /*  this.presenter = new UI512DemoText();  */
-       /*  this.presenter = new UI512DemoTextEdit();  */
+        /*  this.presenter = new UI512DemoTextEdit();  */
         this.presenter = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
         UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor);

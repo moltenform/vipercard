@@ -857,7 +857,6 @@ listOfAllBuiltinCommandsInOriginalProduct['if'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappablechoose'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappabledomenu'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['replace'] = true;
-listOfAllBuiltinCommandsInOriginalProduct['internalvpcsort'] = true;
 
 export const listOfAllBuiltinEventsInOriginalProduct: { [key: string]: boolean } = {};
 
@@ -1000,7 +999,7 @@ export const tkstr = {
     RuleBuiltinCmdSelect: 'RuleBuiltinCmdSelect',
     RuleBuiltinCmdSet: 'RuleBuiltinCmdSet',
     RuleBuiltinCmdShow: 'RuleBuiltinCmdShow',
-    RuleBuiltinCmdInternalvpcsort: 'RuleBuiltinCmdInternalvpcsort',
+    RuleBuiltinCmdSort: 'RuleBuiltinCmdSort',
     RuleBuiltinCmdStart: 'RuleBuiltinCmdStart',
     RuleBuiltinCmdStop: 'RuleBuiltinCmdStop',
     RuleBuiltinCmdSubtract: 'RuleBuiltinCmdSubtract',

@@ -37,12 +37,16 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512Paint', true);
 export let testCollectionUI512Paint = t;
 
-t.atest('async/Test Shape', ()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
-new TestDrawUI512Paint().testDrawShape()
-))
-t.atest('async/Test Flood Fill', ()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
-new TestDrawUI512Paint().testDrawFloodFill()
-))
+t.atest('async/Test Shape', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+        new TestDrawUI512Paint().testDrawShape()
+    )
+);
+t.atest('async/Test Flood Fill', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+        new TestDrawUI512Paint().testDrawFloodFill()
+    )
+);
 
 export class TestDrawUI512Paint {
     uiContext = false;
@@ -232,7 +236,7 @@ export class TestDrawUI512Paint {
             5,
             5
         );
-        layout.combinations((n, column:any, type, bnds) => {
+        layout.combinations((n, column: any, type, bnds) => {
             let lineColor = lineColors[column];
             let fillColor = fillColors[column];
             let lineSize = lineSizes[column];
@@ -299,7 +303,7 @@ export class TestDrawUI512Paint {
             68,
             68,
             Util512.range(0, 20),
-            Util512.range(0,20),
+            Util512.range(0, 20),
             30,
             30
         );
@@ -430,4 +434,3 @@ export class UI512TestPaintPresenter extends UI512Presenter {
         addDefaultListeners(this.listeners);
     }
 }
-

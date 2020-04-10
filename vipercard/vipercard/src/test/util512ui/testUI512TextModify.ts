@@ -6,6 +6,8 @@
 /* auto */ import { TextFontStyling, specialCharFontChange, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
+import { VoidFn } from '../../ui512/utils/util512Higher';
+
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -241,12 +243,20 @@ t.test('changeTextInsert.TypedCharactersShouldMatchAdjacentFont', () => {
     );
 });
 
+type FnChangesSelection = (...args: unknown[]) => [FormattedText, number, number];
+
 /**
  * run fromPlainText to get the selcaret and selend markers,
  * then run the callback with the provided args,
  * then compare expected and received results
  */
-function runT(expected: string, input: string, fn: Function, ...moreargs: any[]) {
+
+function runT(
+    expected: string,
+    input: string,
+    fn: FnChangesSelection,
+    ...moreargs: unknown[]
+) {
     expected = expected.replace(/\|/g, '\n');
     input = input.replace(/\|/g, '\n');
     let [t, selcaret, selend] = FormattedTextFromPlainText.fromPlainText(input);

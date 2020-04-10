@@ -7,7 +7,7 @@
 /* auto */ import { ScrollbarImpl, fldIdToScrollbarPartId, getAmountIfScrollArrowClicked } from './ui512Scrollbar';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { MenuListeners } from './../menu/ui512MenuListeners';
-/* auto */ import { MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
+/* auto */ import { FnEventCallback, MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from './../menu/ui512Events';
@@ -461,7 +461,7 @@ export class UI512TextEvents {
 /**
  * default listeners for a presenter with text editing.
  */
-export function addDefaultListeners(listeners: { [t: number]: Function[] }) {
+export function addDefaultListeners(listeners: { [t: number]: FnEventCallback[] }) {
     let editTextBehavior = new UI512TextEvents();
     listeners[UI512EventType.MouseDown.valueOf()] = [
         BasicHandlers.trackMouseStatusMouseDown,

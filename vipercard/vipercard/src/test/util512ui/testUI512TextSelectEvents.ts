@@ -1202,14 +1202,14 @@ t.test('testSelectLineInField,selectByLinesWhichLine.FieldWithSomeEmptyLines', (
 function testChangeSel(
     expected: string,
     input: string,
-    fn: Function,
+    fn: (...args: unknown[]) => [number, number],
     ...moreargs: any[]
 ) {
     expected = expected.replace(/\|/g, '\n');
     input = input.replace(/\|/g, '\n');
     let [t, selcaret, selend] = FormattedTextFromPlainText.fromPlainText(input);
     let args = [t, selcaret, selend, ...moreargs];
-    let [gotSelCaret, gotSelEnd] = fn(... args);
+    let [gotSelCaret, gotSelEnd] = fn(...args);
     let [
         expectedTxt,
         expectedCaret,

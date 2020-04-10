@@ -1,7 +1,7 @@
 
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Assert';
-/* auto */ import { cast } from './../../ui512/utils/util512';
+/* auto */ import { cast, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -16,7 +16,6 @@
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * UI512DemoTextEdit
@@ -43,18 +42,42 @@ export class UI512DemoTextEdit extends UI512Presenter {
         let curX = 10;
         let grp = this.app.getGroup('grp');
 
-        /* run this after hitting toggle scroll a couple times to make sure we're not leaking elements */
-        /* i.e. if this number is continually increasing we are leaking elements somewhere */
-        let testBtns = ['RunTest', 'DldImage', 'ToggleScroll', 'Count Elems', 'WhichChoice'];
-        let layoutTestBtns = new GridLayout(clientRect[0] + 10, clientRect[1] + 330, 85, 15, testBtns, [1], 5, 5);
-        layoutTestBtns.createElems(this.app, grp, 'btn', UI512ElButton, () => {}, true, true);
+        /* run this after hitting toggle scroll a couple times
+        to make sure we're not leaking elements
+        i.e. if this number is continually increasing we
+        are leaking elements somewhere */
+        let testBtns = [
+            'RunTest',
+            'DldImage',
+            'ToggleScroll',
+            'Count Elems',
+            'WhichChoice'
+        ];
+        let layoutTestBtns = new GridLayout(
+            clientRect[0] + 10,
+            clientRect[1] + 330,
+            85,
+            15,
+            testBtns,
+            [1],
+            5,
+            5
+        );
+        layoutTestBtns.createElems(
+            this.app,
+            grp,
+            'btn',
+            UI512ElButton,
+            () => {},
+            true,
+            true
+        );
 
         let testSelByLines = new UI512ElTextField('testSelByLines');
         grp.addElement(this.app, testSelByLines);
         testSelByLines.setDimensions(485, 270, 170, 80);
-        let choices = 'choice 0\nchoice 1\nchoice 2 (another)\nchoice 3\nchoice 4\nchoice 5\nchoice 6\nchoice 7'.split(
-            '\n'
-        );
+        let choices = longstr(`choice 0,choice 1,choice
+        2 (another),choice 3,choice 4,choice 5,choice 6,choice 7`).split(',');
         UI512ElTextField.setListChoices(testSelByLines, choices);
 
         testSelByLines.set('scrollbar', true);
@@ -74,22 +97,33 @@ export class UI512DemoTextEdit extends UI512Presenter {
         this.rebuildFieldScrollbars();
     }
 
-    
-
-
     protected static respondMouseUp(pr: UI512DemoTextEdit, d: MouseUpEventDetails) {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-                Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawTextEdit()), 'demotextedit', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                            pr.test.testDrawTextEdit()
+                        ),
+                    'demotextedit',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnRunTest') {
-                Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawTextEdit()), 'demotextedit', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                            pr.test.testDrawTextEdit()
+                        ),
+                    'demotextedit',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnToggleScroll') {
                 pr.test.toggleScroll(pr);
             } else if (d.elClick.id === 'btnCount Elems') {
                 console.log(`# of elements === ${pr.app.getGroup('grp').countElems()}`);
             } else if (d.elClick.id === 'btnWhichChoice') {
                 let grp = pr.app.getGroup('grp');
-                let el = cast(UI512ElTextField, grp.getEl('testSelByLines'), );
+                let el = cast(UI512ElTextField, grp.getEl('testSelByLines'));
                 let gel = new UI512ElTextFieldAsGeneric(el);
                 let whichLine = TextSelModify.selectByLinesWhichLine(gel);
                 console.log(`the chosen line is: ${whichLine} `);

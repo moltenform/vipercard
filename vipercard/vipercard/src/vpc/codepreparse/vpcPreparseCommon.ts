@@ -113,6 +113,8 @@ export class LoopLimit {
     }
 }
 
+export type ChvRuleFnType = (idxInCallingRule?: number, ...args: any[]) => chevrotain.CstNode;
+
 /**
  * a line of code.
  * can span multiple user-typed lines if the \ escape across lines,
@@ -128,7 +130,7 @@ export class VpcCodeLine {
     readonly firstToken: ChvITk;
 
     /* parsing entry point */
-    protected parseRule: O<Function>;
+    protected parseRule: O<ChvRuleFnType>;
 
     /* list of tokens, if any, that should be sent to parser */
     excerptToParse: ChvITk[] = [];
@@ -167,7 +169,7 @@ export class VpcCodeLine {
     /**
      * set parser entry point
      */
-    setParseRule(fn: O<Function>) {
+    setParseRule(fn: O<ChvRuleFnType>) {
         this.parseRule = fn;
 
         /* while we're here, let's store 'allImages' as a string

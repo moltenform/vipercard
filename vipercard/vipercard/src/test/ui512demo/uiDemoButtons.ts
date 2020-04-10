@@ -16,7 +16,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * UI512DemoButtons
  *
@@ -48,12 +47,35 @@ export class UI512DemoButtons extends UI512Presenter {
         this.testrunner = new TestDrawUI512Buttons();
         this.testrunner.uiContext = true;
         let list: UI512ElButton[] = [];
-        this.testrunner.addBackgroundButtons(this.app, grp, list, clientRect[0], clientRect[1]);
-        this.testrunner.addButtons(this.app, grp, list, clientRect[0], clientRect[1], false, false, 'btns');
+        this.testrunner.addBackgroundButtons(
+            this.app,
+            grp,
+            list,
+            clientRect[0],
+            clientRect[1]
+        );
+        this.testrunner.addButtons(
+            this.app,
+            grp,
+            list,
+            clientRect[0],
+            clientRect[1],
+            false,
+            false,
+            'btns'
+        );
 
         let testBtns = ['DldImage', 'RunTest', 'Disable'];
         let layoutTestBtns = new GridLayout(710, 378, 65, 15, testBtns, [1], 5, 5);
-        layoutTestBtns.createElems(this.app, grp, 'btn', UI512ElButton, () => {}, true, true);
+        layoutTestBtns.createElems(
+            this.app,
+            grp,
+            'btn',
+            UI512ElButton,
+            () => {},
+            true,
+            true
+        );
 
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseUp, UI512DemoButtons.respondMouseUp);
@@ -72,17 +94,30 @@ export class UI512DemoButtons extends UI512Presenter {
 
         console.log('clicked on ' + d.elClick.id);
         if (d.elClick.id === 'btnDldImage') {
-            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.testrunner.testDrawButtons()), 'demobuttons', RespondToErr.Alert)
-
+            Util512Higher.syncToAsyncTransition(
+                () =>
+                    TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                        pr.testrunner.testDrawButtons()
+                    ),
+                'demobuttons',
+                RespondToErr.Alert
+            );
         } else if (d.elClick.id === 'btnRunTest') {
-            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.testrunner.testDrawButtons()), 'demobuttons', RespondToErr.Alert)
+            Util512Higher.syncToAsyncTransition(
+                () =>
+                    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                        pr.testrunner.testDrawButtons()
+                    ),
+                'demobuttons',
+                RespondToErr.Alert
+            );
         } else if (d.elClick.id === 'btnDisable') {
             pr.drawEnabledStyle = !pr.drawEnabledStyle;
             let grp = pr.app.getGroup('grpmain');
             for (let el of grp.iterEls()) {
                 if (el.id.startsWith('btnnumber')) {
-                    cast(UI512ElButton, el, ).set('enabled', pr.drawEnabledStyle);
-                    cast(UI512ElButton, el, ).set('enabledstyle', pr.drawEnabledStyle);
+                    cast(UI512ElButton, el).set('enabled', pr.drawEnabledStyle);
+                    cast(UI512ElButton, el).set('enabledstyle', pr.drawEnabledStyle);
                 }
             }
         }

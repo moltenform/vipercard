@@ -265,7 +265,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected buildBtnFromScratch(vel: VpcElButton, currentCardId: string) {
         let target = new UI512ElButton(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        let keys = Util512.getMapKeys(vel as any);
+        let keys = Util512.getMapKeys(vel);
         for (let i = 0, len = keys.length; i < len; i++) {
             let prop = keys[i];
             if (prop.startsWith('_') && prop[1] !== '_') {
@@ -282,7 +282,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     protected buildFldFromScratch(vel: VpcElField, currentCardId: string) {
         let target = new UI512ElTextField(this.velIdToElId(vel.id));
         this.grp.addElement(this.vci.UI512App(), target);
-        let keys = Util512.getMapKeys(vel as any);
+        let keys = Util512.getMapKeys(vel);
         for (let i = 0, len = keys.length; i < len; i++) {
             let prop = keys[i];
             if (prop.startsWith('_') && prop[1] !== '_') {

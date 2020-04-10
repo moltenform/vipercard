@@ -1,7 +1,7 @@
 
 /* auto */ import { MenuConsts, ScreenConsts, ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
+/* auto */ import { RenderComplete, VoidFn, getRoot } from './../utils/util512Higher';
 /* auto */ import { O, assertTrue, assertTrueWarn, bool } from './../utils/util512Assert';
 /* auto */ import { Util512, cast, slength } from './../utils/util512';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './ui512ElementTextField';
@@ -322,8 +322,8 @@ export class UI512ViewDraw {
     renderOpaqueButton(
         b: UI512ViewDrawBorders,
         el: UI512ElementButtonBase,
-        fnNotHighlight: Function,
-        fnHighlight: Function,
+        fnNotHighlight: VoidFn,
+        fnHighlight: VoidFn,
         decorationSize: number
     ) {
         if (el.getB('highlightactive') && el.getN('iconnumberwhenhighlight') === -1) {
@@ -648,7 +648,7 @@ export class UI512ViewDraw {
     protected getBorderAndMarginForField(
         b: UI512ViewDrawBorders,
         style: number
-    ): [O<Function>, number, number] {
+    ): [O<VoidFn>, number, number] {
         switch (style) {
             case UI512FldStyle.Transparent:
                 return [undefined, 3, 1];
@@ -670,7 +670,7 @@ export class UI512ViewDraw {
     getSubRectForField(
         b: UI512ViewDrawBorders,
         el: UI512ElTextField
-    ): [O<Function>, O<number[]>] {
+    ): [O<VoidFn>, O<number[]>] {
         let [fnborder, padX, padY] = this.getBorderAndMarginForField(b, el.getN('style'));
         if (el.getB('scrollbar')) {
             /* make it smaller to make room for the scrollbar */

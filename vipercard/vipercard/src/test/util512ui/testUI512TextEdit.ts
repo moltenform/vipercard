@@ -36,9 +36,11 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512TextEdit', true);
 export let testCollectionUI512TextEdit = t;
 
-t.atest('async/Test Drawing Text Edits', () => TestUtilsCanvas.RenderAndCompareImages(false, () =>
-new TestDrawUI512TextEdit().testDrawTextEdit()
-))
+t.atest('async/Test Drawing Text Edits', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+        new TestDrawUI512TextEdit().testDrawTextEdit()
+    )
+);
 
 export class TestDrawUI512TextEdit {
     uiContext = false;
@@ -121,8 +123,8 @@ export class TestDrawUI512TextEdit {
             80,
             80,
             20,
-            Util512.range(0,5),
-            Util512.range(0,2),
+            Util512.range(0, 5),
+            Util512.range(0, 2),
             10,
             100 - 20
         );
@@ -136,8 +138,8 @@ export class TestDrawUI512TextEdit {
             100,
             80,
             60,
-            Util512.range(0,5),
-            Util512.range(0,2),
+            Util512.range(0, 5),
+            Util512.range(0, 2),
             10,
             40
         );
@@ -409,7 +411,7 @@ te, nam ne habeo officiis argumentum, cu pri homero democritum. No illum
 moderatius sea, vim no equidem nusquam complectitur.{{NEWLINE}}Autem dolor principes
 ea duo. In sea suas tation regione, cum ei maiorum volumus reformidans.
 Ei mei noluisse oportere iudicabit, ex ius summo officiis, feugait blandit
-nominavi id vel. Purto accusamus eu ius, an posse probatus similique 
+nominavi id vel. Purto accusamus eu ius, an posse probatus similique
 qui.{{NEWLINE}}Ut nibh maiestatis ius, sea dolorum facilisi ei. Cu cum tritani quaeque
 pertinacia, causae delectus delicata pro te, graeco scribentur
 reprehendunt pri eu. Corpora iracundia adolescens sit ei, in duo

@@ -14,7 +14,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * UI512DemoMenus
  *
@@ -55,7 +54,10 @@ export class UI512DemoMenus extends UI512Presenter {
 
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseUp, UI512DemoMenus.respondMouseUp);
-        this.listenEvent(UI512EventType.MenuItemClicked, UI512DemoMenus.respondMenuItemClick);
+        this.listenEvent(
+            UI512EventType.MenuItemClicked,
+            UI512DemoMenus.respondMenuItemClick
+        );
         this.rebuildFieldScrollbars();
     }
 
@@ -74,13 +76,26 @@ export class UI512DemoMenus extends UI512Presenter {
     protected static respondMouseUp(pr: UI512DemoMenus, d: MouseUpEventDetails) {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btn1') {
-                let btn1 = cast(UI512ElButton, d.elClick, );
+                let btn1 = cast(UI512ElButton, d.elClick);
                 btn1.set('labeltext', 'changed');
             } else if (d.elClick.id === 'btnDldImage') {
-            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawMenus()), 'demomenus', RespondToErr.Alert)
-
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                            pr.test.testDrawMenus()
+                        ),
+                    'demomenus',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnRunTest') {
-            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawMenus()), 'demomenus', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                            pr.test.testDrawMenus()
+                        ),
+                    'demomenus',
+                    RespondToErr.Alert
+                );
             }
         }
     }

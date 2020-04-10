@@ -11,7 +11,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * UI512DemoComposites
  *
@@ -37,8 +36,25 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
         let grp = this.app.getGroup('grp');
 
         let testBtns = ['WhichChecked', 'RunTest', 'DldImage', 'Dlg1', 'Dlg2', 'DlgAsk'];
-        let layoutTestBtns = new GridLayout(clientRect[0] + 10, clientRect[1] + 330, 100, 15, testBtns, [1], 5, 5);
-        layoutTestBtns.createElems(this.app, grp, 'btn', UI512ElButton, () => {}, true, true);
+        let layoutTestBtns = new GridLayout(
+            clientRect[0] + 10,
+            clientRect[1] + 330,
+            100,
+            15,
+            testBtns,
+            [1],
+            5,
+            5
+        );
+        layoutTestBtns.createElems(
+            this.app,
+            grp,
+            'btn',
+            UI512ElButton,
+            () => {},
+            true,
+            true
+        );
 
         this.invalidateAll();
         this.listenEvent(UI512EventType.MouseUp, UI512DemoComposites.respondMouseUp);
@@ -48,10 +64,23 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
     protected static respondMouseUp(pr: UI512DemoComposites, d: MouseUpEventDetails) {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawComposites()), 'democomposite', RespondToErr.Alert)
-        ;
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                            pr.test.testDrawComposites()
+                        ),
+                    'democomposite',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnRunTest') {
-            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawComposites()), 'democomposite', RespondToErr.Alert)
+                Util512Higher.syncToAsyncTransition(
+                    () =>
+                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                            pr.test.testDrawComposites()
+                        ),
+                    'democomposite',
+                    RespondToErr.Alert
+                );
             } else if (d.elClick.id === 'btnWhichChecked') {
                 console.log('Fruit: ' + pr.testRadioBtns.getWhichChecked(pr.app));
                 console.log('Food: ' + pr.testCheckBtns.getWhichChecked(pr.app));
@@ -60,17 +89,23 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
                 pr.testModalDlg.dlgType = UI512CompStdDialogType.Answer;
                 pr.testModalDlg.btnLabels = ['', '', ''];
                 pr.testModalDlg.create(pr, pr.app);
-                pr.testModalDlg.showStandardModalDialog(pr, pr.app, n => pr.gotFromDlg(n));
+                pr.testModalDlg.showStandardModalDialog(pr, pr.app, n =>
+                    pr.gotFromDlg(n)
+                );
             } else if (d.elClick.id === 'btnDlg2') {
                 pr.testModalDlg.dlgType = UI512CompStdDialogType.Answer;
                 pr.testModalDlg.btnLabels = ['Ch A', 'Ch B', 'Ch C'];
                 pr.testModalDlg.create(pr, pr.app);
-                pr.testModalDlg.showStandardModalDialog(pr, pr.app, n => pr.gotFromDlg(n));
+                pr.testModalDlg.showStandardModalDialog(pr, pr.app, n =>
+                    pr.gotFromDlg(n)
+                );
             } else if (d.elClick.id === 'btnDlgAsk') {
                 pr.testModalDlg.dlgType = UI512CompStdDialogType.Ask;
                 pr.testModalDlg.btnLabels = ['OK', 'Cancel'];
                 pr.testModalDlg.create(pr, pr.app);
-                pr.testModalDlg.showStandardModalDialog(pr, pr.app, n => pr.gotFromDlg(n));
+                pr.testModalDlg.showStandardModalDialog(pr, pr.app, n =>
+                    pr.gotFromDlg(n)
+                );
             }
 
             pr.testCheckBtns.respondMouseUp(pr.app, d);

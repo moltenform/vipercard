@@ -35,7 +35,7 @@ export async function assertThrowsAsync<T>(
 /**
  * assert that an exception is thrown, with a certain message
  */
-export function assertThrows(msgWithMark: string, expectedErr: string, fn: Function) {
+export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidFn) {
     let msg: O<string>;
     let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
     try {

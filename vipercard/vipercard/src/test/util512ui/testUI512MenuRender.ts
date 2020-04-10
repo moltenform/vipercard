@@ -30,13 +30,15 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512MenuRender', true);
 export let testCollectionUI512MenuRender = t;
 
-t.atest('async/Test Drawing Menus',()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
-new TestDrawUI512Menus().testDrawMenus()
-))
+t.atest('async/Test Drawing Menus', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+        new TestDrawUI512Menus().testDrawMenus()
+    )
+);
 
 export class TestDrawUI512Menus {
     uiContext = false;
- 
+
     getDefn(): UI512MenuDefn[] {
         return [
             ['mnuHeaderOS|icon:001:80:26', ['|lngPlaceholder|']],

@@ -2,13 +2,14 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
-/* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
+/* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, VpcVisualEffectSpec, VpcVisualEffectSpeed, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
+/* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, assertTrue, checkIsProductionBuild, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString, longstr } from './../../ui512/utils/util512';
 
@@ -19,11 +20,11 @@
  * execute a single line of code
  */
 export class ExecuteStatement {
-    cbAskMsg: O<(prompt: string, deftxt: string, fnOnResult: (ret: O<string>, n: number) => void) => void>;
-    cbAnswerMsg: O<(prompt: string, fnOnResult: (n: number) => void, choice1: string, choice2: string, choice3: string) => void>;
+    cbAskMsg: O<FnAskMsgCallback>;
+    cbAnswerMsg: O<FnAnswerMsgCallback>;
 
     outside: OutsideWorldReadWrite;
-    cbStopCodeRunning: O<() => void>;
+    cbStopCodeRunning: O<VoidFn>;
     pendingOps: VpcPendingAsyncOps;
     h = new VpcScriptExecuteStatementHelpers();
 

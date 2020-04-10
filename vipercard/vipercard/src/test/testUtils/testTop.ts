@@ -2,7 +2,13 @@
 /* auto */ import { AsyncVoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
+/* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
+/* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../util512/testUtil512Higher';
+/* auto */ import { testCollectionUtil512Class } from './../util512/testUtil512Class';
+/* auto */ import { testCollectionUtil512Assert } from './../util512/testUtil512Assert';
+/* auto */ import { testCollectionUtil512 } from './../util512/testUtil512';
 /* auto */ import { testCollectionUI512TextSelectEvents } from './../util512ui/testUI512TextSelectEvents';
 /* auto */ import { testCollectionUI512TextModify } from './../util512ui/testUI512TextModify';
 /* auto */ import { testCollectionUI512TextEdit } from './../util512ui/testUI512TextEdit';
@@ -14,7 +20,7 @@
 /* auto */ import { testCollectionUI512DrawText } from './../util512ui/testUI512DrawText';
 /* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
 /* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
-/* auto */ import { testCollectionExternalChevrotain } from './../util512/testExternalChevrotain';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../util512/testExternalLibs';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -27,37 +33,40 @@ export class SimpleUtil512Tests {
         // order tests from high to low
         let colls = [
             testCollectionUI512CodeEditor,
-testCollectionUI512Composites,
-testCollectionUI512DrawText,
-testCollectionUI512Elements,
-testCollectionUI512ElementsViewButtons,
-testCollectionUI512FormattedText,
-testCollectionUI512MenuRender,
-testCollectionUI512Paint,
-testCollectionUI512TextEdit,
-testCollectionUI512TextModify,
-testCollectionUI512TextSelectEvents,
+            testCollectionUI512Composites,
+            testCollectionUI512DrawText,
+            testCollectionUI512Elements,
+            testCollectionUI512ElementsViewButtons,
+            testCollectionUI512FormattedText,
+            testCollectionUI512MenuRender,
+            testCollectionUI512Paint,
+            testCollectionUI512TextEdit,
+            testCollectionUI512TextModify,
+            testCollectionUI512TextSelectEvents,
 
-            //~ testCollectionUI512TextModify,
-            //~ testCollectionUI512FormattedText,
-            //~ testCollectionUtilsCanvasWrapper,
-            //~ testCollectionUtilsDraw,
-            //~ testCollectionExampleAsyncTests,
-            //~ testCollectionUtil512LessUsefulLibs,
-            //~ testCollectionUtil512Higher,
-            //~ testCollectionUtil512Class,
-            //~ testCollectionUtil512,
-            //~ testCollectionUtil512Assert,
-            testCollectionExternalChevrotain,
-            //~ testCollectionExternalLibs
+            testCollectionUtilsCanvasWrapper,
+            testCollectionUtilsDraw,
+            testCollectionExampleAsyncTests,
+            testCollectionUtil512LessUsefulLibs,
+            testCollectionUtil512Higher,
+            testCollectionUtil512Class,
+            testCollectionUtil512,
+            testCollectionUtil512Assert,
+            testCollectionExternalLibs
         ];
 
         // run tests from low level to high level
         colls.reverse();
         let colNamesSeen = new Map<string, boolean>();
         let mapSeen = new Map<string, boolean>();
-        let countTotal = colls.filter(item=>includeSlow || !item.slow).map(item => item.tests.length).reduce(Util512.add);
-        countTotal += colls.filter(item=>includeSlow || !item.slow).map(item => item.atests.length).reduce(Util512.add);
+        let countTotal = colls
+            .filter(item => includeSlow || !item.slow)
+            .map(item => item.tests.length)
+            .reduce(Util512.add);
+        countTotal += colls
+            .filter(item => includeSlow || !item.slow)
+            .map(item => item.atests.length)
+            .reduce(Util512.add);
         let counter = new ValHolder(1);
         for (let coll of colls) {
             if (colNamesSeen.has(coll.name.toLowerCase())) {
