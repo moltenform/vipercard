@@ -4,7 +4,7 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
-/* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct, tks } from './../codeparse/vpcTokens';
+/* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
@@ -16,7 +16,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum, last, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrFallback, getStrToEnum, last, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /**
@@ -218,7 +218,7 @@ export class VpcExecFrameStack {
      */
     protected runOneLineImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, blocked: ValHolder<AsyncCodeOpState>) {
         let parsed = this.cacheParsedCST.getParsedLine(curLine);
-        let methodName = 'visit' + getEnumToStrOrUnknown(VpcLineCategory, curLine.ctg);
+        let methodName = 'visit' + getEnumToStrOrFallback(VpcLineCategory, curLine.ctg);
         Util512.callAsMethodOnClass('VpcExecFrameStack', this, methodName, [curFrame, curLine, parsed, blocked], false);
 
         /* make sure we're not stuck on the same line again */
@@ -489,8 +489,8 @@ export class VpcExecFrameStack {
     protected helpGetEvaledArgs(parsed: VpcParsed, curLine: VpcCodeLine): VpcVal[] {
         let evaluated = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
         checkThrow(evaluated instanceof IntermedMapOfIntermedVals, '7o|expected IntermedMapOfIntermedVals');
-        if (evaluated.vals['RuleExpr'] && evaluated.vals['RuleExpr'].length) {
-            let ret = evaluated.vals['RuleExpr'] as VpcVal[];
+        if (evaluated.vals[tkstr.RuleExpr] && evaluated.vals[tkstr.RuleExpr].length) {
+            let ret = evaluated.vals[tkstr.RuleExpr] as VpcVal[];
             assertTrue(ret !== undefined, '5Q|expected RuleExpr');
             assertTrue(
                 ret.every(v => v instanceof VpcVal),
@@ -627,7 +627,7 @@ end ${newHandlerName}
         in the message chain. */
         let newScriptMessage = Util512.shallowClone(curFrame.message) as VpcScriptMessage;
         newScriptMessage.targetId = velTargetId;
-        newScriptMessage.msgName = getEnumToStrOrUnknown(VpcBuiltinMsg, msg);
+        newScriptMessage.msgName = getEnumToStrOrFallback(VpcBuiltinMsg, msg);
         newScriptMessage.msg = msg;
         let newFrame = this.pushStackFrame(newHandlerName, newScriptMessage, code, linref, meId, statedParentId);
         newFrame.args = [];

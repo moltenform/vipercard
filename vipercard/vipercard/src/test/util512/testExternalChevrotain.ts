@@ -261,8 +261,8 @@ function realParse(input: string) {
     let b = a;
 
     // Visit
-    //const ast = visitor.visit(cst);
-    //return ast;
+    const ast = visitor.visit(cst);
+    return ast;
 }
 
 t.test('TestRealParser', () => {

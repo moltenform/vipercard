@@ -2,7 +2,7 @@
 /* auto */ import { VpcBuiltinMsg } from './vpcEnums';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, UI512AttachableErr, assertTrue, assertTrueWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrUnknown, slength } from './../../ui512/utils/util512';
+/* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength } from './../../ui512/utils/util512';
 
 /**
  * container that can be read from.
@@ -75,7 +75,7 @@ export class VpcScriptMessage {
             this.msgName = msgName;
         } else {
             this.msg = handler;
-            this.msgName = getEnumToStrOrUnknown(VpcBuiltinMsg, handler, '');
+            this.msgName = getEnumToStrOrFallback(VpcBuiltinMsg, handler, '');
             assertTrue(slength(this.msgName), '4i|got', this.msgName);
         }
     }

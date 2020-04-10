@@ -6,7 +6,7 @@
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { O, bool, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { GenericTextField } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -116,7 +116,7 @@ export class VpcElField extends VpcElSizable {
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElField) => {
-                return getEnumToStrOrUnknown(VpcFldStyleInclScroll, me._style);
+                return getEnumToStrOrFallback(VpcFldStyleInclScroll, me._style);
             }
         ];
 

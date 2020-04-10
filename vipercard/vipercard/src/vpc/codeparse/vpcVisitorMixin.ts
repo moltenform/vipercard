@@ -3,6 +3,7 @@
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
+/* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType, VpcOpCtg } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
@@ -58,12 +59,12 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectBtn(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Btn);
-            return this.help$ObjBtnOrFld(ctx, 'tkBtn', ret);
+            return this.help$ObjBtnOrFld(ctx, tkstr.tkBtn, ret);
         }
 
         RuleObjectFld(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Fld);
-            return this.help$ObjBtnOrFld(ctx, 'tkFld', ret);
+            return this.help$ObjBtnOrFld(ctx, tkstr.tkFld, ret);
         }
 
         help$ObjBtnOrFld(ctx: VisitingContext, tokenName: string, ret: RequestedVelRef): RequestedVelRef {
@@ -74,7 +75,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.parentCdInfo.lookByRelative = OrdinalOrPosition.This;
             }
 
-            let isBg = tokenName === 'tkFld';
+            let isBg = tokenName === tkstr.tkFld;
             if (ctx.tkBg[0]) {
                 isBg = true;
             }
@@ -221,13 +222,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         */
         RuleOrdinal(ctx: VisitingContext): OrdinalOrPosition {
             let image = ctx.tkOrdinal[0].image;
-            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RuleOrdinal', image);
+            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, tkstr.RuleOrdinal, image);
             return ret;
         }
 
         RulePosition(ctx: VisitingContext): OrdinalOrPosition {
             let image = ctx.tkPosition[0].image;
-            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, 'RulePosition', image);
+            let ret = getStrToEnum<OrdinalOrPosition>(OrdinalOrPosition, tkstr.RulePosition, image);
             return ret;
         }
 
@@ -288,8 +289,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
-            checkThrow(ctx.tkChunkGranularity[0], 'RuleHChunk');
-            ret.type = getStrToEnum<VpcChunkType>(VpcChunkType, 'RuleHChunk', ctx.tkChunkGranularity[0].image);
+            checkThrow(ctx.tkChunkGranularity[0], tkstr.RuleHChunk);
+            ret.type = getStrToEnum<VpcChunkType>(VpcChunkType, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
             if (ctx.RuleOrdinal[0]) {
                 ret.ordinal = this.visit(ctx.RuleOrdinal[0]);
             } else {
@@ -399,7 +400,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleFnCallNumberOf_9(ctx: VisitingContext): VpcVal {
             /* put the number of card buttons into x */
-            let evaledvpc = this.Helper$ReadVpcVal(ctx, 'RuleLvl3Expression', 'RuleFnCallNumberOf_9');
+            let evaledvpc = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl3Expression, tkstr.RuleFnCallNumberOf_9);
             let str = evaledvpc.readAsString();
             let stype = ctx.tkChunkGranularity[0].image;
             let type = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', stype);

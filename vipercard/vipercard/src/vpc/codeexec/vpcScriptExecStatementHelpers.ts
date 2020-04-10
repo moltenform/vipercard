@@ -1,5 +1,6 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
@@ -14,8 +15,8 @@ export class VpcScriptExecuteStatementHelpers {
      * implementation of add, subtract, etc
      */
     goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
-        let val = throwIfUndefined(this.findChildVal(vals, 'RuleLvl1Expression'), '5M|');
-        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '5L|');
+        let val = throwIfUndefined(this.findChildVal(vals, tkstr.RuleLvl1Expression), '5M|');
+        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, tkstr.RuleHContainer), '5L|');
 
         let getResultAsString = (s: string) => {
             let f1 = VpcValS(s).readAsStrictNumeric();
@@ -31,7 +32,7 @@ export class VpcScriptExecuteStatementHelpers {
      * click, drag implementation
      */
     clickOrDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, expectSee: string) {
-        let nm = 'RuleLvl4Expression';
+        let nm = tkstr.RuleLvl4Expression;
         let argsGiven: number[] = [];
         let ar = vals.vals[nm];
         if (ar && ar.length) {
@@ -50,7 +51,7 @@ export class VpcScriptExecuteStatementHelpers {
 
         checkThrow(argsGiven.length > 1, 'JN|not enough args');
         let mods = ModifierKeys.None;
-        let allIdentifiers = this.getAllChildStrs(vals, 'tkIdentifier', true);
+        let allIdentifiers = this.getAllChildStrs(vals, tkstr.tkIdentifier, true);
         let sawExpected = false;
         for (let i = 0, len = allIdentifiers.length; i < len; i++) {
             let id = allIdentifiers[i];
@@ -73,7 +74,7 @@ export class VpcScriptExecuteStatementHelpers {
      * get all string literal params
      */
     getAllStringLiteralParams(vals: IntermedMapOfIntermedVals, nm: string): string[] {
-        let strs = this.getAllChildStrs(vals, 'tkStringLiteral', false);
+        let strs = this.getAllChildStrs(vals, tkstr.tkStringLiteral, false);
         for (let i = 0; i < strs.length; i++) {
             strs[i] = strs[i].toLowerCase().replace(/"/g, '');
         }

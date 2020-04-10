@@ -11,7 +11,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Productname';
 /* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { Util512, checkThrowEq, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Patterns } from './../../ui512/draw/ui512DrawPatterns';
@@ -109,7 +109,7 @@ export class VpcElProductOpts extends VpcElBase {
             PrpTyp.Str,
             (me: VpcElProductOpts) => {
                 let curs = UI512CursorAccess.getCursor();
-                let ret = getEnumToStrOrUnknown(UI512Cursors, curs);
+                let ret = getEnumToStrOrFallback(UI512Cursors, curs);
                 return ret.toLowerCase();
             }
         ];

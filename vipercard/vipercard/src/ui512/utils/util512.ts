@@ -589,7 +589,7 @@ export function findEnumToStr<E>(Enm: TypeLikeAnEnum<E>, n: number): O<string> {
 /**
  * findEnumToStr, but returns a fallback value.
  */
-export function getEnumToStrOrUnknown<E>(
+export function getEnumToStrOrFallback<E>(
     Enm: TypeLikeAnEnum<E>,
     n: number,
     fallback = 'Unknown'

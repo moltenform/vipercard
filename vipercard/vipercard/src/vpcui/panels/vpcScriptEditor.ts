@@ -168,13 +168,27 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             );
         } else {
             /* check for syntax err */
-            let codeStatus = this.vci.getCodeExec().getCompiledScript(vel.id, vel.getS('script'));
-            if (codeStatus instanceof VpcScriptErrorBase) {
+            let err: O<Error>;
+            try {
+                let rawCode = vel.getS('script');
+                this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
+            } catch (e) {
+                err = e;
+            }
+
+            if (err instanceof VpcScriptErrorBase) {
                 this.setStatusLabeltext(
                     'lngSyntax error:',
-                    codeStatus.lineNumber,
-                    cleanExceptionMsg(codeStatus.details),
-                    cleanExceptionMsg(codeStatus.details)
+                    err.lineNumber,
+                    cleanExceptionMsg(err.details),
+                    cleanExceptionMsg(err.details)
+                );
+            } else if (err) {
+                this.setStatusLabeltext(
+                    'lngFindhandler unknown error:',
+                    1,
+                    cleanExceptionMsg(err.toString()),
+                    cleanExceptionMsg(err.toString())
                 );
             } else {
                 this.setStatusLabeltext('', undefined, '', '');
@@ -222,8 +236,8 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.saveChangesToModel(this.vci.UI512App(), false);
 
         /* how to check for syntax errors... try finding a handler on it? */
-        let code = vel.getS('script');
-        this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(code, 'anyHandlerName', vel.id);
+        let rawCode = vel.getS('script');
+        this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
 
         /* hide the "just encountered" message. */
         /* seems ok to do -- also might be possible for user to click hide. */

@@ -104,7 +104,8 @@ export interface VpcCompleteVisitor {
 }
 
 export interface VisitingContext {
-    //[index: string]: any;
+    // you can add something like [index: string]: any if you want to
+    // silence type errors during development
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];

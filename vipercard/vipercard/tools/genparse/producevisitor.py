@@ -108,10 +108,10 @@ class MakingVisitors(object):
         for item in options:
             type = determineEntry(item, rule.origLine, otherOk=False)
             if type == 'rule':
-                branches.append(f'if (ctx.{renderRuleForVisitor(item)}[0]) {{\n return this.visit(ctx.{renderRuleForVisitor(item)}[0]); \n}}')
+                branches.append(f'if (ctx.{renderRuleForVisitor(item)} && ctx.{renderRuleForVisitor(item)}[0]) {{\n return this.visit(ctx.{renderRuleForVisitor(item)}[0]); \n}}')
             elif type == 'token':
                 maybeGetImage = '.image' if returnType=='string' else ''
-                branches.append(f'if (ctx.{renderTokenForVisitor(item)}[0]) {{\n return ctx.{renderTokenForVisitor(item)}[0]{maybeGetImage}; \n}}')
+                branches.append(f'if (ctx.{renderTokenForVisitor(item)} && ctx.{renderTokenForVisitor(item)}[0]) {{\n return ctx.{renderTokenForVisitor(item)}[0]{maybeGetImage}; \n}}')
         out.append('\n else \n'.join(branches))
         out.append(" else { throw makeVpcInternalErr('OR in " + rule.name + ", no branch found'); }")
         out.append('}')
@@ -137,14 +137,16 @@ class MakingVisitors(object):
     def goMakeBuildExpr(self, rule, visitorOpts, returnType):
         template = """
         %METHODNAME%(ctx: VisitingContext): VpcVal {
-            if (!ctx.%NEXTRULE%.length || ctx.%OPERATORNAME%.length + 1 !== ctx.%NEXTRULE%.length) {
-                throw makeVpcInternalErr(`%METHODNAME%:${ctx.%OPERATORNAME%.length},${ctx.%NEXTRULE%.length}.`);
+            let operatorList = ctx.%OPERATORNAME%
+            let operatorListLen = operatorList ? operatorList.length : 0
+            if (!ctx.%NEXTRULE% || !ctx.%NEXTRULE%.length || operatorListLen + 1 !== ctx.%NEXTRULE%.length) {
+                throw makeVpcInternalErr(`%METHODNAME%:${operatorListLen},${ctx.%NEXTRULE%.length}.`);
             }
 
             let total = this.visit(ctx.%NEXTRULE%[0]) as VpcVal;
             checkThrow(total instanceof VpcVal, '%METHODNAME%: first not a vpcval');
             const oprulecategory = VpcOpCtg.%OPCATEGORY%;
-            for (let i = 0; i < ctx.%OPERATORNAME%.length; i++) {
+            for (let i = 0; i < operatorListLen; i++) {
                 let whichop = %GETOPIMAGE%;
                 checkThrow(isString(whichop), '%METHODNAME%: op not a string');
                 let val1 = total;

@@ -1,6 +1,6 @@
 
 /* auto */ import { UI512ErrorHandling, assertTrue, bool } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrUnknown, getStrToEnum, isString, last, longstr, slength, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, isString, last, longstr, slength, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
 let t = new SimpleUtil512TestCollection('testCollectionUtil512');
@@ -69,36 +69,36 @@ t.test('findStrToEnum.UseAlts', () => {
     assertEq(TestEnum.Third, findStrToEnum(TestEnum, 'Thd'), 'Dd|');
 });
 t.test('getEnumToStr.FoundPrimary', () => {
-    assertEq('first', getEnumToStrOrUnknown(TestEnum, TestEnum.First), 'Dc|');
-    assertEq('second', getEnumToStrOrUnknown(TestEnum, TestEnum.Second), 'Db|');
-    assertEq('third', getEnumToStrOrUnknown(TestEnum, TestEnum.Third), 'Da|');
+    assertEq('first', getEnumToStrOrFallback(TestEnum, TestEnum.First), 'Dc|');
+    assertEq('second', getEnumToStrOrFallback(TestEnum, TestEnum.Second), 'Db|');
+    assertEq('third', getEnumToStrOrFallback(TestEnum, TestEnum.Third), 'Da|');
 });
 t.test('getEnumToStr.AlternatesHaveSameVal', () => {
     assertEq(
         'first',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__TheFirst),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__TheFirst),
         'DZ|'
     );
     assertEq(
         'second',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Scnd),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Scnd),
         'DY|'
     );
     assertEq(
         'third',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__AlternateForm__Thd),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__AlternateForm__Thd),
         'DX|'
     );
 });
 t.test('getEnumToStr.NotFound', () => {
-    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, -1), 'DW|');
-    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, 999), 'DV|');
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, -1), 'DW|');
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, 999), 'DV|');
 });
 t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
-    assertEq('Unknown', getEnumToStrOrUnknown(TestEnum, TestEnum.__isUI512Enum), 'DU|');
+    assertEq('Unknown', getEnumToStrOrFallback(TestEnum, TestEnum.__isUI512Enum), 'DU|');
     assertEq(
         'Unknown',
-        getEnumToStrOrUnknown(TestEnum, TestEnum.__UI512EnumCapitalize),
+        getEnumToStrOrFallback(TestEnum, TestEnum.__UI512EnumCapitalize),
         'DT|'
     );
 });

@@ -30,6 +30,16 @@ def goTokensDefnOne(st):
     # add to list of alsoReservedWordsList
     addToListOfReservedWords(st, out, st.tokens)
     
+    # this simply helps us syntax-check for spelling typos
+    out.append('export const tkstr = {')
+    for rule in st.rules:
+        out.append(f"    Rule{rule.name}: 'Rule{rule.name}',")
+    for tk in st.tokens:
+        out.append(f"    {tk.name}: '{tk.name}',")
+    out.append('}')
+    out.append('')
+    out.append('')
+    
     return out
 
 def getPatternFromTk(tk):

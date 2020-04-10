@@ -4,7 +4,7 @@
 /* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { bool, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, getEnumToStrOrUnknown, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
 
@@ -73,7 +73,7 @@ export class VpcElButton extends VpcElSizable {
         getters['style'] = [
             PrpTyp.Str,
             (me: VpcElButton) => {
-                let ret = getEnumToStrOrUnknown(VpcBtnStyle, me._style);
+                let ret = getEnumToStrOrFallback(VpcBtnStyle, me._style);
                 return ret.replace(/osstandard/g, 'standard').replace(/osdefault/g, 'default');
             }
         ];
