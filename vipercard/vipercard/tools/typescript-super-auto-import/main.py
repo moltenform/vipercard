@@ -5,9 +5,12 @@
 from ts_exports_read import *
 from ts_layers_read import *
 from ts_parsing import *
+from ts_add_copyright import *
 
 # extensionInImportStatement = '.ts'
 extensionInImportStatement = ''
+# addCopyright = None
+addCopyright = '/* (c) 2019 moltenform(Ben Fisher) */'
 
 def go(dir):
     assertTrueMsg(files.isdir(dir), 'directory not found', dir)
@@ -81,10 +84,11 @@ def autoAddImports(srcdirectory, layers, useSingleQuotes):
         if newLinesToAdd:
             linesOrigFile = getFileLines(layerfullpath, False)
             linesWithNoAuto = [line for line in linesOrigFile if not (line.startswith('/* auto */ import') and '{' in line )]
-            assertTrueMsg(linesWithNoAuto[0]=='', 'expected file to start with an empty line ', layer[0], file=layer[0])
-            addNewLine = linesWithNoAuto[1]!=''
+            assertTrueMsg(linesWithNoAuto[0] == '', 'expected file to start with an empty line ', layer[0], file=layer[0])
+            addNewLine = linesWithNoAuto[1] != ''
             if addNewLine:
                 newLinesToAdd.append('')
+            addCopyrightIfRequested(layerfullpath, linesWithNoAuto, newLinesToAdd, addCopyright)
             linesWithNoAuto[1:1] = newLinesToAdd
             
             alltxtNew = '\n'.join(linesWithNoAuto)

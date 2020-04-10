@@ -19,6 +19,9 @@
 /* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrFallback, getStrToEnum, last, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the GPLv3 license */
+
 /**
  * messages and our support for them
  *

@@ -11,6 +11,9 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, assertTrue, bool, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
 
+/* (c) 2019 moltenform(Ben Fisher) */
+/* Released under the MIT license */
+
 /**
  * an "execution frame"
  * holding local variables and the offset to the current line of code
