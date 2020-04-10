@@ -1,4 +1,5 @@
 
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { cast } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -76,10 +77,10 @@ export class UI512DemoMenus extends UI512Presenter {
                 let btn1 = cast(UI512ElButton, d.elClick, );
                 btn1.set('labeltext', 'changed');
             } else if (d.elClick.id === 'btnDldImage') {
-        TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawMenus());
+            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawMenus()), 'demomenus', RespondToErr.Alert)
 
             } else if (d.elClick.id === 'btnRunTest') {
-        TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawMenus());
+            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawMenus()), 'demomenus', RespondToErr.Alert)
             }
         }
     }

@@ -27,20 +27,15 @@
  * interacting with the buttons has the expected behavior
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512ElementsViewButtons');
+let t = new SimpleUtil512TestCollection('testCollectionUI512ElementsViewButtons', true);
 export let testCollectionUI512ElementsViewButtons = t;
+
+t.atest('async/Test Drawing Buttons', ()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
+new TestDrawUI512Buttons().testDrawButtons()
+))
 
 export class TestDrawUI512Buttons {
     uiContext = false;
-    tests = [
-        'async/Test Drawing Buttons',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                this.testDrawButtons()
-            );
-        }
-    ];
-
     readonly stylesToTest: number[] = [
         UI512BtnStyle.Rectangle,
         UI512BtnStyle.Transparent,

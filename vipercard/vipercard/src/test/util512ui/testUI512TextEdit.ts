@@ -33,19 +33,16 @@
  * interacting with the text fields has the expected behavior
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512TextEdit');
+let t = new SimpleUtil512TestCollection('testCollectionUI512TextEdit', true);
 export let testCollectionUI512TextEdit = t;
+
+t.atest('async/Test Drawing Text Edits', () => TestUtilsCanvas.RenderAndCompareImages(false, () =>
+new TestDrawUI512TextEdit().testDrawTextEdit()
+))
 
 export class TestDrawUI512TextEdit {
     uiContext = false;
-    tests = [
-        'async/Test Drawing Text Edits',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                this.testDrawTextEdit()
-            );
-        }
-    ];
+
     addElements(pr: UI512Presenter, bounds: number[]) {
         const b0 = 45;
         const b1 = 45;
@@ -405,20 +402,20 @@ const loremText = longstr(`Lorem ipsum dolor sit amet, dolore pericula ne mel,
 erat feugait placerat ut sit, id vel persecuti constituam. Nibh probo et pro,
 ei quo case deterruisset. Nibh impetus per at. Oporteat scripserit has te,
 sea te nostrud pertinacia. Per deleniti deseruisse an, et usu singulis
-necessitatibus. Antiopam efficiendi an mei.\nCum cu ignota timeam consequat,
+necessitatibus. Antiopam efficiendi an mei.{{NEWLINE}}Cum cu ignota timeam consequat,
 salutandi contentiones nam an, ut apeirian deserunt conclusionemque eum. Eu
 singulis deterruisset vix, sed in sumo suas facete. Qui reprimique dissentiunt
 te, nam ne habeo officiis argumentum, cu pri homero democritum. No illum
-moderatius sea, vim no equidem nusquam complectitur.\nAutem dolor principes
+moderatius sea, vim no equidem nusquam complectitur.{{NEWLINE}}Autem dolor principes
 ea duo. In sea suas tation regione, cum ei maiorum volumus reformidans.
 Ei mei noluisse oportere iudicabit, ex ius summo officiis, feugait blandit
-nominavi id vel. Purto accusamus eu ius, an posse probatus similique qui.\n
-Ut nibh maiestatis ius, sea dolorum facilisi ei. Cu cum tritani quaeque
+nominavi id vel. Purto accusamus eu ius, an posse probatus similique 
+qui.{{NEWLINE}}Ut nibh maiestatis ius, sea dolorum facilisi ei. Cu cum tritani quaeque
 pertinacia, causae delectus delicata pro te, graeco scribentur
 reprehendunt pri eu. Corpora iracundia adolescens sit ei, in duo
 commune reprimique. In aliquam graecis eum, fugit utamur et sea.
 In molestie platonem conceptam mel. Ea hinc sensibus eam, aeque
-expetendis reprimique et vim.\nSumo saepe sit ne. Ex facilisi pericula
+expetendis reprimique et vim.{{NEWLINE}}Sumo saepe sit ne. Ex facilisi pericula
 constituam pri, et pro habemus definiebas, aliquam electram ex nam.
 Magna nostro moderatius ei sea, cu quo nostro theophrastus. Tation
 blandit ei per, odio dolorem has at. At brute alterum vituperatoribus

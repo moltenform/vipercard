@@ -10,10 +10,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512TextEditInteractions');
-export let testCollectionUI512TextEditInteractions = t;
-
 /**
+ * no test cases need to be here, it's used by testUI512TextEdit
+ * 
  * send simulated events,
  * and we'll then compare a screenshot of the current state
  * with a known-good screenshot to see if we rendered what was expected

@@ -159,7 +159,7 @@ assertEq('btn2', el?.id, 'AK|');
 
 /* where only second element is */
 el = app.coordsToElement(105, 205);
-assertEq('btn2', el!.id, 'AJ|');
+assertEq('btn2', el?.id, 'AJ|');
 
 /* where no element is */
 el = app.coordsToElement(115, 215);

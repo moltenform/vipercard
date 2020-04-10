@@ -177,9 +177,9 @@ export class TestUtilsCanvas {
             let promises = fnGetDrawParams.map(f =>
                 TestUtilsCanvas.RenderAndCompareImage(download, f)
             );
-            await Promise.all(promises);
+            return Promise.all(promises);
         } else {
-            await TestUtilsCanvas.RenderAndCompareImage(download, fnGetDrawParams);
+            return TestUtilsCanvas.RenderAndCompareImage(download, fnGetDrawParams);
         }
     }
 

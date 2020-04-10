@@ -219,7 +219,7 @@ export class UI512AutoIndent {
             /* make a record of the indentation state of the 'current' line where the caret it */
             if (i === currentline - 1 && !isContinuation && isBlockStart) {
                 lastUnclosedDelta = 1;
-                lastUnclosedMatch = last(stack);
+                lastUnclosedMatch = stack.length ? last(stack) : undefined;
             }
 
             /* decrease the indentation if we ended a block */

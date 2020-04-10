@@ -281,6 +281,7 @@ export enum RespondToErr {
  */
 export type VoidFn = () => void;
 export type AsyncVoidFn = () => Promise<void>;
+export type AsyncFn = () => Promise<unknown>;
 
 /**
  * root (top-level) object

@@ -1209,7 +1209,7 @@ function testChangeSel(
     input = input.replace(/\|/g, '\n');
     let [t, selcaret, selend] = FormattedTextFromPlainText.fromPlainText(input);
     let args = [t, selcaret, selend, ...moreargs];
-    let [gotSelCaret, gotSelEnd] = fn.apply(null, args);
+    let [gotSelCaret, gotSelEnd] = fn(... args);
     let [
         expectedTxt,
         expectedCaret,

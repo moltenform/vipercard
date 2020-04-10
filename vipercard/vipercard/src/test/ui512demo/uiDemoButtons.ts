@@ -1,6 +1,7 @@
 
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { cast } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -71,9 +72,10 @@ export class UI512DemoButtons extends UI512Presenter {
 
         console.log('clicked on ' + d.elClick.id);
         if (d.elClick.id === 'btnDldImage') {
-            TestUtilsCanvas.RenderAndCompareImages(true, () => pr.testrunner.testDrawButtons());
+            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.testrunner.testDrawButtons()), 'demobuttons', RespondToErr.Alert)
+
         } else if (d.elClick.id === 'btnRunTest') {
-            TestUtilsCanvas.RenderAndCompareImages(false, () => pr.testrunner.testDrawButtons());
+            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.testrunner.testDrawButtons()), 'demobuttons', RespondToErr.Alert)
         } else if (d.elClick.id === 'btnDisable') {
             pr.drawEnabledStyle = !pr.drawEnabledStyle;
             let grp = pr.app.getGroup('grpmain');

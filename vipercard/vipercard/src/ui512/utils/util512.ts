@@ -936,7 +936,7 @@ export function assertEqWarn(
 }
 
 /**
-get last of an array
+* get last of an array
 */
 export function last<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'Ou|empty array');

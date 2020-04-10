@@ -34,25 +34,18 @@
  * and click Download Image to update the test
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512Paint');
+let t = new SimpleUtil512TestCollection('testCollectionUI512Paint', true);
 export let testCollectionUI512Paint = t;
+
+t.atest('async/Test Shape', ()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
+new TestDrawUI512Paint().testDrawShape()
+))
+t.atest('async/Test Flood Fill', ()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
+new TestDrawUI512Paint().testDrawFloodFill()
+))
 
 export class TestDrawUI512Paint {
     uiContext = false;
-    tests = [
-        'async/Test Shape',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                this.testDrawShape()
-            );
-        },
-        'async/Test Flood Fill',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                this.testDrawFloodFill()
-            );
-        }
-    ];
 
     protected testSetPixelAndSerialize(
         app: UI512Application,
@@ -421,14 +414,6 @@ export class TestDrawUI512Paint {
             floodfilltest.layout.getTotalHeight(),
             this.uiContext
         );
-    }
-
-    runtestFloodFill(dldimage: boolean) {
-        TestUtilsCanvas.RenderAndCompareImages(dldimage, () => this.testDrawFloodFill());
-    }
-
-    runtestShape(dldimage: boolean) {
-        TestUtilsCanvas.RenderAndCompareImages(dldimage, () => this.testDrawShape());
     }
 }
 

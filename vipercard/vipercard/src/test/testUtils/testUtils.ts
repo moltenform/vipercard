@@ -1,5 +1,5 @@
 
-/* auto */ import { AsyncVoidFn, VoidFn } from './../../ui512/utils/util512Higher';
+/* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { util512Sort } from './../../ui512/utils/util512';
 
@@ -78,14 +78,14 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 export class SimpleUtil512TestCollection {
     constructor(public name: string, public async = false, public slow = false) {}
     tests: [string, VoidFn][] = [];
-    atests: [string, AsyncVoidFn][] = [];
+    atests: [string, AsyncFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
         assertTrue(!this.async, 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
-    public atest(s: string, fn: AsyncVoidFn) {
+    public atest(s: string, fn: AsyncFn) {
         assertTrue(this.async, 'Os|');
         this.atests.push([s, fn]);
         return this;

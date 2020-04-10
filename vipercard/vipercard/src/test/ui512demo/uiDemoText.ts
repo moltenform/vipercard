@@ -1,4 +1,5 @@
 
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { Util512, cast, castVerifyIsNum } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -144,14 +145,14 @@ export class UI512DemoText extends UI512Presenter {
                 let newwidth = mainfield.w === 400 ? 100 : 400;
                 mainfield.setDimensions(mainfield.x, mainfield.y, newwidth, mainfield.h);
             } else if (attr.startsWith('test')) {
-                pr.runTest(attr);
+                Util512Higher.syncToAsyncTransition(() => pr.runTest(attr), 'demotext', RespondToErr.Alert)
             }
         }
 
         pr.drawTextDemo();
     }
 
-    runTest(params: string) {
+    async runTest(params: string) {
         let tests = [
             () => this.testrunner.draw1(),
             () => this.testrunner.draw2(),
@@ -161,9 +162,9 @@ export class UI512DemoText extends UI512Presenter {
 
         if (params.startsWith('testdld')) {
             let testNumber = castVerifyIsNum(Util512.parseInt(params.substr('testdld'.length)));
-            TestUtilsCanvas.RenderAndCompareImages(true, tests[testNumber])
+            return TestUtilsCanvas.RenderAndCompareImages(true, tests[testNumber])
         } else {
-            TestUtilsCanvas.RenderAndCompareImages(false, tests)
+            return TestUtilsCanvas.RenderAndCompareImages(false, tests)
         }
     }
 }

@@ -1,4 +1,5 @@
 
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertEq, cast } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
@@ -7,6 +8,7 @@
 /* auto */ import { UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
 /* auto */ import { FloodFillTest } from './../util512ui/testUI512PaintFlood';
 /* auto */ import { TestDrawUI512Paint, UI512TestPaintPresenter } from './../util512ui/testUI512Paint';
 
@@ -71,13 +73,13 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         pr.isDragging = false;
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-                pr.test.runtestShape(true);
+        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawShape()), 'demopaint', RespondToErr.Alert)
             } else if (d.elClick.id === 'btnRunTest') {
-                pr.test.runtestShape(false);
+        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawShape()), 'demopaint', RespondToErr.Alert)
             } else if (d.elClick.id === 'btnDldImageFill') {
-                pr.test.runtestFloodFill(true);
+        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawFloodFill()), 'demopaint', RespondToErr.Alert)
             } else if (d.elClick.id === 'btnRunTestFill') {
-                pr.test.runtestFloodFill(false);
+        Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawFloodFill()), 'demopaint', RespondToErr.Alert)
             }
         }
 

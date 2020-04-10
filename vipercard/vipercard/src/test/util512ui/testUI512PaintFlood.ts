@@ -13,6 +13,8 @@
 /* Released under the GPLv3 license */
 
 /**
+ * no test cases here, used by testUI512paint
+ * 
  * Test flood fill (paint bucket)
  *
  * We'll draw some 32x32 icons onto the screen,
@@ -20,8 +22,6 @@
  * and then compare the results with expected results.
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512PaintFlood');
-export let testCollectionUI512PaintFlood = t;
 
 export class FloodFillTest {
     readonly columns = [true, true, true, true, true];

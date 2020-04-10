@@ -27,20 +27,16 @@
  * interacting with the menus has the expected behavior
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512MenuRender');
+let t = new SimpleUtil512TestCollection('testCollectionUI512MenuRender', true);
 export let testCollectionUI512MenuRender = t;
+
+t.atest('async/Test Drawing Menus',()=>TestUtilsCanvas.RenderAndCompareImages(false, () =>
+new TestDrawUI512Menus().testDrawMenus()
+))
 
 export class TestDrawUI512Menus {
     uiContext = false;
-    tests = [
-        'async/Test Drawing Menus',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                this.testDrawMenus()
-            );
-        }
-    ];
-
+ 
     getDefn(): UI512MenuDefn[] {
         return [
             ['mnuHeaderOS|icon:001:80:26', ['|lngPlaceholder|']],

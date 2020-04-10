@@ -1,4 +1,5 @@
 
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512CompStdDialogType } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
@@ -47,9 +48,10 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
     protected static respondMouseUp(pr: UI512DemoComposites, d: MouseUpEventDetails) {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-        TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawComposites());
+            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawComposites()), 'democomposite', RespondToErr.Alert)
+        ;
             } else if (d.elClick.id === 'btnRunTest') {
-        TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawComposites());
+            Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawComposites()), 'democomposite', RespondToErr.Alert)
             } else if (d.elClick.id === 'btnWhichChecked') {
                 console.log('Fruit: ' + pr.testRadioBtns.getWhichChecked(pr.app));
                 console.log('Food: ' + pr.testCheckBtns.getWhichChecked(pr.app));

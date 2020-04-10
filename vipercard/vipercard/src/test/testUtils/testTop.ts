@@ -3,6 +3,17 @@
 /* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
+/* auto */ import { testCollectionUI512TextSelectEvents } from './../util512ui/testUI512TextSelectEvents';
+/* auto */ import { testCollectionUI512TextModify } from './../util512ui/testUI512TextModify';
+/* auto */ import { testCollectionUI512TextEdit } from './../util512ui/testUI512TextEdit';
+/* auto */ import { testCollectionUI512Paint } from './../util512ui/testUI512Paint';
+/* auto */ import { testCollectionUI512MenuRender } from './../util512ui/testUI512MenuRender';
+/* auto */ import { testCollectionUI512FormattedText } from './../util512ui/testUI512FormattedText';
+/* auto */ import { testCollectionUI512ElementsViewButtons } from './../util512ui/testUI512ElementsViewButtons';
+/* auto */ import { testCollectionUI512Elements } from './../util512ui/testUI512Elements';
+/* auto */ import { testCollectionUI512DrawText } from './../util512ui/testUI512DrawText';
+/* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
+/* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
 /* auto */ import { testCollectionExternalChevrotain } from './../util512/testExternalChevrotain';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -15,6 +26,18 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
+            testCollectionUI512CodeEditor,
+testCollectionUI512Composites,
+testCollectionUI512DrawText,
+testCollectionUI512Elements,
+testCollectionUI512ElementsViewButtons,
+testCollectionUI512FormattedText,
+testCollectionUI512MenuRender,
+testCollectionUI512Paint,
+testCollectionUI512TextEdit,
+testCollectionUI512TextModify,
+testCollectionUI512TextSelectEvents,
+
             //~ testCollectionUI512TextModify,
             //~ testCollectionUI512FormattedText,
             //~ testCollectionUtilsCanvasWrapper,
@@ -25,7 +48,7 @@ export class SimpleUtil512Tests {
             //~ testCollectionUtil512Class,
             //~ testCollectionUtil512,
             //~ testCollectionUtil512Assert,
-            testCollectionExternalChevrotain
+            testCollectionExternalChevrotain,
             //~ testCollectionExternalLibs
         ];
 
@@ -33,8 +56,8 @@ export class SimpleUtil512Tests {
         colls.reverse();
         let colNamesSeen = new Map<string, boolean>();
         let mapSeen = new Map<string, boolean>();
-        let countTotal = colls.map(item => item.tests.length).reduce(Util512.add);
-        countTotal += colls.map(item => item.atests.length).reduce(Util512.add);
+        let countTotal = colls.filter(item=>includeSlow || !item.slow).map(item => item.tests.length).reduce(Util512.add);
+        countTotal += colls.filter(item=>includeSlow || !item.slow).map(item => item.atests.length).reduce(Util512.add);
         let counter = new ValHolder(1);
         for (let coll of colls) {
             if (colNamesSeen.has(coll.name.toLowerCase())) {

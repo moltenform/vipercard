@@ -26,27 +26,18 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512DrawText', true, true);
 export let testCollectionUI512DrawText = t;
 
+t.atest('async/Text Core Fonts', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw1())
+);
+t.atest('async/Text All Fonts', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw2())
+);
+t.atest('async/Text Wrap, align, underlign', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw3())
+);
+t.atest('async/Text corner cases', () => TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw4())
+);
+
 export class TestDrawUI512Text {
     uiContext = false;
     readonly margin = 1;
-    tests = [
-        'async/Text Core Fonts',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () => this.draw1());
-        },
-        'async/Text All Fonts',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () => this.draw2());
-        },
-        'async/Text Wrap, align, underlign',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () => this.draw3());
-        },
-        'async/Text corner cases',
-        async () => {
-            await TestUtilsCanvas.RenderAndCompareImages(false, () => this.draw4());
-        }
-    ];
 
     addFonts(listFonts: string[], sFaces: string, sSizes: string, sStyles: string) {
         let faces = sFaces.split(',');

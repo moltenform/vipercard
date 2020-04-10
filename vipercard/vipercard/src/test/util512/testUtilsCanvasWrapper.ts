@@ -33,7 +33,7 @@ t.atest('Simple Draw Rectangles', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('Simple Draw Rectangles including no-op drawing', async () => {
     let draw = (canvas: CanvasWrapper, _unused_complete: RenderComplete) => {
@@ -61,7 +61,7 @@ t.atest('Simple Draw Rectangles including no-op drawing', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('Should fail with 85 differences if shifted', async () => {
     let draw = (canvas: CanvasWrapper, _unused_complete: RenderComplete) => {
@@ -83,7 +83,7 @@ t.atest('Should fail with 85 differences if shifted', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('1 different pixel', async () => {
     t.say('Should fail with 1 different pixel if black pixel turned white');
@@ -107,7 +107,7 @@ t.atest('1 different pixel', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('2 different pxls (NW)', async () => {
     t.say('Should fail with 2 different pxls if white pxl turned black (NW)');
@@ -132,7 +132,7 @@ t.atest('2 different pxls (NW)', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('2 different pxls (NE)', async () => {
     t.say('Should fail with 2 different pxls if white pxl turned black (NE)');
@@ -157,7 +157,7 @@ t.atest('2 different pxls (NE)', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('2 different pixels (SW)', async () => {
     t.say('Should fail with 2 different pixels if white pixel turned black (SW)');
@@ -182,7 +182,7 @@ t.atest('2 different pixels (SW)', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('2 different pixels (SE)', async () => {
     t.say('Should fail with 2 different pixels if white pixel turned black (SE)');
@@ -227,7 +227,7 @@ t.atest('2 different pixels (SE)', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 t.atest('continue looping until renderComplete', async () => {
     t.say(
@@ -260,7 +260,7 @@ t.atest('continue looping until renderComplete', async () => {
         );
     };
 
-    await TestUtilsCanvas.RenderAndCompareImages(false, getParams);
+    return TestUtilsCanvas.RenderAndCompareImages(false, getParams);
 });
 
 const imWidth = 300;

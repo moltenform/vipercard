@@ -40,11 +40,10 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512Composites', true);
 export let testCollectionUI512Composites = t;
 
-t.atest('async/Test Drawing Composites', async ()=> {
-    return TestUtilsCanvas.RenderAndCompareImages(false, () =>
+t.atest('async/Test Drawing Composites', ()=>  TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512Composites().testDrawComposites()
-    );
-})
+    )
+)
 
 export class TestDrawUI512Composites {
     uiContext = false;
@@ -154,7 +153,6 @@ end1`.replace(/\r\n/g, '\n')
         tmpCanvas: CanvasWrapper,
         w: number,
         h: number,
-        i: number,
         complete: RenderComplete
     ) {
         tmpCanvas.clear();
@@ -241,7 +239,7 @@ end1`.replace(/\r\n/g, '\n')
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = true;
             for (let i = 0; i < screensToDraw; i++) {
-                this.drawTestCase(i, tmpCanvas, w, h, i, complete);
+                this.drawTestCase(i, tmpCanvas, w, h, complete);
                 let dest = [0, i * h, w, h];
                 canvas.drawFromImage(
                     tmpCanvas.canvas,

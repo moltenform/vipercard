@@ -1,4 +1,5 @@
 
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Assert';
 /* auto */ import { cast } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
@@ -79,9 +80,9 @@ export class UI512DemoTextEdit extends UI512Presenter {
     protected static respondMouseUp(pr: UI512DemoTextEdit, d: MouseUpEventDetails) {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
-                TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawTextEdit());
+                Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(true, () => pr.test.testDrawTextEdit()), 'demotextedit', RespondToErr.Alert)
             } else if (d.elClick.id === 'btnRunTest') {
-                TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawTextEdit());
+                Util512Higher.syncToAsyncTransition(() => TestUtilsCanvas.RenderAndCompareImages(false, () => pr.test.testDrawTextEdit()), 'demotextedit', RespondToErr.Alert)
             } else if (d.elClick.id === 'btnToggleScroll') {
                 pr.test.toggleScroll(pr);
             } else if (d.elClick.id === 'btnCount Elems') {
