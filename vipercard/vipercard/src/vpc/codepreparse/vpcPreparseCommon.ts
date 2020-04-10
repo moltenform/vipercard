@@ -242,7 +242,9 @@ export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
     checkThrow(tk.tokenType !== tks.tkAdjective, "we don't support variable names like long,short,abbrev,abbr,abbreviated");
     checkThrow(
         tk.tokenType !== tks.tkOrdinal,
-         deleteThis.longstr(`we don't support variable names like last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eigth,ninth,tenth`, '')
+         longstr(`we don't support variable names like last,
+         mid,middle,any,first,second,third,fourth,fifth,
+         sixth,seventh,eigth,ninth,tenth`)
     );
     checkThrow(tk.tokenType !== tks.tkPosition, "we don't support variable names like this,prev,next");
     checkThrow(

@@ -104,7 +104,7 @@ export interface VpcCompleteVisitor {
 }
 
 export interface VisitingContext {
-    [index: string]: any;
+    //[index: string]: any;
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];

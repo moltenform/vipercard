@@ -209,7 +209,7 @@ export class ExecuteStatement {
      */
     goHide(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let ref = this.h.findChildVelRef(vals, 'RuleObjectPart');
-        let identifier = this.h.findChildStr(vals, 'Tokentkidentifier');
+        let identifier = this.h.findChildStr(vals, 'tkIdentifier');
         if (ref) {
             this.outside.SetProp(ref, 'visible', VpcVal.False, undefined);
         } else if (identifier) {
@@ -253,8 +253,8 @@ export class ExecuteStatement {
         let args = this.h.getAllChildVpcVals(vals, 'RuleExpr', true);
         let whichSound = args[0].readAsString();
         let isJustLoadIdentifier =
-            vals.vals['TokenTkidentifier'] && vals.vals['TokenTkidentifier'].length > 1
-                ? vals.vals['TokenTkidentifier'][1]
+            vals.vals['tkIdentifier'] && vals.vals['tkIdentifier'].length > 1
+                ? vals.vals['tkIdentifier'][1]
                 : undefined;
         let justLoad = false;
         if (isJustLoadIdentifier && isString(isJustLoadIdentifier)) {
@@ -281,7 +281,7 @@ export class ExecuteStatement {
      * Evaluates any expression and saves the result to a variable or container.
      */
     goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.h.getAllChildStrs(vals, 'tkIdentifier', true);
         checkThrow(
             terms.length === 2,
             longstr(
@@ -369,7 +369,6 @@ export class ExecuteStatement {
             this.outside.SetProp(velRef, propName, combined, undefined);
         }
     }
-
     /**
      * subtract [chunk of] {container} from {number}
      * Subtracts a number from the number in a container.
@@ -377,34 +376,11 @@ export class ExecuteStatement {
     goSubtract(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         this.h.goMathAlter(line, vals, (a: number, b: number) => a - b);
     }
-
-    /**
-     * understands both "4" and "line"
-     */
-    protected getWhichTool(s: string): VpcTool {
-        s = s.replace(/ +/g, '_');
-        checkThrow(s.length >= 1, 'JP|not a valid tool name.');
-        let choseNumber = Util512.parseInt(s);
-        if (choseNumber !== undefined) {
-            return originalToolNumberToTool(choseNumber);
-        } else {
-            return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
-        }
-    }
-
-    /**
-     * set if a vel is enabled or not
-     */
-    protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
-        let ref = throwIfUndefined(this.h.findChildVelRef(vals, 'RuleObjectBtn'), '59|');
-        this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
-    }
-
     /**
      * show {button|field}
      */
     goShow(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let strs = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let strs = this.h.getAllChildStrs(vals, 'tkIdentifier', true);
         let rule1 = this.h.findChildMap(vals, 'RuleShow_1');
         let rule2 = this.h.findChildMap(vals, 'RuleShow_1');
         if (strs.length > 1) {
@@ -432,12 +408,11 @@ export class ExecuteStatement {
             throw makeVpcScriptErr('4`|all choices null');
         }
     }
-
     /**
      * sort [lines|items|chars] of {container}
      */
     goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.h.getAllChildStrs(vals, 'tkIdentifier', true);
         let ascend = true;
         let sortType = SortType.Text;
         for (let i = 1; i < terms.length; i++) {
@@ -450,7 +425,7 @@ export class ExecuteStatement {
             }
         }
 
-        let strChunktype = throwIfUndefined(this.h.findChildStr(vals, 'TokenTkcharorwordoritemorlineorplural'), '4]|');
+        let strChunktype = throwIfUndefined(this.h.findChildStr(vals, 'tkChunkGranularity'), '4]|');
         let chunktype = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', strChunktype);
         let contRef = throwIfUndefined(this.h.findChildOther(RequestedContainerRef, vals, 'RuleHContainer'), '4[|');
 
@@ -458,12 +433,41 @@ export class ExecuteStatement {
         let itemDel = this.outside.GetItemDelim();
         ChunkResolution.applySort(cont, itemDel, chunktype, sortType, ascend);
     }
+    
+
+
+
+    /**
+     * understands both "4" and "line"
+     */
+    protected getWhichTool(s: string): VpcTool {
+        s = s.replace(/ +/g, '_');
+        checkThrow(s.length >= 1, 'JP|not a valid tool name.');
+        let choseNumber = Util512.parseInt(s);
+        if (choseNumber !== undefined) {
+            return originalToolNumberToTool(choseNumber);
+        } else {
+            return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
+        }
+    }
+
+    /**
+     * set if a vel is enabled or not
+     */
+    protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
+        let ref = throwIfUndefined(this.h.findChildVelRef(vals, 'RuleObjectBtn'), '59|');
+        this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
+    }
+
+    
+
+    
 
     /**
      * unlock screen
      */
     goUnlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.h.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let terms = this.h.getAllChildStrs(vals, 'tkIdentifier', true);
         checkThrow(
             terms.length === 2 && terms[0] === 'unlock' && terms[1] === 'screen',
             '7I|the only thing we currently support here is unlock screen.'

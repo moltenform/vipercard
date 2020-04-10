@@ -50,7 +50,7 @@ export class VpcScriptExecuteStatementHelpers {
 
         checkThrow(argsGiven.length > 1, 'JN|not enough args');
         let mods = ModifierKeys.None;
-        let allIdentifiers = this.getAllChildStrs(vals, 'TokenTkidentifier', true);
+        let allIdentifiers = this.getAllChildStrs(vals, 'tkIdentifier', true);
         let sawExpected = false;
         for (let i = 0, len = allIdentifiers.length; i < len; i++) {
             let id = allIdentifiers[i];
@@ -67,6 +67,18 @@ export class VpcScriptExecuteStatementHelpers {
 
         checkThrow(sawExpected, 'JM|syntax error did not see ', expectSee);
         this.outside.SimulateClick(argsGiven, mods);
+    }
+
+    /**
+     * get all string literal params
+     */
+    getAllStringLiteralParams(vals: IntermedMapOfIntermedVals, nm: string): string[] {
+        let strs = this.getAllChildStrs(vals, 'tkStringLiteral', false)
+        for (let i=0; i<strs.length; i++) {
+            strs[i] = strs[i].toLowerCase().replace(/"/g,'')
+        }
+
+        return strs;
     }
 
     /**
