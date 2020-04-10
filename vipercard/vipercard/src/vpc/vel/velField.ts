@@ -2,7 +2,7 @@
 /* auto */ import { VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcChunkType, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcGranularity } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { O, bool, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
@@ -337,7 +337,7 @@ export class VpcElField extends VpcElSizable {
     protected resolveChunkBounds(cardId: string, chunk: RequestedChunk, itemDel: string) {
         let newChunk = chunk.getClone();
         if (
-            newChunk.type === VpcChunkType.Chars &&
+            newChunk.type === VpcGranularity.Chars &&
             !newChunk.ordinal &&
             newChunk.last !== undefined &&
             newChunk.last < newChunk.first

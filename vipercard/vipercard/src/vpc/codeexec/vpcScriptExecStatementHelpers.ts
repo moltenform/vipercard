@@ -19,7 +19,7 @@ export class VpcScriptExecuteStatementHelpers {
      */
     goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
         let val = throwIfUndefined(this.findChildVal(vals, tkstr.RuleLvl1Expression), '5M|');
-        let container = throwIfUndefined(this.findChildOther(RequestedContainerRef, vals, tkstr.RuleHContainer), '5L|');
+        let container = throwIfUndefined(this.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '5L|');
 
         let getResultAsString = (s: string) => {
             let f1 = VpcValS(s).readAsStrictNumeric();
@@ -54,7 +54,7 @@ export class VpcScriptExecuteStatementHelpers {
 
         checkThrow(argsGiven.length > 1, 'JN|not enough args');
         let mods = ModifierKeys.None;
-        let allIdentifiers = this.getAllChildStrs(vals, tkstr.tkIdentifier, true);
+        let allIdentifiers = this.getChildStrs(vals, tkstr.tkIdentifier, true);
         let sawExpected = false;
         for (let i = 0, len = allIdentifiers.length; i < len; i++) {
             let id = allIdentifiers[i];
@@ -74,26 +74,29 @@ export class VpcScriptExecuteStatementHelpers {
     }
 
     /**
-     * get all string literal params
+     * get string literal params
      */
-    getAllStringLiteralParams(vals: IntermedMapOfIntermedVals, nm: string): string[] {
-        let strs = this.getAllChildStrs(vals, tkstr.tkStringLiteral, false);
+    getLiteralParams(vals: IntermedMapOfIntermedVals, nm = tkstr.tkStringLiteral): string[] {
+        let strs = this.getChildStrs(vals, nm, false);
         for (let i = 0; i < strs.length; i++) {
-            strs[i] = strs[i].toLowerCase().replace(/"/g, '');
+            strs[i] = strs[i].toLowerCase();
+            if (strs[i].startsWith('"') && strs[i].endsWith('"')) {
+                strs[i] = strs[i].toLowerCase().slice(1, -1);
+            }
         }
 
         return strs;
     }
 
     /**
-     * get all child strings
+     * get child strings
      */
-    getAllChildStrs(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): string[] {
+    getChildStrs(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): string[] {
         let ret: string[] = [];
         if (vals.vals[nm]) {
             for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
                 let child = vals.vals[nm][i];
-                checkThrow(isString(child), '7T|');
+                checkThrow(isString(child), '7T|not a string');
                 ret.push(child);
             }
         } else {
@@ -104,9 +107,9 @@ export class VpcScriptExecuteStatementHelpers {
     }
 
     /**
-     * get all child VpcVals
+     * get child VpcVals
      */
-    getAllChildVpcVals(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): VpcVal[] {
+    getChildVpcVals(vals: IntermedMapOfIntermedVals, nm: string, atLeastOne: boolean): VpcVal[] {
         let ret: VpcVal[] = [];
         if (vals.vals[nm]) {
             for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
@@ -184,12 +187,11 @@ export class VpcScriptExecuteStatementHelpers {
     /**
      * retrieve an expected type of VpcIntermedValBase from the visitor result
      */
-    findChildOther<T extends VpcIntermedValBase>(ctor: AnyParameterCtor<T>, vals: IntermedMapOfIntermedVals, nm: string): O<T> {
+    findChildAndCast<T extends VpcIntermedValBase>(ctor: AnyParameterCtor<T>, vals: IntermedMapOfIntermedVals, nm: string): O<T> {
         let got = vals.vals[nm];
         if (got) {
             let gotAsT = got[0] as T;
             checkThrowEq(1, got.length, '7V|expected length 1');
-            checkThrow((gotAsT as any)['is' + ctor.name] === true, '7U|wrong type');
             return gotAsT;
         } else {
             return undefined;

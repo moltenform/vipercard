@@ -2,7 +2,7 @@
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { PropAdjective, VpcChunkType, VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
@@ -173,7 +173,7 @@ export class VpcChangeSelectedFont {
 
         /* adjust the range because vpc is both 1-based and inclusive */
         chunk.first += 1;
-        chunk.type = VpcChunkType.Chars;
+        chunk.type = VpcGranularity.Chars;
         let velRef = new RequestedVelRef(VpcElType.Fld);
         let idn = Util512.parseInt(vel.id);
         checkThrow(idn, 'KO|non numeric id?', vel.id);
@@ -195,7 +195,7 @@ export class VpcChangeSelectedFont {
                 let subChunk = new RequestedChunk(i);
                 subChunk.first = i;
                 subChunk.last = i;
-                subChunk.type = VpcChunkType.Chars;
+                subChunk.type = VpcGranularity.Chars;
                 let curStyle = this.vci.getOutside().GetProp(velRef, typeOfChange, PropAdjective.Empty, subChunk).readAsString();
 
                 curStyle = this.toggleStyle(curStyle, v);

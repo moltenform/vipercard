@@ -68,7 +68,7 @@ export enum OrdinalOrPosition {
  * word 3 to 4 of "a b c d e"
  * these are the types of chunks currently supported.
  */
-export enum VpcChunkType {
+export enum VpcGranularity {
     __isUI512Enum = 1,
     __UI512EnumCapitalize,
     Chars,
@@ -180,6 +180,21 @@ export function vpcElTypeToString(type: VpcElType, veryShort: boolean) {
 }
 
 /**
+ * speed of visual effect
+ */
+export enum VpcVisualEffectSpeed {
+    __isUI512Enum = 1,
+    normal,
+    slow,
+    fast,
+    verynormal,
+    veryslow,
+    veryfast,
+    __AlternateForm__veryslowly = veryslow,
+    __AlternateForm__slowly = slow
+}
+
+/**
  * note: for simplicity we use "barn" and not "barn door",
  * and "venetian" and not "venetian blinds"
  */
@@ -203,7 +218,7 @@ export enum VpcVisualEffectType {
 /**
  * the direction of the effect
  */
-export enum VpcVisualEffectTypeModifier {
+export enum VpcVisualEffectTypeDirection {
     __isUI512Enum = 1,
     open,
     close,
@@ -228,6 +243,18 @@ export enum VpcVisualEffectTypeDestination {
     inverse,
     __AlternateForm__cd = card,
     __AlternateForm__grey = gray
+}
+
+/**
+ * specify a visual effect
+ */
+export class VpcVisualEffectSpec {
+    constructor(
+        public sp: VpcVisualEffectSpeed,
+        public typ: VpcVisualEffectType,
+        public dir: VpcVisualEffectTypeDirection,
+        public dest: VpcVisualEffectTypeDestination
+    ) {}
 }
 
 /**

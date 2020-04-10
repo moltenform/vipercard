@@ -5,7 +5,7 @@
 /* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
 /* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, PropAdjective, VpcChunkType, VpcElType, VpcOpCtg } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VelResolveId } from './../vel/velResolveName';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
@@ -293,7 +293,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
             checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], tkstr.RuleHChunk);
-            ret.type = getStrToEnum<VpcChunkType>(VpcChunkType, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
+            ret.type = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
             if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.ordinal = this.visit(ctx.RuleOrdinal[0]);
             } else {
@@ -406,7 +406,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let evaledvpc = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl3Expression, tkstr.RuleFnCallNumberOf_9);
             let str = evaledvpc.readAsString();
             let stype = ctx.tkChunkGranularity[0].image;
-            let type = getStrToEnum<VpcChunkType>(VpcChunkType, 'VpcChunkType', stype);
+            let type = getStrToEnum<VpcGranularity>(VpcGranularity, 'VpcGranularity', stype);
             let result = ChunkResolution.applyCount(str, this.outside.GetItemDelim(), type, true);
             return VpcValN(result);
         }

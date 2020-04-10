@@ -3,7 +3,7 @@
 /* auto */ import { BuildFakeTokens, ChvITk, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
-/* auto */ import { MapTermToMilliseconds, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeModifier } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection } from './../vpcutils/vpcEnums';
 /* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { checkThrowEq, findStrToEnum, last, longstr } from './../../ui512/utils/util512';
 
@@ -382,7 +382,7 @@ put the result %ARG0%`;
         }
 
         let template = longstr(
-            `internalvpcsort
+            `sort
             "${sortOptions['granularity']}"
             "${sortOptions['method']}"
             "${sortOptions['order']}" %ARG0%`
@@ -484,35 +484,29 @@ repeat
 end repeat`;
             return this.rw.go(template, line[0], [line.slice(2)]);
         } else {
-            let asQuantity = findStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, last(line).image);
-            if (asQuantity) {
-                line[line.length - 1] = BuildFakeTokens.inst.makeStringLiteral(line[0], last(line).image);
-            }
-
             return [line];
         }
     }
 
     hParseVisualEffect(line: ChvITk[], prefix: string) {
         let opts = new Map<string, string>();
-        opts['speed'] = 'slow';
-        opts['speedmodify'] = '';
+        opts['speed'] = '';
         opts['method'] = '';
-        opts['modifier'] = '';
+        opts['direction'] = '';
         opts['dest'] = 'card';
         for (let t of line) {
             if (t.image === 'slow' || t.image === 'slowly' || t.image === 'fast') {
-                opts['speed'] = t.image;
+                opts['speed'] += t.image;
             } else if (t.image === 'very') {
-                opts['speedmodify'] = t.image;
+                opts['speed'] = 'very' + opts['speed'];
             } else {
                 let foundMethod = findStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, t.image);
-                let foundModifier = findStrToEnum<VpcVisualEffectTypeModifier>(VpcVisualEffectTypeModifier, t.image);
+                let foundDirection = findStrToEnum<VpcVisualEffectTypeDirection>(VpcVisualEffectTypeDirection, t.image);
                 let foundDest = findStrToEnum<VpcVisualEffectTypeDestination>(VpcVisualEffectTypeDestination, t.image);
                 if (foundMethod) {
                     opts['method'] = t.image;
-                } else if (foundModifier) {
-                    opts['modifier'] = t.image;
+                } else if (foundDirection) {
+                    opts['direction'] = t.image;
                 } else if (foundDest) {
                     opts['dest'] = t.image;
                 } else if (t.image !== 'to' && t.image !== 'from' && t.image !== 'door' && t.image !== 'blinds') {
@@ -521,9 +515,13 @@ end repeat`;
             }
         }
 
+        if (!opts['speed']) {
+            opts['speed'] = 'normal';
+        }
+
         let template = longstr(
-            `${prefix} "${opts['speed']}" "${opts['speedmodify']}"
-            "${opts['method']}" "${opts['modifier']}" "${opts['dest']}" `
+            `${prefix} "${opts['speed']}"
+            "${opts['method']}" "${opts['direction']}" "${opts['dest']}" `
         );
         return this.rw.go(template, line[0]);
     }

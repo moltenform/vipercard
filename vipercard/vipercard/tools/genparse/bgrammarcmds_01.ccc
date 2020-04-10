@@ -1,6 +1,6 @@
 
 // ben fisher, 2018
-// some tips from http://www.jaedworks.com/hypercard/scripts/hypertalk-bnf.html
+// some inspiration from http://www.jaedworks.com/hypercard/scripts/hypertalk-bnf.html
 // (viewing this file as C may highlight the syntax better)
 
 // not supported from product: ask file, answer file, close
@@ -9,6 +9,8 @@
 //      select supports only selecting chunk of a field
 //      sort only supports sorting text
 
+// this is the syntax seen by the parser, which isn't the same 
+// as what is typed by the user -- we'll apply transformations during "rewrite".
 // all commands start with ..., which means 3 tkSyntaxPlaceholder tokens
 
 // addition. supports customfns
@@ -109,9 +111,9 @@ BuiltinCmdSelect:=...  tkStringLiteral [ <HContainer> ]
 BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> <ObjectFld> | <Object> } ] _to <AnyPropertyVal>    
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
 // we don't yet support show all cards or show 6 cards
-BuiltinCmdShow:=...  <ObjectPart> tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>]                                        
+BuiltinCmdShow:=...  <ObjectPart> [ tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>]  ]                                  
 // we'll build an actual sort in software. tkStringLiteral1 is "items|lines" tkStringLiteral2 is "numeric|alphabetic" tkStringLiteral3 is "ascending|descending"
-BuiltinCmdInternalvpcsort:=... tkStringLiteral tkStringLiteral tkStringLiteral <HAnyAllowedVariableName>
+BuiltinCmdSort:=... tkStringLiteral tkStringLiteral tkStringLiteral <HAnyAllowedVariableName>
 // start using, currently a no-op
 BuiltinCmdStart:=... tkIdentifier <ObjectStack>
 // stop using, currently a no-op
@@ -119,19 +121,19 @@ BuiltinCmdStop:=... tkIdentifier <ObjectStack>
 // subtraction. rewrite 'from' to syntaxmarker
 BuiltinCmdSubtract:=... <Lvl1Expression> tkSyntaxPlaceholder <HContainer>      
 // tabkey. sent up the message hierarchy, usually goes from one field to the next. takes no args
-// type. set NYI in software
+// type. set NYI during rewrites
 // unlock.
-BuiltinCmdUnlock:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
+BuiltinCmdUnlock:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
 // unmark, rewrite it to "mark", "_not"
 // visual effect, parse it in software. the visual effect seems to last until the end of the scope
-BuiltinCmdVisual:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
+BuiltinCmdVisual:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
 // wait supports  second,seconds,milliseconds,ms,ticks. defaults to a tick, which is 60th of second
 // we rewrite `wait for 2 ms` into `wait 2 "ms"`
 // or "wait until/while" which we should just expand into a while loop
-BuiltinCmdWait:=... <Expr> [tkStringLiteral]
-// execute in context of another object
+BuiltinCmdWait:=... <Expr> [tkIdentifier]
+// write. set NYI during rewrites
+// used internally
 CmdSend:=... <Expr> _to <Object>                    --->BuildMap
-// write. set NYI in software
 InternalCmdRequestEval:=... <Expr>             --->BuildMap
 InternalCmdUserHandler:=... <Expr>             --->BuildMap
 

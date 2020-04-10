@@ -14,7 +14,8 @@ prettierCfg = '../../.prettierrc.js'
 prettierPath = '../../node_modules/prettier/bin-prettier.js'
 allowLongerLinesOn = [
     #'../../src/vpc/codeparse/vpcVisitor.ts', '../../src/vpc/codeparse/vpcVisitorMixin.ts',
-    '../../src/vpc/**/*.ts', '../../src/vpcui/**/*.ts'
+    '../../src/vpc/**/*.ts',
+    '../../src/vpcui/**/*.ts'
 ]
 
 def go(srcdirectory):
@@ -31,6 +32,23 @@ def go(srcdirectory):
         'could not find node_modules/prettier/bin-prettier.js')
     goPrettierAll(srcdirectory, prettierPath, prettierCfg)
 
+def runPrettier(args):
+    retcode, stderr, stdout = files.run(args, throwOnFailure=None)
+    if retcode != 0:
+        s = (stdout + b'\n' + stderr).decode('utf-8')
+        # make links clickable
+        # example [error] ..\..\src\test\util512ui\testUI512Composites.ts: SyntaxError: ',' expected. (6:54)
+        search = r' ([^ ]+\.ts): ([\w]+Error: [^]n]+)\(([^)]+)\)'
+        def getReplaced(r):
+            result = '\n$1:$3 error $2'
+            result = result.replace('$1', os.path.abspath(r.group(1))).replace('\\', '/')
+            result = result.replace('$2', r.group(2))
+            result = result.replace('$3', r.group(3))
+            return result
+        s = re.sub(search, getReplaced, s)
+        trace(s)
+        assertTrueMsg(False, "prettier returned failure", file=os.path.abspath(__file__), linenum=4)
+
 def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
     # we used to run prettier individually for each file,
     # but it is a lot faster to run prettier in batch for all files at once.
@@ -41,14 +59,14 @@ def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
     assertTrueMsg(not srcdirectory.endswith('/'))
     assertTrueMsg(not srcdirectory.endswith('\\'))
     args = ['node', prettierPath, '--config', prettierCfg, '--write', srcdirectory.replace('\\', '/') + '/**/*.ts']
-    files.run(args)
+    runPrettier(args)
     
     # allow long lines in certain files
     if allowLongerLinesOn:
         prettierCfgLonger = prettierCfg.replace('prettierrc', 'prettierrc_longer')
         for file in allowLongerLinesOn:
             args = ['node', prettierPath, '--config', prettierCfgLonger, '--write', file]
-            files.run(args)
+            runPrettier(args)
     
     # do other checks per file
     for f, short in files.recursefiles(srcdirectory):

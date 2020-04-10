@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcIntermedValBase, VpcVal } from './vpcVal';
 /* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
-/* auto */ import { OrdinalOrPosition, SortType, VpcChunkPreposition, VpcChunkType, getPositionFromOrdinalOrPosition } from './vpcEnums';
+/* auto */ import { OrdinalOrPosition, SortType, VpcChunkPreposition, VpcGranularity, getPositionFromOrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, checkThrowEq, last, longstr, util512Sort } from './../../ui512/utils/util512';
 
@@ -160,7 +160,7 @@ export class ChunkResolution {
             last = first;
         }
 
-        if (ch.type === VpcChunkType.Chars && last !== undefined && last < first) {
+        if (ch.type === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return undefined;
         }
@@ -183,13 +183,13 @@ export class ChunkResolution {
         end++;
 
         /* type-specific actions */
-        if (ch.type === VpcChunkType.Chars) {
+        if (ch.type === VpcGranularity.Chars) {
             return this.charsBoundsForGet(s, start, end);
-        } else if (ch.type === VpcChunkType.Items) {
+        } else if (ch.type === VpcGranularity.Items) {
             return this.itemsBoundsForGet(s, itemDel, start, end);
-        } else if (ch.type === VpcChunkType.Lines) {
+        } else if (ch.type === VpcGranularity.Lines) {
             return this.itemsBoundsForGet(s, '\n', start, end);
-        } else if (ch.type === VpcChunkType.Words) {
+        } else if (ch.type === VpcGranularity.Words) {
             return this.wordsBoundsForGet(s, start, end);
         } else {
             throw makeVpcScriptErr(`5<|unknown chunk type ${ch.type}`);
@@ -210,7 +210,7 @@ export class ChunkResolution {
         }
 
         assertTrue(first !== null && first !== undefined && last !== null, '5;|invalid first or last');
-        if (ch.type === VpcChunkType.Chars && last !== undefined && last < first) {
+        if (ch.type === VpcGranularity.Chars && last !== undefined && last < first) {
             /* checked in emulator, behavior for chars differs here for some reason. */
             return [first - 1, first - 1, ''];
         }
@@ -230,13 +230,13 @@ export class ChunkResolution {
         end++;
 
         /* type-specific actions */
-        if (ch.type === VpcChunkType.Chars) {
+        if (ch.type === VpcGranularity.Chars) {
             return this.charsBoundsForSet(sInput, start, end);
-        } else if (ch.type === VpcChunkType.Items) {
+        } else if (ch.type === VpcGranularity.Items) {
             return this.itemsBoundsForSet(sInput, itemDel, start, end);
-        } else if (ch.type === VpcChunkType.Lines) {
+        } else if (ch.type === VpcGranularity.Lines) {
             return this.itemsBoundsForSet(sInput, '\n', start, end);
-        } else if (ch.type === VpcChunkType.Words) {
+        } else if (ch.type === VpcGranularity.Words) {
             return this.wordsBoundsForSet(sInput, start, end);
         } else {
             throw makeVpcScriptErr(`5:|unknown chunk type ${ch.type}`);
@@ -249,13 +249,13 @@ export class ChunkResolution {
      * numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
      * international sorting, compares text using current locale.
      */
-    static applySort(cont: WritableContainer, itemDel: string, type: VpcChunkType, sortType: SortType, ascend: boolean) {
+    static applySort(cont: WritableContainer, itemDel: string, type: VpcGranularity, sortType: SortType, ascend: boolean) {
         let splitBy: string;
-        if (type === VpcChunkType.Chars) {
+        if (type === VpcGranularity.Chars) {
             splitBy = '';
-        } else if (type === VpcChunkType.Items) {
+        } else if (type === VpcGranularity.Items) {
             splitBy = itemDel;
-        } else if (type === VpcChunkType.Lines) {
+        } else if (type === VpcGranularity.Lines) {
             splitBy = '\n';
         } else {
             throw makeVpcScriptErr(`5/|we don't currently support sorting by ${type}`);
@@ -301,22 +301,22 @@ export class ChunkResolution {
      * count chunks, e.g.
      * 'put the number of words in x into y'
      */
-    static applyCount(sInput: string, itemDel: string, type: VpcChunkType, isPublicCall: boolean) {
+    static applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
         let self = new ChunkResolution();
 
         /* in the public interface, change behavior to be
         closer(still not 100% match) to emulator */
-        if (isPublicCall && sInput === '' && (type === VpcChunkType.Items || VpcChunkType.Lines)) {
+        if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
             return 0;
         }
 
-        if (type === VpcChunkType.Chars) {
+        if (type === VpcGranularity.Chars) {
             return sInput.length;
-        } else if (type === VpcChunkType.Items) {
+        } else if (type === VpcGranularity.Items) {
             return self.getPositionsTable(sInput, self.regexpForDelim(itemDel), false).length;
-        } else if (type === VpcChunkType.Lines) {
+        } else if (type === VpcGranularity.Lines) {
             return self.getPositionsTable(sInput, /\n/g, false).length;
-        } else if (type === VpcChunkType.Words) {
+        } else if (type === VpcGranularity.Words) {
             return self.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
         } else {
             throw makeVpcScriptErr(`5-|unknown chunk type ${type}`);
@@ -417,7 +417,7 @@ export class ChunkResolution {
  * a requested chunk from a script.
  */
 export class RequestedChunk extends VpcIntermedValBase {
-    type = VpcChunkType.Chars;
+    type = VpcGranularity.Chars;
     first: number;
     last: O<number>;
     ordinal: O<OrdinalOrPosition>;
@@ -441,14 +441,14 @@ export class RequestedChunk extends VpcIntermedValBase {
     /**
      * an index must be a valid integer
      */
-    confirmValidIndex(v: VpcVal, chunktype: string, tmpArr: [boolean, any]) {
+    confirmValidIndex(v: VpcVal, granularity: string, tmpArr: [boolean, any]) {
         checkThrow(v instanceof VpcVal, `8p|internal error in RuleHChunk`);
-        checkThrow(v.isItInteger(), `8o|when getting ${chunktype}, need to provide an integer but got ${v.readAsString()}`);
+        checkThrow(v.isItInteger(), `8o|when getting ${granularity}, need to provide an integer but got ${v.readAsString()}`);
 
         let asInt = v.readAsStrictInteger(tmpArr);
         checkThrow(
             asInt >= 0,
-            longstr(`8n|when getting ${chunktype}, need to provide
+            longstr(`8n|when getting ${granularity}, need to provide
              a number >= 0 but got ${v.readAsString()}`)
         );
 
