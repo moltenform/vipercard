@@ -258,7 +258,7 @@ function realParse(input: string) {
     }
 
     let a = 5;
-    let b = a
+    let b = a;
 
     // Visit
     //const ast = visitor.visit(cst);

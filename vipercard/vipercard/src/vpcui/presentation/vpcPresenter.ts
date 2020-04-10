@@ -1,12 +1,12 @@
 
 /* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
@@ -157,39 +157,35 @@ export class VpcPresenter extends VpcPresenterInit {
      * schedule the closefield event(s)
      */
     beginScheduleFldOpenCloseEventClose(prevElId: string) {
-        let NoteThisIsDisabledCode = 1;
+        /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
+        since people's closeField scripts probably assume we are on the card anyways */
+        let prevVel = this.lyrModelRender.findElIdToVel(prevElId);
+        if (prevVel && prevVel.getType() === VpcElType.Fld) {
+            if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
+                /* closefield called if changes made in the field */
+                let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
+                this.vci.getCodeExec().scheduleCodeExec(msg);
 
-        //~ /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
-        //~ since people's closeField scripts probably assume we are on the card anyways */
-        //~ let prevVel = this.lyrModelRender.findElIdToVel(prevElId);
-        //~ if (prevVel && prevVel.getType() === VpcElType.Fld) {
-        //~ if (this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id]) {
-        //~ /* closefield called if changes made in the field */
-        //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Closefield);
-        //~ this.vci.getCodeExec().scheduleCodeExec(msg);
-
-        //~ this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false;
-        //~ } else {
-        //~ /* exitfield called if no changes were made in the field */
-        //~ let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
-        //~ this.vci.getCodeExec().scheduleCodeExec(msg);
-        //~ }
-        //~ }
+                this.vci.getCodeExec().fieldsRecentlyEdited.val[prevVel.id] = false;
+            } else {
+                /* exitfield called if no changes were made in the field */
+                let msg = new VpcScriptMessage(prevVel.id, VpcBuiltinMsg.Exitfield);
+                this.vci.getCodeExec().scheduleCodeExec(msg);
+            }
+        }
     }
 
     /**
      * schedule the openfield event
      */
     beginScheduleFldOpenCloseEventOpen(nextId: string) {
-        let NoteThisIsDisabledCode = 1;
-
-        //~ /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
-        //~ since people's openField scripts probably assume we are on the card anyways */
-        //~ let vel = this.lyrModelRender.findElIdToVel(nextId);
-        //~ if (vel && vel.getType() === VpcElType.Fld) {
-        //~ let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
-        //~ this.vci.getCodeExec().scheduleCodeExec(msg);
-        //~ }
+        /* note, findElIdToVel returns undefined if vel is on a different card, ok for now
+        since people's openField scripts probably assume we are on the card anyways */
+        let vel = this.lyrModelRender.findElIdToVel(nextId);
+        if (vel && vel.getType() === VpcElType.Fld) {
+            let msg = new VpcScriptMessage(vel.id, VpcBuiltinMsg.Openfield);
+            this.vci.getCodeExec().scheduleCodeExec(msg);
+        }
     }
 
     /**
@@ -356,15 +352,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * returns true if code is currently running
      */
     isCodeRunning() {
-        let NoteThisIsDisabledCode = 1;
-        return false;
-        //~ return (
-        //~ this &&
-        //~ this.vci &&
-        //~ this.vci.getCodeExec &&
-        //~ this.vci.getCodeExec() &&
-        //~ this.vci.getCodeExec().isCodeRunning()
-        //~ );
+        return this && this.vci && this.vci.getCodeExec && this.vci.getCodeExec() && this.vci.getCodeExec().isCodeRunning();
     }
 
     /**

@@ -32,7 +32,7 @@ export class VpcExecTop {
     silenceMessagesForUIAction: ValHolder<O<VpcTool>> = new ValHolder(undefined);
     protected justSawRepeatedMousedown = false;
     protected readonly cachedCST: VpcCacheParsedCST;
-    protected readonly cachedAST: VpcCacheParsedAST;
+    readonly cachedAST: VpcCacheParsedAST;
     protected readonly outside: OutsideWorldReadWrite;
     constructor(outside: OutsideWorldReadWrite) {
         this.cachedAST = new VpcCacheParsedAST();

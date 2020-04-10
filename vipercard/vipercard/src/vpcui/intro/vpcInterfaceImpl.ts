@@ -11,6 +11,7 @@
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { last } from './../../ui512/utils/util512';
 /* auto */ import { EventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -96,14 +97,12 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get current execution context, or undefined if script not running
      */
     findExecFrameStack(): [O<VpcExecFrameStack>, O<VpcExecFrame>] {
-        let NoteThisIsDisabledCode = 1;
-        return [undefined, undefined];
-        //~ let frStack = this.vcstate.runtime.codeExec.workQueue[0];
-        //~ if (frStack) {
-        //~ return [frStack, last(frStack.stack)];
-        //~ } else {
-        //~ return [undefined, undefined];
-        //~ }
+        let frStack = this.vcstate.runtime.codeExec.workQueue[0];
+        if (frStack) {
+            return [frStack, last(frStack.stack)];
+        } else {
+            return [undefined, undefined];
+        }
     }
 
     /**
@@ -117,9 +116,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * is code currently running
      */
     isCodeRunning(): boolean {
-        let NoteThisIsDisabledCode = 1;
-        return false;
-        //~ return this.vcstate.runtime.codeExec.isCodeRunning();
+        return this.vcstate.runtime.codeExec.isCodeRunning();
     }
 
     /**
@@ -333,9 +330,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * get top code execution object
      */
     getCodeExec(): VpcExecTop {
-        let NoteThisIsDisabledCode = 1;
-        return (null as any) as VpcExecTop;
-        //~ return this.vcstate.runtime.codeExec;
+        return this.vcstate.runtime.codeExec;
     }
 
     /**

@@ -139,19 +139,15 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
 
         /* when a runtime option changes: */
         /* - set a flag in observeRuntimeOptChanges that we'll check during render */
-        //~ this.vci.getCodeExec().cbOnScriptError =
-        //~ scriptErr => this.showError(scriptErr);
-        //~ this.vci.getCodeExec().cbCauseUIRedraw = () =>
-        //~ this.lyrModelRender.uiRedrawNeeded();
-        //~ this.vci.getCodeExec().runStatements.cbAnswerMsg =
-        //~ (a, b, c, d, e) => this.answerMsg(a, b, c, d, e);
-        //~ this.vci.getCodeExec().runStatements.cbAskMsg = (a, b, c) => this.askMsg(a, b, c);
-        //~ this.vci.getCodeExec().runStatements.cbStopCodeRunning = () => {
-        //~ /* stop all code, even an infinite loop */
-        //~ this.vci.getCodeExec().forceStopRunning();
-        //~ this.vci.setTool(VpcTool.Button);
-        //~ };
-        let NoteThisIsDisabledCode = 1;
+        this.vci.getCodeExec().cbOnScriptError = scriptErr => this.showError(scriptErr);
+        this.vci.getCodeExec().cbCauseUIRedraw = () => this.lyrModelRender.uiRedrawNeeded();
+        this.vci.getCodeExec().runStatements.cbAnswerMsg = (a, b, c, d, e) => this.answerMsg(a, b, c, d, e);
+        this.vci.getCodeExec().runStatements.cbAskMsg = (a, b, c) => this.askMsg(a, b, c);
+        this.vci.getCodeExec().runStatements.cbStopCodeRunning = () => {
+            /* stop all code, even an infinite loop */
+            this.vci.getCodeExec().forceStopRunning();
+            this.vci.setTool(VpcTool.Button);
+        };
 
         /* window dimensions*/
         Util512.extendArray(this.bounds, getUI512WindowBounds());

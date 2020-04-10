@@ -2,6 +2,7 @@
 /* auto */ import { UndoManager } from './../state/vpcUndo';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
+/* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcSuperRewrite } from './../../vpc/codepreparse/vpcRewritesGlobal';
 /* auto */ import { VpcSession, vpcStacksGetData } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
@@ -131,9 +132,8 @@ export class VpcIntroProvider {
         await this.yieldTime();
         vpcState.runtime.outside = new VpcOutsideImpl();
         await this.yieldTime();
-        let NoteThisIsDisabledCode = 1;
-        //~ vpcState.runtime.codeExec = new VpcExecTop(vpcState.runtime.outside);
-        //~ await this.yieldTime();
+        vpcState.runtime.codeExec = new VpcExecTop(vpcState.runtime.outside);
+        await this.yieldTime();
         vpcState.model = new VpcModelTop();
         await this.yieldTime();
         let fullVci = new VpcStateInterfaceImpl();

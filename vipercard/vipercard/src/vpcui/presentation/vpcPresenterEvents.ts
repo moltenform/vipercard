@@ -4,13 +4,14 @@
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcModelRender } from './../modelrender/vpcModelRender';
-/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcBuiltinMsg, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, assertTrueWarn, bool, showWarningIfExceptionThrown, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
 /* auto */ import { cast, coalesceIfFalseLike, last, slength } from './../../ui512/utils/util512';
+/* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { ScrollbarImpl } from './../../ui512/textedit/ui512Scrollbar';
 /* auto */ import { MenuListeners } from './../../ui512/menu/ui512MenuListeners';
@@ -324,20 +325,19 @@ export class VpcPresenterEvents {
     }
 
     /**
-     * track when we've typed normal text in a field, used to
+     * track when we've typed normal text in a field, to
      * know if we should call closeField or exitField
      */
     static updateFieldsRecentlyEdited(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
-        let NoteThisIsDisabledCode = 1;
-        //~ if (UI512TextEvents.keyDownProbablyCausesTextChange(d)) {
-        //~ let el = TextSelModify.getSelectedField(pr);
-        //~ if (el) {
-        //~ let vel = pr.lyrModelRender.findElIdToVel(el.id);
-        //~ if (vel && vel.getType() === VpcElType.Fld && !vel.getB('locktext')) {
-        //~ pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id] = true;
-        //~ }
-        //~ }
-        //~ }
+        if (UI512TextEvents.keyDownProbablyCausesTextChange(d)) {
+            let el = TextSelModify.getSelectedField(pr);
+            if (el) {
+                let vel = pr.lyrModelRender.findElIdToVel(el.id);
+                if (vel && vel.getType() === VpcElType.Fld && !vel.getB('locktext')) {
+                    pr.vci.getCodeExec().fieldsRecentlyEdited.val[vel.id] = true;
+                }
+            }
+        }
     }
 
     /**
@@ -395,15 +395,14 @@ export class VpcPresenterEvents {
 
         if (!d.handled() && curtool === VpcTool.Browse) {
             /* run scripts. note that anything a script does is undoable. */
-            let NoteThisIsDisabledCode = 1;
-            //~ pr.timerRunScript.update(d.milliseconds);
-            //~ if (pr.timerRunScript.isDue()) {
-            //~ pr.timerRunScript.reset();
-            //~ pr.vci.undoableAction(
-            //~ () => pr.vci.getCodeExec().runTimeslice(pr.runScriptTimeslice),
-            //~ TypeOfUndoAction.StartReusableAction
-            //~ );
-            //~ }
+            pr.timerRunScript.update(d.milliseconds);
+            if (pr.timerRunScript.isDue()) {
+                pr.timerRunScript.reset();
+                pr.vci.undoableAction(
+                    () => pr.vci.getCodeExec().runTimeslice(pr.runScriptTimeslice),
+                    TypeOfUndoAction.StartReusableAction
+                );
+            }
         }
 
         if (!d.handled() && codeRunning) {
@@ -448,10 +447,7 @@ export class VpcPresenterEvents {
                 pr.timerRunMaintenance.reset();
                 if (!pr.vci.isCurrentlyUndoing()) {
                     VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance());
-                    let NoteThisIsDisabledCode = 1;
-                    //~ VpcPresenterEvents.showWarningIfExceptionThrown(() =>
-                    //~ pr.vci.getCodeExec().doMaintenance()
-                    //~ );
+                    VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance());
                 }
             }
         }

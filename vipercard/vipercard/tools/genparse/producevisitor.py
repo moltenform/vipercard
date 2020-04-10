@@ -13,7 +13,8 @@ def goForVisitorInterface(st):
     out.append('}')
     out.append('')
     out.append('export interface VisitingContext {')
-    out.append('[index: string]: any;')
+    out.append('// you can add something like [index: string]: any if you want to')
+    out.append('// silence type errors during development')
     for rule in st.rules:
         out.append(f'    Rule{rule.name}: any[];')
     for tk in st.tokens:

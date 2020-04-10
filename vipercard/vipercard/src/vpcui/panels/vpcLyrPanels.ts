@@ -119,8 +119,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
             }
         }
 
-        let NoteThisIsDisabledCode = 1;
-        //~ panel.showOrHideBgSpecific(this.vci.UI512App(), isBgPart);
+        panel.showOrHideBgSpecific(this.vci.UI512App(), isBgPart);
     }
 
     /**

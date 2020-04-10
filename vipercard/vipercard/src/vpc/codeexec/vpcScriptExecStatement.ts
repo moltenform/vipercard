@@ -253,9 +253,7 @@ export class ExecuteStatement {
         let args = this.h.getAllChildVpcVals(vals, 'RuleExpr', true);
         let whichSound = args[0].readAsString();
         let isJustLoadIdentifier =
-            vals.vals['tkIdentifier'] && vals.vals['tkIdentifier'].length > 1
-                ? vals.vals['tkIdentifier'][1]
-                : undefined;
+            vals.vals['tkIdentifier'] && vals.vals['tkIdentifier'].length > 1 ? vals.vals['tkIdentifier'][1] : undefined;
         let justLoad = false;
         if (isJustLoadIdentifier && isString(isJustLoadIdentifier)) {
             checkThrow(isJustLoadIdentifier === 'load', 'JQ|expected play "snd" load, but got', isJustLoadIdentifier);
@@ -433,9 +431,6 @@ export class ExecuteStatement {
         let itemDel = this.outside.GetItemDelim();
         ChunkResolution.applySort(cont, itemDel, chunktype, sortType, ascend);
     }
-    
-
-
 
     /**
      * understands both "4" and "line"
@@ -458,10 +453,6 @@ export class ExecuteStatement {
         let ref = throwIfUndefined(this.h.findChildVelRef(vals, 'RuleObjectBtn'), '59|');
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
     }
-
-    
-
-    
 
     /**
      * unlock screen

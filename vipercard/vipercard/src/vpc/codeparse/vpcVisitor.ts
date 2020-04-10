@@ -551,9 +551,7 @@ export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser, VpcVisitor
     }
 
     if (!CachedObjects.staticCache.visitor) {
-        //~ let NoteThisIsDisabledCode = 1;
-        CachedObjects.staticCache.visitor = (createVisitor(CachedObjects.staticCache.parser) as any) as VpcVisitorInterface;
-        //~ CachedObjects.staticCache.visitor = (12345 as any) as VpcVisitorInterface;
+        CachedObjects.staticCache.visitor = createVisitor(CachedObjects.staticCache.parser);
     }
 
     return [CachedObjects.staticCache.lexer, CachedObjects.staticCache.parser, CachedObjects.staticCache.visitor];

@@ -2,7 +2,7 @@
 /* auto */ import { CodeLimits } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { last, longstr } from './../../ui512/utils/util512';
 
 /**
  * make every symbol lowercase, because the language is case insensitive
@@ -242,7 +242,7 @@ export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
     checkThrow(tk.tokenType !== tks.tkAdjective, "we don't support variable names like long,short,abbrev,abbr,abbreviated");
     checkThrow(
         tk.tokenType !== tks.tkOrdinal,
-         longstr(`we don't support variable names like last,
+        longstr(`we don't support variable names like last,
          mid,middle,any,first,second,third,fourth,fifth,
          sixth,seventh,eigth,ninth,tenth`)
     );

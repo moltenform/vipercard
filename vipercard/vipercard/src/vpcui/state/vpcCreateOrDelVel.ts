@@ -100,8 +100,6 @@ export abstract class UndoableActionCreateOrDelVel {
      * remove a vel
      */
     protected remove(vci: VpcStateInterface) {
-        checkThrow(!vci.getCodeExec().isCodeRunning(), "8(|currently can't add or remove an element while code is running");
-
         vci.causeFullRedraw();
         let el = vci.getModel().getByIdUntyped(this.velId);
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(el.parentId, vci, el.getType());
@@ -109,8 +107,6 @@ export abstract class UndoableActionCreateOrDelVel {
         assertTrueWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
         ar.splice(this.insertIndex, 1);
         vci.getModel().removeIdFromMapOfElements(el.id);
-        let NoteThisIsDisabledCode = 1;
-        //~ vci.getCodeExec().removeScript(this.velId);
     }
 
     /**

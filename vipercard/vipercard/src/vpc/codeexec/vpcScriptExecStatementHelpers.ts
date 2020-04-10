@@ -5,7 +5,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, assertTrue, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyParameterCtor, checkThrowEq, isString, Util512 } from './../../ui512/utils/util512';
+/* auto */ import { AnyParameterCtor, Util512, checkThrowEq, isString } from './../../ui512/utils/util512';
 
 export class VpcScriptExecuteStatementHelpers {
     outside: OutsideWorldReadWrite;
@@ -73,9 +73,9 @@ export class VpcScriptExecuteStatementHelpers {
      * get all string literal params
      */
     getAllStringLiteralParams(vals: IntermedMapOfIntermedVals, nm: string): string[] {
-        let strs = this.getAllChildStrs(vals, 'tkStringLiteral', false)
-        for (let i=0; i<strs.length; i++) {
-            strs[i] = strs[i].toLowerCase().replace(/"/g,'')
+        let strs = this.getAllChildStrs(vals, 'tkStringLiteral', false);
+        for (let i = 0; i < strs.length; i++) {
+            strs[i] = strs[i].toLowerCase().replace(/"/g, '');
         }
 
         return strs;

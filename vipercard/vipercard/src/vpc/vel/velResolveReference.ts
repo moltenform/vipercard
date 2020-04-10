@@ -22,7 +22,7 @@ export class VelResolveReference {
      * returns the given parent card as well,
      * since 'bg fld id 1234 of cd 1' is different than 'bg fld id 1234 of cd 2'
      */
-    go(ref: RequestedVelRef, me: O<VpcElBase>, target: O<VpcElBase>, cardHistory: RememberHistory): [O<VpcElBase>, VpcElCard] {
+    go(ref: RequestedVelRef, me: O<VpcElBase>, cardHistory: RememberHistory): [O<VpcElBase>, VpcElCard] {
         const currentCard = this.model.getCurrentCard();
 
         /* check that the types are consistent */
@@ -44,8 +44,8 @@ export class VelResolveReference {
             return this.getFromCardRecentHistory(currentCard, ref, cardHistory);
         }
 
-        let parentCard: O<VpcElBase> = ref.parentCdInfo ? this.go(ref.parentCdInfo, me, target, cardHistory)[0] : undefined;
-        let parentBg: O<VpcElBase> = ref.parentBgInfo ? this.go(ref.parentBgInfo, me, target, cardHistory)[0] : undefined;
+        let parentCard: O<VpcElBase> = ref.parentCdInfo ? this.go(ref.parentCdInfo, me, cardHistory)[0] : undefined;
+        let parentBg: O<VpcElBase> = ref.parentBgInfo ? this.go(ref.parentBgInfo, me, cardHistory)[0] : undefined;
         let methodName = 'go' + VpcElType[ref.type];
         if (bool(ref.parentCdInfo && !parentCard) || bool(ref.parentBgInfo && !parentBg)) {
             /* you have specified a parent, but the parent does not exist!
