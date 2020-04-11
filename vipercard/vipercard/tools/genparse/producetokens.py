@@ -6,6 +6,9 @@ def goTokensDefnOne(st):
     out = []
     out.append('')
     
+    assertEq('tkIdentifier', st.tokens[-1].name,
+        'expect the last to be tkIdentifier')
+    
     # the map, and the creation
     out.append('export const tks = {')
     for tk in st.tokens:

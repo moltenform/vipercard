@@ -67,7 +67,7 @@ t.test('serialize: expected', () => {
     let s = Util512SerializableHelpers.serializeToJson(o);
     let got = JSON.parse(s);
     let ks = sorted(Util512.getMapKeys(got)).join(',');
-    assertEq('fld1,fld2,f1,f2', ks, '');
+    assertEq('f1,f2,fld1,fld2', ks, '');
     assertEq('fld 1', got.fld1, '');
     assertEq('fld 2 and text', got.fld2, '');
     assertEq('an optional field', got.f1, '');
@@ -138,8 +138,8 @@ t.test('serialize: getting extra data is fine', () => {
     );
     assertEq('a', oGot.fld1, '');
     assertEq('b', oGot.fld2, '');
-    assertTrue(undefined === oGot.optional_f1, '');
-    assertEq('c', oGot.optional_f2, '');
+    assertEq('c', oGot.optional_f1, '');
+    assertEq('d', oGot.optional_f2, '');
     assertEq('not serialized', oGot.__private, '');
 });
 t.test('serialize: throw on missing field ', () => {
@@ -164,7 +164,7 @@ t.test('serialize: throw on unsupported type 1', () => {
 t.test('serialize: throw on unsupported type 2', () => {
     let badIncoming = { fld1: 'fld 1', fld2: 'b', f1: 1234, f2: 'also optional' };
     let s = JSON.stringify(badIncoming);
-    assertThrows('', 'support', () =>
+    assertThrows('', 'not a string', () =>
         Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s)
     );
 });
@@ -241,7 +241,7 @@ t.test('serialize: ok to send an undefined if optional', () => {
     o.optional_f2 += '~';
     let s = Util512SerializableHelpers.serializeToJson(o);
     let ks = sorted(Util512.getMapKeys(JSON.parse(s))).join(',');
-    assertEq('fld1,fld2,f2', ks, '');
+    assertEq('f2,fld1,fld2', ks, '');
     t.say(/*——————————*/ 'round trip');
     let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
     ks = sorted(Util512.getMapKeys(oGot)).join(',');
@@ -267,7 +267,8 @@ t.test("serialize: we don't read private incoming", () => {
     let okIncoming = { fld1: 'a', fld2: 'b', f1: 'c', f2: 'd', __private: 'e' };
     let s = JSON.stringify(okIncoming);
     let oGot = Util512SerializableHelpers.deserializeFromJson(DemoSerializable, s);
-    assertTrue('not serialized' === oGot.optional_f2, '');
+    assertTrue('not serialized' === oGot.__private, '');
+    assertTrue('d' === oGot.optional_f2, '');
     assertTrue('c' === oGot.optional_f1, '');
     assertTrue('b' === oGot.fld2, '');
 });
@@ -290,11 +291,17 @@ t.test('serialize: inheritance works, methods skipped', () => {
     let s = Util512SerializableHelpers.serializeToJson(o);
     let got = JSON.parse(s);
     let ks = sorted(Util512.getMapKeys(got)).join(',');
-    assertEq('fld1,fld2,f1,f2,other', ks, '');
+    assertEq('f1,f2,fld1,fld2,other', ks, '');
     let oGot = Util512SerializableHelpers.deserializeFromJson(DemoChild, s);
     ks = sorted(Util512.getMapKeys(oGot)).join(',');
     assertEq(
-        '__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2',
+        '__isUtil512Serializable,__private,fld1,fld2,method1,optional_f1,optional_f2,other',
+        ks,
+        ''
+    );
+    ks = sorted(IsUtil512Serializable.getKeys(oGot)).join(',');
+    assertEq(
+        'fld1,fld2,optional_f1,optional_f2,other',
         ks,
         ''
     );

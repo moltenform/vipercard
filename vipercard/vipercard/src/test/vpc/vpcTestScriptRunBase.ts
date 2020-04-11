@@ -7,7 +7,6 @@
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { VpcElType, VpcOpCtg, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue, assertTrueWarn, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
@@ -175,19 +174,6 @@ export class TestVpcScriptRunBase {
         this.simClickY = b.getN('y') + 8;
     }
 
-    protected updateChangedCodeAndCheckForSyntaxError(owner: VpcElBase, code: string) {
-        assertTrue(false, 'nyi');
-        let NoteThisIsDisabledCode = 1;
-        //~ this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
-        //~ let fnd = this.vcstate.runtime.codeExec.getCompiledScript(
-        //~ owner.id,
-        //~ owner.getS('script')
-        //~ );
-        //~ if (fnd && fnd instanceof VpcScriptSyntaxError) {
-        //~ throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
-        //~ }
-    }
-
     updateObjectScript(id: string, code: string) {
         this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
             let idScriptErr = errFromScript.velId;
@@ -202,7 +188,7 @@ export class TestVpcScriptRunBase {
         let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
         let obj = this.vcstate.model.getByIdUntyped(id);
         this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
-        this.updateChangedCodeAndCheckForSyntaxError(obj, obj.getS('script'));
+        this.vcstate.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', obj.id)
     }
 
     runGeneralCode(
@@ -280,7 +266,7 @@ export class TestVpcScriptRunBase {
 
         let btnGo = this.vcstate.model.getById(VpcElButton, this.elIds.btn_go);
         this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));
-        this.updateChangedCodeAndCheckForSyntaxError(btnGo, btnGo.getS('script'));
+        this.vcstate.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', btnGo.id)
         if (caughtErr) {
             return;
         } else if (expectErrMsg && expectCompErr) {
@@ -302,6 +288,7 @@ export class TestVpcScriptRunBase {
             0,
             ModifierKeys.None
         );
+
         VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id, false);
 
         /* message should now be in the queue */
@@ -314,10 +301,8 @@ export class TestVpcScriptRunBase {
             this.vcstate.runtime.codeExec.runTimeslice(Infinity)
         );
 
-        if (caughtErr) {
-            return;
-        } else if (expectErrMsg) {
-            assertTrueWarn(false, '2U|error not seen', codeBefore, codeIn);
+        if (expectErrMsg) {
+            this.t.warnAndAllowToContinue('2U|error not seen', codeBefore, codeIn);
         }
 
         assertTrue(

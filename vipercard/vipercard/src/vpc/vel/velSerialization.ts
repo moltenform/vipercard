@@ -51,7 +51,6 @@ export class VpcGettableSerialization {
         let savedObserver = vel.observer;
         try {
             vel.observer = new ElementObserverNoOp();
-
             let expectToSee = Util512.getMapKeys(vel as any);
             let whichWereSet: { [key: string]: boolean } = {};
             let keys = Util512.getMapKeys(vals as any);

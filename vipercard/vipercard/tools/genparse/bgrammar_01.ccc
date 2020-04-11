@@ -161,8 +161,7 @@ tkStringConcat=OneOfOr(&& |or| &)
 // not-equal, greater than, less than
 // mac-roman encoding \xAD is not-equal \xB2 \xB3 are lessthan-or-equal
 tkGreaterOrLessEqualOrEqual=OneOfOr(<> |or| >=? |or| <=? |or| != |or| ==? |or| \xB2 |or| \xB3 |or| \xAD)
-// must be last, or it would take precedence over most of the rest
-tkIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
+
 
 // i think i will have to enumerate the property names in any case,
 // in order to distinguish between a prop lookup and an old style function call
@@ -189,6 +188,8 @@ HAnyAllowedVariableName:={ tkIdentifier | _number | tkA | tkAllUnaryPropertiesIf
 // separating operators into different levels to implement operator precedence: makes a bigger parse tree and more parsing code
 // it's also possible to make all binary operators the same level and work out the precedence in software = smaller parse tree to hold in memory
 
+// must be last, or it would take precedence over most of the rest
+tkIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
 
 //////////// Objects
 // note use of Lvl6Expression - confirmed in product. you have to say 'cd btn (1+1)' and not 'cd btn 1+1'
@@ -305,7 +306,7 @@ HGenericFunctionCall:={ MAX_LOOKAHEAD=5 <FnCallNumberOf> | <FnCallThereIs> | <HF
 FnCallNumberOf:= _the _number tkOfOnly { <FnCallNumberOf_1>|<FnCallNumberOf_5>|<FnCallNumberOf_6>|<FnCallNumberOf_7>|<FnCallNumberOf_8>|<FnCallNumberOf_9>  }      --->ProcessOr--->VpcVal
 FnCallNumberOf_1:=[{tkCard | tkBg}] { tkBtnPlural | tkPartPlural | tkFldPlural } [ <Of> <ObjectCard> ]     --->Custom--->VpcVal
 FnCallNumberOf_5:=_marked tkCardPlural                                                                                                  --->Custom--->VpcVal
-FnCallNumberOf_6:=tkCardPlural  [ <Of> <ObjectBg> ]                                                       --->Custom--->VpcVal
+FnCallNumberOf_6:=tkCardPlural  [ <Of> { <ObjectBg> | <ObjectStack> } ]                                               --->Custom--->VpcVal
 FnCallNumberOf_7:=tkBgPlural [ <Of> <ObjectStack> ]                                                       --->Custom--->VpcVal
 FnCallNumberOf_8:={_windows | _menu | _menuItem <Of> <Menu>}                             --->Custom--->VpcVal
 FnCallNumberOf_9:=tkChunkGranularity <Of> <Lvl3Expression>                                        --->Custom--->VpcVal

@@ -1,4 +1,10 @@
 
+/* auto */ import { testCollectionvpcuiMsgBox } from './../vpc/vpcuiTestMsgBox';
+/* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
+/* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
+/* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
+/* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
+/* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
@@ -32,22 +38,28 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
-            testCollectionUI512CodeEditor,
-            testCollectionUI512Composites,
-            testCollectionUI512DrawText,
-            testCollectionUI512Elements,
-            testCollectionUI512ElementsViewButtons,
-            testCollectionUI512FormattedText,
-            testCollectionUI512MenuRender,
-            testCollectionUI512Paint,
-            testCollectionUI512TextEdit,
-            testCollectionUI512TextModify,
-            testCollectionUI512TextSelectEvents,
-
-            testCollectionUtilsCanvasWrapper,
-            testCollectionUtilsDraw,
-            testCollectionExampleAsyncTests,
-            testCollectionUtil512LessUsefulLibs,
+            testCollectionvpcScriptParseExpr,
+            testCollectionvpcChunkResolution,
+            testCollectionvpcElements,
+            testCollectionvpcuiMsgBox,
+            testCollectionvpcuiIntroProvider,
+            testCollectionvpcVpcVal, 
+            //testCollectionUI512CodeEditor,
+            //testCollectionUI512Composites,
+            //testCollectionUI512DrawText,
+            //testCollectionUI512Elements,
+            //testCollectionUI512ElementsViewButtons,
+            //testCollectionUI512FormattedText,
+            //testCollectionUI512MenuRender,
+            //testCollectionUI512Paint,
+            //testCollectionUI512TextEdit,
+            //testCollectionUI512TextModify,
+            //testCollectionUI512TextSelectEvents,
+//
+            //testCollectionUtilsCanvasWrapper,
+            //testCollectionUtilsDraw,
+            //testCollectionExampleAsyncTests,
+            //testCollectionUtil512LessUsefulLibs,
             testCollectionUtil512Higher,
             testCollectionUtil512Class,
             testCollectionUtil512,
@@ -140,3 +152,32 @@ export class SimpleUtil512Tests {
         }
     }
 }
+
+let allCols = [
+    testCollectionvpcScriptParseExpr,
+    testCollectionvpcChunkResolution,
+    testCollectionvpcElements,
+    testCollectionvpcuiMsgBox,
+    testCollectionvpcuiIntroProvider,
+    testCollectionvpcVpcVal, 
+    testCollectionUI512CodeEditor,
+    testCollectionUI512Composites,
+    testCollectionUI512DrawText,
+    testCollectionUI512Elements,
+    testCollectionUI512ElementsViewButtons,
+    testCollectionUI512FormattedText,
+    testCollectionUI512MenuRender,
+    testCollectionUI512Paint,
+    testCollectionUI512TextEdit,
+    testCollectionUI512TextModify,
+    testCollectionUI512TextSelectEvents,
+    testCollectionUtilsCanvasWrapper,
+    testCollectionUtilsDraw, 
+    testCollectionExampleAsyncTests,
+    testCollectionUtil512LessUsefulLibs,
+    testCollectionUtil512Higher,
+    testCollectionUtil512Class,
+    testCollectionUtil512,
+    testCollectionUtil512Assert,
+    testCollectionExternalLibs
+];
