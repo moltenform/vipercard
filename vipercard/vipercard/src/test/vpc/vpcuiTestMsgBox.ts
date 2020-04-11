@@ -106,7 +106,7 @@ t.test('VpcNonModalReplBox.makeAllVarsGlobals with input referencing many', () =
         'GX|'
     );
 });
-let fallbackReturnsEmpty = () => ''
+let fallbackReturnsEmpty = () => '';
 t.test('VpcNonModalReplBox.RememberHistory walk previous with no history', () => {
     let h = new RememberHistory();
     assertEq('', h.walkPrevious(fallbackReturnsEmpty), 'GW|');

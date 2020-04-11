@@ -18,11 +18,11 @@
 let t = new SimpleUtil512TestCollection('testCollectionvpcScriptRunSyntax');
 export let testCollectionvpcScriptRunSyntax = t;
 
-let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>()
-t.atest("--init--testCollectionvpcScriptRunSyntax", async ()=> {
-    h = new TestVpcScriptRunBase(t)
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
+t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
+    h = new TestVpcScriptRunBase(t);
     await h.initEnvironment();
-})
+});
 
 t.test('_checkLexing', () => {
     let batch: [string, string][];
@@ -371,11 +371,7 @@ put x into x\\x`,
 
     /* try to use it as a custom handler name */
     for (let reserved of notvalidDifferentTks) {
-        h.assertCompileError(
-            `on ${reserved}\nend ${reserved}`,
-            'support variables',
-            1
-        );
+        h.assertCompileError(`on ${reserved}\nend ${reserved}`, 'support variables', 1);
     }
 });
 t.test('_ifStatementsAndRepeats', () => {
@@ -1849,7 +1845,7 @@ t.test('_scriptMessagePassing', () => {
     let parents = [h.vcstate.model.stack.id, h.elIds.bg_a, h.elIds.card_a_a];
     for (let parent of parents) {
         /* reset all scripts */
-        let hCaptured = h
+        let hCaptured = h;
         parents.map(id => hCaptured.updateObjectScript(id, ''));
         h.updateObjectScript(h.elIds.btn_go, '');
 

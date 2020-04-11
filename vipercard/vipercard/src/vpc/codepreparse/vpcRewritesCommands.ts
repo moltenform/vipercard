@@ -108,7 +108,7 @@ export class VpcRewriteForCommands {
     }
     rewriteDo(line: ChvITk[]): ChvITk[][] {
         let template = `send ( %ARG0% ) to me`;
-        return this.rw.go(template, line[0], [line.slice(1)]);
+        return this.rw.gen(template, line[0], [line.slice(1)]);
     }
     rewriteDoMenu(line: ChvITk[]): ChvITk[][] {
         let allImages = line.map(t => t.image).join('***') + '***';
@@ -153,7 +153,7 @@ export class VpcRewriteForCommands {
     }
     rewriteGet(line: ChvITk[]): ChvITk[][] {
         let template = `put ( %ARG0% ) %INTO% it`;
-        return this.rw.go(template, line[0], [line.slice(1)]);
+        return this.rw.gen(template, line[0], [line.slice(1)]);
     }
     rewriteGo(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, "8k|can't have just 'go' on its own. try 'go next' or 'go prev' ");
@@ -189,7 +189,7 @@ if there is a %ARG0% then
     internalvpcmovecardhelper (the id of %ARG0%), ${shouldSuspendHistory}
 end if`;
         }
-        return this.rw.go(template, line[0], [line.slice(1)]);
+        return this.rw.gen(template, line[0], [line.slice(1)]);
     }
     rewriteHide(line: ChvITk[]): ChvITk[][] {
         return this.hReturnNyiIfMenuMentionedOutsideParens(line);
@@ -214,7 +214,7 @@ end if`;
     }
     rewritePass(line: ChvITk[]): ChvITk[][] {
         /* add a return statement afterwards, solely to make code exec simpler. */
-        return this.rw.go(
+        return this.rw.gen(
             `%ARG0%
 return 0`,
             line[0],
@@ -226,12 +226,12 @@ return 0`,
         checkThrow(line.length >= 2, 'not enough args');
         checkThrowEq(tks.tkCard, line[1], 'must be pop *card*');
         if (line.length === 2) {
-            return this.rw.go('pop true', line[0]);
+            return this.rw.gen('pop true', line[0]);
         } else {
             let newCode = `
 pop false
 put the result %ARG0%`;
-            let gen = this.rw.go(newCode, line[0], [line.slice(2)]);
+            let gen = this.rw.gen(newCode, line[0], [line.slice(2)]);
             let fixedPut = this.rewritePut(gen[1]);
             return [gen[0], fixedPut[0]];
         }
@@ -243,7 +243,7 @@ put the result %ARG0%`;
     rewritePush(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length === 2, 'expect 2 args');
         checkThrowEq(tks.tkCard, line[1], 'must be push *card*');
-        return this.rw.go('push "card"', line[0]);
+        return this.rw.gen('push "card"', line[0]);
     }
     rewritePut(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
@@ -387,7 +387,7 @@ put the result %ARG0%`;
             "${sortOptions['method']}"
             "${sortOptions['order']}" %ARG0%`
         );
-        let cmd = this.rw.go(template, line[0], [containerExpression]);
+        let cmd = this.rw.gen(template, line[0], [containerExpression]);
         if (!foundBy) {
             return cmd;
         } else {
@@ -423,7 +423,7 @@ if length ( content%UNIQUE% ) then
     put char 1 to (the length of result%UNIQUE% - the length of ${delimExpr}) of result%UNIQUE% %INTO% result%UNIQUE%
     put result%UNIQUE% %INTO% %ARG0%
 end if`;
-            return this.rw.go(template, line[0], [containerExpression, byExpr, cmd[0]]);
+            return this.rw.gen(template, line[0], [containerExpression, byExpr, cmd[0]]);
         }
     }
     rewriteStart(line: ChvITk[]): ChvITk[][] {
@@ -482,7 +482,7 @@ repeat
     end if
     wait 100 "ms"
 end repeat`;
-            return this.rw.go(template, line[0], [line.slice(2)]);
+            return this.rw.gen(template, line[0], [line.slice(2)]);
         } else {
             return [line];
         }
@@ -523,7 +523,7 @@ end repeat`;
             `${prefix} "${opts['speed']}"
             "${opts['method']}" "${opts['direction']}" "${opts['dest']}" `
         );
-        return this.rw.go(template, line[0]);
+        return this.rw.gen(template, line[0]);
     }
 
     hBuildNyi(msg: string, basis: ChvITk) {
@@ -544,6 +544,6 @@ end repeat`;
 
     hReturnNoOp(line: ChvITk[]): ChvITk[][] {
         let template = `put "no-op" %INTO% c%UNIQUE% `;
-        return this.rw.go(template, line[0]);
+        return this.rw.gen(template, line[0]);
     }
 }

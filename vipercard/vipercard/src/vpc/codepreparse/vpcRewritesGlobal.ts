@@ -53,7 +53,7 @@ export class VpcRewritesGlobal {
 export class VpcSuperRewrite {
     constructor(protected idGen: CountNumericId) {}
 
-    go(s: string, realTokenAsBasis: ChvITk, args?: ChvITk[][], argMany?: ChvITk[][], needsToBePostProcess = true): ChvITk[][] {
+    gen(s: string, realTokenAsBasis: ChvITk, args?: ChvITk[][], argMany?: ChvITk[][], needsToBePostProcess = true): ChvITk[][] {
         args = args ?? [];
         let ret: ChvITk[][] = [];
         s = s.trim();

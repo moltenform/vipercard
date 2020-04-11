@@ -1,97 +1,164 @@
 
 /* auto */ import { checkThrowUI512 } from './util512Assert';
-/* auto */ import { NoParameterCtor, UnshapedJsonAny, Util512, isString } from './util512';
+/* auto */ import { NoParameterCtor, Util512, isString } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
 /**
  * serialize and deserialize simple structures.
- * 
+ *
  * use optional_ to indicate an optional field.
  * fields beginning with "__" will be skipped.
  * unknown incoming fields are skipped silently.
  */
 export namespace Util512SerializableHelpers {
-    
-    export function serializeObj<T extends IsUtil512Serializable>(obj:T) {
-        checkThrowUI512(obj.__isUtil512Serializable, 'must be a isUtil512Serializable')
-        let objToSend: { [key: string]: unknown } = {}
+
+    /**
+     * serialize a typescript object to a plain json map of strings to strings
+     */
+    export function serializeObj<T extends IsUtil512Serializable>(obj: T) {
+        checkThrowUI512(obj.__isUtil512Serializable, 'must be a isUtil512Serializable');
+        let objToSend: { [key: string]: unknown } = {};
         for (let prop in obj) {
-            if (
-                shouldSerializeProperty(obj, prop)
-            ) {
-                let isOpt = prop.startsWith('optional_')
+            if (shouldSerializeProperty(obj, prop)) {
+                let isOpt = prop.startsWith('optional_');
                 if (isOpt) {
-                    checkThrowUI512(obj[prop] === undefined || obj[prop] === null || isString(obj[prop]), "we currently only support strings")
-                    let propDest = prop.slice('optional_'.length)
+                    checkThrowUI512(
+                        obj[prop] === undefined ||
+                            obj[prop] === null ||
+                            isString(obj[prop]),
+                        'we currently only support strings'
+                    );
+                    let propDest = prop.slice('optional_'.length);
                     if (isString(obj[prop])) {
-                        objToSend[propDest] = obj[prop]
+                        objToSend[propDest] = obj[prop];
                     }
                 } else {
-                    checkThrowUI512(isString(obj[prop]), "we currently only support strings")
-                    objToSend[prop] = obj[prop]
+                    checkThrowUI512(
+                        isString(obj[prop]),
+                        'we currently only support strings'
+                    );
+                    objToSend[prop] = obj[prop];
                 }
             }
         }
-        
-        return objToSend
+
+        return objToSend;
     }
 
-    export function serializeToJson<T extends IsUtil512Serializable>(obj:T) {
-        return JSON.stringify(serializeObj(obj))
+    /**
+     * helper that calls stringify for you
+     */
+    export function serializeToJson<T extends IsUtil512Serializable>(obj: T) {
+        return JSON.stringify(serializeObj(obj));
     }
 
-    export function deserializeObj<T extends IsUtil512Serializable>(ctor: NoParameterCtor<T>, incoming:UnshapedJsonAny):T {
-        let objNew = new ctor()
-        checkThrowUI512(objNew.__isUtil512Serializable, 'must be a isUtil512Serializable')
-        let prop = ''
+    /**
+     * goes from a plain json map of string-of-strings
+     * to instance of a typescript class
+     */
+    export function deserializeObj<T extends IsUtil512Serializable>(
+        ctor: NoParameterCtor<T>,
+        incoming: IsUtil512Serializable
+    ): T {
+        let objNew = new ctor();
+        checkThrowUI512(
+            objNew.__isUtil512Serializable,
+            'must be a isUtil512Serializable'
+        );
+        let prop = '';
         for (prop in objNew) {
-            if (
-                shouldSerializeProperty(objNew, prop)
-            ) {
-                let isOpt = prop.startsWith('optional_')
+            if (shouldSerializeProperty(objNew, prop)) {
+                let isOpt = prop.startsWith('optional_');
                 if (isOpt) {
-                    checkThrowUI512(objNew[prop] === undefined || objNew[prop] === null || isString(objNew[prop]), "we currently only support strings")
-                    let propSrc = prop.slice('optional_'.length)
-                    checkThrowUI512(isString(incoming[propSrc]) || incoming[propSrc]===null || incoming[propSrc]===undefined, `field ${prop} is not a string`);
-                    objNew[prop] = incoming[propSrc]===null ? undefined : incoming[propSrc]
+                    checkThrowUI512(
+                        objNew[prop] === undefined ||
+                            objNew[prop] === null ||
+                            isString(objNew[prop]),
+                        'we currently only support strings'
+                    );
+                    let propSrc = prop.slice('optional_'.length);
+                    checkThrowUI512(
+                        isString(incoming[propSrc]) ||
+                            incoming[propSrc] === null ||
+                            incoming[propSrc] === undefined,
+                        `field ${prop} is not a string`
+                    );
+                    objNew[prop] =
+                        incoming[propSrc] === null ? undefined : incoming[propSrc];
                 } else {
-                    checkThrowUI512(isString(objNew[prop]), "we currently only support strings")
-                    checkThrowUI512(incoming[prop] !== undefined, `did not see required field ${prop}`)
-                    checkThrowUI512(isString(incoming[prop]), `field ${prop} not a string, only support strings`);
-                    objNew[prop] = incoming[prop]
+                    checkThrowUI512(
+                        isString(objNew[prop]),
+                        'we currently only support strings'
+                    );
+                    checkThrowUI512(
+                        incoming[prop] !== undefined,
+                        `did not see required field ${prop}`
+                    );
+                    checkThrowUI512(
+                        isString(incoming[prop]),
+                        `field ${prop} not a string, only support strings`
+                    );
+                    objNew[prop] = incoming[prop];
                 }
             }
         }
 
-        return objNew
+        return objNew;
     }
 
-    export function deserializeFromJson<T extends IsUtil512Serializable>(ctor: NoParameterCtor<T>, s:string):T {
-        return deserializeObj(ctor, JSON.parse(s))
+    /**
+     * helper that cals json parse for you
+     */
+    export function deserializeFromJson<T extends IsUtil512Serializable>(
+        ctor: NoParameterCtor<T>,
+        s: string
+    ): T {
+        return deserializeObj(ctor, JSON.parse(s));
     }
 
-    export function isAPropertyOnAllObjects(prop:string) {
-        /* don't use hasOwnProperty because we might want to use inheritance */
-        return prop in new Object()
+    /**
+     * is this something like toString() that's everywhere?
+     * another approach is checking hasOwnProperty,
+     * but we do want to see parent classes
+     */
+    export function isAPropertyOnAllObjects(prop: string) {
+        return prop in new Object();
     }
 
-    export function shouldSerializeProperty(obj:any, prop:string) {
-        return !isAPropertyOnAllObjects(prop) && !prop.startsWith('__') && typeof obj[prop] !== 'function'
+    /**
+     * we'll skip methods, Object properties, and props starting with __
+     */
+    export function shouldSerializeProperty(obj: { [key: string]: any }, prop: string) {
+        return (
+            !isAPropertyOnAllObjects(prop) &&
+            !prop.startsWith('__') &&
+            typeof obj[prop] !== 'function'
+        );
     }
 }
 
+/**
+ * essentially just a signal that this class can be serialized 
+ */
 export abstract class IsUtil512Serializable {
-    __isUtil512Serializable = true
-    static getClone<T extends object>(me:IsUtil512Serializable):T {
-        return Util512.shallowClone(me)
+    __isUtil512Serializable = true;
+
+    /**
+     * get a shallow clone of the object
+     */
+    static getClone<T extends object>(me: IsUtil512Serializable): T {
+        return Util512.shallowClone(me);
     }
-    static getKeys(me:IsUtil512Serializable) {
-        return Util512.getMapKeys(me).filter(k => Util512SerializableHelpers.shouldSerializeProperty(me, k))
+
+    /**
+     * get only the keys that should be serialized
+     */
+    static getKeys(me: IsUtil512Serializable) {
+        return Util512.getMapKeys(me).filter(k =>
+            Util512SerializableHelpers.shouldSerializeProperty(me, k)
+        );
     }
 }
 
-export class IsUtil512SerializableIndexable extends IsUtil512Serializable {
-    [index: string]: any
-}

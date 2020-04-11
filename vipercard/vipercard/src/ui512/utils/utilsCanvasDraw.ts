@@ -415,6 +415,9 @@ export class CanvasWrapper {
     }
 }
 
+/**
+ * math on rectangles
+ */
 export class RectUtils {
     /**
      * return a rectangle that is the intersection of the rectangles.

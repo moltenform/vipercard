@@ -31,11 +31,11 @@
 let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptRunCmd');
 export let vpcTestCollectionScriptRunCmd = t;
 
-let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>()
-t.atest("--init--vpcTestScriptEval", async ()=> {
-    h = new TestVpcScriptRunBase(t)
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
+t.atest('--init--vpcTestScriptEval', async () => {
+    h = new TestVpcScriptRunBase(t);
     await h.initEnvironment();
-})
+});
 
 t.test('_execCommands choose', () => {
     let batch: [string, string][];
@@ -142,22 +142,10 @@ t.test('_execCommands arithmetic invalid parse', () => {
     h.assertLineError('add 4 from cd fld "to"', 'MismatchedTokenException', 3);
     h.assertLineError('add 4 to', 'NoViableAltException', 3);
     h.assertLineError('add to cd fld "p1"', 'NoViableAltException', 3);
-    h.assertCompileErrorIn(
-        'subtract 4 with cd fld "p1"',
-        'did not see the keyword',
-        3
-    );
-    h.assertCompileErrorIn(
-        'subtract 4 into cd fld "p1"',
-        'did not see the keyword',
-        3
-    );
+    h.assertCompileErrorIn('subtract 4 with cd fld "p1"', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('subtract 4 into cd fld "p1"', 'did not see the keyword', 3);
     h.assertCompileErrorIn('subtract 4 to cd fld "p1"', 'did not see the keyword', 3);
-    h.assertCompileErrorIn(
-        'subtract 4 to cd fld "from"',
-        'did not see the keyword',
-        3
-    );
+    h.assertCompileErrorIn('subtract 4 to cd fld "from"', 'did not see the keyword', 3);
     h.assertLineError('subtract 4 from', 'NoViableAltException', 3);
     h.assertLineError('subtract from cd fld "p1"', 'NoViableAltException', 3);
     h.assertCompileErrorIn('divide cd fld "p1"', 'did not see the keyword', 3);
@@ -168,21 +156,9 @@ t.test('_execCommands arithmetic invalid parse', () => {
     h.assertLineError('divide cd fld "p1" by', 'NoViableAltException', 3);
     h.assertCompileErrorIn('multiply cd fld "p1"', 'did not see the keyword', 3);
     h.assertCompileErrorIn('multiply cd fld "p1" to 4', 'did not see the keyword', 3);
-    h.assertCompileErrorIn(
-        'multiply cd fld "p1" with 4',
-        'did not see the keyword',
-        3
-    );
-    h.assertCompileErrorIn(
-        'multiply cd fld "p1" from 4',
-        'did not see the keyword',
-        3
-    );
-    h.assertCompileErrorIn(
-        'multiply cd fld "by" from 4',
-        'did not see the keyword',
-        3
-    );
+    h.assertCompileErrorIn('multiply cd fld "p1" with 4', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('multiply cd fld "p1" from 4', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('multiply cd fld "by" from 4', 'did not see the keyword', 3);
     h.assertLineError('multiply cd fld "p1" by', 'NoViableAltException', 3);
 });
 t.test('_execCommands arithmetic valid', () => {
@@ -306,22 +282,10 @@ t.test('_execCommands go to card', () => {
         ['go last\ngo next\\the short id of this cd', `${h.elIds.card_a_a}`],
 
         /* reference by name */
-        [
-            'go to card 1\ngo to card "a"\\the short id of this cd',
-            `${h.elIds.card_a_a}`
-        ],
-        [
-            'go to card 1\ngo to card "b"\\the short id of this cd',
-            `${h.elIds.card_b_b}`
-        ],
-        [
-            'go to card 1\ngo to card "c"\\the short id of this cd',
-            `${h.elIds.card_b_c}`
-        ],
-        [
-            'go to card 1\ngo to card "d"\\the short id of this cd',
-            `${h.elIds.card_b_d}`
-        ],
+        ['go to card 1\ngo to card "a"\\the short id of this cd', `${h.elIds.card_a_a}`],
+        ['go to card 1\ngo to card "b"\\the short id of this cd', `${h.elIds.card_b_b}`],
+        ['go to card 1\ngo to card "c"\\the short id of this cd', `${h.elIds.card_b_c}`],
+        ['go to card 1\ngo to card "d"\\the short id of this cd', `${h.elIds.card_b_d}`],
         [
             'go to card 1\ngo to card "d" of bg 2\\the short id of this cd',
             `${h.elIds.card_b_d}`

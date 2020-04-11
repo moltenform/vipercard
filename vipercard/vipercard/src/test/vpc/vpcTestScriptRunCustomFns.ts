@@ -6,7 +6,6 @@
 /* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -23,11 +22,11 @@ export let vpcTestCollectionScriptRunCustomFns = t;
 /**
  * setup
  */
-let h = YetToBeDefinedTestHelper<TestVpcScriptRunCustomFns>()
-t.atest("--init--vpcTestScriptEval", async ()=> {
-    h = new TestVpcScriptRunCustomFns(t)
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunCustomFns>();
+t.atest('--init--vpcTestScriptEval', async () => {
+    h = new TestVpcScriptRunCustomFns(t);
     await h.initEnvironment();
-})
+});
 
 t.test('_expand if + if else', () => {
     let inp = `
@@ -1595,33 +1594,36 @@ theTest myMult(2,myMult(3,4)), myMult(5,6)
     h.testBatchEvaluate(batch);
 });
 
+/**
+ * new features of TestVpcScriptRunBase for running custom functions
+ */
 class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
     /**
      * check that the preparsed/rewritten code is as expected
      */
     compareRewrittenCode(script: string, expected: string) {
-        checkThrow(false, "nyi")
+        checkThrow(false, 'nyi');
         //~ let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
         //~ h.vcstate.vci.undoableAction(() => btnGo.set('script', script.trim()));
         //~ let transformedCode = h.vcstate.vci
-            //~ .getCodeExec()
-            //~ .getCompiledScript(btnGo.id, btnGo.getS('script')) as VpcCodeOfOneVel;
+        //~ .getCodeExec()
+        //~ .getCompiledScript(btnGo.id, btnGo.getS('script')) as VpcCodeOfOneVel;
 
         //~ let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory[o.ctg]);
         //~ got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
         //~ let exp = expected
-            //~ .trim()
-            //~ .split('\n')
-            //~ .map(s => s.trim());
+        //~ .trim()
+        //~ .split('\n')
+        //~ .map(s => s.trim());
         //~ if (util512Sort(exp, got) !== 0) {
-            //~ console.log('\ncontext\n\n', script);
-            //~ t.warnAndAllowToContinue(
-                //~ '\nexpected\n',
-                //~ exp.join('\n'),
-                //~ '\nbut got\n',
-                //~ got.join('\n'),
-                //~ '\n\n'
-            //~ );
+        //~ console.log('\ncontext\n\n', script);
+        //~ t.warnAndAllowToContinue(
+        //~ '\nexpected\n',
+        //~ exp.join('\n'),
+        //~ '\nbut got\n',
+        //~ got.join('\n'),
+        //~ '\n\n'
+        //~ );
         //~ }
     }
 
@@ -1643,5 +1645,4 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
             )
         );
     }
-
 }

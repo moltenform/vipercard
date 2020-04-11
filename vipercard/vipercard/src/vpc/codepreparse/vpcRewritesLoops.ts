@@ -45,7 +45,7 @@ end repeat`;
         }
 
         let conditionExpression = line.slice(2);
-        return rw.go(template, line[0], [conditionExpression]);
+        return rw.gen(template, line[0], [conditionExpression]);
     }
     function goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
@@ -89,6 +89,6 @@ repeat
             template = template.replace(/%CMPARE%/g, ' >= ');
         }
 
-        return rw.go(template, firstExpr[0], [[loopVar], firstExpr, secondExpr]);
+        return rw.gen(template, firstExpr[0], [[loopVar], firstExpr, secondExpr]);
     }
 }

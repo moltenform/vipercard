@@ -7,13 +7,18 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-export namespace VpcRewritesConditions {
-    export function splitSinglelineIf(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
+/**
+ * in the original product you can write a one-line if like this,
+ *       'if true then put 1+1 into x'
+ * let's split it into different lines so it's easier to parse.
+ */
+export namespace VpcSplitSingleLineIf {
+    export function go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('if', line[0].image, '');
         let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
         checkThrow(findThen !== -1, 'if statement, no "then" found');
         if (findThen === line.length - 1) {
-            // already on different lines, we are fine
+            /* already on different lines, we are fine */
             return [line];
         } else {
             let firstPart = line.slice(0, findThen + 1);
@@ -22,15 +27,33 @@ export namespace VpcRewritesConditions {
 %ARG0%
     %ARG1%
 end if`;
-            return rw.go(template, line[0], [firstPart, secondPart]);
+            return rw.gen(template, line[0], [firstPart, secondPart]);
         }
     }
 }
 
-export namespace VpcRewritesConditionsNoElseIfClauses {
+/**
+ * get rid of else-if clauses, they don't support custom function calls
+ * (which we expand into multiple lines)
+ * also, at runtime, they require the framestack to have more state
+ * (remembering if a clause has been taken) so it's more complex.
+ * ideally this one needs access to the entire array.
+ */
+export namespace VpcRewriteNoElseIfClauses {
+    /**
+     * we'll build the code into a tree structure,
+     * then walk the tree recursively to flatten it.
+     */
+    export function go(tree:TreeBuilder, rw: VpcSuperRewrite) {
+        let ret: ChvITk[][] = [];
+        flattenTreeRecurse(tree.root, rw, ret);
+        return ret;
+    }
+
     function isLineEndIf(l: ChvITk[]) {
         return l.length === 2 && l[0].image === 'end' && l[1].image === 'if';
     }
+
     function isLineIf(l: ChvITk[]) {
         if (l.length >= 1 && l[0].image === 'if') {
             checkThrow(l.length >= 3, "expect line starting with if to be 'if condition then'");
@@ -40,9 +63,11 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
 
         return undefined;
     }
+
     function isLineElsePlain(l: ChvITk[]) {
         return l.length === 1 && l[0].image === 'else';
     }
+
     function isLineElseCondition(l: ChvITk[]) {
         if (l.length > 1 && l[0].image === 'else') {
             checkThrow(l.length >= 4, "expect line starting with else to be 'else if condition then'");
@@ -52,53 +77,68 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
         }
         return undefined;
     }
+
     class IfConstructClause {
         children: (ChvITk[] | IfConstruct)[] = [];
         constructor(public condition: ChvITk[], public isFirst: boolean) {}
     }
+
     class IfConstruct {
         clauses: IfConstructClause[];
         hasSeenPlainElse = false;
         isRoot = false;
         constructor(public parent: O<IfConstruct>) {}
     }
-    function buildTree(lines: ChvITk[][]) {
-        let root = new IfConstruct(undefined);
-        root.isRoot = true;
-        root.clauses = [new IfConstructClause([], true)];
-        let current = root;
-        for (let line of lines) {
+
+    /**
+     * make a tree, where each if statement has clauses,
+     * and each clause has either lines of code or if statements.
+     * no transformations applied yet - the IfConstruct
+     * will match 1-1 with the input code
+     */
+    export class TreeBuilder {
+        root = new IfConstruct(undefined);
+        current = this.root
+        constructor() {
+            this.root.isRoot = true;
+            this.root.clauses = [new IfConstructClause([], true)];
+        }
+
+        addLine(line:ChvITk[]) {
             let arisLineIf = isLineIf(line);
             let arisLineElseCondition = isLineElseCondition(line);
             if (arisLineIf) {
                 let clause = new IfConstructClause(arisLineIf, true);
-                let construct = new IfConstruct(current);
+                let construct = new IfConstruct(this.current);
                 construct.clauses = [clause];
-                last(current.clauses).children.push(construct);
-                current = construct;
+                last(this.current.clauses).children.push(construct);
+                this.current = construct;
             } else if (arisLineElseCondition) {
-                checkThrow(!current.isRoot, 'else outside of if?');
-                checkThrow(!current.hasSeenPlainElse, "can't have conditional else after plain else");
+                checkThrow(!this.current.isRoot, 'else outside of if?');
+                checkThrow(!this.current.hasSeenPlainElse, "can't have conditional else after plain else");
                 let clause = new IfConstructClause(arisLineElseCondition, false);
-                current.clauses.push(clause);
+                this.current.clauses.push(clause);
             } else if (isLineElsePlain(line)) {
-                current.hasSeenPlainElse = true;
+                this.current.hasSeenPlainElse = true;
                 let clause = new IfConstructClause([], false);
-                current.clauses.push(clause);
+                this.current.clauses.push(clause);
             } else if (isLineEndIf(line)) {
-                checkThrow(!current.isRoot && current.parent, "can't have an end if outside an if");
-                current = current.parent;
+                checkThrow(!this.current.isRoot && this.current.parent, "can't have an end if outside an if");
+                this.current = this.current.parent;
             } else {
-                last(current.clauses).children.push(line);
+                last(this.current.clauses).children.push(line);
             }
         }
-        return root;
     }
 
-    function transformTreeRecurse(node: IfConstruct, rw: VpcSuperRewrite, output: ChvITk[][]) {
+    /**
+     * flatten the tree, and while doing so,
+     * write out the clauses as separate if statements.
+     */
+    function flattenTreeRecurse(node: IfConstruct, rw: VpcSuperRewrite, output: ChvITk[][]) {
         let numberOfEndIfsNeeded = 0;
         if (!node.isRoot) {
-            let firstLine = rw.go('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
+            let firstLine = rw.gen('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
             output.push(firstLine[0]);
             numberOfEndIfsNeeded = 1;
         }
@@ -106,7 +146,7 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
             if (!clause.isFirst) {
                 if (clause.condition.length) {
                     output.push([rw.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
-                    let line = rw.go('if %ARG0% then', clause.condition[0], [clause.condition]);
+                    let line = rw.gen('if %ARG0% then', clause.condition[0], [clause.condition]);
                     output.push(line[0]);
                     numberOfEndIfsNeeded += 1;
                 } else {
@@ -115,12 +155,13 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
             }
             for (let item of clause.children) {
                 if (item instanceof IfConstruct) {
-                    transformTreeRecurse(node, rw, output);
+                    flattenTreeRecurse(node, rw, output);
                 } else {
                     output.push(item);
                 }
             }
         }
+
         for (let i = 0; i < numberOfEndIfsNeeded; i++) {
             output.push([
                 rw.tokenFromEnglishTerm('end', node.clauses[0].condition[0]),
@@ -128,52 +169,4 @@ export namespace VpcRewritesConditionsNoElseIfClauses {
             ]);
         }
     }
-
-    export function goNoElseIfClauses(lines: ChvITk[][], rw: VpcSuperRewrite) {
-        let construct = buildTree(lines);
-        let ret: ChvITk[][] = [];
-        transformTreeRecurse(construct, rw, ret);
-        return ret;
-    }
-}
-
-function testonly() {
-    /*
-    if 0 == 0 then
-        if 1 == 1 then
-            if 1a == 1a then
-            else if 2a == 2a then
-            else if 3a == 3a then
-            end if
-        else if 2 == 2 then
-            if 1b == 1b then
-            else if 2b == 2b then
-            else if 3b == 3b then
-            end if
-        else if 3 == 3 then
-            if 1c == 1c then
-            else if 2c == 2c then
-            else if 3c == 3c then
-            end if
-        end if
-    else
-        if 1 == 1 then
-            if 1d == 1d then
-            else if 2d == 2d then
-            else if 3d == 3d then
-            end if
-        else if 2 == 2 then
-            if 1e == 1e then
-            else if 2e == 2e then
-            else if 3e == 3e then
-            end if
-        else if 3 == 3 then
-            if 1f == 1f then
-            else if 2f == 2f then
-            else if 3f == 3f then
-            end if
-        end if
-    end if
-
-    */
 }

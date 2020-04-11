@@ -161,16 +161,16 @@ export class VpcEvalHelpers {
             case '<=':
                 return VpcValBool(av <= bv);
             case 'is':
-            // falls through
+            /* falls through */
             case '==':
-            // falls through
+            /* falls through */
             case '=':
                 /* string equality, no leniency for whitespace */
                 return VpcValBool(av === bv);
             case 'is not':
-            // falls through
+            /* falls through */
             case '<>':
-            // falls through
+            /* falls through */
             case '!=':
                 return VpcValBool(av !== bv);
             default:
@@ -194,16 +194,16 @@ export class VpcEvalHelpers {
             case '<=':
                 return VpcValBool(av <= bv);
             case 'is':
-            // falls through
+            /* falls through */
             case '==':
-            // falls through
+            /* falls through */
             case '=':
                 /* confirmed in emulator -- very close numbers compare equal */
                 return VpcValBool(Math.abs(av - bv) < VpcVal.epsilon);
             case 'is not':
-            // falls through
+            /* falls through */
             case '<>':
-            // falls through
+            /* falls through */
             case '!=':
                 return VpcValBool(Math.abs(av - bv) >= VpcVal.epsilon);
             default:

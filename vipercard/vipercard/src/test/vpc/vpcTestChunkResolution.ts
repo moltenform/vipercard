@@ -312,8 +312,20 @@ t.test('ChunkSetWord1', () => {
         0,
         5
     );
-    testSetChunk('  123  .def gh.i   ', '  abc  .def gh.i   ', VpcGranularity.Words, 1, 0);
-    testSetChunk('  123  .def gh.i   ', '  abc  .def gh.i   ', VpcGranularity.Words, 1, 1);
+    testSetChunk(
+        '  123  .def gh.i   ',
+        '  abc  .def gh.i   ',
+        VpcGranularity.Words,
+        1,
+        0
+    );
+    testSetChunk(
+        '  123  .def gh.i   ',
+        '  abc  .def gh.i   ',
+        VpcGranularity.Words,
+        1,
+        1
+    );
     testSetChunk('  123 gh.i   ', '  abc  .def gh.i   ', VpcGranularity.Words, 1, 2);
     testSetChunk('  123   ', '  abc  .def gh.i   ', VpcGranularity.Words, 1, 3);
     testSetChunk('  123   ', '  abc  .def gh.i   ', VpcGranularity.Words, 1, 4);
@@ -356,11 +368,29 @@ t.test('ChunkSetWord1', () => {
     );
 });
 t.test('ChunkSetWord2', () => {
-    testSetChunk('123ABC   DEF  GHI', 'ABC   DEF  GHI', VpcGranularity.Words, 0, undefined);
+    testSetChunk(
+        '123ABC   DEF  GHI',
+        'ABC   DEF  GHI',
+        VpcGranularity.Words,
+        0,
+        undefined
+    );
     testSetChunk('123   DEF  GHI', 'ABC   DEF  GHI', VpcGranularity.Words, 1, undefined);
     testSetChunk('ABC   123  GHI', 'ABC   DEF  GHI', VpcGranularity.Words, 2, undefined);
-    testSetChunk('ABC   DEF  GHI123', 'ABC   DEF  GHI', VpcGranularity.Words, 4, undefined);
-    testSetChunk('ABC   DEF  GHI123', 'ABC   DEF  GHI', VpcGranularity.Words, 5, undefined);
+    testSetChunk(
+        'ABC   DEF  GHI123',
+        'ABC   DEF  GHI',
+        VpcGranularity.Words,
+        4,
+        undefined
+    );
+    testSetChunk(
+        'ABC   DEF  GHI123',
+        'ABC   DEF  GHI',
+        VpcGranularity.Words,
+        5,
+        undefined
+    );
     testSetChunk('123ABC   DEF  GHI', 'ABC   DEF  GHI', VpcGranularity.Words, 0, 0);
     testSetChunk('123ABC   DEF  GHI', 'ABC   DEF  GHI', VpcGranularity.Words, 0, 2);
     testSetChunk('123ABC   DEF  GHI', 'ABC   DEF  GHI', VpcGranularity.Words, 0, 4);

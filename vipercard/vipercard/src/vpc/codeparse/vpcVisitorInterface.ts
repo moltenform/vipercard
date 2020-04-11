@@ -8,11 +8,14 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-// the VpcCompleteVisitor interface will make it easier
-// to see that all visitor methods are there
-
-// the VisitingContext interface is just basically there
-// while writing the visitor to get autocomplete in the code editor
+/**
+ * the VpcCompleteVisitor interface will ensure that
+ * all visitor methods are defined as expected, or we'll get a 
+ * type check warning.
+ * 
+ * the VisitingContext interface just basically
+ * helps with auto-complete when writing code.
+ */
 
 /* generated code, any changes past this point will be lost: --------------- */
 

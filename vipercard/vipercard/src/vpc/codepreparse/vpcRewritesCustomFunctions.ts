@@ -172,7 +172,7 @@ export class ExpandCustomFunctions {
         /* put results of the call into the temporary variable */
         let template = `put result ( ) %INTO% %ARG0%`;
         let tokenNewVarname = this.rw.tokenFromEnglishTerm(newvarname, line[0]);
-        let fromTemplateLines = this.rw.go(template, line[0], [[tokenNewVarname]]);
+        let fromTemplateLines = this.rw.gen(template, line[0], [[tokenNewVarname]]);
         checkThrowEq(1, fromTemplateLines.length, '');
         ret.push(fromTemplateLines[0]);
     }

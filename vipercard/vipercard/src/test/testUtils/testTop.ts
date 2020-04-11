@@ -55,7 +55,7 @@ export class SimpleUtil512Tests {
             testCollectionExternalLibs
         ];
 
-        // run tests from low level to high level
+        /* run tests from low level to high level */
         colls.reverse();
         let colNamesSeen = new Map<string, boolean>();
         let mapSeen = new Map<string, boolean>();
@@ -105,7 +105,7 @@ export class SimpleUtil512Tests {
 
         /* note that some tests require async tests to be done first. */
         let tests: [string, VoidFn | AsyncFn][] = coll.atests;
-        tests = tests.concat(coll.tests)
+        tests = tests.concat(coll.tests);
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {

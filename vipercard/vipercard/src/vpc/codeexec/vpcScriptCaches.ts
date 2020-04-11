@@ -85,8 +85,16 @@ export class VpcCacheParsedCST {
     }
 }
 
+/**
+ * for efficiency, let's cache the entire script once we've processed it.
+ * note that this isn't keyed by element id. if two elements have exactly
+ * the same script, they'll share an entry here.
+ * 
+ * this also helps simplify the case where a script deletes objects at runtime,
+ * it can even delete itself with no issues.
+ */
 export class VpcCacheParsedAST {
-    cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyParsedLines);
+    cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyScripts);
     constructor(protected idGen: CountNumericId) {}
     getParsedCodeCollection(code: string, velIdForErrMsg: string): VpcParsedCodeCollection | VpcScriptSyntaxError {
         assertTrue(!code.match(/^\s*$/), '');

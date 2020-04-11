@@ -358,8 +358,10 @@ export class IntermedMapOfIntermedVals extends VpcIntermedValBase {
         }
     }
 
+    /**
+     * rules like HOrdinal are actually an enum, not a string
+     */
     static getOrdinalOrPosition(v: IntermedMapOfIntermedVals, keyname: string) {
-        // rules like HOrdinal are actually an enum, not a string
         return (v.vals[keyname][0] as any) as OrdinalOrPosition;
     }
 }

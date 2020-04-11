@@ -54,7 +54,7 @@ export class CheckReservedWords {
     }
 
     okLocalVar(s: string) {
-        // new: local variables can be property names.
+        /* new: local variables can be the same as a property name. */
         checkThrow(slength(s), `7(|invalid identifier ${s}`);
         return !this.isKeyword(s) && !this.isBuiltinHandler(s) && !this.isBuiltinFunction(s) && !this.isBuiltinVarOrConstant(s);
     }

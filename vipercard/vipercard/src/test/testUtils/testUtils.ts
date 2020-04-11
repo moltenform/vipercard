@@ -82,8 +82,11 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
     });
 }
 
+/**
+ * a collection of tests
+ */
 export class SimpleUtil512TestCollection {
-    static haveHitWarnAndAllowToContinue = false
+    static haveHitWarnAndAllowToContinue = false;
     constructor(public name: string, public slow = false) {}
     tests: [string, VoidFn][] = [];
     atests: [string, AsyncFn][] = [];
@@ -101,14 +104,16 @@ export class SimpleUtil512TestCollection {
         console.log(Util512.repeat(25, ' ').join('') + this._context);
     }
     public warnAndAllowToContinue(...message: unknown[]) {
-        console.error(...message)
+        console.error(...message);
         if (!SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue) {
-            if (!window.confirm(`a test failed, see details in
-            console. continue running tests?`)) {
-                throw makeUI512Error('user chose to stop after failed test.')
+            if (
+                !window.confirm(`a test failed, see details in
+            console. continue running tests?`)
+            ) {
+                throw makeUI512Error('user chose to stop after failed test.');
             }
 
-            SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue = true
+            SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue = true;
         }
     }
 }

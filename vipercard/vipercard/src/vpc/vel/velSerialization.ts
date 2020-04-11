@@ -1,4 +1,6 @@
 
+/* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512, isString } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -17,7 +19,7 @@ export class VpcGettableSerialization {
      * serialize a Gettable to a JS object
      */
     static serializeGettable(vel: UI512Gettable) {
-        let ret: { [key: string]: ElementObserverVal } = {};
+        let ret: { [key: string]: string | number | boolean } = {};
         let keys = Util512.getMapKeys(vel as any);
         for (let i = 0, len = keys.length; i < len; i++) {
             let propName = keys[i];
@@ -136,7 +138,7 @@ export class VpcGettableSerialization {
     /**
      * use base64 if the string contains nonprintable or nonascii chars
      */
-    static serializePlain(v: ElementObserverVal): ElementObserverVal {
+    static serializePlain(v: string | number | boolean): string | number | boolean {
         if (isString(v) && VpcGettableSerialization.containsNonSimpleAscii(v.toString())) {
             return 'b64``' + VpcGettableSerialization.jsBinaryStringToUtf16Base64(v.toString());
         } else {
@@ -147,7 +149,7 @@ export class VpcGettableSerialization {
     /**
      * decode a string encoded by serializePlain
      */
-    static deserializePlain(v: ElementObserverVal): ElementObserverVal {
+    static deserializePlain(v: string | number | boolean): string | number | boolean {
         if (isString(v) && v.toString().startsWith('b64``')) {
             let s = v.toString();
             return VpcGettableSerialization.Base64Utf16ToJsBinaryString(s.substr('b64``'.length));
@@ -205,4 +207,27 @@ export class VpcGettableSerialization {
 
         return s;
     }
+}
+
+/**
+ * defines what a saved document is
+ */
+export class SerializedVpcDocStructure extends IsUtil512Serializable {
+    product = 'vpc';
+    fileformatmajor = 0;
+    fileformatminor = 0;
+    buildnumber = '';
+    uuid = '';
+    elements: SerializedVelStructure[] = [];
+}
+
+/**
+ * defines what a serialized vel is
+ */
+export class SerializedVelStructure extends IsUtil512Serializable {
+    type: VpcElType;
+    id: string;
+    parent_id: string;
+    insertIndex: number;
+    attrs: { [key: string]: string | number | boolean };
 }

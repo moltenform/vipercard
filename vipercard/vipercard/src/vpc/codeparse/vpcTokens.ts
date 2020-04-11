@@ -49,9 +49,7 @@ export function cloneToken(tk: chevrotain.IToken): chevrotain.IToken {
  * tkidentifiers that we just don't want to be used as variable names
  */
 export const alsoReservedWordsList: { [key: string]: boolean } = {
-    /* current tokens that aren't in the list below */
-    // a: true, we now allow this
-    // an: true,
+    /* a: true, we now allow this as a variable name */
     div: true,
     mod: true,
     owner: true,
@@ -216,7 +214,7 @@ export const alsoReservedWordsList: { [key: string]: boolean } = {
 
 alsoReservedWordsList[cProductName.toLowerCase()] = true;
 alsoReservedWordsList[cAltProductName.toLowerCase()] = true;
-// we'll also add to this list during genparse, see below
+/* we'll also add to this list during genparse, see below */
 
 /* check_long_lines_silence_subsequent */
 

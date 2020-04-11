@@ -273,6 +273,10 @@ function runT(
     assertEq(expectedEnd, gotSelEnd, '1n|incorrect select-end position');
 }
 
+/**
+ * make the test code easier to read by putting markers like ^
+ * to indicate the selection
+ */
 export class FormattedTextFromPlainText {
     /**
      * From one string with ^ and # markers,

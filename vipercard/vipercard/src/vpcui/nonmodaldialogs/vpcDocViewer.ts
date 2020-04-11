@@ -2,10 +2,9 @@
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, assertTrue, tostring } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson, Util512, cast } from './../../ui512/utils/util512';
+/* auto */ import { Util512, cast } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -450,13 +449,11 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
  * structure of the json documentation
  */
 class JsonDocumentationStructure {
-    name:string
-    entries:JsonDocumentationStructureInner[]
-}
-
-class JsonDocumentationStructureInner {
-    title:string
-    body:string
+    name: string;
+    entries: {
+        title: string;
+        body: string;
+    }[];
 }
 
 /**

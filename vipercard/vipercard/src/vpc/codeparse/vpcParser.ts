@@ -13,9 +13,7 @@ export class VpcChvParser extends chevrotain.CstParser {
         super(allVpcTokens, {
             recoveryEnabled: false,
             outputCst: true,
-            maxLookahead: 4 // better to set it definitely.
-            // would set to 6 but it can get exponentially slower
-            // and i think we'll get a warning if it's too small
+            maxLookahead: 4 
         });
 
         this.performSelfAnalysis();

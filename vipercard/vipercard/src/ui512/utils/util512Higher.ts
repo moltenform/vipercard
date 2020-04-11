@@ -51,7 +51,7 @@ export class Util512Higher {
             nextPowerOf2 *= 2;
         }
 
-        // use rejection sampling. slower, but better for uniform values
+        /* use rejection sampling. slower, but better for uniform values */
         let buf = new Uint8Array(8);
         while (true) {
             window.crypto.getRandomValues(buf);

@@ -506,21 +506,20 @@ t.test('ScriptParse Invalid There-is-a, we require "cd btn", not "btn" alone', (
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('ScriptParse1',() => {
-        t.say(longstr(`ScriptParse there is not a`));
-            testExp(`there is not a card 1`, 'parses');
-        testExp(`there is not a card x`, 'parses');
+t.test('ScriptParse1', () => {
+    t.say(longstr(`ScriptParse there is not a`));
+    testExp(`there is not a card 1`, 'parses');
+    testExp(`there is not a card x`, 'parses');
 
-        assertFailsParseExp(
-            `there is not cd btn 1`,
-            `MismatchedTokenException: Expecting token of type `
-        );
-        assertFailsParseExp(
-            `there not cd btn 1`,
-            `MismatchedTokenException: Expecting token of type `
-        );
-    }
-);
+    assertFailsParseExp(
+        `there is not cd btn 1`,
+        `MismatchedTokenException: Expecting token of type `
+    );
+    assertFailsParseExp(
+        `there not cd btn 1`,
+        `MismatchedTokenException: Expecting token of type `
+    );
+});
 t.test('testScriptParseExpr.get rect property', () => {
     testExp(`the rect of cd btn "p1"`, 'parses');
     testExp(`the rect of bg btn "p1"`, 'parses');

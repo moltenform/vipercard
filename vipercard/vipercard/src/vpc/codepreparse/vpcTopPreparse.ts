@@ -5,7 +5,7 @@
 /* auto */ import { VpcRewritesLoops } from './vpcRewritesLoops';
 /* auto */ import { VpcRewritesGlobal, VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { ExpandCustomFunctions } from './vpcRewritesCustomFunctions';
-/* auto */ import { VpcRewritesConditions, VpcRewritesConditionsNoElseIfClauses } from './vpcRewritesConditions';
+/* auto */ import { VpcSplitSingleLineIf, VpcRewriteNoElseIfClauses } from './vpcRewritesConditions';
 /* auto */ import { VpcRewriteForCommands } from './vpcRewritesCommands';
 /* auto */ import { BranchProcessing } from './vpcProcessBranchAndLoops';
 /* auto */ import { MakeLowerCase, SplitIntoLinesAndMakeLowercase, VpcCodeLine, VpcCodeLineReference } from './vpcPreparseCommon';
@@ -110,23 +110,21 @@ export namespace VpcCodeProcessor {
         let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, lowercase);
         let rewrites = new VpcRewriteForCommands(rw);
         let exp = new ExpandCustomFunctions(idGen, new CheckReservedWords());
-        let lines: ChvITk[][] = [];
+        let buildTree = new VpcRewriteNoElseIfClauses.TreeBuilder()
         while (true) {
             let next = splitter.next();
             if (!next) {
                 break;
             }
 
-            lines.push(next);
+            buildTree.addLine(next)
         }
 
-        // get rid of else-if clauses, they don't support custom function calls
-        // and make our branch-processing code a little more complex
-        // this one needs access to the entire array.
-        lines = VpcRewritesConditionsNoElseIfClauses.goNoElseIfClauses(lines, rw);
+        /* transform else-if into their own if-end */
+        let lines = VpcRewriteNoElseIfClauses.go(buildTree, rw);
 
-        // now do these as stages, they don't need access to the entire array
-        // by passing the result of one to the next, we're saving some allocations
+        /* now do these as stages, they don't need access to the entire array */
+        /* by passing the result of one to the next, we're saving some allocations */
         let totalOutput: VpcCodeLine[] = [];
         let checkReserved = new CheckReservedWords();
         let toCodeObj = new VpcLineToCodeObj(idGen, checkReserved);
@@ -167,7 +165,7 @@ export namespace VpcCodeProcessor {
 
     function stage1Process(line: ChvITk[], rw: VpcSuperRewrite): O<ChvITk[][]> {
         if (line.length && line[0].image === 'if') {
-            return VpcRewritesConditions.splitSinglelineIf(line, rw);
+            return VpcSplitSingleLineIf.go(line, rw);
         } else if (line.length && line[0].image === 'repeat') {
             return VpcRewritesLoops.Go(line, rw);
         } else {
@@ -214,6 +212,9 @@ export namespace VpcCodeProcessor {
     }
 }
 
+/**
+ * the top level collection of parsed and processed code.
+ */
 export class VpcParsedCodeCollection {
     protected _handlerStarts: number[];
     protected _handlers: MapKeyToObject<VpcCodeLineReference>;

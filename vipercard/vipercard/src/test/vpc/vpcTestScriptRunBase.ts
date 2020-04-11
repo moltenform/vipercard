@@ -176,15 +176,15 @@ export class TestVpcScriptRunBase {
     }
 
     protected updateChangedCodeAndCheckForSyntaxError(owner: VpcElBase, code: string) {
-        assertTrue(false, "nyi")
+        assertTrue(false, 'nyi');
         let NoteThisIsDisabledCode = 1;
         //~ this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
         //~ let fnd = this.vcstate.runtime.codeExec.getCompiledScript(
-            //~ owner.id,
-            //~ owner.getS('script')
+        //~ owner.id,
+        //~ owner.getS('script')
         //~ );
         //~ if (fnd && fnd instanceof VpcScriptSyntaxError) {
-            //~ throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
+        //~ throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
         //~ }
     }
 
@@ -220,10 +220,10 @@ export class TestVpcScriptRunBase {
             let velId = '';
             let line = -1;
             this.vcstate.vci.undoableAction(() => {
-                let [
-                    reVelId,
-                    reLine
-                ] = VpcPresenter.commonRespondToError(this.vcstate.vci, scriptErr);
+                let [reVelId, reLine] = VpcPresenter.commonRespondToError(
+                    this.vcstate.vci,
+                    scriptErr
+                );
                 velId = reVelId;
                 line = reLine;
                 this.vcstate.vci.setTool(VpcTool.Browse);
@@ -435,12 +435,9 @@ put ${s} into testresult`;
             let [beforeLine, expr] = getBeforeLine(testsErr[i][0]);
             let errOnLine = beforeLine.length ? 4 : 5;
             let expectErr = testsErr[i][1].replace(/ERR:/g, '');
-            let tryLine = Util512.parseInt(expectErr.split(':')[0])
-            if (
-                expectErr.includes(':') &&
-                tryLine !== undefined)
-             {
-                errOnLine = tryLine
+            let tryLine = Util512.parseInt(expectErr.split(':')[0]);
+            if (expectErr.includes(':') && tryLine !== undefined) {
+                errOnLine = tryLine;
                 expectErr = expectErr.split(':')[1];
             }
 

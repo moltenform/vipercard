@@ -76,7 +76,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
                 fldEmailVerify.set('visible', true);
                 let lblEmailVerify = grp.getEl(this.getElId('lblForcodeEmailVerify'));
                 lblEmailVerify.set('visible', true);
-                this.waitingForVerifyCode = result.keyBuffer
+                this.waitingForVerifyCode = result.keyBuffer;
             } else {
                 this.setStatus('lngDid not log in, unknown.');
             }

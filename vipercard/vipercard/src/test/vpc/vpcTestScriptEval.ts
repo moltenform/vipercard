@@ -40,12 +40,12 @@
 let t = new SimpleUtil512TestCollection('testCollectionvpcScriptEval');
 export let testCollectionvpcScriptEval = t;
 
-let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>()
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
 
-t.atest("--init--vpcTestScriptExprLvl", async ()=> {
-    h = new TestVpcScriptRunBase(t)
+t.atest('--init--vpcTestScriptExprLvl', async () => {
+    h = new TestVpcScriptRunBase(t);
     await h.initEnvironment();
-})
+});
 
 t.test('_getProp', () => {
     let batch: [string, string][];
@@ -144,10 +144,7 @@ t.test('_getProp', () => {
         /* field */
         [`the short id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`],
         [`the short id of cd fld id ${h.elIds.fld_c_d_1}`, `${h.elIds.fld_c_d_1}`],
-        [
-            `the short id of cd fld id (${h.elIds.fld_c_d_1})`,
-            `${h.elIds.fld_c_d_1}`
-        ],
+        [`the short id of cd fld id (${h.elIds.fld_c_d_1})`, `${h.elIds.fld_c_d_1}`],
         [`the short id of cd fld id 99`, `ERR:could not find the specified`],
         [`the short id of cd fld "p1"`, `${h.elIds.fld_b_c_1}`],
         [`the short id of cd fld "p2"`, `${h.elIds.fld_b_c_2}`],
@@ -178,10 +175,7 @@ t.test('_getProp', () => {
         /* button */
         [`the short id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`],
         [`the short id of cd btn id ${h.elIds.btn_c_d_1}`, `${h.elIds.btn_c_d_1}`],
-        [
-            `the short id of cd btn id (${h.elIds.btn_c_d_1})`,
-            `${h.elIds.btn_c_d_1}`
-        ],
+        [`the short id of cd btn id (${h.elIds.btn_c_d_1})`, `${h.elIds.btn_c_d_1}`],
         [`the short id of cd btn id 99`, `ERR:could not find the specified`],
         [`the short id of cd btn "p1"`, `${h.elIds.btn_b_c_1}`],
         [`the short id of cd btn "p2"`, `${h.elIds.btn_b_c_2}`],
@@ -281,14 +275,8 @@ t.test('_vpcProperties', () => {
     ];
     h.testBatchEvaluate(batch);
 
-    h.updateObjectScript(
-        h.vcstate.model.stack.id,
-        'on stackscript\nend stackscript'
-    );
-    h.updateObjectScript(
-        h.vcstate.model.stack.bgs[1].id,
-        'on bgscript\nend bgscript'
-    );
+    h.updateObjectScript(h.vcstate.model.stack.id, 'on stackscript\nend stackscript');
+    h.updateObjectScript(h.vcstate.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
     h.updateObjectScript(
         h.vcstate.model.stack.bgs[1].cards[1].id,
         'on cdscript\nend cdscript'
@@ -319,10 +307,7 @@ t.test('_vpcProperties', () => {
         ['length(the script of cd 1) == 0', `true`],
         ['the script of cd 1', ``],
         ['length(the script of cd 3) > 1', `true`],
-        [
-            'the script of cd 3',
-            `${h.vcstate.model.stack.bgs[1].cards[1].getS('script')}`
-        ],
+        ['the script of cd 3', `${h.vcstate.model.stack.bgs[1].cards[1].getS('script')}`],
         ['the short name of cd 3', 'c'],
         ['set the name of cd 3 to "newname" \\ the short name of cd 3', 'newname'],
         ['set the name of cd 3 to "c" \\ the short name of cd 3', 'c']
@@ -435,10 +420,7 @@ t.test('_vpcProperties', () => {
     let batchWithFld = batch.map((item): [string, string] => [
         item[0]
             .replace(/ cd btn /g, ' cd fld ')
-            .replace(
-                new RegExp(`${h.elIds.btn_b_c_1}`, 'g'),
-                `${h.elIds.fld_b_c_1}`
-            ),
+            .replace(new RegExp(`${h.elIds.btn_b_c_1}`, 'g'), `${h.elIds.fld_b_c_1}`),
         item[1]
     ]);
     h.testBatchEvaluate(batchWithFld);
@@ -1430,18 +1412,12 @@ t.test('_builtinFunctions', () => {
         ['shiftkey()', 'ERR:not a key event'],
         ['clickh()', `${h.simClickX - userBounds[0]}`],
         ['clickv()', `${h.simClickY - userBounds[1]}`],
-        [
-            'clickloc()',
-            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
-        ],
+        ['clickloc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`],
         ['mouse()', `up`],
         ['mouseclick()', `true`],
         ['mouseh()', `${h.simMouseX - userBounds[0]}`],
         ['mousev()', `${h.simMouseY - userBounds[1]}`],
-        [
-            'mouseloc()',
-            `${h.simMouseX - userBounds[0]},${h.simMouseY - userBounds[1]}`
-        ],
+        ['mouseloc()', `${h.simMouseX - userBounds[0]},${h.simMouseY - userBounds[1]}`],
         ['param(0)', ``],
         ['param(1)', ``],
         ['param(2)', ``],
@@ -1451,20 +1427,10 @@ t.test('_builtinFunctions', () => {
         ['tool()', `browse`],
 
         /* casing */
-        [
-            'CLICKLOC()',
-            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
-        ],
-        [
-            'clIcKloC()',
-            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
-        ],
-        [
-            'ClickLoc()',
-            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
-        ]
+        ['CLICKLOC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`],
+        ['clIcKloC()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`],
+        ['ClickLoc()', `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`]
     ];
 
     h.testBatchEvaluate(batch);
 });
-

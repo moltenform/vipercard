@@ -309,9 +309,7 @@ export class TestParseHelpers {
                         .substr(0, 50)
                         .split('\r')[0]
                         .split('\n')[0];
-                    t.warnAndAllowToContinue(
-                        `for input ${sInput} got\n${got}`
-                    );
+                    t.warnAndAllowToContinue(`for input ${sInput} got\n${got}`);
                     return false;
                 }
 

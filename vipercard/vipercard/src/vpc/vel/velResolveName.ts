@@ -311,6 +311,6 @@ export class VelResolveNumber {
         checkThrow(parentList && parentList.length, 'parent list not found or empty');
         let index = parentList.findIndex(e => e.id === vel.id);
         checkThrow(index !== -1, 'object not found belonging to its parent');
-        return index + 1; // one-based indexing
+        return index + 1; /* one-based indexing */
     }
 }

@@ -141,7 +141,7 @@ export class Util512 {
     /**
      * shallow clone of an object
      */
-    static shallowClone<T extends object>(o: object):T {
+    static shallowClone<T extends object>(o: object): T {
         return Object.assign({}, o) as T;
     }
 
@@ -347,14 +347,14 @@ export class Util512 {
     }
 
     /**
-     * javascript's default sort is dangerous because it's 
+     * javascript's default sort is dangerous because it's
      * always a string sort, but we can use this for cases where
      * we know we are sorting strings. our util512 sort is
      * usually better though because it checks types at runtime.
      */
-    static sortStringArray(arr:string[]) {
+    static sortStringArray(arr: string[]) {
         /* eslint-disable-next-line @typescript-eslint/require-array-sort-compare */
-        arr.sort()
+        arr.sort();
     }
 
     /**
@@ -363,11 +363,11 @@ export class Util512 {
      * often more efficient than passing a comparison function.
      */
     static sortDecorated<T>(ar: T[], fn: (a: T) => unknown): T[] {
-        // 1) decorate
+        /* 1) decorate */
         let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
-        // 2) sort
+        /* 2) sort */
         decorated.sort((a, b) => util512Sort(a[0], b[0]));
-        // 3) undecorate
+        /* 3) undecorate */
         return decorated.map(val => val[1]);
     }
 

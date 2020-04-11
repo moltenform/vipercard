@@ -451,8 +451,8 @@ declare const WEBPACK_PRODUCTION: boolean;
 export function checkIsProductionBuild(): boolean {
     let ret = false;
     try {
-        // when webpack builds this file it will replace the string
-        // with `true` or `false`
+        /* when webpack builds this file it will replace the string */
+        /* with `true` or `false` */
         ret = WEBPACK_PRODUCTION;
     } catch {
         ret = false;
