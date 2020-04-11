@@ -45,30 +45,30 @@ t.test('CheckPageUrlParamsGetProvider.provide demo stack', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?s=ZGVtb19nbGlkZXI'
     );
-    assertEq(VpcDocumentLocation.FromStaticDemo, got!.loc, 'G2|');
-    assertEq('demo_glider.json', got!.identifier, 'G1|');
+    assertEq(VpcDocumentLocation.FromStaticDemo, got?.loc, 'G2|');
+    assertEq('demo_glider.json', got?.identifier, 'G1|');
 
     got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2/?s=ZGVtb19zcGFjZWdhbWU'
     );
-    assertEq(VpcDocumentLocation.FromStaticDemo, got!.loc, 'G0|');
-    assertEq('demo_spacegame.json', got!.identifier, 'F~|');
+    assertEq(VpcDocumentLocation.FromStaticDemo, got?.loc, 'G0|');
+    assertEq('demo_spacegame.json', got?.identifier, 'F~|');
 });
 t.test('CheckPageUrlParamsGetProvider.works even if not the only parameter', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?abc=1&s=ZGVtb19nbGlkZXI'
     );
-    assertEq(VpcDocumentLocation.FromStaticDemo, got!.loc, 'F}|');
+    assertEq(VpcDocumentLocation.FromStaticDemo, got?.loc, 'F}|');
 
     got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?s1=*&s=ZGVtb19nbGlkZXI'
     );
-    assertEq(VpcDocumentLocation.FromStaticDemo, got!.loc, 'F||');
+    assertEq(VpcDocumentLocation.FromStaticDemo, got?.loc, 'F||');
 
     got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?s=ZGVtb19nbGlkZXI&abc=1'
     );
-    assertEq(VpcDocumentLocation.FromStaticDemo, got!.loc, 'F{|');
+    assertEq(VpcDocumentLocation.FromStaticDemo, got?.loc, 'F{|');
 });
 t.test('CheckPageUrlParams1', () => {
     t.say(
@@ -100,14 +100,14 @@ t.test('CheckPageUrlParamsGetProvider.provide reference to stack', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?s=abc|def'
     );
-    assertEq(VpcDocumentLocation.FromStackIdOnline, got!.loc, 'F[|');
-    assertEq('abc|def', got!.identifier, 'F@|');
+    assertEq(VpcDocumentLocation.FromStackIdOnline, got?.loc, 'F[|');
+    assertEq('abc|def', got?.identifier, 'F@|');
 
     got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2/?s=ZXJpY28|U3ZcVJvvxadd8_iQplmeYB'
     );
-    assertEq(VpcDocumentLocation.FromStackIdOnline, got!.loc, 'F?|');
-    assertEq('ZXJpY28|U3ZcVJvvxadd8_iQplmeYB', got!.identifier, 'F>|');
+    assertEq(VpcDocumentLocation.FromStackIdOnline, got?.loc, 'F?|');
+    assertEq('ZXJpY28|U3ZcVJvvxadd8_iQplmeYB', got?.identifier, 'F>|');
 });
 t.test('CheckPageUrlParamsGetProvider.too many |', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
@@ -123,18 +123,18 @@ t.test('CheckPageUrlParamsGetProvider.| is escaped by percent', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2/?s=ZXJpY28%7cU3ZcVJvvxadd8_iQplmeYB'
     );
-    assertEq(VpcDocumentLocation.FromStackIdOnline, got!.loc, 'F;|');
-    assertEq('ZXJpY28|U3ZcVJvvxadd8_iQplmeYB', got!.identifier, 'F:|');
+    assertEq(VpcDocumentLocation.FromStackIdOnline, got?.loc, 'F;|');
+    assertEq('ZXJpY28|U3ZcVJvvxadd8_iQplmeYB', got?.identifier, 'F:|');
 
     got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2/?s=ZXJpY28%7CU3ZcVJvvxadd8_iQplmeYB'
     );
-    assertEq(VpcDocumentLocation.FromStackIdOnline, got!.loc, 'F/|');
-    assertEq('ZXJpY28|U3ZcVJvvxadd8_iQplmeYB', got!.identifier, 'F.|');
+    assertEq(VpcDocumentLocation.FromStackIdOnline, got?.loc, 'F/|');
+    assertEq('ZXJpY28|U3ZcVJvvxadd8_iQplmeYB', got?.identifier, 'F.|');
 
     got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2/?s=currentlyjustleave|a%77%xx'
     );
-    assertEq(VpcDocumentLocation.FromStackIdOnline, got!.loc, 'F-|');
-    assertEq('currentlyjustleave|a%77%xx', got!.identifier, 'F,|');
+    assertEq(VpcDocumentLocation.FromStackIdOnline, got?.loc, 'F-|');
+    assertEq('currentlyjustleave|a%77%xx', got?.identifier, 'F,|');
 });

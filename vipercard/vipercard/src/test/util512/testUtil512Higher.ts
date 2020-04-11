@@ -235,6 +235,34 @@ t.test("serialize: we don't read private incoming", () => {
     assertTrue('c' === oGot.optional_f1,'')
     assertTrue('b' === oGot.fld2,'')
 });
+t.test('serialize: inheritance works, methods skipped', () => {
+    class DemoChild extends DemoSerializable{
+        other = 'other'
+        method1 = ()=> { return 1; }
+    }
+    let o = new DemoChild()
+    o.__private += '~'
+    o.fld1 += '~'
+    o.fld2 += '~'
+    o.optional_f1 += '~'
+    o.optional_f2 += '~';
+    (o as any).method2 = () => { return 2; }
+    let s = Util512SerializableHelpers.serializeToJson(o)
+    let got = JSON.parse(s)
+    let ks = sorted(Util512.getMapKeys(got)).join(',')
+    assertEq('fld1,fld2,f1,f2,other', ks, '')
+    let oGot = Util512SerializableHelpers.deserializeFromJson(DemoChild, s)
+    ks = sorted(Util512.getMapKeys(oGot)).join(',')
+    assertEq('__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2', ks, '')
+    assertEq('fld 1~', oGot.fld1, '')
+    assertEq('fld 2 and text~', oGot.fld2, '')
+    assertEq('an optional field~', oGot.optional_f1, '')
+    assertEq('also optional~', oGot.optional_f2, '')
+    assertEq('not serialized', oGot.__private, '')
+    assertEq('other', oGot.other, '')
+    assertEq(1, oGot.method1(), '')
+    assertTrue(undefined === oGot['method2'], '')
+})
 
 
 t = new SimpleUtil512TestCollection('testCollectionExampleAsyncTests');

@@ -3,9 +3,10 @@
 /* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { vpcversion } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson, UnshapedJsonAny, checkThrowEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { AnyJson, checkThrowEq, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -45,7 +46,7 @@ export class VpcStateSerialize {
      * serialize a vel
      */
     serializeVel(vel: VpcElBase) {
-        let ret: UnshapedJsonAny = {};
+        let ret: IsUtil512Serializable = {};
         ret.type = vel.getType();
         ret.id = vel.id;
         ret.parent_id = vel.parentId;
@@ -57,7 +58,7 @@ export class VpcStateSerialize {
     /**
      * deserialize an entire project, from a plain JSON object
      */
-    deserializeAll(building: VpcStateInterface, incoming: UnshapedJsonAny) {
+    deserializeAll(building: VpcStateInterface, incoming: IsUtil512Serializable) {
         building.doWithoutAbilityToUndo(() => {
             checkThrowEq('vpc', incoming.product, 'K |');
             checkThrow(incoming.fileformatmajor <= this.latestMajor, 'Kz|file comes from a future version, cannot open');
@@ -82,7 +83,7 @@ export class VpcStateSerialize {
     /**
      * deserialize a vel, from a plain JSON object
      */
-    deserializeVel(building: VpcStateInterface, incoming: UnshapedJsonAny) {
+    deserializeVel(building: VpcStateInterface, incoming: IsUtil512Serializable) {
         if (incoming.type === VpcElType.Stack) {
             /* don't create a new element, just copy over the attrs */
             VpcGettableSerialization.deserializeSettable(building.getModel().stack, incoming.attrs);

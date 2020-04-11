@@ -245,7 +245,6 @@ export class Util512 {
      * returns list of keys.
      */
     static getMapKeys(map: object): string[] {
-        // map: { [key: string]: U }
         let ret: string[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {

@@ -2,9 +2,10 @@
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
+/* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, assertTrue, tostring } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson, UnshapedJsonAny, Util512, cast } from './../../ui512/utils/util512';
+/* auto */ import { AnyJson, Util512, cast } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -195,7 +196,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * show the json data on the right side
      */
-    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: UnshapedJsonAny) {
+    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: IsUtil512Serializable) {
         let entryTitles = this.referenceInfo[ctg][2];
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);
