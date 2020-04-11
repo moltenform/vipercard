@@ -1,6 +1,6 @@
 
 /* auto */ import { checkThrowUI512 } from './util512Assert';
-/* auto */ import { AnyJson, NoParameterCtor, Util512, isString } from './util512';
+/* auto */ import { NoParameterCtor, UnshapedJsonAny, Util512, isString } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -42,7 +42,7 @@ export namespace Util512SerializableHelpers {
         return JSON.stringify(serializeObj(obj))
     }
 
-    export function deserializeObj<T extends IsUtil512Serializable>(ctor: NoParameterCtor<T>, incoming:AnyJson):T {
+    export function deserializeObj<T extends IsUtil512Serializable>(ctor: NoParameterCtor<T>, incoming:UnshapedJsonAny):T {
         let objNew = new ctor()
         checkThrowUI512(objNew.__isUtil512Serializable, 'must be a isUtil512Serializable')
         let prop = ''
@@ -84,10 +84,14 @@ export namespace Util512SerializableHelpers {
 
 export abstract class IsUtil512Serializable {
     __isUtil512Serializable = true
-    getClone<T extends object>():T {
-        return Util512.shallowClone(this)
+    static getClone<T extends object>(me:IsUtil512Serializable):T {
+        return Util512.shallowClone(me)
     }
-    getKeys() {
-        return Util512.getMapKeys(this).filter(k => Util512SerializableHelpers.shouldSerializeProperty(this, k))
+    static getKeys(me:IsUtil512Serializable) {
+        return Util512.getMapKeys(me).filter(k => Util512SerializableHelpers.shouldSerializeProperty(me, k))
     }
+}
+
+export class IsUtil512SerializableIndexable extends IsUtil512Serializable {
+    [index: string]: any
 }

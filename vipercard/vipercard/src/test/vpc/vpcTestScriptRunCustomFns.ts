@@ -6,7 +6,6 @@
 /* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
-import { checkThrow } from '../../ui512/utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

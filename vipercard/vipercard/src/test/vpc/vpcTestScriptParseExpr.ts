@@ -163,7 +163,7 @@ t.test('ScriptParseExpr.expression precedence, above level 5', () => {
 });
 t.test('exp precedence', () => {
     t.say(
-        longstr(`testScriptParseExpr.expression
+        longstr(`ScriptParseExpr.expression
         precedence, the btn name is a Lvl6Expression, confirmed in emulator`)
     );
     testExp(`cd btn 1 + 1`, 'parses');
@@ -281,7 +281,7 @@ t.test('ScriptParseExpr parts', () => {
 });
 t.test('ScriptParseExpr.parts of', () => {
     t.say(
-        longstr(`testScriptParseExpr.parts of
+        longstr(`ScriptParseExpr.parts of
         expressions, we require the cd or btn prefix.`)
     );
     assertFailsParseExp(`btn 1`, `NoViableAltException: Expecting: one of these poss`);
@@ -338,7 +338,7 @@ t.test(
 );
 t.test('ScriptParseExpr1', () => {
     t.say(
-        longstr(`testScriptParseExpr.parts of
+        longstr(`ScriptParseExpr.parts of
         expressions, other possible HSimpleContainers`)
     );
     testExp(`1 + cd fld "a"`, 'parses');
@@ -506,10 +506,8 @@ t.test('ScriptParse Invalid There-is-a, we require "cd btn", not "btn" alone', (
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`ScriptParse1`)),
-
-    () => {
-        t.say(longstr(`ScriptParse there is not a`)),
+t.test('ScriptParse1',() => {
+        t.say(longstr(`ScriptParse there is not a`));
             testExp(`there is not a card 1`, 'parses');
         testExp(`there is not a card x`, 'parses');
 
@@ -521,14 +519,12 @@ t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`ScriptParse1`))
             `there not cd btn 1`,
             `MismatchedTokenException: Expecting token of type `
         );
-    },
-
-    'testScriptParseExpr.get rect property',
-    () => {
-        testExp(`the rect of cd btn "p1"`, 'parses');
-        testExp(`the rect of bg btn "p1"`, 'parses');
     }
 );
+t.test('testScriptParseExpr.get rect property', () => {
+    testExp(`the rect of cd btn "p1"`, 'parses');
+    testExp(`the rect of bg btn "p1"`, 'parses');
+});
 
 /**
  * wrapper around testParse, for testing parsing an expression

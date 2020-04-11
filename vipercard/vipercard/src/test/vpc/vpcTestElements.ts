@@ -43,7 +43,7 @@ t.test('ChangeToSingleLine.making it single line should kill the other line', ()
 });
 t.test('ChangeToSingleLine1', () => {
     t.say(
-        longstr(`testChangeToSingleLine.making
+        longstr(`ChangeToSingleLine.making
         it single line should kill all the other lines`)
     );
     let vel = new VpcElField('id1', 'parentid1');
@@ -311,9 +311,9 @@ t.test('SerializeGettable with nonascii characters', () => {
     assertEq(sBinXbb, restored.getS('textalign'), 'F9|');
     assertEq(sBinMany, restored.getS('name'), 'F8|');
 });
-t.test('MMMMMM', () => {
+t.test('vars starting with _', () => {
     t.say(
-        longstr(`testVpcElements.Properties for
+        longstr(`VpcElements.Properties for
         serialization should include all member vars starting with _`)
     );
     return;

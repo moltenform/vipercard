@@ -241,7 +241,7 @@ export class TestVpcScriptRunBase {
             } else if (expectErrMsg) {
                 assertEqWarn(expectErrLine, line, codeBefore, codeIn, '2Z|');
                 if (!msg.includes(expectErrMsg)) {
-                    t.warnAndAllowToContinue(
+                    this.t.warnAndAllowToContinue(
                         'DIFFERENT ERR MSG for input ' +
                             codeBefore
                                 .replace(/\n/g, '; ')
@@ -419,7 +419,7 @@ put ${s} into testresult`;
                 let gt = got.readAsString();
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
-                    t.warnAndAllowToContinue(
+                    this.t.warnAndAllowToContinue(
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
                             '; '

@@ -1,5 +1,6 @@
 
 /* auto */ import { VpcValBool, VpcValN } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcStateSerialize } from './../../vpcui/state/vpcStateSerialize';
 /* auto */ import { VpcState } from './../../vpcui/state/vpcState';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
@@ -14,7 +15,7 @@
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { assertThrows } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertThrows } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -42,7 +43,16 @@
  * since if a == b, we also confirm that
  * b == a, a != b, and b != a
  */
-// TestVpcScriptRunBase {
+
+    let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptExprLvl');
+    export let vpcTestCollectionScriptExprLvl = t;
+
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunBaseForScriptExpr>()
+
+t.atest("--init--vpcTestScriptEval", async ()=> {
+    h = new TestVpcScriptRunBaseForScriptExpr(t)
+    await h.initEnvironment();
+})
 
 t.test('_evalRuleExpr,RuleLvl1', () => {
     let batch: [string, string][];
@@ -54,7 +64,7 @@ t.test('_evalRuleExpr,RuleLvl1', () => {
         ['1 + xyz', 'ERR:no variable found with this name']
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* RuleExpr and/or with data types */
@@ -74,7 +84,7 @@ t.test('_evalRuleExpr,RuleLvl1', () => {
         ['true _or_ false', 'true'],
         ['false _or_ false', 'false']
     ];
-    this.testBatchEvalCommutative(batch);
+    h.testBatchEvalCommutative(batch);
 
     batch = [
         /* Lvl1Expression greater less, strings */
@@ -106,7 +116,7 @@ t.test('_evalRuleExpr,RuleLvl1', () => {
         ['"abc" _is_ "abb"', 'false'],
         ['"abc" _is_ "abc "', 'false']
     ];
-    this.testBatchEvalInvertAndCommute(batch);
+    h.testBatchEvalInvertAndCommute(batch);
 
     batch = [
         /* Lvl1Expression string/number differences */
@@ -189,7 +199,7 @@ t.test('_evalRuleExpr,RuleLvl1', () => {
         ['123 _is_ " 123 "', 'true'],
         ['123 _is_ 0', 'false']
     ];
-    this.testBatchEvalInvertAndCommute(batch);
+    h.testBatchEvalInvertAndCommute(batch);
 
     /* test chaining or any other that can't easily be unverted */
     batch = [
@@ -216,7 +226,7 @@ t.test('_evalRuleExpr,RuleLvl1', () => {
         ['12 == 13 == true', 'false'],
         ['12 == 12 == false', 'false']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
 t.test('_evalRuleLvl2', () => {
     let batch: [string, string][];
@@ -227,7 +237,7 @@ t.test('_evalRuleLvl2', () => {
         ['1 is a abcdef', 'ERR:needs one of {number|'],
         ['1 is a n', 'ERR:needs one of {number|']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* Lvl2Expression, type check */
@@ -316,7 +326,7 @@ t.test('_evalRuleLvl2', () => {
         ['" 12,13,14,15 , " _is_ a rect', 'false']
     ];
 
-    this.testBatchEvalInvert(batch);
+    h.testBatchEvalInvert(batch);
     batch = [
         /* Lvl2Expression, is within */
         ['"" _is_ in "abc"', 'true'],
@@ -342,7 +352,7 @@ t.test('_evalRuleLvl2', () => {
         ['"abcd" _is_ within "abc"', 'false'],
         ['"abdd" _is_ within "abc"', 'false']
     ];
-    this.testBatchEvalInvert(batch);
+    h.testBatchEvalInvert(batch);
 });
 t.test('_evalRuleLvl3', () => {
     let batch: [string, string][];
@@ -372,7 +382,7 @@ t.test('_evalRuleLvl3', () => {
         ['"a" && "b" && "c" && "d"', 'a b c d'],
         ['"a" && "b" && "c"', 'a b c']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
 t.test('_evalArithmetic', () => {
     /* the communitative ones, integer */
@@ -395,7 +405,7 @@ t.test('_evalArithmetic', () => {
         ['123 _*_ 0', '0'],
         ['123 _*_ -0', '0']
     ];
-    this.testBatchEvalCommutative(batch, false);
+    h.testBatchEvalCommutative(batch, false);
 
     /* the communitative ones, floating point */
     batch = [
@@ -416,7 +426,7 @@ t.test('_evalArithmetic', () => {
         ['123.9 _*_ 0', '0'],
         ['123.9 _*_ -0', '0']
     ];
-    this.testBatchEvalCommutative(batch, true);
+    h.testBatchEvalCommutative(batch, true);
 
     /* the non-communitative ones integer */
     batch = [
@@ -455,7 +465,7 @@ t.test('_evalArithmetic', () => {
         ['123 mod 0', 'ERR:> 1e18'],
         ['123 mod -0', 'ERR:> 1e18']
     ];
-    this.testBatchEvaluate(batch, false);
+    h.testBatchEvaluate(batch, false);
 
     /* the non-communitative ones floating point */
     batch = [
@@ -494,7 +504,7 @@ t.test('_evalArithmetic', () => {
         ['12 div 2.3', '5'],
         ['12 mod 2.3', '0.5']
     ];
-    this.testBatchEvaluate(batch, true);
+    h.testBatchEvaluate(batch, true);
 
     /* test chained */
     batch = [
@@ -507,7 +517,7 @@ t.test('_evalArithmetic', () => {
         ['12 * 34 / 56 * 78', '568.285714285714285'],
         ['12 / 34 / 56 / 78', '0.00008080155']
     ];
-    this.testBatchEvaluate(batch, true);
+    h.testBatchEvaluate(batch, true);
 
     /* test wrong types given (communitative works) */
     batch = [
@@ -533,7 +543,7 @@ t.test('_evalArithmetic', () => {
         ['12 _mod_ "12 a"', 'ERR:expected a number'],
         ['12 _mod_ "12.3."', 'ERR:expected a number']
     ];
-    this.testBatchEvalCommutative(batch);
+    h.testBatchEvalCommutative(batch);
 });
 t.test('_evalRuleLvl6', () => {
     let batch: [string, string][];
@@ -579,7 +589,7 @@ t.test('_evalRuleLvl6', () => {
         ['not "truea"', 'ERR:expected true or false'],
         ['not "atrue"', 'ERR:expected true or false']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
     batch = [
         /* chunk */
         ['set the itemdelimiter to "," \\ "abc"', 'abc'],
@@ -629,7 +639,7 @@ t.test('_evalRuleLvl6', () => {
             '2'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
     batch = [
         /* different chunk types */
         ['char 1 to 3 of "abcd"', 'abc'],
@@ -677,7 +687,7 @@ t.test('_evalRuleLvl6', () => {
         ['middle word of "ab cd ef gh"', 'ef'],
         ['last word of "ab cd ef gh"', 'gh']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* chunk expressions */
@@ -695,9 +705,9 @@ t.test('_evalRuleLvl6', () => {
         ['put 2 into x\\char -x of "abcd"', 'ERR:5:NoViableAlt'],
         ['put 2 into x\nput 3 into y\\char x to -y of "abcd"', 'ERR:6:NoViableAlt']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         /* order of operations */
         ['2 * 3 + 4', '10'],
@@ -746,7 +756,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
             '2'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
 t.test('_vpcvalnumbers', () => {
     assertThrows('L`|', '> 1e18', () => VpcValN(Infinity));
@@ -791,7 +801,7 @@ t.test('_vpcvalnumbers', () => {
         ['(2e20 + 3e10)/(4e17)', 'ERR:> 1e18'],
         ['(2^80 - 5^35)/(2e22)', 'ERR:> 1e18']
     ];
-    this.testBatchEvaluate(batch, true);
+    h.testBatchEvaluate(batch, true);
 
     batch = [
         /* scientific notation not applied for strings */
@@ -908,103 +918,103 @@ t.test('_vpcvalnumbers', () => {
         ['strToNumber(3.3456e2) = 334.56', 'true']
     ];
 
-    this.testBatchEvaluate(batch, false);
+    h.testBatchEvaluate(batch, false);
 });
 t.test('ModelGetById.should throw if not found', () => {
-    assertEq(undefined, this.vcstate.model.findByIdUntyped('111'), 'HM|');
+    assertEq(undefined, h.vcstate.model.findByIdUntyped('111'), 'HM|');
     assertEq(
-        this.elIds.card_a_a,
-        this.vcstate.model.findByIdUntyped(this.elIds.card_a_a)!.id,
+        h.elIds.card_a_a,
+        h.vcstate.model.findByIdUntyped(h.elIds.card_a_a)?.id,
         'HL|'
     );
     assertEq(
-        this.elIds.stack,
-        this.vcstate.model.findByIdUntyped(this.elIds.stack)!.id,
+        h.elIds.stack,
+        h.vcstate.model.findByIdUntyped(h.elIds.stack)?.id,
         'HK|'
     );
-    assertThrows('L=|', 'not found', () => this.vcstate.model.getByIdUntyped('111'));
+    assertThrows('L=|', 'not found', () => h.vcstate.model.getByIdUntyped('111'));
     assertEq(
-        this.elIds.card_a_a,
-        this.vcstate.model.getByIdUntyped(this.elIds.card_a_a).id,
+        h.elIds.card_a_a,
+        h.vcstate.model.getByIdUntyped(h.elIds.card_a_a).id,
         'HJ|'
     );
     assertEq(
-        this.elIds.stack,
-        this.vcstate.model.getByIdUntyped(this.elIds.stack).id,
+        h.elIds.stack,
+        h.vcstate.model.getByIdUntyped(h.elIds.stack).id,
         'HI|'
     );
 });
 t.test('ModelFindById.when exists and given correct type', () => {
     assertEq(
         VpcElType.Stack,
-        this.vcstate.model.findById(this.elIds.stack, VpcElStack)!.getType(),
+        h.vcstate.model.findById(VpcElStack, h.elIds.stack)?.getType(),
         'HH|'
     );
     assertEq(
         VpcElType.Card,
-        this.vcstate.model.findById(this.elIds.card_a_a, VpcElCard)!.getType(),
+        h.vcstate.model.findById(VpcElCard, h.elIds.card_a_a)?.getType(),
         'HG|'
     );
     assertEq(
         VpcElType.Btn,
-        this.vcstate.model.findById(this.elIds.btn_b_c_1, VpcElButton)!.getType(),
+        h.vcstate.model.findById(VpcElButton, h.elIds.btn_b_c_1)?.getType(),
         'HF|'
     );
     assertEq(
         VpcElType.Stack,
-        this.vcstate.model.getById(VpcElStack, this.elIds.stack).getType(),
+        h.vcstate.model.getById(VpcElStack, h.elIds.stack).getType(),
         'HE|'
     );
     assertEq(
         VpcElType.Card,
-        this.vcstate.model.getCardById(this.elIds.card_a_a).getType(),
+        h.vcstate.model.getCardById(h.elIds.card_a_a).getType(),
         'HD|'
     );
     assertEq(
         VpcElType.Btn,
-        this.vcstate.model.getById(VpcElButton, this.elIds.btn_b_c_1).getType(),
+        h.vcstate.model.getById(VpcElButton, h.elIds.btn_b_c_1).getType(),
         'HC|'
     );
 });
 t.test('ModelFindById.when exists and given incorrect type', () => {
     assertThrows('L<|', 'cast exception', () =>
-        this.vcstate.model.findById(this.elIds.stack, VpcElCard)
+        h.vcstate.model.findById(VpcElCard, h.elIds.stack)
     );
     assertThrows('L;|', 'cast exception', () =>
-        this.vcstate.model.findById(this.elIds.card_a_a, VpcElButton)
+        h.vcstate.model.findById(VpcElButton, h.elIds.card_a_a)
     );
     assertThrows('L:|', 'cast exception', () =>
-        this.vcstate.model.findById(this.elIds.btn_b_c_1, VpcElStack)
+        h.vcstate.model.findById(VpcElStack, h.elIds.btn_b_c_1)
     );
     assertThrows('L/|', 'cast exception', () =>
-        this.vcstate.model.getCardById(this.elIds.stack)
+        h.vcstate.model.getCardById(h.elIds.stack)
     );
     assertThrows('L.|', 'cast exception', () =>
-        this.vcstate.model.getById(VpcElButton, this.elIds.card_a_a)
+        h.vcstate.model.getById(VpcElButton, h.elIds.card_a_a)
     );
     assertThrows('L-|', 'cast exception', () =>
-        this.vcstate.model.getById(VpcElStack, this.elIds.btn_b_c_1)
+        h.vcstate.model.getById(VpcElStack, h.elIds.btn_b_c_1)
     );
 });
 t.test('ModelFindById.when not exists', () => {
-    assertEq(undefined, this.vcstate.model.findById('111', VpcElCard), 'HB|');
-    assertEq(undefined, this.vcstate.model.findById('111', VpcElStack), 'HA|');
-    assertEq(undefined, this.vcstate.model.findById('', VpcElCard), 'H9|');
-    assertEq(undefined, this.vcstate.model.findById('', VpcElStack), 'H8|');
-    assertThrows('L,|', 'not found', () => this.vcstate.model.getCardById('111'));
-    assertThrows('L+|', 'not found', () => this.vcstate.model.getById(VpcElStack, '111'));
-    assertThrows('L*|', 'not found', () => this.vcstate.model.getCardById(''));
-    assertThrows('L)|', 'not found', () => this.vcstate.model.getById(VpcElStack, ''));
+    assertEq(undefined, h.vcstate.model.findById(VpcElCard, '111'), 'HB|');
+    assertEq(undefined, h.vcstate.model.findById(VpcElStack, '111'), 'HA|');
+    assertEq(undefined, h.vcstate.model.findById(VpcElCard, ''), 'H9|');
+    assertEq(undefined, h.vcstate.model.findById(VpcElStack, ''), 'H8|');
+    assertThrows('L,|', 'not found', () => h.vcstate.model.getCardById('111'));
+    assertThrows('L+|', 'not found', () => h.vcstate.model.getById(VpcElStack, '111'));
+    assertThrows('L*|', 'not found', () => h.vcstate.model.getCardById(''));
+    assertThrows('L)|', 'not found', () => h.vcstate.model.getById(VpcElStack, ''));
 });
 t.atest('async/testVpcStateSerialize', async () => {
     let txt = FormattedText.newFromUnformatted('');
-    this.vcstate.undoManager.doWithoutAbilityToUndo(() => {
-        txt = this.modifyVcState();
+    h.vcstate.undoManager.doWithoutAbilityToUndo(() => {
+        txt = h.modifyVcState();
     });
 
     /* serialize */
     let obj = new VpcStateSerialize();
-    let serializedJson = obj.serializeAll(this.vcstate.vci);
+    let serializedJson = obj.serializeAll(h.vcstate.vci);
     let s = JSON.stringify(serializedJson);
     let restoredJson = JSON.parse(s);
 
@@ -1013,22 +1023,22 @@ t.atest('async/testVpcStateSerialize', async () => {
     assertEq(3, restoredJson.fileformatmajor, 'H6|');
     assertEq(0, restoredJson.fileformatminor, 'H5|');
     assertEq(vpcversion, restoredJson.buildnumber, 'H4|');
-    assertEq(this.vcstate.vci.getModel().uuid, restoredJson.uuid, 'H3|');
+    assertEq(h.vcstate.vci.getModel().uuid, restoredJson.uuid, 'H3|');
 
     /* do the full restore, as if opening from disk */
     let newProv = new VpcIntroProvider(s, 'docName', VpcDocumentLocation.FromJsonFile);
     let [newPr, newState] = await newProv.loadDocumentTop();
 
     /* test that it has everything */
-    this.testModelHasItAll(newState);
-    this.testModelBgPartProps(newState);
+    h.testModelHasItAll(newState);
+    h.testModelBgPartProps(newState);
 
     /* check productOpts (should not be persisted) */
     assertTrue(newState.model.productOpts.getN('optPaintLineColor') !== 1234, 'H2|');
     assertEq(true, newState.model.productOpts.getB('optUseHostClipboard'), '');
     assertEq(cProductName, newState.model.productOpts.getS('name'), 'H0|');
     assertEq(
-        this.elIds.card_a_a,
+        h.elIds.card_a_a,
         newState.model.productOpts.getS('currentCardId'),
         'G~|'
     );
@@ -1038,17 +1048,17 @@ t.atest('async/testVpcStateSerialize', async () => {
     assertEq(`stackname`, newState.model.stack.getS('name'), 'G||');
 
     /* check bg */
-    let newBg = newState.model.getById(VpcElBg, this.elIds.bg_b);
+    let newBg = newState.model.getById(VpcElBg, h.elIds.bg_b);
     assertEq(`on t2\nend t2`, newBg.getS('script'), 'G{|');
     assertEq(`paint2`, newBg.getS('paint'), 'G`|');
 
     /* check card */
-    let newCard = newState.model.getCardById(this.elIds.card_b_c);
+    let newCard = newState.model.getCardById(h.elIds.card_b_c);
     assertEq(`on t3\nend t3`, newCard.getS('script'), 'G_|');
     assertEq(`paint3`, newCard.getS('paint'), 'G^|');
 
     /* check button */
-    let newBtn = newState.model.getById(VpcElButton, this.elIds.btn_b_c_1);
+    let newBtn = newState.model.getById(VpcElButton, h.elIds.btn_b_c_1);
     assertEq(true, newBtn.getB('checkmark'), 'G]|');
     assertEq(false, newBtn.getB('enabled'), 'G[|');
     assertEq(123, newBtn.getN('icon'), 'G@|');
@@ -1056,7 +1066,7 @@ t.atest('async/testVpcStateSerialize', async () => {
     assertEq('on t4\nend t4', newBtn.getS('script'), 'G>|');
 
     /* check field */
-    let newFld = newState.model.getById(VpcElField, this.elIds.fld_b_d_1);
+    let newFld = newState.model.getById(VpcElField, h.elIds.fld_b_d_1);
     assertEq(true, newFld.getB('dontwrap'), 'G=|');
     assertEq(false, newFld.getB('enabled'), 'G<|');
     assertEq(123, newFld.getN('scroll'), 'G;|');
@@ -1069,114 +1079,116 @@ t.atest('async/testVpcStateSerialize', async () => {
     assertEq(txt.toSerialized(), newTxt.toSerialized(), 'G-|');
 });
 
+class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
+
 /**
  * some properties on background elements can have values stored per-card,
  * which has its own logic and needs to be tested
  */
-function testModelBgPartProps(newState: VpcState) {
+testModelBgPartProps(newState: VpcState) {
     /* we'll be setting sharedtext and sharedhilite a few times, so for convenience
         allow setting data throughout */
     newState.undoManager.doWithoutAbilityToUndo(() => {
         /* check bg field, card specific */
-        let bgfld = newState.model.getById(VpcElField, this.elIds.bgfld_b_1);
+        let bgfld = newState.model.getById(VpcElField, h.elIds.bgfld_b_1);
         assertEq(
             false,
-            bgfld.getProp('sharedtext', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgfld.getProp('sharedtext', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             123,
-            bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(),
+            bgfld.getProp('scroll', h.elIds.card_b_b).readAsStrictInteger(),
             ''
         );
-        assertEq('forbb', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '');
+        assertEq('forbb', bgfld.getCardFmTxt(h.elIds.card_b_b).toUnformatted(), '');
         assertEq(
             456,
-            bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(),
+            bgfld.getProp('scroll', h.elIds.card_b_c).readAsStrictInteger(),
             ''
         );
-        assertEq('forbc', bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(), '');
+        assertEq('forbc', bgfld.getCardFmTxt(h.elIds.card_b_c).toUnformatted(), '');
         assertEq(
             0,
-            bgfld.getProp('scroll', this.elIds.card_b_d).readAsStrictInteger(),
+            bgfld.getProp('scroll', h.elIds.card_b_d).readAsStrictInteger(),
             ''
         );
-        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_d).toUnformatted(), '');
+        assertEq('', bgfld.getCardFmTxt(h.elIds.card_b_d).toUnformatted(), '');
 
         /* check bg field, shared */
         bgfld.set('sharedtext', true);
         assertEq(
             789,
-            bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(),
+            bgfld.getProp('scroll', h.elIds.card_b_b).readAsStrictInteger(),
             ''
         );
         assertEq(
             'forshared',
-            bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(),
+            bgfld.getCardFmTxt(h.elIds.card_b_b).toUnformatted(),
             ''
         );
         assertEq(
             789,
-            bgfld.getProp('scroll', this.elIds.card_b_c).readAsStrictInteger(),
+            bgfld.getProp('scroll', h.elIds.card_b_c).readAsStrictInteger(),
             ''
         );
         assertEq(
             'forshared',
-            bgfld.getCardFmTxt(this.elIds.card_b_c).toUnformatted(),
+            bgfld.getCardFmTxt(h.elIds.card_b_c).toUnformatted(),
             ''
         );
 
         /* check bg field, not set */
-        bgfld = newState.model.getById(VpcElField, this.elIds.bgfld_b_2);
+        bgfld = newState.model.getById(VpcElField, h.elIds.bgfld_b_2);
         assertEq(
             0,
-            bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(),
+            bgfld.getProp('scroll', h.elIds.card_b_b).readAsStrictInteger(),
             ''
         );
-        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '');
+        assertEq('', bgfld.getCardFmTxt(h.elIds.card_b_b).toUnformatted(), '');
         bgfld.set('sharedtext', false);
         assertEq(
             0,
-            bgfld.getProp('scroll', this.elIds.card_b_b).readAsStrictInteger(),
+            bgfld.getProp('scroll', h.elIds.card_b_b).readAsStrictInteger(),
             ''
         );
-        assertEq('', bgfld.getCardFmTxt(this.elIds.card_b_b).toUnformatted(), '');
+        assertEq('', bgfld.getCardFmTxt(h.elIds.card_b_b).toUnformatted(), '');
 
         /* check bg btn, card specific */
-        let bgbtn = newState.model.getById(VpcElButton, this.elIds.bgbtn_b_1);
+        let bgbtn = newState.model.getById(VpcElButton, h.elIds.bgbtn_b_1);
         assertEq(
             false,
-            bgbtn.getProp('sharedhilite', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('sharedhilite', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             true,
-            bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('hilite', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             false,
-            bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('checkmark', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             false,
-            bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(),
+            bgbtn.getProp('hilite', h.elIds.card_b_c).readAsStrictBoolean(),
             ''
         );
         assertEq(
             true,
-            bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(),
+            bgbtn.getProp('checkmark', h.elIds.card_b_c).readAsStrictBoolean(),
             ''
         );
         assertEq(
             false,
-            bgbtn.getProp('hilite', this.elIds.card_b_d).readAsStrictBoolean(),
+            bgbtn.getProp('hilite', h.elIds.card_b_d).readAsStrictBoolean(),
             ''
         );
         assertEq(
             false,
-            bgbtn.getProp('checkmark', this.elIds.card_b_d).readAsStrictBoolean(),
+            bgbtn.getProp('checkmark', h.elIds.card_b_d).readAsStrictBoolean(),
             ''
         );
 
@@ -1184,46 +1196,46 @@ function testModelBgPartProps(newState: VpcState) {
         bgbtn.set('sharedhilite', true);
         assertEq(
             true,
-            bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('hilite', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             true,
-            bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('checkmark', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             true,
-            bgbtn.getProp('hilite', this.elIds.card_b_c).readAsStrictBoolean(),
+            bgbtn.getProp('hilite', h.elIds.card_b_c).readAsStrictBoolean(),
             ''
         );
         assertEq(
             true,
-            bgbtn.getProp('checkmark', this.elIds.card_b_c).readAsStrictBoolean(),
+            bgbtn.getProp('checkmark', h.elIds.card_b_c).readAsStrictBoolean(),
             ''
         );
 
         /* check bg btn, not set */
-        bgbtn = newState.model.getById(VpcElButton, this.elIds.bgbtn_b_2);
+        bgbtn = newState.model.getById(VpcElButton, h.elIds.bgbtn_b_2);
         assertEq(
             false,
-            bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('hilite', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             false,
-            bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('checkmark', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         bgbtn.set('sharedhilite', false);
         assertEq(
             false,
-            bgbtn.getProp('hilite', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('hilite', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
         assertEq(
             false,
-            bgbtn.getProp('checkmark', this.elIds.card_b_b).readAsStrictBoolean(),
+            bgbtn.getProp('checkmark', h.elIds.card_b_b).readAsStrictBoolean(),
             ''
         );
     });
@@ -1232,29 +1244,29 @@ function testModelBgPartProps(newState: VpcState) {
 /**
  * make changes to elements, that we'll read later
  */
-function modifyVcState() {
+modifyVcState() {
     /* modify productOpts (should not be persisted) */
-    this.vcstate.model.productOpts.set('optPaintLineColor', 1234);
-    this.vcstate.model.productOpts.set('optUseHostClipboard', false);
-    this.vcstate.model.productOpts.set('name', `productname`);
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.vcstate.model.productOpts.set('optPaintLineColor', 1234);
+    h.vcstate.model.productOpts.set('optUseHostClipboard', false);
+    h.vcstate.model.productOpts.set('name', `productname`);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
 
     /* modify stack */
-    this.vcstate.model.stack.set('script', `on t1\nend t1`);
-    this.vcstate.model.stack.set('name', `stackname`);
+    h.vcstate.model.stack.set('script', `on t1\nend t1`);
+    h.vcstate.model.stack.set('name', `stackname`);
 
     /* modify bg */
-    let bg = this.vcstate.model.getById(VpcElBg, this.elIds.bg_b);
+    let bg = h.vcstate.model.getById(VpcElBg, h.elIds.bg_b);
     bg.set('script', `on t2\nend t2`);
     bg.set('paint', `paint2`);
 
     /* modify card */
-    let card = this.vcstate.model.getCardById(this.elIds.card_b_c);
+    let card = h.vcstate.model.getCardById(h.elIds.card_b_c);
     card.set('script', `on t3\nend t3`);
     card.set('paint', `paint3`);
 
     /* modify button */
-    let btn = this.vcstate.model.getById(VpcElButton, this.elIds.btn_b_c_1);
+    let btn = h.vcstate.model.getById(VpcElButton, h.elIds.btn_b_c_1);
     btn.set('checkmark', true);
     btn.set('enabled', false);
     btn.set('icon', 123);
@@ -1262,7 +1274,7 @@ function modifyVcState() {
     btn.set('script', 'on t4\nend t4');
 
     /* modify field */
-    let fld = this.vcstate.model.getById(VpcElField, this.elIds.fld_b_d_1);
+    let fld = h.vcstate.model.getById(VpcElField, h.elIds.fld_b_d_1);
     fld.set('dontwrap', true);
     fld.set('enabled', false);
     fld.set('scroll', 123);
@@ -1275,37 +1287,37 @@ function modifyVcState() {
     fld.setCardFmTxt(fld.parentId, txt);
 
     /* modify bg field - for card bb */
-    let bgfld = this.vcstate.model.getById(VpcElField, this.elIds.bgfld_b_1);
+    let bgfld = h.vcstate.model.getById(VpcElField, h.elIds.bgfld_b_1);
     bgfld.set('sharedtext', false);
-    bgfld.setCardFmTxt(this.elIds.card_b_b, FormattedText.newFromSerialized(`forbb`));
-    bgfld.setProp('scroll', VpcValN(123), this.elIds.card_b_b);
+    bgfld.setCardFmTxt(h.elIds.card_b_b, FormattedText.newFromSerialized(`forbb`));
+    bgfld.setProp('scroll', VpcValN(123), h.elIds.card_b_b);
 
     /* modify bg field - for card bc */
-    bgfld.setCardFmTxt(this.elIds.card_b_c, FormattedText.newFromSerialized(`forbc`));
-    bgfld.setProp('scroll', VpcValN(456), this.elIds.card_b_c);
+    bgfld.setCardFmTxt(h.elIds.card_b_c, FormattedText.newFromSerialized(`forbc`));
+    bgfld.setProp('scroll', VpcValN(456), h.elIds.card_b_c);
 
     /* modify bg field - shared contents */
     bgfld.set('sharedtext', true);
-    bgfld.setCardFmTxt(this.elIds.card_b_c, FormattedText.newFromSerialized(`forshared`));
-    bgfld.setProp('scroll', VpcValN(789), this.elIds.card_b_c);
+    bgfld.setCardFmTxt(h.elIds.card_b_c, FormattedText.newFromSerialized(`forshared`));
+    bgfld.setProp('scroll', VpcValN(789), h.elIds.card_b_c);
     bgfld.set('sharedtext', false);
 
     /* modify bg btn - for card bb */
-    let bgbtn = this.vcstate.model.getById(VpcElButton, this.elIds.bgbtn_b_1);
+    let bgbtn = h.vcstate.model.getById(VpcElButton, h.elIds.bgbtn_b_1);
     bgbtn.set('sharedhilite', false);
-    bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_b);
-    bgbtn.setProp('checkmark', VpcValBool(false), this.elIds.card_b_b);
+    bgbtn.setProp('hilite', VpcValBool(true), h.elIds.card_b_b);
+    bgbtn.setProp('checkmark', VpcValBool(false), h.elIds.card_b_b);
 
     /* modify bg btn - for card bc */
-    bgbtn.setProp('hilite', VpcValBool(false), this.elIds.card_b_c);
-    bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_c);
+    bgbtn.setProp('hilite', VpcValBool(false), h.elIds.card_b_c);
+    bgbtn.setProp('checkmark', VpcValBool(true), h.elIds.card_b_c);
 
     /* modify bg btn - shared contents */
     bgbtn.set('sharedhilite', true);
-    bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_c);
-    bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_c);
-    bgbtn.setProp('hilite', VpcValBool(true), this.elIds.card_b_d);
-    bgbtn.setProp('checkmark', VpcValBool(true), this.elIds.card_b_d);
+    bgbtn.setProp('hilite', VpcValBool(true), h.elIds.card_b_c);
+    bgbtn.setProp('checkmark', VpcValBool(true), h.elIds.card_b_c);
+    bgbtn.setProp('hilite', VpcValBool(true), h.elIds.card_b_d);
+    bgbtn.setProp('checkmark', VpcValBool(true), h.elIds.card_b_d);
     bgbtn.set('sharedhilite', false);
 
     return txt;
@@ -1315,60 +1327,60 @@ function modifyVcState() {
  * ensure that the new model has all expected vels,
  * with correct parents and children in the right order
  */
-function testModelHasItAll(newState: VpcState) {
-    assertEq(this.elIds.stack, newState.model.stack.id, 'G,|');
+testModelHasItAll(newState: VpcState) {
+    assertEq(h.elIds.stack, newState.model.stack.id, 'G,|');
     let bgParents = newState.model.stack.bgs.map(bg => bg.parentId).join(',');
     assertEq(
-        `${this.elIds.stack},${this.elIds.stack},${this.elIds.stack}`,
+        `${h.elIds.stack},${h.elIds.stack},${h.elIds.stack}`,
         bgParents,
         'G+|'
     );
     let bgIds = newState.model.stack.bgs.map(bg => bg.id).join(',');
-    assertEq(`${this.elIds.bg_a},${this.elIds.bg_b},${this.elIds.bg_c}`, bgIds, 'G*|');
+    assertEq(`${h.elIds.bg_a},${h.elIds.bg_b},${h.elIds.bg_c}`, bgIds, 'G*|');
     let bgNames = newState.model.stack.bgs.map(bg => bg.getS('name')).join(',');
     assertEq(`a,b,c`, bgNames, 'G)|');
 
-    let bgA = newState.model.getById(VpcElBg, this.elIds.bg_a);
+    let bgA = newState.model.getById(VpcElBg, h.elIds.bg_a);
     let cdParents = bgA.cards.map(cd => cd.parentId).join(',');
-    assertEq(`${this.elIds.bg_a}`, cdParents, 'G(|');
+    assertEq(`${h.elIds.bg_a}`, cdParents, 'G(|');
     let cdIds = bgA.cards.map(cd => cd.id).join(',');
-    assertEq(`${this.elIds.card_a_a}`, cdIds, 'G&|');
+    assertEq(`${h.elIds.card_a_a}`, cdIds, 'G&|');
     let cdNames = bgA.cards.map(cd => cd.getS('name')).join(',');
     assertEq(`a`, cdNames, 'G%|');
 
-    let bgB = newState.model.getById(VpcElBg, this.elIds.bg_b);
+    let bgB = newState.model.getById(VpcElBg, h.elIds.bg_b);
     cdParents = bgB.cards.map(cd => cd.parentId).join(',');
     assertEq(
-        `${this.elIds.bg_b},${this.elIds.bg_b},${this.elIds.bg_b}`,
+        `${h.elIds.bg_b},${h.elIds.bg_b},${h.elIds.bg_b}`,
         cdParents,
         'G$|'
     );
     cdIds = bgB.cards.map(cd => cd.id).join(',');
     assertEq(
-        `${this.elIds.card_b_b},${this.elIds.card_b_c},${this.elIds.card_b_d}`,
+        `${h.elIds.card_b_b},${h.elIds.card_b_c},${h.elIds.card_b_d}`,
         cdIds,
         'G#|'
     );
     cdNames = bgB.cards.map(cd => cd.getS('name')).join(',');
     assertEq(`b,c,d`, cdNames, 'G!|');
 
-    let bgC = newState.model.getById(VpcElBg, this.elIds.bg_c);
+    let bgC = newState.model.getById(VpcElBg, h.elIds.bg_c);
     cdParents = bgC.cards.map(cd => cd.parentId).join(',');
-    assertEq(`${this.elIds.bg_c}`, cdParents, 'G |');
+    assertEq(`${h.elIds.bg_c}`, cdParents, 'G |');
     cdIds = bgC.cards.map(cd => cd.id).join(',');
-    assertEq(`${this.elIds.card_c_d}`, cdIds, 'Gz|');
+    assertEq(`${h.elIds.card_c_d}`, cdIds, 'Gz|');
     cdNames = bgC.cards.map(cd => cd.getS('name')).join(',');
     assertEq(`d`, cdNames, 'Gy|');
 
-    let cd_a_a = newState.model.getCardById(this.elIds.card_a_a);
+    let cd_a_a = newState.model.getCardById(h.elIds.card_a_a);
     let ptParents = cd_a_a.parts.map(pt => pt.parentId).join(',');
-    assertEq(`${this.elIds.card_a_a}`, ptParents, 'Gx|');
+    assertEq(`${h.elIds.card_a_a}`, ptParents, 'Gx|');
     let ptIds = cd_a_a.parts.map(pt => pt.id).join(',');
-    assertEq(`${this.elIds.btn_go}`, ptIds, 'Gw|');
+    assertEq(`${h.elIds.btn_go}`, ptIds, 'Gw|');
     let ptNames = cd_a_a.parts.map(pt => pt.getS('name')).join(',');
     assertEq(`go`, ptNames, 'Gv|');
 
-    let cd_b_b = newState.model.getCardById(this.elIds.card_b_b);
+    let cd_b_b = newState.model.getCardById(h.elIds.card_b_b);
     ptParents = cd_b_b.parts.map(pt => pt.parentId).join(',');
     assertEq(``, ptParents, 'Gu|');
     ptIds = cd_b_b.parts.map(pt => pt.id).join(',');
@@ -1376,12 +1388,12 @@ function testModelHasItAll(newState: VpcState) {
     ptNames = cd_b_b.parts.map(pt => pt.getS('name')).join(',');
     assertEq(``, ptNames, 'Gs|');
 
-    let cd_b_c = newState.model.getCardById(this.elIds.card_b_c);
+    let cd_b_c = newState.model.getCardById(h.elIds.card_b_c);
     ptParents = cd_b_c.parts.map(pt => pt.parentId).join(',');
     assertEq(
         longstr(
-            `${this.elIds.card_b_c},${this.elIds.card_b_c},
-            ${this.elIds.card_b_c},${this.elIds.card_b_c},${this.elIds.card_b_c}`,
+            `${h.elIds.card_b_c},${h.elIds.card_b_c},
+            ${h.elIds.card_b_c},${h.elIds.card_b_c},${h.elIds.card_b_c}`,
             ''
         ),
         ptParents,
@@ -1390,8 +1402,8 @@ function testModelHasItAll(newState: VpcState) {
     ptIds = cd_b_c.parts.map(pt => pt.id).join(',');
     assertEq(
         longstr(
-            `${this.elIds.fld_b_c_1},${this.elIds.fld_b_c_2},
-            ${this.elIds.fld_b_c_3},${this.elIds.btn_b_c_1},${this.elIds.btn_b_c_2}`,
+            `${h.elIds.fld_b_c_1},${h.elIds.fld_b_c_2},
+            ${h.elIds.fld_b_c_3},${h.elIds.btn_b_c_1},${h.elIds.btn_b_c_2}`,
             ''
         ),
         ptIds,
@@ -1400,42 +1412,42 @@ function testModelHasItAll(newState: VpcState) {
     ptNames = cd_b_c.parts.map(pt => pt.getS('name')).join(',');
     assertEq(`p1,p2,p3,p1,p2`, ptNames, 'Gp|');
 
-    let cd_b_d = newState.model.getCardById(this.elIds.card_b_d);
+    let cd_b_d = newState.model.getCardById(h.elIds.card_b_d);
     ptParents = cd_b_d.parts.map(pt => pt.parentId).join(',');
     assertEq(
-        `${this.elIds.card_b_d},${this.elIds.card_b_d},${this.elIds.card_b_d}`,
+        `${h.elIds.card_b_d},${h.elIds.card_b_d},${h.elIds.card_b_d}`,
         ptParents,
         'Go|'
     );
     ptIds = cd_b_d.parts.map(pt => pt.id).join(',');
     assertEq(
-        `${this.elIds.fld_b_d_1},${this.elIds.fld_b_d_2},${this.elIds.btn_b_d_1}`,
+        `${h.elIds.fld_b_d_1},${h.elIds.fld_b_d_2},${h.elIds.btn_b_d_1}`,
         ptIds,
         'Gn|'
     );
     ptNames = cd_b_d.parts.map(pt => pt.getS('name')).join(',');
     assertEq(`p1,p2,p1`, ptNames, 'Gm|');
 
-    let cd_c_d = newState.model.getCardById(this.elIds.card_c_d);
+    let cd_c_d = newState.model.getCardById(h.elIds.card_c_d);
     ptParents = cd_c_d.parts.map(pt => pt.parentId).join(',');
-    assertEq(`${this.elIds.card_c_d},${this.elIds.card_c_d}`, ptParents, 'Gl|');
+    assertEq(`${h.elIds.card_c_d},${h.elIds.card_c_d}`, ptParents, 'Gl|');
     ptIds = cd_c_d.parts.map(pt => pt.id).join(',');
-    assertEq(`${this.elIds.fld_c_d_1},${this.elIds.btn_c_d_1}`, ptIds, 'Gk|');
+    assertEq(`${h.elIds.fld_c_d_1},${h.elIds.btn_c_d_1}`, ptIds, 'Gk|');
     ptNames = cd_c_d.parts.map(pt => pt.getS('name')).join(',');
     assertEq(`p1,p1`, ptNames, 'Gj|');
 
     /* look for bg b's parts */
     ptParents = bgB.parts.map(pt => pt.parentId).join(',');
     assertEq(
-        `${this.elIds.bg_b},${this.elIds.bg_b},${this.elIds.bg_b},${this.elIds.bg_b}`,
+        `${h.elIds.bg_b},${h.elIds.bg_b},${h.elIds.bg_b},${h.elIds.bg_b}`,
         ptParents,
         ''
     );
     ptIds = bgB.parts.map(pt => pt.id).join(',');
     assertEq(
         longstr(
-            `${this.elIds.bgfld_b_1},${this.elIds.bgfld_b_2},
-            ${this.elIds.bgbtn_b_1},${this.elIds.bgbtn_b_2}`,
+            `${h.elIds.bgfld_b_1},${h.elIds.bgfld_b_2},
+            ${h.elIds.bgbtn_b_1},${h.elIds.bgbtn_b_2}`,
             ''
         ),
         ptIds,
@@ -1446,9 +1458,10 @@ function testModelHasItAll(newState: VpcState) {
 
     /* look for bg c's parts */
     ptParents = bgC.parts.map(pt => pt.parentId).join(',');
-    assertEq(`${this.elIds.bg_c},${this.elIds.bg_c}`, ptParents, '');
+    assertEq(`${h.elIds.bg_c},${h.elIds.bg_c}`, ptParents, '');
     ptIds = bgC.parts.map(pt => pt.id).join(',');
-    assertEq(`${this.elIds.bgfld_c_1},${this.elIds.bgbtn_c_1}`, ptIds, '');
+    assertEq(`${h.elIds.bgfld_c_1},${h.elIds.bgbtn_c_1}`, ptIds, '');
     ptNames = bgC.parts.map(pt => pt.getS('name')).join(',');
     assertEq(`p1,p1`, ptNames, '');
+}
 }

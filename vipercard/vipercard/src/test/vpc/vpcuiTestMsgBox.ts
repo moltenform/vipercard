@@ -25,9 +25,9 @@ t.test('VpcNonModalReplBox.makeAllVarsGlobals with typical input', () => {
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq(['global myVar'], got, 'Gh|');
 });
-t.test('MMMMMM', () => {
+t.test('with underscore', () => {
     t.say(
-        longstr(`testVpcNonModalReplBox.makeAllVarsGlobals
+        longstr(`VpcNonModalReplBox.makeAllVarsGlobals
         with typical input with underscore`)
     );
     let s = 'put 4 into my_var';
@@ -37,7 +37,7 @@ t.test('MMMMMM', () => {
 });
 t.test('VpcNonModalReplBox1', () => {
     t.say(
-        longstr(`testVpcNonModalReplBox.makeAllVarsGlobals
+        longstr(`VpcNonModalReplBox.makeAllVarsGlobals
         with typical input with leading underscore`)
     );
     let s = 'put 4 into _my_var';

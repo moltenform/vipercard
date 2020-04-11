@@ -1849,7 +1849,8 @@ t.test('_scriptMessagePassing', () => {
     let parents = [h.vcstate.model.stack.id, h.elIds.bg_a, h.elIds.card_a_a];
     for (let parent of parents) {
         /* reset all scripts */
-        parents.map(id => h.updateObjectScript(id, ''));
+        let hCaptured = h
+        parents.map(id => hCaptured.updateObjectScript(id, ''));
         h.updateObjectScript(h.elIds.btn_go, '');
 
         let script = `

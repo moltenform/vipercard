@@ -68,7 +68,7 @@ t.test('EvalHelpers.String Comparisons Must Be A Strict Match', () => {
 });
 t.test('EvalHelpers1', () => {
     t.say(
-        longstr(`testEvalHelpers.Number comparisons
+        longstr(`EvalHelpers.Number comparisons
         allow trailing - and even preceding - whitespace`)
     );
     testEquality(true, '12', '12 ');

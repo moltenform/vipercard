@@ -42,7 +42,7 @@ export let testCollectionvpcScriptEval = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>()
 
-t.atest("--init--vpcTestScriptEval", async ()=> {
+t.atest("--init--vpcTestScriptExprLvl", async ()=> {
     h = new TestVpcScriptRunBase(t)
     await h.initEnvironment();
 })

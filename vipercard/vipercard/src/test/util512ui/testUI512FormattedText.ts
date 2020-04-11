@@ -113,7 +113,7 @@ t.test('FormattedTextNewFromSerialized.Complex', () => {
 });
 t.test('FormattedTextNewFromSerialized and more', () => {
     t.say(
-        longstr(`testFormattedTextNewFromSerialized.ImplicitDefaultFont,
+        longstr(`FormattedTextNewFromSerialized.ImplicitDefaultFont,
             CoalesceNeighboringFontChanges,OKToEndWithFontChange`)
     );
     let ser = longstr(

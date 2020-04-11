@@ -72,7 +72,7 @@ t.test('CheckPageUrlParamsGetProvider.works even if not the only parameter', () 
 });
 t.test('CheckPageUrlParams1', () => {
     t.say(
-        longstr(`testCheckPageUrlParamsGetProvider.provide
+        longstr(`CheckPageUrlParamsGetProvider.provide
         base64, but not a valid demo stack`)
     );
     /* starts with dem_ instead of demo_ */

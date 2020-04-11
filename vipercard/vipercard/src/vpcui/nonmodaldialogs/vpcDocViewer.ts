@@ -70,7 +70,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * cache script reference data loaded from server
      */
-    referenceJsonData: { [key: string]: AnyJson } = {};
+    referenceJsonData = new JsonDocumentationStructure();
 
     /**
      * add list entries and choose the first
@@ -196,7 +196,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     /**
      * show the json data on the right side
      */
-    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: IsUtil512Serializable) {
+    protected referenceShowData(grp: UI512ElGroup, btm: UI512ElTextField, ctg: number, jsonData: JsonDocumentationStructure) {
         let entryTitles = this.referenceInfo[ctg][2];
         let gel = new UI512ElTextFieldAsGeneric(btm);
         let ln = TextSelModify.selectByLinesWhichLine(gel);
@@ -444,6 +444,19 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
      * respond to mouse down
      */
     onMouseDown(short: string, el: UI512Element, vci: VpcStateInterface): void {}
+}
+
+/**
+ * structure of the json documentation
+ */
+class JsonDocumentationStructure {
+    name:string
+    entries:JsonDocumentationStructureInner[]
+}
+
+class JsonDocumentationStructureInner {
+    title:string
+    body:string
 }
 
 /**

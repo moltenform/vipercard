@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcSession, vpcUsersCheckLogin, vpcUsersEnterEmailVerifyCode } from './../../vpc/request/vpcRequest';
+/* auto */ import { VpcSession, vpcUsersCheckLogin, vpcUsersCheckLoginResponse, vpcUsersEnterEmailVerifyCode } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormLoginInterface, VpcNonModalFormNewUser } from './vpcFormNewUser';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
@@ -49,7 +49,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
         let paramFields = this.readFields(vci.UI512App());
 
         let fn = async () => {
-            let result: (string | ArrayBuffer)[] | VpcSession;
+            let result: vpcUsersCheckLoginResponse | VpcSession;
             try {
                 result = await vpcUsersCheckLogin(paramFields['username'], paramFields['pw']);
             } catch (e) {
@@ -68,7 +68,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
                 this.vci.setNonModalDialog(undefined);
                 this.children = [];
                 this.fnCbWhenSignedIn();
-            } else if (result[0] === 'needEmailVerify' && result.length === 3) {
+            } else if (result.status === 'needEmailVerify') {
                 /* login needs email verification */
                 this.setStatus('lngPlease enter the verification code sent via e-mail.');
                 let grp = vci.UI512App().getGroup(this.grpId);
@@ -76,7 +76,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
                 fldEmailVerify.set('visible', true);
                 let lblEmailVerify = grp.getEl(this.getElId('lblForcodeEmailVerify'));
                 lblEmailVerify.set('visible', true);
-                this.waitingForVerifyCode = result[2] as ArrayBuffer;
+                this.waitingForVerifyCode = result.keyBuffer
             } else {
                 this.setStatus('lngDid not log in, unknown.');
             }

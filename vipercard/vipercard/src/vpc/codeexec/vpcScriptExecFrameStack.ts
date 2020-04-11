@@ -628,7 +628,7 @@ end ${newHandlerName}
         /* this is a bit interesting: we are setting the "me" and the "StatedParent" to the
         same object, so that calls in the new code can access the real object's code
         in the message chain. */
-        let newScriptMessage = Util512.shallowClone(curFrame.message) as VpcScriptMessage;
+        let newScriptMessage = Util512.shallowClone<VpcScriptMessage>(curFrame.message);
         newScriptMessage.targetId = velTargetId;
         newScriptMessage.msgName = getEnumToStrOrFallback(VpcBuiltinMsg, msg);
         newScriptMessage.msg = msg;

@@ -124,7 +124,7 @@ t.test('serialize: getting extra data is fine', () => {
     assertEq('__isUtil512Serializable,__private,fld1,fld2,optional_f1,optional_f2', ks, '')
     assertEq('a', oGot.fld1, '')
     assertEq('b', oGot.fld2, '')
-    assertTrue(undefined == oGot.optional_f1, '')
+    assertTrue(undefined === oGot.optional_f1, '')
     assertEq('c', oGot.optional_f2, '')
     assertEq('not serialized', oGot.__private, '')
 });

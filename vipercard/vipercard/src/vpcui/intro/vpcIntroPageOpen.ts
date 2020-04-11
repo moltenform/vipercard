@@ -133,7 +133,7 @@ export class IntroPageOpen extends IntroPageBase {
         if (ses) {
             try {
                 let stacks = await ses.vpcListMyStacks();
-                this.loadedFromOnline = stacks.map(item => [item.fullstackid, item.stackName] as [string, string]);
+                this.loadedFromOnline = stacks.map(item => [item.fullstackid, item.stackname] as [string, string]);
                 UI512ElTextField.setListChoices(
                     this.listBox,
                     this.loadedFromOnline.map(item => item[1])

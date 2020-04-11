@@ -40,6 +40,8 @@ Libraries:
 - [Pizzicato](https://github.com/alemangui/pizzicato)
 
 - [Bowser](https://github.com/lancedikson/bowser)
+  
+- pbkdf2 gist by Chris Veness
 
 - Wikipedia's [description of Mac OS Roman](https://en.wikipedia.org/wiki/Mac_OS_Roman)
 
