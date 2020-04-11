@@ -2,6 +2,7 @@
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { checkThrowEq, isString, slength } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -152,10 +153,10 @@ export abstract class VpcElBase extends UI512Settable {
      * cause an exception
      */
     destroy() {
-        this.getters = undefined as any; /* destroy() */
-        this.setters = undefined as any; /* destroy() */
-        this.set = undefined as any; /* destroy() */
-        this.setCardFmTxt = undefined as any; /* destroy() */
+        this.getters = SetToInvalidObjectAtEndOfExecution(this.getters);
+        this.setters = SetToInvalidObjectAtEndOfExecution(this.setters);
+        this.set = SetToInvalidObjectAtEndOfExecution(this.set);
+        this.setCardFmTxt = SetToInvalidObjectAtEndOfExecution(this.setCardFmTxt);
     }
 
     /**

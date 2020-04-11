@@ -10,7 +10,7 @@
 let t = new SimpleUtil512TestCollection('testCollectionExternalLibs');
 export let testCollectionExternalLibs = t;
 
-t.test('TestJsLru', () => {
+t.test('JsLru', () => {
     let testmap = new BridgedLRUMap<string, number>(3);
     testmap.set('a', 1);
     testmap.set('b', 2);

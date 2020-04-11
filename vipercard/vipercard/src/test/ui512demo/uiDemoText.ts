@@ -188,7 +188,7 @@ export class UI512DemoText extends UI512Presenter {
     }
 
     async runTest(params: string) {
-        let tests = [
+        let demoTextTests = [
             () => this.testrunner.draw1(),
             () => this.testrunner.draw2(),
             () => this.testrunner.draw3(),
@@ -199,9 +199,12 @@ export class UI512DemoText extends UI512Presenter {
             let testNumber = castVerifyIsNum(
                 Util512.parseInt(params.substr('testdld'.length))
             );
-            return TestUtilsCanvas.RenderAndCompareImages(true, tests[testNumber]);
+            return TestUtilsCanvas.RenderAndCompareImages(
+                true,
+                demoTextTests[testNumber]
+            );
         } else {
-            return TestUtilsCanvas.RenderAndCompareImages(false, tests);
+            return TestUtilsCanvas.RenderAndCompareImages(false, demoTextTests);
         }
     }
 }

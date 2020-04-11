@@ -23,7 +23,7 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512Elements');
 export let testCollectionUI512Elements = t;
 
-t.test('testUI512ElGroupIterEls', () => {
+t.test('UI512ElGroupIterEls', () => {
     let [app, grp] = makeFakeGroup();
 
     /* iterate through elements in a group */
@@ -42,7 +42,7 @@ t.test('testUI512ElGroupIterEls', () => {
 
     assertEq('btn3,btn2,btn1,', s, 'Ag|');
 });
-t.test('testUI512ElGroupRemoveAllEls', () => {
+t.test('UI512ElGroupRemoveAllEls', () => {
     let [app, grp] = makeFakeGroup();
     assertEq('btn1,btn2,btn3,', listElems(grp), 'Af|');
 
@@ -50,13 +50,13 @@ t.test('testUI512ElGroupRemoveAllEls', () => {
     grp.removeAllEls();
     assertEq('', listElems(grp), 'Ae|');
 });
-t.test('testUI512ElGroupCountElems', () => {
+t.test('UI512ElGroupCountElems', () => {
     let [app, grp] = makeFakeGroup();
 
     /* count all elements */
     assertEq(3, grp.countElems(), 'Ad|');
 });
-t.test('testAddElementAfter', () => {
+t.test('AddElementAfter', () => {
     let [app, grp] = makeFakeGroup();
     assertEq('btn1,btn2,btn3,', listElems(grp), 'Ac|');
 
@@ -89,7 +89,7 @@ t.test('testAddElementAfter', () => {
         'AX|'
     );
 });
-t.test('testGroupFindById', () => {
+t.test('GroupFindById', () => {
     let [app, grp] = makeFakeGroup();
 
     /* find existing */
@@ -107,7 +107,7 @@ t.test('testGroupFindById', () => {
     /* get not existing */
     assertThrows('K]|', 'not find', () => grp.getEl('btn9'));
 });
-t.test('testAppFindById', () => {
+t.test('AppFindById', () => {
     let [app, grp] = makeFakeGroup();
     let fakeGrp2 = new UI512ElGroup('fakegrp2');
     app.addGroup(fakeGrp2);
@@ -140,7 +140,7 @@ t.test('testAppFindById', () => {
     assertEq('btn4', el.id, 'AO|');
     assertEq('fromnewgroup', el.getS('labeltext'), 'AN|');
 });
-t.test('testCoordsToElement', () => {
+t.test('CoordsToElement', () => {
     let [app, grp] = makeFakeGroup();
     grp.getEl('btn1').setDimensionsX1Y1(10, 20, 100, 200);
     grp.getEl('btn2').setDimensionsX1Y1(20, 30, 110, 210);
@@ -165,7 +165,7 @@ t.test('testCoordsToElement', () => {
     el = app.coordsToElement(115, 215);
     assertEq(undefined, el, 'AI|');
 });
-t.test('testUpdateBoundsBasedOnChildren', () => {
+t.test('UpdateBoundsBasedOnChildren', () => {
     let [app, grp] = makeFakeGroup();
     assertEq([0, 0, largeArea, largeArea], grp.mouseInteractionBounds, 'AH|');
 
@@ -187,7 +187,7 @@ t.test('testUpdateBoundsBasedOnChildren', () => {
     grp.updateBoundsBasedOnChildren();
     assertEq([15, 30, 410, 60], grp.mouseInteractionBounds, 'AE|');
 });
-t.test('testUI512ElTextFieldAsGeneric', () => {
+t.test('UI512ElTextFieldAsGeneric', () => {
     let el = new UI512ElTextField('fld1');
     el.observer = new ElementObserverNoOp();
     el.set('h', 123);
@@ -220,7 +220,7 @@ t.test('testUI512ElTextFieldAsGeneric', () => {
     gel.setScrollAmt(500);
     assertEq(500, gel.getScrollAmt(), 'A2|');
 });
-t.test('testVpcTextFieldAsGeneric', () => {
+t.test('VpcTextFieldAsGeneric', () => {
     let el = new UI512ElTextField('fld1');
     el.observer = new ElementObserverNoOp();
 
@@ -256,7 +256,7 @@ t.test('testVpcTextFieldAsGeneric', () => {
     gel.setScrollAmt(500);
     assertEq(500, gel.getScrollAmt(), '9@|');
 });
-t.test('testUI512Lines.flatten', () => {
+t.test('UI512Lines.flatten', () => {
     let c = specialCharFontChange;
     let txt = FormattedText.newFromSerialized(
         `${c}f1${c}abc\n${c}f2${c}de\n${c}f1${c}fgh`
@@ -265,7 +265,7 @@ t.test('testUI512Lines.flatten', () => {
     let flattened = lines.flatten();
     assertEq(txt.toSerialized(), flattened.toSerialized(), '9?|');
 });
-t.test('testUI512Lines.indexToLineNumber', () => {
+t.test('UI512Lines.indexToLineNumber', () => {
     let c = specialCharFontChange;
     let txt = FormattedText.newFromSerialized(
         `${c}f1${c}abc\n${c}f2${c}de\n${c}f1${c}fgh`
@@ -276,7 +276,7 @@ t.test('testUI512Lines.indexToLineNumber', () => {
     assertEq('0,0,0,0,1,1,1,2,2,2', got.join(','), '9>|');
     assertEq(2, lines.indexToLineNumber(1000), '9=|');
 });
-t.test('testUI512Lines.lineNumberToIndex', () => {
+t.test('UI512Lines.lineNumberToIndex', () => {
     let c = specialCharFontChange;
     let txt = FormattedText.newFromSerialized(
         `${c}f1${c}abc\n${c}f2${c}de\n${c}f1${c}fgh`
@@ -288,7 +288,7 @@ t.test('testUI512Lines.lineNumberToIndex', () => {
     got = Util512.range(0, 10).map(n => UI512Lines.fastLineNumberToIndex(txt, n));
     assertEq('0,4,7,7,7,7,7,7,7,7', got.join(','), '9;|');
 });
-t.test('testUI512Lines.lineNumberToLineEndIndex', () => {
+t.test('UI512Lines.lineNumberToLineEndIndex', () => {
     let c = specialCharFontChange;
     let txt = FormattedText.newFromSerialized(
         `${c}f1${c}abc\n${c}f2${c}de\n${c}f1${c}fgh`
@@ -302,7 +302,7 @@ t.test('testUI512Lines.lineNumberToLineEndIndex', () => {
     );
     assertEq('0-4,4-7,7-11,7-11,7-11,7-11,7-11,7-11,7-11,7-11', fastGot.join(','), '9/|');
 });
-t.test('testUI512Lines.length', () => {
+t.test('UI512Lines.length', () => {
     let c = specialCharFontChange;
     let txt = FormattedText.newFromSerialized(
         `${c}f1${c}abc\n${c}f2${c}de\n${c}f1${c}fgh`
@@ -311,7 +311,7 @@ t.test('testUI512Lines.length', () => {
     assertEq(txt.len(), lines.length(), '9.|');
     assertEq(txt.toUnformatted().length, lines.length(), '9-|');
 });
-t.test('testUI512Lines.getLineUnformatted', () => {
+t.test('UI512Lines.getLineUnformatted', () => {
     let c = specialCharFontChange;
     let txt = FormattedText.newFromSerialized(
         `${c}f1${c}abc\n${c}f2${c}de\n${c}f1${c}fgh`
@@ -322,7 +322,7 @@ t.test('testUI512Lines.getLineUnformatted', () => {
     assertEq('de\n', lines.getLineUnformatted(1), '9+|');
     assertEq('fgh', lines.getLineUnformatted(2), '9*|');
 });
-t.test('testUI512Lines.alterSelectedLines', () => {
+t.test('UI512Lines.alterSelectedLines', () => {
     let c = specialCharFontChange;
     let txt = FormattedText.newFromSerialized(
         `${c}f1${c}abc\n${c}f2${c}de\n${c}f1${c}fgh`
@@ -339,7 +339,7 @@ t.test('testUI512Lines.alterSelectedLines', () => {
     assertEq(0, selc, '9(|');
     assertEq(10, selend, '9&|');
 });
-t.test('testUI512Lines.getNonSpaceStartOfLine', () => {
+t.test('UI512Lines.getNonSpaceStartOfLine', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq(0, UI512Lines.getNonSpaceStartOfLine(txt, true), '9%|');
     assertEq(0, UI512Lines.getNonSpaceStartOfLine(txt, false), '9$|');
@@ -353,7 +353,7 @@ t.test('testUI512Lines.getNonSpaceStartOfLine', () => {
     assertEq(3, UI512Lines.getNonSpaceStartOfLine(txt, true), '9y|');
     assertEq(2, UI512Lines.getNonSpaceStartOfLine(txt, false), '9x|');
 });
-t.test('testUI512Lines.getIndentLevel', () => {
+t.test('UI512Lines.getIndentLevel', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq(0, UI512Lines.getIndentLevel(txt), '9w|');
     txt = FormattedText.newFromUnformatted('   abc');
@@ -367,7 +367,7 @@ t.test('testUI512Lines.getIndentLevel', () => {
     txt = FormattedText.newFromUnformatted('            ');
     assertEq(3, UI512Lines.getIndentLevel(txt), '9r|');
 });
-t.test('testGridLayout', () => {
+t.test('GridLayout', () => {
     let grid = new GridLayout(100, 200, 30, 40, [1, 2, 3], [4, 5, 6], 7, 8);
     let results: number[][] = [];
     grid.combinations((n, a, b, bnds) => {

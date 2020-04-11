@@ -4,12 +4,13 @@
 /* auto */ import { cloneToken } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq, assertEqWarn, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, assertEq, assertEqWarn, longstr, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+
+import { Util512Higher } from '../../ui512/utils/util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * test parsing a command
@@ -17,14 +18,14 @@
 let t = new SimpleUtil512TestCollection('testCollectionvpcScriptParseCmd');
 export let testCollectionvpcScriptParseCmd = t;
 
-t.test('TestVpcParseCmdSet.Basic syntax', () => {
+t.test('VpcParseCmdSet.Basic syntax', () => {
     testCmdSet(`set the prop to 1`, 'parses');
     testCmdSet(`set the prop to -1`, 'parses');
     testCmdSet(`set the prop to 1 + 1`, 'parses');
     testCmdSet(`set the prop to (1 < 2)`, 'parses');
     testCmdSet(`set prop to 1`, 'parses');
 });
-t.test('TestVpcParseCmdSet.confirm that cases that should fail, do fail', () => {
+t.test('VpcParseCmdSet.confirm that cases that should fail, do fail', () => {
     assertFailsCmdSet(
         `set prop in cd btn 1 to 2`,
         `MismatchedTokenException: Expecting token of type `
@@ -38,7 +39,7 @@ t.test('TestVpcParseCmdSet.confirm that cases that should fail, do fail', () => 
     /* we'll fail at a later stage. */
     /* this.assertFailsParseSetExp(#set prop of x to 1#, ##) */
 });
-t.test('TestVpcParseCmdSet.test property targets', () => {
+t.test('VpcParseCmdSet.test property targets', () => {
     testCmdSet(`set prop of cd 1 to 2`, 'parses');
     testCmdSet(`set prop of bg 1 to 2`, 'parses');
     testCmdSet(`set prop of cd x to 2`, 'parses');
@@ -51,11 +52,11 @@ t.test('TestVpcParseCmdSet.test property targets', () => {
     testCmdSet(`set prop of the target to 2`, 'parses');
     testCmdSet(`set prop of me to 2`, 'parses');
 });
-t.test('TestVpcParseCmdSet.using keyword "to" more than once', () => {
+t.test('VpcParseCmdSet.using keyword "to" more than once', () => {
     testCmdSet(`set prop to chars 1 to 2 of "a"`, 'parses');
     testCmdSet(`set prop of chars 1 to 2 of cd fld 1 to chars 3 to 4 of "a"`, 'parses');
 });
-t.test('TestVpcParseCmdSet.chunks of fields', () => {
+t.test('VpcParseCmdSet.chunks of fields', () => {
     testCmdSet(`set prop of word 1 to 2 of cd fld 3 to 4`, 'parses');
     testCmdSet(`set prop of item 1 to (2 + 3) of cd fld 4 to 5`, 'parses');
 });
@@ -81,11 +82,11 @@ t.test(`TestVpcParseCmdSet.can't take chunks of anything else`, () => {
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('TestVpcParseCmdSet.will fail at runtime, but syntax is valid', () => {
+t.test('VpcParseCmdSet.will fail at runtime, but syntax is valid', () => {
     testCmdSet(`set the id of cd btn 1 to 2`, 'parses');
     testCmdSet(`set the id of cd btn id 1 to 2`, 'parses');
 });
-t.test('TestVpcParseCmdSet.types of things to set to', () => {
+t.test('VpcParseCmdSet.types of things to set to', () => {
     testCmdSet(`set prop to ta`, 'parses');
     testCmdSet(`set prop to ta, tb`, 'parses');
     testCmdSet(`set prop to ta, tb, tc`, 'parses');
@@ -98,7 +99,7 @@ t.test('TestVpcParseCmdSet.types of things to set to', () => {
     testCmdSet(`set prop to (1), (2)`, 'parses');
     testCmdSet(`set prop to (1+2), (3+4)`, 'parses');
 });
-t.test('TestVpcParseCmdSet.not a valid property set', () => {
+t.test('VpcParseCmdSet.not a valid property set', () => {
     assertFailsCmdSet(
         `set prop to cd 1`,
         `NoViableAltException: Expecting: one of these poss`
@@ -132,7 +133,7 @@ t.test('TestVpcParseCmdSet.not a valid property set', () => {
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('TestVpcParseCmdAdd', () => {
+t.test('VpcParseCmdAdd', () => {
     testCmd('add x to y', 'parses');
     testCmd('add 1+2+3 to y', 'parses');
     testCmd('add 1 to cd fld o', 'parses');
@@ -140,7 +141,7 @@ t.test('TestVpcParseCmdAdd', () => {
     testCmd('add 1 to line 2 to 3 of cd fld o', 'parses');
     testCmd('add 1 to line 2 to (3*4) of cd fld o', 'parses');
 });
-t.test('TestVpcParseCmdAdd.invalid syntax', () => {
+t.test('VpcParseCmdAdd.invalid syntax', () => {
     assertFailsCmd('add 1 + 2', 'MismatchedTokenException');
     assertFailsCmd('add 1 to 2', 'NoViableAltException');
     assertFailsCmd('add 1 to "abc"', 'NoViableAltException');
@@ -151,7 +152,7 @@ t.test('TestVpcParseCmdAdd.invalid syntax', () => {
     assertFailsCmd('add 1 to the x', 'MismatchedTokenException');
     assertFailsCmd('add 1 to the left of cd btn 1', 'MismatchedTokenException');
 });
-t.test('TestVpcParseCmdAnswer', () => {
+t.test('VpcParseCmdAnswer', () => {
     testCmd('answer x', 'parses');
     testCmd('answer x \n y', 'parses');
     testCmd('answer x \n y or z1', 'parses');
@@ -159,11 +160,11 @@ t.test('TestVpcParseCmdAnswer', () => {
     testCmd('ask x', 'parses');
     testCmd('ask x \n y', 'parses');
 });
-t.test('TestVpcParseCmdMultiply', () => {
+t.test('VpcParseCmdMultiply', () => {
     testCmd('multiply x \n 2', 'parses');
     testCmd('multiply x \n "2"', 'parses');
 });
-t.test('TestVpcParseCmdDrag', () => {
+t.test('VpcParseCmdDrag', () => {
     testCmd('drag from 2,3 to 4,5', 'parses');
     testCmd('drag from 2,3 to 4,5 \n shiftkey', 'parses');
     testCmd('drag from 2,3 to 4,5 \n shiftkey, optkey', 'parses');
@@ -173,7 +174,7 @@ t.test('TestVpcParseCmdDrag', () => {
     testCmd('drag from 2,3 to 4,5 to 6,7 \n shiftkey, optkey', 'parses');
     testCmd('drag from 2,3 to 4,5 to 6,7 \n shiftkey, optkey, cmdkey', 'parses');
 });
-t.test('TestVpcParseCmdPut', () => {
+t.test('VpcParseCmdPut', () => {
     testCmd('put 1+2 \n into \n x', 'parses');
     testCmd('put 1+2 \n before \n x', 'parses');
     testCmd('put 1 \n into \n x', 'parses');
@@ -216,7 +217,7 @@ HContainer(
     testCmd('put line 1 to 2 of y \n into \n x', 'parses');
     testCmd('put not char 1 of (char 2 of y) \n into \n x', 'parses');
 });
-t.test('TestLexerRemembersInitialLine', () => {
+t.test('LexerRemembersInitialLine', () => {
     /* if chevrotain didn't remember this,
         when there was a runtime error,
         we'd take you to the wrong line number */
@@ -237,7 +238,7 @@ t.test('TestLexerRemembersInitialLine', () => {
         'HT|'
     );
 });
-t.test('TestCloneToken', () => {
+t.test('CloneToken', () => {
     let lexer = TestParseHelpers.instance.lexer;
     let input = 'put 4 into x';
     let lexResult = lexer.tokenize(input);
@@ -251,12 +252,11 @@ t.test('TestCloneToken', () => {
     let cloned = cloneToken(real);
     let realTokenKeys = Util512.getMapKeys(real as any);
     let clonedTokenKeys = Util512.getMapKeys(cloned as any);
-    realTokenKeys.sort();
-    clonedTokenKeys.sort();
+    realTokenKeys.sort(util512Sort);
+    clonedTokenKeys.sort(util512Sort);
 
     /* these ones we know we can ignore, after confirming they are undefined in the real object */
-    assertEq(undefined, real.isInsertedInRecovery, 'HP|');
-    assertEq(undefined, real.tokenClassName, 'HO|');
+    assertTrue(!real.isInsertedInRecovery, 'HP|');
     clonedTokenKeys = clonedTokenKeys.filter(
         k => k !== 'isInsertedInRecovery' && k !== 'tokenClassName'
     );
@@ -268,13 +268,14 @@ t.test('TestCloneToken', () => {
  */
 export class TestParseHelpers {
     static instance = new TestParseHelpers();
-    lexer: ChvLexer;
+    lexer: chevrotain.Lexer;
     parser: VpcChvParser;
     visitor: VpcVisitorInterface;
     constructor() {
         [this.lexer, this.parser, this.visitor] = getParsingObjects();
-        assertTrue(this.lexer, '1<|bad input');
-        assertTrue(this.parser, '1;|bad input');
+        assertTrue(this.lexer, '1<|could not getParsingObjects');
+        assertTrue(this.parser, '1;|could not getParsingObjects');
+        assertTrue(this.visitor, '1;|could not getParsingObjects');
     }
 
     /**
@@ -293,12 +294,6 @@ export class TestParseHelpers {
         if (!shouldCont) {
             return;
         }
-
-        if (sExpected.replace(/ /g, '') !== flattened.replace(/ /g, '')) {
-            UI512TestBase.warnAndAllowToContinue(
-                `err--for ${sInput} we got \n${flattened}\n`
-            );
-        }
     }
 
     /**
@@ -314,7 +309,7 @@ export class TestParseHelpers {
                         .substr(0, 50)
                         .split('\r')[0]
                         .split('\n')[0];
-                    UI512TestBase.warnAndAllowToContinue(
+                    t.warnAndAllowToContinue(
                         `for input ${sInput} got\n${got}`
                     );
                     return false;
@@ -322,7 +317,7 @@ export class TestParseHelpers {
 
                 assertTrue(
                     this.parser.errors[0].toString().includes(sErrExpected),
-                    deleteThis.longstr(
+                    longstr(
                         `1+|for input ${sInput} got different
                         failure message, expected ${sErrExpected} ${this.parser.errors}`
                     )

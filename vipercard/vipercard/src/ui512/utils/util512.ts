@@ -141,8 +141,8 @@ export class Util512 {
     /**
      * shallow clone of an object
      */
-    static shallowClone(o: object) {
-        return Object.assign({}, o);
+    static shallowClone<T extends object>(o: object):T {
+        return Object.assign({}, o) as T;
     }
 
     /**
@@ -345,6 +345,17 @@ export class Util512 {
         }
 
         return ar;
+    }
+
+    /**
+     * javascript's default sort is dangerous because it's 
+     * always a string sort, but we can use this for cases where
+     * we know we are sorting strings. our util512 sort is
+     * usually better though because it checks types at runtime.
+     */
+    static sortStringArray(arr:string[]) {
+        /* eslint-disable-next-line @typescript-eslint/require-array-sort-compare */
+        arr.sort()
     }
 
     /**

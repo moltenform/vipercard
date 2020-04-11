@@ -10,6 +10,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { last } from './../../ui512/utils/util512';
 /* auto */ import { EventDetails } from './../../ui512/menu/ui512Events';
@@ -355,13 +356,13 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * releases memory by nulling out everything owned by the class
      */
     destroy(): void {
-        this.vcstate.vci = undefined as any; /* destroy() */
         this.vcstate.model.destroy();
-        this.vcstate.model = undefined as any; /* destroy() */
         this.vcstate.runtime.destroy();
-        this.vcstate.runtime = undefined as any; /* destroy() */
-        this.vcstate.undoManager = undefined as any; /* destroy() */
-        this.vcstate = undefined as any; /* destroy() */
-        this.pr = undefined as any; /* destroy() */
+        this.vcstate.vci = SetToInvalidObjectAtEndOfExecution(this.vcstate.vci);
+        this.vcstate.model = SetToInvalidObjectAtEndOfExecution(this.vcstate.model);
+        this.vcstate.runtime = SetToInvalidObjectAtEndOfExecution(this.vcstate.runtime);
+        this.vcstate.undoManager = SetToInvalidObjectAtEndOfExecution(this.vcstate.undoManager);
+        this.vcstate = SetToInvalidObjectAtEndOfExecution(this.vcstate);
+        this.pr = SetToInvalidObjectAtEndOfExecution(this.pr);
     }
 }

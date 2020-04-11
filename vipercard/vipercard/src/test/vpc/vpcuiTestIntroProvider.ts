@@ -7,14 +7,13 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * tests related to the intro provider, for loading ViperCard documents
  */
 let t = new SimpleUtil512TestCollection('testCollectionvpcuiIntroProvider');
 export let testCollectionvpcuiIntroProvider = t;
 
-t.test('testCheckPageUrlParamsGetProvider.no params', () => {
+t.test('CheckPageUrlParamsGetProvider.no params', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2'
     );
@@ -28,7 +27,7 @@ t.test('testCheckPageUrlParamsGetProvider.no params', () => {
     );
     assertEq(undefined, got, 'G6|');
 });
-t.test('testCheckPageUrlParamsGetProvider.params, but not s', () => {
+t.test('CheckPageUrlParamsGetProvider.params, but not s', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?other=1'
     );
@@ -42,7 +41,7 @@ t.test('testCheckPageUrlParamsGetProvider.params, but not s', () => {
     );
     assertEq(undefined, got, 'G3|');
 });
-t.test('testCheckPageUrlParamsGetProvider.provide demo stack', () => {
+t.test('CheckPageUrlParamsGetProvider.provide demo stack', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?s=ZGVtb19nbGlkZXI'
     );
@@ -55,7 +54,7 @@ t.test('testCheckPageUrlParamsGetProvider.provide demo stack', () => {
     assertEq(VpcDocumentLocation.FromStaticDemo, got!.loc, 'G0|');
     assertEq('demo_spacegame.json', got!.identifier, 'F~|');
 });
-t.test('testCheckPageUrlParamsGetProvider.works even if not the only parameter', () => {
+t.test('CheckPageUrlParamsGetProvider.works even if not the only parameter', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?abc=1&s=ZGVtb19nbGlkZXI'
     );
@@ -71,45 +70,33 @@ t.test('testCheckPageUrlParamsGetProvider.works even if not the only parameter',
     );
     assertEq(VpcDocumentLocation.FromStaticDemo, got!.loc, 'F{|');
 });
-t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    () => {
-        t.say(
-            longstr(`testCheckPageUrlParamsGetProvider.provide
+t.test('CheckPageUrlParams1', () => {
+    t.say(
+        longstr(`testCheckPageUrlParamsGetProvider.provide
         base64, but not a valid demo stack`)
-        );
-        /* starts with dem_ instead of demo_ */
-        let got = IntroPageFirst.checkPageUrlParamsGetProvider(
-            'https://www.productname.com/0.2?s=ZGVtX2dsaWRlcg'
-        );
-        assertEq(undefined, got, 'F`|');
-        /* is demo_*, containing invalid character * */
-        got = IntroPageFirst.checkPageUrlParamsGetProvider(
-            'https://www.productname.com/0.2?s=ZGVtb18q'
-        );
-        assertEq(undefined, got, 'F_|');
-        /* is demo_a/a, containing invalid character a */
-        got = IntroPageFirst.checkPageUrlParamsGetProvider(
-            'https://www.productname.com/0.2/?s=ZGVtb19hL2E'
-        );
-        assertEq(undefined, got, 'F^|');
-        /* is demo_a.a, containing invalid character . */
-        got = IntroPageFirst.checkPageUrlParamsGetProvider(
-            'https://www.productname.com/0.2/?s=ZGVtb19hLmE'
-        );
-        assertEq(undefined, got, 'F]|');
-    }
-);
-t.test('testCheckPageUrlParamsGetProvider.provide reference to stack', () => {
+    );
+    /* starts with dem_ instead of demo_ */
+    let got = IntroPageFirst.checkPageUrlParamsGetProvider(
+        'https://www.productname.com/0.2?s=ZGVtX2dsaWRlcg'
+    );
+    assertEq(undefined, got, 'F`|');
+    /* is demo_*, containing invalid character * */
+    got = IntroPageFirst.checkPageUrlParamsGetProvider(
+        'https://www.productname.com/0.2?s=ZGVtb18q'
+    );
+    assertEq(undefined, got, 'F_|');
+    /* is demo_a/a, containing invalid character a */
+    got = IntroPageFirst.checkPageUrlParamsGetProvider(
+        'https://www.productname.com/0.2/?s=ZGVtb19hL2E'
+    );
+    assertEq(undefined, got, 'F^|');
+    /* is demo_a.a, containing invalid character . */
+    got = IntroPageFirst.checkPageUrlParamsGetProvider(
+        'https://www.productname.com/0.2/?s=ZGVtb19hLmE'
+    );
+    assertEq(undefined, got, 'F]|');
+});
+t.test('CheckPageUrlParamsGetProvider.provide reference to stack', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?s=abc|def'
     );
@@ -122,7 +109,7 @@ t.test('testCheckPageUrlParamsGetProvider.provide reference to stack', () => {
     assertEq(VpcDocumentLocation.FromStackIdOnline, got!.loc, 'F?|');
     assertEq('ZXJpY28|U3ZcVJvvxadd8_iQplmeYB', got!.identifier, 'F>|');
 });
-t.test('testCheckPageUrlParamsGetProvider.too many |', () => {
+t.test('CheckPageUrlParamsGetProvider.too many |', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2?s=a|b|c'
     );
@@ -132,7 +119,7 @@ t.test('testCheckPageUrlParamsGetProvider.too many |', () => {
     );
     assertEq(undefined, got, 'F<|');
 });
-t.test('testCheckPageUrlParamsGetProvider.| is escaped by percent', () => {
+t.test('CheckPageUrlParamsGetProvider.| is escaped by percent', () => {
     let got = IntroPageFirst.checkPageUrlParamsGetProvider(
         'https://www.productname.com/0.2/?s=ZXJpY28%7cU3ZcVJvvxadd8_iQplmeYB'
     );

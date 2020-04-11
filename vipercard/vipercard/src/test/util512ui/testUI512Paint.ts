@@ -34,7 +34,7 @@
  * and click Download Image to update the test
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512Paint', true);
+let t = new SimpleUtil512TestCollection('testCollectionUI512Paint');
 export let testCollectionUI512Paint = t;
 
 t.atest('async/Test Shape', () =>

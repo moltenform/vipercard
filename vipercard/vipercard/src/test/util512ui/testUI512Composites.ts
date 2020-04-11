@@ -37,7 +37,7 @@
  * interacting with the buttons has the expected behavior
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512Composites', true);
+let t = new SimpleUtil512TestCollection('testCollectionUI512Composites');
 export let testCollectionUI512Composites = t;
 
 t.atest('async/Test Drawing Composites', () =>

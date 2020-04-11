@@ -28,7 +28,7 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512TextSelectEvents');
 export let testCollectionUI512TextSelectEvents = t;
 
-t.test('testChangeSelSelectAll', () => {
+t.test('ChangeSelSelectAll', () => {
     /* no current selection */
     testChangeSel('^abc#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
     testChangeSel('^abc#', 'a^#bc', TextSelModifyImpl.changeSelSelectAll);
@@ -43,7 +43,7 @@ t.test('testChangeSelSelectAll', () => {
     testChangeSel('^abc#', 'a^b#c', TextSelModifyImpl.changeSelSelectAll);
     testChangeSel('^ab\nc#', 'a^#b\nc', TextSelModifyImpl.changeSelSelectAll);
 });
-t.test('testChangeSelGoDocHomeEnd', () => {
+t.test('ChangeSelGoDocHomeEnd', () => {
     /* go to start, no extend */
     testChangeSel('^#abc', '^#abc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
     testChangeSel('^#abc', 'a^#bc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
@@ -102,7 +102,7 @@ t.test('testChangeSelGoDocHomeEnd', () => {
     testChangeSel('a#bc^', 'a#b^c', TextSelModifyImpl.changeSelGoDocHomeEnd, false, true);
     testChangeSel('abc#^', 'abc^#', TextSelModifyImpl.changeSelGoDocHomeEnd, false, true);
 });
-t.test('testChangeSelLeftRight', () => {
+t.test('ChangeSelLeftRight', () => {
     /* move left, no extend */
     testChangeSel(
         '^#abcd',
@@ -335,7 +335,7 @@ t.test('testChangeSelLeftRight', () => {
         false
     );
 });
-t.test('testChangeSelGoLineHomeEnd', () => {
+t.test('ChangeSelGoLineHomeEnd', () => {
     /* middle line, go to start, no extend */
     testChangeSel(
         'qr|^#abc|st',
@@ -826,7 +826,7 @@ t.test('testChangeSelGoLineHomeEnd', () => {
     input = '\t\t\tabc\t\t\tdef^#';
     testChangeSel(expected, input, TextSelModifyImpl.changeSelGoLineHomeEnd, true, true);
 });
-t.test('testChangeSelLeftRightUntilWord', () => {
+t.test('ChangeSelLeftRightUntilWord', () => {
     /* move left by words */
     testChangeSel(
         '#^abcd',
@@ -1076,7 +1076,7 @@ t.test('testChangeSelLeftRightUntilWord', () => {
         true
     );
 });
-t.test('testChangeSelCurrentWord', () => {
+t.test('ChangeSelCurrentWord', () => {
     testChangeSel('^#', '^#', TextSelModifyImpl.changeSelCurrentWord);
     testChangeSel('^a#', '^#a', TextSelModifyImpl.changeSelCurrentWord);
     testChangeSel('^abc#', '^#abc', TextSelModifyImpl.changeSelCurrentWord);
@@ -1122,7 +1122,7 @@ t.test('testChangeSelCurrentWord', () => {
     testChangeSel('1 abc^  #2', '1 abc^#  2', TextSelModifyImpl.changeSelCurrentWord);
     testChangeSel('1 abc^  #2', '1 abc ^# 2', TextSelModifyImpl.changeSelCurrentWord);
 });
-t.test('testSelectLineInField,selectByLinesWhichLine.EmptyField', () => {
+t.test('SelectLineInField,selectByLinesWhichLine.EmptyField', () => {
     let el = new UI512ElTextField('test', new ElementObserverNoOp());
     let gel = new UI512ElTextFieldAsGeneric(el);
     el.setFmTxt(FormattedText.newFromUnformatted(''));
@@ -1135,7 +1135,7 @@ t.test('testSelectLineInField,selectByLinesWhichLine.EmptyField', () => {
     assertEq(0, el.getN('selend'), 'C4|');
     assertEq(undefined, TextSelModify.selectByLinesWhichLine(gel), 'C3|');
 });
-t.test('testSelectLineInField,selectByLinesWhichLine.FieldWithNoEmptyLines', () => {
+t.test('SelectLineInField,selectByLinesWhichLine.FieldWithNoEmptyLines', () => {
     let el = new UI512ElTextField('test', new ElementObserverNoOp());
     let gel = new UI512ElTextFieldAsGeneric(el);
     el.setFmTxt(FormattedText.newFromUnformatted('abc\ndef\nghi'));
@@ -1164,7 +1164,7 @@ t.test('testSelectLineInField,selectByLinesWhichLine.FieldWithNoEmptyLines', () 
     assertEq(11, el.getN('selend'), 'B?|');
     assertEq(2, TextSelModify.selectByLinesWhichLine(gel), 'B>|');
 });
-t.test('testSelectLineInField,selectByLinesWhichLine.FieldWithSomeEmptyLines', () => {
+t.test('SelectLineInField,selectByLinesWhichLine.FieldWithSomeEmptyLines', () => {
     let el = new UI512ElTextField('test', new ElementObserverNoOp());
     let gel = new UI512ElTextFieldAsGeneric(el);
     el.setFmTxt(FormattedText.newFromUnformatted('\nabc\n\ndef\n'));

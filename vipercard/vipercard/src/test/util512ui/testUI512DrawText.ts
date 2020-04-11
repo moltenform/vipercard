@@ -23,7 +23,7 @@
  * of styles and fonts, by clicking the buttons like Bold and Italic
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512DrawText', true, true);
+let t = new SimpleUtil512TestCollection('testCollectionUI512DrawText', true);
 export let testCollectionUI512DrawText = t;
 
 t.atest('async/Text Core Fonts', () =>

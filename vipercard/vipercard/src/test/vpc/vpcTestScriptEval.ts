@@ -1,4 +1,5 @@
 
+/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Productname';
@@ -7,11 +8,10 @@
 /* auto */ import { UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * test running ViperCard scripts that evaluate expressions.
@@ -39,24 +39,29 @@
 
 let t = new SimpleUtil512TestCollection('testCollectionvpcScriptEval');
 export let testCollectionvpcScriptEval = t;
-// TestVpcScriptRunBase
-// await this.initEnvironment();
 
-t.test('test_getProp', () => {
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>()
+
+t.atest("--init--vpcTestScriptEval", async ()=> {
+    h = new TestVpcScriptRunBase(t)
+    await h.initEnvironment();
+})
+
+t.test('_getProp', () => {
     let batch: [string, string][];
 
     /* object resolution */
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         /* invalid */
         [`the short id of xyz`, `ERR:We did not recognize`],
         [`the short id of the xyz`, `ERR:We did not recognize`],
 
         /* target, me, productOpts */
-        [`the short id of target`, `${this.elIds.btn_go}`],
-        [`the short id of the target`, `${this.elIds.btn_go}`],
-        [`the short id of me`, `${this.elIds.btn_go}`],
-        [`the short id of the me`, `${this.elIds.btn_go}`],
+        [`the short id of target`, `${h.elIds.btn_go}`],
+        [`the short id of the target`, `${h.elIds.btn_go}`],
+        [`the short id of me`, `${h.elIds.btn_go}`],
+        [`the short id of the me`, `${h.elIds.btn_go}`],
         [`the short id of ${cProductName}`, `WILD`],
         [`the short id of the ${cProductName}`, `WILD`],
 
@@ -66,147 +71,147 @@ t.test('test_getProp', () => {
         [`the short id of xyz stack`, 'ERR:only accept referring to a stack'],
 
         /* bg absolute */
-        [`the short id of bg id ${this.elIds.bg_a}`, `${this.elIds.bg_a}`],
-        [`the short id of bg id ${this.elIds.bg_c}`, `${this.elIds.bg_c}`],
-        [`the short id of bg id (${this.elIds.bg_c})`, `${this.elIds.bg_c}`],
+        [`the short id of bg id ${h.elIds.bg_a}`, `${h.elIds.bg_a}`],
+        [`the short id of bg id ${h.elIds.bg_c}`, `${h.elIds.bg_c}`],
+        [`the short id of bg id (${h.elIds.bg_c})`, `${h.elIds.bg_c}`],
         [`the short id of bg id 99`, `ERR: could not find the specified`],
-        [`the short id of bg "a"`, `${this.elIds.bg_a}`],
-        [`the short id of bg "c"`, `${this.elIds.bg_c}`],
-        [`the short id of bg ("c")`, `${this.elIds.bg_c}`],
+        [`the short id of bg "a"`, `${h.elIds.bg_a}`],
+        [`the short id of bg "c"`, `${h.elIds.bg_c}`],
+        [`the short id of bg ("c")`, `${h.elIds.bg_c}`],
         [`the short id of bg ""`, `ERR: could not find the specified`],
         [`the short id of bg "notfound"`, `ERR: could not find the specified`],
-        [`the short id of bg 1`, `${this.elIds.bg_a}`],
-        [`the short id of bg 3`, `${this.elIds.bg_c}`],
-        [`the short id of bg (3)`, `${this.elIds.bg_c}`],
+        [`the short id of bg 1`, `${h.elIds.bg_a}`],
+        [`the short id of bg 3`, `${h.elIds.bg_c}`],
+        [`the short id of bg (3)`, `${h.elIds.bg_c}`],
         [`the short id of bg -1`, `ERR:could not find the specified`],
         [`the short id of bg 5`, `ERR:could not find the specified`],
 
         /* bg relative */
-        [`the short id of this bg`, `${this.elIds.bg_b}`],
-        [`the short id of next bg`, `${this.elIds.bg_c}`],
-        [`the short id of first bg`, `${this.elIds.bg_a}`],
-        [`the short id of last bg`, `${this.elIds.bg_c}`],
-        [`the short id of the first bg`, `${this.elIds.bg_a}`],
-        [`the short id of the second bg`, `${this.elIds.bg_b}`],
-        [`the short id of the next bg`, `${this.elIds.bg_c}`],
+        [`the short id of this bg`, `${h.elIds.bg_b}`],
+        [`the short id of next bg`, `${h.elIds.bg_c}`],
+        [`the short id of first bg`, `${h.elIds.bg_a}`],
+        [`the short id of last bg`, `${h.elIds.bg_c}`],
+        [`the short id of the first bg`, `${h.elIds.bg_a}`],
+        [`the short id of the second bg`, `${h.elIds.bg_b}`],
+        [`the short id of the next bg`, `${h.elIds.bg_c}`],
         [`the short id of xyz bg`, `ERR:Not a valid choice of OrdinalOrPosition`],
         [`the short id of the xyz bg`, `ERR:Not a valid choice of OrdinalOrPosition`],
 
         /* bg with parent */
-        [`the short id of bg id ${this.elIds.bg_a} of this stack`, `${this.elIds.bg_a}`],
-        [`the short id of bg 1 of this stack`, `${this.elIds.bg_a}`],
-        [`the short id of bg "a" of this stack`, `${this.elIds.bg_a}`],
-        [`the short id of this bg of this stack`, `${this.elIds.bg_b}`],
+        [`the short id of bg id ${h.elIds.bg_a} of this stack`, `${h.elIds.bg_a}`],
+        [`the short id of bg 1 of this stack`, `${h.elIds.bg_a}`],
+        [`the short id of bg "a" of this stack`, `${h.elIds.bg_a}`],
+        [`the short id of this bg of this stack`, `${h.elIds.bg_b}`],
 
         /* card absolute */
-        [`the short id of card id ${this.elIds.card_a_a}`, `${this.elIds.card_a_a}`],
-        [`the short id of card id ${this.elIds.card_c_d}`, `${this.elIds.card_c_d}`],
-        [`the short id of card id (${this.elIds.card_c_d})`, `${this.elIds.card_c_d}`],
+        [`the short id of card id ${h.elIds.card_a_a}`, `${h.elIds.card_a_a}`],
+        [`the short id of card id ${h.elIds.card_c_d}`, `${h.elIds.card_c_d}`],
+        [`the short id of card id (${h.elIds.card_c_d})`, `${h.elIds.card_c_d}`],
         [`the short id of card id 99`, `ERR: could not find the specified`],
-        [`the short id of card "a"`, `${this.elIds.card_a_a}`],
-        [`the short id of card "d"`, `${this.elIds.card_b_d}`],
-        [`the short id of card ("d")`, `${this.elIds.card_b_d}`],
+        [`the short id of card "a"`, `${h.elIds.card_a_a}`],
+        [`the short id of card "d"`, `${h.elIds.card_b_d}`],
+        [`the short id of card ("d")`, `${h.elIds.card_b_d}`],
         [`the short id of card ""`, `ERR: could not find the specified`],
         [`the short id of card "notfound"`, `ERR: could not find the specified`],
-        [`the short id of card 1`, `${this.elIds.card_a_a}`],
-        [`the short id of card 3`, `${this.elIds.card_b_c}`],
-        [`the short id of card (3)`, `${this.elIds.card_b_c}`],
+        [`the short id of card 1`, `${h.elIds.card_a_a}`],
+        [`the short id of card 3`, `${h.elIds.card_b_c}`],
+        [`the short id of card (3)`, `${h.elIds.card_b_c}`],
         [`the short id of card -1`, `ERR:could not find`],
         [`the short id of card 99`, `ERR:could not find`],
 
         /* card relative */
-        [`the short id of this card`, `${this.elIds.card_b_c}`],
-        [`the short id of next card`, `${this.elIds.card_b_d}`],
-        [`the short id of first card`, `${this.elIds.card_a_a}`],
-        [`the short id of last card`, `${this.elIds.card_c_d}`],
-        [`the short id of the first card`, `${this.elIds.card_a_a}`],
-        [`the short id of the second card`, `${this.elIds.card_b_b}`],
-        [`the short id of the next card`, `${this.elIds.card_b_d}`],
+        [`the short id of this card`, `${h.elIds.card_b_c}`],
+        [`the short id of next card`, `${h.elIds.card_b_d}`],
+        [`the short id of first card`, `${h.elIds.card_a_a}`],
+        [`the short id of last card`, `${h.elIds.card_c_d}`],
+        [`the short id of the first card`, `${h.elIds.card_a_a}`],
+        [`the short id of the second card`, `${h.elIds.card_b_b}`],
+        [`the short id of the next card`, `${h.elIds.card_b_d}`],
         [`the short id of xyz card`, `ERR:Not a valid choice of OrdinalOrPosition`],
         [`the short id of the xyz card`, `ERR:Not a valid choice of OrdinalOrPosition`],
 
         /* card with parent */
-        [`the short id of card "d" of this bg`, `${this.elIds.card_b_d}`],
-        [`the short id of card "d" of bg "c"`, `${this.elIds.card_c_d}`],
-        [`the short id of card "d" of bg 3`, `${this.elIds.card_c_d}`],
-        [`the short id of card 1 of this bg`, `${this.elIds.card_b_b}`],
-        [`the short id of card 1 of bg 2`, `${this.elIds.card_b_b}`],
-        [`the short id of card 1 of bg 3`, `${this.elIds.card_c_d}`],
-        [`the short id of card 2 of bg 2`, `${this.elIds.card_b_c}`],
+        [`the short id of card "d" of this bg`, `${h.elIds.card_b_d}`],
+        [`the short id of card "d" of bg "c"`, `${h.elIds.card_c_d}`],
+        [`the short id of card "d" of bg 3`, `${h.elIds.card_c_d}`],
+        [`the short id of card 1 of this bg`, `${h.elIds.card_b_b}`],
+        [`the short id of card 1 of bg 2`, `${h.elIds.card_b_b}`],
+        [`the short id of card 1 of bg 3`, `${h.elIds.card_c_d}`],
+        [`the short id of card 2 of bg 2`, `${h.elIds.card_b_c}`],
         [`the short id of card 2 of bg 1`, `ERR: could not find the specified`],
-        [`the short id of card "d" of this bg of this stack`, `${this.elIds.card_b_d}`],
+        [`the short id of card "d" of this bg of this stack`, `${h.elIds.card_b_d}`],
 
         /* field */
-        [`the short id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
-        [`the short id of cd fld id ${this.elIds.fld_c_d_1}`, `${this.elIds.fld_c_d_1}`],
+        [`the short id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`],
+        [`the short id of cd fld id ${h.elIds.fld_c_d_1}`, `${h.elIds.fld_c_d_1}`],
         [
-            `the short id of cd fld id (${this.elIds.fld_c_d_1})`,
-            `${this.elIds.fld_c_d_1}`
+            `the short id of cd fld id (${h.elIds.fld_c_d_1})`,
+            `${h.elIds.fld_c_d_1}`
         ],
         [`the short id of cd fld id 99`, `ERR:could not find the specified`],
-        [`the short id of cd fld "p1"`, `${this.elIds.fld_b_c_1}`],
-        [`the short id of cd fld "p2"`, `${this.elIds.fld_b_c_2}`],
-        [`the short id of cd fld ("p2")`, `${this.elIds.fld_b_c_2}`],
+        [`the short id of cd fld "p1"`, `${h.elIds.fld_b_c_1}`],
+        [`the short id of cd fld "p2"`, `${h.elIds.fld_b_c_2}`],
+        [`the short id of cd fld ("p2")`, `${h.elIds.fld_b_c_2}`],
         [`the short id of cd fld "notfound"`, `ERR:could not find the specified`],
-        [`the short id of cd fld 1`, `${this.elIds.fld_b_c_1}`],
+        [`the short id of cd fld 1`, `${h.elIds.fld_b_c_1}`],
 
         /* field with parent */
         [
-            `the short id of cd fld id ${this.elIds.fld_b_c_1} of this cd`,
-            `${this.elIds.fld_b_c_1}`
+            `the short id of cd fld id ${h.elIds.fld_b_c_1} of this cd`,
+            `${h.elIds.fld_b_c_1}`
         ],
         [
-            `the short id of cd fld id ${this.elIds.fld_c_d_1} of this cd`,
-            `${this.elIds.fld_c_d_1}`
+            `the short id of cd fld id ${h.elIds.fld_c_d_1} of this cd`,
+            `${h.elIds.fld_c_d_1}`
         ],
         [`the short id of cd fld "p1" of cd 1`, `ERR:could not find the specified`],
-        [`the short id of cd fld "p1" of this cd`, `${this.elIds.fld_b_c_1}`],
-        [`the short id of cd fld "p1" of fifth cd`, `${this.elIds.fld_c_d_1}`],
-        [`the short id of cd fld "p1" of cd 4`, `${this.elIds.fld_b_d_1}`],
-        [`the short id of cd fld "p1" of cd "d"`, `${this.elIds.fld_b_d_1}`],
-        [`the short id of cd fld "p1" of cd "d" of bg 3`, `${this.elIds.fld_c_d_1}`],
+        [`the short id of cd fld "p1" of this cd`, `${h.elIds.fld_b_c_1}`],
+        [`the short id of cd fld "p1" of fifth cd`, `${h.elIds.fld_c_d_1}`],
+        [`the short id of cd fld "p1" of cd 4`, `${h.elIds.fld_b_d_1}`],
+        [`the short id of cd fld "p1" of cd "d"`, `${h.elIds.fld_b_d_1}`],
+        [`the short id of cd fld "p1" of cd "d" of bg 3`, `${h.elIds.fld_c_d_1}`],
         [
             `the short id of cd fld "p1" of cd "d" of bg 3 of this stack`,
-            `${this.elIds.fld_c_d_1}`
+            `${h.elIds.fld_c_d_1}`
         ],
 
         /* button */
-        [`the short id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
-        [`the short id of cd btn id ${this.elIds.btn_c_d_1}`, `${this.elIds.btn_c_d_1}`],
+        [`the short id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`],
+        [`the short id of cd btn id ${h.elIds.btn_c_d_1}`, `${h.elIds.btn_c_d_1}`],
         [
-            `the short id of cd btn id (${this.elIds.btn_c_d_1})`,
-            `${this.elIds.btn_c_d_1}`
+            `the short id of cd btn id (${h.elIds.btn_c_d_1})`,
+            `${h.elIds.btn_c_d_1}`
         ],
         [`the short id of cd btn id 99`, `ERR:could not find the specified`],
-        [`the short id of cd btn "p1"`, `${this.elIds.btn_b_c_1}`],
-        [`the short id of cd btn "p2"`, `${this.elIds.btn_b_c_2}`],
-        [`the short id of cd btn ("p2")`, `${this.elIds.btn_b_c_2}`],
+        [`the short id of cd btn "p1"`, `${h.elIds.btn_b_c_1}`],
+        [`the short id of cd btn "p2"`, `${h.elIds.btn_b_c_2}`],
+        [`the short id of cd btn ("p2")`, `${h.elIds.btn_b_c_2}`],
         [`the short id of cd btn "notfound"`, `ERR:could not find the specified`],
-        [`the short id of cd btn 1`, `${this.elIds.btn_b_c_1}`],
+        [`the short id of cd btn 1`, `${h.elIds.btn_b_c_1}`],
 
         /* button with parent */
         [
-            `the short id of cd btn id ${this.elIds.btn_b_c_1} of this cd`,
-            `${this.elIds.btn_b_c_1}`
+            `the short id of cd btn id ${h.elIds.btn_b_c_1} of this cd`,
+            `${h.elIds.btn_b_c_1}`
         ],
         [
-            `the short id of cd btn id ${this.elIds.btn_c_d_1} of this cd`,
-            `${this.elIds.btn_c_d_1}`
+            `the short id of cd btn id ${h.elIds.btn_c_d_1} of this cd`,
+            `${h.elIds.btn_c_d_1}`
         ],
         [`the short id of cd btn "p1" of cd 1`, `ERR:could not find the specified`],
-        [`the short id of cd btn "p1" of this cd`, `${this.elIds.btn_b_c_1}`],
-        [`the short id of cd btn "p1" of fifth cd`, `${this.elIds.btn_c_d_1}`],
-        [`the short id of cd btn "p1" of cd 4`, `${this.elIds.btn_b_d_1}`],
-        [`the short id of cd btn "p1" of cd "d"`, `${this.elIds.btn_b_d_1}`],
-        [`the short id of cd btn "p1" of cd "d" of bg 3`, `${this.elIds.btn_c_d_1}`],
+        [`the short id of cd btn "p1" of this cd`, `${h.elIds.btn_b_c_1}`],
+        [`the short id of cd btn "p1" of fifth cd`, `${h.elIds.btn_c_d_1}`],
+        [`the short id of cd btn "p1" of cd 4`, `${h.elIds.btn_b_d_1}`],
+        [`the short id of cd btn "p1" of cd "d"`, `${h.elIds.btn_b_d_1}`],
+        [`the short id of cd btn "p1" of cd "d" of bg 3`, `${h.elIds.btn_c_d_1}`],
         [
             `the short id of cd btn "p1" of cd "d" of bg 3 of this stack`,
-            `${this.elIds.btn_c_d_1}`
+            `${h.elIds.btn_c_d_1}`
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_vpcProperties', () => {
+t.test('_vpcProperties', () => {
     let batch: [string, string][];
 
     batch = [
@@ -250,7 +255,7 @@ t.test('test_vpcProperties', () => {
         ['set the id of cd fld "p1" to 100\\0', 'ERR:unknown property'],
         ['set the script of cd fld "p1" to "abc"\\0', 'ERR:unknown property']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* product opts get */
@@ -274,24 +279,24 @@ t.test('test_vpcProperties', () => {
         ['set the cursor to "plus" \\ the cursor', 'plus'],
         ['set the cursor to "arrow" \\ the cursor', 'arrow']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
-    this.updateObjectScript(
-        this.vcstate.model.stack.id,
+    h.updateObjectScript(
+        h.vcstate.model.stack.id,
         'on stackscript\nend stackscript'
     );
-    this.updateObjectScript(
-        this.vcstate.model.stack.bgs[1].id,
+    h.updateObjectScript(
+        h.vcstate.model.stack.bgs[1].id,
         'on bgscript\nend bgscript'
     );
-    this.updateObjectScript(
-        this.vcstate.model.stack.bgs[1].cards[1].id,
+    h.updateObjectScript(
+        h.vcstate.model.stack.bgs[1].cards[1].id,
         'on cdscript\nend cdscript'
     );
     batch = [
         /* stack get and set */
         ['length(the script of this stack) > 1', `true`],
-        ['the script of this stack', `${this.vcstate.model.stack.getS('script')}`],
+        ['the script of this stack', `${h.vcstate.model.stack.getS('script')}`],
         [
             'set the name of this stack to "newname" \\ the short name of this stack',
             'newname'
@@ -305,7 +310,7 @@ t.test('test_vpcProperties', () => {
         ['length(the script of bg 1) == 0', `true`],
         ['the script of bg 1', ``],
         ['length(the script of bg 2) > 1', `true`],
-        ['the script of bg 2', `${this.vcstate.model.stack.bgs[1].getS('script')}`],
+        ['the script of bg 2', `${h.vcstate.model.stack.bgs[1].getS('script')}`],
         ['the short name of bg 2', 'b'],
         ['set the name of bg 2 to "newname" \\ the short name of bg 2', 'newname'],
         ['set the name of bg 2 to "b" \\ the short name of bg 2', 'b'],
@@ -316,15 +321,15 @@ t.test('test_vpcProperties', () => {
         ['length(the script of cd 3) > 1', `true`],
         [
             'the script of cd 3',
-            `${this.vcstate.model.stack.bgs[1].cards[1].getS('script')}`
+            `${h.vcstate.model.stack.bgs[1].cards[1].getS('script')}`
         ],
         ['the short name of cd 3', 'c'],
         ['set the name of cd 3 to "newname" \\ the short name of cd 3', 'newname'],
         ['set the name of cd 3 to "c" \\ the short name of cd 3', 'c']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         /* size properties */
         ['the left of cd btn "p1"', '0'],
@@ -377,18 +382,18 @@ t.test('test_vpcProperties', () => {
         ['the rect of cd btn "p1"', '10,20,42,62'],
 
         /* set name */
-        [`the short name of cd btn id ${this.elIds.btn_b_c_1}`, 'p1'],
+        [`the short name of cd btn id ${h.elIds.btn_b_c_1}`, 'p1'],
         [
             longstr(
-                `set the name of cd btn id ${this.elIds.btn_b_c_1} to
-                "newname" \\ the short name of cd btn id ${this.elIds.btn_b_c_1}`
+                `set the name of cd btn id ${h.elIds.btn_b_c_1} to
+                "newname" \\ the short name of cd btn id ${h.elIds.btn_b_c_1}`
             ),
             'newname'
         ],
         [
             longstr(
-                `set the name of cd btn id ${this.elIds.btn_b_c_1} to
-                "p1" \\ the short name of cd btn id ${this.elIds.btn_b_c_1}`
+                `set the name of cd btn id ${h.elIds.btn_b_c_1} to
+                "p1" \\ the short name of cd btn id ${h.elIds.btn_b_c_1}`
             ),
             'p1'
         ],
@@ -426,17 +431,17 @@ t.test('test_vpcProperties', () => {
         ['set the left of cd btn "p1" to "a10"\\0', 'ERR:expected an integer'],
         ['set the left of cd btn "p1" to "10.1"\\0', 'ERR:expected an integer']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
     let batchWithFld = batch.map((item): [string, string] => [
         item[0]
             .replace(/ cd btn /g, ' cd fld ')
             .replace(
-                new RegExp(`${this.elIds.btn_b_c_1}`, 'g'),
-                `${this.elIds.fld_b_c_1}`
+                new RegExp(`${h.elIds.btn_b_c_1}`, 'g'),
+                `${h.elIds.fld_b_c_1}`
             ),
         item[1]
     ]);
-    this.testBatchEvaluate(batchWithFld);
+    h.testBatchEvaluate(batchWithFld);
 
     batch = [
         /* btn simple get/set */
@@ -483,7 +488,7 @@ t.test('test_vpcProperties', () => {
             'ERR:unrecognized text style'
         ],
         [
-            deleteThis.longstr(
+            longstr(
                 `set the textstyle of cd btn "p1" to
                 "bold,italic,underline,outline,shadow,condense,extend"\\the
                 textstyle of cd btn "p1"`
@@ -491,7 +496,7 @@ t.test('test_vpcProperties', () => {
             'bold,italic,underline,outline,shadow,condense,extend'
         ],
         [
-            deleteThis.longstr(
+            longstr(
                 `set the textstyle of cd btn "p1" to
                 bold,italic,underline,outline,shadow,condense,extend\\the
                 textstyle of cd btn "p1"`
@@ -520,7 +525,7 @@ t.test('test_vpcProperties', () => {
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* field simple get/set */
@@ -642,10 +647,10 @@ t.test('test_vpcProperties', () => {
         ['set the textalign of cd fld "p1" to xyz\\0', 'ERR:no variable found']
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* setting style */
-    const fld = this.vcstate.model.getById(VpcElField, this.elIds.fld_b_c_1);
+    const fld = h.vcstate.model.getById(VpcElField, h.elIds.fld_b_c_1);
     assertEq(UI512FldStyle.Rectangle, fld.getN('style'), '1 |');
     batch = [
         ['the style of cd fld "p1"', 'rectangle'],
@@ -661,13 +666,13 @@ t.test('test_vpcProperties', () => {
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
     assertEq(UI512FldStyle.Transparent, fld.getN('style'), '1z|');
 
     /* reading per-character formatting */
     /* here's what we'll set it to: Courier/Bold/24"ab"
         Courier/ItalicShadow/18"cd"Times/Plain/18ef */
-    const fldPerChar = this.vcstate.model.getById(VpcElField, this.elIds.fld_b_c_2);
+    const fldPerChar = h.vcstate.model.getById(VpcElField, h.elIds.fld_b_c_2);
     let sfmt = '';
     sfmt += UI512DrawText.setFont(
         'ab',
@@ -685,7 +690,7 @@ t.test('test_vpcProperties', () => {
         'ef',
         new TextFontSpec('Times', TextFontStyling.Default, 18).toSpecString()
     );
-    this.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.undoableAction(() =>
         fldPerChar.setCardFmTxt(
             fldPerChar.parentId,
             FormattedText.newFromSerialized(sfmt)
@@ -722,7 +727,7 @@ t.test('test_vpcProperties', () => {
         ['the xyz of char 1 to 2 of cd fld "p2"', 'ERR:can only say']
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* formatting should have been preserved */
     let contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
@@ -795,7 +800,7 @@ t.test('test_vpcProperties', () => {
         ],
         ['set the xyz of char 1 to 2 of cd fld "p2" to "Geneva"\\0', 'ERR:can only say']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* confirm formatting */
     contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
@@ -835,7 +840,7 @@ t.test('test_vpcProperties', () => {
     ];
 
     for (let [action, expectedFont] of actions) {
-        this.vcstate.vci.undoableAction(() =>
+        h.vcstate.vci.undoableAction(() =>
             fldPerChar.setCardFmTxt(
                 fldPerChar.parentId,
                 FormattedText.newFromSerialized(sfmt)
@@ -852,7 +857,7 @@ t.test('test_vpcProperties', () => {
             ['set the defaulttextsize of cd fld "p2" to "12"\\0', '0'],
             [`${action}\\0`, '0']
         ];
-        this.testBatchEvaluate(batch);
+        h.testBatchEvaluate(batch);
 
         /* formatting should have been lost */
         contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
@@ -860,7 +865,7 @@ t.test('test_vpcProperties', () => {
         assertEq(expected, contents, '1v|');
     }
 
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         /* productopts */
         [`the name of the ${cProductName}`, `${cProductName}`],
@@ -873,10 +878,10 @@ t.test('test_vpcProperties', () => {
         [`the long id of ${cProductName}`, `WILD`],
 
         /* stack */
-        ['the name of this stack', 'this stack'],
-        ['the abbr name of this stack', 'this stack'],
+        ['the name of this stack', 'h stack'],
+        ['the abbr name of this stack', 'h stack'],
         ['the short name of this stack', 'teststack'],
-        ['the long name of this stack', 'this stack'],
+        ['the long name of this stack', 'h stack'],
         ['the id of this stack', '901'],
         ['the abbr id of this stack', '901'],
         ['the short id of this stack', '901'],
@@ -887,21 +892,21 @@ t.test('test_vpcProperties', () => {
         ['the abbr name of bg 2', 'bkgnd "b"'],
         ['the short name of bg 2', 'b'],
         ['the long name of bg 2', 'bkgnd "b" of this stack'],
-        ['the id of bg 2', `${this.elIds.bg_b}`],
-        ['the abbr id of bg 2', `${this.elIds.bg_b}`],
-        ['the short id of bg 2', `${this.elIds.bg_b}`],
-        ['the long id of bg 2', `bkgnd id ${this.elIds.bg_b}`],
+        ['the id of bg 2', `${h.elIds.bg_b}`],
+        ['the abbr id of bg 2', `${h.elIds.bg_b}`],
+        ['the short id of bg 2', `${h.elIds.bg_b}`],
+        ['the long id of bg 2', `bkgnd id ${h.elIds.bg_b}`],
 
         /* bkgnd with no name */
         ['set the name of bg 2 to ""\\0', '0'],
-        ['the name of bg 2', `bkgnd id ${this.elIds.bg_b}`],
-        ['the abbr name of bg 2', `bkgnd id ${this.elIds.bg_b}`],
-        ['the short name of bg 2', `bkgnd id ${this.elIds.bg_b}`],
-        ['the long name of bg 2', `bkgnd id ${this.elIds.bg_b} of this stack`],
-        ['the id of bg 2', `${this.elIds.bg_b}`],
-        ['the abbr id of bg 2', `${this.elIds.bg_b}`],
-        ['the short id of bg 2', `${this.elIds.bg_b}`],
-        ['the long id of bg 2', `bkgnd id ${this.elIds.bg_b}`],
+        ['the name of bg 2', `bkgnd id ${h.elIds.bg_b}`],
+        ['the abbr name of bg 2', `bkgnd id ${h.elIds.bg_b}`],
+        ['the short name of bg 2', `bkgnd id ${h.elIds.bg_b}`],
+        ['the long name of bg 2', `bkgnd id ${h.elIds.bg_b} of this stack`],
+        ['the id of bg 2', `${h.elIds.bg_b}`],
+        ['the abbr id of bg 2', `${h.elIds.bg_b}`],
+        ['the short id of bg 2', `${h.elIds.bg_b}`],
+        ['the long id of bg 2', `bkgnd id ${h.elIds.bg_b}`],
         ['set the name of bg 2 to "b"\\0', '0'],
 
         /* card with a name */
@@ -909,21 +914,21 @@ t.test('test_vpcProperties', () => {
         ['the abbr name of cd 4', 'card "d"'],
         ['the short name of cd 4', 'd'],
         ['the long name of cd 4', 'card "d" of this stack'],
-        ['the id of cd 4', `card id ${this.elIds.card_b_d}`],
-        ['the abbr id of cd 4', `card id ${this.elIds.card_b_d}`],
-        ['the short id of cd 4', `${this.elIds.card_b_d}`],
-        ['the long id of cd 4', `card id ${this.elIds.card_b_d} of this stack`],
+        ['the id of cd 4', `card id ${h.elIds.card_b_d}`],
+        ['the abbr id of cd 4', `card id ${h.elIds.card_b_d}`],
+        ['the short id of cd 4', `${h.elIds.card_b_d}`],
+        ['the long id of cd 4', `card id ${h.elIds.card_b_d} of this stack`],
 
         /* card with no name */
         ['set the name of cd 4 to ""\\0', '0'],
-        ['the name of cd 4', `card id ${this.elIds.card_b_d}`],
-        ['the abbr name of cd 4', `card id ${this.elIds.card_b_d}`],
-        ['the short name of cd 4', `card id ${this.elIds.card_b_d}`],
-        ['the long name of cd 4', `card id ${this.elIds.card_b_d} of this stack`],
-        ['the id of cd 4', `card id ${this.elIds.card_b_d}`],
-        ['the abbr id of cd 4', `card id ${this.elIds.card_b_d}`],
-        ['the short id of cd 4', `${this.elIds.card_b_d}`],
-        ['the long id of cd 4', `card id ${this.elIds.card_b_d} of this stack`],
+        ['the name of cd 4', `card id ${h.elIds.card_b_d}`],
+        ['the abbr name of cd 4', `card id ${h.elIds.card_b_d}`],
+        ['the short name of cd 4', `card id ${h.elIds.card_b_d}`],
+        ['the long name of cd 4', `card id ${h.elIds.card_b_d} of this stack`],
+        ['the id of cd 4', `card id ${h.elIds.card_b_d}`],
+        ['the abbr id of cd 4', `card id ${h.elIds.card_b_d}`],
+        ['the short id of cd 4', `${h.elIds.card_b_d}`],
+        ['the long id of cd 4', `card id ${h.elIds.card_b_d} of this stack`],
         ['set the name of cd 4 to "d"\\0', '0'],
 
         /* button with a name */
@@ -931,102 +936,102 @@ t.test('test_vpcProperties', () => {
         ['the abbr name of cd btn "p1"', 'card button "p1"'],
         ['the short name of cd btn "p1"', 'p1'],
         ['the long name of cd btn "p1"', 'card button "p1" of card "c" of this stack'],
-        ['the id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
-        ['the abbr id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
-        ['the short id of cd btn "p1"', `${this.elIds.btn_b_c_1}`],
-        ['the long id of cd btn "p1"', `card btn id ${this.elIds.btn_b_c_1}`],
+        ['the id of cd btn "p1"', `${h.elIds.btn_b_c_1}`],
+        ['the abbr id of cd btn "p1"', `${h.elIds.btn_b_c_1}`],
+        ['the short id of cd btn "p1"', `${h.elIds.btn_b_c_1}`],
+        ['the long id of cd btn "p1"', `card btn id ${h.elIds.btn_b_c_1}`],
 
         /* button with no name */
-        [`set the name of cd btn id ${this.elIds.btn_b_c_1} to ""\\0`, '0'],
+        [`set the name of cd btn id ${h.elIds.btn_b_c_1} to ""\\0`, '0'],
         [
-            `the name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1}`
+            `the name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1}`
         ],
         [
-            `the abbr name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1}`
+            `the abbr name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1}`
         ],
         [
-            `the short name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1}`
+            `the short name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1}`
         ],
         [
-            `the long name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1} of card "c" of this stack`
+            `the long name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1} of card "c" of this stack`
         ],
-        [`the id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
-        [`the abbr id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
-        [`the short id of cd btn id ${this.elIds.btn_b_c_1}`, `${this.elIds.btn_b_c_1}`],
+        [`the id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`],
+        [`the abbr id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`],
+        [`the short id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`],
         [
-            `the long id of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1}`
+            `the long id of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1}`
         ],
-        [`set the name of cd btn id ${this.elIds.btn_b_c_1} to "p1"\\0`, '0'],
+        [`set the name of cd btn id ${h.elIds.btn_b_c_1} to "p1"\\0`, '0'],
 
         /* field with a name */
         ['the name of cd fld "p1"', 'card field "p1"'],
         ['the abbr name of cd fld "p1"', 'card field "p1"'],
         ['the short name of cd fld "p1"', 'p1'],
         ['the long name of cd fld "p1"', 'card field "p1" of card "c" of this stack'],
-        ['the id of cd fld "p1"', `${this.elIds.fld_b_c_1}`],
-        ['the abbr id of cd fld "p1"', `${this.elIds.fld_b_c_1}`],
-        ['the short id of cd fld "p1"', `${this.elIds.fld_b_c_1}`],
-        ['the long id of cd fld "p1"', `card field id ${this.elIds.fld_b_c_1}`],
+        ['the id of cd fld "p1"', `${h.elIds.fld_b_c_1}`],
+        ['the abbr id of cd fld "p1"', `${h.elIds.fld_b_c_1}`],
+        ['the short id of cd fld "p1"', `${h.elIds.fld_b_c_1}`],
+        ['the long id of cd fld "p1"', `card field id ${h.elIds.fld_b_c_1}`],
 
         /* field with no name */
-        [`set the name of cd fld id ${this.elIds.fld_b_c_1} to ""\\0`, '0'],
+        [`set the name of cd fld id ${h.elIds.fld_b_c_1} to ""\\0`, '0'],
         [
-            `the name of cd fld id ${this.elIds.fld_b_c_1}`,
-            `card field id ${this.elIds.fld_b_c_1}`
+            `the name of cd fld id ${h.elIds.fld_b_c_1}`,
+            `card field id ${h.elIds.fld_b_c_1}`
         ],
         [
-            `the abbr name of cd fld id ${this.elIds.fld_b_c_1}`,
-            `card field id ${this.elIds.fld_b_c_1}`
+            `the abbr name of cd fld id ${h.elIds.fld_b_c_1}`,
+            `card field id ${h.elIds.fld_b_c_1}`
         ],
         [
-            `the short name of cd fld id ${this.elIds.fld_b_c_1}`,
-            `card field id ${this.elIds.fld_b_c_1}`
+            `the short name of cd fld id ${h.elIds.fld_b_c_1}`,
+            `card field id ${h.elIds.fld_b_c_1}`
         ],
         [
-            `the long name of cd fld id ${this.elIds.fld_b_c_1}`,
-            `card field id ${this.elIds.fld_b_c_1} of card "c" of this stack`
+            `the long name of cd fld id ${h.elIds.fld_b_c_1}`,
+            `card field id ${h.elIds.fld_b_c_1} of card "c" of this stack`
         ],
-        [`the id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
-        [`the abbr id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
-        [`the short id of cd fld id ${this.elIds.fld_b_c_1}`, `${this.elIds.fld_b_c_1}`],
+        [`the id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`],
+        [`the abbr id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`],
+        [`the short id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`],
         [
-            `the long id of cd fld id ${this.elIds.fld_b_c_1}`,
-            `card field id ${this.elIds.fld_b_c_1}`
+            `the long id of cd fld id ${h.elIds.fld_b_c_1}`,
+            `card field id ${h.elIds.fld_b_c_1}`
         ],
-        [`set the name of cd fld id ${this.elIds.fld_b_c_1} to "p1"\\0`, '0'],
+        [`set the name of cd fld id ${h.elIds.fld_b_c_1} to "p1"\\0`, '0'],
 
         /* when nothing has names, we get different output */
         ['set the name of this stack to ""\\0', '0'],
         ['set the name of this bg to ""\\0', '0'],
         ['set the name of this card to ""\\0', '0'],
-        [`set the name of cd btn id ${this.elIds.btn_b_c_1} to ""\\0`, '0'],
+        [`set the name of cd btn id ${h.elIds.btn_b_c_1} to ""\\0`, '0'],
         [
-            `the name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1}`
+            `the name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1}`
         ],
         [
-            `the abbr name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1}`
+            `the abbr name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1}`
         ],
         [
-            `the short name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1}`
+            `the short name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1}`
         ],
         [
-            `the long name of cd btn id ${this.elIds.btn_b_c_1}`,
-            `card button id ${this.elIds.btn_b_c_1} of card id ${this.elIds.card_b_c} of this stack`
+            `the long name of cd btn id ${h.elIds.btn_b_c_1}`,
+            `card button id ${h.elIds.btn_b_c_1} of card id ${h.elIds.card_b_c} of this stack`
         ],
         ['set the name of this stack to "teststack"\\0', '0'],
         ['set the name of this bg to "b"\\0', '0'],
         ['set the name of this card to "c"\\0', '0'],
-        [`set the name of cd btn id ${this.elIds.btn_b_c_1} to "p1"\\0`, '0'],
+        [`set the name of cd btn id ${h.elIds.btn_b_c_1} to "p1"\\0`, '0'],
 
-        /* the target (this.objids.btn_go) */
+        /* the target (h.objids.btn_go) */
         ['the target', 'card button "go"'],
         ['the abbr target', 'card button "go"'],
         ['the short target', 'go'],
@@ -1035,7 +1040,7 @@ t.test('test_vpcProperties', () => {
         /* owner */
         ['the owner of vipercard', 'ERR:get the owner'],
         ['the owner of this stack', 'ERR:get owner'],
-        ['the owner of bg 1', 'this stack'],
+        ['the owner of bg 1', 'h stack'],
         ['the owner of cd fld "p1"', 'card "c"'],
         ['the owner of cd btn "p1"', 'card "c"'],
         ['the owner of cd btn "xyz"', 'ERR:could not find'],
@@ -1045,10 +1050,10 @@ t.test('test_vpcProperties', () => {
         ['the owner of fifth cd', 'bkgnd "c"'],
         ['the owner of cd "d" of bg 3', 'bkgnd "c"']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_setting a property can use variety of expression levels', () => {
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+t.test('_setting a property can use variety of expression levels', () => {
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][] = [
         ['set hilite of cd btn "p1" to 2 == 3\\hilite of cd btn "p1"', 'false'],
         ['set hilite of cd btn "p1" to 3 > 2\\hilite of cd btn "p1"', 'true'],
@@ -1065,10 +1070,10 @@ t.test('test_setting a property can use variety of expression levels', () => {
         ['set hilite of cd btn "p1" to (2 == 3)\\hilite of cd btn "p1"', 'false'],
         ['set hilite of cd btn "p1" to (3 > 2)\\hilite of cd btn "p1"', 'true']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_builtinFunctions', () => {
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+t.test('_builtinFunctions', () => {
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [
         /* RuleExprSource and RuleHSimpleContainer */
@@ -1091,9 +1096,9 @@ t.test('test_builtinFunctions', () => {
         ['cr', '\n'],
         ['return', '\n']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         /* length */
         ['the length of ""', '0'],
@@ -1151,7 +1156,7 @@ t.test('test_builtinFunctions', () => {
         ['the number of bgs of this stack', '3'],
         ['selectedtext()', ''] /* use as breakpoint */
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* existence of objects */
@@ -1169,7 +1174,7 @@ t.test('test_builtinFunctions', () => {
         [`there _is_ a bg 1`, 'true'],
         [`there _is_ a bg 2`, 'true'],
         [`there _is_ a bg 4`, 'false'],
-        [`there _is_ a bg id ${this.elIds.bg_b}`, 'true'],
+        [`there _is_ a bg id ${h.elIds.bg_b}`, 'true'],
         [`there _is_ a bg id 99`, 'false'],
         [`there _is_ a bg "a"`, 'true'],
         [`there _is_ a bg "notexist"`, 'false'],
@@ -1182,7 +1187,7 @@ t.test('test_builtinFunctions', () => {
         [`there _is_ a card 1`, 'true'],
         [`there _is_ a card 4`, 'true'],
         [`there _is_ a card 8`, 'false'],
-        [`there _is_ a card id ${this.elIds.card_b_d}`, 'true'],
+        [`there _is_ a card id ${h.elIds.card_b_d}`, 'true'],
         [`there _is_ a card id 99`, 'false'],
         [`there _is_ a card "a"`, 'true'],
         [`there _is_ a card "notexist"`, 'false'],
@@ -1202,8 +1207,8 @@ t.test('test_builtinFunctions', () => {
         [`there _is_ a cd btn 70`, 'false'],
         [`there _is_ a cd btn "p1"`, 'true'],
         [`there _is_ a cd btn "p"`, 'false'],
-        [`there _is_ a cd btn id ${this.elIds.btn_b_c_1}`, 'true'],
-        [`there _is_ a cd btn id ${this.elIds.btn_b_d_1}`, 'true'],
+        [`there _is_ a cd btn id ${h.elIds.btn_b_c_1}`, 'true'],
+        [`there _is_ a cd btn id ${h.elIds.btn_b_d_1}`, 'true'],
         [`there _is_ a cd btn id 99`, 'false'],
         [`there _is_ a cd btn "p1" of this cd`, 'true'],
         [`there _is_ a cd btn "p1" of cd 2`, 'false'],
@@ -1217,8 +1222,8 @@ t.test('test_builtinFunctions', () => {
         [`there _is_ a cd fld 70`, 'false'],
         [`there _is_ a cd fld "p1"`, 'true'],
         [`there _is_ a cd fld "p"`, 'false'],
-        [`there _is_ a cd fld id ${this.elIds.fld_b_c_1}`, 'true'],
-        [`there _is_ a cd fld id ${this.elIds.fld_b_d_2}`, 'true'],
+        [`there _is_ a cd fld id ${h.elIds.fld_b_c_1}`, 'true'],
+        [`there _is_ a cd fld id ${h.elIds.fld_b_d_2}`, 'true'],
         [`there _is_ a cd fld id 99`, 'false'],
         [`there _is_ a cd fld "p1" of this cd`, 'true'],
         [`there _is_ a cd fld "p1" of cd 2`, 'false'],
@@ -1227,7 +1232,7 @@ t.test('test_builtinFunctions', () => {
         [`there _is_ a cd fld "p2" of cd "d" of bg 2`, 'true'],
         [`there _is_ a cd fld "p2" of cd "d" of bg 3`, 'false']
     ];
-    this.testBatchEvalInvert(batch);
+    h.testBatchEvalInvert(batch);
 
     batch = [
         /* fn calls without parens */
@@ -1246,7 +1251,7 @@ t.test('test_builtinFunctions', () => {
         ['the xyz', "ERR:you can't say something"],
         ['sin of 2', 'ERR:NoViableAltException']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* isolated */
@@ -1333,7 +1338,7 @@ t.test('test_builtinFunctions', () => {
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     batch = [
         /* isolated, math */
@@ -1409,9 +1414,9 @@ t.test('test_builtinFunctions', () => {
         ['log2(5)', '2.321928094887362'],
         ['exp2(2.321928094887362)', '5']
     ];
-    this.testBatchEvaluate(batch, true);
+    h.testBatchEvaluate(batch, true);
 
-    let userBounds = this.pr.userBounds;
+    let userBounds = h.pr.userBounds;
     batch = [
         /* unknown */
         ['xyz()', 'ERR:no handler'],
@@ -1423,19 +1428,19 @@ t.test('test_builtinFunctions', () => {
         ['commandkey()', 'ERR:not a key event'],
         ['optionkey()', 'ERR:not a key event'],
         ['shiftkey()', 'ERR:not a key event'],
-        ['clickh()', `${this.simClickX - userBounds[0]}`],
-        ['clickv()', `${this.simClickY - userBounds[1]}`],
+        ['clickh()', `${h.simClickX - userBounds[0]}`],
+        ['clickv()', `${h.simClickY - userBounds[1]}`],
         [
             'clickloc()',
-            `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`
+            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
         ],
         ['mouse()', `up`],
         ['mouseclick()', `true`],
-        ['mouseh()', `${this.simMouseX - userBounds[0]}`],
-        ['mousev()', `${this.simMouseY - userBounds[1]}`],
+        ['mouseh()', `${h.simMouseX - userBounds[0]}`],
+        ['mousev()', `${h.simMouseY - userBounds[1]}`],
         [
             'mouseloc()',
-            `${this.simMouseX - userBounds[0]},${this.simMouseY - userBounds[1]}`
+            `${h.simMouseX - userBounds[0]},${h.simMouseY - userBounds[1]}`
         ],
         ['param(0)', ``],
         ['param(1)', ``],
@@ -1448,17 +1453,18 @@ t.test('test_builtinFunctions', () => {
         /* casing */
         [
             'CLICKLOC()',
-            `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`
+            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
         ],
         [
             'clIcKloC()',
-            `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`
+            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
         ],
         [
             'ClickLoc()',
-            `${this.simClickX - userBounds[0]},${this.simClickY - userBounds[1]}`
+            `${h.simClickX - userBounds[0]},${h.simClickY - userBounds[1]}`
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
+

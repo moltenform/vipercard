@@ -33,7 +33,7 @@
  * interacting with the text fields has the expected behavior
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512TextEdit', true);
+let t = new SimpleUtil512TestCollection('testCollectionUI512TextEdit');
 export let testCollectionUI512TextEdit = t;
 
 t.atest('async/Test Drawing Text Edits', () =>

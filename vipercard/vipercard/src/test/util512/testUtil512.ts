@@ -393,7 +393,7 @@ t.test('forOfGenerator', () => {
 
     assertEq([10, 20, 30, 40], result, '0s|');
 });
-t.test('testOrderedHash.IterKeys', () => {
+t.test('OrderedHash.IterKeys', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
@@ -405,7 +405,7 @@ t.test('testOrderedHash.IterKeys', () => {
 
     assertEq(['ccc', 'ccb', 'cca'], result, '0q|');
 });
-t.test('testOrderedHash.IterVals', () => {
+t.test('OrderedHash.IterVals', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);
@@ -417,7 +417,7 @@ t.test('testOrderedHash.IterVals', () => {
 
     assertEq([30, 29, 28], result, '0p|');
 });
-t.test('testOrderedHash.IterReversed', () => {
+t.test('OrderedHash.IterReversed', () => {
     let h = new OrderedHash<number>();
     h.insertNew('ccc', 30);
     h.insertNew('ccb', 29);

@@ -19,7 +19,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * test running ViperCard scripts that evaluate simple computation expressions.
  *
@@ -45,7 +44,7 @@
  */
 // TestVpcScriptRunBase {
 
-t.test('test_evalRuleExpr,RuleLvl1', () => {
+t.test('_evalRuleExpr,RuleLvl1', () => {
     let batch: [string, string][];
     batch = [
         /* basic tests */
@@ -219,7 +218,7 @@ t.test('test_evalRuleExpr,RuleLvl1', () => {
     ];
     this.testBatchEvaluate(batch);
 });
-t.test('test_evalRuleLvl2', () => {
+t.test('_evalRuleLvl2', () => {
     let batch: [string, string][];
     batch = [
         /* Lvl2Expression, type check, invalid keywords */
@@ -345,7 +344,7 @@ t.test('test_evalRuleLvl2', () => {
     ];
     this.testBatchEvalInvert(batch);
 });
-t.test('test_evalRuleLvl3', () => {
+t.test('_evalRuleLvl3', () => {
     let batch: [string, string][];
     batch = [
         ['"" & ""', ''],
@@ -375,7 +374,7 @@ t.test('test_evalRuleLvl3', () => {
     ];
     this.testBatchEvaluate(batch);
 });
-t.test('test_evalArithmetic', () => {
+t.test('_evalArithmetic', () => {
     /* the communitative ones, integer */
     let batch: [string, string][];
     batch = [
@@ -536,7 +535,7 @@ t.test('test_evalArithmetic', () => {
     ];
     this.testBatchEvalCommutative(batch);
 });
-t.test('test_evalRuleLvl6', () => {
+t.test('_evalRuleLvl6', () => {
     let batch: [string, string][];
     batch = [
         /* parens */
@@ -749,7 +748,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
     ];
     this.testBatchEvaluate(batch);
 });
-t.test('test_vpcvalnumbers', () => {
+t.test('_vpcvalnumbers', () => {
     assertThrows('L`|', '> 1e18', () => VpcValN(Infinity));
     assertThrows('L_|', '> 1e18', () => VpcValN(Number.POSITIVE_INFINITY));
     assertThrows('L^|', '> 1e18', () => VpcValN(-Infinity));
@@ -911,7 +910,7 @@ t.test('test_vpcvalnumbers', () => {
 
     this.testBatchEvaluate(batch, false);
 });
-t.test('testModelGetById.should throw if not found', () => {
+t.test('ModelGetById.should throw if not found', () => {
     assertEq(undefined, this.vcstate.model.findByIdUntyped('111'), 'HM|');
     assertEq(
         this.elIds.card_a_a,
@@ -935,7 +934,7 @@ t.test('testModelGetById.should throw if not found', () => {
         'HI|'
     );
 });
-t.test('testModelFindById.when exists and given correct type', () => {
+t.test('ModelFindById.when exists and given correct type', () => {
     assertEq(
         VpcElType.Stack,
         this.vcstate.model.findById(this.elIds.stack, VpcElStack)!.getType(),
@@ -967,7 +966,7 @@ t.test('testModelFindById.when exists and given correct type', () => {
         'HC|'
     );
 });
-t.test('testModelFindById.when exists and given incorrect type', () => {
+t.test('ModelFindById.when exists and given incorrect type', () => {
     assertThrows('L<|', 'cast exception', () =>
         this.vcstate.model.findById(this.elIds.stack, VpcElCard)
     );
@@ -987,7 +986,7 @@ t.test('testModelFindById.when exists and given incorrect type', () => {
         this.vcstate.model.getById(VpcElStack, this.elIds.btn_b_c_1)
     );
 });
-t.test('testModelFindById.when not exists', () => {
+t.test('ModelFindById.when not exists', () => {
     assertEq(undefined, this.vcstate.model.findById('111', VpcElCard), 'HB|');
     assertEq(undefined, this.vcstate.model.findById('111', VpcElStack), 'HA|');
     assertEq(undefined, this.vcstate.model.findById('', VpcElCard), 'H9|');

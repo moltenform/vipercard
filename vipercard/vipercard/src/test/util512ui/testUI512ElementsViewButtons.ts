@@ -27,7 +27,7 @@
  * interacting with the buttons has the expected behavior
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512ElementsViewButtons', true);
+let t = new SimpleUtil512TestCollection('testCollectionUI512ElementsViewButtons');
 export let testCollectionUI512ElementsViewButtons = t;
 
 t.atest('async/Test Drawing Buttons', () =>

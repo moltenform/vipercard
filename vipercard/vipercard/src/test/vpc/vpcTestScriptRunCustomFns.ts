@@ -1,13 +1,15 @@
 
+/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcLineCategory } from './../../vpc/codepreparse/vpcPreparseCommon';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
-/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
+
+import { checkThrow } from '../../ui512/utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * test running ViperCard scripts.
@@ -15,10 +17,20 @@
  * test lexing, syntax structures like loops, functions, and handlers
  * see _TestVpcScriptRunCmd_ for a description of testBatchEvaluate
  */
-// export class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
-// await this.initEnvironment();
 
-t.test('test_expand if + if else', () => {
+let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptRunCustomFns');
+export let vpcTestCollectionScriptRunCustomFns = t;
+
+/**
+ * setup
+ */
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunCustomFns>()
+t.atest("--init--vpcTestScriptEval", async ()=> {
+    h = new TestVpcScriptRunCustomFns(t)
+    await h.initEnvironment();
+})
+
+t.test('_expand if + if else', () => {
     let inp = `
 on myCode
 test001
@@ -33,7 +45,7 @@ if~0~is~1~then~
     code1~
 IfEnd
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -53,7 +65,7 @@ IfElsePlain
     code2~
 IfEnd
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -85,7 +97,7 @@ IfElsePlain
     IfEnd
 IfEnd
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -119,7 +131,7 @@ IfElsePlain
     IfEnd
 IfEnd
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -167,7 +179,7 @@ IfElsePlain
     IfEnd
 IfEnd
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -225,7 +237,7 @@ IfElsePlain
     IfEnd
 IfEnd
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -295,9 +307,9 @@ IfElsePlain
     IfEnd
 IfEnd
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 });
-t.test('test_expand single-line if and else-if', () => {
+t.test('_expand single-line if and else-if', () => {
     let inp = `
 on myCode
 if x > 1 then c1
@@ -309,7 +321,7 @@ if~x~>~1~then~
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -326,7 +338,7 @@ if~x~>~2~then~
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -347,7 +359,7 @@ if~x~>~3~then~
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -364,7 +376,7 @@ if~x~>~1~then~
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -379,7 +391,7 @@ IfEnd
 c2~
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     /* two lines */
     expected = `
@@ -397,14 +409,14 @@ if x > 1 then c1
 else c2
 end myCode`;
 
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
     c1
 else c2
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then c1
@@ -412,7 +424,7 @@ else
     c2
 end if
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
@@ -421,7 +433,7 @@ else
     c2
 end if
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     /* three lines */
     expected = `
@@ -443,7 +455,7 @@ if x > 1 then c1
 else if x > 2 then c2
 else c3
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
@@ -451,7 +463,7 @@ if x > 1 then
 else if x > 2 then c2
 else c3
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
@@ -460,7 +472,7 @@ else if x > 2 then
     c2
 else c3
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then c1
@@ -469,7 +481,7 @@ else
     c3
 end if
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
@@ -479,7 +491,7 @@ else
     c3
 end if
 end myCode`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     /* if a plain else, must end the single line! */
     inp = `
@@ -502,7 +514,7 @@ IfElsePlain
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -528,7 +540,7 @@ IfElsePlain
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 0 then
@@ -551,7 +563,7 @@ IfElsePlain
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `
 on myCode
@@ -582,7 +594,7 @@ IfElsePlain
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 0 then
@@ -610,16 +622,16 @@ IfElsePlain
 IfEnd
 HandlerEnd
 `;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 });
-t.test('test_put into message box', () => {
+t.test('_put into message box', () => {
     let inp = `on myCode
 put "abc"
 end myCode`;
     let expected = `HandlerStart
     put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
     HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc"
@@ -629,7 +641,7 @@ end myCode`;
     put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
     put~"def"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
     HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "a" & "b" & "c"
@@ -637,7 +649,7 @@ end myCode`;
     expected = `HandlerStart
     put~"a"~&~"b"~&~"c"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
     HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "a" & "b into c"
@@ -645,7 +657,7 @@ end myCode`;
     expected = `HandlerStart
 put~"a"~&~"b into c"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into x
@@ -653,7 +665,7 @@ end myCode`;
     expected = `HandlerStart
     put~"abc"~syntaxmarker~into~syntaxmarker~x~
     HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into msgbox
@@ -661,7 +673,7 @@ end myCode`;
     expected = `HandlerStart
 put~"abc"~syntaxmarker~into~syntaxmarker~msgbox~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 add 1 to the msg box
@@ -669,7 +681,7 @@ end myCode`;
     expected = `HandlerStart
 add~1~to~vpc__internal__msgbox~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into msg boxb
@@ -677,7 +689,7 @@ end myCode`;
     expected = `HandlerStart
 put~"abc"~syntaxmarker~into~syntaxmarker~msg~boxb~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into bmsg box
@@ -685,7 +697,7 @@ end myCode`;
     expected = `HandlerStart
 put~"abc"~syntaxmarker~into~syntaxmarker~bmsg~box~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into msg box
@@ -693,7 +705,7 @@ end myCode`;
     expected = `HandlerStart
 put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into msg box
@@ -703,7 +715,7 @@ end myCode`;
 put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
 put~"def"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into the msg boxb
@@ -711,7 +723,7 @@ end myCode`;
     expected = `HandlerStart
     put~"abc"~syntaxmarker~into~syntaxmarker~the~msg~boxb~
     HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into xthe msg box
@@ -719,7 +731,7 @@ end myCode`;
     expected = `HandlerStart
 put~"abc"~syntaxmarker~into~syntaxmarker~xthe~vpc__internal__msgbox~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 
     inp = `on myCode
 put "abc" into the msg box
@@ -727,9 +739,9 @@ end myCode`;
     expected = `HandlerStart
 put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
 HandlerEnd`;
-    this.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 });
-t.test('test_run code with single-line if', () => {
+t.test('_run code with single-line if', () => {
     let batch: [string, string][] = [
         [
             `
@@ -863,10 +875,10 @@ end if
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand with nested calls', () => {
-    this.provideCustomFnInStackScript(`
+t.test('_expand with nested calls', () => {
+    h.provideCustomFnInStackScript(`
 function myConcat p1, p2, p3
 global countCalls
 add 1 to countCalls
@@ -940,41 +952,41 @@ put myMult(2,myMult(myMult((2), 3), (4))) into ret
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
 t.test("test_don't need to expand custom fns on these lines", () => {
     /* VpcLineCategory.HandlerStart */
     let inp = `
 on myHandler myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'required comma', 2);
+    h.assertCompileError(inp, 'required comma', 2);
 
     /* VpcLineCategory.HandlerEnd */
     inp = `
 on myHandler
 end myHandler myFn(1, 2)`;
-    this.assertCompileError(inp, 'wrong line length', 3);
+    h.assertCompileError(inp, 'wrong line length', 3);
 
     /* VpcLineCategory.HandlerExit */
     inp = `
 on myHandler
 exit myHandler myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'wrong line length', 3);
+    h.assertCompileError(inp, 'wrong line length', 3);
 
     /* VpcLineCategory.ProductExit */
     inp = `
 on myHandler
 exit to ${cProductName} myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'wrong line length', 3);
+    h.assertCompileError(inp, 'wrong line length', 3);
 
     /* VpcLineCategory.HandlerPass */
     inp = `
 on myHandler
 pass myHandler myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'wrong line length', 3);
+    h.assertCompileError(inp, 'wrong line length', 3);
 
     /* VpcLineCategory.IfElsePlain */
     inp = `
@@ -983,7 +995,7 @@ if true then
 else myFn(1, 2)
 end if
 end myHandler`;
-    this.assertCompileError(inp, "'fn()' alone", 4);
+    h.assertCompileError(inp, "'fn()' alone", 4);
 
     /* VpcLineCategory.IfEnd */
     inp = `
@@ -992,7 +1004,7 @@ if true then
 else
 end if myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'wrong line length', 5);
+    h.assertCompileError(inp, 'wrong line length', 5);
 
     /* VpcLineCategory.RepeatExit */
     inp = `
@@ -1001,7 +1013,7 @@ repeat while false
     exit repeat myFn(1, 2)
 end repeat
 end myHandler`;
-    this.assertCompileError(inp, 'wrong line length', 4);
+    h.assertCompileError(inp, 'wrong line length', 4);
 
     /* VpcLineCategory.RepeatNext */
     inp = `
@@ -1010,7 +1022,7 @@ repeat while false
     next repeat myFn(1, 2)
 end repeat
 end myHandler`;
-    this.assertCompileError(inp, "just 'next repeat'", 4);
+    h.assertCompileError(inp, "just 'next repeat'", 4);
 
     /* VpcLineCategory.RepeatEnd */
     inp = `
@@ -1019,24 +1031,24 @@ repeat while false
     next repeat
 end repeat myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'wrong line length', 5);
+    h.assertCompileError(inp, 'wrong line length', 5);
 
     /* VpcLineCategory.Global */
     inp = `
 on myHandler
 global myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'required comma', 3);
+    h.assertCompileError(inp, 'required comma', 3);
 
     /* VpcLineCategory.Global in list */
     inp = `
 on myHandler
 global a, myFn(1, 2)
 end myHandler`;
-    this.assertCompileError(inp, 'required comma', 3);
+    h.assertCompileError(inp, 'required comma', 3);
 });
-t.test('test_expand in VpcLineCategory.ReturnExpr', () => {
-    this.provideCustomFnInStackScript(`
+t.test('_expand in VpcLineCategory.ReturnExpr', () => {
+    h.provideCustomFnInStackScript(`
 on theTest
     global countCalls
     put 0 into countCalls
@@ -1050,10 +1062,10 @@ end theTest
         ['theTest\\the result && countCalls', '24 2']
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in VpcLineCategory.IfStart', () => {
-    this.provideCustomFnInStackScript();
+t.test('_expand in VpcLineCategory.IfStart', () => {
+    h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
         [
@@ -1080,10 +1092,10 @@ end if\\ret && countCalls`,
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in VpcLineCategory.IfElse', () => {
-    this.provideCustomFnInStackScript();
+t.test('_expand in VpcLineCategory.IfElse', () => {
+    h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
         /* take first branch */
@@ -1206,10 +1218,10 @@ end if\\ret && countCalls`,
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in simple repeats', () => {
-    this.provideCustomFnInStackScript();
+t.test('_expand in simple repeats', () => {
+    h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
         /* repeat with x */
@@ -1287,10 +1299,10 @@ end repeat\\s && countCalls`,
             '--- 1'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in repeat while/until', () => {
-    this.provideCustomFnInStackScript();
+t.test('_expand in repeat while/until', () => {
+    h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
         /* repeat while */
@@ -1356,10 +1368,10 @@ end repeat\\s && countCalls`,
             '1/1,1/2,2/1,2/2,3/1,3/2,4/1,4/2,5/1,5/2, 21'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in VpcLineCategory.built in command', () => {
-    this.provideCustomFnInStackScript();
+t.test('_expand in VpcLineCategory.built in command', () => {
+    h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
         [
@@ -1474,10 +1486,10 @@ put 6 + \\\n myMult(1, \\\n 3) + myMult(\\\n 1, 3) + myMult(1, 3 \\\n) into x
             '15'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in VpcLineCategory.GoCardImpl', () => {
-    this.provideCustomFnInStackScript();
+t.test('_expand in VpcLineCategory.GoCardImpl', () => {
+    h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
         /* go to card */
@@ -1514,10 +1526,10 @@ put the short id of this cd is the short id of card 4 into ret
             'true 2'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in VpcLineCategory.CallDynamic', () => {
-    this.provideCustomFnInStackScript();
+t.test('_expand in VpcLineCategory.CallDynamic', () => {
+    h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
         [
@@ -1537,10 +1549,10 @@ send "global g" & cr & "put " & myMult(2,3) & " + 1 into g" to this card
             '7 1'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_expand in VpcLineCategory.CallHandler', () => {
-    this.provideCustomFnInStackScript(`
+t.test('_expand in VpcLineCategory.CallHandler', () => {
+    h.provideCustomFnInStackScript(`
 on theTest p1, p2
 global g
 put p1+p2 into g
@@ -1581,52 +1593,56 @@ theTest myMult(2,myMult(3,4)), myMult(5,6)
             '54 3'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
 
-/**
- * check that the preparsed/rewritten code is as expected
- */
-function compareRewrittenCode(script: string, expected: string) {
-    let btnGo = this.vcstate.model.getById(VpcElButton, this.elIds.btn_go);
-    this.vcstate.vci.undoableAction(() => btnGo.set('script', script.trim()));
-    let transformedCode = this.vcstate.vci
-        .getCodeExec()
-        .getCompiledScript(btnGo.id, btnGo.getS('script')) as VpcCodeOfOneVel;
+class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
+    /**
+     * check that the preparsed/rewritten code is as expected
+     */
+    compareRewrittenCode(script: string, expected: string) {
+        checkThrow(false, "nyi")
+        //~ let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
+        //~ h.vcstate.vci.undoableAction(() => btnGo.set('script', script.trim()));
+        //~ let transformedCode = h.vcstate.vci
+            //~ .getCodeExec()
+            //~ .getCompiledScript(btnGo.id, btnGo.getS('script')) as VpcCodeOfOneVel;
 
-    let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory[o.ctg]);
-    got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
-    let exp = expected
-        .trim()
-        .split('\n')
-        .map(s => s.trim());
-    if (util512Sort(exp, got) !== 0) {
-        console.log('\ncontext\n\n', script);
-        UI512TestBase.warnAndAllowToContinue(
-            '\nexpected\n',
-            exp.join('\n'),
-            '\nbut got\n',
-            got.join('\n'),
-            '\n\n'
+        //~ let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory[o.ctg]);
+        //~ got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
+        //~ let exp = expected
+            //~ .trim()
+            //~ .split('\n')
+            //~ .map(s => s.trim());
+        //~ if (util512Sort(exp, got) !== 0) {
+            //~ console.log('\ncontext\n\n', script);
+            //~ t.warnAndAllowToContinue(
+                //~ '\nexpected\n',
+                //~ exp.join('\n'),
+                //~ '\nbut got\n',
+                //~ got.join('\n'),
+                //~ '\n\n'
+            //~ );
+        //~ }
+    }
+
+    /**
+     * in case it's not already there, provide myMult in the stack script
+     */
+    provideCustomFnInStackScript(addCode = '') {
+        let stack = h.vcstate.model.getById(VpcElStack, h.elIds.stack);
+        h.vcstate.vci.undoableAction(() =>
+            stack.set(
+                'script',
+                `
+    function myMult p1, p2
+        global countCalls
+        add 1 to countCalls
+        return p1 * p2
+    end myMult
+    ${addCode}`
+            )
         );
     }
-}
 
-/**
- * in case it's not already there, provide myMult in the stack script
- */
-function provideCustomFnInStackScript(addCode = '') {
-    let stack = this.vcstate.model.getById(VpcElStack, this.elIds.stack);
-    this.vcstate.vci.undoableAction(() =>
-        stack.set(
-            'script',
-            `
-function myMult p1, p2
-    global countCalls
-    add 1 to countCalls
-    return p1 * p2
-end myMult
-${addCode}`
-        )
-    );
 }

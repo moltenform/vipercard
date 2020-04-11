@@ -5,11 +5,10 @@
 /* auto */ import { VpcOpCtg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * tests on vpcutils
@@ -17,7 +16,15 @@
 let t = new SimpleUtil512TestCollection('testCollectionvpcVpcVal');
 export let testCollectionvpcVpcVal = t;
 
-t.test('testEvalHelpers.String Comparisons Must Be A Strict Match', () => {
+/**
+ * initiate test helpers
+ */
+let h = YetToBeDefinedTestHelper<VpcEvalHelpers>();
+t.test('--init--VpcEvalHelpers', () => {
+    h = new VpcEvalHelpers();
+});
+
+t.test('EvalHelpers.String Comparisons Must Be A Strict Match', () => {
     testEquality(true, '', '');
     testEquality(false, '', ' ');
     testEquality(true, ' ', ' ');
@@ -59,7 +66,7 @@ t.test('testEvalHelpers.String Comparisons Must Be A Strict Match', () => {
     testEquality(false, '12a', '\n12a');
     testEquality(true, '\n12a', '\n12a');
 });
-t.test('MMMMMM', () => {
+t.test('EvalHelpers1', () => {
     t.say(
         longstr(`testEvalHelpers.Number comparisons
         allow trailing - and even preceding - whitespace`)
@@ -95,7 +102,7 @@ t.test('MMMMMM', () => {
     testEquality(true, '12.0', ' 12\n');
     testEquality(true, '\n12.0\n', '\n12\n');
 });
-t.test('testEvalHelpers.Number special numeric cases', () => {
+t.test('EvalHelpers.Number special numeric cases', () => {
     testEquality(true, '\n12', '\t12\t');
     testEquality(true, '   12', '\n\n12\n\n');
     testEquality(true, '12', '12.');
@@ -112,7 +119,7 @@ t.test('testEvalHelpers.Number special numeric cases', () => {
     testEquality(false, '12', '12,0');
     testEquality(false, '12,000', '00012,0');
 });
-t.test('testEvalHelpers.Number, very close numbers compare equal', () => {
+t.test('EvalHelpers.Number, very close numbers compare equal', () => {
     /* confirmed in an emulator that very close numbers compare equal */
     testEquality(true, '4', '4 ');
     testEquality(true, '4', '4.0 ');
@@ -143,7 +150,7 @@ t.test('testEvalHelpers.Number, very close numbers compare equal', () => {
     testEquality(false, '4', '-4');
 });
 
-t.test('testVpcStyleToInt', () => {
+t.test('VpcStyleToInt', () => {
     assertEq(TextFontStyling.Default, SubstringStyleComplex.vpcStyleToInt([]), 'I#|');
     assertEq(
         TextFontStyling.Default,
@@ -177,95 +184,73 @@ t.test('testVpcStyleToInt', () => {
         'Iv|'
     );
 });
-t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`testStringToTextFontStyling`)),
-
-    () => {
-        assertEq(TextFontStyling.Default, stringToTextFontStyling('biuosdce'), 'Iu|');
-        assertEq(TextFontStyling.Bold, stringToTextFontStyling('+biuosdce'), 'It|');
-        assertEq(
-            TextFontStyling.Bold | TextFontStyling.Italic,
-            stringToTextFontStyling('+b+iuosdce'),
-            'Is|'
-        );
-        assertEq(
-            TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline,
-            stringToTextFontStyling('+b+i+uosdce'),
-            'Ir|'
-        );
-        assertEq(TextFontStyling.Shadow, stringToTextFontStyling('biuo+sdce'), 'Iq|');
-        assertEq(
-            TextFontStyling.Shadow | TextFontStyling.Condense,
-            stringToTextFontStyling('biuo+sd+ce'),
-            'Ip|'
-        );
-        assertEq(
-            TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline,
-            stringToTextFontStyling('biu+o+sd+ce'),
-            'Io|'
-        );
-    },
-    'vpcStyleFromInt',
-    () => {
-        assertEq(
-            'plain',
-            SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Default),
-            'In|'
-        );
-        assertEq(
-            'bold',
-            SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Bold),
-            'Im|'
-        );
-        assertEq(
-            'bold,italic',
-            SubstringStyleComplex.vpcStyleFromInt(
-                TextFontStyling.Bold | TextFontStyling.Italic
-            ),
-            'Il|'
-        );
-        assertEq(
-            'bold,italic,underline',
-            SubstringStyleComplex.vpcStyleFromInt(
-                TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline
-            ),
-            'Ik|'
-        );
-        assertEq(
-            'shadow',
-            SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Shadow),
-            'Ij|'
-        );
-        assertEq(
-            'shadow,condense',
-            SubstringStyleComplex.vpcStyleFromInt(
-                TextFontStyling.Shadow | TextFontStyling.Condense
-            ),
-            'Ii|'
-        );
-        assertEq(
-            'outline,shadow,condense',
-            SubstringStyleComplex.vpcStyleFromInt(
-                TextFontStyling.Shadow |
-                    TextFontStyling.Condense |
-                    TextFontStyling.Outline
-            ),
-            'Ih|'
-        );
-    }
-);
-t.test('testTextFontStylingToString', () => {
+t.test('testStringToTextFontStyling', () => {
+    assertEq(TextFontStyling.Default, stringToTextFontStyling('biuosdce'), 'Iu|');
+    assertEq(TextFontStyling.Bold, stringToTextFontStyling('+biuosdce'), 'It|');
+    assertEq(
+        TextFontStyling.Bold | TextFontStyling.Italic,
+        stringToTextFontStyling('+b+iuosdce'),
+        'Is|'
+    );
+    assertEq(
+        TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline,
+        stringToTextFontStyling('+b+i+uosdce'),
+        'Ir|'
+    );
+    assertEq(TextFontStyling.Shadow, stringToTextFontStyling('biuo+sdce'), 'Iq|');
+    assertEq(
+        TextFontStyling.Shadow | TextFontStyling.Condense,
+        stringToTextFontStyling('biuo+sd+ce'),
+        'Ip|'
+    );
+    assertEq(
+        TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline,
+        stringToTextFontStyling('biu+o+sd+ce'),
+        'Io|'
+    );
+});
+t.test('vpcStyleFromInt', () => {
+    assertEq(
+        'plain',
+        SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Default),
+        'In|'
+    );
+    assertEq('bold', SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Bold), 'Im|');
+    assertEq(
+        'bold,italic',
+        SubstringStyleComplex.vpcStyleFromInt(
+            TextFontStyling.Bold | TextFontStyling.Italic
+        ),
+        'Il|'
+    );
+    assertEq(
+        'bold,italic,underline',
+        SubstringStyleComplex.vpcStyleFromInt(
+            TextFontStyling.Bold | TextFontStyling.Italic | TextFontStyling.Underline
+        ),
+        'Ik|'
+    );
+    assertEq(
+        'shadow',
+        SubstringStyleComplex.vpcStyleFromInt(TextFontStyling.Shadow),
+        'Ij|'
+    );
+    assertEq(
+        'shadow,condense',
+        SubstringStyleComplex.vpcStyleFromInt(
+            TextFontStyling.Shadow | TextFontStyling.Condense
+        ),
+        'Ii|'
+    );
+    assertEq(
+        'outline,shadow,condense',
+        SubstringStyleComplex.vpcStyleFromInt(
+            TextFontStyling.Shadow | TextFontStyling.Condense | TextFontStyling.Outline
+        ),
+        'Ih|'
+    );
+});
+t.test('TextFontStylingToString', () => {
     assertEq('biuosdce', textFontStylingToString(TextFontStyling.Default), 'Ig|');
     assertEq('+biuosdce', textFontStylingToString(TextFontStyling.Bold), 'If|');
     assertEq(
@@ -296,18 +281,10 @@ t.test('testTextFontStylingToString', () => {
 });
 
 /**
- * exported test class for mTests
- */
-export class TestVpcUtils extends UI512TestBase {
-    static evalHelper = new VpcEvalHelpers();
-}
-
-/**
  * assert that (inp1 == inp2) is exp,
  * and that (inp2 == inp1) is exp
  */
 function testEquality(exp: boolean, inp1: string, inp2: string) {
-    let h = TestVpcUtils.evalHelper;
     let got = h.evalOp(
         VpcValS(inp1),
         VpcValS(inp2),
@@ -316,7 +293,7 @@ function testEquality(exp: boolean, inp1: string, inp2: string) {
     );
     assertEq(exp.toString(), got.readAsString(), '2i|');
 
-    /* equality should be commutative */
+    /* it should also work this way too */
     got = h.evalOp(
         VpcValS(inp2),
         VpcValS(inp1),

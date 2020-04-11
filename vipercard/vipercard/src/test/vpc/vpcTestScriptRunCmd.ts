@@ -1,12 +1,12 @@
 
-/* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
+/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { assertEq, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * test running ViperCard scripts.
@@ -27,9 +27,17 @@
  * the \\x means to evaluate x and compare it with 2.
  *
  */
-// TestVpcScriptRunBase
 
-t.test('test_execCommands choose', () => {
+let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptRunCmd');
+export let vpcTestCollectionScriptRunCmd = t;
+
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>()
+t.atest("--init--vpcTestScriptEval", async ()=> {
+    h = new TestVpcScriptRunBase(t)
+    await h.initEnvironment();
+})
+
+t.test('_execCommands choose', () => {
     let batch: [string, string][];
     batch = [
         /* not valid */
@@ -122,62 +130,62 @@ t.test('test_execCommands choose', () => {
         ['put 15 into x\nchoose tool (x)\\tool()', 'curve']
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_execCommands arithmetic invalid parse', () => {
+t.test('_execCommands arithmetic invalid parse', () => {
     /* add, subtract, divide, multiply */
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
-    this.runGeneralCode('', 'put "0" into cd fld "p1"');
-    this.assertLineError('add 4 with cd fld "p1"', 'MismatchedTokenException', 3);
-    this.assertLineError('add 4 into cd fld "p1"', 'MismatchedTokenException', 3);
-    this.assertLineError('add 4 from cd fld "p1"', 'MismatchedTokenException', 3);
-    this.assertLineError('add 4 from cd fld "to"', 'MismatchedTokenException', 3);
-    this.assertLineError('add 4 to', 'NoViableAltException', 3);
-    this.assertLineError('add to cd fld "p1"', 'NoViableAltException', 3);
-    this.assertCompileErrorIn(
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.runGeneralCode('', 'put "0" into cd fld "p1"');
+    h.assertLineError('add 4 with cd fld "p1"', 'MismatchedTokenException', 3);
+    h.assertLineError('add 4 into cd fld "p1"', 'MismatchedTokenException', 3);
+    h.assertLineError('add 4 from cd fld "p1"', 'MismatchedTokenException', 3);
+    h.assertLineError('add 4 from cd fld "to"', 'MismatchedTokenException', 3);
+    h.assertLineError('add 4 to', 'NoViableAltException', 3);
+    h.assertLineError('add to cd fld "p1"', 'NoViableAltException', 3);
+    h.assertCompileErrorIn(
         'subtract 4 with cd fld "p1"',
         'did not see the keyword',
         3
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         'subtract 4 into cd fld "p1"',
         'did not see the keyword',
         3
     );
-    this.assertCompileErrorIn('subtract 4 to cd fld "p1"', 'did not see the keyword', 3);
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn('subtract 4 to cd fld "p1"', 'did not see the keyword', 3);
+    h.assertCompileErrorIn(
         'subtract 4 to cd fld "from"',
         'did not see the keyword',
         3
     );
-    this.assertLineError('subtract 4 from', 'NoViableAltException', 3);
-    this.assertLineError('subtract from cd fld "p1"', 'NoViableAltException', 3);
-    this.assertCompileErrorIn('divide cd fld "p1"', 'did not see the keyword', 3);
-    this.assertCompileErrorIn('divide cd fld "p1" to 4', 'did not see the keyword', 3);
-    this.assertCompileErrorIn('divide cd fld "p1" with 4', 'did not see the keyword', 3);
-    this.assertCompileErrorIn('divide cd fld "p1" from 4', 'did not see the keyword', 3);
-    this.assertCompileErrorIn('divide cd fld "by" from 4', 'did not see the keyword', 3);
-    this.assertLineError('divide cd fld "p1" by', 'NoViableAltException', 3);
-    this.assertCompileErrorIn('multiply cd fld "p1"', 'did not see the keyword', 3);
-    this.assertCompileErrorIn('multiply cd fld "p1" to 4', 'did not see the keyword', 3);
-    this.assertCompileErrorIn(
+    h.assertLineError('subtract 4 from', 'NoViableAltException', 3);
+    h.assertLineError('subtract from cd fld "p1"', 'NoViableAltException', 3);
+    h.assertCompileErrorIn('divide cd fld "p1"', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('divide cd fld "p1" to 4', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('divide cd fld "p1" with 4', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('divide cd fld "p1" from 4', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('divide cd fld "by" from 4', 'did not see the keyword', 3);
+    h.assertLineError('divide cd fld "p1" by', 'NoViableAltException', 3);
+    h.assertCompileErrorIn('multiply cd fld "p1"', 'did not see the keyword', 3);
+    h.assertCompileErrorIn('multiply cd fld "p1" to 4', 'did not see the keyword', 3);
+    h.assertCompileErrorIn(
         'multiply cd fld "p1" with 4',
         'did not see the keyword',
         3
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         'multiply cd fld "p1" from 4',
         'did not see the keyword',
         3
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         'multiply cd fld "by" from 4',
         'did not see the keyword',
         3
     );
-    this.assertLineError('multiply cd fld "p1" by', 'NoViableAltException', 3);
+    h.assertLineError('multiply cd fld "p1" by', 'NoViableAltException', 3);
 });
-t.test('test_execCommands arithmetic valid', () => {
+t.test('_execCommands arithmetic valid', () => {
     let batch: [string, string][];
     batch = [
         /* operations */
@@ -239,125 +247,125 @@ t.test('test_execCommands arithmetic valid', () => {
         ['put 22 into x\n divide x by 1*1\\x', '22']
     ];
 
-    this.testBatchEvaluate(batch, true);
+    h.testBatchEvaluate(batch, true);
 });
-t.test('test_execCommands go to card', () => {
+t.test('_execCommands go to card', () => {
     /* changing current card */
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
-    this.assertCompileErrorIn('go', 'on its own', 3);
-    this.assertLineError('go "a"', 'not this', 3);
-    this.assertLineError('go 1', 'NoViableAltException', 3);
-    this.assertLineError('go to cd btn id 1', 'NoViableAltException', 3);
-    this.assertLineError('go to cd btn "p1"', 'NoViableAltException', 3);
-    this.assertLineError('go xyz', 'Not a valid choice', 3);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.assertCompileErrorIn('go', 'on its own', 3);
+    h.assertLineError('go "a"', 'not this', 3);
+    h.assertLineError('go 1', 'NoViableAltException', 3);
+    h.assertLineError('go to cd btn id 1', 'NoViableAltException', 3);
+    h.assertLineError('go to cd btn "p1"', 'NoViableAltException', 3);
+    h.assertLineError('go xyz', 'Not a valid choice', 3);
     let batch: [string, string][];
     batch = [
         /* go by id */
         [
-            `go to card id ${this.elIds.card_b_c}\\the short id of this cd`,
-            `${this.elIds.card_b_c}`
+            `go to card id ${h.elIds.card_b_c}\\the short id of this cd`,
+            `${h.elIds.card_b_c}`
         ],
         [
-            `go to card id ${this.elIds.card_b_d}\\the short id of this cd`,
-            `${this.elIds.card_b_d}`
+            `go to card id ${h.elIds.card_b_d}\\the short id of this cd`,
+            `${h.elIds.card_b_d}`
         ],
         [
-            `go to card id ${this.elIds.card_c_d}\\the short id of this cd`,
-            `${this.elIds.card_c_d}`
+            `go to card id ${h.elIds.card_c_d}\\the short id of this cd`,
+            `${h.elIds.card_c_d}`
         ],
 
         /* go by number */
-        ['go to card 1\\the short id of this cd', `${this.elIds.card_a_a}`],
-        ['go to card 2\\the short id of this cd', `${this.elIds.card_b_b}`],
-        ['go to card 3\\the short id of this cd', `${this.elIds.card_b_c}`],
-        ['go to card 4\\the short id of this cd', `${this.elIds.card_b_d}`],
-        ['go to card 5\\the short id of this cd', `${this.elIds.card_c_d}`],
+        ['go to card 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+        ['go to card 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
+        ['go to card 4\\the short id of this cd', `${h.elIds.card_b_d}`],
+        ['go to card 5\\the short id of this cd', `${h.elIds.card_c_d}`],
 
         /* get by relative (tests getCardByOrdinal) */
-        ['go to card 1\\the short id of next cd', `${this.elIds.card_b_b}`],
-        ['go to card 2\\the short id of next cd', `${this.elIds.card_b_c}`],
-        ['go to card 3\\the short id of next cd', `${this.elIds.card_b_d}`],
-        ['go to card 4\\the short id of next cd', `${this.elIds.card_c_d}`],
-        ['go to card 2\\the short id of prev cd', `${this.elIds.card_a_a}`],
-        ['go to card 3\\the short id of prev cd', `${this.elIds.card_b_b}`],
-        ['go to card 4\\the short id of prev cd', `${this.elIds.card_b_c}`],
-        ['go to card 5\\the short id of prev cd', `${this.elIds.card_b_d}`],
+        ['go to card 1\\the short id of next cd', `${h.elIds.card_b_b}`],
+        ['go to card 2\\the short id of next cd', `${h.elIds.card_b_c}`],
+        ['go to card 3\\the short id of next cd', `${h.elIds.card_b_d}`],
+        ['go to card 4\\the short id of next cd', `${h.elIds.card_c_d}`],
+        ['go to card 2\\the short id of prev cd', `${h.elIds.card_a_a}`],
+        ['go to card 3\\the short id of prev cd', `${h.elIds.card_b_b}`],
+        ['go to card 4\\the short id of prev cd', `${h.elIds.card_b_c}`],
+        ['go to card 5\\the short id of prev cd', `${h.elIds.card_b_d}`],
 
         /* ord/position */
-        ['go to card 3\\the short id of this cd', `${this.elIds.card_b_c}`],
-        ['go next\\the short id of this cd', `${this.elIds.card_b_d}`],
-        ['go prev\\the short id of this cd', `${this.elIds.card_b_c}`],
-        ['go previous\\the short id of this cd', `${this.elIds.card_b_b}`],
-        ['go next\\the short id of this cd', `${this.elIds.card_b_c}`],
-        ['go first\\the short id of this cd', `${this.elIds.card_a_a}`],
-        ['go last\\the short id of this cd', `${this.elIds.card_c_d}`],
-        ['go third\\the short id of this cd', `${this.elIds.card_b_c}`],
+        ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
+        ['go next\\the short id of this cd', `${h.elIds.card_b_d}`],
+        ['go prev\\the short id of this cd', `${h.elIds.card_b_c}`],
+        ['go previous\\the short id of this cd', `${h.elIds.card_b_b}`],
+        ['go next\\the short id of this cd', `${h.elIds.card_b_c}`],
+        ['go first\\the short id of this cd', `${h.elIds.card_a_a}`],
+        ['go last\\the short id of this cd', `${h.elIds.card_c_d}`],
+        ['go third\\the short id of this cd', `${h.elIds.card_b_c}`],
 
         /* should wrap around */
-        ['go first\ngo prev\\the short id of this cd', `${this.elIds.card_c_d}`],
-        ['go last\ngo next\\the short id of this cd', `${this.elIds.card_a_a}`],
+        ['go first\ngo prev\\the short id of this cd', `${h.elIds.card_c_d}`],
+        ['go last\ngo next\\the short id of this cd', `${h.elIds.card_a_a}`],
 
         /* reference by name */
         [
             'go to card 1\ngo to card "a"\\the short id of this cd',
-            `${this.elIds.card_a_a}`
+            `${h.elIds.card_a_a}`
         ],
         [
             'go to card 1\ngo to card "b"\\the short id of this cd',
-            `${this.elIds.card_b_b}`
+            `${h.elIds.card_b_b}`
         ],
         [
             'go to card 1\ngo to card "c"\\the short id of this cd',
-            `${this.elIds.card_b_c}`
+            `${h.elIds.card_b_c}`
         ],
         [
             'go to card 1\ngo to card "d"\\the short id of this cd',
-            `${this.elIds.card_b_d}`
+            `${h.elIds.card_b_d}`
         ],
         [
             'go to card 1\ngo to card "d" of bg 2\\the short id of this cd',
-            `${this.elIds.card_b_d}`
+            `${h.elIds.card_b_d}`
         ],
         [
             'go to card 1\ngo to card "d" of bg 3\\the short id of this cd',
-            `${this.elIds.card_c_d}`
+            `${h.elIds.card_c_d}`
         ],
 
         /* confirmed in emulator: if there are ambiguous card names,
             use whichever comes first in the stack, regardless of current bg */
         [
-            `go to card id ${this.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`,
-            `${this.elIds.card_b_d}`
+            `go to card id ${h.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`,
+            `${h.elIds.card_b_d}`
         ],
         [
-            `go to card id ${this.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`,
-            `${this.elIds.card_b_d}`
+            `go to card id ${h.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`,
+            `${h.elIds.card_b_d}`
         ],
         [
-            `go to card id ${this.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`,
-            `${this.elIds.card_b_d}`
+            `go to card id ${h.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`,
+            `${h.elIds.card_b_d}`
         ],
 
         /* reference by bg */
-        ['go to card 1\ngo to bg 1\\the short id of this cd', `${this.elIds.card_a_a}`],
-        ['go to card 2\ngo to bg 1\\the short id of this cd', `${this.elIds.card_a_a}`],
-        ['go to card 2\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
-        ['go to card 5\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
-        ['go to card 5\ngo to bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
-        ['go to card 2\ngo to bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
+        ['go to card 1\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+        ['go to card 2\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+        ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        ['go to card 5\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        ['go to card 5\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+        ['go to card 2\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
 
         /* confirmed in emulator: if sent to the same bg,
             do not change the current card */
-        ['go to card 2\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
-        ['go to card 3\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_c}`],
-        ['go to card 4\ngo to bg 2\\the short id of this cd', `${this.elIds.card_b_d}`],
+        ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        ['go to card 3\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_c}`],
+        ['go to card 4\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_d}`],
 
         /* object reference */
-        ['go third\ngo to this stack\\the short id of this cd', `${this.elIds.card_b_c}`],
+        ['go third\ngo to this stack\\the short id of this cd', `${h.elIds.card_b_c}`],
         ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
         ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
         [
-            `go to stack id ${this.vcstate.model.stack.id}\\the short id of this cd`,
+            `go to stack id ${h.vcstate.model.stack.id}\\the short id of this cd`,
             `ERR:NoViableAltException`
         ],
         [
@@ -368,21 +376,21 @@ t.test('test_execCommands go to card', () => {
             'go to card 4 of this stack\\the short id of this cd',
             `ERR:MismatchedTokenException`
         ],
-        ['go to card 1 of bg 2\\the short id of this cd', `${this.elIds.card_b_b}`],
-        ['go to card 1 of bg 3\\the short id of this cd', `${this.elIds.card_c_d}`],
+        ['go to card 1 of bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        ['go to card 1 of bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
         [
             'go to card 1 of bg 2 of this stack\\the short id of this cd',
-            `${this.elIds.card_b_b}`
+            `${h.elIds.card_b_b}`
         ],
         [
             'go to card 1 of bg 3 of this stack\\the short id of this cd',
-            `${this.elIds.card_c_d}`
+            `${h.elIds.card_c_d}`
         ]
     ];
-    this.testBatchEvaluate(batch);
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.testBatchEvaluate(batch);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
 });
-t.test('test_execCommands disable and enable', () => {
+t.test('_execCommands disable and enable', () => {
     let batch: [string, string][];
     batch = [
         /* not valid */
@@ -399,10 +407,10 @@ t.test('test_execCommands disable and enable', () => {
         ['enable cd btn "p1"\\the enabled of cd btn "p1"', `true`],
         ['enable cd btn "p1"\\the enabled of cd btn "p1"', `true`]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_execCommands hide and show', () => {
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+t.test('_execCommands hide and show', () => {
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [
         /* not valid */
@@ -454,9 +462,9 @@ t.test('test_execCommands hide and show', () => {
         ],
         ['show cd fld "p1" at (12), (" 23 ")\\the loc of cd fld "p1"', `12,23`]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_execCommands sort', () => {
+t.test('_execCommands sort', () => {
     let batch: [string, string][];
     batch = [
         ['put "pear,Apple2,z11,z2,11,2,apple1,peach" into initlist\\0', '0'],
@@ -503,9 +511,9 @@ t.test('test_execCommands sort', () => {
         ['sort xyz of x\\x', `ERR:MismatchedTokenException`],
         ['sort xyz xyz of x\\x', `ERR:MismatchedTokenException`]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_execCommands delete', () => {
+t.test('_execCommands delete', () => {
     let batch: [string, string][];
     batch = [
         /* not yet supported */
@@ -558,10 +566,10 @@ t.test('test_execCommands delete', () => {
         ['put initlist into x\\0', '0'],
         ['delete char 1 to 999 of x\\x', '']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_execCommands put', () => {
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+t.test('_execCommands put', () => {
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [
         ['put "abc"\\0', '0'],
@@ -732,9 +740,9 @@ t.test('test_execCommands put', () => {
         ['put "abc" before char 2 to 3 of newvar8\\0', 'ERR:no variable found'],
         ['put "abc" after char 2 to 3 of newvar9\\0', 'ERR:no variable found']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_execCommands get', () => {
+t.test('_execCommands get', () => {
     let batch: [string, string][];
     batch = [
         ['get 1+2\\it', `3`],
@@ -749,9 +757,9 @@ t.test('test_execCommands get', () => {
         ['get the\\0', `ERR:NoViableAltException`],
         ['put 123 into it\\0', `ERR:variable name not allowed`]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_execCommands replace', () => {
+t.test('_execCommands replace', () => {
     let batch: [string, string][];
     batch = [
         /* incorrect usage */
@@ -884,10 +892,10 @@ replace "b" with "$&" in s
             'a$&$&a'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* use a real field */
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         [
             `put "" into cd fld "p1"
@@ -920,9 +928,9 @@ replace "aa" with "bb" in cd fld "pnotexist"
             'ERR:5:not found'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_dynamicCode do', () => {
+t.test('_dynamicCode do', () => {
     let batch: [string, string][];
     batch = [
         /* valid */
@@ -975,48 +983,48 @@ do s\\counting() - cfirst`,
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_dynamicCode send', () => {
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_a_a);
+t.test('_dynamicCode send', () => {
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_a_a);
     let batch: [string, string][];
     batch = [
         /* valid */
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
-send code to cd fld id ${this.elIds.fld_c_d_1}\\g`,
-            `${this.elIds.fld_c_d_1}`
+send code to cd fld id ${h.elIds.fld_c_d_1}\\g`,
+            `${h.elIds.fld_c_d_1}`
         ],
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
-send code to cd btn id ${this.elIds.btn_b_c_1}\\g`,
-            `${this.elIds.btn_b_c_1}`
+send code to cd btn id ${h.elIds.btn_b_c_1}\\g`,
+            `${h.elIds.btn_b_c_1}`
         ],
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to card "a"\\g`,
-            `${this.elIds.card_a_a}`
+            `${h.elIds.card_a_a}`
         ],
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
-send code to card id ${this.elIds.card_c_d}\\g`,
-            `${this.elIds.card_c_d}`
+send code to card id ${h.elIds.card_c_d}\\g`,
+            `${h.elIds.card_c_d}`
         ],
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to bg "b"\\g`,
-            `${this.elIds.bg_b}`
+            `${h.elIds.bg_b}`
         ],
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
-            `${this.elIds.stack}`
+            `${h.elIds.stack}`
         ],
         /* not valid */
         ['send\\0', 'ERR:too short'],
@@ -1042,42 +1050,42 @@ send code to this stack\\g`,
         ['send "put 1 into x" to cd btn 99999\\0', "ERR:target of 'send' not found"],
         ['send "put 1 into x" to cd btn id 99999\\0', "ERR:target of 'send' not found"]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* make sure that invalid code is cleaned out after a compile failure. */
-    let stack = this.vcstate.vci.getModel().getById(VpcElStack, this.elIds.stack);
-    this.vcstate.vci.undoableAction(() => stack.set('script', ``));
+    let stack = h.vcstate.vci.getModel().getById(VpcElStack, h.elIds.stack);
+    h.vcstate.vci.undoableAction(() => stack.set('script', ``));
     batch = [['send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error']];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
     batch = [
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
-            `${this.elIds.stack}`
+            `${h.elIds.stack}`
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* make sure that code can run after a runtime failure. */
-    this.vcstate.vci.undoableAction(() => stack.set('script', ``));
+    h.vcstate.vci.undoableAction(() => stack.set('script', ``));
     batch = [
         ['send "put 1 into cd fld 999" to this stack\\0', 'ERR:4:element not found']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
     batch = [
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
-            `${this.elIds.stack}`
+            `${h.elIds.stack}`
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* calling as a handler, like the original product could do */
-    let v = this.vcstate.vci.getModel().getById(VpcElButton, this.elIds.btn_b_c_1);
-    this.vcstate.vci.undoableAction(() =>
+    let v = h.vcstate.vci.getModel().getById(VpcElButton, h.elIds.btn_b_c_1);
+    h.vcstate.vci.undoableAction(() =>
         v.set(
             'script',
             `
@@ -1088,20 +1096,20 @@ end myCompute`
     );
     batch = [
         [
-            `send "myCompute 2, 3" to cd btn id ${this.elIds.btn_b_c_1}
+            `send "myCompute 2, 3" to cd btn id ${h.elIds.btn_b_c_1}
         \\the result`,
             `7`
         ],
         [
-            `send "myCompute 2, 3" & cr & "return the result" to cd btn id ${this.elIds.btn_b_c_1}
+            `send "myCompute 2, 3" & cr & "return the result" to cd btn id ${h.elIds.btn_b_c_1}
         \\the result`,
             `7`
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* calling as a function */
-    this.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.undoableAction(() =>
         v.set(
             'script',
             `
@@ -1112,20 +1120,20 @@ end myCompute`
     );
     batch = [
         [
-            `send "myCompute(2, 3)" to cd btn id ${this.elIds.btn_b_c_1}
+            `send "myCompute(2, 3)" to cd btn id ${h.elIds.btn_b_c_1}
         \\the result`,
             `ERR:4:this isn't C`
         ],
         [
-            `send "return myCompute(3, 3)" to cd btn id ${this.elIds.btn_b_c_1}
+            `send "return myCompute(3, 3)" to cd btn id ${h.elIds.btn_b_c_1}
         \\the result`,
             `12`
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* calling as a function (can access others in that scope) */
-    this.vcstate.vci.undoableAction(() =>
+    h.vcstate.vci.undoableAction(() =>
         v.set(
             'script',
             `
@@ -1140,57 +1148,10 @@ end myCompute`
     );
     batch = [
         [
-            `send "return myCompute(2, 3)" to cd btn id ${this.elIds.btn_b_c_1}
+            `send "return myCompute(2, 3)" to cd btn id ${h.elIds.btn_b_c_1}
         \\the result`,
             `10`
         ]
     ];
-    this.testBatchEvaluate(batch);
-
-    /* map temp line numbers to the target line */
-    /* part 1: call send a few times */
-    this.vcstate.vci.undoableAction(() =>
-        stack.set(
-            'script',
-            `on myHandler n
-        put 1 into x
-        end myHandler`
-        )
-    );
-
-    batch = [
-        [
-            `send "myHandler 1" to this stack
-            send "myHandler 2" to this stack
-            put 1 into x
-            send "myHandler 3" to this stack
-        \\0`,
-            `0`
-        ]
-    ];
-    this.testBatchEvaluate(batch);
-
-    /* map temp line numbers to the target line */
-    /* part 2: test getBetterLineNumberIfTemporary */
-    let spl = stack.getS('script').split('\n');
-    for (let i = 0; i < 30; i++) {
-        let [redirVel, redirLine] = VpcExecFrame.getBetterLineNumberIfTemporary(
-            stack.getS('script'),
-            '(not redirected)',
-            i
-        );
-        if (i >= 5 && i <= 9) {
-            assertEq(`${this.elIds.btn_go}`, redirVel, '');
-            assertEq(6, redirLine, '');
-        } else if (i >= 13 && i <= 17) {
-            assertEq(`${this.elIds.btn_go}`, redirVel, '');
-            assertEq(7, redirLine, '');
-        } else if (i >= 21 && i <= 25) {
-            assertEq(`${this.elIds.btn_go}`, redirVel, '');
-            assertEq(9, redirLine, '');
-        } else {
-            assertEq(`(not redirected)`, redirVel, '');
-            assertEq(i, redirLine, '');
-        }
-    }
+    h.testBatchEvaluate(batch);
 });

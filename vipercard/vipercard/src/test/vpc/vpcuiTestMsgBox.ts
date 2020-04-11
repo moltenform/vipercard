@@ -7,20 +7,19 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * tests on FormattedText
  */
 let t = new SimpleUtil512TestCollection('testCollectionvpcuiMsgBox');
 export let testCollectionvpcuiMsgBox = t;
 
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals with no input', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals with no input', () => {
     let s = '';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq([], got, 'Gi|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals with typical input', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals with typical input', () => {
     let s = 'put 4 into myVar';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
@@ -36,72 +35,60 @@ t.test('MMMMMM', () => {
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq(['global my_var'], got, 'Gg|');
 });
-t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    () => {
-        t.say(
-            longstr(`testVpcNonModalReplBox.makeAllVarsGlobals
+t.test('VpcNonModalReplBox1', () => {
+    t.say(
+        longstr(`testVpcNonModalReplBox.makeAllVarsGlobals
         with typical input with leading underscore`)
-        );
-        let s = 'put 4 into _my_var';
-        let got: string[] = [];
-        VpcNonModalReplBox.makeAllVarsGlobals(got, s);
-        assertEq(['global _my_var'], got, 'Gf|');
-    }
-);
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals with customHandler', () => {
+    );
+    let s = 'put 4 into _my_var';
+    let got: string[] = [];
+    VpcNonModalReplBox.makeAllVarsGlobals(got, s);
+    assertEq(['global _my_var'], got, 'Gf|');
+});
+t.test('VpcNonModalReplBox.makeAllVarsGlobals with customHandler', () => {
     let s = 'myCustomFn 4, myVar';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq(['global myVar'], got, 'Ge|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals with no symbols', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals with no symbols', () => {
     let s = 'exit repeat';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq([], got, 'Gd|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals with only numbers and strings', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals with only numbers and strings', () => {
     let s = 'return 123 & "notvars x y z"';
     let got: string[] = [];
     s = VpcNonModalReplBox.removeStringLiterals(s);
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq([], got, 'Gc|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals with only reserved keywords', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals with only reserved keywords', () => {
     let s = 'put result + card background sin italic autohilite into on mouseUp';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq([], got, 'Gb|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals should skip fn calls', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals should skip fn calls', () => {
     let s = 'put 4 + myFunction() into myVar';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq(['global myVar'], got, 'Ga|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals should skip fn calls at end', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals should skip fn calls at end', () => {
     let s = 'put 4 + myFunction(x) into myFunction()';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq(['global x'], got, 'GZ|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals should skip fn calls with args', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals should skip fn calls with args', () => {
     let s = 'put 4 + myFunction(1,2) into myVar';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
     assertEq(['global myVar'], got, 'GY|');
 });
-t.test('testVpcNonModalReplBox.makeAllVarsGlobals with input referencing many', () => {
+t.test('VpcNonModalReplBox.makeAllVarsGlobals with input referencing many', () => {
     let s = 'aCustomHandler x + (y * var1/var2)+x+y into myVar';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
@@ -119,47 +106,48 @@ t.test('testVpcNonModalReplBox.makeAllVarsGlobals with input referencing many', 
         'GX|'
     );
 });
-t.test('testVpcNonModalReplBox.RememberHistory walk previous with no history', () => {
+let fallbackReturnsEmpty = () => ''
+t.test('VpcNonModalReplBox.RememberHistory walk previous with no history', () => {
     let h = new RememberHistory();
-    assertEq('', h.walkPrevious(), 'GW|');
-    assertEq('', h.walkPrevious(), 'GV|');
-    assertEq('', h.walkPrevious(), 'GU|');
+    assertEq('', h.walkPrevious(fallbackReturnsEmpty), 'GW|');
+    assertEq('', h.walkPrevious(fallbackReturnsEmpty), 'GV|');
+    assertEq('', h.walkPrevious(fallbackReturnsEmpty), 'GU|');
 });
-t.test('testVpcNonModalReplBox.RememberHistory walk next with no history', () => {
+t.test('VpcNonModalReplBox.RememberHistory walk next with no history', () => {
     let h = new RememberHistory();
-    assertEq('', h.walkNext(), 'GT|');
-    assertEq('', h.walkNext(), 'GS|');
-    assertEq('', h.walkNext(), 'GR|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GT|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GS|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GR|');
 });
-t.test('testVpcNonModalReplBox.RememberHistory walk through history', () => {
+t.test('VpcNonModalReplBox.RememberHistory walk through history', () => {
     let h = new RememberHistory();
     h.append('aa');
     h.append('bb');
     h.append('cc');
     h.append('dd');
-    assertEq('', h.walkNext(), 'GQ|');
-    assertEq('', h.walkNext(), 'GP|');
-    assertEq('', h.walkNext(), 'GO|');
-    assertEq('dd', h.walkPrevious(), 'GN|');
-    assertEq('cc', h.walkPrevious(), 'GM|');
-    assertEq('bb', h.walkPrevious(), 'GL|');
-    assertEq('aa', h.walkPrevious(), 'GK|');
-    assertEq('aa', h.walkPrevious(), 'GJ|');
-    assertEq('aa', h.walkPrevious(), 'GI|');
-    assertEq('bb', h.walkNext(), 'GH|');
-    assertEq('cc', h.walkNext(), 'GG|');
-    assertEq('dd', h.walkNext(), 'GF|');
-    assertEq('', h.walkNext(), 'GE|');
-    assertEq('', h.walkNext(), 'GD|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GQ|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GP|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GO|');
+    assertEq('dd', h.walkPrevious(fallbackReturnsEmpty), 'GN|');
+    assertEq('cc', h.walkPrevious(fallbackReturnsEmpty), 'GM|');
+    assertEq('bb', h.walkPrevious(fallbackReturnsEmpty), 'GL|');
+    assertEq('aa', h.walkPrevious(fallbackReturnsEmpty), 'GK|');
+    assertEq('aa', h.walkPrevious(fallbackReturnsEmpty), 'GJ|');
+    assertEq('aa', h.walkPrevious(fallbackReturnsEmpty), 'GI|');
+    assertEq('bb', h.walkNext(fallbackReturnsEmpty), 'GH|');
+    assertEq('cc', h.walkNext(fallbackReturnsEmpty), 'GG|');
+    assertEq('dd', h.walkNext(fallbackReturnsEmpty), 'GF|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GE|');
+    assertEq('', h.walkNext(fallbackReturnsEmpty), 'GD|');
 });
-t.test('testVpcNonModalReplBox.RememberHistory add during going back', () => {
+t.test('VpcNonModalReplBox.RememberHistory add during going back', () => {
     let h = new RememberHistory();
     h.append('aa');
     h.append('bb');
     h.append('cc');
-    assertEq('cc', h.walkPrevious(), 'GC|');
-    assertEq('bb', h.walkPrevious(), 'GB|');
+    assertEq('cc', h.walkPrevious(fallbackReturnsEmpty), 'GC|');
+    assertEq('bb', h.walkPrevious(fallbackReturnsEmpty), 'GB|');
     h.append('dd');
-    assertEq('dd', h.walkPrevious(), 'GA|');
-    assertEq('cc', h.walkPrevious(), 'G9|');
+    assertEq('dd', h.walkPrevious(fallbackReturnsEmpty), 'GA|');
+    assertEq('cc', h.walkPrevious(fallbackReturnsEmpty), 'G9|');
 });

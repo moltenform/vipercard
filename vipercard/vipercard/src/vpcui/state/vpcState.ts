@@ -10,6 +10,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
@@ -125,7 +126,7 @@ export class VpcRuntimeOpts extends UI512Settable {
      * and cause any callers to throw exceptions if attempting to access
      */
     destroy() {
-        this.observer = undefined as any; /* destroy() */
+        this.observer = SetToInvalidObjectAtEndOfExecution(this.observer);
     }
 }
 
@@ -145,9 +146,9 @@ export class VpcRuntime {
      */
     destroy() {
         this.opts.destroy();
-        this.opts = undefined as any; /* destroy() */
-        this.codeExec = undefined as any; /* destroy() */
-        this.useThisObserverForVpcEls = undefined as any; /* destroy() */
-        this.outside = undefined as any; /* destroy() */
+        this.opts = SetToInvalidObjectAtEndOfExecution(this.opts);
+        this.codeExec = SetToInvalidObjectAtEndOfExecution(this.codeExec);
+        this.useThisObserverForVpcEls = SetToInvalidObjectAtEndOfExecution(this.useThisObserverForVpcEls);
+        this.outside = SetToInvalidObjectAtEndOfExecution(this.outside);
     }
 }

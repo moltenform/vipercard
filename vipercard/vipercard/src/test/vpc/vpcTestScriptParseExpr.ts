@@ -7,14 +7,13 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * test parsing an expression
  */
 let t = new SimpleUtil512TestCollection('testCollectionvpcScriptParseExpr');
 export let testCollectionvpcScriptParseExpr = t;
 
-t.test('testScriptParseExpr.Simple Expressions', () => {
+t.test('ScriptParseExpr.Simple Expressions', () => {
     testExp('4', 'parses');
     testExp('1+2', 'parses');
     testExp('1 + 2', 'parses');
@@ -22,14 +21,14 @@ t.test('testScriptParseExpr.Simple Expressions', () => {
     testExp('11  +  (2 * 3)', 'parses');
     testExp('11  *  (2 + 3)', 'parses');
 });
-t.test('testScriptParseExpr.lexing should take care of this', () => {
+t.test('ScriptParseExpr.lexing should take care of this', () => {
     testExp('1 + \\\n2', 'parses');
     testExp('1 + \\\n\\\n2', 'parses');
     testExp('1 + \\\n    \\\n2', 'parses');
     assertFailsParseExp('1 + \n 2', 'NoViableAltException: Expecting: one of these');
     assertFailsParseExp('1 + \\\n\n 2', 'NoViableAltException: Expecting: one of these');
 });
-t.test('testScriptParseUnaryMinusAndSubtraction', () => {
+t.test('ScriptParseUnaryMinusAndSubtraction', () => {
     testExp('1-2-3', 'parses');
     testExp('1 - 2 - 3', 'parses');
     testExp('1.0-2.0-3.0', 'parses');
@@ -37,7 +36,7 @@ t.test('testScriptParseUnaryMinusAndSubtraction', () => {
     testExp('(1)- -(2)- -(3)', 'parses');
     testExp('- 1 - - 2 - - 3- -4', 'parses');
 });
-t.test('testScriptParseExpr.EveryLevelOfExpression', () => {
+t.test('ScriptParseExpr.EveryLevelOfExpression', () => {
     testExp('true and false', 'parses');
     testExp('true and false or true', 'parses');
     testExp('1 > 2', 'parses');
@@ -61,7 +60,7 @@ t.test('testScriptParseExpr.EveryLevelOfExpression', () => {
     testExp('not true', 'parses');
     testExp('- (1)', 'parses');
 });
-t.test('testScriptParseExpr.expressions that should fail', () => {
+t.test('ScriptParseExpr.expressions that should fail', () => {
     /* cases that should fail */
     assertFailsParseExp(`(1`, `MismatchedTokenException: Expecting token of type `);
     assertFailsParseExp(`1(`, `NotAllInputParsedException: Redundant input, expec`);
@@ -98,7 +97,7 @@ t.test('testScriptParseExpr.expressions that should fail', () => {
     assertFailsParseExp(`(1 2)`, `MismatchedTokenException: Expecting token of type `);
     assertFailsParseExp(`(1 2 3)`, `MismatchedTokenException: Expecting token of type `);
 });
-t.test('testScriptParseExpr.expression precedence, lvl0 to higher', () => {
+t.test('ScriptParseExpr.expression precedence, lvl0 to higher', () => {
     /* for 1+2*3 */
     /* I call this "lower to higher", the first operator in the input string ("+") is done last. */
     /* for 1*2+3 */
@@ -107,15 +106,15 @@ t.test('testScriptParseExpr.expression precedence, lvl0 to higher', () => {
     testExp('1 and 2 mod 3', 'parses');
     testExp('not 1 and 2', 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 1 to higher', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 1 to higher', () => {
     testExp('1 > 2 is within "a"', 'parses');
     testExp('1 > 2 && "a"', 'parses');
     testExp('not 1>2', 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 1 to lower', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 1 to lower', () => {
     testExp('1 > 2 and 3', 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 2 to higher', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 2 to higher', () => {
     testExp('1 is in 2 + 3', 'parses');
     testExp('1 is 2 mod 3', 'parses');
     /* path "is a number" terminates, confirmed is consisent with the emulator. */
@@ -124,40 +123,40 @@ t.test('testScriptParseExpr.expression precedence, lvl 2 to higher', () => {
         `NotAllInputParsedException: Redundant input, expecting EOF`
     );
 });
-t.test('testScriptParseExpr.expression precedence, lvl 2 to lower', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 2 to lower', () => {
     testExp('1 is a number > 2', 'parses');
     testExp('1 is in 2 contains 3', 'parses');
     testExp('1 is 2 or 3', 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 3 to higher', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 3 to higher', () => {
     testExp(`"a" && "b" + 1`, 'parses');
     testExp(`"a" & "b" div 1`, 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 3 to lower', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 3 to lower', () => {
     testExp(`"a" && "b" is a number`, 'parses');
     testExp(`("a" is a number) && "b"`, 'parses');
     testExp(`"a" & "b" > 1`, 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 4 to higher', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 4 to higher', () => {
     testExp(`1 + 2 * 3`, 'parses');
     testExp(`1 - 2 div 3`, 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 4 to lower', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 4 to lower', () => {
     testExp(`1 + 2 is 3`, 'parses');
     testExp(`1 - 2 is within 3`, 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, lvl 5 to higher', () => {
+t.test('ScriptParseExpr.expression precedence, lvl 5 to higher', () => {
     testExp(`not 1 * 2`, 'parses');
     testExp(`- 1 mod 2`, 'parses');
     testExp(`1 * sin(2)`, 'parses');
     testExp(`1 * the result`, 'parses');
     testExp(`1 * the result * 2`, 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, level 5 to lower', () => {
+t.test('ScriptParseExpr.expression precedence, level 5 to lower', () => {
     testExp(`1 * 2 + 3`, 'parses');
     testExp(`1 / 2 contains 3`, 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, above level 5', () => {
+t.test('ScriptParseExpr.expression precedence, above level 5', () => {
     testExp(`1 * style of cd btn "a"`, 'parses');
     testExp(`1 & the style of cd btn var & 2`, 'parses');
     testExp(`1 & the length of var & 2`, 'parses');
@@ -170,7 +169,7 @@ t.test('exp precedence', () => {
     testExp(`cd btn 1 + 1`, 'parses');
     testExp(`not there is a cd btn the number of cds + 1`, 'parses');
 });
-t.test('testScriptParseExpr.expression precedence, high-level precedence', () => {
+t.test('ScriptParseExpr.expression precedence, high-level precedence', () => {
     testExp(`cd fld 1`, 'parses');
     testExp(`cd fld 1 of cd (cd fld 1)`, 'parses');
     testExp(`cd fld 1 of cd the result + 1`, 'parses');
@@ -180,7 +179,7 @@ t.test('testScriptParseExpr.expression precedence, high-level precedence', () =>
     testExp(`char (char 1 of (char 2 of "a")) of "b"`, 'parses');
     testExp(`char (char (char 1 of "a") of "b") of "c"`, 'parses');
 });
-t.test('testScriptParseExpr.parts of expressions, HChunk', () => {
+t.test('ScriptParseExpr.parts of expressions, HChunk', () => {
     testExp(`word 1 of "a"`, 'parses');
     testExp(`word 1 to 2 of "a"`, 'parses');
     testExp(`word (1+2) of "a"`, 'parses');
@@ -189,13 +188,13 @@ t.test('testScriptParseExpr.parts of expressions, HChunk', () => {
     testExp(`first word of "a"`, 'parses');
     testExp(`fifth word of "a"`, 'parses');
 });
-t.test('testScriptParseExpr.parts of expressions, Lvl6Expression', () => {
+t.test('ScriptParseExpr.parts of expressions, Lvl6Expression', () => {
     testExp(`(1)`, 'parses');
     testExp(`("a")`, 'parses');
     testExp(`((1))`, 'parses');
     testExp(`(((1)))`, 'parses');
 });
-t.test('testScriptParseExpr.parts of expressions, ExprGetProperty', () => {
+t.test('ScriptParseExpr.parts of expressions, ExprGetProperty', () => {
     testExp(`prop of this cd`, 'parses');
     testExp(`the prop of this cd`, 'parses');
     testExp(`long prop of this cd`, 'parses');
@@ -207,7 +206,7 @@ t.test('testScriptParseExpr.parts of expressions, ExprGetProperty', () => {
     testExp(`prop of cd fld 1`, 'parses');
     testExp(`prop of cd btn 1`, 'parses');
 });
-t.test('testScriptParseExpr.parts of expressions, Object corner-cases', () => {
+t.test('ScriptParseExpr.parts of expressions, Object corner-cases', () => {
     testExp(`prop of the target`, 'parses');
     testExp(`prop of target`, 'parses');
     testExp(`prop of ${cProductName}`, 'parses');
@@ -249,7 +248,7 @@ t.test(
     }
 );
 t.test('parts of exp', () => {
-    t.say(`testScriptParseExpr.parts of expressions,
+    t.say(`ScriptParseExpr.parts of expressions,
         Fields (they are 'containers' and as such can stand alone)`);
     testExp(`cd fld 1`, 'parses');
     testExp(`cd fld id 1`, 'parses');
@@ -262,7 +261,7 @@ t.test('parts of exp', () => {
     testExp(`cd fld 1 of cd 2`, 'parses');
     testExp(`cd fld id 1 of cd id 2`, 'parses');
 });
-t.test('testScriptParseExpr parts', () => {
+t.test('ScriptParseExpr parts', () => {
     t.say(
         longstr(
             `testScriptParseExpr.parts of expressions,
@@ -280,7 +279,7 @@ t.test('testScriptParseExpr parts', () => {
     testExp(`cd btn 1 of cd 2`, 'parses');
     testExp(`cd btn id 1 of cd id 2`, 'parses');
 });
-t.test('testScriptParseExpr.parts of', () => {
+t.test('ScriptParseExpr.parts of', () => {
     t.say(
         longstr(`testScriptParseExpr.parts of
         expressions, we require the cd or btn prefix.`)
@@ -296,7 +295,7 @@ t.test('testScriptParseExpr.parts of', () => {
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('testScriptParseExpr.parts of expressions, Cards', () => {
+t.test('ScriptParseExpr.parts of expressions, Cards', () => {
     testExp(`prop of cd 1`, 'parses');
     testExp(`prop of cd id 1`, 'parses');
     testExp(`prop of first cd`, 'parses');
@@ -304,7 +303,7 @@ t.test('testScriptParseExpr.parts of expressions, Cards', () => {
     testExp(`prop of prev cd`, 'parses');
     testExp(`prop of next cd`, 'parses');
 });
-t.test('testScriptParseExpr.parts of expressions, Bkgnds', () => {
+t.test('ScriptParseExpr.parts of expressions, Bkgnds', () => {
     testExp(`prop of bg 1`, 'parses');
     testExp(`prop of bg id 1`, 'parses');
     testExp(`prop of first bg`, 'parses');
@@ -312,7 +311,7 @@ t.test('testScriptParseExpr.parts of expressions, Bkgnds', () => {
     testExp(`prop of prev bg`, 'parses');
     testExp(`prop of next bg`, 'parses');
 });
-t.test('testScriptParseExpr.parts of expressions, Stacks', () => {
+t.test('ScriptParseExpr.parts of expressions, Stacks', () => {
     testExp(`prop of this stack`, 'parses');
     testExp(`there is a this stack`, 'parses');
 });
@@ -337,34 +336,22 @@ t.test(
         );
     }
 );
-t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    () => {
-        t.say(
-            longstr(`testScriptParseExpr.parts of
+t.test('ScriptParseExpr1', () => {
+    t.say(
+        longstr(`testScriptParseExpr.parts of
         expressions, other possible HSimpleContainers`)
-        );
-        testExp(`1 + cd fld "a"`, 'parses');
-        testExp(`cd fld "a" + 1`, 'parses');
-    }
-);
-t.test('testScriptParseFunctionCalls length', () => {
+    );
+    testExp(`1 + cd fld "a"`, 'parses');
+    testExp(`cd fld "a" + 1`, 'parses');
+});
+t.test('ScriptParseFunctionCalls length', () => {
     testExp(`the length of "a"`, 'parses');
     testExp(`the length of "a" + 1`, 'parses');
     testExp(`length("a")`, 'parses');
     testExp(`the length("a")`, 'parses');
     testExp(`char (length("a")) of "b"`, 'parses');
 });
-t.test('testScriptParseFunctionCalls fn call with no args', () => {
+t.test('ScriptParseFunctionCalls fn call with no args', () => {
     testExp(`time()`, 'parses');
     testExp(`time ()`, 'parses');
     testExp(`time \\\n ()`, 'parses');
@@ -375,7 +362,7 @@ t.test('testScriptParseFunctionCalls fn call with no args', () => {
     testExp(`the target`, 'parses');
     testExp(`the long target`, 'parses');
 });
-t.test('testScriptParseFunctionCalls ensure that invalid fn calls are rejected', () => {
+t.test('ScriptParseFunctionCalls ensure that invalid fn calls are rejected', () => {
     assertFailsParseExp(
         `time() time()`,
         `NotAllInputParsedException: Redundant input, expec`
@@ -387,7 +374,7 @@ t.test('testScriptParseFunctionCalls ensure that invalid fn calls are rejected',
     assertFailsParseExp(`+ ()`, `NoViableAltException: Expecting: one of these poss`);
     assertFailsParseExp(`the long target()`, `Redundant input, expecting EOF`);
 });
-t.test('testScriptParseFunctionCalls arguments', () => {
+t.test('ScriptParseFunctionCalls arguments', () => {
     testExp(`time(f1())`, 'parses');
     testExp(`time((1))`, 'parses');
     testExp(`time(1,2)`, 'parses');
@@ -409,7 +396,7 @@ t.test(`testScriptParseFunctionCalls arguments aren't given correctly`, () => {
         `MismatchedTokenException: Expecting token of type `
     );
 });
-t.test('testScriptParseFunctionCalls allowed without parens', () => {
+t.test('ScriptParseFunctionCalls allowed without parens', () => {
     testExp(`the target`, 'parses');
     testExp(`the long target`, 'parses');
     testExp(`the long target + 1`, 'parses');
@@ -422,29 +409,17 @@ t.test('testScriptParseFunctionCalls allowed without parens', () => {
         `NotAllInputParsedException: Redundant input, expec`
     );
 });
-t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    () => {
-        t.say(
-            longstr(`testScriptParseFunctionCalls but
+t.test('ScriptParseFunctionCalls1', () => {
+    t.say(
+        longstr(`ScriptParseFunctionCalls but
         parens are ok too if you want, as long as there is no adjective`)
-        );
-        testExp(`the target()`, 'parses');
-        testExp(`the params()`, 'parses');
-        testExp(`the paramcount()`, 'parses');
-        testExp(`not the paramcount() + 1`, 'parses');
-    }
-);
-t.test('testScriptParseFunctionCalls number of', () => {
+    );
+    testExp(`the target()`, 'parses');
+    testExp(`the params()`, 'parses');
+    testExp(`the paramcount()`, 'parses');
+    testExp(`not the paramcount() + 1`, 'parses');
+});
+t.test('ScriptParseFunctionCalls number of', () => {
     testExp(`the number of words of "a"`, 'parses');
     testExp(`the number of words of "a" && "b"`, 'parses');
     testExp(`the number of chars in "a"`, 'parses');
@@ -454,7 +429,7 @@ t.test('testScriptParseFunctionCalls number of', () => {
     testExp(`the number of bg btns`, 'parses');
     testExp(`the number of bg flds`, 'parses');
 });
-t.test('testScriptParseFunctionCalls invalid "number of" syntax', () => {
+t.test('ScriptParseFunctionCalls invalid "number of" syntax', () => {
     assertFailsParseExp(
         `the number of btns`,
         `NoViableAltException: Expecting: one of these poss`
@@ -476,7 +451,7 @@ t.test('testScriptParseFunctionCalls invalid "number of" syntax', () => {
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('testScriptParseFunctionCalls number of, nested', () => {
+t.test('ScriptParseFunctionCalls number of, nested', () => {
     testExp(`the number of cds`, 'parses');
     testExp(`the number of cds of bg 1`, 'parses');
     testExp(`the number of cds of bg 1 of this stack`, 'parses');
@@ -484,7 +459,7 @@ t.test('testScriptParseFunctionCalls number of, nested', () => {
     testExp(`the number of bgs`, 'parses');
     testExp(`the number of bgs of this stack`, 'parses');
 });
-t.test('testScriptParseFunctionCalls number of, invalid', () => {
+t.test('ScriptParseFunctionCalls number of, invalid', () => {
     assertFailsParseExp(
         `the long number of cds`,
         `NoViableAltException: Expecting: one of these poss`
@@ -502,7 +477,7 @@ t.test('testScriptParseFunctionCalls number of, invalid', () => {
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('testScriptParse There-is-a', () => {
+t.test('ScriptParse There-is-a', () => {
     testExp(`there is a cd 1`, 'parses');
     testExp(`there is a cd x`, 'parses');
     testExp(`there is a cd btn 1`, 'parses');
@@ -513,7 +488,7 @@ t.test('testScriptParse There-is-a', () => {
     testExp(`there is a the target`, 'parses');
     testExp(`there is a ${cProductName}`, 'parses');
 });
-t.test('testScriptParse Invalid There-is-a, we require "cd btn", not "btn" alone', () => {
+t.test('ScriptParse Invalid There-is-a, we require "cd btn", not "btn" alone', () => {
     assertFailsParseExp(
         `there is a btn 1`,
         `NoViableAltException: Expecting: one of these poss`
@@ -531,22 +506,11 @@ t.test('testScriptParse Invalid There-is-a, we require "cd btn", not "btn" alone
         `NoViableAltException: Expecting: one of these poss`
     );
 });
-t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`MMMMMM`)),
-
-    moveTheSayCallIntoTheBlockBelow,
-    t.say(longstr(`testScriptParse there is not a`)),
+t.test('MMMMMM', moveTheSayCallIntoTheBlockBelow, t.say(longstr(`ScriptParse1`)),
 
     () => {
-        testExp(`there is not a card 1`, 'parses');
+        t.say(longstr(`ScriptParse there is not a`)),
+            testExp(`there is not a card 1`, 'parses');
         testExp(`there is not a card x`, 'parses');
 
         assertFailsParseExp(

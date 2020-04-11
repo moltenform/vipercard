@@ -1,7 +1,6 @@
 
 /* auto */ import { VpcEvalHelpers } from './../../vpc/vpcutils/vpcValEval';
 /* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { VpcScriptSyntaxError } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcState } from './../../vpcui/state/vpcState';
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
@@ -11,14 +10,14 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue, assertTrueWarn, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue, assertTrueWarn, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, assertEqWarn } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * infrastructure to set up a mock ViperCard environment
@@ -31,7 +30,7 @@
  * b == a, a != b, and b != a
  *
  */
-export class TestVpcScriptRunBase extends UI512TestBase {
+export class TestVpcScriptRunBase {
     pr: VpcPresenter;
     vcstate: VpcState;
     elIds: { [key: string]: string } = {};
@@ -42,6 +41,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
     simClickX: number;
     simClickY: number;
     readonly customFunc = 'function';
+    constructor(protected t: SimpleUtil512TestCollection) {}
 
     async initEnvironment() {
         if (!this.initedAppl) {
@@ -176,17 +176,19 @@ export class TestVpcScriptRunBase extends UI512TestBase {
     }
 
     protected updateChangedCodeAndCheckForSyntaxError(owner: VpcElBase, code: string) {
-        this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
-        let fnd = this.vcstate.runtime.codeExec.getCompiledScript(
-            owner.id,
-            owner.getS('script')
-        );
-        if (fnd && fnd instanceof VpcScriptSyntaxError) {
-            throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
-        }
+        assertTrue(false, "nyi")
+        let NoteThisIsDisabledCode = 1;
+        //~ this.vcstate.runtime.codeExec.updateChangedCode(owner, code);
+        //~ let fnd = this.vcstate.runtime.codeExec.getCompiledScript(
+            //~ owner.id,
+            //~ owner.getS('script')
+        //~ );
+        //~ if (fnd && fnd instanceof VpcScriptSyntaxError) {
+            //~ throwIfUndefined(this.vcstate.runtime.codeExec.cbOnScriptError, 'HZ|')(fnd);
+        //~ }
     }
 
-    protected updateObjectScript(id: string, code: string) {
+    updateObjectScript(id: string, code: string) {
         this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
             let idScriptErr = errFromScript.velId;
             let n = errFromScript.lineNumber;
@@ -203,7 +205,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
         this.updateChangedCodeAndCheckForSyntaxError(obj, obj.getS('script'));
     }
 
-    protected runGeneralCode(
+    runGeneralCode(
         codeBefore: string,
         codeIn: string,
         expectErrMsg?: string,
@@ -219,8 +221,6 @@ export class TestVpcScriptRunBase extends UI512TestBase {
             let line = -1;
             this.vcstate.vci.undoableAction(() => {
                 let [
-                    origVelId,
-                    origLine,
                     reVelId,
                     reLine
                 ] = VpcPresenter.commonRespondToError(this.vcstate.vci, scriptErr);
@@ -241,7 +241,7 @@ export class TestVpcScriptRunBase extends UI512TestBase {
             } else if (expectErrMsg) {
                 assertEqWarn(expectErrLine, line, codeBefore, codeIn, '2Z|');
                 if (!msg.includes(expectErrMsg)) {
-                    UI512TestBase.warnAndAllowToContinue(
+                    t.warnAndAllowToContinue(
                         'DIFFERENT ERR MSG for input ' +
                             codeBefore
                                 .replace(/\n/g, '; ')
@@ -406,7 +406,7 @@ put ${s} into testresult`;
                         )
                         .readAsString() !== 'true'
                 ) {
-                    UI512TestBase.warnAndAllowToContinue(
+                    this.t.warnAndAllowToContinue(
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
                             '; '
@@ -419,7 +419,7 @@ put ${s} into testresult`;
                 let gt = got.readAsString();
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
-                    UI512TestBase.warnAndAllowToContinue(
+                    t.warnAndAllowToContinue(
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
                             '; '
@@ -435,11 +435,12 @@ put ${s} into testresult`;
             let [beforeLine, expr] = getBeforeLine(testsErr[i][0]);
             let errOnLine = beforeLine.length ? 4 : 5;
             let expectErr = testsErr[i][1].replace(/ERR:/g, '');
+            let tryLine = Util512.parseInt(expectErr.split(':')[0])
             if (
                 expectErr.includes(':') &&
-                isFinite(Util512.parseInt(expectErr.split(':')[0], base10))
-            ) {
-                errOnLine = Util512.parseInt(expectErr.split(':')[0]);
+                tryLine !== undefined)
+             {
+                errOnLine = tryLine
                 expectErr = expectErr.split(':')[1];
             }
 
@@ -569,22 +570,4 @@ put ${s} into testresult`;
         this.testBatchEvaluate(testsInvert);
         this.testBatchEvaluate(testsInvertAndOrder);
     }
-
-    tests = [
-        'test_jslru',
-        () => {
-            let testmap = new ExpLRUMap<string, number>(3);
-            testmap.set('a', 1);
-            testmap.set('b', 2);
-            testmap.set('c', 3);
-            assertTrue(testmap.has('a'), '2B|');
-            assertTrue(testmap.has('b'), '2A|');
-            assertTrue(testmap.has('c'), '29|');
-            testmap.set('d', 4);
-            assertTrue(!testmap.has('a'), '28|');
-            assertTrue(testmap.has('b'), '27|');
-            assertTrue(testmap.has('c'), '26|');
-            assertTrue(testmap.has('d'), '25|');
-        }
-    ];
 }

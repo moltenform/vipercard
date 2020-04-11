@@ -10,14 +10,13 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * tests on chunk resolution
  */
 let t = new SimpleUtil512TestCollection('testCollectionvpcChunkResolution');
 export let testCollectionvpcChunkResolution = t;
 
-t.test('testChunkGetChar', () => {
+t.test('ChunkGetChar', () => {
     testGetChunk('', 'abc', VpcChunkType.Chars, 0, undefined);
     testGetChunk('a', 'abc', VpcChunkType.Chars, 1, undefined);
     testGetChunk('b', 'abc', VpcChunkType.Chars, 2, undefined);
@@ -46,7 +45,7 @@ t.test('testChunkGetChar', () => {
     testGetChunk('', 'abc', VpcChunkType.Chars, 4, 6);
     testGetChunk('', 'abc', VpcChunkType.Chars, 5, 5);
 });
-t.test('testChunkGetItem1', () => {
+t.test('ChunkGetItem1', () => {
     testGetChunk('', 'a,b,c', VpcChunkType.Items, 0, undefined);
     testGetChunk('a', 'a,b,c', VpcChunkType.Items, 1, undefined);
     testGetChunk('b', 'a,b,c', VpcChunkType.Items, 2, undefined);
@@ -75,7 +74,7 @@ t.test('testChunkGetItem1', () => {
     testGetChunk('', 'a,b,c', VpcChunkType.Items, 4, 6);
     testGetChunk('', 'a,b,c', VpcChunkType.Items, 5, 5);
 });
-t.test('testChunkGetItem2', () => {
+t.test('ChunkGetItem2', () => {
     testGetChunk('', ',,cd,', VpcChunkType.Items, 0, undefined);
     testGetChunk('', ',,cd,', VpcChunkType.Items, 1, undefined);
     testGetChunk('', ',,cd,', VpcChunkType.Items, 2, undefined);
@@ -104,7 +103,7 @@ t.test('testChunkGetItem2', () => {
     testGetChunk('', ',,cd,', VpcChunkType.Items, 4, 6);
     testGetChunk('', ',,cd,', VpcChunkType.Items, 5, 5);
 });
-t.test('testChunkGetWord1', () => {
+t.test('ChunkGetWord1', () => {
     testGetChunk('', '  abc  .def gh.i   ', VpcChunkType.Words, 0, undefined);
     testGetChunk('abc', '  abc  .def gh.i   ', VpcChunkType.Words, 1, undefined);
     testGetChunk('.def', '  abc  .def gh.i   ', VpcChunkType.Words, 2, undefined);
@@ -133,7 +132,7 @@ t.test('testChunkGetWord1', () => {
     testGetChunk('', '  abc  .def gh.i   ', VpcChunkType.Words, 4, 6);
     testGetChunk('', '  abc  .def gh.i   ', VpcChunkType.Words, 5, 5);
 });
-t.test('testChunkGetWord2', () => {
+t.test('ChunkGetWord2', () => {
     testGetChunk('', 'ABC   DEF  GHI', VpcChunkType.Words, 0, undefined);
     testGetChunk('ABC', 'ABC   DEF  GHI', VpcChunkType.Words, 1, undefined);
     testGetChunk('DEF', 'ABC   DEF  GHI', VpcChunkType.Words, 2, undefined);
@@ -162,7 +161,7 @@ t.test('testChunkGetWord2', () => {
     testGetChunk('', 'ABC   DEF  GHI', VpcChunkType.Words, 4, 6);
     testGetChunk('', 'ABC   DEF  GHI', VpcChunkType.Words, 5, 5);
 });
-t.test('testChunkSetChar', () => {
+t.test('ChunkSetChar', () => {
     testSetChunk('123abc', 'abc', VpcChunkType.Chars, 0, undefined);
     testSetChunk('123bc', 'abc', VpcChunkType.Chars, 1, undefined);
     testSetChunk('a123c', 'abc', VpcChunkType.Chars, 2, undefined);
@@ -191,7 +190,7 @@ t.test('testChunkSetChar', () => {
     testSetChunk('abc123', 'abc', VpcChunkType.Chars, 4, 6);
     testSetChunk('abc123', 'abc', VpcChunkType.Chars, 5, 5);
 });
-t.test('testChunkSetItem1', () => {
+t.test('ChunkSetItem1', () => {
     testSetChunk('123a,b,c', 'a,b,c', VpcChunkType.Items, 0, undefined);
     testSetChunk('123,b,c', 'a,b,c', VpcChunkType.Items, 1, undefined);
     testSetChunk('a,123,c', 'a,b,c', VpcChunkType.Items, 2, undefined);
@@ -220,7 +219,7 @@ t.test('testChunkSetItem1', () => {
     testSetChunk('a,b,c,123', 'a,b,c', VpcChunkType.Items, 4, 6);
     testSetChunk('a,b,c,,123', 'a,b,c', VpcChunkType.Items, 5, 5);
 });
-t.test('testChunkSetItem2', () => {
+t.test('ChunkSetItem2', () => {
     testSetChunk('123,,cd,', ',,cd,', VpcChunkType.Items, 0, undefined);
     testSetChunk('123,,cd,', ',,cd,', VpcChunkType.Items, 1, undefined);
     testSetChunk(',123,cd,', ',,cd,', VpcChunkType.Items, 2, undefined);
@@ -249,7 +248,7 @@ t.test('testChunkSetItem2', () => {
     testSetChunk(',,cd,123', ',,cd,', VpcChunkType.Items, 4, 6);
     testSetChunk(',,cd,,123', ',,cd,', VpcChunkType.Items, 5, 5);
 });
-t.test('testChunkSetWord1', () => {
+t.test('ChunkSetWord1', () => {
     testSetChunk(
         '123  abc  .def gh.i   ',
         '  abc  .def gh.i   ',
@@ -356,7 +355,7 @@ t.test('testChunkSetWord1', () => {
         5
     );
 });
-t.test('testChunkSetWord2', () => {
+t.test('ChunkSetWord2', () => {
     testSetChunk('123ABC   DEF  GHI', 'ABC   DEF  GHI', VpcChunkType.Words, 0, undefined);
     testSetChunk('123   DEF  GHI', 'ABC   DEF  GHI', VpcChunkType.Words, 1, undefined);
     testSetChunk('ABC   123  GHI', 'ABC   DEF  GHI', VpcChunkType.Words, 2, undefined);
@@ -385,7 +384,7 @@ t.test('testChunkSetWord2', () => {
     testSetChunk('ABC   DEF  GHI123', 'ABC   DEF  GHI', VpcChunkType.Words, 4, 6);
     testSetChunk('ABC   DEF  GHI123', 'ABC   DEF  GHI', VpcChunkType.Words, 5, 5);
 });
-t.test('test_cornercases', () => {
+t.test('_cornercases', () => {
     testGetChunk('', '', VpcChunkType.Chars, 0, 0);
     testGetChunk('', '', VpcChunkType.Chars, 0, 2);
     testGetChunk('', '', VpcChunkType.Chars, 1, 1);

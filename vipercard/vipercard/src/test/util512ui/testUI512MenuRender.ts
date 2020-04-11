@@ -27,7 +27,7 @@
  * interacting with the menus has the expected behavior
  */
 
-let t = new SimpleUtil512TestCollection('testCollectionUI512MenuRender', true);
+let t = new SimpleUtil512TestCollection('testCollectionUI512MenuRender');
 export let testCollectionUI512MenuRender = t;
 
 t.atest('async/Test Drawing Menus', () =>

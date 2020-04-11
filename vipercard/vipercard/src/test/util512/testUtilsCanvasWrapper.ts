@@ -12,7 +12,7 @@
  * testing fillRect, getColorFromCanvasData, and
  * TestUtilsCanvas.RenderAndCompareImages itself
  */
-let t = new SimpleUtil512TestCollection('testCollectionUtilsCanvasWrapper', true);
+let t = new SimpleUtil512TestCollection('testCollectionUtilsCanvasWrapper');
 export let testCollectionUtilsCanvasWrapper = t;
 
 t.atest('Simple Draw Rectangles', async () => {

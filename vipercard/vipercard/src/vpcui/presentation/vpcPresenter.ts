@@ -15,7 +15,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
-/* auto */ import { RenderComplete, Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, bool, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, coalesceIfFalseLike } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
@@ -202,7 +202,6 @@ export class VpcPresenter extends VpcPresenterInit {
 
         /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
         vci.setTool(VpcTool.Button);
-
         return [velId, line];
     }
 
@@ -447,8 +446,8 @@ export class VpcPresenter extends VpcPresenterInit {
         /* scribble over everything to make sure no-one reuses it. */
         this.listeners = [];
         this.vci.destroy();
-        this.vci = undefined as any; /* destroy() */
-        this.runtime = undefined as any; /* destroy() */
+        this.vci = SetToInvalidObjectAtEndOfExecution(this.vci);
+        this.runtime = SetToInvalidObjectAtEndOfExecution(this.runtime);
         if (dest === 'mnuNewStack') {
             this.cbExitToNewDocument();
         } else if (dest === 'mnuOpen') {

@@ -1,5 +1,5 @@
 
-/* auto */ import { AsyncVoidFn } from './../../ui512/utils/util512Higher';
+/* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
@@ -98,8 +98,14 @@ export class SimpleUtil512Tests {
         mapSeen: Map<string, boolean>
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
-        let tests = coll.async ? coll.atests : coll.tests;
-        assertTrue(tests.length > 0, 'O-|no tests in collection');
+        assertTrue(
+            coll.tests.length > 0 || coll.atests.length > 0,
+            'O-|no tests in collection'
+        );
+
+        /* note that some tests require async tests to be done first. */
+        let tests: [string, VoidFn | AsyncFn][] = coll.atests;
+        tests = tests.concat(coll.tests)
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {
@@ -109,11 +115,7 @@ export class SimpleUtil512Tests {
             mapSeen.set(tstname.toLowerCase(), true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
-            if (coll.async) {
-                await (tstfn as AsyncVoidFn)();
-            } else {
-                tstfn();
-            }
+            await tstfn();
         }
     }
 

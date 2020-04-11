@@ -1,12 +1,12 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
 /* auto */ import { assertEq, assertEqWarn, last } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * test running ViperCard scripts.
@@ -14,12 +14,17 @@
  * test lexing, syntax structures like loops, functions, and handlers
  * see _TestVpcScriptRunCmd_ for a description of testBatchEvaluate
  */
-//export class TestVpcScriptRunSyntax extends TestVpcScriptRunBase {
-//await this.initEnvironment();
+
 let t = new SimpleUtil512TestCollection('testCollectionvpcScriptRunSyntax');
 export let testCollectionvpcScriptRunSyntax = t;
 
-t.test('test_checkLexing', () => {
+let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>()
+t.atest("--init--testCollectionvpcScriptRunSyntax", async ()=> {
+    h = new TestVpcScriptRunBase(t)
+    await h.initEnvironment();
+})
+
+t.test('_checkLexing', () => {
     let batch: [string, string][];
     batch = [
         /* empty lines don't interfere with scripts */
@@ -105,46 +110,46 @@ t.test('test_checkLexing', () => {
         ['put 4 into autohilite\\0', 'ERR:name not allowed']
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* string literal cannot contain contline symbol since it has a newline */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         'put "a{BSLASH}\nb" into test',
         'unexpected character: ->"<-',
         3
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         'put "{BSLASH}\n" into test',
         'unexpected character: ->"<-',
         3
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         'put "{BSLASH}\n{BSLASH}\n" into test',
         'unexpected character: ->"<-',
         3
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         'put {BSLASH}\n"{BSLASH}\n{BSLASH}\n"{BSLASH}\n into test',
         'unexpected character: ->"<-',
         4
     );
 
     /* we changed lexer to disallow this, since it is clearly wrong */
-    this.assertCompileErrorIn('put 3into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3into into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3sin into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3of into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3id into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3e into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 7mod3 into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 7mod 3 into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 7div3 into test', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 7div 3 into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3into into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3sin into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3of into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3id into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3e into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 7mod3 into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 7mod 3 into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 7div3 into test', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 7div 3 into test', 'unexpected character', 3);
 
     /* for keywords/semikeywords that would be a common variable name, check */
-    this.assertCompileErrorIn('x = 4', "this isn't C", 3);
-    this.assertCompileErrorIn('xyz(4)', "this isn't C", 3);
-    this.assertCompileErrorIn('sin(4)', "this isn't C", 3);
+    h.assertCompileErrorIn('x = 4', "this isn't C", 3);
+    h.assertCompileErrorIn('xyz(4)', "this isn't C", 3);
+    h.assertCompileErrorIn('sin(4)', "this isn't C", 3);
 
     batch = [
         /* comments */
@@ -225,59 +230,59 @@ put x into x\\x`,
             '1'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* lexing: baseline for runGeneralCode */
-    this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
-    this.runGeneralCode('', 'global testresult \n put 123.0 into testresult');
+    h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
+    h.runGeneralCode('', 'global testresult \n put 123.0 into testresult');
     assertEq(
         '123',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '24|'
     );
 
     /* lexing: invalid num literals */
-    this.assertCompileErrorIn('put . into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put .5 into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put x.5 into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put e.5 into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put .e into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put .e2 into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put .e+2 into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put .3e into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3.4e into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3.4e 2 into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3.4ee into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3.4e4e into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 3.44. into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 0..1 into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put 4.. into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put . into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put .5 into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put x.5 into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put e.5 into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put .e into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put .e2 into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put .e+2 into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put .3e into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3.4e into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3.4e 2 into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3.4ee into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3.4e4e into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 3.44. into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 0..1 into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put 4.. into x', 'unexpected character', 3);
 
     /* lexing: invalid string literals */
-    this.assertCompileErrorIn('put "abc into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put "abc\ndef" into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put "\n" into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put " into x', 'unexpected character', 3);
-    this.assertCompileErrorIn('put """ into x', 'unexpected character', 3);
-    this.assertLineError('put a"" into x', 'MismatchedToken', 3);
-    this.assertLineError('put ""a into x', 'MismatchedToken', 3);
-    this.assertLineError('put a""a into x', 'MismatchedToken', 3);
-    this.assertLineError('put 1"" into x', 'MismatchedToken', 3);
-    this.assertLineError('put ""1 into x', 'MismatchedToken', 3);
-    this.assertLineError('put 1""1 into x', 'MismatchedToken', 3);
-    this.assertLineError('put """" into x', 'MismatchedToken', 3);
-    this.assertLineError('put "a""b" into x', 'MismatchedToken', 3);
-    this.assertLineError('put "a" "b" into x', 'MismatchedToken', 3);
+    h.assertCompileErrorIn('put "abc into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put "abc\ndef" into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put "\n" into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put " into x', 'unexpected character', 3);
+    h.assertCompileErrorIn('put """ into x', 'unexpected character', 3);
+    h.assertLineError('put a"" into x', 'MismatchedToken', 3);
+    h.assertLineError('put ""a into x', 'MismatchedToken', 3);
+    h.assertLineError('put a""a into x', 'MismatchedToken', 3);
+    h.assertLineError('put 1"" into x', 'MismatchedToken', 3);
+    h.assertLineError('put ""1 into x', 'MismatchedToken', 3);
+    h.assertLineError('put 1""1 into x', 'MismatchedToken', 3);
+    h.assertLineError('put """" into x', 'MismatchedToken', 3);
+    h.assertLineError('put "a""b" into x', 'MismatchedToken', 3);
+    h.assertLineError('put "a" "b" into x', 'MismatchedToken', 3);
 
     /* invalid identifiers */
-    this.assertLineError('put "abc" into 1', 'NotAllInputParsedException', 3);
-    this.assertLineError('put "abc" into 1 x', 'NotAllInputParsedException', 3);
-    this.assertLineError('put "abc" into b c', 'NotAllInputParsedException', 3);
-    this.assertLineError('put "abc" into "def"', 'NotAllInputParsedException', 3);
-    this.assertCompileErrorIn('put "abc" into \x03', 'unexpected character', 3);
-    this.assertCompileErrorIn('put "abc" into b\x03', 'unexpected character', 3);
-    this.assertCompileErrorIn('put "abc" into \xf1', 'unexpected character', 3);
-    this.assertCompileErrorIn('put "abc" into b\xf1', 'unexpected character', 3);
+    h.assertLineError('put "abc" into 1', 'NotAllInputParsedException', 3);
+    h.assertLineError('put "abc" into 1 x', 'NotAllInputParsedException', 3);
+    h.assertLineError('put "abc" into b c', 'NotAllInputParsedException', 3);
+    h.assertLineError('put "abc" into "def"', 'NotAllInputParsedException', 3);
+    h.assertCompileErrorIn('put "abc" into \x03', 'unexpected character', 3);
+    h.assertCompileErrorIn('put "abc" into b\x03', 'unexpected character', 3);
+    h.assertCompileErrorIn('put "abc" into \xf1', 'unexpected character', 3);
+    h.assertCompileErrorIn('put "abc" into b\xf1', 'unexpected character', 3);
 
     /* not valid because it's something else */
     let notvalid = `pi,it,one,true,cr,autohilite,style,cursor,dontwrap,
@@ -292,12 +297,12 @@ put x into x\\x`,
 
     /* can't use this as a name for variables */
     for (let reserved of disallowedAsVar) {
-        this.assertLineError(`put "abc" into ${reserved}`, 'name not allowed', 3);
+        h.assertLineError(`put "abc" into ${reserved}`, 'name not allowed', 3);
     }
 
     /* can't use this as a name for loop variables */
     for (let reserved of disallowedAsVar) {
-        this.assertCompileErrorIn(
+        h.assertCompileErrorIn(
             `repeat with ${reserved} = 1 to 3\nend repeat`,
             'reserved word',
             3
@@ -306,12 +311,12 @@ put x into x\\x`,
 
     /* can't use this as a name for globals */
     for (let reserved of disallowedAsVar.concat(['before', 'after', 'into'])) {
-        this.assertCompileErrorIn(`global ${reserved}`, 'reserved word', 3);
+        h.assertCompileErrorIn(`global ${reserved}`, 'reserved word', 3);
     }
 
     /* can't use this as a name for params */
     for (let reserved of disallowedAsVar.concat(['before', 'after', 'into'])) {
-        this.assertCompileError(
+        h.assertCompileError(
             `on myhandler p1, ${reserved}` + '\nglobal x\n' + `end myhandler`,
             'reserved word',
             1
@@ -320,7 +325,7 @@ put x into x\\x`,
 
     /* can't use this as a name for handlers */
     for (let reserved of disallowedAsHandler) {
-        this.assertCompileError(
+        h.assertCompileError(
             `on ${reserved}` + '\nglobal x\n' + `end ${reserved}`,
             'reserved word',
             1
@@ -342,7 +347,7 @@ put x into x\\x`,
             expectErr = 'NotAllInputParsedException';
         }
 
-        this.runGeneralCode('', `${reserved} 1, 2, 3`, expectErr, 3);
+        h.runGeneralCode('', `${reserved} 1, 2, 3`, expectErr, 3);
     }
 
     /* can't use these names, (different token type), checkCommonMistakenVarNames */
@@ -352,12 +357,12 @@ put x into x\\x`,
 
     /* try to use it as a variable name */
     for (let reserved of notvalidDifferentTks) {
-        this.assertCompileErrorIn(`put 4 into ${reserved}`, 'support variables', 3);
+        h.assertCompileErrorIn(`put 4 into ${reserved}`, 'support variables', 3);
     }
 
     /* try to use it as a parameter name */
     for (let reserved of notvalidDifferentTks) {
-        this.assertCompileError(
+        h.assertCompileError(
             `on myHandler v1, ${reserved}\nend myHandler`,
             'support variables',
             1
@@ -366,14 +371,14 @@ put x into x\\x`,
 
     /* try to use it as a custom handler name */
     for (let reserved of notvalidDifferentTks) {
-        this.assertCompileError(
+        h.assertCompileError(
             `on ${reserved}\nend ${reserved}`,
             'support variables',
             1
         );
     }
 });
-t.test('test_ifStatementsAndRepeats', () => {
+t.test('_ifStatementsAndRepeats', () => {
     /*
         important to reset flags in a loop:
         the state of which if branch has been taken
@@ -542,7 +547,7 @@ end if\\x`,
             '100'
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* repeats */
     batch = [
@@ -817,7 +822,7 @@ end repeat\\s`,
         ]
     ];
 
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* repeats and if statements */
     batch = [
@@ -950,10 +955,10 @@ end if\\s`,
             `a 1 2 3`
         ]
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* locals, globals, and variable scopes */
-    this.vcstate.runtime.codeExec.globals.set('testvar', VpcValS('1'));
+    h.vcstate.runtime.codeExec.globals.set('testvar', VpcValS('1'));
     batch = [
         /* simple locals read/write */
         ['put 3 into x\\x', '3'],
@@ -980,9 +985,9 @@ end if\\s`,
         ['put "z" into testvar\\testvar', 'z'],
         ['put "z" into testvar\nglobal testvar\\testvar', '1']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 });
-t.test('test_calls', () => {
+t.test('_calls', () => {
     let batch: [string, string][];
     batch = [
         /* attempt to call something that isn't a valid custom handler */
@@ -1004,11 +1009,11 @@ t.test('test_calls', () => {
         ['result()', ''],
         ['the result()', '']
     ];
-    this.testBatchEvaluate(batch);
+    h.testBatchEvaluate(batch);
 
     /* call a custom handler */
-    this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
-    this.runGeneralCode(
+    h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
+    h.runGeneralCode(
         `on myhandler
 global x
 put x + 1 into x
@@ -1020,12 +1025,12 @@ put x into testresult`
     );
     assertEqWarn(
         '4',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '23|'
     );
 
     /* wrong name for the handler */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler
 global x
 put x + 1 into x
@@ -1039,7 +1044,7 @@ put x into testresult`,
     );
 
     /* longer call stack */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler1
 global x
 put x && "myhandler1" into x
@@ -1069,11 +1074,11 @@ put x into testresult`
     );
     assertEqWarn(
         ' myhandler4 myhandler3 myhandler2 myhandler1 j i h',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '22|'
     );
     /* return value from one must not bleed down into the rest */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler1
 return 4
 end myhandler1
@@ -1086,11 +1091,11 @@ put "a" & the result into testresult`
     );
     assertEqWarn(
         'a',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '21|'
     );
     /* handler with arguments */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler arg1
 global x
 if the paramcount is 1 and the params is "hi" then
@@ -1114,11 +1119,11 @@ put x into testresult`
     );
     assertEqWarn(
         'a myhandlerhi myhandlermanyh1h2h3 myhandlerhi',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '20|'
     );
     /* expect arguments eval'd from left to right */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler a1, a2, a3
 global x, testresult
 put testresult && (a1 - x) into testresult
@@ -1132,11 +1137,11 @@ myhandler counting(), counting(), counting()`
     );
     assertEqWarn(
         ' 1 2 3',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1~|'
     );
     /* variadic handlers / giving a handler the wrong number of args */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on printargs a1, a2
 global x
 put cr & "#args=" & the paramcount after x
@@ -1167,12 +1172,12 @@ put x into testresult`
 #args=2 alla1=a alla2=b alla3= alla=a,b a1=a a2=b
 #args=2 alla1=a alla2=b alla3= alla=a,b a1=a a2=b
 #args=3 alla1=a alla2=b alla3=c alla=a,b,c a1=a a2=b`,
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1}|'
     );
 
     /* handler with return value */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler arg1
 global x
 put arg1 + 1 into y
@@ -1188,11 +1193,11 @@ put ret & x into testresult`
     );
     assertEqWarn(
         '20',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1||'
     );
     /* exit handler and exit product */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler arg1
 global testresult
 if arg1 is 10 then
@@ -1214,11 +1219,11 @@ myhandler 14`
     );
     assertEqWarn(
         ' called 9 called 11',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1{|'
     );
     /* recursion in a handler */
-    this.runGeneralCode(
+    h.runGeneralCode(
         `on myhandler p
 if p is 1 then
 return p
@@ -1235,12 +1240,12 @@ put the result into testresult`
     );
     assertEqWarn(
         '24',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1`|'
     );
     /* a simple custom function! */
-    this.runGeneralCode(
-        `${this.customFunc} myfn p
+    h.runGeneralCode(
+        `${h.customFunc} myfn p
 return p * (p + 1)
 end myfn
 `,
@@ -1249,13 +1254,13 @@ put myfn(2+myfn(3)) into testresult`
     );
     assertEqWarn(
         '210',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1_|'
     );
     /* recursion. use g to 1) verify number of recursive calls and */
     /* 2) run a real statement like "put" that can't be part of an eval'd expression */
-    this.runGeneralCode(
-        `${this.customFunc} recurse p
+    h.runGeneralCode(
+        `${h.customFunc} recurse p
 global g
 put g + 1 into g
 if p is 1 then
@@ -1272,12 +1277,12 @@ put testresult && g into testresult`
     );
     assertEqWarn(
         '120 5',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1^|'
     );
     /* mutual recursion */
-    this.runGeneralCode(
-        `${this.customFunc} isEven n
+    h.runGeneralCode(
+        `${h.customFunc} isEven n
 if n is 0 then
 return true
 else
@@ -1285,7 +1290,7 @@ return isOdd(n - 1)
 end if
 end isEven
 
-${this.customFunc} isOdd n
+${h.customFunc} isOdd n
 if n is 0 then
 return false
 else
@@ -1298,16 +1303,16 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
     );
     assertEqWarn(
         'true false true',
-        this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+        h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1]|'
     );
     /* nesting/interesting custom function calls
      we *manually* parse custom fn calls by counting
     parenthesis levels so this needs to be tested */
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_a_a);
-    this.updateObjectScript(
-        this.elIds.card_a_a,
-        `${this.customFunc} mm p1, p2, p3
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_a_a);
+    h.updateObjectScript(
+        h.elIds.card_a_a,
+        `${h.customFunc} mm p1, p2, p3
     global g
     put g+1 into g
     return "m" & g & "(" & p1 & "," & p2 & "," & p3 & ")"
@@ -1455,19 +1460,19 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         ['mm(1),(2)\\0', `ERR:isn't C`],
         ['mm (1),(2)\\the result', 'm3(1,2,)']
     ];
-    this.testBatchEvaluate(batch);
-    this.updateObjectScript(this.elIds.card_a_a, ``);
+    h.testBatchEvaluate(batch);
+    h.updateObjectScript(h.elIds.card_a_a, ``);
 
     /* disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess) */
     /* but not printargs("a") */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `put 1 into x
 sin(3)
 put 1 into x`,
         `this isn't C`,
         4
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `put 1 into x
 myfn(3)
 put 1 into x`,
@@ -1476,14 +1481,14 @@ put 1 into x`,
     );
 
     /* only block starts outside of scope */
-    this.assertCompileError(
+    h.assertCompileError(
         `put 1 into x
 on myhandler
 end myhandler`,
         'can exist at this scope',
         1
     );
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler
 end myhandler
@@ -1492,7 +1497,7 @@ put 1 into x`,
         4
     );
     /* cannot start handler inside handler */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler
 on myhandler2
@@ -1502,9 +1507,9 @@ end myhandler`,
         3
     );
     /* cannot start handler inside handler */
-    this.assertCompileError(
+    h.assertCompileError(
         `
-    ${this.customFunc} myhandler
+    ${h.customFunc} myhandler
 on myhandler2
 end myhandler2
 end myhandler`,
@@ -1512,17 +1517,17 @@ end myhandler`,
         3
     );
     /* cannot start handler inside handler */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler
-${this.customFunc} myhandler2
+${h.customFunc} myhandler2
 end myhandler2
 end myhandler`,
         'inside an existing handler',
         3
     );
     /* mismatched handler name */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1
 end myhandler2`,
@@ -1530,7 +1535,7 @@ end myhandler2`,
         3
     );
     /* doesn't make sense to end here */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1
 end myhandler1
@@ -1539,7 +1544,7 @@ end myhandler1`,
         4
     );
     /* mismatched handler name in exit */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1
 exit myhandler2
@@ -1548,7 +1553,7 @@ end myhandler1`,
         3
     );
     /* mismatched handler name in pass */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1
 pass myhandler2
@@ -1557,7 +1562,7 @@ end myhandler1`,
         3
     );
     /* mismatched handler name in end */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1
 end myhandler2
@@ -1566,7 +1571,7 @@ end myhandler1`,
         3
     );
     /* no handler name */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on
 get 1 + 2
@@ -1575,7 +1580,7 @@ end myhandler1`,
         2
     );
     /* no valid handler name */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on ,
 get 1 + 2
@@ -1584,7 +1589,7 @@ end myhandler1`,
         2
     );
     /* handler params invalid 1 */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1 x y
 get 1 + 2
@@ -1593,7 +1598,7 @@ end myhandler1`,
         2
     );
     /* handler params invalid 2 */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1 x , ,
 get 1 + 2
@@ -1602,7 +1607,7 @@ end myhandler1`,
         2
     );
     /* no handler end name */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler1
 get 1 + 2
@@ -1611,7 +1616,7 @@ end`,
         4
     );
     /* duplicate handler name */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler
 get 1 + 2
@@ -1623,8 +1628,8 @@ end myhandler`,
         7
     );
     /* cannot exit repeat when no loop */
-    this.assertCompileErrorIn(`exit repeat`, 'outside of a loop', 3);
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(`exit repeat`, 'outside of a loop', 3);
+    h.assertCompileErrorIn(
         `repeat while false
 end repeat
 exit repeat`,
@@ -1632,8 +1637,8 @@ exit repeat`,
         5
     );
     /* cannot next repeat when no loop */
-    this.assertCompileErrorIn(`next repeat`, 'outside of a loop', 3);
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(`next repeat`, 'outside of a loop', 3);
+    h.assertCompileErrorIn(
         `repeat while false
 end repeat
 next repeat`,
@@ -1641,7 +1646,7 @@ next repeat`,
         5
     );
     /* cannot end repeat when no loop */
-    this.assertCompileError(
+    h.assertCompileError(
         `
     on myhandler
     end repeat
@@ -1650,7 +1655,7 @@ next repeat`,
         3
     );
     /* cannot else when no if */
-    this.assertCompileError(
+    h.assertCompileError(
         `
     on myhandler
     else
@@ -1660,7 +1665,7 @@ next repeat`,
         3
     );
     /* cannot else if when no if */
-    this.assertCompileError(
+    h.assertCompileError(
         `
     on myhandler
     else if true then
@@ -1670,7 +1675,7 @@ next repeat`,
         3
     );
     /* cannot else when after the if */
-    this.assertCompileError(
+    h.assertCompileError(
         `
     on myhandler
     if true then
@@ -1682,7 +1687,7 @@ next repeat`,
         5
     );
     /* cannot else if when after the if */
-    this.assertCompileError(
+    h.assertCompileError(
         `
     on myhandler
     if true then
@@ -1694,71 +1699,71 @@ next repeat`,
         5
     );
     /* cannot end if when no if */
-    this.assertCompileErrorIn(`end if`, 'interleaved within', 3);
+    h.assertCompileErrorIn(`end if`, 'interleaved within', 3);
     /* cannot say "else then" */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `if false then
     else then`,
         'expected else to not have then',
         4
     );
     /* cannot say just "if" */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `if
     end if`,
         'all-on-one-line',
         3
     );
     /* cannot ommit the "then" */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `if true
     end if`,
         'all-on-one-line',
         3
     );
     /* cannot just say "return" */
-    this.assertCompileErrorIn(`return`, 'cannot have a line that is just', 3);
+    h.assertCompileErrorIn(`return`, 'cannot have a line that is just', 3);
     /* cannot just say "end" */
-    this.assertCompileErrorIn(`end`, 'cannot have a line', 3);
+    h.assertCompileErrorIn(`end`, 'cannot have a line', 3);
     /* cannot just say "exit" */
-    this.assertCompileErrorIn(`exit`, 'cannot have a line', 3);
+    h.assertCompileErrorIn(`exit`, 'cannot have a line', 3);
     /* cannot just say "repeat while" */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `repeat while
     end repeat`,
         'without an expression',
         3
     );
     /* cannot just say "repeat until" */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `repeat until
     end repeat`,
         'without an expression',
         3
     );
     /* invalid repeat part 1 */
-    this.assertLineError(
+    h.assertLineError(
         `repeat xyz
     end repeat`,
         'no variable found with this name',
         3
     );
     /* invalid repeat part 2 */
-    this.assertLineError(
+    h.assertLineError(
         `repeat to
     end repeat`,
         'NoViableAltException',
         3
     );
     /* invalid repeat part 3, not quite enough tokens */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `repeat with x = 1 to
     end repeat`,
         'wrong length',
         3
     );
     /* invalid repeat part 4, not quite enough tokens */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `repeat with x = 1 down to
     end repeat`,
         'wrong length',
@@ -1766,7 +1771,7 @@ next repeat`,
     );
 
     /* interleaved blocks */
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `repeat while false
 if false then
 end repeat
@@ -1774,7 +1779,7 @@ end if`,
         'interleaved within',
         5
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `repeat while false
 if false then
 put "a" into x
@@ -1784,7 +1789,7 @@ end if`,
         'interleaved within',
         7
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `if false then
 repeat while false
 end if
@@ -1792,7 +1797,7 @@ end repeat`,
         'interleaved within',
         5
     );
-    this.assertCompileErrorIn(
+    h.assertCompileErrorIn(
         `if false then
 repeat while false
 else
@@ -1803,7 +1808,7 @@ end repeat`,
         5
     );
     /* forgot to close the block */
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler
 repeat while false
@@ -1811,7 +1816,7 @@ end myhandler`,
         'interleaved within',
         4
     );
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler
 if false then
@@ -1819,7 +1824,7 @@ end myhandler`,
         'interleaved within',
         4
     );
-    this.assertCompileError(
+    h.assertCompileError(
         `
 on myhandler
 if false then
@@ -1828,7 +1833,7 @@ end myhandler`,
         'interleaved within',
         5
     );
-    this.runGeneralCode(
+    h.runGeneralCode(
         `
 on myhandler
 put 3 into x`,
@@ -1839,13 +1844,13 @@ put 3 into x`,
         true
     );
 });
-t.test('test_scriptMessagePassing', () => {
-    this.pr.setCurCardNoOpenCardEvt(this.elIds.card_a_a);
-    let parents = [this.vcstate.model.stack.id, this.elIds.bg_a, this.elIds.card_a_a];
+t.test('_scriptMessagePassing', () => {
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_a_a);
+    let parents = [h.vcstate.model.stack.id, h.elIds.bg_a, h.elIds.card_a_a];
     for (let parent of parents) {
         /* reset all scripts */
-        parents.map(id => this.updateObjectScript(id, ''));
-        this.updateObjectScript(this.elIds.btn_go, '');
+        parents.map(id => h.updateObjectScript(id, ''));
+        h.updateObjectScript(h.elIds.btn_go, '');
 
         let script = `
             on mouseup
@@ -1856,35 +1861,35 @@ t.test('test_scriptMessagePassing', () => {
 
         /* if there is nothing in the button script but
         something in a parent script, the parent script should be called instead */
-        this.updateObjectScript(this.elIds.btn_go, '');
-        this.updateObjectScript(parent, script);
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.runGeneralCode('', '', undefined, undefined, undefined, true);
+        h.updateObjectScript(h.elIds.btn_go, '');
+        h.updateObjectScript(parent, script);
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.runGeneralCode('', '', undefined, undefined, undefined, true);
         let expectedMe = parent;
         assertEqWarn(
-            ` me=${expectedMe} target=${this.elIds.btn_go}`,
-            this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+            ` me=${expectedMe} target=${h.elIds.btn_go}`,
+            h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1[|'
         );
 
         /* if there is something in the button script and
         something in a parent script, the parent script is not called */
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.runGeneralCode(
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.runGeneralCode(
             '',
             `global testresult
             put "button script instead" after testresult`
         );
         assertEqWarn(
             `button script instead`,
-            this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+            h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1@|'
         );
 
         /* if the button script calls exit to product, the parent script also isn't called */
         /* (currently has the same effect has just exiting with no call to pass) */
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.runGeneralCode(
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.runGeneralCode(
             '',
             `global testresult
             put "a" after testresult
@@ -1893,13 +1898,13 @@ t.test('test_scriptMessagePassing', () => {
         );
         assertEqWarn(
             `a`,
-            this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+            h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1?|'
         );
 
         /* pass upwards from the button script to the parent script */
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.runGeneralCode(
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.runGeneralCode(
             '',
             `global testresult
             put "a" after testresult
@@ -1907,20 +1912,20 @@ t.test('test_scriptMessagePassing', () => {
             put "b" after testresult`
         );
         assertEqWarn(
-            `a me=${expectedMe} target=${this.elIds.btn_go}`,
-            this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+            `a me=${expectedMe} target=${h.elIds.btn_go}`,
+            h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1>|'
         );
 
         /* local variables should not bleed over into another scope (upwards) */
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.updateObjectScript(
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.updateObjectScript(
             parent,
-            `${this.customFunc} parentfn p1
+            `${h.customFunc} parentfn p1
             return "got" && myLocal && x && the short id of the target
             end parentfn`
         );
-        this.assertLineError(
+        h.assertLineError(
             `global testresult
             put "a" into myLocal
             put parentfn("abc") into testresult`,
@@ -1929,15 +1934,15 @@ t.test('test_scriptMessagePassing', () => {
         );
 
         /* local variables should not bleed over into another scope (downwards) */
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.updateObjectScript(
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.updateObjectScript(
             parent,
-            `${this.customFunc} parentfn p1
+            `${h.customFunc} parentfn p1
             put "abc" into myLocal
             return "got" && x && the short id of the target
             end parentfn`
         );
-        this.assertLineError(
+        h.assertLineError(
             `global testresult
             put parentfn("abc") into testresult
             put myLocal after testresult`,
@@ -1946,39 +1951,39 @@ t.test('test_scriptMessagePassing', () => {
         );
 
         /* child can call a function in the parent script */
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.updateObjectScript(
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.updateObjectScript(
             parent,
-            `${this.customFunc} parentfn p1
+            `${h.customFunc} parentfn p1
             return "got" && p1 && the short id of me
             end parentfn`
         );
-        this.runGeneralCode(
+        h.runGeneralCode(
             '',
             `global testresult
             put parentfn("abc") into testresult`
         );
         assertEqWarn(
             `got abc ${expectedMe}`,
-            this.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
+            h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1=|'
         );
 
         /* the parent script can't access function down in the button script though */
-        this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        this.updateObjectScript(
+        h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
+        h.updateObjectScript(
             parent,
             `on mouseup
             global testresult
             put childfn("abc") into testresult
             end mouseup`
         );
-        this.updateObjectScript(
-            this.elIds.btn_go,
-            `${this.customFunc} childfn p1
+        h.updateObjectScript(
+            h.elIds.btn_go,
+            `${h.customFunc} childfn p1
             return "got" && p1 && the short id of me
             end childfn`
         );
-        this.runGeneralCode('', '', 'no handler', 3, false, true);
+        h.runGeneralCode('', '', 'no handler', 3, false, true);
     }
 });

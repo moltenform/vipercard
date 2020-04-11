@@ -284,6 +284,13 @@ export type AsyncVoidFn = () => Promise<void>;
 export type AsyncFn = () => Promise<unknown>;
 
 /**
+ * used to intentionally free memory
+ */
+export function SetToInvalidObjectAtEndOfExecution<T>(_useToGetType: T): T {
+    return (undefined as any) as T;
+}
+
+/**
  * root (top-level) object
  */
 export interface UI512IsDrawTextInterface {}

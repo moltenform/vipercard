@@ -1,7 +1,7 @@
 
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
-/* auto */ import { util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { Util512, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -64,6 +64,13 @@ export function sorted(ar: any[]) {
 }
 
 /**
+ * test-only code, to avoid type casts
+ */
+export function YetToBeDefinedTestHelper<T>(): T {
+    return (undefined as any) as T;
+}
+
+/**
  * if the debugger is set to All Exceptions,
  * you will see a lot of false positives
  */
@@ -76,22 +83,32 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
 }
 
 export class SimpleUtil512TestCollection {
-    constructor(public name: string, public async = false, public slow = false) {}
+    static haveHitWarnAndAllowToContinue = false
+    constructor(public name: string, public slow = false) {}
     tests: [string, VoidFn][] = [];
     atests: [string, AsyncFn][] = [];
     _context = '';
     public test(s: string, fn: VoidFn) {
-        assertTrue(!this.async, 'Ot|');
         this.tests.push([s, fn]);
         return this;
     }
     public atest(s: string, fn: AsyncFn) {
-        assertTrue(this.async, 'Os|');
         this.atests.push([s, fn]);
         return this;
     }
     public say(context: string) {
         this._context = context;
-        console.log('                      ' + this._context);
+        console.log(Util512.repeat(25, ' ').join('') + this._context);
+    }
+    public warnAndAllowToContinue(...message: unknown[]) {
+        console.error(...message)
+        if (!SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue) {
+            if (!window.confirm(`a test failed, see details in
+            console. continue running tests?`)) {
+                throw makeUI512Error('user chose to stop after failed test.')
+            }
+
+            SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue = true
+        }
     }
 }

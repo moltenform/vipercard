@@ -17,21 +17,21 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512FormattedText');
 export let testCollectionUI512FormattedText = t;
 
-t.test('testFormattedText.CharAt', () => {
+t.test('FormattedText.CharAt', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq('abc'.charCodeAt(0), txt.charAt(0), 'By|');
     assertEq('abc'.charCodeAt(1), txt.charAt(1), 'Bx|');
     assertEq('abc'.charCodeAt(2), txt.charAt(2), 'Bw|');
     assertEq(undefined, txt.charAt(3), 'Bv|');
 });
-t.test('testFormattedText.FontAt', () => {
+t.test('FormattedText.FontAt', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), 'Bu|');
     assertEq(UI512FontRequest.defaultFont, txt.fontAt(1), 'Bt|');
     assertEq(UI512FontRequest.defaultFont, txt.fontAt(2), 'Bs|');
     assertEq(undefined, txt.fontAt(3), 'Br|');
 });
-t.test('testFormattedText.SetCharAt', () => {
+t.test('FormattedText.SetCharAt', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     txt.setCharAt(1, 'y'.charCodeAt(0));
     txt.setCharAt(2, 'z'.charCodeAt(0));
@@ -39,7 +39,7 @@ t.test('testFormattedText.SetCharAt', () => {
     assertEq('ayz'.charCodeAt(1), txt.charAt(1), 'Bp|');
     assertEq('ayz'.charCodeAt(2), txt.charAt(2), 'Bo|');
 });
-t.test('testFormattedText.SetFontAt', () => {
+t.test('FormattedText.SetFontAt', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     txt.setFontAt(1, 'otherfont1');
     txt.setFontAt(2, 'otherfont2');
@@ -47,18 +47,18 @@ t.test('testFormattedText.SetFontAt', () => {
     assertEq('otherfont1', txt.fontAt(1), 'Bm|');
     assertEq('otherfont2', txt.fontAt(2), 'Bl|');
 });
-t.test('testFormattedText.Len', () => {
+t.test('FormattedText.Len', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq(3, txt.len(), 'Bk|');
     assertEq(0, FormattedText.newFromUnformatted('').len(), 'Bj|');
 });
-t.test('testFormattedText.indexOf', () => {
+t.test('FormattedText.indexOf', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq(1, txt.indexOf('b'.charCodeAt(0)), 'Bi|');
     assertEq(2, txt.indexOf('c'.charCodeAt(0)), 'Bh|');
     assertEq(-1, txt.indexOf('?'.charCodeAt(0)), 'Bg|');
 });
-t.test('testFormattedText.setFontEverywhere', () => {
+t.test('FormattedText.setFontEverywhere', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     txt.setFontEverywhere('changedfont');
     assertEq('changedfont', txt.fontAt(0), 'Bf|');
@@ -66,7 +66,7 @@ t.test('testFormattedText.setFontEverywhere', () => {
     assertEq('changedfont', txt.fontAt(2), 'Bd|');
     assertEq('abc', txt.toUnformatted(), 'Bc|');
 });
-t.test('testFormattedText.toUnformatted', () => {
+t.test('FormattedText.toUnformatted', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq('abc', txt.toUnformatted(), 'Bb|');
     assertEq('a', txt.toUnformattedSubstr(0, 1), 'Ba|');
@@ -74,7 +74,7 @@ t.test('testFormattedText.toUnformatted', () => {
     assertEq('b', txt.toUnformattedSubstr(1, 1), 'BY|');
     assertEq('bc', txt.toUnformattedSubstr(1, 2), 'BX|');
 });
-t.test('testFormattedTextNewFromUnformatted.EmptyStringIsOK', () => {
+t.test('FormattedTextNewFromUnformatted.EmptyStringIsOK', () => {
     let txt = FormattedText.newFromUnformatted('');
     assertEq('', txt.toUnformatted(), 'BW|');
     assertEq(0, txt.len(), 'BV|');
@@ -111,7 +111,7 @@ t.test('FormattedTextNewFromSerialized.Complex', () => {
     let roundTripped = txt.toSerialized();
     assertEq(ser, roundTripped, 'BF|');
 });
-t.test('testFormattedTextNewFromSerialized and more', () => {
+t.test('FormattedTextNewFromSerialized and more', () => {
     t.say(
         longstr(`testFormattedTextNewFromSerialized.ImplicitDefaultFont,
             CoalesceNeighboringFontChanges,OKToEndWithFontChange`)
@@ -140,7 +140,7 @@ t.test('testFormattedTextNewFromSerialized and more', () => {
     );
     assertEq(expected, txt.toSerialized(), 'B5|');
 });
-t.test('testFormattedText.Push', () => {
+t.test('FormattedText.Push', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     txt.push('d'.charCodeAt(0), 'font2');
     assertEq(4, txt.len(), 'B4|');
@@ -149,7 +149,7 @@ t.test('testFormattedText.Push', () => {
     assertEq(UI512FontRequest.defaultFont, txt.fontAt(2), 'B1|');
     assertEq('font2', txt.fontAt(3), 'B0|');
 });
-t.test('testFormattedText.Append', () => {
+t.test('FormattedText.Append', () => {
     let txt1 = FormattedText.newFromUnformatted('ab');
     txt1.setFontEverywhere('font1');
     let txt2 = FormattedText.newFromUnformatted('cd');
@@ -165,7 +165,7 @@ t.test('testFormattedText.Append', () => {
     assertEq('font2', txt1.fontAt(2), 'A]|');
     assertEq('font2', txt1.fontAt(3), 'A[|');
 });
-t.test('testFormattedText.AppendEmptyString', () => {
+t.test('FormattedText.AppendEmptyString', () => {
     let txt1 = FormattedText.newFromUnformatted('ab');
     let txt2 = FormattedText.newFromUnformatted('');
     txt1.append(txt2);
@@ -173,13 +173,13 @@ t.test('testFormattedText.AppendEmptyString', () => {
     assertEq('ab'.charCodeAt(0), txt1.charAt(0), 'A?|');
     assertEq('ab'.charCodeAt(1), txt1.charAt(1), 'A>|');
 });
-t.test('testFormattedText.AppendSubstring', () => {
+t.test('FormattedText.AppendSubstring', () => {
     let txt1 = FormattedText.newFromUnformatted('ab');
     let txt2 = FormattedText.newFromUnformatted('cdefg');
     txt1.appendSubstring(txt2, 1, 3);
     assertEq('abde', txt1.toUnformatted(), 'A=|');
 });
-t.test('testFormattedText.SpliceDeletesTwoCharacters', () => {
+t.test('FormattedText.SpliceDeletesTwoCharacters', () => {
     let ser = longstr(
         `a${specialCharFontChange}font2
         ${specialCharFontChange}bc${specialCharFontChange}
@@ -195,13 +195,13 @@ t.test('testFormattedText.SpliceDeletesTwoCharacters', () => {
     assertEq(UI512FontRequest.defaultFont, txt.fontAt(0), 'A.|');
     assertEq('font3', txt.fontAt(1), 'A-|');
 });
-t.test('testFormattedText.SpliceDeletesNoCharacters', () => {
+t.test('FormattedText.SpliceDeletesNoCharacters', () => {
     let txt = FormattedText.newFromUnformatted('abc');
     assertEq(3, txt.len(), 'A,|');
     txt.splice(1, 0);
     assertEq(3, txt.len(), 'A+|');
 });
-t.test('testFormattedText.ByInsertion, from 2 chars -> 0 chars', () => {
+t.test('FormattedText.ByInsertion, from 2 chars -> 0 chars', () => {
     let txt1 = FormattedText.newFromUnformatted('abcde');
     txt1.setFontEverywhere('f1');
     let txt2 = FormattedText.byInsertion(txt1, 2, 2, '', 'f2');
@@ -209,7 +209,7 @@ t.test('testFormattedText.ByInsertion, from 2 chars -> 0 chars', () => {
     assertEq(3, txt2.len(), 'A*|');
     assertEq(expected, txt2.toSerialized(), 'A)|');
 });
-t.test('testFormattedText.ByInsertion, from 2 chars -> 1 char', () => {
+t.test('FormattedText.ByInsertion, from 2 chars -> 1 char', () => {
     let txt1 = FormattedText.newFromUnformatted('abcde');
     txt1.setFontEverywhere('f1');
     let txt2 = FormattedText.byInsertion(txt1, 2, 2, 'x', 'f2');
@@ -223,7 +223,7 @@ t.test('testFormattedText.ByInsertion, from 2 chars -> 1 char', () => {
     assertEq(4, txt2.len(), 'A(|');
     assertEq(expected, txt2.toSerialized(), 'A&|');
 });
-t.test('testFormattedText.ByInsertion, from 2 chars -> 2 chars', () => {
+t.test('FormattedText.ByInsertion, from 2 chars -> 2 chars', () => {
     let txt1 = FormattedText.newFromUnformatted('abcde');
     txt1.setFontEverywhere('f1');
     let txt2 = FormattedText.byInsertion(txt1, 2, 2, 'xy', 'f2');
@@ -237,7 +237,7 @@ t.test('testFormattedText.ByInsertion, from 2 chars -> 2 chars', () => {
     assertEq(5, txt2.len(), 'A%|');
     assertEq(expected, txt2.toSerialized(), 'A$|');
 });
-t.test('testFormattedText.ByInsertion, from 2 chars -> 3 chars', () => {
+t.test('FormattedText.ByInsertion, from 2 chars -> 3 chars', () => {
     let txt1 = FormattedText.newFromUnformatted('abcde');
     txt1.setFontEverywhere('f1');
     let txt2 = FormattedText.byInsertion(txt1, 2, 2, 'xyz', 'f2');
@@ -251,7 +251,7 @@ t.test('testFormattedText.ByInsertion, from 2 chars -> 3 chars', () => {
     assertEq(6, txt2.len(), 'A#|');
     assertEq(expected, txt2.toSerialized(), 'A!|');
 });
-t.test('testFormattedTextFilterAndConvertNewlines.Filter', () => {
+t.test('FormattedTextFilterAndConvertNewlines.Filter', () => {
     assertEq('', FormattedText.filterAndConvertNewlines(''), 'A |');
     assertEq('abc def', FormattedText.filterAndConvertNewlines('abc def'), 'Az|');
     assertEq(
@@ -261,7 +261,7 @@ t.test('testFormattedTextFilterAndConvertNewlines.Filter', () => {
     );
     assertEq('', FormattedText.filterAndConvertNewlines('\x00\x00'), 'Ax|');
 });
-t.test('testFormattedTextFilterAndConvertNewlines.RemoveInternalUseBytes', () => {
+t.test('FormattedTextFilterAndConvertNewlines.RemoveInternalUseBytes', () => {
     assertEq(
         'abc def',
         FormattedText.filterAndConvertNewlines(
@@ -277,7 +277,7 @@ t.test('testFormattedTextFilterAndConvertNewlines.RemoveInternalUseBytes', () =>
         'Av|'
     );
 });
-t.test('testFormattedTextFilterAndConvertNewlines.ConvertNewlines', () => {
+t.test('FormattedTextFilterAndConvertNewlines.ConvertNewlines', () => {
     assertEq(
         '\nabc\n123\n',
         FormattedText.filterAndConvertNewlines('\nabc\n123\n'),
@@ -294,12 +294,12 @@ t.test('testFormattedTextFilterAndConvertNewlines.ConvertNewlines', () => {
         'As|'
     );
 });
-t.test('testFormattedTextFilterAndConvertNewlines.ConvertEveryNewlineCombination', () => {
+t.test('FormattedTextFilterAndConvertNewlines.ConvertEveryNewlineCombination', () => {
     let expected = '\n\n\n1\n\n\n2\n\n3\n\n\n4\n\n5\n\n6\n\n7\n\n\n8';
     let input = '\n\n\n1\n\n\r2\n\r\n3\n\r\r4\r\n\n5\r\n\r6\r\r\n7\r\r\r8';
     assertEq(expected, FormattedText.filterAndConvertNewlines(input), 'Ar|');
 });
-t.test('testFormattedText.FromExternalCharset', () => {
+t.test('FormattedText.FromExternalCharset', () => {
     let fromHost = (s: string) =>
         FormattedText.fromExternalCharset(s, BrowserOSInfo.Unknown);
 
@@ -353,7 +353,7 @@ t.test('testFormattedText.FromExternalCharset', () => {
         '1X|'
     );
 });
-t.test('testFormattedText.FromExternalCharset.UsingFromCharCode', () => {
+t.test('FormattedText.FromExternalCharset.UsingFromCharCode', () => {
     let fromHost = (s: string) =>
         FormattedText.fromExternalCharset(s, BrowserOSInfo.Unknown);
 
@@ -433,7 +433,7 @@ t.test('testFormattedText.FromExternalCharset.UsingFromCharCode', () => {
         '1V|'
     );
 });
-t.test('testFormattedTextAsteriskOnly.ZeroLength', () => {
+t.test('FormattedTextAsteriskOnly.ZeroLength', () => {
     let args = new DrawTextArgs(0, 0, largeArea, largeArea);
     args.asteriskOnly = true;
     let textin = FormattedText.newFromUnformatted('');
@@ -441,7 +441,7 @@ t.test('testFormattedTextAsteriskOnly.ZeroLength', () => {
     assertEq(0, modded.len(), 'Aq|');
     assertTrue(modded.isLocked(), 'Ap|');
 });
-t.test('testFormattedTextAsteriskOnly.NoFormattingChanges', () => {
+t.test('FormattedTextAsteriskOnly.NoFormattingChanges', () => {
     let args = new DrawTextArgs(0, 0, largeArea, largeArea);
     args.asteriskOnly = true;
     let textin = FormattedText.newFromUnformatted('abcd');
@@ -450,7 +450,7 @@ t.test('testFormattedTextAsteriskOnly.NoFormattingChanges', () => {
     assertEq('\xA5\xA5\xA5\xA5', modded.toUnformatted(), 'An|');
     assertEq(4, modded.len(), 'Am|');
 });
-t.test('testFormattedTextAsteriskOnly.FormattingIsPreserved', () => {
+t.test('FormattedTextAsteriskOnly.FormattingIsPreserved', () => {
     let args = new DrawTextArgs(0, 0, largeArea, largeArea);
     args.asteriskOnly = true;
     let font1 = new TextFontSpec('geneva', TextFontStyling.Default, 12).toSpecString();
