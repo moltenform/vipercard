@@ -553,7 +553,19 @@ t.test('testScriptParseExpr.get rect property', () => {
     testExp(`the rect of cd btn "p1"`, 'parses');
     testExp(`the rect of bg btn "p1"`, 'parses');
 });
-
+t.test('disallow double identifiers', () => {
+    /* if two consecutive identifiers is a valid expression,
+    harder to parse commands correctly */
+    testExp(`x`, 'parses');
+    assertFailsParseExp(
+        `x y`,
+        `Exception`
+    );
+    assertFailsParseExp(
+        `x y z`,
+        `Exception`
+    );
+})
 /**
  * wrapper around testParse, for testing parsing an expression
  * uses the get command,

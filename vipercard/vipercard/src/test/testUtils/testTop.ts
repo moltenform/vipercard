@@ -3,6 +3,7 @@
 /* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
 /* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
+/* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
@@ -38,6 +39,7 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
+            testCollectionvpcScriptParseCmd,
             testCollectionvpcScriptParseExpr,
             testCollectionvpcChunkResolution,
             testCollectionvpcElements,

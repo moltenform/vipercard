@@ -1250,9 +1250,9 @@ RuleBuiltinCmdDivide = this.RULE('RuleBuiltinCmdDivide', () => {
 this.CONSUME1(tks.tkSyntaxPlaceholder)
 this.CONSUME2(tks.tkSyntaxPlaceholder)
 this.CONSUME3(tks.tkSyntaxPlaceholder)
-this.SUBRULE1(this.RuleLvl1Expression)
-this.CONSUME1(tks.tkIdentifier)
 this.SUBRULE1(this.RuleHContainer)
+this.CONSUME1(tks.tkIdentifier)
+this.SUBRULE1(this.RuleLvl1Expression)
 });
 
 RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE('RuleBuiltinCmdVpccalluntrappabledomenu', () => {
@@ -1349,9 +1349,9 @@ RuleBuiltinCmdMultiply = this.RULE('RuleBuiltinCmdMultiply', () => {
 this.CONSUME1(tks.tkSyntaxPlaceholder)
 this.CONSUME2(tks.tkSyntaxPlaceholder)
 this.CONSUME3(tks.tkSyntaxPlaceholder)
-this.SUBRULE1(this.RuleLvl1Expression)
-this.CONSUME1(tks.tkIdentifier)
 this.SUBRULE1(this.RuleHContainer)
+this.CONSUME1(tks.tkIdentifier)
+this.SUBRULE1(this.RuleLvl1Expression)
 });
 
 RuleBuiltinCmdPlay = this.RULE('RuleBuiltinCmdPlay', () => {

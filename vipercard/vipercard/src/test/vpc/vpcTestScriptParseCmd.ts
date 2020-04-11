@@ -7,8 +7,6 @@
 /* auto */ import { Util512, assertEq, assertEqWarn, longstr, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
-import { Util512Higher } from '../../ui512/utils/util512Higher';
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -149,50 +147,50 @@ t.test('VpcParseCmdAdd.invalid syntax', () => {
     assertFailsCmd('add 1 to line 2 to 3 of', 'NoViableAltException');
     assertFailsCmd('add 1 to cd x', 'NoViableAltException');
     assertFailsCmd('add 1 to bg x', 'NoViableAltException');
-    assertFailsCmd('add 1 to the x', 'MismatchedTokenException');
-    assertFailsCmd('add 1 to the left of cd btn 1', 'MismatchedTokenException');
+    assertFailsCmd('add 1 to the x', 'Exception');
+    assertFailsCmd('add 1 to the left of cd btn 1', 'Exception');
 });
 t.test('VpcParseCmdAnswer', () => {
     testCmd('answer x', 'parses');
-    testCmd('answer x \n y', 'parses');
-    testCmd('answer x \n y or z1', 'parses');
-    testCmd('answer x \n y or z1 or z2', 'parses');
+    testCmd('answer x {MK} y', 'parses');
+    testCmd('answer x {MK} y or z1', 'parses');
+    testCmd('answer x {MK} y or z1 or z2', 'parses');
     testCmd('ask x', 'parses');
-    testCmd('ask x \n y', 'parses');
+    testCmd('ask x {MK} y', 'parses');
 });
 t.test('VpcParseCmdMultiply', () => {
-    testCmd('multiply x \n 2', 'parses');
-    testCmd('multiply x \n "2"', 'parses');
+    testCmd('multiply x by 2', 'parses');
+    testCmd('multiply x by "2"', 'parses');
 });
 t.test('VpcParseCmdDrag', () => {
     testCmd('drag from 2,3 to 4,5', 'parses');
-    testCmd('drag from 2,3 to 4,5 \n shiftkey', 'parses');
-    testCmd('drag from 2,3 to 4,5 \n shiftkey, optkey', 'parses');
-    testCmd('drag from 2,3 to 4,5 \n shiftkey, optkey, cmdkey', 'parses');
+    testCmd('drag from 2,3 to 4,5 {MK} shiftkey', 'parses');
+    testCmd('drag from 2,3 to 4,5 {MK} shiftkey, optkey', 'parses');
+    testCmd('drag from 2,3 to 4,5 {MK} shiftkey, optkey, cmdkey', 'parses');
     testCmd('drag from 2,3 to 4,5 to 6,7', 'parses');
-    testCmd('drag from 2,3 to 4,5 to 6,7 \n shiftkey', 'parses');
-    testCmd('drag from 2,3 to 4,5 to 6,7 \n shiftkey, optkey', 'parses');
-    testCmd('drag from 2,3 to 4,5 to 6,7 \n shiftkey, optkey, cmdkey', 'parses');
+    testCmd('drag from 2,3 to 4,5 to 6,7 {MK} shiftkey', 'parses');
+    testCmd('drag from 2,3 to 4,5 to 6,7 {MK} shiftkey, optkey', 'parses');
+    testCmd('drag from 2,3 to 4,5 to 6,7 {MK} shiftkey, optkey, cmdkey', 'parses');
 });
 t.test('VpcParseCmdPut', () => {
-    testCmd('put 1+2 \n into \n x', 'parses');
-    testCmd('put 1+2 \n before \n x', 'parses');
-    testCmd('put 1 \n into \n x', 'parses');
-    testCmd('put "abc" \n into \n x', 'parses');
-    testCmd('put cd fld 1 \n into \n x', 'parses');
-    testCmd('put y \n into \n x', 'parses');
-    testCmd('put myfn(1,2) \n into \n x', 'parses');
-    testCmd('put sin(1) \n into \n x', 'parses');
-    testCmd('put result() \n into \n x', 'parses');
-    testCmd('put the result \n into \n x', 'parses');
-    testCmd('put the left of cd btn 1 \n into \n x', 'parses');
-    testCmd('put the textfont of line 1 of cd fld 1 \n into \n x', 'parses');
-    testCmd('put the long name of cd fld 1 \n into \n x', 'parses');
-    testCmd('put the long version \n into \n x', 'parses');
-    testCmd('put the number of cd btns \n into \n x', 'parses');
-    testCmd('put there is a cd btn y \n into \n x', 'parses');
+    testCmd('put 1+2 {MK} into {MK} x', 'parses');
+    testCmd('put 1+2 {MK} before {MK} x', 'parses');
+    testCmd('put 1 {MK} into {MK} x', 'parses');
+    testCmd('put "abc" {MK} into {MK} x', 'parses');
+    testCmd('put cd fld 1 {MK} into {MK} x', 'parses');
+    testCmd('put y {MK} into {MK} x', 'parses');
+    testCmd('put myfn(1,2) {MK} into {MK} x', 'parses');
+    testCmd('put sin(1) {MK} into {MK} x', 'parses');
+    testCmd('put result() {MK} into {MK} x', 'parses');
+    testCmd('put the result {MK} into {MK} x', 'parses');
+    testCmd('put the left of cd btn 1 {MK} into {MK} x', 'parses');
+    testCmd('put the textfont of line 1 of cd fld 1 {MK} into {MK} x', 'parses');
+    testCmd('put the long name of cd fld 1 {MK} into {MK} x', 'parses');
+    testCmd('put the long version {MK} into {MK} x', 'parses');
+    testCmd('put the number of cd btns {MK} into {MK} x', 'parses');
+    testCmd('put there is a cd btn y {MK} into {MK} x', 'parses');
     testCmd(
-        'put true or false \n into \n x',
+        'put true or false {MK} into {MK} x',
         `Expr(
     ExprSource(
         HSimpleContainer( $true ) )
@@ -202,20 +200,20 @@ t.test('VpcParseCmdPut', () => {
 HContainer(
     HSimpleContainer( $x ) ) $put $into`
     );
-    testCmd('put 2 > 3 \n into \n x', 'parses');
-    testCmd('put 2 is a number \n into \n x', 'parses');
-    testCmd('put y is within z \n into \n x', 'parses');
-    testCmd('put y is in z \n into \n x', 'parses');
-    testCmd('put y & z \n into \n x', 'parses');
-    testCmd('put 4/5 \n into \n x', 'parses');
-    testCmd('put 4 div 5 \n into \n x', 'parses');
-    testCmd('put (1) \n into \n x', 'parses');
-    testCmd('put -1 \n into \n x', 'parses');
-    testCmd('put not true \n into \n x', 'parses');
-    testCmd('put first line of y \n into \n x', 'parses');
-    testCmd('put line 1 of y \n into \n x', 'parses');
-    testCmd('put line 1 to 2 of y \n into \n x', 'parses');
-    testCmd('put not char 1 of (char 2 of y) \n into \n x', 'parses');
+    testCmd('put 2 > 3 {MK} into {MK} x', 'parses');
+    testCmd('put 2 is a number {MK} into {MK} x', 'parses');
+    testCmd('put y is within z {MK} into {MK} x', 'parses');
+    testCmd('put y is in z {MK} into {MK} x', 'parses');
+    testCmd('put y & z {MK} into {MK} x', 'parses');
+    testCmd('put 4/5 {MK} into {MK} x', 'parses');
+    testCmd('put 4 div 5 {MK} into {MK} x', 'parses');
+    testCmd('put (1) {MK} into {MK} x', 'parses');
+    testCmd('put -1 {MK} into {MK} x', 'parses');
+    testCmd('put not true {MK} into {MK} x', 'parses');
+    testCmd('put first line of y {MK} into {MK} x', 'parses');
+    testCmd('put line 1 of y {MK} into {MK} x', 'parses');
+    testCmd('put line 1 to 2 of y {MK} into {MK} x', 'parses');
+    testCmd('put not char 1 of (char 2 of y) {MK} into {MK} x', 'parses');
 });
 t.test('LexerRemembersInitialLine', () => {
     /* if chevrotain didn't remember this,
@@ -258,7 +256,7 @@ t.test('CloneToken', () => {
     /* these ones we know we can ignore, after confirming they are undefined in the real object */
     assertTrue(!real.isInsertedInRecovery, 'HP|');
     clonedTokenKeys = clonedTokenKeys.filter(
-        k => k !== 'isInsertedInRecovery' && k !== 'tokenClassName'
+        k => k !== 'isInsertedInRecovery' && k !== 'tokenClassName' && k !== 'payload'
     );
     assertEqWarn(realTokenKeys.join(','), clonedTokenKeys.join(','), 'HN|');
 });
@@ -371,6 +369,9 @@ function assertFailsCmdSet(sInput: string, sErrExpected: string) {
  * we'll get the rule name by extracting the first word from sInput
  */
 function testCmd(sInput: string, sExpected: string) {
+    /* manually make a syntax marker */
+    let sSyntaxMarker = Util512.repeat(99, '?').join('')
+    sInput = sInput.replace(/\{MK\}/g, sSyntaxMarker)
     let sCmd = sInput.split(' ')[0];
     assertTrue(sInput.startsWith(sCmd + ' '), '1.|expected start with ' + sCmd);
     let firstCapital = sCmd[0].toUpperCase() + sCmd.slice(1).toLowerCase();
