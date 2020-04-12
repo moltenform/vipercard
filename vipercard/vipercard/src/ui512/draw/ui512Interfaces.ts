@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, UI512IsEventInterface, UI512IsPresenterInterface, VoidFn } from './../utils/util512Higher';
-/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

@@ -1,5 +1,5 @@
 
-/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';

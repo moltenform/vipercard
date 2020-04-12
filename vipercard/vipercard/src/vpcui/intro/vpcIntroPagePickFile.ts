@@ -2,8 +2,8 @@
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './vpcIntroProvider';
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
-/* auto */ import { trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { isString, longstr } from './../../ui512/utils/util512';
+/* auto */ import { isString, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';

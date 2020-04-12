@@ -2,7 +2,7 @@
 /* auto */ import { toShortcutString, ui512TranslateModifiers } from './../utils/utilsKeypressHelpers';
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { setRoot } from './../utils/util512Higher';
-/* auto */ import { assertTrueWarn } from './../utils/util512Assert';
+/* auto */ import { assertWarn } from './../utils/util512AssertCustom';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { FullRootUI512 } from './rootUI512';
@@ -200,7 +200,7 @@ function mainOnResize(root: FullRootUI512, gly: any) {
     let canFitH = Math.max(1, Math.trunc(availH / ScreenConsts.ScreenHeight));
     let canFitTotal = Math.min(canFitW, canFitH);
     if (!Util512.isValidNumber(canFitTotal)) {
-        assertTrueWarn(false, `3?|invalid canFitW=${canFitW} canFitW=${canFitW}`);
+        assertWarn(false, `3?|invalid canFitW=${canFitW} canFitW=${canFitW}`);
         return;
     }
 

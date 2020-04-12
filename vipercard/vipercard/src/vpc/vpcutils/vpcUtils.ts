@@ -1,8 +1,9 @@
 
 /* auto */ import { VpcBuiltinMsg } from './vpcEnums';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { O, UI512AttachableErr, assertTrue, assertTrueWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength } from './../../ui512/utils/util512';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { Util512BaseErr, assertTrue, assertWarn, joinIntoMessage } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -29,31 +30,7 @@ export interface WritableContainer extends ReadableContainer {
     replaceAll(search: string, replaceWith: string): void;
 }
 
-/**
- * base class for script error
- */
-export class VpcScriptErrorBase implements UI512AttachableErr {
-    velId = '';
-    lineNumber = -1;
-    details = '';
-    lineData: any;
-    e: any;
-    isScriptException = true;
-    isExternalException = false;
-    toString() {
-        return `on line ${this.lineNumber}, ${this.details}, from object id ${this.velId}`
-    }
-}
 
-/**
- * a script "runtime" error, meaning error happened during execution
- */
-export class VpcScriptRuntimeError extends VpcScriptErrorBase {}
-
-/**
- * script "syntax" error, meaning error happened prior to execution
- */
-export class VpcScriptSyntaxError extends VpcScriptErrorBase {}
 
 /**
  * a message sent to a script
@@ -127,7 +104,7 @@ export class CountNumericIdNormal implements CountNumericId {
         if (n >= this.counter) {
             this.counter = n;
         } else {
-            assertTrueWarn(false, 'KC|tried to set counter lower', n);
+            assertWarn(false, 'KC|tried to set counter lower', n);
         }
     }
 }
@@ -149,8 +126,55 @@ export enum CodeLimits {
     MaxStringLength = 64 * 1024,
     MaxVelChildren = 256,
     MaxObjectsInMsgChain = 128,
-    LimitChevErr = 128,
-    MaxStackNameLen = 256
+    LimitChevErrStringLen = 128,
+}
+
+export class VpcErr  extends Util512BaseErr {
+    isVpcBaseErr = true
+    constructor(public message:string, public level:string) {
+        super(message, level)
+    }
+}
+
+export function makeVpcError(
+    msg: string,
+    s1: unknown = '',
+    s2: unknown = '',
+    s3: unknown = '',) {
+        let level = 'vpc'
+        let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
+        return Util512BaseErr.create(VpcErr, msgTotal, level)
+    }
+
+/**
+ * a quick way to throw if condition is false.
+ * not the same as assert, which should only be triggered when
+ * something goes wrong.
+ */
+export function checkThrow(
+    condition: unknown,
+    msg: string,
+    s1: unknown = '',
+    s2: unknown = ''
+): asserts condition {
+    if (!condition) {
+        throw makeVpcError(`O |${msg} ${s1} ${s2}`);
+    }
+}
+
+/**
+ * a quick way to throw an expection if value is not what was expected.
+ */
+export function checkThrowEq<T>(
+    expected: T,
+    got: unknown,
+    msg: string,
+    c1: unknown = '',
+    c2: unknown = ''
+): asserts got is T {
+    if (expected !== got && util512Sort(expected, got) !== 0) {
+        checkThrow(false, msg, c1, c2)
+    }
 }
 
 /**

@@ -2,7 +2,7 @@
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
+/* auto */ import { LogToReplMsgBox, checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg } from './../vpcutils/vpcEnums';
@@ -11,8 +11,8 @@
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
-/* auto */ import { bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, castVerifyIsStr, getStrToEnum, isString, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { Util512, castVerifyIsStr, getStrToEnum, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 

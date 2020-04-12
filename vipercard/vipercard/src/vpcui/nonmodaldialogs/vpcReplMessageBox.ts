@@ -1,10 +1,10 @@
 
-/* auto */ import { RememberHistory, VpcScriptErrorBase, VpcScriptMessageMsgBoxCode } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { RememberHistory, VpcScriptMessageMsgBoxCode } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
-/* auto */ import { O, cleanExceptionMsg } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';

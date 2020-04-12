@@ -1,5 +1,6 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512 } from './util512Assert';
+/* auto */ import { O } from './util512Base';
+/* auto */ import { assertTrue } from './util512AssertCustom';
 /* auto */ import { Util512 } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -16,7 +17,7 @@ export class CanvasWrapper {
     constructor(canvas: O<HTMLCanvasElement>) {
         if (canvas) {
             let context = canvas.getContext('2d');
-            checkThrowUI512(context, '3=|could not create 2d context');
+            assertTrue(context, '3=|could not create 2d context');
             this.canvas = canvas;
             this.context = context;
             let contextSetParams = this.context as any; /* browser compat */

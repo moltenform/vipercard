@@ -1,6 +1,7 @@
 
 /* auto */ import { UI512IsDrawIconInterface, Util512Higher } from './../utils/util512Higher';
-/* auto */ import { O, assertTrue } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
 /* auto */ import { RenderIcon, RenderIconGroup } from './ui512DrawIconClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */

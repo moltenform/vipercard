@@ -4,7 +4,7 @@
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { cast } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ImageCollection, UI512ImageCollectionCollection, UI512ImageCollectionImage } from './../../ui512/draw/ui512ImageCollection';

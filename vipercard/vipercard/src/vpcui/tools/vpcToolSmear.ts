@@ -2,7 +2,7 @@
 /* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElCanvasPiece } from './../../ui512/elements/ui512ElementCanvasPiece';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';

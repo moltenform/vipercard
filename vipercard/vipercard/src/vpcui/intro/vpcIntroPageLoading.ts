@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcIntroProvider } from './vpcIntroProvider';
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';

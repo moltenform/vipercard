@@ -3,13 +3,14 @@
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal } from './../vpcutils/vpcVal';
+/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk, allVpcTokens } from './vpcTokens';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcChvParser } from './vpcParser';
 /* auto */ import { VpcOpCtg } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
-/* auto */ import { O, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { isString, longstr } from './../../ui512/utils/util512';
+/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

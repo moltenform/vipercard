@@ -6,7 +6,7 @@
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { VpcAboutDialog } from './../menu/vpcAboutDialog';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, slength } from './../../ui512/utils/util512';
 /* auto */ import { IdleEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';

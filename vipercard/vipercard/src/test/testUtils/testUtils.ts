@@ -1,6 +1,7 @@
 
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue, checkThrow512 } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -76,7 +77,7 @@ export function YetToBeDefinedTestHelper<T>(): T {
  */
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
     assertThrows('L||', 'intentionally throw', () => {
-        throw makeUI512Error(`1!|It looks like the debugger is set to break
+        checkThrow512(false, `1!|It looks like the debugger is set to break
             on 'All Exceptions'... you probably want to turn this off because
             many tests intentionally throw exceptions.`);
     });
@@ -110,7 +111,7 @@ export class SimpleUtil512TestCollection {
                 !window.confirm(`a test failed, see details in
             console. continue running tests?`)
             ) {
-                throw makeUI512Error('user chose to stop after failed test.');
+                checkThrow512(false, 'user chose to stop after failed test.');
             }
 
             SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue = true;

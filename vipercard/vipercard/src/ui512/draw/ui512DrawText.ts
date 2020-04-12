@@ -1,7 +1,8 @@
 
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { UI512IsDrawTextInterface } from './../utils/util512Higher';
-/* auto */ import { O, assertTrue } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
 /* auto */ import { Util512, last } from './../utils/util512';
 /* auto */ import { FormattedText } from './ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';

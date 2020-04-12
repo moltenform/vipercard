@@ -1,6 +1,8 @@
 
-/* auto */ import { UI512ErrorHandling, assertTrue, bool } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, checkThrowEq, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, isString, last, longstr, slength, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { checkThrowEq } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, last, longstr, slength, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

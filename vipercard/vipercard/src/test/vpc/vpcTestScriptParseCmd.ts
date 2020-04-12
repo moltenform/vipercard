@@ -3,8 +3,8 @@
 /* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { BuildFakeTokens, cloneToken } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq, assertEqWarn, longstr, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, assertEq, longstr, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

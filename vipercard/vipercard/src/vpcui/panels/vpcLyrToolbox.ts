@@ -1,11 +1,13 @@
 
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { ToolboxDims, VpcToolboxPatterns } from './vpcToolboxPatterns';
 /* auto */ import { VpcToolboxNav } from './vpcToolboxNav';
 /* auto */ import { VpcToolboxMain } from './vpcToolboxMain';
 /* auto */ import { VpcUILayer } from './../state/vpcInterface';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { O, assertTrueWarn, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { findEnumToStr, getStrToEnum, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
@@ -96,7 +98,7 @@ export class VpcAppLyrToolbox extends VpcUILayer {
             this.vci.setOption('viewingScriptVelId', '');
             this.vci.setOption('selectedVelId', '');
         } else {
-            assertTrueWarn(false, `6w|invalid tool id ${sTool}`);
+            assertWarn(false, `6w|invalid tool id ${sTool}`);
         }
     }
 

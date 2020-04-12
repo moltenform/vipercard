@@ -1,6 +1,7 @@
 
-/* auto */ import { O, assertTrue, checkThrowUI512 } from './../utils/util512Assert';
-/* auto */ import { assertEq, assertEqWarn, slength } from './../utils/util512';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { assertEq, slength } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 
@@ -75,7 +76,7 @@ export abstract class UI512Settable extends UI512Gettable {
         defaultVal: O<ElementObserverVal>,
         context: ChangeContext
     ) {
-        checkThrowUI512(
+        checkThrow512(
             !this.locked,
             'O:|tried to set value when locked. setting during refresh()?'
         );

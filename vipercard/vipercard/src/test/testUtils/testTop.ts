@@ -8,7 +8,7 @@
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertTrue, makeUI512Error } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
 /* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
@@ -104,7 +104,11 @@ export class SimpleUtil512Tests {
         }
 
         UI512ErrorHandling.runningTests = false;
-        console.log(`All tests complete.`);
+        if (UI512ErrorHandling.gfghfg) {
+            console.log(`A test may have failed, warning occurred.`);
+        } else {
+            console.log(`All tests complete.`);
+        }
     }
 
     static async runCollection(
@@ -132,27 +136,6 @@ export class SimpleUtil512Tests {
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             counter.val += 1;
             await tstfn();
-        }
-    }
-
-    /**
-     * the first time hit, show a dialog asking if we should continue
-     * subsequent hits, allow through without stopping
-     */
-    static haveHitWarnAndAllowToContinue = false;
-    static warnAndAllowToContinue(...message: any[]) {
-        console.error(...message);
-
-        if (!SimpleUtil512Tests.haveHitWarnAndAllowToContinue) {
-            if (
-                !window.confirm(
-                    'test failed. see details in console. continue running tests?'
-                )
-            ) {
-                throw makeUI512Error('O,|user chose to stop after failed test.');
-            }
-
-            SimpleUtil512Tests.haveHitWarnAndAllowToContinue = true;
         }
     }
 }

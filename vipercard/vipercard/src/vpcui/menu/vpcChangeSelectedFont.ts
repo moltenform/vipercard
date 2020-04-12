@@ -1,12 +1,13 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, fitIntoInclusive, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
@@ -190,7 +191,7 @@ export class VpcChangeSelectedFont {
                 to italic shouldn't lose the bold of that one
             2) besides, if we looked up current style of all the selection,
                 it might return 'mixed' and we wouldn't know how to flip */
-            assertTrueWarn(chunk.first <= chunk.last, 'KN|', chunk.first, chunk.last);
+            assertWarn(chunk.first <= chunk.last, 'KN|', chunk.first, chunk.last);
             for (let i = chunk.first; i <= chunk.last; i++) {
                 let subChunk = new RequestedChunk(i);
                 subChunk.first = i;

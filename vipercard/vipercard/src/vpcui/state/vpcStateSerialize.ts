@@ -1,11 +1,12 @@
 
+/* auto */ import { checkThrow, checkThrowEq } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { SerializedVelStructure, SerializedVpcDocStructure, VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { vpcversion } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { O, UI512Compress, vpcversion } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -95,7 +96,7 @@ export class VpcStateSerialize {
             let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);
             VpcGettableSerialization.deserializeSettable(created, incoming.attrs);
         } else {
-            assertTrueWarn(false, 'Kx|unsupported type', incoming.type);
+            assertWarn(false, 'Kx|unsupported type', incoming.type);
         }
     }
 
@@ -134,6 +135,6 @@ export class VpcStateSerialize {
             VpcGettableSerialization.deserializeSettable(created, incoming.attrs);
         });
 
-        return throwIfUndefined(created, 'Kv|');
+        return ensureDefined(created, 'Kv|');
     }
 }

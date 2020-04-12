@@ -1,14 +1,13 @@
 
-/* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
+/* auto */ import { RememberHistory, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, bool, checkThrow, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq } from './../../ui512/utils/util512';
+/* auto */ import { O, bool, cProductName, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

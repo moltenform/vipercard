@@ -1,5 +1,5 @@
 
-/* auto */ import { CountNumericIdNormal } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { CountNumericIdNormal, checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoManager } from './../state/vpcUndo';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
@@ -16,8 +16,9 @@
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { assertEqWarn, longstr, slength, Util512 } from './../../ui512/utils/util512';
+/* auto */ import { bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
@@ -73,7 +74,7 @@ export class VpcIntroProvider {
             /* don't prevent stack from opening if a failure happens here */
             await this.initPrSettings(pr, vpcState, fullVci);
         } catch (e) {
-            assertTrueWarn(false, 'initPrSettings', e.toString());
+            assertWarn(false, 'initPrSettings', e.toString());
         }
 
         /* setup the redirection-to-login-form if requested */

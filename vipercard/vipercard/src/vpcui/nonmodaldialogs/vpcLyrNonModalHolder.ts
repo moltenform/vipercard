@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcStateInterface, VpcUILayer } from './../state/vpcInterface';
-/* auto */ import { O, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';

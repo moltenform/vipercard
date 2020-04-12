@@ -1,13 +1,13 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
-/* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
+/* auto */ import { CountNumericId, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, isTkType, listOfAllBuiltinCommandsInOriginalProduct, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcCodeLine, VpcLineCategory, checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
-/* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, last, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

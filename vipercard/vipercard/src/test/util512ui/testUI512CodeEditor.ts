@@ -2,7 +2,7 @@
 /* auto */ import { VpcPanelScriptEditor } from './../../vpcui/panels/vpcScriptEditor';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { KeyDownEventDetails } from './../../ui512/menu/ui512Events';

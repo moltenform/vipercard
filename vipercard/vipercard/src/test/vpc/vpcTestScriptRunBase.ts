@@ -9,8 +9,8 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue, assertTrueWarn, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq, assertEqWarn } from './../../ui512/utils/util512';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
@@ -218,7 +218,7 @@ export class TestVpcScriptRunBase {
             if (expectCompErr !== undefined && isCompilationStage !== expectCompErr) {
                 let lns = built.split('\n');
                 let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-                assertTrueWarn(
+                assertWarn(
                     false,
                     '2a|got error at the wrong stage',
                     culpritLine,
@@ -270,7 +270,7 @@ export class TestVpcScriptRunBase {
         if (caughtErr) {
             return;
         } else if (expectErrMsg && expectCompErr) {
-            assertTrueWarn(
+            assertWarn(
                 false,
                 "2W|we expected it to throw error but it didn't",
                 codeBefore,

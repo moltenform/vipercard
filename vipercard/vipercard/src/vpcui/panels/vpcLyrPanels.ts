@@ -14,8 +14,8 @@
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
-/* auto */ import { O, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { MapKeyToObject, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
@@ -230,7 +230,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
         this.panels.add(VpcElType.Card.toString(), new VpcEditPanelsCard('editPanelCd'));
         this.panels.add(VpcElType.Fld.toString(), new VpcEditPanelsField('editPanelFld'));
         this.panels.add(VpcElType.Stack.toString(), new VpcEditPanelsStack('editPanelStack'));
-        this.panels.add(VpcElType.Unknown.toString(), throwIfUndefined(this.panelEmpty, '6v|'));
+        this.panels.add(VpcElType.Unknown.toString(), ensureDefined(this.panelEmpty, '6v|'));
         this.panels.add(VpcElType.Product.toString(), this.editor);
         for (let panel of this.panels.getVals()) {
             panel.vci = this.vci;

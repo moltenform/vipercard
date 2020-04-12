@@ -1,8 +1,10 @@
 
+/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
-/* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyJson, Util512, isString } from './../../ui512/utils/util512';
+/* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/draw/ui512DrawTextClasses';
@@ -26,9 +28,9 @@ export class VpcGettableSerialization {
             if (propName.startsWith('_') && propName[1] !== '_') {
                 propName = propName.slice(1);
                 let v = vel.getGeneric(propName);
-                assertTrueWarn(v !== undefined, propName, 'J||');
+                assertWarn(v !== undefined, propName, 'J||');
                 if (v instanceof FormattedText) {
-                    assertTrueWarn(
+                    assertWarn(
                         VpcGettableSerialization.propNameExpectFormattedText(propName),
                         'expected ftxt, got ',
                         propName
@@ -116,7 +118,7 @@ export class VpcGettableSerialization {
             vel.set(propName, new FormattedText());
             vel.set(propName, v);
         } else {
-            assertTrueWarn(false, 'unknown data type for ' + v);
+            assertWarn(false, 'unknown data type for ' + v);
         }
     }
 

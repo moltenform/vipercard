@@ -1,11 +1,11 @@
 
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../../vpc/codepreparse/vpcTopPreparse';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcLineCategory } from './../../vpc/codepreparse/vpcPreparseCommon';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 

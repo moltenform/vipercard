@@ -3,7 +3,7 @@
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompToolbox } from './../../ui512/composites/ui512Toolbox';
 /* auto */ import { UI512TextEvents, addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';

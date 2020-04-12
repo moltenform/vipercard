@@ -1,12 +1,14 @@
 
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcUILayer } from './../state/vpcInterface';
 /* auto */ import { VpcElType, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElField, VpcFldStyleInclScroll } from './../../vpc/vel/velField';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, assertTrue, assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, isString } from './../../ui512/utils/util512';
+/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
@@ -318,7 +320,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
                 /* it's a property that doesn't impact rendering. that's ok. */
             }
         } else if (!this.needFullRedraw && !this.needFullRedrawBecauseScreenWasLocked) {
-            assertTrueWarn(false, `6(|did not find rendered corresponing ${vel.id}`);
+            assertWarn(false, `6(|did not find rendered corresponing ${vel.id}`);
         }
 
         if (!fromScratch && this.propertiesCouldUnFocus[key]) {

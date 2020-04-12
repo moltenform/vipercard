@@ -2,7 +2,7 @@
 /* auto */ import { VpcIntermedValBase } from './vpcVal';
 /* auto */ import { OrdinalOrPosition, VpcElType } from './vpcEnums';
 /* auto */ import { RequestedChunk } from './vpcChunkResolution';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */

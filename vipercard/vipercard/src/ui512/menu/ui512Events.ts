@@ -1,7 +1,7 @@
 
 /* auto */ import { ModifierKeys, toShortcutString } from './../utils/utilsKeypressHelpers';
 /* auto */ import { UI512IsEventInterface } from './../utils/util512Higher';
-/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { UI512EventType } from './../draw/ui512Interfaces';
 /* auto */ import { UI512Element } from './../elements/ui512Element';
 

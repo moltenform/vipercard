@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModifyImpl } from './../../ui512/textedit/ui512TextSelModifyImpl';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';

@@ -1,6 +1,6 @@
 
-/* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { assertTrue, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
+/* auto */ import { cAltProductName, cProductName, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, last } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

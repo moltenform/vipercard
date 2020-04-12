@@ -1,11 +1,12 @@
 
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { checkThrow, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq, last, slength } from './../../ui512/utils/util512';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, last, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -170,7 +171,7 @@ export class VpcElStack extends VpcElBase {
      * position of card within the stack. throw if card not found
      */
     getCardStackPosition(cardId: string) {
-        return throwIfUndefined(this.findCardStackPosition(cardId), '4v|card id not found', cardId);
+        return ensureDefined(this.findCardStackPosition(cardId), '4v|card id not found', cardId);
     }
 
     /**
@@ -196,7 +197,7 @@ export class VpcElStack extends VpcElBase {
      * "go to card 6", which card is it? throws if not exist
      */
     getFromCardStackPosition(pos: number) {
-        return throwIfUndefined(this.findFromCardStackPosition(pos), '4u|card number not found', pos);
+        return ensureDefined(this.findFromCardStackPosition(pos), '4u|card number not found', pos);
     }
 
     /**

@@ -2,7 +2,7 @@
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { getRoot } from './../utils/util512Higher';
-/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { TextSelModify } from './ui512TextSelModify';
 /* auto */ import { ScrollbarImpl, fldIdToScrollbarPartId, getAmountIfScrollArrowClicked } from './ui512Scrollbar';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';

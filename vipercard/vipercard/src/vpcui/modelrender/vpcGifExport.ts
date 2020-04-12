@@ -1,9 +1,9 @@
 
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { lng } from './../../ui512/lang/langBase';

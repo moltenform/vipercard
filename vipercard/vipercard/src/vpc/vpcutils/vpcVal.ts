@@ -1,7 +1,8 @@
 
-/* auto */ import { CodeLimits } from './vpcUtils';
+/* auto */ import { CodeLimits, checkThrow } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition } from './vpcEnums';
-/* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -119,7 +120,7 @@ export class VpcVal extends VpcIntermedValBase {
      * read as scientific notation, or throw exception
      */
     static getScientificNotation(s: string) {
-        return throwIfUndefined(
+        return ensureDefined(
             VpcVal.readScientificNotation(s),
             `63|expected a number/scientific notation here, or > 1e18, got "${s}"`
         );

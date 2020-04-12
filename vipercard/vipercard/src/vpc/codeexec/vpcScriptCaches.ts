@@ -1,11 +1,12 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
-/* auto */ import { CodeLimits, CountNumericId, VpcScriptErrorBase, VpcScriptSyntaxError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId, checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcCodeProcessor, VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed } from './../codeparse/vpcTokens';
 /* auto */ import { ChvRuleFnType, VpcCodeLine, VpcCodeLineReference } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
-/* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, markUI512Err } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
@@ -86,12 +87,12 @@ export class VpcCacheParsedCST {
             }
         } catch (e) {
             /* don't expect error to be thrown here, but am checking this case out of caution */
-            let err = e.message.toString().substr(0, CodeLimits.LimitChevErr);
+            let err = e.message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
             throw makeVpcScriptErr('4;|parse error: ' + err);
         }
 
         if (this.parser.errors.length) {
-            let err = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErr);
+            let err = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErrStringLen);
             throw makeVpcScriptErr('4:|parse error: ' + err);
         }
 

@@ -1,5 +1,5 @@
 
-/* auto */ import { CodeLimits } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
@@ -9,8 +9,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { assertTrueWarn, checkThrow, makeVpcInternalErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { assertEqWarn } from './../../ui512/utils/util512';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -91,7 +90,7 @@ export abstract class UndoableActionCreateOrDelVel {
         }
 
         /* check bounds, note that it is ok to insert one past the end. */
-        assertTrueWarn(this.insertIndex >= 0 && this.insertIndex <= ar.length, '6c|incorrect insertion point');
+        assertWarn(this.insertIndex >= 0 && this.insertIndex <= ar.length, '6c|incorrect insertion point');
         checkThrow(
             ar.length < CodeLimits.MaxVelChildren,
             `8)|exceeded maximum number of child elements (${CodeLimits.MaxVelChildren})`
@@ -107,7 +106,7 @@ export abstract class UndoableActionCreateOrDelVel {
         let el = vci.getModel().getByIdUntyped(this.velId);
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(el.parentId, vci, el.getType());
         assertEqWarn(el.id, ar[this.insertIndex].id, '6b|');
-        assertTrueWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
+        assertWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
         ar.splice(this.insertIndex, 1);
         vci.getModel().removeIdFromMapOfElements(el.id);
     }

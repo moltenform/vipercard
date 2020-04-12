@@ -1,6 +1,6 @@
 
+/* auto */ import { checkThrow } from './vpcUtils';
 /* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

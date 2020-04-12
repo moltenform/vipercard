@@ -1,11 +1,12 @@
 
-/* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { LoopLimit } from './vpcPreparseCommon';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
-/* auto */ import { O, assertTrue, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { ValHolder, assertEq, checkThrowEq } from './../../ui512/utils/util512';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { ValHolder, assertEq } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

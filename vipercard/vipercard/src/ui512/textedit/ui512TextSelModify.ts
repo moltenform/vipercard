@@ -1,5 +1,5 @@
 
-/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertEq, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { TextSelModifyImpl } from './ui512TextSelModifyImpl';
 /* auto */ import { UI512Lines } from './ui512TextLines';

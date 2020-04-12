@@ -1,5 +1,6 @@
 
-/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrowUI512, makeUI512Error, respondUI512Error } from './util512Assert';
+/* auto */ import { O } from './util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn, respondUI512Error } from './util512AssertCustom';
 /* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -100,7 +101,7 @@ export class Util512Higher {
             }
         });
         img.onerror = () => {
-            throw makeUI512Error('4L|failed to load ' + url);
+            assertWarn('4L|failed to load ' + url);
         };
         img.src = url;
         if (img.complete) {
@@ -124,7 +125,7 @@ export class Util512Higher {
         req.open('GET', url, true);
         if (!callbackOnErr) {
             callbackOnErr = () => {
-                throw makeUI512Error(`4K|failed to load ${url}, status=${req.status}`);
+                assertWarn(false, `4K|failed to load ${url}, status=${req.status}`);
             };
         }
 
@@ -316,7 +317,7 @@ export interface Root {
  */
 let rootHolder: Root[] = [];
 export function getRoot(): Root {
-    checkThrowUI512(rootHolder[0], 'J6|root not yet set.');
+    assertWarn(rootHolder[0], 'J6|root not yet set.');
     return rootHolder[0];
 }
 

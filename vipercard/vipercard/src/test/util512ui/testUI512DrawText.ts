@@ -1,7 +1,8 @@
 
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue, bool } from './../../ui512/utils/util512Assert';
+/* auto */ import { bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { TextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { DrawTextArgs } from './../../ui512/draw/ui512DrawTextArgs';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';

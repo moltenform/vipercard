@@ -1,10 +1,12 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq, isString, slength } from './../../ui512/utils/util512';
+/* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverVal, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
@@ -178,7 +180,7 @@ export abstract class VpcElBase extends UI512Settable {
      * throw if not found
      */
     static getIndexById<T extends VpcElBase>(list: T[], id: string) {
-        return throwIfUndefined(VpcElBase.findIndexById(list, id), '4 |id not found in this list', id);
+        return ensureDefined(VpcElBase.findIndexById(list, id), '4 |id not found in this list', id);
     }
 
     /**

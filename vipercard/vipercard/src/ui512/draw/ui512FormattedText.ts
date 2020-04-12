@@ -1,6 +1,7 @@
 
-/* auto */ import { O, assertTrue, assertTrueWarn } from './../utils/util512Assert';
-/* auto */ import { BrowserOSInfo, assertEq, assertEqWarn } from './../utils/util512';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../utils/util512AssertCustom';
+/* auto */ import { BrowserOSInfo, assertEq } from './../utils/util512';
 /* auto */ import { TranslateCharset } from './ui512TranslateCharset';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { specialCharFontChange } from './ui512DrawTextClasses';
@@ -34,7 +35,7 @@ export class FormattedText {
     }
 
     setFontAt(i: number, s: string) {
-        assertTrueWarn(s.length > 0, 'I||');
+        assertWarn(s.length > 0, 'I||');
         assertTrue(!this.locked, '3q|locked');
         assertTrue(
             !s.includes(specialCharFontChange),
@@ -52,7 +53,7 @@ export class FormattedText {
     }
 
     setFontEverywhere(s: string) {
-        assertTrueWarn(s.length > 0, 'I{|');
+        assertWarn(s.length > 0, 'I{|');
         assertTrue(!this.locked, '3n|locked');
         assertTrue(
             !s.includes(specialCharFontChange),
@@ -67,7 +68,7 @@ export class FormattedText {
     }
 
     push(char: number, font: string) {
-        assertTrueWarn(font.length > 0, 'I`|');
+        assertWarn(font.length > 0, 'I`|');
         assertTrue(!this.locked, '3l|locked');
         assertTrue(
             !font.includes(specialCharFontChange),

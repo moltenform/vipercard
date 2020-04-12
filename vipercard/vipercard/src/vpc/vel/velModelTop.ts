@@ -1,4 +1,5 @@
 
+/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
@@ -8,7 +9,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { AnyParameterCtor, MapKeyToObject, cast } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverDefault } from './../../ui512/elements/ui512ElementGettable';
 

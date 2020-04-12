@@ -1,5 +1,5 @@
 
-/* auto */ import { O } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { FormattedText } from './ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { CharRectType } from './ui512DrawTextClasses';

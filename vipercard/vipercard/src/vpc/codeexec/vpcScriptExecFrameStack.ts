@@ -2,7 +2,7 @@
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode, VpcScriptRuntimeError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
@@ -15,8 +15,9 @@
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrFallback, getStrToEnum, last, lastIfThere, slength } from './../../ui512/utils/util512';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, ValHolder, assertEq, getEnumToStrOrFallback, getStrToEnum, last, lastIfThere, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -560,7 +561,7 @@ export class VpcExecFrameStack {
 
         let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
         checkThrow(velRef instanceof RequestedVelRef, 'visitSendStatement expected vel reference.');
-        let vel = throwIfUndefined(this.outside.ResolveVelRef(velRef)[0], "target of 'send' not found");
+        let vel = ensureDefined(this.outside.ResolveVelRef(velRef)[0], "target of 'send' not found");
 
         return [val, vel];
     }

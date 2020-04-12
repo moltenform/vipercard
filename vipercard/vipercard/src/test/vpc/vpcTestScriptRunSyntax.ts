@@ -1,8 +1,8 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { assertEq, assertEqWarn, last } from './../../ui512/utils/util512';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { assertEq, last } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

@@ -1,6 +1,7 @@
 
 /* auto */ import { RepeatingTimer, getRoot } from './../utils/util512Higher';
-/* auto */ import { assertTrue, tostring } from './../utils/util512Assert';
+/* auto */ import { tostring } from './../utils/util512Base';
+/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
 /* auto */ import { ClipManagerInterface } from './../draw/ui512Interfaces';
 /* auto */ import { PasteTextEventDetails } from './../menu/ui512Events';
 

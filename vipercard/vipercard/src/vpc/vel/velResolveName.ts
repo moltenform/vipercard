@@ -1,4 +1,5 @@
 
+/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
@@ -9,8 +10,7 @@
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
-/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, castVerifyIsStr, getStrToEnum, last } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

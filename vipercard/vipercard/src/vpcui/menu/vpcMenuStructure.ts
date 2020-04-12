@@ -1,7 +1,6 @@
 
 /* auto */ import { VpcUILayer } from './../state/vpcInterface';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
-/* auto */ import { isString } from './../../ui512/utils/util512';
+/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512MenuDefn } from './../../ui512/menu/ui512MenuPositioning';
 /* auto */ import { KeyDownEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { lng } from './../../ui512/lang/langBase';

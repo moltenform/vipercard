@@ -1,8 +1,9 @@
 
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
-/* auto */ import { O, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq, last } from './../../ui512/utils/util512';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { last } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

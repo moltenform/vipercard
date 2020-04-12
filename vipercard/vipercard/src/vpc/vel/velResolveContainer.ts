@@ -1,9 +1,8 @@
 
 /* auto */ import { VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { ReadableContainer, WritableContainer } from './../vpcutils/vpcUtils';
+/* auto */ import { ReadableContainer, WritableContainer, checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './velOutsideInterfaces';
 /* auto */ import { VpcElField } from './velField';
-/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 

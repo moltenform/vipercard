@@ -1,5 +1,5 @@
 
-/* auto */ import { respondUI512Error } from './../utils/util512Assert';
+/* auto */ import { respondUI512Error } from './../utils/util512AssertCustom';
 /* auto */ import { cast } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { MenuPositioning } from './ui512MenuPositioning';

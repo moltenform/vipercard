@@ -1,12 +1,14 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { O, assertTrue, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyParameterCtor, Util512, checkThrowEq, isString } from './../../ui512/utils/util512';
+/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { AnyParameterCtor, Util512 } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -18,8 +20,8 @@ export class VpcScriptExecuteStatementHelpers {
      * implementation of add, subtract, etc
      */
     goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
-        let val = throwIfUndefined(this.findChildVal(vals, tkstr.RuleLvl1Expression), '5M|');
-        let container = throwIfUndefined(this.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '5L|');
+        let val = ensureDefined(this.findChildVal(vals, tkstr.RuleLvl1Expression), '5M|');
+        let container = ensureDefined(this.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '5L|');
 
         let getResultAsString = (s: string) => {
             let f1 = VpcValS(s).readAsStrictNumeric();

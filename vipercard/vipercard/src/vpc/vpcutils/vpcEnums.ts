@@ -1,6 +1,5 @@
 
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { fitIntoInclusive } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';

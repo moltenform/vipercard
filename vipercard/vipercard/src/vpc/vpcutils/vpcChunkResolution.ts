@@ -1,9 +1,10 @@
 
 /* auto */ import { VpcIntermedValBase, VpcVal } from './vpcVal';
-/* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
+/* auto */ import { ReadableContainer, WritableContainer, checkThrow, checkThrowEq } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition, SortType, VpcChunkPreposition, VpcGranularity, getPositionFromOrdinalOrPosition } from './vpcEnums';
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, checkThrowEq, last, longstr, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, last, longstr, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

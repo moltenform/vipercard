@@ -2,7 +2,8 @@
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../utils/utilsCursors';
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { O, assertTrue, makeUI512Error } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512AssertCustom';
 /* auto */ import { addDefaultListeners } from './../textedit/ui512TextEvents';
 /* auto */ import { TemporarilySuspendEvents } from './../menu/ui512SuspendEvents';
 /* auto */ import { UI512PresenterBase } from './../presentation/ui512PresenterBase';
@@ -315,7 +316,7 @@ export class UI512CompModalDialog extends UI512CompBase {
             h = 106;
             yratio = 0.3;
         } else {
-            throw makeUI512Error(`2n|unknown dialog type ${this.dlgType}`);
+            checkThrow512(false, `2n|unknown dialog type ${this.dlgType}`);
         }
 
         const screenh = ScreenConsts.ScreenHeight;

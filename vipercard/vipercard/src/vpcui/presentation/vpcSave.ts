@@ -5,10 +5,10 @@
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
 /* auto */ import { VpcSaveInterface } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
-/* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512, coalesceIfFalseLike, longstr } from './../../ui512/utils/util512';
+/* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { BrowserOSInfo, Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
@@ -32,7 +32,7 @@ export class VpcSave implements VpcSaveInterface {
         if (ses) {
             this.busy = true;
 
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsAsync(throwIfUndefined(ses, 'Kr|')), 'goSaveAsAsync');
+            Util512Higher.syncToAsyncTransition(() => this.goSaveAsAsync(ensureDefined(ses, 'Kr|')), 'goSaveAsAsync');
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -52,7 +52,7 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsync(throwIfUndefined(ses, 'Kq|')), 'beginSave async');
+            Util512Higher.syncToAsyncTransition(() => this.goSaveAsync(ensureDefined(ses, 'Kq|')), 'beginSave async');
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);

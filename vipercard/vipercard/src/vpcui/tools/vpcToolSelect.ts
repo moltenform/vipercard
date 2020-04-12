@@ -1,7 +1,7 @@
 
 /* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from './vpcToolSelectBase';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
+/* auto */ import { trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
 /* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';

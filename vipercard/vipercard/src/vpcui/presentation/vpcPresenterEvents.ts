@@ -9,8 +9,9 @@
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { O, assertTrueWarn, bool, showWarningIfExceptionThrown, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { cast, coalesceIfFalseLike, last, slength } from './../../ui512/utils/util512';
+/* auto */ import { O, bool, coalesceIfFalseLike, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { assertWarn, showWarningIfExceptionThrown } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { cast, last, slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { ScrollbarImpl } from './../../ui512/textedit/ui512Scrollbar';
@@ -464,7 +465,7 @@ export class VpcPresenterEvents {
         try {
             fn();
         } catch (e) {
-            assertTrueWarn(false, e.toString());
+            assertWarn(false, e.toString());
         }
     }
 

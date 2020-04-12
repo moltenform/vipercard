@@ -1,6 +1,6 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
-/* auto */ import { CodeLimits, CountNumericId, VpcScriptSyntaxError } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId, checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcRewritesLoops } from './vpcRewritesLoops';
 /* auto */ import { VpcRewritesGlobal, VpcSuperRewrite } from './vpcRewritesGlobal';
@@ -11,7 +11,8 @@
 /* auto */ import { MakeLowerCase, SplitIntoLinesAndMakeLowercase, VpcCodeLine, VpcCodeLineReference } from './vpcPreparseCommon';
 /* auto */ import { VpcLineToCodeObj } from './vpcLineToCodeObj';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { MapKeyToObject, Util512, ValHolder, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -121,7 +122,7 @@ export namespace VpcCodeProcessor {
         let lexed = lexer.tokenize(code);
         if (lexed.errors.length) {
             latestSrcLineSeen.val = lexed.errors[0].line;
-            let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErr);
+            let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
             throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
         }
 

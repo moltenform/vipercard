@@ -5,7 +5,8 @@
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';

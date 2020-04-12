@@ -1,6 +1,7 @@
 
 /* auto */ import { Util512Higher } from './../utils/util512Higher';
-/* auto */ import { O, assertTrue } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
 /* auto */ import { Util512, last } from './../utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

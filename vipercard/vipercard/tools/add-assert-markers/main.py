@@ -8,15 +8,18 @@ from assertmarkerutils import *
 # and it works across multiple lines
 
 desiredArgIndex = {
-    'makeUI512Error': 0,
+    # base
     'assertTrue': 1,
-    'assertTrueWarn': 1,
-    'checkThrowUI512': 1,
-    'throwIfUndefined': 1,
+    'assertWarn': 1,
+    'checkThrow512': 1,
+    'assertEq': 2,
+    'assertWarnEq': 2,
+    'checkThrowEq512': 2,
+    # vpc level
     'checkThrow': 1,
     'checkThrowEq': 2,
-    'assertEq': 2,
-    'assertEqWarn': 2,
+    # other
+    'ensureDefined': 1,
     'assertThrows': 0,
     'assertThrowsAsync': 0,
 }

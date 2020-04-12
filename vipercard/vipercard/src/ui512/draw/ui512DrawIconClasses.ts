@@ -1,6 +1,7 @@
 
 /* auto */ import { CanvasWrapper, DrawableImage } from './../utils/utilsCanvasDraw';
-/* auto */ import { O, assertTrue, throwIfUndefined } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../utils/util512AssertCustom';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -137,7 +138,7 @@ export class RenderIconGroup {
         let rect = this.getRectangle(iconNumber);
         return new RenderIcon(
             this,
-            throwIfUndefined(
+            ensureDefined(
                 rect,
                 '3G|could not load icon number',
                 iconNumber,

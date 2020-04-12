@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { VpcScriptErrorBase, VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcScriptMessage, checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
@@ -14,10 +14,10 @@
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, UI512ErrorHandling, assertTrue, assertTrueWarn, bool, checkThrow, cleanExceptionMsg, makeVpcInternalErr, throwIfUndefined, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, coalesceIfFalseLike } from './../../ui512/utils/util512';
+/* auto */ import { O, bool, coalesceIfFalseLike, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
@@ -44,7 +44,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * from tool to the corresponding tool response object
      */
     getToolResponse(t: VpcTool) {
-        return throwIfUndefined(this.tlNumToResponse[t.valueOf()], 'Kl|not found', t);
+        return ensureDefined(this.tlNumToResponse[t.valueOf()], 'Kl|not found', t);
     }
 
     /**
@@ -280,7 +280,7 @@ export class VpcPresenter extends VpcPresenterInit {
         tl.cancelCurrentToolAction();
         let dlg = this.getModalDlg();
         dlg.standardAnswer(this, this.app, prompt, fnOnResult, choice1 ?? '', choice2 ?? '', choice3 ?? '');
-        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Ki|expect to have been created');
+        assertWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Ki|expect to have been created');
     }
 
     /**
@@ -295,7 +295,7 @@ export class VpcPresenter extends VpcPresenterInit {
         tl.cancelCurrentToolAction();
         let dlg = this.getModalDlg();
         dlg.standardAsk(this, this.app, prompt, defText, fnOnResult);
-        assertTrueWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Kh|expect to have been created');
+        assertWarn(this.app.findEl('mainModalDlg##modaldialog##dlgprompt'), 'Kh|expect to have been created');
     }
 
     /**
@@ -603,7 +603,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
                 let currentCard = this.vci.getModel().findById(VpcElCard, currentCardId);
                 if (!currentCard) {
-                    assertTrueWarn(false, 'card has been deleted, going to card 1 instead.');
+                    assertWarn(false, 'card has been deleted, going to card 1 instead.');
                     let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.First);
                     this.vci.setCurCardNoOpenCardEvt(card);
                 }
@@ -666,7 +666,7 @@ export class VpcPresenter extends VpcPresenterInit {
         } else if (s === 'mnuClear') {
             this.getToolResponse(this.getTool()).onDeleteSelection();
         } else if (!this.menuActions.runFontMenuActionsIfApplicable(s)) {
-            assertTrueWarn('could not recognize menu command', s, '6D|');
+            assertWarn('could not recognize menu command', s, '6D|');
         }
     }
 

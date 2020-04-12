@@ -1,6 +1,6 @@
 
 /* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { assertTrue, assertTrueWarn, makeUI512Error } from './../utils/util512Assert';
+/* auto */ import { assertTrue, assertWarn, checkThrow512 } from './../utils/util512AssertCustom';
 /* auto */ import { assertEq, slength } from './../utils/util512';
 /* auto */ import { UI512Patterns, clrBlack, clrTransp, clrWhite, needsPatternSupport, simplifyPattern } from './ui512DrawPatterns';
 /* auto */ import { UI512Painter } from './ui512DrawPainterClasses';
@@ -42,7 +42,7 @@ export class UI512PainterCvData extends UI512Painter {
             this.arr[offset + 2] = 255;
             this.arr[offset + 3] = 255;
         } else {
-            assertTrueWarn(false, `2~|unknown color ${color}`);
+            assertWarn(false, `2~|unknown color ${color}`);
         }
     }
 
@@ -74,7 +74,7 @@ export class UI512PainterCvData extends UI512Painter {
         ) {
             return clrBlack;
         } else {
-            assertTrueWarn(
+            assertWarn(
                 false,
                 `2||unknown color ${this.arr[i]},${this.arr[i + 1]},${this.arr[i + 2]},${
                     this.arr[i + 3]
@@ -214,7 +214,7 @@ export class UI512PainterCvCanvas extends UI512Painter {
         } else if (color === clrTransp) {
             this.cv.context.clearRect(x, y, 1, 1);
         } else {
-            assertTrueWarn(false, '32|unsupported color', color);
+            assertWarn(false, '32|unsupported color', color);
         }
     }
 
@@ -226,12 +226,12 @@ export class UI512PainterCvCanvas extends UI512Painter {
         } else if (color === clrTransp) {
             this.cv.context.clearRect(x, y, w, h);
         } else {
-            assertTrueWarn(false, '30|unsupported color', color);
+            assertWarn(false, '30|unsupported color', color);
         }
     }
 
     readPixel(x: number, y: number): number {
-        throw makeUI512Error('31|not implemented');
+        checkThrow512(false, '31|not implemented');
     }
 
     readPixelSupported() {

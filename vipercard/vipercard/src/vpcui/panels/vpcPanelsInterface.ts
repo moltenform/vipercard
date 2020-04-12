@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 

@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, makeUI512Error } from './../utils/util512Assert';
+/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512AssertCustom';
 /* auto */ import { Util512, longstr } from './../utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -71,7 +71,7 @@ export class UI512FontGrid {
 
     getLineHeight() {
         if (!this.metrics || !this.metrics.lineheight) {
-            throw makeUI512Error(
+            checkThrow512(false, 
                 '3U|invalid metrics for font ' +
                     longstr(`${this.spec.typefacename}
                     ${this.spec.size} ${this.spec.style}`)
@@ -83,7 +83,7 @@ export class UI512FontGrid {
 
     getCapHeight() {
         if (!this.metrics || !this.metrics.capHeight) {
-            throw makeUI512Error(
+            checkThrow512(false, 
                 '3T|invalid metrics for font' +
                     longstr(`${this.spec.typefacename}
                     ${this.spec.size} ${this.spec.style}`)

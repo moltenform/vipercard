@@ -1,7 +1,7 @@
 
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { VpcVal } from './../vpcutils/vpcVal';
-/* auto */ import { CodeLimits, VpcScriptMessage } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, VpcScriptMessage, checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { LoopLimit, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
@@ -9,7 +9,8 @@
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { VpcElProductOpts } from './../vel/velProductOpts';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
-/* auto */ import { O, assertTrue, bool, checkThrow, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -143,12 +144,12 @@ export class VpcExecFrame {
         if (!hasSeenStack) {
             let r = new RequestedVelRef(VpcElType.Stack);
             r.lookByRelative = OrdinalOrPosition.This;
-            ret.push(throwIfUndefined(outside.ResolveVelRef(r)[0], '').id);
+            ret.push(ensureDefined(outside.ResolveVelRef(r)[0], '').id);
         }
         if (!hasSeenProduct) {
             let r = new RequestedVelRef(VpcElType.Product);
             r.lookByRelative = OrdinalOrPosition.This;
-            ret.push(throwIfUndefined(outside.ResolveVelRef(r)[0], '').id);
+            ret.push(ensureDefined(outside.ResolveVelRef(r)[0], '').id);
         }
 
         return ret;

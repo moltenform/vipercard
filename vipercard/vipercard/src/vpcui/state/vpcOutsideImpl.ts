@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcVal, VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer, checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
@@ -21,7 +21,8 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -124,7 +125,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             parentRef.cardLookAtMarkedOnly = false;
         }
 
-        let parent = throwIfUndefined(this.ResolveVelRef(parentRef)[0], '6t|Cannot find this element');
+        let parent = ensureDefined(this.ResolveVelRef(parentRef)[0], '6t|Cannot find this element');
         let parentAsCard = parent as VpcElCard;
         let parentAsBg = parent as VpcElBg;
         let parentAsStack = parent as VpcElStack;
@@ -199,7 +200,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         }
 
         found = frame.locals.find(varName);
-        return throwIfUndefined(
+        return ensureDefined(
             found,
             '6o|no variable found with this name. please put contents into before reading from it.',
             varName
@@ -327,7 +328,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             resolved = [this.vci.getModel().productOpts, this.vci.getModel().getCurrentCard()];
         }
 
-        let vel = throwIfUndefined(resolved[0], `8/|could not get ${prop} because could not find the specified element.`);
+        let vel = ensureDefined(resolved[0], `8/|could not get ${prop} because could not find the specified element.`);
         let cardId = resolved[1].id;
         if (chunk) {
             let fld = vel as VpcElField;
@@ -349,7 +350,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             resolved = [this.vci.getModel().productOpts, this.vci.getModel().getCurrentCard()];
         }
 
-        let vel = throwIfUndefined(resolved[0], `8-|could not get ${prop} because could not find the specified element.`);
+        let vel = ensureDefined(resolved[0], `8-|could not get ${prop} because could not find the specified element.`);
         let cardId = resolved[1].id;
         let resolver = new VelResolveName(this.vci.getModel());
         /* handled here are the cases where "adjective" matters */

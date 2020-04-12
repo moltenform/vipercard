@@ -1,6 +1,7 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { O, assertTrueWarn, makeUI512Error } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertWarn, checkThrow512 } from './../utils/util512AssertCustom';
 /* auto */ import { UI512BasePainterUtils } from './ui512DrawPatterns';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -264,7 +265,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         let savedFillRect = this.fillRect;
         try {
             this.fillRect = () => {
-                throw makeUI512Error("I@|shouldn't be called");
+                checkThrow512(false, "I@|shouldn't be called");
             };
             this.setPixel = newSetPixel;
             if (xPts.length === 1 && yPts.length === 1) {
@@ -306,7 +307,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
      * flood fill ('bucket tool')
      */
     floodFill(xIn: number, yIn: number, color: number) {
-        throw makeUI512Error('I?|not implemented');
+        checkThrow512( false, 'I?|not implemented');
     }
 
     /**
@@ -348,7 +349,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
         while (qx.length > 0) {
             counter += 1;
             if (counter > maxAllowedIters) {
-                assertTrueWarn(false, `39|exceeded maxallowediters ${counter}`);
+                assertWarn(false, `39|exceeded maxallowediters ${counter}`);
                 return;
             }
 

@@ -1,4 +1,5 @@
 
+/* auto */ import { checkThrow, checkThrowEq } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateSerialize } from './vpcStateSerialize';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './vpcInterface';
 /* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
@@ -7,8 +8,9 @@
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { O, UI512Compress, assertTrue, assertTrueWarn, bool, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq, isString, last } from './../../ui512/utils/util512';
+/* auto */ import { O, UI512Compress, bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { last } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserver, ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
@@ -324,7 +326,7 @@ export class UndoManager implements ElementObserver {
     undoableAction(fn: () => void, type = TypeOfUndoAction.StartNewAction) {
         /* note: use needToAddToList,
         be aware of re-entrancy into this method */
-        assertTrueWarn(!this.expectNoChanges, 'K$|expected no changes');
+        assertWarn(!this.expectNoChanges, 'K$|expected no changes');
         let needToAddToList = false;
         if (!this.activeChangeSet) {
             this.activeChangeSet = new UndoableChangeSet(type);
@@ -352,7 +354,7 @@ export class UndoManager implements ElementObserver {
      * record changes
      */
     protected pushUndoableChanges(list: UndoableChangeSet) {
-        assertTrueWarn(!this.expectNoChanges, 'K#|expected no changes');
+        assertWarn(!this.expectNoChanges, 'K#|expected no changes');
         if (this.doWithoutAbilityToUndoActive) {
             /* we've been told not to record any changes */
             return;
@@ -441,7 +443,7 @@ export class UndoManager implements ElementObserver {
      * respond to an incoming change of state
      */
     changeSeen(context: ChangeContext, elId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
-        assertTrueWarn(!this.expectNoChanges, 'K!|expected no changes');
+        assertWarn(!this.expectNoChanges, 'K!|expected no changes');
         if (this.doWithoutAbilityToUndoActive) {
             return;
         } else if (
@@ -457,7 +459,7 @@ export class UndoManager implements ElementObserver {
         if (this.activeChangeSet) {
             this.activeChangeSet.notifyPropChange(elId, propName, prevVal, newVal);
         } else {
-            assertTrueWarn(false, '6O|must be done inside an undoable block ' + elId + ' ' + propName, prevVal, newVal);
+            assertWarn(false, '6O|must be done inside an undoable block ' + elId + ' ' + propName, prevVal, newVal);
         }
     }
 
@@ -473,7 +475,7 @@ export class UndoManager implements ElementObserver {
             if (this.activeChangeSet) {
                 this.activeChangeSet.notifyAction(action);
             } else {
-                assertTrueWarn(false, '6N|must be done inside an undoable block', action.velId, action.type);
+                assertWarn(false, '6N|must be done inside an undoable block', action.velId, action.type);
             }
         } else {
             throw new Error('not a known type of UndoableAction');

@@ -1,11 +1,10 @@
 
-/* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
+/* auto */ import { LogToReplMsgBox, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection } from './../vpcutils/vpcEnums';
-/* auto */ import { checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq, findStrToEnum, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { findStrToEnum, last, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

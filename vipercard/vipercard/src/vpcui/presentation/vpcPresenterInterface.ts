@@ -1,5 +1,4 @@
 
-/* auto */ import { VpcScriptErrorBase } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcAppUIToolSelect } from './../tools/vpcToolSelect';
 /* auto */ import { VpcAppUIToolLasso } from './../tools/vpcToolLasso';
 /* auto */ import { VpcAppUIToolBase } from './../tools/vpcToolBase';
@@ -14,7 +13,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';

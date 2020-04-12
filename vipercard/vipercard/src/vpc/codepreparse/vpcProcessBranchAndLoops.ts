@@ -1,8 +1,7 @@
 
-/* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
+/* auto */ import { CountNumericId, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcLineCategory } from './vpcPreparseCommon';
-/* auto */ import { checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObject, checkThrowEq, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObject, last, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

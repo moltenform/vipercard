@@ -1,6 +1,7 @@
 
 /* auto */ import { Util512Higher } from './../utils/util512Higher';
-/* auto */ import { O, assertTrue, throwIfUndefined } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../utils/util512AssertCustom';
 /* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, UI512FontGrid, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -162,7 +163,7 @@ export class UI512FontRequest {
      * find font and throw if not present.
      */
     getFont(font: string): TextRendererFont {
-        return throwIfUndefined(
+        return ensureDefined(
             this.findFont(font),
             '3O|font should have been cached',
             font

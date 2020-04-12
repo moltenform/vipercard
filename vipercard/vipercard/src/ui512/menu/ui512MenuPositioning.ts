@@ -1,7 +1,8 @@
 
 /* auto */ import { MenuConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
-/* auto */ import { O, assertTrueWarn, checkThrowUI512 } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertWarn } from './../utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq, cast, slength } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from './../elements/ui512ElementMenu';
@@ -211,7 +212,7 @@ export class MenuPositioning {
             app.bounds[2],
             MenuConsts.BarHeight - 1
         );
-        assertTrueWarn(
+        assertWarn(
             grpItems.findEl(menuRoot.id + '##dropdownBg'),
             'J0|forgot to call createMenuHelperEls?'
         );
@@ -325,7 +326,7 @@ export class MenuPositioning {
             dropdn.set('labeltext', lng(headerLabelUntranslated));
         }
 
-        assertTrueWarn(
+        assertWarn(
             grpItems.findEl(menuRoot.id + '##dropdownBg'),
             'I~|forgot to call createMenuHelperEls?'
         );
@@ -368,7 +369,7 @@ export class MenuPositioning {
         if (grp) {
             return grp;
         } else {
-            checkThrowUI512(createIfNeeded, 'K?|menubar group expected but not found');
+            assertWarn(createIfNeeded, 'K?|menubar group expected but not found');
             let addedGrp = new UI512ElGroup(s, app.observer);
             app.addGroup(addedGrp);
             return addedGrp;
@@ -384,7 +385,7 @@ export class MenuPositioning {
         if (elem) {
             return cast(UI512MenuRoot, elem);
         } else {
-            checkThrowUI512(createIfNeeded, '2[|menubar group expected but not found');
+            assertWarn(createIfNeeded, '2[|menubar group expected but not found');
             let mb = new UI512MenuRoot('$$menubarforapp', app.observer);
             grpBar.addElement(app, mb);
             return mb;
@@ -417,7 +418,7 @@ export class MenuPositioning {
                 elem.set('labeltext', translatedLabel);
             }
         } else {
-            assertTrueWarn(false, `2?|menuitem ${id} not found`);
+            assertWarn(false, `2?|menuitem ${id} not found`);
         }
     }
 }

@@ -1,5 +1,6 @@
 
-/* auto */ import { O, assertTrueWarn, throwIfUndefined } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertWarn, ensureDefined } from './../utils/util512AssertCustom';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512Application } from './../elements/ui512ElementApp';
@@ -67,7 +68,7 @@ export class UI512CompToolbox extends UI512CompBase {
      * returns short id of chosen tool
      */
     getWhich() {
-        return throwIfUndefined(this.whichChosen, '2u|this.whichChosen');
+        return ensureDefined(this.whichChosen, '2u|this.whichChosen');
     }
 
     /**
@@ -110,7 +111,7 @@ export class UI512CompToolbox extends UI512CompBase {
                         this.callbackOnChange(this.whichChosen);
                     }
                 } else {
-                    assertTrueWarn(
+                    assertWarn(
                         false,
                         `2t|did not find ${userId} in ${this.idPrefix}`
                     );

@@ -1,8 +1,9 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './vpcVal';
+/* auto */ import { checkThrow, checkThrowEq } from './vpcUtils';
 /* auto */ import { VpcOpCtg } from './vpcEnums';
-/* auto */ import { bool, checkThrow, makeVpcInternalErr, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
-/* auto */ import { checkThrowEq, longstr } from './../../ui512/utils/util512';
+/* auto */ import { bool } from './../../ui512/utils/util512Base';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

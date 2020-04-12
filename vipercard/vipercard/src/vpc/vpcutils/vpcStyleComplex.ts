@@ -1,5 +1,4 @@
 
-/* auto */ import { makeVpcScriptErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, fitIntoInclusive } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';

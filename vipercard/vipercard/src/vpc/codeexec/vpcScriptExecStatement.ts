@@ -1,5 +1,6 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
@@ -10,8 +11,9 @@
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, assertTrue, checkIsProductionBuild, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, checkThrowEq, getStrToEnum, isString, longstr } from './../../ui512/utils/util512';
+/* auto */ import { O, checkIsProductionBuild, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, ValHolder, getStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -113,7 +115,7 @@ export class ExecuteStatement {
      * Doesn't set the actual tool, which is always Browse when scripts are running.
      */
     goVpccalluntrappablechoose(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let term = throwIfUndefined(this.h.findChildVal(vals, tkstr.RuleExpr), '5G|');
+        let term = ensureDefined(this.h.findChildVal(vals, tkstr.RuleExpr), '5G|');
         let tool = this.getWhichTool(term.readAsString());
         let ctg = getToolCategory(tool);
 
@@ -148,11 +150,11 @@ export class ExecuteStatement {
         if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
             throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
-            let contRef = throwIfUndefined(
+            let contRef = ensureDefined(
                 this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer),
                 '5B|'
             );
-            let chunk = throwIfUndefined(this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk), '5A|');
+            let chunk = ensureDefined(this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk), '5A|');
 
             contRef.chunk = chunk;
 
@@ -297,8 +299,8 @@ export class ExecuteStatement {
         );
 
         let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[0]);
-        let val = throwIfUndefined(this.h.findChildVal(vals, tkstr.RuleExpr), '54|');
-        let contRef = throwIfUndefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
+        let val = ensureDefined(this.h.findChildVal(vals, tkstr.RuleExpr), '54|');
+        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
 
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
@@ -325,7 +327,7 @@ export class ExecuteStatement {
         let searchFor = expr1.readAsString();
         let replaceWith = expr2.readAsString();
 
-        let contRef = throwIfUndefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), '53|');
+        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), '53|');
         let cont = this.outside.ResolveContainerWritable(contRef);
         cont.replaceAll(searchFor, replaceWith);
     }
@@ -337,7 +339,7 @@ export class ExecuteStatement {
         if (params[0] === 'empty') {
             checkThrow(false, 'nyi: deselecting text');
         } else {
-            let contRef = throwIfUndefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
+            let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
             let cont = this.outside.ResolveContainerWritable(contRef);
             checkThrow(contRef.vel, 'has to be a field, not a variable');
             checkThrow(false, 'nyi: selecting text');
@@ -350,7 +352,7 @@ export class ExecuteStatement {
         let velRef = this.h.findChildVelRef(vals, tkstr.RuleObject);
         let velRefFld = this.h.findChildVelRef(vals, tkstr.RuleObjectFld);
         let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
-        let propName = throwIfUndefined(this.h.findChildStr(vals, tkstr.RuleHCouldBeAPropertyToSet), '51|');
+        let propName = ensureDefined(this.h.findChildStr(vals, tkstr.RuleHCouldBeAPropertyToSet), '51|');
 
         /* let's concat all of the values together into one string separated by commas */
         /* that way we'll support coordinates "1,2" and text styles "plain, bold" */
@@ -370,7 +372,7 @@ export class ExecuteStatement {
         checkThrow(strings.length > 0, '7L|could not find RuleAnyPropertyVal or its child', nm);
         let combined = VpcValS(strings.join(','));
         if (velRefChunk) {
-            throwIfUndefined(velRefFld, '4~|');
+            ensureDefined(velRefFld, '4~|');
             this.outside.SetProp(velRefFld, propName, combined, velRefChunk);
         } else {
             this.outside.SetProp(velRef, propName, combined, undefined);
@@ -390,7 +392,7 @@ export class ExecuteStatement {
         let location = this.h.getChildVpcVals(vals, tkstr.RuleLvl4Expression, false);
         let locationStr = location.map(v => v.readAsString()).join(',');
 
-        let ref = throwIfUndefined(this.h.findChildVelRef(vals, tkstr.RuleObjectPart), '4||');
+        let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectPart), '4||');
         this.outside.SetProp(ref, 'visible', VpcVal.True, undefined);
         if (locationStr) {
             this.outside.SetProp(ref, 'loc', VpcValS(locationStr), undefined);
@@ -407,7 +409,7 @@ export class ExecuteStatement {
         let granularity = getStrToEnum<VpcGranularity>(VpcGranularity, 'Granularity', sgranularity);
         let method = getStrToEnum<SortType>(SortType, 'SortType', smethod);
         let ascend = sorder.toLowerCase() !== 'descending';
-        let contRef = throwIfUndefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '4[|');
+        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '4[|');
         let cont = this.outside.ResolveContainerWritable(contRef);
         ChunkResolution.applySort(cont, itemDel, granularity, method, ascend);
     }
@@ -468,7 +470,7 @@ export class ExecuteStatement {
      * set if a vel is enabled or not
      */
     protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
-        let ref = throwIfUndefined(this.h.findChildVelRef(vals, tkstr.RuleObjectBtn), '59|');
+        let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectBtn), '59|');
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
     }
 

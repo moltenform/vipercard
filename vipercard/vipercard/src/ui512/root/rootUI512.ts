@@ -1,18 +1,19 @@
 
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcUiIntro } from './../../vpcui/intro/vpcIntro';
 /* auto */ import { VpcInitIcons } from './../../vpc/vpcutils/vpcInitIcons';
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher } from './../utils/util512Higher';
-/* auto */ import { O, assertTrueWarn, checkThrow, respondUI512Error } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { assertWarn, respondUI512Error } from './../utils/util512AssertCustom';
 /* auto */ import { BrowserOSInfo, Util512 } from './../utils/util512';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
-/* auto */ import { bridgedGetBrowserInfo } from './../../bridge/bridgeBrowserInfo';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -98,7 +99,7 @@ export class FullRootUI512 implements Root {
 
     sendEvent(evt: UI512IsEventInterface) {
         let details = evt as EventDetails;
-        assertTrueWarn(details instanceof EventDetails, 'J1|');
+        assertWarn(details instanceof EventDetails, 'J1|');
         return this.event(details);
     }
 
@@ -217,6 +218,3 @@ export class FullRootUI512 implements Root {
     }
 }
 
-function doDetectBrowser() {
-    let info = bridgedGetBrowserInfo();
-}

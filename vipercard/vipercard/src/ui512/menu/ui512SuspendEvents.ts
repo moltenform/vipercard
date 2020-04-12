@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue } from './../utils/util512Assert';
+/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { FnEventCallback, TemporarilySuspendEventsInterface } from './../draw/ui512Interfaces';
 

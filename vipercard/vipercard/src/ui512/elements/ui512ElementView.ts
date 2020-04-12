@@ -2,7 +2,8 @@
 /* auto */ import { MenuConsts, ScreenConsts, ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, VoidFn, getRoot } from './../utils/util512Higher';
-/* auto */ import { O, assertTrue, assertTrueWarn, bool } from './../utils/util512Assert';
+/* auto */ import { O, bool } from './../utils/util512Base';
+/* auto */ import { assertTrue, assertWarn } from './../utils/util512AssertCustom';
 /* auto */ import { Util512, cast, slength } from './../utils/util512';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './ui512ElementTextField';
 /* auto */ import { UI512MenuItem, UI512MenuRoot } from './ui512ElementMenu';
@@ -436,7 +437,7 @@ export class UI512ViewDraw {
                 );
                 break;
             default:
-                assertTrueWarn(false, `4f|unknown button style ${el.getN('style')}`);
+                assertWarn(false, `4f|unknown button style ${el.getN('style')}`);
                 this.renderOpaqueButton(
                     b,
                     el,
@@ -541,7 +542,7 @@ export class UI512ViewDraw {
             iconInfo.iconGroup,
             iconInfo.iconNumber
         );
-        assertTrueWarn(srcRect, '4e|expected to get srcRect');
+        assertWarn(srcRect, '4e|expected to get srcRect');
         if (srcRect) {
             /* adjust so that the icon width is exactly the width we want */
             let resultingwidth = Math.min(el.w, srcRect[2]);
@@ -659,7 +660,7 @@ export class UI512ViewDraw {
             case UI512FldStyle.Rectangle:
                 return [b.drawboxthinborder, 3, 1];
             default:
-                assertTrueWarn(false, `4c|unknown field style ${style}`);
+                assertWarn(false, `4c|unknown field style ${style}`);
                 return [b.drawboxthinborder, 3, 1];
         }
     }
@@ -744,8 +745,8 @@ export class UI512ViewDraw {
         hasFocus: boolean,
         complete: RenderComplete
     ) {
-        assertTrueWarn(el.w >= 0, '4b|too small');
-        assertTrueWarn(el.h >= 0, '4a|too small');
+        assertWarn(el.w >= 0, '4b|too small');
+        assertWarn(el.h >= 0, '4a|too small');
         if (el.w === 0 && el.h === 0) {
             return;
         } else if (!el.visible) {

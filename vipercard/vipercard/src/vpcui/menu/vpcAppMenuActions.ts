@@ -10,9 +10,7 @@
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { msgNotification } from './../../ui512/utils/util512Productname';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { makeVpcInternalErr } from './../../ui512/utils/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';

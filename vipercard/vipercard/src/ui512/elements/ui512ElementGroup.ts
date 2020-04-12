@@ -1,5 +1,6 @@
 
-/* auto */ import { O, checkThrowUI512 } from './../utils/util512Assert';
+/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { checkThrow512 } from './../utils/util512AssertCustom';
 /* auto */ import { OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { ElementObserver, elementObserverDefault } from './ui512ElementGettable';
@@ -140,7 +141,7 @@ export class UI512ElGroup {
     ) {
         /* disallow any duplicates */
         for (let grp of parent.iterGrps()) {
-            checkThrowUI512(
+            checkThrow512(
                 !grp.findEl(elemIn.id),
                 `2x|dup ${elemIn.id} found in grp ${grp.id}`
             );

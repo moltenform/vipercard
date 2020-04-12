@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { getRoot } from './../utils/util512Higher';
-/* auto */ import { checkIsProductionBuild } from './../utils/util512Assert';
+/* auto */ import { checkIsProductionBuild } from './../utils/util512Base';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElementWithHighlight } from './../elements/ui512Element';

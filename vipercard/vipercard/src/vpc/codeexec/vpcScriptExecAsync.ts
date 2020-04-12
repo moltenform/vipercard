@@ -3,7 +3,8 @@
 /* auto */ import { VpcPhoneDial } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, makeVpcInternalErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';
 
@@ -92,7 +93,7 @@ export class VpcScriptExecAsync {
                 pendingOps.markCompleted(asyncOpId, [n]);
             };
 
-            dlg = throwIfUndefined(dlg, 'JH|cbAnswerMsg is undefined');
+            dlg = ensureDefined(dlg, 'JH|cbAnswerMsg is undefined');
             dlg(prmpt, markComplete, opt1, opt2, opt3);
         };
 
@@ -132,7 +133,7 @@ export class VpcScriptExecAsync {
         defval: string
     ) {
         let op = () => {
-            dlg = throwIfUndefined(dlg, 'JF|cbAskMsg');
+            dlg = ensureDefined(dlg, 'JF|cbAskMsg');
             dlg(prmpt, defval, (s: string, n: number) => {
                 pendingOps.markCompleted(asyncOpId, [s, n]);
             });

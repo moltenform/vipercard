@@ -1,7 +1,8 @@
 
-/* auto */ import { CodeLimits } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
-/* auto */ import { O, assertTrue, checkThrow, makeVpcScriptErr } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { last, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -45,6 +46,7 @@ export class SplitIntoLinesAndMakeLowercase {
                 currentLine.push(tk);
             }
         }
+        
         return undefined;
     }
 

@@ -1,6 +1,7 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { O, throwIfUndefined, tostring } from './../utils/util512Assert';
+/* auto */ import { O, tostring } from './../utils/util512Base';
+/* auto */ import { ensureDefined } from './../utils/util512AssertCustom';
 /* auto */ import { OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { UI512ApplicationInterface, UI512ElGroup } from './ui512ElementGroup';
@@ -142,7 +143,7 @@ export class UI512Application implements UI512ApplicationInterface {
      * look for an element by id, search all groups, throw exception if not found
      */
     getEl(elId: string) {
-        return throwIfUndefined(this.findEl(elId), '2w|not found ' + elId);
+        return ensureDefined(this.findEl(elId), '2w|not found ' + elId);
     }
 }
 

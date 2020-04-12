@@ -2,8 +2,8 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Productname';
-/* auto */ import { assertEq, assertEqWarn, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Base';
+/* auto */ import { assertEq, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';

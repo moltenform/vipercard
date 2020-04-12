@@ -1,6 +1,6 @@
 
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O } from './../../ui512/utils/util512Assert';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { cast, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
