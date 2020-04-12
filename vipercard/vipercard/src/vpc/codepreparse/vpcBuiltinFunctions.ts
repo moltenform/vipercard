@@ -53,9 +53,12 @@ export class VpcBuiltinFunctions {
         numbertostr: 1,
         length: 1,
         offset: 2,
+        annuity: 2,
+        compound: 2,
         max: VpcBuiltinFunctions.indicateVarArgs,
         min: VpcBuiltinFunctions.indicateVarArgs,
-        sum: VpcBuiltinFunctions.indicateVarArgs
+        sum: VpcBuiltinFunctions.indicateVarArgs,
+        average: VpcBuiltinFunctions.indicateVarArgs
     };
 
     /**
@@ -191,6 +194,13 @@ export class VpcBuiltinFunctions {
      */
     callSum(args: VpcVal[]) {
         return this.mathVariadic(args, 'sum', ar => ar.reduce(Util512.add));
+    }
+
+    /**
+     * returns the average of all arguments given
+     */
+    callAverage(args: VpcVal[]) {
+        return this.mathVariadic(args, 'sum', ar => ar.reduce(Util512.add) / ar.length);
     }
 
     /**
@@ -342,6 +352,26 @@ export class VpcBuiltinFunctions {
         let haystack = args[1].readAsString();
         let index = haystack.indexOf(needle);
         return VpcValN(index === -1 ? 0 : index + 1);
+    }
+
+    /**
+     * Calculates interest rate annuity.
+     */
+    callAnnuity(args: VpcVal[]) {
+        let rate = args[0].readAsStrictNumeric()
+        let periods = args[1].readAsStrictNumeric()
+        let ret = (1 - Math.pow(1+ rate, -periods)) / rate
+        return VpcValN(ret)
+    }
+
+    /**
+     * Calculates compound interest rate.
+     */
+    callCompound(args: VpcVal[]) {
+        let rate = args[0].readAsStrictNumeric()
+        let periods = args[1].readAsStrictNumeric()
+        let ret = Math.pow(1 + rate, periods)
+        return VpcValN(ret)
     }
 
     /**

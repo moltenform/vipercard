@@ -1,6 +1,108 @@
+=====
+abs(x)
+=====
+Absolute value.
+Examples:
+
+put abs(-0.5) into x
+put abs(0.5) into x
 
 =====
-diskSpace()
+Compatibility--annuity(rate, periods)
+=====
+Computes the total cost of an annuity now that will pay you one unit per period, over the specific number of periods.
+
+You want to purchase an annuity that pays you $10,000 a year for 10 years. The interest rate is 10%. How much will it cost you now?
+The amount loaned is 10000 * annuity(0.10, 10), or 61445.67.
+
+=====
+atan(x)
+=====
+
+Arctangent, in radians.
+Examples:
+
+put atan(0.5) into x
+
+=====
+charToNum(x)
+=====
+From ascii-like number to a character.
+Note that characters in a field are displayed in Mac OS Roman
+encoding.
+
+Note that the newline character is always \n (10).
+Examples:
+
+put charToNum(97) into x
+
+=====
+clickh()
+=====
+In a mousedown or mouseup handler, get click x coordinate.
+Examples:
+
+put clickh() into x
+
+
+=====
+clickloc()
+=====
+In a mousedown or mouseup handler, get click x,y coordinates.
+
+Examples:
+
+put clickloc() into x
+
+
+=====
+clickv()
+=====
+In a mousedown or mouseup handler, get click y coordinate.
+
+Examples:
+
+put clickv() into x
+
+=====
+commandKey()
+=====
+In an afterkeydown or afterkeyup handler, check if this modifier 
+key is pressed.
+Examples:
+
+put commandKey() into x
+
+put cmdkey() into x -- same as above.
+
+=====
+compound(rate, periods)
+=====
+
+Retturns the value of one unit of principal invested at the interest rate
+and compounded over the specified number of periods.
+
+Example: $100 invested for 20 years at 10% interest compounded yearly:
+
+futureValue = 100 * compound(0.10, 20) = about $673
+
+=====
+date()
+the {adjective} date
+=====
+
+Returns the current date.
+
+Examples:
+
+the date
+date()
+the abbrev date
+the short date
+the long date
+
+=====
+Compatibility--diskSpace()
 =====
 (Deprecated and hard-coded).
 Examples:
@@ -88,18 +190,6 @@ Examples:
 put screenRect() into x
 
 
-=====
-charToNum(x)
-=====
-From ascii-like number to a character.
-Note that characters in a field are displayed in Mac OS Roman
-encoding.
-
-Note that the newline character is always \n (10).
-Examples:
-
-put charToNum(97) into x
-
 
 =====
 numToChar(x)
@@ -181,17 +271,6 @@ Examples:
 put sum(1,2,3) into x
 put sum("1,2,3") into x -- returns 6
 
-=====
-commandKey()
-=====
-In an afterkeydown or afterkeyup handler, check if this modifier 
-key is pressed.
-Examples:
-
-put commandKey() into x
-
-put cmdkey() into x -- same as above.
-
 
 =====
 optionKey()
@@ -239,34 +318,6 @@ on afterKeyDown
         answer "you pressed shift-u"
     end if
 end afterKeyDown
-
-=====
-clickh()
-=====
-In a mousedown or mouseup handler, get click x coordinate.
-Examples:
-
-put clickh() into x
-
-
-=====
-clickloc()
-=====
-In a mousedown or mouseup handler, get click x,y coordinates.
-
-Examples:
-
-put clickloc() into x
-
-
-=====
-clickv()
-=====
-In a mousedown or mouseup handler, get click y coordinate.
-
-Examples:
-
-put clickv() into x
 
 
 =====
@@ -434,24 +485,7 @@ choose pencil tool
 answer tool() -- shows "pencil"
 
 
-=====
-abs(x)
-=====
-Absolute value.
-Examples:
 
-put abs(-0.5) into x
-put abs(0.5) into x
-
-
-=====
-atan(x)
-=====
-
-Arctangent, in radians.
-Examples:
-
-put atan(0.5) into x
 
 
 =====

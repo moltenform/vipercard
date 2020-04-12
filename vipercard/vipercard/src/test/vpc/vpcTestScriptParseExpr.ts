@@ -565,15 +565,31 @@ t.test('disallow double identifiers', () => {
         `x y z`,
         `Exception`
     );
+    assertFailsParseExp(
+        `7 x`,
+        `Exception`
+    );
+    assertFailsParseExp(
+        `x 7`,
+        `Exception`
+    );
+    assertFailsParseExp(
+        `7x`,
+        `Lexer:lexerror`
+    );
+    assertFailsParseExp(
+        `???`,
+        `Lexer:lexerror`
+    );
 })
 /**
  * wrapper around testParse, for testing parsing an expression
- * uses the get command,
- * and then strips the get command out of the output as well
+ * uses the RuleInternalCmdRequestEval (like "get") command,
+ * and then strips the command out of the output as well
  */
 function testExp(sInput: string, sExpected: string) {
     return TestParseHelpers.instance.testParse(
-        'get ' + sInput,
+        'RuleInternalCmdRequestEval ' + sInput,
         'RuleInternalCmdRequestEval',
         sExpected,
         ''
@@ -585,7 +601,7 @@ function testExp(sInput: string, sExpected: string) {
  */
 function assertFailsParseExp(sInput: string, sErrExpected: string) {
     return TestParseHelpers.instance.testParse(
-        'get ' + sInput,
+        'RuleInternalCmdRequestEval ' + sInput,
         'RuleInternalCmdRequestEval',
         '',
         sErrExpected

@@ -12,6 +12,20 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+
+/**
+ * Redesigning exceptions for code errors.
+ * Different ways code can fail:
+ *      1) error during lexing
+ *      2) error during preprocessing/rewrites
+ *      3) error during parsing
+ *      4) error during command execution
+ *      5) error during syntax execution
+ *      (i.e. runtime error in an if )
+ */
+
+
+
 /**
  * cache the CST from a parsed line of code, for better perf.
  * it can be re-evaluated by calling visit() again.
@@ -117,6 +131,14 @@ export class VpcCacheParsedAST {
     }
 
     findHandlerOrThrowIfVelScriptHasSyntaxError(
+        code: string,
+        handlername: string,
+        velIdForErrMsg: string
+    ): O<[VpcParsedCodeCollection, VpcCodeLineReference] | Error> {
+        return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg)
+    }
+
+    protected findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(
         code: string,
         handlername: string,
         velIdForErrMsg: string

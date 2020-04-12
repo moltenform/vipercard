@@ -955,6 +955,13 @@ export function last<T>(ar: T[]): T {
 }
 
 /**
+ * get last of an array, or undefined if array is empty
+ */
+export function lastIfThere<T>(ar: T[]): O<T> {
+    return ar ? ar[ar.length - 1] : undefined;
+}
+
+/**
  * conveniently write a long string
  */
 export function longstr(s: string, newlinesBecome = ' ') {

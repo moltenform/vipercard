@@ -28,11 +28,11 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
     currentImg: O<UI512ImageCollectionImage>;
     images = new UI512ImageCollectionCollection();
     readonly directories: [string, string, number][] = [
-        ['animals', 'lnganimals', 20],
+        ['animals', 'lnganimals', 31],
         ['aquatic', 'lngaquatic', 14],
         ['food', 'lngfood', 16],
         ['people', 'lngpeople', 26],
-        ['places', 'lngplaces', 10],
+        ['places', 'lngplaces', 12],
         ['plants', 'lngplants', 16],
         ['symbols', 'lngsymbols', 8],
         ['things', 'lngthings', 22],

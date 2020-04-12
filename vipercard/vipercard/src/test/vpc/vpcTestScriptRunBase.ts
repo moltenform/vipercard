@@ -299,9 +299,9 @@ export class TestVpcScriptRunBase {
         isCompilationStage = false;
         this.vcstate.vci.doWithoutAbilityToUndo(() =>
             this.vcstate.runtime.codeExec.runTimeslice(Infinity)
-        );
+        ); 
 
-        if (expectErrMsg) {
+        if (expectErrMsg && !caughtErr) {
             this.t.warnAndAllowToContinue('2U|error not seen', codeBefore, codeIn);
         }
 

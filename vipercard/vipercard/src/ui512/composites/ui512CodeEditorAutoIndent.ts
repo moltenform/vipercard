@@ -1,7 +1,7 @@
 
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { O, assertTrue, assertTrueWarn } from './../utils/util512Assert';
-/* auto */ import { Util512, assertEqWarn, last, slength } from './../utils/util512';
+/* auto */ import { Util512, assertEqWarn, last, lastIfThere, slength } from './../utils/util512';
 /* auto */ import { UI512Lines } from './../textedit/ui512TextLines';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
@@ -219,7 +219,7 @@ export class UI512AutoIndent {
             /* make a record of the indentation state of the 'current' line where the caret it */
             if (i === currentline - 1 && !isContinuation && isBlockStart) {
                 lastUnclosedDelta = 1;
-                lastUnclosedMatch = stack.length ? last(stack) : undefined;
+                lastUnclosedMatch = lastIfThere(stack);
             }
 
             /* decrease the indentation if we ended a block */

@@ -27,112 +27,114 @@ t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
 t.test('_checkLexing', () => {
     let batch: [string, string][];
     batch = [
-        /* empty lines don't interfere with scripts */
-        ['\n\n\n\nput 1 into t1\n\n\n\\t1', '1'],
+        //~ /* empty lines don't interfere with scripts */
+        //~ ['\n\n\n\nput 1 into t1\n\n\n\\t1', '1'],
 
-        /* wrong indentation doesn't interfere with scripts */
-        ['\n         put 1 into t2\n\\t2', '1'],
-        ['\n\t\t\t\t\tput 1 into t3\n\\t3', '1'],
+        //~ /* wrong indentation doesn't interfere with scripts */
+        //~ ['\n         put 1 into t2\n\\t2', '1'],
+        //~ ['\n\t\t\t\t\tput 1 into t3\n\\t3', '1'],
 
-        /* trailing whitespace doesn't interfere with scripts */
-        ['\nput 1 into t4           \n\\t4', '1'],
-        ['\nput 1 into t5\t\t\t\t\t\n\\t5', '1'],
+        //~ /* trailing whitespace doesn't interfere with scripts */
+        //~ ['\nput 1 into t4           \n\\t4', '1'],
+        //~ ['\nput 1 into t5\t\t\t\t\t\n\\t5', '1'],
 
-        /* continued lines */
-        ['put 1 {BSLASH}\n into t6\\t6', '1'],
-        ['put {BSLASH}\n 1 {BSLASH}\n into {BSLASH}\n t7\\t7', '1'],
-        ['put 8 into t8{BSLASH}\n{BSLASH}\n{BSLASH}\n\\t8', '8'],
-        ['{BSLASH}\n{BSLASH}\n{BSLASH}\nput 9 into t9\\t9', '9'],
+        //~ /* continued lines */
+        //~ ['put 1 {BSLASH}\n into t6\\t6', '1'],
+        //~ ['put {BSLASH}\n 1 {BSLASH}\n into {BSLASH}\n t7\\t7', '1'],
+        //~ ['put 8 into t8{BSLASH}\n{BSLASH}\n{BSLASH}\n\\t8', '8'],
+        //~ ['{BSLASH}\n{BSLASH}\n{BSLASH}\nput 9 into t9\\t9', '9'],
 
-        /* continued lines with whitespace after the backslash */
-        ['put 1 {BSLASH} \n into t6\\t6', '1'],
-        ['put {BSLASH}\t  \n 1 {BSLASH}\t  \n into {BSLASH}\t  \n t7\\t7', '1'],
+        //~ /* continued lines with whitespace after the backslash */
+        //~ ['put 1 {BSLASH} \n into t6\\t6', '1'],
+        //~ ['put {BSLASH}\t  \n 1 {BSLASH}\t  \n into {BSLASH}\t  \n t7\\t7', '1'],
 
-        /* continued lines should still show errors on the expected line */
-        ['put {BSLASH}\n xyz into tnot\\tnot', 'ERR:no variable found with this name'],
-        ['1 {BSLASH}\n + {BSLASH}\n xyz', 'ERR:no variable found with this name'],
-
+        //~ /* continued lines should still show errors on the expected line */
+        //~ ['put {BSLASH}\n xyz000 into tnot\\tnot', 'ERR:no variable found with this name'],
+        //~ ['put xyz000 into tnot\\tnot', 'ERR:no variable found with this name'],
+        //~ ['1 {BSLASH}\n + {BSLASH}\n xyz000', 'ERR:no variable found with this name'],
+ 
         /* continue a across a line */
-        ['put "a" & {BSLASH}\n "b" into test\\test', 'ab'],
-        ['put 2 + {BSLASH}\n 3 into test\\test', '5'],
+        //~ ['put "a" & {BSLASH}\n "b" into test\\test', 'ab'],
+        //~ ['put 2 + {BSLASH}\n 3 into test\\test', '5'],
 
         /* string literal can contain comment symbols */
-        ['put "--thetest" into test\\test', '--thetest'],
-        ['put "  --thetest" into test\\test', '  --thetest'],
-        ['put "aa--thetest" into test\\test', 'aa--thetest'],
-        ['put "aa--thetest--test" into test\\test', 'aa--thetest--test'],
+        //~ ['put "--thetest" into test\\test', '--thetest'],
+        //~ ['put "  --thetest" into test\\test', '  --thetest'],
+        //~ ['put "aa--thetest" into test\\test', 'aa--thetest'],
+        //~ ['put "aa--thetest--test" into test\\test', 'aa--thetest--test'],
 
-        /* lexing: most but not all constructs need whitespace */
-        ['2*3*4', '24'],
-        ['2 * 3 * 4', '24'],
-        ['put 2 into myvar\\myvar', '2'],
-        ['2*myvar*3', '12'],
-        ['7 mod 3', '1'],
-        ['7 div 3', '2'],
-        ['7 mod3', 'ERR:MismatchedTokenException'],
-        ['7 div3', 'ERR:MismatchedTokenException'],
+        //~ /* lexing: most but not all constructs need whitespace */
+        //~ ['2*3*4', '24'],
+        //~ ['2 * 3 * 4', '24'],
+        //~ ['put 2 into myvar\\myvar', '2'],
+        //~ ['2*myvar*3', '12'],
+        //~ ['7 mod 3', '1'],
+        //~ ['7 div 3', '2'],
+        //~ ['put 90 into mod3\\mod3', '90'],
+        //~ ['put 91 into div3\\div3', '91'],
 
-        /* lexing: strings don't need space */
-        ['"a"&"b"', 'ab'],
-        ['"a"&&"b"', 'a b'],
-        ['"single\'quotes ok"', "single'quotes ok"],
-        ['"single\'quotes\'ok"', "single'quotes'ok"],
+        //~ /* lexing: strings don't need space */
+        //~ ['"a"&"b"', 'ab'],
+        //~ ['"a"&&"b"', 'a b'],
+        //~ ['"single\'quotes ok"', "single'quotes ok"],
+        //~ ['"single\'quotes\'ok"', "single'quotes'ok"],
 
-        /* it is ok if identifiers contain a keyword. ("of" is a keyword) */
-        /* if "of" is a keyword, "of_" is still an ok variable name */
-        /* this is why it's important that the lexer regex is */
-        /* /of(?![a-zA-Z0-9_])/ and not just /of/ */
-        ['put 4 into put4into\\put4into', '4'],
-        ['put 4 into ofa\\ofa', '4'],
-        ['put 4 into ofcards\\ofcards', '4'],
-        ['put 4 into ofnumber\\ofnumber', '4'],
-        ['put 4 into ofto\\ofto', '4'],
-        ['put 4 into of_to\\of_to', '4'],
-        ['put 4 into ofa\\ofa', '4'],
-        ['put 4 into ofA\\ofA', '4'],
-        ['put 4 into of1\\of1', '4'],
-        ['put 4 into aof\\aof', '4'],
-        ['put 4 into Aof\\Aof', '4'],
-        ['put 4 into Zof\\Zof', '4'],
-        ['put 4 into a\\a', '4'],
-        ['put 4 into aa\\aa', '4'],
+        //~ /* it is ok if identifiers contain a keyword. ("of" is a keyword) */
+        //~ /* if "of" is a keyword, "of_" is still an ok variable name */
+        //~ /* this is why it's important that the lexer regex is */
+        //~ /* /of(?![a-zA-Z0-9_])/ and not just /of/ */
+        //~ ['put 4 into put4into\\put4into', '4'],
+        //~ ['put 4 into ofa\\ofa', '4'],
+        //~ ['put 4 into ofcards\\ofcards', '4'],
+        //~ ['put 4 into ofnumber\\ofnumber', '4'],
+        //~ ['put 4 into ofto\\ofto', '4'],
+        //~ ['put 4 into of_to\\of_to', '4'],
+        //~ ['put 4 into ofa\\ofa', '4'],
+        //~ ['put 4 into ofA\\ofA', '4'],
+        //~ ['put 4 into of1\\of1', '4'],
+        //~ ['put 4 into aof\\aof', '4'],
+        //~ ['put 4 into Aof\\Aof', '4'],
+        //~ ['put 4 into Zof\\Zof', '4'],
+        //~ ['put 4 into a\\a', '4'], /* used to be disallowed */
+        //~ ['put 4 into aa\\aa', '4'],
+        //~ ['put 4 into a4\\a4', '4'],
+        //~ ['put 4 into number\\number', '4'],
 
         /* dest needs to be a token of type TkIdentifier */
         ['put 4 into short\\0', 'ERR:support variables'],
-        ['put 4 into long\\0', 'ERR:support variables'],
-        ['put 4 into number\\0', 'ERR:support variables'],
-        ['put 4 into length\\0', 'ERR:support variables'],
-        ['put 4 into id\\0', 'ERR:support variables'],
-        ['put 4 into if\\0', 'ERR:name not allowed'],
-        ['put 4 into 4\\0', 'ERR:NotAllInputParsedException'],
-        ['put 4 into in\\0', 'ERR:NotAllInputParsedException'],
-        ['put 4 into and\\0', 'ERR:NotAllInputParsedException'],
-        ['put 4 into autohilite\\0', 'ERR:name not allowed']
+        //~ ['put 4 into long\\0', 'ERR:support variables'],
+        //~ ['put 4 into length\\0', 'ERR:support variables'],
+        //~ ['put 4 into id\\0', 'ERR:support variables'],
+        //~ ['put 4 into if\\0', 'ERR:name not allowed'],
+        //~ ['put 4 into 4\\0', 'ERR:NotAllInputParsedException'],
+        //~ ['put 4 into in\\0', 'ERR:NotAllInputParsedException'],
+        //~ ['put 4 into and\\0', 'ERR:NotAllInputParsedException'],
+        //~ ['put 4 into autohilite\\0', 'ERR:name not allowed']
     ];
 
     h.testBatchEvaluate(batch);
 
     /* string literal cannot contain contline symbol since it has a newline */
-    h.assertCompileErrorIn(
-        'put "a{BSLASH}\nb" into test',
-        'unexpected character: ->"<-',
-        3
-    );
-    h.assertCompileErrorIn(
-        'put "{BSLASH}\n" into test',
-        'unexpected character: ->"<-',
-        3
-    );
-    h.assertCompileErrorIn(
-        'put "{BSLASH}\n{BSLASH}\n" into test',
-        'unexpected character: ->"<-',
-        3
-    );
-    h.assertCompileErrorIn(
-        'put {BSLASH}\n"{BSLASH}\n{BSLASH}\n"{BSLASH}\n into test',
-        'unexpected character: ->"<-',
-        4
-    );
+    //~ h.assertCompileErrorIn(
+        //~ 'put "a{BSLASH}\nb" into test',
+        //~ 'unexpected character: ->"<-',
+        //~ 3
+    //~ );
+    //~ h.assertCompileErrorIn(
+        //~ 'put "{BSLASH}\n" into test',
+        //~ 'unexpected character: ->"<-',
+        //~ 3
+    //~ );
+    //~ h.assertCompileErrorIn(
+        //~ 'put "{BSLASH}\n{BSLASH}\n" into test',
+        //~ 'unexpected character: ->"<-',
+        //~ 3
+    //~ );
+    //~ h.assertCompileErrorIn(
+        //~ 'put {BSLASH}\n"{BSLASH}\n{BSLASH}\n"{BSLASH}\n into test',
+        //~ 'unexpected character: ->"<-',
+        //~ 4
+    //~ );
 
     /* we changed lexer to disallow this, since it is clearly wrong */
     h.assertCompileErrorIn('put 3into test', 'unexpected character', 3);

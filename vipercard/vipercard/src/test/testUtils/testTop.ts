@@ -2,6 +2,7 @@
 /* auto */ import { testCollectionvpcuiMsgBox } from './../vpc/vpcuiTestMsgBox';
 /* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
 /* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
+/* auto */ import { testCollectionvpcScriptRunSyntax } from './../vpc/vpcTestScriptRunSyntax';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
 /* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
@@ -39,6 +40,7 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
+            testCollectionvpcScriptRunSyntax,
             testCollectionvpcScriptParseCmd,
             testCollectionvpcScriptParseExpr,
             testCollectionvpcChunkResolution,

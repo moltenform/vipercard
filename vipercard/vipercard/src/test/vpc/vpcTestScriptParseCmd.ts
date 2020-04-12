@@ -285,7 +285,19 @@ export class TestParseHelpers {
      */
     testParse(sInput: string, sTopRule: string, sExpected: string, sErrExpected: string) {
         let lexResult = this.lexer.tokenize(sInput);
-        assertTrue(!lexResult.errors.length, `1,|${lexResult.errors[0]}`);
+        let expectLexerErr = false
+        if (sErrExpected.startsWith('Lexer:')) {
+            expectLexerErr = true
+            sErrExpected = sErrExpected.substr('Lexer:'.length)
+            if (!lexResult.errors.length) {
+                t.warnAndAllowToContinue("expected a lexer error but there weren't any", `${lexResult.errors[0]}`)
+            } else {
+                return
+            }
+        } else {
+            assertTrue(!lexResult.errors.length, `1,|${lexResult.errors[0]}`);
+        }
+        
         let line = lexResult.tokens
         line.splice(0, 1, BuildFakeTokens.inst.makeSyntaxMarker(line[0]), BuildFakeTokens.inst.makeSyntaxMarker(line[0]), BuildFakeTokens.inst.makeSyntaxMarker(line[0]))
         this.parser.input = line;

@@ -289,7 +289,7 @@ HChunkBound:= { tkLParen <Expr> tkRParen | tkNumLiteral  | <HSimpleContainer> } 
 // note that "the length" is not handled specially, a phrase like "get the length of cd fld 1" should just work (previously we'd have trouble with it)
 // note that you can't use fn style to get global properties, "get the version" is valid but not "get version()"
 // note that we'll match the product and let you say "get the long sin of 4" and ignore the nonsensical adjective
-HSource:={<HSource_1> | <HGenericFunctionCall> | <HSimpleContainer>}   --->ProcessOr--->VpcVal
+HSource:={<HSource_1> | <HGenericFunctionCall> | <HSimpleContainer>}   --->Custom--->VpcVal
 HSource_1:=  {tkStringLiteral | tkNumLiteral}                 --->Custom--->VpcVal
 HFnCallWParens:={ <HAnyFnName> tkLParen MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP tkRParen  }         --->Custom--->VpcVal
 HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> <ObjectFld>}       --->Custom--->VpcVal

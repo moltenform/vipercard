@@ -269,20 +269,6 @@ return "{msgBoxExpr}";
 
 
 
-RuleHSource(ctx: VisitingContext): VpcVal {
-if (ctx.RuleHSource_1 && ctx.RuleHSource_1[0]) {
- return this.visit(ctx.RuleHSource_1[0]); 
-}
- else 
-if (ctx.RuleHGenericFunctionCall && ctx.RuleHGenericFunctionCall[0]) {
- return this.visit(ctx.RuleHGenericFunctionCall[0]); 
-}
- else 
-if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
- return this.visit(ctx.RuleHSimpleContainer[0]); 
-}
- else { throw makeVpcInternalErr('OR in HSource, no branch found'); }
-}
 
 
 

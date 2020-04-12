@@ -17,7 +17,7 @@
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue, assertTrueWarn, bool, checkThrow } from './../../ui512/utils/util512Assert';
-/* auto */ import { assertEqWarn, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { assertEqWarn, longstr, slength, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
@@ -278,21 +278,19 @@ export class VpcIntroProvider {
      */
     protected async startLoadDocumentAsyncImpl(currentCntrl: UI512Presenter) {
         /* minimum time, just so that it "feels right" rather than loading instantly */
+        
         const minimumTime = 1500;
-        let began = performance.now();
-
-        let [pr, vpcState] = await this.loadDocumentTop();
-        if (this.loc !== VpcDocumentLocation.ShowLoginForm) {
-            let elapsed = performance.now() - began;
-            if (elapsed < minimumTime) {
-                /* we loaded too fast... slow it down intentionally */
-                await Util512Higher.sleep(minimumTime - elapsed);
-            }
-        }
-
+        let ret:[VpcPresenter, VpcState]
+        let promises = [
+            /* don't load too fast... slow it down intentionally */
+            Util512Higher.sleep(minimumTime),
+            (async() => { ret = await this.loadDocumentTop() })()
+        ]
+        
+        await Promise.all(promises)
         currentCntrl.placeCallbackInQueue(() => {
             /* remove the loading page and replace it with the new presenter */
-            getRoot().replaceCurrentPresenter(pr);
+            getRoot().replaceCurrentPresenter(ret[0]);
         });
     }
 

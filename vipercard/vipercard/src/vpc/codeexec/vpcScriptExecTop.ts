@@ -10,7 +10,7 @@
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
-/* auto */ import { O, UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512Assert';
+/* auto */ import { O, UI512ErrorHandling } from './../../ui512/utils/util512Assert';
 /* auto */ import { ValHolder, cast, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -50,6 +50,32 @@ export class VpcExecTop {
         /* provide read-only access to the visitor */
         let visitor = getParsingObjects()[2];
         visitor.outside = outside as OutsideWorldRead;
+    }
+
+    /**
+     * 
+     */
+    goScript() {
+        try {
+            newWork.findHandlerToExec();
+            if (newWork.stack.length > 1) {
+                this.workQueue.push(newWork);
+            }
+        } catch (e) {
+            if (e.isVpcScriptError) {
+                this.respondScriptError(e);
+            }
+        } finally {
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
+        }
+        
+
+        try {
+            UI512ErrorHandling.breakOnThrow = false;
+            return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg)
+        } finally {
+            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
+        }
     }
 
     /**
@@ -239,7 +265,7 @@ export class VpcExecTop {
         if (this.cbOnScriptError) {
             this.cbOnScriptError(err);
         } else {
-            assertTrue(false, `5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
+            alert(`5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
         }
     }
 

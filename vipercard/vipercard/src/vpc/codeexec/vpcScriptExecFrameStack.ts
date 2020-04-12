@@ -16,7 +16,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrFallback, getStrToEnum, last, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, assertEq, assertEqWarn, checkThrowEq, getEnumToStrOrFallback, getStrToEnum, last, lastIfThere, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -163,7 +163,7 @@ export class VpcExecFrameStack {
         while (this.stack.length > 1) {
             /* run one line of code */
             let isComplete = this.runOneLine(blocked);
-            if (isComplete || blocked.val) {
+            if (isComplete || blocked.val !== AsyncCodeOpState.AllowNext) {
                 break;
             }
 
@@ -189,7 +189,7 @@ export class VpcExecFrameStack {
      * run one line of code, and catch exceptions
      */
     protected runOneLine(blocked: ValHolder<AsyncCodeOpState>): boolean {
-        let curFrame = last(this.stack);
+        let curFrame = lastIfThere(this.stack);
         if (curFrame) {
             let curLine = curFrame.codeSection.lines[curFrame.getOffset()];
             checkThrow(curLine, `5c|no code defined at offset ${curFrame.getOffset()} of element ${curFrame.meId}`);
@@ -225,7 +225,7 @@ export class VpcExecFrameStack {
         Util512.callAsMethodOnClass('VpcExecFrameStack', this, methodName, [curFrame, curLine, parsed, blocked], false);
 
         /* make sure we're not stuck on the same line again */
-        if (last(this.stack) === curFrame && !blocked.val) {
+        if (last(this.stack) === curFrame && blocked.val === AsyncCodeOpState.AllowNext) {
             checkThrow(curFrame.getOffset() !== curLine.offset, '7x|stuck on the same line', curLine.offset.toString());
         }
     }

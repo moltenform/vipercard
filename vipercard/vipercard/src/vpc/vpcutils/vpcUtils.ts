@@ -40,6 +40,9 @@ export class VpcScriptErrorBase implements UI512AttachableErr {
     e: any;
     isScriptException = true;
     isExternalException = false;
+    toString() {
+        return `on line ${this.lineNumber}, ${this.details}, from object id ${this.velId}`
+    }
 }
 
 /**

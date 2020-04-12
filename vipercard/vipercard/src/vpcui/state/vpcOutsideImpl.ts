@@ -8,6 +8,7 @@
 /* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
+/* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VelResolveReference } from './../../vpc/vel/velResolveReference';
@@ -20,7 +21,6 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Productname';
 /* auto */ import { O, assertTrue, bool, checkThrow, makeVpcScriptErr, throwIfUndefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
@@ -186,10 +186,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     ReadVarContents(varName: string): VpcVal {
         assertTrue(slength(varName), '6p|bad varName', varName);
-
-        if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
-            throw makeVpcScriptErr(`in ${cProductName}, you can only write to the msg box, not read from it.`);
-        }
 
         let [frStack, frame] = this.getExecFrameStack();
         let found = frStack.constants.find(varName);
@@ -379,6 +375,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             /* put the long target into x */
             checkThrow(!ref, "8+|must say 'get the target' and not 'get the target of cd btn 1'");
             return VpcValS(this.getTargetFullString(adjective));
+        } else if (prop === 'date') {
+            /* put the long date into x */
+            checkThrow(!ref, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
+            return VpcBuiltinFunctionsDateUtils.go(adjective);
         } else if (prop === 'owner') {
             /* put the owner of cd btn 1 into x */
             checkThrow(ref, "8+|must say 'get the owner of cd btn 1' and not 'get the owner'");

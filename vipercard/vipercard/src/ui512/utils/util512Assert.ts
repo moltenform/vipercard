@@ -43,11 +43,15 @@ export function respondUI512Error(e: Error, context: string) {
         /* assert.ts */
         console.log('caught ' + e.message + ' at context ' + context);
         console.log(e.stack);
+        if ((e as any).attachErr) {
+            context += '... ' + (e as any).attachErr.toString()
+        }
+
         window.alert(e.message + ' ' + context);
     } else {
         console.error(e.message);
         console.error(e.stack);
-        breakIntoDebugger();
+        callDebuggerIfNotInProduction();
         window.alert(e.message);
     }
 }
@@ -351,23 +355,13 @@ export function joinIntoMessage(
 export interface UI512AttachableErr {}
 
 /**
- * break into debugger. V8 js perf sometimes hurt if seeing a debugger
- * statement, so separate it here.
- */
-function breakIntoDebugger() {
-    if (!checkIsProductionBuild()) {
-        debugger;
-    }
-}
-
-/**
  * record and show an unhandled exception
  */
 function recordAndShowErr(firstMsg: string, msg: string) {
     if (UI512ErrorHandling.breakOnThrow || firstMsg.includes('assertion failed')) {
         UI512ErrorHandling.appendErrMsgToLogs(true, msg);
         console.error(msg);
-        breakIntoDebugger();
+        callDebuggerIfNotInProduction();
         window.alert(msg);
     } else {
         UI512ErrorHandling.appendErrMsgToLogs(false, msg);
@@ -444,6 +438,7 @@ export function checkThrow(
  * this will not exist at runtime, the string is rewritten
  */
 declare const WEBPACK_PRODUCTION: boolean;
+declare const DBGPLACEHOLDER: boolean;
 
 /**
  * check if we are in a production build.
@@ -459,4 +454,16 @@ export function checkIsProductionBuild(): boolean {
     }
 
     return ret;
+}
+
+/**
+ * at build time, the string below
+ * might be replaced with "debugger".
+ * V8's perf can be affected if there's a debugger statement around,
+ * so this makes sure it's not even there.
+ */
+export function callDebuggerIfNotInProduction() {
+    window['DBG' + 'PLACEHOLDER'] = true
+    /* eslint-disable-next-line no-unused-expressions */
+    DBGPLACEHOLDER;
 }

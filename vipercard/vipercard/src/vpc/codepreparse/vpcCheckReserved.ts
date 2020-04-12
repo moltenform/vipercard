@@ -54,7 +54,14 @@ export class CheckReservedWords {
     }
 
     okLocalVar(s: string) {
-        /* new: local variables can be the same as a property name. */
+        if (s === 'number' || s === 'a') { 
+            /* these ones we've explicitly said are ok variable names.
+            see also checkCommonMistakenVarNames */
+            return true;
+        }
+
+        /* new: don't need to check this.isPropertyName,
+        it'd fine for local variables to shadow a property name. */
         checkThrow(slength(s), `7(|invalid identifier ${s}`);
         return !this.isKeyword(s) && !this.isBuiltinHandler(s) && !this.isBuiltinFunction(s) && !this.isBuiltinVarOrConstant(s);
     }

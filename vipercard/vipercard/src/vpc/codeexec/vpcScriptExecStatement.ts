@@ -290,14 +290,13 @@ export class ExecuteStatement {
     goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let terms = this.h.getChildStrs(vals, tkstr.tkIdentifier, true);
         checkThrow(
-            terms.length === 2,
+            terms.length === 1,
             longstr(
-                `7M|we don't support 'put "abc"' to use the message
-                box (missing into, before, or after).`
+                `7M|(missing into, before, or after).`
             )
         );
 
-        let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[1]);
+        let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[0]);
         let val = throwIfUndefined(this.h.findChildVal(vals, tkstr.RuleExpr), '54|');
         let contRef = throwIfUndefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
 
