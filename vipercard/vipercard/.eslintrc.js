@@ -147,12 +147,11 @@ module.exports = {
 
         "ban/ban": [
             1, // warn
-            {"name": ["*", "apply"], "message": "apply is dangerous, there could be max arg limits."},
             {"name": "parseInt", "message": "prefer my parseint in utils, don't need to remember to specify base10."},
-            {"name": ["*", "setTimeout"], "message": "use syncToAsyncTransition instead or exceptions won't get logged."},
-            {"name": "setTimeout", "message": "use syncToAsyncTransition instead or exceptions won't get logged."},
-            {"name": ["*", "setInterval"], "message": "use syncToAsyncTransition instead or exceptions won't get logged."},
-            {"name": "setInterval", "message": "use syncToAsyncTransition instead or exceptions won't get logged."},
+            {"name": ["*", "setTimeout"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
+            {"name": "setTimeout", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
+            {"name": ["*", "setInterval"], "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
+            {"name": "setInterval", "message": "use syncToAsyncAfterPause instead or exceptions won't get logged."},
         ]
     },
     settings: {

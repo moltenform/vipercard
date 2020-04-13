@@ -99,9 +99,9 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 this.st.offsetForMoveX = d.mouseX - this.st.elBorder.x;
                 this.st.offsetForMoveY = d.mouseY - this.st.elBorder.y;
                 this.st.elBorder.set('visible', false);
-                this.st.isCopyMult = (d.mods & ModifierKeys.Opt) !== 0;
-                this.st.isCopy = bool(this.st.isCopyMult) || bool((d.mods & ModifierKeys.Cmd) !== 0);
-                this.st.elMask.set('visible', !this.st.isCopy);
+                this.st.areCopyingMult = (d.mods & ModifierKeys.Opt) !== 0;
+                this.st.areCopying = bool(this.st.areCopyingMult) || bool((d.mods & ModifierKeys.Cmd) !== 0);
+                this.st.elMask.set('visible', !this.st.areCopying);
                 this.st.mode = SelectToolMode.MovingRegion;
             } else {
                 /* user clicked outside of the selection, cancel the selection */
@@ -143,7 +143,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 this.st.topPtY = tny;
             }
         } else if (this.st && this.st.mode === SelectToolMode.MovingRegion) {
-            if (!this.st.isCopyMult) {
+            if (!this.st.areCopyingMult) {
                 this.st.elStage.getCanvasForWrite().clear();
             }
 
@@ -365,7 +365,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
         if (this.st) {
             if (this.st.elMask.getCanvasForWrite()) {
                 let basePaint = this.cbPaintRender().getMainBg();
-                let incoming = this.st.isCopy
+                let incoming = this.st.areCopying
                     ? [this.st.elStage.getCanvasForWrite()]
                     : [this.st.elMask.getCanvasForWrite(), this.st.elStage.getCanvasForWrite()];
                 this.cbPaintRender().commitImageOntoImage(incoming, 0, 0);
@@ -442,8 +442,8 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
  */
 export class SelectToolState {
     mode: SelectToolMode;
-    isCopy = false;
-    isCopyMult = false;
+    areCopying = false;
+    areCopyingMult = false;
     rawStartX = -1;
     rawStartY = -1;
     startX = -1;

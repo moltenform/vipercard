@@ -36,7 +36,6 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     entry: UI512ElTextField;
     showResults: UI512ElTextField;
     history = new RememberHistory();
-    busy = false;
     rememberedTool = VpcTool.Button;
     constructor(protected vci: VpcStateInterface) {
         super('VpcNonModalReplBox' + Math.random());
@@ -158,24 +157,22 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
             return;
         }
 
-        if (!this.busy) {
-            this.busy = true;
+        /* don't need to have a "busy" state,
+        they'd still be queued. */
+        this.history.append(scr);
+        this.appendToOutput('> ' + scr + ' ...', false);
+        this.setFontAndText(this.entry, '', 'geneva', 12);
 
-            this.history.append(scr);
-            this.appendToOutput('> ' + scr + ' ...', false);
-            this.setFontAndText(this.entry, '', 'geneva', 12);
+        /* prepare to run the code */
+        let codeBody = VpcNonModalReplBox.transformText(scr);
+        let curCard = this.vci.getOptionS('currentCardId');
 
-            /* prepare to run the code */
-            let codeBody = VpcNonModalReplBox.transformText(scr);
-            let curCard = this.vci.getOptionS('currentCardId');
+        this.rememberedTool = this.vci.getTool();
+        this.vci.setTool(VpcTool.Browse);
 
-            this.rememberedTool = this.vci.getTool();
-            this.vci.setTool(VpcTool.Browse);
-
-            /* do this last because it could throw
-            synchronously and call onScriptErr right away */
-            this.vci.getCodeExec().runMsgBoxCodeOrThrow(codeBody, curCard, true);
-        }
+        /* do this last because it could throw
+        synchronously and call onScriptErr right away */
+        this.vci.getCodeExec().runMsgBoxCodeOrThrow(codeBody, curCard, true);
     }
 
     /**
@@ -213,7 +210,6 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         //~ /* note that script errors are to be expected --
         //~ it's how we get the signal back after running a script,
         //~ we intentionally try to call a handler that doesn't exist. */
-        //~ this.busy = false;
         //~ /* go back to the previous tool */
         //~ this.vci.setTool(this.rememberedTool);
         //~ if (scriptErr && scriptErr.details && scriptErr.details.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)) {

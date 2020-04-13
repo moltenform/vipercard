@@ -130,7 +130,7 @@ export class FormattedText {
         insert: string,
         font: string
     ) {
-        /* previously used splice() and fn.apply() to do this in a few lines,
+        /* previously used splice and fn.apply to do this in a few lines,
         but if done with long strings might hit the javascript engine's argument
         count limit */
         let tNew = new FormattedText();

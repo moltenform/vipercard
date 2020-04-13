@@ -43,7 +43,12 @@ export class VpcScriptExecAsync {
         milliseconds: number
     ) {
         let op = () => {
-            Util512Higher.syncToAsyncAfterPause(() => pendingOps.markCompleted(asyncOpId, true), milliseconds, 'goAsyncWait', RespondToErr.Alert);
+            Util512Higher.syncToAsyncAfterPause(
+                () => pendingOps.markCompleted(asyncOpId, true),
+                milliseconds,
+                'goAsyncWait',
+                RespondToErr.Alert
+            );
         };
 
         pendingOps.go(asyncOpId, op, blocked);

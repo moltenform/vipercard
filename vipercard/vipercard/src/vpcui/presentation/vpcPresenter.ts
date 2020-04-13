@@ -649,7 +649,6 @@ export class VpcPresenter extends VpcPresenterInit {
     performMenuActionImpl(s: string) {
         let method = Util512.isMethodOnClass(this.menuActions, 'go' + Util512.capitalizeFirst(s));
         if (method !== undefined) {
-            /* eslint-disable-next-line ban/ban */
             method.apply(this.menuActions, [this.vci]);
         } else if (s === 'mnuObjectsNewBtn') {
             this.makePart(VpcElType.Btn);

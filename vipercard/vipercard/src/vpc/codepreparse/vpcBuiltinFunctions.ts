@@ -177,16 +177,24 @@ export class VpcBuiltinFunctions {
      * returns the largest of all arguments given
      */
     callMax(args: VpcVal[]) {
-        /* eslint-disable-next-line ban/ban */
-        return this.mathVariadic(args, 'max', ar => Math.max.apply(null, ar));
+        let f = (ar: number[]) => {
+            assertTrue(ar.length < 100, 'too many args');
+            return Math.max.apply(null, ar); /* warn-apply-ok */
+        };
+
+        return this.mathVariadic(args, 'max', f);
     }
 
     /**
      * returns the smallest of all arguments given
      */
     callMin(args: VpcVal[]) {
-        /* eslint-disable-next-line ban/ban */
-        return this.mathVariadic(args, 'min', ar => Math.min.apply(null, ar));
+        let f = (ar: number[]) => {
+            assertTrue(ar.length < 100, 'too many args');
+            return Math.min.apply(null, ar); /* warn-apply-ok */
+        };
+
+        return this.mathVariadic(args, 'min', f);
     }
 
     /**

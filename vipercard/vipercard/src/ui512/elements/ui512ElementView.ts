@@ -329,7 +329,6 @@ export class UI512ViewDraw {
     ) {
         if (el.getB('highlightactive') && el.getN('iconnumberwhenhighlight') === -1) {
             /* draw the border */
-            /* eslint-disable-next-line ban/ban */
             fnHighlight.apply(b);
             let subRect = this.getSubRect(b, decorationSize, decorationSize);
             if (subRect && !b.didFallbackToSimpleRect) {
@@ -342,7 +341,6 @@ export class UI512ViewDraw {
             }
         } else {
             /* draw the border */
-            /* eslint-disable-next-line ban/ban */
             fnNotHighlight.apply(b);
             if (
                 !b.didFallbackToSimpleRect &&

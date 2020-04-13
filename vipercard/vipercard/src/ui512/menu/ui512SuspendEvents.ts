@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, respondUI512Error } from './../utils/util512AssertCustom';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { FnEventCallback, TemporarilySuspendEventsInterface } from './../draw/ui512Interfaces';
 
@@ -42,7 +42,18 @@ export abstract class TemporarilySuspendEvents
      */
     pulse(pr: UI512PresenterWithMenuInterface, ms: number) {
         assertTrue(this.isStarted, '2-|please call start first');
-        if (this.shouldRestore(ms)) {
+
+        /* catch exceptions, otherwise an exception in
+        shouldRestore would make us stuck in this temp state. */
+        let shouldRestore = false;
+        try {
+            shouldRestore = this.shouldRestore(ms);
+        } catch (e) {
+            respondUI512Error(e, 'TemporarilySuspendEvents', true);
+            shouldRestore = true;
+        }
+
+        if (shouldRestore) {
             pr.listeners = this.savedListeners;
             this.savedListeners = {};
             this.isStarted = false;

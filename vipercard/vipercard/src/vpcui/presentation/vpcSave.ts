@@ -32,8 +32,11 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsAsync(ensureDefined(ses, 'Kr|')), 'goSaveAsAsync', RespondToErr.Alert);
+            Util512Higher.syncToAsyncTransition(
+                () => this.goSaveAsAsync(ensureDefined(ses, 'Kr|')),
+                'goSaveAsAsync',
+                RespondToErr.Alert
+            );
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -53,7 +56,11 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsync(ensureDefined(ses, 'Kq|')), 'beginSave async', RespondToErr.Alert);
+            Util512Higher.syncToAsyncTransition(
+                () => this.goSaveAsync(ensureDefined(ses, 'Kq|')),
+                'beginSave async',
+                RespondToErr.Alert
+            );
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -78,7 +85,6 @@ export class VpcSave implements VpcSaveInterface {
             didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
         } catch (e) {
             caught = true;
-            this.busy = false;
             this.pr.answerMsg(
                 longstr(`Save did not complete. If you encounter repeated
                  errors, you can use 'Save As Json' instead.\n${e}`),
@@ -97,7 +103,6 @@ export class VpcSave implements VpcSaveInterface {
         }
 
         this.pr.cameFromDemoSoNeverPromptSave = '';
-        this.busy = false;
     }
 
     /**
@@ -116,7 +121,6 @@ export class VpcSave implements VpcSaveInterface {
             }
         } catch (e) {
             caught = true;
-            this.busy = false;
             await this.pr.answerMsgAsync(
                 longstr(`Save did not complete. If you encounter repeated
                     errors, you can use 'Save As Json' instead.\n${e}`)
@@ -134,7 +138,6 @@ export class VpcSave implements VpcSaveInterface {
         }
 
         this.pr.cameFromDemoSoNeverPromptSave = '';
-        this.busy = false;
     }
 
     /**
@@ -309,7 +312,7 @@ export class VpcSave implements VpcSaveInterface {
 
             return this.pr.answerMsgAsync('Submitted a content report for this stack. Thank you.');
         } else {
-            return undefined
+            return undefined;
         }
     }
 

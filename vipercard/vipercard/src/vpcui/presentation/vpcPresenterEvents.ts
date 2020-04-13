@@ -21,6 +21,7 @@
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { BasicHandlers } from './../../ui512/textedit/ui512BasicHandlers';
+import { justConsoleMsgIfExceptionThrown } from '../../ui512/utils/util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -449,8 +450,8 @@ export class VpcPresenterEvents {
             if (pr.timerRunMaintenance.isDue()) {
                 pr.timerRunMaintenance.reset();
                 if (!pr.vci.isCurrentlyUndoing()) {
-                    VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance());
-                    VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance());
+                    justConsoleMsgIfExceptionThrown(pr.lyrPaintRender.doMaintenance, 'lyrPaintRender.doMaintenance');
+                    justConsoleMsgIfExceptionThrown(pr.vci.getCodeExec().doMaintenance, 'getCodeExec.doMaintenance');
                 }
             }
         }
@@ -546,14 +547,6 @@ export class VpcPresenterEvents {
             return;
         }
 
-        if (pr.lyrNonModalDlgHolder.current) {
-            /* don't let 'on idle' run when you are running a msg box command */
-            let cur = pr.lyrNonModalDlgHolder.current as VpcNonModalReplBox;
-            if (cur instanceof VpcNonModalReplBox && cur.busy && !(d instanceof MouseUpEventDetails)) {
-                return;
-            }
-        }
-
         let target: O<string>;
         let isOnIdleEvent = false;
         if (d instanceof MouseUpEventDetails) {
@@ -585,6 +578,10 @@ export class VpcPresenterEvents {
                 /* idle event */
                 target = '<use-current-card>';
                 isOnIdleEvent = true;
+                /* don't let 'on idle' run when you are running a msg box command  */
+                if (pr.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox) {
+                    target = undefined;
+                }
             }
         }
 

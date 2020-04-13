@@ -225,9 +225,7 @@ export class Util512 {
             );
 
             assertTrue(args.length < 100, 'Ox|too many args', clsname, s);
-
-            /* eslint-disable-next-line ban/ban */
-            return method.apply(me, args);
+            return method.apply(me, args); /* warn-apply-ok */
         } else if (okIfNotExists) {
             return returnIfNotExists ? returnIfNotExists : undefined;
         } else {

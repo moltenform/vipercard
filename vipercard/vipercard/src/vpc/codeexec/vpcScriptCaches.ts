@@ -79,7 +79,6 @@ export class VpcCacheParsedCST {
         //~ /* setting input again is documented to reset the parser state */
         //~ this.parser.input = ln.excerptToParse;
         //~ this.parser.errors.length = 0;
-        //~ /* eslint-disable-next-line ban/ban */
         //~ parsed = firstRule.apply(this.parser, []);
         //~ if (VpcCacheParsedCST.ensureNotChanged) {
         //~ Util512.freezeRecurse(parsed);

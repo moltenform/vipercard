@@ -11,7 +11,7 @@
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { ValHolder, cast, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -281,7 +281,9 @@ export class VpcExecTop {
         let idsSeen = new Map<string, boolean>();
         for (let vel of stack.iterEntireStack()) {
             if (idsSeen.has(vel.id)) {
-                alert('duplicate id seen: ' + vel.id);
+                /* use assertwarn, not throw, because it's sure to show
+                a dialog, but the user can also ignore subsquent ones */
+                assertWarn(false, 'duplicate id seen: ' + vel.id);
             }
 
             idsSeen.set(vel.id, true);
