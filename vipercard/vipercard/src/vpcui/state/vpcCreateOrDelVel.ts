@@ -1,7 +1,7 @@
 
-/* auto */ import { CodeLimits, checkThrow } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { CodeLimits } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
@@ -10,6 +10,7 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertWarnEq } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -35,7 +36,7 @@ export abstract class UndoableActionCreateOrDelVel {
         } else if (type === VpcElType.Stack) {
             return VpcElStack;
         } else {
-            throw makeVpcInternalErr(`6f|incorrect type/parent. type is a ${type}`);
+            checkThrowInternal(false, `6f|incorrect type/parent. type is a ${type}`);
         }
     }
 
@@ -57,7 +58,7 @@ export abstract class UndoableActionCreateOrDelVel {
         } else if (type === VpcElType.Bg && velAsStack instanceof VpcElStack) {
             return velAsStack.bgs;
         } else {
-            throw makeVpcInternalErr(`6e|incorrect type/parent. child is a ${type} and parent is a `);
+            checkThrowInternal(false, `6e|incorrect type/parent. child is a ${type} and parent is a `);
         }
     }
 
@@ -72,7 +73,7 @@ export abstract class UndoableActionCreateOrDelVel {
             }
         }
 
-        throw makeVpcInternalErr(`6d|could not find place in parent array for ${vel.id}`);
+        checkThrowInternal(false, `6d|could not find place in parent array for ${vel.id}`);
     }
 
     /**
@@ -105,7 +106,7 @@ export abstract class UndoableActionCreateOrDelVel {
         vci.causeFullRedraw();
         let el = vci.getModel().getByIdUntyped(this.velId);
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(el.parentId, vci, el.getType());
-        assertEqWarn(el.id, ar[this.insertIndex].id, '6b|');
+        assertWarnEq(el.id, ar[this.insertIndex].id, '6b|');
         assertWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
         ar.splice(this.insertIndex, 1);
         vci.getModel().removeIdFromMapOfElements(el.id);

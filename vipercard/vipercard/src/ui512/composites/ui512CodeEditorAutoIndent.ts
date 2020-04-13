@@ -2,7 +2,7 @@
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../utils/util512AssertCustom';
-/* auto */ import { Util512, last, lastIfThere, slength } from './../utils/util512';
+/* auto */ import { Util512, assertWarnEq, last, lastIfThere, slength } from './../utils/util512';
 /* auto */ import { UI512Lines } from './../textedit/ui512TextLines';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
@@ -264,7 +264,7 @@ export class UI512AutoIndent {
             }
         }
 
-        assertEqWarn(lns.lns.length, lnsOut.lns.length, '2r|');
+        assertWarnEq(lns.lns.length, lnsOut.lns.length, '2r|');
         assertWarn(currentline < lnsOut.lns.length, '2q|invalid currentline');
         let index = lnsOut.lineNumberToLineEndIndex(currentline);
         return [lnsOut, index, index];

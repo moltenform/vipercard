@@ -1,5 +1,6 @@
 
 /* auto */ import { VpcStateInterface, VpcUILayer } from './../state/vpcInterface';
+/* auto */ import { checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
@@ -43,7 +44,7 @@ export class VpcLyrNonModalHolder extends VpcUILayer {
             form.create(this.pr, this.vci.UI512App());
             this.current = form;
         } else if (form) {
-            throw makeVpcInternalErr('KY|expected VpcFormNonModalDialogBase.');
+            checkThrowInternal(false, 'KY|expected VpcFormNonModalDialogBase.');
         }
     }
 

@@ -1,6 +1,7 @@
 
-/* auto */ import { CodeLimits, checkThrow } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { IVpcCodeLine, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { last, longstr } from './../../ui512/utils/util512';
@@ -104,7 +105,7 @@ export class LoopLimit {
     next(): true {
         this.count--;
         if (this.count < 0) {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`5n|Unfortunately, we need to have
             limitations on scripts, in order to prevent denial of service.
                 for ${this.msg}, the limit is ${this.maxcount}`)
@@ -122,7 +123,7 @@ export type ChvRuleFnType = (idxInCallingRule?: number, ...args: any[]) => chevr
  * can span multiple user-typed lines if the \ escape across lines,
  * the offset to the user-typed source code is offset
  */
-export class VpcCodeLine {
+export class VpcCodeLine implements IVpcCodeLine {
     /* unique id for this line */
     readonly lineId: number;
 
@@ -186,6 +187,10 @@ export class VpcCodeLine {
             }
         }
     }
+}
+
+export class VpcCurrentParseStage {
+    //~ static currentStage = VpcErrStage.
 }
 
 /**

@@ -1,5 +1,6 @@
 
 /* auto */ import { VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcPhoneDial } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
@@ -105,7 +106,7 @@ export class VpcScriptExecAsync {
                 if (cbStopCodeRunning) {
                     cbStopCodeRunning();
                 } else {
-                    throw makeVpcInternalErr('JG|cbStopCodeRunning');
+                    checkThrowInternal(false, 'JG|cbStopCodeRunning');
                 }
 
                 /* this causes script to stop immediately,
@@ -147,7 +148,7 @@ export class VpcScriptExecAsync {
                 if (cbStopCodeRunning) {
                     cbStopCodeRunning();
                 } else {
-                    throw makeVpcInternalErr('JE|cbStopCodeRunning');
+                    checkThrowInternal(false, 'JE|cbStopCodeRunning');
                 }
 
                 /* this causes script to stop immediately,

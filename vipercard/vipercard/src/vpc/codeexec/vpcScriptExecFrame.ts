@@ -1,11 +1,11 @@
 
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { VpcVal } from './../vpcutils/vpcVal';
-/* auto */ import { CodeLimits, VpcScriptMessage, checkThrow } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { LoopLimit, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { VpcElProductOpts } from './../vel/velProductOpts';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';

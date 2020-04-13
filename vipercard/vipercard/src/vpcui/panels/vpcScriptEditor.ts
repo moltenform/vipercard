@@ -1,10 +1,10 @@
 
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { checkThrow, checkThrowInternal, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O, tostring } from './../../ui512/utils/util512Base';
-/* auto */ import { MapKeyToObjectCanSet, Util512, slength } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
@@ -157,46 +157,47 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * shows the last error encountered by the codeExec object
      */
     protected refreshStatusLabels(app: UI512Application, vel: VpcElBase) {
-        let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
-        this.status2a.set('labeltext', '');
-        if (lastScriptErr && lastScriptErr.velId === vel.id) {
-            /* check for "encountered" err */
-            this.setStatusLabeltext(
-                'lngEncountered a script error:',
-                lastScriptErr.lineNumber,
-                cleanExceptionMsg(lastScriptErr.details),
-                cleanExceptionMsg(lastScriptErr.details)
-            );
-        } else {
-            /* check for syntax err */
-            let err: O<Error>;
-            try {
-                let rawCode = vel.getS('script');
-                this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
-            } catch (e) {
-                err = e;
-            }
+        checkThrow(false, 'nyi')
+        //~ let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
+        //~ this.status2a.set('labeltext', '');
+        //~ if (lastScriptErr && lastScriptErr.velId === vel.id) {
+            //~ /* check for "encountered" err */
+            //~ this.setStatusLabeltext(
+                //~ 'lngEncountered a script error:',
+                //~ lastScriptErr.lineNumber,
+                //~ cleanExceptionMsg(lastScriptErr.details),
+                //~ cleanExceptionMsg(lastScriptErr.details)
+            //~ );
+        //~ } else {
+            //~ /* check for syntax err */
+            //~ let err: O<Error>;
+            //~ try {
+                //~ let rawCode = vel.getS('script');
+                //~ this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
+            //~ } catch (e) {
+                //~ err = e;
+            //~ }
 
-            if (err) {
-                let errGot = this.vci.getCodeExec().getOrGenerateScriptErr(err);
-                this.setStatusLabeltext(
-                    'lngSyntax error:',
-                    errGot.lineNumber,
-                    cleanExceptionMsg(errGot.details),
-                    cleanExceptionMsg(errGot.details)
-                );
-            } else {
-                this.setStatusLabeltext('', undefined, '', '');
-            }
-        }
+            //~ if (err) {
+                //~ let errGot = this.vci.getCodeExec().getOrGenerateScriptErr(err);
+                //~ this.setStatusLabeltext(
+                    //~ 'lngSyntax error:',
+                    //~ errGot.lineNumber,
+                    //~ cleanExceptionMsg(errGot.details),
+                    //~ cleanExceptionMsg(errGot.details)
+                //~ );
+            //~ } else {
+                //~ this.setStatusLabeltext('', undefined, '', '');
+            //~ }
+        //~ }
 
-        let grp = app.getGroup(this.grpId);
-        let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
-        if (slength(this.status2a.getS('labeltext')) || this.needsCompilation.find(vel.id)) {
-            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
-        } else {
-            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
-        }
+        //~ let grp = app.getGroup(this.grpId);
+        //~ let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
+        //~ if (slength(this.status2a.getS('labeltext')) || this.needsCompilation.find(vel.id)) {
+            //~ btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
+        //~ } else {
+            //~ btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
+        //~ }
     }
 
     /**
@@ -230,22 +231,23 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         /* run compilation */
         this.saveChangesToModel(this.vci.UI512App(), false);
 
-        /* how to check for syntax errors... try finding a handler on it? */
-        let rawCode = vel.getS('script');
-        this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
+        checkThrow(false, 'nyi')
+        //~ /* how to check for syntax errors... try finding a handler on it? */
+        //~ let rawCode = vel.getS('script');
+        //~ this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
 
-        /* hide the "just encountered" message. */
-        /* seems ok to do -- also might be possible for user to click hide. */
-        let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
-        if (lastScriptErr && lastScriptErr.velId === vel.id) {
-            this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
-        }
+        //~ /* hide the "just encountered" message. */
+        //~ /* seems ok to do -- also might be possible for user to click hide. */
+        //~ let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
+        //~ if (lastScriptErr && lastScriptErr.velId === vel.id) {
+            //~ this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
+        //~ }
 
-        /* refresh. setting script does trigger uiredraw, but script has already been updated */
-        /* because saveChangesToModel was called in mousedown.
-        so need to manually cause update */
-        this.needsCompilation.remove(vel.id);
-        this.vci.causeUIRedraw();
+        //~ /* refresh. setting script does trigger uiredraw, but script has already been updated */
+        //~ /* because saveChangesToModel was called in mousedown.
+        //~ so need to manually cause update */
+        //~ this.needsCompilation.remove(vel.id);
+        //~ this.vci.causeUIRedraw();
     }
 
     /**
@@ -359,7 +361,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         if (onlyCheckIfDirty) {
             let current = vel.getS('script');
             if (current !== newscript) {
-                throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
+                checkThrowInternal(false, VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
             vel.set('script', newscript);

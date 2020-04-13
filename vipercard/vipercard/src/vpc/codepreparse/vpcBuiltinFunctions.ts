@@ -1,9 +1,9 @@
 
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { VpcScriptMessage, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
+/* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { PropAdjective, VpcElType, VpcTool, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
@@ -170,7 +170,7 @@ export class VpcBuiltinFunctions {
             return ret;
         }
 
-        throw makeVpcScriptErr(`5k|no such function ${name}`);
+        checkThrow(false, `5k|no such function ${name}`);
     }
 
     /**
@@ -259,7 +259,7 @@ export class VpcBuiltinFunctions {
         let f = args[0].readAsStrictNumeric(this.tmpArr);
         let max = Math.trunc(f);
         if (max < 1) {
-            throw makeVpcScriptErr(`5j|value must be >= 1 but got ${f}`);
+            checkThrow(false, `5j|value must be >= 1 but got ${f}`);
         } else {
             return VpcValN(Util512Higher.getRandIntInclusiveWeak(1, max));
         }
@@ -388,7 +388,7 @@ export class VpcBuiltinFunctions {
      */
     callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.cmdKey === undefined) {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`Ja|not a key event - function can only be
                     called in a handler like 'on afterkeydown'`)
             );
@@ -403,7 +403,7 @@ export class VpcBuiltinFunctions {
      */
     callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.optionKey === undefined) {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`JZ|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );
@@ -418,7 +418,7 @@ export class VpcBuiltinFunctions {
      */
     callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.shiftKey === undefined) {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`JY|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );
@@ -433,7 +433,7 @@ export class VpcBuiltinFunctions {
      */
     callKeychar(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyChar === undefined) {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`JX|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );
@@ -447,7 +447,7 @@ export class VpcBuiltinFunctions {
      */
     callKeyrepeated(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyRepeated === undefined) {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`JW|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );

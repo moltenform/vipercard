@@ -1,8 +1,8 @@
 
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { vpcUsersCreate } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';

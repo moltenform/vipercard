@@ -1,7 +1,6 @@
 
-/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, checkThrowInternal, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
@@ -94,7 +93,7 @@ export class VpcElStack extends VpcElBase {
             let linParts = lin.split('||');
             return VpcElStackLineageEntry.fromSerialized(last(linParts));
         } else {
-            throw makeVpcInternalErr('K5|stacklineage should never be empty');
+            checkThrowInternal(false, 'K5|stacklineage should never be empty');
         }
     }
 

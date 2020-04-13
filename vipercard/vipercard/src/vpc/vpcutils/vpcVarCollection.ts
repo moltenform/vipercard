@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcVal, VpcValS } from './vpcVal';
-/* auto */ import { checkThrow } from './vpcUtils';
+/* auto */ import { checkThrow, checkThrowInternal } from './vpcEnums';
 /* auto */ import { MapKeyToObjectCanSet, Util512 } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -109,6 +109,6 @@ export class VariableCollectionConstants extends VarCollection {
     }
 
     set(varName: string, val: VpcVal) {
-        throw makeVpcInternalErr("5~|we don't support creating a new constant " + varName);
+        checkThrowInternal(false, "5~|we don't support creating a new constant " + varName);
     }
 }

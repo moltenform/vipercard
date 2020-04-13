@@ -1,6 +1,5 @@
 
-/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
-/* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
@@ -84,7 +83,7 @@ export class VpcGettableSerialization {
                     prp[1] !== '_' &&
                     !VpcGettableSerialization.okNotToSee[prpSliced]
                 ) {
-                    throw makeVpcInternalErr(`in obj ${vel.id} did not see ${prpSliced}`);
+                    checkThrowInternal(false, `in obj ${vel.id} did not see ${prpSliced}`);
                 }
             }
         } finally {

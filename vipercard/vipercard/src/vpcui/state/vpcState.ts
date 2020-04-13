@@ -1,10 +1,9 @@
 
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoManager, UndoableActionCreateVel, UndoableActionDeleteVel } from './vpcUndo';
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcOutsideImpl } from './vpcOutsideImpl';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';

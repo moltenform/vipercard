@@ -3,7 +3,7 @@
 /* auto */ import { VpcPanelScriptEditor } from './vpcScriptEditor';
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcElType, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrowInternal, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, cast } from './../../ui512/utils/util512';
@@ -251,7 +251,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         if (onlyCheckIfDirty) {
             let current = propName === 'name' ? VpcValS(vel.getS('name')) : vel.getProp(propName, currentCardId);
             if (current.readAsString() !== newVal.readAsString()) {
-                throw makeVpcInternalErr(msgNotification + VpcPanelScriptEditor.thereArePendingChanges);
+                checkThrowInternal(false, VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
             vel.setProp(propName, newVal, currentCardId);

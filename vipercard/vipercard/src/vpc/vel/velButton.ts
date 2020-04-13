@@ -1,8 +1,7 @@
 
-/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
@@ -128,7 +127,7 @@ export class VpcElButton extends VpcElSizable {
                 } else if (s === 'center') {
                     me.set('textalign', 'center');
                 } else {
-                    throw makeVpcScriptErr(`4z|we don't currently support setting text align to ${s}`);
+                    checkThrow(false, `4z|we don't currently support setting text align to ${s}`);
                 }
             }
         ];

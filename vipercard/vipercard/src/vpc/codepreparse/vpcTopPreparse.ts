@@ -1,6 +1,6 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
-/* auto */ import { CodeLimits, CountNumericId, checkThrow } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcRewritesLoops } from './vpcRewritesLoops';
 /* auto */ import { VpcRewritesGlobal, VpcSuperRewrite } from './vpcRewritesGlobal';
@@ -10,9 +10,9 @@
 /* auto */ import { BranchProcessing } from './vpcProcessBranchAndLoops';
 /* auto */ import { MakeLowerCase, SplitIntoLinesAndMakeLowercase, VpcCodeLine, VpcCodeLineReference } from './vpcPreparseCommon';
 /* auto */ import { VpcLineToCodeObj } from './vpcLineToCodeObj';
+/* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { MapKeyToObject, Util512, ValHolder, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -110,7 +110,7 @@ Part 2: execution
         the scheduler will call into us again in a few milliseconds.
     If the stack of execution frames is empty, we've completed the script.
 */
-export namespace VpcCodeProcessor {
+export namespace VpcTopPreparse {
     function goImpl(
         code: string,
         latestSrcLineSeen: ValHolder<number>,
@@ -123,7 +123,7 @@ export namespace VpcCodeProcessor {
         if (lexed.errors.length) {
             latestSrcLineSeen.val = lexed.errors[0].line;
             let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
-            throw makeVpcScriptErr(`5(|lex error: ${errmsg}`);
+            checkThrow(false, `5(|lex error: ${errmsg}`);
         }
 
         let rw = new VpcSuperRewrite(idGen);
@@ -213,28 +213,26 @@ export namespace VpcCodeProcessor {
         code: string,
         velIdForErrMsg: string,
         idGen: CountNumericId
-    ): VpcScriptSyntaxError | VpcParsedCodeCollection {
-        assertTrue(!code.match(/^\s*$/), '');
-        let latestSrcLineSeen = new ValHolder(0);
-        let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
-        let syntaxError: O<VpcScriptSyntaxError>;
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
-        try {
-            UI512ErrorHandling.breakOnThrow = false;
-            return goImpl(code, latestSrcLineSeen, latestDestLineSeen, idGen);
-        } catch (e) {
-            syntaxError = new VpcScriptSyntaxError();
-            syntaxError.isScriptException = e.isVpcError;
-            syntaxError.isExternalException = !e.isUi512Error;
-            syntaxError.lineNumber = latestSrcLineSeen.val;
-            syntaxError.velId = velIdForErrMsg;
-            syntaxError.lineData = latestDestLineSeen.val;
-            syntaxError.details = e.message;
-        } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
-        }
+    ):  VpcParsedCodeCollection {
+        //  VpcScriptSyntaxError | VpcParsedCodeCollection
+        checkThrow(false, 'nyi')
+        //~ assertTrue(!code.match(/^\s*$/), '');
+        //~ let latestSrcLineSeen = new ValHolder(0);
+        //~ let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
+        //~ let syntaxError: O<VpcScriptSyntaxError>;
+        //~ try {
+            //~ return goImpl(code, latestSrcLineSeen, latestDestLineSeen, idGen);
+        //~ } catch (e) {
+            //~ syntaxError = new VpcScriptSyntaxError();
+            //~ syntaxError.isScriptException = e.isVpcError;
+            //~ syntaxError.isExternalException = !e.isUi512Error;
+            //~ syntaxError.lineNumber = latestSrcLineSeen.val;
+            //~ syntaxError.velId = velIdForErrMsg;
+            //~ syntaxError.lineData = latestDestLineSeen.val;
+            //~ syntaxError.details = e.message;
+        //~ }
 
-        return syntaxError;
+        //~ return syntaxError;
     }
 }
 

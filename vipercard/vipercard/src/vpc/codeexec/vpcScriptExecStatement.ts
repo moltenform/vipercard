@@ -1,12 +1,11 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, VpcVisualEffectSpec, VpcVisualEffectSpeed, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
+/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, VpcVisualEffectSpec, VpcVisualEffectSpeed, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
@@ -129,7 +128,7 @@ export class ExecuteStatement {
         ) {
             this.outside.SetOption('mimicCurrentTool', tool);
         } else {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`5F|the choose command is currently used for
                 simulating drawing only, so it must be one of the
                 paint tools like "pencil" or "brush" chosen`)
@@ -148,7 +147,7 @@ export class ExecuteStatement {
      */
     goDelete(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
-            throw makeVpcScriptErr("5C|the 'delete' command is not yet supported for btns or flds.");
+            checkThrow(false, "5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
             let contRef = ensureDefined(
                 this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer),
@@ -224,10 +223,10 @@ export class ExecuteStatement {
             if (identifier === 'menubar') {
                 this.outside.SetOption('fullScreen', true);
             } else {
-                throw makeVpcScriptErr('4_|so far we only support hide menubar or hide cd btn 1');
+                checkThrow(false, '4_|so far we only support hide menubar or hide cd btn 1');
             }
         } else {
-            throw makeVpcScriptErr('4^|all choices null');
+            checkThrow(false, '4^|all choices null');
         }
     }
     /**
@@ -312,7 +311,7 @@ export class ExecuteStatement {
     goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
         checkThrow(params[0] === 'paint', 'only support reset paint');
-        throw makeVpcScriptErr("52|the 'reset' command is not yet implemented.");
+        checkThrow(false, "52|the 'reset' command is not yet implemented.");
     }
     /**
      * replace text

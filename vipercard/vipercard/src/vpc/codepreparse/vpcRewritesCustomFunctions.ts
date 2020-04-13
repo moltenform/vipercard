@@ -1,8 +1,9 @@
 
-/* auto */ import { CodeLimits, CountNumericId, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { LoopLimit } from './vpcPreparseCommon';
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';

@@ -2,7 +2,7 @@
 /* auto */ import { VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcElType, VpcGranularity } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcGranularity, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
@@ -207,7 +207,7 @@ export class VpcElField extends VpcElSizable {
                 } else if (s === 'center') {
                     me.set('textalign', 'center');
                 } else {
-                    throw makeVpcScriptErr(`4y|we don't currently support setting text align to ${s}`);
+                    checkThrow(false, `4y|we don't currently support setting text align to ${s}`);
                 }
             }
         ];
@@ -282,7 +282,7 @@ export class VpcElField extends VpcElSizable {
             let n = VpcValS(s).readAsStrictInteger();
             SubstringStyleComplex.setChunkTextSize(newTxt, this.getDefaultFontAsUi512(), charstart, len, n);
         } else {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`4x|can only say 'set the (prop) of char 1 to 2'
                     for textstyle, textfont, or textsize`)
             );
@@ -323,7 +323,7 @@ export class VpcElField extends VpcElSizable {
                 len
             ).toString();
         } else {
-            throw makeVpcScriptErr(
+            checkThrow(false, 
                 longstr(`4w|can only say 'get the (prop) of char 1 to 2'
                     for textstyle, textfont, or textsize`)
             );

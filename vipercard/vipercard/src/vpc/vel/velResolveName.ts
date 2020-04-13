@@ -1,7 +1,6 @@
 
-/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, checkThrow, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcModelTop } from './velModelTop';

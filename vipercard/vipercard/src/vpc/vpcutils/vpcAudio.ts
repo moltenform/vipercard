@@ -1,5 +1,5 @@
 
-/* auto */ import { checkThrow } from './vpcUtils';
+/* auto */ import { checkThrow } from './vpcEnums';
 /* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
 

@@ -1,6 +1,6 @@
 
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';

@@ -1,7 +1,7 @@
 
-/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { last } from './../../ui512/utils/util512';
 

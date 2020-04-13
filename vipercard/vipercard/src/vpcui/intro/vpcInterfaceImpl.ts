@@ -1,5 +1,4 @@
 
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcState } from './../state/vpcState';
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
@@ -7,7 +6,7 @@
 /* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';

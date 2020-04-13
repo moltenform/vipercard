@@ -2,8 +2,8 @@
 /* auto */ import { VpcBuiltinMsg } from './vpcEnums';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512BaseErr, assertTrue, assertWarn, joinIntoMessage } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -129,53 +129,6 @@ export enum CodeLimits {
     LimitChevErrStringLen = 128,
 }
 
-export class VpcErr  extends Util512BaseErr {
-    isVpcBaseErr = true
-    constructor(public message:string, public level:string) {
-        super(message, level)
-    }
-}
-
-export function makeVpcError(
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = '',
-    s3: unknown = '',) {
-        let level = 'vpc'
-        let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
-        return Util512BaseErr.create(VpcErr, msgTotal, level)
-    }
-
-/**
- * a quick way to throw if condition is false.
- * not the same as assert, which should only be triggered when
- * something goes wrong.
- */
-export function checkThrow(
-    condition: unknown,
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = ''
-): asserts condition {
-    if (!condition) {
-        throw makeVpcError(`O |${msg} ${s1} ${s2}`);
-    }
-}
-
-/**
- * a quick way to throw an expection if value is not what was expected.
- */
-export function checkThrowEq<T>(
-    expected: T,
-    got: unknown,
-    msg: string,
-    c1: unknown = '',
-    c2: unknown = ''
-): asserts got is T {
-    if (expected !== got && util512Sort(expected, got) !== 0) {
-        checkThrow(false, msg, c1, c2)
-    }
-}
 
 /**
  * the user can log to the message box

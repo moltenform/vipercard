@@ -1,7 +1,7 @@
 
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../utils/util512AssertCustom';
-/* auto */ import { BrowserOSInfo, assertEq } from './../utils/util512';
+/* auto */ import { BrowserOSInfo, assertEq, assertWarnEq } from './../utils/util512';
 /* auto */ import { TranslateCharset } from './ui512TranslateCharset';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { specialCharFontChange } from './ui512DrawTextClasses';
@@ -234,7 +234,7 @@ export class FormattedText {
      * length of our string
      */
     len() {
-        assertEqWarn(this.charArray.length, this.fontArray.length, '3f|');
+        assertWarnEq(this.charArray.length, this.fontArray.length, '3f|');
         return this.charArray.length;
     }
 

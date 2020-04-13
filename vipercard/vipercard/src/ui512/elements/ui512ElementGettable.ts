@@ -1,7 +1,7 @@
 
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, checkThrow512 } from './../utils/util512AssertCustom';
-/* auto */ import { assertEq, slength } from './../utils/util512';
+/* auto */ import { assertEq, assertWarnEq, slength } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 
@@ -25,7 +25,7 @@ export abstract class UI512Gettable {
 
     getS(s: string): string {
         let v = (this as any)['_' + s]; /* gettable */
-        assertEqWarn(typeof '', typeof v, `2*|${s} expected type ${typeof ''}`);
+        assertWarnEq(typeof '', typeof v, `2*|${s} expected type ${typeof ''}`);
         return v;
     }
 

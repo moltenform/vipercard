@@ -101,7 +101,7 @@ export class Util512Higher {
             }
         });
         img.onerror = () => {
-            assertWarn('4L|failed to load ' + url);
+            assertWarn(false, '4L|failed to load ' + url);
         };
         img.src = url;
         if (img.complete) {

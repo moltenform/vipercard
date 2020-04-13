@@ -1,7 +1,7 @@
 
-/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, couldTokenTypeBeAVariableName, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
+/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { last } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

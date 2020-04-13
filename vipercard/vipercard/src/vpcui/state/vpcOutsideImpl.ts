@@ -1,11 +1,11 @@
 
 /* auto */ import { VpcVal, VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer, checkThrow } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { LogToReplMsgBox, ReadableContainer, VpcScriptMessage, WritableContainer } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcExecFrameStack } from './../../vpc/codeexec/vpcScriptExecFrameStack';
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
@@ -148,7 +148,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsCard instanceof VpcElCard) {
             return parentAsCard.parts.filter(ch => ch.getType() === type).length;
         } else {
-            throw makeVpcScriptErr(`6s|cannot count types ${type} parent of type ${parent.getType()} ${parent.id}`);
+            checkThrow(false, `6s|cannot count types ${type} parent of type ${parent.getType()} ${parent.id}`);
         }
     }
 
@@ -221,7 +221,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let [frStack, frame] = this.getExecFrameStack();
         let found = frStack.constants.find(varName);
         if (found) {
-            throw makeVpcScriptErr(`6m|name not allowed ${varName}, it is a constant`);
+            checkThrow(false, `6m|name not allowed ${varName}, it is a constant`);
         }
 
         checkThrow(this.check.okLocalVar(varName), '8>|variable name not allowed', varName);
@@ -261,7 +261,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         } else if (container.variable) {
             return new ReadableContainerVar(this as OutsideWorldRead, container.variable);
         } else {
-            throw makeVpcScriptErr(`6l|invalid IntermedValContainer, nothing set`);
+            checkThrow(false, `6l|invalid IntermedValContainer, nothing set`);
         }
     }
 
@@ -285,7 +285,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         } else if (container.variable) {
             return new WritableContainerVar(this, container.variable);
         } else {
-            throw makeVpcScriptErr(`6k|invalid IntermedValContainer, nothing set`);
+            checkThrow(false, `6k|invalid IntermedValContainer, nothing set`);
         }
     }
 
@@ -389,7 +389,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 /* the only other prop that accepts an adjective is version. */
                 prop = 'version/long';
             } else if (adjective !== PropAdjective.Empty) {
-                throw makeVpcScriptErr(
+                checkThrow(false, 
                     longstr(`6j|this property does not take an
                         adjective like long (the long name of cd btn 1)`)
                 );
@@ -589,7 +589,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return [frStack, frame];
         } else {
             assertTrue(false, '6h|could not find execution frame');
-            throw makeVpcScriptErr('6g|could not find execution frame');
         }
     }
 }

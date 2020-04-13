@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcIntermedValBase, VpcVal } from './vpcVal';
-/* auto */ import { ReadableContainer, WritableContainer, checkThrow, checkThrowEq } from './vpcUtils';
-/* auto */ import { OrdinalOrPosition, SortType, VpcChunkPreposition, VpcGranularity, getPositionFromOrdinalOrPosition } from './vpcEnums';
+/* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
+/* auto */ import { OrdinalOrPosition, SortType, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, getPositionFromOrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, last, longstr, util512Sort } from './../../ui512/utils/util512';
@@ -193,7 +193,7 @@ export class ChunkResolution {
         } else if (ch.type === VpcGranularity.Words) {
             return this.wordsBoundsForGet(s, start, end);
         } else {
-            throw makeVpcScriptErr(`5<|unknown chunk type ${ch.type}`);
+            checkThrow(false, `5<|unknown chunk type ${ch.type}`);
         }
     }
 
@@ -240,7 +240,7 @@ export class ChunkResolution {
         } else if (ch.type === VpcGranularity.Words) {
             return this.wordsBoundsForSet(sInput, start, end);
         } else {
-            throw makeVpcScriptErr(`5:|unknown chunk type ${ch.type}`);
+            checkThrow(false, `5:|unknown chunk type ${ch.type}`);
         }
     }
 
@@ -259,7 +259,7 @@ export class ChunkResolution {
         } else if (type === VpcGranularity.Lines) {
             splitBy = '\n';
         } else {
-            throw makeVpcScriptErr(`5/|we don't currently support sorting by ${type}`);
+            checkThrow(false, `5/|we don't currently support sorting by ${type}`);
         }
 
         let split = cont.getRawString().split(splitBy);
@@ -286,7 +286,7 @@ export class ChunkResolution {
                 return a.localeCompare(b);
             };
         } else {
-            throw makeVpcScriptErr(`5.|Don't yet support sorting by style ${sortType}`);
+            checkThrow(false, `5.|Don't yet support sorting by style ${sortType}`);
         }
 
         split.sort(sorter);
@@ -320,7 +320,7 @@ export class ChunkResolution {
         } else if (type === VpcGranularity.Words) {
             return self.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
         } else {
-            throw makeVpcScriptErr(`5-|unknown chunk type ${type}`);
+            checkThrow(false, `5-|unknown chunk type ${type}`);
         }
     }
 
@@ -393,7 +393,7 @@ export class ChunkResolution {
             } else if (prep === VpcChunkPreposition.Before) {
                 cont.splice(bounds[0], 0, news);
             } else {
-                throw makeVpcScriptErr(`5,|unknown preposition ${prep}`);
+                checkThrow(false, `5,|unknown preposition ${prep}`);
             }
         } else {
             let result: string;
@@ -406,7 +406,7 @@ export class ChunkResolution {
             } else if (prep === VpcChunkPreposition.Into) {
                 result = news;
             } else {
-                throw makeVpcScriptErr(`5+|unknown preposition ${prep}`);
+                checkThrow(false, `5+|unknown preposition ${prep}`);
             }
 
             cont.setAll(result);

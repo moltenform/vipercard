@@ -1,6 +1,5 @@
 
-/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
-/* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcElField } from './velField';
@@ -90,13 +89,13 @@ export class VpcModelTop {
         if (vel instanceof VpcElStack) {
             return this.productOpts;
         } else if (vel instanceof VpcElProductOpts) {
-            throw makeVpcScriptErr(`4t|cannot get the owner of product`);
+            checkThrow(false, `4t|cannot get the owner of product`);
         } else {
             let found = this.findByIdUntyped(vel.parentId);
             if (found !== undefined) {
                 return found;
             } else {
-                throw makeVpcScriptErr(`4s|cannot get the owner of el ${vel.id}`);
+                checkThrow(false, `4s|cannot get the owner of el ${vel.id}`);
             }
         }
     }

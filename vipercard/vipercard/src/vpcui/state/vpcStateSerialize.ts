@@ -1,7 +1,6 @@
 
-/* auto */ import { checkThrow, checkThrowEq } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow, checkThrowEq } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { SerializedVelStructure, SerializedVpcDocStructure, VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O, UI512Compress, vpcversion } from './../../ui512/utils/util512Base';

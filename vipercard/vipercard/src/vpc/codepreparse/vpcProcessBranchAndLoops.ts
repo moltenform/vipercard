@@ -1,6 +1,7 @@
 
-/* auto */ import { CountNumericId, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
+/* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcLineCategory } from './vpcPreparseCommon';
+/* auto */ import { checkThrow, checkThrowEq, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { MapKeyToObject, last, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -33,7 +34,7 @@ export class BranchProcessing {
             }
         }
 
-        throw makeVpcScriptErr(`5r|cannot call 'exit repeat' or 'next repeat' outside of a loop`);
+        checkThrow(false, `5r|cannot call 'exit repeat' or 'next repeat' outside of a loop`);
     }
 
     /**
@@ -70,9 +71,9 @@ export class BranchProcessing {
      */
     go(line: VpcCodeLine) {
         if (this.stack.length === 0 && line.ctg !== VpcLineCategory.HandlerStart) {
-            throw makeVpcScriptErr(`5q|only 'on mouseup' and 'function myfunction' can exist at this scope`);
+            checkThrow(false, `5q|only 'on mouseup' and 'function myfunction' can exist at this scope`);
         } else if (this.stack.length > 0 && line.ctg === VpcLineCategory.HandlerStart) {
-            throw makeVpcScriptErr(`5p|cannot begin a handler inside an existing handler`);
+            checkThrow(false, `5p|cannot begin a handler inside an existing handler`);
         }
 
         switch (line.ctg) {
@@ -148,7 +149,8 @@ export class BranchProcessing {
                 break;
             }
             case VpcLineCategory.Invalid:
-                throw makeVpcInternalErr('5o|should not have this line category');
+                checkThrowInternal(false, '5o|should not have this line category');
+                break;
             default:
                 break;
         }

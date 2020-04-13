@@ -1,7 +1,7 @@
 
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, checkThrow512 } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, checkThrow512 } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -16,14 +16,10 @@ export async function assertThrowsAsync<T>(
     fn: () => Promise<T>
 ) {
     let msg: O<string>;
-    let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
-    UI512ErrorHandling.breakOnThrow = false;
     try {
         await fn();
     } catch (e) {
         msg = e.message ? e.message : '';
-    } finally {
-        UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
     }
 
     assertTrue(msg !== undefined, `JC|did not throw ${msgWithMark}`);
@@ -38,14 +34,11 @@ export async function assertThrowsAsync<T>(
  */
 export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidFn) {
     let msg: O<string>;
-    let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
+    
     try {
-        UI512ErrorHandling.breakOnThrow = false;
         fn();
     } catch (e) {
         msg = e.message ? e.message : '';
-    } finally {
-        UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
     }
 
     assertTrue(msg !== undefined, `3{|did not throw ${msgWithMark}`);

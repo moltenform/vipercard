@@ -2,7 +2,7 @@
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
+/* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
@@ -11,13 +11,13 @@
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, ValHolder, assertEq, getEnumToStrOrFallback, getStrToEnum, last, lastIfThere, slength } from './../../ui512/utils/util512';
+/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512, ValHolder, assertEq, assertWarnEq, getEnumToStrOrFallback, getStrToEnum, last, lastIfThere, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -194,23 +194,27 @@ export class VpcExecFrameStack {
         if (curFrame) {
             let curLine = curFrame.codeSection.lines[curFrame.getOffset()];
             checkThrow(curLine, `5c|no code defined at offset ${curFrame.getOffset()} of element ${curFrame.meId}`);
-            try {
-                assertEq(curLine.offset, curFrame.getOffset(), '5d|');
-                this.runOneLineImpl(curFrame, curLine, blocked);
-                return false;
-            } catch (e) {
-                /* add error context and re-throw */
-                let scriptErr = new VpcScriptRuntimeError();
-                scriptErr.details = e.message;
-                scriptErr.lineNumber = curLine.firstToken.startLine ?? 0;
-                scriptErr.velId = curFrame.meId;
-                scriptErr.lineData = curLine;
-                scriptErr.isScriptException = e.isVpcError;
-                scriptErr.isExternalException = !e.isUi512Error;
-                scriptErr.e = e;
-                e.vpcScriptErr = scriptErr;
-                throw e;
-            }
+            assertWarn(false, 'nyi')
+            //~ try {
+                //~ assertEq(curLine.offset, curFrame.getOffset(), '5d|');
+                //~ this.runOneLineImpl(curFrame, curLine, blocked);
+                //~ return false;
+            //~ } catch (e) {
+                //~ let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e)
+                //~ if (!scriptErr) {
+                    //~ scriptErr = VpcErr.createError('', 'runOneLine')
+                    //~ scriptErr.addErr(e)
+                //~ }
+                //~ /* add error context and re-throw */
+                //~ scriptErr.scriptErrLine = curLine.firstToken.startLine ?? 0;
+                //~ scriptErr.scriptErrVelid = curFrame.meId;
+                //~ scriptErr.lineData = curLine;
+                //~ scriptErr.isScriptException = e.isVpcError;
+                //~ scriptErr.isExternalException = !e.isUi512Error;
+                //~ scriptErr.e = e;
+                //~ e.vpcScriptErr = scriptErr;
+                //~ throw e;
+            //~ }
         } else {
             /* there's no current stack, looks like we are done! */
             return true;
@@ -259,7 +263,7 @@ export class VpcExecFrameStack {
             checkThrow(visited instanceof VpcIntermedValBase, '7t|did not get IntermedValBase when running', curLine.allImages);
             return visited;
         } else {
-            throw makeVpcScriptErr('5Z|no expression was parsed');
+            checkThrow(false,'5Z|no expression was parsed');
         }
     }
 
@@ -324,7 +328,7 @@ export class VpcExecFrameStack {
     visitHandlerStart(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         /* confirm handler name */
         assertTrue(curLine.excerptToParse.length > 1, '5X|wrong readyToParse length');
-        assertEqWarn(curFrame.handlerName.toLowerCase(), curLine.excerptToParse[1].image.toLowerCase(), '5W|');
+        assertWarnEq(curFrame.handlerName.toLowerCase(), curLine.excerptToParse[1].image.toLowerCase(), '5W|');
 
         for (let i = 2; i < curLine.excerptToParse.length; i++) {
             /* set "params" values */
@@ -396,7 +400,7 @@ export class VpcExecFrameStack {
         if (curLine.blockInfo && curLine.blockInfo.length >= nAtLeast) {
             return curLine.blockInfo;
         } else {
-            throw makeVpcScriptErr(`5V|no branches stored in blockInfo`);
+            checkThrow(false, `5V|no branches stored in blockInfo`);
         }
     }
 
@@ -534,7 +538,7 @@ export class VpcExecFrameStack {
                 send "openCard" to cd 3 should never be an error
                 even if there's no openCard handler */
             } else {
-                throw makeVpcScriptErr(`5O|tried to call ${handlerName} but no handler of this name found`);
+                checkThrow(false, `5O|tried to call ${handlerName} but no handler of this name found`);
             }
         }
     }
@@ -608,10 +612,13 @@ on ${newHandlerName}
 end ${newHandlerName}
         `.replace(/\r\n/g, '\n');
 
-        let compiled = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(code, newHandlerName, meId);
-        checkThrow(compiled, 'did not find the handler we just created');
+        assertTrue(false, "nyi")
 
-        return [compiled, newHandlerName];
+
+        //~ let compiled = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(code, newHandlerName, meId);
+        //~ checkThrow(compiled, 'did not find the handler we just created');
+
+        //~ return [compiled, newHandlerName];
     }
 
     private callCodeAtATarget(

@@ -1,12 +1,9 @@
 
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
-/* auto */ import { VpcParsedCodeCollection } from './../../vpc/codepreparse/vpcTopPreparse';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcLineCategory } from './../../vpc/codepreparse/vpcPreparseCommon';
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
-/* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 
@@ -1606,28 +1603,29 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
      * check that the preparsed/rewritten code is as expected
      */
     compareRewrittenCode(script: string, expected: string) {
-        script = script.trim()
-        let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
-        h.vcstate.vci.undoableAction(() => btnGo.set('script', script));
-        let transformedCode = h.vcstate.vci.getCodeExec().cachedAST.getParsedCodeCollection(script, btnGo.id)
-        checkThrow(transformedCode instanceof VpcParsedCodeCollection, '')
+        checkThrow(false , 'nyi')
+        //~ script = script.trim()
+        //~ let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
+        //~ h.vcstate.vci.undoableAction(() => btnGo.set('script', script));
+        //~ let transformedCode = h.vcstate.vci.getCodeExec().cachedAST.getParsedCodeCollection(script, btnGo.id)
+        //~ checkThrow(transformedCode instanceof VpcParsedCodeCollection, '')
 
-        let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory[o.ctg]);
-        got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
-        let exp = expected
-        .trim()
-        .split('\n')
-        .map(s => s.trim());
-        if (util512Sort(exp, got) !== 0) {
-        console.log('\ncontext\n\n', script);
-        t.warnAndAllowToContinue(
-        '\nexpected\n',
-        exp.join('\n'),
-        '\nbut got\n',
-        got.join('\n'),
-        '\n\n'
-        );
-        }
+        //~ let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory[o.ctg]);
+        //~ got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
+        //~ let exp = expected
+        //~ .trim()
+        //~ .split('\n')
+        //~ .map(s => s.trim());
+        //~ if (util512Sort(exp, got) !== 0) {
+        //~ console.log('\ncontext\n\n', script);
+        //~ t.warnAndAllowToContinue(
+        //~ '\nexpected\n',
+        //~ exp.join('\n'),
+        //~ '\nbut got\n',
+        //~ got.join('\n'),
+        //~ '\n\n'
+        //~ );
+        //~ }
     }
 
     /**

@@ -1,7 +1,7 @@
 
-/* auto */ import { RememberHistory, checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
+/* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBg } from './velBg';

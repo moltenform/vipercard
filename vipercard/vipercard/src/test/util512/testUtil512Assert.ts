@@ -13,7 +13,7 @@ export let testCollectionUtil512Assert = t;
 t.test('AssertThrows', () => {
     t.say(/*——————————*/ 'Get Message From Custom Error');
     assertThrows('L0|', 'mymessage', () => {
-        throw make512Error('1N|1 mymessage 2');
+        throw make512Error('1N|1 mymessage 2').clsAsErr();
     });
     t.say(/*——————————*/ 'Get Message From Plain Error');
     assertThrows('K~|', 'xyz', () => {

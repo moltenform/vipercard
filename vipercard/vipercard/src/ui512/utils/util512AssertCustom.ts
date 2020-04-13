@@ -26,21 +26,44 @@
  */
 export class Util512BaseErr {
     isUtil512BaseErr = true
-    constructor(public message:string, public level:string) {
+    protected constructor(public message:string, public level:string) {
     }
-    static from<T extends Util512BaseErr>(ctor: { new (...args: unknown[]): T }, e:Error):O<T> {
-        let fld = 'is' + ctor.name
+
+    static errAsCls<T extends Util512BaseErr>(nm: string , e:Error):O<T> {
+        let fld = 'is' + nm
         if ((e as any)[fld]) {
             return e as any as T
         } else {
             return undefined
         }
     }
-    static create<T extends Util512BaseErr>(ctor: { new (...args: unknown[]): T }, ...params: unknown[]) {
+
+    clsAsErr() {
+        assertWarn((this as any).isUtil512BaseErr, '')
+        assertWarn((this as any).message, '')
+        return this as any as Error
+    }
+
+    addErr(e:Error) {
+        (this as any).message += '\n' + e.message;
+        (this as any).stack = e.stack;
+        (this as any).line = (e as any).line;
+        (this as any).sourceURL = (e as any).sourceURL;
+    }
+
+    static createErrorImpl<T extends Util512BaseErr>(fnCtor:  (...args: unknown[]) => T, ...params: unknown[]):T {
         let e = new Error()
-        let err = new ctor(...params)
+        let err = fnCtor(...params)
         Object.assign(e, err)
-        return e
+        return e as any as T
+    }
+
+    protected static gen(message:string, level:string) {
+        return new Util512BaseErr(message, level)
+    }
+
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params)
     }
 }
 
@@ -50,6 +73,12 @@ export class Util512BaseErr {
  */
 export class Util512Warn extends Util512BaseErr {
     isUtil512Warn = true
+    protected static gen(message:string, level:string) {
+        return new Util512Warn(message, level)
+    }
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512Warn.gen, ...params)
+    }
 }
 
 /**
@@ -57,6 +86,12 @@ export class Util512Warn extends Util512BaseErr {
  */
 export class Util512Message extends Util512BaseErr {
     isUtil512Message = true
+    protected static gen(message:string, level:string) {
+        return new Util512Message(message, level)
+    }
+    static createError(...params: unknown[]) {
+        return Util512BaseErr.createErrorImpl(Util512Message.gen, ...params)
+    }
 }
 
 function makeUtil512BaseErrGeneric(
@@ -67,7 +102,7 @@ function makeUtil512BaseErrGeneric(
     s3?: unknown
 ) {
     let msg = joinIntoMessage(firstMsg, level, s1, s2, s3);
-    return Util512BaseErr.create(Util512BaseErr, msg, level)
+    return Util512BaseErr.createError(msg, level)
 }
 
 
@@ -86,7 +121,7 @@ export function assertTrue(
 ): asserts condition {
     if (!condition) {
         callDebuggerIfNotInProduction();
-        throw make512Error('O#|assertion failed:', s1, s2, s3);
+        throw make512Error('O#|assertion failed:', s1, s2, s3).clsAsErr();
     }
 }
 
@@ -105,8 +140,8 @@ export function assertWarn(
         if (!UI512ErrorHandling.silenceWarnings) {
             /* we won't throw this error, but we'll make it
             so we can save it + the callstack to logs */
-            let e = Util512BaseErr.create(Util512Warn, msg, 'ui512warn')
-            respondUI512Error(e, 'ui512warn')
+            let e = Util512Warn.createError(msg, 'ui512warn')
+            respondUI512Error(e.clsAsErr(), 'ui512warn')
             let msgTotal = msg + ' Press OK to silence future asserts.'
             if (confirm(msgTotal)) {
                 UI512ErrorHandling.silenceWarnings = true
@@ -127,7 +162,7 @@ export function checkThrow512(
     s2: unknown = ''
 ): asserts condition {
     if (!condition) {
-        throw make512Error(`O |${msg} ${s1} ${s2}`);
+        throw make512Error(`O |${msg} ${s1} ${s2}`).clsAsErr();
     }
 }
 
@@ -243,7 +278,7 @@ export function ensureDefined<T>(
             sTotal += ', ' + s3;
         }
 
-        throw make512Error(sTotal);
+        throw make512Error(sTotal).clsAsErr();
     } else {
         return v;
     }
@@ -253,9 +288,9 @@ export function ensureDefined<T>(
  * respond to exception.
  */
 export function respondUI512Error(e: Error, context: string) {
-    let message = Util512BaseErr.from(Util512Message, e)
-    let warn = Util512BaseErr.from(Util512Warn, e)
-    let structure = Util512BaseErr.from(Util512BaseErr, e)
+    let message = Util512BaseErr.errAsCls(Util512Message.name, e)
+    let warn = Util512BaseErr.errAsCls(Util512Warn.name, e)
+    let structure = Util512BaseErr.errAsCls(Util512BaseErr.name, e)
     if (message) {
         window.alert(e.message)
         return

@@ -1,7 +1,6 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './vpcVal';
-/* auto */ import { checkThrow, checkThrowEq } from './vpcUtils';
-/* auto */ import { VpcOpCtg } from './vpcEnums';
+/* auto */ import { VpcOpCtg, checkThrow, checkThrowEq, checkThrowInternal } from './vpcEnums';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 
@@ -39,7 +38,7 @@ export class VpcEvalHelpers {
             } else if (sType === 'rect') {
                 numExpected = 4;
             } else {
-                throw makeVpcScriptErr(
+                checkThrow(false, 
                     longstr(`5}|expected "if x is a number" but got "if x is a
                       ${sType}" needs one of {number|integer|point|rect|logical}`)
                 );
@@ -54,7 +53,7 @@ export class VpcEvalHelpers {
      */
     evalUnary(aIn: any, op: string): VpcVal {
         if (!aIn || !aIn.isVpcVal) {
-            throw makeVpcInternalErr(`5||can't compute, not VpcVal. ${aIn} ${op}`);
+            checkThrowInternal(false, `5||can't compute, not VpcVal. ${aIn} ${op}`);
         }
 
         let a = aIn as VpcVal;
@@ -65,9 +64,9 @@ export class VpcEvalHelpers {
             let f = a.readAsStrictNumeric(this.tmp1);
             return VpcValN(-f);
         } else if (op === '+') {
-            throw makeVpcScriptErr(`5{|syntax error, "+" in the wrong place. we can't evaluate something like 2*(+3)`);
+            checkThrow(false, `5{|syntax error, "+" in the wrong place. we can't evaluate something like 2*(+3)`);
         } else {
-            throw makeVpcInternalErr(`9f|unknown unary operation ${op}`);
+            checkThrowInternal(false, `9f|unknown unary operation ${op}`);
         }
     }
 
@@ -78,7 +77,7 @@ export class VpcEvalHelpers {
         let a = aIn as VpcVal;
         let b = bIn as VpcVal;
         if (!a || !b || !(a instanceof VpcVal) || !(b instanceof VpcVal)) {
-            throw makeVpcInternalErr(`5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`);
+            checkThrowInternal(false, `5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`);
         }
 
         if (opClass === VpcOpCtg.OpLogicalOrAnd) {
@@ -96,7 +95,7 @@ export class VpcEvalHelpers {
         } else if (opClass === VpcOpCtg.OpPlusMinus || opClass === VpcOpCtg.OpMultDivideExpDivMod) {
             return this.evalOpMath(a, b, op, opClass);
         } else {
-            throw makeVpcInternalErr(`5>|unknown opClass ${opClass} ${op}`);
+            checkThrowInternal(false, `5>|unknown opClass ${opClass} ${op}`);
         }
     }
 
@@ -122,7 +121,7 @@ export class VpcEvalHelpers {
             case 'div':
                 return VpcValN(Math.trunc(av / bv));
             default:
-                throw makeVpcInternalErr(`5?|unknown operator. ${opClass} ${op}`);
+                checkThrowInternal(false, `5?|unknown operator. ${opClass} ${op}`);
         }
     }
 
@@ -142,7 +141,7 @@ export class VpcEvalHelpers {
             case 'is within':
                 return VpcValBool(bv.includes(av));
             default:
-                throw makeVpcInternalErr(`5@|unknown operator. ${opClass} ${op}`);
+                checkThrowInternal(false, `5@|unknown operator. ${opClass} ${op}`);
         }
     }
 
@@ -175,7 +174,7 @@ export class VpcEvalHelpers {
             case '!=':
                 return VpcValBool(av !== bv);
             default:
-                throw makeVpcInternalErr(`5[|unknown operator. ${opClass} ${op}`);
+                checkThrowInternal(false, `5[|unknown operator. ${opClass} ${op}`);
         }
     }
 
@@ -208,7 +207,7 @@ export class VpcEvalHelpers {
             case '!=':
                 return VpcValBool(Math.abs(av - bv) >= VpcVal.epsilon);
             default:
-                throw makeVpcInternalErr(`5]|unknown operator. ${opClass} ${op}`);
+                checkThrowInternal(false, `5]|unknown operator. ${opClass} ${op}`);
         }
     }
 
@@ -224,7 +223,7 @@ export class VpcEvalHelpers {
             case 'and':
                 return VpcValBool(av && bv);
             default:
-                throw makeVpcInternalErr(`5^|unknown operator. ${opClass} ${op}`);
+                checkThrowInternal(false, `5^|unknown operator. ${opClass} ${op}`);
         }
     }
 

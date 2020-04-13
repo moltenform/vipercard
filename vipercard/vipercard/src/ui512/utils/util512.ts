@@ -660,7 +660,7 @@ export function castVerifyIsNum(instance: unknown, context?: string): number {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context);
+    throw make512Error('J7|type cast exception', context).clsAsErr();
 }
 
 /**
@@ -671,7 +671,7 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
         return instance;
     }
 
-    throw make512Error('J7|type cast exception', context);
+    throw make512Error('J7|type cast exception', context).clsAsErr();
 }
 
 
@@ -843,10 +843,7 @@ export class MapKeyToObject<T> {
 
     add(key: string, obj: T) {
         assertTrue(slength(key) > 0, `3^|invalid id ${key}`);
-        if (this.objects[key] !== undefined) {
-            throw make512Error(`3]|duplicate key, ${key} already exists`);
-        }
-
+        checkThrow512(this.objects[key] !== undefined, `3]|duplicate key, ${key} already exists`)
         this.objects[key] = obj;
     }
 
@@ -890,7 +887,7 @@ export function assertEq(
 ) {
     if (expected !== got && util512Sort(expected, got) !== 0) {
         let msgAssertEq = longstr(`expected '${expected}' but got '${got}'.`);
-        assertTrue(false, msgAssertEq, c1, c2, c3)
+        assertTrue(false, msgAssertEq + c1, c2, c3)
     }
 }
 
@@ -904,7 +901,7 @@ export function assertWarnEq(
 ) {
     if (expected !== got && util512Sort(expected, got) !== 0) {
         let msgAssertEq = longstr(`expected '${expected}' but got '${got}'.`);
-        assertWarn(false, msgAssertEq, c1, c2, c3)
+        assertWarn(false, msgAssertEq + c1, c2, c3)
     }
 }
 

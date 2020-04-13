@@ -4,7 +4,7 @@
 /* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
 /* auto */ import { O, bool } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512AssertCustom';
-/* auto */ import { Util512, cast, fitIntoInclusive } from './../utils/util512';
+/* auto */ import { Util512, assertWarnEq, cast, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
@@ -109,7 +109,7 @@ export class ScrollbarImpl {
             return;
         }
 
-        assertEqWarn(
+        assertWarnEq(
             el.getB('scrollbar'),
             bool(grp.findEl(fldIdToScrollbarPartId(el.id, 'arrowUp'))),
             'J3|forgot to call rebuildFieldScrollbars? ' + el.id

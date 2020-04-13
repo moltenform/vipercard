@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
-/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
@@ -60,6 +60,6 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
      * respond to backspace and edit->clear
      */
     onDeleteSelection() {
-        throw makeVpcInternalErr(msgNotification + lng('lngPlease press Backspace on the keyboard to \ndelete text.'));
+        checkThrowInternal(false, lng('lngPlease press Backspace on the keyboard to \ndelete text.'));
     }
 }

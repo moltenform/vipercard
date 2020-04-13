@@ -1,7 +1,7 @@
 
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcUiIntro } from './../../vpcui/intro/vpcIntro';
 /* auto */ import { VpcInitIcons } from './../../vpc/vpcutils/vpcInitIcons';
+/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';

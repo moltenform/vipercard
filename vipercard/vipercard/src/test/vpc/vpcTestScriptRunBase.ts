@@ -5,7 +5,7 @@
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { VpcElType, VpcOpCtg, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcOpCtg, VpcTool, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
@@ -175,20 +175,21 @@ export class TestVpcScriptRunBase {
     }
 
     updateObjectScript(id: string, code: string) {
-        this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
-            let idScriptErr = errFromScript.velId;
-            let n = errFromScript.lineNumber;
-            let isUs = !errFromScript.isExternalException;
-            let msg = errFromScript.details;
-            let lns = built.split('\n');
-            let culpritLine = n ? lns[n - 1] + '; ' + lns[n] : '';
-            assertTrue(false, `2b|script error, looks like <${culpritLine}> ${n}`, msg);
-        };
+        checkThrow(false, 'nyi')
+        //~ this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
+            //~ let idScriptErr = errFromScript.velId;
+            //~ let n = errFromScript.lineNumber;
+            //~ let isUs = !errFromScript.isExternalException;
+            //~ let msg = errFromScript.details;
+            //~ let lns = built.split('\n');
+            //~ let culpritLine = n ? lns[n - 1] + '; ' + lns[n] : '';
+            //~ assertTrue(false, `2b|script error, looks like <${culpritLine}> ${n}`, msg);
+        //~ };
 
-        let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
-        let obj = this.vcstate.model.getByIdUntyped(id);
-        this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
-        this.vcstate.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', obj.id)
+        //~ let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
+        //~ let obj = this.vcstate.model.getByIdUntyped(id);
+        //~ this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
+        //~ this.vcstate.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', obj.id)
     }
 
     runGeneralCode(
@@ -202,55 +203,56 @@ export class TestVpcScriptRunBase {
         let caughtErr = false;
         let isCompilationStage = true;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
-            let msg = scriptErr.details;
-            let velId = '';
-            let line = -1;
-            this.vcstate.vci.undoableAction(() => {
-                let [reVelId, reLine] = VpcPresenter.commonRespondToError(
-                    this.vcstate.vci,
-                    scriptErr
-                );
-                velId = reVelId;
-                line = reLine;
-                this.vcstate.vci.setTool(VpcTool.Browse);
-            });
+            checkThrow(false, 'nyi')
+            //~ let msg = scriptErr.details;
+            //~ let velId = '';
+            //~ let line = -1;
+            //~ this.vcstate.vci.undoableAction(() => {
+                //~ let [reVelId, reLine] = VpcPresenter.commonRespondToError(
+                    //~ this.vcstate.vci,
+                    //~ scriptErr
+                //~ );
+                //~ velId = reVelId;
+                //~ line = reLine;
+                //~ this.vcstate.vci.setTool(VpcTool.Browse);
+            //~ });
 
-            if (expectCompErr !== undefined && isCompilationStage !== expectCompErr) {
-                let lns = built.split('\n');
-                let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-                assertWarn(
-                    false,
-                    '2a|got error at the wrong stage',
-                    culpritLine,
-                    msg
-                );
-            } else if (expectErrMsg) {
-                assertEqWarn(expectErrLine, line, codeBefore, codeIn, '2Z|');
-                if (!msg.includes(expectErrMsg)) {
-                    this.t.warnAndAllowToContinue(
-                        'DIFFERENT ERR MSG for input ' +
-                            codeBefore
-                                .replace(/\n/g, '; ')
-                                .replace(/global testresult; ;/g, '') +
-                            codeIn
-                                .replace(/\n/g, '; ')
-                                .replace(/global testresult; ;/g, '') +
-                            ` expected ${expectErrMsg} and got`
-                    );
+            //~ if (expectCompErr !== undefined && isCompilationStage !== expectCompErr) {
+                //~ let lns = built.split('\n');
+                //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
+                //~ assertWarn(
+                    //~ false,
+                    //~ '2a|got error at the wrong stage',
+                    //~ culpritLine,
+                    //~ msg
+                //~ );
+            //~ } else if (expectErrMsg) {
+                //~ assertWarnEq(expectErrLine, line, codeBefore, codeIn, '2Z|');
+                //~ if (!msg.includes(expectErrMsg)) {
+                    //~ this.t.warnAndAllowToContinue(
+                        //~ 'DIFFERENT ERR MSG for input ' +
+                            //~ codeBefore
+                                //~ .replace(/\n/g, '; ')
+                                //~ .replace(/global testresult; ;/g, '') +
+                            //~ codeIn
+                                //~ .replace(/\n/g, '; ')
+                                //~ .replace(/global testresult; ;/g, '') +
+                            //~ ` expected ${expectErrMsg} and got`
+                    //~ );
 
-                    console.error(msg.replace(/\n/g, '; '));
-                    caughtErr = true;
-                    return;
-                }
-            } else {
-                let lns = built.split('\n');
-                let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-                assertTrue(
-                    false,
-                    `2X|script error, looks like <${culpritLine}> ${line}`,
-                    msg
-                );
-            }
+                    //~ console.error(msg.replace(/\n/g, '; '));
+                    //~ caughtErr = true;
+                    //~ return;
+                //~ }
+            //~ } else {
+                //~ let lns = built.split('\n');
+                //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
+                //~ assertTrue(
+                    //~ false,
+                    //~ `2X|script error, looks like <${culpritLine}> ${line}`,
+                    //~ msg
+                //~ );
+            //~ }
 
             caughtErr = true;
         };
@@ -444,7 +446,7 @@ put ${s} into testresult`;
         } else if (s.startsWith('ERR:')) {
             return s;
         } else {
-            throw makeVpcInternalErr('2J|could not flip ' + s);
+            checkThrowInternal(false, '2J|could not flip ' + s);
         }
     }
 
@@ -468,7 +470,7 @@ put ${s} into testresult`;
             if (op === 'is') {
                 return ['is not', false];
             } else {
-                throw makeVpcInternalErr('2H|unknown op ' + op);
+                checkThrowInternal(false, '2H|unknown op ' + op);
             }
         };
 
@@ -513,7 +515,7 @@ put ${s} into testresult`;
             } else if (op === '>=') {
                 return ['<=', '<'];
             } else {
-                throw makeVpcInternalErr('2F|unknown op ' + op);
+                checkThrowInternal(false, '2F|unknown op ' + op);
             }
         };
 

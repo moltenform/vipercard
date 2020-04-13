@@ -1,8 +1,7 @@
 
-/* auto */ import { checkThrow, checkThrowEq } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcStateSerialize } from './vpcStateSerialize';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './vpcInterface';
-/* auto */ import { VpcElType } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow, checkThrowEq, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UndoableActionCreateOrDelVel } from './vpcCreateOrDelVel';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
@@ -97,14 +96,14 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
         let velAsBg = vel as VpcElBg;
         assertTrue(bool(vci.getModel().findByIdUntyped(vel.id)), "6Z|deleting element that doesn't exist?", vel.id);
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
-            throw makeVpcScriptErr('6Y|Cannot delete this type of element');
+            checkThrow(false, '6Y|Cannot delete this type of element');
         } else if (velAsCard instanceof VpcElCard) {
             let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
             checkThrow(ar.length > 1, '8%|Cannot delete the only card of a stack');
         } else if (vel.id === currentCard.id) {
-            throw makeVpcScriptErr('6X|Cannot delete the current card');
+            checkThrow(false, '6X|Cannot delete the current card');
         } else if (vel.id === currentCard.parentId) {
-            throw makeVpcScriptErr('6W|Cannot delete the current background');
+            checkThrow(false, '6W|Cannot delete the current background');
         }
 
         let childCount = 0;
@@ -152,7 +151,7 @@ class UndoableActionModifyVelement implements UndoableAction {
                 prevVal = '$' + UI512Compress.compressString(prevVal.toString());
                 newVal = '$' + UI512Compress.compressString(newVal.toString());
             } else {
-                throw makeVpcInternalErr('K&|both must be strings ' + propName + ' ' + velId);
+                checkThrowInternal(false, 'K&|both must be strings ' + propName + ' ' + velId);
             }
         } else if (prevVal instanceof FormattedText) {
             if (newVal instanceof FormattedText) {
@@ -161,7 +160,7 @@ class UndoableActionModifyVelement implements UndoableAction {
                 prevVal = '@' + UI512Compress.compressString(prevVal.toSerialized());
                 newVal = '@' + UI512Compress.compressString(newVal.toSerialized());
             } else {
-                throw makeVpcInternalErr('K%|both must be FormattedText ' + propName + ' ' + velId);
+                checkThrowInternal(false, 'K%|both must be FormattedText ' + propName + ' ' + velId);
             }
         }
 

@@ -1,12 +1,12 @@
 
 /* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { VpcScriptMessage, checkThrow } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcScriptErrorBase, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
@@ -15,8 +15,8 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, coalesceIfFalseLike, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { O, bool, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -195,14 +195,15 @@ export class VpcPresenter extends VpcPresenterInit {
      * from script error, to an appropriate site of the error location
      */
     static commonRespondToError(vci: VpcStateInterface, scriptErr: VpcScriptErrorBase): [string, number] {
-        /* use current card if velId is unknown */
-        let velId = scriptErr.velId;
-        velId = coalesceIfFalseLike(velId, vci.getModel().getCurrentCard().id);
-        let line = scriptErr.lineNumber;
+        assertTrue(false, 'nyi')
+        //~ /* use current card if velId is unknown */
+        //~ let velId = scriptErr.velId;
+        //~ velId = coalesceIfFalseLike(velId, vci.getModel().getCurrentCard().id);
+        //~ let line = scriptErr.lineNumber;
 
-        /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
-        vci.setTool(VpcTool.Button);
-        return [velId, line];
+        //~ /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
+        //~ vci.setTool(VpcTool.Button);
+        //~ return [velId, line];
     }
 
     /**
@@ -468,9 +469,9 @@ export class VpcPresenter extends VpcPresenterInit {
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             this.pasteVelImpl(id);
         } else if (id && id.length) {
-            throw makeVpcInternalErr(msgNotification + lng('lngPasting this type of element is not yet supported.'));
+            checkThrowInternal(false, lng('lngPasting this type of element is not yet supported.'));
         } else {
-            throw makeVpcInternalErr(msgNotification + lng('lngNothing has been copied.'));
+            checkThrowInternal(false, lng('lngNothing has been copied.'));
         }
     }
 
@@ -492,7 +493,7 @@ export class VpcPresenter extends VpcPresenterInit {
             w = defaultFldW;
             h = defaultFldH;
         } else {
-            throw makeVpcInternalErr('6E|wrong type ' + type);
+            checkThrowInternal(false, '6E|wrong type ' + type);
         }
 
         let newX = this.userBounds[0] + Util512Higher.getRandIntInclusiveWeak(20, 200);
@@ -550,7 +551,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 dupe.getN('h')
             );
         } else {
-            throw makeVpcInternalErr(msgNotification + lng("lngCan't paste this."));
+            checkThrowInternal(false, lng("lngCan't paste this."));
         }
     }
 
@@ -612,7 +613,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 this.lyrModelRender.fullRedrawNeeded();
             });
         } else {
-            throw makeVpcInternalErr(msgNotification + lng(msgIfFalse));
+            checkThrowInternal(false, lng(msgIfFalse));
         }
     }
 
@@ -624,9 +625,6 @@ export class VpcPresenter extends VpcPresenterInit {
         if (this.isCodeRunning()) {
             return;
         }
-
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
-        UI512ErrorHandling.breakOnThrow = false;
 
         try {
             if (s === 'mnuUndo') {
@@ -642,8 +640,6 @@ export class VpcPresenter extends VpcPresenterInit {
             }
         } catch (e) {
             this.answerMsg(cleanExceptionMsg(e.message));
-        } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
 
         this.lyrModelRender.uiRedrawNeeded();

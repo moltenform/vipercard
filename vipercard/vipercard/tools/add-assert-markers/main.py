@@ -18,6 +18,10 @@ desiredArgIndex = {
     # vpc level
     'checkThrow': 1,
     'checkThrowEq': 2,
+    # vpc level helpers
+    'checkThrowInternal': 1,
+    'checkThrowNotifyMessage': 1,
+    
     # other
     'ensureDefined': 1,
     'assertThrows': 0,

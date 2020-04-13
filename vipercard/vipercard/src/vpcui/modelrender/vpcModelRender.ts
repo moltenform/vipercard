@@ -1,7 +1,6 @@
 
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcUILayer } from './../state/vpcInterface';
-/* auto */ import { VpcElType, VpcToolCtg, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcToolCtg, checkThrow, checkThrowInternal, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElField, VpcFldStyleInclScroll } from './../../vpc/vel/velField';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
@@ -166,7 +165,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             let lbl = vel.getB('showlabel') ? UI512DrawText.setFont(vel.getS('label'), vel.getFontAsUI512()) : '';
             target.set('labeltext', lbl);
         } else {
-            throw makeVpcInternalErr(`6+|expected button`);
+            checkThrowInternal(false, `6+|expected button`);
         }
     }
 
@@ -186,7 +185,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             } else if (partAsField instanceof VpcElField) {
                 this.buildFldFromScratch(partAsField, currentCardId);
             } else {
-                throw makeVpcInternalErr('6*|invalid part type');
+                checkThrowInternal(false, '6*|invalid part type');
             }
         }
 

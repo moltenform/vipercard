@@ -2,7 +2,7 @@
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { assertEq, last } from './../../ui512/utils/util512';
+/* auto */ import { assertEq, assertWarnEq, last } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -1021,7 +1021,7 @@ put 3 into x
 myhandler
 put x into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         '4',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '23|'
@@ -1070,7 +1070,7 @@ put "" into x
 myhandler4
 put x into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         ' myhandler4 myhandler3 myhandler2 myhandler1 j i h',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '22|'
@@ -1087,7 +1087,7 @@ end myhandler2`,
 myhandler2
 put "a" & the result into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         'a',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '21|'
@@ -1115,7 +1115,7 @@ myhandlerMany "h1,h2,h3"
 myhandler "hi"
 put x into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         'a myhandlerhi myhandlermanyh1h2h3 myhandlerhi',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '20|'
@@ -1133,7 +1133,7 @@ put counting() into x
 put "" into testresult
 myhandler counting(), counting(), counting()`
     );
-    assertEqWarn(
+    assertWarnEq(
         ' 1 2 3',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1~|'
@@ -1161,7 +1161,7 @@ printargs "a", "b"
 printargs "a", "b", "c"
 put x into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         `
 #args=0 alla1= alla2= alla3= alla= a1= a2=
 #args=1 alla1=a alla2= alla3= alla=a a1=a a2=
@@ -1189,7 +1189,7 @@ myhandler 4
 put the result into ret
 put ret & x into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         '20',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1||'
@@ -1215,7 +1215,7 @@ myhandler 12
 myhandler 13
 myhandler 14`
     );
-    assertEqWarn(
+    assertWarnEq(
         ' called 9 called 11',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1{|'
@@ -1236,7 +1236,7 @@ end myhandler
 myhandler 4
 put the result into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         '24',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1`|'
@@ -1250,7 +1250,7 @@ end myfn
         `global testresult
 put myfn(2+myfn(3)) into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         '210',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1_|'
@@ -1273,7 +1273,7 @@ put 0 into g
 put recurse(5) into testresult
 put testresult && g into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         '120 5',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1^|'
@@ -1299,7 +1299,7 @@ end isOdd
         `global testresult
 put isEven(8) && isEven(9) && isEven(10) into testresult`
     );
-    assertEqWarn(
+    assertWarnEq(
         'true false true',
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1]|'
@@ -1865,7 +1865,7 @@ t.test('_scriptMessagePassing', () => {
         h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
         h.runGeneralCode('', '', undefined, undefined, undefined, true);
         let expectedMe = parent;
-        assertEqWarn(
+        assertWarnEq(
             ` me=${expectedMe} target=${h.elIds.btn_go}`,
             h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1[|'
@@ -1879,7 +1879,7 @@ t.test('_scriptMessagePassing', () => {
             `global testresult
             put "button script instead" after testresult`
         );
-        assertEqWarn(
+        assertWarnEq(
             `button script instead`,
             h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1@|'
@@ -1895,7 +1895,7 @@ t.test('_scriptMessagePassing', () => {
             exit to ${cProductName}
             put "b" after testresult`
         );
-        assertEqWarn(
+        assertWarnEq(
             `a`,
             h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1?|'
@@ -1910,7 +1910,7 @@ t.test('_scriptMessagePassing', () => {
             pass mouseUp
             put "b" after testresult`
         );
-        assertEqWarn(
+        assertWarnEq(
             `a me=${expectedMe} target=${h.elIds.btn_go}`,
             h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1>|'
@@ -1962,7 +1962,7 @@ t.test('_scriptMessagePassing', () => {
             `global testresult
             put parentfn("abc") into testresult`
         );
-        assertEqWarn(
+        assertWarnEq(
             `got abc ${expectedMe}`,
             h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
             '1=|'

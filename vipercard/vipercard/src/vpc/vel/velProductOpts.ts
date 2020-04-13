@@ -1,8 +1,7 @@
 
-/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcStandardLibScript } from './../vpcutils/vpcStandardLibScript';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcElType, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElCard } from './velCard';

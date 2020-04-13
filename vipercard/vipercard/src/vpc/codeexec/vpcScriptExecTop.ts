@@ -6,12 +6,12 @@
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcScriptErrorBase, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { UI512ErrorHandling } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { ValHolder, cast, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -53,31 +53,21 @@ export class VpcExecTop {
         visitor.outside = outside as OutsideWorldRead;
     }
 
-    /**
-     * 
-     */
-    goScript() {
-        try {
-            newWork.findHandlerToExec();
-            if (newWork.stack.length > 1) {
-                this.workQueue.push(newWork);
-            }
-        } catch (e) {
-            if (e.isVpcScriptError) {
-                this.respondScriptError(e);
-            }
-        } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
-        }
+    //~ /**
+     //~ * 
+     //~ */
+    //~ goScript() {
+        //~ try {
+            //~ newWork.findHandlerToExec();
+            //~ if (newWork.stack.length > 1) {
+                //~ this.workQueue.push(newWork);
+            //~ }
+        //~ } catch (e) {
+            //~ this.respondScriptError(e, VpcErrStage.);
+        //~ }
         
-
-        try {
-            UI512ErrorHandling.breakOnThrow = false;
-            return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg)
-        } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
-        }
-    }
+        //~ return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg)
+    //~ }
 
     /**
      * add an entry to the queue, scheduling code execution
@@ -128,9 +118,6 @@ export class VpcExecTop {
         }
 
         /* an error might be thrown, e.g. the script causes a lexer error  */
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
-        UI512ErrorHandling.breakOnThrow = false;
-
         try {
             newWork.findHandlerToExec();
             if (newWork.stack.length > 1) {
@@ -140,8 +127,6 @@ export class VpcExecTop {
             if (e.isVpcScriptError) {
                 this.respondScriptError(e);
             }
-        } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
     }
 
@@ -216,15 +201,10 @@ export class VpcExecTop {
         }
 
         /* allow exceptions, because we will catch them here */
-        let storedBreakOnThrow = UI512ErrorHandling.breakOnThrow;
-        UI512ErrorHandling.breakOnThrow = false;
-
         try {
             first.runTimeslice(ms);
         } catch (e) {
             this.respondScriptError(e);
-        } finally {
-            UI512ErrorHandling.breakOnThrow = storedBreakOnThrow;
         }
 
         if (first.stack.length <= 1) {
@@ -239,35 +219,36 @@ export class VpcExecTop {
     /**
      * get an instance of VpcScriptErrorBase, or create if needed
      */
-    getOrGenerateScriptErr(e: any): VpcScriptErrorBase {
-        if (e instanceof VpcScriptErrorBase) {
-            return e;
-        } else if (e.attachErr && e.attachErr instanceof VpcScriptErrorBase) {
-            return e.attachErr;
-        } else if (e.vpcScriptErr && e.vpcScriptErr instanceof VpcScriptErrorBase) {
-            return e.vpcScriptErr;
-        } else {
-            let scrRuntime = new VpcScriptRuntimeError();
-            scrRuntime.isScriptException = false;
-            scrRuntime.isExternalException = !e.isUi512Error;
-            scrRuntime.details = e.toString();
-            scrRuntime.e = e;
-            return scrRuntime;
-        }
-    }
+    //~ getOrGenerateScriptErr(e: any): VpcScriptErrorBase {
+        //~ if (e instanceof VpcScriptErrorBase) {
+            //~ return e;
+        //~ } else if (e.attachErr && e.attachErr instanceof VpcScriptErrorBase) {
+            //~ return e.attachErr;
+        //~ } else if (e.vpcScriptErr && e.vpcScriptErr instanceof VpcScriptErrorBase) {
+            //~ return e.vpcScriptErr;
+        //~ } else {
+            //~ let scrRuntime = new VpcScriptRuntimeError();
+            //~ scrRuntime.isScriptException = false;
+            //~ scrRuntime.isExternalException = !e.isUi512Error;
+            //~ scrRuntime.details = e.toString();
+            //~ scrRuntime.e = e;
+            //~ return scrRuntime;
+        //~ }
+    //~ }
 
     /**
      * add context information to the error and call cbOnScriptError
      */
     protected respondScriptError(e: any) {
-        this.forceStopRunning();
-        let err = this.getOrGenerateScriptErr(e);
+        assertTrue(false, "nyi")
+        //~ this.forceStopRunning();
+        //~ let err = this.getOrGenerateScriptErr(e);
 
-        if (this.cbOnScriptError) {
-            this.cbOnScriptError(err);
-        } else {
-            alert(`5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
-        }
+        //~ if (this.cbOnScriptError) {
+            //~ this.cbOnScriptError(err);
+        //~ } else {
+            //~ alert(`5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
+        //~ }
     }
 
     /**

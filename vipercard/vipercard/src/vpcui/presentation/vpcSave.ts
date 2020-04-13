@@ -3,6 +3,7 @@
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
+/* auto */ import { checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcSaveInterface } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
@@ -344,7 +345,7 @@ export class VpcSave implements VpcSaveInterface {
                 !info.stackOwner.length ||
                 info.stackOwner === this.pr.vci.getModel().stack.lineageUsernameNull()
             ) {
-                throw makeVpcInternalErr(msgNotification + lng('lngFirst, go to File->Save to upload the stack.'));
+                checkThrowInternal(false, lng('lngFirst, go to File->Save to upload the stack.'));
             }
 
             let ses = VpcSession.fromRoot();
@@ -360,7 +361,7 @@ export class VpcSave implements VpcSaveInterface {
                         longstr(`lngIt looks like you have unsaved
                          changes, we're reminding you to hit Save first.`)
                     );
-                    throw makeVpcInternalErr(msgNotification + msg);
+                    checkThrowInternal(false, msg);
                 }
 
                 return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);

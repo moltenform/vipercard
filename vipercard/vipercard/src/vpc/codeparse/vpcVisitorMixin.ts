@@ -2,10 +2,10 @@
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { LogToReplMsgBox, checkThrow } from './../vpcutils/vpcUtils';
+/* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
 /* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VelResolveId } from './../vel/velResolveName';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
@@ -176,7 +176,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret = new RequestedVelRef(VpcElType.Unknown);
                 ret.isReferenceToMe = true;
             } else {
-                throw makeVpcInternalErr('|3|null');
+                checkThrowInternal(false, '|3|null');
             }
 
             return ret;
@@ -271,7 +271,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 let token = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
                 ret.variable = token.image;
             } else {
-                throw makeVpcInternalErr('|3|HsimpleContainer no branch taken');
+                checkThrowInternal(false, '|3|HsimpleContainer no branch taken');
             }
             return ret;
         }
@@ -315,7 +315,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 checkThrow(container instanceof RequestedContainerRef, `JT|internal error, expected IntermedValContainer`);
                 return VpcValS(this.outside.ContainerRead(container));
             } else {
-                throw makeVpcInternalErr('|3|null');
+                checkThrowInternal(false, '|3|null');
             }
         }
 
@@ -335,7 +335,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
              let s = readable.getRawString()
              return VpcValS(s)
             }
-             else { throw makeVpcInternalErr('OR in HSource, no branch found'); }
+             else { checkThrowInternal(false, 'OR in HSource, no branch found'); }
             }
 
         RuleHSource_1(ctx: VisitingContext): VpcVal {
@@ -349,7 +349,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 sLit = sLit.slice(1, -1);
                 return VpcValS(sLit);
             } else {
-                throw makeVpcInternalErr('RuleHSource_1 no branch taken');
+                checkThrowInternal(false, 'RuleHSource_1 no branch taken');
             }
         }
 
@@ -541,7 +541,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 val = this.visit(ctx.RuleExpr[0]);
                 checkThrow(val instanceof VpcVal, '8{|not a vpcval', val);
             } else {
-                throw makeVpcInternalErr(`80|in RuleLvl6Expression. all interesting children null.`);
+                checkThrowInternal(false, `80|in RuleLvl6Expression. all interesting children null.`);
             }
 
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {

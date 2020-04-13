@@ -1,4 +1,5 @@
 
+/* auto */ import { checkThrow } from './vpcEnums';
 /* auto */ import { Util512, fitIntoInclusive } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
@@ -44,7 +45,7 @@ export class SubstringStyleComplex {
                     ret |= TextFontStyling.Extend;
                     break;
                 default:
-                    throw makeVpcScriptErr(`67|warning: unrecognized text style ${s}`);
+                    checkThrow(false, `67|warning: unrecognized text style ${s}`);
             }
         }
 

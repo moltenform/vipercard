@@ -3,7 +3,7 @@
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Base';
-/* auto */ import { assertEq, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { assertEq, assertWarnEq, last, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
@@ -713,7 +713,7 @@ t.test('_vpcProperties', () => {
 
     /* formatting should have been preserved */
     let contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
-    assertEqWarn(sfmt, contents, '1y|');
+    assertWarnEq(sfmt, contents, '1y|');
 
     batch = [
         /* setting per-character formatting */
@@ -786,7 +786,7 @@ t.test('_vpcProperties', () => {
 
     /* confirm formatting */
     contents = fldPerChar.getCardFmTxt(fldPerChar.parentId).toSerialized();
-    assertEqWarn(
+    assertWarnEq(
         longstr(
             `|Courier_24_+biuosdce|a|geneva_24_+biuosdce|b|geneva_18_b+iuo+sdce|
             c|Courier_18_bi+uosdce|d|Times_18_bi+uosdce|e|Times_14_biuosdce|f`,

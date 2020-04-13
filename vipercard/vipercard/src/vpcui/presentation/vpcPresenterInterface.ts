@@ -11,7 +11,7 @@
 /* auto */ import { VpcLyrNonModalHolder } from './../nonmodaldialogs/vpcLyrNonModalHolder';
 /* auto */ import { VpcAppLyrDragHandles } from './../panels/vpcLyrDragHandles';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcScriptErrorBase, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';

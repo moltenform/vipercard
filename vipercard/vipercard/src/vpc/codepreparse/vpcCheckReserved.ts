@@ -1,8 +1,7 @@
 
 /* auto */ import { VariableCollectionConstants } from './../vpcutils/vpcVarCollection';
-/* auto */ import { checkThrow } from './../vpcutils/vpcUtils';
 /* auto */ import { alsoReservedWordsList, listOfAllBuiltinCommandsInOriginalProduct } from './../codeparse/vpcTokens';
-/* auto */ import { VpcBuiltinMsg } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcBuiltinFunctions } from './vpcBuiltinFunctions';
 /* auto */ import { VpcElProductOpts } from './../vel/velProductOpts';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';

@@ -1,5 +1,5 @@
 
-/* auto */ import { CountNumericIdNormal, checkThrow } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { CountNumericIdNormal } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { UndoManager } from './../state/vpcUndo';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
@@ -11,14 +11,14 @@
 /* auto */ import { VpcStateInterfaceImpl } from './vpcInterfaceImpl';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UndoableActionCreateOrDelVel } from './../state/vpcCreateOrDelVel';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { assertWarnEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
@@ -91,7 +91,7 @@ export class VpcIntroProvider {
         let serializedSavedData = '';
         if (this.loc === VpcDocumentLocation.NewDoc || this.loc === VpcDocumentLocation.ShowLoginForm) {
             /* no serialized data needed */
-            assertEqWarn('', this.identifier, 'KL|');
+            assertWarnEq('', this.identifier, 'KL|');
         } else if (this.loc === VpcDocumentLocation.FromStaticDemo) {
             /* request json asynchronously */
             assertTrue(!this.identifier.includes('/'), 'KK|');

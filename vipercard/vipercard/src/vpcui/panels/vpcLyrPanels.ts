@@ -154,8 +154,6 @@ export class VpcAppLyrPanels extends VpcUILayer {
             this.saveChangesToModel(true);
         } catch (e) {
             if (
-                e.isUi512Error &&
-                e.toString().includes(msgNotification) &&
                 e.toString().includes(VpcPanelScriptEditor.thereArePendingChanges)
             ) {
                 return true;

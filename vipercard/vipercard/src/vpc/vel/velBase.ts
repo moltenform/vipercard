@@ -1,8 +1,7 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcUtils';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
@@ -100,10 +99,10 @@ export abstract class VpcElBase extends UI512Settable {
                     return VpcValBool(this.getB(mappedProp));
                 }
             } else {
-                throw makeVpcScriptErr(`4)|invalid PrpTyp ${type} for el id ${this.id}`);
+                checkThrow(false, `4)|invalid PrpTyp ${type} for el id ${this.id}`);
             }
         } else {
-            throw makeVpcScriptErr(`4(|unknown property ${propName} for el id ${this.id}`);
+            checkThrow(false, `4(|unknown property ${propName} for el id ${this.id}`);
         }
     }
 
@@ -137,10 +136,10 @@ export abstract class VpcElBase extends UI512Settable {
                     this.set(mappedProp, val.readAsStrictBoolean(this.tmpArray));
                 }
             } else {
-                throw makeVpcScriptErr(`4#|invalid PrpTyp ${type} for el id ${this.id}`);
+                checkThrow(false, `4#|invalid PrpTyp ${type} for el id ${this.id}`);
             }
         } else {
-            throw makeVpcScriptErr(`4!|unknown property ${propName} for el id ${this.id}`);
+            checkThrow(false, `4!|unknown property ${propName} for el id ${this.id}`);
         }
     }
 

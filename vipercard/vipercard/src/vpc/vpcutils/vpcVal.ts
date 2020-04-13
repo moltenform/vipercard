@@ -1,13 +1,11 @@
 
-/* auto */ import { CodeLimits, checkThrow } from './vpcUtils';
-/* auto */ import { OrdinalOrPosition } from './vpcEnums';
+/* auto */ import { CodeLimits } from './vpcUtils';
+/* auto */ import { OrdinalOrPosition, checkThrow } from './vpcEnums';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
-import { checkThrowEq } from '../../ui512/utils/util512';
 
 /**
  * for the interpreter, when interpreting a script,
@@ -73,7 +71,7 @@ export class VpcVal extends VpcIntermedValBase {
         if (tmpArr[0]) {
             return tmpArr[1];
         } else {
-            throw makeVpcScriptErr(`64|expected true or false here, got "${this.v}"`);
+            checkThrow(false, `64|expected true or false here, got "${this.v}"`);
         }
     }
 
@@ -156,7 +154,7 @@ export class VpcVal extends VpcIntermedValBase {
         if (tmpArr[0]) {
             return tmpArr[1];
         } else {
-            throw makeVpcScriptErr(`62|expected a number here, got "${this.v}"`);
+            checkThrow(false, `62|expected a number here, got "${this.v}"`);
         }
     }
 
@@ -195,7 +193,7 @@ export class VpcVal extends VpcIntermedValBase {
         if (tmpArr[0]) {
             return tmpArr[1];
         } else {
-            throw makeVpcScriptErr(`61|expected an integer here, got "${this.v}"`);
+            checkThrow(false, `61|expected an integer here, got "${this.v}"`);
         }
     }
 
@@ -277,7 +275,7 @@ export class VpcVal extends VpcIntermedValBase {
         if (this.v !== null && this.v !== undefined) {
             return this.v;
         } else {
-            throw makeVpcScriptErr(`9g|value is null, got "${this.v}"`);
+            checkThrow(false, `9g|value is null, got "${this.v}"`);
         }
     }
 

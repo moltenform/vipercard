@@ -104,7 +104,7 @@ export class SimpleUtil512Tests {
         }
 
         UI512ErrorHandling.runningTests = false;
-        if (UI512ErrorHandling.gfghfg) {
+        if (UI512ErrorHandling.silenceWarnings) {
             console.log(`A test may have failed, warning occurred.`);
         } else {
             console.log(`All tests complete.`);

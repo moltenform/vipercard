@@ -1,9 +1,8 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
@@ -58,7 +57,7 @@ export class VpcChangeSelectedFont {
     protected setAlign(v: string) {
         let worked = this.setAlignImpl(v);
         if (!worked) {
-            throw makeVpcInternalErr(msgNotification + lng('lngNo selection found. Select a button or field.'));
+            checkThrowInternal(false, lng('lngNo selection found. Select a button or field.'));
         }
     }
 
@@ -97,7 +96,7 @@ export class VpcChangeSelectedFont {
             few{{NEWLINE}} letters.`)
             );
 
-            throw makeVpcInternalErr(msgNotification + msg);
+            checkThrowInternal(false, msg);
         }
     }
 

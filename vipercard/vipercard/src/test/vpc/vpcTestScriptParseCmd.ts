@@ -4,7 +4,7 @@
 /* auto */ import { BuildFakeTokens, cloneToken } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, assertEq, longstr, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { Util512, assertEq, assertWarnEq, longstr, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -258,7 +258,7 @@ t.test('CloneToken', () => {
     clonedTokenKeys = clonedTokenKeys.filter(
         k => k !== 'isInsertedInRecovery' && k !== 'tokenClassName' && k !== 'payload'
     );
-    assertEqWarn(realTokenKeys.join(','), clonedTokenKeys.join(','), 'HN|');
+    assertWarnEq(realTokenKeys.join(','), clonedTokenKeys.join(','), 'HN|');
 });
 
 /**
