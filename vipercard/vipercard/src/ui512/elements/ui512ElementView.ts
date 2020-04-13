@@ -151,8 +151,8 @@ export class UI512ViewDraw {
         overrideCentered?: boolean
     ) {
         if (rect) {
-            const iconCentered =
-                overrideCentered === undefined ? iconInfo.centered : overrideCentered;
+            //~ const iconCentered =
+                //~ overrideCentered === undefined ? iconInfo.centered : overrideCentered;
             let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
             let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
             if (icon) {
@@ -232,7 +232,9 @@ export class UI512ViewDraw {
                 let boxTextOnlyX = boxIconAndTextX;
                 let boxTextOnlyY = boxIconAndTextY + iconH + marginBetween;
                 let boxTextOnlyWidth = boxIconAndTextWidth;
+                /*
                 let boxTextOnlyHeight = Math.max(1, rect[3] - (boxTextOnlyY - rect[1]));
+                */
 
                 /* Follow what HC does and set the font to 9pt Geneva.
                 in fact, in HC no other font is supported. */
@@ -553,13 +555,6 @@ export class UI512ViewDraw {
             iconInfo.adjustHeight = resultingheight - srcRect[3];
             iconInfo.adjustSrcX = shiftleft;
             iconInfo.centered = true;
-            let subRect = [
-                b.bx + MenuConsts.ShadowSizeLeft,
-                b.by,
-                el.w - (MenuConsts.ShadowSizeLeft + MenuConsts.ShadowSizeRight),
-                el.h
-            ];
-
             this.drawIconIfDefined(b, [b.bx, b.by, el.w, el.h], iconInfo);
         }
     }

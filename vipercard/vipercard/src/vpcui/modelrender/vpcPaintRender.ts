@@ -6,7 +6,7 @@
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { MapKeyToObjectCanSet, cast, last } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, arLast, cast } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { UI512ImageSerialization } from './../../ui512/draw/ui512ImageSerialization';
@@ -56,7 +56,7 @@ export class VpcPaintRender extends VpcUILayer {
     updateUI512Els(): void {
         let mainPaint = cast(UI512ElCanvasPiece, this.vci.UI512App().getEl('VpcModelRender$$renderbg'));
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let [currentlyCachedV, currentlyCachedIm] = this.refreshCachedPaintForCard(currentCardId);
+        let currentlyCachedIm = this.refreshCachedPaintForCard(currentCardId)[1];
         mainPaint.setCanvas(currentlyCachedIm);
     }
 
@@ -315,17 +315,17 @@ export class VpcPaintRender extends VpcUILayer {
         let queuesPerCard: UI512PaintDispatch[][] = [];
         for (let item of queue) {
             if (item.cardId === currentCard) {
-                last(queuesPerCard).push(item);
+                arLast(queuesPerCard).push(item);
             } else {
                 queuesPerCard.push([]);
-                last(queuesPerCard).push(item);
+                arLast(queuesPerCard).push(item);
                 currentCard = item.cardId;
             }
         }
 
         for (let queuePerCard of queuesPerCard) {
             let cd = this.vci.getModel().getCardById(queuePerCard[0].cardId);
-            let [v, cvs] = this.refreshCachedPaintForCard(cd.id);
+            let cvs = this.refreshCachedPaintForCard(cd.id)[1];
             let painter = new UI512PainterCvCanvas(cvs, cvs.canvas.width, cvs.canvas.height);
 
             for (let item of queuePerCard) {

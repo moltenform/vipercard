@@ -51,7 +51,7 @@ export class IntroPageOpen extends IntroPageBase {
         let headerHeight = this.drawCommonFirst(app, grp);
 
         /* draw the OK and cancel buttons */
-        let windowBg = grp.getEl(this.getElId('windowBg'));
+        grp.getEl(this.getElId('windowBg'));
         this.drawBtn(app, grp, 1, this.x + 180, this.y + 287, 68, 21);
         this.drawBtn(app, grp, 0, this.x + 180 - (252 - 174), this.y + 287 - 4, 69, 29);
 
@@ -86,8 +86,6 @@ export class IntroPageOpen extends IntroPageBase {
         prompt.setDimensions(this.x + 20, this.y + 50, 200, 50);
 
         /* draw the list of choices */
-        let chooserWidth = 218;
-        let chooserX = this.x + Math.floor(half - chooserWidth);
         this.listBox = this.genChild(app, grp, 'chooser', UI512ElTextField);
         this.listBox.set('scrollbar', true);
         this.listBox.set('selectbylines', true);

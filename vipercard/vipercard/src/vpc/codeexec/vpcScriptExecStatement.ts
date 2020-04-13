@@ -87,7 +87,6 @@ export class ExecuteStatement {
     goAsk(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let argsVals = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
         let args = argsVals.map(item => item.readAsString());
-        let closureGetAsyncOps = this.pendingOps;
 
         /* because there is only 1 script execution thread, don't need to assign a unique id. */
         let asyncOpId = 'singleThreadAsyncOpId';
@@ -324,7 +323,7 @@ export class ExecuteStatement {
             checkThrow(false, 'nyi: deselecting text');
         } else {
             let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
-            let cont = this.outside.ResolveContainerWritable(contRef);
+            //~ let cont = this.outside.ResolveContainerWritable(contRef);
             checkThrow(contRef.vel, 'has to be a field, not a variable');
             checkThrow(false, 'nyi: selecting text');
         }
@@ -412,7 +411,7 @@ export class ExecuteStatement {
         checkThrow(params[0] === 'screen', 'only support lock screen');
         this.outside.SetOption('screenLocked', false);
         if (params.length > 1) {
-            let spec = this.getVisualEffect(params.slice(1));
+            // let spec = this.getVisualEffect(params.slice(1));
             checkThrow(false, 'visual effects are nyi');
         }
     }

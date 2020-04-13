@@ -6,7 +6,6 @@
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { KeyDownEventDetails } from './../../ui512/menu/ui512Events';
-/* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512CompCodeEditor } from './../../ui512/composites/ui512CodeEditor';
@@ -514,7 +513,6 @@ t.test('CodeEditorFeatures.SetIndentation.Continued Lines', () => {
 function createFakeEd() {
     let bounds = getUI512WindowBounds();
     let fakeApp = new UI512Application(bounds, new ElementObserverNoOp());
-    let fakeGrp = new UI512ElGroup('fakeGrp');
     let fakePr = { rebuildFieldScrollbars: () => {} } as any; /* test code */
     let ed = new VpcPanelScriptEditor('vpcPanelScriptEditor');
     ed.logicalWidth = 1000;

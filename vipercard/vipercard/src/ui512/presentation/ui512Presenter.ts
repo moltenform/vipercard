@@ -68,7 +68,6 @@ export abstract class UI512Presenter extends UI512PresenterBase {
             }
 
             /* now we can modify safely */
-            let stilldirty: { [key: string]: boolean } = {};
             let builder = new ScrollbarImpl();
             for (let el of els) {
                 if (el instanceof UI512ElTextField) {

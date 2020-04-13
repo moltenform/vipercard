@@ -234,7 +234,8 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
     readFields(app: UI512Application, trim = true) {
         let ret: { [key: string]: string } = {};
         let grp = app.getGroup(this.grpId);
-        for (let [fldId, fldUntransed, heightMult] of this.fields) {
+        for (let fldIdPts of this.fields) {
+            let fldId = fldIdPts[0]
             let el = grp.getEl(this.getElId('fld' + fldId));
             ret[fldId] = el.getFmTxt().toUnformatted();
             if (trim) {

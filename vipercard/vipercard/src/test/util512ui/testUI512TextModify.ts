@@ -6,7 +6,6 @@
 /* auto */ import { TextFontStyling, specialCharFontChange, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
-import { VoidFn } from '../../ui512/utils/util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

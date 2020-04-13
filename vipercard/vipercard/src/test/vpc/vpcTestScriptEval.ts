@@ -2,8 +2,8 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Base';
-/* auto */ import { assertEq, assertWarnEq, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { cProductName, vpcVersion } from './../../ui512/utils/util512Base';
+/* auto */ import { assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
@@ -261,8 +261,8 @@ t.test('_vpcProperties', () => {
         ['the size', '0'],
         ['the stacksinuse', ''],
         ['the suspended', 'false'],
-        ['the long version', `${vpcversion}`],
-        ['the version', `${vpcversion[0]}.${vpcversion[1]}`],
+        ['the long version', `${vpcVersion}`],
+        ['the version', `${vpcVersion[0]}.${vpcVersion[1]}`],
 
         /* product opts set */
         ['set the itemdelimiter to "|" \\ the itemdelimiter', '|'],

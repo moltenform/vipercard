@@ -193,7 +193,6 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
 
         for (let i = 0, len = currentCard.parts.length; i < len; i++) {
             /* change something on an ui512el to trigger redraw */
-            let part = currentCard.parts[i];
             let target = this.findVelIdToEl(currentCard.parts[0].id);
             if (target) {
                 target.set('x', target.getN('x') + 1);

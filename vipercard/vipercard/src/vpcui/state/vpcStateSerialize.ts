@@ -3,7 +3,7 @@
 /* auto */ import { VpcElType, checkThrow, checkThrowEq } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { SerializedVelStructure, SerializedVpcDocStructure, VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { O, UI512Compress, vpcversion } from './../../ui512/utils/util512Base';
+/* auto */ import { O, UI512Compress, vpcVersion } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 
@@ -29,7 +29,7 @@ export class VpcStateSerialize {
         ret.product = 'vpc';
         ret.fileformatmajor = this.latestMajor;
         ret.fileformatminor = this.latestMinor;
-        ret.buildnumber = vpcversion;
+        ret.buildnumber = vpcVersion;
         ret.uuid = vci.getModel().uuid;
         ret.elements = [];
         let stack = vci.getModel().stack;
@@ -68,7 +68,7 @@ export class VpcStateSerialize {
             );
             console.log(
                 longstr(`opening a document made by
-                buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcversion}`)
+                buildnumber ${incoming.buildnumber}, my buildnumber is ${vpcVersion}`)
             );
 
             building.getModel().uuid = incoming.uuid;

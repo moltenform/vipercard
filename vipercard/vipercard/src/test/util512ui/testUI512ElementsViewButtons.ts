@@ -161,7 +161,6 @@ export class TestDrawUI512Buttons {
         const imWidth = 950;
         const imHeight = 2400;
         let list: UI512ElButton[] = [];
-        let count = 0;
         let view = new UI512ViewDraw();
         let fakeApp = new UI512Application([0, 0, 1, 1], elementObserverNoOp);
         let fakeGrp = new UI512ElGroup('fakeGrp', elementObserverNoOp);

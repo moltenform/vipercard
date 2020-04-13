@@ -2,7 +2,7 @@
 /* auto */ import { checkThrowEq } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, last, longstr, slength, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -469,8 +469,8 @@ t.test('checkThrowEq', () => {
     });
 });
 t.test('last', () => {
-    assertEq(3, last([1, 2, 3]), 'M&|');
-    assertEq(1, last([1]), 'M%|');
+    assertEq(3, arLast([1, 2, 3]), 'M&|');
+    assertEq(1, arLast([1]), 'M%|');
 });
 t.test('bool', () => {
     assertEq(true, bool(true), 'M#|');

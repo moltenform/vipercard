@@ -3,7 +3,7 @@
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { last } from './../../ui512/utils/util512';
+/* auto */ import { arLast } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -58,7 +58,7 @@ export namespace VpcRewriteNoElseIfClauses {
     function isLineIf(l: ChvITk[]) {
         if (l.length >= 1 && l[0].image === 'if') {
             checkThrow(l.length >= 3, "expect line starting with if to be 'if condition then'");
-            checkThrowEq('then', last(l).image, "expect line starting with else to be 'if condition *then*'");
+            checkThrowEq('then', arLast(l).image, "expect line starting with else to be 'if condition *then*'");
             return l.slice(1, -1);
         }
 
@@ -73,7 +73,7 @@ export namespace VpcRewriteNoElseIfClauses {
         if (l.length > 1 && l[0].image === 'else') {
             checkThrow(l.length >= 4, "expect line starting with else to be 'else if condition then'");
             checkThrowEq('if', l[1].image, "expect line starting with else to be 'else *if* condition then'");
-            checkThrowEq('then', last(l).image, "expect line starting with else to be 'else if condition *then*'");
+            checkThrowEq('then', arLast(l).image, "expect line starting with else to be 'else if condition *then*'");
             return l.slice(2, -1);
         }
         return undefined;
@@ -112,7 +112,7 @@ export namespace VpcRewriteNoElseIfClauses {
                 let clause = new IfConstructClause(arisLineIf, true);
                 let construct = new IfConstruct(this.current);
                 construct.clauses = [clause];
-                last(this.current.clauses).children.push(construct);
+                arLast(this.current.clauses).children.push(construct);
                 this.current = construct;
             } else if (arisLineElseCondition) {
                 checkThrow(!this.current.isRoot, 'else outside of if?');
@@ -127,7 +127,7 @@ export namespace VpcRewriteNoElseIfClauses {
                 checkThrow(!this.current.isRoot && this.current.parent, "can't have an end if outside an if");
                 this.current = this.current.parent;
             } else {
-                last(this.current.clauses).children.push(line);
+                arLast(this.current.clauses).children.push(line);
             }
         }
     }

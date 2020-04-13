@@ -921,7 +921,7 @@ export function checkThrowEq512<T>(
 /**
  * get last of an array
  */
-export function last<T>(ar: T[]): T {
+export function arLast<T>(ar: T[]): T {
     assertTrue(ar.length >= 1, 'Ou|empty array');
     return ar[ar.length - 1];
 }

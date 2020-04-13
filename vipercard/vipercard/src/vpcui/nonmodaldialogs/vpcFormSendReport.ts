@@ -3,7 +3,7 @@
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { checkIsProductionBuild, vpcversion } from './../../ui512/utils/util512Base';
+/* auto */ import { checkIsProductionBuild, vpcVersion } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { AnyJson, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
@@ -96,7 +96,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
         let lastClientLogs = UI512ErrorHandling.getLatestErrLogs(amountToGet);
         let obj: AnyJson = {
             logs: ['(logs are compressed with lz-string)', lastClientLogs],
-            version: vpcversion
+            version: vpcVersion
         };
         let s = JSON.stringify(obj);
         let defaultFilename = 'vpc logs.json';
@@ -109,7 +109,6 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
      */
     doSendErrReport(vci: VpcStateInterface) {
         let params = this.readFields(vci.UI512App());
-        let ses = VpcSession.fromRoot() as VpcSession;
         let fn = async () => {
             try {
                 await this.asyncSendErrReport(this.vci, params['desc']);
@@ -140,7 +139,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
         let ses = VpcSession.fromRoot() as VpcSession;
 
         /* get the last 30 logged errors, which might be useful. */
-        let lastClientLogs = vpcversion;
+        let lastClientLogs = vpcVersion;
         lastClientLogs += '\n' + UI512ErrorHandling.getLatestErrLogs(30).join('\n\n\n\n');
         let info = this.vci.getModel().stack.getLatestStackLineage();
         let fullStackId = VpcSession.getFullStackId(info.stackOwner, info.stackGuid);

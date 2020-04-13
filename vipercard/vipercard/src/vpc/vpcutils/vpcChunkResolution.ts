@@ -4,7 +4,7 @@
 /* auto */ import { OrdinalOrPosition, SortType, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, getPositionFromOrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, last, longstr, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { Util512, longstr, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

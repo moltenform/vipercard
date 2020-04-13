@@ -261,7 +261,7 @@ export class TextSelModify {
      * move by one page
      */
     static changeSelPageUpDown(el: GenericTextField, isUp: boolean, isExtend: boolean) {
-        let [nCaret, nEnd] = el.getSel();
+        let nCaret = el.getSel()[0];
         let approxLineHeight = TextSelModify.readOnlyScrollbarImpl.getApproxLineHeight(
             el.getReadOnlyUI512(),
             nCaret
@@ -410,15 +410,12 @@ export class TextSelModify {
                 let above = isUp
                     ? bounds[1] - pixelsExtendedPast
                     : bounds[1] + bounds[3] + pixelsExtendedPast;
-                let [
-                    found,
-                    lowest
-                ] = TextSelModify.readOnlyScrollbarImpl.getCoordToCharInField(
+                let found = TextSelModify.readOnlyScrollbarImpl.getCoordToCharInField(
                     gel.getReadOnlyUI512(),
                     middle,
                     above,
                     true
-                );
+                )[0];
 
                 if (found) {
                     let nextcaret = found.charIndex;

@@ -129,7 +129,7 @@ export abstract class UndoableActionCreateOrDelVel {
                 model.stack = vci.rawCreate(VpcElStack.initProductOptsId, model.productOpts.id, VpcElStack);
                 if (createFirstCard) {
                     let firstBg = vci.createVel(model.stack.id, VpcElType.Bg, -1);
-                    let firstCard = vci.createVel(firstBg.id, VpcElType.Card, -1);
+                    vci.createVel(firstBg.id, VpcElType.Card, -1);
                 }
             });
         }

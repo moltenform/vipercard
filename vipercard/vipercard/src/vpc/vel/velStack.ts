@@ -5,7 +5,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, last, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -91,7 +91,7 @@ export class VpcElStack extends VpcElBase {
         let lin = this.getS('stacklineage');
         if (slength(lin)) {
             let linParts = lin.split('||');
-            return VpcElStackLineageEntry.fromSerialized(last(linParts));
+            return VpcElStackLineageEntry.fromSerialized(arLast(linParts));
         } else {
             checkThrowInternal(false, 'K5|stacklineage should never be empty');
         }

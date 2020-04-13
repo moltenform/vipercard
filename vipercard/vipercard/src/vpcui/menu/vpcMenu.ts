@@ -77,7 +77,7 @@ export class VpcAppMenu extends VpcAppMenuStructure {
             true
         );
 
-        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(this.vci.UI512App());
+        let grpBar = MenuPositioning.getMenuGroups(this.vci.UI512App())[0];
 
         /* update day of year */
         let topClock = grpBar.getEl('topClock');

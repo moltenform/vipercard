@@ -11,7 +11,7 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { BrowserOSInfo, Util512, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { BrowserOSInfo, Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';

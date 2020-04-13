@@ -4,7 +4,7 @@
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
-/* auto */ import { findStrToEnum, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { arLast, findStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -56,7 +56,7 @@ export class VpcRewriteForCommands {
     }
     rewriteChoose(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
-        if (last(line).image === 'tool' && line.length >= 3) {
+        if (arLast(line).image === 'tool' && line.length >= 3) {
             let s = line
                 .slice(1, -1)
                 .map(t => t.image)
@@ -261,7 +261,7 @@ put the result %ARG0%`;
             and you try to use it as a variable. "put 4 into length"
             you'd get the error message NotAllInputParsed exception,
             which doesn't make too much sense, let's try to give you a better error message */
-            checkCommonMistakenVarNames(last(line));
+            checkCommonMistakenVarNames(arLast(line));
         } else {
             /* you can say `put 1+1` to add to the message box */
             foundPreposition = line.length;

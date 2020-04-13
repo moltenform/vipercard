@@ -286,7 +286,7 @@ export class ScrollbarImpl {
             new RenderComplete()
         );
         let view = new UI512ViewDraw();
-        let [_, subRect] = view.getSubRectForField(b, el);
+        let  subRect = view.getSubRectForField(b, el)[1];
         if (!subRect) {
             subRect = [0, 0, 0, 0];
         }

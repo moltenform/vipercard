@@ -1,7 +1,7 @@
 
 /* auto */ import { O } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, respondUI512Error } from './util512AssertCustom';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
+/* auto */ import { AnyJson, BrowserOSInfo, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -189,7 +189,7 @@ export class Util512Higher {
             let loaded = false;
             script.onerror = () => {
                 let urlsplit = url.split('/');
-                reject(new Error('Did not load ' + last(urlsplit)));
+                reject(new Error('Did not load ' + arLast(urlsplit)));
             };
 
             script.onload = () => {

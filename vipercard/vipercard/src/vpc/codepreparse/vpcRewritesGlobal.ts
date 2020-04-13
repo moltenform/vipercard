@@ -3,7 +3,7 @@
 /* auto */ import { BuildFakeTokens, ChvITk, ChvITkType, listOfAllWordLikeTokens, tks } from './../codeparse/vpcTokens';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, last } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -30,7 +30,7 @@ export class VpcRewritesGlobal {
             }
         }
 
-        ret.push(last(copyLine));
+        ret.push(arLast(copyLine));
         ret.reverse();
         return ret;
     }
@@ -80,19 +80,19 @@ export class VpcSuperRewrite {
             let sn = term.replace(/%ARG/g, '').replace(/%/g, '');
             let n = Util512.parseIntStrict(sn);
             checkThrow(typeof n === 'number' && n >= 0 && n < args.length, 'internal error in template');
-            Util512.extendArray(last(ret), args[n]);
+            Util512.extendArray(arLast(ret), args[n]);
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
-            last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
+            arLast(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
             let newToken = this.tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
-            last(ret).push(newToken);
-            last(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
+            arLast(ret).push(newToken);
+            arLast(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
         } else {
             checkThrow(
                 !needsToBePostProcess || (term !== 'into' && term !== 'before' && term !== 'after'),
                 "it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead."
             );
             let newToken = this.tokenFromEnglishTerm(term, realTokenAsBasis);
-            last(ret).push(newToken);
+            arLast(ret).push(newToken);
         }
     }
 

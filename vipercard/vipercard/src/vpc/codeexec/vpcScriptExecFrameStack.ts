@@ -15,9 +15,9 @@
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, ValHolder, assertEq, assertWarnEq, getEnumToStrOrFallback, getStrToEnum, last, lastIfThere, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, getEnumToStrOrFallback, getStrToEnum, lastIfThere, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -231,7 +231,7 @@ export class VpcExecFrameStack {
         Util512.callAsMethodOnClass('VpcExecFrameStack', this, methodName, [curFrame, curLine, parsed, blocked], false);
 
         /* make sure we're not stuck on the same line again */
-        if (last(this.stack) === curFrame && blocked.val === AsyncCodeOpState.AllowNext) {
+        if (arLast(this.stack) === curFrame && blocked.val === AsyncCodeOpState.AllowNext) {
             checkThrow(curFrame.getOffset() !== curLine.offset, '7x|stuck on the same line', curLine.offset.toString());
         }
     }
@@ -251,7 +251,7 @@ export class VpcExecFrameStack {
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleExpr[0], '7v|evalRequestedExpression no result of RuleExpr');
 
         let ret = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow(ret instanceof VpcVal, '7u|evalRequestedExpression expected a number, string, or bool.');
+        checkThrow(ret instanceof VpcVal, '7u|evalRequestedExpression expected a number, string, or boolean.');
         return ret;
     }
 
@@ -411,7 +411,7 @@ export class VpcExecFrameStack {
     visitIfStart(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         /* if blocks must start with "if" and end with an "end if" */
         let blockInfo = this.getBlockInfo(curLine, 2);
-        let blockEnd = last(blockInfo);
+        let blockEnd = arLast(blockInfo);
         assertEq(curLine.offset, blockInfo[0].offset, '5U|');
         assertEq(curLine.lineId, blockInfo[0].lineId, '5T|');
         assertEq(VpcLineCategory.IfEnd, curFrame.codeSection.lines[blockEnd.offset].ctg, '5S|');
@@ -443,7 +443,7 @@ export class VpcExecFrameStack {
         let anyTaken = blockInfo.some(ln => curFrame.offsetsMarked[ln.offset]);
         if (anyTaken) {
             /* we've already taken a branch - skip to one past the end of the block */
-            this.validatedGoto(curFrame, last(blockInfo));
+            this.validatedGoto(curFrame, arLast(blockInfo));
             curFrame.next();
         } else {
             /* enter the branch */
@@ -465,7 +465,7 @@ export class VpcExecFrameStack {
     visitRepeatExit(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         /* advance to one line past the end of the loop */
         let blockInfo = this.getBlockInfo(curLine, 2);
-        this.validatedGoto(curFrame, last(blockInfo));
+        this.validatedGoto(curFrame, arLast(blockInfo));
         curFrame.next();
     }
 
@@ -605,13 +605,13 @@ export class VpcExecFrameStack {
         return the last result that was computed. see the myCompute example in the docs. */
         /* build a new temporary handler, then call it.
         it's a bit inefficent because we might have to re-preparse everything in the file. */
-        let newHandlerName = 'vpcinternaltmpcode';
-        let code = `
-on ${newHandlerName}
-    ${codeToCompile}
-    return the result
-end ${newHandlerName}
-        `.replace(/\r\n/g, '\n');
+        //~ let newHandlerName = 'vpcinternaltmpcode';
+        //~ let code = `
+//~ on ${newHandlerName}
+    //~ ${codeToCompile}
+    //~ return the result
+//~ end ${newHandlerName}
+        //~ `.replace(/\r\n/g, '\n');
 
         assertTrue(false, 'nyi');
 

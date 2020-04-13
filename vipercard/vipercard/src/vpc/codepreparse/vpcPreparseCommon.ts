@@ -4,7 +4,7 @@
 /* auto */ import { IVpcCodeLine, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

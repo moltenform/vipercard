@@ -24,7 +24,7 @@ let t = new SimpleUtil512TestCollection('testCollectionUI512Elements');
 export let testCollectionUI512Elements = t;
 
 t.test('UI512ElGroupIterEls', () => {
-    let [app, grp] = makeFakeGroup();
+    let grp = makeFakeGroup()[1];
 
     /* iterate through elements in a group */
     let s = '';
@@ -43,7 +43,7 @@ t.test('UI512ElGroupIterEls', () => {
     assertEq('btn3,btn2,btn1,', s, 'Ag|');
 });
 t.test('UI512ElGroupRemoveAllEls', () => {
-    let [app, grp] = makeFakeGroup();
+    let grp = makeFakeGroup()[1];
     assertEq('btn1,btn2,btn3,', listElems(grp), 'Af|');
 
     /* remove all elements */
@@ -51,7 +51,7 @@ t.test('UI512ElGroupRemoveAllEls', () => {
     assertEq('', listElems(grp), 'Ae|');
 });
 t.test('UI512ElGroupCountElems', () => {
-    let [app, grp] = makeFakeGroup();
+    let grp = makeFakeGroup()[1];
 
     /* count all elements */
     assertEq(3, grp.countElems(), 'Ad|');
@@ -90,7 +90,7 @@ t.test('AddElementAfter', () => {
     );
 });
 t.test('GroupFindById', () => {
-    let [app, grp] = makeFakeGroup();
+    let grp = makeFakeGroup()[1];
 
     /* find existing */
     let el = grp.findEl('btn1');
@@ -108,7 +108,7 @@ t.test('GroupFindById', () => {
     assertThrows('K]|', 'not find', () => grp.getEl('btn9'));
 });
 t.test('AppFindById', () => {
-    let [app, grp] = makeFakeGroup();
+    let app = makeFakeGroup()[0];
     let fakeGrp2 = new UI512ElGroup('fakegrp2');
     app.addGroup(fakeGrp2);
     let btn4 = new UI512ElButton('btn4');
@@ -166,7 +166,7 @@ t.test('CoordsToElement', () => {
     assertEq(undefined, el, 'AI|');
 });
 t.test('UpdateBoundsBasedOnChildren', () => {
-    let [app, grp] = makeFakeGroup();
+    let grp = makeFakeGroup()[1];
     assertEq([0, 0, largeArea, largeArea], grp.mouseInteractionBounds, 'AH|');
 
     /* width and height are 0 for an empty group */

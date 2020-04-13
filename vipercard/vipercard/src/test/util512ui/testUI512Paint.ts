@@ -91,7 +91,7 @@ export class TestDrawUI512Paint {
         let worker = new UI512ImageSerialization();
         let serialized = worker.writeToString(testFillRect);
         assertTrue(serialized.length < w * h, 'Bz|');
-        let deserialized = worker.loadFromString(testDeserialize, serialized);
+        worker.loadFromString(testDeserialize, serialized);
 
         /* show these on the screen */
         let layout = new GridLayout(610, 50, w, h, [0], canvases, 5, 5);
@@ -405,7 +405,7 @@ export class TestDrawUI512Paint {
 
     testDrawFloodFill() {
         let floodfilltest = new FloodFillTest();
-        let canvasUnused = floodfilltest.start();
+        floodfilltest.start();
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             floodfilltest.floodFillTest(canvas);
             complete.complete = floodfilltest.isDone;

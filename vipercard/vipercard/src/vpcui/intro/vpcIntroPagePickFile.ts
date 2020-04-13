@@ -29,7 +29,7 @@ export class IntroPagePickFile extends IntroPageBase {
      */
     createSpecific(app: UI512Application) {
         let grp = app.getGroup(this.grpId);
-        let headerHeight = this.drawCommonFirst(app, grp);
+        this.drawCommonFirst(app, grp);
 
         let noteToUser = this.genChild(app, grp, 'noteToUser', UI512ElLabel);
         noteToUser.setDimensions(this.x + 30, this.y + 30, 300, 200);
@@ -48,10 +48,6 @@ export class IntroPagePickFile extends IntroPageBase {
         let windowBg = grp.getEl(this.getElId('windowBg'));
         const baseX = windowBg.right - 170;
         const baseY = windowBg.bottom - 50;
-        let btnOkX = baseX;
-        let btnOkY = baseY;
-        let btnOkW = 69;
-        let btnOkH = 29;
         this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
 
         /* set the dimensions of the clickbounds based on position of the main <canvas> */

@@ -3,7 +3,7 @@
 /* auto */ import { UI512IsDrawTextInterface } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512AssertCustom';
-/* auto */ import { Util512, last } from './../utils/util512';
+/* auto */ import { Util512, arLast } from './../utils/util512';
 /* auto */ import { FormattedText } from './ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { CharRectType, DrawCharResult, TextRendererFont, largeArea, specialCharFontChange, specialCharNumNewline, specialCharNumZeroPixelChar, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
@@ -106,14 +106,14 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     ) {
         if (
             curX + measurements[charNum].newLogicalX >= boxW &&
-            last(ret).text.len() > 0
+            arLast(ret).text.len() > 0
         ) {
             ret.push(new LineTextToRender());
             retStarts.push(charNum);
             curX = 0;
         }
 
-        last(ret).text.push(s.charAt(charNum), s.fontAt(charNum));
+        arLast(ret).text.push(s.charAt(charNum), s.fontAt(charNum));
         curX += measurements[charNum].newLogicalX;
         return curX;
     }
@@ -144,7 +144,6 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         let measurements: DrawCharResult[] = [];
         let words: FormattedText[] = [new FormattedText()];
         let wordStarts: number[] = [0];
-        let divideNext = false;
         for (let i = 0; i < s.len(); i++) {
             /* 1) measure the size of characters */
             let c = s.charAt(i);
@@ -175,14 +174,14 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
                 }
             }
 
-            last(words).push(c, font);
+            arLast(words).push(c, font);
         }
 
         /* 3) placeholder for the end of the string,
         for convenience drawing the selection when end of string is selected */
         let fontLast = s.len() === 0 ? args.defaultFont : s.fontAt(s.len() - 1);
         words.push(new FormattedText());
-        last(words).push(specialCharNumZeroPixelChar, fontLast);
+        arLast(words).push(specialCharNumZeroPixelChar, fontLast);
         wordStarts.push(s.len());
 
         /* 4) place words into LineTextToRender */
@@ -190,7 +189,6 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         boxW = Math.max(1, boxW);
         let ret = [new LineTextToRender()];
         let retStarts: number[] = [0];
-        let total = 0;
         let curX = 0;
         for (let nWord = 0; nWord < words.length; nWord++) {
             /* make a new line if the last word ended with a newline */
@@ -217,23 +215,23 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             let nextX = curX + wordMeasured;
             if (nextX < boxW) {
                 /* it fits on the line */
-                last(ret).text.append(word);
+                arLast(ret).text.append(word);
                 curX = nextX;
             } else if (wordMeasured < boxW) {
                 /* it would fit on *a* line, just not this line */
-                if (last(ret).text.len()) {
+                if (arLast(ret).text.len()) {
                     ret.push(new LineTextToRender());
                     retStarts.push(wordStarts[nWord]);
                     curX = 0;
                 }
 
                 nextX = curX + wordMeasured;
-                last(ret).text.append(word);
+                arLast(ret).text.append(word);
                 curX = nextX;
             } else {
                 /* it won't fit on any line at all... */
                 /* first go down to the next line if we're not at the start of a line */
-                if (last(ret).text.len()) {
+                if (arLast(ret).text.len()) {
                     ret.push(new LineTextToRender());
                     retStarts.push(wordStarts[nWord]);
                     curX = 0;
@@ -508,7 +506,6 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         let [lines, measurements] = this.wrapTextIntoLines(textIn, args);
 
         /* measure dimensions */
-        let totalWidth = 0;
         let totalHeight = 0;
         let lastHeightMeasured = 0;
         let lastCapHeightMeasured = 0;
@@ -521,7 +518,6 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
                 lastHeightMeasured,
                 lastCapHeightMeasured
             );
-            totalWidth += line.width;
             totalHeight += line.tallestLineHeight;
             lastHeightMeasured = line.tallestLineHeight;
             lastCapHeightMeasured = line.tallestCapHeight;

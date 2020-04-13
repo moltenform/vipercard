@@ -9,8 +9,9 @@
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
+/* auto */ import { justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { cast, last, slength } from './../../ui512/utils/util512';
+/* auto */ import { arLast, cast, slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { ScrollbarImpl } from './../../ui512/textedit/ui512Scrollbar';
@@ -21,7 +22,7 @@
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { BasicHandlers } from './../../ui512/textedit/ui512BasicHandlers';
-import { justConsoleMsgIfExceptionThrown } from '../../ui512/utils/util512Higher';
+
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -556,7 +557,7 @@ export class VpcPresenterEvents {
         } else if (d instanceof MouseEventDetails || d instanceof MouseEnterDetails || d instanceof MouseLeaveDetails) {
             let affected = d.getAffectedElements();
             if (affected.length) {
-                target = last(affected).id;
+                target = arLast(affected).id;
             }
         } else if (d instanceof KeyEventDetails) {
             let focus = pr.vci.getCurrentFocus();

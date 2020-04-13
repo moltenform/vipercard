@@ -10,7 +10,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, castVerifyIsStr, getStrToEnum, last } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -230,7 +230,7 @@ export class VelResolveId {
         let words = s.split(/\s+/);
         if (
             words.length >= 3 &&
-            last(words) === 'stack' &&
+            arLast(words) === 'stack' &&
             words[words.length - 1] === 'this' &&
             words[words.length - 2] === 'of'
         ) {

@@ -2,7 +2,7 @@
 /* auto */ import { Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512AssertCustom';
-/* auto */ import { Util512, last } from './../utils/util512';
+/* auto */ import { Util512, arLast } from './../utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -26,7 +26,7 @@ export class UI512ImageCollection {
             let id = Util512.padStart(i, 2, '0');
             let name = 'lng' + i.toString();
             this.children.push(new UI512ImageCollectionImage(id, name));
-            last(this.children).parent = this;
+            arLast(this.children).parent = this;
         }
     }
 }

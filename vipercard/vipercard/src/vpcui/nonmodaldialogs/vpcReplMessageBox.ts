@@ -39,7 +39,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     rememberedTool = VpcTool.Button;
     constructor(protected vci: VpcStateInterface) {
         super('VpcNonModalReplBox' + Math.random());
-        let app = this.vci.UI512App();
+        this.vci.UI512App();
         this.adjustDimensions(vci);
     }
 

@@ -2,7 +2,7 @@
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../utils/util512AssertCustom';
-/* auto */ import { Util512, assertWarnEq, last, lastIfThere, slength } from './../utils/util512';
+/* auto */ import { Util512, arLast, assertWarnEq, lastIfThere, slength } from './../utils/util512';
 /* auto */ import { UI512Lines } from './../textedit/ui512TextLines';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
@@ -89,7 +89,7 @@ export class UI512AutoIndent {
      * does this line end a block, for this specific prefix?
      */
     getLevelChangeIsEndOfBlock(s: string, stack: AutoIndentMatch[]) {
-        let desiredMatch = last(stack);
+        let desiredMatch = arLast(stack);
         let matched = s.match(desiredMatch.desiredEndPattern);
         if (matched) {
             stack.pop();
@@ -200,7 +200,6 @@ export class UI512AutoIndent {
         len: number,
         attemptInsertText: boolean
     ): [UI512Lines, number, number] {
-        let wasEnd = selCaret >= len;
         let currentline = lns.indexToLineNumber(selCaret);
         let lnsOut = new UI512Lines(FormattedText.newFromSerialized(''));
         lnsOut.lns = [];

@@ -77,14 +77,12 @@ export class VpcSave implements VpcSaveInterface {
      * save as, show dialog upon failure
      */
     protected async goSaveAsAsyncImpl(ses: VpcSession) {
-        let caught = false;
         let didSave = false;
         try {
             let newStackData = this.pr.getSerializedStack();
             let info = this.pr.vci.getModel().stack.getLatestStackLineage();
             didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
         } catch (e) {
-            caught = true;
             this.pr.answerMsg(
                 longstr(`Save did not complete. If you encounter repeated
                  errors, you can use 'Save As Json' instead.\n${e}`),
@@ -109,7 +107,6 @@ export class VpcSave implements VpcSaveInterface {
      * save, show dialog upon failure
      */
     protected async goSaveAsyncImpl(ses: VpcSession) {
-        let caught = false;
         let didSave = false;
         try {
             let newStackData = this.pr.getSerializedStack();
@@ -120,7 +117,6 @@ export class VpcSave implements VpcSaveInterface {
                 didSave = bool(await this.goSaveAsWithNewName(ses, info.stackName, newStackData));
             }
         } catch (e) {
-            caught = true;
             await this.pr.answerMsgAsync(
                 longstr(`Save did not complete. If you encounter repeated
                     errors, you can use 'Save As Json' instead.\n${e}`)
@@ -180,7 +176,7 @@ export class VpcSave implements VpcSaveInterface {
             prevStackNameToShow = 'Untitled ' + Util512Higher.getRandIntInclusiveWeak(1, 100);
         }
 
-        let [newName, n] = await this.pr.askMsgAsync('Save as:', prevStackNameToShow);
+        let newName = await this.pr.askMsgAsync('Save as:', prevStackNameToShow)[0];
         if (newName && newName.trim().length) {
             newName = newName.trim();
             let lineageBeforeChanges = this.pr.vci.getModel().stack.getS('stacklineage');
@@ -213,7 +209,7 @@ export class VpcSave implements VpcSaveInterface {
     beginShareLink() {
         let gotLink = this.getShareLink();
         let br = getRoot().getBrowserInfo();
-        let key = BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
+        let key = (br===BrowserOSInfo.Mac) ? 'Cmd' : 'Ctrl';
         this.pr.askMsg(lng(`lngPress ${key}+C to copy this link!`), gotLink, () => {});
     }
 

@@ -201,7 +201,7 @@ export class TestVpcScriptRunBase {
         addNoHandler?: boolean
     ) {
         let caughtErr = false;
-        let isCompilationStage = true;
+        //~ let isCompilationStage = true;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
             checkThrow(false, 'nyi');
             //~ let msg = scriptErr.details;
@@ -254,7 +254,7 @@ export class TestVpcScriptRunBase {
             //~ );
             //~ }
 
-            caughtErr = true;
+            //~ caughtErr = true;
         };
 
         let built = addNoHandler
@@ -304,7 +304,6 @@ export class TestVpcScriptRunBase {
             this.vcstate.runtime.codeExec.workQueue.length > 0,
             '2V|should be in queue'
         );
-        isCompilationStage = false;
         this.vcstate.vci.doWithoutAbilityToUndo(() =>
             this.vcstate.runtime.codeExec.runTimeslice(Infinity)
         );

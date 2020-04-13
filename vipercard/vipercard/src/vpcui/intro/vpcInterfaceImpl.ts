@@ -12,7 +12,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { last } from './../../ui512/utils/util512';
+/* auto */ import { arLast } from './../../ui512/utils/util512';
 /* auto */ import { EventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -103,7 +103,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     findExecFrameStack(): [O<VpcExecFrameStack>, O<VpcExecFrame>] {
         let frStack = this.vcstate.runtime.codeExec.workQueue[0];
         if (frStack) {
-            return [frStack, last(frStack.stack)];
+            return [frStack, arLast(frStack.stack)];
         } else {
             return [undefined, undefined];
         }

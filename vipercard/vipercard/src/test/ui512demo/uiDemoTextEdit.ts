@@ -39,7 +39,6 @@ export class UI512DemoTextEdit extends UI512Presenter {
         this.test.addElements(this, clientRect);
         this.test.uiContext = true;
 
-        let curX = 10;
         let grp = this.app.getGroup('grp');
 
         /* run this after hitting toggle scroll a couple times

@@ -23,7 +23,6 @@ export class VpcAppLyrNotification extends VpcUILayer {
      * update ui
      */
     updateUI512Els() {
-        let currentTool = this.vci.getOptionN('currentTool');
         this.elems.nyiMsg.set('visible', false);
     }
 
@@ -88,7 +87,6 @@ export class VpcAppLyrNotification extends VpcUILayer {
         this.elems.cover.setDimensions(coverx, covery, coverw, coverh);
 
         /* a message to the user saying "nyi" */
-        const margin = 45;
         let msg = lng('lng(This feature is not yet supported.)');
         let font = new TextFontSpec('geneva', 0, 10);
         msg = UI512DrawText.setFont(msg, font.toSpecString());

@@ -12,7 +12,7 @@
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
 /* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, castVerifyIsStr, getStrToEnum, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast, castVerifyIsStr, getStrToEnum, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 
@@ -434,7 +434,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.RuleExpr) {
                 for (let i = 0; i < ctx.RuleExpr.length; i++) {
                     args.push(this.visit(ctx.RuleExpr[i]));
-                    checkThrow(last(args) instanceof VpcVal, '9H|did not get a vpc val, got', last(args));
+                    checkThrow(arLast(args) instanceof VpcVal, '9H|did not get a vpc val, got', arLast(args));
                 }
             }
 

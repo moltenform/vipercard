@@ -3,7 +3,7 @@
 /* auto */ import { checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcPhoneDial } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
-/* auto */ import { Util512Higher, VoidFn, RespondToErr } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from './../../ui512/utils/util512';

@@ -2,7 +2,7 @@
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcLineCategory } from './vpcPreparseCommon';
 /* auto */ import { checkThrow, checkThrowEq, checkThrowInternal } from './../vpcutils/vpcEnums';
-/* auto */ import { MapKeyToObject, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObject, arLast, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -49,7 +49,7 @@ export class BranchProcessing {
      * call this when finished with a block, like after an 'end if'
      */
     protected finalizeBlock() {
-        let topOfStack = last(this.stack);
+        let topOfStack = arLast(this.stack);
         let references = topOfStack.relevantLines.map(ln => new VpcCodeLineReference(ln));
         for (let i = 0, len = topOfStack.relevantLines.length; i < len; i++) {
             let line = topOfStack.relevantLines[i];
@@ -88,10 +88,10 @@ export class BranchProcessing {
             }
             case VpcLineCategory.RepeatEnd: {
                 checkThrow(
-                    this.stack.length && VpcLineCategory.RepeatForever === last(this.stack).cat,
+                    this.stack.length && VpcLineCategory.RepeatForever === arLast(this.stack).cat,
                     `7<|cannot "end repeat" interleaved within some other block.`
                 );
-                last(this.stack).add(line);
+                arLast(this.stack).add(line);
                 this.finalizeBlock();
                 break;
             }
@@ -100,24 +100,24 @@ export class BranchProcessing {
                 break;
             case VpcLineCategory.IfElsePlain:
                 checkThrow(
-                    this.stack.length && VpcLineCategory.IfStart === last(this.stack).cat,
+                    this.stack.length && VpcLineCategory.IfStart === arLast(this.stack).cat,
                     `7;|cannot have an "else" interleaved within some other block.`
                 );
-                last(this.stack).add(line);
+                arLast(this.stack).add(line);
                 break;
             case VpcLineCategory.IfEnd:
                 checkThrow(
-                    this.stack.length && VpcLineCategory.IfStart === last(this.stack).cat,
+                    this.stack.length && VpcLineCategory.IfStart === arLast(this.stack).cat,
                     `7;|cannot have an "else" interleaved within some other block.`
                 );
-                last(this.stack).add(line);
+                arLast(this.stack).add(line);
                 this.finalizeBlock();
                 break;
             case VpcLineCategory.HandlerStart:
                 this.stack.push(new BranchBlockInfo(VpcLineCategory.HandlerStart, line));
                 break;
             case VpcLineCategory.HandlerEnd: {
-                let topOfStack = last(this.stack);
+                let topOfStack = arLast(this.stack);
                 checkThrowEq(
                     VpcLineCategory.HandlerStart,
                     topOfStack.cat,
@@ -162,7 +162,7 @@ export class BranchProcessing {
     checkStartAndEndMatch(lines: VpcCodeLine[]) {
         checkThrow(lines[0].excerptToParse.length > 1, '7,|on myHandler, missing name of handler');
         let firstname = lines[0].excerptToParse[1].image;
-        let lastline = last(lines);
+        let lastline = arLast(lines);
         checkThrow(lastline.excerptToParse.length > 1, '7+|end myHandler, missing name of handler');
         let lastname = lastline.excerptToParse[1].image;
         checkThrowEq(

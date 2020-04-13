@@ -6,7 +6,7 @@
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { GenericTextField } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';

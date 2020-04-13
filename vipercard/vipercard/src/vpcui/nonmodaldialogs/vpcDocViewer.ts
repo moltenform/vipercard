@@ -374,12 +374,11 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
     protected clickedBtnStartVid(rightBtn: UI512Element) {
         if (this.type === DialogDocsType.Examples) {
             let grp = this.vci.UI512App().getGroup(this.grpId);
-            let btmGeneric = grp.getEl(this.getElId('btmChoice'));
             let top = cast(UI512ElTextField, grp.getEl(this.getElId('topChoice')));
             let ctg = this.getChosenCategoryNumber(top);
             if (ctg !== undefined && this.examplesInfo[ctg]) {
                 let num = this.examplesInfo[ctg][0].replace(/vid/g, '');
-                let redirectWindow = window.open('/0.3/html/video' + num + '.html', '_blank');
+                window.open('/0.3/html/video' + num + '.html', '_blank');
             }
         }
     }

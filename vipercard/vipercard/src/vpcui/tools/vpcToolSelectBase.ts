@@ -364,7 +364,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
     applyMove() {
         if (this.st) {
             if (this.st.elMask.getCanvasForWrite()) {
-                let basePaint = this.cbPaintRender().getMainBg();
+                this.cbPaintRender().getMainBg();
                 let incoming = this.st.areCopying
                     ? [this.st.elStage.getCanvasForWrite()]
                     : [this.st.elMask.getCanvasForWrite(), this.st.elStage.getCanvasForWrite()];

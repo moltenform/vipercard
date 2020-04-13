@@ -10,7 +10,7 @@
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
-/* auto */ import { cProductName, vpcversion } from './../../ui512/utils/util512Base';
+/* auto */ import { cProductName, vpcVersion } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -1014,12 +1014,12 @@ t.atest('async/testVpcStateSerialize', async () => {
     assertEq('vpc', restoredJson.product, 'H7|');
     assertEq(3, restoredJson.fileformatmajor, 'H6|');
     assertEq(0, restoredJson.fileformatminor, 'H5|');
-    assertEq(vpcversion, restoredJson.buildnumber, 'H4|');
+    assertEq(vpcVersion, restoredJson.buildnumber, 'H4|');
     assertEq(h.vcstate.vci.getModel().uuid, restoredJson.uuid, 'H3|');
 
     /* do the full restore, as if opening from disk */
     let newProv = new VpcIntroProvider(s, 'docName', VpcDocumentLocation.FromJsonFile);
-    let [newPr, newState] = await newProv.loadDocumentTop();
+    let newState = await newProv.loadDocumentTop()[1];
 
     /* test that it has everything */
     h.testModelHasItAll(newState);

@@ -2,7 +2,7 @@
 /* auto */ import { VpcSession, vpcUsersCheckLogin, vpcUsersCheckLoginResponse, vpcUsersEnterEmailVerifyCode } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormLoginInterface, VpcNonModalFormNewUser } from './vpcFormNewUser';
-/* auto */ import { Util512Higher, getRoot, RespondToErr } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';

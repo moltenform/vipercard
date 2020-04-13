@@ -4,7 +4,7 @@
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerVar, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
-/* auto */ import { assertEq, last } from './../../ui512/utils/util512';
+/* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

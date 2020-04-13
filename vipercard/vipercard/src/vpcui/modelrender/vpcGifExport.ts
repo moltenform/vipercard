@@ -2,7 +2,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { Util512Higher, RespondToErr } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
@@ -96,7 +96,7 @@ export class PaintGifExport {
                 await Util512Higher.sleep(100);
                 let cds = this.vci.getModel().stack.bgs[0].cards;
                 let cardId = cds[i].id;
-                let [currentlyCachedV, currentlyCachedIm] = this.cbRefreshCachedPaintForCard(cardId);
+                let  currentlyCachedIm = this.cbRefreshCachedPaintForCard(cardId)[1];
                 checkThrow(encoder.addFrame(currentlyCachedIm.context), `KT|addFrame() returned false on cd ${i + 1}.`);
             }
 

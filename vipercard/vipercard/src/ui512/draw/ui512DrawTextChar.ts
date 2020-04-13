@@ -9,7 +9,6 @@
 /* Released under the GPLv3 license */
 
 const space = ' '.charCodeAt(0);
-const dash = '-'.charCodeAt(0);
 
 /**
  * draw one character onto a canvas

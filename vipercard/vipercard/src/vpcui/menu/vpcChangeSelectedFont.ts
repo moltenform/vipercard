@@ -7,7 +7,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, fitIntoInclusive, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, fitIntoInclusive, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */

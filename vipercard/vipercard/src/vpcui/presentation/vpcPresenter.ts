@@ -215,7 +215,7 @@ export class VpcPresenter extends VpcPresenterInit {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
-            let [velId, line] = VpcPresenter.commonRespondToError(this.vci, scriptErr);
+            let velId = VpcPresenter.commonRespondToError(this.vci, scriptErr)[0];
 
             /* did this come from the messagebox? */
             if (velId === 'messagebox') {

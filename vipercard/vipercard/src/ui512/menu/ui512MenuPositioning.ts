@@ -114,7 +114,7 @@ export class MenuPositioning {
 
         /* draw shadowed bg */
         /* the top of this rect will goes under the main menu bar, so the top line won't be seen */
-        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
+        let grpItems = MenuPositioning.getMenuGroups(app)[1];
         let dropdownBg = grpItems.getEl(menuRoot.id + '##dropdownBg');
         dropdownBg.setDimensions(
             rect[0],
@@ -180,7 +180,7 @@ export class MenuPositioning {
         if (isExpanded) {
             MenuPositioning.setMenuItemPositions(app, menuRoot, header, complete);
 
-            let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
+            let  grpItems = MenuPositioning.getMenuGroups(app)[1];
             grpItems.setVisible(true);
         } else {
             let children = header.getChildren(app);
@@ -205,7 +205,7 @@ export class MenuPositioning {
         }
 
         /* top bar */
-        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app);
+        let grpItems = MenuPositioning.getMenuGroups(app)[1];
         menuRoot.setDimensions(
             app.bounds[0],
             app.bounds[1],
@@ -220,7 +220,6 @@ export class MenuPositioning {
         /* draw menu headers */
         /* interesting fact: the headers overlap each other. confirmed in emulator */
         let curX = app.bounds[0] + MenuConsts.TopHeaderMargin1;
-        let counticonsdrawn = 0;
         let dropDowns = menuRoot.getchildren(app);
         grpItems.setVisible(false);
         for (let i = 0; i < dropDowns.length; i++) {
@@ -315,9 +314,9 @@ export class MenuPositioning {
         grpBar.addElementAfter(app, dropdn, menuRoot.id);
         dropdn.set('fixedoffset', fixedOffset);
         if (headerLabelUntranslated.startsWith('icon:')) {
-            let [_, iconGroupId, iconNumber, fixWidth] = headerLabelUntranslated.split(
+            let [iconGroupId, iconNumber, fixWidth] = headerLabelUntranslated.split(
                 ':'
-            );
+            ).slice(1);
             dropdn.set('icongroupid', iconGroupId);
             dropdn.set('iconnumber', Util512.parseInt(iconNumber) ?? 0);
             dropdn.set('fixedwidth', Util512.parseInt(fixWidth) ?? 0);
@@ -380,7 +379,7 @@ export class MenuPositioning {
      * by default we'll give the menuRoot a hard-coded id so it can always be found by id
      */
     static getMenuRoot(app: UI512Application, createIfNeeded = true): UI512MenuRoot {
-        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app, createIfNeeded);
+        let grpBar = MenuPositioning.getMenuGroups(app, createIfNeeded)[0];
         let elem = grpBar.findEl('$$menubarforapp');
         if (elem) {
             return cast(UI512MenuRoot, elem);
@@ -402,7 +401,7 @@ export class MenuPositioning {
         enabled: O<boolean>,
         translatedLabel?: string
     ) {
-        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(app, true);
+        let  grpItems = MenuPositioning.getMenuGroups(app, true)[1];
         let elem = grpItems.findEl(id);
         if (elem) {
             if (checked !== undefined) {

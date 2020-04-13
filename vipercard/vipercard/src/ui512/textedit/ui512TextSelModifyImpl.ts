@@ -269,13 +269,13 @@ export class TextSelModifyImpl {
         /* 2) add spaces */
         assertTrue(level >= 0, '2;|negative level');
         let added = Util512.repeat(level, space).join('');
-        let [tNew, p1, p2] = TextSelModifyImpl.changeTextInsert(
+        let tNew = TextSelModifyImpl.changeTextInsert(
             t,
             0,
             0,
             added,
             defaultFont
-        );
+        )[0];
         return tNew;
     }
 
@@ -345,13 +345,13 @@ export class TextSelModifyImpl {
                 );
             } else {
                 /* no prefix, add it */
-                let [tNew, p1, p2] = TextSelModifyImpl.changeTextInsert(
+                let tNew = TextSelModifyImpl.changeTextInsert(
                     line,
                     lineStart,
                     lineStart,
                     prefix,
                     defaultFont
-                );
+                )[0];
                 line.deleteAll();
                 line.append(tNew);
             }

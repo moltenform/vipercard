@@ -123,7 +123,7 @@ export class TestDrawUI512Menus {
         testTransparency.setDimensions(bounds[0] + 100, bounds[1] + 100, 5, 1);
 
         /* add the menu */
-        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(pr.app);
+        let  grpItems = MenuPositioning.getMenuGroups(pr.app)[1];
         MenuPositioning.buildFromArray(pr, this.getDefn());
         grpItems.getEl('mnuOptSecond').set('checkmark', true);
         let toDisable = ['mnuCut', 'mnuCopy', 'mnuClear', 'mnuTextStyle'];
@@ -165,7 +165,7 @@ export class TestDrawUI512Menus {
 
         /* test different clock times */
         if (i < 2) {
-            let [grpBar, grpItems] = MenuPositioning.getMenuGroups(testPr.app);
+            let grpBar = MenuPositioning.getMenuGroups(testPr.app)[0];
             grpBar.getEl('topClock').set('labeltext', i === 0 ? '1/1/17' : '1/18/18');
         }
 

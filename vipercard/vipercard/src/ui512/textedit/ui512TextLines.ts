@@ -1,6 +1,6 @@
 
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
-/* auto */ import { Util512, fitIntoInclusive, last } from './../utils/util512';
+/* auto */ import { Util512, arLast, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';
 /* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
 
@@ -9,7 +9,6 @@
 
 /* small perf opt to reduce calls to charCodeAt */
 const space = ' '.charCodeAt(0);
-const dash = '-'.charCodeAt(0);
 const tab = '\t'.charCodeAt(0);
 
 /**
@@ -26,7 +25,7 @@ export class UI512Lines {
         /* include the '\n' characters at the end of the line like we do when rendering */
         /* if we strip the \n character we would lose the formatting of the \n character */
         for (let i = 0; i < txt.len(); i++) {
-            last(this.lns).push(txt.charAt(i), txt.fontAt(i));
+            arLast(this.lns).push(txt.charAt(i), txt.fontAt(i));
             if (txt.charAt(i) === specialCharNumNewline) {
                 this.lns.push(new FormattedText());
             }

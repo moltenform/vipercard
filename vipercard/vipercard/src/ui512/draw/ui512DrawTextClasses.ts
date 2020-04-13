@@ -22,8 +22,6 @@ export const specialCharNumFontChange = specialCharFontChange.charCodeAt(0);
 export const specialCharNumCmdSymbol = specialCharCmdSymbol.charCodeAt(0);
 export const specialCharNumTab = '\t'.charCodeAt(0);
 export const largeArea = 1024 * 1024 * 1024;
-const space = ' '.charCodeAt(0);
-const dash = '-'.charCodeAt(0);
 
 /* nbsp in the os-roman character set */
 export const specialCharNonBreakingSpace = '\xCA';

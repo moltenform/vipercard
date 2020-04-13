@@ -1,4 +1,5 @@
 
+/* auto */ import { vpcWebsitePart } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { UI512CompModalDialog, UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';
@@ -28,7 +29,7 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn2) {
-                let redirectWindow = window.open('https://donorbox.org/vipercard', '_blank');
+                window.open('https://donorbox.org/vipercard', '_blank');
             }
         };
 
@@ -62,7 +63,7 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn1) {
-                let redirectWindow = window.open('https://donorbox.org/vipercard', '_blank');
+                window.open('https://donorbox.org/vipercard', '_blank');
             }
         };
 
@@ -85,7 +86,7 @@ export class VpcAboutDialog {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn3) {
-                let redirectWindow = window.open('/0.3/html/terms.html', '_blank');
+                window.open(vpcWebsitePart + 'html/terms.html', '_blank');
             }
         };
 

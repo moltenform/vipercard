@@ -1,7 +1,7 @@
 
 /* auto */ import { TestParseHelpers } from './vpcTestScriptParseCmd';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

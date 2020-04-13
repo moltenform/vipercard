@@ -47,7 +47,6 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     CreatePart(type: VpcElType, x: number, y: number, w: number, h: number) {
         let currentCardId = this.GetOptionS('currentCardId');
-        let currentCard = this.vci.getModel().getCardById(currentCardId);
         let el = this.vci.createVel(currentCardId, type, -1) as VpcElSizable;
         assertTrue(el instanceof VpcElSizable, '6u|not VpcElSizable');
         el.setDimensions(x, y, w, h);
@@ -81,7 +80,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * resolve reference to a vel
      */
     ResolveVelRef(ref: RequestedVelRef): [O<VpcElBase>, VpcElCard] {
-        let [frStack, frame] = this.vci.findExecFrameStack();
+        let frame = this.vci.findExecFrameStack()[1];
         let me: O<VpcElBase> = this.FindVelById(frame?.meId);
         let cardHistory = this.vci.getCodeExec().cardHistory;
 
@@ -169,7 +168,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     DeclareGlobal(varName: string) {
         assertTrue(slength(varName), '6q|bad varName', varName);
-        let [frStack, frame] = this.getExecFrameStack();
+        let frame = this.getExecFrameStack()[1];
         frame.declaredGlobals[varName] = true;
     }
 
@@ -240,7 +239,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     SetSpecialVar(varName: string, v: VpcVal): void {
         checkThrow(varName === 'it', '8=|only supported for it');
-        let [frStack, frame] = this.getExecFrameStack();
+        let frame = this.getExecFrameStack()[1];
         frame.locals.set(varName, v);
     }
 
@@ -440,7 +439,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * get code execution frame information
      */
     GetFrameInfo(): [VpcScriptMessage, VpcVal[]] {
-        let [frStack, frame] = this.getExecFrameStack();
+        let frame = this.getExecFrameStack()[1];
         return [frame.message, frame.args];
     }
 
@@ -505,7 +504,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             args.yPts.push(argsGiven[i + 1]);
         }
 
-        let [frStack, frame] = this.getExecFrameStack();
+        let frStack = this.getExecFrameStack()[0];
         frStack.paintQueue.push(args);
     }
 
@@ -560,7 +559,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     protected getTargetFullString(adjective: PropAdjective) {
         /* get a longer form of the id unless specifically said "short" */
-        let [frStack, frame] = this.vci.findExecFrameStack();
+        let  frame = this.vci.findExecFrameStack()[1];
         let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
         checkThrow(target, 'the target was not found');
         if (adjective === PropAdjective.Short) {

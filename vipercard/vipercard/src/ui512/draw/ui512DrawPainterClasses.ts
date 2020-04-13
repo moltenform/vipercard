@@ -343,7 +343,6 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
 
         qx.push(xIn);
         qy.push(yIn);
-        let countPixelsWritten = 0;
         let maxAllowedIters = 1000 * w * h;
         let counter = 0;
         while (qx.length > 0) {
@@ -359,7 +358,6 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
                 RectUtils.hasPoint(x, y, 0, 0, w, h) &&
                 this.readPixel(x, y) === targetColor
             ) {
-                countPixelsWritten += 1;
                 this.setPixel(x, y, tmpColor);
                 if (recordOutputX) {
                     recordOutputX.push(x);

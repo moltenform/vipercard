@@ -2,7 +2,7 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

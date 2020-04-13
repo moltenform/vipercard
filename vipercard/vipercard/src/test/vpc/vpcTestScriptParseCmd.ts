@@ -288,9 +288,7 @@ export class TestParseHelpers {
      */
     testParse(sInput: string, sTopRule: string, sExpected: string, sErrExpected: string) {
         let lexResult = this.lexer.tokenize(sInput);
-        let expectLexerErr = false;
         if (sErrExpected.startsWith('Lexer:')) {
-            expectLexerErr = true;
             sErrExpected = sErrExpected.substr('Lexer:'.length);
             if (!lexResult.errors.length) {
                 t.warnAndAllowToContinue(

@@ -1,6 +1,5 @@
 
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
-/* auto */ import { VpcLineCategory } from './../../vpc/codepreparse/vpcPreparseCommon';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
@@ -953,40 +952,40 @@ put myMult(2,myMult(myMult((2), 3), (4))) into ret
     h.testBatchEvaluate(batch);
 });
 t.test("test_don't need to expand custom fns on these lines", () => {
-    /* VpcLineCategory.HandlerStart */
+    /* VpcLineCategory_.HandlerStart */
     let inp = `
 on myHandler myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'required comma', 2);
 
-    /* VpcLineCategory.HandlerEnd */
+    /* VpcLineCategory_.HandlerEnd */
     inp = `
 on myHandler
 end myHandler myFn(1, 2)`;
     h.assertCompileError(inp, 'wrong line length', 3);
 
-    /* VpcLineCategory.HandlerExit */
+    /* VpcLineCategory_.HandlerExit */
     inp = `
 on myHandler
 exit myHandler myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'wrong line length', 3);
 
-    /* VpcLineCategory.ProductExit */
+    /* VpcLineCategory_.ProductExit */
     inp = `
 on myHandler
 exit to ${cProductName} myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'wrong line length', 3);
 
-    /* VpcLineCategory.HandlerPass */
+    /* VpcLineCategory_.HandlerPass */
     inp = `
 on myHandler
 pass myHandler myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'wrong line length', 3);
 
-    /* VpcLineCategory.IfElsePlain */
+    /* VpcLineCategory_.IfElsePlain */
     inp = `
 on myHandler
 if true then
@@ -995,7 +994,7 @@ end if
 end myHandler`;
     h.assertCompileError(inp, "'fn()' alone", 4);
 
-    /* VpcLineCategory.IfEnd */
+    /* VpcLineCategory_.IfEnd */
     inp = `
 on myHandler
 if true then
@@ -1004,7 +1003,7 @@ end if myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'wrong line length', 5);
 
-    /* VpcLineCategory.RepeatExit */
+    /* VpcLineCategory_.RepeatExit */
     inp = `
 on myHandler
 repeat while false
@@ -1013,7 +1012,7 @@ end repeat
 end myHandler`;
     h.assertCompileError(inp, 'wrong line length', 4);
 
-    /* VpcLineCategory.RepeatNext */
+    /* VpcLineCategory_.RepeatNext */
     inp = `
 on myHandler
 repeat while false
@@ -1022,7 +1021,7 @@ end repeat
 end myHandler`;
     h.assertCompileError(inp, "just 'next repeat'", 4);
 
-    /* VpcLineCategory.RepeatEnd */
+    /* VpcLineCategory_.RepeatEnd */
     inp = `
 on myHandler
 repeat while false
@@ -1031,21 +1030,21 @@ end repeat myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'wrong line length', 5);
 
-    /* VpcLineCategory.Global */
+    /* VpcLineCategory_.Global */
     inp = `
 on myHandler
 global myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'required comma', 3);
 
-    /* VpcLineCategory.Global in list */
+    /* VpcLineCategory_.Global in list */
     inp = `
 on myHandler
 global a, myFn(1, 2)
 end myHandler`;
     h.assertCompileError(inp, 'required comma', 3);
 });
-t.test('_expand in VpcLineCategory.ReturnExpr', () => {
+t.test('_expand in VpcLineCategory_.ReturnExpr', () => {
     h.provideCustomFnInStackScript(`
 on theTest
     global countCalls
@@ -1062,7 +1061,7 @@ end theTest
 
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory.IfStart', () => {
+t.test('_expand in VpcLineCategory_.IfStart', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1092,7 +1091,7 @@ end if\\ret && countCalls`,
 
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory.IfElse', () => {
+t.test('_expand in VpcLineCategory_.IfElse', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1368,7 +1367,7 @@ end repeat\\s && countCalls`,
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory.built in command', () => {
+t.test('_expand in VpcLineCategory_.built in command', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1486,7 +1485,7 @@ put 6 + \\\n myMult(1, \\\n 3) + myMult(\\\n 1, 3) + myMult(1, 3 \\\n) into x
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory.GoCardImpl', () => {
+t.test('_expand in VpcLineCategory_.GoCardImpl', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1526,7 +1525,7 @@ put the short id of this cd is the short id of card 4 into ret
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory.CallDynamic', () => {
+t.test('_expand in VpcLineCategory_.CallDynamic', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1549,7 +1548,7 @@ send "global g" & cr & "put " & myMult(2,3) & " + 1 into g" to this card
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory.CallHandler', () => {
+t.test('_expand in VpcLineCategory_.CallHandler', () => {
     h.provideCustomFnInStackScript(`
 on theTest p1, p2
 global g
@@ -1609,7 +1608,7 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
         //~ let transformedCode = h.vcstate.vci.getCodeExec().cachedAST.getParsedCodeCollection(script, btnGo.id)
         //~ checkThrow(transformedCode instanceof VpcParsedCodeCollection, '')
 
-        //~ let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory[o.ctg]);
+        //~ let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory_[o.ctg]);
         //~ got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
         //~ let exp = expected
         //~ .trim()

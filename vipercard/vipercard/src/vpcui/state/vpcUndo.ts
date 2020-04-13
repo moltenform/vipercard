@@ -5,11 +5,10 @@
 /* auto */ import { UndoableActionCreateOrDelVel } from './vpcCreateOrDelVel';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
-/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O, UI512Compress, bool, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { last } from './../../ui512/utils/util512';
+/* auto */ import { arLast } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserver, ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
@@ -92,12 +91,10 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
      */
     static checkIfCanDelete(vel: VpcElBase, vci: VpcStateInterface) {
         let currentCard = vci.getModel().getByIdUntyped(vci.getModel().productOpts.getS('currentCardId'));
-        let velAsCard = vel as VpcElCard;
-        let velAsBg = vel as VpcElBg;
         assertTrue(bool(vci.getModel().findByIdUntyped(vel.id)), "6Z|deleting element that doesn't exist?", vel.id);
         if (vel.getType() === VpcElType.Stack || vel.getType() === VpcElType.Product || vel.getType() === VpcElType.Unknown) {
             checkThrow(false, '6Y|Cannot delete this type of element');
-        } else if (velAsCard instanceof VpcElCard) {
+        } else if (vel instanceof VpcElCard) {
             let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
             checkThrow(ar.length > 1, '8%|Cannot delete the only card of a stack');
         } else if (vel.id === currentCard.id) {
@@ -492,7 +489,7 @@ export class UndoManager implements ElementObserver {
             /* this is a transient state */
             return 'viewingHistory' + Math.random().toString();
         } else {
-            return last(this.history).stateId;
+            return arLast(this.history).stateId;
         }
     }
 }

@@ -164,8 +164,9 @@ export class RingBufferLocalStorage extends RingBuffer {
  */
 export const cProductName = 'ViperCard';
 export const cAltProductName = 'HyperCard';
-export const vpcversion = '00002061';
+export const vpcVersion = '00002061';
 export const vpcWebsite = 'https://www.vipercard.net/0.3/';
+export const vpcWebsitePart = '/0.3/';
 
 /**
  * a short way to say optional<T>.

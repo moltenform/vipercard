@@ -2,7 +2,7 @@
 /* auto */ import { BuildFakeTokens, ChvITk, couldTokenTypeBeAVariableName, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
-/* auto */ import { last } from './../../ui512/utils/util512';
+/* auto */ import { arLast } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -21,7 +21,7 @@ export namespace VpcRewritesLoops {
             return goWith(line, rw);
         } else {
             let times = rw.tokenFromEnglishTerm('times', line[0]);
-            if (last(line).tokenType === times.tokenType && last(line).image === times.image) {
+            if (arLast(line).tokenType === times.tokenType && arLast(line).image === times.image) {
                 line.pop();
             }
 

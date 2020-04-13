@@ -64,7 +64,7 @@ export class UI512DemoMenus extends UI512Presenter {
     protected static respondMenuItemClick(pr: UI512DemoMenus, d: MenuItemClickedDetails) {
         console.log('clicked on menuitem ' + d.id);
         let idsInList = 'mnuOptFirst|mnuOptSecond|mnuOptThird'.split('|');
-        let [grpBar, grpItems] = MenuPositioning.getMenuGroups(pr.app);
+        let grpItems = MenuPositioning.getMenuGroups(pr.app)[1];
         if (idsInList.indexOf(d.id) !== -1) {
             for (let idInList of idsInList) {
                 let item = grpItems.getEl(idInList);

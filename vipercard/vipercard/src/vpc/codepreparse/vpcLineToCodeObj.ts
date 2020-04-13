@@ -8,7 +8,7 @@
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, last, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -119,7 +119,7 @@ export class VpcLineToCodeObj {
      */
     goIf(line: ChvITk[], output: VpcCodeLine) {
         output.ctg = VpcLineCategory.IfStart;
-        let lastToken = last(line);
+        let lastToken = arLast(line);
         checkThrow(
             isTkType(lastToken, tks.tkIdentifier) && lastToken.image === 'then',
             `87|expected line to end with "then". 'if x > 2 then' `
