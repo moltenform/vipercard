@@ -223,7 +223,7 @@ export class UI512ErrorHandling {
  *              for images, json, server requests, dynamic script loading
  *              look for "addEventListener" and "onload"
  *              fix: wrap in trycatch or showMsgIfExceptionThrown
- *          setinterval and settimeout. use ban/ban to stop them.
+ *          setinterval and settimeout. use eslint ban / ban to stop them.
  *              fix: replace with syncToAsyncAfterPause
  *          all async code
  *              fix: use syncToAsyncTransition

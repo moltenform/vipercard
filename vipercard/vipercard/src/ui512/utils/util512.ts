@@ -92,7 +92,7 @@ export class Util512 {
     static parseInt(s: O<string>): O<number> {
         let ret = 0;
         if (s) {
-            /* ok to use here, we remembered to say base 10 */
+            /* ok to use, we remembered to say base 10 */
             /* eslint-disable-next-line ban/ban */
             ret = parseInt(s, 10);
         } else {

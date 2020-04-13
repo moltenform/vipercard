@@ -691,7 +691,6 @@ export class UI512ViewDraw {
     ) {
         let [fnborder, subRect] = this.getSubRectForField(b, el);
         if (fnborder) {
-            /* eslint-disable-next-line ban/ban */
             fnborder.apply(b);
         }
 
