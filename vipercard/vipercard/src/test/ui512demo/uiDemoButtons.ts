@@ -2,6 +2,7 @@
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { cast } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -30,7 +31,6 @@
 export class UI512DemoButtons extends UI512Presenter {
     counter = 0;
     isCurrentlyResizingButton = false;
-    btnstylelist: string[];
     btnstyleindex = 0;
     drawEnabledStyle = true;
     testrunner: TestDrawUI512Buttons;

@@ -115,32 +115,24 @@ export class Util512Higher {
     /**
      * download json asynchronously. see vpcrequest.ts if sending parameters.
      */
-    static beginLoadJson(
+    private static loadJsonImpl(
         url: string,
         req: XMLHttpRequest,
         callback: (s: string) => void,
-        callbackOnErr?: () => void
+        callbackOnErr: (n:number) => void
     ) {
         req.overrideMimeType('application/json');
         req.open('GET', url, true);
-        if (!callbackOnErr) {
-            callbackOnErr = () => {
-                assertWarn(false, `4K|failed to load ${url}, status=${req.status}`);
-            };
-        }
-
         req.addEventListener('load', () => {
-            if (req.status === 200) {
+            if (req.status >= 200 && req.status <= 299) {
                 callback(req.responseText);
-            } else if (callbackOnErr) {
-                callbackOnErr();
+            } else {
+                callbackOnErr(req.status);
             }
         });
 
         req.addEventListener('error', () => {
-            if (callbackOnErr) {
-                callbackOnErr();
-            }
+            callbackOnErr(-1);
         });
 
         req.send();
@@ -149,71 +141,86 @@ export class Util512Higher {
     /**
      * download json asynchronously, and return parsed js object.
      */
-    static asyncBeginLoadJson(url: string): Promise<AnyJson> {
+    static asyncLoadJsonString(url: string): Promise<string> {
         return new Promise((resolve, reject) => {
             let req = new XMLHttpRequest();
-            Util512Higher.beginLoadJson(
+            Util512Higher.loadJsonImpl(
                 url,
                 req,
                 s => {
-                    let parsed = undefined;
-                    try {
-                        parsed = JSON.parse(s);
-                    } catch (e) {
-                        reject(e);
-                    }
-
-                    resolve(parsed);
+                     resolve(s);
                 },
-                () => reject(new Error(`4K|failed to load ${url}, status=${req.status}`))
+                n => {
+                    reject(new Error(`failed to load ${url}, status=${n}`))
+                }
             );
         });
     }
 
-    /**
-     * load and run script. must be on same domain.
-     */
-    static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
-    static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
-        return new Promise((resolve, reject) => {
-            assertTrue(url.startsWith('/'), 'J8|');
-            if (Util512Higher.scriptsAlreadyLoaded[url]) {
-                resolve();
-                return;
-            }
-
-            let script = window.document.createElement('script');
-            script.setAttribute('src', url);
-
-            /* prevents cb from being called twice */
-            let loaded = false;
-            script.onerror = () => {
-                let urlsplit = url.split('/');
-                reject(new Error('Did not load ' + arLast(urlsplit)));
-            };
-
-            script.onload = () => {
-                if (!loaded) {
-                    Util512Higher.scriptsAlreadyLoaded[url] = true;
-                    loaded = true;
-                    resolve();
-                }
-            };
-
-            (script as any).onreadystatechange = script.onload; /* browser compat */
-
-            window.document.getElementsByTagName('head')[0].appendChild(script);
-        });
+    static async asyncLoadJson(url: string):Promise<AnyJson> {
+        let s = await Util512Higher.asyncLoadJsonString(url)
+        return JSON.parse(s);
     }
 
     /**
-     *
+     * load and run script. must be on same domain (url starts with /)
+     */
+    static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
+    static asyncLoadJsIfNotAlreadyLoaded(url: string, timeoutAfter=15 * 1000): Promise<unknown> {
+        let script:O<HTMLScriptElement>
+        let pr1 = new Promise((resolve, reject) => {
+            assertTrue(url.startsWith('/'), 'J8|');
+            if (Util512Higher.scriptsAlreadyLoaded[url]) {
+                resolve(true);
+            }
+
+            script = window.document.createElement('script');
+            script.id = 'pending' + Math.random()
+            script.setAttribute('src', url);
+
+            /* prevents cb from being called twice */
+            let onerror = () => {
+                if (script) {
+                    script.id = 'err' + Math.random()
+                    let urlsplit = url.split('/');
+                    reject(new Error('Did not load ' + arLast(urlsplit)));
+                }
+            };
+
+            let onload = () => {
+                /* we might have already timed out */
+                if (script && script.id.startsWith('pending')) {
+                    script.id = 'done' + Math.random()
+                    Util512Higher.scriptsAlreadyLoaded[url] = true;
+                    resolve(true);
+                }
+            };
+            
+            script.addEventListener('load', () => showMsgIfExceptionThrown(onload, 'onload'));
+            script.addEventListener('error', () => showMsgIfExceptionThrown(onerror, 'onerror'));
+            (script as any).onreadystatechange = script.onload; /* browser compat */
+            window.document.getElementsByTagName('head')[0].appendChild(script);
+        })
+        
+        let pr2 = async () => {
+            await Util512Higher.sleep(timeoutAfter)
+            if (!script || !script.id.startsWith('done')) {
+                if (script) {
+                    script.id = 'timedout' + Math.random()
+                }
+                
+                throw new Error("could not load script, please check internet connection and try again")
+            }
+
+            return true
+        }
+
+        return Promise.race([pr1, pr2()])
+    }
+
+    /**
      * all code that goes from sync to async *must* use this method
      * so that errors can be shown, otherwise they might be invisible.
-     *
-     * using placeCallbackInQueue
-     *
-     *
      */
     static syncToAsyncTransition<T>(
         fn: () => Promise<T>,
@@ -230,6 +237,9 @@ export class Util512Higher {
         );
     }
 
+    /**
+     * essentially a replacement for timeout.
+     */
     static syncToAsyncAfterPause<T>(
         fn: () => unknown,
         nMilliseconds: number,
