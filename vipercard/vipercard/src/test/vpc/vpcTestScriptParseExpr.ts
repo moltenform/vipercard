@@ -98,21 +98,15 @@ t.test('expressions that should fail', () => {
     assertFailsParseExp(`(1 2 3)`, `MismatchedTokenException: Expecting token of type `);
 });
 t.test('basic properties', () => {
-    /* because properties are a different type of token now, 
+    /* because properties are a different type of token now,
     you can't say "the prop of cd btn 1" it has to be a real property. */
-    assertFailsParseExp(
-        `the`, 
-        `Exception`
-    );
-    assertFailsParseExp(
-        `the style`,
-        `Exception`
-    );
+    assertFailsParseExp(`the`, `Exception`);
+    assertFailsParseExp(`the style`, `Exception`);
     testExp(`the style of cd btn "a"`, 'parses');
     testExp(`style of cd btn "a"`, 'parses');
     testExp(`the textfont of cd btn "a"`, 'parses');
     testExp(`the textfont`, 'parses');
-})
+});
 t.test('expression precedence, lvl0 to higher', () => {
     /* for 1+2*3 */
     /* I call this "lower to higher", the first operator in the input string ("+") is done last. */
@@ -234,31 +228,13 @@ t.test(
     `testScriptParseExpr.parts of expressions, cards/bgs can't stand alone as an expression`,
     () => {
         assertFailsParseExp(`cd 1`, `NoViableAltException: Expecting: one of these poss`);
-        assertFailsParseExp(
-            `this cd`,
-            `NoViableAltException`
-        );
-        assertFailsParseExp(
-            `(cd 1)`,
-            `NoViableAltException`
-        );
-        assertFailsParseExp(
-            `(this cd)`,
-            `NoViableAltException`
-        );
+        assertFailsParseExp(`this cd`, `NoViableAltException`);
+        assertFailsParseExp(`(cd 1)`, `NoViableAltException`);
+        assertFailsParseExp(`(this cd)`, `NoViableAltException`);
         assertFailsParseExp(`bg 1`, `NoViableAltException`);
-        assertFailsParseExp(
-            `this bg`,
-            `NoViableAltException`
-        );
-        assertFailsParseExp(
-            `(bg 1)`,
-            `NoViableAltException`
-        );
-        assertFailsParseExp(
-            `(this bg)`,
-            `NoViableAltException`
-        );
+        assertFailsParseExp(`this bg`, `NoViableAltException`);
+        assertFailsParseExp(`(bg 1)`, `NoViableAltException`);
+        assertFailsParseExp(`(this bg)`, `NoViableAltException`);
 
         /* this will fail at a later stage, right now thinks target() is a function */
         /* assertFailsParseExp(#the target#, ##) */
@@ -345,14 +321,8 @@ t.test(
             `NoViableAltException: Expecting: one of these poss`
         );
         /* we'll accept these in the parser but fail at runtime */
-        testExp(
-            `topleft of stack "a"`,
-            `parses`
-        );
-        testExp(
-            `there is a stack "a"`,
-            `parses`
-        );
+        testExp(`topleft of stack "a"`, `parses`);
+        testExp(`there is a stack "a"`, `parses`);
     }
 );
 t.test('ScriptParseExpr1', () => {
@@ -388,10 +358,7 @@ t.test('ScriptParseFunctionCalls fn call with no args', () => {
     assertFailsParseExp(`not the time()`, 'NotAllInputParsed');
 });
 t.test('ScriptParseFunctionCalls ensure that invalid fn calls are rejected', () => {
-    assertFailsParseExp(
-        `time() time()`,
-        `NotAllInputParsedException`
-    );
+    assertFailsParseExp(`time() time()`, `NotAllInputParsedException`);
     assertFailsParseExp(`time() 1`, `NotAllInputParsedException`);
     assertFailsParseExp(`1 time()`, `NotAllInputParsedException: Redundant input, expec`);
     assertFailsParseExp(`1.23()`, `NotAllInputParsedException: Redundant input, expec`);
@@ -462,19 +429,10 @@ t.test('ScriptParseFunctionCalls invalid "number of" syntax', () => {
     /* we now support these */
     testExp(`the number of btns`, 'parses');
     testExp(`the number of flds`, 'parses');
-    assertFailsParseExp(
-        `the number of cd cds`,
-        `Exception`
-    );
-    assertFailsParseExp(
-        `the number of x in "a"`,
-        `Exception`
-    );
+    assertFailsParseExp(`the number of cd cds`, `Exception`);
+    assertFailsParseExp(`the number of x in "a"`, `Exception`);
     /* we now support this. it's treated as a special property like the owner of */
-    testExp(
-        `the number of cd x`,
-        `parses`
-    );
+    testExp(`the number of cd x`, `parses`);
 });
 t.test('ScriptParseFunctionCalls number of, nested', () => {
     testExp(`the number of cds`, 'parses');
@@ -493,14 +451,8 @@ t.test('ScriptParseFunctionCalls number of, invalid', () => {
         `the long number of cds`,
         `NoViableAltException: Expecting: one of these poss`
     );
-    testExp(
-        `the number of this stack`,
-        `parses`
-    );
-    assertFailsParseExp(
-        `the number of cd bg 1`,
-        `Exception`
-    );
+    testExp(`the number of this stack`, `parses`);
+    assertFailsParseExp(`the number of cd bg 1`, `Exception`);
     assertFailsParseExp(
         `the number of words of bg 1`,
         `NoViableAltException: Expecting: one of these poss`
@@ -557,31 +509,13 @@ t.test('disallow double identifiers', () => {
     /* if two consecutive identifiers is a valid expression,
     harder to parse commands correctly */
     testExp(`x`, 'parses');
-    assertFailsParseExp(
-        `x y`,
-        `Exception`
-    );
-    assertFailsParseExp(
-        `x y z`,
-        `Exception`
-    );
-    assertFailsParseExp(
-        `7 x`,
-        `Exception`
-    );
-    assertFailsParseExp(
-        `x 7`,
-        `Exception`
-    );
-    assertFailsParseExp(
-        `7x`,
-        `Lexer:lexerror`
-    );
-    assertFailsParseExp(
-        `???`,
-        `Lexer:lexerror`
-    );
-})
+    assertFailsParseExp(`x y`, `Exception`);
+    assertFailsParseExp(`x y z`, `Exception`);
+    assertFailsParseExp(`7 x`, `Exception`);
+    assertFailsParseExp(`x 7`, `Exception`);
+    assertFailsParseExp(`7x`, `Lexer:lexerror`);
+    assertFailsParseExp(`???`, `Lexer:lexerror`);
+});
 /**
  * wrapper around testParse, for testing parsing an expression
  * uses the RuleInternalCmdRequestEval (like "get") command,
@@ -593,7 +527,7 @@ function testExp(sInput: string, sExpected: string) {
         'RuleInternalCmdRequestEval',
         sExpected,
         ''
-    ); 
+    );
 }
 
 /**

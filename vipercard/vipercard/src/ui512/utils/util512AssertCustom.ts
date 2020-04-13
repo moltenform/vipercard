@@ -4,20 +4,19 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
- * if I wanted true custom Error objects,
+ * If I wanted true custom Error objects,
  * approaches like https://github.com/bjyoungblood/es6-error
  * look good, but I don't think I need that now.
- * 
+ *
  * throwing an assert does *not* need to show an alert or
  * record error information. in any context, there should be a
  * catch() at the top, which we need in any case to catch
  * generic javascript exceptions.
-*/
+ */
 
 /**
- * it's useful to distinguish between errors we've thrown
+ * It's useful to distinguish between errors we've thrown
  * and generic javascript errors.
  * the errors we deal with will be true Error,
  * with no es6 custom-error-inheritance,
@@ -25,45 +24,47 @@
  * although instanceof won't know it.
  */
 export class Util512BaseErr {
-    isUtil512BaseErr = true
-    protected constructor(public message:string, public level:string) {
-    }
+    isUtil512BaseErr = true;
+    protected constructor(public message: string, public level: string) {}
 
-    static errAsCls<T extends Util512BaseErr>(nm: string , e:Error):O<T> {
-        let fld = 'is' + nm
+    static errAsCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
+        let fld = 'is' + nm;
         if ((e as any)[fld]) {
-            return e as any as T
+            return (e as any) as T;
         } else {
-            return undefined
+            return undefined;
         }
     }
 
     clsAsErr() {
-        assertWarn((this as any).isUtil512BaseErr, '')
-        assertWarn((this as any).message, '')
-        return this as any as Error
+        assertWarn((this as any).isUtil512BaseErr, '');
+        assertWarn((this as any).message, '');
+        return (this as any) as Error;
     }
 
-    addErr(e:Error) {
+    addErr(e: Error) {
         (this as any).message += '\n' + e.message;
         (this as any).stack = e.stack;
         (this as any).line = (e as any).line;
         (this as any).sourceURL = (e as any).sourceURL;
     }
 
-    static createErrorImpl<T extends Util512BaseErr>(fnCtor:  (...args: unknown[]) => T, ...params: unknown[]):T {
-        let e = new Error()
-        let err = fnCtor(...params)
-        Object.assign(e, err)
-        return e as any as T
+    static createErrorImpl<T extends Util512BaseErr>(
+        fnCtor: (...args: unknown[]) => T,
+        ...params: unknown[]
+    ): T {
+        let e = new Error();
+        let err = fnCtor(...params);
+        Object.assign(e, err);
+        return (e as any) as T;
     }
 
-    protected static gen(message:string, level:string) {
-        return new Util512BaseErr(message, level)
+    protected static gen(message: string, level: string) {
+        return new Util512BaseErr(message, level);
     }
 
     static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params)
+        return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params);
     }
 }
 
@@ -72,12 +73,12 @@ export class Util512BaseErr {
  * we'll show a message to the user.
  */
 export class Util512Warn extends Util512BaseErr {
-    isUtil512Warn = true
-    protected static gen(message:string, level:string) {
-        return new Util512Warn(message, level)
+    isUtil512Warn = true;
+    protected static gen(message: string, level: string) {
+        return new Util512Warn(message, level);
     }
     static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512Warn.gen, ...params)
+        return Util512BaseErr.createErrorImpl(Util512Warn.gen, ...params);
     }
 }
 
@@ -85,12 +86,12 @@ export class Util512Warn extends Util512BaseErr {
  * just a message, not an error case.
  */
 export class Util512Message extends Util512BaseErr {
-    isUtil512Message = true
-    protected static gen(message:string, level:string) {
-        return new Util512Message(message, level)
+    isUtil512Message = true;
+    protected static gen(message: string, level: string) {
+        return new Util512Message(message, level);
     }
     static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(Util512Message.gen, ...params)
+        return Util512BaseErr.createErrorImpl(Util512Message.gen, ...params);
     }
 }
 
@@ -102,9 +103,8 @@ function makeUtil512BaseErrGeneric(
     s3?: unknown
 ) {
     let msg = joinIntoMessage(firstMsg, level, s1, s2, s3);
-    return Util512BaseErr.createError(msg, level)
+    return Util512BaseErr.createError(msg, level);
 }
-
 
 export function make512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unknown) {
     return makeUtil512BaseErrGeneric(msg, 'ui512', s1, s2, s3);
@@ -140,11 +140,11 @@ export function assertWarn(
         if (!UI512ErrorHandling.silenceWarnings) {
             /* we won't throw this error, but we'll make it
             so we can save it + the callstack to logs */
-            let e = Util512Warn.createError(msg, 'ui512warn')
-            respondUI512Error(e.clsAsErr(), 'ui512warn')
-            let msgTotal = msg + ' Press OK to silence future asserts.'
+            let e = Util512Warn.createError(msg, 'ui512warn');
+            respondUI512Error(e.clsAsErr(), 'ui512warn');
+            let msgTotal = msg + ' Press OK to silence future asserts.';
             if (confirm(msgTotal)) {
-                UI512ErrorHandling.silenceWarnings = true
+                UI512ErrorHandling.silenceWarnings = true;
             }
         }
     }
@@ -169,23 +169,15 @@ export function checkThrow512(
 /* see also: assertEq, assertWarnEq, checkThrowEq512 in util512.ts*/
 
 /**
- * if an error is thrown, show a warning message and swallow the error
- */
-export function showWarningIfExceptionThrown(fn: () => void) {
-    try {
-        fn();
-    } catch (e) {
-        assertWarn(false, e.toString(), 'Oz|');
-    }
-}
-
-/**
  * store logs. user can choose "send err report" to send us error context.
  */
 export class UI512ErrorHandling {
     static shouldRecordErrors = true;
     static runningTests = false;
-    static silenceWarnings = false
+    static silenceWarnings = false;
+    static silenceWarningsAndMore = false;
+    static silenceWarningsAndMoreCount = 0;
+    static contextHint = '';
     static readonly maxEntryLength = 512;
     static readonly maxLinesKept = 256;
     static store = new RingBufferLocalStorage(UI512ErrorHandling.maxLinesKept);
@@ -201,7 +193,7 @@ export class UI512ErrorHandling {
 
     static appendErrMsgToLogs(severity: boolean, s: string) {
         if (UI512ErrorHandling.shouldRecordErrors) {
-            if (!UI512ErrorHandling.runningTests ) {
+            if (!UI512ErrorHandling.runningTests) {
                 let sseverity = severity ? '1' : '2';
                 let encoded = sseverity + UI512ErrorHandling.encodeErrMsg(s);
                 UI512ErrorHandling.store.append(encoded);
@@ -211,6 +203,101 @@ export class UI512ErrorHandling {
 
     static getLatestErrLogs(amount: number): string[] {
         return UI512ErrorHandling.store.retrieve(amount);
+    }
+}
+
+/**
+ * EXCEPTION HANDLING STRATEGY:
+ *
+ * We don't want any exception to be accidentally swallowed silently.
+ * It's not enough to just put an alert in assertTrue,
+ * because this won't cover base javascript errors like null-reference.
+ * it's important to show errors visibly so not to silently fall into
+ * a bad state, and also we can log into local storage.
+ * So, EVERY TOP OF THE CALL STACK must catch errors and send them to respondUI512Error
+ * This includes:
+ *          events from the browser (usually via golly)
+ *              fix: wrap in trycatch
+ *          onload callbacks
+ *              for images, json, server requests, dynamic script loading
+ *              look for "addEventListener" and "onload"
+ *              fix: wrap in trycatch or showMsgIfExceptionThrown
+ *          setinterval and settimeout. use ban/ban to stop them.
+ *              fix: replaced with syncToAsyncTransition() and sleep()
+ *          all async code
+ *              fix: use syncToAsyncTransition
+ *          placeCallbackInQueue
+ *              already ok because it's under the drawframe event.
+ *
+ * I used to show a dialog in assertTrue, but that's not needed,
+ * since we'll show a dialog in the respondtoui512. and by putting the
+ * logging in just the response and not the error site, we won't have
+ * unbounded recursion if there's an exception in the logging code.
+ *
+ * how to respond to exception:
+ */
+export function respondUI512Error(e: Error, context: string, logOnly = false) {
+    let message = Util512BaseErr.errAsCls(Util512Message.name, e);
+    let warn = Util512BaseErr.errAsCls(Util512Warn.name, e);
+    let structure = Util512BaseErr.errAsCls(Util512BaseErr.name, e);
+    callDebuggerIfNotInProduction();
+    if (message) {
+        /* not really an error, just a message */
+        if (logOnly) {
+            console.error(e.message);
+        } else {
+            window.alert(e.message);
+        }
+
+        return;
+    }
+
+    let sAllInfo = '';
+    if (e.message) {
+        sAllInfo += e.message;
+    }
+    if (e.stack) {
+        sAllInfo += '\n\n' + e.stack.toString();
+    }
+    if ((e as any).line) {
+        sAllInfo += '\n\n' + (e as any).line.toString();
+    }
+    if ((e as any).sourceURL) {
+        sAllInfo += '\n\n' + (e as any).sourceURL;
+    }
+    if (!structure && UI512ErrorHandling.contextHint) {
+        sAllInfo += ` ${UI512ErrorHandling.contextHint}`;
+    }
+
+    console.error(sAllInfo);
+    let severity = false;
+    if (!e.message || !e.message.includes('assertion failed')) {
+        severity = true;
+    }
+    
+    if (UI512ErrorHandling.shouldRecordErrors && !UI512ErrorHandling.runningTests) {
+        UI512ErrorHandling.appendErrMsgToLogs(severity, sAllInfo);
+    }
+
+    /* let's always show at least some type of dialog,
+    unless user has silenced it. */
+    if (!(warn && UI512ErrorHandling.silenceWarnings)) {
+        UI512ErrorHandling.silenceWarningsAndMoreCount += 1;
+        if (logOnly || UI512ErrorHandling.silenceWarningsAndMore) {
+            /* do nothing, we've already logged it */
+        } else if (UI512ErrorHandling.silenceWarningsAndMoreCount > 4) {
+            /* unfortunately, we probably want an option like this,
+            otherwise if there's */
+            let msgTotal =
+                sAllInfo +
+                ` -- we recommend that you save your` +
+                `work and refresh the website -- Press OK to silence future asserts`;
+            if (confirm(msgTotal)) {
+                UI512ErrorHandling.silenceWarningsAndMore = true;
+            }
+        } else {
+            window.alert(sAllInfo);
+        }
     }
 }
 
@@ -237,7 +324,6 @@ export function joinIntoMessage(
 
     return message;
 }
-
 
 /**
  * we add two-digit markers to most asserts, so that if a bug report comes in,
@@ -283,46 +369,3 @@ export function ensureDefined<T>(
         return v;
     }
 }
-
-/**
- * respond to exception.
- */
-export function respondUI512Error(e: Error, context: string) {
-    let message = Util512BaseErr.errAsCls(Util512Message.name, e)
-    let warn = Util512BaseErr.errAsCls(Util512Warn.name, e)
-    let structure = Util512BaseErr.errAsCls(Util512BaseErr.name, e)
-    if (message) {
-        window.alert(e.message)
-        return
-    }
-
-    if (!structure) {
-        callDebuggerIfNotInProduction();
-    }
-
-    let sAllInfo = ''
-    if (e.message) {
-        sAllInfo += e.message;
-    }
-    if (e.stack) {
-        sAllInfo += '\n\n' + e.stack.toString()
-    }
-    if ((e as any).line) {
-        sAllInfo += '\n\n' + (e as any).line.toString()
-    }
-    if ((e as any).sourceURL ) {
-        sAllInfo += '\n\n' + (e as any).sourceURL
-    }
-
-    console.error(sAllInfo)
-    let severity = !e.message.includes('assertion failed')
-    if (UI512ErrorHandling.shouldRecordErrors && !UI512ErrorHandling.runningTests) {
-        UI512ErrorHandling.appendErrMsgToLogs(severity, sAllInfo);        
-    }
-
-    if (!warn) {
-        window.alert(sAllInfo);
-    }
-}
-
-

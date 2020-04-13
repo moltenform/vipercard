@@ -1071,13 +1071,12 @@ t.atest('async/testVpcStateSerialize', async () => {
  * a TestVpcScriptRunBase with new features for testing expression levels.
  */
 class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
-    
     testModelBgPartProps(newState: VpcState) {
         /**
          * some properties on background elements can have values stored per-card,
          * which has its own logic and needs to be tested
          */
-        
+
         /* we'll be setting sharedtext and sharedhilite a few times, so for convenience
         allow setting data throughout */
         newState.undoManager.doWithoutAbilityToUndo(() => {

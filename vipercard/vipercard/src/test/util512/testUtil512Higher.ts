@@ -301,11 +301,7 @@ t.test('serialize: inheritance works, methods skipped', () => {
         ''
     );
     ks = sorted(IsUtil512Serializable.getKeys(oGot)).join(',');
-    assertEq(
-        'fld1,fld2,optional_f1,optional_f2,other',
-        ks,
-        ''
-    );
+    assertEq('fld1,fld2,optional_f1,optional_f2,other', ks, '');
     assertEq('fld 1~', oGot.fld1, '');
     assertEq('fld 2 and text~', oGot.fld2, '');
     assertEq('an optional field~', oGot.optional_f1, '');

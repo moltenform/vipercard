@@ -8,12 +8,11 @@
 /* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
+/* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
 
 /**
  * Redesigning exceptions for code errors.
@@ -25,8 +24,6 @@
  *      5) error during syntax execution
  *      (i.e. runtime error in an if )
  */
-
-
 
 /**
  * cache the CST from a parsed line of code, for better perf.
@@ -77,25 +74,26 @@ export class VpcCacheParsedCST {
      */
     protected callParser(ln: VpcCodeLine, firstRule: ChvRuleFnType) {
         let parsed: VpcParsed;
-        try {
-            /* setting input again is documented to reset the parser state */
-            this.parser.input = ln.excerptToParse;
-            this.parser.errors.length = 0;
-            /* eslint-disable-next-line ban/ban */
-            parsed = firstRule.apply(this.parser, []);
-            if (VpcCacheParsedCST.ensureNotChanged) {
-                Util512.freezeRecurse(parsed);
-            }
-        } catch (e) {
-            /* don't expect error to be thrown here, but am checking this case out of caution */
-            let err = e.message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
-            checkThrow(false, '4;|parse error: ' + err);
-        }
+        checkThrow(false, 'nyi');
+        //~ try {
+        //~ /* setting input again is documented to reset the parser state */
+        //~ this.parser.input = ln.excerptToParse;
+        //~ this.parser.errors.length = 0;
+        //~ /* eslint-disable-next-line ban/ban */
+        //~ parsed = firstRule.apply(this.parser, []);
+        //~ if (VpcCacheParsedCST.ensureNotChanged) {
+        //~ Util512.freezeRecurse(parsed);
+        //~ }
+        //~ } catch (e) {
+        //~ /* don't expect error to be thrown here, but am checking this case out of caution */
+        //~ let err = e.message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
+        //~ checkThrow(false, '4;|parse error: ' + err);
+        //~ }
 
-        if (this.parser.errors.length) {
-            let err = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErrStringLen);
-            checkThrow(false, '4:|parse error: ' + err);
-        }
+        //~ if (this.parser.errors.length) {
+        //~ let err = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErrStringLen);
+        //~ checkThrow(false, '4:|parse error: ' + err);
+        //~ }
 
         return parsed;
     }
@@ -105,32 +103,32 @@ export class VpcCacheParsedCST {
  * for efficiency, let's cache the entire script once we've processed it.
  * note that this isn't keyed by element id. if two elements have exactly
  * the same script, they'll share an entry here.
- * 
+ *
  * this also helps simplify the case where a script deletes objects at runtime,
  * it can even delete itself with no issues.
  */
 export class VpcCacheParsedAST {
     cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyScripts);
     constructor(protected idGen: CountNumericId) {}
-    getParsedCodeCollectionOrErrObject(code: string, velIdForErrMsg: string): VpcParsedCodeCollection  {
-        checkThrow(false, 'nyi')
+    getParsedCodeCollectionOrErrObject(code: string, velIdForErrMsg: string): VpcParsedCodeCollection {
+        checkThrow(false, 'nyi');
         //~ | VpcScriptSyntaxError
         //~ assertTrue(!code.match(/^\s*$/), '');
         //~ let found = this.cache.get(code);
         //~ if (found) {
-            //~ return found;
+        //~ return found;
         //~ } else {
-            //~ let got = VpcCodeProcessor.go(code, velIdForErrMsg, this.idGen);
-            //~ if (!(got instanceof VpcParsedCodeCollection)) {
-                //~ return got;
-            //~ }
+        //~ let got = VpcCodeProcessor.go(code, velIdForErrMsg, this.idGen);
+        //~ if (!(got instanceof VpcParsedCodeCollection)) {
+        //~ return got;
+        //~ }
 
-            //~ this.cache.set(code, got);
-            //~ if (VpcCacheParsedCST.ensureNotChanged) {
-                //~ Util512.freezeRecurse(got);
-            //~ }
+        //~ this.cache.set(code, got);
+        //~ if (VpcCacheParsedCST.ensureNotChanged) {
+        //~ Util512.freezeRecurse(got);
+        //~ }
 
-            //~ return got;
+        //~ return got;
         //~ }
     }
 
@@ -139,7 +137,7 @@ export class VpcCacheParsedAST {
         handlername: string,
         velIdForErrMsg: string
     ): O<[VpcParsedCodeCollection, VpcCodeLineReference] | Error> {
-        return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg)
+        return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg);
     }
 
     protected findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(
@@ -150,23 +148,23 @@ export class VpcCacheParsedAST {
         if (code.match(/^\s*$/)) {
             return undefined;
         }
-        checkThrow(false, 'nyi')
+        checkThrow(false, 'nyi');
 
         //~ let ret = this.getParsedCodeCollection(code, velIdForErrMsg);
         //~ let retAsErr = ret as VpcScriptErrorBase;
         //~ let retAsCode = ret as VpcParsedCodeCollection;
         //~ if (retAsCode instanceof VpcParsedCodeCollection) {
-            //~ /* check in the cached map of handlers */
-            //~ let handler = retAsCode.handlers.find(handlername);
-            //~ if (handler) {
-                //~ return [retAsCode, handler];
-            //~ }
+        //~ /* check in the cached map of handlers */
+        //~ let handler = retAsCode.handlers.find(handlername);
+        //~ if (handler) {
+        //~ return [retAsCode, handler];
+        //~ }
         //~ } else if (retAsErr instanceof VpcScriptErrorBase) {
-            //~ let err = makeVpcScriptErr('JV|$compilation error$');
-            //~ markUI512Err(err, true, false, true, retAsErr);
-            //~ throw err;
+        //~ let err = makeVpcScriptErr('JV|$compilation error$');
+        //~ markUI512Err(err, true, false, true, retAsErr);
+        //~ throw err;
         //~ } else {
-            //~ throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
+        //~ throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
         //~ }
 
         //~ return undefined;

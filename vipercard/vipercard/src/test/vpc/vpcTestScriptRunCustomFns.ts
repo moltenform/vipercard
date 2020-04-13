@@ -6,7 +6,6 @@
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -1603,7 +1602,7 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
      * check that the preparsed/rewritten code is as expected
      */
     compareRewrittenCode(script: string, expected: string) {
-        checkThrow(false , 'nyi')
+        checkThrow(false, 'nyi');
         //~ script = script.trim()
         //~ let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
         //~ h.vcstate.vci.undoableAction(() => btnGo.set('script', script));

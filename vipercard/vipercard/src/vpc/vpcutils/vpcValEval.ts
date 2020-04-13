@@ -38,7 +38,8 @@ export class VpcEvalHelpers {
             } else if (sType === 'rect') {
                 numExpected = 4;
             } else {
-                checkThrow(false, 
+                checkThrow(
+                    false,
                     longstr(`5}|expected "if x is a number" but got "if x is a
                       ${sType}" needs one of {number|integer|point|rect|logical}`)
                 );

@@ -1,6 +1,7 @@
 
 /* auto */ import { checkThrow } from './vpcEnums';
-/* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher, VoidFn, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
+/* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, ValHolder, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -30,7 +31,11 @@ export class VpcAudio {
      * note: safari seems to not let the sound work, as the audio
      * element hasn't been 'interacted' with.
      */
-    static preload(key: string) {
+    static preloadNoThrow(key: string) {
+        justConsoleMsgIfExceptionThrown(() => VpcAudio.preloadImpl(key), 'preloadAudio');
+    }
+
+    private static preloadImpl(key: string) {
         if (!VpcAudio.isLoaded[key]) {
             let span = window.document.createElement('span');
             span.setAttribute('id', 'vpcaudiospan' + key);
@@ -48,14 +53,10 @@ export class VpcAudio {
     private static playAsyncImpl(aud: HTMLAudioElement) {
         aud.currentTime = 0;
         let fn = async function () {
-            try {
-                return aud.play();
-            } catch (e) {
-                console.error('exception during play audio ' + e.toString());
-                return Promise.resolve();
-            }
+            return aud.play();
         };
-        Util512Higher.syncToAsyncTransition(fn, 'play audio');
+
+        Util512Higher.syncToAsyncTransition(fn, 'play audio', RespondToErr.ConsoleErrOnly);
     }
 
     /**
@@ -64,13 +65,17 @@ export class VpcAudio {
      * will interrupt a sound that is currently playing
      */
     static play(key: string) {
-        let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
-        if (aud) {
-            VpcAudio.playAsyncImpl(aud);
-            return true;
-        } else {
-            return false;
-        }
+        return bool(
+            justConsoleMsgIfExceptionThrown(() => {
+                let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
+                if (aud) {
+                    VpcAudio.playAsyncImpl(aud);
+                    return true;
+                } else {
+                    return false;
+                }
+            }, 'audio play')
+        );
     }
 
     /**
@@ -106,7 +111,7 @@ export class VpcPhoneDial {
         /* preload, so we'll at least have them available for next time */
         for (let i = 0; i < 10; i++) {
             let filename = `dial${i}`;
-            VpcAudio.preload(filename);
+            VpcAudio.preloadNoThrow(filename);
         }
         /* start playback */
         let padding = 30;

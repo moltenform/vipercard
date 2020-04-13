@@ -111,10 +111,7 @@ export class UI512CompToolbox extends UI512CompBase {
                         this.callbackOnChange(this.whichChosen);
                     }
                 } else {
-                    assertWarn(
-                        false,
-                        `2t|did not find ${userId} in ${this.idPrefix}`
-                    );
+                    assertWarn(false, `2t|did not find ${userId} in ${this.idPrefix}`);
                 }
             }
         }

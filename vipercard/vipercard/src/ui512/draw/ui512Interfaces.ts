@@ -103,7 +103,7 @@ export interface UI512PresenterInterface {
     trackPressedBtns: boolean[];
     trackClickedIds: O<string>[];
     listeners: { [t: number]: FnEventCallback[] };
-    callbackQueueFromAsyncs: O<VoidFn>[];
+    callbackQueueForIdle: O<VoidFn>[];
     needRedraw: boolean;
     inited: boolean;
     openState: MenuOpenState;

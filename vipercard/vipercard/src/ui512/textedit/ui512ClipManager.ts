@@ -1,6 +1,6 @@
 
-/* auto */ import { RepeatingTimer, getRoot } from './../utils/util512Higher';
-/* auto */ import { tostring } from './../utils/util512Base';
+/* auto */ import { RepeatingTimer, RespondToErr, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
+/* auto */ import { bool } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512AssertCustom';
 /* auto */ import { ClipManagerInterface } from './../draw/ui512Interfaces';
 /* auto */ import { PasteTextEventDetails } from './../menu/ui512Events';
@@ -59,15 +59,11 @@ export class ClipManager implements ClipManagerInterface {
             assertTrue(hiddenInput, '2>|could not create hiddenInput');
             hiddenInput.value = s;
             hiddenInput.select();
-            let succeeded = false;
-            try {
-                succeeded = window.document.execCommand('copy');
-            } catch (e) {
-                console.warn(e);
-                succeeded = false;
-            }
-
-            return succeeded;
+            let succeeded = justConsoleMsgIfExceptionThrown(
+                () => window.document.execCommand('copy'),
+                'copy'
+            );
+            return bool(succeeded);
         } else {
             this.simClipboard = s;
             return true;
@@ -75,23 +71,24 @@ export class ClipManager implements ClipManagerInterface {
     }
 
     /**
-     * run in a try/catch, we shouldn't interrupt user with a non-critical error
+     * sets focus so we can paste
      */
     goEnsureReadyForPaste() {
-        try {
-            ClipManager.ensureReadyForPasteImpl(this.getOrCreateHidden());
-        } catch (e) {
-            console.warn('ensureReadyForPaste ' + e);
-        }
+        ClipManager.ensureReadyForPasteImplDoesNotThrow(this.getOrCreateHidden());
     }
 
     /**
-     * set the focus
+     * set the focus.
+     * run in a try/catch, we shouldn't interrupt user with a non-critical error
      */
-    protected static ensureReadyForPasteImpl(hiddenInput: HTMLTextAreaElement) {
-        hiddenInput.value = ' ';
-        hiddenInput.focus();
-        hiddenInput.select();
+    protected static ensureReadyForPasteImplDoesNotThrow(
+        hiddenInput: HTMLTextAreaElement
+    ) {
+        justConsoleMsgIfExceptionThrown(() => {
+            hiddenInput.value = ' ';
+            hiddenInput.focus();
+            hiddenInput.select();
+        }, 'ensureReadyForPasteImplDoesNotThrow');
     }
 
     /**
@@ -127,21 +124,20 @@ export class ClipManager implements ClipManagerInterface {
 
             /* register events */
             let setFocusToHiddenInput = () => {
-                try {
-                    ClipManager.ensureReadyForPasteImpl(hiddenInput);
-                } catch (e) {
-                    console.error(tostring(e));
-                }
+                ClipManager.ensureReadyForPasteImplDoesNotThrow(hiddenInput);
             };
 
             /* keep the hidden text area focused, no matter what... */
             window.document.addEventListener('mouseup', setFocusToHiddenInput);
             window.document.addEventListener('keyup', setFocusToHiddenInput);
-            hiddenInput.addEventListener('input', e => {
-                /* ok to use setTimeout, there's no error we need to record from this */
-                /* eslint-disable-next-line ban/ban */
-                setTimeout(setFocusToHiddenInput, 0);
-            });
+            hiddenInput.addEventListener('input', () =>
+                Util512Higher.syncToAsyncAfterPause(
+                    setFocusToHiddenInput,
+                    1,
+                    'setFocusToHiddenInput',
+                    RespondToErr.ConsoleErrOnly
+                )
+            );
 
             /* register for paste event */
             window.document.addEventListener('paste', (e: ClipboardEvent) => {

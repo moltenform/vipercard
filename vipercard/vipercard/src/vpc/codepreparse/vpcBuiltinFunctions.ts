@@ -358,20 +358,20 @@ export class VpcBuiltinFunctions {
      * Calculates interest rate annuity.
      */
     callAnnuity(args: VpcVal[]) {
-        let rate = args[0].readAsStrictNumeric()
-        let periods = args[1].readAsStrictNumeric()
-        let ret = (1 - Math.pow(1+ rate, -periods)) / rate
-        return VpcValN(ret)
+        let rate = args[0].readAsStrictNumeric();
+        let periods = args[1].readAsStrictNumeric();
+        let ret = (1 - Math.pow(1 + rate, -periods)) / rate;
+        return VpcValN(ret);
     }
 
     /**
      * Calculates compound interest rate.
      */
     callCompound(args: VpcVal[]) {
-        let rate = args[0].readAsStrictNumeric()
-        let periods = args[1].readAsStrictNumeric()
-        let ret = Math.pow(1 + rate, periods)
-        return VpcValN(ret)
+        let rate = args[0].readAsStrictNumeric();
+        let periods = args[1].readAsStrictNumeric();
+        let ret = Math.pow(1 + rate, periods);
+        return VpcValN(ret);
     }
 
     /**
@@ -388,7 +388,8 @@ export class VpcBuiltinFunctions {
      */
     callCmdkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.cmdKey === undefined) {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`Ja|not a key event - function can only be
                     called in a handler like 'on afterkeydown'`)
             );
@@ -403,7 +404,8 @@ export class VpcBuiltinFunctions {
      */
     callOptionkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.optionKey === undefined) {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`JZ|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );
@@ -418,7 +420,8 @@ export class VpcBuiltinFunctions {
      */
     callShiftkey(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.shiftKey === undefined) {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`JY|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );
@@ -433,7 +436,8 @@ export class VpcBuiltinFunctions {
      */
     callKeychar(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyChar === undefined) {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`JX|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );
@@ -447,7 +451,8 @@ export class VpcBuiltinFunctions {
      */
     callKeyrepeated(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         if (!frmMsg || frmMsg.keyRepeated === undefined) {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`JW|not a key event - function can only be called
                     in a handler like 'on afterkeydown'`)
             );

@@ -1,5 +1,5 @@
 
-/* auto */ import { respondUI512Error } from './../utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling } from './../utils/util512AssertCustom';
 /* auto */ import { cast } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { MenuPositioning } from './ui512MenuPositioning';
@@ -93,15 +93,11 @@ export class MenuListeners {
         d: MouseUpEventDetails
     ) {
         let cbAfterAnim = () => {
+            UI512ErrorHandling.contextHint = 'respondToMenuItemClick';
             MenuListeners.closeAllActiveMenus(pr);
             pr.openState = MenuOpenState.MenusClosed;
-
-            try {
-                pr.rawEvent(new MenuItemClickedDetails(item.id, d.mods));
-                pr.queueRefreshCursor();
-            } catch (e) {
-                respondUI512Error(e, 'MenuItemClicked response');
-            }
+            pr.rawEventCanThrow(new MenuItemClickedDetails(item.id, d.mods));
+            pr.queueRefreshCursor();
         };
 
         /* ignore all events during the animation */

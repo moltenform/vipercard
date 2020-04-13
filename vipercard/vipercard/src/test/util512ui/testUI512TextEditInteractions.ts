@@ -230,11 +230,11 @@ export class TestTextEventInteractions {
     ) {
         let mods = isShift ? ModifierKeys.Shift : ModifierKeys.None;
         if (doubleclick) {
-            pr.rawEvent(new MouseDownEventDetails(0, x, y, 0, mods));
-            pr.rawEvent(new MouseDownEventDetails(1, x, y, 0, mods));
-            pr.rawEvent(new MouseDownDoubleEventDetails(2, x, y, 0, mods));
+            pr.rawEventCanThrow(new MouseDownEventDetails(0, x, y, 0, mods));
+            pr.rawEventCanThrow(new MouseDownEventDetails(1, x, y, 0, mods));
+            pr.rawEventCanThrow(new MouseDownDoubleEventDetails(2, x, y, 0, mods));
         } else {
-            pr.rawEvent(new MouseDownEventDetails(0, x, y, 0, mods));
+            pr.rawEventCanThrow(new MouseDownEventDetails(0, x, y, 0, mods));
         }
     }
 
@@ -253,6 +253,6 @@ export class TestTextEventInteractions {
         let mods = isShift ? ModifierKeys.Shift : ModifierKeys.None;
         mods |= isCmd ? ModifierKeys.Cmd : ModifierKeys.None;
         let d = new KeyDownEventDetails(0, keyCode, keyChar, false, mods);
-        pr.rawEvent(d);
+        pr.rawEventCanThrow(d);
     }
 }

@@ -29,11 +29,7 @@ export class VpcGettableSerialization {
                 let v = vel.getGeneric(propName);
                 assertWarn(v !== undefined, propName, 'J||');
                 if (v instanceof FormattedText) {
-                    assertWarn(
-                        VpcGettableSerialization.propNameExpectFormattedText(propName),
-                        'expected ftxt, got ',
-                        propName
-                    );
+                    assertWarn(VpcGettableSerialization.propNameExpectFormattedText(propName), 'expected ftxt, got ', propName);
                     assertTrue(v instanceof FormattedText, 'J{|invalid ftxt');
                     ret[propName] = v.toSerialized();
                 } else {

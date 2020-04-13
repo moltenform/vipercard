@@ -6,7 +6,7 @@
 /* auto */ import { checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcSaveInterface } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
-/* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { BrowserOSInfo, Util512, longstr } from './../../ui512/utils/util512';
@@ -88,10 +88,12 @@ export class VpcSave implements VpcSaveInterface {
 
         if (didSave) {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
-            Util512Higher.syncToAsyncTransition(async () => {
-                await Util512Higher.sleep(2000);
-                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
-            }, 'hide succesful save msg');
+            Util512Higher.syncToAsyncAfterPause(
+                () => this.pr.lyrCoverArea.setMyMessage(''),
+                2000,
+                'hide succesful save msg',
+                RespondToErr.ConsoleErrOnly
+            );
         }
 
         this.pr.cameFromDemoSoNeverPromptSave = '';
@@ -123,10 +125,12 @@ export class VpcSave implements VpcSaveInterface {
 
         if (didSave) {
             this.pr.lyrCoverArea.setMyMessage('Save was successful.');
-            Util512Higher.syncToAsyncTransition(async () => {
-                await Util512Higher.sleep(2000);
-                this.pr.placeCallbackInQueue(() => this.pr.lyrCoverArea.setMyMessage(''));
-            }, 'hide succesful save msg');
+            Util512Higher.syncToAsyncAfterPause(
+                () => this.pr.lyrCoverArea.setMyMessage(''),
+                2000,
+                'hide succesful save msg',
+                RespondToErr.ConsoleErrOnly
+            );
         }
 
         this.pr.cameFromDemoSoNeverPromptSave = '';
@@ -233,30 +237,21 @@ export class VpcSave implements VpcSaveInterface {
         bridgedSaveAs(blob, defaultFilename);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
 
-        /* count json saves */
+        /* count json saves, send to our server to count */
         let info = this.pr.vci.getModel().stack.getLatestStackLineage();
         let ses = VpcSession.fromRoot();
         let currentUsername = ses ? ses.username : '';
 
+        /* telemetry on how often people save stacks */
         Util512Higher.syncToAsyncTransition(
-            () => this.goCountJsonSaves(currentUsername, info.stackOwner, info.stackGuid),
-            'count json saves'
+            async () => VpcSession.vpcStacksCountJsonSaves(info.stackOwner, info.stackGuid, currentUsername),
+            'count json saves',
+            RespondToErr.ConsoleErrOnly
         );
 
         /* now rethrow if we got an error */
         if (eThrown) {
             throw eThrown;
-        }
-    }
-
-    /**
-     * telemetry on how often people save stacks
-     */
-    async goCountJsonSaves(currentUsername: string, stackOwner: string, stackId: string) {
-        try {
-            await VpcSession.vpcStacksCountJsonSaves(stackOwner, stackId, currentUsername);
-        } catch (e) {
-            console.error('could not count json saves ' + e.toString());
         }
     }
 
@@ -306,8 +301,7 @@ export class VpcSave implements VpcSaveInterface {
                 ) {
                     await vpcStacksFlagContent(info.stackOwner, info.stackGuid, currentUsername);
                 } else {
-                    let e = new Error('');
-                    e.toString = () => '';
+                    let e = new Error('Could not get info, or it looks like you own this stack.');
                     throw e;
                 }
             } catch (e) {

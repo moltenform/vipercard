@@ -47,7 +47,7 @@ export class SplitIntoLinesAndMakeLowercase {
                 currentLine.push(tk);
             }
         }
-        
+
         return undefined;
     }
 
@@ -105,7 +105,8 @@ export class LoopLimit {
     next(): true {
         this.count--;
         if (this.count < 0) {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`5n|Unfortunately, we need to have
             limitations on scripts, in order to prevent denial of service.
                 for ${this.msg}, the limit is ${this.maxcount}`)

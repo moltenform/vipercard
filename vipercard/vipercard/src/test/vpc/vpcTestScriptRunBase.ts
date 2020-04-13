@@ -175,15 +175,15 @@ export class TestVpcScriptRunBase {
     }
 
     updateObjectScript(id: string, code: string) {
-        checkThrow(false, 'nyi')
+        checkThrow(false, 'nyi');
         //~ this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
-            //~ let idScriptErr = errFromScript.velId;
-            //~ let n = errFromScript.lineNumber;
-            //~ let isUs = !errFromScript.isExternalException;
-            //~ let msg = errFromScript.details;
-            //~ let lns = built.split('\n');
-            //~ let culpritLine = n ? lns[n - 1] + '; ' + lns[n] : '';
-            //~ assertTrue(false, `2b|script error, looks like <${culpritLine}> ${n}`, msg);
+        //~ let idScriptErr = errFromScript.velId;
+        //~ let n = errFromScript.lineNumber;
+        //~ let isUs = !errFromScript.isExternalException;
+        //~ let msg = errFromScript.details;
+        //~ let lns = built.split('\n');
+        //~ let culpritLine = n ? lns[n - 1] + '; ' + lns[n] : '';
+        //~ assertTrue(false, `2b|script error, looks like <${culpritLine}> ${n}`, msg);
         //~ };
 
         //~ let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
@@ -203,55 +203,55 @@ export class TestVpcScriptRunBase {
         let caughtErr = false;
         let isCompilationStage = true;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
-            checkThrow(false, 'nyi')
+            checkThrow(false, 'nyi');
             //~ let msg = scriptErr.details;
             //~ let velId = '';
             //~ let line = -1;
             //~ this.vcstate.vci.undoableAction(() => {
-                //~ let [reVelId, reLine] = VpcPresenter.commonRespondToError(
-                    //~ this.vcstate.vci,
-                    //~ scriptErr
-                //~ );
-                //~ velId = reVelId;
-                //~ line = reLine;
-                //~ this.vcstate.vci.setTool(VpcTool.Browse);
+            //~ let [reVelId, reLine] = VpcPresenter.commonRespondToError(
+            //~ this.vcstate.vci,
+            //~ scriptErr
+            //~ );
+            //~ velId = reVelId;
+            //~ line = reLine;
+            //~ this.vcstate.vci.setTool(VpcTool.Browse);
             //~ });
 
             //~ if (expectCompErr !== undefined && isCompilationStage !== expectCompErr) {
-                //~ let lns = built.split('\n');
-                //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-                //~ assertWarn(
-                    //~ false,
-                    //~ '2a|got error at the wrong stage',
-                    //~ culpritLine,
-                    //~ msg
-                //~ );
+            //~ let lns = built.split('\n');
+            //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
+            //~ assertWarn(
+            //~ false,
+            //~ '2a|got error at the wrong stage',
+            //~ culpritLine,
+            //~ msg
+            //~ );
             //~ } else if (expectErrMsg) {
-                //~ assertWarnEq(expectErrLine, line, codeBefore, codeIn, '2Z|');
-                //~ if (!msg.includes(expectErrMsg)) {
-                    //~ this.t.warnAndAllowToContinue(
-                        //~ 'DIFFERENT ERR MSG for input ' +
-                            //~ codeBefore
-                                //~ .replace(/\n/g, '; ')
-                                //~ .replace(/global testresult; ;/g, '') +
-                            //~ codeIn
-                                //~ .replace(/\n/g, '; ')
-                                //~ .replace(/global testresult; ;/g, '') +
-                            //~ ` expected ${expectErrMsg} and got`
-                    //~ );
+            //~ assertWarnEq(expectErrLine, line, codeBefore, codeIn, '2Z|');
+            //~ if (!msg.includes(expectErrMsg)) {
+            //~ this.t.warnAndAllowToContinue(
+            //~ 'DIFFERENT ERR MSG for input ' +
+            //~ codeBefore
+            //~ .replace(/\n/g, '; ')
+            //~ .replace(/global testresult; ;/g, '') +
+            //~ codeIn
+            //~ .replace(/\n/g, '; ')
+            //~ .replace(/global testresult; ;/g, '') +
+            //~ ` expected ${expectErrMsg} and got`
+            //~ );
 
-                    //~ console.error(msg.replace(/\n/g, '; '));
-                    //~ caughtErr = true;
-                    //~ return;
-                //~ }
+            //~ console.error(msg.replace(/\n/g, '; '));
+            //~ caughtErr = true;
+            //~ return;
+            //~ }
             //~ } else {
-                //~ let lns = built.split('\n');
-                //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-                //~ assertTrue(
-                    //~ false,
-                    //~ `2X|script error, looks like <${culpritLine}> ${line}`,
-                    //~ msg
-                //~ );
+            //~ let lns = built.split('\n');
+            //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
+            //~ assertTrue(
+            //~ false,
+            //~ `2X|script error, looks like <${culpritLine}> ${line}`,
+            //~ msg
+            //~ );
             //~ }
 
             caughtErr = true;
@@ -268,7 +268,13 @@ export class TestVpcScriptRunBase {
 
         let btnGo = this.vcstate.model.getById(VpcElButton, this.elIds.btn_go);
         this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));
-        this.vcstate.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', btnGo.id)
+        this.vcstate.vci
+            .getCodeExec()
+            .cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(
+                built,
+                'mouseup',
+                btnGo.id
+            );
         if (caughtErr) {
             return;
         } else if (expectErrMsg && expectCompErr) {
@@ -301,7 +307,7 @@ export class TestVpcScriptRunBase {
         isCompilationStage = false;
         this.vcstate.vci.doWithoutAbilityToUndo(() =>
             this.vcstate.runtime.codeExec.runTimeslice(Infinity)
-        ); 
+        );
 
         if (expectErrMsg && !caughtErr) {
             this.t.warnAndAllowToContinue('2U|error not seen', codeBefore, codeIn);

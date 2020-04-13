@@ -10,7 +10,6 @@
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool, coalesceIfFalseLike, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { assertWarn, showWarningIfExceptionThrown } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { cast, last, slength } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
@@ -454,18 +453,6 @@ export class VpcPresenterEvents {
                     VpcPresenterEvents.showWarningIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance());
                 }
             }
-        }
-    }
-
-    /**
-     * shows a browser alert dialog on exception,
-     * it's the only thing we can do if rendering is failing
-     */
-    static showWarningIfExceptionThrown(fn: () => void) {
-        try {
-            fn();
-        } catch (e) {
-            assertWarn(false, e.toString());
         }
     }
 

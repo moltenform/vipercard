@@ -214,18 +214,15 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         //~ it's how we get the signal back after running a script,
         //~ we intentionally try to call a handler that doesn't exist. */
         //~ this.busy = false;
-
         //~ /* go back to the previous tool */
         //~ this.vci.setTool(this.rememberedTool);
-
         //~ if (scriptErr && scriptErr.details && scriptErr.details.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)) {
-            //~ /* it wasn't actually an error, we internally caused it */
+        //~ /* it wasn't actually an error, we internally caused it */
         //~ } else if (scriptErr) {
-            //~ this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);
+        //~ this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);
         //~ } else {
-            //~ this.appendToOutput('Unknown', true);
+        //~ this.appendToOutput('Unknown', true);
         //~ }
-
         //~ /* set focus back */
         //~ this.vci.getPresenter().setCurrentFocus(this.entry.id);
     }

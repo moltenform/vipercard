@@ -52,7 +52,7 @@ t.test('_checkLexing', () => {
         //~ ['put {BSLASH}\n xyz000 into tnot\\tnot', 'ERR:no variable found with this name'],
         //~ ['put xyz000 into tnot\\tnot', 'ERR:no variable found with this name'],
         //~ ['1 {BSLASH}\n + {BSLASH}\n xyz000', 'ERR:no variable found with this name'],
- 
+
         /* continue a across a line */
         //~ ['put "a" & {BSLASH}\n "b" into test\\test', 'ab'],
         //~ ['put 2 + {BSLASH}\n 3 into test\\test', '5'],
@@ -101,7 +101,7 @@ t.test('_checkLexing', () => {
         //~ ['put 4 into number\\number', '4'],
 
         /* dest needs to be a token of type TkIdentifier */
-        ['put 4 into short\\0', 'ERR:support variables'],
+        ['put 4 into short\\0', 'ERR:support variables']
         //~ ['put 4 into long\\0', 'ERR:support variables'],
         //~ ['put 4 into length\\0', 'ERR:support variables'],
         //~ ['put 4 into id\\0', 'ERR:support variables'],
@@ -116,24 +116,24 @@ t.test('_checkLexing', () => {
 
     /* string literal cannot contain contline symbol since it has a newline */
     //~ h.assertCompileErrorIn(
-        //~ 'put "a{BSLASH}\nb" into test',
-        //~ 'unexpected character: ->"<-',
-        //~ 3
+    //~ 'put "a{BSLASH}\nb" into test',
+    //~ 'unexpected character: ->"<-',
+    //~ 3
     //~ );
     //~ h.assertCompileErrorIn(
-        //~ 'put "{BSLASH}\n" into test',
-        //~ 'unexpected character: ->"<-',
-        //~ 3
+    //~ 'put "{BSLASH}\n" into test',
+    //~ 'unexpected character: ->"<-',
+    //~ 3
     //~ );
     //~ h.assertCompileErrorIn(
-        //~ 'put "{BSLASH}\n{BSLASH}\n" into test',
-        //~ 'unexpected character: ->"<-',
-        //~ 3
+    //~ 'put "{BSLASH}\n{BSLASH}\n" into test',
+    //~ 'unexpected character: ->"<-',
+    //~ 3
     //~ );
     //~ h.assertCompileErrorIn(
-        //~ 'put {BSLASH}\n"{BSLASH}\n{BSLASH}\n"{BSLASH}\n into test',
-        //~ 'unexpected character: ->"<-',
-        //~ 4
+    //~ 'put {BSLASH}\n"{BSLASH}\n{BSLASH}\n"{BSLASH}\n into test',
+    //~ 'unexpected character: ->"<-',
+    //~ 4
     //~ );
 
     /* we changed lexer to disallow this, since it is clearly wrong */

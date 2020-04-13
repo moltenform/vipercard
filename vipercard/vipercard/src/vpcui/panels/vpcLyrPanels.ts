@@ -153,9 +153,7 @@ export class VpcAppLyrPanels extends VpcUILayer {
         try {
             this.saveChangesToModel(true);
         } catch (e) {
-            if (
-                e.toString().includes(VpcPanelScriptEditor.thereArePendingChanges)
-            ) {
+            if (e.toString().includes(VpcPanelScriptEditor.thereArePendingChanges)) {
                 return true;
             } else {
                 throw e;

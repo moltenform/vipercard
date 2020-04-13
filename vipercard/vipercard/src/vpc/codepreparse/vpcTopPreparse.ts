@@ -34,11 +34,11 @@ Part 1: processing
     all different tokens, so it's best to transform in software,
     for example to add quotes or to add 'syntax markers'
     that tell the parser that this term isn't just a variable,
-    it's part of the syntax. 
-    
+    it's part of the syntax.
+
     processing steps include:
     making tokens lower-case, since the language is case insensitive,
-    
+
     SyntaxRewriter rewrites syntax for some lines:
     1) To minimize number of tokens needed in the lexer (for faster lexing)
         for example:
@@ -88,13 +88,13 @@ Part 1: processing
 
 Part 2: execution
     when you say, click on a button, the message is added to a queue.
-    code execution will then see the message in the queue and create a 
+    code execution will then see the message in the queue and create a
     framestack for it. each frame stores local variables and the current line offset,
     so it can move from line to line. when calling a function, a frame is
     pushed onto the stack. when returning from a function, the frame
     is popped from the stack, so that we'll continue running the caller's code.
     when the last frame is popped, we know we're done.
-    
+
     Code execution walks line-by-line through the list, running one line at a time
     It checks the type of the line:
         If there is no expression to be parsed, run the line and continue (such as
@@ -131,7 +131,7 @@ export namespace VpcTopPreparse {
         let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, lowercase);
         let rewrites = new VpcRewriteForCommands(rw);
         let exp = new ExpandCustomFunctions(idGen, new CheckReservedWords());
-        let buildTree = new VpcRewriteNoElseIfClauses.TreeBuilder()
+        let buildTree = new VpcRewriteNoElseIfClauses.TreeBuilder();
         while (true) {
             let next = splitter.next();
             if (!next) {
@@ -139,13 +139,13 @@ export namespace VpcTopPreparse {
             }
 
             /* the stage 1 transformations must be done first */
-            let nextSublines = stage1Process(next, rw)
+            let nextSublines = stage1Process(next, rw);
             if (nextSublines) {
                 for (let subline of nextSublines) {
-                    buildTree.addLine(subline)
+                    buildTree.addLine(subline);
                 }
             } else {
-                buildTree.addLine(next)
+                buildTree.addLine(next);
             }
         }
 
@@ -161,27 +161,27 @@ export namespace VpcTopPreparse {
         let lineNumber = 0;
         let branchProcessor = new BranchProcessing(idGen);
         for (let line of lines) {
-                let nextLines2 = stage2Process(line, rewrites) ?? [line];
-                for (let line2 of nextLines2) {
-                    let nextLines3 = stage3Process(line2, exp);
-                    for (let line3 of nextLines3) {
-                        /* make it lowercase again, just in case */
-                        for (let item of line3) {
-                            lowercase.go(item);
-                        }
-
-                        let lineObj = toCodeObj.toCodeLine(line3);
-                        latestDestLineSeen.val = lineObj;
-                        lineObj.offset = lineNumber;
-                        branchProcessor.go(lineObj);
-                        totalOutput[lineNumber] = lineObj;
-                        lineNumber += 1;
-                        checkThrow(lineNumber < CodeLimits.MaxLinesInScript, 'maxLinesInScript');
-
-                        /* save memory, we don't need this anymore */
-                        lineObj.tmpEntireLine = undefined;
+            let nextLines2 = stage2Process(line, rewrites) ?? [line];
+            for (let line2 of nextLines2) {
+                let nextLines3 = stage3Process(line2, exp);
+                for (let line3 of nextLines3) {
+                    /* make it lowercase again, just in case */
+                    for (let item of line3) {
+                        lowercase.go(item);
                     }
+
+                    let lineObj = toCodeObj.toCodeLine(line3);
+                    latestDestLineSeen.val = lineObj;
+                    lineObj.offset = lineNumber;
+                    branchProcessor.go(lineObj);
+                    totalOutput[lineNumber] = lineObj;
+                    lineNumber += 1;
+                    checkThrow(lineNumber < CodeLimits.MaxLinesInScript, 'maxLinesInScript');
+
+                    /* save memory, we don't need this anymore */
+                    lineObj.tmpEntireLine = undefined;
                 }
+            }
         }
 
         branchProcessor.ensureComplete();
@@ -206,30 +206,27 @@ export namespace VpcTopPreparse {
     function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions): ChvITk[][] {
         line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line);
         let outlines = exp.go(line);
-        return outlines
+        return outlines;
     }
 
-    export function go(
-        code: string,
-        velIdForErrMsg: string,
-        idGen: CountNumericId
-    ):  VpcParsedCodeCollection {
+    export function go(code: string, velIdForErrMsg: string, idGen: CountNumericId): VpcParsedCodeCollection {
         //  VpcScriptSyntaxError | VpcParsedCodeCollection
-        checkThrow(false, 'nyi')
+        checkThrow(false, 'nyi');
+        //~ let as = Util512BaseErr.errAsCls(VpcErr.name, e)
         //~ assertTrue(!code.match(/^\s*$/), '');
         //~ let latestSrcLineSeen = new ValHolder(0);
         //~ let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
         //~ let syntaxError: O<VpcScriptSyntaxError>;
         //~ try {
-            //~ return goImpl(code, latestSrcLineSeen, latestDestLineSeen, idGen);
+        //~ return goImpl(code, latestSrcLineSeen, latestDestLineSeen, idGen);
         //~ } catch (e) {
-            //~ syntaxError = new VpcScriptSyntaxError();
-            //~ syntaxError.isScriptException = e.isVpcError;
-            //~ syntaxError.isExternalException = !e.isUi512Error;
-            //~ syntaxError.lineNumber = latestSrcLineSeen.val;
-            //~ syntaxError.velId = velIdForErrMsg;
-            //~ syntaxError.lineData = latestDestLineSeen.val;
-            //~ syntaxError.details = e.message;
+        //~ syntaxError = new VpcScriptSyntaxError();
+        //~ syntaxError.isScriptException = e.isVpcError;
+        //~ syntaxError.isExternalException = !e.isUi512Error;
+        //~ syntaxError.lineNumber = latestSrcLineSeen.val;
+        //~ syntaxError.velId = velIdForErrMsg;
+        //~ syntaxError.lineData = latestDestLineSeen.val;
+        //~ syntaxError.details = e.message;
         //~ }
 
         //~ return syntaxError;

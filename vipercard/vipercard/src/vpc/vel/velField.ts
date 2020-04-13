@@ -282,7 +282,8 @@ export class VpcElField extends VpcElSizable {
             let n = VpcValS(s).readAsStrictInteger();
             SubstringStyleComplex.setChunkTextSize(newTxt, this.getDefaultFontAsUi512(), charstart, len, n);
         } else {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`4x|can only say 'set the (prop) of char 1 to 2'
                     for textstyle, textfont, or textsize`)
             );
@@ -323,7 +324,8 @@ export class VpcElField extends VpcElSizable {
                 len
             ).toString();
         } else {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`4w|can only say 'get the (prop) of char 1 to 2'
                     for textstyle, textfont, or textsize`)
             );

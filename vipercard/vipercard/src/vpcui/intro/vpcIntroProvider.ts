@@ -15,9 +15,9 @@
 /* auto */ import { UndoableActionCreateOrDelVel } from './../state/vpcCreateOrDelVel';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
-/* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { RespondToErr, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
+/* auto */ import { bool, vpcWebsite } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue, respondUI512Error } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { assertWarnEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
@@ -39,7 +39,11 @@ export class VpcIntroProvider {
      * begin async operation
      */
     startLoadDocument(currentCntrl: UI512Presenter, cbSetStatus: (s: string) => void) {
-        Util512Higher.syncToAsyncTransition(() => this.startLoadDocumentAsync(currentCntrl, cbSetStatus), 'startLoadDocument');
+        Util512Higher.syncToAsyncTransition(
+            () => this.startLoadDocumentAsync(currentCntrl, cbSetStatus),
+            'startLoadDocument',
+            RespondToErr.Alert
+        );
     }
 
     /**
@@ -51,7 +55,13 @@ export class VpcIntroProvider {
             await this.startLoadDocumentAsyncImpl(currentCntrl);
         } catch (e) {
             cbSetStatus(
-                lng('lngPlease go to \nhttps://www.vipercard.net/0.3/\nto return to the main menu.') + '\n' + e.message + '\n\n\n'
+                lng(
+                    longstr(
+                        `lngPlease go to \n${vpcWebsite}\nto return
+                to the main menu.'){NEWLINE}${e.message}{NEWLINE}{NEWLINE}{NEWLINE}`,
+                        ''
+                    )
+                )
             );
         }
     }
@@ -70,11 +80,11 @@ export class VpcIntroProvider {
         await this.initPrUI(pr, serialized, fullVci, vpcState);
 
         /* compile scripts, set stack lineage */
+        /* don't prevent stack from opening if a failure happens here */
         try {
-            /* don't prevent stack from opening if a failure happens here */
             await this.initPrSettings(pr, vpcState, fullVci);
         } catch (e) {
-            assertWarn(false, 'initPrSettings', e.toString());
+            respondUI512Error(e, 'initPrSettings');
         }
 
         /* setup the redirection-to-login-form if requested */
@@ -254,23 +264,20 @@ export class VpcIntroProvider {
             });
         } else if (this.loc === VpcDocumentLocation.FromStackIdOnline) {
             /* tell the presenter to show a dialog explaining that this is someone else's stack */
-            pr.placeCallbackInQueue(() => {
-                try {
-                    let ses = VpcSession.fromRoot();
-                    let username = ses ? ses.username : '';
-                    let info = vpcState.vci.getModel().stack.getLatestStackLineage();
-                    if (info.stackOwner !== username) {
-                        pr.answerMsg(
-                            longstr(`You're opening a stack created by
+            let fn = () => {
+                let ses = VpcSession.fromRoot();
+                let username = ses ? ses.username : '';
+                let info = vpcState.vci.getModel().stack.getLatestStackLineage();
+                if (info.stackOwner !== username) {
+                    pr.answerMsg(
+                        longstr(`You're opening a stack created by
                                 "${info.stackOwner}".{{NEWLINE}}If you want
                                 to make changes, simply press Save, and you'll
                                 be working on your own copy of the stack.`)
-                        );
-                    }
-                } catch (e) {
-                    console.error('could not show message, ' + e);
+                    );
                 }
-            });
+            };
+            pr.placeCallbackInQueue(() => justConsoleMsgIfExceptionThrown(fn, "this is someone else's stack"));
         }
     }
 
@@ -279,16 +286,18 @@ export class VpcIntroProvider {
      */
     protected async startLoadDocumentAsyncImpl(currentCntrl: UI512Presenter) {
         /* minimum time, just so that it "feels right" rather than loading instantly */
-        
+
         const minimumTime = 1500;
-        let ret:[VpcPresenter, VpcState]
+        let ret: [VpcPresenter, VpcState];
         let promises = [
             /* don't load too fast... slow it down intentionally */
             Util512Higher.sleep(minimumTime),
-            (async() => { ret = await this.loadDocumentTop() })()
-        ]
-        
-        await Promise.all(promises)
+            (async () => {
+                ret = await this.loadDocumentTop();
+            })()
+        ];
+
+        await Promise.all(promises);
         currentCntrl.placeCallbackInQueue(() => {
             /* remove the loading page and replace it with the new presenter */
             getRoot().replaceCurrentPresenter(ret[0]);

@@ -564,7 +564,7 @@ export enum VpcErrStage {
     Parse,
     Visit,
     SyntaxVisit
-} 
+}
 
 export class VpcScriptErrorBase {
     //~ delete these
@@ -574,42 +574,33 @@ export interface IVpcCodeLine {
     readonly lineId: number;
 }
 
-export class VpcErr  extends Util512BaseErr {
-    isVpcErr = true
-    scriptErrLine = -1
-    scriptErrVelid = ''
+export class VpcErr extends Util512BaseErr {
+    isVpcErr = true;
+    scriptErrLine = -1;
+    scriptErrVelid = '';
     lineData: O<IVpcCodeLine>;
-    stage = VpcErrStage.NotFromUs
+    stage = VpcErrStage.NotFromUs;
 
-    protected static gen(message:string, level:string) {
-        return new VpcErr(message, level)
+    protected static gen(message: string, level: string) {
+        return new VpcErr(message, level);
     }
     static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(VpcErr.gen, ...params)
+        return Util512BaseErr.createErrorImpl(VpcErr.gen, ...params);
     }
 }
 
-export function makeVpcError(
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = '',
-    s3: unknown = '',) {
-        let level = 'vpc'
-        let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
-        return VpcErr.createError(msgTotal, level)
-    }
+export function makeVpcError(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
+    let level = 'vpc';
+    let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
+    return VpcErr.createError(msgTotal, level);
+}
 
 /**
  * a quick way to throw if condition is false.
  * not the same as assert, which should only be triggered when
  * something goes wrong.
  */
-export function checkThrow(
-    condition: unknown,
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = ''
-): asserts condition {
+export function checkThrow(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
         throw makeVpcError(`O |${msg} ${s1} ${s2}`).clsAsErr();
     }
@@ -618,80 +609,56 @@ export function checkThrow(
 /**
  * a quick way to throw an expection if value is not what was expected.
  */
-export function checkThrowEq<T>(
-    expected: T,
-    got: unknown,
-    msg: string,
-    c1: unknown = '',
-    c2: unknown = ''
-): asserts got is T {
+export function checkThrowEq<T>(expected: T, got: unknown, msg: string, c1: unknown = '', c2: unknown = ''): asserts got is T {
     if (expected !== got && util512Sort(expected, got) !== 0) {
-        checkThrow(false, msg, c1, c2)
+        checkThrow(false, msg, c1, c2);
     }
 }
 
-export class VpcInternalErr  extends Util512BaseErr {
-    isVpcInternalErr = true
-    protected static gen(message:string, level:string) {
-        return new VpcInternalErr(message, level)
+export class VpcInternalErr extends Util512BaseErr {
+    isVpcInternalErr = true;
+    protected static gen(message: string, level: string) {
+        return new VpcInternalErr(message, level);
     }
     static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(VpcInternalErr.gen, ...params)
+        return Util512BaseErr.createErrorImpl(VpcInternalErr.gen, ...params);
     }
 }
 
-export function makeVpcInternalError(
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = '',
-    s3: unknown = '',) {
-        let level = 'vpcinternal'
-        let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
-        return VpcInternalErr.createError(msgTotal, level)
-    }
+export function makeVpcInternalError(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
+    let level = 'vpcinternal';
+    let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
+    return VpcInternalErr.createError(msgTotal, level);
+}
 
-export function checkThrowInternal(
-    condition: unknown,
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = ''
-): asserts condition {
+export function checkThrowInternal(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
         throw makeVpcInternalError(`O |${msg} ${s1} ${s2}`).clsAsErr();
     }
 }
 
-export class VpcNotificationMessage  extends Util512Message {
-    isVpcNotificationMessage = true
-    protected static gen(message:string, level:string) {
-        return new VpcNotificationMessage(message, level)
+export class VpcNotificationMessage extends Util512Message {
+    isVpcNotificationMessage = true;
+    protected static gen(message: string, level: string) {
+        return new VpcNotificationMessage(message, level);
     }
     static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(VpcNotificationMessage.gen, ...params)
+        return Util512BaseErr.createErrorImpl(VpcNotificationMessage.gen, ...params);
     }
 }
 
-export function makeVpcNotificationMessage(
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = '',
-    s3: unknown = '',) {
-        let level = 'vpcinternal'
-        let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
-        return VpcNotificationMessage.createError(msgTotal, level)
-    }
+export function makeVpcNotificationMessage(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
+    let level = 'vpcinternal';
+    let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
+    return VpcNotificationMessage.createError(msgTotal, level);
+}
 
-export function checkThrowNotifyMessage(
-    condition: unknown,
-    msg: string,
-    s1: unknown = '',
-    s2: unknown = ''
-): asserts condition {
+export function checkThrowNotifyMessage(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
         throw makeVpcInternalError(`O |${msg} ${s1} ${s2}`).clsAsErr();
     }
 }
 
-export function cleanExceptionMsg(s:string):string {
-    assertTrue(false, 'nyi')
+export function cleanExceptionMsg(e: Error): string {
+    assertTrue(false, 'nyi');
 }

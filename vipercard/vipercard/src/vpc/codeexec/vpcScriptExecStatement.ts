@@ -10,7 +10,7 @@
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, checkIsProductionBuild, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, ValHolder, getStrToEnum, longstr } from './../../ui512/utils/util512';
 
@@ -128,7 +128,8 @@ export class ExecuteStatement {
         ) {
             this.outside.SetOption('mimicCurrentTool', tool);
         } else {
-            checkThrow(false, 
+            checkThrow(
+                false,
                 longstr(`5F|the choose command is currently used for
                 simulating drawing only, so it must be one of the
                 paint tools like "pencil" or "brush" chosen`)
@@ -149,10 +150,7 @@ export class ExecuteStatement {
         if (vals.vals.RuleObjectPart && vals.vals.RuleObjectPart.length) {
             checkThrow(false, "5C|the 'delete' command is not yet supported for btns or flds.");
         } else {
-            let contRef = ensureDefined(
-                this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer),
-                '5B|'
-            );
+            let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), '5B|');
             let chunk = ensureDefined(this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk), '5A|');
 
             contRef.chunk = chunk;
@@ -270,18 +268,10 @@ export class ExecuteStatement {
             justLoad = true;
         }
 
-        try {
-            if (justLoad) {
-                VpcAudio.preload(whichSound);
-            } else {
-                VpcAudio.play(whichSound);
-            }
-        } catch (e) {
-            if (checkIsProductionBuild()) {
-                console.error('audio encountered ' + e);
-            } else {
-                throw e;
-            }
+        if (justLoad) {
+            VpcAudio.preloadNoThrow(whichSound);
+        } else {
+            VpcAudio.play(whichSound);
         }
     }
     /**
@@ -290,12 +280,7 @@ export class ExecuteStatement {
      */
     goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let terms = this.h.getChildStrs(vals, tkstr.tkIdentifier, true);
-        checkThrow(
-            terms.length === 1,
-            longstr(
-                `7M|(missing into, before, or after).`
-            )
-        );
+        checkThrow(terms.length === 1, longstr(`7M|(missing into, before, or after).`));
 
         let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[0]);
         let val = ensureDefined(this.h.findChildVal(vals, tkstr.RuleExpr), '54|');

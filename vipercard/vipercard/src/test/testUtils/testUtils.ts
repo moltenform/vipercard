@@ -34,7 +34,7 @@ export async function assertThrowsAsync<T>(
  */
 export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidFn) {
     let msg: O<string>;
-    
+
     try {
         fn();
     } catch (e) {
@@ -70,9 +70,12 @@ export function YetToBeDefinedTestHelper<T>(): T {
  */
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
     assertThrows('L||', 'intentionally throw', () => {
-        checkThrow512(false, `1!|It looks like the debugger is set to break
+        checkThrow512(
+            false,
+            `1!|It looks like the debugger is set to break
             on 'All Exceptions'... you probably want to turn this off because
-            many tests intentionally throw exceptions.`);
+            many tests intentionally throw exceptions.`
+        );
     });
 }
 

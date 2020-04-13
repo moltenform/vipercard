@@ -321,22 +321,19 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHSource(ctx: VisitingContext): VpcVal {
             if (ctx.RuleHSource_1 && ctx.RuleHSource_1[0]) {
-             return this.visit(ctx.RuleHSource_1[0]); 
+                return this.visit(ctx.RuleHSource_1[0]);
+            } else if (ctx.RuleHGenericFunctionCall && ctx.RuleHGenericFunctionCall[0]) {
+                return this.visit(ctx.RuleHGenericFunctionCall[0]);
+            } else if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
+                let reference = this.visit(ctx.RuleHSimpleContainer[0]);
+                checkThrow(reference instanceof RequestedContainerRef, '');
+                let readable = this.outside.ResolveContainerReadable(reference);
+                let s = readable.getRawString();
+                return VpcValS(s);
+            } else {
+                checkThrowInternal(false, 'OR in HSource, no branch found');
             }
-             else 
-            if (ctx.RuleHGenericFunctionCall && ctx.RuleHGenericFunctionCall[0]) {
-             return this.visit(ctx.RuleHGenericFunctionCall[0]); 
-            }
-             else 
-            if (ctx.RuleHSimpleContainer && ctx.RuleHSimpleContainer[0]) {
-             let reference = this.visit(ctx.RuleHSimpleContainer[0]); 
-             checkThrow(reference instanceof RequestedContainerRef, '')
-             let readable = this.outside.ResolveContainerReadable(reference)
-             let s = readable.getRawString()
-             return VpcValS(s)
-            }
-             else { checkThrowInternal(false, 'OR in HSource, no branch found'); }
-            }
+        }
 
         RuleHSource_1(ctx: VisitingContext): VpcVal {
             if (ctx.tkNumLiteral && ctx.tkNumLiteral[0]) {

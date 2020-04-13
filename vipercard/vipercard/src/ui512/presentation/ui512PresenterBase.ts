@@ -2,7 +2,7 @@
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, UI512IsPresenterInterface, VoidFn } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { respondUI512Error } from './../utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling } from './../utils/util512AssertCustom';
 /* auto */ import { Util512, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { TemporarilySuspendEvents } from './../menu/ui512SuspendEvents';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
@@ -35,7 +35,7 @@ export abstract class UI512PresenterBase
     trackPressedBtns: boolean[] = Util512.repeat(this.maxMouseButtons, false);
     trackClickedIds: O<string>[] = Util512.repeat(this.maxMouseButtons, undefined);
     listeners: { [t: number]: FnEventCallback[] } = {};
-    callbackQueueFromAsyncs: O<VoidFn>[] = [];
+    callbackQueueForIdle: O<VoidFn>[] = [];
     needRedraw = true;
     inited = false;
     openState = MenuOpenState.MenusClosed;
@@ -73,12 +73,8 @@ export abstract class UI512PresenterBase
             let evt = new FocusChangedEventDetails(this.currentFocus, next);
             evt.skipCloseFieldMsg = skipCloseFieldMsg;
 
-            try {
-                this.rawEvent(evt);
-            } catch (e) {
-                respondUI512Error(e, 'FocusChangedEvent response');
-            }
-
+            UI512ErrorHandling.contextHint = 'setCurrentFocus';
+            this.rawEventCanThrow(evt);
             if (!evt.preventChange) {
                 this.currentFocus = next;
             }
@@ -117,36 +113,31 @@ export abstract class UI512PresenterBase
     /**
      * handle an incoming event, and dispatch it to all of the listeners
      */
-    rawEvent(d: EventDetails) {
+    rawEventCanThrow(d: EventDetails) {
         let evtNumber = d.type().valueOf();
         let ar = this.listeners[evtNumber];
-        try {
-            if (ar) {
-                /* use a plain JS loop and not a for/of loop here, this area
-                benefits from perf micro-optimizations */
-                for (let i = 0, len = ar.length; i < len; i++) {
-                    if (d.handled()) {
-                        break;
-                    }
-
-                    let cb = ar[i];
-                    cb(this, d);
+        if (ar) {
+            /* use a plain JS loop and not a for/of loop here, this area
+            benefits from perf micro-optimizations */
+            for (let i = 0, len = ar.length; i < len; i++) {
+                if (d.handled()) {
+                    break;
                 }
+
+                let cb = ar[i];
+                cb(this, d);
             }
-        } catch (e) {
-            respondUI512Error(e, 'event ' + d.type());
-            return;
         }
 
         /* construct mouseleave and mouseenter events */
         if (d instanceof MouseMoveEventDetails) {
             if (d.elNext !== d.elPrev) {
                 if (d.elPrev) {
-                    this.rawEvent(new MouseLeaveDetails(d.elPrev));
+                    this.rawEventCanThrow(new MouseLeaveDetails(d.elPrev));
                 }
 
                 if (d.elNext && this.canInteract(d.elNext)) {
-                    this.rawEvent(new MouseEnterDetails(d.elNext));
+                    this.rawEventCanThrow(new MouseEnterDetails(d.elNext));
                 }
             }
         }
@@ -215,11 +206,11 @@ export abstract class UI512PresenterBase
     }
 
     /**
-     * this is a way to run code asynchronously, while still having UI512
-     * in the callback, to get error-handling.
+     * this is a way to run code asynchronously, while still
+     * responding to unhandled exceptions
      */
     placeCallbackInQueue(cb: () => void) {
-        this.callbackQueueFromAsyncs.push(cb);
+        this.callbackQueueForIdle.push(cb);
     }
 
     /**

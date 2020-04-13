@@ -3,7 +3,7 @@
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
@@ -94,7 +94,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
             try {
                 result = await vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email']);
             } catch (e) {
-                this.setStatus('lng ' + e.toString());
+                this.setStatus(e.toString());
                 return;
             }
 
@@ -110,7 +110,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
             }
         };
 
-        Util512Higher.syncToAsyncTransition(fn, 'vpcuserscreate');
+        Util512Higher.syncToAsyncTransition(fn, 'vpcuserscreate', RespondToErr.Alert);
     }
 
     /**

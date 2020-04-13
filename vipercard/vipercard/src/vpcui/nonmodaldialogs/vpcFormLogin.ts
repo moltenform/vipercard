@@ -54,7 +54,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
                 result = await vpcUsersCheckLogin(paramFields['username'], paramFields['pw']);
             } catch (e) {
                 /* login was not successful, no such user or wrong password */
-                this.setStatus(`lngDid not log in, ${e}`);
+                this.setStatus(`Did not log in, ${e}`);
                 return;
             }
 

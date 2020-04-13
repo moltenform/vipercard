@@ -30,8 +30,6 @@ export interface WritableContainer extends ReadableContainer {
     replaceAll(search: string, replaceWith: string): void;
 }
 
-
-
 /**
  * a message sent to a script
  * includes both built-in messages "mouseUp" and custom messages "myHandler"
@@ -126,9 +124,8 @@ export enum CodeLimits {
     MaxStringLength = 64 * 1024,
     MaxVelChildren = 256,
     MaxObjectsInMsgChain = 128,
-    LimitChevErrStringLen = 128,
+    LimitChevErrStringLen = 128
 }
-
 
 /**
  * the user can log to the message box

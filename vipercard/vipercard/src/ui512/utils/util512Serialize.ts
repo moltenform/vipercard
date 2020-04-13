@@ -14,7 +14,6 @@
  * unknown incoming fields are skipped silently.
  */
 export namespace Util512SerializableHelpers {
-
     /**
      * serialize a typescript object to a plain json map of strings to strings
      */
@@ -36,10 +35,7 @@ export namespace Util512SerializableHelpers {
                         objToSend[propDest] = obj[prop];
                     }
                 } else {
-                    assertWarn(
-                        isString(obj[prop]),
-                        'we currently only support strings'
-                    );
+                    assertWarn(isString(obj[prop]), 'we currently only support strings');
                     objToSend[prop] = obj[prop];
                 }
             }
@@ -64,10 +60,7 @@ export namespace Util512SerializableHelpers {
         incoming: IsUtil512Serializable
     ): T {
         let objNew = new ctor();
-        assertWarn(
-            objNew.__isUtil512Serializable,
-            'must be a isUtil512Serializable'
-        );
+        assertWarn(objNew.__isUtil512Serializable, 'must be a isUtil512Serializable');
         let prop = '';
         for (prop in objNew) {
             if (shouldSerializeProperty(objNew, prop)) {
@@ -141,7 +134,7 @@ export namespace Util512SerializableHelpers {
 }
 
 /**
- * essentially just a signal that this class can be serialized 
+ * essentially just a signal that this class can be serialized
  */
 export abstract class IsUtil512Serializable {
     __isUtil512Serializable = true;
@@ -162,4 +155,3 @@ export abstract class IsUtil512Serializable {
         );
     }
 }
-

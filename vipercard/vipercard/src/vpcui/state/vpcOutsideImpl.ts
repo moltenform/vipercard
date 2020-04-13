@@ -5,7 +5,7 @@
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcErr, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
@@ -22,7 +22,7 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512BaseErr, assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -88,9 +88,12 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let resolver = new VelResolveReference(this.vci.getModel());
         let ret: [O<VpcElBase>, VpcElCard];
         try {
+            /* for convenience, let's throw exceptions when
+            the vel can't be found. */
             ret = resolver.go(ref, me, cardHistory);
         } catch (e) {
-            if (e.isVpcError) {
+            let as = Util512BaseErr.errAsCls(VpcErr.name, e);
+            if (as) {
                 ret = [undefined, this.vci.getModel().getCurrentCard()];
             } else {
                 throw e;
@@ -389,7 +392,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
                 /* the only other prop that accepts an adjective is version. */
                 prop = 'version/long';
             } else if (adjective !== PropAdjective.Empty) {
-                checkThrow(false, 
+                checkThrow(
+                    false,
                     longstr(`6j|this property does not take an
                         adjective like long (the long name of cd btn 1)`)
                 );

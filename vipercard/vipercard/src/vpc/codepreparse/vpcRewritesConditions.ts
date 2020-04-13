@@ -45,7 +45,7 @@ export namespace VpcRewriteNoElseIfClauses {
      * we'll build the code into a tree structure,
      * then walk the tree recursively to flatten it.
      */
-    export function go(tree:TreeBuilder, rw: VpcSuperRewrite) {
+    export function go(tree: TreeBuilder, rw: VpcSuperRewrite) {
         let ret: ChvITk[][] = [];
         flattenTreeRecurse(tree.root, rw, ret);
         return ret;
@@ -99,13 +99,13 @@ export namespace VpcRewriteNoElseIfClauses {
      */
     export class TreeBuilder {
         root = new IfConstruct(undefined);
-        current = this.root
+        current = this.root;
         constructor() {
             this.root.isRoot = true;
             this.root.clauses = [new IfConstructClause([], true)];
         }
 
-        addLine(line:ChvITk[]) {
+        addLine(line: ChvITk[]) {
             let arisLineIf = isLineIf(line);
             let arisLineElseCondition = isLineElseCondition(line);
             if (arisLineIf) {

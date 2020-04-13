@@ -2,7 +2,7 @@
 /* auto */ import { VpcSession } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { checkIsProductionBuild, vpcversion } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { AnyJson, longstr } from './../../ui512/utils/util512';
@@ -117,7 +117,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
                 if (e.toString().includes('could not create log entry')) {
                     this.setStatus('lngAlready sent.');
                 } else {
-                    this.setStatus('lng ' + e.toString());
+                    this.setStatus(e.toString());
                 }
                 return;
             }
@@ -130,7 +130,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
             }
         };
 
-        Util512Higher.syncToAsyncTransition(fn, 'doSendErrReport');
+        Util512Higher.syncToAsyncTransition(fn, 'doSendErrReport', RespondToErr.Alert);
     }
 
     /**

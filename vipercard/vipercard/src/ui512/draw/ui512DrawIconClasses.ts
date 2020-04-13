@@ -138,12 +138,7 @@ export class RenderIconGroup {
         let rect = this.getRectangle(iconNumber);
         return new RenderIcon(
             this,
-            ensureDefined(
-                rect,
-                '3G|could not load icon number',
-                iconNumber,
-                this.groupId
-            )
+            ensureDefined(rect, '3G|could not load icon number', iconNumber, this.groupId)
         );
     }
 

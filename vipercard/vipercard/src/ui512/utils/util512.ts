@@ -674,8 +674,6 @@ export function castVerifyIsStr(instance: unknown, context?: string): string {
     throw make512Error('J7|type cast exception', context).clsAsErr();
 }
 
-
-
 /**
  * fit n into the boundaries.
  */
@@ -843,7 +841,10 @@ export class MapKeyToObject<T> {
 
     add(key: string, obj: T) {
         assertTrue(slength(key) > 0, `3^|invalid id ${key}`);
-        checkThrow512(this.objects[key] !== undefined, `3]|duplicate key, ${key} already exists`)
+        checkThrow512(
+            this.objects[key] !== undefined,
+            `3]|duplicate key, ${key} already exists`
+        );
         this.objects[key] = obj;
     }
 
@@ -887,10 +888,9 @@ export function assertEq(
 ) {
     if (expected !== got && util512Sort(expected, got) !== 0) {
         let msgAssertEq = longstr(`expected '${expected}' but got '${got}'.`);
-        assertTrue(false, msgAssertEq + c1, c2, c3)
+        assertTrue(false, msgAssertEq + c1, c2, c3);
     }
 }
-
 
 export function assertWarnEq(
     expected: unknown,
@@ -901,7 +901,7 @@ export function assertWarnEq(
 ) {
     if (expected !== got && util512Sort(expected, got) !== 0) {
         let msgAssertEq = longstr(`expected '${expected}' but got '${got}'.`);
-        assertWarn(false, msgAssertEq + c1, c2, c3)
+        assertWarn(false, msgAssertEq + c1, c2, c3);
     }
 }
 
@@ -916,7 +916,7 @@ export function checkThrowEq512<T>(
     c2: unknown = ''
 ): asserts got is T {
     if (expected !== got && util512Sort(expected, got) !== 0) {
-        checkThrow512(false, msg, c1, c2)
+        checkThrow512(false, msg, c1, c2);
     }
 }
 

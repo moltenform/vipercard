@@ -10,9 +10,9 @@
 
 /**
  * the VpcCompleteVisitor interface will ensure that
- * all visitor methods are defined as expected, or we'll get a 
+ * all visitor methods are defined as expected, or we'll get a
  * type check warning.
- * 
+ *
  * the VisitingContext interface just basically
  * helps with auto-complete when writing code.
  */
@@ -110,8 +110,8 @@ export interface VpcCompleteVisitor {
 }
 
 export interface VisitingContext {
-// you can add something like [index: string]: any if you want to
-// silence type errors during development
+    // you can add something like [index: string]: any if you want to
+    // silence type errors during development
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];

@@ -15,7 +15,7 @@
 export interface UI512PresenterWithMenuInterface extends UI512PresenterInterface {
     app: UI512Application;
 
-    rawEvent(d: EventDetails): void;
+    rawEventCanThrow(d: EventDetails): void;
     canInteract(el: O<UI512Element>): boolean;
     canSelectTextInField(el: O<UI512ElTextField>): boolean;
     queueRefreshCursor(): void;

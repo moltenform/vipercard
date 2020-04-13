@@ -194,26 +194,27 @@ export class VpcExecFrameStack {
         if (curFrame) {
             let curLine = curFrame.codeSection.lines[curFrame.getOffset()];
             checkThrow(curLine, `5c|no code defined at offset ${curFrame.getOffset()} of element ${curFrame.meId}`);
-            assertWarn(false, 'nyi')
+            assertWarn(false, 'nyi');
+            //~ let as = Util512BaseErr.errAsCls(VpcErr.name, e)
             //~ try {
-                //~ assertEq(curLine.offset, curFrame.getOffset(), '5d|');
-                //~ this.runOneLineImpl(curFrame, curLine, blocked);
-                //~ return false;
+            //~ assertEq(curLine.offset, curFrame.getOffset(), '5d|');
+            //~ this.runOneLineImpl(curFrame, curLine, blocked);
+            //~ return false;
             //~ } catch (e) {
-                //~ let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e)
-                //~ if (!scriptErr) {
-                    //~ scriptErr = VpcErr.createError('', 'runOneLine')
-                    //~ scriptErr.addErr(e)
-                //~ }
-                //~ /* add error context and re-throw */
-                //~ scriptErr.scriptErrLine = curLine.firstToken.startLine ?? 0;
-                //~ scriptErr.scriptErrVelid = curFrame.meId;
-                //~ scriptErr.lineData = curLine;
-                //~ scriptErr.isScriptException = e.isVpcError;
-                //~ scriptErr.isExternalException = !e.isUi512Error;
-                //~ scriptErr.e = e;
-                //~ e.vpcScriptErr = scriptErr;
-                //~ throw e;
+            //~ let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e)
+            //~ if (!scriptErr) {
+            //~ scriptErr = VpcErr.createError('', 'runOneLine')
+            //~ scriptErr.addErr(e)
+            //~ }
+            //~ /* add error context and re-throw */
+            //~ scriptErr.scriptErrLine = curLine.firstToken.startLine ?? 0;
+            //~ scriptErr.scriptErrVelid = curFrame.meId;
+            //~ scriptErr.lineData = curLine;
+            //~ scriptErr.isScriptException = e.isVpcError;
+            //~ scriptErr.isExternalException = !e.isUi512Error;
+            //~ scriptErr.e = e;
+            //~ e.vpcScriptErr = scriptErr;
+            //~ throw e;
             //~ }
         } else {
             /* there's no current stack, looks like we are done! */
@@ -263,7 +264,7 @@ export class VpcExecFrameStack {
             checkThrow(visited instanceof VpcIntermedValBase, '7t|did not get IntermedValBase when running', curLine.allImages);
             return visited;
         } else {
-            checkThrow(false,'5Z|no expression was parsed');
+            checkThrow(false, '5Z|no expression was parsed');
         }
     }
 
@@ -612,8 +613,7 @@ on ${newHandlerName}
 end ${newHandlerName}
         `.replace(/\r\n/g, '\n');
 
-        assertTrue(false, "nyi")
-
+        assertTrue(false, 'nyi');
 
         //~ let compiled = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(code, newHandlerName, meId);
         //~ checkThrow(compiled, 'did not find the handler we just created');

@@ -5,9 +5,9 @@
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, RepeatingTimer, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher } from './../utils/util512Higher';
+/* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertWarn, respondUI512Error } from './../utils/util512AssertCustom';
+/* auto */ import { assertWarn } from './../utils/util512AssertCustom';
 /* auto */ import { BrowserOSInfo, Util512 } from './../utils/util512';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
@@ -48,22 +48,15 @@ export class FullRootUI512 implements Root {
         this.presenter = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
         UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor);
-
         VpcInitIcons.go();
 
-        try {
-            this.presenter.init();
-        } catch (e) {
-            respondUI512Error(e, 'init');
-        }
+        /* add a try/catch, this is a naked call */
+        showMsgIfExceptionThrown(() => this.presenter.init(), 'root.init');
     }
 
     invalidateAll() {
-        try {
-            this.presenter.invalidateAll();
-        } catch (e) {
-            respondUI512Error(e, 'invalidateAll');
-        }
+        /* called by us. does not need try/catch */
+        this.presenter.invalidateAll();
     }
 
     getDrawText() {
@@ -86,7 +79,10 @@ export class FullRootUI512 implements Root {
         return this.browserOSInfo;
     }
 
+    /* these are coming straight from golly, need to wrap in try/catch */
+
     replaceCurrentPresenter(newPrIn: any) {
+        /* called by us. does not need try/catch */
         let newPr = newPrIn as UI512Presenter;
         checkThrow(newPr instanceof UI512Presenter, 'J2|');
         if (newPr.importMouseTracking) {
@@ -125,11 +121,7 @@ export class FullRootUI512 implements Root {
         }
 
         if (!details.handled()) {
-            try {
-                this.presenter.rawEvent(details);
-            } catch (e) {
-                respondUI512Error(e, 'event ' + details.type());
-            }
+            this.presenter.rawEventCanThrow(details);
         }
 
         if (details instanceof MouseDownEventDetails) {
@@ -198,11 +190,7 @@ export class FullRootUI512 implements Root {
         }
 
         let complete = new RenderComplete();
-        try {
-            this.presenter.render(this.domCanvas, milliseconds, complete);
-        } catch (e) {
-            respondUI512Error(e, 'drawFrame');
-        }
+        this.presenter.render(this.domCanvas, milliseconds, complete);
     }
 
     setTimerRate(s: string): void {
@@ -213,8 +201,8 @@ export class FullRootUI512 implements Root {
     runTests(all: boolean) {
         Util512Higher.syncToAsyncTransition(
             () => SimpleUtil512Tests.runTests(all),
-            'tests'
+            'tests',
+            RespondToErr.Alert
         );
     }
 }
-

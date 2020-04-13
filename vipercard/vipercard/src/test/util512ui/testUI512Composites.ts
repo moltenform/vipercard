@@ -279,7 +279,7 @@ end1`.replace(/\r\n/g, '\n')
         let mods = isShift ? ModifierKeys.Shift : ModifierKeys.None;
         mods |= isCmd ? ModifierKeys.Cmd : ModifierKeys.None;
         let d = new KeyDownEventDetails(0, keyCode, keyChar, false, mods);
-        pr.rawEvent(d);
+        pr.rawEventCanThrow(d);
     }
 
     simulateText(pr: UI512TestCompositesPresenter, s: string) {

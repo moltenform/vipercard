@@ -4,7 +4,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
  * be extra cautious in case string was made via new String
  */
@@ -71,11 +70,10 @@ export function checkIsProductionBuild(): boolean {
  * so this makes sure it's not even there.
  */
 export function callDebuggerIfNotInProduction() {
-    window['DBG' + 'PLACEHOLDER'] = true
+    window['DBG' + 'PLACEHOLDER'] = true;
     /* eslint-disable-next-line no-unused-expressions */
     DBGPLACEHOLDER;
 }
-
 
 /**
  * store the last <size> log entries, without needing to
@@ -131,7 +129,7 @@ export class RingBufferLocalStorage extends RingBuffer {
         if (window.localStorage) {
             return window.localStorage['ui512Log_' + index] ?? '';
         } else {
-            return ''
+            return '';
         }
     }
 
@@ -150,7 +148,7 @@ export class RingBufferLocalStorage extends RingBuffer {
             let ptrLatest = parseInt(sLatest, 10);
             return Number.isFinite(ptrLatest) ? ptrLatest : 0;
         } else {
-            return 0
+            return 0;
         }
     }
 
@@ -167,7 +165,7 @@ export class RingBufferLocalStorage extends RingBuffer {
 export const cProductName = 'ViperCard';
 export const cAltProductName = 'HyperCard';
 export const vpcversion = '00002061';
-
+export const vpcWebsite = 'https://www.vipercard.net/0.3/';
 
 /**
  * a short way to say optional<T>.
@@ -192,5 +190,3 @@ export class UI512Compress {
         return BridgedLZString.decompressFromUTF16(s) ?? '';
     }
 }
-
-

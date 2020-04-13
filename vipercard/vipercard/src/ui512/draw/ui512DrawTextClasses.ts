@@ -71,7 +71,8 @@ export class UI512FontGrid {
 
     getLineHeight() {
         if (!this.metrics || !this.metrics.lineheight) {
-            checkThrow512(false, 
+            checkThrow512(
+                false,
                 '3U|invalid metrics for font ' +
                     longstr(`${this.spec.typefacename}
                     ${this.spec.size} ${this.spec.style}`)
@@ -83,7 +84,8 @@ export class UI512FontGrid {
 
     getCapHeight() {
         if (!this.metrics || !this.metrics.capHeight) {
-            checkThrow512(false, 
+            checkThrow512(
+                false,
                 '3T|invalid metrics for font' +
                     longstr(`${this.spec.typefacename}
                     ${this.spec.size} ${this.spec.style}`)

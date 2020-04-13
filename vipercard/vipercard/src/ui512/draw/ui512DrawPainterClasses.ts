@@ -307,7 +307,7 @@ export abstract class UI512Painter extends UI512BasePainterUtils {
      * flood fill ('bucket tool')
      */
     floodFill(xIn: number, yIn: number, color: number) {
-        checkThrow512( false, 'I?|not implemented');
+        checkThrow512(false, 'I?|not implemented');
     }
 
     /**

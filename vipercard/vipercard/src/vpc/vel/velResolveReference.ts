@@ -220,7 +220,7 @@ export class VelResolveReference {
                 let arrOnlyMarked = arrAllCards.filter(c => c.getB('marked'));
                 retCard = VpcElBase.findByOrdinal(
                     arrOnlyMarked,
-                    0, /* we only have Ordinals left, so the current position doesn't matter */
+                    0 /* we only have Ordinals left, so the current position doesn't matter */,
                     ref.lookByRelative
                 );
             }

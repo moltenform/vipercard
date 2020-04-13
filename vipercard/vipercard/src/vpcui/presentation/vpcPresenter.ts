@@ -195,7 +195,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * from script error, to an appropriate site of the error location
      */
     static commonRespondToError(vci: VpcStateInterface, scriptErr: VpcScriptErrorBase): [string, number] {
-        assertTrue(false, 'nyi')
+        assertTrue(false, 'nyi');
         //~ /* use current card if velId is unknown */
         //~ let velId = scriptErr.velId;
         //~ velId = coalesceIfFalseLike(velId, vci.getModel().getCurrentCard().id);
@@ -365,20 +365,18 @@ export class VpcPresenter extends VpcPresenterInit {
         this.lyrModelRender.checkIfScreenWasJustUnlocked();
         let shouldUpdate = bool(this.lyrModelRender.needUIToolsRedraw) || bool(this.lyrModelRender.needFullRedraw);
 
-        /* set flags saying we don't need to render again -- even if render() fails.
-        so we don't get stuck in any annoying assert loops.
-        (otherwise if something in updateUI512ElsAllLayers failed,
-        needUIToolsRedraw would never get set, and we'd hit the failure repeatedly) */
-        try {
-            if (shouldUpdate) {
-                this.updateUI512ElsAllLayers();
-                this.refreshCursor();
-            }
-        } finally {
-            this.lyrModelRender.needUIToolsRedraw = false;
-            this.lyrModelRender.needFullRedraw = false;
+        /* we used to put a finally here to ensure that needFullRedraw is
+        always set to false even if an exception ocurrs. we did this to
+        prevent continous exception dialogs. now that we let
+        the user ignore exception messages, I don't think it's necessary.
+        */
+        if (shouldUpdate) {
+            this.updateUI512ElsAllLayers();
+            this.refreshCursor();
         }
 
+        this.lyrModelRender.needUIToolsRedraw = false;
+        this.lyrModelRender.needFullRedraw = false;
         super.render(canvas, ms, cmpTotal);
     }
 
@@ -639,7 +637,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 this.vci.undoableAction(() => this.performMenuActionImpl(s));
             }
         } catch (e) {
-            this.answerMsg(cleanExceptionMsg(e.message));
+            this.answerMsg(cleanExceptionMsg(e));
         }
 
         this.lyrModelRender.uiRedrawNeeded();

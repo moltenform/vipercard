@@ -52,7 +52,10 @@ t.test('VpcParseCmdSet.test property targets', () => {
 });
 t.test('VpcParseCmdSet.using keyword "to" more than once', () => {
     testCmdSet(`set topleft to chars 1 to 2 of "a"`, 'parses');
-    testCmdSet(`set topleft of chars 1 to 2 of cd fld 1 to chars 3 to 4 of "a"`, 'parses');
+    testCmdSet(
+        `set topleft of chars 1 to 2 of cd fld 1 to chars 3 to 4 of "a"`,
+        'parses'
+    );
 });
 t.test('VpcParseCmdSet.chunks of fields', () => {
     testCmdSet(`set topleft of word 1 to 2 of cd fld 3 to 4`, 'parses');
@@ -285,25 +288,34 @@ export class TestParseHelpers {
      */
     testParse(sInput: string, sTopRule: string, sExpected: string, sErrExpected: string) {
         let lexResult = this.lexer.tokenize(sInput);
-        let expectLexerErr = false
+        let expectLexerErr = false;
         if (sErrExpected.startsWith('Lexer:')) {
-            expectLexerErr = true
-            sErrExpected = sErrExpected.substr('Lexer:'.length)
+            expectLexerErr = true;
+            sErrExpected = sErrExpected.substr('Lexer:'.length);
             if (!lexResult.errors.length) {
-                t.warnAndAllowToContinue("expected a lexer error but there weren't any", `${lexResult.errors[0]}`)
+                t.warnAndAllowToContinue(
+                    "expected a lexer error but there weren't any",
+                    `${lexResult.errors[0]}`
+                );
             } else {
-                return
+                return;
             }
         } else {
             assertTrue(!lexResult.errors.length, `1,|${lexResult.errors[0]}`);
         }
-        
-        let line = lexResult.tokens
-        line.splice(0, 1, BuildFakeTokens.inst.makeSyntaxMarker(line[0]), BuildFakeTokens.inst.makeSyntaxMarker(line[0]), BuildFakeTokens.inst.makeSyntaxMarker(line[0]))
+
+        let line = lexResult.tokens;
+        line.splice(
+            0,
+            1,
+            BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
+            BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
+            BuildFakeTokens.inst.makeSyntaxMarker(line[0])
+        );
         this.parser.input = line;
         let cst = Util512.callAsMethodOnClass('parser', this.parser, sTopRule, [], false);
         let shouldCont = this.testParseRespondToErrs(sInput, sErrExpected, cst);
-        if (!shouldCont) { 
+        if (!shouldCont) {
             return;
         }
     }
@@ -325,24 +337,23 @@ export class TestParseHelpers {
                     return false;
                 }
 
-                if(
-                   ! this.parser.errors[0].toString().includes(sErrExpected)) {
+                if (!this.parser.errors[0].toString().includes(sErrExpected)) {
                     let s = longstr(
                         `1+|for input ${sInput} got different
                         failure message, expected ${sErrExpected} ${this.parser.errors}`
-                    )
-                    t.warnAndAllowToContinue(s)
+                    );
+                    t.warnAndAllowToContinue(s);
                 }
 
                 return false;
             } else {
-                let s = `1*|for input ${sInput} got parse errors ${this.parser.errors}`
-                t.warnAndAllowToContinue(s)
+                let s = `1*|for input ${sInput} got parse errors ${this.parser.errors}`;
+                t.warnAndAllowToContinue(s);
             }
         } else {
             if (sErrExpected.length > 0) {
-                let s = `1)|for input ${sInput} expected failure but succeeded.`
-                t.warnAndAllowToContinue(s)
+                let s = `1)|for input ${sInput} expected failure but succeeded.`;
+                t.warnAndAllowToContinue(s);
             }
         }
 
@@ -382,8 +393,8 @@ function assertFailsCmdSet(sInput: string, sErrExpected: string) {
  */
 function testCmd(sInput: string, sExpected: string) {
     /* manually make a syntax marker */
-    let sSyntaxMarker = Util512.repeat(99, '?').join('')
-    sInput = sInput.replace(/\{MK\}/g, sSyntaxMarker)
+    let sSyntaxMarker = Util512.repeat(99, '?').join('');
+    sInput = sInput.replace(/\{MK\}/g, sSyntaxMarker);
     let sCmd = sInput.split(' ')[0];
     assertTrue(sInput.startsWith(sCmd + ' '), '1.|expected start with ' + sCmd);
     let firstCapital = sCmd[0].toUpperCase() + sCmd.slice(1).toLowerCase();

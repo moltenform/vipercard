@@ -255,6 +255,10 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
                 s += '.';
             }
 
+            if (!s.startsWith('lng')) {
+                s = 'lng' + s;
+            }
+
             this.lblStatus.set('labeltext', lng(s));
         }
     }

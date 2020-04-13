@@ -1,8 +1,8 @@
 
 /* auto */ import { toShortcutString, ui512TranslateModifiers } from './../utils/utilsKeypressHelpers';
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
-/* auto */ import { setRoot } from './../utils/util512Higher';
-/* auto */ import { assertWarn } from './../utils/util512AssertCustom';
+/* auto */ import { setRoot, showMsgIfExceptionThrown } from './../utils/util512Higher';
+/* auto */ import { assertWarn, respondUI512Error } from './../utils/util512AssertCustom';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { FullRootUI512 } from './rootUI512';
@@ -33,11 +33,20 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
     gly.desiredFrameTime = 60;
     root.init(gly.domElement);
     gly.draw = () => {
-        root.drawFrame(gly.frameCount, gly.milliseconds);
+        try {
+            root.drawFrame(gly.frameCount, gly.milliseconds);
+        } catch (e) {
+            respondUI512Error(e, 'drawframe');
+        }
     };
 
     gly.onresize = () => {
-        mainOnResize(root, gly);
+        try {
+            mainOnResize(root, gly);
+        } catch (e) {
+            respondUI512Error(e, 'onresize');
+        }
+        return true;
     };
 
     gly.keydown = (
@@ -49,28 +58,33 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(
-            browserOSInfo,
-            ctrlKey,
-            shiftKey,
-            altKey,
-            metaKey
-        );
-        let details = new KeyDownEventDetails(
-            gly.milliseconds,
-            keyCode,
-            keyChar,
-            repeated,
-            mods
-        );
-        root.event(details);
+        try {
+            let mods = ui512TranslateModifiers(
+                browserOSInfo,
+                ctrlKey,
+                shiftKey,
+                altKey,
+                metaKey
+            );
+            let details = new KeyDownEventDetails(
+                gly.milliseconds,
+                keyCode,
+                keyChar,
+                repeated,
+                mods
+            );
+            root.event(details);
 
-        /* let "paste" through, stop everything else */
-        if (details.readableShortcut !== 'Cmd+V') {
-            details.setHandled();
+            /* let "paste" through, stop everything else */
+            if (details.readableShortcut !== 'Cmd+V') {
+                details.setHandled();
+            }
+
+            return !details.handled();
+        } catch (e) {
+            respondUI512Error(e, 'keydown');
+            return true;
         }
-
-        return !details.handled();
     };
 
     gly.keyup = (
@@ -81,29 +95,34 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(
-            browserOSInfo,
-            ctrlKey,
-            shiftKey,
-            altKey,
-            metaKey
-        );
-        let details = new KeyUpEventDetails(
-            gly.milliseconds,
-            keyCode,
-            keyChar,
-            false,
-            mods
-        );
-        root.event(details);
+        try {
+            let mods = ui512TranslateModifiers(
+                browserOSInfo,
+                ctrlKey,
+                shiftKey,
+                altKey,
+                metaKey
+            );
+            let details = new KeyUpEventDetails(
+                gly.milliseconds,
+                keyCode,
+                keyChar,
+                false,
+                mods
+            );
+            root.event(details);
 
-        /* let "paste" through, stop everything else */
-        let readableShortcut = toShortcutString(details.mods, details.keyCode);
-        if (readableShortcut !== 'Cmd+V') {
-            details.setHandled();
+            /* let "paste" through, stop everything else */
+            let readableShortcut = toShortcutString(details.mods, details.keyCode);
+            if (readableShortcut !== 'Cmd+V') {
+                details.setHandled();
+            }
+
+            return !details.handled();
+        } catch (e) {
+            respondUI512Error(e, 'keyup');
+            return true;
         }
-
-        return !details.handled();
     };
 
     gly.mousemove = (
@@ -114,19 +133,24 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         prevMouseX: number,
         prevMouseY: number
     ) => {
-        let details = new MouseMoveEventDetails(
-            gly.milliseconds,
-            mouseX,
-            mouseY,
-            prevMouseX,
-            prevMouseY
-        );
-        root.event(details);
-        if (buttons !== root.mouseButtonsExpected) {
-            root.sendMissedEvents(buttons);
-        }
+        try {
+            let details = new MouseMoveEventDetails(
+                gly.milliseconds,
+                mouseX,
+                mouseY,
+                prevMouseX,
+                prevMouseY
+            );
+            root.event(details);
+            if (buttons !== root.mouseButtonsExpected) {
+                root.sendMissedEvents(buttons);
+            }
 
-        return !details.handled();
+            return !details.handled();
+        } catch (e) {
+            respondUI512Error(e, 'mousemove');
+            return true;
+        }
     };
 
     gly.mouseup = (
@@ -139,23 +163,28 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(
-            browserOSInfo,
-            ctrlKey,
-            shiftKey,
-            altKey,
-            metaKey
-        );
-        let details = new MouseUpEventDetails(
-            gly.milliseconds,
-            mouseX,
-            mouseY,
-            button,
-            mods
-        );
-        root.event(details);
-        root.mouseButtonsExpected = buttons;
-        return !details.handled();
+        try {
+            let mods = ui512TranslateModifiers(
+                browserOSInfo,
+                ctrlKey,
+                shiftKey,
+                altKey,
+                metaKey
+            );
+            let details = new MouseUpEventDetails(
+                gly.milliseconds,
+                mouseX,
+                mouseY,
+                button,
+                mods
+            );
+            root.event(details);
+            root.mouseButtonsExpected = buttons;
+            return !details.handled();
+        } catch (e) {
+            respondUI512Error(e, 'mouseup');
+            return true;
+        }
     };
 
     gly.mousedown = (
@@ -168,27 +197,34 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         altKey: boolean,
         metaKey: boolean
     ) => {
-        let mods = ui512TranslateModifiers(
-            browserOSInfo,
-            ctrlKey,
-            shiftKey,
-            altKey,
-            metaKey
-        );
-        let details = new MouseDownEventDetails(
-            gly.milliseconds,
-            mouseX,
-            mouseY,
-            button,
-            mods
-        );
-        root.event(details);
-        root.mouseButtonsExpected = buttons;
-        return !details.handled();
+        try {
+            let mods = ui512TranslateModifiers(
+                browserOSInfo,
+                ctrlKey,
+                shiftKey,
+                altKey,
+                metaKey
+            );
+            let details = new MouseDownEventDetails(
+                gly.milliseconds,
+                mouseX,
+                mouseY,
+                button,
+                mods
+            );
+            root.event(details);
+            root.mouseButtonsExpected = buttons;
+            return !details.handled();
+        } catch (e) {
+            respondUI512Error(e, 'mousedown');
+            return true;
+        }
     };
 
-    setRoot(root);
-    mainOnResize(root, gly);
+    showMsgIfExceptionThrown(() => {
+        setRoot(root);
+        mainOnResize(root, gly);
+    }, 'rootStartCanvas');
 }
 
 function mainOnResize(root: FullRootUI512, gly: any) {

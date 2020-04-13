@@ -210,17 +210,17 @@ export class BasicHandlers {
         pr: UI512PresenterWithMenuInterface,
         d: KeyDownEventDetails
     ) {
-        for (let i = 0; i < pr.callbackQueueFromAsyncs.length; i++) {
-            let cb = pr.callbackQueueFromAsyncs[i];
+        for (let i = 0; i < pr.callbackQueueForIdle.length; i++) {
+            let cb = pr.callbackQueueForIdle[i];
 
             /* set to undefined before calling it: otherwise if it throws an exception,
             we might call it repeatedly. */
-            pr.callbackQueueFromAsyncs[i] = undefined;
+            pr.callbackQueueForIdle[i] = undefined;
             if (cb) {
                 cb();
             }
         }
 
-        pr.callbackQueueFromAsyncs = [];
+        pr.callbackQueueForIdle = [];
     }
 }

@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from './util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn, respondUI512Error } from './util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, respondUI512Error } from './util512AssertCustom';
 /* auto */ import { AnyJson, BrowserOSInfo, Util512, assertEq, fitIntoInclusive, last } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -148,7 +148,6 @@ export class Util512Higher {
 
     /**
      * download json asynchronously, and return parsed js object.
-     * chose to use an old-style Promise rather than async
      */
     static asyncBeginLoadJson(url: string): Promise<AnyJson> {
         return new Promise((resolve, reject) => {
@@ -208,34 +207,41 @@ export class Util512Higher {
     }
 
     /**
+     *
      * all code that goes from sync to async *must* use this method
      * so that errors can be shown, otherwise they might be invisible.
+     *
+     * using placeCallbackInQueue
+     *
+     *
      */
     static syncToAsyncTransition<T>(
         fn: () => Promise<T>,
         context: string,
-        alertOnErr: RespondToErr = RespondToErr.Alert
+        rtype: RespondToErr
     ) {
         fn().then(
             () => {
                 /* fulfilled with no exceptions */
             },
-            (err: unknown) => {
-                if (!(err as any)?.isUi512Error) {
-                    UI512ErrorHandling.appendErrMsgToLogs(
-                        false,
-                        'unhandled in async ' + err
-                    );
-                }
-
-                let e = err instanceof Error ? err : new Error(`non-Error param ${err}`);
-                if (alertOnErr === RespondToErr.Alert) {
-                    respondUI512Error(e, context);
-                } else {
-                    console.error(e.toString());
-                }
+            (err: Error) => {
+                respondUI512Error(err, context, rtype === RespondToErr.ConsoleErrOnly);
             }
         );
+    }
+
+    static syncToAsyncAfterPause<T>(
+        fn: () => unknown,
+        nMilliseconds: number,
+        context: string,
+        rtype: RespondToErr
+    ) {
+        let asyncf = async () => {
+            await Util512Higher.sleep(nMilliseconds);
+            fn();
+        };
+
+        Util512Higher.syncToAsyncTransition(asyncf, context, rtype);
     }
 
     /**
@@ -272,9 +278,38 @@ export class Util512Higher {
     }
 }
 
+/**
+ * by default, alert on every exception
+ */
 export enum RespondToErr {
     Alert = 1,
     ConsoleErrOnly
+}
+
+/**
+ * if an error is thrown, show a message
+ */
+export function showMsgIfExceptionThrown(fn: () => void, context: string) {
+    try {
+        fn();
+        return undefined;
+    } catch (e) {
+        respondUI512Error(e, context);
+        return e as Error;
+    }
+}
+
+/**
+ * if an error is thrown, show a warning message just in the console
+ */
+export function justConsoleMsgIfExceptionThrown(fn: () => void, context: string) {
+    try {
+        fn();
+        return undefined;
+    } catch (e) {
+        respondUI512Error(e, context, true);
+        return e as Error;
+    }
 }
 
 /**
