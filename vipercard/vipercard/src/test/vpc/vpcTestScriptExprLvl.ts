@@ -51,7 +51,7 @@ let h = YetToBeDefinedTestHelper<TestVpcScriptRunBaseForScriptExpr>();
 
 t.atest('--init--vpcTestScriptEval', async () => {
     h = new TestVpcScriptRunBaseForScriptExpr(t);
-    await h.initEnvironment();
+    return h.initEnvironment();
 });
 
 t.test('_evalRuleExpr,RuleLvl1', () => {

@@ -282,7 +282,8 @@ export class Util512Higher {
  * by default, alert on every exception
  */
 export enum RespondToErr {
-    Alert = 1,
+    __isUI512Enum = 1,
+    Alert,
     ConsoleErrOnly
 }
 

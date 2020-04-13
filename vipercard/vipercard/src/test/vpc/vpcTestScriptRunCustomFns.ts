@@ -25,7 +25,7 @@ export let vpcTestCollectionScriptRunCustomFns = t;
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunCustomFns>();
 t.atest('--init--vpcTestScriptEval', async () => {
     h = new TestVpcScriptRunCustomFns(t);
-    await h.initEnvironment();
+    return h.initEnvironment();
 });
 
 t.test('_expand if + if else', () => {

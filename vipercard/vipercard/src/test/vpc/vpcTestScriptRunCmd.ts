@@ -34,7 +34,7 @@ export let vpcTestCollectionScriptRunCmd = t;
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
 t.atest('--init--vpcTestScriptEval', async () => {
     h = new TestVpcScriptRunBase(t);
-    await h.initEnvironment();
+    return h.initEnvironment();
 });
 
 t.test('_execCommands choose', () => {

@@ -44,7 +44,7 @@ let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
 
 t.atest('--init--vpcTestScriptExprLvl', async () => {
     h = new TestVpcScriptRunBase(t);
-    await h.initEnvironment();
+    return h.initEnvironment();
 });
 
 t.test('_getProp', () => {

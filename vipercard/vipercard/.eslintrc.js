@@ -73,6 +73,7 @@ module.exports = {
         '@typescript-eslint/prefer-regexp-exec': 'off',
         '@typescript-eslint/promise-function-async': 'off',
         '@typescript-eslint/interface-name-prefix': 'off',
+        '@typescript-eslint/require-await': 'off',
 
         // leaving disabled, since default vals in classes seem to work fine
         'no-invalid-this': 'off',

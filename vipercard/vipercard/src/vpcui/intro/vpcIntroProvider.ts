@@ -52,7 +52,7 @@ export class VpcIntroProvider {
      */
     async startLoadDocumentAsync(currentCntrl: UI512Presenter, cbSetStatus: (s: string) => void) {
         try {
-            await this.startLoadDocumentAsyncImpl(currentCntrl);
+            return this.startLoadDocumentAsyncImpl(currentCntrl);
         } catch (e) {
             cbSetStatus(
                 lng(
@@ -242,7 +242,7 @@ export class VpcIntroProvider {
         });
 
         vci.vci.causeUIRedraw();
-        await this.yieldTime();
+        return this.yieldTime();
     }
 
     /**

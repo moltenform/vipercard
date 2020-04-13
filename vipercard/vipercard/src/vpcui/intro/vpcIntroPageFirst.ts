@@ -5,7 +5,7 @@
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { VpcAboutDialog } from './../menu/vpcAboutDialog';
-/* auto */ import { Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { Util512Higher, getRoot, RespondToErr } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, slength } from './../../ui512/utils/util512';
 /* auto */ import { IdleEventDetails } from './../../ui512/menu/ui512Events';
@@ -146,7 +146,7 @@ export class IntroPageFirst extends IntroPageBase {
     respondIdle(pr: VpcIntroInterface, d: IdleEventDetails) {
         if (!IntroPageFirst.haveCheckedPageURLParams) {
             IntroPageFirst.haveCheckedPageURLParams = true;
-            Util512Higher.syncToAsyncTransition(() => this.checkPageUrlParams(pr), 'respondIdle');
+            Util512Higher.syncToAsyncTransition(() => this.checkPageUrlParams(pr), 'respondIdle', RespondToErr.Alert);
         }
 
         super.respondIdle(pr, d);
@@ -155,7 +155,6 @@ export class IntroPageFirst extends IntroPageBase {
     /**
      * see if the url is taking to us to a stack, and load the stack if so
      */
-    /* eslint-disable-next-line @typescript-eslint/require-await */
     async checkPageUrlParams(pr: VpcIntroInterface) {
         let provider = IntroPageFirst.checkPageUrlParamsGetProvider(window.location.href);
         if (provider) {

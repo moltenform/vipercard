@@ -33,7 +33,7 @@ export class VpcSave implements VpcSaveInterface {
         if (ses) {
             this.busy = true;
 
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsAsync(ensureDefined(ses, 'Kr|')), 'goSaveAsAsync');
+            Util512Higher.syncToAsyncTransition(() => this.goSaveAsAsync(ensureDefined(ses, 'Kr|')), 'goSaveAsAsync', RespondToErr.Alert);
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -53,7 +53,7 @@ export class VpcSave implements VpcSaveInterface {
         let ses = VpcSession.fromRoot();
         if (ses) {
             this.busy = true;
-            Util512Higher.syncToAsyncTransition(() => this.goSaveAsync(ensureDefined(ses, 'Kq|')), 'beginSave async');
+            Util512Higher.syncToAsyncTransition(() => this.goSaveAsync(ensureDefined(ses, 'Kq|')), 'beginSave async', RespondToErr.Alert);
         } else {
             /* not logged in yet, show log in form */
             let form = new VpcNonModalFormLogin(this.pr.vci, true /* newUserOk*/);
@@ -272,7 +272,7 @@ export class VpcSave implements VpcSaveInterface {
      * send mark to server to flag content
      */
     beginFlagContent() {
-        Util512Higher.syncToAsyncTransition(() => this.mnuGoFlagContentAsync(), 'beginFlagContent');
+        Util512Higher.syncToAsyncTransition(() => this.mnuGoFlagContentAsync(), 'beginFlagContent', RespondToErr.Alert);
     }
 
     /**
@@ -288,7 +288,6 @@ export class VpcSave implements VpcSaveInterface {
         );
 
         if (choice === 0) {
-            let caught = false;
             try {
                 let ses = VpcSession.fromRoot();
                 let currentUsername = ses ? ses.username : '';
@@ -305,13 +304,12 @@ export class VpcSave implements VpcSaveInterface {
                     throw e;
                 }
             } catch (e) {
-                caught = true;
-                await this.pr.answerMsgAsync('Could not send a report. ' + e.toString());
+                return this.pr.answerMsgAsync('Could not send a report. ' + e.toString());
             }
 
-            if (!caught) {
-                await this.pr.answerMsgAsync('Submitted a content report for this stack. Thank you.');
-            }
+            return this.pr.answerMsgAsync('Submitted a content report for this stack. Thank you.');
+        } else {
+            return undefined
         }
     }
 

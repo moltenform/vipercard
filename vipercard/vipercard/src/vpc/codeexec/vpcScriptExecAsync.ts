@@ -3,7 +3,7 @@
 /* auto */ import { checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcPhoneDial } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
-/* auto */ import { Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
+/* auto */ import { Util512Higher, VoidFn, RespondToErr } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from './../../ui512/utils/util512';
@@ -43,12 +43,7 @@ export class VpcScriptExecAsync {
         milliseconds: number
     ) {
         let op = () => {
-            let f = async () => {
-                await Util512Higher.sleep(milliseconds);
-                pendingOps.markCompleted(asyncOpId, true);
-            };
-
-            Util512Higher.syncToAsyncTransition(f, 'goAsyncWait');
+            Util512Higher.syncToAsyncAfterPause(() => pendingOps.markCompleted(asyncOpId, true), milliseconds, 'goAsyncWait', RespondToErr.Alert);
         };
 
         pendingOps.go(asyncOpId, op, blocked);

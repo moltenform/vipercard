@@ -136,6 +136,7 @@ export function assertWarn(
     s3?: unknown
 ): asserts condition {
     if (!condition) {
+        callDebuggerIfNotInProduction();
         let msg = joinIntoMessage('assert:', 'ui512', s1, s2, s3);
         if (!UI512ErrorHandling.silenceWarnings) {
             /* we won't throw this error, but we'll make it
@@ -223,7 +224,7 @@ export class UI512ErrorHandling {
  *              look for "addEventListener" and "onload"
  *              fix: wrap in trycatch or showMsgIfExceptionThrown
  *          setinterval and settimeout. use ban/ban to stop them.
- *              fix: replaced with syncToAsyncTransition() and sleep()
+ *              fix: replace with syncToAsyncAfterPause
  *          all async code
  *              fix: use syncToAsyncTransition
  *          placeCallbackInQueue
@@ -274,7 +275,7 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
     if (!e.message || !e.message.includes('assertion failed')) {
         severity = true;
     }
-    
+
     if (UI512ErrorHandling.shouldRecordErrors && !UI512ErrorHandling.runningTests) {
         UI512ErrorHandling.appendErrMsgToLogs(severity, sAllInfo);
     }

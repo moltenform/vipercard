@@ -2,7 +2,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { Util512Higher, RespondToErr } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
@@ -28,7 +28,7 @@ export class PaintGifExport {
      */
     begin(speed: number) {
         this.init();
-        Util512Higher.syncToAsyncTransition(() => this.beginPaintExportToGif(speed), 'gif export');
+        Util512Higher.syncToAsyncTransition(() => this.beginPaintExportToGif(speed), 'gif export', RespondToErr.ConsoleErrOnly);
     }
 
     /**
@@ -66,7 +66,7 @@ export class PaintGifExport {
      * set status, s is untranslated, s2 is already translated
      */
     protected setStatus(s: string, s2 = '') {
-        if (this.elStatus) {
+        if (this && this.elStatus && this.elStatus.set) {
             this.elStatus.set('labeltext', lng(s) + ' ' + s2);
         }
     }
@@ -85,7 +85,8 @@ export class PaintGifExport {
             this.setStatus('lngBegin .gif export.');
 
             if (speed < 1 || speed > 10) {
-                return await this.showMsgAndClose('lngSpeed should be between 1 and 10');
+                await this.showMsgAndClose('lngSpeed should be between 1 and 10');
+                return;
             }
 
             let framesTodo = this.vci.getModel().stack.bgs[0].cards.length;

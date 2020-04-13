@@ -21,7 +21,7 @@ export let testCollectionvpcScriptRunSyntax = t;
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
 t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
     h = new TestVpcScriptRunBase(t);
-    await h.initEnvironment();
+    return h.initEnvironment();
 });
 
 t.test('_checkLexing', () => {
