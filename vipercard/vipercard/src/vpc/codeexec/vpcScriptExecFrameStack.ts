@@ -92,7 +92,7 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(this.originalMsg.targetId, chain, this.originalMsg.msgName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
-            this.pushStackFrame(this.originalMsg.msgName, this.originalMsg, ast, lineRef, vel.id, vel.parentId);
+            this.pushStackFrame(this.originalMsg.msgName, this.originalMsg, ast, lineRef, vel.id, vel.parentId, undefined);
         }
     }
 
@@ -100,7 +100,7 @@ export class VpcExecFrameStack {
      * start for the message box
      */
     startHandlerMsgBox(obj: VpcScriptMessageMsgBoxCode) {
-        let meId = 'messagebox';
+        let meId = this.outside.GetCurrentCardId();
         let statedParentId = this.outside.GetCurrentCardId();
         let targetId = this.outside.GetCurrentCardId();
         let codeToCompile = obj.msgBoxCodeBody;
@@ -108,8 +108,9 @@ export class VpcExecFrameStack {
             codeToCompile += '\n' + VpcScriptMessageMsgBoxCode.markIntentionalErr;
         }
 
+        let dynamicCodeOrigin:[string, number] = ['messagebox', 0]
         let [[ast, lineRef], newHandlerName] = this.visitCallDynamicHelper(codeToCompile, meId, statedParentId, targetId);
-        this.pushStackFrame(newHandlerName, obj, ast, lineRef, meId, statedParentId);
+        this.pushStackFrame(newHandlerName, obj, ast, lineRef, meId, statedParentId, dynamicCodeOrigin);
     }
 
     /**
@@ -121,10 +122,11 @@ export class VpcExecFrameStack {
         code: VpcParsedCodeCollection,
         codeLine: VpcCodeLineReference,
         meId: string,
-        statedParentId: O<string>
+        statedParentId: O<string>,
+        dynamicCodeOrigin: O<[string, number]>
     ) {
         checkThrowEq(VpcTool.Browse, this.outside.GetCurrentTool(true), 'JI|not browse tool?');
-        let newFrame = new VpcExecFrame(msgName, msg, meId, statedParentId, this.outside);
+        let newFrame = new VpcExecFrame(msgName, msg, meId, statedParentId, dynamicCodeOrigin, this.outside);
         newFrame.codeSection = code;
         this.validatedGoto(newFrame, codeLine, true);
         this.stack.push(newFrame);
@@ -199,6 +201,7 @@ export class VpcExecFrameStack {
             VpcCurrentScriptStage.latestDestLineSeen = curLine;
             VpcCurrentScriptStage.origClass = undefined;
             VpcCurrentScriptStage.latestVelID = curFrame.meId;
+            VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin
             this.runOneLineOrThrowImpl(curFrame, curLine, blocked);
             return false;
         } else {
@@ -370,7 +373,7 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, curFrame.handlerName, true);
         if (found) {
             let [ast, lineRef, vel] = found;
-            this.pushStackFrame(curFrame.handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId);
+            this.pushStackFrame(curFrame.handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId, undefined);
         }
     }
 
@@ -525,7 +528,7 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, handlerName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
-            let newFrame = this.pushStackFrame(handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId);
+            let newFrame = this.pushStackFrame(handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId, undefined);
             newFrame.args = args;
             Util512.freezeRecurse(newFrame.args);
         } else {
@@ -573,6 +576,7 @@ export class VpcExecFrameStack {
         curFrame.next();
         let meId = velTarget.id;
         let statedParentId = velTarget.id;
+        let dynamicCodeOrigin:[string, number] = [curFrame.meId, curLine.firstToken.startLine ?? 0]
         let [[ast, lineref], newHandlerName] = this.visitCallDynamicHelper(codeToCompile, meId, statedParentId, velTarget.id);
         this.callCodeAtATarget(
             curFrame,
@@ -582,7 +586,8 @@ export class VpcExecFrameStack {
             meId,
             statedParentId,
             velTarget.id,
-            VpcBuiltinMsg.SendCode
+            VpcBuiltinMsg.SendCode,
+            dynamicCodeOrigin
         );
     }
 
@@ -625,7 +630,8 @@ export class VpcExecFrameStack {
         meId: string,
         statedParentId: string,
         velTargetId: string,
-        msg: VpcBuiltinMsg
+        msg: VpcBuiltinMsg,
+        dynamicCodeOrigin:O<[string, number]>
     ) {
         curFrame.locals.set('$result', VpcVal.Empty);
 
@@ -636,7 +642,7 @@ export class VpcExecFrameStack {
         newScriptMessage.targetId = velTargetId;
         newScriptMessage.msgName = getEnumToStrOrFallback(VpcBuiltinMsg, msg);
         newScriptMessage.msg = msg;
-        let newFrame = this.pushStackFrame(newHandlerName, newScriptMessage, code, linref, meId, statedParentId);
+        let newFrame = this.pushStackFrame(newHandlerName, newScriptMessage, code, linref, meId, statedParentId, dynamicCodeOrigin);
         newFrame.args = [];
     }
 
@@ -687,7 +693,7 @@ export class VpcExecFrameStack {
             );
             if (found) {
                 let [ast, lineRef, vel] = found;
-                this.callCodeAtATarget(curFrame, ast, lineRef, sendMsg, vel.id, vel.parentId, sendMsgTarget, theMsg);
+                this.callCodeAtATarget(curFrame, ast, lineRef, sendMsg, vel.id, vel.parentId, sendMsgTarget, theMsg, undefined);
             }
         }
     }

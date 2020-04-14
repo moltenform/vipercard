@@ -36,6 +36,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     needsCompilation = new MapKeyToObjectCanSet<boolean>();
     cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
     cbAnswerMsg: (s: string, cb: () => void) => void;
+    protected lastErrLineNum = 1
     protected status1a: UI512ElLabel;
     protected status2a: UI512ElLabel;
     protected status2b: UI512ElLabel;
@@ -253,12 +254,13 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     /**
      * scroll to and highlight the target line
      */
-    scrollToErrorPosition(pr: O<UI512PresenterBase>) {
+    scrollToErrorPosition(pr: O<UI512PresenterBase>, lineNumber:number) {
         /* parse the line number out of the label text */
-        let lineNumberText = this.status2a.getS('labeltext');
-        if (this.el && lineNumberText.length > 0) {
-            lineNumberText = lineNumberText.split(' ')[1].replace(/,/g, '');
-            let lineNumber = Util512.parseInt(lineNumberText);
+        //~ let lineNumberText = this.status2a.getS('labeltext');
+        //~ if (this.el && lineNumberText.length > 0) {
+            //~ lineNumberText = lineNumberText.split(' ')[1].replace(/,/g, '');
+            //~ let lineNumber = Util512.parseInt(lineNumberText);
+            this.lastErrLineNum = lineNumber
             if (lineNumber !== undefined) {
                 lineNumber = Math.max(0, lineNumber - 1); /* from 1-based to 0-based */
                 let gel = new UI512ElTextFieldAsGeneric(this.el);
@@ -268,7 +270,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                     pr.setCurrentFocus(this.el.id);
                 }
             }
-        }
+        //~ }
     }
 
     /**
@@ -327,7 +329,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 this.onBtnCompile();
             } else if (short === 'status2a') {
                 /* user clicked the line number, scroll to that line */
-                this.scrollToErrorPosition(undefined);
+                this.scrollToErrorPosition(undefined, this.lastErrLineNum);
             } else if (short === 'status2b') {
                 /* user clicked the error message, show the details */
                 if (!this.statusErrMoreDetails.match(/^\s*$/)) {

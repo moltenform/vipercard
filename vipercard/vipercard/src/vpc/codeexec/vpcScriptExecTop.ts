@@ -7,7 +7,7 @@
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCurrentScriptStage } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcScriptErrorBase, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
@@ -32,9 +32,8 @@ export class VpcExecTop {
     check = new CheckReservedWords();
     runStatements = new ExecuteStatement();
     workQueue: VpcExecFrameStack[] = [];
-    cbOnScriptError: O<(err: VpcScriptErrorBase) => void>;
+    cbOnScriptError: O<(err: VpcErr) => void>;
     cbCauseUIRedraw: O<() => void>;
-    lastEncounteredScriptErr: O<VpcScriptErrorBase>;
     fieldsRecentlyEdited: ValHolder<{ [id: string]: boolean }> = new ValHolder({});
     silenceMessagesForUIAction: ValHolder<O<VpcTool>> = new ValHolder(undefined);
     protected justSawRepeatedMousedown = false;
@@ -232,6 +231,9 @@ export class VpcExecTop {
         }
         if (!scriptErr.lineData) {
             scriptErr.lineData = VpcCurrentScriptStage.latestDestLineSeen;
+        }
+        if (!scriptErr.dynamicCodeOrigin) {
+            scriptErr.dynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin;
         }
         if (VpcCurrentScriptStage.origClass) {
             scriptErr.origClass = VpcCurrentScriptStage.origClass;

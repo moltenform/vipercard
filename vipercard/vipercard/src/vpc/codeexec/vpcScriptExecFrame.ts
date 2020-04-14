@@ -32,6 +32,7 @@ export class VpcExecFrame {
         public message: VpcScriptMessage,
         public meId: string,
         public statedParentId: O<string>,
+        public dynamicCodeOrigin: O<[string, number]>,
         tmpOutside: OutsideWorldReadWrite
     ) {
         /* why require a value for "me" and "parent"?

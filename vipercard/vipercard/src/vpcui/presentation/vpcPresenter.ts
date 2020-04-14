@@ -5,11 +5,11 @@
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
-/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcScriptErrorBase, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
@@ -192,33 +192,22 @@ export class VpcPresenter extends VpcPresenterInit {
     }
 
     /**
-     * from script error, to an appropriate site of the error location
-     */
-    static commonRespondToError(vci: VpcStateInterface, scriptErr: VpcScriptErrorBase): [string, number] {
-        assertTrue(false, 'nyi');
-        //~ /* use current card if velId is unknown */
-        //~ let velId = scriptErr.velId;
-        //~ velId = coalesceIfFalseLike(velId, vci.getModel().getCurrentCard().id);
-        //~ let line = scriptErr.lineNumber;
-
-        //~ /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
-        //~ vci.setTool(VpcTool.Button);
-        //~ return [velId, line];
-    }
-
-    /**
      * respond to a script error,
      * might be either a compile error
      * or a runtime error
      */
-    showError(scriptErr: VpcScriptErrorBase) {
+    showError(scriptErr: VpcErr) {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
-            let velId = VpcPresenter.commonRespondToError(this.vci, scriptErr)[0];
+            /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
+            this.vci.setTool(VpcTool.Button);
+            /* if there wasn't a velid set, use current card */
+            let velId = scriptErr.scriptErrVelid ?? this.vci.getModel().getCurrentCard().id
+            let lineNum = scriptErr.scriptErrLine ?? 1
 
             /* did this come from the messagebox? */
-            if (velId === 'messagebox') {
+            if (scriptErr.dynamicCodeOrigin && scriptErr.dynamicCodeOrigin[0] === 'messagebox') {
                 if (this.lyrNonModalDlgHolder.current && this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox) {
                     this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
                 }
@@ -226,22 +215,39 @@ export class VpcPresenter extends VpcPresenterInit {
                 return;
             }
 
+            /* look at dynamic code origin: send "xsdfsdf" to cd 1 should show
+            the error being from the offending send statement, not the target,
+            especially because the linenumber on the target will be wrong */
+            if (scriptErr.dynamicCodeOrigin) {
+                velId = scriptErr.dynamicCodeOrigin[0]
+                lineNum = scriptErr.dynamicCodeOrigin[1]
+            }
+
             /* move to the card where the error happened. */
             /* for example "send myevent to btn 4 of cd 5" */
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
             let vel = this.vci.getModel().getByIdUntyped(velId);
-            let parentCard = this.vci.getModel().getParentCardOfElement(vel);
-            this.vci.setCurCardNoOpenCardEvt(parentCard.id);
+            if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
+                let parentCard = this.vci.getModel().getParentCardOfElement(vel);
+                this.vci.setCurCardNoOpenCardEvt(parentCard.id);
+            } else if (vel.getType() === VpcElType.Card) {
+                this.vci.setCurCardNoOpenCardEvt(vel.id);
+            } else if (vel instanceof VpcElBg) {
+                if (this.vci.getModel().getByIdUntyped(this.vci.getModel().getCurrentCard().id).parentId !== vel.id && vel.cards.length)
+                {
+                    this.vci.setCurCardNoOpenCardEvt(vel.cards[0].id);
+                }
+            }
+            
 
             /* set the runtime flags */
-            this.vci.getCodeExec().lastEncounteredScriptErr = scriptErr;
             this.vci.setOption('selectedVelId', vel.id);
             this.vci.setOption('viewingScriptVelId', vel.id);
 
             /* open the code editor at the offending line */
             this.lyrPropPanel.updateUI512Els();
             this.lyrPropPanel.editor.refreshFromModel(this.app);
-            this.lyrPropPanel.editor.scrollToErrorPosition(this);
+            this.lyrPropPanel.editor.scrollToErrorPosition(this, lineNum);
         });
     }
 

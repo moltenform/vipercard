@@ -11,7 +11,7 @@
 /* auto */ import { VpcLyrNonModalHolder } from './../nonmodaldialogs/vpcLyrNonModalHolder';
 /* auto */ import { VpcAppLyrDragHandles } from './../panels/vpcLyrDragHandles';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcScriptErrorBase, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcErr, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -51,7 +51,7 @@ export abstract class VpcPresenterInterface extends UI512Presenter {
     abstract askMsgAsync(prompt: string, defText: string): Promise<[O<string>, number]>;
     abstract answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number>;
     abstract isDocDirty(): boolean;
-    abstract showError(scriptErr: VpcScriptErrorBase): void;
+    abstract showError(scriptErr: VpcErr): void;
     abstract getSerializedStack(): string;
     abstract getToolResponse(t: VpcTool): VpcAppUIToolBase;
     abstract refreshCursor(): void;

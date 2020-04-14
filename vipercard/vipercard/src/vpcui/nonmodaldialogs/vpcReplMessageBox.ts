@@ -2,7 +2,7 @@
 /* auto */ import { RememberHistory } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcScriptErrorBase, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcErr, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
@@ -206,7 +206,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * respond to a script error
      * sometimes it's a script error we intentionally made!
      */
-    onScriptErr(scriptErr: VpcScriptErrorBase) {
+    onScriptErr(scriptErr: VpcErr) {
         //~ /* note that script errors are to be expected --
         //~ it's how we get the signal back after running a script,
         //~ we intentionally try to call a handler that doesn't exist. */

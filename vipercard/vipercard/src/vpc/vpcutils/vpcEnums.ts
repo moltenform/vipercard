@@ -576,10 +576,6 @@ export enum VpcErrStage {
     SyntaxStep
 }
 
-export class VpcScriptErrorBase {
-    //~ delete these
-}
-
 export interface IVpcCodeLine {
     readonly lineId: number;
 }
@@ -590,6 +586,7 @@ export class VpcErr extends Util512BaseErr {
     scriptErrLine: O<number>;
     scriptErrVelid: O<string>;
     lineData: O<IVpcCodeLine>;
+    dynamicCodeOrigin: O<[string, number]>
     stage = VpcErrStage.Unknown;
 
     protected static gen(message: string, level: string) {

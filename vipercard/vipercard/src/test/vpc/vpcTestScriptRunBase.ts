@@ -209,7 +209,7 @@ export class TestVpcScriptRunBase {
             //~ let velId = '';
             //~ let line = -1;
             //~ this.vcstate.vci.undoableAction(() => {
-            //~ let [reVelId, reLine] = VpcPresenter.commonRespondToError(
+            //~ let [reVelId, reLine] = VpcPresenter.(
             //~ this.vcstate.vci,
             //~ scriptErr
             //~ );
