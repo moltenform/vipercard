@@ -130,9 +130,9 @@ t.test('getStrToEnum.ShowValuesInExceptionMsg', () => {
 
     let pts = excMessage.split(',');
     pts.sort(util512Sort);
-    assertEq(pts[0], ` first`, 'DP|');
-    assertEq(pts[1], ` second`, 'DO|');
-    assertEq(pts[2], ` third (4E)`, 'DN|');
+    assertEq(` first`,pts[0],  'DP|');
+    assertEq(` second`,pts[1],  'DO|');
+    assertEq(` third (4E)`, pts[2],  'DN|');
     assertTrue(pts[3].endsWith(`Not a valid choice of TestEnum. try one of`), 'DM|');
 });
 t.test('slength', () => {

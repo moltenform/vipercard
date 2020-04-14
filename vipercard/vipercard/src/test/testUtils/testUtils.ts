@@ -1,7 +1,7 @@
 
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, checkThrow512 } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -70,8 +70,7 @@ export function YetToBeDefinedTestHelper<T>(): T {
  */
 export function notifyUserIfDebuggerIsSetToAllExceptions() {
     assertThrows('L||', 'intentionally throw', () => {
-        checkThrow512(
-            false,
+        throw new Error(
             `1!|It looks like the debugger is set to break
             on 'All Exceptions'... you probably want to turn this off because
             many tests intentionally throw exceptions.`
@@ -83,7 +82,6 @@ export function notifyUserIfDebuggerIsSetToAllExceptions() {
  * a collection of tests
  */
 export class SimpleUtil512TestCollection {
-    static haveHitWarnAndAllowToContinue = false;
     constructor(public name: string, public slow = false) {}
     tests: [string, VoidFn][] = [];
     atests: [string, AsyncFn][] = [];
@@ -99,18 +97,5 @@ export class SimpleUtil512TestCollection {
     public say(context: string) {
         this._context = context;
         console.log(Util512.repeat(25, ' ').join('') + this._context);
-    }
-    public warnAndAllowToContinue(...message: unknown[]) {
-        console.error(...message);
-        if (!SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue) {
-            if (
-                !window.confirm(`a test failed, see details in
-            console. continue running tests?`)
-            ) {
-                checkThrow512(false, 'user chose to stop after failed test.');
-            }
-
-            SimpleUtil512TestCollection.haveHitWarnAndAllowToContinue = true;
-        }
     }
 }

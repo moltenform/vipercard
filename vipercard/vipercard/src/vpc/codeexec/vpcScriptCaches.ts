@@ -78,7 +78,7 @@ export class VpcCacheParsedCST {
 
         VpcCurrentScriptStage.origClass = 'chevrotain.parse';
         if (this.parser.errors.length) {
-            let s = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErrStringLen);
+            let s = this.parser.errors[0]?.message?.substr(0, CodeLimits.LimitChevErrStringLen);
             checkThrow(false, '4:|parse error: ' + s);
         }
 
@@ -99,7 +99,7 @@ export class VpcCacheParsedCST {
  */
 export class VpcCacheParsedAST {
     cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyScripts);
-    constructor(protected idGen: CountNumericId) {}
+    constructor(public idGen: CountNumericId) {}
     protected getParsedCodeCollectionOrThrow(code: string, velIdForErrMsg: string): VpcParsedCodeCollection {
         VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;

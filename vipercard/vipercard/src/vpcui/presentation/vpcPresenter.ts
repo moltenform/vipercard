@@ -15,7 +15,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool, callDebuggerIfNotInProduction, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
@@ -196,15 +196,16 @@ export class VpcPresenter extends VpcPresenterInit {
      * might be either a compile error
      * or a runtime error
      */
-    showError(scriptErr: VpcErr) {
+    defaultShowScriptErr(scriptErr: VpcErr) {
         this.vci.getCodeExec().forceStopRunning();
 
         this.vci.undoableAction(() => {
             /* by leaving browse tool we won't hit other errors / try to run closeCard or openCard */
             this.vci.setTool(VpcTool.Button);
             /* if there wasn't a velid set, use current card */
-            let velId = scriptErr.scriptErrVelid ?? this.vci.getModel().getCurrentCard().id
-            let lineNum = scriptErr.scriptErrLine ?? 1
+            let velId = scriptErr.scriptErrVelid ?? this.vci.getModel().getCurrentCard().id;
+            let lineNum = scriptErr.scriptErrLine ?? 1;
+            let msg = cleanExceptionMsg(scriptErr.clsAsErr());
 
             /* did this come from the messagebox? */
             if (scriptErr.dynamicCodeOrigin && scriptErr.dynamicCodeOrigin[0] === 'messagebox') {
@@ -219,35 +220,47 @@ export class VpcPresenter extends VpcPresenterInit {
             the error being from the offending send statement, not the target,
             especially because the linenumber on the target will be wrong */
             if (scriptErr.dynamicCodeOrigin) {
-                velId = scriptErr.dynamicCodeOrigin[0]
-                lineNum = scriptErr.dynamicCodeOrigin[1]
+                velId = scriptErr.dynamicCodeOrigin[0];
+                lineNum = scriptErr.dynamicCodeOrigin[1];
             }
 
             /* move to the card where the error happened. */
             /* for example "send myevent to btn 4 of cd 5" */
             /* if there is an error in that script, we need to be on cd 5 to edit that script */
-            let vel = this.vci.getModel().getByIdUntyped(velId);
-            if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
-                let parentCard = this.vci.getModel().getParentCardOfElement(vel);
-                this.vci.setCurCardNoOpenCardEvt(parentCard.id);
-            } else if (vel.getType() === VpcElType.Card) {
-                this.vci.setCurCardNoOpenCardEvt(vel.id);
-            } else if (vel instanceof VpcElBg) {
-                if (this.vci.getModel().getByIdUntyped(this.vci.getModel().getCurrentCard().id).parentId !== vel.id && vel.cards.length)
-                {
-                    this.vci.setCurCardNoOpenCardEvt(vel.cards[0].id);
+            {
+                let vel = this.vci.getModel().findByIdUntyped(velId);
+                if (vel?.getType() === VpcElType.Btn || vel?.getType() === VpcElType.Fld) {
+                    let parentCard = this.vci.getModel().getParentCardOfElement(vel);
+                    this.vci.setCurCardNoOpenCardEvt(parentCard.id);
+                } else if (vel?.getType() === VpcElType.Card) {
+                    this.vci.setCurCardNoOpenCardEvt(vel.id);
+                } else if (vel instanceof VpcElBg) {
+                    if (
+                        this.vci.getModel().getByIdUntyped(this.vci.getModel().getCurrentCard().id).parentId !== vel.id &&
+                        vel.cards.length
+                    ) {
+                        this.vci.setCurCardNoOpenCardEvt(vel.cards[0].id);
+                    }
+                } else if (vel?.getType() !== VpcElType.Stack) {
+                    /* for example, error in standardlib,
+                    or script error from a deleted object (which is fine) */
+                    console.error(`script err in id${velId} line${lineNum} ${msg}`);
+                    callDebuggerIfNotInProduction();
+                    /* fall back to current card */
+                    velId = this.vci.getModel().getCurrentCard().id;
+                    lineNum = 1;
                 }
             }
-            
 
             /* set the runtime flags */
-            this.vci.setOption('selectedVelId', vel.id);
-            this.vci.setOption('viewingScriptVelId', vel.id);
+            this.vci.setOption('selectedVelId', velId);
+            this.vci.setOption('viewingScriptVelId', velId);
 
             /* open the code editor at the offending line */
             this.lyrPropPanel.updateUI512Els();
+            this.lyrPropPanel.editor.setLastErrInfo(velId, msg, lineNum, scriptErr.stage);
             this.lyrPropPanel.editor.refreshFromModel(this.app);
-            this.lyrPropPanel.editor.scrollToErrorPosition(this, lineNum);
+            this.lyrPropPanel.editor.scrollToErrorPosition(this);
         });
     }
 

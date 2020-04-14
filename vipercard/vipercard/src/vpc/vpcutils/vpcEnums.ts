@@ -1,7 +1,7 @@
 
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512BaseErr, Util512Message, assertTrue, joinIntoMessage } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512BaseErr, Util512Message, joinIntoMessage } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { fitIntoInclusive, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -586,7 +586,7 @@ export class VpcErr extends Util512BaseErr {
     scriptErrLine: O<number>;
     scriptErrVelid: O<string>;
     lineData: O<IVpcCodeLine>;
-    dynamicCodeOrigin: O<[string, number]>
+    dynamicCodeOrigin: O<[string, number]>;
     stage = VpcErrStage.Unknown;
 
     protected static gen(message: string, level: string) {
@@ -610,7 +610,7 @@ export function makeVpcError(msg: string, s1: unknown = '', s2: unknown = '', s3
  */
 export function checkThrow(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
-        throw makeVpcError(`O |${msg} ${s1} ${s2}`).clsAsErr();
+        throw makeVpcError(msg, s1, s2).clsAsErr();
     }
 }
 
@@ -619,7 +619,8 @@ export function checkThrow(condition: unknown, msg: string, s1: unknown = '', s2
  */
 export function checkThrowEq<T>(expected: T, got: unknown, msg: string, c1: unknown = '', c2: unknown = ''): asserts got is T {
     if (expected !== got && util512Sort(expected, got) !== 0) {
-        checkThrow(false, msg, c1, c2);
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        checkThrow(false, msg + msgEq, c1, c2);
     }
 }
 
@@ -642,7 +643,7 @@ export function makeVpcInternalError(msg: string, s1: unknown = '', s2: unknown 
 
 export function checkThrowInternal(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
-        throw makeVpcInternalError(`O |${msg} ${s1} ${s2}`).clsAsErr();
+        throw makeVpcInternalError(msg, s1, s2).clsAsErr();
     }
 }
 
@@ -658,18 +659,18 @@ export class VpcNotificationMessage extends Util512Message {
 }
 
 export function makeVpcNotificationMessage(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
-    let level = 'vpcinternal';
+    let level = 'vpcmessage';
     let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
     return VpcNotificationMessage.createError(msgTotal, level);
 }
 
 export function checkThrowNotifyMessage(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
-        throw makeVpcInternalError(`O |${msg} ${s1} ${s2}`).clsAsErr();
+        throw makeVpcNotificationMessage(msg, s1, s2).clsAsErr();
     }
 }
 
 export function cleanExceptionMsg(e: Error): string {
     //~ assertTrue(false, 'nyi');
-    return e.message
+    return e.message;
 }

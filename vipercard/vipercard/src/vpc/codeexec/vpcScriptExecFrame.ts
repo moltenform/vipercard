@@ -16,6 +16,19 @@
 /* Released under the MIT license */
 
 /**
+ * why do frames require a value for both "me" and "parent"?
+ * when executing code dynamically with 'send',
+ * we set the "parent" to be the same as "me" so that it can
+ * access the methods there.
+ *
+ * the dynamicCodeOrigin is used to show better error messages
+ * when code is sent from "do", "send", or the message box.
+ * in those cases if an error occurs it's not correct
+ * to say the error occurred in the temporary location,
+ * we should instead point to the offending send statement.
+ */
+
+/**
  * an "execution frame"
  * holding local variables and the offset to the current line of code
  */
@@ -35,10 +48,6 @@ export class VpcExecFrame {
         public dynamicCodeOrigin: O<[string, number]>,
         tmpOutside: OutsideWorldReadWrite
     ) {
-        /* why require a value for "me" and "parent"?
-        when executing code dynamically with 'send',
-        "me" and "parent" might be the same.
-        */
         /* make special locals */
         this.locals.set('$result', VpcVal.Empty);
         this.locals.set('it', VpcVal.Empty);
@@ -100,13 +109,13 @@ export class VpcExecFrame {
         btn 1's myMessage handler says
             delete btn 1 of cd 4
             doCardThing
-        
+
         if we hadn't precomputed the message chain, it would
         be hard to know how doCardThing would reach the right target.
-        
+
     i confirmed in the product that the message chain is about
     the parent card, not the current card.
-        
+
     Note the "stated parent", it let's us have snippets of code that run
     in the context of an element's script,
     but aren't actually in that script.

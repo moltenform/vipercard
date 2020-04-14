@@ -323,8 +323,8 @@ export class ExecuteStatement {
             checkThrow(false, 'nyi: deselecting text');
         } else {
             let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
-            //~ let cont = this.outside.ResolveContainerWritable(contRef);
             checkThrow(contRef.vel, 'has to be a field, not a variable');
+            this.outside.ResolveContainerWritable(contRef);
             checkThrow(false, 'nyi: selecting text');
         }
     }

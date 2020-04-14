@@ -1308,7 +1308,7 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
      we *manually* parse custom fn calls by counting
     parenthesis levels so this needs to be tested */
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_a_a);
-    h.updateObjectScript(
+    h.setScript(
         h.elIds.card_a_a,
         `${h.customFunc} mm p1, p2, p3
     global g
@@ -1459,7 +1459,7 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         ['mm (1),(2)\\the result', 'm3(1,2,)']
     ];
     h.testBatchEvaluate(batch);
-    h.updateObjectScript(h.elIds.card_a_a, ``);
+    h.setScript(h.elIds.card_a_a, ``);
 
     /* disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess) */
     /* but not printargs("a") */
@@ -1847,9 +1847,9 @@ t.test('_scriptMessagePassing', () => {
     let parents = [h.vcstate.model.stack.id, h.elIds.bg_a, h.elIds.card_a_a];
     for (let parent of parents) {
         /* reset all scripts */
-        let hCaptured = h;
-        parents.map(id => hCaptured.updateObjectScript(id, ''));
-        h.updateObjectScript(h.elIds.btn_go, '');
+        let hClosure = h;
+        parents.map(id => hClosure.setScript(id, ''));
+        h.setScript(h.elIds.btn_go, '');
 
         let script = `
             on mouseup
@@ -1860,8 +1860,8 @@ t.test('_scriptMessagePassing', () => {
 
         /* if there is nothing in the button script but
         something in a parent script, the parent script should be called instead */
-        h.updateObjectScript(h.elIds.btn_go, '');
-        h.updateObjectScript(parent, script);
+        h.setScript(h.elIds.btn_go, '');
+        h.setScript(parent, script);
         h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
         h.runGeneralCode('', '', undefined, undefined, undefined, true);
         let expectedMe = parent;
@@ -1918,7 +1918,7 @@ t.test('_scriptMessagePassing', () => {
 
         /* local variables should not bleed over into another scope (upwards) */
         h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        h.updateObjectScript(
+        h.setScript(
             parent,
             `${h.customFunc} parentfn p1
             return "got" && myLocal && x && the short id of the target
@@ -1934,7 +1934,7 @@ t.test('_scriptMessagePassing', () => {
 
         /* local variables should not bleed over into another scope (downwards) */
         h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        h.updateObjectScript(
+        h.setScript(
             parent,
             `${h.customFunc} parentfn p1
             put "abc" into myLocal
@@ -1951,7 +1951,7 @@ t.test('_scriptMessagePassing', () => {
 
         /* child can call a function in the parent script */
         h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        h.updateObjectScript(
+        h.setScript(
             parent,
             `${h.customFunc} parentfn p1
             return "got" && p1 && the short id of me
@@ -1970,14 +1970,14 @@ t.test('_scriptMessagePassing', () => {
 
         /* the parent script can't access function down in the button script though */
         h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS(''));
-        h.updateObjectScript(
+        h.setScript(
             parent,
             `on mouseup
             global testresult
             put childfn("abc") into testresult
             end mouseup`
         );
-        h.updateObjectScript(
+        h.setScript(
             h.elIds.btn_go,
             `${h.customFunc} childfn p1
             return "got" && p1 && the short id of me

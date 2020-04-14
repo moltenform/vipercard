@@ -1,10 +1,10 @@
 
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { checkThrow, checkThrowInternal, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcErrStage, checkThrowInternal, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { O, tostring } from './../../ui512/utils/util512Base';
-/* auto */ import { MapKeyToObjectCanSet } from './../../ui512/utils/util512';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { MapKeyToObjectCanSet, getEnumToStrOrFallback } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
@@ -33,14 +33,13 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     compositeType = 'VpcPanelScriptEditor';
     lineCommentPrefix = '--~ ';
     vci: VpcStateInterface;
-    needsCompilation = new MapKeyToObjectCanSet<boolean>();
+    needsToBeSaved = new MapKeyToObjectCanSet<boolean>();
     cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
     cbAnswerMsg: (s: string, cb: () => void) => void;
-    protected lastErrLineNum = 1
     protected status1a: UI512ElLabel;
     protected status2a: UI512ElLabel;
     protected status2b: UI512ElLabel;
-    protected statusErrMoreDetails: string;
+    protected lastErrInfo: O<[string, string, number, VpcErrStage]>;
     readonly monaco = `monaco_9_${textFontStylingToString(TextFontStyling.Default)}`;
     readonly genevaPlain = `geneva_10_${textFontStylingToString(TextFontStyling.Default)}`;
     readonly genevaBold = `geneva_10_${textFontStylingToString(TextFontStyling.Bold)}`;
@@ -55,10 +54,17 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             [/^function\s+(\w+)\b/, /^end\s+%MATCH%\b/, 'end %MATCH%']
         ];
 
-        this.autoIndent.caseSensitive = true;
+        this.autoIndent.caseSensitive = false;
         this.autoIndent.useTabs = true;
         this.autoIndent.useAutoIndent = true;
         this.autoIndent.useAutoCreateBlock = true;
+    }
+
+    /**
+     * a higher layer will tells us info about the current error
+     */
+    setLastErrInfo(velId: string, errDetails: string, lineNum: number, stage: VpcErrStage) {
+        this.lastErrInfo = [velId, errDetails, lineNum, stage];
     }
 
     /**
@@ -131,7 +137,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
         let grp = app.getGroup(this.grpId);
         if (!vel) {
-            this.setStatusLabeltext('', undefined, '', '');
+            this.setContent(lng('lngElement not found.'));
             grp.getEl(this.getElId('caption')).set('labeltext', lng('lngElement not found.'));
         } else {
             let caption = grp.getEl(this.getElId('caption'));
@@ -148,8 +154,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             this.el.set('selcaret', selcaret);
             this.el.set('selend', selend);
             this.el.set('scrollamt', scrl);
-
-            this.refreshStatusLabels(app, vel);
+            this.refreshStatusLabels(app);
         }
     }
 
@@ -157,120 +162,71 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * refresh status labels,
      * shows the last error encountered by the codeExec object
      */
-    protected refreshStatusLabels(app: UI512Application, vel: VpcElBase) {
-        checkThrow(false, 'nyi');
-        //~ let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
-        //~ this.status2a.set('labeltext', '');
-        //~ if (lastScriptErr && lastScriptErr.velId === vel.id) {
-        //~ /* check for "encountered" err */
-        //~ this.setStatusLabeltext(
-        //~ 'lngEncountered a script error:',
-        //~ lastScriptErr.lineNumber,
-        //~ cleanExceptionMsg(lastScriptErr.details),
-        //~ cleanExceptionMsg(lastScriptErr.details)
-        //~ );
-        //~ } else {
-        //~ /* check for syntax err */
-        //~ let err: O<Error>;
-        //~ try {
-        //~ let rawCode = vel.getS('script');
-        //~ this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
-        //~ } catch (e) {
-        //~ err = e;
-        //~ }
-
-        //~ if (err) {
-        //~ let errGot = this.vci.getCodeExec().getOrGenerateScriptErr(err);
-        //~ this.setStatusLabeltext(
-        //~ 'lngSyntax error:',
-        //~ errGot.lineNumber,
-        //~ cleanExceptionMsg(errGot.details),
-        //~ cleanExceptionMsg(errGot.details)
-        //~ );
-        //~ } else {
-        //~ this.setStatusLabeltext('', undefined, '', '');
-        //~ }
-        //~ }
-
-        //~ let grp = app.getGroup(this.grpId);
-        //~ let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
-        //~ if (slength(this.status2a.getS('labeltext')) || this.needsCompilation.find(vel.id)) {
-        //~ btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
-        //~ } else {
-        //~ btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
-        //~ }
-    }
-
-    /**
-     * set status label,
-     * sType is untranslated,
-     * sMsg and sMsgMore are already translated
-     */
-    protected setStatusLabeltext(sType: string, n: O<number>, sMsg: string, sMsgMore: string) {
-        this.status1a.set('labeltext', lng(sType));
-        this.status2b.set('labeltext', UI512DrawText.setFont(tostring(sMsg), this.monaco));
-
-        this.statusErrMoreDetails = tostring(sMsgMore);
-        if (n === undefined) {
-            this.status2a.set('labeltext', '');
+    refreshStatusLabels(app: UI512Application) {
+        if (this.lastErrInfo) {
+            let [velId, errDetails, lineNum, stage] = this.lastErrInfo;
+            let sStage = getEnumToStrOrFallback(VpcErrStage, stage);
+            this.status1a.set('labeltext', sStage);
+            let sLine = ` ${lineNum}`;
+            sLine = UI512DrawText.setFont(sLine, this.monaco);
+            this.status2a.set('labeltext', sLine);
+            let sAll = `Script error: ${errDetails}`;
+            sAll = UI512DrawText.setFont(sAll, this.monaco);
+            this.status2b.set('labeltext', sAll);
         } else {
-            let txt = lng('lngLine') + ` ${n},`;
-            txt = UI512DrawText.setFont(txt, this.monaco);
-            this.status2a.set('labeltext', txt);
+            this.status1a.set('labeltext', '');
+            this.status2a.set('labeltext', '');
+            this.status2b.set('labeltext', '');
+        }
+
+        /* does script have unsaved changes? */
+        let velid = this.vci.getOptionS('viewingScriptVelId');
+
+        let grp = app.getGroup(this.grpId);
+        let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
+        if (this.needsToBeSaved.find(velid)) {
+            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
+        } else {
+            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
         }
     }
 
     /**
      * user has clicked 'Save Script'
      */
-    protected onBtnCompile() {
+    protected onBtnSaveScript() {
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
         if (!vel) {
             return;
         }
 
-        /* run compilation */
+        /* saves script */
         this.saveChangesToModel(this.vci.UI512App(), false);
 
-        checkThrow(false, 'nyi');
-        //~ /* how to check for syntax errors... try finding a handler on it? */
-        //~ let rawCode = vel.getS('script');
-        //~ this.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(rawCode, 'anyHandlerName', vel.id);
+        /* clear the encountered error message */
+        this.lastErrInfo = undefined;
+        this.needsToBeSaved.remove(vel.id);
+        this.refreshStatusLabels(this.vci.UI512App());
+        this.vci.causeUIRedraw();
 
-        //~ /* hide the "just encountered" message. */
-        //~ /* seems ok to do -- also might be possible for user to click hide. */
-        //~ let lastScriptErr = this.vci ? this.vci.getCodeExec().lastEncounteredScriptErr : undefined;
-        //~ if (lastScriptErr && lastScriptErr.velId === vel.id) {
-        //~ this.vci.getCodeExec().lastEncounteredScriptErr = undefined;
-        //~ }
-
-        //~ /* refresh. setting script does trigger uiredraw, but script has already been updated */
-        //~ /* because saveChangesToModel was called in mousedown.
-        //~ so need to manually cause update */
-        //~ this.needsCompilation.remove(vel.id);
-        //~ this.vci.causeUIRedraw();
+        /* we used to check for syntax errors here. */
     }
 
     /**
      * scroll to and highlight the target line
      */
-    scrollToErrorPosition(pr: O<UI512PresenterBase>, lineNumber:number) {
-        /* parse the line number out of the label text */
-        //~ let lineNumberText = this.status2a.getS('labeltext');
-        //~ if (this.el && lineNumberText.length > 0) {
-            //~ lineNumberText = lineNumberText.split(' ')[1].replace(/,/g, '');
-            //~ let lineNumber = Util512.parseInt(lineNumberText);
-            this.lastErrLineNum = lineNumber
-            if (lineNumber !== undefined) {
-                lineNumber = Math.max(0, lineNumber - 1); /* from 1-based to 0-based */
-                let gel = new UI512ElTextFieldAsGeneric(this.el);
-                TextSelModify.selectLineInField(gel, lineNumber);
+    scrollToErrorPosition(pr: O<UI512PresenterBase>) {
+        if (this.lastErrInfo !== undefined) {
+            let lineNum = this.lastErrInfo[2] ?? 0;
+            lineNum -= 1; /* from 1-based to 0-based */
+            lineNum = Math.max(0, lineNum);
+            let gel = new UI512ElTextFieldAsGeneric(this.el);
+            TextSelModify.selectLineInField(gel, lineNum);
 
-                if (pr) {
-                    pr.setCurrentFocus(this.el.id);
-                }
+            if (pr) {
+                pr.setCurrentFocus(this.el.id);
             }
-        //~ }
+        }
     }
 
     /**
@@ -285,19 +241,19 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             /* make the 'save' button bold since we have unsaved changes */
             let vel = this.cbGetAndValidateSelectedVel('selectedVelId');
             if (vel) {
-                this.needsCompilation.set(vel.id, true);
-                this.refreshStatusLabels(this.vci.UI512App(), vel);
+                this.needsToBeSaved.set(vel.id, true);
+                this.refreshStatusLabels(this.vci.UI512App());
             }
         }
 
         super.respondKeydown(d);
 
         /* typically changes are saved to model after every keypress,
-        but let's save even more often, after every Enter key is pressed.
-        this way, when you hit undo, it won't take you back too far.
+        but let's save less often, after every Enter key is pressed.
+        this way, it's better when you hit undo.
         note that we call saveChangesToModel after super.respondKeydown
         in order to include any indentation/text insertion changes.*/
-        if (d.readableShortcut.search(/\bEnter\b/) !== -1) {
+        if (d.readableShortcut.toLowerCase().search(/\benter\b/) !== -1) {
             this.saveChangesToModel(this.vci.UI512App(), false);
         }
     }
@@ -315,7 +271,6 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
 
                 /* reset scroll, in case the last script we saw was really long */
                 this.el.set('scrollamt', 0);
-
                 this.refreshFromModel(app);
             }
         } else {
@@ -326,14 +281,15 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 this.vci.setOption('viewingScriptVelId', '');
             } else if (short === 'btnScriptEditorCompile') {
                 /* user clicked 'save script' */
-                this.onBtnCompile();
+                this.onBtnSaveScript();
             } else if (short === 'status2a') {
                 /* user clicked the line number, scroll to that line */
-                this.scrollToErrorPosition(undefined, this.lastErrLineNum);
+                this.scrollToErrorPosition(undefined);
             } else if (short === 'status2b') {
                 /* user clicked the error message, show the details */
-                if (!this.statusErrMoreDetails.match(/^\s*$/)) {
-                    this.cbAnswerMsg(this.statusErrMoreDetails, () => {});
+                if (this.lastErrInfo) {
+                    let s = `Details: ${this.lastErrInfo[1]}`;
+                    this.cbAnswerMsg(s, () => {});
                     /* remember to not run other code after showing modal dialog */
                 }
             }
@@ -351,9 +307,6 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      * there are unsaved changes
      */
     saveChangesToModel(app: UI512Application, onlyCheckIfDirty: boolean) {
-        /* note: here we will save the script text to the 'script' property */
-        /* it is not until the user clicks Compile that the compiled script changes. */
-        /* using this design because previously the compilation errors would often pop up. */
         let vel = this.cbGetAndValidateSelectedVel('viewingScriptVelId');
         if (!vel || !this.el) {
             return;

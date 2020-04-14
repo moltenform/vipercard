@@ -841,9 +841,10 @@ export class MapKeyToObject<T> {
     add(key: string, obj: T) {
         assertTrue(slength(key) > 0, `3^|invalid id ${key}`);
         checkThrow512(
-            this.objects[key] !== undefined,
+            this.objects[key] === undefined,
             `3]|duplicate key, ${key} already exists`
         );
+
         this.objects[key] = obj;
     }
 
@@ -878,29 +879,29 @@ export class MapKeyToObjectCanSet<T> extends MapKeyToObject<T> {
  * a quick way to trigger assertion if value is not what was expected.
  * 'hard' assert, does not let execution continue.
  */
-export function assertEq(
-    expected: unknown,
+export function assertEq<T>(
+    expected: T,
     got: unknown,
-    c1: string,
+    msg: string,
+    c1?: unknown,
     c2?: unknown,
-    c3?: unknown
-) {
+): asserts got is T {
     if (expected !== got && util512Sort(expected, got) !== 0) {
-        let msgAssertEq = longstr(`expected '${expected}' but got '${got}'.`);
-        assertTrue(false, msgAssertEq + c1, c2, c3);
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        assertTrue(false, msg + msgEq, c1, c2);
     }
 }
 
 export function assertWarnEq(
     expected: unknown,
     got: unknown,
-    c1: string,
+    msg: string,
+    c1?: unknown,
     c2?: unknown,
-    c3?: unknown
 ) {
     if (expected !== got && util512Sort(expected, got) !== 0) {
-        let msgAssertEq = longstr(`expected '${expected}' but got '${got}'.`);
-        assertWarn(false, msgAssertEq + c1, c2, c3);
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        assertWarn(false, msg + msgEq, c1, c2);
     }
 }
 
@@ -912,10 +913,11 @@ export function checkThrowEq512<T>(
     got: unknown,
     msg: string,
     c1: unknown = '',
-    c2: unknown = ''
+    c2: unknown = '',
 ): asserts got is T {
     if (expected !== got && util512Sort(expected, got) !== 0) {
-        checkThrow512(false, msg, c1, c2);
+        let msgEq = ` expected '${expected}' but got '${got}'.`;
+        checkThrow512(false, msg + msgEq, c1, c2);
     }
 }
 

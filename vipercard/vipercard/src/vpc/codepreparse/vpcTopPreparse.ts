@@ -124,7 +124,7 @@ export namespace VpcTopPreparse {
         if (lexed.errors.length) {
             VpcCurrentScriptStage.latestSrcLineSeen = lexed.errors[0].line;
             VpcCurrentScriptStage.origClass = 'chevrotain.lex';
-            let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
+            let errmsg = lexed.errors[0]?.message?.substr(0, CodeLimits.LimitChevErrStringLen);
             checkThrow(false, `5(|lex error: ${errmsg}`);
         }
 

@@ -104,7 +104,7 @@ export class VpcExecTop {
         /* an error might be thrown, for example if
         the script has a lexer error. */
         try {
-            newWork.getHandlerToExecOrThrow();
+            newWork.getAndRunHandlerOrThrow();
             if (newWork.stack.length > 1) {
                 this.workQueue.push(newWork);
             }

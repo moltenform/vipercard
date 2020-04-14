@@ -508,13 +508,20 @@ t.test('testScriptParseExpr.get rect property', () => {
 t.test('disallow double identifiers', () => {
     /* if two consecutive identifiers is a valid expression,
     harder to parse commands correctly */
-    testExp(`x`, 'parses');
     assertFailsParseExp(`x y`, `Exception`);
     assertFailsParseExp(`x y z`, `Exception`);
-    assertFailsParseExp(`7 x`, `Exception`);
-    assertFailsParseExp(`x 7`, `Exception`);
     assertFailsParseExp(`7x`, `Lexer:lexerror`);
     assertFailsParseExp(`???`, `Lexer:lexerror`);
+    /* try all orders of two consecutive literals */
+    assertFailsParseExp(`7 7`, `Exception`);
+    assertFailsParseExp(`7 x`, `Exception`);
+    assertFailsParseExp(`7 "a"`, `Exception`);
+    assertFailsParseExp(`x 7`, `Exception`);
+    assertFailsParseExp(`x x`, `Exception`);
+    assertFailsParseExp(`x "a"`, `Exception`);
+    assertFailsParseExp(`"a" 7`, `Exception`);
+    assertFailsParseExp(`"a" x`, `Exception`);
+    assertFailsParseExp(`"a" "a"`, `Exception`);
 });
 /**
  * wrapper around testParse, for testing parsing an expression

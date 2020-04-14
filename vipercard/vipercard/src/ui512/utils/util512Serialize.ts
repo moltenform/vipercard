@@ -1,6 +1,6 @@
 
 /* auto */ import { isString } from './util512Base';
-/* auto */ import { assertWarn } from './util512AssertCustom';
+/* auto */ import { checkThrow512 } from './util512AssertCustom';
 /* auto */ import { NoParameterCtor, Util512 } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -18,13 +18,13 @@ export namespace Util512SerializableHelpers {
      * serialize a typescript object to a plain json map of strings to strings
      */
     export function serializeObj<T extends IsUtil512Serializable>(obj: T) {
-        assertWarn(obj.__isUtil512Serializable, 'must be a isUtil512Serializable');
+        checkThrow512(obj.__isUtil512Serializable, 'must be a isUtil512Serializable');
         let objToSend: { [key: string]: unknown } = {};
         for (let prop in obj) {
             if (shouldSerializeProperty(obj, prop)) {
                 let isOpt = prop.startsWith('optional_');
                 if (isOpt) {
-                    assertWarn(
+                    checkThrow512(
                         obj[prop] === undefined ||
                             obj[prop] === null ||
                             isString(obj[prop]),
@@ -35,7 +35,7 @@ export namespace Util512SerializableHelpers {
                         objToSend[propDest] = obj[prop];
                     }
                 } else {
-                    assertWarn(isString(obj[prop]), 'we currently only support strings');
+                    checkThrow512(isString(obj[prop]), 'we currently only support strings');
                     objToSend[prop] = obj[prop];
                 }
             }
@@ -60,20 +60,20 @@ export namespace Util512SerializableHelpers {
         incoming: IsUtil512Serializable
     ): T {
         let objNew = new ctor();
-        assertWarn(objNew.__isUtil512Serializable, 'must be a isUtil512Serializable');
+        checkThrow512(objNew.__isUtil512Serializable, 'must be a isUtil512Serializable');
         let prop = '';
         for (prop in objNew) {
             if (shouldSerializeProperty(objNew, prop)) {
                 let isOpt = prop.startsWith('optional_');
                 if (isOpt) {
-                    assertWarn(
+                    checkThrow512(
                         objNew[prop] === undefined ||
                             objNew[prop] === null ||
                             isString(objNew[prop]),
                         'we currently only support strings'
                     );
                     let propSrc = prop.slice('optional_'.length);
-                    assertWarn(
+                    checkThrow512(
                         isString(incoming[propSrc]) ||
                             incoming[propSrc] === null ||
                             incoming[propSrc] === undefined,
@@ -82,15 +82,15 @@ export namespace Util512SerializableHelpers {
                     objNew[prop] =
                         incoming[propSrc] === null ? undefined : incoming[propSrc];
                 } else {
-                    assertWarn(
+                    checkThrow512(
                         isString(objNew[prop]),
                         'we currently only support strings'
                     );
-                    assertWarn(
+                    checkThrow512(
                         incoming[prop] !== undefined,
                         `did not see required field ${prop}`
                     );
-                    assertWarn(
+                    checkThrow512(
                         isString(incoming[prop]),
                         `field ${prop} not a string, only support strings`
                     );

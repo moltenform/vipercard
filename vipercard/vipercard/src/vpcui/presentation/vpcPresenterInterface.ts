@@ -51,7 +51,7 @@ export abstract class VpcPresenterInterface extends UI512Presenter {
     abstract askMsgAsync(prompt: string, defText: string): Promise<[O<string>, number]>;
     abstract answerMsgAsync(prompt: string, choice1?: string, choice2?: string, choice3?: string): Promise<number>;
     abstract isDocDirty(): boolean;
-    abstract showError(scriptErr: VpcErr): void;
+    abstract defaultShowScriptErr(scriptErr: VpcErr): void;
     abstract getSerializedStack(): string;
     abstract getToolResponse(t: VpcTool): VpcAppUIToolBase;
     abstract refreshCursor(): void;

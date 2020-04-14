@@ -67,7 +67,9 @@ export class VpcSuperRewrite {
                 let terms = line.split(/\s+/);
                 ret.push([]);
                 for (let term of terms) {
-                    this.addTerm(ret, term, args, realTokenAsBasis, needsToBePostProcess);
+                    if (term) {
+                        this.addTerm(ret, term, args, realTokenAsBasis, needsToBePostProcess);
+                    }
                 }
             }
         }

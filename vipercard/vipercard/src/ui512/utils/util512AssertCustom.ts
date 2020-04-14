@@ -57,7 +57,10 @@ export class Util512BaseErr {
         let e = new Error();
         let err = fnCtor(...params);
         Object.assign(e, err);
-        return (e as any) as T;
+        let cls = (e as any) as T;
+        cls.clsAsErr = err.clsAsErr.bind(e);
+        cls.addErr = err.addErr.bind(e);
+        return cls;
     }
 
     protected static gen(message: string, level: string) {
@@ -123,8 +126,9 @@ export function assertTrue(
     s3?: unknown
 ): asserts condition {
     if (!condition) {
+        console.error(s1, s2 ?? '', s3 ?? '')
         callDebuggerIfNotInProduction();
-        throw make512Error('O#|assertion failed:', s1, s2, s3).clsAsErr();
+        throw make512Error('assertion failed:', s1, s2, s3).clsAsErr();
     }
 }
 
@@ -137,8 +141,9 @@ export function assertWarn(
     s1: string,
     s2?: unknown,
     s3?: unknown
-): asserts condition {
+) {
     if (!condition) {
+        console.error(s1, s2 ?? '', s3 ?? '')
         callDebuggerIfNotInProduction();
         let msg = joinIntoMessage('assert:', 'ui512', s1, s2, s3);
         if (!UI512ErrorHandling.silenceWarnings) {
@@ -166,7 +171,7 @@ export function checkThrow512(
     s2: unknown = ''
 ): asserts condition {
     if (!condition) {
-        throw make512Error(`O |${msg} ${s1} ${s2}`).clsAsErr();
+        throw make512Error(msg, s1, s2).clsAsErr()
     }
 }
 

@@ -275,12 +275,9 @@ t.test('_vpcProperties', () => {
     ];
     h.testBatchEvaluate(batch);
 
-    h.updateObjectScript(h.vcstate.model.stack.id, 'on stackscript\nend stackscript');
-    h.updateObjectScript(h.vcstate.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
-    h.updateObjectScript(
-        h.vcstate.model.stack.bgs[1].cards[1].id,
-        'on cdscript\nend cdscript'
-    );
+    h.setScript(h.vcstate.model.stack.id, 'on stackscript\nend stackscript');
+    h.setScript(h.vcstate.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
+    h.setScript(h.vcstate.model.stack.bgs[1].cards[1].id, 'on cdscript\nend cdscript');
     batch = [
         /* stack get and set */
         ['length(the script of this stack) > 1', `true`],

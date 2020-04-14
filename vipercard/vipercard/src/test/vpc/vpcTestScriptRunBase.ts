@@ -5,12 +5,12 @@
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { VpcElType, VpcOpCtg, VpcTool, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
+/* auto */ import { Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
@@ -50,8 +50,8 @@ export class TestVpcScriptRunBase {
                 this.pr.setTool(VpcTool.Browse)
             );
 
-            /* make showError a no-op instead of opening the script. */
-            this.pr.showError = a => {};
+            /* ensure that it won't try to open the script in ui. */
+            this.pr.defaultShowScriptErr = () => {};
         }
 
         this.initedAppl = true;
@@ -60,6 +60,11 @@ export class TestVpcScriptRunBase {
     async startEnvironment(): Promise<[VpcPresenter, VpcState]> {
         let loader = new VpcIntroProvider('', '', VpcDocumentLocation.NewDoc);
         return loader.loadDocumentTop();
+    }
+
+    setScript(id: string, s: string) {
+        let v = this.vcstate.model.getByIdUntyped(id);
+        v.set('script', s);
     }
 
     populateModel() {
@@ -174,25 +179,6 @@ export class TestVpcScriptRunBase {
         this.simClickY = b.getN('y') + 8;
     }
 
-    updateObjectScript(id: string, code: string) {
-        checkThrow(false, 'nyi');
-        //~ this.vcstate.runtime.codeExec.cbOnScriptError = errFromScript => {
-        //~ let idScriptErr = errFromScript.velId;
-        //~ let n = errFromScript.lineNumber;
-        //~ let isUs = !errFromScript.isExternalException;
-        //~ let msg = errFromScript.details;
-        //~ let lns = built.split('\n');
-        //~ let culpritLine = n ? lns[n - 1] + '; ' + lns[n] : '';
-        //~ assertTrue(false, `2b|script error, looks like <${culpritLine}> ${n}`, msg);
-        //~ };
-
-        //~ let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
-        //~ let obj = this.vcstate.model.getByIdUntyped(id);
-        //~ this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
-        //~ this.vcstate.vci.getCodeExec().cachedAST.
-        //~ findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', obj.id)
-    }
-
     runGeneralCode(
         codeBefore: string,
         codeIn: string,
@@ -202,60 +188,47 @@ export class TestVpcScriptRunBase {
         addNoHandler?: boolean
     ) {
         let caughtErr = false;
-        //~ let isCompilationStage = true;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
-            checkThrow(false, 'nyi');
-            //~ let msg = scriptErr.details;
-            //~ let velId = '';
-            //~ let line = -1;
-            //~ this.vcstate.vci.undoableAction(() => {
-            //~ let [reVelId, reLine] = VpcPresenter.(
-            //~ this.vcstate.vci,
-            //~ scriptErr
-            //~ );
-            //~ velId = reVelId;
-            //~ line = reLine;
-            //~ this.vcstate.vci.setTool(VpcTool.Browse);
-            //~ });
+            let msg = scriptErr.message;
+            let velId = scriptErr.scriptErrVelid ?? 'unknown';
+            let line = scriptErr.scriptErrLine ?? -1;
+            this.vcstate.vci.undoableAction(() => {
+                this.vcstate.vci.setTool(VpcTool.Browse);
+            });
 
-            //~ if (expectCompErr !== undefined && isCompilationStage !== expectCompErr) {
-            //~ let lns = built.split('\n');
-            //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-            //~ assertWarn(
-            //~ false,
-            //~ '2a|got error at the wrong stage',
-            //~ culpritLine,
-            //~ msg
-            //~ );
-            //~ } else if (expectErrMsg) {
-            //~ assertWarnEq(expectErrLine, line, codeBefore, codeIn, '2Z|');
-            //~ if (!msg.includes(expectErrMsg)) {
-            //~ this.t.warnAndAllowToContinue(
-            //~ 'DIFFERENT ERR MSG for input ' +
-            //~ codeBefore
-            //~ .replace(/\n/g, '; ')
-            //~ .replace(/global testresult; ;/g, '') +
-            //~ codeIn
-            //~ .replace(/\n/g, '; ')
-            //~ .replace(/global testresult; ;/g, '') +
-            //~ ` expected ${expectErrMsg} and got`
-            //~ );
+            let makeWarningUseful = '';
+            let lns = built.split('\n');
+            line = line - 1; // 1-based index
+            if (line >= 0 && line < lns.length) {
+                makeWarningUseful += `culprit line: <${lns[line]}>`;
+            } else {
+                makeWarningUseful += `lines: <${lns.join('; ')}>`;
+            }
+            makeWarningUseful = makeWarningUseful.replace(/global testresult; /g, '');
+            makeWarningUseful += ` v=${velId} msg=\n${msg}`;
 
-            //~ console.error(msg.replace(/\n/g, '; '));
-            //~ caughtErr = true;
-            //~ return;
-            //~ }
-            //~ } else {
-            //~ let lns = built.split('\n');
-            //~ let culpritLine = line ? lns[line - 1] + '; ' + lns[line] : '';
-            //~ assertTrue(
-            //~ false,
-            //~ `2X|script error, looks like <${culpritLine}> ${line}`,
-            //~ msg
-            //~ );
-            //~ }
+            if (expectErrMsg !== undefined) {
+                assertWarn(
+                    msg.includes(expectErrMsg),
+                    `wrong err message, expected <${expectErrMsg}>`,
+                    makeWarningUseful
+                );
+            }
 
-            //~ caughtErr = true;
+            if (expectErrLine !== undefined) {
+                assertWarnEq(expectErrLine, scriptErr.scriptErrLine, makeWarningUseful);
+            }
+
+            if (expectCompErr) {
+                assertWarn(
+                    scriptErr.stage !== VpcErrStage.Execute &&
+                        scriptErr.stage !== VpcErrStage.Visit &&
+                        scriptErr.stage !== VpcErrStage.SyntaxStep,
+                    makeWarningUseful
+                );
+            }
+
+            caughtErr = true;
         };
 
         let built = addNoHandler
@@ -269,23 +242,6 @@ export class TestVpcScriptRunBase {
 
         let btnGo = this.vcstate.model.getById(VpcElButton, this.elIds.btn_go);
         this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));
-        this.vcstate.vci
-            .getCodeExec()
-            .cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(
-                built,
-                'mouseup',
-                btnGo.id
-            );
-        if (caughtErr) {
-            return;
-        } else if (expectErrMsg && expectCompErr) {
-            assertWarn(
-                false,
-                "2W|we expected it to throw error but it didn't",
-                codeBefore,
-                codeIn
-            );
-        }
 
         /* fake a click inside btnGo */
         assertEq(VpcTool.Browse, this.pr.getTool(), 'HY|');
@@ -310,7 +266,7 @@ export class TestVpcScriptRunBase {
         );
 
         if (expectErrMsg && !caughtErr) {
-            this.t.warnAndAllowToContinue('2U|error not seen', codeBefore, codeIn);
+            assertWarn(false, '2U|error not seen', codeBefore, codeIn);
         }
 
         assertTrue(
@@ -399,7 +355,8 @@ put ${s} into testresult`;
                         )
                         .readAsString() !== 'true'
                 ) {
-                    this.t.warnAndAllowToContinue(
+                    assertWarn(
+                        false,
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
                             '; '
@@ -412,7 +369,8 @@ put ${s} into testresult`;
                 let gt = got.readAsString();
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
-                    this.t.warnAndAllowToContinue(
+                    assertWarn(
+                        false,
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
                             '; '

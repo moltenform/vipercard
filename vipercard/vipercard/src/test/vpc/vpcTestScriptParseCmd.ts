@@ -3,7 +3,7 @@
 /* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { BuildFakeTokens, cloneToken } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq, assertWarnEq, longstr, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
@@ -225,7 +225,7 @@ t.test('LexerRemembersInitialLine', () => {
     let lexer = TestParseHelpers.instance.lexer;
     let input = 'put\\\n 4\\\n into\\\n x\nput 5\\\n into y';
     let lexResult = lexer.tokenize(input);
-    assertTrue(!lexResult.errors.length, `HX|${lexResult.errors[0]}`);
+    assertTrue(!lexResult.errors.length, `HX|${lexResult.errors[0]?.message}`);
     assertEq(9, lexResult.tokens.length, 'HW|');
     assertEq(
         '1,2,3,4,4,5,5,6,6',
@@ -243,7 +243,7 @@ t.test('CloneToken', () => {
     let lexer = TestParseHelpers.instance.lexer;
     let input = 'put 4 into x';
     let lexResult = lexer.tokenize(input);
-    assertTrue(!lexResult.errors.length, `HS|${lexResult.errors[0]}`);
+    assertTrue(!lexResult.errors.length, `HS|${lexResult.errors[0]?.message}`);
     assertEq(4, lexResult.tokens.length, 'HR|');
     assertEq('put,4,into,x', lexResult.tokens.map(o => o.image).join(','), 'HQ|');
 
@@ -291,15 +291,16 @@ export class TestParseHelpers {
         if (sErrExpected.startsWith('Lexer:')) {
             sErrExpected = sErrExpected.substr('Lexer:'.length);
             if (!lexResult.errors.length) {
-                t.warnAndAllowToContinue(
+                assertWarn(
+                    false,
                     "expected a lexer error but there weren't any",
-                    `${lexResult.errors[0]}`
+                    `${lexResult.errors[0]?.message}`
                 );
             } else {
                 return;
             }
         } else {
-            assertTrue(!lexResult.errors.length, `1,|${lexResult.errors[0]}`);
+            assertWarn(!lexResult.errors.length, `1,|${lexResult.errors[0]?.message}`);
         }
 
         let line = lexResult.tokens;
@@ -312,6 +313,7 @@ export class TestParseHelpers {
         );
         this.parser.input = line;
         let cst = Util512.callAsMethodOnClass('parser', this.parser, sTopRule, [], false);
+        assertWarn(sExpected === '' || sExpected === 'parses', "we don't check the cst anymore")
         let shouldCont = this.testParseRespondToErrs(sInput, sErrExpected, cst);
         if (!shouldCont) {
             return;
@@ -325,33 +327,25 @@ export class TestParseHelpers {
     protected testParseRespondToErrs(sInput: string, sErrExpected: string, cst: any) {
         if (this.parser.errors.length) {
             if (sErrExpected.length) {
-                if (sErrExpected === 'GETTING') {
-                    let got = this.parser.errors[0]
-                        .toString()
-                        .substr(0, 50)
-                        .split('\r')[0]
-                        .split('\n')[0];
-                    t.warnAndAllowToContinue(`for input ${sInput} got\n${got}`);
-                    return false;
-                }
-
-                if (!this.parser.errors[0].toString().includes(sErrExpected)) {
+                /* add the exception name, for backwards compat */
+                let compatName = this.parser.errors[0].name + ': ' + this.parser.errors[0].message
+                if (!compatName.includes(sErrExpected)) {
                     let s = longstr(
                         `1+|for input ${sInput} got different
                         failure message, expected ${sErrExpected} ${this.parser.errors}`
                     );
-                    t.warnAndAllowToContinue(s);
+                    assertWarn(false, s);
                 }
 
                 return false;
             } else {
                 let s = `1*|for input ${sInput} got parse errors ${this.parser.errors}`;
-                t.warnAndAllowToContinue(s);
+                assertWarn(false, s);
             }
         } else {
             if (sErrExpected.length > 0) {
-                let s = `1)|for input ${sInput} expected failure but succeeded.`;
-                t.warnAndAllowToContinue(s);
+                let s = `1&|for input ${sInput} expected failure but succeeded.`;
+                assertWarn(false, s);
             }
         }
 

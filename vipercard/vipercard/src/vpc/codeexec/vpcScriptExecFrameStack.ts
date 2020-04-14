@@ -17,7 +17,7 @@
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, getEnumToStrOrFallback, getStrToEnum, lastIfThere, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, getEnumToStrOrFallback, getStrToEnum, lastIfThere, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -83,7 +83,7 @@ export class VpcExecFrameStack {
      * send a message, like "on mouseUp", and see if anything in the message hierarchy responds
      * if something responds, push it onto the stack so that it's ready to execute
      */
-    getHandlerToExecOrThrow() {
+    getAndRunHandlerOrThrow() {
         let chain = VpcExecFrame.getMessageChain(this.originalMsg.targetId, undefined, this.outside);
         if (this.originalMsg instanceof VpcScriptMessageMsgBoxCode) {
             return this.startHandlerMsgBox(this.originalMsg);
@@ -108,8 +108,14 @@ export class VpcExecFrameStack {
             codeToCompile += '\n' + VpcScriptMessageMsgBoxCode.markIntentionalErr;
         }
 
-        let dynamicCodeOrigin:[string, number] = ['messagebox', 0]
-        let [[ast, lineRef], newHandlerName] = this.visitCallDynamicHelper(codeToCompile, meId, statedParentId, targetId);
+        let dynamicCodeOrigin: [string, number] = ['messagebox', 0];
+        let [ast, lineRef, newHandlerName] = this.visitCallDynamicHelper(
+            codeToCompile,
+            meId,
+            statedParentId,
+            targetId,
+            dynamicCodeOrigin
+        );
         this.pushStackFrame(newHandlerName, obj, ast, lineRef, meId, statedParentId, dynamicCodeOrigin);
     }
 
@@ -201,7 +207,7 @@ export class VpcExecFrameStack {
             VpcCurrentScriptStage.latestDestLineSeen = curLine;
             VpcCurrentScriptStage.origClass = undefined;
             VpcCurrentScriptStage.latestVelID = curFrame.meId;
-            VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin
+            VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
             this.runOneLineOrThrowImpl(curFrame, curLine, blocked);
             return false;
         } else {
@@ -576,8 +582,14 @@ export class VpcExecFrameStack {
         curFrame.next();
         let meId = velTarget.id;
         let statedParentId = velTarget.id;
-        let dynamicCodeOrigin:[string, number] = [curFrame.meId, curLine.firstToken.startLine ?? 0]
-        let [[ast, lineref], newHandlerName] = this.visitCallDynamicHelper(codeToCompile, meId, statedParentId, velTarget.id);
+        let dynamicCodeOrigin: [string, number] = [curFrame.meId, curLine.firstToken.startLine ?? 0];
+        let [ast, lineref, newHandlerName] = this.visitCallDynamicHelper(
+            codeToCompile,
+            meId,
+            statedParentId,
+            velTarget.id,
+            dynamicCodeOrigin
+        );
         this.callCodeAtATarget(
             curFrame,
             ast,
@@ -593,33 +605,49 @@ export class VpcExecFrameStack {
 
     /**
      * run dynamically-built code like 'send "answer 1+1" to cd btn "myBtn"'
-        confirmed in the product when running `send`, "the target" and "me"
-        are both set to the receipient of the event
+        confirmed in the product when running `send`,
+        "the target" and "me" are both set to the recipient of the event
      */
     visitCallDynamicHelper(
         codeToCompile: string,
         meId: string,
         statedParentId: string,
-        targetId: string
-    ): [[VpcParsedCodeCollection, VpcCodeLineReference], string] {
-        /* for compatibility with original product, if there's no return statement,
-        return the last result that was computed. see the myCompute example in the docs. */
-        /* build a new temporary handler, then call it.
-        it's a bit inefficent because we might have to re-preparse everything in the file. */
-        //~ let newHandlerName = 'vpcinternaltmpcode';
-        //~ let code = `
-        //~ on ${newHandlerName}
-        //~ ${codeToCompile}
-        //~ return the result
-        //~ end ${newHandlerName}
-        //~ `.replace(/\r\n/g, '\n');
+        targetId: string,
+        dynamicCodeOrigin: [string, number]
+    ): [VpcParsedCodeCollection, VpcCodeLineReference, string] {
+        /* confirmed in original product: if there's no return statement,
+        return the last result that was computed. send "myCompute" to cd btn 4,
+        it would make sense that the result is set to the result of myCompute.
 
-        assertTrue(false, 'nyi');
+        build a new temporary handler, then call it.
+        give the temp handler a unique name?
+        seems safer, but then it couldn't be cached. */
+        let newHandlerName = 'vpcinternaltmpcode';
+        let code = longstr(
+            `
+        on ${newHandlerName}
+        ${codeToCompile}
+        return the result
+        end ${newHandlerName}
+        `,
+            '\n'
+        );
 
-        //~ let compiled = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(code, newHandlerName, meId);
-        //~ checkThrow(compiled, 'did not find the handler we just created');
-
-        //~ return [compiled, newHandlerName];
+        VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.latestVelID = meId;
+        VpcCurrentScriptStage.dynamicCodeOrigin = dynamicCodeOrigin;
+        let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(code, newHandlerName, meId);
+        checkThrow(lineRef, 'did not find the handler we just created?');
+        VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.latestVelID = meId;
+        VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
+        return [codeColl, lineRef, newHandlerName];
     }
 
     private callCodeAtATarget(
@@ -631,7 +659,7 @@ export class VpcExecFrameStack {
         statedParentId: string,
         velTargetId: string,
         msg: VpcBuiltinMsg,
-        dynamicCodeOrigin:O<[string, number]>
+        dynamicCodeOrigin: O<[string, number]>
     ) {
         curFrame.locals.set('$result', VpcVal.Empty);
 
@@ -642,7 +670,15 @@ export class VpcExecFrameStack {
         newScriptMessage.targetId = velTargetId;
         newScriptMessage.msgName = getEnumToStrOrFallback(VpcBuiltinMsg, msg);
         newScriptMessage.msg = msg;
-        let newFrame = this.pushStackFrame(newHandlerName, newScriptMessage, code, linref, meId, statedParentId, dynamicCodeOrigin);
+        let newFrame = this.pushStackFrame(
+            newHandlerName,
+            newScriptMessage,
+            code,
+            linref,
+            meId,
+            statedParentId,
+            dynamicCodeOrigin
+        );
         newFrame.args = [];
     }
 

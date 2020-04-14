@@ -2,20 +2,31 @@
 /* auto */ import { testCollectionvpcuiMsgBox } from './../vpc/vpcuiTestMsgBox';
 /* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
 /* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
-/* auto */ import { testCollectionvpcScriptRunSyntax } from './../vpc/vpcTestScriptRunSyntax';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
-/* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
+/* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
+/* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
-/* auto */ import { testCollectionUtil512Higher } from './../util512/testUtil512Higher';
+/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../util512/testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './../util512/testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './../util512/testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './../util512/testUtil512';
-/* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
+/* auto */ import { testCollectionUI512TextSelectEvents } from './../util512ui/testUI512TextSelectEvents';
+/* auto */ import { testCollectionUI512TextModify } from './../util512ui/testUI512TextModify';
+/* auto */ import { testCollectionUI512TextEdit } from './../util512ui/testUI512TextEdit';
+/* auto */ import { testCollectionUI512Paint } from './../util512ui/testUI512Paint';
+/* auto */ import { testCollectionUI512MenuRender } from './../util512ui/testUI512MenuRender';
+/* auto */ import { testCollectionUI512FormattedText } from './../util512ui/testUI512FormattedText';
+/* auto */ import { testCollectionUI512ElementsViewButtons } from './../util512ui/testUI512ElementsViewButtons';
+/* auto */ import { testCollectionUI512Elements } from './../util512ui/testUI512Elements';
+/* auto */ import { testCollectionUI512DrawText } from './../util512ui/testUI512DrawText';
+/* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
+/* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
+/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../util512/testExternalLibs';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -27,30 +38,29 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
-            testCollectionvpcScriptRunSyntax,
-            testCollectionvpcScriptParseCmd,
+            //~ testCollectionvpcScriptRunSyntax,
+            //~ testCollectionvpcScriptParseCmd,
             testCollectionvpcScriptParseExpr,
             testCollectionvpcChunkResolution,
             testCollectionvpcElements,
             testCollectionvpcuiMsgBox,
             testCollectionvpcuiIntroProvider,
             testCollectionvpcVpcVal,
-            //testCollectionUI512CodeEditor,
-            //testCollectionUI512Composites,
-            //testCollectionUI512DrawText,
-            //testCollectionUI512Elements,
-            //testCollectionUI512ElementsViewButtons,
-            //testCollectionUI512FormattedText,
-            //testCollectionUI512MenuRender,
-            //testCollectionUI512Paint,
-            //testCollectionUI512TextEdit,
-            //testCollectionUI512TextModify,
-            //testCollectionUI512TextSelectEvents,
-            //
-            //testCollectionUtilsCanvasWrapper,
-            //testCollectionUtilsDraw,
-            //testCollectionExampleAsyncTests,
-            //testCollectionUtil512LessUsefulLibs,
+            testCollectionUI512CodeEditor,
+            testCollectionUI512Composites,
+            testCollectionUI512DrawText,
+            testCollectionUI512Elements,
+            testCollectionUI512ElementsViewButtons,
+            testCollectionUI512FormattedText,
+            testCollectionUI512MenuRender,
+            testCollectionUI512Paint,
+            testCollectionUI512TextEdit,
+            testCollectionUI512TextModify,
+            testCollectionUI512TextSelectEvents,
+            testCollectionUtilsCanvasWrapper,
+            testCollectionUtilsDraw,
+            testCollectionExampleAsyncTests,
+            testCollectionUtil512LessUsefulLibs,
             testCollectionUtil512Higher,
             testCollectionUtil512Class,
             testCollectionUtil512,

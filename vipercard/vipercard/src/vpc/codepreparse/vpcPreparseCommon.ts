@@ -202,7 +202,7 @@ export class VpcCurrentScriptStage {
     static latestSrcLineSeen: O<number>;
     static latestDestLineSeen: O<VpcCodeLine>;
     static origClass: O<string>;
-    static dynamicCodeOrigin: O<[string, number]>
+    static dynamicCodeOrigin: O<[string, number]>;
 }
 
 /**

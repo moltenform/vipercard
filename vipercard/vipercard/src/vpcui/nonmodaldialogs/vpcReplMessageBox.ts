@@ -213,13 +213,13 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         /* go back to the previous tool */
         this.vci.setTool(this.rememberedTool);
         if (scriptErr && scriptErr.message && scriptErr.message.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)) {
-        /* it wasn't actually an error, we internally caused it */
+            /* it wasn't actually an error, we internally caused it */
         } else if (scriptErr) {
-        this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.clsAsErr()), true);
+            this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.clsAsErr()), true);
         } else {
-        this.appendToOutput('Unknown', true);
+            this.appendToOutput('Unknown', true);
         }
-        
+
         /* set focus back */
         this.vci.getPresenter().setCurrentFocus(this.entry.id);
     }
