@@ -92,16 +92,23 @@ export class VpcExecFrame {
 
     /**
     get the message chain.
-    edge case. send "foo" to btn 2
-    btn 2 then deletes itself.
-    btn 2 then calls doCardThing
-    doCardThing fails because the message chain is broken.
-    so should i evaluate the message chain as part of the frame?
-    maybe so!
-     */
-    /**
-    get message chain
-    the stated parent let's us have snippets of code that run in the context of an element's script,
+    we need to precompute the message chain in advance,
+    consider this case:
+        cd 4 has a doCardThing handler
+        you are on cd 1 and click a button that does this:
+        send "myMessage" to btn 1 of cd 4
+        btn 1's myMessage handler says
+            delete btn 1 of cd 4
+            doCardThing
+        
+        if we hadn't precomputed the message chain, it would
+        be hard to know how doCardThing would reach the right target.
+        
+    i confirmed in the product that the message chain is about
+    the parent card, not the current card.
+        
+    Note the "stated parent", it let's us have snippets of code that run
+    in the context of an element's script,
     but aren't actually in that script.
      */
     static getMessageChain(velId: string, statedParent: O<string>, outside: OutsideWorldReadWrite): string[] {
@@ -114,12 +121,6 @@ export class VpcExecFrame {
             vel = outside.FindVelById(statedParent);
             haveUsedStatedParent = true;
         }
-        /*
-        running code on a deleted object can happen: such as in an ondelete message.
-        in such cases this is a break in the chain--another good reason why we have a
-        statedParent. let's also, though, make sure the stack and product are in the chain
-        for the case where we're running code in and the background that has just been deleted.
-        */
 
         let loop = new LoopLimit(CodeLimits.MaxObjectsInMsgChain, 'maxObjectsInMsgChain');
         while (loop.next()) {

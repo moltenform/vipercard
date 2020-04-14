@@ -1,8 +1,8 @@
 
-/* auto */ import { RememberHistory } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { RememberHistory, VpcScriptMessageMsgBoxCode } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcErr, VpcTool } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcErr, VpcTool, cleanExceptionMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
@@ -207,20 +207,21 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
      * sometimes it's a script error we intentionally made!
      */
     onScriptErr(scriptErr: VpcErr) {
-        //~ /* note that script errors are to be expected --
-        //~ it's how we get the signal back after running a script,
-        //~ we intentionally try to call a handler that doesn't exist. */
-        //~ /* go back to the previous tool */
-        //~ this.vci.setTool(this.rememberedTool);
-        //~ if (scriptErr && scriptErr.details && scriptErr.details.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)) {
-        //~ /* it wasn't actually an error, we internally caused it */
-        //~ } else if (scriptErr) {
-        //~ this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.details), true);
-        //~ } else {
-        //~ this.appendToOutput('Unknown', true);
-        //~ }
-        //~ /* set focus back */
-        //~ this.vci.getPresenter().setCurrentFocus(this.entry.id);
+        /* note that script errors are to be expected --
+        it's how we get the signal back after running a script,
+        we intentionally try to call a handler that doesn't exist. */
+        /* go back to the previous tool */
+        this.vci.setTool(this.rememberedTool);
+        if (scriptErr && scriptErr.message && scriptErr.message.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)) {
+        /* it wasn't actually an error, we internally caused it */
+        } else if (scriptErr) {
+        this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.clsAsErr()), true);
+        } else {
+        this.appendToOutput('Unknown', true);
+        }
+        
+        /* set focus back */
+        this.vci.getPresenter().setCurrentFocus(this.entry.id);
     }
 
     /**

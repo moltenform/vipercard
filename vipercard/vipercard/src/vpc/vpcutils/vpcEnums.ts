@@ -670,5 +670,6 @@ export function checkThrowNotifyMessage(condition: unknown, msg: string, s1: unk
 }
 
 export function cleanExceptionMsg(e: Error): string {
-    assertTrue(false, 'nyi');
+    //~ assertTrue(false, 'nyi');
+    return e.message
 }
