@@ -265,4 +265,3 @@ export interface VisitingContext {
 }
 
 /* generated code, any changes above this point will be lost: --------------- */
-

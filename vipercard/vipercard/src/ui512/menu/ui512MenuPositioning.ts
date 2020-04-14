@@ -180,7 +180,7 @@ export class MenuPositioning {
         if (isExpanded) {
             MenuPositioning.setMenuItemPositions(app, menuRoot, header, complete);
 
-            let  grpItems = MenuPositioning.getMenuGroups(app)[1];
+            let grpItems = MenuPositioning.getMenuGroups(app)[1];
             grpItems.setVisible(true);
         } else {
             let children = header.getChildren(app);
@@ -314,9 +314,9 @@ export class MenuPositioning {
         grpBar.addElementAfter(app, dropdn, menuRoot.id);
         dropdn.set('fixedoffset', fixedOffset);
         if (headerLabelUntranslated.startsWith('icon:')) {
-            let [iconGroupId, iconNumber, fixWidth] = headerLabelUntranslated.split(
-                ':'
-            ).slice(1);
+            let [iconGroupId, iconNumber, fixWidth] = headerLabelUntranslated
+                .split(':')
+                .slice(1);
             dropdn.set('icongroupid', iconGroupId);
             dropdn.set('iconnumber', Util512.parseInt(iconNumber) ?? 0);
             dropdn.set('fixedwidth', Util512.parseInt(fixWidth) ?? 0);
@@ -401,7 +401,7 @@ export class MenuPositioning {
         enabled: O<boolean>,
         translatedLabel?: string
     ) {
-        let  grpItems = MenuPositioning.getMenuGroups(app, true)[1];
+        let grpItems = MenuPositioning.getMenuGroups(app, true)[1];
         let elem = grpItems.findEl(id);
         if (elem) {
             if (checked !== undefined) {

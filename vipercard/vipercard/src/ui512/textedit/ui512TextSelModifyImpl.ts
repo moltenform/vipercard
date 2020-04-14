@@ -269,13 +269,7 @@ export class TextSelModifyImpl {
         /* 2) add spaces */
         assertTrue(level >= 0, '2;|negative level');
         let added = Util512.repeat(level, space).join('');
-        let tNew = TextSelModifyImpl.changeTextInsert(
-            t,
-            0,
-            0,
-            added,
-            defaultFont
-        )[0];
+        let tNew = TextSelModifyImpl.changeTextInsert(t, 0, 0, added, defaultFont)[0];
         return tNew;
     }
 

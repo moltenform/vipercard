@@ -96,7 +96,7 @@ export class PaintGifExport {
                 await Util512Higher.sleep(100);
                 let cds = this.vci.getModel().stack.bgs[0].cards;
                 let cardId = cds[i].id;
-                let  currentlyCachedIm = this.cbRefreshCachedPaintForCard(cardId)[1];
+                let currentlyCachedIm = this.cbRefreshCachedPaintForCard(cardId)[1];
                 checkThrow(encoder.addFrame(currentlyCachedIm.context), `KT|addFrame() returned false on cd ${i + 1}.`);
             }
 

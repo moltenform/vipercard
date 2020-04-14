@@ -607,10 +607,10 @@ export class VpcExecFrameStack {
         it's a bit inefficent because we might have to re-preparse everything in the file. */
         //~ let newHandlerName = 'vpcinternaltmpcode';
         //~ let code = `
-//~ on ${newHandlerName}
-    //~ ${codeToCompile}
-    //~ return the result
-//~ end ${newHandlerName}
+        //~ on ${newHandlerName}
+        //~ ${codeToCompile}
+        //~ return the result
+        //~ end ${newHandlerName}
         //~ `.replace(/\r\n/g, '\n');
 
         assertTrue(false, 'nyi');

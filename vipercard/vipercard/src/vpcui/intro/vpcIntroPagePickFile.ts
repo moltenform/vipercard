@@ -9,6 +9,7 @@
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+import { showMsgIfExceptionThrown } from '../../ui512/utils/util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -151,8 +152,8 @@ export class IntroPagePickFile extends IntroPageBase {
         } else {
             let file = files[0];
             let reader = new FileReader();
-            reader.onload = evt => this.onOpenFileCallback(reader);
-            reader.onerror = evt => this.onOpenFileErrorCallback(reader);
+            reader.addEventListener('load', evt => showMsgIfExceptionThrown(() => this.onOpenFileCallback(reader), ''));
+            reader.addEventListener('error', evt => showMsgIfExceptionThrown(() => this.onOpenFileErrorCallback(reader), ''));
 
             /* dead in the image file as a data URL */
             reader.readAsText(file, 'utf-8');

@@ -1,7 +1,7 @@
 
 /* auto */ import { O } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, respondUI512Error } from './util512AssertCustom';
-/* auto */ import { AnyJson, BrowserOSInfo, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
+/* auto */ import { AnyUnshapedJson, BrowserOSInfo, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -94,21 +94,31 @@ export class Util512Higher {
      */
     static beginLoadImage(url: string, img: HTMLImageElement, callback: () => void) {
         let haveRunCallback = false;
-        img.addEventListener('load', () => {
+        let on_load = () => {
             if (!haveRunCallback) {
                 haveRunCallback = true;
                 callback();
             }
-        });
-        img.onerror = () => {
-            assertWarn(false, '4L|failed to load ' + url);
         };
+
+        let on_error = () => {
+            throw new Error('failed to load ' + url);
+        };
+
+        img.addEventListener('load', () =>
+            showMsgIfExceptionThrown(on_load, 'LoadImage.on_load')
+        );
+        img.addEventListener('error', () =>
+            showMsgIfExceptionThrown(on_error, 'LoadImage.on_error')
+        );
         img.src = url;
         if (img.complete) {
-            /* some sources say it might be possible for .complete to be set
-            immediately if image was cached */
-            haveRunCallback = true;
-            callback();
+            /* apparently it might be possible for .complete to be set
+            immediately in some cases */
+            showMsgIfExceptionThrown(() => {
+                haveRunCallback = true;
+                callback();
+            }, 'LoadImage.on_load');
         }
     }
 
@@ -119,27 +129,33 @@ export class Util512Higher {
         url: string,
         req: XMLHttpRequest,
         callback: (s: string) => void,
-        callbackOnErr: (n:number) => void
+        callbackOnErr: (n: number) => void
     ) {
         req.overrideMimeType('application/json');
         req.open('GET', url, true);
-        req.addEventListener('load', () => {
+        let on_load = () => {
             if (req.status >= 200 && req.status <= 299) {
                 callback(req.responseText);
             } else {
                 callbackOnErr(req.status);
             }
-        });
+        };
 
-        req.addEventListener('error', () => {
+        let on_error = () => {
             callbackOnErr(-1);
-        });
+        };
 
+        req.addEventListener('load', () =>
+            showMsgIfExceptionThrown(on_load, 'loadJson.on_load')
+        );
+        req.addEventListener('error', () =>
+            showMsgIfExceptionThrown(on_error, 'loadJson.on_error')
+        );
         req.send();
     }
 
     /**
-     * download json asynchronously, and return parsed js object.
+     * download json asynchronously, and return string.
      */
     static asyncLoadJsonString(url: string): Promise<string> {
         return new Promise((resolve, reject) => {
@@ -148,74 +164,61 @@ export class Util512Higher {
                 url,
                 req,
                 s => {
-                     resolve(s);
+                    resolve(s);
                 },
                 n => {
-                    reject(new Error(`failed to load ${url}, status=${n}`))
+                    reject(new Error(`failed to load ${url}, status=${n}`));
                 }
             );
         });
     }
 
-    static async asyncLoadJson(url: string):Promise<AnyJson> {
-        let s = await Util512Higher.asyncLoadJsonString(url)
+    /**
+     * download json asynchronously, and return parsed js object.
+     */
+    static async asyncLoadJson(url: string): Promise<AnyUnshapedJson> {
+        let s = await Util512Higher.asyncLoadJsonString(url);
         return JSON.parse(s);
     }
 
     /**
-     * load and run script. must be on same domain (url starts with /)
+     * load and run script. must be on same domain.
      */
     static scriptsAlreadyLoaded: { [key: string]: boolean } = {};
-    static asyncLoadJsIfNotAlreadyLoaded(url: string, timeoutAfter=15 * 1000): Promise<unknown> {
-        let script:O<HTMLScriptElement>
-        let pr1 = new Promise((resolve, reject) => {
+    static asyncLoadJsIfNotAlreadyLoaded(url: string): Promise<void> {
+        return new Promise((resolve, reject) => {
             assertTrue(url.startsWith('/'), 'J8|');
             if (Util512Higher.scriptsAlreadyLoaded[url]) {
-                resolve(true);
+                resolve();
+                return;
             }
 
-            script = window.document.createElement('script');
-            script.id = 'pending' + Math.random()
+            let script = window.document.createElement('script');
             script.setAttribute('src', url);
 
             /* prevents cb from being called twice */
-            let onerror = () => {
-                if (script) {
-                    script.id = 'err' + Math.random()
-                    let urlsplit = url.split('/');
-                    reject(new Error('Did not load ' + arLast(urlsplit)));
-                }
+            let loaded = false;
+            /* prevents cb from being called twice */
+            let on_error = () => {
+                let urlsplit = url.split('/');
+                reject(new Error('Did not load ' + arLast(urlsplit)));
             };
 
-            let onload = () => {
-                /* we might have already timed out */
-                if (script && script.id.startsWith('pending')) {
-                    script.id = 'done' + Math.random()
-                    Util512Higher.scriptsAlreadyLoaded[url] = true;
-                    resolve(true);
-                }
+            let on_load = () => {
+                Util512Higher.scriptsAlreadyLoaded[url] = true;
+                loaded = true;
+                resolve();
             };
-            
-            script.addEventListener('load', () => showMsgIfExceptionThrown(onload, 'onload'));
-            script.addEventListener('error', () => showMsgIfExceptionThrown(onerror, 'onerror'));
-            (script as any).onreadystatechange = script.onload; /* browser compat */
+
+            script.addEventListener('load', () =>
+                showMsgIfExceptionThrown(on_load, 'LoadJs.on_load')
+            );
+            script.addEventListener('error', () =>
+                showMsgIfExceptionThrown(on_error, 'LoadJs.on_error')
+            );
+            /* if you need to support old browsers, use onreadystatechange */
             window.document.getElementsByTagName('head')[0].appendChild(script);
-        })
-        
-        let pr2 = async () => {
-            await Util512Higher.sleep(timeoutAfter)
-            if (!script || !script.id.startsWith('done')) {
-                if (script) {
-                    script.id = 'timedout' + Math.random()
-                }
-                
-                throw new Error("could not load script, please check internet connection and try again")
-            }
-
-            return true
-        }
-
-        return Promise.race([pr1, pr2()])
+        });
     }
 
     /**

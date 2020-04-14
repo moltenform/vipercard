@@ -559,7 +559,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     protected getTargetFullString(adjective: PropAdjective) {
         /* get a longer form of the id unless specifically said "short" */
-        let  frame = this.vci.findExecFrameStack()[1];
+        let frame = this.vci.findExecFrameStack()[1];
         let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
         checkThrow(target, 'the target was not found');
         if (adjective === PropAdjective.Short) {

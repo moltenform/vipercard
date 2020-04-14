@@ -123,7 +123,7 @@ export class TestDrawUI512Menus {
         testTransparency.setDimensions(bounds[0] + 100, bounds[1] + 100, 5, 1);
 
         /* add the menu */
-        let  grpItems = MenuPositioning.getMenuGroups(pr.app)[1];
+        let grpItems = MenuPositioning.getMenuGroups(pr.app)[1];
         MenuPositioning.buildFromArray(pr, this.getDefn());
         grpItems.getEl('mnuOptSecond').set('checkmark', true);
         let toDisable = ['mnuCut', 'mnuCopy', 'mnuClear', 'mnuTextStyle'];

@@ -2,7 +2,7 @@
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, tostring } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, cast } from './../../ui512/utils/util512';
@@ -253,15 +253,14 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
                 this.referenceShowData(grp, btm, ctg, jsonData);
             } else {
                 let url = '/resources/docs/ref' + sectionId + '.json';
-                let req = new XMLHttpRequest();
-                Util512Higher.beginLoadJson(url, req, sjson => {
-                    this.vci.placeCallbackInQueue(() => {
-                        let parsedJson = JSON.parse(sjson);
-                        assertTrue(parsedJson.entries, 'KW|');
-                        this.referenceJsonData[sectionId] = parsedJson;
-                        this.onChooseItem(btm);
-                    });
-                });
+                let afn = async () => {
+                    let obj = await Util512Higher.asyncLoadJson(url);
+                    assertTrue(obj.entries, 'KW|');
+                    this.referenceJsonData[sectionId] = obj;
+                    this.onChooseItem(btm);
+                };
+
+                Util512Higher.syncToAsyncTransition(afn, 'ChooseReferenceItem', RespondToErr.Alert);
             }
         }
     }

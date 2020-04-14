@@ -23,7 +23,6 @@
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { BasicHandlers } from './../../ui512/textedit/ui512BasicHandlers';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 

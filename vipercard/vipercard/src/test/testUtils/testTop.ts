@@ -126,4 +126,3 @@ export class SimpleUtil512Tests {
         }
     }
 }
-

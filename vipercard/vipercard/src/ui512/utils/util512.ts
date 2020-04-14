@@ -502,6 +502,7 @@ type AnyJsonInner =
  * indicates that the value is a plain JS object
  */
 export type AnyJson = { [property: string]: AnyJsonInner } | AnyJsonInner[];
+export type AnyUnshapedJson = any;
 export type NoParameterCtor<T> = { new (): T };
 export type AnyParameterCtor<T> = { new (...args: unknown[]): T };
 

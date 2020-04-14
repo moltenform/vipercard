@@ -1,0 +1,2 @@
+ * pbkdf2, gist by Chris Veness
+ * takes a user-typed password, and uses a salt to generate a ArrayBuffer key.

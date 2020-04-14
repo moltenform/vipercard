@@ -1,5 +1,5 @@
 
-/* auto */ import { Util512Higher } from './../utils/util512Higher';
+/* auto */ import { RespondToErr, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../utils/util512AssertCustom';
 /* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, UI512FontGrid, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
@@ -96,13 +96,14 @@ export class UI512FontRequest {
 
             /* queue loading the metrics */
             const jsonUrl = '/resources/fonts/' + gridkey + '.json';
-            let req = new XMLHttpRequest();
-            Util512Higher.beginLoadJson(jsonUrl, req, s => {
-                pendingGrid.metrics = JSON.parse(s);
+            let afn = async () => {
+                let obj = await Util512Higher.asyncLoadJson(jsonUrl);
+                pendingGrid.metrics = obj;
                 pendingGrid.loadedMetrics = true;
                 pendingGrid.freeze();
-            });
+            };
 
+            Util512Higher.syncToAsyncTransition(afn, 'loadfont', RespondToErr.Alert);
             return undefined;
         } else {
             if (!found || !found.loadedMetrics || !found.loadedImage) {

@@ -88,7 +88,7 @@ export class VpcIntroProvider {
         }
 
         /* setup the redirection-to-login-form if requested */
-        this.setFirstActionUponLoad(vpcState, pr);
+        this.setFirstActionWhenLoaded(vpcState, pr);
 
         /* return the results */
         return [pr, vpcState];
@@ -108,7 +108,7 @@ export class VpcIntroProvider {
             assertTrue(!this.identifier.includes('\\'), 'KJ|');
             assertTrue(!this.identifier.includes('..'), 'KI|');
             assertTrue(this.identifier.endsWith('.json'), 'KH|');
-            let got = await Util512Higher.asyncBeginLoadJson('/resources/docs/' + this.identifier);
+            let got = await Util512Higher.asyncLoadJson('/resources/docs/' + this.identifier);
             serializedSavedData = JSON.stringify(got);
         } else if (this.loc === VpcDocumentLocation.FromJsonFile) {
             /* we already have the json, it was given to us via identifier */
@@ -249,7 +249,7 @@ export class VpcIntroProvider {
      * by placing a callback in the queue, this code will be run
      * as soon as the page opens
      */
-    protected setFirstActionUponLoad(vpcState: VpcState, pr: VpcPresenter) {
+    protected setFirstActionWhenLoaded(vpcState: VpcState, pr: VpcPresenter) {
         if (this.loc === VpcDocumentLocation.ShowLoginForm) {
             /* tell the presenter to show the login form as soon as the page opens */
             pr.lyrCoverArea.setMyMessage('');

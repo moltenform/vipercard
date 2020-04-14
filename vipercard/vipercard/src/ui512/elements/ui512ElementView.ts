@@ -152,7 +152,7 @@ export class UI512ViewDraw {
     ) {
         if (rect) {
             //~ const iconCentered =
-                //~ overrideCentered === undefined ? iconInfo.centered : overrideCentered;
+            //~ overrideCentered === undefined ? iconInfo.centered : overrideCentered;
             let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
             let icon = iconManager.findIcon(iconInfo.iconGroup, iconInfo.iconNumber);
             if (icon) {

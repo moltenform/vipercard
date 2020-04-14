@@ -235,7 +235,7 @@ export abstract class VpcNonModalFormBase extends VpcNonModalBase {
         let ret: { [key: string]: string } = {};
         let grp = app.getGroup(this.grpId);
         for (let fldIdPts of this.fields) {
-            let fldId = fldIdPts[0]
+            let fldId = fldIdPts[0];
             let el = grp.getEl(this.getElId('fld' + fldId));
             ret[fldId] = el.getFmTxt().toUnformatted();
             if (trim) {

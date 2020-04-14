@@ -200,7 +200,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         this.fillInValuesTip(app, vel);
         let grp = app.getGroup(this.grpId);
         for (let lblTxtPts of this.topInputs) {
-            let inId = lblTxtPts[1]
+            let inId = lblTxtPts[1];
             let el = grp.getEl(this.getElId(`inp##${inId}`));
             if (inId === 'fldcontent') {
                 el.set('style', UI512FldStyle.Transparent);
@@ -231,7 +231,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         }
 
         for (let lblTxtPts of this.rightOptions) {
-            let inId = lblTxtPts[1]
+            let inId = lblTxtPts[1];
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
             let val = vel.getProp(inId, currentCardId);
             el.set('checkmark', val.readAsStrictBoolean());
@@ -291,7 +291,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         }
 
         for (let lblTxtPts of this.topInputs) {
-            let inId = lblTxtPts[1]
+            let inId = lblTxtPts[1];
             if (inId === 'fldcontent') {
                 continue;
             }
@@ -317,7 +317,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         }
 
         for (let lblTxtParts of this.rightOptions) {
-            let inId = lblTxtParts[1]
+            let inId = lblTxtParts[1];
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
             let checked = el.getB('checkmark');
             vel.setProp(inId, VpcValBool(checked), this.vci.getOptionS('currentCardId'));
@@ -353,7 +353,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
 
         let curY = basey;
         for (let lblTxtParts of this.rightOptions) {
-            let inId = lblTxtParts[1]
+            let inId = lblTxtParts[1];
             let inp = grp.getEl(this.getElId(`toggle##${inId}`));
             inp.setDimensions(inp.x, curY, inp.w, inp.h);
             curY += inputH + inputMargin;

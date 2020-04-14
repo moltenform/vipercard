@@ -106,7 +106,7 @@ export class VpcPhoneDial {
         };
         /* fail-safe: continue running the script in 5 seconds even if everything else fails */
         let fiveSeconds = 5 * 1000;
-        Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, fiveSeconds, 'dial', RespondToErr.ConsoleErrOnly)
+        Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, fiveSeconds, 'dial', RespondToErr.ConsoleErrOnly);
         /* preload, so we'll at least have them available for next time */
         for (let i = 0; i < 10; i++) {
             let filename = `dial${i}`;
@@ -116,7 +116,7 @@ export class VpcPhoneDial {
         let padding = 30;
         let arr = VpcPhoneDial.intoArray(s);
         if (!arr.length) {
-            Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, 1, 'dial', RespondToErr.ConsoleErrOnly)
+            Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, 1, 'dial', RespondToErr.ConsoleErrOnly);
             return;
         }
         /* schedule playing each tone */
@@ -124,11 +124,11 @@ export class VpcPhoneDial {
         for (let i = 0; i < arr.length; i++) {
             let timeAt = durations.slice(0, i + 1).reduce(Util512.add);
             let filename = `dial${arr[i]}`;
-            Util512Higher.syncToAsyncAfterPause(() => VpcAudio.play(filename), timeAt, 'dialone', RespondToErr.ConsoleErrOnly)
+            Util512Higher.syncToAsyncAfterPause(() => VpcAudio.play(filename), timeAt, 'dialone', RespondToErr.ConsoleErrOnly);
         }
         /* schedule returing to the script */
         let totalTime = durations.reduce(Util512.add) + 500;
-        Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, totalTime, 'dial', RespondToErr.ConsoleErrOnly)
+        Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, totalTime, 'dial', RespondToErr.ConsoleErrOnly);
     }
 
     /**
