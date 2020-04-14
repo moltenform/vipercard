@@ -8,12 +8,12 @@
 /* auto */ import { VpcRewriteNoElseIfClauses, VpcSplitSingleLineIf } from './vpcRewritesConditions';
 /* auto */ import { VpcRewriteForCommands } from './vpcRewritesCommands';
 /* auto */ import { BranchProcessing } from './vpcProcessBranchAndLoops';
-/* auto */ import { MakeLowerCase, SplitIntoLinesAndMakeLowercase, VpcCodeLine, VpcCodeLineReference } from './vpcPreparseCommon';
+/* auto */ import { MakeLowerCase, SplitIntoLinesAndMakeLowercase, VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage } from './vpcPreparseCommon';
 /* auto */ import { VpcLineToCodeObj } from './vpcLineToCodeObj';
-/* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcErrStage, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { MapKeyToObject, Util512, ValHolder, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObject, Util512, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -111,21 +111,24 @@ Part 2: execution
     If the stack of execution frames is empty, we've completed the script.
 */
 export namespace VpcTopPreparse {
-    function goImpl(
-        code: string,
-        latestSrcLineSeen: ValHolder<number>,
-        latestDestLineSeen: ValHolder<VpcCodeLine>,
-        idGen: CountNumericId
-    ): VpcParsedCodeCollection {
+    export function goPreparseOrThrow(code: string, idGen: CountNumericId): VpcParsedCodeCollection {
+        /* set current status */
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Lex;
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
+
         /* lex the input */
         let lexer = getParsingObjects()[0];
         let lexed = lexer.tokenize(code);
         if (lexed.errors.length) {
-            latestSrcLineSeen.val = lexed.errors[0].line;
+            VpcCurrentScriptStage.latestSrcLineSeen = lexed.errors[0].line;
+            VpcCurrentScriptStage.origClass = 'chevrotain.lex';
             let errmsg = lexed.errors[0].message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
             checkThrow(false, `5(|lex error: ${errmsg}`);
         }
 
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Rewrite;
         let rw = new VpcSuperRewrite(idGen);
         let lowercase = new MakeLowerCase();
         let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, lowercase);
@@ -139,6 +142,7 @@ export namespace VpcTopPreparse {
             }
 
             /* the stage 1 transformations must be done first */
+            VpcCurrentScriptStage.latestSrcLineSeen = next[0].startLine;
             let nextSublines = stage1Process(next, rw);
             if (nextSublines) {
                 for (let subline of nextSublines) {
@@ -150,10 +154,12 @@ export namespace VpcTopPreparse {
         }
 
         /* transform else-if into their own if-end */
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         let lines = VpcRewriteNoElseIfClauses.go(buildTree, rw);
 
         /* now do these as stages, they don't need access to the entire array */
         /* by passing the result of one to the next, we're saving some allocations */
+        VpcCurrentScriptStage.latestSrcLineSeen = lines[0][0].startLine;
         let totalOutput: VpcCodeLine[] = [];
         let checkReserved = new CheckReservedWords();
         let toCodeObj = new VpcLineToCodeObj(idGen, checkReserved);
@@ -161,6 +167,7 @@ export namespace VpcTopPreparse {
         let lineNumber = 0;
         let branchProcessor = new BranchProcessing(idGen);
         for (let line of lines) {
+            VpcCurrentScriptStage.latestSrcLineSeen = line[0].startLine;
             let nextLines2 = stage2Process(line, rewrites) ?? [line];
             for (let line2 of nextLines2) {
                 let nextLines3 = stage3Process(line2, exp);
@@ -171,7 +178,8 @@ export namespace VpcTopPreparse {
                     }
 
                     let lineObj = toCodeObj.toCodeLine(line3);
-                    latestDestLineSeen.val = lineObj;
+                    VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
+                    VpcCurrentScriptStage.latestDestLineSeen = lineObj;
                     lineObj.offset = lineNumber;
                     branchProcessor.go(lineObj);
                     totalOutput[lineNumber] = lineObj;
@@ -184,6 +192,9 @@ export namespace VpcTopPreparse {
             }
         }
 
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
         branchProcessor.ensureComplete();
         return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput);
     }
@@ -208,29 +219,6 @@ export namespace VpcTopPreparse {
         let outlines = exp.go(line);
         return outlines;
     }
-
-    export function go(code: string, velIdForErrMsg: string, idGen: CountNumericId): VpcParsedCodeCollection {
-        //  VpcScriptSyntaxError | VpcParsedCodeCollection
-        checkThrow(false, 'nyi');
-        //~ let as = Util512BaseErr.errAsCls(VpcErr.name, e)
-        //~ assertTrue(!code.match(/^\s*$/), '');
-        //~ let latestSrcLineSeen = new ValHolder(0);
-        //~ let latestDestLineSeen = new ValHolder(new VpcCodeLine(0, []));
-        //~ let syntaxError: O<VpcScriptSyntaxError>;
-        //~ try {
-        //~ return goImpl(code, latestSrcLineSeen, latestDestLineSeen, idGen);
-        //~ } catch (e) {
-        //~ syntaxError = new VpcScriptSyntaxError();
-        //~ syntaxError.isScriptException = e.isVpcError;
-        //~ syntaxError.isExternalException = !e.isUi512Error;
-        //~ syntaxError.lineNumber = latestSrcLineSeen.val;
-        //~ syntaxError.velId = velIdForErrMsg;
-        //~ syntaxError.lineData = latestDestLineSeen.val;
-        //~ syntaxError.details = e.message;
-        //~ }
-
-        //~ return syntaxError;
-    }
 }
 
 /**
@@ -238,10 +226,8 @@ export namespace VpcTopPreparse {
  */
 export class VpcParsedCodeCollection {
     protected _handlerStarts: number[];
-    protected _handlers: MapKeyToObject<VpcCodeLineReference>;
-    constructor(protected map: MapKeyToObject<VpcCodeLineReference>, public lines: VpcCodeLine[]) {
-        this._handlers = map;
-        this._handlerStarts = map.getVals().map(h => h.offset);
+    constructor(protected _handlers: MapKeyToObject<VpcCodeLineReference>, public lines: VpcCodeLine[]) {
+        this._handlerStarts = _handlers.getVals().map(h => h.offset);
         this._handlerStarts.sort(util512Sort);
         Object.freeze(this._handlerStarts);
     }
@@ -259,11 +245,6 @@ export class VpcParsedCodeCollection {
     get handlerStarts() {
         return this._handlerStarts;
     }
-
-    /**
-     * store handlers
-     */
-    setHandlers(map: MapKeyToObject<VpcCodeLineReference>) {}
 
     /**
      * given a code offset, which handler is it in?

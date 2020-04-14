@@ -1,29 +1,18 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
+/* auto */ import { VpcParsedCodeCollection, VpcTopPreparse } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed } from './../codeparse/vpcTokens';
-/* auto */ import { ChvRuleFnType, VpcCodeLine, VpcCodeLineReference } from './../codepreparse/vpcPreparseCommon';
+/* auto */ import { ChvRuleFnType, VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
-/* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcErrStage, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { assertEq } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObject, Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
-
-/**
- * Redesigning exceptions for code errors.
- * Different ways code can fail:
- *      1) error during lexing
- *      2) error during preprocessing/rewrites
- *      3) error during parsing
- *      4) error during command execution
- *      5) error during syntax execution
- *      (i.e. runtime error in an if )
- */
 
 /**
  * cache the CST from a parsed line of code, for better perf.
@@ -73,27 +62,29 @@ export class VpcCacheParsedCST {
      * call the parser to get a new cst
      */
     protected callParser(ln: VpcCodeLine, firstRule: ChvRuleFnType) {
-        let parsed: VpcParsed;
-        checkThrow(false, 'nyi');
-        //~ try {
-        //~ /* setting input again is documented to reset the parser state */
-        //~ this.parser.input = ln.excerptToParse;
-        //~ this.parser.errors.length = 0;
-        //~ parsed = firstRule.apply(this.parser, []);
-        //~ if (VpcCacheParsedCST.ensureNotChanged) {
-        //~ Util512.freezeRecurse(parsed);
-        //~ }
-        //~ } catch (e) {
-        //~ /* don't expect error to be thrown here, but am checking this case out of caution */
-        //~ let err = e.message.toString().substr(0, CodeLimits.LimitChevErrStringLen);
-        //~ checkThrow(false, '4;|parse error: ' + err);
-        //~ }
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Parse;
+        VpcCurrentScriptStage.latestSrcLineSeen = ln.excerptToParse[0]?.startLine;
+        VpcCurrentScriptStage.latestDestLineSeen = ln;
+        VpcCurrentScriptStage.origClass = undefined;
 
-        //~ if (this.parser.errors.length) {
-        //~ let err = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErrStringLen);
-        //~ checkThrow(false, '4:|parse error: ' + err);
-        //~ }
+        /* setting input again will reset the parser's state */
+        this.parser.input = ln.excerptToParse;
+        this.parser.errors.length = 0;
+        VpcCurrentScriptStage.origClass = 'chevrotain.parsecallthrew';
+        let parsed = firstRule.apply(this.parser, []);
+        if (VpcCacheParsedCST.ensureNotChanged) {
+            Util512.freezeRecurse(parsed);
+        }
 
+        VpcCurrentScriptStage.origClass = 'chevrotain.parse';
+        if (this.parser.errors.length) {
+            let s = this.parser.errors[0].toString().substr(0, CodeLimits.LimitChevErrStringLen);
+            checkThrow(false, '4:|parse error: ' + s);
+        }
+
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
         return parsed;
     }
 }
@@ -109,63 +100,37 @@ export class VpcCacheParsedCST {
 export class VpcCacheParsedAST {
     cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyScripts);
     constructor(protected idGen: CountNumericId) {}
-    getParsedCodeCollectionOrErrObject(code: string, velIdForErrMsg: string): VpcParsedCodeCollection {
-        checkThrow(false, 'nyi');
-        //~ | VpcScriptSyntaxError
-        //~ assertTrue(!code.match(/^\s*$/), '');
-        //~ let found = this.cache.get(code);
-        //~ if (found) {
-        //~ return found;
-        //~ } else {
-        //~ let got = VpcCodeProcessor.go(code, velIdForErrMsg, this.idGen);
-        //~ if (!(got instanceof VpcParsedCodeCollection)) {
-        //~ return got;
-        //~ }
+    protected getParsedCodeCollectionOrThrow(code: string, velIdForErrMsg: string): VpcParsedCodeCollection {
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.latestVelID = velIdForErrMsg;
 
-        //~ this.cache.set(code, got);
-        //~ if (VpcCacheParsedCST.ensureNotChanged) {
-        //~ Util512.freezeRecurse(got);
-        //~ }
-
-        //~ return got;
-        //~ }
-    }
-
-    findHandlerOrThrowIfVelScriptHasSyntaxError(
-        code: string,
-        handlername: string,
-        velIdForErrMsg: string
-    ): O<[VpcParsedCodeCollection, VpcCodeLineReference] | Error> {
-        return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg);
-    }
-
-    protected findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(
-        code: string,
-        handlername: string,
-        velIdForErrMsg: string
-    ): O<[VpcParsedCodeCollection, VpcCodeLineReference]> {
         if (code.match(/^\s*$/)) {
-            return undefined;
+            return new VpcParsedCodeCollection(new MapKeyToObject<VpcCodeLineReference>(), []);
         }
-        checkThrow(false, 'nyi');
 
-        //~ let ret = this.getParsedCodeCollection(code, velIdForErrMsg);
-        //~ let retAsErr = ret as VpcScriptErrorBase;
-        //~ let retAsCode = ret as VpcParsedCodeCollection;
-        //~ if (retAsCode instanceof VpcParsedCodeCollection) {
-        //~ /* check in the cached map of handlers */
-        //~ let handler = retAsCode.handlers.find(handlername);
-        //~ if (handler) {
-        //~ return [retAsCode, handler];
-        //~ }
-        //~ } else if (retAsErr instanceof VpcScriptErrorBase) {
-        //~ let err = makeVpcScriptErr('JV|$compilation error$');
-        //~ markUI512Err(err, true, false, true, retAsErr);
-        //~ throw err;
-        //~ } else {
-        //~ throw makeVpcScriptErr('JU|VpcCodeOfOneVel did not return expected type ' + ret);
-        //~ }
+        let found = this.cache.get(code);
+        if (found) {
+            return found;
+        } else {
+            let got = VpcTopPreparse.goPreparseOrThrow(code, this.idGen);
+            if (VpcCacheParsedCST.ensureNotChanged) {
+                Util512.freezeRecurse(got);
+            }
+            this.cache.set(code, got);
+            return got;
+        }
+    }
 
-        //~ return undefined;
+    getHandlerOrThrow(
+        code: string,
+        handlername: string,
+        velIdForErrMsg: string
+    ): [VpcParsedCodeCollection, O<VpcCodeLineReference>] {
+        let coll = this.getParsedCodeCollectionOrThrow(code, velIdForErrMsg);
+        let handler = coll.handlers.find(handlername);
+        return [coll, handler];
     }
 }

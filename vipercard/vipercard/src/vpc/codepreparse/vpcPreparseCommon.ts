@@ -1,7 +1,7 @@
 
 /* auto */ import { CodeLimits } from './../vpcutils/vpcUtils';
 /* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
-/* auto */ import { IVpcCodeLine, checkThrow } from './../vpcutils/vpcEnums';
+/* auto */ import { IVpcCodeLine, VpcErrStage, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
@@ -190,8 +190,18 @@ export class VpcCodeLine implements IVpcCodeLine {
     }
 }
 
-export class VpcCurrentParseStage {
-    //~ static currentStage = VpcErrStage.
+/**
+ * we could tag all exceptions and attach line information.
+ * this is simpler (though perhaps less accurate),
+ * just record last line seen, and if an error occurs, it
+ * was probably during that line.
+ */
+export class VpcCurrentScriptStage {
+    static latestVelID: O<string>;
+    static currentStage = VpcErrStage.Unknown;
+    static latestSrcLineSeen: O<number>;
+    static latestDestLineSeen: O<VpcCodeLine>;
+    static origClass: O<string>;
 }
 
 /**

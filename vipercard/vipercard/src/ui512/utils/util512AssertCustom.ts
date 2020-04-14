@@ -25,6 +25,7 @@
  */
 export class Util512BaseErr {
     isUtil512BaseErr = true;
+    origClass = Util512BaseErr.name;
     protected constructor(public message: string, public level: string) {}
 
     static errAsCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
@@ -74,6 +75,7 @@ export class Util512BaseErr {
  */
 export class Util512Warn extends Util512BaseErr {
     isUtil512Warn = true;
+    origClass = Util512Warn.name;
     protected static gen(message: string, level: string) {
         return new Util512Warn(message, level);
     }
@@ -87,6 +89,7 @@ export class Util512Warn extends Util512BaseErr {
  */
 export class Util512Message extends Util512BaseErr {
     isUtil512Message = true;
+    origClass = Util512Message.name;
     protected static gen(message: string, level: string) {
         return new Util512Message(message, level);
     }

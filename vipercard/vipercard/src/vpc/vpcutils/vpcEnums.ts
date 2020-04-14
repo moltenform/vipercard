@@ -555,15 +555,25 @@ export function getPositionFromOrdinalOrPosition(rel: OrdinalOrPosition, current
     return fitIntoInclusive(ret, min, max);
 }
 
+/**
+ * Redesigning exceptions for code errors.
+ * Different ways code can fail:
+ *      1) error during lexing
+ *      2) error during preprocessing/rewrites
+ *      3) error during parsing
+ *      4) error during command execution
+ *      5) error during syntax execution
+ *      (i.e. runtime error in an if )
+ */
 export enum VpcErrStage {
     __isUI512Enum = 1,
-    NotFromUs,
-    NotFromScript,
+    Unknown,
     Lex,
     Rewrite,
     Parse,
+    Execute,
     Visit,
-    SyntaxVisit
+    SyntaxStep
 }
 
 export class VpcScriptErrorBase {
@@ -576,10 +586,11 @@ export interface IVpcCodeLine {
 
 export class VpcErr extends Util512BaseErr {
     isVpcErr = true;
-    scriptErrLine = -1;
-    scriptErrVelid = '';
+    origClass = VpcErr.name;
+    scriptErrLine: O<number>;
+    scriptErrVelid: O<string>;
     lineData: O<IVpcCodeLine>;
-    stage = VpcErrStage.NotFromUs;
+    stage = VpcErrStage.Unknown;
 
     protected static gen(message: string, level: string) {
         return new VpcErr(message, level);
@@ -617,6 +628,7 @@ export function checkThrowEq<T>(expected: T, got: unknown, msg: string, c1: unkn
 
 export class VpcInternalErr extends Util512BaseErr {
     isVpcInternalErr = true;
+    origClass = VpcInternalErr.name;
     protected static gen(message: string, level: string) {
         return new VpcInternalErr(message, level);
     }
@@ -639,6 +651,7 @@ export function checkThrowInternal(condition: unknown, msg: string, s1: unknown 
 
 export class VpcNotificationMessage extends Util512Message {
     isVpcNotificationMessage = true;
+    origClass = VpcNotificationMessage.name;
     protected static gen(message: string, level: string) {
         return new VpcNotificationMessage(message, level);
     }

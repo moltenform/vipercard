@@ -189,7 +189,8 @@ export class TestVpcScriptRunBase {
         //~ let built = FormattedText.fromExternalCharset(code, getRoot().getBrowserInfo());
         //~ let obj = this.vcstate.model.getByIdUntyped(id);
         //~ this.vcstate.vci.doWithoutAbilityToUndo(() => obj.set('script', built));
-        //~ this.vcstate.vci.getCodeExec().cachedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', obj.id)
+        //~ this.vcstate.vci.getCodeExec().cachedAST.
+        //~ findHandlerOrThrowIfVelScriptHasSyntaxError(built, 'mouseup', obj.id)
     }
 
     runGeneralCode(

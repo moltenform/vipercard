@@ -10,13 +10,13 @@
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
+/* auto */ import { VpcBuiltinMsg, VpcErrStage, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, getEnumToStrOrFallback, getStrToEnum, lastIfThere, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
@@ -83,13 +83,13 @@ export class VpcExecFrameStack {
      * send a message, like "on mouseUp", and see if anything in the message hierarchy responds
      * if something responds, push it onto the stack so that it's ready to execute
      */
-    findHandlerToExec() {
+    getHandlerToExecOrThrow() {
         let chain = VpcExecFrame.getMessageChain(this.originalMsg.targetId, undefined, this.outside);
         if (this.originalMsg instanceof VpcScriptMessageMsgBoxCode) {
             return this.startHandlerMsgBox(this.originalMsg);
         }
 
-        let found = this.findHandlerUpwards(this.originalMsg.targetId, chain, this.originalMsg.msgName, false);
+        let found = this.getHandlerUpwardsOrThrow(this.originalMsg.targetId, chain, this.originalMsg.msgName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
             this.pushStackFrame(this.originalMsg.msgName, this.originalMsg, ast, lineRef, vel.id, vel.parentId);
@@ -144,7 +144,7 @@ export class VpcExecFrameStack {
     /**
      * continue running code until _ms_ milliseconds have passed
      */
-    runTimeslice(ms: number) {
+    runTimesliceOrThrow(ms: number) {
         const howOftenToCheckElapsedTime = 4;
         if (!this.hasRunCode) {
             VpcExecFrameStack.staticPendingOps = new VpcPendingAsyncOps();
@@ -163,7 +163,7 @@ export class VpcExecFrameStack {
         let count = 0;
         while (this.stack.length > 1) {
             /* run one line of code */
-            let isComplete = this.runOneLine(blocked);
+            let isComplete = this.runOneLineOrThrow(blocked);
             if (isComplete || blocked.val !== AsyncCodeOpState.AllowNext) {
                 break;
             }
@@ -189,33 +189,18 @@ export class VpcExecFrameStack {
     /**
      * run one line of code, and catch exceptions
      */
-    protected runOneLine(blocked: ValHolder<AsyncCodeOpState>): boolean {
+    protected runOneLineOrThrow(blocked: ValHolder<AsyncCodeOpState>): boolean {
         let curFrame = lastIfThere(this.stack);
         if (curFrame) {
             let curLine = curFrame.codeSection.lines[curFrame.getOffset()];
             checkThrow(curLine, `5c|no code defined at offset ${curFrame.getOffset()} of element ${curFrame.meId}`);
-            assertWarn(false, 'nyi');
-            //~ let as = Util512BaseErr.errAsCls(VpcErr.name, e)
-            //~ try {
-            //~ assertEq(curLine.offset, curFrame.getOffset(), '5d|');
-            //~ this.runOneLineImpl(curFrame, curLine, blocked);
-            //~ return false;
-            //~ } catch (e) {
-            //~ let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e)
-            //~ if (!scriptErr) {
-            //~ scriptErr = VpcErr.createError('', 'runOneLine')
-            //~ scriptErr.addErr(e)
-            //~ }
-            //~ /* add error context and re-throw */
-            //~ scriptErr.scriptErrLine = curLine.firstToken.startLine ?? 0;
-            //~ scriptErr.scriptErrVelid = curFrame.meId;
-            //~ scriptErr.lineData = curLine;
-            //~ scriptErr.isScriptException = e.isVpcError;
-            //~ scriptErr.isExternalException = !e.isUi512Error;
-            //~ scriptErr.e = e;
-            //~ e.vpcScriptErr = scriptErr;
-            //~ throw e;
-            //~ }
+            assertEq(curLine.offset, curFrame.getOffset(), '5d|');
+            VpcCurrentScriptStage.latestSrcLineSeen = curLine.firstToken.startLine;
+            VpcCurrentScriptStage.latestDestLineSeen = curLine;
+            VpcCurrentScriptStage.origClass = undefined;
+            VpcCurrentScriptStage.latestVelID = curFrame.meId;
+            this.runOneLineOrThrowImpl(curFrame, curLine, blocked);
+            return false;
         } else {
             /* there's no current stack, looks like we are done! */
             return true;
@@ -225,8 +210,11 @@ export class VpcExecFrameStack {
     /**
      * run one line of code
      */
-    protected runOneLineImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, blocked: ValHolder<AsyncCodeOpState>) {
+    protected runOneLineOrThrowImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, blocked: ValHolder<AsyncCodeOpState>) {
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Parse;
         let parsed = this.cacheParsedCST.getParsedLine(curLine);
+
+        VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
         let methodName = 'visit' + getEnumToStrOrFallback(VpcLineCategory, curLine.ctg);
         Util512.callAsMethodOnClass('VpcExecFrameStack', this, methodName, [curFrame, curLine, parsed, blocked], false);
 
@@ -240,18 +228,23 @@ export class VpcExecFrameStack {
      * we were told to evaluate an expression, return the value
      */
     protected evalRequestedExpression(parsed: VpcParsed, curLine: VpcCodeLine): VpcVal {
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Visit;
+        VpcCurrentScriptStage.origClass = undefined;
         assertTrue(curLine.ctg !== VpcLineCategory.Statement, '5b|', curLine.ctg);
         assertTrue(
             this.cacheParsedCST.parser.RuleInternalCmdRequestEval === curLine.getParseRule(),
             '5a|expected eval parse rule'
         );
 
+        VpcCurrentScriptStage.origClass = 'evalGeneralVisit';
         let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
+        VpcCurrentScriptStage.origClass = undefined;
         checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|evalRequestedExpression wrong type');
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleExpr[0], '7v|evalRequestedExpression no result of RuleExpr');
 
         let ret = visited.vals.RuleExpr[0] as VpcVal;
         checkThrow(ret instanceof VpcVal, '7u|evalRequestedExpression expected a number, string, or boolean.');
+        VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
         return ret;
     }
 
@@ -272,7 +265,7 @@ export class VpcExecFrameStack {
      * look in the message hierarchy for a handler
      * don't stop iterating if an object is missing!
      */
-    findHandlerUpwards(
+    getHandlerUpwardsOrThrow(
         velIdStart: string,
         chain: string[],
         handlername: string,
@@ -285,9 +278,9 @@ export class VpcExecFrameStack {
 
             let v = this.outside.FindVelById(velId);
             if (v) {
-                let found = this.cacheParsedAST.findHandlerOrThrowIfVelScriptHasSyntaxError(v.getS('script'), handlername, v.id);
-                if (found) {
-                    return [found[0], found[1], v];
+                let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(v.getS('script'), handlername, v.id);
+                if (codeColl && lineRef) {
+                    return [codeColl, lineRef, v];
                 }
             }
         }
@@ -299,7 +292,9 @@ export class VpcExecFrameStack {
      * run a builtin command
      */
     visitStatement(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed, blocked: ValHolder<AsyncCodeOpState>) {
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Execute;
         let visited = parsed ? this.evalGeneralVisit(parsed, curLine) : VpcVal.Empty;
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Execute;
         this.execStatements.go(curLine, visited, blocked);
         if (blocked.val === AsyncCodeOpState.AllowNext) {
             curFrame.next();
@@ -372,7 +367,7 @@ export class VpcExecFrameStack {
         /* we've validated curLine.readyToParse[1] in the BranchProcessing class */
         /* in rewriting we've added a "return" after this line so we don't need to pop a frame */
         curFrame.next();
-        let found = this.findHandlerUpwards(curFrame.meId, curFrame.messageChain, curFrame.handlerName, true);
+        let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, curFrame.handlerName, true);
         if (found) {
             let [ast, lineRef, vel] = found;
             this.pushStackFrame(curFrame.handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId);
@@ -527,7 +522,7 @@ export class VpcExecFrameStack {
     protected callHandlerAndThrowIfNotExist(curFrame: VpcExecFrame, args: VpcVal[], handlerName: string) {
         /* reset the result, in case the callee doesn't return anything */
         curFrame.locals.set('$result', VpcVal.Empty);
-        let found = this.findHandlerUpwards(curFrame.meId, curFrame.messageChain, handlerName, false);
+        let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, handlerName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
             let newFrame = this.pushStackFrame(handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId);
@@ -537,7 +532,8 @@ export class VpcExecFrameStack {
             if (listOfAllBuiltinEventsInOriginalProduct[handlerName.toLowerCase()]) {
                 /* it's fine, we shouldn't throw in this case.
                 send "openCard" to cd 3 should never be an error
-                even if there's no openCard handler */
+                even if there's no openCard handler.
+                same effect has putting empty handlers in the standardlib. */
             } else {
                 checkThrow(false, `5O|tried to call ${handlerName} but no handler of this name found`);
             }
@@ -683,7 +679,7 @@ export class VpcExecFrameStack {
 
         if (slength(sendMsg)) {
             let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, 'sending message directive', sendMsg);
-            let found = this.findHandlerUpwards(
+            let found = this.getHandlerUpwardsOrThrow(
                 this.originalMsg.targetId,
                 curFrame.messageChain,
                 this.originalMsg.msgName,

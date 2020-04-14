@@ -2,6 +2,7 @@
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './vpcIntroProvider';
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
+/* auto */ import { showMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
 /* auto */ import { isString, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
@@ -9,6 +10,7 @@
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+
 import { showMsgIfExceptionThrown } from '../../ui512/utils/util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */

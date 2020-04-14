@@ -1605,7 +1605,8 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
         //~ script = script.trim()
         //~ let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
         //~ h.vcstate.vci.undoableAction(() => btnGo.set('script', script));
-        //~ let transformedCode = h.vcstate.vci.getCodeExec().cachedAST.getParsedCodeCollection(script, btnGo.id)
+        //~ let transformedCode = h.vcstate.vci.getCodeExec().
+        //~ cachedAST.getParsedCodeCollection(script, btnGo.id)
         //~ checkThrow(transformedCode instanceof VpcParsedCodeCollection, '')
 
         //~ let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory_[o.ctg]);

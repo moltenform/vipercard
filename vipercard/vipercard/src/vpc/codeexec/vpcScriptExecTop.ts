@@ -6,12 +6,13 @@
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcScriptErrorBase, VpcTool, checkThrow } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcCurrentScriptStage } from './../codepreparse/vpcPreparseCommon';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcScriptErrorBase, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { ValHolder, cast, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -52,22 +53,6 @@ export class VpcExecTop {
         let visitor = getParsingObjects()[2];
         visitor.outside = outside as OutsideWorldRead;
     }
-
-    //~ /**
-    //~ *
-    //~ */
-    //~ goScript() {
-    //~ try {
-    //~ newWork.findHandlerToExec();
-    //~ if (newWork.stack.length > 1) {
-    //~ this.workQueue.push(newWork);
-    //~ }
-    //~ } catch (e) {
-    //~ this.respondScriptError(e, VpcErrStage.);
-    //~ }
-
-    //~ return this.findHandlerOrThrowIfVelScriptHasSyntaxErrorImpl(code, handlername, velIdForErrMsg)
-    //~ }
 
     /**
      * add an entry to the queue, scheduling code execution
@@ -117,18 +102,16 @@ export class VpcExecTop {
             this.justSawRepeatedMousedown = false;
         }
 
-        /* an error might be thrown, e.g. the script causes a lexer error  */
-        checkThrow(false, 'nyi');
-        //~ try {
-        //~ newWork.findHandlerToExec();
-        //~ if (newWork.stack.length > 1) {
-        //~ this.workQueue.push(newWork);
-        //~ }
-        //~ } catch (e) {
-        //~ if (e.isVpcScriptError) {
-        //~ this.respondScriptError(e);
-        //~ }
-        //~ }
+        /* an error might be thrown, for example if
+        the script has a lexer error. */
+        try {
+            newWork.getHandlerToExecOrThrow();
+            if (newWork.stack.length > 1) {
+                this.workQueue.push(newWork);
+            }
+        } catch (e) {
+            this.handleScriptException(e, 'scheduleCodeExec');
+        }
     }
 
     /**
@@ -153,18 +136,32 @@ export class VpcExecTop {
      * run code, and trigger UI refresh
      */
     runTimeslice(ms: number) {
-        if (this.silenceMessagesForUIAction.val && this.workQueue.length === 0) {
-            /* nyi: new style ui actions */
-            /* this.vci.setTool(this.silenceMessagesForUIAction.val) */
-            this.silenceMessagesForUIAction.val = undefined;
+        if (this.workQueue.length === 0) {
+            this.resetAfterFrameStackIsDone();
             return;
         }
 
         let codeRunningBefore = this.isCodeRunning();
-        this.runTimesliceImpl(ms);
+        try {
+            this.runTimesliceImpl(ms);
+        } catch (e) {
+            this.handleScriptException(e, 'runTimeslice');
+        }
+
         let codeRunningAfter = this.isCodeRunning();
         if (codeRunningBefore !== codeRunningAfter && this.cbCauseUIRedraw) {
             this.cbCauseUIRedraw();
+        }
+    }
+
+    resetAfterFrameStackIsDone() {
+        this.outside.SetOption('screenLocked', false);
+        this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
+
+        /* nyi: new style ui actions */
+        if (this.silenceMessagesForUIAction.val) {
+            /* this.vci.setTool(this.silenceMessagesForUIAction.val) */
+            this.silenceMessagesForUIAction.val = undefined;
         }
     }
 
@@ -172,6 +169,12 @@ export class VpcExecTop {
      * run code
      */
     protected runTimesliceImpl(ms: number) {
+        VpcCurrentScriptStage.latestVelID = undefined;
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
+
         let first = this.workQueue[0];
         let currentCardId = this.outside.GetOptionS('currentCardId');
 
@@ -196,60 +199,49 @@ export class VpcExecTop {
         if (first.stack.length <= 1) {
             /* we just finished a handler */
             this.workQueue.splice(0, 1);
-            this.outside.SetOption('screenLocked', false);
-            this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
+            this.resetAfterFrameStackIsDone();
             return;
         }
 
-        /* allow exceptions, because we will catch them here */
-        try {
-            first.runTimeslice(ms);
-        } catch (e) {
-            this.respondScriptError(e);
-        }
+        first.runTimesliceOrThrow(ms);
 
         if (first.stack.length <= 1) {
-            /* we just finished a handler */
+            /* we just finished a frame */
             this.workQueue.splice(0, 1);
-            this.outside.SetOption('screenLocked', false);
-            this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
+            this.resetAfterFrameStackIsDone();
             return;
         }
     }
 
-    /**
-     * get an instance of VpcScriptErrorBase, or create if needed
-     */
-    //~ getOrGenerateScriptErr(e: any): VpcScriptErrorBase {
-    //~ if (e instanceof VpcScriptErrorBase) {
-    //~ return e;
-    //~ } else if (e.attachErr && e.attachErr instanceof VpcScriptErrorBase) {
-    //~ return e.attachErr;
-    //~ } else if (e.vpcScriptErr && e.vpcScriptErr instanceof VpcScriptErrorBase) {
-    //~ return e.vpcScriptErr;
-    //~ } else {
-    //~ let scrRuntime = new VpcScriptRuntimeError();
-    //~ scrRuntime.isScriptException = false;
-    //~ scrRuntime.isExternalException = !e.isUi512Error;
-    //~ scrRuntime.details = e.toString();
-    //~ scrRuntime.e = e;
-    //~ return scrRuntime;
-    //~ }
-    //~ }
+    protected handleScriptException(e: Error, context: string) {
+        let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e);
+        if (!scriptErr) {
+            scriptErr = VpcErr.createError('', 'runOneLine');
+            scriptErr.addErr(e);
+            scriptErr.origClass = (e as any).origClass ?? '(javascript)';
+        }
 
-    /**
-     * add context information to the error and call cbOnScriptError
-     */
-    protected respondScriptError(e: any) {
-        assertTrue(false, 'nyi');
-        //~ this.forceStopRunning();
-        //~ let err = this.getOrGenerateScriptErr(e);
+        if (!scriptErr.scriptErrVelid) {
+            scriptErr.scriptErrVelid = VpcCurrentScriptStage.latestVelID;
+        }
+        if (!scriptErr.stage) {
+            scriptErr.stage = VpcCurrentScriptStage.currentStage;
+        }
+        if (!scriptErr.scriptErrLine) {
+            scriptErr.scriptErrLine = VpcCurrentScriptStage.latestSrcLineSeen;
+        }
+        if (!scriptErr.lineData) {
+            scriptErr.lineData = VpcCurrentScriptStage.latestDestLineSeen;
+        }
+        if (VpcCurrentScriptStage.origClass) {
+            scriptErr.origClass = VpcCurrentScriptStage.origClass;
+        }
 
-        //~ if (this.cbOnScriptError) {
-        //~ this.cbOnScriptError(err);
-        //~ } else {
-        //~ alert(`5i|script error occurred on line ${e.vpcLine} of el ${e.vpcVelId}`);
-        //~ }
+        if (this.cbOnScriptError) {
+            this.cbOnScriptError(scriptErr);
+        } else {
+            respondUI512Error(scriptErr.clsAsErr(), context);
+        }
     }
 
     /**
