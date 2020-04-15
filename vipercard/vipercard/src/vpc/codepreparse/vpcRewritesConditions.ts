@@ -120,6 +120,7 @@ export namespace VpcRewriteNoElseIfClauses {
                 let clause = new IfConstructClause(arisLineElseCondition, false);
                 this.current.clauses.push(clause);
             } else if (isLineElsePlain(line)) {
+                checkThrow(!this.current.hasSeenPlainElse, "can't have two plain elses");
                 this.current.hasSeenPlainElse = true;
                 let clause = new IfConstructClause([], false);
                 this.current.clauses.push(clause);
@@ -156,7 +157,7 @@ export namespace VpcRewriteNoElseIfClauses {
             }
             for (let item of clause.children) {
                 if (item instanceof IfConstruct) {
-                    flattenTreeRecurse(node, rw, output);
+                    flattenTreeRecurse(item, rw, output);
                 } else {
                     output.push(item);
                 }

@@ -511,15 +511,15 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let checkIsWithin = bool(map.vals.tkInOnly) || bool(map.vals._within);
             if (checkIsWithin) {
                 /* "is within" expression */
-                checkThrow(map.vals.Lvl3Expression && map.vals.Lvl3Expression[0] instanceof VpcVal, '');
-                total = this.evalHelp.evalOp(total, map.vals.Lvl3Expression[0], VpcOpCtg.OpStringWithin, 'is within');
+                checkThrow(map.vals.RuleLvl3Expression && map.vals.RuleLvl3Expression[0] instanceof VpcVal, '');
+                total = this.evalHelp.evalOp(total, map.vals.RuleLvl3Expression[0], VpcOpCtg.OpStringWithin, 'is within');
             } else if (typeCheck) {
                 /* type check expression "is a number" */
                 total = this.evalHelp.typeMatches(total, typeCheck);
             } else {
                 /* "is" or "is not" expression */
-                checkThrow(map.vals.Lvl3Expression && map.vals.Lvl3Expression[0] instanceof VpcVal, '');
-                total = this.evalHelp.evalOp(total, map.vals.Lvl3Expression[0], VpcOpCtg.OpEqualityGreaterLessOrContains, 'is');
+                checkThrow(map.vals.RuleLvl3Expression && map.vals.RuleLvl3Expression[0] instanceof VpcVal, '');
+                total = this.evalHelp.evalOp(total, map.vals.RuleLvl3Expression[0], VpcOpCtg.OpEqualityGreaterLessOrContains, 'is');
             }
 
             let negated = map.vals._not && map.vals._not.length > 0;

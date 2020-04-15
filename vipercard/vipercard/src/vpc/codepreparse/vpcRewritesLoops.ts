@@ -34,14 +34,16 @@ export namespace VpcRewritesLoops {
     function goUntilWhile(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         let template = `
 repeat
-    if %NOT% %ARG0% then
+    if %NOTSTART% %ARG0% %NOTEND% then
         exit repeat
     end if
-end repeat`;
+`; // the end repeat comes later
         if (line[1].image === 'until') {
-            template = template.replace(/%NOT%/g, '');
+            template = template.replace(/%NOTSTART%/g, '');
+            template = template.replace(/%NOTEND%/g, '');
         } else {
-            template = template.replace(/%NOT%/g, 'not');
+            template = template.replace(/%NOTSTART%/g, 'not (');
+            template = template.replace(/%NOTEND%/g, ')');
         }
 
         let conditionExpression = line.slice(2);
@@ -61,7 +63,7 @@ end repeat`;
             isDown = true;
             endFirstExpr -= 1;
         }
-        let firstExpr = line.slice(startFirstExpr, endFirstExpr);
+        let firstExpr = line.slice(startFirstExpr, endFirstExpr+1);
         let secondExpr = line.slice(findTo + 1);
         return goWithImpl(firstExpr, secondExpr, line[2], isDown, rw);
     }
@@ -73,20 +75,20 @@ end repeat`;
         rw: VpcSuperRewrite
     ): ChvITk[][] {
         let template = `
-put ( %ARG1% ) - ( %ADJUST% ) into %ARG0%
+put ( %ARG1% ) -  %ADJUST%  into %ARG0%
 put %ARG2% into $loopbound%UNIQUE%
 repeat
-    put %ARG0% %ADJUST% into %ARG0%
+    put %ARG0% + %ADJUST% into %ARG0%
     if %ARG0% %CMPARE% $loopbound%UNIQUE% then
         exit repeat
     end if
 `;
         if (isDown) {
             template = template.replace(/%ADJUST%/g, ' - 1');
-            template = template.replace(/%CMPARE%/g, ' <= ');
+            template = template.replace(/%CMPARE%/g, ' < ');
         } else {
-            template = template.replace(/%ADJUST%/g, ' + 1');
-            template = template.replace(/%CMPARE%/g, ' >= ');
+            template = template.replace(/%ADJUST%/g, ' 1');
+            template = template.replace(/%CMPARE%/g, ' > ');
         }
 
         return rw.gen(template, firstExpr[0], [[loopVar], firstExpr, secondExpr], undefined, false);

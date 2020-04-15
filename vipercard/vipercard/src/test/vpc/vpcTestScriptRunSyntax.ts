@@ -665,34 +665,7 @@ put i+1 into i
 end repeat\\s && (counting() - firstc)`,
             `b 0 1 2 5`
         ],
-        /* "times" syntax rewriting, simplest form. */
-        /* currently, the condition is evaluated every time. */
-        [
-            `put "a" into s
-put counting() into firstc
-repeat (counting() * 0 + 3) times
-put s && "a" into s
-end repeat\\s && (counting() - firstc)`,
-            `a a a a 5`
-        ],
-        /* "times" syntax rewriting, loop never done */
-        [
-            `put "a" into s
-put counting() into firstc
-repeat (counting() * 0 + 0) times
-put s && "a" into s
-end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
-        /* "times" syntax rewriting, loop never done */
-        [
-            `put "a" into s
-put counting() into firstc
-repeat (counting() * 0 - 1) times
-put s && "a" into s
-end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
+        
         /* "with" syntax rewriting, simplest form. */
         [
             `put "a" into s
@@ -700,7 +673,7 @@ put counting() into firstc
 repeat with x = 1 to (counting() * 0 + 3)
 put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
-            `a a1 a2 a3 5`
+            `a a1 a2 a3 2`
         ],
         /* "with" syntax rewriting, loop never done */
         [
@@ -727,7 +700,7 @@ put counting() into firstc
 repeat with x = 3 down to (counting() * 0)
 put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
-            `a a3 a2 a1 a0 6`
+            `a a3 a2 a1 a0 2`
         ],
         /* "with down" syntax rewriting, loop never done */
         [
@@ -760,13 +733,13 @@ end repeat\\s && (counting() - firstc)`,
         [
             `put "a" into s
 repeat with i = 0 to 2
-repeat with j = 0 to 1
-put s && "j" & j into s
-end repeat
-put s && i into s
+    repeat with j = 0 to 1
+        put s && "j" & j into s
+    end repeat
+    put s && i into s
 end repeat
 repeat with k = j to 4
-put s && "k" & k into s
+    put s && "k" & k into s
 end repeat\\s`,
             `a j0 j1 0 j0 j1 1 j0 j1 2 k1 k2 k3 k4`
         ],
@@ -779,6 +752,33 @@ put s && (i+1) & "," & j into s
 end repeat
 end repeat\\s`,
             `a 1,0 2,0 2,1 3,0 3,1 3,2`
+        ],
+        /* "times" syntax rewriting, simplest form. */
+        [
+            `put "a" into s
+put counting() into firstc
+repeat (counting() * 0 + 3) times
+put s && "a" into s
+end repeat\\s && (counting() - firstc)`,
+            `a a a a 2`
+        ],
+        /* "times" syntax rewriting, loop never done */
+        [
+            `put "a" into s
+put counting() into firstc
+repeat (counting() * 0 + 0) times
+put s && "a" into s
+end repeat\\s && (counting() - firstc)`,
+            `a 2`
+        ],
+        /* "times" syntax rewriting, loop never done */
+        [
+            `put "a" into s
+put counting() into firstc
+repeat (counting() * 0 - 1) times
+put s && "a" into s
+end repeat\\s && (counting() - firstc)`,
+            `a 2`
         ],
         /* simple test next repeat */
         [

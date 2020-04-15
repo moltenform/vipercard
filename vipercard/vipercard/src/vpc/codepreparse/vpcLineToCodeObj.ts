@@ -35,7 +35,7 @@ export class VpcLineToCodeObj {
     toCodeLine(line: ChvITk[]) {
         checkThrow(line && line.length > 0, "8O|we don't allow empty lines of code");
         checkThrow(
-            line[0].tokenType === tks.tkIdentifier,
+            line[0].tokenType === tks.tkIdentifier || line[0].tokenType === tks.tkPosition,
             '8N|The first word of this line is not a valid command or keyword.',
             line[0].image
         );
@@ -277,6 +277,7 @@ export class VpcLineToCodeObj {
      */
     goRepeat(line: ChvITk[], output: VpcCodeLine) {
         checkThrowEq(1, line.length, 'all repeats should have already been transformed.');
+        output.ctg = VpcLineCategory.RepeatForever
     }
 
     /**
