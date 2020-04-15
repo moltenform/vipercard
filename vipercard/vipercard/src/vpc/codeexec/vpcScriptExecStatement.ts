@@ -1,6 +1,6 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { tkstr } from './../codeparse/vpcTokens';
+/* auto */ import { tkstr, ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
@@ -42,7 +42,7 @@ export class ExecuteStatement {
         );
 
         let method = 'go' + Util512.capitalizeFirst(firstToken.image);
-        Util512.callAsMethodOnClass('ExecuteStatement', this, method, [line, vals, blocked], false);
+        Util512.callAsMethodOnClass(ExecuteStatement.name, this, method, [line, vals, blocked], false);
     }
 
     /**
@@ -280,7 +280,6 @@ export class ExecuteStatement {
     goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let terms = this.h.getChildStrs(vals, tkstr.tkIdentifier, true);
         checkThrow(terms.length === 1, longstr(`7M|(missing into, before, or after).`));
-
         let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[0]);
         let val = ensureDefined(this.h.findChildVal(vals, tkstr.RuleExpr), '54|');
         let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
@@ -335,7 +334,8 @@ export class ExecuteStatement {
         let velRef = this.h.findChildVelRef(vals, tkstr.RuleObject);
         let velRefFld = this.h.findChildVelRef(vals, tkstr.RuleObjectFld);
         let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
-        let propName = ensureDefined(this.h.findChildStr(vals, tkstr.RuleHCouldBeAPropertyToSet), '51|');
+        let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], '')[0];
+        let propName = (tk as ChvITk).image
 
         /* let's concat all of the values together into one string separated by commas */
         /* that way we'll support coordinates "1,2" and text styles "plain, bold" */
@@ -424,7 +424,7 @@ export class ExecuteStatement {
         let multiply = MapTermToMilliseconds.Ticks;
         if (params && params.length) {
             checkThrowEq(1, params.length, 'expected `wait 400 ms`');
-            multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, '', params[0]);
+            multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, 'MapTermToMilliseconds', params[0]);
         }
 
         let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
@@ -463,10 +463,10 @@ export class ExecuteStatement {
     protected getVisualEffect(params: string[]) {
         checkThrowEq(4, params.length, '');
         return new VpcVisualEffectSpec(
-            getStrToEnum<VpcVisualEffectSpeed>(VpcVisualEffectSpeed, '', params[0]),
-            getStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, '', params[1]),
-            getStrToEnum<VpcVisualEffectTypeDirection>(VpcVisualEffectTypeDirection, '', params[2]),
-            getStrToEnum<VpcVisualEffectTypeDestination>(VpcVisualEffectTypeDestination, '', params[3])
+            getStrToEnum<VpcVisualEffectSpeed>(VpcVisualEffectSpeed, 'VpcVisualEffectSpeed', params[0]),
+            getStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, 'VpcVisualEffectType', params[1]),
+            getStrToEnum<VpcVisualEffectTypeDirection>(VpcVisualEffectTypeDirection, 'VpcVisualEffectTypeDirection', params[2]),
+            getStrToEnum<VpcVisualEffectTypeDestination>(VpcVisualEffectTypeDestination, 'VpcVisualEffectTypeDestination', params[3])
         );
     }
 }

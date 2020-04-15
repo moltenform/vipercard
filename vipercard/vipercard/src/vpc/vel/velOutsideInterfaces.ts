@@ -4,6 +4,7 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBase } from './velBase';
@@ -168,10 +169,10 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
      */
     SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void;
 
-    /**
-     * find element by id
+    /** 
+     * access the model 
      */
-    FindVelById(id: O<string>): O<VpcElBase>;
+    Model(): VpcModelTop
 
     /**
      * get a runtime (non-persisted) string value

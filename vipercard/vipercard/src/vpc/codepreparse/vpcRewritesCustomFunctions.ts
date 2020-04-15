@@ -156,7 +156,7 @@ export class ExpandCustomFunctions {
         assertTrue(isTkType(line[start + 1], tks.tkLParen), '5z|line did not start w identifier(');
         assertTrue(isTkType(line[end - 1], tks.tkRParen), '5y|line did not end w )');
         let stmtCall: ChvITk[] = [];
-        let newvarname = `tmpvar^^${this.idgenThisScript.next()}`;
+        let newvarname = `$tmpvar${this.idgenThisScript.next()}`;
 
         /* create new line of code calling this fn */
         checkThrow(this.check.potentialUserFn(line[start].image), '8P|must be valid userfn', line[start].image);

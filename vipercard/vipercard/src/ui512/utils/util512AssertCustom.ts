@@ -288,6 +288,9 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
     if (!structure && UI512ErrorHandling.contextHint) {
         sAllInfo += ` ${UI512ErrorHandling.contextHint}`;
     }
+    if (context) {
+        sAllInfo += ` (${context})`;
+    }
 
     console.error(sAllInfo);
     let severity = false;

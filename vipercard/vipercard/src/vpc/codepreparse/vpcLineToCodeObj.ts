@@ -51,7 +51,7 @@ export class VpcLineToCodeObj {
             let method = 'go' + Util512.capitalizeFirst(cmd);
             let ret: unknown;
             if (Util512.isMethodOnClass(this, method)) {
-                ret = Util512.callAsMethodOnClass('VpcLineToCodeObj', this, method, [line, output], false);
+                ret = Util512.callAsMethodOnClass(VpcLineToCodeObj.name, this, method, [line, output], false);
             } else {
                 ret = this.goCustomHandler(line, output);
             }
@@ -192,7 +192,7 @@ export class VpcLineToCodeObj {
             let firstToken = line[0];
             checkThrow(line[1].image !== '=', `8M|this isn't C... you need to use 'put 1 into x' not 'x = 1'`);
             checkThrow(
-                !firstToken.endOffset || line[1].image !== '(' || line[1].startOffset > firstToken.endOffset + 1,
+                !firstToken.endOffset || line[1].image !== '(' || arLast(line).image !== ')' || line[1].startOffset > firstToken.endOffset + 1,
                 longstr(`8L|this isn't C... you need to say
                  'put fn() into x' or 'get fn()' but not 'fn()' alone`)
             );

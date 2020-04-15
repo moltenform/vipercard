@@ -220,331 +220,333 @@ alsoReservedWordsList[cAltProductName.toLowerCase()] = true;
 
 /* generated code, any changes past this point will be lost: --------------- */
 export const tks = {
-    tkStringLiteral: chevrotain.createToken({
-        name: 'tkStringLiteral',
-        pattern: /"[^"\n]*"(?![a-zA-Z0-9_])/i
-    }),
-    tkBlockComment: chevrotain.createToken({
-        name: 'tkBlockComment',
-        pattern: /--\[\[[^\x5d]+\x5d/i,
-        group: chevrotain.Lexer.SKIPPED,
-        line_breaks: true
-    }),
-    tkLineComment: chevrotain.createToken({
-        name: 'tkLineComment',
-        pattern: /--[^\n]*/i,
-        group: chevrotain.Lexer.SKIPPED
-    }),
-    tkContinuedLineOrWhiteSpace: chevrotain.createToken({
-        name: 'tkContinuedLineOrWhiteSpace',
-        pattern: /(?:[ \t]+)|(?:[\\\xC2][ \t]*\n)/i,
-        group: chevrotain.Lexer.SKIPPED,
-        line_breaks: true
-    }),
-    tkCardAtEndOfLine: chevrotain.createToken({
-        name: 'tkCardAtEndOfLine',
-        pattern: /(?:card|cd)(?=\s*\n)/i
-    }),
-    tkBgAtEndOfLine: chevrotain.createToken({
-        name: 'tkBgAtEndOfLine',
-        pattern: /(?:background|bkgnd|bg)(?=\s*\n)/i
-    }),
-    tkStackAtEndOfLine: chevrotain.createToken({
-        name: 'tkStackAtEndOfLine',
-        pattern: /stack(?=\s*\n)/i
-    }),
-    tkNewLine: chevrotain.createToken({
-        name: 'tkNewLine',
-        pattern: /\n+/i,
-        line_breaks: true
-    }),
-    tkSyntaxPlaceholder: chevrotain.createToken({
-        name: 'tkSyntaxPlaceholder',
-        pattern: /\?{9}/i
-    }),
-    tkNumLiteral: chevrotain.createToken({
-        name: 'tkNumLiteral',
-        pattern: /[0-9]+(?:\.[0-9]*)?(?:e[-+]?[0-9]+)?(?![a-zA-Z0-9_])/i
-    }),
-    tkStack: chevrotain.createToken({
-        name: 'tkStack',
-        pattern: /(?:stack(?![a-zA-Z0-9_]))/i
-    }),
-    tkBg: chevrotain.createToken({
-        name: 'tkBg',
-        pattern: /(?:background(?![a-zA-Z0-9_]))|(?:bkgnd(?![a-zA-Z0-9_]))|(?:bg(?![a-zA-Z0-9_]))/i
-    }),
-    tkBgPlural: chevrotain.createToken({
-        name: 'tkBgPlural',
-        pattern: /(?:backgrounds(?![a-zA-Z0-9_]))|(?:bkgnds(?![a-zA-Z0-9_]))|(?:bgs(?![a-zA-Z0-9_]))/i
-    }),
-    tkCard: chevrotain.createToken({
-        name: 'tkCard',
-        pattern: /(?:card(?![a-zA-Z0-9_]))|(?:cd(?![a-zA-Z0-9_]))/i
-    }),
-    tkCardPlural: chevrotain.createToken({
-        name: 'tkCardPlural',
-        pattern: /(?:cards(?![a-zA-Z0-9_]))|(?:cds(?![a-zA-Z0-9_]))/i
-    }),
-    tkBtn: chevrotain.createToken({
-        name: 'tkBtn',
-        pattern: /(?:button(?![a-zA-Z0-9_]))|(?:btn(?![a-zA-Z0-9_]))/i
-    }),
-    tkBtnPlural: chevrotain.createToken({
-        name: 'tkBtnPlural',
-        pattern: /(?:buttons(?![a-zA-Z0-9_]))|(?:btns(?![a-zA-Z0-9_]))/i
-    }),
-    tkFld: chevrotain.createToken({
-        name: 'tkFld',
-        pattern: /(?:field(?![a-zA-Z0-9_]))|(?:fld(?![a-zA-Z0-9_]))/i
-    }),
-    tkFldPlural: chevrotain.createToken({
-        name: 'tkFldPlural',
-        pattern: /(?:fields(?![a-zA-Z0-9_]))|(?:flds(?![a-zA-Z0-9_]))/i
-    }),
-    tkPart: chevrotain.createToken({
-        name: 'tkPart',
-        pattern: /(?:part(?![a-zA-Z0-9_]))/i
-    }),
-    tkPartPlural: chevrotain.createToken({
-        name: 'tkPartPlural',
-        pattern: /(?:parts(?![a-zA-Z0-9_]))/i
-    }),
-    tkTopObject: chevrotain.createToken({
-        name: 'tkTopObject',
-        pattern: /(?:hypercard(?![a-zA-Z0-9_]))|(?:vipercard(?![a-zA-Z0-9_]))/i
-    }),
-    tkAdjective: chevrotain.createToken({
-        name: 'tkAdjective',
-        pattern: /(?:long(?![a-zA-Z0-9_]))|(?:short(?![a-zA-Z0-9_]))|(?:abbrev(?![a-zA-Z0-9_]))|(?:abbr(?![a-zA-Z0-9_]))|(?:abbreviated(?![a-zA-Z0-9_]))/i
-    }),
-    tkOrdinal: chevrotain.createToken({
-        name: 'tkOrdinal',
-        pattern: /(?:last(?![a-zA-Z0-9_]))|(?:mid(?![a-zA-Z0-9_]))|(?:middle(?![a-zA-Z0-9_]))|(?:any(?![a-zA-Z0-9_]))|(?:first(?![a-zA-Z0-9_]))|(?:second(?![a-zA-Z0-9_]))|(?:third(?![a-zA-Z0-9_]))|(?:fourth(?![a-zA-Z0-9_]))|(?:fifth(?![a-zA-Z0-9_]))|(?:sixth(?![a-zA-Z0-9_]))|(?:seventh(?![a-zA-Z0-9_]))|(?:eigth(?![a-zA-Z0-9_]))|(?:ninth(?![a-zA-Z0-9_]))|(?:tenth(?![a-zA-Z0-9_]))/i
-    }),
-    tkPosition: chevrotain.createToken({
-        name: 'tkPosition',
-        pattern: /(?:this(?![a-zA-Z0-9_]))|(?:prev(?![a-zA-Z0-9_]))|(?:next(?![a-zA-Z0-9_]))/i
-    }),
-    tkChunkGranularity: chevrotain.createToken({
-        name: 'tkChunkGranularity',
-        pattern: /(?:characters?(?![a-zA-Z0-9_]))|(?:chars?(?![a-zA-Z0-9_]))|(?:words?(?![a-zA-Z0-9_]))|(?:items?(?![a-zA-Z0-9_]))|(?:lines?(?![a-zA-Z0-9_]))/i
-    }),
-    tkInOnly: chevrotain.createToken({
-        name: 'tkInOnly',
-        pattern: /(?:in(?![a-zA-Z0-9_]))/i
-    }),
-    tkOfOnly: chevrotain.createToken({
-        name: 'tkOfOnly',
-        pattern: /(?:of(?![a-zA-Z0-9_]))/i
-    }),
-    tkA: chevrotain.createToken({
-        name: 'tkA',
-        pattern: /(?:a(?![a-zA-Z0-9_]))|(?:an(?![a-zA-Z0-9_]))/i
-    }),
-    _not: chevrotain.createToken({
-        name: '_not',
-        pattern: /(?:not(?![a-zA-Z0-9_]))/i
-    }),
-    _there: chevrotain.createToken({
-        name: '_there',
-        pattern: /(?:there(?![a-zA-Z0-9_]))/i
-    }),
-    _is: chevrotain.createToken({
-        name: '_is',
-        pattern: /(?:is(?![a-zA-Z0-9_]))/i
-    }),
-    _no: chevrotain.createToken({
-        name: '_no',
-        pattern: /(?:no(?![a-zA-Z0-9_]))/i
-    }),
-    _and: chevrotain.createToken({
-        name: '_and',
-        pattern: /(?:and(?![a-zA-Z0-9_]))/i
-    }),
-    _or: chevrotain.createToken({
-        name: '_or',
-        pattern: /(?:or(?![a-zA-Z0-9_]))/i
-    }),
-    _contains: chevrotain.createToken({
-        name: '_contains',
-        pattern: /(?:contains(?![a-zA-Z0-9_]))/i
-    }),
-    _within: chevrotain.createToken({
-        name: '_within',
-        pattern: /(?:within(?![a-zA-Z0-9_]))/i
-    }),
-    _the: chevrotain.createToken({
-        name: '_the',
-        pattern: /(?:the(?![a-zA-Z0-9_]))/i
-    }),
-    _message: chevrotain.createToken({
-        name: '_message',
-        pattern: /(?:msg(?![a-zA-Z0-9_]))|(?:message(?![a-zA-Z0-9_]))/i
-    }),
-    _window: chevrotain.createToken({
-        name: '_window',
-        pattern: /(?:window(?![a-zA-Z0-9_]))/i
-    }),
-    _windows: chevrotain.createToken({
-        name: '_windows',
-        pattern: /(?:windows(?![a-zA-Z0-9_]))/i
-    }),
-    _box: chevrotain.createToken({
-        name: '_box',
-        pattern: /(?:box(?![a-zA-Z0-9_]))/i
-    }),
-    _me: chevrotain.createToken({
-        name: '_me',
-        pattern: /(?:me(?![a-zA-Z0-9_]))/i
-    }),
-    _recent: chevrotain.createToken({
-        name: '_recent',
-        pattern: /(?:recent(?![a-zA-Z0-9_]))/i
-    }),
-    _back: chevrotain.createToken({
-        name: '_back',
-        pattern: /(?:back(?![a-zA-Z0-9_]))/i
-    }),
-    _forth: chevrotain.createToken({
-        name: '_forth',
-        pattern: /(?:forth(?![a-zA-Z0-9_]))/i
-    }),
-    _marked: chevrotain.createToken({
-        name: '_marked',
-        pattern: /(?:marked(?![a-zA-Z0-9_]))/i
-    }),
-    _to: chevrotain.createToken({
-        name: '_to',
-        pattern: /(?:to(?![a-zA-Z0-9_]))/i
-    }),
-    _menuItem: chevrotain.createToken({
-        name: '_menuItem',
-        pattern: /(?:menuitems?(?![a-zA-Z0-9_]))/i
-    }),
-    _menu: chevrotain.createToken({
-        name: '_menu',
-        pattern: /(?:menu(?![a-zA-Z0-9_]))/i
-    }),
-    _id: chevrotain.createToken({
-        name: '_id',
-        pattern: /(?:id(?![a-zA-Z0-9_]))/i
-    }),
-    _number: chevrotain.createToken({
-        name: '_number',
-        pattern: /(?:number(?![a-zA-Z0-9_]))/i
-    }),
-    _selection: chevrotain.createToken({
-        name: '_selection',
-        pattern: /(?:selection(?![a-zA-Z0-9_]))/i
-    }),
-    tkComma: chevrotain.createToken({
-        name: 'tkComma',
-        pattern: /,/i
-    }),
-    tkLParen: chevrotain.createToken({
-        name: 'tkLParen',
-        pattern: /\(/i
-    }),
-    tkRParen: chevrotain.createToken({
-        name: 'tkRParen',
-        pattern: /\)/i
-    }),
-    tkPlusOrMinus: chevrotain.createToken({
-        name: 'tkPlusOrMinus',
-        pattern: /(?:\+)|(?:-)/i
-    }),
-    tkMultDivideExpDivMod: chevrotain.createToken({
-        name: 'tkMultDivideExpDivMod',
-        pattern: /(?:\*)|(?:\/)|(?:\^)|(?:div(?![a-zA-Z0-9_]))|(?:mod(?![a-zA-Z0-9_]))/i
-    }),
-    tkStringConcat: chevrotain.createToken({
-        name: 'tkStringConcat',
-        pattern: /(?:&&)|(?:&)/i
-    }),
-    tkGreaterOrLessEqualOrEqual: chevrotain.createToken({
-        name: 'tkGreaterOrLessEqualOrEqual',
-        pattern: /(?:<>)|(?:>=?)|(?:<=?)|(?:!=)|(?:==?)|(?:\xB2)|(?:\xB3)|(?:\xAD)/i
-    }),
-    tkAllUnaryPropertiesIfNotAlready: chevrotain.createToken({
-        name: 'tkAllUnaryPropertiesIfNotAlready',
-        pattern: /(?:autohilite(?![a-zA-Z0-9_]))|(?:autoselect(?![a-zA-Z0-9_]))|(?:autotab(?![a-zA-Z0-9_]))|(?:bottom(?![a-zA-Z0-9_]))|(?:bottomright(?![a-zA-Z0-9_]))|(?:cantabort(?![a-zA-Z0-9_]))|(?:cantdelete(?![a-zA-Z0-9_]))|(?:cantmodify(?![a-zA-Z0-9_]))|(?:cantpeek(?![a-zA-Z0-9_]))|(?:checkmark(?![a-zA-Z0-9_]))|(?:commandchar(?![a-zA-Z0-9_]))|(?:dontsearch(?![a-zA-Z0-9_]))|(?:dontwrap(?![a-zA-Z0-9_]))|(?:enabled(?![a-zA-Z0-9_]))|(?:family(?![a-zA-Z0-9_]))|(?:fixedlineheight(?![a-zA-Z0-9_]))|(?:freesize(?![a-zA-Z0-9_]))|(?:height(?![a-zA-Z0-9_]))|(?:hilite(?![a-zA-Z0-9_]))|(?:icon(?![a-zA-Z0-9_]))|(?:left(?![a-zA-Z0-9_]))|(?:location(?![a-zA-Z0-9_]))|(?:locktext(?![a-zA-Z0-9_]))|(?:markchar(?![a-zA-Z0-9_]))|(?:menumessage(?![a-zA-Z0-9_]))|(?:multiplelines(?![a-zA-Z0-9_]))|(?:name(?![a-zA-Z0-9_]))|(?:owner(?![a-zA-Z0-9_]))|(?:partnumber(?![a-zA-Z0-9_]))|(?:rectangle(?![a-zA-Z0-9_]))|(?:reporttemplates(?![a-zA-Z0-9_]))|(?:right(?![a-zA-Z0-9_]))|(?:script(?![a-zA-Z0-9_]))|(?:scroll(?![a-zA-Z0-9_]))|(?:sharedhilite(?![a-zA-Z0-9_]))|(?:sharedtext(?![a-zA-Z0-9_]))|(?:showlines(?![a-zA-Z0-9_]))|(?:showname(?![a-zA-Z0-9_]))|(?:showpict(?![a-zA-Z0-9_]))|(?:size(?![a-zA-Z0-9_]))|(?:style(?![a-zA-Z0-9_]))|(?:textalign(?![a-zA-Z0-9_]))|(?:titlewidth(?![a-zA-Z0-9_]))|(?:top(?![a-zA-Z0-9_]))|(?:topleft(?![a-zA-Z0-9_]))|(?:visible(?![a-zA-Z0-9_]))|(?:widemargins(?![a-zA-Z0-9_]))|(?:width(?![a-zA-Z0-9_]))|(?:zoomed(?![a-zA-Z0-9_]))/i
-    }),
-    tkAllNullaryOrUnaryPropertiesIfNotAlready: chevrotain.createToken({
-        name: 'tkAllNullaryOrUnaryPropertiesIfNotAlready',
-        pattern: /(?:scriptinglanguage(?![a-zA-Z0-9_]))|(?:textfont(?![a-zA-Z0-9_]))|(?:textheight(?![a-zA-Z0-9_]))|(?:textsize(?![a-zA-Z0-9_]))|(?:textstyle(?![a-zA-Z0-9_]))|(?:version(?![a-zA-Z0-9_]))/i
-    }),
-    tkIdentifier: chevrotain.createToken({
-        name: 'tkIdentifier',
-        pattern: /[a-zA-Z][0-9a-zA-Z_]*/i
-    })
-};
+tkStringLiteral: chevrotain.createToken({
+name: "tkStringLiteral",
+pattern: /"[^"\n]*"(?![a-zA-Z0-9_])/i,
+}),
+tkBlockComment: chevrotain.createToken({
+name: "tkBlockComment",
+pattern: /--\[\[[^\x5d]+\x5d/i,
+group: chevrotain.Lexer.SKIPPED,line_breaks:true,
+}),
+tkLineComment: chevrotain.createToken({
+name: "tkLineComment",
+pattern: /--[^\n]*/i,
+group: chevrotain.Lexer.SKIPPED,
+}),
+tkContinuedLineOrWhiteSpace: chevrotain.createToken({
+name: "tkContinuedLineOrWhiteSpace",
+pattern: /(?:[ \t]+)|(?:[\\\xC2][ \t]*\n)/i,
+group: chevrotain.Lexer.SKIPPED,line_breaks:true,
+}),
+tkCardAtEndOfLine: chevrotain.createToken({
+name: "tkCardAtEndOfLine",
+pattern: /(?:card|cd)(?=\s*\n)/i,
+}),
+tkBgAtEndOfLine: chevrotain.createToken({
+name: "tkBgAtEndOfLine",
+pattern: /(?:background|bkgnd|bg)(?=\s*\n)/i,
+}),
+tkStackAtEndOfLine: chevrotain.createToken({
+name: "tkStackAtEndOfLine",
+pattern: /stack(?=\s*\n)/i,
+}),
+tkNewLine: chevrotain.createToken({
+name: "tkNewLine",
+pattern: /\n+/i,
+line_breaks:true,
+}),
+tkSyntaxPlaceholder: chevrotain.createToken({
+name: "tkSyntaxPlaceholder",
+pattern: /\?{9}/i,
+}),
+tkNumLiteral: chevrotain.createToken({
+name: "tkNumLiteral",
+pattern: /[0-9]+(?:\.[0-9]*)?(?:e[-+]?[0-9]+)?(?![a-zA-Z0-9_])/i,
+}),
+tkStack: chevrotain.createToken({
+name: "tkStack",
+pattern: /(?:stack(?![a-zA-Z0-9_]))/i,
+}),
+tkBg: chevrotain.createToken({
+name: "tkBg",
+pattern: /(?:background(?![a-zA-Z0-9_]))|(?:bkgnd(?![a-zA-Z0-9_]))|(?:bg(?![a-zA-Z0-9_]))/i,
+}),
+tkBgPlural: chevrotain.createToken({
+name: "tkBgPlural",
+pattern: /(?:backgrounds(?![a-zA-Z0-9_]))|(?:bkgnds(?![a-zA-Z0-9_]))|(?:bgs(?![a-zA-Z0-9_]))/i,
+}),
+tkCard: chevrotain.createToken({
+name: "tkCard",
+pattern: /(?:card(?![a-zA-Z0-9_]))|(?:cd(?![a-zA-Z0-9_]))/i,
+}),
+tkCardPlural: chevrotain.createToken({
+name: "tkCardPlural",
+pattern: /(?:cards(?![a-zA-Z0-9_]))|(?:cds(?![a-zA-Z0-9_]))/i,
+}),
+tkBtn: chevrotain.createToken({
+name: "tkBtn",
+pattern: /(?:button(?![a-zA-Z0-9_]))|(?:btn(?![a-zA-Z0-9_]))/i,
+}),
+tkBtnPlural: chevrotain.createToken({
+name: "tkBtnPlural",
+pattern: /(?:buttons(?![a-zA-Z0-9_]))|(?:btns(?![a-zA-Z0-9_]))/i,
+}),
+tkFld: chevrotain.createToken({
+name: "tkFld",
+pattern: /(?:field(?![a-zA-Z0-9_]))|(?:fld(?![a-zA-Z0-9_]))/i,
+}),
+tkFldPlural: chevrotain.createToken({
+name: "tkFldPlural",
+pattern: /(?:fields(?![a-zA-Z0-9_]))|(?:flds(?![a-zA-Z0-9_]))/i,
+}),
+tkPart: chevrotain.createToken({
+name: "tkPart",
+pattern: /(?:part(?![a-zA-Z0-9_]))/i,
+}),
+tkPartPlural: chevrotain.createToken({
+name: "tkPartPlural",
+pattern: /(?:parts(?![a-zA-Z0-9_]))/i,
+}),
+tkTopObject: chevrotain.createToken({
+name: "tkTopObject",
+pattern: /(?:hypercard(?![a-zA-Z0-9_]))|(?:vipercard(?![a-zA-Z0-9_]))/i,
+}),
+tkAdjective: chevrotain.createToken({
+name: "tkAdjective",
+pattern: /(?:long(?![a-zA-Z0-9_]))|(?:short(?![a-zA-Z0-9_]))|(?:abbrev(?![a-zA-Z0-9_]))|(?:abbr(?![a-zA-Z0-9_]))|(?:abbreviated(?![a-zA-Z0-9_]))/i,
+}),
+tkOrdinal: chevrotain.createToken({
+name: "tkOrdinal",
+pattern: /(?:last(?![a-zA-Z0-9_]))|(?:mid(?![a-zA-Z0-9_]))|(?:middle(?![a-zA-Z0-9_]))|(?:any(?![a-zA-Z0-9_]))|(?:first(?![a-zA-Z0-9_]))|(?:second(?![a-zA-Z0-9_]))|(?:third(?![a-zA-Z0-9_]))|(?:fourth(?![a-zA-Z0-9_]))|(?:fifth(?![a-zA-Z0-9_]))|(?:sixth(?![a-zA-Z0-9_]))|(?:seventh(?![a-zA-Z0-9_]))|(?:eighth(?![a-zA-Z0-9_]))|(?:ninth(?![a-zA-Z0-9_]))|(?:tenth(?![a-zA-Z0-9_]))/i,
+}),
+tkPosition: chevrotain.createToken({
+name: "tkPosition",
+pattern: /(?:this(?![a-zA-Z0-9_]))|(?:prev(?![a-zA-Z0-9_]))|(?:next(?![a-zA-Z0-9_]))/i,
+}),
+tkChunkGranularity: chevrotain.createToken({
+name: "tkChunkGranularity",
+pattern: /(?:characters?(?![a-zA-Z0-9_]))|(?:chars?(?![a-zA-Z0-9_]))|(?:words?(?![a-zA-Z0-9_]))|(?:items?(?![a-zA-Z0-9_]))|(?:lines?(?![a-zA-Z0-9_]))/i,
+}),
+tkInOnly: chevrotain.createToken({
+name: "tkInOnly",
+pattern: /(?:in(?![a-zA-Z0-9_]))/i,
+}),
+tkOfOnly: chevrotain.createToken({
+name: "tkOfOnly",
+pattern: /(?:of(?![a-zA-Z0-9_]))/i,
+}),
+tkA: chevrotain.createToken({
+name: "tkA",
+pattern: /(?:a(?![a-zA-Z0-9_]))|(?:an(?![a-zA-Z0-9_]))/i,
+}),
+_not: chevrotain.createToken({
+name: "_not",
+pattern: /(?:not(?![a-zA-Z0-9_]))/i,
+}),
+_there: chevrotain.createToken({
+name: "_there",
+pattern: /(?:there(?![a-zA-Z0-9_]))/i,
+}),
+_is: chevrotain.createToken({
+name: "_is",
+pattern: /(?:is(?![a-zA-Z0-9_]))/i,
+}),
+_no: chevrotain.createToken({
+name: "_no",
+pattern: /(?:no(?![a-zA-Z0-9_]))/i,
+}),
+_and: chevrotain.createToken({
+name: "_and",
+pattern: /(?:and(?![a-zA-Z0-9_]))/i,
+}),
+_or: chevrotain.createToken({
+name: "_or",
+pattern: /(?:or(?![a-zA-Z0-9_]))/i,
+}),
+_contains: chevrotain.createToken({
+name: "_contains",
+pattern: /(?:contains(?![a-zA-Z0-9_]))/i,
+}),
+_within: chevrotain.createToken({
+name: "_within",
+pattern: /(?:within(?![a-zA-Z0-9_]))/i,
+}),
+_the: chevrotain.createToken({
+name: "_the",
+pattern: /(?:the(?![a-zA-Z0-9_]))/i,
+}),
+_message: chevrotain.createToken({
+name: "_message",
+pattern: /(?:msg(?![a-zA-Z0-9_]))|(?:message(?![a-zA-Z0-9_]))/i,
+}),
+_window: chevrotain.createToken({
+name: "_window",
+pattern: /(?:window(?![a-zA-Z0-9_]))/i,
+}),
+_windows: chevrotain.createToken({
+name: "_windows",
+pattern: /(?:windows(?![a-zA-Z0-9_]))/i,
+}),
+_box: chevrotain.createToken({
+name: "_box",
+pattern: /(?:box(?![a-zA-Z0-9_]))/i,
+}),
+_me: chevrotain.createToken({
+name: "_me",
+pattern: /(?:me(?![a-zA-Z0-9_]))/i,
+}),
+_recent: chevrotain.createToken({
+name: "_recent",
+pattern: /(?:recent(?![a-zA-Z0-9_]))/i,
+}),
+_back: chevrotain.createToken({
+name: "_back",
+pattern: /(?:back(?![a-zA-Z0-9_]))/i,
+}),
+_forth: chevrotain.createToken({
+name: "_forth",
+pattern: /(?:forth(?![a-zA-Z0-9_]))/i,
+}),
+_marked: chevrotain.createToken({
+name: "_marked",
+pattern: /(?:marked(?![a-zA-Z0-9_]))/i,
+}),
+_to: chevrotain.createToken({
+name: "_to",
+pattern: /(?:to(?![a-zA-Z0-9_]))/i,
+}),
+_menuItem: chevrotain.createToken({
+name: "_menuItem",
+pattern: /(?:menuitems?(?![a-zA-Z0-9_]))/i,
+}),
+_menu: chevrotain.createToken({
+name: "_menu",
+pattern: /(?:menu(?![a-zA-Z0-9_]))/i,
+}),
+_id: chevrotain.createToken({
+name: "_id",
+pattern: /(?:id(?![a-zA-Z0-9_]))/i,
+}),
+_number: chevrotain.createToken({
+name: "_number",
+pattern: /(?:number(?![a-zA-Z0-9_]))/i,
+}),
+_selection: chevrotain.createToken({
+name: "_selection",
+pattern: /(?:selection(?![a-zA-Z0-9_]))/i,
+}),
+tkComma: chevrotain.createToken({
+name: "tkComma",
+pattern: /,/i,
+}),
+tkLParen: chevrotain.createToken({
+name: "tkLParen",
+pattern: /\(/i,
+}),
+tkRParen: chevrotain.createToken({
+name: "tkRParen",
+pattern: /\)/i,
+}),
+tkPlusOrMinus: chevrotain.createToken({
+name: "tkPlusOrMinus",
+pattern: /(?:\+)|(?:-)/i,
+}),
+tkMultDivideExpDivMod: chevrotain.createToken({
+name: "tkMultDivideExpDivMod",
+pattern: /(?:\*)|(?:\/)|(?:\^)|(?:div(?![a-zA-Z0-9_]))|(?:mod(?![a-zA-Z0-9_]))/i,
+}),
+tkStringConcat: chevrotain.createToken({
+name: "tkStringConcat",
+pattern: /(?:&&)|(?:&)/i,
+}),
+tkGreaterOrLessEqualOrEqual: chevrotain.createToken({
+name: "tkGreaterOrLessEqualOrEqual",
+pattern: /(?:<>)|(?:>=?)|(?:<=?)|(?:!=)|(?:==?)|(?:\xB2)|(?:\xB3)|(?:\xAD)/i,
+}),
+tkAllUnaryPropertiesIfNotAlready: chevrotain.createToken({
+name: "tkAllUnaryPropertiesIfNotAlready",
+pattern: /(?:autohilite(?![a-zA-Z0-9_]))|(?:autoselect(?![a-zA-Z0-9_]))|(?:autotab(?![a-zA-Z0-9_]))|(?:bottom(?![a-zA-Z0-9_]))|(?:bottomright(?![a-zA-Z0-9_]))|(?:cantabort(?![a-zA-Z0-9_]))|(?:cantdelete(?![a-zA-Z0-9_]))|(?:cantmodify(?![a-zA-Z0-9_]))|(?:cantpeek(?![a-zA-Z0-9_]))|(?:checkmark(?![a-zA-Z0-9_]))|(?:commandchar(?![a-zA-Z0-9_]))|(?:dontsearch(?![a-zA-Z0-9_]))|(?:dontwrap(?![a-zA-Z0-9_]))|(?:enabled(?![a-zA-Z0-9_]))|(?:family(?![a-zA-Z0-9_]))|(?:fixedlineheight(?![a-zA-Z0-9_]))|(?:freesize(?![a-zA-Z0-9_]))|(?:height(?![a-zA-Z0-9_]))|(?:hilite(?![a-zA-Z0-9_]))|(?:icon(?![a-zA-Z0-9_]))|(?:left(?![a-zA-Z0-9_]))|(?:location(?![a-zA-Z0-9_]))|(?:locktext(?![a-zA-Z0-9_]))|(?:markchar(?![a-zA-Z0-9_]))|(?:menumessage(?![a-zA-Z0-9_]))|(?:multiplelines(?![a-zA-Z0-9_]))|(?:name(?![a-zA-Z0-9_]))|(?:owner(?![a-zA-Z0-9_]))|(?:partnumber(?![a-zA-Z0-9_]))|(?:rectangle(?![a-zA-Z0-9_]))|(?:reporttemplates(?![a-zA-Z0-9_]))|(?:right(?![a-zA-Z0-9_]))|(?:script(?![a-zA-Z0-9_]))|(?:scroll(?![a-zA-Z0-9_]))|(?:sharedhilite(?![a-zA-Z0-9_]))|(?:sharedtext(?![a-zA-Z0-9_]))|(?:showlines(?![a-zA-Z0-9_]))|(?:showname(?![a-zA-Z0-9_]))|(?:showpict(?![a-zA-Z0-9_]))|(?:size(?![a-zA-Z0-9_]))|(?:style(?![a-zA-Z0-9_]))|(?:textalign(?![a-zA-Z0-9_]))|(?:titlewidth(?![a-zA-Z0-9_]))|(?:top(?![a-zA-Z0-9_]))|(?:topleft(?![a-zA-Z0-9_]))|(?:visible(?![a-zA-Z0-9_]))|(?:widemargins(?![a-zA-Z0-9_]))|(?:width(?![a-zA-Z0-9_]))|(?:zoomed(?![a-zA-Z0-9_]))/i,
+}),
+tkAllNullaryOrUnaryPropertiesIfNotAlready: chevrotain.createToken({
+name: "tkAllNullaryOrUnaryPropertiesIfNotAlready",
+pattern: /(?:scriptinglanguage(?![a-zA-Z0-9_]))|(?:textfont(?![a-zA-Z0-9_]))|(?:textheight(?![a-zA-Z0-9_]))|(?:textsize(?![a-zA-Z0-9_]))|(?:textstyle(?![a-zA-Z0-9_]))|(?:version(?![a-zA-Z0-9_]))/i,
+}),
+tkIdentifier: chevrotain.createToken({
+name: "tkIdentifier",
+pattern: /[a-zA-Z][0-9a-zA-Z_]*/i,
+}),
+}
+
 
 export const allVpcTokens = [
-    tks.tkStringLiteral,
-    tks.tkBlockComment,
-    tks.tkLineComment,
-    tks.tkContinuedLineOrWhiteSpace,
-    tks.tkCardAtEndOfLine,
-    tks.tkBgAtEndOfLine,
-    tks.tkStackAtEndOfLine,
-    tks.tkNewLine,
-    tks.tkSyntaxPlaceholder,
-    tks.tkNumLiteral,
-    tks.tkStack,
-    tks.tkBg,
-    tks.tkBgPlural,
-    tks.tkCard,
-    tks.tkCardPlural,
-    tks.tkBtn,
-    tks.tkBtnPlural,
-    tks.tkFld,
-    tks.tkFldPlural,
-    tks.tkPart,
-    tks.tkPartPlural,
-    tks.tkTopObject,
-    tks.tkAdjective,
-    tks.tkOrdinal,
-    tks.tkPosition,
-    tks.tkChunkGranularity,
-    tks.tkInOnly,
-    tks.tkOfOnly,
-    tks.tkA,
-    tks._not,
-    tks._there,
-    tks._is,
-    tks._no,
-    tks._and,
-    tks._or,
-    tks._contains,
-    tks._within,
-    tks._the,
-    tks._message,
-    tks._window,
-    tks._windows,
-    tks._box,
-    tks._me,
-    tks._recent,
-    tks._back,
-    tks._forth,
-    tks._marked,
-    tks._to,
-    tks._menuItem,
-    tks._menu,
-    tks._id,
-    tks._number,
-    tks._selection,
-    tks.tkComma,
-    tks.tkLParen,
-    tks.tkRParen,
-    tks.tkPlusOrMinus,
-    tks.tkMultDivideExpDivMod,
-    tks.tkStringConcat,
-    tks.tkGreaterOrLessEqualOrEqual,
-    tks.tkAllUnaryPropertiesIfNotAlready,
-    tks.tkAllNullaryOrUnaryPropertiesIfNotAlready,
-    tks.tkIdentifier
-];
+tks.tkStringLiteral,
+tks.tkBlockComment,
+tks.tkLineComment,
+tks.tkContinuedLineOrWhiteSpace,
+tks.tkCardAtEndOfLine,
+tks.tkBgAtEndOfLine,
+tks.tkStackAtEndOfLine,
+tks.tkNewLine,
+tks.tkSyntaxPlaceholder,
+tks.tkNumLiteral,
+tks.tkStack,
+tks.tkBg,
+tks.tkBgPlural,
+tks.tkCard,
+tks.tkCardPlural,
+tks.tkBtn,
+tks.tkBtnPlural,
+tks.tkFld,
+tks.tkFldPlural,
+tks.tkPart,
+tks.tkPartPlural,
+tks.tkTopObject,
+tks.tkAdjective,
+tks.tkOrdinal,
+tks.tkPosition,
+tks.tkChunkGranularity,
+tks.tkInOnly,
+tks.tkOfOnly,
+tks.tkA,
+tks._not,
+tks._there,
+tks._is,
+tks._no,
+tks._and,
+tks._or,
+tks._contains,
+tks._within,
+tks._the,
+tks._message,
+tks._window,
+tks._windows,
+tks._box,
+tks._me,
+tks._recent,
+tks._back,
+tks._forth,
+tks._marked,
+tks._to,
+tks._menuItem,
+tks._menu,
+tks._id,
+tks._number,
+tks._selection,
+tks.tkComma,
+tks.tkLParen,
+tks.tkRParen,
+tks.tkPlusOrMinus,
+tks.tkMultDivideExpDivMod,
+tks.tkStringConcat,
+tks.tkGreaterOrLessEqualOrEqual,
+tks.tkAllUnaryPropertiesIfNotAlready,
+tks.tkAllNullaryOrUnaryPropertiesIfNotAlready,
+tks.tkIdentifier,
+]
+
+
+
 
 alsoReservedWordsList['stack'] = true;
 alsoReservedWordsList['background'] = true;
@@ -585,7 +587,7 @@ alsoReservedWordsList['fourth'] = true;
 alsoReservedWordsList['fifth'] = true;
 alsoReservedWordsList['sixth'] = true;
 alsoReservedWordsList['seventh'] = true;
-alsoReservedWordsList['eigth'] = true;
+alsoReservedWordsList['eighth'] = true;
 alsoReservedWordsList['ninth'] = true;
 alsoReservedWordsList['tenth'] = true;
 alsoReservedWordsList['this'] = true;
@@ -632,7 +634,8 @@ alsoReservedWordsList['id'] = true;
 alsoReservedWordsList['number'] = true;
 alsoReservedWordsList['selection'] = true;
 
-export const listOfAllWordLikeTokens: { [key: string]: chevrotain.TokenType } = {};
+
+export const listOfAllWordLikeTokens:{ [key: string]: chevrotain.TokenType } = { }
 listOfAllWordLikeTokens['stack'] = tks.tkStack;
 listOfAllWordLikeTokens['background'] = tks.tkBg;
 listOfAllWordLikeTokens['bkgnd'] = tks.tkBg;
@@ -672,7 +675,7 @@ listOfAllWordLikeTokens['fourth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['fifth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['sixth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['seventh'] = tks.tkOrdinal;
-listOfAllWordLikeTokens['eigth'] = tks.tkOrdinal;
+listOfAllWordLikeTokens['eighth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['ninth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['tenth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['this'] = tks.tkPosition;
@@ -774,7 +777,8 @@ listOfAllWordLikeTokens['textsize'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlre
 listOfAllWordLikeTokens['textstyle'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['version'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
 
-export const listOfAllBuiltinCommandsInOriginalProduct: { [key: string]: boolean } = {};
+
+export const listOfAllBuiltinCommandsInOriginalProduct:{ [key: string]: boolean } = { }
 
 listOfAllBuiltinCommandsInOriginalProduct['add'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['answer'] = true;
@@ -856,7 +860,7 @@ listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappablechoose'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappabledomenu'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['replace'] = true;
 
-export const listOfAllBuiltinEventsInOriginalProduct: { [key: string]: boolean } = {};
+export const listOfAllBuiltinEventsInOriginalProduct:{ [key: string]: boolean } = { }
 
 listOfAllBuiltinEventsInOriginalProduct['choose'] = true;
 listOfAllBuiltinEventsInOriginalProduct['domenu'] = true;
@@ -910,13 +914,7 @@ listOfAllBuiltinEventsInOriginalProduct['suspend'] = true;
 listOfAllBuiltinEventsInOriginalProduct['suspendstack'] = true;
 
 export function couldTokenTypeBeAVariableName(t: chevrotain.IToken) {
-    return (
-        t.tokenType === tks.tkIdentifier ||
-        t.tokenType === tks._number ||
-        t.tokenType === tks.tkA ||
-        t.tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||
-        t.tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready
-    );
+return t.tokenType === tks.tkIdentifier ||t.tokenType === tks._number ||t.tokenType === tks.tkA ||t.tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||t.tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready 
 }
 
 export const tkstr = {
@@ -1069,8 +1067,8 @@ export const tkstr = {
     tkGreaterOrLessEqualOrEqual: 'tkGreaterOrLessEqualOrEqual',
     tkAllUnaryPropertiesIfNotAlready: 'tkAllUnaryPropertiesIfNotAlready',
     tkAllNullaryOrUnaryPropertiesIfNotAlready: 'tkAllNullaryOrUnaryPropertiesIfNotAlready',
-    tkIdentifier: 'tkIdentifier'
-};
+    tkIdentifier: 'tkIdentifier',
+}
 
 /* generated code, any changes above this point will be lost: --------------- */
 

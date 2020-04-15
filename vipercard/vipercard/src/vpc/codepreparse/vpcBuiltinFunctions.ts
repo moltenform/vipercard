@@ -146,7 +146,7 @@ export class VpcBuiltinFunctions {
             }
 
             let method = 'call' + Util512.capitalizeFirst(name);
-            let ret = Util512.callAsMethodOnClass('VpcBuiltinFunctions', this, method, [args], false) as VpcVal;
+            let ret = Util512.callAsMethodOnClass(VpcBuiltinFunctions.name, this, method, [args], false) as VpcVal;
             assertTrue(ret instanceof VpcVal, '5m|did not return a vpcval');
             return ret;
         }
@@ -159,7 +159,7 @@ export class VpcBuiltinFunctions {
             let [frameMsg, frameParams] = this.readoutside.GetFrameInfo();
             let method = 'call' + Util512.capitalizeFirst(name);
             let ret = Util512.callAsMethodOnClass(
-                'VpcBuiltinFunctions',
+                VpcBuiltinFunctions.name,
                 this,
                 method,
                 [args, frameMsg, frameParams],

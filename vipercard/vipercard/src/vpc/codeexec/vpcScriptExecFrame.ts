@@ -3,14 +3,13 @@
 /* auto */ import { VpcVal } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
-/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { LoopLimit, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow } from './../vpcutils/vpcEnums';
+/* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { VpcElProductOpts } from './../vel/velProductOpts';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -122,12 +121,12 @@ export class VpcExecFrame {
      */
     static getMessageChain(velId: string, statedParent: O<string>, outside: OutsideWorldReadWrite): string[] {
         let ret: string[] = [];
-        let vel = outside.FindVelById(velId);
+        let vel = outside.Model().findByIdUntyped(velId);
         let haveUsedStatedParent = false;
         let hasSeenStack = false;
         let hasSeenProduct = false;
         if (!vel && statedParent) {
-            vel = outside.FindVelById(statedParent);
+            vel = outside.Model().findByIdUntyped(statedParent);
             haveUsedStatedParent = true;
         }
 
@@ -144,23 +143,19 @@ export class VpcExecFrame {
             }
 
             ret.push(vel.id);
-            if (!haveUsedStatedParent && statedParent && outside.FindVelById(statedParent)) {
-                vel = outside.FindVelById(statedParent);
+            if (!haveUsedStatedParent && statedParent && outside.Model().findByIdUntyped(statedParent)) {
+                vel = outside.Model().findByIdUntyped(statedParent);
                 haveUsedStatedParent = true;
             } else {
-                vel = outside.FindVelById(vel.parentId);
+                vel = outside.Model().findByIdUntyped(vel.parentId);
             }
         }
 
         if (!hasSeenStack) {
-            let r = new RequestedVelRef(VpcElType.Stack);
-            r.lookByRelative = OrdinalOrPosition.This;
-            ret.push(ensureDefined(outside.ResolveVelRef(r)[0], '').id);
+            ret.push(outside.Model().stack.id);
         }
         if (!hasSeenProduct) {
-            let r = new RequestedVelRef(VpcElType.Product);
-            r.lookByRelative = OrdinalOrPosition.This;
-            ret.push(ensureDefined(outside.ResolveVelRef(r)[0], '').id);
+            ret.push(outside.Model().productOpts.id);
         }
 
         return ret;

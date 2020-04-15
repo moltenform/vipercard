@@ -5,15 +5,15 @@
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
-/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCurrentScriptStage } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcErr, VpcErrStage, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
+/* auto */ import { VpcElBg } from './../vel/velBg';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { ValHolder, cast, slength } from './../../ui512/utils/util512';
+/* auto */ import { ValHolder, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -26,6 +26,7 @@
  * and we'll start running code
  */
 export class VpcExecTop {
+    which = Math.random()
     globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
     cardHistory = new RememberHistory();
     constants = new VariableCollectionConstants();
@@ -40,6 +41,7 @@ export class VpcExecTop {
     protected readonly cachedCST: VpcCacheParsedCST;
     readonly cachedAST: VpcCacheParsedAST;
     protected readonly outside: OutsideWorldReadWrite;
+    protected haveSentOpenStack = false;
     constructor(outside: OutsideWorldReadWrite, public idGen: CountNumericId) {
         this.cachedAST = new VpcCacheParsedAST(this.idGen);
         this.cachedCST = new VpcCacheParsedCST();
@@ -135,6 +137,11 @@ export class VpcExecTop {
      * run code, and trigger UI refresh
      */
     runTimeslice(ms: number) {
+        if (!this.haveSentOpenStack) {
+            this.haveSentOpenStack = true
+            this.sendInitialOpenStackAndOpenCard();
+        }
+
         if (this.workQueue.length === 0) {
             this.resetAfterFrameStackIsDone();
             return;
@@ -150,6 +157,31 @@ export class VpcExecTop {
         let codeRunningAfter = this.isCodeRunning();
         if (codeRunningBefore !== codeRunningAfter && this.cbCauseUIRedraw) {
             this.cbCauseUIRedraw();
+        }
+    }
+
+    /**
+     * send the first opencard, openbackground, and openstack message
+     */
+    sendInitialOpenStackAndOpenCard() {
+        {
+            /* send openstack */
+            let msg = new VpcScriptMessage(this.outside.Model().stack.id, VpcBuiltinMsg.Openstack);
+            this.scheduleCodeExec(msg);
+        }
+
+        {
+            /* send openbackground */
+            let currentCard = this.outside.Model().getCardById(this.outside.GetCurrentCardId());
+            let currentBg = this.outside.Model().getOwner(VpcElBg, currentCard);
+            let msg = new VpcScriptMessage(currentBg.id, VpcBuiltinMsg.Openbackground);
+            this.scheduleCodeExec(msg);
+        }
+
+        {
+            /* send opencard */
+            let msg = new VpcScriptMessage(this.outside.GetCurrentCardId(), VpcBuiltinMsg.Opencard);
+            this.scheduleCodeExec(msg);
         }
     }
 
@@ -252,12 +284,8 @@ export class VpcExecTop {
      * run maintenance
      */
     doMaintenance() {
-        let refStack = new RequestedVelRef(VpcElType.Stack);
-        refStack.lookByRelative = OrdinalOrPosition.This;
-        let got = this.outside.ResolveVelRef(refStack);
-        if (got && got[0]) {
-            VpcExecTop.checkNoRepeatedIds(cast(VpcElStack, got[0]));
-        }
+        let stack = this.outside.Model().stack
+        VpcExecTop.checkNoRepeatedIds(stack);
     }
 
     /**

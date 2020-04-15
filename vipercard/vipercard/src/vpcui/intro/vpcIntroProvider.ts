@@ -5,7 +5,6 @@
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcSession, vpcStacksGetData } from './../../vpc/request/vpcRequest';
-/* auto */ import { VpcPresenterEvents } from './../presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { VpcOutsideImpl } from './../state/vpcOutsideImpl';
 /* auto */ import { VpcStateInterfaceImpl } from './vpcInterfaceImpl';
@@ -71,19 +70,28 @@ export class VpcIntroProvider {
      */
     async loadDocumentTop(): Promise<[VpcPresenter, VpcState]> {
         /* download the stack data */
+        let a = 1
         let serialized = await this.getSerializedStackData();
+        a=2
 
         /* create pr and fullVci */
         let { pr, fullVci, vpcState } = await this.getVpcState();
+        assertTrue(vpcState, "a1")
+        a=3
 
         /* load saved data */
         await this.initPrUI(pr, serialized, fullVci, vpcState);
+        assertTrue(vpcState, "a2")
+        a=4
 
         /* compile scripts, set stack lineage */
         /* don't prevent stack from opening if a failure happens here */
         try {
+            a=5
             await this.initPrSettings(pr, vpcState, fullVci);
+            a=5
         } catch (e) {
+            a=5
             respondUI512Error(e, 'initPrSettings');
         }
 
@@ -91,6 +99,7 @@ export class VpcIntroProvider {
         this.setFirstActionWhenLoaded(vpcState, pr);
 
         /* return the results */
+        assertTrue(vpcState, "a3")
         return [pr, vpcState];
     }
 
@@ -236,9 +245,6 @@ export class VpcIntroProvider {
 
         vci.vci.doWithoutAbilityToUndo(() => {
             vci.vci.setTool(hasContent ? VpcTool.Browse : VpcTool.Pencil);
-            if (hasContent) {
-                VpcPresenterEvents.sendInitialOpenStackAndOpenCard(pr, vci.vci);
-            }
         });
 
         vci.vci.causeUIRedraw();

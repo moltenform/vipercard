@@ -750,7 +750,7 @@ export class UI512ViewDraw {
         hasFocus = bool(hasFocus) || bool(this.allowMultipleFocus);
         let methodName = 'go' + el.typename;
         Util512.callAsMethodOnClass(
-            'UI512ViewDraw',
+            UI512ViewDraw.name,
             this,
             methodName,
             [b, el, hasFocus],

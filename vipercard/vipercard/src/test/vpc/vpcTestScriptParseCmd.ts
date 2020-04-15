@@ -316,7 +316,7 @@ export class TestParseHelpers {
             BuildFakeTokens.inst.makeSyntaxMarker(line[0])
         );
         this.parser.input = line;
-        let cst = Util512.callAsMethodOnClass('parser', this.parser, sTopRule, [], false);
+        let cst = Util512.callAsMethodOnClass(this.testParse.name, this.parser, sTopRule, [], false);
         assertWarn(
             sExpected === '' || sExpected === 'parses',
             "we don't check the cst anymore"

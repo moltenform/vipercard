@@ -3,6 +3,8 @@
 /* Released under the MIT license */
 
 export class VpcStandardLibScript {
+    static handlersImplementedInSoftware = {push:true, pop:true}
+
     static script = `
 -- we don't need default handlers for "on mousedown" etc...
 -- we have a list of handlers where it's always ok if they are missing (equivalent).
@@ -16,7 +18,7 @@ end choose
 
 on domenu a, b
     vpccalluntrappabledomenu a, b
-end choose
+end domenu
 
 on arrowkey direction
     if direction == "right" then

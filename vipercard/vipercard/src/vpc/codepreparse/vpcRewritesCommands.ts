@@ -177,7 +177,7 @@ export class VpcRewriteForCommands {
         if (line.length === 2 && (line[1].tokenType === tks.tkOrdinal || line[1].tokenType === tks.tkPosition)) {
             template = `
 if there is a %ARG0% card then
-    internalvpcmovecardhelper (the id of %ARG0% card), ${shouldSuspendHistory}
+    internalvpcmovecardhelper ( the id of %ARG0% card ) , ${shouldSuspendHistory}
 end if`;
         } else {
             /* the id might refer to a bg or stack, we will correctly handle that.
@@ -185,7 +185,7 @@ end if`;
 
             template = `
 if there is a %ARG0% then
-    internalvpcmovecardhelper (the id of %ARG0%), ${shouldSuspendHistory}
+    internalvpcmovecardhelper  ( the id of %ARG0% ) , ${shouldSuspendHistory}
 end if`;
         }
         return this.rw.gen(template, line[0], [line.slice(1)]);

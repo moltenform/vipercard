@@ -15,6 +15,7 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -215,6 +216,12 @@ export class TestVpcScriptRunBase {
             makeWarningUseful += ` v=${velId} msg=\n${msg}`;
 
             if (expectErrMsg !== undefined) {
+                if (msg.includes('vpc parse error:')) {
+                    /* add the exception name for compatibility */
+                    if (getParsingObjects()[1].errors?.length) {
+                        msg = getParsingObjects()[1].errors[0].name + ': ' + msg
+                    }
+                }
                 //~ assertWarn(
                 //~ msg.includes(expectErrMsg),
                 //~ `wrong err message, expected <${expectErrMsg}>`,

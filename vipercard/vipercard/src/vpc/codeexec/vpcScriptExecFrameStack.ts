@@ -4,7 +4,7 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
-/* auto */ import { VpcParsed, listOfAllBuiltinEventsInOriginalProduct, tks, tkstr } from './../codeparse/vpcTokens';
+/* auto */ import { VpcParsed, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
@@ -225,7 +225,7 @@ export class VpcExecFrameStack {
 
         VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
         let methodName = 'visit' + getEnumToStrOrFallback(VpcLineCategory, curLine.ctg);
-        Util512.callAsMethodOnClass('VpcExecFrameStack', this, methodName, [curFrame, curLine, parsed, blocked], false);
+        Util512.callAsMethodOnClass(VpcExecFrameStack.name, this, methodName, [curFrame, curLine, parsed, blocked], false);
 
         /* make sure we're not stuck on the same line again */
         if (arLast(this.stack) === curFrame && blocked.val === AsyncCodeOpState.AllowNext) {
@@ -285,7 +285,7 @@ export class VpcExecFrameStack {
                 continue;
             }
 
-            let v = this.outside.FindVelById(velId);
+            let v = this.outside.Model().findByIdUntyped(velId);
             if (v) {
                 let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(v.getS('script'), handlername, v.id);
                 if (codeColl && lineRef) {
@@ -548,7 +548,7 @@ export class VpcExecFrameStack {
             newFrame.args = args;
             Util512.freezeRecurse(newFrame.args);
         } else {
-            if (listOfAllBuiltinEventsInOriginalProduct[handlerName.toLowerCase()]) {
+            if (new CheckReservedWords().isBuiltinHandler(handlerName.toLowerCase())) {
                 /* it's fine, we shouldn't throw in this case.
                 send "openCard" to cd 3 should never be an error
                 even if there's no openCard handler.
@@ -730,7 +730,7 @@ export class VpcExecFrameStack {
         }
 
         if (slength(sendMsg)) {
-            let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, 'sending message directive', sendMsg);
+            let theMsg = getStrToEnum<VpcBuiltinMsg>(VpcBuiltinMsg, this.visitIsInternalvpcmessagesdirective.name, sendMsg);
             let found = this.getHandlerUpwardsOrThrow(
                 this.originalMsg.targetId,
                 curFrame.messageChain,

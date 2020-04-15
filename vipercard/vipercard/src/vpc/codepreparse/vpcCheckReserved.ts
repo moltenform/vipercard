@@ -1,6 +1,7 @@
 
 /* auto */ import { VariableCollectionConstants } from './../vpcutils/vpcVarCollection';
-/* auto */ import { alsoReservedWordsList, listOfAllBuiltinCommandsInOriginalProduct } from './../codeparse/vpcTokens';
+/* auto */ import { alsoReservedWordsList, listOfAllBuiltinCommandsInOriginalProduct, listOfAllBuiltinEventsInOriginalProduct } from './../codeparse/vpcTokens';
+/* auto */ import { VpcStandardLibScript } from './../vpcutils/vpcStandardLibScript';
 /* auto */ import { VpcBuiltinMsg, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcBuiltinFunctions } from './vpcBuiltinFunctions';
 /* auto */ import { VpcElProductOpts } from './../vel/velProductOpts';
@@ -19,7 +20,7 @@ export class CheckReservedWords {
     isBuiltinHandler(s: string): boolean {
         /* "mouseup", "arrowkey" */
         s = s.toLowerCase();
-        return findStrToEnum(VpcBuiltinMsg, s) !== undefined;
+        return bool(findStrToEnum(VpcBuiltinMsg, s)) || bool(listOfAllBuiltinEventsInOriginalProduct[s]) || VpcStandardLibScript.handlersImplementedInSoftware[s];
     }
 
     isBuiltinVarOrConstant(s: string): boolean {

@@ -212,7 +212,7 @@ export namespace VpcTopPreparse {
 
     function stage2Process(line: ChvITk[], rewrites: VpcRewriteForCommands): O<ChvITk[][]> {
         let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image);
-        return Util512.callAsMethodOnClass('VpcRewriteForCommands', rewrites, methodName, [line], true) as O<ChvITk[][]>;
+        return Util512.callAsMethodOnClass(VpcRewriteForCommands.name, rewrites, methodName, [line], true) as O<ChvITk[][]>;
     }
 
     function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions): ChvITk[][] {

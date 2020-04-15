@@ -7,7 +7,6 @@
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcBuiltinMsg, VpcElType, VpcTool, VpcToolCtg, getMsgFromEvtType, getToolCategory } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
-/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
@@ -473,32 +472,6 @@ export class VpcPresenterEvents {
     }
 
     /**
-     * send the first opencard, openbackground, and openstack message
-     */
-    static sendInitialOpenStackAndOpenCard(pr: VpcPresenterInterface, vci: VpcStateInterface) {
-        {
-            /* send openstack */
-            let msg = new VpcScriptMessage(vci.getModel().stack.id, VpcBuiltinMsg.Openstack);
-            pr.vci.getCodeExec().scheduleCodeExec(msg);
-        }
-
-        {
-            /* send openbackground */
-            let currentCard = vci.getModel().getCardById(vci.getCurrentCardId());
-            let currentBg = vci.getModel().getOwner(VpcElBg, currentCard);
-            let msg = new VpcScriptMessage(currentBg.id, VpcBuiltinMsg.Openbackground);
-            pr.vci.getCodeExec().scheduleCodeExec(msg);
-        }
-
-        {
-            /* send opencard */
-            let currentCard = vci.getModel().getCardById(vci.getCurrentCardId());
-            let msg = new VpcScriptMessage(currentCard.id, VpcBuiltinMsg.Opencard);
-            pr.vci.getCodeExec().scheduleCodeExec(msg);
-        }
-    }
-
-    /**
      * send messages when card changes
      */
     static sendCardChangeMsgs(
@@ -508,34 +481,34 @@ export class VpcPresenterEvents {
         wasCardId: string,
         nextCardId: string
     ) {
-        let wasCard = vci.getModel().getCardById(wasCardId);
-        let nextCard = vci.getModel().getCardById(nextCardId);
-        let wasBgId = wasCard.parentId;
-        let nextBgId = nextCard.parentId;
+        //~ let wasCard = vci.getModel().getCardById(wasCardId);
+        //~ let nextCard = vci.getModel().getCardById(nextCardId);
+        //~ let wasBgId = wasCard.parentId;
+        //~ let nextBgId = nextCard.parentId;
 
-        if (before) {
-            /* send closing messages */
-            if (wasCardId !== nextCardId) {
-                let msg = new VpcScriptMessage(wasCardId, VpcBuiltinMsg.Closecard);
-                pr.vci.getCodeExec().scheduleCodeExec(msg);
-            }
+        //~ if (before) {
+            //~ /* send closing messages */
+            //~ if (wasCardId !== nextCardId) {
+                //~ let msg = new VpcScriptMessage(wasCardId, VpcBuiltinMsg.Closecard);
+                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+            //~ }
 
-            if (wasBgId !== nextBgId) {
-                let msg = new VpcScriptMessage(wasBgId, VpcBuiltinMsg.Closebackground);
-                pr.vci.getCodeExec().scheduleCodeExec(msg);
-            }
-        } else {
-            /* send opening messages */
-            if (wasCardId !== nextCardId) {
-                let msg = new VpcScriptMessage(nextCardId, VpcBuiltinMsg.Opencard);
-                pr.vci.getCodeExec().scheduleCodeExec(msg);
-            }
+            //~ if (wasBgId !== nextBgId) {
+                //~ let msg = new VpcScriptMessage(wasBgId, VpcBuiltinMsg.Closebackground);
+                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+            //~ }
+        //~ } else {
+            //~ /* send opening messages */
+            //~ if (wasCardId !== nextCardId) {
+                //~ let msg = new VpcScriptMessage(nextCardId, VpcBuiltinMsg.Opencard);
+                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+            //~ }
 
-            if (wasBgId !== nextBgId) {
-                let msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground);
-                pr.vci.getCodeExec().scheduleCodeExec(msg);
-            }
-        }
+            //~ if (wasBgId !== nextBgId) {
+                //~ let msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground);
+                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+            //~ }
+        //~ }
     }
 
     /**

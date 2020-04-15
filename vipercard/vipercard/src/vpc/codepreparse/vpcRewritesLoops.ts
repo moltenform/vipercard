@@ -78,17 +78,17 @@ repeat
 put ( %ARG1% ) -  %ADJUST%  into %ARG0%
 put %ARG2% into $loopbound%UNIQUE%
 repeat
-    put %ARG0% + %ADJUST% into %ARG0%
     if %ARG0% %CMPARE% $loopbound%UNIQUE% then
         exit repeat
     end if
+    put %ARG0% + %ADJUST% into %ARG0%
 `;
         if (isDown) {
             template = template.replace(/%ADJUST%/g, ' - 1');
-            template = template.replace(/%CMPARE%/g, ' < ');
+            template = template.replace(/%CMPARE%/g, ' <= ');
         } else {
             template = template.replace(/%ADJUST%/g, ' 1');
-            template = template.replace(/%CMPARE%/g, ' > ');
+            template = template.replace(/%CMPARE%/g, ' >= ');
         }
 
         return rw.gen(template, firstExpr[0], [[loopVar], firstExpr, secondExpr], undefined, false);

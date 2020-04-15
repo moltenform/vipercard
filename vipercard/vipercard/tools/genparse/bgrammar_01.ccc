@@ -52,7 +52,10 @@
 //      you can't omit items in a list, like average(1,2,,3)
 //      NEW FEATURE: typeOfObject(id)
 //      CHANGE: the "long id" of objects is now more useful. 
-            // also, the string versions of "the target" and "the owner of" look a little different
+//      the string versions of "the target" and "the owner of" look a little different, they return the long id
+//      we don't support char x + 1 of abc, need char (x + 1) of abc
+            
+            
 // aren't yet supported in software include:
 //      you can't say `part id 4`
 //      you can't refer to other stacks besides "this stack"
@@ -111,7 +114,7 @@ tkPart=OneOfWords(part)
 tkPartPlural=OneOfWords(parts)
 tkTopObject=OneOfWords(hypercard,vipercard)
 tkAdjective=OneOfWords(long,short,abbrev,abbr,abbreviated)
-tkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eigth,ninth,tenth)
+tkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth)
 tkPosition=OneOfWords(this,prev,next)
 tkChunkGranularity=OneOfWords(characters?,chars?,words?,items?,lines?)
 tkInOnly=OneOfWords(in)

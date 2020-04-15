@@ -198,7 +198,7 @@ export class Util512 {
      *
      * let inst = new MyClass()
      * let method = 'goAbc'
-     * callAsMethodOnClass('MyClass', inst, method, [], true)
+     * callAsMethodOnClass(MyClass.name, inst, method, [], true)
      */
     static callAsMethodOnClass(
         clsname: string,

@@ -7,7 +7,8 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { O, bool, cProductName, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512 } from './../../ui512/utils/util512';
+/* auto */ import { Util512, getEnumToStrOrFallback } from './../../ui512/utils/util512';
+import { Util512Higher } from '../../ui512/utils/util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -48,7 +49,7 @@ export class VelResolveReference {
 
         let parentCard: O<VpcElBase> = ref.parentCdInfo ? this.go(ref.parentCdInfo, me, cardHistory)[0] : undefined;
         let parentBg: O<VpcElBase> = ref.parentBgInfo ? this.go(ref.parentBgInfo, me, cardHistory)[0] : undefined;
-        let methodName = 'go' + VpcElType[ref.type];
+        let methodName = 'go' + Util512.capitalizeFirst(getEnumToStrOrFallback(VpcElType, ref.type))
         if (bool(ref.parentCdInfo && !parentCard) || bool(ref.parentBgInfo && !parentBg)) {
             /* you have specified a parent, but the parent does not exist!
             therefore the child does not exist */
@@ -61,7 +62,7 @@ export class VelResolveReference {
         }
 
         let ret = Util512.callAsMethodOnClass(
-            'VelResolveReference',
+            VelResolveReference.name,
             this,
             methodName,
             [ref, parentCard, parentBg, ref.partIsBg],

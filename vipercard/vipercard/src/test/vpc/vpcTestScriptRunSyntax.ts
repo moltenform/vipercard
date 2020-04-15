@@ -580,6 +580,10 @@ end if\\x`,
     h.testBatchEvaluate(batch);
 
     /* repeats */
+    /* we use 'counting()' to see how often the condition is evaluated. */
+    /* confirmed in the product that a loop bound like
+    repeat with x = 1 to the length of abc
+    is only evaluated once! */
     batch = [
         /* simple loop */
         [
@@ -693,6 +697,15 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
             `a 2`
         ],
+        /* "with" syntax rewriting, loop done once */
+        [
+            `put "a" into s
+put counting() into firstc
+repeat with x = 1 to (counting() * 0 + 1)
+put s && "a" into s
+end repeat\\s && (counting() - firstc)`,
+            `a a 2`
+        ],
         /* "with down" syntax rewriting, simplest form. */
         [
             `put "a" into s
@@ -706,7 +719,7 @@ end repeat\\s && (counting() - firstc)`,
         [
             `put "a" into s
 put counting() into firstc
-repeat with x = 0 down to (1 + counting() * 0)
+repeat with x = 0 down to (counting() * 0 + 1)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
             `a 2`
@@ -715,10 +728,19 @@ end repeat\\s && (counting() - firstc)`,
         [
             `put "a" into s
 put counting() into firstc
-repeat with x = -1 down to (1 + counting() * 0)
+repeat with x = -1 down to (counting() * 0 + 1)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
             `a 2`
+        ],
+        /* "with down" syntax rewriting, loop done once */
+        [
+            `put "a" into s
+put counting() into firstc
+repeat with x = 4 down to (counting() * 0 + 4)
+put s && "a" into s
+end repeat\\s && (counting() - firstc)`,
+            `a a 2`
         ],
         /* "with" syntax rewriting, expect start only eval'd once */
         [

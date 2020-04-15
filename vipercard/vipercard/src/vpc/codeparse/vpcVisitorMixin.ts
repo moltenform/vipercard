@@ -92,9 +92,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
             } else {
-                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             }
 
             return ret;
@@ -106,7 +106,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
             }
             if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
             } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
@@ -114,7 +114,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else {
-                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             }
             return ret;
         }
@@ -134,7 +134,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx._forth && ctx._forth[0]) {
                 ret.cardIsRecentHistory = 'forth';
             } else if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
             } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
@@ -142,7 +142,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else {
-                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             }
             return ret;
         }
@@ -150,13 +150,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleObjectStack(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Stack);
             if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, 'Lvl6Expression', '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
             } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else {
-                this.Helper$SetByNumberOrName(ret, ctx, 'Lvl6Expression');
+                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             }
 
             checkThrow(
@@ -443,8 +443,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHUnaryPropertyGet(ctx: VisitingContext): VpcVal {
             let propName = this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]).image;
-            let adjective = ctx.tkAdjective[0]
-                ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
+            let adjective = (ctx.tkAdjective && ctx.tkAdjective[0])
+                ? getStrToEnum<PropAdjective>(PropAdjective, 'PropAdjective', ctx.tkAdjective[0].image)
                 : PropAdjective.Empty;
             checkThrow(!ctx.RuleWindow || !ctx.RuleWindow[0], "don't yet support looking up property on window");
             checkThrow(!ctx.RuleMenuItem || !ctx.RuleMenuItem[0], "don't yet support looking up property on menuitem");
@@ -474,7 +474,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleHOldStyleFnNullaryOrNullaryPropGet(ctx: VisitingContext): VpcVal {
             let adjective =
                 ctx.tkAdjective && ctx.tkAdjective[0]
-                    ? getStrToEnum<PropAdjective>(PropAdjective, 'HUnaryPropertyGet', ctx.tkAdjective[0].image)
+                    ? getStrToEnum<PropAdjective>(PropAdjective, 'PropAdjective', ctx.tkAdjective[0].image)
                     : PropAdjective.Empty;
             let fnOrPropName = this.visit(ctx.RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary[0]).image;
             if (this.outside.IsProductProp(fnOrPropName)) {

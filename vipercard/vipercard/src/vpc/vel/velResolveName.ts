@@ -28,7 +28,7 @@ export class VelResolveName {
     go(vel: VpcElBase, adjective: PropAdjective): string {
         let type = vel.getType();
         let methodName = 'goResolveName' + VpcElType[type];
-        return castVerifyIsStr(Util512.callAsMethodOnClass('VelResolveName', this, methodName, [vel, adjective], false));
+        return castVerifyIsStr(Util512.callAsMethodOnClass(VelResolveName.name, this, methodName, [vel, adjective], false));
     }
 
     /**

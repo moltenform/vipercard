@@ -105,6 +105,8 @@ export class VpcSuperRewrite {
             tktype = tks.tkStringLiteral;
         } else if (!tktype && term.match(/^[0-9]+$/)) {
             tktype = tks.tkNumLiteral;
+        } else if (!tktype && term === ',') {
+            tktype = tks.tkComma;
         } else if (!tktype) {
             tktype = tks.tkIdentifier;
             checkThrow(

@@ -16,6 +16,7 @@
 /* auto */ import { ReadableContainerField, ReadableContainerVar, WritableContainerField, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
+/* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
@@ -322,6 +323,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         return this.vci.getCurrentFocusVelField();
     }
 
+    /**
+     * set a property
+     */
     SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void {
         let resolved: [O<VpcElBase>, VpcElCard];
         if (ref) {
@@ -401,6 +405,13 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             /* ask the vel for the property */
             return vel.getProp(prop, cardId);
         }
+    }
+
+    /**
+     * get the model
+     */
+    Model(): VpcModelTop {
+        return this.vci.getModel()
     }
 
     /**
