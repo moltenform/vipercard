@@ -61,7 +61,7 @@ export abstract class IntroPageBase extends UI512CompBase {
 
         /* draw footer; pages can omit by hiding this element */
         let footerText = this.genChild(app, grp, 'footerText', UI512ElLabel);
-        footerText.set('labeltext', lng('lngby Ben Fisher'));
+        footerText.set('labeltext', lng('lngby moltenform (Ben Fisher)'));
         footerText.setDimensions(this.x + 5, this.y + this.logicalHeight - 20, 300, 20);
         return headerHeight;
     }

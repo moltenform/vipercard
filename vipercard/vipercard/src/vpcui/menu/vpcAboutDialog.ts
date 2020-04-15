@@ -125,7 +125,7 @@ export class VpcAboutDialog {
             pr,
             pr.app,
             longstr(
-                `ViperCard, by Ben Fisher.{{NEWLINE}}{{NEWLINE}}
+                `ViperCard, by moltenform(Ben Fisher).{{NEWLINE}}{{NEWLINE}}
                 'Uses Chevrotain (Apache), FileSaver.js (MIT),
                 Golly (MIT), JSGIF (MIT), js-lru (MIT), lz-string,
                 Clipboard.js (MIT), and easy.filter.`,

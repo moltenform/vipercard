@@ -301,9 +301,19 @@ export class VpcExecFrameStack {
      * run a builtin command
      */
     visitStatement(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed, blocked: ValHolder<AsyncCodeOpState>) {
-        VpcCurrentScriptStage.currentStage = VpcErrStage.Execute;
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Visit;
+        VpcCurrentScriptStage.latestSrcLineSeen = curLine.firstToken.startLine;
+        VpcCurrentScriptStage.latestDestLineSeen = curLine;
+        VpcCurrentScriptStage.origClass = 'visit';
+        VpcCurrentScriptStage.latestVelID = curFrame.meId;
+        VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
         let visited = parsed ? this.evalGeneralVisit(parsed, curLine) : VpcVal.Empty;
         VpcCurrentScriptStage.currentStage = VpcErrStage.Execute;
+        VpcCurrentScriptStage.latestSrcLineSeen = curLine.firstToken.startLine;
+        VpcCurrentScriptStage.latestDestLineSeen = curLine;
+        VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.latestVelID = curFrame.meId;
+        VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
         this.execStatements.go(curLine, visited, blocked);
         if (blocked.val === AsyncCodeOpState.AllowNext) {
             curFrame.next();

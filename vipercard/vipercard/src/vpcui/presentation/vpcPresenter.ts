@@ -62,6 +62,10 @@ export class VpcPresenter extends VpcPresenterInit {
     setTool(nextTl: VpcTool) {
         let prevTl = this.getTool();
         if (nextTl !== prevTl) {
+            if (prevTl === VpcTool.Browse) {
+                this.vci.getCodeExec().forceStopRunning()
+            }
+
             let prevResp = this.getToolResponse(prevTl);
             this.vci.undoableAction(() => prevResp.onLeaveTool());
 

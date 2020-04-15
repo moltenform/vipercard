@@ -3,7 +3,7 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertEq, assertWarnEq } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -23,8 +23,69 @@ t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
     h = new TestVpcScriptRunBase(t);
     return h.initEnvironment();
 });
-
-t.test('_checkLexing', () => {
+t.test('vpcTestScriptBasics', () => {
+    /* compile error */
+    h.assertCompileErrorIn('x = 4', "this isn't C", 3);
+    h.assertCompileErrorIn('put ?? into x', "", 3);
+    let batch: [string, string][];
+    batch = [
+        /* runtime error */
+        ['put unknownVar into x\\x', 'ERR:no variable'],
+        /* valid statement */
+        ['put 9 into x\\x', '9'],
+        /* also a valid statement */
+        ['9', '9'],
+    ]
+    h.testBatchEvaluate(batch);
+    /* get a different string */
+    assertAsserts('', 'assert:', ()=>{
+        h.assertCompileErrorIn('x = 4', "xxxxx", 3);
+    })
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put unknownVar into x\\x', 'ERR:xxxxxx'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put 9 into x\\x', '11111'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    /* failure expected, but succeeds */
+    assertAsserts('', 'assert:', ()=>{
+        h.assertCompileErrorIn('put 9 into x', "", 3);
+    })
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put 9 into x\\x', 'ERR:'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put unknownVar into x\\x', '1111'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    /* same as above, but more tests in the array */
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put 5 into x\\x', '5'],
+            ['put 9 into x\\x', 'ERR:'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put 3 into x\\x', '3'],
+            ['put unknownVar into x\\x', '1111'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+})
+t.test('checkLexing', () => {
     let batch: [string, string][];
     batch = [
         /* empty lines don't interfere with scripts */
@@ -83,38 +144,43 @@ t.test('_checkLexing', () => {
         /* if "of" is a keyword, "of_" is still an ok variable name */
         /* this is why it's important that the lexer regex is */
         /* /of(?![a-zA-Z0-9_])/ and not just /of/ */
-        ['put 4 into put4into\\put4into', '4'],
-        ['put 4 into ofa\\ofa', '4'],
-        ['put 4 into ofcards\\ofcards', '4'],
-        ['put 4 into ofnumber\\ofnumber', '4'],
-        ['put 4 into ofto\\ofto', '4'],
-        ['put 4 into of_to\\of_to', '4'],
-        ['put 4 into ofa\\ofa', '4'],
-        ['put 4 into ofA\\ofA', '4'],
-        ['put 4 into of1\\of1', '4'],
-        ['put 4 into aof\\aof', '4'],
-        ['put 4 into Aof\\Aof', '4'],
-        ['put 4 into Zof\\Zof', '4'],
-        ['put 4 into a\\a', '4'] /* used to be disallowed */,
-        ['put 4 into aa\\aa', '4'],
-        ['put 4 into a4\\a4', '4'],
-        ['put 4 into number\\number', '4'],
+        ['put 9 into put4into\\put4into', '9'],
+        ['put 9 into ofa\\ofa', '9'],
+        ['put 9 into ofcards\\ofcards', '9'],
+        ['put 9 into ofnumber\\ofnumber', '9'],
+        ['put 9 into ofto\\ofto', '9'],
+        ['put 9 into of_to\\of_to', '9'],
+        ['put 9 into ofa\\ofa', '9'],
+        ['put 9 into ofA\\ofA', '9'],
+        ['put 9 into of1\\of1', '9'],
+        ['put 9 into aof\\aof', '9'],
+        ['put 9 into Aof\\Aof', '9'],
+        ['put 9 into Zof\\Zof', '9'],
+        ['put 9 into a\\a', '9'] /* used to be disallowed */,
+        ['put 9 into aa\\aa', '9'],
+        ['put 9 into a4\\a4', '9'],
+        ['put 9 into number\\number', '9'],
 
         /* dest needs to be a token of type TkIdentifier */
-        ['put 4 into short\\0', 'ERR:support variables'],
-        ['put 4 into long\\0', 'ERR:support variables'],
-        ['put 4 into length\\0', 'ERR:support variables'],
-        ['put 4 into id\\0', 'ERR:support variables'],
-        ['put 4 into if\\0', 'ERR:name not allowed'],
-        ['put 4 into 4\\0', 'ERR:NotAllInputParsedException'],
-        ['put 4 into in\\0', 'ERR:NotAllInputParsedException'],
-        ['put 4 into and\\0', 'ERR:NotAllInputParsedException'],
-        ['put 4 into autohilite\\0', 'ERR:name not allowed']
+        ['put 9 into length\\0', 'ERR:name not'],
+        ['put 9 into if\\0', 'ERR:name not allowed'],
+        ['put 9 into 4\\0', 'ERR:Redundant'],
+        ['put 9 into autohilite\\autohilite', '9']
     ];
 
     h.testBatchEvaluate(batch);
+    h.assertCompileErrorIn('put 9 into short', "", 3);
+    h.assertCompileErrorIn('put 9 into long', "", 3);
+    h.assertCompileErrorIn('put 9 into id', "", 3);
+    h.assertCompileErrorIn('put 9 into in', "", 3);
+    h.assertCompileErrorIn('put 9 into and', "", 3);
 
     /* string literal cannot contain contline symbol since it has a newline */
+    h.assertCompileErrorIn(
+        'put "a\nb" into test',
+        '',
+        3
+    );
     h.assertCompileErrorIn(
         'put "a{BSLASH}\nb" into test',
         'unexpected character: ->"<-',
@@ -147,6 +213,11 @@ t.test('_checkLexing', () => {
     h.assertCompileErrorIn('put 7mod 3 into test', 'unexpected character', 3);
     h.assertCompileErrorIn('put 7div3 into test', 'unexpected character', 3);
     h.assertCompileErrorIn('put 7div 3 into test', 'unexpected character', 3);
+    batch = [
+        ['put 7 div3 into x\\x', 'ERR:parse error'],
+        ['put 7 mod3 into x\\x', 'ERR:parse error'],
+    ]
+    h.testBatchEvaluate(batch);
 
     /* for keywords/semikeywords that would be a common variable name, check */
     h.assertCompileErrorIn('x = 4', "this isn't C", 3);
@@ -359,7 +430,7 @@ put x into x\\x`,
 
     /* try to use it as a variable name */
     for (let reserved of notvalidDifferentTks) {
-        h.assertCompileErrorIn(`put 4 into ${reserved}`, 'support variables', 3);
+        h.assertCompileErrorIn(`put 9 into ${reserved}`, 'support variables', 3);
     }
 
     /* try to use it as a parameter name */
@@ -376,7 +447,7 @@ put x into x\\x`,
         h.assertCompileError(`on ${reserved}\nend ${reserved}`, 'support variables', 1);
     }
 });
-t.test('_ifStatementsAndRepeats', () => {
+t.test('ifStatementsAndRepeats', () => {
     /*
         important to reset flags in a loop:
         the state of which if branch has been taken
@@ -985,7 +1056,7 @@ end if\\s`,
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_calls', () => {
+t.test('calls', () => {
     let batch: [string, string][];
     batch = [
         /* attempt to call something that isn't a valid custom handler */
@@ -1842,7 +1913,7 @@ put 3 into x`,
         true
     );
 });
-t.test('_scriptMessagePassing', () => {
+t.test('scriptMessagePassing', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_a_a);
     let parents = [h.vcstate.model.stack.id, h.elIds.bg_a, h.elIds.card_a_a];
     for (let parent of parents) {

@@ -213,6 +213,8 @@ export class VpcExecTop {
     }
 
     protected handleScriptException(e: Error, context: string) {
+        this.forceStopRunning()
+
         let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e);
         if (!scriptErr) {
             scriptErr = VpcErr.createError('', 'runOneLine');
@@ -229,8 +231,8 @@ export class VpcExecTop {
         if (!scriptErr.scriptErrLine) {
             scriptErr.scriptErrLine = VpcCurrentScriptStage.latestSrcLineSeen;
         }
-        if (!scriptErr.lineData) {
-            scriptErr.lineData = VpcCurrentScriptStage.latestDestLineSeen;
+        if (!scriptErr.lineObj) {
+            scriptErr.lineObj = VpcCurrentScriptStage.latestDestLineSeen;
         }
         if (!scriptErr.dynamicCodeOrigin) {
             scriptErr.dynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin;

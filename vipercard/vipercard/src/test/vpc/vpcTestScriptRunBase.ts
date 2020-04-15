@@ -9,7 +9,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
@@ -197,7 +197,13 @@ export class TestVpcScriptRunBase {
             });
 
             let makeWarningUseful = '';
-            let lns = built.trim().split('\n');
+            let lns = built.split('\n');
+            if (line) {
+                line -= 1 /* from 1-based index */
+            }
+            if (expectErrLine) { 
+                expectErrLine -= 1 /* from 1-based index */
+            }
             if (line >= 0 && line < lns.length) {
                 makeWarningUseful += `culprit line: <${lns[line].trim()}>`;
             } else {
@@ -207,22 +213,22 @@ export class TestVpcScriptRunBase {
             makeWarningUseful += ` v=${velId} msg=\n${msg}`;
 
             if (expectErrMsg !== undefined) {
-                //~ assertWarn(
-                //~ msg.includes(expectErrMsg),
-                //~ `wrong err message, expected <${expectErrMsg}>`,
-                //~ makeWarningUseful
-                //~ );
-                if (!msg.includes(expectErrMsg)) {
-                    console.error(
-                        'fghfghddfg',
-                        `wrong err message, expected <${expectErrMsg}>`,
-                        makeWarningUseful
-                    );
-                }
+                assertWarn(
+                msg.includes(expectErrMsg),
+                `wrong err message, expected <${expectErrMsg}>`,
+                makeWarningUseful
+                );
+                //~ if (!msg.includes(expectErrMsg)) {
+                    //~ console.error(
+                        //~ 'fghfghddfg',
+                        //~ `wrong err message, expected <${expectErrMsg}>`,
+                        //~ makeWarningUseful
+                    //~ );
+                //~ }
             }
 
             if (expectErrLine !== undefined) {
-                assertWarnEq(expectErrLine, scriptErr.scriptErrLine, makeWarningUseful);
+                assertWarnEq(expectErrLine, line, 'wrong line', makeWarningUseful);
             }
 
             if (expectCompErr) {
@@ -264,9 +270,14 @@ export class TestVpcScriptRunBase {
 
         /* message should now be in the queue */
         assertTrue(
-            this.vcstate.runtime.codeExec.workQueue.length > 0,
-            '2V|should be in queue'
+            this.vcstate.runtime.codeExec.workQueue.length > 0 === !expectCompErr,
+            '2V|you prob got a compilation err, not a runtime err, or vice versa',
+            codeIn
         );
+        if (expectCompErr && caughtErr) {
+            return
+        }
+
         this.vcstate.vci.doWithoutAbilityToUndo(() =>
             this.vcstate.runtime.codeExec.runTimeslice(Infinity)
         );
@@ -361,17 +372,21 @@ put ${s} into testresult`;
                         )
                         .readAsString() !== 'true'
                 ) {
+                    if (!UI512ErrorHandling.silenceAssertMsgs) {
                     console.error(
                         ` input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`
                     );
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
+                    }
+
                     assertWarn(false, 'DIFF RESULT');
                 }
             } else {
                 let gt = got.readAsString();
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
+                    if (!UI512ErrorHandling.silenceAssertMsgs) {
                     console.error(
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
@@ -380,6 +395,8 @@ put ${s} into testresult`;
                     );
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
+                    }
+
                     assertWarn(false, 'DIFF RESULT');
                 }
             }
@@ -396,7 +413,6 @@ put ${s} into testresult`;
             }
 
             let got = this.testOneEvaluate(beforeLine, expr, expectErr, errOnLine);
-
             assertEq(
                 '(placeholder)',
                 got.readAsString(),

@@ -585,7 +585,7 @@ export class VpcErr extends Util512BaseErr {
     origClass = VpcErr.name;
     scriptErrLine: O<number>;
     scriptErrVelid: O<string>;
-    lineData: O<IVpcCodeLine>;
+    lineObj: O<IVpcCodeLine>;
     dynamicCodeOrigin: O<[string, number]>;
     stage = VpcErrStage.Unknown;
 

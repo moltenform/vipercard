@@ -170,15 +170,16 @@ export namespace VpcTopPreparse {
             VpcCurrentScriptStage.latestSrcLineSeen = line[0].startLine;
             let nextLines2 = stage2Process(line, rewrites) ?? [line];
             for (let line2 of nextLines2) {
+                VpcCurrentScriptStage.latestSrcLineSeen = line2[0].startLine;
                 let nextLines3 = stage3Process(line2, exp);
                 for (let line3 of nextLines3) {
+                    VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
                     /* make it lowercase again, just in case */
                     for (let item of line3) {
                         lowercase.go(item);
                     }
 
                     let lineObj = toCodeObj.toCodeLine(line3);
-                    VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
                     VpcCurrentScriptStage.latestDestLineSeen = lineObj;
                     lineObj.offset = lineNumber;
                     branchProcessor.go(lineObj);

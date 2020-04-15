@@ -51,7 +51,7 @@ export class SimpleUtil512Tests {
             //~ vpcTestCollectionScriptRunCustomFns,
             //~ vpcTestCollectionScriptRunCmd,
 
-            //~ testCollectionvpcScriptRunSyntax,
+            testCollectionvpcScriptRunSyntax,
             testCollectionvpcScriptParseCmd,
             testCollectionvpcScriptParseExpr,
             testCollectionvpcChunkResolution,

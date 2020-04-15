@@ -63,7 +63,7 @@ export class VpcCacheParsedCST {
      */
     protected callParser(ln: VpcCodeLine, firstRule: ChvRuleFnType) {
         VpcCurrentScriptStage.currentStage = VpcErrStage.Parse;
-        VpcCurrentScriptStage.latestSrcLineSeen = ln.excerptToParse[0]?.startLine;
+        VpcCurrentScriptStage.latestSrcLineSeen = ln.firstToken.startLine;
         VpcCurrentScriptStage.latestDestLineSeen = ln;
         VpcCurrentScriptStage.origClass = undefined;
 
