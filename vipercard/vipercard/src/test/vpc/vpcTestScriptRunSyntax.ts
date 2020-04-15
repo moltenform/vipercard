@@ -2,7 +2,7 @@
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { assertEq, assertWarnEq } from './../../ui512/utils/util512';
+/* auto */ import { assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -24,9 +24,9 @@ t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
     return h.initEnvironment();
 });
 t.test('vpcTestScriptBasics', () => {
-    /* compile error */
-    h.assertCompileErrorIn('x = 4', "this isn't C", 3);
-    h.assertCompileErrorIn('put ?? into x', "", 3);
+    /* preparse error */
+    h.assertPreparseErrLn('x = 4', "this isn't C", 3);
+    h.assertPreparseErrLn('put ?? into x', "", 3);
     let batch: [string, string][];
     batch = [
         /* runtime error */
@@ -38,24 +38,24 @@ t.test('vpcTestScriptBasics', () => {
     ]
     h.testBatchEvaluate(batch);
     /* get a different string */
-    assertAsserts('', 'assert:', ()=>{
-        h.assertCompileErrorIn('x = 4', "xxxxx", 3);
-    })
-    assertAsserts('', 'assert:', ()=>{
-        batch = [
-            ['put unknownVar into x\\x', 'ERR:xxxxxx'],
-        ]
-        h.testBatchEvaluate(batch);
-    })
-    assertAsserts('', 'assert:', ()=>{
-        batch = [
-            ['put 9 into x\\x', '11111'],
-        ]
-        h.testBatchEvaluate(batch);
-    })
+    //~ assertAsserts('', 'assert:', ()=>{
+        //~ h.assertPreparseErrIn('x = 4', "xxxxx", 3);
+    //~ })
+    //~ assertAsserts('', 'assert:', ()=>{
+        //~ batch = [
+            //~ ['put unknownVar into x\\x', 'ERR:xxxxxx'],
+        //~ ]
+        //~ h.testBatchEvaluate(batch);
+    //~ })
+    //~ assertAsserts('', 'assert:', ()=>{
+        //~ batch = [
+            //~ ['put 9 into x\\x', '11111'],
+        //~ ]
+        //~ h.testBatchEvaluate(batch);
+    //~ })
     /* failure expected, but succeeds */
     assertAsserts('', 'assert:', ()=>{
-        h.assertCompileErrorIn('put 9 into x', "", 3);
+        h.assertPreparseErrLn('put 9 into x', "", 3);
     })
     assertAsserts('', 'assert:', ()=>{
         batch = [
@@ -169,50 +169,50 @@ t.test('checkLexing', () => {
     ];
 
     h.testBatchEvaluate(batch);
-    h.assertCompileErrorIn('put 9 into short', "", 3);
-    h.assertCompileErrorIn('put 9 into long', "", 3);
-    h.assertCompileErrorIn('put 9 into id', "", 3);
-    h.assertCompileErrorIn('put 9 into in', "", 3);
-    h.assertCompileErrorIn('put 9 into and', "", 3);
+    h.assertPreparseErrLn('put 9 into short', "", 3);
+    h.assertPreparseErrLn('put 9 into long', "", 3);
+    h.assertPreparseErrLn('put 9 into id', "", 3);
+    h.assertPreparseErrLn('put 9 into in', "", 3);
+    h.assertPreparseErrLn('put 9 into and', "", 3);
 
     /* string literal cannot contain contline symbol since it has a newline */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         'put "a\nb" into test',
         '',
         3
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         'put "a{BSLASH}\nb" into test',
         'unexpected character: ->"<-',
         3
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         'put "{BSLASH}\n" into test',
         'unexpected character: ->"<-',
         3
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         'put "{BSLASH}\n{BSLASH}\n" into test',
         'unexpected character: ->"<-',
         3
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         'put {BSLASH}\n"{BSLASH}\n{BSLASH}\n"{BSLASH}\n into test',
         'unexpected character: ->"<-',
         4
     );
 
     /* we changed lexer to disallow this, since it is clearly wrong */
-    h.assertCompileErrorIn('put 3into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3into into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3sin into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3of into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3id into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3e into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 7mod3 into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 7mod 3 into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 7div3 into test', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 7div 3 into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3into into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3sin into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3of into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3id into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3e into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 7mod3 into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 7mod 3 into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 7div3 into test', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 7div 3 into test', 'unexpected character', 3);
     batch = [
         ['put 7 div3 into x\\x', 'ERR:parse error'],
         ['put 7 mod3 into x\\x', 'ERR:parse error'],
@@ -220,9 +220,9 @@ t.test('checkLexing', () => {
     h.testBatchEvaluate(batch);
 
     /* for keywords/semikeywords that would be a common variable name, check */
-    h.assertCompileErrorIn('x = 4', "this isn't C", 3);
-    h.assertCompileErrorIn('xyz(4)', "this isn't C", 3);
-    h.assertCompileErrorIn('sin(4)', "this isn't C", 3);
+    h.assertPreparseErrLn('x = 4', "this isn't C", 3);
+    h.assertPreparseErrLn('xyz(4)', "this isn't C", 3);
+    h.assertPreparseErrLn('sin(4)', "this isn't C", 3);
 
     batch = [
         /* comments */
@@ -315,136 +315,97 @@ put x into x\\x`,
     );
 
     /* lexing: invalid num literals */
-    h.assertCompileErrorIn('put . into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put .5 into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put x.5 into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put e.5 into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put .e into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put .e2 into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put .e+2 into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put .3e into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3.4e into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3.4e 2 into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3.4ee into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3.4e4e into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 3.44. into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 0..1 into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put 4.. into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put . into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put .5 into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put x.5 into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put e.5 into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put .e into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put .e2 into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put .e+2 into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put .3e into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3.4e into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3.4e 2 into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3.4ee into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3.4e4e into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 3.44. into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 0..1 into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put 4.. into x', 'unexpected character', 3);
 
     /* lexing: invalid string literals */
-    h.assertCompileErrorIn('put "abc into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put "abc\ndef" into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put "\n" into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put " into x', 'unexpected character', 3);
-    h.assertCompileErrorIn('put """ into x', 'unexpected character', 3);
-    h.assertLineError('put a"" into x', 'MismatchedToken', 3);
-    h.assertLineError('put ""a into x', 'MismatchedToken', 3);
-    h.assertLineError('put a""a into x', 'MismatchedToken', 3);
-    h.assertLineError('put 1"" into x', 'MismatchedToken', 3);
-    h.assertLineError('put ""1 into x', 'MismatchedToken', 3);
-    h.assertLineError('put 1""1 into x', 'MismatchedToken', 3);
-    h.assertLineError('put """" into x', 'MismatchedToken', 3);
-    h.assertLineError('put "a""b" into x', 'MismatchedToken', 3);
-    h.assertLineError('put "a" "b" into x', 'MismatchedToken', 3);
+    h.assertPreparseErrLn('put "abc into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put "abc\ndef" into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put "\n" into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put " into x', 'unexpected character', 3);
+    h.assertPreparseErrLn('put """ into x', 'unexpected character', 3);
+    h.assertLineErr('put a"" into x', 'Expecting', 3);
+    h.assertPreparseErrLn('put ""a into x', 'unexpected', 3);
+    h.assertPreparseErrLn('put a""a into x', 'unexpected', 3);
+    h.assertLineErr('put 1"" into x', 'Expecting', 3);
+    h.assertPreparseErrLn('put ""1 into x', 'unexpected', 3);
+    h.assertPreparseErrLn('put 1""1 into x', 'unexpected', 3);
+    h.assertLineErr('put """" into x', 'Expecting', 3);
+    h.assertLineErr('put "a""b" into x', 'Expecting', 3);
+    h.assertLineErr('put "a" "b" into x', 'Expecting', 3);
 
     /* invalid identifiers */
-    h.assertLineError('put "abc" into 1', 'NotAllInputParsedException', 3);
-    h.assertLineError('put "abc" into 1 x', 'NotAllInputParsedException', 3);
-    h.assertLineError('put "abc" into b c', 'NotAllInputParsedException', 3);
-    h.assertLineError('put "abc" into "def"', 'NotAllInputParsedException', 3);
-    h.assertCompileErrorIn('put "abc" into \x03', 'unexpected character', 3);
-    h.assertCompileErrorIn('put "abc" into b\x03', 'unexpected character', 3);
-    h.assertCompileErrorIn('put "abc" into \xf1', 'unexpected character', 3);
-    h.assertCompileErrorIn('put "abc" into b\xf1', 'unexpected character', 3);
+    h.assertLineErr('put "abc" into 1', 'Redundant', 3);
+    h.assertLineErr('put "abc" into 1 x', 'Redundant', 3);
+    h.assertLineErr('put "abc" into b c', 'Redundant', 3);
+    h.assertLineErr('put "abc" into "def"', 'Redundant', 3);
+    h.assertPreparseErrLn('put "abc" into \x03', 'unexpected character', 3);
+    h.assertPreparseErrLn('put "abc" into b\x03', 'unexpected character', 3);
+    h.assertPreparseErrLn('put "abc" into \xf1', 'unexpected character', 3);
+    h.assertPreparseErrLn('put "abc" into b\xf1', 'unexpected character', 3);
 
     /* not valid because it's something else */
-    let notvalid = `pi,it,one,true,cr,autohilite,style,cursor,dontwrap,
+    let notvalid = longstr(`pi,one,true,cr,autohilite,style,cursor,dontwrap,
             script,owner,name,target,sin,result,params,
             mouse,screenrect,from,into,after,before,at,with,on,
-            end,exit,pass,return,if,else,while,until,global`;
+            short,long,id,any,tenth,
+            end,exit,pass,return,if,else,while,until,global`, '');
     /* not 'id' 'of' 'length' 'first' because they are different tokens */
-    let disallowedAsHandler = notvalid.replace(/\s/g, '').split(',');
-    let disallowedAsVar = disallowedAsHandler
-        .concat(['mouseup'])
-        .filter(s => s !== 'before' && s !== 'into' && s !== 'after');
+    let disallowedAsHandler = notvalid.split(',');
 
-    /* can't use this as a name for variables */
-    for (let reserved of disallowedAsVar) {
-        h.assertLineError(`put "abc" into ${reserved}`, 'name not allowed', 3);
-    }
-
-    /* can't use this as a name for loop variables */
-    for (let reserved of disallowedAsVar) {
-        h.assertCompileErrorIn(
-            `repeat with ${reserved} = 1 to 3\nend repeat`,
-            'reserved word',
-            3
-        );
-    }
-
-    /* can't use this as a name for globals */
-    for (let reserved of disallowedAsVar.concat(['before', 'after', 'into'])) {
-        h.assertCompileErrorIn(`global ${reserved}`, 'reserved word', 3);
-    }
-
-    /* can't use this as a name for params */
-    for (let reserved of disallowedAsVar.concat(['before', 'after', 'into'])) {
-        h.assertCompileError(
-            `on myhandler p1, ${reserved}` + '\nglobal x\n' + `end myhandler`,
-            'reserved word',
-            1
-        );
-    }
+    /* don't check for local var use/global var/param any more,
+    there are many more var names we now allow  */
 
     /* can't use this as a name for handlers */
-    for (let reserved of disallowedAsHandler) {
-        h.assertCompileError(
-            `on ${reserved}` + '\nglobal x\n' + `end ${reserved}`,
-            'reserved word',
+    h.assertPreparseErr(
+        `on if\nglobal x\nend if`,
+        "can't have",
+        3
+    );
+    for (let reserved of disallowedAsHandler.filter(s => s !== 'if')) {
+        h.assertPreparseErr(
+            `on ${reserved}\nglobal x\nend ${reserved}`,
+            "don't support",
             1
         );
     }
 
     /* can't use this as a name for calling a handler */
+    let unaryProps = longstr(`,autohilite,style,dontwrap,script,
+        owner,name,`, '')
+    let diffTks = ',short,long,id,any,tenth,'
     for (let reserved of disallowedAsHandler) {
-        let expectErr = 'reserved word';
+        let isPreparse = true
+        let expectErr = "don't support";
         if (reserved === 'on') {
             expectErr = 'invalid name';
         } else if (reserved === 'end' || reserved === 'exit' || reserved === 'pass') {
             expectErr = 'wrong line length';
         } else if (reserved === 'if') {
-            expectErr = 'all-on-one-line';
+            expectErr = 'no "then"';
         } else if (reserved === 'else') {
-            expectErr = 'interleaved';
+            expectErr = 'else *if*';
         } else if (reserved === 'return') {
-            expectErr = 'NotAllInputParsedException';
+            expectErr = 'Redundant';
+            isPreparse = false
+        } else if (unaryProps.includes(`,${reserved},`) || diffTks.includes(`,${reserved},`)) {
+            expectErr = 'not a valid';
         }
 
-        h.runGeneralCode('', `${reserved} 1, 2, 3`, expectErr, 3);
-    }
-
-    /* can't use these names, (different token type), checkCommonMistakenVarNames */
-    let notvalidDifferentTokenType = `short,long,abbrev,number,length,
-            id,first,second,last,mid,any,tenth`;
-    let notvalidDifferentTks = notvalidDifferentTokenType.replace(/\s/g, '').split(',');
-
-    /* try to use it as a variable name */
-    for (let reserved of notvalidDifferentTks) {
-        h.assertCompileErrorIn(`put 9 into ${reserved}`, 'support variables', 3);
-    }
-
-    /* try to use it as a parameter name */
-    for (let reserved of notvalidDifferentTks) {
-        h.assertCompileError(
-            `on myHandler v1, ${reserved}\nend myHandler`,
-            'support variables',
-            1
-        );
-    }
-
-    /* try to use it as a custom handler name */
-    for (let reserved of notvalidDifferentTks) {
-        h.assertCompileError(`on ${reserved}\nend ${reserved}`, 'support variables', 1);
+        h.runGeneralCode('', `${reserved} 1, 2, 3`, expectErr, 3, isPreparse);
     }
 });
 t.test('ifStatementsAndRepeats', () => {
@@ -1534,14 +1495,14 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
 
     /* disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess) */
     /* but not printargs("a") */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `put 1 into x
 sin(3)
 put 1 into x`,
         `this isn't C`,
         4
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `put 1 into x
 myfn(3)
 put 1 into x`,
@@ -1550,14 +1511,14 @@ put 1 into x`,
     );
 
     /* only block starts outside of scope */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `put 1 into x
 on myhandler
 end myhandler`,
         'can exist at this scope',
         1
     );
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler
 end myhandler
@@ -1566,7 +1527,7 @@ put 1 into x`,
         4
     );
     /* cannot start handler inside handler */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler
 on myhandler2
@@ -1576,7 +1537,7 @@ end myhandler`,
         3
     );
     /* cannot start handler inside handler */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
     ${h.customFunc} myhandler
 on myhandler2
@@ -1586,7 +1547,7 @@ end myhandler`,
         3
     );
     /* cannot start handler inside handler */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler
 ${h.customFunc} myhandler2
@@ -1596,7 +1557,7 @@ end myhandler`,
         3
     );
     /* mismatched handler name */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1
 end myhandler2`,
@@ -1604,7 +1565,7 @@ end myhandler2`,
         3
     );
     /* doesn't make sense to end here */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1
 end myhandler1
@@ -1613,7 +1574,7 @@ end myhandler1`,
         4
     );
     /* mismatched handler name in exit */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1
 exit myhandler2
@@ -1622,7 +1583,7 @@ end myhandler1`,
         3
     );
     /* mismatched handler name in pass */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1
 pass myhandler2
@@ -1631,7 +1592,7 @@ end myhandler1`,
         3
     );
     /* mismatched handler name in end */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1
 end myhandler2
@@ -1640,7 +1601,7 @@ end myhandler1`,
         3
     );
     /* no handler name */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on
 get 1 + 2
@@ -1649,7 +1610,7 @@ end myhandler1`,
         2
     );
     /* no valid handler name */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on ,
 get 1 + 2
@@ -1658,7 +1619,7 @@ end myhandler1`,
         2
     );
     /* handler params invalid 1 */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1 x y
 get 1 + 2
@@ -1667,7 +1628,7 @@ end myhandler1`,
         2
     );
     /* handler params invalid 2 */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1 x , ,
 get 1 + 2
@@ -1676,7 +1637,7 @@ end myhandler1`,
         2
     );
     /* no handler end name */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler1
 get 1 + 2
@@ -1685,7 +1646,7 @@ end`,
         4
     );
     /* duplicate handler name */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler
 get 1 + 2
@@ -1697,8 +1658,8 @@ end myhandler`,
         7
     );
     /* cannot exit repeat when no loop */
-    h.assertCompileErrorIn(`exit repeat`, 'outside of a loop', 3);
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(`exit repeat`, 'outside of a loop', 3);
+    h.assertPreparseErrLn(
         `repeat while false
 end repeat
 exit repeat`,
@@ -1706,8 +1667,8 @@ exit repeat`,
         5
     );
     /* cannot next repeat when no loop */
-    h.assertCompileErrorIn(`next repeat`, 'outside of a loop', 3);
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(`next repeat`, 'outside of a loop', 3);
+    h.assertPreparseErrLn(
         `repeat while false
 end repeat
 next repeat`,
@@ -1715,7 +1676,7 @@ next repeat`,
         5
     );
     /* cannot end repeat when no loop */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
     on myhandler
     end repeat
@@ -1724,7 +1685,7 @@ next repeat`,
         3
     );
     /* cannot else when no if */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
     on myhandler
     else
@@ -1734,7 +1695,7 @@ next repeat`,
         3
     );
     /* cannot else if when no if */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
     on myhandler
     else if true then
@@ -1744,7 +1705,7 @@ next repeat`,
         3
     );
     /* cannot else when after the if */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
     on myhandler
     if true then
@@ -1756,7 +1717,7 @@ next repeat`,
         5
     );
     /* cannot else if when after the if */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
     on myhandler
     if true then
@@ -1768,71 +1729,71 @@ next repeat`,
         5
     );
     /* cannot end if when no if */
-    h.assertCompileErrorIn(`end if`, 'interleaved within', 3);
+    h.assertPreparseErrLn(`end if`, 'interleaved within', 3);
     /* cannot say "else then" */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `if false then
     else then`,
         'expected else to not have then',
         4
     );
     /* cannot say just "if" */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `if
     end if`,
         'all-on-one-line',
         3
     );
     /* cannot ommit the "then" */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `if true
     end if`,
         'all-on-one-line',
         3
     );
     /* cannot just say "return" */
-    h.assertCompileErrorIn(`return`, 'cannot have a line that is just', 3);
+    h.assertPreparseErrLn(`return`, 'cannot have a line that is just', 3);
     /* cannot just say "end" */
-    h.assertCompileErrorIn(`end`, 'cannot have a line', 3);
+    h.assertPreparseErrLn(`end`, 'cannot have a line', 3);
     /* cannot just say "exit" */
-    h.assertCompileErrorIn(`exit`, 'cannot have a line', 3);
+    h.assertPreparseErrLn(`exit`, 'cannot have a line', 3);
     /* cannot just say "repeat while" */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `repeat while
     end repeat`,
         'without an expression',
         3
     );
     /* cannot just say "repeat until" */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `repeat until
     end repeat`,
         'without an expression',
         3
     );
     /* invalid repeat part 1 */
-    h.assertLineError(
+    h.assertLineErr(
         `repeat xyz
     end repeat`,
         'no variable found with this name',
         3
     );
     /* invalid repeat part 2 */
-    h.assertLineError(
+    h.assertLineErr(
         `repeat to
     end repeat`,
         'NoViableAltException',
         3
     );
     /* invalid repeat part 3, not quite enough tokens */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `repeat with x = 1 to
     end repeat`,
         'wrong length',
         3
     );
     /* invalid repeat part 4, not quite enough tokens */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `repeat with x = 1 down to
     end repeat`,
         'wrong length',
@@ -1840,7 +1801,7 @@ next repeat`,
     );
 
     /* interleaved blocks */
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `repeat while false
 if false then
 end repeat
@@ -1848,7 +1809,7 @@ end if`,
         'interleaved within',
         5
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `repeat while false
 if false then
 put "a" into x
@@ -1858,7 +1819,7 @@ end if`,
         'interleaved within',
         7
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `if false then
 repeat while false
 end if
@@ -1866,7 +1827,7 @@ end repeat`,
         'interleaved within',
         5
     );
-    h.assertCompileErrorIn(
+    h.assertPreparseErrLn(
         `if false then
 repeat while false
 else
@@ -1877,7 +1838,7 @@ end repeat`,
         5
     );
     /* forgot to close the block */
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler
 repeat while false
@@ -1885,7 +1846,7 @@ end myhandler`,
         'interleaved within',
         4
     );
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler
 if false then
@@ -1893,7 +1854,7 @@ end myhandler`,
         'interleaved within',
         4
     );
-    h.assertCompileError(
+    h.assertPreparseErr(
         `
 on myhandler
 if false then
@@ -1995,7 +1956,7 @@ t.test('scriptMessagePassing', () => {
             return "got" && myLocal && x && the short id of the target
             end parentfn`
         );
-        h.assertLineError(
+        h.assertLineErr(
             `global testresult
             put "a" into myLocal
             put parentfn("abc") into testresult`,
@@ -2012,7 +1973,7 @@ t.test('scriptMessagePassing', () => {
             return "got" && x && the short id of the target
             end parentfn`
         );
-        h.assertLineError(
+        h.assertLineErr(
             `global testresult
             put parentfn("abc") into testresult
             put myLocal after testresult`,

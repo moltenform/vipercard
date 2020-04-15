@@ -54,7 +54,7 @@ export class CheckReservedWords {
     }
 
     okLocalVar(s: string) {
-        if (s === 'number' || s === 'a') {
+        if (s === 'number' || s === 'a' || s === 'it') {
             /* these ones we've explicitly said are ok variable names.
             see also checkCommonMistakenVarNames */
             return true;

@@ -511,6 +511,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let checkIsWithin = bool(map.vals.tkInOnly) || bool(map.vals._within);
             if (checkIsWithin) {
                 /* "is within" expression */
+                checkThrow(map.vals.Lvl3Expression && map.vals.Lvl3Expression[0] instanceof VpcVal, '');
                 total = this.evalHelp.evalOp(total, map.vals.Lvl3Expression[0], VpcOpCtg.OpStringWithin, 'is within');
             } else if (typeCheck) {
                 /* type check expression "is a number" */

@@ -961,34 +961,34 @@ t.test("test_don't need to expand custom fns on these lines", () => {
     let inp = `
 on myHandler myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'required comma', 2);
+    h.assertPreparseErr(inp, 'required comma', 2);
 
     /* VpcLineCategory_.HandlerEnd */
     inp = `
 on myHandler
 end myHandler myFn(1, 2)`;
-    h.assertCompileError(inp, 'wrong line length', 3);
+    h.assertPreparseErr(inp, 'wrong line length', 3);
 
     /* VpcLineCategory_.HandlerExit */
     inp = `
 on myHandler
 exit myHandler myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'wrong line length', 3);
+    h.assertPreparseErr(inp, 'wrong line length', 3);
 
     /* VpcLineCategory_.ProductExit */
     inp = `
 on myHandler
 exit to ${cProductName} myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'wrong line length', 3);
+    h.assertPreparseErr(inp, 'wrong line length', 3);
 
     /* VpcLineCategory_.HandlerPass */
     inp = `
 on myHandler
 pass myHandler myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'wrong line length', 3);
+    h.assertPreparseErr(inp, 'wrong line length', 3);
 
     /* VpcLineCategory_.IfElsePlain */
     inp = `
@@ -997,7 +997,7 @@ if true then
 else myFn(1, 2)
 end if
 end myHandler`;
-    h.assertCompileError(inp, "'fn()' alone", 4);
+    h.assertPreparseErr(inp, "'fn()' alone", 4);
 
     /* VpcLineCategory_.IfEnd */
     inp = `
@@ -1006,7 +1006,7 @@ if true then
 else
 end if myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'wrong line length', 5);
+    h.assertPreparseErr(inp, 'wrong line length', 5);
 
     /* VpcLineCategory_.RepeatExit */
     inp = `
@@ -1015,7 +1015,7 @@ repeat while false
     exit repeat myFn(1, 2)
 end repeat
 end myHandler`;
-    h.assertCompileError(inp, 'wrong line length', 4);
+    h.assertPreparseErr(inp, 'wrong line length', 4);
 
     /* VpcLineCategory_.RepeatNext */
     inp = `
@@ -1024,7 +1024,7 @@ repeat while false
     next repeat myFn(1, 2)
 end repeat
 end myHandler`;
-    h.assertCompileError(inp, "just 'next repeat'", 4);
+    h.assertPreparseErr(inp, "just 'next repeat'", 4);
 
     /* VpcLineCategory_.RepeatEnd */
     inp = `
@@ -1033,21 +1033,21 @@ repeat while false
     next repeat
 end repeat myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'wrong line length', 5);
+    h.assertPreparseErr(inp, 'wrong line length', 5);
 
     /* VpcLineCategory_.Global */
     inp = `
 on myHandler
 global myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'required comma', 3);
+    h.assertPreparseErr(inp, 'required comma', 3);
 
     /* VpcLineCategory_.Global in list */
     inp = `
 on myHandler
 global a, myFn(1, 2)
 end myHandler`;
-    h.assertCompileError(inp, 'required comma', 3);
+    h.assertPreparseErr(inp, 'required comma', 3);
 });
 t.test('_expand in VpcLineCategory_.ReturnExpr', () => {
     h.provideCustomFnInStackScript(`

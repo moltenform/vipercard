@@ -154,9 +154,16 @@ export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: un
             so we can save it + the callstack to logs */
             let e = Util512Warn.createError(msg, 'ui512warn');
             respondUI512Error(e.clsAsErr(), 'ui512warn');
-            let msgTotal = msg + ' Press OK to silence future asserts.';
-            if (confirm(msgTotal)) {
-                UI512ErrorHandling.silenceWarnings = true;
+            if (UI512ErrorHandling.runningTests) {
+                let msgTotal = msg + ' Press Cancel to exit tests.';
+                if (!confirm(msgTotal)) {
+                    throw new Error("Exiting tests.")
+                }
+            } else {
+                let msgTotal = msg + ' Press OK to silence future asserts.';
+                if (confirm(msgTotal)) {
+                    UI512ErrorHandling.silenceWarnings = true;
+                }
             }
         }
     }

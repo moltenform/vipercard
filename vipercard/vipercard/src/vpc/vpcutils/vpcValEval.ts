@@ -52,12 +52,11 @@ export class VpcEvalHelpers {
     /**
      * evaluate unary operation
      */
-    evalUnary(aIn: any, op: string): VpcVal {
-        if (!aIn || !aIn.isVpcVal) {
-            checkThrowInternal(false, `5||can't compute, not VpcVal. ${aIn} ${op}`);
+    evalUnary(a: VpcVal, op: string): VpcVal {
+        if (!a || !(a instanceof VpcVal)) {
+            checkThrowInternal(false, `5||can't compute, not VpcVal. ${a} ${op}`);
         }
 
-        let a = aIn as VpcVal;
         if (op === 'not') {
             let v = a.readAsStrictBoolean(this.tmp1);
             return VpcValBool(!v);
@@ -74,9 +73,7 @@ export class VpcEvalHelpers {
     /**
      * evaluate binary operation
      */
-    evalOp(aIn: any, bIn: any, opClass: VpcOpCtg, op: string): VpcVal {
-        let a = aIn as VpcVal;
-        let b = bIn as VpcVal;
+    evalOp(a: VpcVal, b: VpcVal, opClass: VpcOpCtg, op: string): VpcVal {
         if (!a || !b || !(a instanceof VpcVal) || !(b instanceof VpcVal)) {
             checkThrowInternal(false, `5_|can't eval, not VpcVal. ${a} ${b} ${opClass} ${op}`);
         }

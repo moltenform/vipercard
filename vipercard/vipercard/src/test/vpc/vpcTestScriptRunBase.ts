@@ -5,10 +5,11 @@
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { VpcElType, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -184,11 +185,12 @@ export class TestVpcScriptRunBase {
         codeIn: string,
         expectErrMsg?: string,
         expectErrLine?: number,
-        expectCompErr?: boolean,
+        expectPreparseErr?: boolean,
         addNoHandler?: boolean
     ) {
-        let caughtErr = false;
+        let caughtErr:O<VpcErr>;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
+            caughtErr = scriptErr
             let msg = scriptErr.message;
             let velId = scriptErr.scriptErrVelid ?? 'unknown';
             let line = scriptErr.scriptErrLine ?? -1;
@@ -213,25 +215,25 @@ export class TestVpcScriptRunBase {
             makeWarningUseful += ` v=${velId} msg=\n${msg}`;
 
             if (expectErrMsg !== undefined) {
-                assertWarn(
-                msg.includes(expectErrMsg),
-                `wrong err message, expected <${expectErrMsg}>`,
-                makeWarningUseful
-                );
-                //~ if (!msg.includes(expectErrMsg)) {
-                    //~ console.error(
-                        //~ 'fghfghddfg',
-                        //~ `wrong err message, expected <${expectErrMsg}>`,
-                        //~ makeWarningUseful
-                    //~ );
-                //~ }
+                //~ assertWarn(
+                //~ msg.includes(expectErrMsg),
+                //~ `wrong err message, expected <${expectErrMsg}>`,
+                //~ makeWarningUseful
+                //~ );
+                if (!msg.includes(expectErrMsg) && !UI512ErrorHandling.silenceAssertMsgs) {
+                    console.error(
+                        'fghfghddfg',
+                        `wrong err message, expected <${expectErrMsg}>`,
+                        makeWarningUseful
+                    );
+                }
             }
 
             if (expectErrLine !== undefined) {
                 assertWarnEq(expectErrLine, line, 'wrong line', makeWarningUseful);
             }
 
-            if (expectCompErr) {
+            if (expectPreparseErr) {
                 assertWarn(
                     scriptErr.stage !== VpcErrStage.Execute &&
                         scriptErr.stage !== VpcErrStage.Visit &&
@@ -240,7 +242,7 @@ export class TestVpcScriptRunBase {
                 );
             }
 
-            caughtErr = true;
+            assertWarn(expectErrMsg !== undefined, 'unexpected failure', makeWarningUseful);
         };
 
         let built = addNoHandler
@@ -268,13 +270,19 @@ export class TestVpcScriptRunBase {
 
         VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id, false);
 
-        /* message should now be in the queue */
+        assertTrue(!expectPreparseErr || expectErrMsg!==undefined, "please pass an expectErrMsg, even if it's an empty string")
+        if (expectPreparseErr && expectErrMsg!==undefined && !caughtErr) {
+            assertWarn(false, '2U|preparse error expected but not seen', codeBefore, codeIn);
+        }
+
+        /* if it built, message should now be in the queue */
         assertTrue(
-            this.vcstate.runtime.codeExec.workQueue.length > 0 === !expectCompErr,
-            '2V|you prob got a compilation err, not a runtime err, or vice versa',
-            codeIn
+            this.vcstate.runtime.codeExec.workQueue.length > 0 === !expectPreparseErr,
+            `2V|you prob got a preparse err, not a runtime err, or vice versa.
+${codeBefore}\n${codeIn}\n`,
+            caughtErr?.message
         );
-        if (expectCompErr && caughtErr) {
+        if (expectPreparseErr && caughtErr) {
             return
         }
 
@@ -282,7 +290,7 @@ export class TestVpcScriptRunBase {
             this.vcstate.runtime.codeExec.runTimeslice(Infinity)
         );
 
-        if (expectErrMsg && !caughtErr) {
+        if (expectErrMsg!==undefined && !caughtErr) {
             assertWarn(false, '2U|error not seen', codeBefore, codeIn);
         }
 
@@ -292,15 +300,15 @@ export class TestVpcScriptRunBase {
         );
     }
 
-    assertCompileError(s: string, expectErrMsg?: string, expectErrLine?: number) {
+    assertPreparseErr(s: string, expectErrMsg?: string, expectErrLine?: number) {
         return this.runGeneralCode(s, '', expectErrMsg, expectErrLine, true);
     }
 
-    assertCompileErrorIn(s: string, expectErrMsg?: string, expectErrLine?: number) {
+    assertPreparseErrLn(s: string, expectErrMsg?: string, expectErrLine?: number) {
         return this.runGeneralCode('', s, expectErrMsg, expectErrLine, true);
     }
 
-    assertLineError(s: string, expectErrMsg: string, expectErrLine: number) {
+    assertLineErr(s: string, expectErrMsg: string, expectErrLine: number) {
         return this.runGeneralCode('', s, expectErrMsg, expectErrLine, false);
     }
 

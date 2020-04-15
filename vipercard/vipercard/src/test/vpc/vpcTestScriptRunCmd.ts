@@ -136,30 +136,30 @@ t.test('_execCommands arithmetic invalid parse', () => {
     /* add, subtract, divide, multiply */
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     h.runGeneralCode('', 'put "0" into cd fld "p1"');
-    h.assertLineError('add 4 with cd fld "p1"', 'MismatchedTokenException', 3);
-    h.assertLineError('add 4 into cd fld "p1"', 'MismatchedTokenException', 3);
-    h.assertLineError('add 4 from cd fld "p1"', 'MismatchedTokenException', 3);
-    h.assertLineError('add 4 from cd fld "to"', 'MismatchedTokenException', 3);
-    h.assertLineError('add 4 to', 'NoViableAltException', 3);
-    h.assertLineError('add to cd fld "p1"', 'NoViableAltException', 3);
-    h.assertCompileErrorIn('subtract 4 with cd fld "p1"', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('subtract 4 into cd fld "p1"', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('subtract 4 to cd fld "p1"', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('subtract 4 to cd fld "from"', 'did not see the keyword', 3);
-    h.assertLineError('subtract 4 from', 'NoViableAltException', 3);
-    h.assertLineError('subtract from cd fld "p1"', 'NoViableAltException', 3);
-    h.assertCompileErrorIn('divide cd fld "p1"', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('divide cd fld "p1" to 4', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('divide cd fld "p1" with 4', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('divide cd fld "p1" from 4', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('divide cd fld "by" from 4', 'did not see the keyword', 3);
-    h.assertLineError('divide cd fld "p1" by', 'NoViableAltException', 3);
-    h.assertCompileErrorIn('multiply cd fld "p1"', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('multiply cd fld "p1" to 4', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('multiply cd fld "p1" with 4', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('multiply cd fld "p1" from 4', 'did not see the keyword', 3);
-    h.assertCompileErrorIn('multiply cd fld "by" from 4', 'did not see the keyword', 3);
-    h.assertLineError('multiply cd fld "p1" by', 'NoViableAltException', 3);
+    h.assertLineErr('add 4 with cd fld "p1"', 'MismatchedTokenException', 3);
+    h.assertLineErr('add 4 into cd fld "p1"', 'MismatchedTokenException', 3);
+    h.assertLineErr('add 4 from cd fld "p1"', 'MismatchedTokenException', 3);
+    h.assertLineErr('add 4 from cd fld "to"', 'MismatchedTokenException', 3);
+    h.assertLineErr('add 4 to', 'NoViableAltException', 3);
+    h.assertLineErr('add to cd fld "p1"', 'NoViableAltException', 3);
+    h.assertPreparseErrLn('subtract 4 with cd fld "p1"', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('subtract 4 into cd fld "p1"', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('subtract 4 to cd fld "p1"', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('subtract 4 to cd fld "from"', 'did not see the keyword', 3);
+    h.assertLineErr('subtract 4 from', 'NoViableAltException', 3);
+    h.assertLineErr('subtract from cd fld "p1"', 'NoViableAltException', 3);
+    h.assertPreparseErrLn('divide cd fld "p1"', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('divide cd fld "p1" to 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('divide cd fld "p1" with 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('divide cd fld "p1" from 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('divide cd fld "by" from 4', 'did not see the keyword', 3);
+    h.assertLineErr('divide cd fld "p1" by', 'NoViableAltException', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1"', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1" to 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1" with 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1" from 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('multiply cd fld "by" from 4', 'did not see the keyword', 3);
+    h.assertLineErr('multiply cd fld "p1" by', 'NoViableAltException', 3);
 });
 t.test('_execCommands arithmetic valid', () => {
     let batch: [string, string][];
@@ -228,12 +228,12 @@ t.test('_execCommands arithmetic valid', () => {
 t.test('_execCommands go to card', () => {
     /* changing current card */
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
-    h.assertCompileErrorIn('go', 'on its own', 3);
-    h.assertLineError('go "a"', 'not this', 3);
-    h.assertLineError('go 1', 'NoViableAltException', 3);
-    h.assertLineError('go to cd btn id 1', 'NoViableAltException', 3);
-    h.assertLineError('go to cd btn "p1"', 'NoViableAltException', 3);
-    h.assertLineError('go xyz', 'Not a valid choice', 3);
+    h.assertPreparseErrLn('go', 'on its own', 3);
+    h.assertLineErr('go "a"', 'not this', 3);
+    h.assertLineErr('go 1', 'NoViableAltException', 3);
+    h.assertLineErr('go to cd btn id 1', 'NoViableAltException', 3);
+    h.assertLineErr('go to cd btn "p1"', 'NoViableAltException', 3);
+    h.assertLineErr('go xyz', 'Not a valid choice', 3);
     let batch: [string, string][];
     batch = [
         /* go by id */
@@ -1016,7 +1016,7 @@ send code to this stack\\g`,
     ];
     h.testBatchEvaluate(batch);
 
-    /* make sure that invalid code is cleaned out after a compile failure. */
+    /* make sure that invalid code is cleaned out after a preparse failure. */
     let stack = h.vcstate.vci.getModel().getById(VpcElStack, h.elIds.stack);
     h.vcstate.vci.undoableAction(() => stack.set('script', ``));
     batch = [['send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error']];

@@ -102,7 +102,7 @@ export class VpcLineToCodeObj {
         checkThrow(line.length > 1, `8F|cannot have a line that is just "${firstImage}"`);
         checkThrow(line[1].image !== 'keydown', 'we support `on afterkeydown` but not `on keydown`');
         checkCommonMistakenVarNames(line[1]);
-        checkThrow(this.check.okHandlerName(line[1].image), `8E|name of handler is a reserved word.`);
+        checkThrow(this.check.okHandlerName(line[1].image), `8E|name of handler like 'on ${line[1].image}' we don't support.`);
         checkThrowEq(
             tks.tkIdentifier,
             line[1].tokenType,
@@ -201,8 +201,8 @@ export class VpcLineToCodeObj {
         output.ctg = VpcLineCategory.CallHandler;
         checkThrow(
             this.check.okHandlerName(line[0].image),
-            longstr(`8K|it looked like you were calling a
-             handler like mouseUp or myHandler, but this is a reserved word.`)
+            longstr(`8K|it looked like you were calling a handler like
+                myHandler, but this is a reserved word, we don't support that here.`)
         );
         output.excerptToParse = this.cachedStartOnes.concat(line);
         output.setParseRule(this.parser.RuleInternalCmdUserHandler);
@@ -381,7 +381,7 @@ export class VpcLineToCodeObj {
     protected getListOfValidVariableNames(line: ChvITk[], output: VpcCodeLine, index: number) {
         for (let i = index; i < line.length; i++) {
             checkCommonMistakenVarNames(line[i]);
-            checkThrow(this.check.okLocalVar(line[i].image), `8I|name of parameter is a reserved word.`);
+            checkThrow(this.check.okLocalVar(line[i].image), `8I|name of parameter is a reserved word, we don't support here.`);
 
             if ((i - index) % 2 === 1) {
                 checkThrowEq(

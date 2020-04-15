@@ -40,8 +40,13 @@
 
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
-        console.log('Running tests...');
+        if (UI512ErrorHandling.runningTests) {
+            console.log('Apparently already running tests...');
+            return
+        }
+
         UI512ErrorHandling.runningTests = true;
+        console.log('Running tests...');
 
         // order tests from high to low
         let colls = [
@@ -54,31 +59,31 @@ export class SimpleUtil512Tests {
             testCollectionvpcScriptRunSyntax,
             testCollectionvpcScriptParseCmd,
             testCollectionvpcScriptParseExpr,
-            testCollectionvpcChunkResolution,
-            testCollectionvpcElements,
-            testCollectionvpcuiMsgBox,
-            testCollectionvpcuiIntroProvider,
-            testCollectionvpcVpcVal,
+            //~ testCollectionvpcChunkResolution,
+            //~ testCollectionvpcElements,
+            //~ testCollectionvpcuiMsgBox,
+            //~ testCollectionvpcuiIntroProvider,
+            //~ testCollectionvpcVpcVal,
 
-            testCollectionUI512CodeEditor,
-            testCollectionUI512Composites,
-            testCollectionUI512DrawText,
-            testCollectionUI512Elements,
-            testCollectionUI512ElementsViewButtons,
-            testCollectionUI512FormattedText,
-            testCollectionUI512MenuRender,
-            testCollectionUI512Paint,
-            testCollectionUI512TextEdit,
-            testCollectionUI512TextModify,
-            testCollectionUI512TextSelectEvents,
+            //~ testCollectionUI512CodeEditor,
+            //~ testCollectionUI512Composites,
+            //~ testCollectionUI512DrawText,
+            //~ testCollectionUI512Elements,
+            //~ testCollectionUI512ElementsViewButtons,
+            //~ testCollectionUI512FormattedText,
+            //~ testCollectionUI512MenuRender,
+            //~ testCollectionUI512Paint,
+            //~ testCollectionUI512TextEdit,
+            //~ testCollectionUI512TextModify,
+            //~ testCollectionUI512TextSelectEvents,
 
-            testCollectionUtilsCanvasWrapper,
-            testCollectionUtilsDraw,
-            testCollectionUtil512Higher,
-            testCollectionUtil512Class,
-            testCollectionUtil512,
-            testCollectionUtil512Assert,
-            testCollectionExternalLibs
+            //~ testCollectionUtilsCanvasWrapper,
+            //~ testCollectionUtilsDraw,
+            //~ testCollectionUtil512Higher,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Assert,
+            //~ testCollectionExternalLibs
         ];
 
         /* run tests from low level to high level */
