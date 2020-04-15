@@ -220,7 +220,7 @@ export interface VisitingContext {
     tkFldPlural: ChvITk[];
     tkPart: ChvITk[];
     tkPartPlural: ChvITk[];
-    tkTopObject: ChvITk[];
+    tkProductName: ChvITk[];
     tkAdjective: ChvITk[];
     tkOrdinal: ChvITk[];
     tkPosition: ChvITk[];

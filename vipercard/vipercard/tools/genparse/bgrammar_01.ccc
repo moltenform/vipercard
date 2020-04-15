@@ -73,7 +73,7 @@
 //      you can use one val where most places coords are needed. 
         // put "1,1" into cds; click at cds, to match product
         // click at "1," missing items are treated as 0, to match product
-
+//      you can no longer say put the result() into x, you have to say either put the result into x or put result() into x
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
 tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/
@@ -112,7 +112,7 @@ tkFld=OneOfWords(field,fld)
 tkFldPlural=OneOfWords(fields,flds)
 tkPart=OneOfWords(part)
 tkPartPlural=OneOfWords(parts)
-tkTopObject=OneOfWords(hypercard,vipercard)
+tkProductName=OneOfWords(hypercard,vipercard)
 tkAdjective=OneOfWords(long,short,abbrev,abbr,abbreviated)
 tkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth)
 tkPosition=OneOfWords(this,prev,next)
@@ -210,7 +210,7 @@ ObjectStack:={tkPosition tkStack | tkStack <Lvl6Expression> | tkStack _id <Lvl6E
 ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expression> | tkPart <Lvl6Expression> | <Ordinal> tkPart} [ <Of> <ObjectCard> ] }     --->Custom--->RequestedVelRef
 
 // note that "me" is different than "the target". the target returns a string that can be used as an object, but me refers to a true 
-ObjectSpecial:={tkTopObject | _me }       --->Custom--->RequestedVelRef
+ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
 // support variables, HOldStyleFnNonNullary (basically for the target), and HOldStyleFnNullaryOrNullaryPropGet (basically for the owner of),
 ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullary> |  <HOldStyleFnNullaryOrNullaryPropGet> | tkStringLiteral }              --->Custom--->RequestedVelRef
 
@@ -292,11 +292,12 @@ HChunkBound:= { tkLParen <Expr> tkRParen | tkNumLiteral  | <HSimpleContainer> } 
 // note that "the length" is not handled specially, a phrase like "get the length of cd fld 1" should just work (previously we'd have trouble with it)
 // note that you can't use fn style to get global properties, "get the version" is valid but not "get version()"
 // note that we'll match the product and let you say "get the long sin of 4" and ignore the nonsensical adjective
+// note thatHOldStyleFnNonNullary uses a Lvl6Expression not a Expr, otherwise 'the length of "abc" > 1' gets parsed wrong
 HSource:={<HSource_1> | <HGenericFunctionCall> | <HSimpleContainer>}   --->Custom--->VpcVal
 HSource_1:=  {tkStringLiteral | tkNumLiteral}                 --->Custom--->VpcVal
 HFnCallWParens:={ <HAnyFnName> tkLParen MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP tkRParen  }         --->Custom--->VpcVal
 HUnaryPropertyGet:=[_the] [ tkAdjective ] <HAllPropertiesThatCouldBeUnary> tkOfOnly { <Object> | <Window> | <MenuItem> <Of> <Menu> | <HChunk> <ObjectFld>}       --->Custom--->VpcVal
-HOldStyleFnNonNullary:=_the <HAnyFnName> tkOfOnly <Expr>                                                                             --->Custom--->VpcVal
+HOldStyleFnNonNullary:=_the <HAnyFnName> tkOfOnly <Lvl6Expression>                                                                             --->Custom--->VpcVal
 HOldStyleFnNullaryOrNullaryPropGet:= _the [ tkAdjective ] <HAnyFnNameOrAllPropertiesThatCouldBeNullary>             --->Custom--->VpcVal
 
 // I think it's legit to increase the lookahead. <_the, _number, tkOfOnly, tkCard> may appear as a prefix path in all these alternatives. 

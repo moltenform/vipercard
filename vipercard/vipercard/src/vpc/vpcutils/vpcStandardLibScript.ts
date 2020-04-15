@@ -76,12 +76,15 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
         if shouldSuspendHistory then
             put 1 into internalvpcmovecardimplsuspendhistory
         end if
+        internalvpcmessagesdirective "viseffect" nextCard
         internalvpcmessagesdirective "gotocardsendnomessages" nextCard
         put 0 into internalvpcmovecardimplsuspendhistory
         if the id of the owner of cd id prevCard is not the id of the owner of cd id nextCard then
             send "openbackground" to cd id nextCard
         end if
         send "opencard" to cd id nextCard
+    else if length(nextCard) then
+        internalvpcmessagesdirective "viseffect" nextCard
     end if
     if length(nextCard) then
         return ""

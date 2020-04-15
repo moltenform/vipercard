@@ -308,8 +308,8 @@ tkPartPlural: chevrotain.createToken({
 name: "tkPartPlural",
 pattern: /(?:parts(?![a-zA-Z0-9_]))/i,
 }),
-tkTopObject: chevrotain.createToken({
-name: "tkTopObject",
+tkProductName: chevrotain.createToken({
+name: "tkProductName",
 pattern: /(?:hypercard(?![a-zA-Z0-9_]))|(?:vipercard(?![a-zA-Z0-9_]))/i,
 }),
 tkAdjective: chevrotain.createToken({
@@ -501,7 +501,7 @@ tks.tkFld,
 tks.tkFldPlural,
 tks.tkPart,
 tks.tkPartPlural,
-tks.tkTopObject,
+tks.tkProductName,
 tks.tkAdjective,
 tks.tkOrdinal,
 tks.tkPosition,
@@ -657,8 +657,8 @@ listOfAllWordLikeTokens['fields'] = tks.tkFldPlural;
 listOfAllWordLikeTokens['flds'] = tks.tkFldPlural;
 listOfAllWordLikeTokens['part'] = tks.tkPart;
 listOfAllWordLikeTokens['parts'] = tks.tkPartPlural;
-listOfAllWordLikeTokens['hypercard'] = tks.tkTopObject;
-listOfAllWordLikeTokens['vipercard'] = tks.tkTopObject;
+listOfAllWordLikeTokens['hypercard'] = tks.tkProductName;
+listOfAllWordLikeTokens['vipercard'] = tks.tkProductName;
 listOfAllWordLikeTokens['long'] = tks.tkAdjective;
 listOfAllWordLikeTokens['short'] = tks.tkAdjective;
 listOfAllWordLikeTokens['abbrev'] = tks.tkAdjective;
@@ -1026,7 +1026,7 @@ export const tkstr = {
     tkFldPlural: 'tkFldPlural',
     tkPart: 'tkPart',
     tkPartPlural: 'tkPartPlural',
-    tkTopObject: 'tkTopObject',
+    tkProductName: 'tkProductName',
     tkAdjective: 'tkAdjective',
     tkOrdinal: 'tkOrdinal',
     tkPosition: 'tkPosition',

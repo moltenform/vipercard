@@ -1048,20 +1048,20 @@ t.test('calls', () => {
         ['3 + mousewithin(4)', 'ERR:no such function'],
         ['3 + with(4)', 'ERR:no such function'],
         ['3 + at(4)', 'ERR:no such function'],
-        ['3 + into(4)', 'ERR:only see one'],
         ['3 + from(4)', 'ERR:no such function'],
-        ['3 + autohilite(4)', 'ERR:no such function'],
-        ['3 + style(4)', 'ERR:no such function'],
-        ['3 + locktext(4)', 'ERR:no such function'],
+        ['3 + autohilite(4)', 'ERR:Expecting token'],
+        ['3 + style(4)', 'ERR:Expecting token'],
+        ['3 + locktext(4)', 'ERR:Expecting token'],
         ['3 + one(4)', 'ERR:no such function'],
         ['3 + pi(4)', 'ERR:no such function'],
 
         /* the result before anything is called */
         ['put 3 into result\\0', 'ERR:name not allowed'],
         ['result()', ''],
-        ['the result()', '']
+        ['the result', '']
     ];
     h.testBatchEvaluate(batch);
+    h.assertPreparseErr('put 3 + into(4) into x', 'one of')
 
     /* call a custom handler */
     h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));

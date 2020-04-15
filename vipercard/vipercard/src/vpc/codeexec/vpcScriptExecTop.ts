@@ -1,6 +1,7 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection, VariableCollectionConstants } from './../vpcutils/vpcVarCollection';
+/* auto */ import { VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
@@ -143,7 +144,6 @@ export class VpcExecTop {
         }
 
         if (this.workQueue.length === 0) {
-            this.resetAfterFrameStackIsDone();
             return;
         }
 
@@ -156,6 +156,7 @@ export class VpcExecTop {
 
         let codeRunningAfter = this.isCodeRunning();
         if (codeRunningBefore !== codeRunningAfter && this.cbCauseUIRedraw) {
+            this.resetAfterFrameStackIsDone();
             this.cbCauseUIRedraw();
         }
     }
@@ -186,8 +187,15 @@ export class VpcExecTop {
     }
 
     resetAfterFrameStackIsDone() {
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+            VpcCurrentScriptStage.latestDestLineSeen = undefined;
+            VpcCurrentScriptStage.origClass = undefined;
+            VpcCurrentScriptStage.latestVelID = undefined
+            VpcCurrentScriptStage.dynamicCodeOrigin = undefined
+
         this.outside.SetOption('screenLocked', false);
         this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
+        this.globals.set('$currentVisEffect', VpcValS(''))
 
         /* nyi: new style ui actions */
         if (this.silenceMessagesForUIAction.val) {

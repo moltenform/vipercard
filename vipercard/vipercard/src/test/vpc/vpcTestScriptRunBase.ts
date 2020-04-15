@@ -1,4 +1,5 @@
 
+/* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { VpcEvalHelpers } from './../../vpc/vpcutils/vpcValEval';
 /* auto */ import { VpcValN, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { VpcState } from './../../vpcui/state/vpcState';
@@ -15,7 +16,6 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
-import { getParsingObjects } from '../../vpc/codeparse/vpcVisitor';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

@@ -169,7 +169,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectSpecial(ctx: VisitingContext): RequestedVelRef {
             let ret: RequestedVelRef;
-            if (ctx.tkTopObject && ctx.tkTopObject[0]) {
+            if (ctx.tkProductName && ctx.tkProductName[0]) {
                 ret = new RequestedVelRef(VpcElType.Product);
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx._me && ctx._me[0]) {
@@ -467,7 +467,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHOldStyleFnNonNullary(ctx: VisitingContext): VpcVal {
             let fnName = this.visit(ctx.RuleHAnyFnName[0]).image;
-            let arg = this.visit(ctx.RuleExpr[0]);
+            let arg = this.visit(ctx.RuleLvl6Expression[0]);
             return this.outside.CallBuiltinFunction(fnName, [arg]);
         }
 

@@ -204,7 +204,7 @@ export class VpcLineToCodeObj {
             longstr(`8K|it looked like you were calling a handler like
                 myHandler, but this is a reserved word, we don't support that here.`)
         );
-        output.excerptToParse = this.cachedStartOnes.concat(line);
+        output.excerptToParse = this.cachedStartOnes.concat(line.slice(1));
         output.setParseRule(this.parser.RuleInternalCmdUserHandler);
     }
 
@@ -309,9 +309,8 @@ export class VpcLineToCodeObj {
                  "exit repeat", "exit to ${cProductName}"`
             )
         );
-        checkThrowEq(
-            tks.tkIdentifier,
-            line[1].tokenType,
+        checkThrow(
+            line[1].tokenType === tks.tkIdentifier || line[1].tokenType === tks.tkProductName,
             `7?|expected "exit myhandler", "exit repeat", "exit to ${cProductName}"`
         );
 

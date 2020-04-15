@@ -434,7 +434,7 @@ RuleObjectSpecial = this.RULE('RuleObjectSpecial', () => {
 this.OR1([
 {
 ALT: () => {
-this.CONSUME1(tks.tkTopObject)
+this.CONSUME1(tks.tkProductName)
 }
 },
 {
@@ -758,7 +758,7 @@ RuleHOldStyleFnNonNullary = this.RULE('RuleHOldStyleFnNonNullary', () => {
 this.CONSUME1(tks._the)
 this.SUBRULE1(this.RuleHAnyFnName)
 this.CONSUME1(tks.tkOfOnly)
-this.SUBRULE1(this.RuleExpr)
+this.SUBRULE1(this.RuleLvl6Expression)
 });
 
 RuleHOldStyleFnNullaryOrNullaryPropGet = this.RULE('RuleHOldStyleFnNullaryOrNullaryPropGet', () => {
@@ -1540,7 +1540,12 @@ RuleInternalCmdUserHandler = this.RULE('RuleInternalCmdUserHandler', () => {
 this.CONSUME1(tks.tkSyntaxPlaceholder)
 this.CONSUME2(tks.tkSyntaxPlaceholder)
 this.CONSUME3(tks.tkSyntaxPlaceholder)
-this.SUBRULE1(this.RuleExpr)
+this.MANY_SEP1({
+SEP: tks.tkComma,
+DEF: () => {
+this.SUBRULE1(this.RuleExpr);
+}
+});
 });
 /* generated code, any changes above this point will be lost: --------------- */
 }

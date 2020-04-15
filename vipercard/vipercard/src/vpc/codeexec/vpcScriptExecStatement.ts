@@ -1,11 +1,11 @@
 
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValBool, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { tkstr, ChvITk } from './../codeparse/vpcTokens';
+/* auto */ import { ChvITk, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcScriptExecuteStatementHelpers } from './vpcScriptExecStatementHelpers';
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, VpcVisualEffectSpec, VpcVisualEffectSpeed, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
+/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
@@ -411,7 +411,21 @@ export class ExecuteStatement {
         checkThrow(params[0] === 'screen', 'only support lock screen');
         this.outside.SetOption('screenLocked', false);
         if (params.length > 1) {
-            // let spec = this.getVisualEffect(params.slice(1));
+            let str = params.slice(1).join('|')
+            this.outside.SetVarContents("$currentVisEffect", VpcValS(str))
+            checkThrow(false, 'visual effects are nyi');
+        }
+    }
+    /**
+     * visual effect
+     */
+    goVisual(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
+        checkThrow(params[0] === 'effect', 'only support lock screen');
+        if (params.length > 1) {
+            let str = params.slice(1).join('|')
+            this.outside.DeclareGlobal("$currentVisEffect")
+            this.outside.SetVarContents("$currentVisEffect", VpcValS(str))
             checkThrow(false, 'visual effects are nyi');
         }
     }
@@ -455,18 +469,5 @@ export class ExecuteStatement {
     protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
         let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectBtn), '59|');
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
-    }
-
-    /**
-     * parse visual effect params. they were already set up nicely in rewrites.
-     */
-    protected getVisualEffect(params: string[]) {
-        checkThrowEq(4, params.length, '');
-        return new VpcVisualEffectSpec(
-            getStrToEnum<VpcVisualEffectSpeed>(VpcVisualEffectSpeed, 'VpcVisualEffectSpeed', params[0]),
-            getStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, 'VpcVisualEffectType', params[1]),
-            getStrToEnum<VpcVisualEffectTypeDirection>(VpcVisualEffectTypeDirection, 'VpcVisualEffectTypeDirection', params[2]),
-            getStrToEnum<VpcVisualEffectTypeDestination>(VpcVisualEffectTypeDestination, 'VpcVisualEffectTypeDestination', params[3])
-        );
     }
 }

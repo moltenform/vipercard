@@ -506,6 +506,20 @@ t.test('_evalArithmetic', () => {
     ];
     h.testBatchEvaluate(batch, true);
 
+    /* old-style functions should not eat too much.
+    confirmed these in the emulator */
+    batch = [
+        ['length ("abc") > 1', 'true'],
+        ['the length of "abc" > 1', 'true'],
+        ['the length of "a" is a number', 'true'],
+        ['the length of 10 + 1', '3'],
+        ['the length of "ab" / 2', '1'],
+        ['the length of - 12', '3'],
+        ['the length of not true', '5'],
+        ['the length of (10 + 1)', '2'],
+    ]
+    h.testBatchEvaluate(batch);
+
     /* test chained */
     batch = [
         ['12 + 34 + 56 + 78', '180'],

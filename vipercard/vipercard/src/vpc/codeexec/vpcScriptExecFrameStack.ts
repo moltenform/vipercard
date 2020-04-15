@@ -11,7 +11,7 @@
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcErrStage, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcErrStage, VpcTool, VpcVisualEffectSpec, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
@@ -212,6 +212,11 @@ export class VpcExecFrameStack {
             return false;
         } else {
             /* there's no current stack, looks like we are done! */
+            VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+            VpcCurrentScriptStage.latestDestLineSeen = undefined;
+            VpcCurrentScriptStage.origClass = undefined;
+            VpcCurrentScriptStage.latestVelID = undefined
+            VpcCurrentScriptStage.dynamicCodeOrigin = undefined
             return true;
         }
     }
@@ -222,8 +227,13 @@ export class VpcExecFrameStack {
     protected runOneLineOrThrowImpl(curFrame: VpcExecFrame, curLine: VpcCodeLine, blocked: ValHolder<AsyncCodeOpState>) {
         VpcCurrentScriptStage.currentStage = VpcErrStage.Parse;
         let parsed = this.cacheParsedCST.getParsedLine(curLine);
-
         VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
+        VpcCurrentScriptStage.latestSrcLineSeen = curLine.firstToken.startLine;
+        VpcCurrentScriptStage.latestDestLineSeen = curLine;
+        VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.latestVelID = curFrame.meId;
+        VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
+
         let methodName = 'visit' + getEnumToStrOrFallback(VpcLineCategory, curLine.ctg);
         Util512.callAsMethodOnClass(VpcExecFrameStack.name, this, methodName, [curFrame, curLine, parsed, blocked], false);
 
@@ -275,6 +285,31 @@ export class VpcExecFrameStack {
      * don't stop iterating if an object is missing!
      */
     getHandlerUpwardsOrThrow(
+        velIdStart: string,
+        chain: string[],
+        handlername: string,
+        onlyParents: boolean
+    ){
+let storecurrentStage = VpcCurrentScriptStage.currentStage
+let storelatestSrcLineSeen = VpcCurrentScriptStage.latestSrcLineSeen
+let storelatestDestLineSeen = VpcCurrentScriptStage.latestDestLineSeen
+let storeorigClass = VpcCurrentScriptStage.origClass
+let storelatestVelID = VpcCurrentScriptStage.latestVelID
+let storedynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin
+        let ret = this.getHandlerUpwardsOrThrowImpl(velIdStart, chain, handlername, onlyParents)
+VpcCurrentScriptStage.currentStage = storecurrentStage;
+VpcCurrentScriptStage.latestSrcLineSeen = storelatestSrcLineSeen;
+VpcCurrentScriptStage.latestDestLineSeen = storelatestDestLineSeen;
+VpcCurrentScriptStage.origClass = storeorigClass;
+VpcCurrentScriptStage.latestVelID = storelatestVelID;
+VpcCurrentScriptStage.dynamicCodeOrigin = storedynamicCodeOrigin;
+return ret
+    }
+    /**
+     * look in the message hierarchy for a handler
+     * don't stop iterating if an object is missing!
+     */
+    getHandlerUpwardsOrThrowImpl(
         velIdStart: string,
         chain: string[],
         handlername: string,
@@ -529,7 +564,7 @@ export class VpcExecFrameStack {
      * run custom handler like doMyHandler
      */
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
-        let newHandlerName = curLine.excerptToParse[3].image;
+        let newHandlerName = curLine.firstToken.image;
         let args = this.helpGetEvaledArgs(parsed, curLine);
         curFrame.next();
         this.callHandlerAndThrowIfNotExist(curFrame, args, newHandlerName);
@@ -725,6 +760,14 @@ export class VpcExecFrameStack {
             let nextCardId = curFrame.locals.get(variable);
             checkThrow(nextCardId && nextCardId.isItInteger(), '');
             this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
+        } else if (directive === 'viseffect') {
+            let nextCard = curFrame.locals.get(variable)
+            let spec = this.globals.get('$currentVisEffect').readAsString().split('|')
+            this.globals.set('$currentVisEffect', VpcValS(''))
+            if (spec.length >= 4) {
+                let parsed = VpcVisualEffectSpec.getVisualEffect(spec)
+                console.log(nextCard, parsed)
+            }
         } else {
             checkThrow(false, 'unknown directive', directive);
         }

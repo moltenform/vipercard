@@ -135,5 +135,5 @@ BuiltinCmdWait:=... <Expr> [tkIdentifier]
 // used internally
 CmdSend:=... <Expr> _to <Object>                    --->BuildMap
 InternalCmdRequestEval:=... <Expr>             --->BuildMap
-InternalCmdUserHandler:=... <Expr>             --->BuildMap
+InternalCmdUserHandler:=... MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP             --->BuildMap
 

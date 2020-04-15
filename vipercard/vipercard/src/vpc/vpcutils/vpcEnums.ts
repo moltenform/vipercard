@@ -2,7 +2,7 @@
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, Util512Message, joinIntoMessage } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { fitIntoInclusive, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { fitIntoInclusive, getStrToEnum, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
@@ -256,6 +256,19 @@ export class VpcVisualEffectSpec {
         public dir: VpcVisualEffectTypeDirection,
         public dest: VpcVisualEffectTypeDestination
     ) {}
+    
+    /**
+     * parse visual effect params. they were already set up nicely in rewrites.
+     */
+    static getVisualEffect(params: string[]) {
+        checkThrowEq(4, params.length, '');
+        return new VpcVisualEffectSpec(
+            getStrToEnum<VpcVisualEffectSpeed>(VpcVisualEffectSpeed, 'VpcVisualEffectSpeed', params[0]),
+            getStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, 'VpcVisualEffectType', params[1]),
+            getStrToEnum<VpcVisualEffectTypeDirection>(VpcVisualEffectTypeDirection, 'VpcVisualEffectTypeDirection', params[2]),
+            getStrToEnum<VpcVisualEffectTypeDestination>(VpcVisualEffectTypeDestination, 'VpcVisualEffectTypeDestination', params[3])
+        );
+    }
 }
 
 /**
