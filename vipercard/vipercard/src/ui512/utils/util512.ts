@@ -688,7 +688,7 @@ export function fitIntoInclusive(n: number, min: number, max: number) {
  * works on arbitrarily nested array structures.
  * can be used in .sort() or just to compare values.
  */
-export function util512Sort(a: unknown, b: unknown): number {
+export function util512Sort(a: unknown, b: unknown, silent?: boolean): number {
     if (a === undefined && b === undefined) {
         return 0;
     } else if (a === null && b === null) {
@@ -715,7 +715,11 @@ export function util512Sort(a: unknown, b: unknown): number {
         }
         return 0;
     } else {
-        checkThrow512(false, `4B|could not compare types ${a} and ${b}`);
+        if (silent) {
+            return 1;
+        } else {
+            checkThrow512(false, `4B|could not compare types ${a} and ${b}`);
+        }
     }
 }
 
@@ -884,9 +888,9 @@ export function assertEq<T>(
     got: unknown,
     msg: string,
     c1?: unknown,
-    c2?: unknown,
+    c2?: unknown
 ): asserts got is T {
-    if (expected !== got && util512Sort(expected, got) !== 0) {
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         assertTrue(false, msg + msgEq, c1, c2);
     }
@@ -897,9 +901,9 @@ export function assertWarnEq(
     got: unknown,
     msg: string,
     c1?: unknown,
-    c2?: unknown,
+    c2?: unknown
 ) {
-    if (expected !== got && util512Sort(expected, got) !== 0) {
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         assertWarn(false, msg + msgEq, c1, c2);
     }
@@ -913,9 +917,9 @@ export function checkThrowEq512<T>(
     got: unknown,
     msg: string,
     c1: unknown = '',
-    c2: unknown = '',
+    c2: unknown = ''
 ): asserts got is T {
-    if (expected !== got && util512Sort(expected, got) !== 0) {
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         checkThrow512(false, msg + msgEq, c1, c2);
     }

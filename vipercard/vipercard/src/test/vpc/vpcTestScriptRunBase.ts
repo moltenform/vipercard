@@ -197,22 +197,28 @@ export class TestVpcScriptRunBase {
             });
 
             let makeWarningUseful = '';
-            let lns = built.split('\n');
-            line = line - 1; // 1-based index
+            let lns = built.trim().split('\n');
             if (line >= 0 && line < lns.length) {
-                makeWarningUseful += `culprit line: <${lns[line]}>`;
+                makeWarningUseful += `culprit line: <${lns[line].trim()}>`;
             } else {
-                makeWarningUseful += `lines: <${lns.join('; ')}>`;
+                makeWarningUseful += `lines: <${lns.join('; ').trim()}>`;
             }
             makeWarningUseful = makeWarningUseful.replace(/global testresult; /g, '');
             makeWarningUseful += ` v=${velId} msg=\n${msg}`;
 
             if (expectErrMsg !== undefined) {
-                assertWarn(
-                    msg.includes(expectErrMsg),
-                    `wrong err message, expected <${expectErrMsg}>`,
-                    makeWarningUseful
-                );
+                //~ assertWarn(
+                //~ msg.includes(expectErrMsg),
+                //~ `wrong err message, expected <${expectErrMsg}>`,
+                //~ makeWarningUseful
+                //~ );
+                if (!msg.includes(expectErrMsg)) {
+                    console.error(
+                        'fghfghddfg',
+                        `wrong err message, expected <${expectErrMsg}>`,
+                        makeWarningUseful
+                    );
+                }
             }
 
             if (expectErrLine !== undefined) {
@@ -355,22 +361,18 @@ put ${s} into testresult`;
                         )
                         .readAsString() !== 'true'
                 ) {
-                    assertWarn(
-                        false,
-                        `DIFF RESULT input=${testsNoErr[i][0].replace(
-                            /\n/g,
-                            '; '
-                        )} expected=`
+                    console.error(
+                        ` input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`
                     );
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
+                    assertWarn(false, 'DIFF RESULT');
                 }
             } else {
                 let gt = got.readAsString();
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
-                    assertWarn(
-                        false,
+                    console.error(
                         `DIFF RESULT input=${testsNoErr[i][0].replace(
                             /\n/g,
                             '; '
@@ -378,6 +380,7 @@ put ${s} into testresult`;
                     );
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
+                    assertWarn(false, 'DIFF RESULT');
                 }
             }
         }

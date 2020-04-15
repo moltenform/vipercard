@@ -2,7 +2,7 @@
 /* auto */ import { TestParseHelpers } from './vpcTestScriptParseCmd';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -20,6 +20,24 @@ t.test('Simple Expressions', () => {
     testExp('011  +  02.2', 'parses');
     testExp('11  +  (2 * 3)', 'parses');
     testExp('11  *  (2 + 3)', 'parses');
+});
+t.test('ExprConfirmThatFailureAsserts', () => {
+    testExp('1+2', 'parses');
+    assertFailsParseExp('1+', 'Exception');
+    /* test that the tests can fail */
+    assertAsserts('', 'assert:', () => {
+        testExp('1+', 'parses');
+    })
+    assertAsserts('', 'assert:', () => {
+        assertFailsParseExp('1+2', 'Exception');
+    })
+    /* incorrect message */
+    assertAsserts('', 'assert:', () => {
+        testExp('1+2', 'Exception');
+    })
+    assertAsserts('', 'assert:', () => {
+        assertFailsParseExp('1+', 'parses');
+    })
 });
 t.test('lexing should take care of this', () => {
     testExp('1 + \\\n2', 'parses');

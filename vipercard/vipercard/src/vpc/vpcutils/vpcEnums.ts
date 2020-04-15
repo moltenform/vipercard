@@ -618,7 +618,7 @@ export function checkThrow(condition: unknown, msg: string, s1: unknown = '', s2
  * a quick way to throw an expection if value is not what was expected.
  */
 export function checkThrowEq<T>(expected: T, got: unknown, msg: string, c1: unknown = '', c2: unknown = ''): asserts got is T {
-    if (expected !== got && util512Sort(expected, got) !== 0) {
+    if (expected !== got && util512Sort(expected, got, true) !== 0) {
         let msgEq = ` expected '${expected}' but got '${got}'.`;
         checkThrow(false, msg + msgEq, c1, c2);
     }
@@ -635,7 +635,7 @@ export class VpcInternalErr extends Util512BaseErr {
     }
 }
 
-export function makeVpcInternalError(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
+export function makeVpcInternalErr(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
     let level = 'vpcinternal';
     let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
     return VpcInternalErr.createError(msgTotal, level);
@@ -643,34 +643,38 @@ export function makeVpcInternalError(msg: string, s1: unknown = '', s2: unknown 
 
 export function checkThrowInternal(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
-        throw makeVpcInternalError(msg, s1, s2).clsAsErr();
+        throw makeVpcInternalErr(msg, s1, s2).clsAsErr();
     }
 }
 
-export class VpcNotificationMessage extends Util512Message {
-    isVpcNotificationMessage = true;
-    origClass = VpcNotificationMessage.name;
+export class VpcNotificationMsg extends Util512Message {
+    isVpcNotificationMsg = true;
+    origClass = VpcNotificationMsg.name;
     protected static gen(message: string, level: string) {
-        return new VpcNotificationMessage(message, level);
+        return new VpcNotificationMsg(message, level);
     }
     static createError(...params: unknown[]) {
-        return Util512BaseErr.createErrorImpl(VpcNotificationMessage.gen, ...params);
+        return Util512BaseErr.createErrorImpl(VpcNotificationMsg.gen, ...params);
     }
 }
 
-export function makeVpcNotificationMessage(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
+export function makeVpcNotificationMsg(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
     let level = 'vpcmessage';
     let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
-    return VpcNotificationMessage.createError(msgTotal, level);
+    return VpcNotificationMsg.createError(msgTotal, level);
 }
 
-export function checkThrowNotifyMessage(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
+export function checkThrowNotifyMsg(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
-        throw makeVpcNotificationMessage(msg, s1, s2).clsAsErr();
+        throw makeVpcNotificationMsg(msg, s1, s2).clsAsErr();
     }
 }
 
 export function cleanExceptionMsg(e: Error): string {
-    //~ assertTrue(false, 'nyi');
-    return e.message;
+    let asNotification = Util512BaseErr.errAsCls(VpcNotificationMsg.name, e);
+    if (asNotification) {
+        return e.message;
+    } else {
+        return 'Note: ' + e.message;
+    }
 }

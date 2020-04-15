@@ -1,7 +1,7 @@
 
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -38,13 +38,42 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidF
     try {
         fn();
     } catch (e) {
-        msg = e.message ? e.message : '';
+        msg = e.message ?? '';
     }
 
-    assertTrue(msg !== undefined, `3{|did not throw ${msgWithMark}`);
+    assertTrue(msg !== undefined, `3{|did not throw`, msgWithMark);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `9d|message "${msg}" did not contain "${expectedErr}" ${msgWithMark}`
+        `9d|message "${msg}" did not contain "${expectedErr}"`,
+        msgWithMark
+    );
+}
+
+/**
+ * assert that an assertion is thrown
+ */
+export function assertAsserts(msgWithMark: string, expectedErr: string, fn: VoidFn) {
+    let msg: O<string>;
+    let svd = UI512ErrorHandling.silenceAssertMsgs;
+    UI512ErrorHandling.silenceAssertMsgs = true;
+    try {
+        fn();
+    } catch (e) {
+        msg = e.message ?? '';
+    } finally {
+        UI512ErrorHandling.silenceAssertMsgs = svd;
+    }
+
+    assertTrue(msg !== undefined, `3{|did not throw`, msgWithMark);
+    assertTrue(
+        msg.toLowerCase().includes('assert:'),
+        `not an assertion exception`,
+        msgWithMark
+    );
+    assertTrue(
+        msg !== undefined && msg.includes(expectedErr),
+        `9d|message "${msg}" did not contain "${expectedErr}"`,
+        msgWithMark
     );
 }
 

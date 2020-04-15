@@ -89,8 +89,8 @@ tkBgAtEndOfLine=/(?:background|bkgnd|bg)(?=\s*\n)/
 tkStackAtEndOfLine=/stack(?=\s*\n)/
 // a new line
 tkNewLine=/\n+/|||||line_breaks:true
-// never actually lexed from user input, but used as a marker while preparing code to be parsed
-tkSyntaxPlaceholder=/\?{99}/
+// not expected to be lexed from user input, but used as a marker while preparing code to be parsed
+tkSyntaxPlaceholder=/\?{9}/
 // numbers need to disallow letters right afterwards, otherwise 4a becomes ["4", "a"]. note that emulator supports 001 == 1.
 tkNumLiteral=/[0-9]+(?:\.[0-9]*)?(?:e[-+]?[0-9]+)?{{nothingdirectlyafter}}/
 

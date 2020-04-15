@@ -18,7 +18,7 @@ def getFileLines(f, tryToStripComments):
     if tryToStripComments:
         text = simpleStripMultilineComments(text, '/*', '*/')
     lines = text.replace('\r\n', '\n').split('\n')
-    if tryToStripComments:
+    if tryToStripComments and tryToStripComments != 'multilineonly':
         lines = [line.split('//')[0] for line in lines]
     return lines
 

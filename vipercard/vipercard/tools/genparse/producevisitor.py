@@ -113,7 +113,7 @@ class MakingVisitors(object):
                 maybeGetImage = '.image' if returnType=='string' else ''
                 branches.append(f'if (ctx.{renderTokenForVisitor(item)} && ctx.{renderTokenForVisitor(item)}[0]) {{\n return ctx.{renderTokenForVisitor(item)}[0]{maybeGetImage}; \n}}')
         out.append('\n else \n'.join(branches))
-        out.append(" else { throw makeVpcInternalErr('OR in " + rule.name + ", no branch found'); }")
+        out.append(" else { throw makeVpcInternalErr('OR in " + rule.name + ", no branch found').clsAsErr(); }")
         out.append('}')
         return out
         
@@ -140,7 +140,7 @@ class MakingVisitors(object):
             let operatorList = ctx.%OPERATORNAME%
             let operatorListLen = operatorList ? operatorList.length : 0
             if (!ctx.%NEXTRULE% || !ctx.%NEXTRULE%.length || operatorListLen + 1 !== ctx.%NEXTRULE%.length) {
-                throw makeVpcInternalErr(`%METHODNAME%:${operatorListLen},${ctx.%NEXTRULE%.length}.`);
+                throw makeVpcInternalErr(`%METHODNAME%:${operatorListLen},${ctx.%NEXTRULE%.length}.`).clsAsErr();
             }
 
             let total = this.visit(ctx.%NEXTRULE%[0]) as VpcVal;

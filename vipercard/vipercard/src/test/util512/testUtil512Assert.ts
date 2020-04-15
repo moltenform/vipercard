@@ -1,9 +1,9 @@
 
-/* auto */ import { checkThrow, checkThrowEq, checkThrowInternal, checkThrowNotifyMessage } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { checkThrow, checkThrowEq, checkThrowInternal, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RingBuffer, UI512Compress, tostring } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { assertEq, checkThrowEq512 } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertEq, assertWarnEq, checkThrowEq512 } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -38,67 +38,85 @@ t.test('CheckThrow', () => {
         checkThrow512(undefined, 'K.|mymessage', 's1', 's2');
     });
 });
+t.test('AssertAsserts', () => {
+    assertTrue(1, '');
+    assertWarn(1, '');
+    assertEq(2, 1 + 1, '');
+    assertWarnEq(2, 1 + 1, '');
+    assertAsserts('', 'a message', () => {
+        assertTrue(0, 'a message');
+    });
+    assertAsserts('', 'a message', () => {
+        assertWarn(0, 'a message');
+    });
+    assertAsserts('', 'a message', () => {
+        assertEq(3, 1 + 1, 'a message');
+    });
+    assertAsserts('', 'a message', () => {
+        assertWarnEq(3, 1 + 1, 'a message');
+    });
+});
 t.test('GetAssertMessages', () => {
-    checkThrow512(1, '')
-    checkThrowEq512('a', 'a', '')
-    checkThrow(1, '')
-    checkThrowEq('a', 'a', '')
-    checkThrowInternal(1, '')
-    checkThrowNotifyMessage(1, '')
+    checkThrow512(1, '');
+    checkThrowEq512('a', 'a', '');
+    checkThrow(1, '');
+    checkThrowEq('a', 'a', '');
+    checkThrowInternal(1, '');
+    checkThrowNotifyMsg(1, '');
     assertThrows('', 'ui512 a (;0)', () => {
         checkThrow512(false, ';0|a');
-    })
+    });
     assertThrows('', 'ui512 a\nb (;1)', () => {
         checkThrow512(false, ';1|a', 'b');
-    })
+    });
     assertThrows('', 'ui512 a\nb, c (;2)', () => {
         checkThrow512(false, ';2|a', 'b', 'c');
-    })
+    });
     assertThrows('', "ui512 a expected 'a' but got 'b'. (;3)", () => {
         checkThrowEq512('a', 'b', ';3|a');
-    })
+    });
     assertThrows('', "ui512 a expected 'a' but got 'b'.\nc1 (;4)", () => {
         checkThrowEq512('a', 'b', ';4|a', 'c1');
-    })
+    });
     assertThrows('', "ui512 a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
         checkThrowEq512('a', 'b', ';5|a', 'c1', 'c2');
-    })
-    assertThrows('', "vpc a (;6)", () => {
+    });
+    assertThrows('', 'vpc a (;6)', () => {
         checkThrow(false, ';6|a');
-    })
-    assertThrows('', "vpc a\nb (;7)", () => {
+    });
+    assertThrows('', 'vpc a\nb (;7)', () => {
         checkThrow(false, ';7|a', 'b');
-    })
-    assertThrows('', "vpc a\nb, c (;8)", () => {
+    });
+    assertThrows('', 'vpc a\nb, c (;8)', () => {
         checkThrow(false, ';8|a', 'b', 'c');
-    })
+    });
     assertThrows('', "vpc a expected 'a' but got 'b'. (;9)", () => {
         checkThrowEq('a', 'b', ';9|a');
-    })
+    });
     assertThrows('', "vpc a expected 'a' but got 'b'.\nc1 (;a)", () => {
         checkThrowEq('a', 'b', ';a|a', 'c1');
-    })
+    });
     assertThrows('', "vpc a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
         checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
-    })
-    assertThrows('', "vpcinternal a (;c)", () => {
+    });
+    assertThrows('', 'vpcinternal a (;c)', () => {
         checkThrowInternal(false, ';c|a');
-    })
-    assertThrows('', "vpcinternal a\nb (;d)", () => {
+    });
+    assertThrows('', 'vpcinternal a\nb (;d)', () => {
         checkThrowInternal(false, ';d|a', 'b');
-    })
-    assertThrows('', "vpcinternal a\nb, c (;e)", () => {
+    });
+    assertThrows('', 'vpcinternal a\nb, c (;e)', () => {
         checkThrowInternal(false, ';e|a', 'b', 'c');
-    })
-    assertThrows('', "vpcmessage a (;f)", () => {
-        checkThrowNotifyMessage(false, ';f|a');
-    })
-    assertThrows('', "vpcmessage a\nb (;g)", () => {
-        checkThrowNotifyMessage(false, ';g|a', 'b');
-    })
-    assertThrows('', "vpcmessage a\nb, c (;h)", () => {
-        checkThrowNotifyMessage(false, ';h|a', 'b', 'c');
-    })
+    });
+    assertThrows('', 'vpcmessage a (;f)', () => {
+        checkThrowNotifyMsg(false, ';f|a');
+    });
+    assertThrows('', 'vpcmessage a\nb (;g)', () => {
+        checkThrowNotifyMsg(false, ';g|a', 'b');
+    });
+    assertThrows('', 'vpcmessage a\nb, c (;h)', () => {
+        checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
+    });
 });
 t.test('ThrowIfUndefined', () => {
     t.say(/*——————————*/ 'Truthy Should Not Throw');

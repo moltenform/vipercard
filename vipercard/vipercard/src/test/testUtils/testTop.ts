@@ -1,8 +1,15 @@
 
+/* auto */ import { testCollectionvpcuiServer } from './../vpc/vpcuiTestServer';
 /* auto */ import { testCollectionvpcuiMsgBox } from './../vpc/vpcuiTestMsgBox';
 /* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
 /* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
+/* auto */ import { testCollectionvpcScriptRunSyntax } from './../vpc/vpcTestScriptRunSyntax';
+/* auto */ import { vpcTestCollectionScriptRunCustomFns } from './../vpc/vpcTestScriptRunCustomFns';
+/* auto */ import { vpcTestCollectionScriptRunCmd } from './../vpc/vpcTestScriptRunCmd';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
+/* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
+/* auto */ import { vpcTestCollectionScriptExprLvl } from './../vpc/vpcTestScriptExprLvl';
+/* auto */ import { testCollectionvpcScriptEval } from './../vpc/vpcTestScriptEval';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
@@ -11,7 +18,7 @@
 /* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
 /* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
-/* auto */ import { testCollectionExampleAsyncTests, testCollectionUtil512Higher } from './../util512/testUtil512Higher';
+/* auto */ import { testCollectionUtil512Higher } from './../util512/testUtil512Higher';
 /* auto */ import { testCollectionUtil512Class } from './../util512/testUtil512Class';
 /* auto */ import { testCollectionUtil512Assert } from './../util512/testUtil512Assert';
 /* auto */ import { testCollectionUtil512 } from './../util512/testUtil512';
@@ -26,7 +33,7 @@
 /* auto */ import { testCollectionUI512DrawText } from './../util512ui/testUI512DrawText';
 /* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
 /* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
-/* auto */ import { testCollectionExternalLibs, testCollectionUtil512LessUsefulLibs } from './../util512/testExternalLibs';
+/* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -38,14 +45,21 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
+            //~ vpcTestCollectionScriptExprLvl,
+            //~ testCollectionvpcuiServer,
+            //~ testCollectionvpcScriptEval,
+            //~ vpcTestCollectionScriptRunCustomFns,
+            //~ vpcTestCollectionScriptRunCmd,
+
             //~ testCollectionvpcScriptRunSyntax,
-            //~ testCollectionvpcScriptParseCmd,
+            testCollectionvpcScriptParseCmd,
             testCollectionvpcScriptParseExpr,
             testCollectionvpcChunkResolution,
             testCollectionvpcElements,
             testCollectionvpcuiMsgBox,
             testCollectionvpcuiIntroProvider,
             testCollectionvpcVpcVal,
+
             testCollectionUI512CodeEditor,
             testCollectionUI512Composites,
             testCollectionUI512DrawText,
@@ -57,10 +71,9 @@ export class SimpleUtil512Tests {
             testCollectionUI512TextEdit,
             testCollectionUI512TextModify,
             testCollectionUI512TextSelectEvents,
+
             testCollectionUtilsCanvasWrapper,
             testCollectionUtilsDraw,
-            testCollectionExampleAsyncTests,
-            testCollectionUtil512LessUsefulLibs,
             testCollectionUtil512Higher,
             testCollectionUtil512Class,
             testCollectionUtil512,

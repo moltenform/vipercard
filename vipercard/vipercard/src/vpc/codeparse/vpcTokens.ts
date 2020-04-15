@@ -260,7 +260,7 @@ export const tks = {
     }),
     tkSyntaxPlaceholder: chevrotain.createToken({
         name: 'tkSyntaxPlaceholder',
-        pattern: /\?{99}/i
+        pattern: /\?{9}/i
     }),
     tkNumLiteral: chevrotain.createToken({
         name: 'tkNumLiteral',
@@ -1105,7 +1105,7 @@ export class BuildFakeTokens {
     constructor() {
         this.knownImages[tks.tkNewLine.name] = '\n';
         this.knownImages[tks.tkComma.name] = ',';
-        this.knownImages[tks.tkSyntaxPlaceholder.name] = Util512.repeat(99, '?').join('');
+        this.knownImages[tks.tkSyntaxPlaceholder.name] = Util512.repeat(9, '?').join('');
     }
 
     /**

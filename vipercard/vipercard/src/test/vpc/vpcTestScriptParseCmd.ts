@@ -5,7 +5,7 @@
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, assertEq, assertWarnEq, longstr, util512Sort } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -23,6 +23,24 @@ t.test('VpcParseCmdSet.Basic syntax', () => {
     testCmdSet(`set the topleft to (1 < 2)`, 'parses');
     testCmdSet(`set topleft to 1`, 'parses');
 });
+t.test('VpcParseCmdSet.ConfirmThatFailureAsserts', () => {
+    testCmdSet(`set the topleft to 1`, 'parses');
+    assertFailsCmdSet(`set topleft in cd btn 1 to 2`, `Exception`);
+    /* test that the tests can fail */
+    assertAsserts('', 'assert:', () => {
+        testCmdSet(`set topleft in cd btn 1 to 2`, 'parses');
+    })
+    assertAsserts('', 'assert:', () => {
+        assertFailsCmdSet(`set the topleft to 1`, 'Exception');
+    })
+    /* incorrect message */
+    assertAsserts('', 'assert:', () => {
+        testCmdSet(`set the topleft to 1`, 'Exception');
+    })
+    assertAsserts('', 'assert:', () => {
+        assertFailsCmdSet(`set topleft in cd btn 1 to 2`, 'parses');
+    })
+})
 t.test('VpcParseCmdSet.confirm that cases that should fail, do fail', () => {
     assertFailsCmdSet(
         `set topleft in cd btn 1 to 2`,
@@ -32,10 +50,6 @@ t.test('VpcParseCmdSet.confirm that cases that should fail, do fail', () => {
         `set topleft of cd btn 1 to 2 and 3`,
         `NotAllInputParsedException: Redundant input, expec`
     );
-
-    /* hm, a TkIdentifier is currently a valid <Object>. not ideal but saves a few tokens. */
-    /* we'll fail at a later stage. */
-    /* this.assertFailsParseSetExp(#set topleft of x to 1#, ##) */
 });
 t.test('VpcParseCmdSet.test property targets', () => {
     testCmdSet(`set topleft of cd 1 to 2`, 'parses');
@@ -192,17 +206,7 @@ t.test('VpcParseCmdPut', () => {
     testCmd('put the long version {MK} into {MK} x', 'parses');
     testCmd('put the number of cd btns {MK} into {MK} x', 'parses');
     testCmd('put there is a cd btn y {MK} into {MK} x', 'parses');
-    testCmd(
-        'put true or false {MK} into {MK} x',
-        `Expr(
-    ExprSource(
-        HSimpleContainer( $true ) )
-    ExprSource(
-        HSimpleContainer( $false ) )
-    OpLogicalOrAnd( or ) )
-HContainer(
-    HSimpleContainer( $x ) ) $put $into`
-    );
+    testCmd('put true or false {MK} into {MK} x', `parses`);
     testCmd('put 2 > 3 {MK} into {MK} x', 'parses');
     testCmd('put 2 is a number {MK} into {MK} x', 'parses');
     testCmd('put y is within z {MK} into {MK} x', 'parses');
@@ -313,7 +317,10 @@ export class TestParseHelpers {
         );
         this.parser.input = line;
         let cst = Util512.callAsMethodOnClass('parser', this.parser, sTopRule, [], false);
-        assertWarn(sExpected === '' || sExpected === 'parses', "we don't check the cst anymore")
+        assertWarn(
+            sExpected === '' || sExpected === 'parses',
+            "we don't check the cst anymore"
+        );
         let shouldCont = this.testParseRespondToErrs(sInput, sErrExpected, cst);
         if (!shouldCont) {
             return;
@@ -328,7 +335,8 @@ export class TestParseHelpers {
         if (this.parser.errors.length) {
             if (sErrExpected.length) {
                 /* add the exception name, for backwards compat */
-                let compatName = this.parser.errors[0].name + ': ' + this.parser.errors[0].message
+                let compatName =
+                    this.parser.errors[0].name + ': ' + this.parser.errors[0].message;
                 if (!compatName.includes(sErrExpected)) {
                     let s = longstr(
                         `1+|for input ${sInput} got different
@@ -385,7 +393,7 @@ function assertFailsCmdSet(sInput: string, sErrExpected: string) {
  */
 function testCmd(sInput: string, sExpected: string) {
     /* manually make a syntax marker */
-    let sSyntaxMarker = Util512.repeat(99, '?').join('');
+    let sSyntaxMarker = Util512.repeat(9, '?').join('');
     sInput = sInput.replace(/\{MK\}/g, sSyntaxMarker);
     let sCmd = sInput.split(' ')[0];
     assertTrue(sInput.startsWith(sCmd + ' '), '1.|expected start with ' + sCmd);

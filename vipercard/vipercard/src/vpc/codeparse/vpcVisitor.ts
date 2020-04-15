@@ -6,7 +6,7 @@
 /* auto */ import { ChvITk, allVpcTokens } from './vpcTokens';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcChvParser } from './vpcParser';
-/* auto */ import { VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcOpCtg, checkThrow, makeVpcInternalErr } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
@@ -100,7 +100,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx._number && ctx._number[0]) {
                 return ctx._number[0];
             } else {
-                checkThrowInternal(false, 'OR in HAllPropertiesThatCouldBeUnary, no branch found');
+                throw makeVpcInternalErr('OR in HAllPropertiesThatCouldBeUnary, no branch found').clsAsErr();
             }
         }
 
@@ -110,7 +110,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
                 return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
             } else {
-                checkThrowInternal(false, 'OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found');
+                throw makeVpcInternalErr('OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found').clsAsErr();
             }
         }
 
@@ -120,7 +120,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx._windows && ctx._windows[0]) {
                 return ctx._windows[0];
             } else {
-                checkThrowInternal(false, 'OR in HAnyFnName, no branch found');
+                throw makeVpcInternalErr('OR in HAnyFnName, no branch found').clsAsErr();
             }
         }
 
@@ -130,7 +130,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.RuleHAllPropertiesThatCouldBeUnary && ctx.RuleHAllPropertiesThatCouldBeUnary[0]) {
                 return this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]);
             } else {
-                checkThrowInternal(false, 'OR in HCouldBeAPropertyToSet, no branch found');
+                throw makeVpcInternalErr('OR in HCouldBeAPropertyToSet, no branch found').clsAsErr();
             }
         }
 
@@ -146,7 +146,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
                 return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
             } else {
-                checkThrowInternal(false, 'OR in HAnyAllowedVariableName, no branch found');
+                throw makeVpcInternalErr('OR in HAnyAllowedVariableName, no branch found').clsAsErr();
             }
         }
 
@@ -166,7 +166,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
                 return this.visit(ctx.RuleObjectStack[0]);
             } else {
-                checkThrowInternal(false, 'OR in Object, no branch found');
+                throw makeVpcInternalErr('OR in Object, no branch found').clsAsErr();
             }
         }
 
@@ -176,7 +176,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.tkInOnly && ctx.tkInOnly[0]) {
                 return ctx.tkInOnly[0];
             } else {
-                checkThrowInternal(false, 'OR in Of, no branch found');
+                throw makeVpcInternalErr('OR in Of, no branch found').clsAsErr();
             }
         }
 
@@ -214,7 +214,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
                 return this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
             } else {
-                checkThrowInternal(false, 'OR in HGenericFunctionCall, no branch found');
+                throw makeVpcInternalErr('OR in HGenericFunctionCall, no branch found').clsAsErr();
             }
         }
 
@@ -232,7 +232,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.RuleFnCallNumberOf_9 && ctx.RuleFnCallNumberOf_9[0]) {
                 return this.visit(ctx.RuleFnCallNumberOf_9[0]);
             } else {
-                checkThrowInternal(false, 'OR in FnCallNumberOf, no branch found');
+                throw makeVpcInternalErr('OR in FnCallNumberOf, no branch found').clsAsErr();
             }
         }
 
@@ -248,7 +248,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 !ctx.RuleLvl1Expression.length ||
                 operatorListLen + 1 !== ctx.RuleLvl1Expression.length
             ) {
-                checkThrowInternal(false, `RuleExpr:${operatorListLen},${ctx.RuleLvl1Expression.length}.`);
+                throw makeVpcInternalErr(`RuleExpr:${operatorListLen},${ctx.RuleLvl1Expression.length}.`).clsAsErr();
             }
 
             let total = this.visit(ctx.RuleLvl1Expression[0]) as VpcVal;
@@ -274,7 +274,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 !ctx.RuleLvl2Expression.length ||
                 operatorListLen + 1 !== ctx.RuleLvl2Expression.length
             ) {
-                checkThrowInternal(false, `RuleLvl1Expression:${operatorListLen},${ctx.RuleLvl2Expression.length}.`);
+                throw makeVpcInternalErr(`RuleLvl1Expression:${operatorListLen},${ctx.RuleLvl2Expression.length}.`).clsAsErr();
             }
 
             let total = this.visit(ctx.RuleLvl2Expression[0]) as VpcVal;
@@ -300,7 +300,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 !ctx.RuleLvl4Expression.length ||
                 operatorListLen + 1 !== ctx.RuleLvl4Expression.length
             ) {
-                checkThrowInternal(false, `RuleLvl3Expression:${operatorListLen},${ctx.RuleLvl4Expression.length}.`);
+                throw makeVpcInternalErr(`RuleLvl3Expression:${operatorListLen},${ctx.RuleLvl4Expression.length}.`).clsAsErr();
             }
 
             let total = this.visit(ctx.RuleLvl4Expression[0]) as VpcVal;
@@ -326,7 +326,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 !ctx.RuleLvl5Expression.length ||
                 operatorListLen + 1 !== ctx.RuleLvl5Expression.length
             ) {
-                checkThrowInternal(false, `RuleLvl4Expression:${operatorListLen},${ctx.RuleLvl5Expression.length}.`);
+                throw makeVpcInternalErr(`RuleLvl4Expression:${operatorListLen},${ctx.RuleLvl5Expression.length}.`).clsAsErr();
             }
 
             let total = this.visit(ctx.RuleLvl5Expression[0]) as VpcVal;
@@ -352,7 +352,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
                 !ctx.RuleLvl6Expression.length ||
                 operatorListLen + 1 !== ctx.RuleLvl6Expression.length
             ) {
-                checkThrowInternal(false, `RuleLvl5Expression:${operatorListLen},${ctx.RuleLvl6Expression.length}.`);
+                throw makeVpcInternalErr(`RuleLvl5Expression:${operatorListLen},${ctx.RuleLvl6Expression.length}.`).clsAsErr();
             }
 
             let total = this.visit(ctx.RuleLvl6Expression[0]) as VpcVal;
@@ -376,7 +376,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx._and && ctx._and[0]) {
                 return ctx._and[0].image;
             } else {
-                checkThrowInternal(false, 'OR in AndOrOr, no branch found');
+                throw makeVpcInternalErr('OR in AndOrOr, no branch found').clsAsErr();
             }
         }
 
@@ -386,7 +386,7 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
             } else if (ctx.tkGreaterOrLessEqualOrEqual && ctx.tkGreaterOrLessEqualOrEqual[0]) {
                 return ctx.tkGreaterOrLessEqualOrEqual[0].image;
             } else {
-                checkThrowInternal(false, 'OR in ContainsOrGreaterLessEqual, no branch found');
+                throw makeVpcInternalErr('OR in ContainsOrGreaterLessEqual, no branch found').clsAsErr();
             }
         }
 

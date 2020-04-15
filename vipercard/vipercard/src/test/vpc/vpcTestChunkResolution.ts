@@ -5,7 +5,7 @@
 /* auto */ import { ReadableContainerVar, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -45,6 +45,22 @@ t.test('ChunkGetChar', () => {
     testGetChunk('', 'abc', VpcGranularity.Chars, 4, 6);
     testGetChunk('', 'abc', VpcGranularity.Chars, 5, 5);
 });
+t.test('ChunkGetCharConfirmExpectedFailure', () => {
+    testGetChunk('ab', 'abc', VpcGranularity.Chars, 1, 2);
+    assertAsserts('', 'assert:', () => {
+        testGetChunk('ac', 'abc', VpcGranularity.Chars, 1, 2);
+    })
+    assertAsserts('', 'assert:', () => {
+        testGetChunk('abcd', 'abc', VpcGranularity.Chars, 1, 2);
+    })
+    testSetChunk('123', 'abc', VpcGranularity.Chars, 1, 3);
+    assertAsserts('', 'assert:', () => {
+        testSetChunk('124', 'abc', VpcGranularity.Chars, 1, 3);
+    })
+    assertAsserts('', 'assert:', () => {
+        testSetChunk('1234', 'abc', VpcGranularity.Chars, 1, 3);
+    })
+})
 t.test('ChunkGetItem1', () => {
     testGetChunk('', 'a,b,c', VpcGranularity.Items, 0, undefined);
     testGetChunk('a', 'a,b,c', VpcGranularity.Items, 1, undefined);

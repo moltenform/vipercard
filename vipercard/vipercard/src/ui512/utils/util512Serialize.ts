@@ -35,7 +35,10 @@ export namespace Util512SerializableHelpers {
                         objToSend[propDest] = obj[prop];
                     }
                 } else {
-                    checkThrow512(isString(obj[prop]), 'we currently only support strings');
+                    checkThrow512(
+                        isString(obj[prop]),
+                        'we currently only support strings'
+                    );
                     objToSend[prop] = obj[prop];
                 }
             }

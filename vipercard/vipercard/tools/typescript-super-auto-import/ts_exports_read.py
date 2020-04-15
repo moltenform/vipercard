@@ -8,7 +8,7 @@ import re
 from collections import OrderedDict
 from ts_parsing import *
 
-tryToStripComments = True
+tryToStripComments = 'multilineonly'
 
 def collectExportsLine(line, found, which):
     pts = re.split(' +', line)

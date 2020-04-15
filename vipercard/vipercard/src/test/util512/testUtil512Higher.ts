@@ -312,9 +312,6 @@ t.test('serialize: inheritance works, methods skipped', () => {
     assertTrue(undefined === oGot['method2'], '');
 });
 
-t = new SimpleUtil512TestCollection('testCollectionExampleAsyncTests');
-export let testCollectionExampleAsyncTests = t;
-
 /* ok to disable warning, we're intentionally only synchronous here */
 /* eslint-disable-next-line @typescript-eslint/require-await */
 t.atest('canDoSimpleSynchronousActions', async () => {
@@ -336,3 +333,43 @@ async function exampleAsyncFn() {
     await Util512Higher.sleep(100);
     t.say(/*——————————*/ '2...');
 }
+
+/**
+ * test some less useful classes
+ */
+t.test('LockableArr', () => {
+    t.say(/*——————————*/ 'standard use');
+    let ar = new Util512.LockableArr<number>();
+    ar.set(0, 55);
+    ar.set(1, 56);
+    assertEq(55, ar.at(0), 'OS|');
+    assertEq(56, ar.at(1), 'OR|');
+    assertEq(2, ar.len(), 'OQ|');
+    ar.lock();
+    assertThrows('OP|', 'locked', () => {
+        ar.set(1, 57);
+    });
+    t.say(/*——————————*/ "changing the copy won't change original");
+    let copy = ar.getUnlockedCopy();
+    assertEq(55, copy.at(0), 'OO|');
+    assertEq(56, copy.at(1), 'ON|');
+    assertEq(2, copy.len(), 'OM|');
+    copy.set(1, 57);
+    assertEq(57, copy.at(1), 'OL|');
+    assertEq(56, ar.at(1), 'OK|');
+});
+t.test('keepOnlyUnique', () => {
+    assertEq([], Util512.keepOnlyUnique([]), 'OJ|');
+    assertEq(['1'], Util512.keepOnlyUnique(['1']), 'OI|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3']), 'OH|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3']), 'OG|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '3']), 'OF|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '2']), 'OE|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '2', '3', '3']), 'OD|');
+    assertEq(['1', '2', '3'], Util512.keepOnlyUnique(['1', '2', '3', '2', '3']), 'OC|');
+    assertEq(
+        ['11', '12', '13', '14', '15'],
+        Util512.keepOnlyUnique(['11', '12', '13', '14', '15', '15']),
+        'OB|'
+    );
+});

@@ -117,7 +117,7 @@ export function make512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unkno
 }
 
 /**
- * this is a 'hard' assert that always throws.
+ * this is a hard assert that always throws.
  */
 export function assertTrue(
     condition: unknown,
@@ -126,24 +126,27 @@ export function assertTrue(
     s3?: unknown
 ): asserts condition {
     if (!condition) {
-        console.error(s1, s2 ?? '', s3 ?? '')
-        callDebuggerIfNotInProduction();
-        throw make512Error('assertion failed:', s1, s2, s3).clsAsErr();
+        if (!UI512ErrorHandling.silenceAssertMsgs) {
+            console.error(s1, s2 ?? '', s3 ?? '');
+            callDebuggerIfNotInProduction();
+        }
+
+        throw make512Error('assert:', s1, s2, s3).clsAsErr();
     }
 }
 
 /**
  * can be ignored/ignore all.
- * in case proceeding execution would be unsafe, use assertTrue instead
+ * if proceeding with execution would be unsafe, use assertTrue instead
  */
-export function assertWarn(
-    condition: unknown,
-    s1: string,
-    s2?: unknown,
-    s3?: unknown
-) {
+export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: unknown) {
     if (!condition) {
-        console.error(s1, s2 ?? '', s3 ?? '')
+        if (UI512ErrorHandling.silenceAssertMsgs) {
+            /* we are in a assertAsserts test */
+            throw new Error('assert:' + s1 + (s2 ?? '') + (s3 ?? ''));
+        }
+
+        console.error(s1, s2 ?? '', s3 ?? '');
         callDebuggerIfNotInProduction();
         let msg = joinIntoMessage('assert:', 'ui512', s1, s2, s3);
         if (!UI512ErrorHandling.silenceWarnings) {
@@ -161,8 +164,8 @@ export function assertWarn(
 
 /**
  * a quick way to throw if condition is false.
- * not the same as assert, which should only be triggered when
- * something goes wrong.
+ * not the same as assert - an assert should only be 
+ * triggered for unexpected conditions.
  */
 export function checkThrow512(
     condition: unknown,
@@ -171,11 +174,11 @@ export function checkThrow512(
     s2: unknown = ''
 ): asserts condition {
     if (!condition) {
-        throw make512Error(msg, s1, s2).clsAsErr()
+        throw make512Error(msg, s1, s2).clsAsErr();
     }
 }
 
-/* see also: assertEq, assertWarnEq, checkThrowEq512 in util512.ts*/
+/* see also: assertEq, assertWarnEq, checkThrowEq512 in util512.ts */
 
 /**
  * store logs. user can choose "send err report" to send us error context.
@@ -183,6 +186,7 @@ export function checkThrow512(
 export class UI512ErrorHandling {
     static shouldRecordErrors = true;
     static runningTests = false;
+    static silenceAssertMsgs = false;
     static silenceWarnings = false;
     static silenceWarningsAndMore = false;
     static silenceWarningsAndMoreCount = 0;

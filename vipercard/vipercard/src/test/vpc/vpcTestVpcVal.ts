@@ -5,7 +5,7 @@
 /* auto */ import { VpcOpCtg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -66,6 +66,23 @@ t.test('EvalHelpers.String Comparisons Must Be A Strict Match', () => {
     testEquality(false, '12a', '\n12a');
     testEquality(true, '\n12a', '\n12a');
 });
+t.test('EvalConfirmThatFailureAsserts', () => {
+    testEquality(true, '12', '12 ');
+    /* test for false positives */
+    assertAsserts('', 'assert:', () => {
+        testEquality(true, '13', '12 ');
+    })
+    assertAsserts('', 'assert:', () => {
+        testEquality(true, '12 ', '13');
+    })
+    /* test for false negatives */
+    assertAsserts('', 'assert:', () => {
+        testEquality(false, '12', '12 ');
+    })
+    assertAsserts('', 'assert:', () => {
+        testEquality(false, '12 ', '12');
+    })
+})
 t.test('EvalHelpers1', () => {
     t.say(
         longstr(`EvalHelpers.Number comparisons

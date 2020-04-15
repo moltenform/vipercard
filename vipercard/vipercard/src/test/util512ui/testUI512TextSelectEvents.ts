@@ -6,7 +6,7 @@
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
 /* auto */ import { FormattedTextFromPlainText } from './testUI512TextModify';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -43,6 +43,29 @@ t.test('ChangeSelSelectAll', () => {
     testChangeSel('^abc#', 'a^b#c', TextSelModifyImpl.changeSelSelectAll);
     testChangeSel('^ab\nc#', 'a^#b\nc', TextSelModifyImpl.changeSelSelectAll);
 });
+t.test('ConfirmThatFailureAsserts', () => {
+    testChangeSel('^abc#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
+    /* getting the wrong text should assert */
+    assertAsserts('', 'wrong text', () => {
+        testChangeSel('^abd#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
+    })
+    /* missing caret should assert */
+    assertAsserts('', 'assert:', () => {
+        testChangeSel('abd#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
+    })
+    /* missing end should assert */
+    assertAsserts('', 'assert:', () => {
+        testChangeSel('^abd', '^#abc', TextSelModifyImpl.changeSelSelectAll);
+    })
+    /* getting the wrong caret should assert */
+    assertAsserts('', 'incorrect caret', () => {
+        testChangeSel('a^bc#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
+    })
+    /* getting the wrong end should assert */
+    assertAsserts('', 'incorrect select-end', () => {
+        testChangeSel('^ab#c', '^#abc', TextSelModifyImpl.changeSelSelectAll);
+    })
+})
 t.test('ChangeSelGoDocHomeEnd', () => {
     /* go to start, no extend */
     testChangeSel('^#abc', '^#abc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);
@@ -1215,7 +1238,7 @@ function testChangeSel(
         expectedCaret,
         expectedEnd
     ] = FormattedTextFromPlainText.fromPlainText(expected);
-    assertEq(expectedTxt.toSerialized(), t.toSerialized(), '1s|');
+    assertEq(expectedTxt.toSerialized(), t.toSerialized(), '1s|wrong text');
     assertEq(expectedCaret, gotSelCaret, '1r|incorrect caret position');
     assertEq(expectedEnd, gotSelEnd, '1q|incorrect select-end position');
 }

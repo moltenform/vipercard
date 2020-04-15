@@ -4,7 +4,7 @@
 /* auto */ import { TextSelModifyImpl } from './../../ui512/textedit/ui512TextSelModifyImpl';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { TextFontStyling, specialCharFontChange, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -50,6 +50,29 @@ t.test('changeTextDuplicate', () => {
     runT('^#abcd|abcd|34', '^#abcd|34', dup);
     runT('a^#bcd|abcd|34', 'a^bc#d|34', dup);
 });
+t.test('modifyConfirmThatFailureAsserts', () => {
+    runT('abcd^#|abcd', 'abcd^#', dup);
+    /* getting the wrong text should assert */
+    assertAsserts('', 'wrong text', () => {
+        runT('abcd^#|Abcd', 'abcd^#', dup);
+    })
+    /* missing caret should assert */
+    assertAsserts('', 'assert:', () => {
+        runT('abcd#|abcd', 'abcd^#', dup);
+    })
+    /* missing end should assert */
+    assertAsserts('', 'assert:', () => {
+        runT('abcd^|abcd', 'abcd^#', dup);
+    })
+    /* getting the wrong caret should assert */
+    assertAsserts('', 'incorrect caret', () => {
+        runT('abc^d#|abcd', 'abcd^#', dup);
+    })
+    /* getting the wrong end should assert */
+    assertAsserts('', 'incorrect select-end', () => {
+        runT('abcd^|#abcd', 'abcd^#', dup);
+    })
+})
 t.test('changeTextIndentation.Decrease,OneLine', () => {
     runT('^#', '^#', ind, true, defFont);
     runT('^abc#', 'abc^#', ind, true, defFont);
@@ -266,8 +289,8 @@ function runT(
         expectedCaret,
         expectedEnd
     ] = FormattedTextFromPlainText.fromPlainText(expected);
-    assertEq(expectedTxt.toSerialized(), gotTxt.toSerialized(), '1p|');
-    assertEq(expectedCaret, gotSelCaret, '1o|ncorrect caret position');
+    assertEq(expectedTxt.toSerialized(), gotTxt.toSerialized(), '1p|wrong text');
+    assertEq(expectedCaret, gotSelCaret, '1o|incorrect caret position');
     assertEq(expectedEnd, gotSelEnd, '1n|incorrect select-end position');
 }
 
