@@ -290,20 +290,20 @@ export class VpcExecFrameStack {
         handlername: string,
         onlyParents: boolean
     ){
-let storecurrentStage = VpcCurrentScriptStage.currentStage
-let storelatestSrcLineSeen = VpcCurrentScriptStage.latestSrcLineSeen
-let storelatestDestLineSeen = VpcCurrentScriptStage.latestDestLineSeen
-let storeorigClass = VpcCurrentScriptStage.origClass
-let storelatestVelID = VpcCurrentScriptStage.latestVelID
-let storedynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin
+        let storecurrentStage = VpcCurrentScriptStage.currentStage
+        let storelatestSrcLineSeen = VpcCurrentScriptStage.latestSrcLineSeen
+        let storelatestDestLineSeen = VpcCurrentScriptStage.latestDestLineSeen
+        let storeorigClass = VpcCurrentScriptStage.origClass
+        let storelatestVelID = VpcCurrentScriptStage.latestVelID
+        let storedynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin
         let ret = this.getHandlerUpwardsOrThrowImpl(velIdStart, chain, handlername, onlyParents)
-VpcCurrentScriptStage.currentStage = storecurrentStage;
-VpcCurrentScriptStage.latestSrcLineSeen = storelatestSrcLineSeen;
-VpcCurrentScriptStage.latestDestLineSeen = storelatestDestLineSeen;
-VpcCurrentScriptStage.origClass = storeorigClass;
-VpcCurrentScriptStage.latestVelID = storelatestVelID;
-VpcCurrentScriptStage.dynamicCodeOrigin = storedynamicCodeOrigin;
-return ret
+        VpcCurrentScriptStage.currentStage = storecurrentStage;
+        VpcCurrentScriptStage.latestSrcLineSeen = storelatestSrcLineSeen;
+        VpcCurrentScriptStage.latestDestLineSeen = storelatestDestLineSeen;
+        VpcCurrentScriptStage.origClass = storeorigClass;
+        VpcCurrentScriptStage.latestVelID = storelatestVelID;
+        VpcCurrentScriptStage.dynamicCodeOrigin = storedynamicCodeOrigin;
+        return ret
     }
     /**
      * look in the message hierarchy for a handler

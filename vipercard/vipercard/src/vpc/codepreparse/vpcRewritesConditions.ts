@@ -120,12 +120,13 @@ export namespace VpcRewriteNoElseIfClauses {
                 let clause = new IfConstructClause(arisLineElseCondition, false);
                 this.current.clauses.push(clause);
             } else if (isLineElsePlain(line)) {
+                checkThrow(!this.current.isRoot, 'else outside of if?');
                 checkThrow(!this.current.hasSeenPlainElse, "can't have two plain elses");
                 this.current.hasSeenPlainElse = true;
                 let clause = new IfConstructClause([], false);
                 this.current.clauses.push(clause);
             } else if (isLineEndIf(line)) {
-                checkThrow(!this.current.isRoot && this.current.parent, "can't have an end if outside an if");
+                checkThrow(!this.current.isRoot && this.current.parent, "can't have an end if outside of if");
                 this.current = this.current.parent;
             } else {
                 arLast(this.current.clauses).children.push(line);

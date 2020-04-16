@@ -391,7 +391,7 @@ put x into x\\x`,
         let isPreparse = true
         let expectErr = "don't support";
         if (reserved === 'on') {
-            expectErr = 'invalid name';
+            expectErr = `don't support`;
         } else if (reserved === 'end' || reserved === 'exit' || reserved === 'pass') {
             expectErr = 'wrong line length';
         } else if (reserved === 'if') {
@@ -1454,8 +1454,7 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
             '1'
         ],
         /* custom fn error reporting */
-        ['get mm(1\\it', 'ERR:missing )'],
-        ['get mm(abs(1\\it', 'ERR:missing )'],
+        ['get mm(1\\it', 'ERR:Expecting'],
         /* using blank lines, line number reporting should be affected */
         [
             `put "abc" into x
@@ -1503,17 +1502,40 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         show cd btn "notfound"\\0`,
             'ERR:5:could not find the specified'
         ],
-        /* difference between what is allowed and what is not */
         ['global g\nput 0 into g\\0', '0'],
-        ['mm()\\0', `ERR:isn't C`],
         ['mm ("")\\the result', 'm1(,,)'],
-        ['mm(1)\\0', `ERR:isn't C`],
-        ['mm (1)\\the result', 'm2(1,,)'],
-        ['mm(1),(2)\\0', `ERR:isn't C`],
-        ['mm (1),(2)\\the result', 'm3(1,2,)']
+        /* difference between what is allowed and what is not.
+        we can look at token start pos to see if it is 'a()' or 'a ()'
+        myFunction() -- disallow, looks too much like C
+        myFunction(1) -- disallow, looks too much like C
+        myFunction () -- does not parse
+        myFunction (1) -- allow
+        myFunction() && "" -- does not parse
+        myFunction(1) && "" -- allow
+        myFunction (1) && "" -- allow
+        myFunction (1), "" -- allow
+        myFunction (1, "") -- does not parse
+        myFunction (1, "") && "" -- does not parse
+        myFunction  1, "" && "" -- allow
+        */
+        ['global g\nput 0 into g\nmm ()\\the result', 'ERR:6:parse error'],
+        ['global g\nput 0 into g\nmm (1)\\the result', 'm1(1,,)'],
+        ['global g\nput 0 into g\nmm() && ""\\the result', 'ERR:6:'],
+        ['global g\nput 0 into g\nmm(1) && ""\\the result', 'm1(1 ,,)'],
+        ['global g\nput 0 into g\nmm (1) && ""\\the result', 'm1(1 ,,)'],
+        ['global g\nput 0 into g\nmm (1), "o"\\the result', 'm1(1,o,)'],
+        ['global g\nput 0 into g\nmm (1, "")\\the result', 'ERR:6:parse error'],
+        ['global g\nput 0 into g\nmm (1, "") && ""\\the result', 'ERR:6:parse error'],
+        ['global g\nput 0 into g\nmm 1, "" && ""\\the result', 'm1(1, ,)'],
+        ['global g\nput 0 into g\nmm (1),(2)\\the result', 'm1(1,2,)']
     ];
     h.testBatchEvaluate(batch);
+    h.assertPreparseErrLn('get mm(abs(1', 'missing )')
+    h.assertPreparseErrLn('global g\nput 0 into g\nmm()', `isn't C`)
+    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1)', `isn't C`)
+    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1),(2)', `isn't C`)
     h.setScript(h.elIds.card_a_a, ``);
+
 
     /* disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess) */
     /* but not printargs("a") */
@@ -1637,7 +1659,7 @@ end myhandler1`,
 on ,
 get 1 + 2
 end myhandler1`,
-        'expected "on myhandler" but got',
+        `don't support`,
         2
     );
     /* handler params invalid 1 */
@@ -1655,7 +1677,7 @@ end myhandler1`,
 on myhandler1 x , ,
 get 1 + 2
 end myhandler1`,
-        'not a valid variable name',
+        `don't support`,
         2
     );
     /* no handler end name */
@@ -1713,7 +1735,7 @@ next repeat`,
     else
     end if
     end myhandler`,
-        'interleaved within',
+        'outside of if',
         3
     );
     /* cannot else if when no if */
@@ -1723,7 +1745,7 @@ next repeat`,
     else if true then
     end if
     end myhandler`,
-        'interleaved within',
+        'outside of if',
         3
     );
     /* cannot else when after the if */
@@ -1735,7 +1757,7 @@ next repeat`,
     else
     end if
     end myhandler`,
-        'interleaved within',
+        'outside of if',
         5
     );
     /* cannot else if when after the if */
@@ -1747,30 +1769,30 @@ next repeat`,
     else if true then
     end if
     end myhandler`,
-        'interleaved within',
+        'outside of if',
         5
     );
     /* cannot end if when no if */
-    h.assertPreparseErrLn(`end if`, 'interleaved within', 3);
+    h.assertPreparseErrLn(`end if`, 'outside of if', 3);
     /* cannot say "else then" */
     h.assertPreparseErrLn(
         `if false then
     else then`,
-        'expected else to not have then',
+        'else if condition then',
         4
     );
     /* cannot say just "if" */
     h.assertPreparseErrLn(
         `if
     end if`,
-        'all-on-one-line',
+        'no "then"',
         3
     );
     /* cannot ommit the "then" */
     h.assertPreparseErrLn(
         `if true
     end if`,
-        'all-on-one-line',
+        'no "then"',
         3
     );
     /* cannot just say "return" */
@@ -1778,7 +1800,7 @@ next repeat`,
     /* cannot just say "end" */
     h.assertPreparseErrLn(`end`, 'cannot have a line', 3);
     /* cannot just say "exit" */
-    h.assertPreparseErrLn(`exit`, 'cannot have a line', 3);
+    h.assertPreparseErrLn(`exit`, 'not enough args', 3);
     /* cannot just say "repeat while" */
     h.assertPreparseErrLn(
         `repeat while

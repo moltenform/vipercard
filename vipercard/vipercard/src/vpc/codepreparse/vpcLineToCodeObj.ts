@@ -316,7 +316,7 @@ export class VpcLineToCodeObj {
 
         if (line[1].image === 'repeat') {
             return this.goExitRepeat(line, output);
-        } else if (line[1].image === cProductName.toLowerCase() || line[1].image === cAltProductName.toLowerCase()) {
+        } else if (line[1].tokenType === tks.tkProductName) {
             return this.goExitProduct(line, output);
         } else {
             return this.goExitHandler(line, output);
@@ -379,11 +379,10 @@ export class VpcLineToCodeObj {
      * note that in this version, variable names aren't always a tkIdentifier
      */
     protected getListOfValidVariableNames(line: ChvITk[], output: VpcCodeLine, index: number) {
+        let count = 0
         for (let i = index; i < line.length; i++) {
-            checkCommonMistakenVarNames(line[i]);
-            checkThrow(this.check.okLocalVar(line[i].image), `8I|name of parameter is a reserved word, we don't support here.`);
-
-            if ((i - index) % 2 === 1) {
+            count += 1
+            if (count % 2 === 0) {
                 checkThrowEq(
                     tks.tkComma,
                     line[i].tokenType,
@@ -391,6 +390,8 @@ export class VpcLineToCodeObj {
                     line[i].image
                 );
             } else {
+                checkCommonMistakenVarNames(line[i]);
+                checkThrow(this.check.okLocalVar(line[i].image), `8I|name of parameter is a reserved word, we don't support here.`);
                 output.excerptToParse.push(line[i]);
             }
         }

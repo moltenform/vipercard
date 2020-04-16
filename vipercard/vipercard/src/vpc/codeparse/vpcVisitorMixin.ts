@@ -52,7 +52,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         Helper$SetByNumberOrName(ret: RequestedVelRef, ctx: VisitingContext, subrule: string) {
-            let val = this.Helper$ReadVpcVal(ctx, subrule, '');
+            let val = this.Helper$ReadVpcVal(ctx, subrule, this.Helper$SetByNumberOrName.name);
             if (val.isItNumeric()) {
                 ret.lookByAbsolute = val.readAsStrictNumeric(this.tmpArr);
             } else {
@@ -92,7 +92,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.help$ObjBtnOrFld.name).readAsStrictNumeric(this.tmpArr);
             } else {
                 this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             }
@@ -106,7 +106,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
             }
             if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectBg.name).readAsStrictNumeric(this.tmpArr);
             } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
@@ -134,7 +134,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx._forth && ctx._forth[0]) {
                 ret.cardIsRecentHistory = 'forth';
             } else if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectCard.name).readAsStrictNumeric(this.tmpArr);
             } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
@@ -150,7 +150,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleObjectStack(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Stack);
             if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, '').readAsStrictNumeric(this.tmpArr);
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectStack.name).readAsStrictNumeric(this.tmpArr);
             } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
@@ -203,9 +203,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleObjectPart(ctx: VisitingContext): RequestedVelRef {
             if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
-                return this.RuleObjectBtn(this.visit(ctx.RuleObjectBtn[0]));
+                return this.visit(ctx.RuleObjectBtn[0]);
             } else if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
-                return this.RuleObjectFld(this.visit(ctx.RuleObjectFld[0]));
+                return this.visit(ctx.RuleObjectFld[0]);
             } else {
                 checkThrow(false, "we don't yet support looking up an object by 'part'");
             }
@@ -419,7 +419,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleFnCallNumberOf_9(ctx: VisitingContext): VpcVal {
             /* put the number of card buttons into x */
-            let evaledvpc = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl3Expression, tkstr.RuleFnCallNumberOf_9);
+            let evaledvpc = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl3Expression, this.RuleFnCallNumberOf_9.name);
             let str = evaledvpc.readAsString();
             let stype = ctx.tkChunkGranularity[0].image;
             let type = getStrToEnum<VpcGranularity>(VpcGranularity, 'VpcGranularity', stype);

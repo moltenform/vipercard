@@ -48,6 +48,9 @@ export class CheckReservedWords {
 
     okHandlerName(s: string) {
         checkThrow(slength(s), `7)|invalid identifier ${s}`);
+        if (!s.match(/^[A-Za-z$]/)) {
+            return false
+        }
         return (
             this.isBuiltinHandler(s) ||
             (!this.isKeyword(s) && !this.isPropertyName(s) && !this.isBuiltinFunction(s) && !this.isBuiltinVarOrConstant(s))
@@ -61,6 +64,10 @@ export class CheckReservedWords {
             return true;
         }
 
+        if (!s.match(/^[A-Za-z$]/)) {
+            return false
+        }
+
         /* new: don't need to check this.isPropertyName,
         it'd fine for local variables to shadow a property name. */
         checkThrow(slength(s), `7(|invalid identifier ${s}`);
@@ -68,6 +75,7 @@ export class CheckReservedWords {
     }
 
     potentialUserFn(s: string) {
+        checkThrow(s.match(/^[A-Za-z$]/), "must start with a letter")
         checkThrow(slength(s), `7&|invalid identifier ${s}`);
         return (
             !this.isKeyword(s) &&

@@ -66,7 +66,8 @@ export class TestVpcScriptRunBase {
 
     setScript(id: string, s: string) {
         let v = this.vcstate.model.getByIdUntyped(id);
-        v.set('script', s);
+        this.vcstate.vci.doWithoutAbilityToUndo(()=>
+        v.set('script', s))
     }
 
     populateModel() {
@@ -289,7 +290,7 @@ export class TestVpcScriptRunBase {
 ${codeBefore}\n${codeIn}\n`,
             caughtErr?.message
         );
-        if (expectPreparseErr && caughtErr) {
+        if (expectPreparseErr) {
             return
         }
 

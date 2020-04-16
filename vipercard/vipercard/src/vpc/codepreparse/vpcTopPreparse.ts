@@ -192,11 +192,11 @@ export namespace VpcTopPreparse {
                 }
             }
         }
-
+        
+        branchProcessor.ensureComplete();
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
         VpcCurrentScriptStage.origClass = undefined;
-        branchProcessor.ensureComplete();
         return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput);
     }
 

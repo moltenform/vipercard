@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from './util512Base';
-/* auto */ import { assertTrue, assertWarn, respondUI512Error } from './util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, respondUI512Error, make512Error, checkThrow512 } from './util512AssertCustom';
 /* auto */ import { AnyUnshapedJson, BrowserOSInfo, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -266,6 +266,41 @@ export class Util512Higher {
             /* eslint-disable-next-line ban/ban */
             setTimeout(resolve, ms);
         });
+    }
+
+    /**
+     * rejects if operation takes too long
+     */
+    static async runAsyncWithTimeout<T>(fn:Promise<T>, ms:number):Promise<T> {
+        let completed = false
+        let fTimeout = async () => {
+            await Util512Higher.sleep(ms);
+            if (!completed) {
+                checkThrow512(false, "timed out")
+            }
+            
+            return undefined
+        }
+
+        let ps = [fn, fTimeout()]
+        try {
+            await Promise.race(ps)
+        } finally {
+            completed = true
+        }
+    }
+
+    /**
+     * takes at least ms seconds.
+     */
+    static async runAsyncWithMinimumTime<T>(fn:Promise<T>, ms:number):Promise<T> {
+        let fTimeout = async ():Promise<any> => {
+            return Util512Higher.sleep(ms);
+        }
+
+        let ps = [fn, fTimeout()]
+        let ret = await Promise.all(ps)
+        return ret[0]
     }
 
     /**

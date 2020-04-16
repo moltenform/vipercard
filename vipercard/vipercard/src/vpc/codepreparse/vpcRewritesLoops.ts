@@ -47,6 +47,7 @@ repeat
         }
 
         let conditionExpression = line.slice(2);
+        checkThrow(conditionExpression?.length, 'without an expression')
         return rw.gen(template, line[0], [conditionExpression], undefined, false);
     }
     function goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
@@ -91,6 +92,8 @@ repeat
             template = template.replace(/%CMPARE%/g, ' >= ');
         }
 
+        checkThrow(firstExpr?.length, 'wrong length')
+        checkThrow(secondExpr?.length, 'wrong length')
         return rw.gen(template, firstExpr[0], [[loopVar], firstExpr, secondExpr], undefined, false);
     }
 }
