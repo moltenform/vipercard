@@ -55,24 +55,24 @@ t.test('modifyConfirmThatFailureAsserts', () => {
     /* getting the wrong text should assert */
     assertAsserts('', 'wrong text', () => {
         runT('abcd^#|Abcd', 'abcd^#', dup);
-    })
+    });
     /* missing caret should assert */
     assertAsserts('', 'assert:', () => {
         runT('abcd#|abcd', 'abcd^#', dup);
-    })
+    });
     /* missing end should assert */
     assertAsserts('', 'assert:', () => {
         runT('abcd^|abcd', 'abcd^#', dup);
-    })
+    });
     /* getting the wrong caret should assert */
     assertAsserts('', 'incorrect caret', () => {
         runT('abc^d#|abcd', 'abcd^#', dup);
-    })
+    });
     /* getting the wrong end should assert */
     assertAsserts('', 'incorrect select-end', () => {
         runT('abcd^|#abcd', 'abcd^#', dup);
-    })
-})
+    });
+});
 t.test('changeTextIndentation.Decrease,OneLine', () => {
     runT('^#', '^#', ind, true, defFont);
     runT('^abc#', 'abc^#', ind, true, defFont);

@@ -133,7 +133,7 @@ export class VpcExecTop {
      */
     runTimeslice(ms: number) {
         if (!this.haveSentOpenStack) {
-            this.haveSentOpenStack = true
+            this.haveSentOpenStack = true;
             this.sendInitialOpenStackAndOpenCard();
         }
 
@@ -182,14 +182,14 @@ export class VpcExecTop {
 
     resetAfterFrameStackIsDone() {
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
-            VpcCurrentScriptStage.latestDestLineSeen = undefined;
-            VpcCurrentScriptStage.origClass = undefined;
-            VpcCurrentScriptStage.latestVelID = undefined
-            VpcCurrentScriptStage.dynamicCodeOrigin = undefined
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.latestVelID = undefined;
+        VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
 
         this.outside.SetOption('screenLocked', false);
         this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
-        this.globals.set('$currentVisEffect', VpcValS(''))
+        this.globals.set('$currentVisEffect', VpcValS(''));
 
         /* nyi: new style ui actions */
         if (this.silenceMessagesForUIAction.val) {
@@ -247,7 +247,7 @@ export class VpcExecTop {
     }
 
     protected handleScriptException(e: Error, context: string) {
-        this.forceStopRunning()
+        this.forceStopRunning();
 
         let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e);
         if (!scriptErr) {
@@ -286,7 +286,7 @@ export class VpcExecTop {
      * run maintenance
      */
     doMaintenance() {
-        let stack = this.outside.Model().stack
+        let stack = this.outside.Model().stack;
         VpcExecTop.checkNoRepeatedIds(stack);
     }
 

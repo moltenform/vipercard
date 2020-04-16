@@ -256,7 +256,7 @@ export class VpcVisualEffectSpec {
         public dir: VpcVisualEffectTypeDirection,
         public dest: VpcVisualEffectTypeDestination
     ) {}
-    
+
     /**
      * parse visual effect params. they were already set up nicely in rewrites.
      */
@@ -266,7 +266,11 @@ export class VpcVisualEffectSpec {
             getStrToEnum<VpcVisualEffectSpeed>(VpcVisualEffectSpeed, 'VpcVisualEffectSpeed', params[0]),
             getStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, 'VpcVisualEffectType', params[1]),
             getStrToEnum<VpcVisualEffectTypeDirection>(VpcVisualEffectTypeDirection, 'VpcVisualEffectTypeDirection', params[2]),
-            getStrToEnum<VpcVisualEffectTypeDestination>(VpcVisualEffectTypeDestination, 'VpcVisualEffectTypeDestination', params[3])
+            getStrToEnum<VpcVisualEffectTypeDestination>(
+                VpcVisualEffectTypeDestination,
+                'VpcVisualEffectTypeDestination',
+                params[3]
+            )
         );
     }
 }

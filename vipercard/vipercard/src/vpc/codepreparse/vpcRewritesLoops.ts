@@ -47,7 +47,7 @@ repeat
         }
 
         let conditionExpression = line.slice(2);
-        checkThrow(conditionExpression?.length, 'without an expression')
+        checkThrow(conditionExpression?.length, 'without an expression');
         return rw.gen(template, line[0], [conditionExpression], undefined, false);
     }
     function goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
@@ -64,7 +64,7 @@ repeat
             isDown = true;
             endFirstExpr -= 1;
         }
-        let firstExpr = line.slice(startFirstExpr, endFirstExpr+1);
+        let firstExpr = line.slice(startFirstExpr, endFirstExpr + 1);
         let secondExpr = line.slice(findTo + 1);
         return goWithImpl(firstExpr, secondExpr, line[2], isDown, rw);
     }
@@ -92,8 +92,8 @@ repeat
             template = template.replace(/%CMPARE%/g, ' >= ');
         }
 
-        checkThrow(firstExpr?.length, 'wrong length')
-        checkThrow(secondExpr?.length, 'wrong length')
+        checkThrow(firstExpr?.length, 'wrong length');
+        checkThrow(secondExpr?.length, 'wrong length');
         return rw.gen(template, firstExpr[0], [[loopVar], firstExpr, secondExpr], undefined, false);
     }
 }

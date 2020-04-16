@@ -71,18 +71,18 @@ t.test('EvalConfirmThatFailureAsserts', () => {
     /* test for false positives */
     assertAsserts('', 'assert:', () => {
         testEquality(true, '13', '12 ');
-    })
+    });
     assertAsserts('', 'assert:', () => {
         testEquality(true, '12 ', '13');
-    })
+    });
     /* test for false negatives */
     assertAsserts('', 'assert:', () => {
         testEquality(false, '12', '12 ');
-    })
+    });
     assertAsserts('', 'assert:', () => {
         testEquality(false, '12 ', '12');
-    })
-})
+    });
+});
 t.test('EvalHelpers1', () => {
     t.say(
         longstr(`EvalHelpers.Number comparisons

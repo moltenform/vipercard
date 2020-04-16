@@ -215,8 +215,8 @@ export class VpcExecFrameStack {
             VpcCurrentScriptStage.latestSrcLineSeen = undefined;
             VpcCurrentScriptStage.latestDestLineSeen = undefined;
             VpcCurrentScriptStage.origClass = undefined;
-            VpcCurrentScriptStage.latestVelID = undefined
-            VpcCurrentScriptStage.dynamicCodeOrigin = undefined
+            VpcCurrentScriptStage.latestVelID = undefined;
+            VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
             return true;
         }
     }
@@ -266,11 +266,15 @@ export class VpcExecFrameStack {
     /**
      * run the visitor, to get a value from the CST
      */
-    protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine, okCustom?:boolean): VpcIntermedValBase {
+    protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine, okCustom?: boolean): VpcIntermedValBase {
         if (parsed !== null && parsed !== undefined) {
-            let visitor = getChvVisitor(this.outside)
+            let visitor = getChvVisitor(this.outside);
             let visited = visitor.visit(parsed);
-            checkThrow(okCustom ?? (visited instanceof VpcIntermedValBase), '7t|did not get IntermedValBase when running', curLine.allImages);
+            checkThrow(
+                okCustom ?? visited instanceof VpcIntermedValBase,
+                '7t|did not get IntermedValBase when running',
+                curLine.allImages
+            );
             return visited;
         } else {
             checkThrow(false, '5Z|no expression was parsed');
@@ -281,26 +285,21 @@ export class VpcExecFrameStack {
      * look in the message hierarchy for a handler
      * don't stop iterating if an object is missing!
      */
-    getHandlerUpwardsOrThrow(
-        velIdStart: string,
-        chain: string[],
-        handlername: string,
-        onlyParents: boolean
-    ){
-        let storecurrentStage = VpcCurrentScriptStage.currentStage
-        let storelatestSrcLineSeen = VpcCurrentScriptStage.latestSrcLineSeen
-        let storelatestDestLineSeen = VpcCurrentScriptStage.latestDestLineSeen
-        let storeorigClass = VpcCurrentScriptStage.origClass
-        let storelatestVelID = VpcCurrentScriptStage.latestVelID
-        let storedynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin
-        let ret = this.getHandlerUpwardsOrThrowImpl(velIdStart, chain, handlername, onlyParents)
+    getHandlerUpwardsOrThrow(velIdStart: string, chain: string[], handlername: string, onlyParents: boolean) {
+        let storecurrentStage = VpcCurrentScriptStage.currentStage;
+        let storelatestSrcLineSeen = VpcCurrentScriptStage.latestSrcLineSeen;
+        let storelatestDestLineSeen = VpcCurrentScriptStage.latestDestLineSeen;
+        let storeorigClass = VpcCurrentScriptStage.origClass;
+        let storelatestVelID = VpcCurrentScriptStage.latestVelID;
+        let storedynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin;
+        let ret = this.getHandlerUpwardsOrThrowImpl(velIdStart, chain, handlername, onlyParents);
         VpcCurrentScriptStage.currentStage = storecurrentStage;
         VpcCurrentScriptStage.latestSrcLineSeen = storelatestSrcLineSeen;
         VpcCurrentScriptStage.latestDestLineSeen = storelatestDestLineSeen;
         VpcCurrentScriptStage.origClass = storeorigClass;
         VpcCurrentScriptStage.latestVelID = storelatestVelID;
         VpcCurrentScriptStage.dynamicCodeOrigin = storedynamicCodeOrigin;
-        return ret
+        return ret;
     }
     /**
      * look in the message hierarchy for a handler
@@ -544,10 +543,10 @@ export class VpcExecFrameStack {
      */
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         let newHandlerName = curLine.firstToken.image;
-        checkThrow(curLine.getParseRule() === this.cacheParsedCST.parser.RuleInternalCmdUserHandler, '')
+        checkThrow(curLine.getParseRule() === this.cacheParsedCST.parser.RuleInternalCmdUserHandler, '');
         let evaluated = this.evalGeneralVisit(parsed, curLine, true);
-        checkThrow(Array.isArray(evaluated), '')
-        let args = evaluated as VpcVal[]
+        checkThrow(Array.isArray(evaluated), '');
+        let args = evaluated as VpcVal[];
         curFrame.next();
         this.callHandlerAndThrowIfNotExist(curFrame, args, newHandlerName);
     }
@@ -743,12 +742,12 @@ export class VpcExecFrameStack {
             checkThrow(nextCardId && nextCardId.isItInteger(), '');
             this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
         } else if (directive === 'viseffect') {
-            let nextCard = curFrame.locals.get(variable)
-            let spec = this.globals.get('$currentVisEffect').readAsString().split('|')
-            this.globals.set('$currentVisEffect', VpcValS(''))
+            let nextCard = curFrame.locals.get(variable);
+            let spec = this.globals.get('$currentVisEffect').readAsString().split('|');
+            this.globals.set('$currentVisEffect', VpcValS(''));
             if (spec.length >= 4) {
-                let parsed = VpcVisualEffectSpec.getVisualEffect(spec)
-                console.log(nextCard, parsed)
+                let parsed = VpcVisualEffectSpec.getVisualEffect(spec);
+                console.log(nextCard, parsed);
             }
         } else {
             checkThrow(false, 'unknown directive', directive);

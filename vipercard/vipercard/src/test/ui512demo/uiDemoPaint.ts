@@ -95,33 +95,33 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
-                            pr.test.testDrawShape()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                        pr.test.testDrawShape()
+                    ),
                     'demopaint',
                     RespondToErr.Alert
                 );
             } else if (d.elClick.id === 'btnRunTest') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                            pr.test.testDrawShape()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                        pr.test.testDrawShape()
+                    ),
                     'demopaint',
                     RespondToErr.Alert
                 );
             } else if (d.elClick.id === 'btnDldImageFill') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
-                            pr.test.testDrawFloodFill()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                        pr.test.testDrawFloodFill()
+                    ),
                     'demopaint',
                     RespondToErr.Alert
                 );
             } else if (d.elClick.id === 'btnRunTestFill') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                            pr.test.testDrawFloodFill()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                        pr.test.testDrawFloodFill()
+                    ),
                     'demopaint',
                     RespondToErr.Alert
                 );

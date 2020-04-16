@@ -272,37 +272,36 @@ export class Util512Higher {
      * rejects if operation takes too long.
      * if I threw an exception to reject from within fTimeout, I'd have to
             1) add state to ensure the timeout was cleared and
-            2) use a try/finally in case fn throws exceptions 
-        I think my approach is simpler. 
+            2) use a try/finally in case fn throws exceptions
+        I think my approach is simpler.
      */
-    static async runAsyncWithTimeout<T>(fn:Promise<T>, ms:number):Promise<T> {
-        class SentinelClass {
-        }
+    static async runAsyncWithTimeout<T>(fn: Promise<T>, ms: number): Promise<T> {
+        class SentinelClass {}
         let fTimeout = async () => {
             await Util512Higher.sleep(ms);
             return new SentinelClass();
-        }
+        };
 
-        let ps = [fn, fTimeout()]
-        let ret = await Promise.race(ps)
+        let ps = [fn, fTimeout()];
+        let ret = await Promise.race(ps);
         if (ret instanceof SentinelClass) {
-            checkThrow512(false, "Timed out.")
+            checkThrow512(false, 'Timed out.');
         } else {
-            return ret
+            return ret;
         }
     }
 
     /**
      * takes at least ms seconds.
      */
-    static async runAsyncWithMinimumTime<T>(fn:Promise<T>, ms:number):Promise<T> {
-        let fTimeout = async ():Promise<any> => {
+    static async runAsyncWithMinimumTime<T>(fn: Promise<T>, ms: number): Promise<T> {
+        let fTimeout = async (): Promise<any> => {
             return Util512Higher.sleep(ms);
-        }
+        };
 
-        let ps = [fn, fTimeout()]
-        let ret = await Promise.all(ps)
-        return ret[0]
+        let ps = [fn, fTimeout()];
+        let ret = await Promise.all(ps);
+        return ret[0];
     }
 
     /**

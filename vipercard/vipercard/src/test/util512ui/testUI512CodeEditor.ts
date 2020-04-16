@@ -30,12 +30,11 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512CodeEditor');
 export let testCollectionUI512CodeEditor = t;
 
-let ed = YetToBeDefinedTestHelper<VpcPanelScriptEditor>()
+let ed = YetToBeDefinedTestHelper<VpcPanelScriptEditor>();
 t.test('CodeEditorFeatures.Init', () => {
     ed = createFakeEd();
-})
+});
 t.test('CodeEditorFeatures.Auto Close A Block', () => {
-    
     testAutoFormat(
         ed,
         `on z
@@ -75,26 +74,25 @@ end if`
     );
 });
 t.test('CodeEditorConfirmThatFailureAsserts', () => {
-    testAutoFormat(ed,  `on z^`, `on z\n    ^\nend z`);
+    testAutoFormat(ed, `on z^`, `on z\n    ^\nend z`);
     /* getting the wrong text should assert */
     assertAsserts('', 'assert:', () => {
-        testAutoFormat(ed,  `on z^`, `On z\n    ^\nend z`);
-    })
+        testAutoFormat(ed, `on z^`, `On z\n    ^\nend z`);
+    });
     /* missing caret should assert */
     assertAsserts('', 'assert:', () => {
-        testAutoFormat(ed,  `on z^`, `On z\n    \nend z`);
-    })
+        testAutoFormat(ed, `on z^`, `On z\n    \nend z`);
+    });
     /* two should assert */
     assertAsserts('', 'assert:', () => {
-        testAutoFormat(ed,  `on z^`, `On z\n    ^\n^end z`);
-    })
+        testAutoFormat(ed, `on z^`, `On z\n    ^\n^end z`);
+    });
     /* getting the wrong caret loc should assert */
     assertAsserts('', 'assert:', () => {
-        testAutoFormat(ed,  `on z^`, `on z\n    \n^end z`);
-    })
-})
+        testAutoFormat(ed, `on z^`, `on z\n    \n^end z`);
+    });
+});
 t.test('CodeEditorFeatures.Correctly Close A Block', () => {
-    
     testAutoFormat(
         ed,
         `on z
@@ -127,7 +125,6 @@ end if
     );
 });
 t.test('CodeEditorFeatures.Incorrectly Close A Block', () => {
-    
     testAutoFormat(
         ed,
         `on z
@@ -160,8 +157,6 @@ end if
     );
 });
 t.test('CodeEditorFeatures.SetIndentation.Maintain At Level Zero', () => {
-    
-
     /* currently, if Enter pressed in middle of text, the caret is sent to end of line. */
     testAutoFormat(ed, '^', '\n^');
     testAutoFormat(ed, 'text^', 'text\n^');
@@ -171,7 +166,6 @@ t.test('CodeEditorFeatures.SetIndentation.Maintain At Level Zero', () => {
     testAutoFormat(ed, 'text1^text2\ntext3', 'text1\ntext2^\ntext3');
 });
 t.test('CodeEditorFeatures.SetIndentation.Maintain At Level One', () => {
-    
     testAutoFormat(
         ed,
         `on z
@@ -203,7 +197,6 @@ end z`
     );
 });
 t.test('CodeEditorFeatures.SetIndentation.Maintain At Level Two', () => {
-    
     testAutoFormat(
         ed,
         `on z
@@ -247,7 +240,6 @@ end z`
     );
 });
 t.test('CodeEditorFeatures.SetIndentation.Introduce One Tab', () => {
-    
     testAutoFormat(
         ed,
         `on z^
@@ -284,7 +276,6 @@ end z`
     );
 });
 t.test('CodeEditorFeatures.SetIndentation.Introduce Two Tabs', () => {
-    
     testAutoFormat(
         ed,
         `on z
@@ -343,7 +334,7 @@ t.test('SetIndentation.AddElse', () => {
                 Correct Indentation For Else Clauses`
         )
     );
-    
+
     testAutoFormat(
         ed,
         `if 2 > 1 then\nelse\nend if\na^`,
@@ -428,7 +419,6 @@ end if
     );
 });
 t.test('CodeEditorFeatures.SetIndentation.Nested Blocks', () => {
-    
     testAutoFormat(
         ed,
         `if 2 > 1 then\nrepeat 2 times\nend repeat\nelse\nrepeat\nend repeat^`,
@@ -455,7 +445,6 @@ else
     );
 });
 t.test('CodeEditorFeatures.SetIndentation.Too Many End Blocks', () => {
-    
     testAutoFormat(
         ed,
         `if 2 > 1 then\nx\nend if\nend if^`,
@@ -476,7 +465,6 @@ end if
     );
 });
 t.test('CodeEditorFeatures.An Else Cannot Stand Alone.', () => {
-    
     testAutoFormat(
         ed,
         `else^`,
@@ -513,7 +501,6 @@ y
     );
 });
 t.test('CodeEditorFeatures.SetIndentation.Continued Lines', () => {
-    
     assertEq(2, ed.autoIndent.lineContinuation.length, '9o|');
     for (let c of ed.autoIndent.lineContinuation) {
         testAutoFormat(ed, `put 2 into x^`, `put 2 into x\n^`);

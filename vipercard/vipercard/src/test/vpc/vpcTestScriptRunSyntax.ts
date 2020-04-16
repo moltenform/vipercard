@@ -26,7 +26,7 @@ t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
 t.test('vpcTestScriptBasics', () => {
     /* preparse error */
     h.assertPreparseErrLn('x = 4', "this isn't C", 3);
-    h.assertPreparseErrLn('put ?? into x', "", 3);
+    h.assertPreparseErrLn('put ?? into x', '', 3);
     let batch: [string, string][];
     batch = [
         /* runtime error */
@@ -34,57 +34,49 @@ t.test('vpcTestScriptBasics', () => {
         /* valid statement */
         ['put 9 into x\\x', '9'],
         /* also a valid statement */
-        ['9', '9'],
-    ]
+        ['9', '9']
+    ];
     h.testBatchEvaluate(batch);
     /* get a different string */
-    assertAsserts('', 'assert:', ()=>{
-        h.assertPreparseErrLn('x = 4', "(incorrectmessage)", 3);
-    })
-    assertAsserts('', 'assert:', ()=>{
-        batch = [
-            ['put unknownVar into x\\x', 'ERR:(incorrectmessage)x'],
-        ]
+    assertAsserts('', 'assert:', () => {
+        h.assertPreparseErrLn('x = 4', '(incorrectmessage)', 3);
+    });
+    assertAsserts('', 'assert:', () => {
+        batch = [['put unknownVar into x\\x', 'ERR:(incorrectmessage)x']];
         h.testBatchEvaluate(batch);
-    })
-    assertAsserts('', 'assert:', ()=>{
-        batch = [
-            ['put 9 into x\\x', '11111'],
-        ]
+    });
+    assertAsserts('', 'assert:', () => {
+        batch = [['put 9 into x\\x', '11111']];
         h.testBatchEvaluate(batch);
-    })
+    });
     /* failure expected, but succeeds */
-    assertAsserts('', 'assert:', ()=>{
-        h.assertPreparseErrLn('put 9 into x', "", 3);
-    })
-    assertAsserts('', 'assert:', ()=>{
-        batch = [
-            ['put 9 into x\\x', 'ERR:'],
-        ]
+    assertAsserts('', 'assert:', () => {
+        h.assertPreparseErrLn('put 9 into x', '', 3);
+    });
+    assertAsserts('', 'assert:', () => {
+        batch = [['put 9 into x\\x', 'ERR:']];
         h.testBatchEvaluate(batch);
-    })
-    assertAsserts('', 'assert:', ()=>{
-        batch = [
-            ['put unknownVar into x\\x', '1111'],
-        ]
+    });
+    assertAsserts('', 'assert:', () => {
+        batch = [['put unknownVar into x\\x', '1111']];
         h.testBatchEvaluate(batch);
-    })
+    });
     /* same as above, but more tests in the array */
-    assertAsserts('', 'assert:', ()=>{
+    assertAsserts('', 'assert:', () => {
         batch = [
             ['put 5 into x\\x', '5'],
-            ['put 9 into x\\x', 'ERR:'],
-        ]
+            ['put 9 into x\\x', 'ERR:']
+        ];
         h.testBatchEvaluate(batch);
-    })
-    assertAsserts('', 'assert:', ()=>{
+    });
+    assertAsserts('', 'assert:', () => {
         batch = [
             ['put 3 into x\\x', '3'],
-            ['put unknownVar into x\\x', '1111'],
-        ]
+            ['put unknownVar into x\\x', '1111']
+        ];
         h.testBatchEvaluate(batch);
-    })
-})
+    });
+});
 t.test('checkLexing', () => {
     let batch: [string, string][];
     batch = [
@@ -169,28 +161,20 @@ t.test('checkLexing', () => {
     ];
 
     h.testBatchEvaluate(batch);
-    h.assertPreparseErrLn('put 9 into short', "", 3);
-    h.assertPreparseErrLn('put 9 into long', "", 3);
-    h.assertPreparseErrLn('put 9 into id', "", 3);
-    h.assertPreparseErrLn('put 9 into in', "", 3);
-    h.assertPreparseErrLn('put 9 into and', "", 3);
+    h.assertPreparseErrLn('put 9 into short', '', 3);
+    h.assertPreparseErrLn('put 9 into long', '', 3);
+    h.assertPreparseErrLn('put 9 into id', '', 3);
+    h.assertPreparseErrLn('put 9 into in', '', 3);
+    h.assertPreparseErrLn('put 9 into and', '', 3);
 
     /* string literal cannot contain contline symbol since it has a newline */
-    h.assertPreparseErrLn(
-        'put "a\nb" into test',
-        '',
-        3
-    );
+    h.assertPreparseErrLn('put "a\nb" into test', '', 3);
     h.assertPreparseErrLn(
         'put "a{BSLASH}\nb" into test',
         'unexpected character: ->"<-',
         3
     );
-    h.assertPreparseErrLn(
-        'put "{BSLASH}\n" into test',
-        'unexpected character: ->"<-',
-        3
-    );
+    h.assertPreparseErrLn('put "{BSLASH}\n" into test', 'unexpected character: ->"<-', 3);
     h.assertPreparseErrLn(
         'put "{BSLASH}\n{BSLASH}\n" into test',
         'unexpected character: ->"<-',
@@ -215,8 +199,8 @@ t.test('checkLexing', () => {
     h.assertPreparseErrLn('put 7div 3 into test', 'unexpected character', 3);
     batch = [
         ['put 7 div3 into x\\x', 'ERR:parse error'],
-        ['put 7 mod3 into x\\x', 'ERR:parse error'],
-    ]
+        ['put 7 mod3 into x\\x', 'ERR:parse error']
+    ];
     h.testBatchEvaluate(batch);
 
     /* for keywords/semikeywords that would be a common variable name, check */
@@ -358,11 +342,14 @@ put x into x\\x`,
     h.assertPreparseErrLn('put "abc" into b\xf1', 'unexpected character', 3);
 
     /* not valid because it's something else */
-    let notvalid = longstr(`pi,one,true,cr,autohilite,style,cursor,dontwrap,
+    let notvalid = longstr(
+        `pi,one,true,cr,autohilite,style,cursor,dontwrap,
             script,owner,name,target,sin,result,params,
             mouse,screenrect,from,into,after,before,at,with,on,
             short,long,id,any,tenth,
-            end,exit,pass,return,if,else,while,until,global`, '');
+            end,exit,pass,return,if,else,while,until,global`,
+        ''
+    );
     /* not 'id' 'of' 'length' 'first' because they are different tokens */
     let disallowedAsHandler = notvalid.split(',');
 
@@ -370,11 +357,7 @@ put x into x\\x`,
     there are many more var names we now allow  */
 
     /* can't use this as a name for handlers */
-    h.assertPreparseErr(
-        `on if\nglobal x\nend if`,
-        "can't have",
-        3
-    );
+    h.assertPreparseErr(`on if\nglobal x\nend if`, "can't have", 3);
     for (let reserved of disallowedAsHandler.filter(s => s !== 'if')) {
         h.assertPreparseErr(
             `on ${reserved}\nglobal x\nend ${reserved}`,
@@ -384,11 +367,14 @@ put x into x\\x`,
     }
 
     /* can't use this as a name for calling a handler */
-    let unaryProps = longstr(`,autohilite,style,dontwrap,script,
-        owner,name,`, '')
-    let diffTks = ',short,long,id,any,tenth,'
+    let unaryProps = longstr(
+        `,autohilite,style,dontwrap,script,
+        owner,name,`,
+        ''
+    );
+    let diffTks = ',short,long,id,any,tenth,';
     for (let reserved of disallowedAsHandler) {
-        let isPreparse = true
+        let isPreparse = true;
         let expectErr = "don't support";
         if (reserved === 'on') {
             expectErr = `don't support`;
@@ -400,8 +386,11 @@ put x into x\\x`,
             expectErr = 'else *if*';
         } else if (reserved === 'return') {
             expectErr = 'Redundant';
-            isPreparse = false
-        } else if (unaryProps.includes(`,${reserved},`) || diffTks.includes(`,${reserved},`)) {
+            isPreparse = false;
+        } else if (
+            unaryProps.includes(`,${reserved},`) ||
+            diffTks.includes(`,${reserved},`)
+        ) {
             expectErr = 'not a valid';
         }
 
@@ -669,7 +658,7 @@ put i+1 into i
 end repeat\\s && (counting() - firstc)`,
             `b 0 1 2 5`
         ],
-        
+
         /* "with" syntax rewriting, simplest form. */
         [
             `put "a" into s
@@ -1061,7 +1050,7 @@ t.test('calls', () => {
         ['the result', '']
     ];
     h.testBatchEvaluate(batch);
-    h.assertPreparseErr('put 3 + into(4) into x', 'one of')
+    h.assertPreparseErr('put 3 + into(4) into x', 'one of');
 
     /* call a custom handler */
     h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
@@ -1530,12 +1519,11 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         ['global g\nput 0 into g\nmm (1),(2)\\the result', 'm1(1,2,)']
     ];
     h.testBatchEvaluate(batch);
-    h.assertPreparseErrLn('get mm(abs(1', 'missing )')
-    h.assertPreparseErrLn('global g\nput 0 into g\nmm()', `isn't C`)
-    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1)', `isn't C`)
-    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1),(2)', `isn't C`)
+    h.assertPreparseErrLn('get mm(abs(1', 'missing )');
+    h.assertPreparseErrLn('global g\nput 0 into g\nmm()', `isn't C`);
+    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1)', `isn't C`);
+    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1),(2)', `isn't C`);
     h.setScript(h.elIds.card_a_a, ``);
-
 
     /* disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess) */
     /* but not printargs("a") */

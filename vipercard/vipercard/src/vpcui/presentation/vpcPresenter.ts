@@ -63,7 +63,7 @@ export class VpcPresenter extends VpcPresenterInit {
         let prevTl = this.getTool();
         if (nextTl !== prevTl) {
             if (prevTl === VpcTool.Browse) {
-                this.vci.getCodeExec().forceStopRunning()
+                this.vci.getCodeExec().forceStopRunning();
             }
 
             let prevResp = this.getToolResponse(prevTl);

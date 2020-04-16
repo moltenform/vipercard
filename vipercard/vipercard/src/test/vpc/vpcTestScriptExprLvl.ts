@@ -235,39 +235,31 @@ t.test('evalExprConfirmFailure', () => {
         ['true and true', 'true'],
         ['true and false', 'false'],
         ['1 is a integer', 'true'],
-        ['1 is a integer1', 'ERR:needs one of'],
-    ]
+        ['1 is a integer1', 'ERR:needs one of']
+    ];
     h.testBatchEvaluate(batch);
     /* fails, wrong result */
-    assertAsserts('', 'DIFF RESULT', ()=> { 
-        batch = [
-            ['true and false', 'true'],
-        ]
+    assertAsserts('', 'DIFF RESULT', () => {
+        batch = [['true and false', 'true']];
         h.testBatchEvaluate(batch);
-    })
+    });
     /* fails, runtime err */
-    assertAsserts('', 'needs one of', ()=> { 
-        batch = [
-            ['1 is a integer1', 'true'],
-        ]
+    assertAsserts('', 'needs one of', () => {
+        batch = [['1 is a integer1', 'true']];
         h.testBatchEvaluate(batch);
-    })
+    });
     /* fails, runtime err with wrong message */
-    assertAsserts('', 'wrong err message', ()=> { 
-        batch = [
-            ['1 is a integer1', 'ERR:(incorrectmessage)'],
-        ]
+    assertAsserts('', 'wrong err message', () => {
+        batch = [['1 is a integer1', 'ERR:(incorrectmessage)']];
         h.testBatchEvaluate(batch);
-    })
+    });
     /* runtime err expected but not got */
-    assertAsserts('', 'error not seen', ()=> { 
-        batch = [
-            ['true and false', 'ERR:(incorrectmessage)'],
-        ]
+    assertAsserts('', 'error not seen', () => {
+        batch = [['true and false', 'ERR:(incorrectmessage)']];
         h.testBatchEvaluate(batch);
-    })
+    });
     /* same as above but happen lower in the list */
-})
+});
 t.test('evalRuleLvl2', () => {
     let batch: [string, string][];
     batch = [
@@ -556,8 +548,8 @@ t.test('evalArithmetic', () => {
         ['the length of "ab" / 2', '1'],
         ['the length of - 12', '3'],
         ['the length of not true', '5'],
-        ['the length of (10 + 1)', '2'],
-    ]
+        ['the length of (10 + 1)', '2']
+    ];
     h.testBatchEvaluate(batch);
 
     /* test chained */
@@ -1074,9 +1066,9 @@ t.atest('async/testVpcStateSerialize', async () => {
     /* do the full restore, as if opening from disk */
     let newProv = new VpcIntroProvider(s, 'docName', VpcDocumentLocation.FromJsonFile);
     let newStateBoth = await newProv.loadDocumentTop();
-    assertTrue(newStateBoth[0], '')
-    assertTrue(newStateBoth[1], '')
-    let newState = newStateBoth[1]
+    assertTrue(newStateBoth[0], '');
+    assertTrue(newStateBoth[1], '');
+    let newState = newStateBoth[1];
 
     /* test that it has everything */
     h.testModelHasItAll(newState);

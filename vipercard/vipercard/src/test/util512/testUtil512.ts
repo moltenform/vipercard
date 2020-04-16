@@ -168,18 +168,18 @@ t.test('cast', () => {
     });
 });
 t.test('isString', () => {
-    assertTrue((typeof '' === 'string'), 'N9|');
-    assertTrue((typeof 'abc' === 'string'), 'N8|');
+    assertTrue(typeof '' === 'string', 'N9|');
+    assertTrue(typeof 'abc' === 'string', 'N8|');
     assertTrue(typeof String('abc') === 'string', 'N7|');
-    assertTrue((typeof 123 !== 'string'), 'N5|');
-    assertTrue((typeof null !== 'string'), 'N4|');
-    assertTrue((typeof undefined !== 'string'), 'N3|');
-    assertTrue((typeof ['a'] !== 'string'), 'N2|');
+    assertTrue(typeof 123 !== 'string', 'N5|');
+    assertTrue(typeof null !== 'string', 'N4|');
+    assertTrue(typeof undefined !== 'string', 'N3|');
+    assertTrue(typeof ['a'] !== 'string', 'N2|');
     /* ok to disable the warning, intentionally making a Object-style-string.
     we now assume that these will never occur, so it's ok that
     they aren't identified as strings. */
     /* eslint-disable-next-line no-new-wrappers */
-    assertTrue(typeof new String('abc') !=='string', 'N6|');
+    assertTrue(typeof new String('abc') !== 'string', 'N6|');
 });
 t.test('fitIntoInclusive.AlreadyWithin', () => {
     assertEq(1, fitIntoInclusive(1, 1, 1), 'DL|');

@@ -27,17 +27,17 @@ t.test('ExprConfirmThatFailureAsserts', () => {
     /* test that the tests can fail */
     assertAsserts('', 'assert:', () => {
         testExp('1+', 'parses');
-    })
+    });
     assertAsserts('', 'assert:', () => {
         assertFailsParseExp('1+2', 'Exception');
-    })
+    });
     /* incorrect message */
     assertAsserts('', 'assert:', () => {
         testExp('1+2', 'Exception');
-    })
+    });
     assertAsserts('', 'assert:', () => {
         assertFailsParseExp('1+', 'parses');
-    })
+    });
 });
 t.test('lexing should take care of this', () => {
     testExp('1 + \\\n2', 'parses');

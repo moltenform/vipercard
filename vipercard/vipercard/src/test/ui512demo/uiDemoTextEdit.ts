@@ -100,17 +100,17 @@ export class UI512DemoTextEdit extends UI512Presenter {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
-                            pr.test.testDrawTextEdit()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                        pr.test.testDrawTextEdit()
+                    ),
                     'demotextedit',
                     RespondToErr.Alert
                 );
             } else if (d.elClick.id === 'btnRunTest') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                            pr.test.testDrawTextEdit()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                        pr.test.testDrawTextEdit()
+                    ),
                     'demotextedit',
                     RespondToErr.Alert
                 );

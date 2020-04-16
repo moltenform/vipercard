@@ -3,7 +3,11 @@
 /* Released under the MIT license */
 
 export class VpcStandardLibScript {
-    static handlersImplementedInSoftware = {push:true, pop:true, internalvpcdeletebghelper:true}
+    static handlersImplementedInSoftware = {
+        push: true,
+        pop: true,
+        internalvpcdeletebghelper: true
+    };
 
     static script = `
 -- we don't need default handlers for "on mousedown" etc...

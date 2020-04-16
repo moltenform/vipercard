@@ -384,15 +384,18 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return VpcValS(this.getOwnerFullString(resolved, adjective));
         } else if (prop === 'target') {
             /* put the long target into x */
-            checkThrow(!ref || ref.type===VpcElType.Product, "8+|must say 'get the target' and not 'get the target of cd btn 1'");
+            checkThrow(
+                !ref || ref.type === VpcElType.Product,
+                "8+|must say 'get the target' and not 'get the target of cd btn 1'"
+            );
             return VpcValS(this.getTargetFullString(adjective));
         } else if (prop === 'date') {
             /* put the long date into x */
-            checkThrow(!ref|| ref.type===VpcElType.Product, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
+            checkThrow(!ref || ref.type === VpcElType.Product, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
             return VpcBuiltinFunctionsDateUtils.go(adjective);
         } else if (prop === 'version') {
             /* get the long version */
-            checkThrow(!ref|| ref.type===VpcElType.Product, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
+            checkThrow(!ref || ref.type === VpcElType.Product, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
             return VpcBuiltinFunctionsDateUtils.getVersion(adjective);
         } else {
             if (adjective !== PropAdjective.Empty) {
@@ -412,15 +415,16 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * get the model
      */
     Model(): VpcModelTop {
-        return this.vci.getModel()
+        return this.vci.getModel();
     }
 
     /**
      * is this a runtime property on the 'product' object, or a special pseudoproperty?
      */
     IsProductProp(propName: string): boolean {
-        return VpcElProductOpts.canGetProductProp(propName) ||
-         propName === 'target' || propName === 'date' || propName === 'version';
+        return (
+            VpcElProductOpts.canGetProductProp(propName) || propName === 'target' || propName === 'date' || propName === 'version'
+        );
     }
 
     /**

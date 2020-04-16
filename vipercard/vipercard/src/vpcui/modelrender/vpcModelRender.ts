@@ -331,7 +331,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * change the onIdle rate
      */
     protected changeIdleRate(s: ElementObserverVal) {
-        if ((typeof s === 'string')) {
+        if (typeof s === 'string') {
             getRoot().setTimerRate(s.toString());
         }
     }

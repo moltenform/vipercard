@@ -98,7 +98,7 @@ export class VpcScriptExecuteStatementHelpers {
         if (vals.vals[nm]) {
             for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
                 let child = vals.vals[nm][i];
-                checkThrow((typeof child === 'string'), '7T|not a string');
+                checkThrow(typeof child === 'string', '7T|not a string');
                 ret.push(child);
             }
         } else {
@@ -164,7 +164,7 @@ export class VpcScriptExecuteStatementHelpers {
         if (got) {
             let gotAsString = got[0] as string;
             checkThrowEq(1, got.length, '7Z|expected length 1');
-            checkThrow((typeof gotAsString === 'string'), '7Y|wrong type');
+            checkThrow(typeof gotAsString === 'string', '7Y|wrong type');
             return gotAsString;
         } else {
             return undefined;

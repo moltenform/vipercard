@@ -90,8 +90,8 @@ export class VpcIntroProvider {
         this.setFirstActionWhenLoaded(vpcState, pr);
 
         /* return the results */
-        checkThrow(pr, "pr must be defined")
-        checkThrow(vpcState, "vpcState must be defined")
+        checkThrow(pr, 'pr must be defined');
+        checkThrow(vpcState, 'vpcState must be defined');
         return [pr, vpcState];
     }
 
@@ -284,7 +284,7 @@ export class VpcIntroProvider {
      */
     protected async startLoadDocumentAsyncImpl(currentCntrl: UI512Presenter) {
         /* minimum time, just so that it "feels right" rather than loading instantly */
-        let ret: [VpcPresenter, VpcState] = await Util512Higher.runAsyncWithMinimumTime(this.loadDocumentTop(), 1500)
+        let ret: [VpcPresenter, VpcState] = await Util512Higher.runAsyncWithMinimumTime(this.loadDocumentTop(), 1500);
 
         currentCntrl.placeCallbackInQueue(() => {
             /* remove the loading page and replace it with the new presenter */

@@ -28,18 +28,18 @@ t.test('VpcParseCmdSet.ConfirmThatFailureAsserts', () => {
     /* test that the tests can fail */
     assertAsserts('', 'assert:', () => {
         testCmdSet(`set topleft in cd btn 1 to 2`, 'parses');
-    })
+    });
     assertAsserts('', 'assert:', () => {
         assertFailsCmdSet(`set the topleft to 1`, 'Exception');
-    })
+    });
     /* incorrect message */
     assertAsserts('', 'assert:', () => {
         testCmdSet(`set the topleft to 1`, 'Exception');
-    })
+    });
     assertAsserts('', 'assert:', () => {
         assertFailsCmdSet(`set topleft in cd btn 1 to 2`, 'parses');
-    })
-})
+    });
+});
 t.test('VpcParseCmdSet.confirm that cases that should fail, do fail', () => {
     assertFailsCmdSet(
         `set topleft in cd btn 1 to 2`,
@@ -313,7 +313,13 @@ export class TestParseHelpers {
             BuildFakeTokens.inst.makeSyntaxMarker(line[0])
         );
         this.parser.input = line;
-        let cst = Util512.callAsMethodOnClass(this.testParse.name, this.parser, sTopRule, [], false);
+        let cst = Util512.callAsMethodOnClass(
+            this.testParse.name,
+            this.parser,
+            sTopRule,
+            [],
+            false
+        );
         assertWarn(
             sExpected === '' || sExpected === 'parses',
             "we don't check the cst anymore"

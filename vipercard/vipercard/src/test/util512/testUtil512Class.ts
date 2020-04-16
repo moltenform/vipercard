@@ -304,7 +304,13 @@ t.test('callAsMethod.MissingMethodWhenAllowed', () => {
 t.test('callAsMethod.MissingMethodWhenDisAllowed', () => {
     let o = new TestClsWithMethods();
     assertThrows('Lf|', 'could not find', () =>
-        Util512.callAsMethodOnClass(TestClsWithMethods.name, o, 'notExist', [true, 1], false)
+        Util512.callAsMethodOnClass(
+            TestClsWithMethods.name,
+            o,
+            'notExist',
+            [true, 1],
+            false
+        )
     );
 });
 t.test('callAsMethod.ValidMethod', () => {

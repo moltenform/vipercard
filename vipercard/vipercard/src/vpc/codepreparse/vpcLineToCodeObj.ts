@@ -192,7 +192,10 @@ export class VpcLineToCodeObj {
             let firstToken = line[0];
             checkThrow(line[1].image !== '=', `8M|this isn't C... you need to use 'put 1 into x' not 'x = 1'`);
             checkThrow(
-                !firstToken.endOffset || line[1].image !== '(' || arLast(line).image !== ')' || line[1].startOffset > firstToken.endOffset + 1,
+                !firstToken.endOffset ||
+                    line[1].image !== '(' ||
+                    arLast(line).image !== ')' ||
+                    line[1].startOffset > firstToken.endOffset + 1,
                 longstr(`8L|this isn't C... you need to say
                  'put fn() into x' or 'get fn()' but not 'fn()' alone`)
             );
@@ -277,7 +280,7 @@ export class VpcLineToCodeObj {
      */
     goRepeat(line: ChvITk[], output: VpcCodeLine) {
         checkThrowEq(1, line.length, 'all repeats should have already been transformed.');
-        output.ctg = VpcLineCategory.RepeatForever
+        output.ctg = VpcLineCategory.RepeatForever;
     }
 
     /**
@@ -379,9 +382,9 @@ export class VpcLineToCodeObj {
      * note that in this version, variable names aren't always a tkIdentifier
      */
     protected getListOfValidVariableNames(line: ChvITk[], output: VpcCodeLine, index: number) {
-        let count = 0
+        let count = 0;
         for (let i = index; i < line.length; i++) {
-            count += 1
+            count += 1;
             if (count % 2 === 0) {
                 checkThrowEq(
                     tks.tkComma,
@@ -391,7 +394,10 @@ export class VpcLineToCodeObj {
                 );
             } else {
                 checkCommonMistakenVarNames(line[i]);
-                checkThrow(this.check.okLocalVar(line[i].image), `8I|name of parameter is a reserved word, we don't support here.`);
+                checkThrow(
+                    this.check.okLocalVar(line[i].image),
+                    `8I|name of parameter is a reserved word, we don't support here.`
+                );
                 output.excerptToParse.push(line[i]);
             }
         }

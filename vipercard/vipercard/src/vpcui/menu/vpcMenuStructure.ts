@@ -230,7 +230,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
     translateHotkey(d: KeyDownEventDetails): O<string> {
         if (!d.repeated) {
             let mapped = this.keyMappings[d.readableShortcut];
-            if ((typeof mapped === 'string')) {
+            if (typeof mapped === 'string') {
                 return mapped;
             } else if (typeof mapped === 'function') {
                 return mapped(this);

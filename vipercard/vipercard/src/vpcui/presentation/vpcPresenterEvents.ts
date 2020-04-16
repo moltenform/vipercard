@@ -485,29 +485,26 @@ export class VpcPresenterEvents {
         //~ let nextCard = vci.getModel().getCardById(nextCardId);
         //~ let wasBgId = wasCard.parentId;
         //~ let nextBgId = nextCard.parentId;
-
         //~ if (before) {
-            //~ /* send closing messages */
-            //~ if (wasCardId !== nextCardId) {
-                //~ let msg = new VpcScriptMessage(wasCardId, VpcBuiltinMsg.Closecard);
-                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-            //~ }
-
-            //~ if (wasBgId !== nextBgId) {
-                //~ let msg = new VpcScriptMessage(wasBgId, VpcBuiltinMsg.Closebackground);
-                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-            //~ }
+        //~ /* send closing messages */
+        //~ if (wasCardId !== nextCardId) {
+        //~ let msg = new VpcScriptMessage(wasCardId, VpcBuiltinMsg.Closecard);
+        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ }
+        //~ if (wasBgId !== nextBgId) {
+        //~ let msg = new VpcScriptMessage(wasBgId, VpcBuiltinMsg.Closebackground);
+        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ }
         //~ } else {
-            //~ /* send opening messages */
-            //~ if (wasCardId !== nextCardId) {
-                //~ let msg = new VpcScriptMessage(nextCardId, VpcBuiltinMsg.Opencard);
-                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-            //~ }
-
-            //~ if (wasBgId !== nextBgId) {
-                //~ let msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground);
-                //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-            //~ }
+        //~ /* send opening messages */
+        //~ if (wasCardId !== nextCardId) {
+        //~ let msg = new VpcScriptMessage(nextCardId, VpcBuiltinMsg.Opencard);
+        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ }
+        //~ if (wasBgId !== nextBgId) {
+        //~ let msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground);
+        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
+        //~ }
         //~ }
     }
 

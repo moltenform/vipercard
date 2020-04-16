@@ -50,7 +50,7 @@ export class VelResolveReference {
 
         let parentCard: O<VpcElBase> = ref.parentCdInfo ? this.go(ref.parentCdInfo, me, cardHistory)[0] : undefined;
         let parentBg: O<VpcElBase> = ref.parentBgInfo ? this.go(ref.parentBgInfo, me, cardHistory)[0] : undefined;
-        let methodName = 'go' + Util512.capitalizeFirst(getEnumToStrOrFallback(VpcElType, ref.type))
+        let methodName = 'go' + Util512.capitalizeFirst(getEnumToStrOrFallback(VpcElType, ref.type));
         if (bool(ref.parentCdInfo && !parentCard) || bool(ref.parentBgInfo && !parentBg)) {
             /* you have specified a parent, but the parent does not exist!
             therefore the child does not exist */

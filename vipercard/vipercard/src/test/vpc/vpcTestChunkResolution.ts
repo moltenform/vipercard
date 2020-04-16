@@ -49,18 +49,18 @@ t.test('ChunkGetCharConfirmExpectedFailure', () => {
     testGetChunk('ab', 'abc', VpcGranularity.Chars, 1, 2);
     assertAsserts('', 'assert:', () => {
         testGetChunk('ac', 'abc', VpcGranularity.Chars, 1, 2);
-    })
+    });
     assertAsserts('', 'assert:', () => {
         testGetChunk('abcd', 'abc', VpcGranularity.Chars, 1, 2);
-    })
+    });
     testSetChunk('123', 'abc', VpcGranularity.Chars, 1, 3);
     assertAsserts('', 'assert:', () => {
         testSetChunk('124', 'abc', VpcGranularity.Chars, 1, 3);
-    })
+    });
     assertAsserts('', 'assert:', () => {
         testSetChunk('1234', 'abc', VpcGranularity.Chars, 1, 3);
-    })
-})
+    });
+});
 t.test('ChunkGetItem1', () => {
     testGetChunk('', 'a,b,c', VpcGranularity.Items, 0, undefined);
     testGetChunk('a', 'a,b,c', VpcGranularity.Items, 1, undefined);

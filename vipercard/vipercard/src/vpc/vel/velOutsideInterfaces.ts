@@ -169,10 +169,10 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
      */
     SetProp(ref: O<RequestedVelRef>, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void;
 
-    /** 
-     * access the model 
+    /**
+     * access the model
      */
-    Model(): VpcModelTop
+    Model(): VpcModelTop;
 
     /**
      * get a runtime (non-persisted) string value

@@ -251,9 +251,9 @@ t.test('_vpcProperties', () => {
 
     batch = [
         /* product opts get */
-        ['the xyz', "ERR:no such function"],
-        ['the long xyz', "ERR:no such function"],
-        ['the short xyz', "ERR:no such function"],
+        ['the xyz', 'ERR:no such function'],
+        ['the long xyz', 'ERR:no such function'],
+        ['the short xyz', 'ERR:no such function'],
         ['the environment', 'development'],
         ['the freesize of this stack', '0'],
         ['the size of this stack', '0'],

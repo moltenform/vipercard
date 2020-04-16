@@ -157,7 +157,7 @@ export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: un
             if (UI512ErrorHandling.runningTests) {
                 let msgTotal = msg + ' Press Cancel to exit tests.';
                 if (!confirm(msgTotal)) {
-                    throw new Error("Exiting tests.")
+                    throw new Error('Exiting tests.');
                 }
             } else {
                 let msgTotal = msg + ' Press OK to silence future asserts.';
@@ -171,7 +171,7 @@ export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: un
 
 /**
  * a quick way to throw if condition is false.
- * not the same as assert - an assert should only be 
+ * not the same as assert - an assert should only be
  * triggered for unexpected conditions.
  */
 export function checkThrow512(

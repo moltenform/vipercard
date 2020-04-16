@@ -81,21 +81,21 @@ export abstract class VpcElBase extends UI512Settable {
                 if (typeof mappedProp === 'function') {
                     return VpcValS(mappedProp(this, cardId) as string);
                 } else {
-                    assertTrue((typeof mappedProp === 'string'), '4,|not a string');
+                    assertTrue(typeof mappedProp === 'string', '4,|not a string');
                     return VpcValS(this.getS(mappedProp));
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
                     return VpcValN(mappedProp(this, cardId) as number);
                 } else {
-                    assertTrue((typeof mappedProp === 'string'), '4+|not a string');
+                    assertTrue(typeof mappedProp === 'string', '4+|not a string');
                     return VpcValN(this.getN(mappedProp));
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
                     return VpcValBool(mappedProp(this, cardId) as boolean);
                 } else {
-                    assertTrue((typeof mappedProp === 'string'), '4*|not a string');
+                    assertTrue(typeof mappedProp === 'string', '4*|not a string');
                     return VpcValBool(this.getB(mappedProp));
                 }
             } else {
@@ -118,21 +118,21 @@ export abstract class VpcElBase extends UI512Settable {
                 if (typeof mappedProp === 'function') {
                     mappedProp(this, val.readAsString(), cardId);
                 } else {
-                    assertTrue((typeof mappedProp === 'string'), '4&|prop name not a string');
+                    assertTrue(typeof mappedProp === 'string', '4&|prop name not a string');
                     this.set(mappedProp, val.readAsString());
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
                     mappedProp(this, val.readAsStrictInteger(this.tmpArray), cardId);
                 } else {
-                    assertTrue((typeof mappedProp === 'string'), '4%|prop name not a string');
+                    assertTrue(typeof mappedProp === 'string', '4%|prop name not a string');
                     this.set(mappedProp, val.readAsStrictInteger(this.tmpArray));
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
                     mappedProp(this, val.readAsStrictBoolean(this.tmpArray), cardId);
                 } else {
-                    assertTrue((typeof mappedProp === 'string'), '4$|prop name not a string');
+                    assertTrue(typeof mappedProp === 'string', '4$|prop name not a string');
                     this.set(mappedProp, val.readAsStrictBoolean(this.tmpArray));
                 }
             } else {

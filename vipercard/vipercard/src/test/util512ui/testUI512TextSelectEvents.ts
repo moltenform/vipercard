@@ -48,24 +48,24 @@ t.test('ConfirmThatFailureAsserts', () => {
     /* getting the wrong text should assert */
     assertAsserts('', 'wrong text', () => {
         testChangeSel('^abd#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
-    })
+    });
     /* missing caret should assert */
     assertAsserts('', 'assert:', () => {
         testChangeSel('abd#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
-    })
+    });
     /* missing end should assert */
     assertAsserts('', 'assert:', () => {
         testChangeSel('^abd', '^#abc', TextSelModifyImpl.changeSelSelectAll);
-    })
+    });
     /* getting the wrong caret should assert */
     assertAsserts('', 'incorrect caret', () => {
         testChangeSel('a^bc#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
-    })
+    });
     /* getting the wrong end should assert */
     assertAsserts('', 'incorrect select-end', () => {
         testChangeSel('^ab#c', '^#abc', TextSelModifyImpl.changeSelSelectAll);
-    })
-})
+    });
+});
 t.test('ChangeSelGoDocHomeEnd', () => {
     /* go to start, no extend */
     testChangeSel('^#abc', '^#abc', TextSelModifyImpl.changeSelGoDocHomeEnd, true, false);

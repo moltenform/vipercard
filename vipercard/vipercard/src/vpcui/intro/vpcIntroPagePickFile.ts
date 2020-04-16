@@ -187,7 +187,7 @@ export class IntroPagePickFile extends IntroPageBase {
                 alert('got no text from file');
                 return;
             }
-            if ((typeof text !== 'string')) {
+            if (typeof text !== 'string') {
                 alert('text is not a string. got binary data?');
                 return;
             }

@@ -1614,7 +1614,9 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
             .cachedAST.getHandlerOrThrow(script, 'handlerNotExist', btnGo.id)[0];
         checkThrow(transformedCode instanceof VpcParsedCodeCollection, '');
 
-        let got = transformedCode.lines.map(o => o.allImages ?? getEnumToStrOrFallback(VpcLineCategory, o.ctg));
+        let got = transformedCode.lines.map(
+            o => o.allImages ?? getEnumToStrOrFallback(VpcLineCategory, o.ctg)
+        );
         got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
         let exp = expected
             .trim()

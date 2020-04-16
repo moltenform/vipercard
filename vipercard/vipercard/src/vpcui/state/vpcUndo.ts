@@ -143,8 +143,8 @@ class UndoableActionModifyVelement implements UndoableAction {
     prevVal: ElementObserverVal;
     newVal: ElementObserverVal;
     constructor(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
-        if ((typeof prevVal === 'string') && propName !== 'paint') {
-            if ((typeof newVal === 'string')) {
+        if (typeof prevVal === 'string' && propName !== 'paint') {
+            if (typeof newVal === 'string') {
                 prevVal = '$' + UI512Compress.compressString(prevVal.toString());
                 newVal = '$' + UI512Compress.compressString(newVal.toString());
             } else {

@@ -192,7 +192,7 @@ export namespace VpcTopPreparse {
                 }
             }
         }
-        
+
         branchProcessor.ensureComplete();
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;

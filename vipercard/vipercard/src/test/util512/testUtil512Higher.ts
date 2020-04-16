@@ -333,48 +333,48 @@ async function exampleAsyncFn() {
     await Util512Higher.sleep(100);
     t.say(/*——————————*/ '2...');
 }
-t.atest('minimumTimeSlowsDown', async() => {
-    let shortFn = async() => {
-        await Util512Higher.sleep(100)
-        return 123
-    }
-    let start = performance.now()
-    let result = await Util512Higher.runAsyncWithMinimumTime(shortFn(), 500)
-    assertEq(123, result, '')
-    assertTrue(performance.now()-start > 400, 'too fast')
-})
-t.atest('minimumTimeStaysSame', async() => {
-    let longFn = async() => {
-        await Util512Higher.sleep(500)
-        return 123
-    }
-    let start = performance.now()
-    let result = await Util512Higher.runAsyncWithMinimumTime(longFn(), 100)
-    assertEq(123, result, '')
-    assertTrue(performance.now()-start > 400, 'too fast')
-})
-t.atest('doesNotTimeOut', async() => {
-    let shortFn = async() => {
-        await Util512Higher.sleep(200)
-        return 123
-    }
-    let start = performance.now()
-    let result = await Util512Higher.runAsyncWithTimeout(shortFn(), 800)
-    assertEq(123, result, '')
-    assertTrue(performance.now()-start < 600, 'too slow')
-})
-t.atest('timesOut', async() => {
-    let longFn = async() => {
-        await Util512Higher.sleep(800)
-        return 123
-    }
-    let start = performance.now()
+t.atest('minimumTimeSlowsDown', async () => {
+    let shortFn = async () => {
+        await Util512Higher.sleep(100);
+        return 123;
+    };
+    let start = performance.now();
+    let result = await Util512Higher.runAsyncWithMinimumTime(shortFn(), 500);
+    assertEq(123, result, '');
+    assertTrue(performance.now() - start > 400, 'too fast');
+});
+t.atest('minimumTimeStaysSame', async () => {
+    let longFn = async () => {
+        await Util512Higher.sleep(500);
+        return 123;
+    };
+    let start = performance.now();
+    let result = await Util512Higher.runAsyncWithMinimumTime(longFn(), 100);
+    assertEq(123, result, '');
+    assertTrue(performance.now() - start > 400, 'too fast');
+});
+t.atest('doesNotTimeOut', async () => {
+    let shortFn = async () => {
+        await Util512Higher.sleep(200);
+        return 123;
+    };
+    let start = performance.now();
+    let result = await Util512Higher.runAsyncWithTimeout(shortFn(), 800);
+    assertEq(123, result, '');
+    assertTrue(performance.now() - start < 600, 'too slow');
+});
+t.atest('timesOut', async () => {
+    let longFn = async () => {
+        await Util512Higher.sleep(800);
+        return 123;
+    };
+    let start = performance.now();
     let cb = async () => {
-        return Util512Higher.runAsyncWithTimeout(longFn(), 200)
-    }
-    await assertThrowsAsync('', 'Timed out', ()=>cb())
-    assertTrue(performance.now()-start < 600, 'too slow')
-})
+        return Util512Higher.runAsyncWithTimeout(longFn(), 200);
+    };
+    await assertThrowsAsync('', 'Timed out', () => cb());
+    assertTrue(performance.now() - start < 600, 'too slow');
+});
 
 /**
  * test some less useful classes

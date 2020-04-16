@@ -66,8 +66,7 @@ export class TestVpcScriptRunBase {
 
     setScript(id: string, s: string) {
         let v = this.vcstate.model.getByIdUntyped(id);
-        this.vcstate.vci.doWithoutAbilityToUndo(()=>
-        v.set('script', s))
+        this.vcstate.vci.doWithoutAbilityToUndo(() => v.set('script', s));
     }
 
     populateModel() {
@@ -190,9 +189,9 @@ export class TestVpcScriptRunBase {
         expectPreparseErr?: boolean,
         addNoHandler?: boolean
     ) {
-        let caughtErr:O<VpcErr>;
+        let caughtErr: O<VpcErr>;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
-            caughtErr = scriptErr
+            caughtErr = scriptErr;
             let msg = scriptErr.message;
             let velId = scriptErr.scriptErrVelid ?? 'unknown';
             let line = scriptErr.scriptErrLine ?? -1;
@@ -203,10 +202,10 @@ export class TestVpcScriptRunBase {
             let makeWarningUseful = '';
             let lns = built.split('\n');
             if (line) {
-                line -= 1 /* from 1-based index */
+                line -= 1; /* from 1-based index */
             }
-            if (expectErrLine) { 
-                expectErrLine -= 1 /* from 1-based index */
+            if (expectErrLine) {
+                expectErrLine -= 1; /* from 1-based index */
             }
             if (line >= 0 && line < lns.length) {
                 makeWarningUseful += `culprit line: <${lns[line].trim()}>`;
@@ -220,25 +219,30 @@ export class TestVpcScriptRunBase {
                 if (msg.includes('vpc parse error:')) {
                     /* add the exception name for compatibility */
                     if (getParsingObjects()[1].errors?.length) {
-                        msg = getParsingObjects()[1].errors[0].name + ': ' + msg
+                        msg = getParsingObjects()[1].errors[0].name + ': ' + msg;
                     }
                 }
                 assertWarn(
-                msg.includes(expectErrMsg),
-                `wrong err message, expected <${expectErrMsg}>`,
-                makeWarningUseful
+                    msg.includes(expectErrMsg),
+                    `wrong err message, expected <${expectErrMsg}>`,
+                    makeWarningUseful
                 );
                 //~ if (!msg.includes(expectErrMsg) && !UI512ErrorHandling.silenceAssertMsgs) {
-                    //~ console.error(
-                        //~ 'fghfghddfg',
-                        //~ `wrong err message, expected <${expectErrMsg}>`,
-                        //~ makeWarningUseful
-                    //~ );
+                //~ console.error(
+                //~ 'fghfghddfg',
+                //~ `wrong err message, expected <${expectErrMsg}>`,
+                //~ makeWarningUseful
+                //~ );
                 //~ }
             }
 
             if (expectErrLine !== undefined) {
-                assertWarnEq(expectErrLine+1, line+1, 'wrong line', makeWarningUseful);
+                assertWarnEq(
+                    expectErrLine + 1,
+                    line + 1,
+                    'wrong line',
+                    makeWarningUseful
+                );
             }
 
             if (expectPreparseErr) {
@@ -250,7 +254,11 @@ export class TestVpcScriptRunBase {
                 );
             }
 
-            assertWarn(expectErrMsg !== undefined, 'unexpected failure', makeWarningUseful);
+            assertWarn(
+                expectErrMsg !== undefined,
+                'unexpected failure',
+                makeWarningUseful
+            );
         };
 
         let built = addNoHandler
@@ -278,9 +286,17 @@ export class TestVpcScriptRunBase {
 
         VpcPresenterEvents.scheduleScriptMsgImpl(this.pr, fakeEvent, btnGo.id, false);
 
-        assertTrue(!expectPreparseErr || expectErrMsg!==undefined, "please pass an expectErrMsg, even if it's an empty string")
-        if (expectPreparseErr && expectErrMsg!==undefined && !caughtErr) {
-            assertWarn(false, '2U|preparse error expected but not seen', codeBefore, codeIn);
+        assertTrue(
+            !expectPreparseErr || expectErrMsg !== undefined,
+            "please pass an expectErrMsg, even if it's an empty string"
+        );
+        if (expectPreparseErr && expectErrMsg !== undefined && !caughtErr) {
+            assertWarn(
+                false,
+                '2U|preparse error expected but not seen',
+                codeBefore,
+                codeIn
+            );
         }
 
         /* if it built, message should now be in the queue */
@@ -291,14 +307,14 @@ ${codeBefore}\n${codeIn}\n`,
             caughtErr?.message
         );
         if (expectPreparseErr) {
-            return
+            return;
         }
 
         this.vcstate.vci.doWithoutAbilityToUndo(() =>
             this.vcstate.runtime.codeExec.runTimeslice(Infinity)
         );
 
-        if (expectErrMsg!==undefined && !caughtErr) {
+        if (expectErrMsg !== undefined && !caughtErr) {
             assertWarn(false, '2U|error not seen\n', codeBefore, codeIn);
         }
 
@@ -389,11 +405,11 @@ put ${s} into testresult`;
                         .readAsString() !== 'true'
                 ) {
                     if (!UI512ErrorHandling.silenceAssertMsgs) {
-                    console.error(
-                        ` input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`
-                    );
-                    console.error(`${expectString} output=`);
-                    console.error(`${got.readAsString()}`);
+                        console.error(
+                            ` input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`
+                        );
+                        console.error(`${expectString} output=`);
+                        console.error(`${got.readAsString()}`);
                     }
 
                     assertWarn(false, 'DIFF RESULT');
@@ -403,14 +419,14 @@ put ${s} into testresult`;
                 let expt = testsNoErr[i][1];
                 if (gt !== expt) {
                     if (!UI512ErrorHandling.silenceAssertMsgs) {
-                    console.error(
-                        `DIFF RESULT input=${testsNoErr[i][0].replace(
-                            /\n/g,
-                            '; '
-                        )} expected=`
-                    );
-                    console.error(`${expt.replace(/\n/g, '; ')} output=`);
-                    console.error(`${gt.replace(/\n/g, '; ')}`);
+                        console.error(
+                            `DIFF RESULT input=${testsNoErr[i][0].replace(
+                                /\n/g,
+                                '; '
+                            )} expected=`
+                        );
+                        console.error(`${expt.replace(/\n/g, '; ')} output=`);
+                        console.error(`${gt.replace(/\n/g, '; ')}`);
                     }
 
                     assertWarn(false, 'DIFF RESULT');

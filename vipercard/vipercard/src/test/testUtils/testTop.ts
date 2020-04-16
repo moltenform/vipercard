@@ -42,7 +42,7 @@ export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         if (UI512ErrorHandling.runningTests) {
             console.log('Apparently already running tests...');
-            return
+            return;
         }
 
         UI512ErrorHandling.runningTests = true;

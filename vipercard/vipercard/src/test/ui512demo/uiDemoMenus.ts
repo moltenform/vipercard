@@ -80,17 +80,17 @@ export class UI512DemoMenus extends UI512Presenter {
                 btn1.set('labeltext', 'changed');
             } else if (d.elClick.id === 'btnDldImage') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(true, () =>
-                            pr.test.testDrawMenus()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(true, () =>
+                        pr.test.testDrawMenus()
+                    ),
                     'demomenus',
                     RespondToErr.Alert
                 );
             } else if (d.elClick.id === 'btnRunTest') {
                 Util512Higher.syncToAsyncTransition(
-                        TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                            pr.test.testDrawMenus()
-                        ),
+                    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+                        pr.test.testDrawMenus()
+                    ),
                     'demomenus',
                     RespondToErr.Alert
                 );

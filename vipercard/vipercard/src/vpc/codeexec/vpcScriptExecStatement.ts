@@ -262,7 +262,7 @@ export class ExecuteStatement {
                 ? vals.vals[tkstr.tkIdentifier][1]
                 : undefined;
         let justLoad = false;
-        if (isJustLoadIdentifier && (typeof isJustLoadIdentifier === 'string')) {
+        if (isJustLoadIdentifier && typeof isJustLoadIdentifier === 'string') {
             checkThrow(isJustLoadIdentifier === 'load', 'JQ|expected play "snd" load, but got', isJustLoadIdentifier);
             justLoad = true;
         }
@@ -279,10 +279,10 @@ export class ExecuteStatement {
      */
     goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         /* for performance, visiting a put returns a flat array */
-        let ar = vals as any
-        let val = cast(VpcVal, ar[0])
+        let ar = vals as any;
+        let val = cast(VpcVal, ar[0]);
         let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', ar[1]);
-        let contRef = cast(RequestedContainerRef, ar[2])
+        let contRef = cast(RequestedContainerRef, ar[2]);
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
         ChunkResolution.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);
@@ -334,7 +334,7 @@ export class ExecuteStatement {
         let velRefFld = this.h.findChildVelRef(vals, tkstr.RuleObjectFld);
         let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
         let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], '')[0];
-        let propName = (tk as ChvITk).image
+        let propName = (tk as ChvITk).image;
 
         /* let's concat all of the values together into one string separated by commas */
         /* that way we'll support coordinates "1,2" and text styles "plain, bold" */
@@ -410,8 +410,8 @@ export class ExecuteStatement {
         checkThrow(params[0] === 'screen', 'only support lock screen');
         this.outside.SetOption('screenLocked', false);
         if (params.length > 1) {
-            let str = params.slice(1).join('|')
-            this.outside.SetVarContents("$currentVisEffect", VpcValS(str))
+            let str = params.slice(1).join('|');
+            this.outside.SetVarContents('$currentVisEffect', VpcValS(str));
             checkThrow(false, 'visual effects are nyi');
         }
     }
@@ -422,9 +422,9 @@ export class ExecuteStatement {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
         checkThrow(params[0] === 'effect', 'only support lock screen');
         if (params.length > 1) {
-            let str = params.slice(1).join('|')
-            this.outside.DeclareGlobal("$currentVisEffect")
-            this.outside.SetVarContents("$currentVisEffect", VpcValS(str))
+            let str = params.slice(1).join('|');
+            this.outside.DeclareGlobal('$currentVisEffect');
+            this.outside.SetVarContents('$currentVisEffect', VpcValS(str));
             checkThrow(false, 'visual effects are nyi');
         }
     }

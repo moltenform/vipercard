@@ -20,7 +20,11 @@ export class CheckReservedWords {
     isBuiltinHandler(s: string): boolean {
         /* "mouseup", "arrowkey" */
         s = s.toLowerCase();
-        return bool(findStrToEnum(VpcBuiltinMsg, s)) || bool(listOfAllBuiltinEventsInOriginalProduct[s]) || VpcStandardLibScript.handlersImplementedInSoftware[s];
+        return (
+            bool(findStrToEnum(VpcBuiltinMsg, s)) ||
+            bool(listOfAllBuiltinEventsInOriginalProduct[s]) ||
+            VpcStandardLibScript.handlersImplementedInSoftware[s]
+        );
     }
 
     isBuiltinVarOrConstant(s: string): boolean {
@@ -49,7 +53,7 @@ export class CheckReservedWords {
     okHandlerName(s: string) {
         checkThrow(slength(s), `7)|invalid identifier ${s}`);
         if (!s.match(/^[A-Za-z$]/)) {
-            return false
+            return false;
         }
         return (
             this.isBuiltinHandler(s) ||
@@ -65,7 +69,7 @@ export class CheckReservedWords {
         }
 
         if (!s.match(/^[A-Za-z$]/)) {
-            return false
+            return false;
         }
 
         /* new: don't need to check this.isPropertyName,
@@ -75,7 +79,7 @@ export class CheckReservedWords {
     }
 
     potentialUserFn(s: string) {
-        checkThrow(s.match(/^[A-Za-z$]/), "must start with a letter")
+        checkThrow(s.match(/^[A-Za-z$]/), 'must start with a letter');
         checkThrow(slength(s), `7&|invalid identifier ${s}`);
         return (
             !this.isKeyword(s) &&
