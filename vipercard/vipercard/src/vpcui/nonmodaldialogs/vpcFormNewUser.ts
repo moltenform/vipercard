@@ -110,7 +110,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
             }
         };
 
-        Util512Higher.syncToAsyncTransition(fn, 'vpcuserscreate', RespondToErr.Alert);
+        Util512Higher.syncToAsyncTransition(fn(), 'vpcuserscreate', RespondToErr.Alert);
     }
 
     /**

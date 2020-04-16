@@ -65,7 +65,6 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
                 Util512Higher.syncToAsyncTransition(
-                    () =>
                         TestUtilsCanvas.RenderAndCompareImages(true, () =>
                             pr.test.testDrawComposites()
                         ),
@@ -74,7 +73,6 @@ export class UI512DemoComposites extends UI512TestCompositesPresenter {
                 );
             } else if (d.elClick.id === 'btnRunTest') {
                 Util512Higher.syncToAsyncTransition(
-                    () =>
                         TestUtilsCanvas.RenderAndCompareImages(false, () =>
                             pr.test.testDrawComposites()
                         ),

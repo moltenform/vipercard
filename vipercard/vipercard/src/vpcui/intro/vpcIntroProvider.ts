@@ -39,7 +39,7 @@ export class VpcIntroProvider {
      */
     startLoadDocument(currentCntrl: UI512Presenter, cbSetStatus: (s: string) => void) {
         Util512Higher.syncToAsyncTransition(
-            () => this.startLoadDocumentAsync(currentCntrl, cbSetStatus),
+            this.startLoadDocumentAsync(currentCntrl, cbSetStatus),
             'startLoadDocument',
             RespondToErr.Alert
         );
@@ -292,18 +292,8 @@ export class VpcIntroProvider {
      */
     protected async startLoadDocumentAsyncImpl(currentCntrl: UI512Presenter) {
         /* minimum time, just so that it "feels right" rather than loading instantly */
+        let ret: [VpcPresenter, VpcState] = await Util512Higher.runAsyncWithMinimumTime(this.loadDocumentTop(), 1500)
 
-        const minimumTime = 1500;
-        let ret: [VpcPresenter, VpcState];
-        let promises = [
-            /* don't load too fast... slow it down intentionally */
-            Util512Higher.sleep(minimumTime),
-            (async () => {
-                ret = await this.loadDocumentTop();
-            })()
-        ];
-
-        await Promise.all(promises);
         currentCntrl.placeCallbackInQueue(() => {
             /* remove the loading page and replace it with the new presenter */
             getRoot().replaceCurrentPresenter(ret[0]);
@@ -311,12 +301,11 @@ export class VpcIntroProvider {
     }
 
     /**
-     * provide time for event loop
-     * probably the time it is the most useful is
-     * if the stack has thousands of scripts to process
+     * provide time for event loop,
+     * in case the stack has thousands of scripts to process
      */
     protected async yieldTime() {
-        await Util512Higher.sleep(1);
+        return Util512Higher.sleep(10);
     }
 }
 

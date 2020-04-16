@@ -146,7 +146,7 @@ export class IntroPageFirst extends IntroPageBase {
     respondIdle(pr: VpcIntroInterface, d: IdleEventDetails) {
         if (!IntroPageFirst.haveCheckedPageURLParams) {
             IntroPageFirst.haveCheckedPageURLParams = true;
-            Util512Higher.syncToAsyncTransition(() => this.checkPageUrlParams(pr), 'respondIdle', RespondToErr.Alert);
+            Util512Higher.syncToAsyncTransition(this.checkPageUrlParams(pr), 'respondIdle', RespondToErr.Alert);
         }
 
         super.respondIdle(pr, d);

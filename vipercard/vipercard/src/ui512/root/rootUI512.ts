@@ -200,7 +200,7 @@ export class FullRootUI512 implements Root {
 
     runTests(all: boolean) {
         Util512Higher.syncToAsyncTransition(
-            () => SimpleUtil512Tests.runTests(all),
+            SimpleUtil512Tests.runTests(all),
             'tests',
             RespondToErr.Alert
         );

@@ -103,7 +103,7 @@ export class UI512FontRequest {
                 pendingGrid.freeze();
             };
 
-            Util512Higher.syncToAsyncTransition(afn, 'loadfont', RespondToErr.Alert);
+            Util512Higher.syncToAsyncTransition(afn(), 'loadfont', RespondToErr.Alert);
             return undefined;
         } else {
             if (!found || !found.loadedMetrics || !found.loadedImage) {

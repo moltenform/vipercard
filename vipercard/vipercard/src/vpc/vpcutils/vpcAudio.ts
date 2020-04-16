@@ -56,7 +56,7 @@ export class VpcAudio {
             return aud.play();
         };
 
-        Util512Higher.syncToAsyncTransition(fn, 'play audio', RespondToErr.ConsoleErrOnly);
+        Util512Higher.syncToAsyncTransition(fn(), 'play audio', RespondToErr.ConsoleErrOnly);
     }
 
     /**

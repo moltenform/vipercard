@@ -129,7 +129,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
             }
         };
 
-        Util512Higher.syncToAsyncTransition(fn, 'doSendErrReport', RespondToErr.Alert);
+        Util512Higher.syncToAsyncTransition(fn(), 'doSendErrReport', RespondToErr.Alert);
     }
 
     /**

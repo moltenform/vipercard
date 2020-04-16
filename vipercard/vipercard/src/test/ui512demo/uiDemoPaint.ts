@@ -95,7 +95,6 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
         if (d.elClick && d.button === 0) {
             if (d.elClick.id === 'btnDldImage') {
                 Util512Higher.syncToAsyncTransition(
-                    () =>
                         TestUtilsCanvas.RenderAndCompareImages(true, () =>
                             pr.test.testDrawShape()
                         ),
@@ -104,7 +103,6 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
                 );
             } else if (d.elClick.id === 'btnRunTest') {
                 Util512Higher.syncToAsyncTransition(
-                    () =>
                         TestUtilsCanvas.RenderAndCompareImages(false, () =>
                             pr.test.testDrawShape()
                         ),
@@ -113,7 +111,6 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
                 );
             } else if (d.elClick.id === 'btnDldImageFill') {
                 Util512Higher.syncToAsyncTransition(
-                    () =>
                         TestUtilsCanvas.RenderAndCompareImages(true, () =>
                             pr.test.testDrawFloodFill()
                         ),
@@ -122,7 +119,6 @@ export class UI512DemoPaint extends UI512TestPaintPresenter {
                 );
             } else if (d.elClick.id === 'btnRunTestFill') {
                 Util512Higher.syncToAsyncTransition(
-                    () =>
                         TestUtilsCanvas.RenderAndCompareImages(false, () =>
                             pr.test.testDrawFloodFill()
                         ),

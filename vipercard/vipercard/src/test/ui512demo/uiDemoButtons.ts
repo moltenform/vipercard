@@ -94,7 +94,6 @@ export class UI512DemoButtons extends UI512Presenter {
         console.log('clicked on ' + d.elClick.id);
         if (d.elClick.id === 'btnDldImage') {
             Util512Higher.syncToAsyncTransition(
-                () =>
                     TestUtilsCanvas.RenderAndCompareImages(true, () =>
                         pr.testrunner.testDrawButtons()
                     ),
@@ -103,7 +102,6 @@ export class UI512DemoButtons extends UI512Presenter {
             );
         } else if (d.elClick.id === 'btnRunTest') {
             Util512Higher.syncToAsyncTransition(
-                () =>
                     TestUtilsCanvas.RenderAndCompareImages(false, () =>
                         pr.testrunner.testDrawButtons()
                     ),

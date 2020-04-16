@@ -226,11 +226,11 @@ export class Util512Higher {
      * so that errors can be shown, otherwise they might be invisible.
      */
     static syncToAsyncTransition<T>(
-        fn: () => Promise<T>,
+        fn: Promise<T>,
         context: string,
         rtype: RespondToErr
     ) {
-        fn().then(
+        fn.then(
             () => {
                 /* fulfilled with no exceptions */
             },
@@ -254,7 +254,7 @@ export class Util512Higher {
             fn();
         };
 
-        Util512Higher.syncToAsyncTransition(asyncf, context, rtype);
+        Util512Higher.syncToAsyncTransition(asyncf(), context, rtype);
     }
 
     /**
@@ -272,21 +272,17 @@ export class Util512Higher {
      * rejects if operation takes too long
      */
     static async runAsyncWithTimeout<T>(fn:Promise<T>, ms:number):Promise<T> {
-        let completed = false
         let fTimeout = async () => {
             await Util512Higher.sleep(ms);
-            if (!completed) {
-                checkThrow512(false, "timed out")
-            }
-            
-            return undefined
+            return null
         }
 
         let ps = [fn, fTimeout()]
-        try {
-            await Promise.race(ps)
-        } finally {
-            completed = true
+        let ret = await Promise.race(ps)
+        if (ret === null) {
+            checkThrow512(false, "Timed out.")
+        } else {
+            return ret
         }
     }
 

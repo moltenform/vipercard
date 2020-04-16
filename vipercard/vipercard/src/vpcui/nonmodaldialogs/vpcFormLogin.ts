@@ -82,7 +82,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
             }
         };
 
-        Util512Higher.syncToAsyncTransition(fn, 'doLogin', RespondToErr.Alert);
+        Util512Higher.syncToAsyncTransition(fn(), 'doLogin', RespondToErr.Alert);
     }
 
     /**
@@ -116,7 +116,7 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
             }
         };
 
-        Util512Higher.syncToAsyncTransition(fn, 'doLoginVerifyCode', RespondToErr.Alert);
+        Util512Higher.syncToAsyncTransition(fn(), 'doLoginVerifyCode', RespondToErr.Alert);
     }
 
     /**

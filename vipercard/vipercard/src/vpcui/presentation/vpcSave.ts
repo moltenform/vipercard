@@ -33,7 +33,7 @@ export class VpcSave implements VpcSaveInterface {
         if (ses) {
             this.busy = true;
             Util512Higher.syncToAsyncTransition(
-                () => this.goSaveAsAsync(ensureDefined(ses, 'Kr|')),
+                this.goSaveAsAsync(ensureDefined(ses, 'Kr|')),
                 'goSaveAsAsync',
                 RespondToErr.Alert
             );
@@ -57,7 +57,7 @@ export class VpcSave implements VpcSaveInterface {
         if (ses) {
             this.busy = true;
             Util512Higher.syncToAsyncTransition(
-                () => this.goSaveAsync(ensureDefined(ses, 'Kq|')),
+                this.goSaveAsync(ensureDefined(ses, 'Kq|')),
                 'beginSave async',
                 RespondToErr.Alert
             );
@@ -243,7 +243,7 @@ export class VpcSave implements VpcSaveInterface {
 
         /* telemetry on how often people save stacks */
         Util512Higher.syncToAsyncTransition(
-            async () => VpcSession.vpcStacksCountJsonSaves(info.stackOwner, info.stackGuid, currentUsername),
+            VpcSession.vpcStacksCountJsonSaves(info.stackOwner, info.stackGuid, currentUsername),
             'count json saves',
             RespondToErr.ConsoleErrOnly
         );
@@ -271,7 +271,7 @@ export class VpcSave implements VpcSaveInterface {
      * send mark to server to flag content
      */
     beginFlagContent() {
-        Util512Higher.syncToAsyncTransition(() => this.mnuGoFlagContentAsync(), 'beginFlagContent', RespondToErr.Alert);
+        Util512Higher.syncToAsyncTransition(this.mnuGoFlagContentAsync(), 'beginFlagContent', RespondToErr.Alert);
     }
 
     /**

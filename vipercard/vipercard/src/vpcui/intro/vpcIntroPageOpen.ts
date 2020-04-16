@@ -106,7 +106,7 @@ export class IntroPageOpen extends IntroPageBase {
             }
         } else {
             prompt.set('labeltext', 'Loading...');
-            Util512Higher.syncToAsyncTransition(() => this.getListChoicesAsync(prompt), 'respondIdle', RespondToErr.Alert);
+            Util512Higher.syncToAsyncTransition(this.getListChoicesAsync(prompt), 'respondIdle', RespondToErr.Alert);
         }
 
         this.drawCommonLast(app, grp);

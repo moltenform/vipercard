@@ -260,7 +260,7 @@ export class VpcNonModalDocViewer extends VpcNonModalBase {
                     this.onChooseItem(btm);
                 };
 
-                Util512Higher.syncToAsyncTransition(afn, 'ChooseReferenceItem', RespondToErr.Alert);
+                Util512Higher.syncToAsyncTransition(afn(), 'ChooseReferenceItem', RespondToErr.Alert);
             }
         }
     }

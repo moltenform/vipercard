@@ -177,7 +177,7 @@ export class UI512DemoText extends UI512Presenter {
                 mainfield.setDimensions(mainfield.x, mainfield.y, newwidth, mainfield.h);
             } else if (attr.startsWith('test')) {
                 Util512Higher.syncToAsyncTransition(
-                    () => pr.runTest(attr),
+                    pr.runTest(attr),
                     'demotext',
                     RespondToErr.Alert
                 );

@@ -28,7 +28,7 @@ export class PaintGifExport {
      */
     begin(speed: number) {
         this.init();
-        Util512Higher.syncToAsyncTransition(() => this.beginPaintExportToGif(speed), 'gif export', RespondToErr.ConsoleErrOnly);
+        Util512Higher.syncToAsyncTransition(this.beginPaintExportToGif(speed), 'gif export', RespondToErr.ConsoleErrOnly);
     }
 
     /**
