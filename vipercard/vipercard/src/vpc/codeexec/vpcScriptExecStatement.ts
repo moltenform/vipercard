@@ -35,14 +35,8 @@ export class ExecuteStatement {
     go(line: VpcCodeLine, visitResult: VpcIntermedValBase, blocked: ValHolder<AsyncCodeOpState>) {
         checkThrowEq(VpcLineCategory.Statement, line.ctg, '7h|not a statement');
         let firstToken = line.firstToken;
-        let vals = visitResult as IntermedMapOfIntermedVals;
-        checkThrow(
-            vals instanceof IntermedMapOfIntermedVals,
-            `7f|command ${firstToken.image} did not return IntermedMapOfIntermedVals`
-        );
-
         let method = 'go' + Util512.capitalizeFirst(firstToken.image);
-        Util512.callAsMethodOnClass(ExecuteStatement.name, this, method, [line, vals, blocked], false);
+        Util512.callAsMethodOnClass(ExecuteStatement.name, this, method, [line, visitResult, blocked], false);
     }
 
     /**
@@ -377,7 +371,7 @@ export class ExecuteStatement {
         let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectPart), '4||');
         this.outside.SetProp(ref, 'visible', VpcVal.True, undefined);
         if (locationStr) {
-            this.outside.SetProp(ref, 'loc', VpcValS(locationStr), undefined);
+            this.outside.SetProp(ref, 'location', VpcValS(locationStr), undefined);
         }
     }
     /**

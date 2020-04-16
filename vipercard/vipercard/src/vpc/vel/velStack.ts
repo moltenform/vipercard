@@ -124,6 +124,7 @@ export class VpcElStack extends VpcElBase {
             VpcElStack.cachedGetters['size'] = [PrpTyp.Num, () => 0];
             VpcElStack.cachedSetters = {};
             VpcElStack.cachedSetters['name'] = [PrpTyp.Str, 'name'];
+            VpcElStack.cachedSetters['script'] = [PrpTyp.Str, 'script'];
             Util512.freezeRecurse(VpcElStack.cachedGetters);
             Util512.freezeRecurse(VpcElStack.cachedSetters);
         }

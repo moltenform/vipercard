@@ -171,7 +171,7 @@ export namespace VpcTopPreparse {
             let nextLines2 = stage2Process(line, rewrites) ?? [line];
             for (let line2 of nextLines2) {
                 VpcCurrentScriptStage.latestSrcLineSeen = line2[0].startLine;
-                let nextLines3 = stage3Process(line2, exp);
+                let nextLines3 = stage3Process(line2, exp, rw);
                 for (let line3 of nextLines3) {
                     VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
                     /* make it lowercase again, just in case */
@@ -210,13 +210,14 @@ export namespace VpcTopPreparse {
         }
     }
 
-    function stage2Process(line: ChvITk[], rewrites: VpcRewriteForCommands): O<ChvITk[][]> {
+    function stage2Process(line: ChvITk[], rwcmd: VpcRewriteForCommands): O<ChvITk[][]> {
         let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image);
-        return Util512.callAsMethodOnClass(VpcRewriteForCommands.name, rewrites, methodName, [line], true) as O<ChvITk[][]>;
+        return Util512.callAsMethodOnClass(VpcRewriteForCommands.name, rwcmd, methodName, [line], true) as O<ChvITk[][]>;
     }
 
-    function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions): ChvITk[][] {
+    function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
         line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line);
+        line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);
         let outlines = exp.go(line);
         return outlines;
     }

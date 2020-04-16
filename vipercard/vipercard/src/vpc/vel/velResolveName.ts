@@ -134,15 +134,18 @@ export class VelResolveName {
     }
 
     /**
-     * get the name of a stack
-     * interesting fact, in emulator the "long name" of stack would return filepath of the stack
+     * get the name of a stack.
+     * made compatible with original product.
      */
     protected goResolveNameStack(vel: VpcElStack, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElStack, 'J<|');
+        let nm = vel.getS('name')
         if (adjective === PropAdjective.Short) {
-            return vel.getS('name');
+            return nm;
+        } else if (adjective === PropAdjective.Long) {
+            return `stack "Hard Drive:${nm}"`
         } else {
-            return 'this stack';
+            return `stack "${nm}"`
         }
     }
 

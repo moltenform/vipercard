@@ -57,6 +57,7 @@ module.exports = {
         'no-constant-condition': 'off',
         'prefer-const': 'off',
         'prefer-destructuring': 'off',
+        'no-empty': 'off',
 
         // typescript, ones that I think are fine
         '@typescript-eslint/explicit-function-return-type': 'off',

@@ -185,11 +185,11 @@ def writePropertiesListIntoGrammar(infiles):
     addAlreadyTokens = [('_' + s.lower().strip()) for s in tempst.listPropertiesUnary if s.lower().strip() in alreadyAToken]
     addAlreadyTokens.extend([('_' + s.lower().strip()) for s in tempst.listPropertiesNullaryOrUnary if s.lower().strip() in alreadyAToken])
     if addAlreadyTokens:
-        s += '\nHAllPropertiesThatCouldBeUnary:={tkAllUnaryPropertiesIfNotAlready | tkAllNullaryOrUnaryPropertiesIfNotAlready |'
+        s += '\nHAllPropertiesThatCouldBeUnary:={tkAllUnaryPropertiesIfNotAlready | tkUnaryVipercardProperties | tkAllNullaryOrUnaryPropertiesIfNotAlready |'
         s += '|'.join(addAlreadyTokens)
         s += '}'
     else:
-        s += '\nHAllPropertiesThatCouldBeUnary:={ tkAllUnaryPropertiesIfNotAlready | tkAllNullaryOrUnaryPropertiesIfNotAlready }'
+        s += '\nHAllPropertiesThatCouldBeUnary:={ tkAllUnaryPropertiesIfNotAlready | tkUnaryVipercardProperties | tkAllNullaryOrUnaryPropertiesIfNotAlready }'
     s += '                      --->ProcessOr--->IToken'
     
     addAlreadyTokens = [('_' + s.lower().strip()) for s in tempst.listPropertiesNullary if s.lower().strip() in alreadyAToken]

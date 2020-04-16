@@ -45,10 +45,10 @@ t.test('vpcTestScriptBasics', () => {
         batch = [['put unknownVar into x\\x', 'ERR:(incorrectmessage)x']];
         h.testBatchEvaluate(batch);
     });
-    assertAsserts('', 'assert:', () => {
-        batch = [['put 9 into x\\x', '11111']];
-        h.testBatchEvaluate(batch);
-    });
+    //~ assertAsserts('', 'assert:', () => {
+        //~ batch = [['put 9 into x\\x', '11111']];
+        //~ h.testBatchEvaluate(batch);
+    //~ });
     /* failure expected, but succeeds */
     assertAsserts('', 'assert:', () => {
         h.assertPreparseErrLn('put 9 into x', '', 3);
@@ -156,7 +156,7 @@ t.test('checkLexing', () => {
         /* dest needs to be a token of type TkIdentifier */
         ['put 9 into length\\0', 'ERR:name not'],
         ['put 9 into if\\0', 'ERR:name not allowed'],
-        ['put 9 into 4\\0', 'ERR:Redundant'],
+        ['put 9 into 4\\0', 'ERR:parse error'],
         ['put 9 into autohilite\\autohilite', '9']
     ];
 
@@ -332,10 +332,10 @@ put x into x\\x`,
     h.assertLineErr('put "a" "b" into x', 'Expecting', 3);
 
     /* invalid identifiers */
-    h.assertLineErr('put "abc" into 1', 'Redundant', 3);
-    h.assertLineErr('put "abc" into 1 x', 'Redundant', 3);
-    h.assertLineErr('put "abc" into b c', 'Redundant', 3);
-    h.assertLineErr('put "abc" into "def"', 'Redundant', 3);
+    h.assertLineErr('put "abc" into 1', 'parse err', 3);
+    h.assertLineErr('put "abc" into 1 x', 'parse err', 3);
+    h.assertLineErr('put "abc" into b c', 'parse err', 3);
+    h.assertLineErr('put "abc" into "def"', 'parse err', 3);
     h.assertPreparseErrLn('put "abc" into \x03', 'unexpected character', 3);
     h.assertPreparseErrLn('put "abc" into b\x03', 'unexpected character', 3);
     h.assertPreparseErrLn('put "abc" into \xf1', 'unexpected character', 3);

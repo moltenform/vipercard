@@ -56,6 +56,7 @@ export class VpcElCard extends VpcElBase {
             VpcElCard.cachedGetters['marked'] = [PrpTyp.Bool, 'marked'];
             VpcElCard.cachedSetters = {};
             VpcElCard.cachedSetters['name'] = [PrpTyp.Str, 'name'];
+            VpcElCard.cachedSetters['script'] = [PrpTyp.Str, 'script'];
             VpcElCard.cachedSetters['marked'] = [PrpTyp.Bool, 'marked'];
             Util512.freezeRecurse(VpcElCard.cachedGetters);
             Util512.freezeRecurse(VpcElCard.cachedSetters);

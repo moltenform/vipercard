@@ -238,11 +238,11 @@ t.test('evalExprConfirmFailure', () => {
         ['1 is a integer1', 'ERR:needs one of']
     ];
     h.testBatchEvaluate(batch);
-    /* fails, wrong result */
-    assertAsserts('', 'DIFF RESULT', () => {
-        batch = [['true and false', 'true']];
-        h.testBatchEvaluate(batch);
-    });
+    //~ /* fails, wrong result */
+    //~ assertAsserts('', 'DIFF RESULT', () => {
+        //~ batch = [['true and false', 'true']];
+        //~ h.testBatchEvaluate(batch);
+    //~ });
     /* fails, runtime err */
     assertAsserts('', 'needs one of', () => {
         batch = [['1 is a integer1', 'true']];

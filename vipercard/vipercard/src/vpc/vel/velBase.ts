@@ -276,6 +276,7 @@ export abstract class VpcElSizable extends VpcElBase {
      * define size getters
      */
     static initSizeGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
+        getters['script'] = [PrpTyp.Str, 'script'];
         getters['width'] = [PrpTyp.Num, 'w'];
         getters['height'] = [PrpTyp.Num, 'h'];
         getters['left'] = [PrpTyp.Num, 'x'];
@@ -283,18 +284,16 @@ export abstract class VpcElSizable extends VpcElBase {
         getters['right'] = [PrpTyp.Num, (me: VpcElSizable) => me._x + me._w];
         getters['bottom'] = [PrpTyp.Num, (me: VpcElSizable) => me._y + me._h];
         getters['topleft'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y}`];
-        getters['botright'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + me._w},${me._y + me._h}`];
-        getters['rect'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`];
-        getters['loc'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`];
-        getters['bottomright'] = getters['botright'];
-        getters['rectangle'] = getters['rect'];
-        getters['location'] = getters['loc'];
+        getters['bottomright'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + me._w},${me._y + me._h}`];
+        getters['rectangle'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`];
+        getters['location'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`];
     }
 
     /**
      * define size setters
      */
     static initSizeSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
+        setters['script'] = [PrpTyp.Str, 'script'];
         setters['width'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, n, me._h)];
         setters['height'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, me._w, n)];
         setters['left'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(n, me._y, me._w, me._h)];
@@ -308,21 +307,21 @@ export abstract class VpcElSizable extends VpcElBase {
                 me.setDimensions(coords[0], coords[1], me._w, me._h);
             }
         ];
-        setters['botright'] = [
+        setters['bottomright'] = [
             PrpTyp.Str,
             (me: VpcElSizable, s: string) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
                 me.setDimensions(me._x, me._y, coords[0] - me._x, coords[1] - me._y);
             }
         ];
-        setters['rect'] = [
+        setters['rectangle'] = [
             PrpTyp.Str,
             (me: VpcElSizable, s: string) => {
                 let coords = VpcValS(s).readAsIntegerList(4);
                 me.setDimensions(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1]);
             }
         ];
-        setters['loc'] = [
+        setters['location'] = [
             PrpTyp.Str,
             (me: VpcElSizable, s: string) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
@@ -333,8 +332,5 @@ export abstract class VpcElSizable extends VpcElBase {
                 me.setDimensions(me._x + moveX, me._y + moveY, me._w, me._h);
             }
         ];
-        setters['bottomright'] = setters['botright'];
-        setters['rectangle'] = setters['rect'];
-        setters['location'] = setters['loc'];
     }
 }

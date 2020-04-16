@@ -245,7 +245,8 @@ t.test('_vpcProperties', () => {
 
         /* nonsettable props */
         ['set the id of cd fld "p1" to 100\\0', 'ERR:unknown property'],
-        ['set the script of cd fld "p1" to "abc"\\0', 'ERR:unknown property']
+        ['set the hilite of cd fld "p1" to true\\0', 'ERR:unknown property'],
+        ['set the number of cd fld "p1" to 6\\0', 'ERR:unknown property']
     ];
     h.testBatchEvaluate(batch);
 
@@ -384,29 +385,32 @@ t.test('_vpcProperties', () => {
         ['the rect of cd btn "p1"', '10,20,30,40'],
         ['set the rect of cd btn "p1" to " 10 , 20 , 30 , 40 "\\0', '0'],
         ['the rect of cd btn "p1"', '10,20,30,40'],
-        ['set the rect of cd btn "p1" to 10\\0', 'ERR:could not get coord'],
-        ['set the rect of cd btn "p1" to 10,20\\0', 'ERR:could not get coord'],
-        ['set the rect of cd btn "p1" to 10,20,30\\0', 'ERR:could not get coord'],
-        ['set the rect of cd btn "p1" to "10"\\0', 'ERR:could not get coord'],
-        ['set the rect of cd btn "p1" to "10,20"\\0', 'ERR:could not get coord'],
-        ['set the rect of cd btn "p1" to "10,20,30"\\0', 'ERR:could not get coord'],
-        ['set the rect of cd btn "p1" to "10,20,30,40a"\\0', 'ERR:not an integer'],
-        ['set the rect of cd btn "p1" to "10,20,30a,40"\\0', 'ERR:not an integer'],
-        ['set the rect of cd btn "p1" to "10,20a,30,40"\\0', 'ERR:not an integer'],
-        ['set the rect of cd btn "p1" to "10a,20,30,40"\\0', 'ERR:not an integer'],
-        ['set the rect of cd btn "p1" to "10,20,30,40.1"\\0', 'ERR:not an integer'],
-        ['set the rect of cd btn "p1" to "10,20,30.1,40"\\0', 'ERR:not an integer'],
-        ['set the rect of cd btn "p1" to "10,20.1,30,40"\\0', 'ERR:not an integer'],
-        ['set the rect of cd btn "p1" to "10.1,20,30,40"\\0', 'ERR:not an integer'],
-        ['set the topleft of cd btn "p1" to "10"\\0', 'ERR:could not get coord'],
-        ['set the topleft of cd btn "p1" to "10,20a"\\0', 'ERR:not an integer'],
-        ['set the topleft of cd btn "p1" to "10a,20"\\0', 'ERR:not an integer'],
+        ['set the rect of cd btn "p1" to " 10 , 20.0000000001 , 29.99999999999 , 40 "\\0', '0'],
+        ['the rect of cd btn "p1"', '10,20,30,40'],
+        ['set the rect of cd btn "p1" to 10\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to 10,20\\0', 'ERR:expected 4 numbers but got 2'],
+        ['set the rect of cd btn "p1" to 10,20,30\\0', 'ERR:expected 4 numbers but got 3'],
+        ['set the rect of cd btn "p1" to "10"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10,20"\\0', 'ERR:expected 4 numbers but got 2'],
+        ['set the rect of cd btn "p1" to "10,20,30"\\0', 'ERR:expected 4 numbers but got 3'],
+        ['set the rect of cd btn "p1" to "10,20,30,40a"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10,20,30a,40"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10,20a,30,40"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10a,20,30,40"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10,20,30,40.1"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10,20,30.1,40"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10,20.1,30,40"\\0', 'ERR:Not a list of integers'],
+        ['set the rect of cd btn "p1" to "10.1,20,30,40"\\0', 'ERR:Not a list of integers'],
+        ['set the topleft of cd btn "p1" to "10"\\0', 'ERR:Not a list of integers'],
+        ['set the topleft of cd btn "p1" to "10,20a"\\0', 'ERR:Not a list of integers'],
+        ['set the topleft of cd btn "p1" to "10a,20"\\0', 'ERR:Not a list of integers'],
 
         /* type checking, single values */
         ['set the left of cd btn "p1" to "-30"\\0', '0'],
         ['the left of cd btn "p1"', '-30'],
         ['set the left of cd btn "p1" to " 10 "\\0', '0'],
         ['the left of cd btn "p1"', '10'],
+        ['set the left of cd btn "p1" to "4,5"\\0', 'ERR:expected an integer'],
         ['set the left of cd btn "p1" to ""\\0', 'ERR:expected an integer'],
         ['set the left of cd btn "p1" to "10a"\\0', 'ERR:expected an integer'],
         ['set the left of cd btn "p1" to "a10"\\0', 'ERR:expected an integer'],
@@ -700,9 +704,9 @@ t.test('_vpcProperties', () => {
         ['the textfont of char 1 to 2 of cd btn "p2"', 'ERR:NoViableAltException'],
         ['the textfont of char 1 to 2 of cd 1', 'ERR:NoViableAltException'],
         ['the textfont of char 1 to 2 of bg 1', 'ERR:NoViableAltException'],
-        ['the dontwrap of char 1 to 2 of cd fld "p2"', 'ERR:can only say'],
-        ['the style of char 1 to 2 of cd fld "p2"', 'ERR:can only say'],
-        ['the xyz of char 1 to 2 of cd fld "p2"', 'ERR:can only say']
+        ['the dontwrap of char 1 to 2 of cd fld "p2"', 'ERR:for textstyle, textfont'],
+        ['the style of char 1 to 2 of cd fld "p2"', 'ERR:for textstyle, textfont'],
+        ['the xyz of char 1 to 2 of cd fld "p2"', 'ERR:no such function']
     ];
 
     h.testBatchEvaluate(batch);
@@ -846,24 +850,24 @@ t.test('_vpcProperties', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         /* productopts */
-        [`the name of the ${cProductName}`, `${cProductName}`],
+        [`the name of ${cProductName}`, `${cProductName}`],
         [`the abbr name of ${cProductName}`, `${cProductName}`],
         [`the short name of ${cProductName}`, `${cProductName}`],
         [`the long name of ${cProductName}`, `${cProductName}`],
-        [`the id of the ${cProductName}`, `WILD`],
+        [`the id of ${cProductName}`, `WILD`],
         [`the abbr id of ${cProductName}`, `WILD`],
         [`the short id of ${cProductName}`, `WILD`],
         [`the long id of ${cProductName}`, `WILD`],
 
         /* stack */
-        ['the name of this stack', 'h stack'],
-        ['the abbr name of this stack', 'h stack'],
+        ['the name of this stack', 'stack "teststack"'],
+        ['the abbr name of this stack', 'stack "teststack"'],
         ['the short name of this stack', 'teststack'],
-        ['the long name of this stack', 'h stack'],
+        ['the long name of this stack', 'stack "Hard Drive:teststack"'],
         ['the id of this stack', '901'],
         ['the abbr id of this stack', '901'],
         ['the short id of this stack', '901'],
-        ['the long id of this stack', '901'],
+        ['the long id of this stack', 'stack id 901'],
 
         /* bkgnd with a name */
         ['the name of bg 2', 'bkgnd "b"'],
@@ -917,7 +921,7 @@ t.test('_vpcProperties', () => {
         ['the id of cd btn "p1"', `${h.elIds.btn_b_c_1}`],
         ['the abbr id of cd btn "p1"', `${h.elIds.btn_b_c_1}`],
         ['the short id of cd btn "p1"', `${h.elIds.btn_b_c_1}`],
-        ['the long id of cd btn "p1"', `card btn id ${h.elIds.btn_b_c_1}`],
+        ['the long id of cd btn "p1"', `card button id ${h.elIds.btn_b_c_1}`],
 
         /* button with no name */
         [`set the name of cd btn id ${h.elIds.btn_b_c_1} to ""\\0`, '0'],
@@ -1010,23 +1014,23 @@ t.test('_vpcProperties', () => {
         [`set the name of cd btn id ${h.elIds.btn_b_c_1} to "p1"\\0`, '0'],
 
         /* the target (h.objids.btn_go) */
-        ['the target', 'card button "go"'],
-        ['the abbr target', 'card button "go"'],
+        ['the target', 'card button id 1024'],
+        ['the abbr target', 'card button id 1024'],
         ['the short target', 'go'],
-        ['the long target', 'card button "go" of card "a" of this stack'],
+        ['the long target', 'card button id 1024'],
 
         /* owner */
-        ['the owner of vipercard', 'ERR:get the owner'],
+        ['the owner of vipercard', 'ERR:get owner'],
         ['the owner of this stack', 'ERR:get owner'],
-        ['the owner of bg 1', 'h stack'],
-        ['the owner of cd fld "p1"', 'card "c"'],
-        ['the owner of cd btn "p1"', 'card "c"'],
+        ['the owner of bg 1', 'stack id 901'],
+        ['the owner of cd fld "p1"', 'card id 1005 of this stack'],
+        ['the owner of cd btn "p1"', 'card id 1005 of this stack'],
         ['the owner of cd btn "xyz"', 'ERR:could not find'],
         ['the owner of cd fld "xyz"', 'ERR:could not find'],
-        ['the owner of cd 1', 'bkgnd "a"'],
-        ['the owner of second cd', 'bkgnd "b"'],
-        ['the owner of fifth cd', 'bkgnd "c"'],
-        ['the owner of cd "d" of bg 3', 'bkgnd "c"']
+        ['the owner of cd 1', 'bkgnd id 1000'],
+        ['the owner of second cd', 'bkgnd id 1002'],
+        ['the owner of fifth cd', 'bkgnd id 1003'],
+        ['the owner of cd "d" of bg 3', 'bkgnd id 1003']
     ];
     h.testBatchEvaluate(batch);
 });
@@ -1113,7 +1117,7 @@ t.test('_builtinFunctions', () => {
         ['the number of bgs', '3'],
         ['the number of bgs of this stack', '3'],
         ['the number of bgs of next stack', 'ERR:only accept referring to a stack'],
-        ['the number of bgs of second stack', 'ERR:MismatchedTokenException'],
+        ['the number of bgs of second stack', 'ERR:parse error'],
         ['the number of cds', '5'],
         ['the number of cds of this stack', '5'],
         ['the number of cds of this bg', '3'],
@@ -1139,14 +1143,13 @@ t.test('_builtinFunctions', () => {
     batch = [
         /* existence of objects */
         [`there _is_ a ${cProductName}`, 'true'],
-        [`there _is_ a target`, 'true'],
         [`there _is_ a the target`, 'true'],
         [`there _is_ a me`, 'true'],
-        [`there _is_ a xyz`, 'ERR:We did not recognize'],
+        [`there _is_ a xyz`, 'ERR:variable found'],
         [`there _is_ a this stack`, 'true'],
         [`there _is_ a next stack`, 'ERR:we only accept referring to a stack'],
         [`there _is_ a second stack`, 'ERR:NoViableAltException'],
-        [`there _is_ a xyz stack`, 'ERR:we only accept referring to a stack'],
+        [`there _is_ a xyz stack`, 'ERR:parse err'],
 
         /* bg */
         [`there _is_ a bg 1`, 'true'],
@@ -1219,15 +1222,14 @@ t.test('_builtinFunctions', () => {
         ['the params', ''],
         ['the result', ''],
 
-        /* we require parens for basically everything else though. */
-        ['the ticks', "ERR:you can't say something"],
-        ['the screenrect', "ERR:you can't say something"],
-        ['the sin', "ERR:you can't say something"],
-        ['the offset', "ERR:you can't say something"],
-        ['the rand', "ERR:you can't say something"],
-        ['the sin of 2', 'ERR:NoViableAltException'],
-        ['the xyz', "ERR:you can't say something"],
-        ['sin of 2', 'ERR:NoViableAltException']
+        /* we now accept fn calls without parens. */
+        ['the screenrect', "0,0,928,416"],
+        ['the sin', "ERR:arg expected"],
+        ['the offset', "ERR:args expected"],
+        ['the random', "ERR:args expected"],
+        ['round(100 * the sin of 2)', '91'],
+        ['the xyz', "ERR:no such function"],
+        ['sin of 2', 'ERR:parse err']
     ];
     h.testBatchEvaluate(batch);
 
@@ -1275,7 +1277,7 @@ t.test('_builtinFunctions', () => {
         ['min(",1,2,3")', '0'],
         ['min(",1,2,3,")', '0'],
         ['min("1,2,3,,")', '0'],
-        ['sum("")', '0'],
+        ['sum("")', 'ERR:Wrong arguments'], /* confirmed in emulator */
         ['sum(1)', '1'],
         ['sum("1")', '1'],
         ['sum(" 1 ")', '1'],
@@ -1285,10 +1287,10 @@ t.test('_builtinFunctions', () => {
         ['sum(" 1 ",2)', '3'],
         ['sum(" 1 "," 2 ")', '3'],
         ['sum(" 1 , 2 ")', '3'],
-        ['sum("1a")', 'ERR:expected a number'],
-        ['sum("1 a")', 'ERR:expected a number'],
-        ['sum("1 , 2a")', 'ERR:expected a number'],
-        ['sum("1 , 2 a")', 'ERR:expected a number'],
+        ['sum("1a")', 'ERR:wanted numbers'],
+        ['sum("1 a")', 'ERR:wanted numbers'],
+        ['sum("1 , 2a")', 'ERR:wanted numbers'],
+        ['sum("1 , 2 a")', 'ERR:wanted numbers'],
         ['sum("1,2")', '3'],
         ['sum("1,2,")', '3'],
         ['sum("1,2, ")', '3'],
@@ -1298,22 +1300,17 @@ t.test('_builtinFunctions', () => {
         ['sum(" , 1 , 2 , , ")', '3'],
 
         /* with "the" */
-        ['the diskspace', `ERR:you can't say something`],
-        ['the diskspace()', `${100 * 1024 * 1024}`],
-        ['the abs(123)', '123'],
-        ['the offset("c", "abc")', '3'],
+        ['the diskspace()', `ERR:parse err`],
+        ['the diskspace', `${100 * 1024 * 1024}`],
+        ['the abs(123)', 'ERR:parse err'],
+        ['abs(123)', '123'],
+        ['offset("c", "abc")', '3'],
 
         /* reading the time */
-        ['the ticks() - the ticks() >= 0', 'true'],
-        [
-            `put the seconds() into x
-            put 31557600 into sInYear
-            put 2017.75 into curYear
-            put (curYear - 1904) * sInYear into lowBound
-            put lowBound + sInYear into upperBound
-            \\x > lowBound and x < upperBound`,
-            'true'
-        ]
+        ['ticks() - ticks() >= 0', 'true'],
+        ['the ticks - the ticks >= 0', 'true'],
+        ['seconds() - seconds() >= 0', 'true'],
+        ['the seconds - the seconds >= 0', 'true'],
     ];
 
     h.testBatchEvaluate(batch);

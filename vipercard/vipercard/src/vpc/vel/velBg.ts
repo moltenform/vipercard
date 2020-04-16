@@ -59,6 +59,7 @@ export class VpcElBg extends VpcElBase {
             VpcElBg.cachedGetters['script'] = [PrpTyp.Str, 'script'];
             VpcElBg.cachedSetters = {};
             VpcElBg.cachedSetters['name'] = [PrpTyp.Str, 'name'];
+            VpcElBg.cachedSetters['script'] = [PrpTyp.Str, 'script'];
             Util512.freezeRecurse(VpcElBg.cachedGetters);
             Util512.freezeRecurse(VpcElBg.cachedSetters);
         }

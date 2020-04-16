@@ -592,6 +592,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     protected getOwnerFullString(resolved: [O<VpcElBase>, VpcElCard], adjective: PropAdjective) {
         /* get a longer form of the id unless specifically said "short" */
         checkThrow(resolved[0], 'the object was not found');
+        if (resolved[0].getType() === VpcElType.Stack || resolved[0].getType()===VpcElType.Product) {
+            checkThrow(false, "Cannot get owner of this type of object.")
+        }
+
         let owner = this.vci.getModel().getOwnerUntyped(resolved[0]);
         if (adjective === PropAdjective.Short) {
             return owner.getS('name') ?? '';

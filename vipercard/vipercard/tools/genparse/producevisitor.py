@@ -148,7 +148,7 @@ class MakingVisitors(object):
             const oprulecategory = VpcOpCtg.%OPCATEGORY%;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = %GETOPIMAGE%;
-                checkThrow(isString(whichop), '%METHODNAME%: op not a string');
+                checkThrow(typeof whichop === 'string', '%METHODNAME%: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.%NEXTRULE%[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);

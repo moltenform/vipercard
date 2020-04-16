@@ -15,7 +15,7 @@
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, cast, getEnumToStrOrFallback, getStrToEnum, lastIfThere, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -266,12 +266,12 @@ export class VpcExecFrameStack {
     /**
      * run the visitor, to get a value from the CST
      */
-    protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine, okCustom?: boolean): VpcIntermedValBase {
+    protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine, okCustom = false): VpcIntermedValBase {
         if (parsed !== null && parsed !== undefined) {
             let visitor = getChvVisitor(this.outside);
             let visited = visitor.visit(parsed);
             checkThrow(
-                okCustom ?? visited instanceof VpcIntermedValBase,
+                okCustom || (visited instanceof VpcIntermedValBase),
                 '7t|did not get IntermedValBase when running',
                 curLine.allImages
             );

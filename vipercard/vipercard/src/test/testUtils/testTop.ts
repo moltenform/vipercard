@@ -51,10 +51,10 @@ export class SimpleUtil512Tests {
         // order tests from high to low
         let colls = [
             //~ testCollectionvpcuiServer,
-            testCollectionvpcScriptEval,
             //~ vpcTestCollectionScriptRunCustomFns,
             //~ vpcTestCollectionScriptRunCmd,
 
+            testCollectionvpcScriptEval,
             testCollectionvpcScriptRunSyntax,
             vpcTestCollectionScriptExprLvl,
             testCollectionvpcScriptParseCmd,
@@ -79,11 +79,11 @@ export class SimpleUtil512Tests {
 
             //~ testCollectionUtilsCanvasWrapper,
             //~ testCollectionUtilsDraw,
-            testCollectionUtil512Higher,
-            testCollectionUtil512Class,
-            testCollectionUtil512,
-            testCollectionUtil512Assert,
-            testCollectionExternalLibs
+            //~ testCollectionUtil512Higher,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Assert,
+            //~ testCollectionExternalLibs
         ];
 
         /* run tests from low level to high level */
@@ -149,8 +149,8 @@ export class SimpleUtil512Tests {
 
             mapSeen.set(tstname.toLowerCase(), true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
-            counter.val += 1;
             await tstfn();
+            counter.val += 1;
         }
     }
 }

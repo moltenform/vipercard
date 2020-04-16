@@ -8,8 +8,21 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-export class VpcRewritesGlobal {
-    static rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
+export namespace VpcRewritesGlobal {
+    const mapSynonyms = { rect: 'rectangle', highlight:'hilite', autohighlight:'autohilite', loc:'location', botright:'bottomright' }
+    export function rewritePropertySynonyms(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[] {
+        for (let i = 0; i < line.length - 1; i++) {
+            if (line[i+1].image === 'of') {
+                let mapped = mapSynonyms[line[i].image]
+                if (mapped) {
+                    line[i] = rw.tokenFromEnglishTerm(mapped, line[i])
+                }
+            }
+        }
+
+        return line
+    }
+    export function rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
         let ret: ChvITk[] = [];
         let copyLine = line.slice();
         copyLine.reverse();

@@ -71,7 +71,6 @@ export class VpcElButton extends VpcElSizable {
      */
     static btnGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
-        getters['script'] = [PrpTyp.Str, 'script'];
         getters['textstyle'] = [PrpTyp.Str, (me: VpcElButton) => SubstringStyleComplex.vpcStyleFromInt(me._textstyle)];
         getters['style'] = [
             PrpTyp.Str,
