@@ -37,10 +37,11 @@ t.atest('--init--vpcTestScriptRunCmd', async () => {
     return h.initEnvironment();
 });
 t.test('_execCommands choose', () => {
+    h.assertPreparseErrLn('choose', "not enough args")
+    h.assertPreparseErrLn('choose brush', "tool")
     let batch: [string, string][];
     batch = [
         /* not valid */
-        ['choose\\tool()', 'ERR:not enough args'],
         ['choose tool\\tool()', 'ERR:not enough args'],
         ['choose 3\\tool()', 'ERR:not enough args'],
         ['choose pencil\\tool()', 'ERR:not enough args'],

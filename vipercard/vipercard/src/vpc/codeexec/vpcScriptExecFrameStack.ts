@@ -11,7 +11,7 @@
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcErrStage, VpcTool, VpcVisualEffectSpec, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcErrStage, VpcTool, VpcVisualEffectSpec, checkThrow, checkThrowEq, VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
@@ -548,13 +548,13 @@ export class VpcExecFrameStack {
         checkThrow(Array.isArray(evaluated), '');
         let args = evaluated as VpcVal[];
         curFrame.next();
-        this.callHandlerAndThrowIfNotExist(curFrame, args, newHandlerName);
+        this.callHandlerAndThrowIfNotExist(curFrame, curLine, args, newHandlerName);
     }
 
     /**
      * call a handler
      */
-    protected callHandlerAndThrowIfNotExist(curFrame: VpcExecFrame, args: VpcVal[], handlerName: string) {
+    protected callHandlerAndThrowIfNotExist(curFrame: VpcExecFrame, curLine: VpcCodeLine, args: VpcVal[], handlerName: string) {
         /* reset the result, in case the callee doesn't return anything */
         curFrame.locals.set('$result', VpcVal.Empty);
         let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, handlerName, false);
@@ -563,6 +563,13 @@ export class VpcExecFrameStack {
             let newFrame = this.pushStackFrame(handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId, undefined);
             newFrame.args = args;
             Util512.freezeRecurse(newFrame.args);
+            if (vel.getType() === VpcElType.Product && !curFrame.dynamicCodeOrigin) {
+                /* don't let the debugger say that the error was in standardlib */
+                newFrame.dynamicCodeOrigin = [curFrame.meId, curLine.firstToken.startLine ?? 0]
+            } else if (vel.getType() === VpcElType.Product) {
+                /* e.g. some code in standardlib is calling other code in standardlib */
+                newFrame.dynamicCodeOrigin = curFrame.dynamicCodeOrigin
+            }
         } else {
             if (new CheckReservedWords().isBuiltinHandler(handlerName.toLowerCase())) {
                 /* it's fine, we shouldn't throw in this case.

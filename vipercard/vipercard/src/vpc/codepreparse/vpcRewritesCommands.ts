@@ -98,7 +98,7 @@ export class VpcRewriteForCommands {
         /* turn any plain identifiers that are valid VpcTools into string literals */
         for (let i=0; i<line.length; i++) {
             let im = line[i].image
-            let en = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', im)
+            let en = findStrToEnum<VpcTool>(VpcTool, im)
             if (en !== undefined) {
                 line[i] = BuildFakeTokens.inst.makeStringLiteral(line[i], im)
             }
