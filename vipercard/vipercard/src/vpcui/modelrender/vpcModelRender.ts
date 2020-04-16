@@ -5,7 +5,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -331,7 +331,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
      * change the onIdle rate
      */
     protected changeIdleRate(s: ElementObserverVal) {
-        if (isString(s)) {
+        if ((typeof s === 'string')) {
             getRoot().setTimerRate(s.toString());
         }
     }

@@ -10,7 +10,7 @@
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, ValHolder, cast, getStrToEnum, longstr } from './../../ui512/utils/util512';
 
@@ -262,7 +262,7 @@ export class ExecuteStatement {
                 ? vals.vals[tkstr.tkIdentifier][1]
                 : undefined;
         let justLoad = false;
-        if (isJustLoadIdentifier && isString(isJustLoadIdentifier)) {
+        if (isJustLoadIdentifier && (typeof isJustLoadIdentifier === 'string')) {
             checkThrow(isJustLoadIdentifier === 'load', 'JQ|expected play "snd" load, but got', isJustLoadIdentifier);
             justLoad = true;
         }

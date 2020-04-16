@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcUILayer } from './../state/vpcInterface';
-/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512MenuDefn } from './../../ui512/menu/ui512MenuPositioning';
 /* auto */ import { KeyDownEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
@@ -230,7 +230,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
     translateHotkey(d: KeyDownEventDetails): O<string> {
         if (!d.repeated) {
             let mapped = this.keyMappings[d.readableShortcut];
-            if (isString(mapped)) {
+            if ((typeof mapped === 'string')) {
                 return mapped;
             } else if (typeof mapped === 'function') {
                 return mapped(this);

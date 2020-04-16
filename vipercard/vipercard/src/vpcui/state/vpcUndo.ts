@@ -6,7 +6,7 @@
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { O, UI512Compress, bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { O, UI512Compress, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { arLast } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -143,8 +143,8 @@ class UndoableActionModifyVelement implements UndoableAction {
     prevVal: ElementObserverVal;
     newVal: ElementObserverVal;
     constructor(velId: string, propName: string, prevVal: ElementObserverVal, newVal: ElementObserverVal) {
-        if (isString(prevVal) && propName !== 'paint') {
-            if (isString(newVal)) {
+        if ((typeof prevVal === 'string') && propName !== 'paint') {
+            if ((typeof newVal === 'string')) {
                 prevVal = '$' + UI512Compress.compressString(prevVal.toString());
                 newVal = '$' + UI512Compress.compressString(newVal.toString());
             } else {

@@ -11,7 +11,7 @@
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
-/* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, arLast, castVerifyIsStr, getStrToEnum, longstr } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
@@ -186,7 +186,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let val = VpcVal.Empty;
             if (ctx.RuleHAnyAllowedVariableName && ctx.RuleHAnyAllowedVariableName[0]) {
                 let s:string = this.visit(ctx.RuleHAnyAllowedVariableName[0]).image;
-                checkThrow(isString(s), '')
+                checkThrow((typeof s === 'string'), '')
                 let req = new RequestedContainerRef()
                 req.variable = s
                 let resolved = this.outside.ResolveContainerReadable(req)
@@ -454,7 +454,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             checkThrow(!ctx.RuleWindow || !ctx.RuleWindow[0], "don't yet support looking up property on window");
             checkThrow(!ctx.RuleMenuItem || !ctx.RuleMenuItem[0], "don't yet support looking up property on menuitem");
             checkThrow(!ctx.RuleMenu || !ctx.RuleMenu[0], "don't yet support looking up property on menu");
-            checkThrow(isString(propName), `9C|internal error, expected AnyPropertyName to be a string`);
+            checkThrow((typeof propName === 'string'), `9C|internal error, expected AnyPropertyName to be a string`);
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
                 /* put the textfont of char 2 to 4 of cd fld "myFld" into x */
                 let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;

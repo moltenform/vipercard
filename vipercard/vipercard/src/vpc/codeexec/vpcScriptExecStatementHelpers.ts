@@ -6,7 +6,7 @@
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { AnyParameterCtor, Util512 } from './../../ui512/utils/util512';
 
@@ -98,7 +98,7 @@ export class VpcScriptExecuteStatementHelpers {
         if (vals.vals[nm]) {
             for (let i = 0, len = vals.vals[nm].length; i < len; i++) {
                 let child = vals.vals[nm][i];
-                checkThrow(isString(child), '7T|not a string');
+                checkThrow((typeof child === 'string'), '7T|not a string');
                 ret.push(child);
             }
         } else {
@@ -164,7 +164,7 @@ export class VpcScriptExecuteStatementHelpers {
         if (got) {
             let gotAsString = got[0] as string;
             checkThrowEq(1, got.length, '7Z|expected length 1');
-            checkThrow(isString(gotAsString), '7Y|wrong type');
+            checkThrow((typeof gotAsString === 'string'), '7Y|wrong type');
             return gotAsString;
         } else {
             return undefined;

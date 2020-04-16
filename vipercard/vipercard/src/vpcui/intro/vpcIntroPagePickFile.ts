@@ -3,7 +3,7 @@
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { showMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
-/* auto */ import { isString, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
@@ -187,7 +187,7 @@ export class IntroPagePickFile extends IntroPageBase {
                 alert('got no text from file');
                 return;
             }
-            if (!isString(text)) {
+            if ((typeof text !== 'string')) {
                 alert('text is not a string. got binary data?');
                 return;
             }

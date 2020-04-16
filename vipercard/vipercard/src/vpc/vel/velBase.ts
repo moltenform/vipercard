@@ -3,7 +3,7 @@
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -81,21 +81,21 @@ export abstract class VpcElBase extends UI512Settable {
                 if (typeof mappedProp === 'function') {
                     return VpcValS(mappedProp(this, cardId) as string);
                 } else {
-                    assertTrue(isString(mappedProp), '4,|not a string');
+                    assertTrue((typeof mappedProp === 'string'), '4,|not a string');
                     return VpcValS(this.getS(mappedProp));
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
                     return VpcValN(mappedProp(this, cardId) as number);
                 } else {
-                    assertTrue(isString(mappedProp), '4+|not a string');
+                    assertTrue((typeof mappedProp === 'string'), '4+|not a string');
                     return VpcValN(this.getN(mappedProp));
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
                     return VpcValBool(mappedProp(this, cardId) as boolean);
                 } else {
-                    assertTrue(isString(mappedProp), '4*|not a string');
+                    assertTrue((typeof mappedProp === 'string'), '4*|not a string');
                     return VpcValBool(this.getB(mappedProp));
                 }
             } else {
@@ -118,21 +118,21 @@ export abstract class VpcElBase extends UI512Settable {
                 if (typeof mappedProp === 'function') {
                     mappedProp(this, val.readAsString(), cardId);
                 } else {
-                    assertTrue(isString(mappedProp), '4&|prop name not a string');
+                    assertTrue((typeof mappedProp === 'string'), '4&|prop name not a string');
                     this.set(mappedProp, val.readAsString());
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
                     mappedProp(this, val.readAsStrictInteger(this.tmpArray), cardId);
                 } else {
-                    assertTrue(isString(mappedProp), '4%|prop name not a string');
+                    assertTrue((typeof mappedProp === 'string'), '4%|prop name not a string');
                     this.set(mappedProp, val.readAsStrictInteger(this.tmpArray));
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
                     mappedProp(this, val.readAsStrictBoolean(this.tmpArray), cardId);
                 } else {
-                    assertTrue(isString(mappedProp), '4$|prop name not a string');
+                    assertTrue((typeof mappedProp === 'string'), '4$|prop name not a string');
                     this.set(mappedProp, val.readAsStrictBoolean(this.tmpArray));
                 }
             } else {

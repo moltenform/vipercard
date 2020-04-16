@@ -8,7 +8,7 @@
 /* auto */ import { VpcChvParser } from './vpcParser';
 /* auto */ import { VpcOpCtg, checkThrow, makeVpcInternalErr } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
-/* auto */ import { O, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -369,7 +369,7 @@ return this.H$BuildMap(ctx);
             const oprulecategory = VpcOpCtg.OpLogicalOrAnd;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = this.visit(ctx.RuleAndOrOr[i]);
-                checkThrow(isString(whichop), 'RuleExpr: op not a string');
+                checkThrow((typeof whichop === 'string'), 'RuleExpr: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl1Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
@@ -394,7 +394,7 @@ return this.H$BuildMap(ctx);
             const oprulecategory = VpcOpCtg.OpEqualityGreaterLessOrContains;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = this.visit(ctx.RuleContainsOrGreaterLessEqual[i]);
-                checkThrow(isString(whichop), 'RuleLvl1Expression: op not a string');
+                checkThrow((typeof whichop === 'string'), 'RuleLvl1Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl2Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
@@ -421,7 +421,7 @@ return this.H$BuildMap(ctx);
             const oprulecategory = VpcOpCtg.OpStringConcat;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = ctx.tkStringConcat[i].image;
-                checkThrow(isString(whichop), 'RuleLvl3Expression: op not a string');
+                checkThrow((typeof whichop === 'string'), 'RuleLvl3Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl4Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
@@ -446,7 +446,7 @@ return this.H$BuildMap(ctx);
             const oprulecategory = VpcOpCtg.OpPlusMinus;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = ctx.tkPlusOrMinus[i].image;
-                checkThrow(isString(whichop), 'RuleLvl4Expression: op not a string');
+                checkThrow((typeof whichop === 'string'), 'RuleLvl4Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl5Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
@@ -471,7 +471,7 @@ return this.H$BuildMap(ctx);
             const oprulecategory = VpcOpCtg.OpMultDivideExpDivMod;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = ctx.tkMultDivideExpDivMod[i].image;
-                checkThrow(isString(whichop), 'RuleLvl5Expression: op not a string');
+                checkThrow((typeof whichop === 'string'), 'RuleLvl5Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl6Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);

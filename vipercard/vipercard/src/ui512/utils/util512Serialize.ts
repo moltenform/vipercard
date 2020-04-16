@@ -1,5 +1,4 @@
 
-/* auto */ import { isString } from './util512Base';
 /* auto */ import { checkThrow512 } from './util512AssertCustom';
 /* auto */ import { NoParameterCtor, Util512 } from './util512';
 
@@ -27,16 +26,16 @@ export namespace Util512SerializableHelpers {
                     checkThrow512(
                         obj[prop] === undefined ||
                             obj[prop] === null ||
-                            isString(obj[prop]),
+                            (typeof obj[prop] === 'string'),
                         'we currently only support strings'
                     );
                     let propDest = prop.slice('optional_'.length);
-                    if (isString(obj[prop])) {
+                    if ((typeof obj[prop] === 'string')) {
                         objToSend[propDest] = obj[prop];
                     }
                 } else {
                     checkThrow512(
-                        isString(obj[prop]),
+                        (typeof obj[prop] === 'string'),
                         'we currently only support strings'
                     );
                     objToSend[prop] = obj[prop];
@@ -72,12 +71,12 @@ export namespace Util512SerializableHelpers {
                     checkThrow512(
                         objNew[prop] === undefined ||
                             objNew[prop] === null ||
-                            isString(objNew[prop]),
+                            (typeof objNew[prop] === 'string'),
                         'we currently only support strings'
                     );
                     let propSrc = prop.slice('optional_'.length);
                     checkThrow512(
-                        isString(incoming[propSrc]) ||
+                        (typeof incoming[propSrc] === 'string') ||
                             incoming[propSrc] === null ||
                             incoming[propSrc] === undefined,
                         `field ${prop} is not a string`
@@ -86,7 +85,7 @@ export namespace Util512SerializableHelpers {
                         incoming[propSrc] === null ? undefined : incoming[propSrc];
                 } else {
                     checkThrow512(
-                        isString(objNew[prop]),
+                        (typeof objNew[prop] === 'string'),
                         'we currently only support strings'
                     );
                     checkThrow512(
@@ -94,7 +93,7 @@ export namespace Util512SerializableHelpers {
                         `did not see required field ${prop}`
                     );
                     checkThrow512(
-                        isString(incoming[prop]),
+                        (typeof incoming[prop] === 'string'),
                         `field ${prop} not a string, only support strings`
                     );
                     objNew[prop] = incoming[prop];

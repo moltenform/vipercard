@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcElType, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
-/* auto */ import { bool, isString } from './../../ui512/utils/util512Base';
+/* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -56,7 +56,7 @@ export class VpcGettableSerialization {
                 whichWereSet[propName] = true;
                 let v = vals[propName];
                 if (VpcGettableSerialization.propNameExpectFormattedText(propName)) {
-                    if (isString(v)) {
+                    if ((typeof v === 'string')) {
                         let vAsText = FormattedText.newFromSerialized(v);
                         VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, vAsText);
                     } else {
@@ -104,7 +104,7 @@ export class VpcGettableSerialization {
             (vel as any)['_' + propName] = 0;
             vel.set(propName, v === 0 ? 1 : 0);
             vel.set(propName, v);
-        } else if (isString(v)) {
+        } else if ((typeof v === 'string')) {
             (vel as any)['_' + propName] = '';
             vel.set(propName, v.length === 0 ? ' ' : '');
             vel.set(propName, v);
@@ -135,7 +135,7 @@ export class VpcGettableSerialization {
      * use base64 if the string contains nonprintable or nonascii chars
      */
     static serializePlain(v: string | number | boolean): string | number | boolean {
-        if (isString(v) && VpcGettableSerialization.containsNonSimpleAscii(v.toString())) {
+        if ((typeof v === 'string') && VpcGettableSerialization.containsNonSimpleAscii(v.toString())) {
             return 'b64``' + VpcGettableSerialization.jsBinaryStringToUtf16Base64(v.toString());
         } else {
             return v;
@@ -146,7 +146,7 @@ export class VpcGettableSerialization {
      * decode a string encoded by serializePlain
      */
     static deserializePlain(v: string | number | boolean): string | number | boolean {
-        if (isString(v) && v.toString().startsWith('b64``')) {
+        if ((typeof v === 'string') && v.toString().startsWith('b64``')) {
             let s = v.toString();
             return VpcGettableSerialization.Base64Utf16ToJsBinaryString(s.substr('b64``'.length));
         } else {
