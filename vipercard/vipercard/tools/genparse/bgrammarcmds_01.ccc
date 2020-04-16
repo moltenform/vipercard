@@ -93,7 +93,9 @@ BuiltinCmdPlay:=... <Expr>  [tkSyntaxPlaceholder <Expr>]
 // put variable in. in rewrite, reject if "menu" is mentioned.
 // tkIdentifier here is 'before' 'after' 'into'
 // the traditional <Expr> [ tkIdentifier [ <HContainer> ]] does work for now, but breaks if an Expr can ever have 2 consecutive tkIdentifiers
-BuiltinCmdPut:=... <Expr> tkSyntaxPlaceholder tkIdentifier tkSyntaxPlaceholder [ <HContainer> ]           
+// buildmap would work fine, but returns an array for performance reasons
+// rewrites make the HContainer always present.
+BuiltinCmdPut:=... <Expr> tkSyntaxPlaceholder tkIdentifier tkSyntaxPlaceholder <HContainer>                      --->Custom--->any
 // read. show NYI in rewrite
 // reply. show NYI in rewrite
 // request. show NYI in rewrite
@@ -134,6 +136,6 @@ BuiltinCmdWait:=... <Expr> [tkIdentifier]
 // write. set NYI during rewrites
 // used internally
 CmdSend:=... <Expr> _to <Object>                    --->BuildMap
-InternalCmdRequestEval:=... <Expr>             --->BuildMap
-InternalCmdUserHandler:=... MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP             --->BuildMap
+InternalCmdRequestEval:=... <Expr>             --->Custom--->any
+InternalCmdUserHandler:=... MANYSEP{{ tkComma / <Expr> }}ENDMANYSEP             --->Custom--->any
 

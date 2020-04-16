@@ -1373,9 +1373,7 @@ this.SUBRULE1(this.RuleExpr)
 this.CONSUME4(tks.tkSyntaxPlaceholder)
 this.CONSUME1(tks.tkIdentifier)
 this.CONSUME5(tks.tkSyntaxPlaceholder)
-this.OPTION1(() => {
 this.SUBRULE1(this.RuleHContainer)
-});
 });
 
 RuleBuiltinCmdReset = this.RULE('RuleBuiltinCmdReset', () => {

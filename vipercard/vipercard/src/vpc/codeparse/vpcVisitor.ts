@@ -609,9 +609,6 @@ return this.H$BuildMap(ctx);
 }
 
 
-RuleBuiltinCmdPut(ctx: VisitingContext): IntermedMapOfIntermedVals {
-return this.H$BuildMap(ctx);
-}
 
 
 RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals {
@@ -679,15 +676,38 @@ return this.H$BuildMap(ctx);
 }
 
 
-RuleInternalCmdRequestEval(ctx: VisitingContext): IntermedMapOfIntermedVals {
-return this.H$BuildMap(ctx);
-}
 
 
-RuleInternalCmdUserHandler(ctx: VisitingContext): IntermedMapOfIntermedVals {
-return this.H$BuildMap(ctx);
-}
 /* generated code, any changes above this point will be lost: --------------- */
+
+        /**
+         * for slightly faster performance, hand-write the put command,
+         * since it is used so often
+         */
+        RuleBuiltinCmdPut(ctx: VisitingContext) {
+            return [this.visit(ctx.RuleExpr[0]), ctx.tkIdentifier[0].image, this.visit(ctx.RuleHContainer[0]) ]
+        }
+
+        /**
+         * for slightly faster performance, hand-write these commands,
+         * since they are used so often
+         */
+        RuleInternalCmdRequestEval(ctx: VisitingContext) {
+            return this.visit(ctx.RuleExpr[0])
+        }
+
+        /**
+         * for slightly faster performance, hand-write these commands,
+         * since they are used so often
+         */
+        RuleInternalCmdUserHandler(ctx: VisitingContext) {
+            let ret:VpcVal[] = []
+            let len = ctx.RuleExpr ? ctx.RuleExpr.length : 0
+            for (let i=0; i<len; i++) {
+                ret.push(this.visit(ctx.RuleExpr[i]))
+            }
+            return ret
+        }
     }
 
     let ComposedClass = VpcVisitorAddMixinMethods(VPCCustomVisitor);

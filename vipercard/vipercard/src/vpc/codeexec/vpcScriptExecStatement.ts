@@ -12,7 +12,7 @@
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, isString } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, ValHolder, getStrToEnum, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, cast, getStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -278,12 +278,11 @@ export class ExecuteStatement {
      * Evaluates any expression and saves the result to a variable or container.
      */
     goPut(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        let terms = this.h.getChildStrs(vals, tkstr.tkIdentifier, true);
-        checkThrow(terms.length === 1, longstr(`7M|(missing into, before, or after).`));
-        let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', terms[0]);
-        let val = ensureDefined(this.h.findChildVal(vals, tkstr.RuleExpr), '54|');
-        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
-
+        /* for performance, visiting a put returns a flat array */
+        let ar = vals as any
+        let val = cast(VpcVal, ar[0])
+        let prep = getStrToEnum<VpcChunkPreposition>(VpcChunkPreposition, 'VpcChunkPreposition', ar[1]);
+        let contRef = cast(RequestedContainerRef, ar[2])
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
         ChunkResolution.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);

@@ -5,13 +5,6 @@
 /* Released under the GPLv3 license */
 
 /**
- * be extra cautious in case string was made via new String
- */
-export function isString(v: unknown): v is string {
-    return bool(typeof v === 'string') || bool(v instanceof String);
-}
-
-/**
  * is it truthy? anything except false, 0, "", null, undefined, and NaN
  */
 export function bool(x: unknown): boolean {
@@ -28,6 +21,8 @@ export function trueIfDefinedAndNotNull<T>(x: O<T>): x is T {
 
 /**
  * cast to string.
+ * we used to have an isstring() check, but weird 'new String'
+ * hybrid strings are rare and banned by es-lint
  */
 export function tostring(s: unknown): string {
     /* eslint-disable-next-line no-implicit-coercion */

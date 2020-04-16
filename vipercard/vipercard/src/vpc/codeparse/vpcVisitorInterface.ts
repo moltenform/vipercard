@@ -91,7 +91,7 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdMultiply(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdPlay(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleBuiltinCmdPut(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdPut(ctx: VisitingContext): any;
     RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdReplace(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdSelect(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -105,8 +105,8 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdVisual(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleInternalCmdRequestEval(ctx: VisitingContext): IntermedMapOfIntermedVals;
-    RuleInternalCmdUserHandler(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleInternalCmdRequestEval(ctx: VisitingContext): any;
+    RuleInternalCmdUserHandler(ctx: VisitingContext): any;
 }
 
 export interface VisitingContext {

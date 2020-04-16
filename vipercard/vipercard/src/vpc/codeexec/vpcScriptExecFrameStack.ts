@@ -4,7 +4,7 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
-/* auto */ import { VpcParsed, tks, tkstr } from './../codeparse/vpcTokens';
+/* auto */ import { VpcParsed, tks } from './../codeparse/vpcTokens';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
@@ -15,9 +15,9 @@
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, getEnumToStrOrFallback, getStrToEnum, lastIfThere, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, cast, getEnumToStrOrFallback, getStrToEnum, lastIfThere, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -256,13 +256,9 @@ export class VpcExecFrameStack {
         );
 
         VpcCurrentScriptStage.origClass = 'evalGeneralVisit';
-        let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
+        let visited = this.evalGeneralVisit(parsed, curLine, true);
         VpcCurrentScriptStage.origClass = undefined;
-        checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|evalRequestedExpression wrong type');
-        checkThrow(visited.vals.RuleExpr && visited.vals.RuleExpr[0], '7v|evalRequestedExpression no result of RuleExpr');
-
-        let ret = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow(ret instanceof VpcVal, '7u|evalRequestedExpression expected a number, string, or boolean.');
+        let ret = cast(VpcVal, visited);
         VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
         return ret;
     }
@@ -270,11 +266,11 @@ export class VpcExecFrameStack {
     /**
      * run the visitor, to get a value from the CST
      */
-    protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine): VpcIntermedValBase {
+    protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine, okCustom?:boolean): VpcIntermedValBase {
         if (parsed !== null && parsed !== undefined) {
             let visitor = getChvVisitor(this.outside)
             let visited = visitor.visit(parsed);
-            checkThrow(visited instanceof VpcIntermedValBase, '7t|did not get IntermedValBase when running', curLine.allImages);
+            checkThrow(okCustom ?? (visited instanceof VpcIntermedValBase), '7t|did not get IntermedValBase when running', curLine.allImages);
             return visited;
         } else {
             checkThrow(false, '5Z|no expression was parsed');
@@ -343,7 +339,8 @@ export class VpcExecFrameStack {
         VpcCurrentScriptStage.origClass = 'visit';
         VpcCurrentScriptStage.latestVelID = curFrame.meId;
         VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
-        let visited = parsed ? this.evalGeneralVisit(parsed, curLine) : VpcVal.Empty;
+        let customOk = curLine.getParseRule() === this.cacheParsedCST.parser.RuleBuiltinCmdPut;
+        let visited = parsed ? this.evalGeneralVisit(parsed, curLine, customOk) : VpcVal.Empty;
         VpcCurrentScriptStage.currentStage = VpcErrStage.Execute;
         VpcCurrentScriptStage.latestSrcLineSeen = curLine.firstToken.startLine;
         VpcCurrentScriptStage.latestDestLineSeen = curLine;
@@ -543,30 +540,14 @@ export class VpcExecFrameStack {
     }
 
     /**
-     * from a line like myHandler x,y,z, retrieve the VpcVals (value of x y and z)
-     */
-    protected helpGetEvaledArgs(parsed: VpcParsed, curLine: VpcCodeLine): VpcVal[] {
-        let evaluated = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
-        checkThrow(evaluated instanceof IntermedMapOfIntermedVals, '7o|expected IntermedMapOfIntermedVals');
-        if (evaluated.vals[tkstr.RuleExpr] && evaluated.vals[tkstr.RuleExpr].length) {
-            let ret = evaluated.vals[tkstr.RuleExpr] as VpcVal[];
-            assertTrue(ret !== undefined, '5Q|expected RuleExpr');
-            assertTrue(
-                ret.every(v => v instanceof VpcVal),
-                '5P|every arg must be a VpcVal'
-            );
-            return ret;
-        } else {
-            return [];
-        }
-    }
-
-    /**
      * run custom handler like doMyHandler
      */
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         let newHandlerName = curLine.firstToken.image;
-        let args = this.helpGetEvaledArgs(parsed, curLine);
+        checkThrow(curLine.getParseRule() === this.cacheParsedCST.parser.RuleInternalCmdUserHandler, '')
+        let evaluated = this.evalGeneralVisit(parsed, curLine, true);
+        checkThrow(Array.isArray(evaluated), '')
+        let args = evaluated as VpcVal[]
         curFrame.next();
         this.callHandlerAndThrowIfNotExist(curFrame, args, newHandlerName);
     }
@@ -602,7 +583,7 @@ export class VpcExecFrameStack {
     protected visitSendStatement(curLine: VpcCodeLine, parsed: VpcParsed): [VpcVal, VpcElBase] {
         assertTrue(this.cacheParsedCST.parser.RuleCmdSend === curLine.getParseRule(), 'expected "send" parse rule');
 
-        let visited = this.evalGeneralVisit(parsed, curLine) as IntermedMapOfIntermedVals;
+        let visited = this.evalGeneralVisit(parsed, curLine);
         checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
         checkThrow(visited.vals.RuleExpr && visited.vals.RuleObject, 'visitSendStatement expected both RuleExpr and RuleObject');
 
