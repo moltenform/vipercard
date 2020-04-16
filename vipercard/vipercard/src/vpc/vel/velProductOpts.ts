@@ -9,7 +9,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
-/* auto */ import { bool, cProductName, vpcVersion } from './../../ui512/utils/util512Base';
+/* auto */ import { bool, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -105,8 +105,6 @@ export class VpcElProductOpts extends VpcElBase {
         getters['size'] = [PrpTyp.Num, () => 0];
         getters['stacksinuse'] = [PrpTyp.Str, () => ''];
         getters['suspended'] = [PrpTyp.Bool, () => false];
-        getters['version/long'] = [PrpTyp.Str, () => vpcVersion];
-        getters['version'] = [PrpTyp.Str, () => vpcVersion[0] + '.' + vpcVersion[1]];
         getters['itemdelimiter'] = [PrpTyp.Str, 'itemDel'];
         getters['cursor'] = [
             PrpTyp.Str,

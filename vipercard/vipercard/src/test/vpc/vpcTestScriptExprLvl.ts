@@ -15,7 +15,7 @@
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertThrows } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts, assertThrows } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -54,7 +54,7 @@ t.atest('--init--vpcTestScriptEval', async () => {
     return h.initEnvironment();
 });
 
-t.test('_evalRuleExpr,RuleLvl1', () => {
+t.test('evalRuleExpr,RuleLvl1', () => {
     let batch: [string, string][];
     batch = [
         /* basic tests */
@@ -228,7 +228,47 @@ t.test('_evalRuleExpr,RuleLvl1', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_evalRuleLvl2', () => {
+t.test('evalExprConfirmFailure', () => {
+    /* succeeds */
+    let batch: [string, string][];
+    batch = [
+        ['true and true', 'true'],
+        ['true and false', 'false'],
+        ['1 is a integer', 'true'],
+        ['1 is a integer1', 'ERR:needs one of'],
+    ]
+    h.testBatchEvaluate(batch);
+    /* fails, wrong result */
+    assertAsserts('', 'DIFF RESULT', ()=> { 
+        batch = [
+            ['true and false', 'true'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    /* fails, runtime err */
+    assertAsserts('', 'needs one of', ()=> { 
+        batch = [
+            ['1 is a integer1', 'true'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    /* fails, runtime err with wrong message */
+    assertAsserts('', 'wrong err message', ()=> { 
+        batch = [
+            ['1 is a integer1', 'ERR:(incorrectmessage)'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    /* runtime err expected but not got */
+    assertAsserts('', 'error not seen', ()=> { 
+        batch = [
+            ['true and false', 'ERR:(incorrectmessage)'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    /* same as above but happen lower in the list */
+})
+t.test('evalRuleLvl2', () => {
     let batch: [string, string][];
     batch = [
         /* Lvl2Expression, type check, invalid keywords */
@@ -354,7 +394,7 @@ t.test('_evalRuleLvl2', () => {
     ];
     h.testBatchEvalInvert(batch);
 });
-t.test('_evalRuleLvl3', () => {
+t.test('evalRuleLvl3', () => {
     let batch: [string, string][];
     batch = [
         ['"" & ""', ''],
@@ -384,7 +424,7 @@ t.test('_evalRuleLvl3', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_evalArithmetic', () => {
+t.test('evalArithmetic', () => {
     /* the communitative ones, integer */
     let batch: [string, string][];
     batch = [
@@ -559,7 +599,7 @@ t.test('_evalArithmetic', () => {
     ];
     h.testBatchEvalCommutative(batch);
 });
-t.test('_evalRuleLvl6', () => {
+t.test('evalRuleLvl6', () => {
     let batch: [string, string][];
     batch = [
         /* parens */
@@ -772,7 +812,7 @@ get false and char 1 of counting() is "z"\\counting() - cfirst`,
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_vpcvalnumbers', () => {
+t.test('vpcvalnumbers', () => {
     assertThrows('L`|', '> 1e18', () => VpcValN(Infinity));
     assertThrows('L_|', '> 1e18', () => VpcValN(Number.POSITIVE_INFINITY));
     assertThrows('L^|', '> 1e18', () => VpcValN(-Infinity));

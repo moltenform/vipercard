@@ -378,27 +378,28 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             /* put the number of card "myCard" into x */
             let resolveNum = new VelResolveNumber(this.vci.getModel());
             return VpcValN(resolveNum.go(vel));
-        } else if (prop === 'target') {
-            /* put the long target into x */
-            checkThrow(!ref, "8+|must say 'get the target' and not 'get the target of cd btn 1'");
-            return VpcValS(this.getTargetFullString(adjective));
-        } else if (prop === 'date') {
-            /* put the long date into x */
-            checkThrow(!ref, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
-            return VpcBuiltinFunctionsDateUtils.go(adjective);
         } else if (prop === 'owner') {
             /* put the owner of cd btn 1 into x */
             checkThrow(ref, "8+|must say 'get the owner of cd btn 1' and not 'get the owner'");
             return VpcValS(this.getOwnerFullString(resolved, adjective));
+        } else if (prop === 'target') {
+            /* put the long target into x */
+            checkThrow(!ref || ref.type===VpcElType.Product, "8+|must say 'get the target' and not 'get the target of cd btn 1'");
+            return VpcValS(this.getTargetFullString(adjective));
+        } else if (prop === 'date') {
+            /* put the long date into x */
+            checkThrow(!ref|| ref.type===VpcElType.Product, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
+            return VpcBuiltinFunctionsDateUtils.go(adjective);
+        } else if (prop === 'version') {
+            /* get the long version */
+            checkThrow(!ref|| ref.type===VpcElType.Product, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
+            return VpcBuiltinFunctionsDateUtils.getVersion(adjective);
         } else {
-            if (prop === 'version' && adjective === PropAdjective.Long) {
-                /* the only other prop that accepts an adjective is version. */
-                prop = 'version/long';
-            } else if (adjective !== PropAdjective.Empty) {
+            if (adjective !== PropAdjective.Empty) {
                 checkThrow(
                     false,
                     longstr(`6j|this property does not take an
-                        adjective like long (the long name of cd btn 1)`)
+                        adjective like 'long' (the long name of cd btn 1)`)
                 );
             }
 
@@ -415,10 +416,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
-     * is this a runtime property on the 'product' object?
+     * is this a runtime property on the 'product' object, or a special pseudoproperty?
      */
     IsProductProp(propName: string): boolean {
-        return VpcElProductOpts.canGetProductProp(propName);
+        return VpcElProductOpts.canGetProductProp(propName) ||
+         propName === 'target' || propName === 'date' || propName === 'version';
     }
 
     /**

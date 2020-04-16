@@ -223,22 +223,22 @@ export class TestVpcScriptRunBase {
                         msg = getParsingObjects()[1].errors[0].name + ': ' + msg
                     }
                 }
-                //~ assertWarn(
-                //~ msg.includes(expectErrMsg),
-                //~ `wrong err message, expected <${expectErrMsg}>`,
-                //~ makeWarningUseful
-                //~ );
-                if (!msg.includes(expectErrMsg) && !UI512ErrorHandling.silenceAssertMsgs) {
-                    console.error(
-                        'fghfghddfg',
-                        `wrong err message, expected <${expectErrMsg}>`,
-                        makeWarningUseful
-                    );
-                }
+                assertWarn(
+                msg.includes(expectErrMsg),
+                `wrong err message, expected <${expectErrMsg}>`,
+                makeWarningUseful
+                );
+                //~ if (!msg.includes(expectErrMsg) && !UI512ErrorHandling.silenceAssertMsgs) {
+                    //~ console.error(
+                        //~ 'fghfghddfg',
+                        //~ `wrong err message, expected <${expectErrMsg}>`,
+                        //~ makeWarningUseful
+                    //~ );
+                //~ }
             }
 
             if (expectErrLine !== undefined) {
-                assertWarnEq(expectErrLine, line, 'wrong line', makeWarningUseful);
+                assertWarnEq(expectErrLine+1, line+1, 'wrong line', makeWarningUseful);
             }
 
             if (expectPreparseErr) {
@@ -299,7 +299,7 @@ ${codeBefore}\n${codeIn}\n`,
         );
 
         if (expectErrMsg!==undefined && !caughtErr) {
-            assertWarn(false, '2U|error not seen', codeBefore, codeIn);
+            assertWarn(false, '2U|error not seen\n', codeBefore, codeIn);
         }
 
         assertTrue(

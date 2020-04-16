@@ -38,21 +38,21 @@ t.test('vpcTestScriptBasics', () => {
     ]
     h.testBatchEvaluate(batch);
     /* get a different string */
-    //~ assertAsserts('', 'assert:', ()=>{
-        //~ h.assertPreparseErrIn('x = 4', "xxxxx", 3);
-    //~ })
-    //~ assertAsserts('', 'assert:', ()=>{
-        //~ batch = [
-            //~ ['put unknownVar into x\\x', 'ERR:xxxxxx'],
-        //~ ]
-        //~ h.testBatchEvaluate(batch);
-    //~ })
-    //~ assertAsserts('', 'assert:', ()=>{
-        //~ batch = [
-            //~ ['put 9 into x\\x', '11111'],
-        //~ ]
-        //~ h.testBatchEvaluate(batch);
-    //~ })
+    assertAsserts('', 'assert:', ()=>{
+        h.assertPreparseErrLn('x = 4', "(incorrectmessage)", 3);
+    })
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put unknownVar into x\\x', 'ERR:(incorrectmessage)x'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
+    assertAsserts('', 'assert:', ()=>{
+        batch = [
+            ['put 9 into x\\x', '11111'],
+        ]
+        h.testBatchEvaluate(batch);
+    })
     /* failure expected, but succeeds */
     assertAsserts('', 'assert:', ()=>{
         h.assertPreparseErrLn('put 9 into x', "", 3);
@@ -1869,7 +1869,7 @@ repeat while false
 end if
 end repeat`,
         'interleaved within',
-        5
+        3 /* tree flatten messes with the line number a bit */
     );
     h.assertPreparseErrLn(
         `if false then
@@ -1879,7 +1879,7 @@ put "a" into x
 end if
 end repeat`,
         'interleaved within',
-        5
+        3
     );
     /* forgot to close the block */
     h.assertPreparseErr(

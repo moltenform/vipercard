@@ -6,7 +6,7 @@
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
-/* auto */ import { cAltProductName, cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, arLast, longstr } from './../../ui512/utils/util512';
 

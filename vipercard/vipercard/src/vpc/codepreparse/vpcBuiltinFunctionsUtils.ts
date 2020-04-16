@@ -1,6 +1,7 @@
 
 /* auto */ import { VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { PropAdjective } from './../vpcutils/vpcEnums';
+/* auto */ import { vpcVersion } from './../../ui512/utils/util512Base';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -46,6 +47,13 @@ export namespace VpcBuiltinFunctionsDateUtils {
             return VpcValS(getLongDate());
         } else {
             return VpcValS(getShortDate());
+        }
+    }
+    export function getVersion(adjective: PropAdjective) {
+        if (adjective === PropAdjective.Long) {
+            return VpcValS(vpcVersion)
+        } else {
+            return VpcValS(vpcVersion[0] + '.' + vpcVersion[1])
         }
     }
 }

@@ -80,11 +80,11 @@ export class SimpleUtil512Tests {
 
             //~ testCollectionUtilsCanvasWrapper,
             //~ testCollectionUtilsDraw,
-            //~ testCollectionUtil512Higher,
-            //~ testCollectionUtil512Class,
-            //~ testCollectionUtil512,
-            //~ testCollectionUtil512Assert,
-            //~ testCollectionExternalLibs
+            testCollectionUtil512Higher,
+            testCollectionUtil512Class,
+            testCollectionUtil512,
+            testCollectionUtil512Assert,
+            testCollectionExternalLibs
         ];
 
         /* run tests from low level to high level */
