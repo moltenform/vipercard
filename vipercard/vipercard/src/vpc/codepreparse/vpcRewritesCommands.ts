@@ -116,6 +116,7 @@ export class VpcRewriteForCommands {
         } else if (allImages.includes('***without***dialog***')) {
             return [this.hBuildNyi('doMenu without dialog', line[0])];
         } else {
+            /* use internalvpcdeletebghelper to delete a bg */
             /* before, we partially supported domenu by looking for string literals,
             i.e. domenu "back" could be rewritten to go back.
             that doesn't work if the domenu can be trapped, though.

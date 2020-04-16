@@ -817,7 +817,7 @@ global: freesize
 
 Examples:
 
-put the freesize into z
+put the freesize of this stack into z
 
 
 =====
@@ -827,7 +827,7 @@ global: size
 
 Examples:
 
-put the size into z
+put the size of this stack into z
 
 
 =====

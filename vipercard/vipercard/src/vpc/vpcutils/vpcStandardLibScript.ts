@@ -3,7 +3,7 @@
 /* Released under the MIT license */
 
 export class VpcStandardLibScript {
-    static handlersImplementedInSoftware = {push:true, pop:true}
+    static handlersImplementedInSoftware = {push:true, pop:true, internalvpcdeletebghelper:true}
 
     static script = `
 -- we don't need default handlers for "on mousedown" etc...
@@ -110,6 +110,32 @@ function goCardDestinationFromObjectId nextId
         return ""
     end if
 end goCardDestinationFromObjectId
+
+--on internalvpcdeletebghelper bgId
+--    if the id of the owner of this cd is bgId then
+--        -- try to find the first card that's not not in the bg and go there
+--        put "" into found
+--        repeat with x = 1 to the number of cards
+--            if the id of the owner of cd x is not bgId then
+--                put the id of cd x into found
+--                exit repeat
+--            end if
+--        end repeat
+--        if not found then
+--            answer "Could not delete background. Exiting script."
+--            exit to vipercard
+--        end if
+--        go to card id found
+--    end if
+--    put "" into toDelete
+--    repeat with x = 1 to the number of cards in bg id bgId
+--        put the id of cd x of bg id bgId into line x of toDelete
+--    end repeat
+--    repeat with x = 1 to the number of lines in toDelete
+--        doMenu "deletecard", line x of toDelete
+--    end repeat
+--end internalvpcdeletebghelper
+
 
 --on internalvpcnewbghelper
 --    put the short id of this cd into prevCard

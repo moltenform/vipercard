@@ -74,6 +74,7 @@
         // put "1,1" into cds; click at cds, to match product
         // click at "1," missing items are treated as 0, to match product
 //      you can no longer say put the result() into x, you have to say either put the result into x or put result() into x
+//      match the product: you can't say 'get the id of target' or 'get the id of target()', you have to say 'get the id of the target'
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
 tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/
@@ -206,7 +207,7 @@ ObjectBtn:=[<Ordinal>] {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6
 ObjectFld:=[<Ordinal>] {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} [ <Of> <ObjectCard> ]                                      --->Custom--->RequestedVelRef
 ObjectCard:= { _recent tkCard | _back | _forth | tkCard _id <Lvl6Expression> | [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | <Ordinal> [_marked] tkCard | <Position> [_marked] tkCard } [ <Of> <ObjectBg> ]   --->Custom--->RequestedVelRef
 ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | tkBgAtEndOfLine | <Ordinal> tkBg | <Position> tkBg } [ <Of> <ObjectStack> ]                              --->Custom--->RequestedVelRef
-ObjectStack:={tkPosition tkStack | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                                                                 --->Custom--->RequestedVelRef  
+ObjectStack:={<Position> tkStack | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                                                                 --->Custom--->RequestedVelRef  
 ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expression> | tkPart <Lvl6Expression> | <Ordinal> tkPart} [ <Of> <ObjectCard> ] }     --->Custom--->RequestedVelRef
 
 // note that "me" is different than "the target". the target returns a string that can be used as an object, but me refers to a true 

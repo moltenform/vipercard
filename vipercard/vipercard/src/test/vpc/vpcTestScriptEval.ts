@@ -2,7 +2,7 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
-/* auto */ import { cProductName, vpcVersion } from './../../ui512/utils/util512Base';
+/* auto */ import { cAltProductName, cProductName, vpcVersion } from './../../ui512/utils/util512Base';
 /* auto */ import { assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
@@ -54,21 +54,19 @@ t.test('_getProp', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     batch = [
         /* invalid */
-        [`the short id of xyz`, `ERR:We did not recognize`],
-        [`the short id of the xyz`, `ERR:We did not recognize`],
+        [`the short id of xyz`, `ERR:no variable`],
+        [`the short id of the xyz`, `ERR:no such function`],
 
         /* target, me, productOpts */
-        [`the short id of target`, `${h.elIds.btn_go}`],
         [`the short id of the target`, `${h.elIds.btn_go}`],
         [`the short id of me`, `${h.elIds.btn_go}`],
-        [`the short id of the me`, `${h.elIds.btn_go}`],
         [`the short id of ${cProductName}`, `WILD`],
-        [`the short id of the ${cProductName}`, `WILD`],
+        [`the short id of ${cAltProductName}`, `WILD`],
 
         /* stack */
         [`the short id of this stack`, `901`],
         [`the short id of next stack`, 'ERR:only accept referring to a stack'],
-        [`the short id of xyz stack`, 'ERR:only accept referring to a stack'],
+        [`the short id of stack 6`, 'ERR:only accept referring to a stack'],
 
         /* bg absolute */
         [`the short id of bg id ${h.elIds.bg_a}`, `${h.elIds.bg_a}`],
@@ -94,8 +92,8 @@ t.test('_getProp', () => {
         [`the short id of the first bg`, `${h.elIds.bg_a}`],
         [`the short id of the second bg`, `${h.elIds.bg_b}`],
         [`the short id of the next bg`, `${h.elIds.bg_c}`],
-        [`the short id of xyz bg`, `ERR:Not a valid choice of OrdinalOrPosition`],
-        [`the short id of the xyz bg`, `ERR:Not a valid choice of OrdinalOrPosition`],
+        [`the short id of xyz bg`, `ERR:parse error`],
+        [`the short id of the xyz bg`, `ERR:parse error`],
 
         /* bg with parent */
         [`the short id of bg id ${h.elIds.bg_a} of this stack`, `${h.elIds.bg_a}`],
@@ -127,8 +125,8 @@ t.test('_getProp', () => {
         [`the short id of the first card`, `${h.elIds.card_a_a}`],
         [`the short id of the second card`, `${h.elIds.card_b_b}`],
         [`the short id of the next card`, `${h.elIds.card_b_d}`],
-        [`the short id of xyz card`, `ERR:Not a valid choice of OrdinalOrPosition`],
-        [`the short id of the xyz card`, `ERR:Not a valid choice of OrdinalOrPosition`],
+        [`the short id of xyz card`, `ERR:parse err`],
+        [`the short id of the xyz card`, `ERR:parse err`],
 
         /* card with parent */
         [`the short id of card "d" of this bg`, `${h.elIds.card_b_d}`],
@@ -220,11 +218,11 @@ t.test('_vpcProperties', () => {
         ['set the dontwrap of cd fld "p1" to "tru"\\0', 'ERR:expected true or false'],
 
         /* get nonexistent props */
-        ['the notexist of cd fld "p1"', 'ERR:unknown property'],
-        ['the scrolla of cd fld "p1"', 'ERR:unknown property'],
-        ['the scrol of cd fld "p1"', 'ERR:unknown property'],
+        ['the notexist of cd fld "p1"', 'ERR:no such'],
+        ['the scrolla of cd fld "p1"', 'ERR:no such'],
+        ['the scrol of cd fld "p1"', 'ERR:no such'],
         ['the style of cd 1', 'ERR:unknown property'],
-        ['the selcaret of cd btn "p1"', 'ERR:unknown property'],
+        ['the selcaret of cd btn "p1"', 'ERR:'],
         ['the autohilite of cd fld "p1"', 'ERR:unknown property'],
         ['the autohilite of cd btn "p1"', 'true'],
         ['the abbr autohilite of cd btn "p1"', 'ERR:does not take an adjective'],
@@ -242,7 +240,7 @@ t.test('_vpcProperties', () => {
         ['set the scrolla of cd fld "p1" to 10\\0', 'ERR:unknown property'],
         ['set the scrol of cd fld "p1" to 10\\0', 'ERR:unknown property'],
         ['set the style of cd 1 to "opaque"\\0', 'ERR:unknown property'],
-        ['set the selcaret of cd btn "p1" to 100\\0', 'ERR:unknown property'],
+        ['set the selcaret of cd btn "p1" to 100\\0', 'ERR:'],
         ['set the autohilite of cd fld "p1" to true\\0', 'ERR:unknown property'],
 
         /* nonsettable props */
@@ -253,12 +251,13 @@ t.test('_vpcProperties', () => {
 
     batch = [
         /* product opts get */
-        ['the xyz', "ERR:use 'sin(4)' instead"],
-        ['the long xyz', "ERR:use 'sin(4)' instead"],
-        ['the short xyz', "ERR:use 'sin(4)' instead"],
+        ['the xyz', "ERR:no such function"],
+        ['the long xyz', "ERR:no such function"],
+        ['the short xyz', "ERR:no such function"],
         ['the environment', 'development'],
-        ['the freesize', '0'],
-        ['the size', '0'],
+        ['the freesize of this stack', '0'],
+        ['the size of this stack', '0'],
+        ['size of this stack', '0'],
         ['the stacksinuse', ''],
         ['the suspended', 'false'],
         ['the long version', `${vpcVersion}`],

@@ -151,10 +151,10 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = new RequestedVelRef(VpcElType.Stack);
             if (ctx._id && ctx._id[0]) {
                 ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectStack.name).readAsStrictNumeric(this.tmpArr);
-            } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
+            } else if (ctx.tkStackAtEndOfLine && ctx.tkStackAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
+                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else {
                 this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             }
@@ -185,7 +185,12 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef {
             let val = VpcVal.Empty;
             if (ctx.RuleHAnyAllowedVariableName && ctx.RuleHAnyAllowedVariableName[0]) {
-                val = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
+                let s:string = this.visit(ctx.RuleHAnyAllowedVariableName[0]).image;
+                checkThrow(isString(s), '')
+                let req = new RequestedContainerRef()
+                req.variable = s
+                let resolved = this.outside.ResolveContainerReadable(req)
+                val = VpcValS(resolved.getRawString())
             } else if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
                 val = this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
             } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {

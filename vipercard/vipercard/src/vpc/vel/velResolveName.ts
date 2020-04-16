@@ -10,7 +10,8 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, arLast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast, castVerifyIsStr, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
+import { Util512Higher } from '../../ui512/utils/util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -27,7 +28,7 @@ export class VelResolveName {
      */
     go(vel: VpcElBase, adjective: PropAdjective): string {
         let type = vel.getType();
-        let methodName = 'goResolveName' + VpcElType[type];
+        let methodName = 'goResolveName' + Util512.capitalizeFirst(getEnumToStrOrFallback(VpcElType, type));
         return castVerifyIsStr(Util512.callAsMethodOnClass(VelResolveName.name, this, methodName, [vel, adjective], false));
     }
 

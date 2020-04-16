@@ -606,9 +606,9 @@ Related to 'me', but not the same.
 
 Examples:
 
-put the id of target into theTarget
-
 set the width of the target to 100
+
+put the target into x
 
 =====
 number

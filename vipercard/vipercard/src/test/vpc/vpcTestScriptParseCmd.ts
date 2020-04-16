@@ -1,6 +1,5 @@
 
-/* auto */ import { VpcVisitorInterface } from './../../vpc/codeparse/vpcVisitorMixin';
-/* auto */ import { getParsingObjects, getChvVisitor } from './../../vpc/codeparse/vpcVisitor';
+/* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { BuildFakeTokens, cloneToken } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';

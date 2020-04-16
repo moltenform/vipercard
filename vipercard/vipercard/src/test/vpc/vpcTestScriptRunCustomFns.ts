@@ -7,7 +7,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { getEnumToStrOrFallback, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -1614,7 +1614,7 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
             .cachedAST.getHandlerOrThrow(script, 'handlerNotExist', btnGo.id)[0];
         checkThrow(transformedCode instanceof VpcParsedCodeCollection, '');
 
-        let got = transformedCode.lines.map(o => o.allImages ?? VpcLineCategory[o.ctg]);
+        let got = transformedCode.lines.map(o => o.allImages ?? getEnumToStrOrFallback(VpcLineCategory, o.ctg));
         got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
         let exp = expected
             .trim()

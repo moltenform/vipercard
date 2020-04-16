@@ -347,7 +347,7 @@ RuleObjectStack = this.RULE('RuleObjectStack', () => {
 this.OR1([
 {
 ALT: () => {
-this.CONSUME1(tks.tkPosition)
+this.SUBRULE1(this.RulePosition)
 this.CONSUME1(tks.tkStack)
 }
 },

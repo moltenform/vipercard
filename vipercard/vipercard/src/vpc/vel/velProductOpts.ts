@@ -101,8 +101,6 @@ export class VpcElProductOpts extends VpcElBase {
     static prodGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         /* many 'properties' here are hard-coded values for backwards-compat only */
         getters['environment'] = [PrpTyp.Str, () => 'development'];
-        getters['freesize'] = [PrpTyp.Num, () => 0];
-        getters['size'] = [PrpTyp.Num, () => 0];
         getters['stacksinuse'] = [PrpTyp.Str, () => ''];
         getters['suspended'] = [PrpTyp.Bool, () => false];
         getters['itemdelimiter'] = [PrpTyp.Str, 'itemDel'];

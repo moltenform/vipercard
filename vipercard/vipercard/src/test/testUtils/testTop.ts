@@ -50,9 +50,8 @@ export class SimpleUtil512Tests {
 
         // order tests from high to low
         let colls = [
-            //~ vpcTestCollectionScriptExprLvl,
             //~ testCollectionvpcuiServer,
-            //~ testCollectionvpcScriptEval,
+            testCollectionvpcScriptEval,
             //~ vpcTestCollectionScriptRunCustomFns,
             //~ vpcTestCollectionScriptRunCmd,
 
