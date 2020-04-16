@@ -101,6 +101,7 @@ export class VariableCollectionConstants extends VarCollection {
         this.add('center', VpcValS('center'));
         this.add('left', VpcValS('left'));
         this.add('right', VpcValS('right'));
+        this.add('centre', VpcValS('center'));
 
         /* field style */
         this.add('scrolling', VpcValS('scrolling'));

@@ -577,6 +577,7 @@ this.OPTION1(() => {
 this.CONSUME1(tks._the)
 });
 this.CONSUME1(tks._message)
+this.OPTION2(() => {
 this.OR1([
 {
 ALT: () => {
@@ -589,6 +590,7 @@ this.CONSUME1(tks._window)
 }
 }
 ]);
+});
 });
 
 RuleHSimpleContainer = this.RULE('RuleHSimpleContainer', () => {

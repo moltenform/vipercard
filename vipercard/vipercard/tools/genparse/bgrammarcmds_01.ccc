@@ -26,8 +26,8 @@ BuiltinCmdAnswer:=... <Expr> [tkSyntaxPlaceholder <Lvl6Expression> [ _or <Lvl6Ex
 BuiltinCmdAsk:=... [tkComma] <Expr> [tkSyntaxPlaceholder <Expr>]                                            
 // play beep sound.
 BuiltinCmdBeep:=... [<Expr>]
-// choose tool. rewrite will turn `choose brush tool` into `choose tool "brush"`
-// then it will get passed up to the top, where default is to actually change the tool
+// choose tool. rewrite will turn `choose brush tool` into `choose "brush"`
+// for compatibility the choose message can be trapped, but in standardlib it will call BuiltinCmdVpccalluntrappablechoose to actually change the tool
 // in vipercard this only changes the tool for script running-simulated drawing purposes
 BuiltinCmdVpccalluntrappablechoose:=... <Expr>
 // simulate click. software rewrite "with" to tkSyntaxPlaceholder. supports click at x if x contains coords.

@@ -264,7 +264,7 @@ Menu:={<Ordinal> _menu | _menu <Lvl6Expression>}                             ---
 // tkIdentifier is one of: pattern,tool,scroll,fatbits
 Window_1:=[_the] {tkCard  } _window    --->Constant|"{windowExpr}"
 Window:={<Window_1> | <MessageBox>}             --->Constant|"{windowExpr}"
-MessageBox:=[_the] _message { _box | _window }      --->Constant|"{msgBoxExpr}"
+MessageBox:=[_the] _message [ { _box | _window } ]      --->Constant|"{msgBoxExpr}"
 
 
 

@@ -3,8 +3,8 @@
 /* auto */ import { BuildFakeTokens, ChvITk, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
-/* auto */ import { VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
-/* auto */ import { arLast, findStrToEnum, longstr } from './../../ui512/utils/util512';
+/* auto */ import { VpcTool, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { arLast, findStrToEnum, getStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -50,25 +50,61 @@ export class VpcRewriteForCommands {
         if (line[1].image === 'file' || line[1].image === 'program') {
             return [this.hBuildNyi('ask ' + line[1].image, line[0])];
         }
+
         this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'password', false, ',');
         this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);
         return [line];
     }
     rewriteChoose(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, 'not enough args');
-        if (arLast(line).image === 'tool' && line.length >= 3) {
-            let s = line
-                .slice(1, -1)
-                .map(t => t.image)
-                .join(' ');
-            return [[line[0], BuildFakeTokens.inst.makeStringLiteral(line[0], s)]];
-        } else {
-            /* erase the 'tool' */
-            let found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'tool');
-            checkThrow(found !== -1, "expected to see something like 'choose brush tool'");
-            line.splice(found, 1);
-            return [line];
+
+        /* delete "tool" */
+        let found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'tool');
+        checkThrow(found !== -1, "expected to see something like 'choose brush tool'");
+        line.splice(found, 1);
+
+        /* turn "spray can" into "spray" */
+        found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'can');
+        if (found !== -1 && found !== 0) {
+            if (line[found-1].image === 'spray') {
+                line.splice(found, 1);
+            }
         }
+
+        /* turn "round rect" into "round" */
+        found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'rect');
+        if (found !== -1 && found !== 0) {
+            if (line[found-1].image === 'round') {
+                line.splice(found, 1);
+            }
+        }
+
+        /* turn "reg poly" into "reg", "regular poly" into "regular" */
+        found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'poly');
+        if (found !== -1 && found !== 0) {
+            if (line[found-1].image === 'reg' || line[found-1].image === 'regular') {
+                line.splice(found, 1);
+            }
+        }
+
+        /* turn "reg polygon" into "reg", "regular polygon" into "regular" */
+        found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'polygon');
+        if (found !== -1 && found !== 0) {
+            if (line[found-1].image === 'reg' || line[found-1].image === 'regular') {
+                line.splice(found, 1);
+            }
+        }
+
+        /* turn any plain identifiers that are valid VpcTools into string literals */
+        for (let i=0; i<line.length; i++) {
+            let im = line[i].image
+            let en = getStrToEnum<VpcTool>(VpcTool, 'VpcTool', im)
+            if (en !== undefined) {
+                line[i] = BuildFakeTokens.inst.makeStringLiteral(line[i], im)
+            }
+        }
+
+        return [line];
     }
     rewriteClick(line: ChvITk[]): ChvITk[][] {
         this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'with', false);

@@ -9,7 +9,15 @@
 /* Released under the GPLv3 license */
 
 export namespace VpcRewritesGlobal {
-    const mapSynonyms = { rect: 'rectangle', highlight:'hilite', autohighlight:'autohilite', loc:'location', botright:'bottomright' }
+    const mapSynonyms = { rect: 'rectangle', 
+    /* all these are in original product */
+    highlight:'hilite', 
+    hilight:'hilite', 
+    highlite:'hilite', 
+    autohighlight:'autohilite', 
+    autohilight:'autohilite', 
+    autohighlite:'autohilite', 
+    loc:'location', botright:'bottomright' }
     export function rewritePropertySynonyms(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[] {
         for (let i = 0; i < line.length - 1; i++) {
             if (line[i+1].image === 'of') {

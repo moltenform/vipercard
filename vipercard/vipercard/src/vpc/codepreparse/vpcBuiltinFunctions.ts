@@ -42,6 +42,7 @@ export class VpcBuiltinFunctions {
         stackspace: 0,
         systemversion: 0,
         seconds: 0,
+        tick: 0,
         ticks: 0,
         random: 1,
         round: 1,
@@ -245,6 +246,13 @@ export class VpcBuiltinFunctions {
     callSeconds(args: VpcVal[]) {
         let unixNow = Date.now() / 1000.0;
         return VpcValN(Math.trunc(unixNow - VpcBuiltinFunctions.time1904));
+    }
+
+    /**
+     * synonym
+     */
+    callTick(args: VpcVal[]) {
+        return this.callTicks(args)
     }
 
     /**

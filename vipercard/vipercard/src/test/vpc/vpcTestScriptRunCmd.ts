@@ -32,11 +32,10 @@ let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptRunCmd');
 export let vpcTestCollectionScriptRunCmd = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
-t.atest('--init--vpcTestScriptEval', async () => {
+t.atest('--init--vpcTestScriptRunCmd', async () => {
     h = new TestVpcScriptRunBase(t);
     return h.initEnvironment();
 });
-
 t.test('_execCommands choose', () => {
     let batch: [string, string][];
     batch = [

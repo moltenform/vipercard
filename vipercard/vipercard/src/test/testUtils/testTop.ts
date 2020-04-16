@@ -13,7 +13,7 @@
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
 /* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
@@ -52,13 +52,13 @@ export class SimpleUtil512Tests {
         let colls = [
             //~ testCollectionvpcuiServer,
             //~ vpcTestCollectionScriptRunCustomFns,
-            //~ vpcTestCollectionScriptRunCmd,
+            vpcTestCollectionScriptRunCmd,
 
             testCollectionvpcScriptEval,
             testCollectionvpcScriptRunSyntax,
             vpcTestCollectionScriptExprLvl,
-            testCollectionvpcScriptParseCmd,
-            testCollectionvpcScriptParseExpr,
+            //~ testCollectionvpcScriptParseCmd,
+            //~ testCollectionvpcScriptParseExpr,
             //~ testCollectionvpcChunkResolution,
             //~ testCollectionvpcElements,
             //~ testCollectionvpcuiMsgBox,
@@ -133,7 +133,7 @@ export class SimpleUtil512Tests {
         mapSeen: Map<string, boolean>
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
-        assertTrue(
+        assertWarn(
             coll.tests.length > 0 || coll.atests.length > 0,
             'O-|no tests in collection'
         );
@@ -144,7 +144,7 @@ export class SimpleUtil512Tests {
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];
             if (mapSeen.has(tstname.toLowerCase())) {
-                assertTrue(false, 'Or|duplicate test name', tstname);
+                assertWarn(false, 'Or|duplicate test name', tstname);
             }
 
             mapSeen.set(tstname.toLowerCase(), true);

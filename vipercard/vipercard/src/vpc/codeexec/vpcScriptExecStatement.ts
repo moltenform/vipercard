@@ -446,11 +446,11 @@ export class ExecuteStatement {
      * understands both "4" and "line"
      */
     protected getWhichTool(s: string): VpcTool {
-        s = s.replace(/ +/g, '_');
+        s = s.replace(/ +/g, '');
         checkThrow(s.length >= 1, 'JP|not a valid tool name.');
-        let choseNumber = Util512.parseInt(s);
-        if (choseNumber !== undefined) {
-            return originalToolNumberToTool(choseNumber);
+        let num = Util512.parseInt(s);
+        if (num !== undefined) {
+            return originalToolNumberToTool(num);
         } else {
             return getStrToEnum<VpcTool>(VpcTool, 'VpcTool', s);
         }

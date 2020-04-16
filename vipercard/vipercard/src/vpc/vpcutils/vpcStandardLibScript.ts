@@ -6,7 +6,9 @@ export class VpcStandardLibScript {
     static handlersImplementedInSoftware = {
         push: true,
         pop: true,
-        internalvpcdeletebghelper: true
+        internalvpcdeletebghelper: true,
+        choose: true,
+        domenu: true,
     };
 
     static script = `
