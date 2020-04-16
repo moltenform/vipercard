@@ -708,7 +708,7 @@ class CachedObjects {
 /**
  * retrieve cached objects, creating if needed
  */
-export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser, VpcVisitorInterface] {
+export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser] {
     if (!CachedObjects.staticCache.lexer) {
         CachedObjects.staticCache.lexer = new chevrotain.Lexer(allVpcTokens, {
             ensureOptimizations: true
@@ -719,9 +719,19 @@ export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser, VpcVisitor
         CachedObjects.staticCache.parser = new VpcChvParser();
     }
 
+    return [CachedObjects.staticCache.lexer, CachedObjects.staticCache.parser];
+}
+
+/**
+ * because the visitor is a singleton, one must provide
+ * it with the correct OutsideWorldRead before using it.
+ */
+export function getChvVisitor(outside:OutsideWorldRead):VpcVisitorInterface {
+    let parser = getParsingObjects()[1]
     if (!CachedObjects.staticCache.visitor) {
-        CachedObjects.staticCache.visitor = createVisitor(CachedObjects.staticCache.parser);
+        CachedObjects.staticCache.visitor = createVisitor(parser);
     }
 
-    return [CachedObjects.staticCache.lexer, CachedObjects.staticCache.parser, CachedObjects.staticCache.visitor];
+    CachedObjects.staticCache.visitor.outside = outside 
+    return CachedObjects.staticCache.visitor
 }

@@ -1,5 +1,4 @@
 
-/* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection, VariableCollectionConstants } from './../vpcutils/vpcVarCollection';
 /* auto */ import { VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
@@ -10,7 +9,7 @@
 /* auto */ import { VpcBuiltinMsg, VpcErr, VpcErrStage, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
-/* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
+/* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBg } from './../vel/velBg';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512AssertCustom';
@@ -27,7 +26,6 @@
  * and we'll start running code
  */
 export class VpcExecTop {
-    which = Math.random()
     globals = new VarCollection(CodeLimits.MaxGlobalVars, 'global');
     cardHistory = new RememberHistory();
     constants = new VariableCollectionConstants();
@@ -50,10 +48,6 @@ export class VpcExecTop {
         this.runStatements.outside = outside;
         this.runStatements.h.outside = outside;
         this.cardHistory.keepBeforeEnd = true;
-
-        /* provide read-only access to the visitor */
-        let visitor = getParsingObjects()[2];
-        visitor.outside = outside as OutsideWorldRead;
     }
 
     /**

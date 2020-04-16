@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcVisitorInterface } from './../../vpc/codeparse/vpcVisitorMixin';
-/* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
+/* auto */ import { getParsingObjects, getChvVisitor } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { BuildFakeTokens, cloneToken } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
@@ -275,12 +275,10 @@ export class TestParseHelpers {
     static instance = new TestParseHelpers();
     lexer: chevrotain.Lexer;
     parser: VpcChvParser;
-    visitor: VpcVisitorInterface;
     constructor() {
-        [this.lexer, this.parser, this.visitor] = getParsingObjects();
+        [this.lexer, this.parser] = getParsingObjects();
         assertTrue(this.lexer, '1<|could not getParsingObjects');
         assertTrue(this.parser, '1;|could not getParsingObjects');
-        assertTrue(this.visitor, '1;|could not getParsingObjects');
     }
 
     /**

@@ -1,5 +1,5 @@
 
-/* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
+/* auto */ import { getChvVisitor } from './../codeparse/vpcVisitor';
 /* auto */ import { VarCollection } from './../vpcutils/vpcVarCollection';
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
@@ -272,7 +272,8 @@ export class VpcExecFrameStack {
      */
     protected evalGeneralVisit(parsed: VpcParsed, curLine: VpcCodeLine): VpcIntermedValBase {
         if (parsed !== null && parsed !== undefined) {
-            let visited = getParsingObjects()[2].visit(parsed);
+            let visitor = getChvVisitor(this.outside)
+            let visited = visitor.visit(parsed);
             checkThrow(visited instanceof VpcIntermedValBase, '7t|did not get IntermedValBase when running', curLine.allImages);
             return visited;
         } else {
