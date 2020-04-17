@@ -302,7 +302,7 @@ export enum VpcTool {
     __last = Spray,
     __AlternateForm__Round = Roundrect,
     __AlternateForm__Rectangle = Rect,
-    __AlternateForm__Spraycan = Spray,
+    __AlternateForm__Spraycan = Spray
 }
 
 /**

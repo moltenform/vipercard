@@ -189,7 +189,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx._me && ctx._me[0]) {
                 ret = new RequestedVelRef(VpcElType.Unknown);
                 ret.isReferenceToMe = true;
-            }else if (ctx._target && ctx._target[0]) {
+            } else if (ctx._target && ctx._target[0]) {
                 ret = new RequestedVelRef(VpcElType.Unknown);
                 ret.isReferenceToTarget = true;
             } else {
@@ -208,6 +208,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 req.variable = s;
                 let resolved = this.outside.ResolveContainerReadable(req);
                 val = VpcValS(resolved.getRawString());
+            } else if (ctx._target && ctx._target[0]) {
+                /* here we're looking up a true object, not reading the results of a variable */
+                let ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToTarget = true;
+                return ref
             } else if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
                 val = this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
             } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
@@ -265,6 +270,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 checkThrow(false, "we don't yet support custom menus");
             } else if (ctx.RuleMessageBox && ctx.RuleMessageBox[0]) {
                 ret.variable = LogToReplMsgBox.redirectThisVariableToMsgBox;
+            } else if (ctx._target && ctx._target[0]) {
+                ret.vel = new RequestedVelRef(VpcElType.Unknown);
+                ret.vel.isReferenceToTarget = true;
             } else if (ctx._selection && ctx._selection[0]) {
                 ret.vel = new RequestedVelRef(VpcElType.Fld);
                 ret.vel.lookByName = 'there is no selection';

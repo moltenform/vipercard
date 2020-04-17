@@ -184,7 +184,7 @@ export class VpcLineToCodeObj {
      * this line is a call to a custom handler "myHandler 1,2,3"
      */
     goCustomHandler(line: ChvITk[], output: VpcCodeLine) {
-        let cmd = line[0].image.toLowerCase()
+        let cmd = line[0].image.toLowerCase();
         if (listOfAllBuiltinCommandsInOriginalProduct[cmd] && !VpcStandardLibScript.handlersImplementedInSoftware[cmd]) {
             checkThrow(false, "It looks like we haven't implemented this command yet.");
         }

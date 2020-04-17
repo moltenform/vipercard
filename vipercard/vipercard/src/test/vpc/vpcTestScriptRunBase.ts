@@ -208,12 +208,20 @@ export class TestVpcScriptRunBase {
                 expectErrLine -= 1; /* from 1-based index */
             }
             if (line >= 0 && line < lns.length) {
-                makeWarningUseful += `culprit line: <${lns[line].replace(/\s+/, ' ').trim()}>`
+                makeWarningUseful += `culprit line: <${lns[line]
+                    .replace(/\s+/, ' ')
+                    .trim()}>`;
                 if (bool(expectPreparseErr) || expectErrMsg) {
-                    makeWarningUseful += ` lines: <${lns.join('; ').replace(/\s+/, ' ').trim()}>`;
+                    makeWarningUseful += ` lines: <${lns
+                        .join('; ')
+                        .replace(/\s+/, ' ')
+                        .trim()}>`;
                 }
             } else {
-                makeWarningUseful += `culprit lines: <${lns.join('; ').replace(/\s+/, ' ').trim()}>`;
+                makeWarningUseful += `culprit lines: <${lns
+                    .join('; ')
+                    .replace(/\s+/, ' ')
+                    .trim()}>`;
             }
             makeWarningUseful = makeWarningUseful.replace(/global testresult; /g, '');
             makeWarningUseful += ` v=${velId} msg=\n${msg}`;
@@ -354,7 +362,7 @@ put ${s} into testresult`;
     }
 
     testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
-        assertWarn(tests.length > 0, '')
+        assertWarn(tests.length > 0, '');
         let getBeforeLine = (s: string): [string, string] => {
             let ptsWithRes = s.split('{RESULT}');
             if (ptsWithRes.length > 1) {
@@ -369,7 +377,9 @@ put ${s} into testresult`;
 
         let testsErr = tests.filter(item => item[1].startsWith('ERR:'));
         let testsPreparseErr = tests.filter(item => item[1].startsWith('PREPARSEERR:'));
-        let testsNoErr = tests.filter(item => !item[1].startsWith('ERR:') && !item[1].startsWith('PREPARSEERR:'));
+        let testsNoErr = tests.filter(
+            item => !item[1].startsWith('ERR:') && !item[1].startsWith('PREPARSEERR:')
+        );
         this.vcstate.runtime.codeExec.globals.set('donewithbatch', VpcValS('0'));
         let codeIn = `global donewithbatch\nput 0 into donewithbatch\n`;
         for (let i = 0; i < testsNoErr.length; i++) {
@@ -389,7 +399,7 @@ put ${s} into testresult`;
             let isDone = this.vcstate.runtime.codeExec.globals.get(`donewithbatch`);
             if ('1' !== isDone.readAsString()) {
                 assertWarn(false, '2R|did not complete every test?');
-                break
+                break;
             }
 
             let got = this.vcstate.runtime.codeExec.globals.get(`testresult${i}`);
@@ -414,46 +424,68 @@ put ${s} into testresult`;
             );
         }
 
-        for (let i=0; i<testsPreparseErr.length; i++) {
+        for (let i = 0; i < testsPreparseErr.length; i++) {
             /* for convenience allow "foo()\\0" but we'll ignore the 0. */
             let pts = getBeforeLine(testsPreparseErr[i][0]);
-            let line = coalesceIfFalseLike(pts[0], pts[1])
+            let line = coalesceIfFalseLike(pts[0], pts[1]);
             let expectErr = testsPreparseErr[i][1].replace(/PREPARSEERR:/g, '');
-            let errOnLine = 3
+            let errOnLine = 3;
             let tryLine = Util512.parseInt(expectErr.split(':')[0]);
             if (expectErr.includes(':') && tryLine !== undefined) {
                 errOnLine = tryLine;
                 expectErr = expectErr.split(':')[1];
             }
 
-            this.assertPreparseErrLn(line, expectErr, errOnLine)
+            this.assertPreparseErrLn(line, expectErr, errOnLine);
         }
     }
 
-    protected confirmCorrectResult(floatingPoint: boolean, got: VpcVal, testsNoErr: [string, string][], i: number) {
+    protected confirmCorrectResult(
+        floatingPoint: boolean,
+        got: VpcVal,
+        testsNoErr: [string, string][],
+        i: number
+    ) {
         if (floatingPoint) {
             assertWarn(got.isItNumeric(), '2Q|not numeric', got.readAsString());
-            assertWarnEq(got.readAsString().trim(), got.readAsString(), '2P|why does it have whitespace');
+            assertWarnEq(
+                got.readAsString().trim(),
+                got.readAsString(),
+                '2P|why does it have whitespace'
+            );
             let expectString = testsNoErr[i][1];
             assertWarn(isFinite(parseFloat(expectString)), '2O|not numeric');
-            if (this.evalHelpers
-                .evalOp(VpcValN(parseFloat(expectString)), got, VpcOpCtg.OpEqualityGreaterLessOrContains, '==')
-                .readAsString() !== 'true') {
+            if (
+                this.evalHelpers
+                    .evalOp(
+                        VpcValN(parseFloat(expectString)),
+                        got,
+                        VpcOpCtg.OpEqualityGreaterLessOrContains,
+                        '=='
+                    )
+                    .readAsString() !== 'true'
+            ) {
                 if (!UI512ErrorHandling.silenceAssertMsgs) {
-                    console.error(` input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
+                    console.error(
+                        ` input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`
+                    );
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
                 }
                 //~ assertWarn(false, 'DIFF RESULT');
                 console.error('DIFF RESULT dfgdfgdfg');
             }
-        }
-        else {
+        } else {
             let gt = got.readAsString();
             let expt = testsNoErr[i][1];
             if (gt !== expt) {
                 if (!UI512ErrorHandling.silenceAssertMsgs) {
-                    console.error(`DIFF RESULT input=${testsNoErr[i][0].replace(/\n/g, '; ')} expected=`);
+                    console.error(
+                        `DIFF RESULT input=${testsNoErr[i][0].replace(
+                            /\n/g,
+                            '; '
+                        )} expected=`
+                    );
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
                 }

@@ -8,7 +8,7 @@ export class VpcStandardLibScript {
         pop: true,
         internalvpcdeletebghelper: true,
         choose: true,
-        domenu: true,
+        domenu: true
     };
 
     static script = `

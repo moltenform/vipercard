@@ -9,26 +9,29 @@
 /* Released under the GPLv3 license */
 
 export namespace VpcRewritesGlobal {
-    const mapSynonyms = { rect: 'rectangle', 
-    /* all these are in original product */
-    highlight:'hilite', 
-    hilight:'hilite', 
-    highlite:'hilite', 
-    autohighlight:'autohilite', 
-    autohilight:'autohilite', 
-    autohighlite:'autohilite', 
-    loc:'location', botright:'bottomright' }
-    export function rewritePropertySynonyms(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[] {
+    const mapSynonyms = {
+        rect: 'rectangle',
+        /* all these are in original product */
+        highlight: 'hilite',
+        hilight: 'hilite',
+        highlite: 'hilite',
+        autohighlight: 'autohilite',
+        autohilight: 'autohilite',
+        autohighlite: 'autohilite',
+        loc: 'location',
+        botright: 'bottomright'
+    };
+    export function rewritePropertySynonyms(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
         for (let i = 0; i < line.length - 1; i++) {
-            if (line[i+1].image === 'of') {
-                let mapped = mapSynonyms[line[i].image]
+            if (line[i + 1].image === 'of') {
+                let mapped = mapSynonyms[line[i].image];
                 if (mapped) {
-                    line[i] = rw.tokenFromEnglishTerm(mapped, line[i])
+                    line[i] = rw.tokenFromEnglishTerm(mapped, line[i]);
                 }
             }
         }
 
-        return line
+        return line;
     }
     /**
      * from "short id of fld 1" to "short id of bg fld 1"

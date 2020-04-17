@@ -255,13 +255,12 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             let resolved = this.ResolveVelRef(container.vel);
             let vel = resolved[0];
             checkThrow(vel instanceof VpcElBase, `8;|element not found`);
-            let asFld = vel as VpcElField;
             checkThrow(
-                asFld instanceof VpcElField,
+                vel instanceof VpcElField,
                 longstr(`6[|currently we only support reading text from a
                     fld. to read label of button, use 'the label of cd btn 1'`)
             );
-            return new ReadableContainerField(asFld, resolved[1].id);
+            return new ReadableContainerField(vel, resolved[1].id);
         } else if (container.variable) {
             return new ReadableContainerVar(this as OutsideWorldRead, container.variable);
         } else {
@@ -277,15 +276,14 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (container.vel) {
             let resolved = this.ResolveVelRef(container.vel);
             let vel = resolved[0];
-            checkThrow(vel instanceof VpcElBase, `8;|element not found`);
-            let asFld = vel as VpcElField;
+            checkThrow(vel, `8;|element not found`);
             checkThrow(
-                asFld instanceof VpcElField,
+                vel instanceof VpcElField,
                 longstr(`currently we only support writing text to
                     a fld. to write label of button, use 'the label of cd btn 1'`)
             );
 
-            return new WritableContainerField(asFld, resolved[1].id);
+            return new WritableContainerField(vel, resolved[1].id);
         } else if (container.variable) {
             return new WritableContainerVar(this, container.variable);
         } else {
@@ -593,8 +591,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     protected getOwnerFullString(resolved: [O<VpcElBase>, VpcElCard], adjective: PropAdjective) {
         /* get a longer form of the id unless specifically said "short" */
         checkThrow(resolved[0], 'the object was not found');
-        if (resolved[0].getType() === VpcElType.Stack || resolved[0].getType()===VpcElType.Product) {
-            checkThrow(false, "Cannot get owner of this type of object.")
+        if (resolved[0].getType() === VpcElType.Stack || resolved[0].getType() === VpcElType.Product) {
+            checkThrow(false, 'Cannot get owner of this type of object.');
         }
 
         let owner = this.vci.getModel().getOwnerUntyped(resolved[0]);

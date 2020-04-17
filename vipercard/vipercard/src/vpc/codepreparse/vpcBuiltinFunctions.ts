@@ -252,7 +252,7 @@ export class VpcBuiltinFunctions {
      * synonym
      */
     callTick(args: VpcVal[]) {
-        return this.callTicks(args)
+        return this.callTicks(args);
     }
 
     /**

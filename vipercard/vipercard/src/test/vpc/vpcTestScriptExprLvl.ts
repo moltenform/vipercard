@@ -240,8 +240,8 @@ t.test('evalExprConfirmFailure', () => {
     h.testBatchEvaluate(batch);
     //~ /* fails, wrong result */
     //~ assertAsserts('', 'DIFF RESULT', () => {
-        //~ batch = [['true and false', 'true']];
-        //~ h.testBatchEvaluate(batch);
+    //~ batch = [['true and false', 'true']];
+    //~ h.testBatchEvaluate(batch);
     //~ });
     /* fails, runtime err */
     assertAsserts('', 'needs one of', () => {

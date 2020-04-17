@@ -271,7 +271,7 @@ export class VpcExecFrameStack {
             let visitor = getChvVisitor(this.outside);
             let visited = visitor.visit(parsed);
             checkThrow(
-                okCustom || (visited instanceof VpcIntermedValBase),
+                okCustom || visited instanceof VpcIntermedValBase,
                 '7t|did not get IntermedValBase when running',
                 curLine.allImages
             );
@@ -565,10 +565,10 @@ export class VpcExecFrameStack {
             Util512.freezeRecurse(newFrame.args);
             if (vel.getType() === VpcElType.Product && !curFrame.dynamicCodeOrigin) {
                 /* don't let the debugger say that the error was in standardlib */
-                newFrame.dynamicCodeOrigin = [curFrame.meId, curLine.firstToken.startLine ?? 0]
+                newFrame.dynamicCodeOrigin = [curFrame.meId, curLine.firstToken.startLine ?? 0];
             } else if (vel.getType() === VpcElType.Product) {
                 /* e.g. some code in standardlib is calling other code in standardlib */
-                newFrame.dynamicCodeOrigin = curFrame.dynamicCodeOrigin
+                newFrame.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
             }
         } else {
             if (new CheckReservedWords().isBuiltinHandler(handlerName.toLowerCase())) {
@@ -723,7 +723,7 @@ export class VpcExecFrameStack {
         checkThrowEq(3, curLine.excerptToParse.length, '');
         checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, '');
         let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
-        let variable:O<string>
+        let variable: O<string>;
         if (curLine.excerptToParse.length >= 2) {
             checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, '');
             variable = curLine.excerptToParse[2].image;

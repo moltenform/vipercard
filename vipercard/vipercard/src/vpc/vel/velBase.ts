@@ -286,7 +286,10 @@ export abstract class VpcElSizable extends VpcElBase {
         getters['topleft'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y}`];
         getters['bottomright'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + me._w},${me._y + me._h}`];
         getters['rectangle'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x},${me._y},${me._x + me._w},${me._y + me._h}`];
-        getters['location'] = [PrpTyp.Str, (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`];
+        getters['location'] = [
+            PrpTyp.Str,
+            (me: VpcElSizable) => `${me._x + Math.trunc(me._w / 2)},${me._y + Math.trunc(me._h / 2)}`
+        ];
     }
 
     /**

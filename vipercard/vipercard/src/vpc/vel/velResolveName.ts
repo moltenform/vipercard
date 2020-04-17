@@ -139,13 +139,13 @@ export class VelResolveName {
      */
     protected goResolveNameStack(vel: VpcElStack, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElStack, 'J<|');
-        let nm = vel.getS('name')
+        let nm = vel.getS('name');
         if (adjective === PropAdjective.Short) {
             return nm;
         } else if (adjective === PropAdjective.Long) {
-            return `stack "Hard Drive:${nm}"`
+            return `stack "Hard Drive:${nm}"`;
         } else {
-            return `stack "${nm}"`
+            return `stack "${nm}"`;
         }
     }
 

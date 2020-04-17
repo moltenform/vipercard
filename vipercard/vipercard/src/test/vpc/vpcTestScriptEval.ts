@@ -61,10 +61,13 @@ t.test('_getProp', () => {
         confirmed these in emulator */
         [`the short id of the target`, `${h.elIds.btn_go}`],
         [`the short id of target`, `${h.elIds.btn_go}`],
-        [`put 1 into target\\0`, `ERR:kkkk`],
+        [`put 1 into target\\0`, `ERR:writing text to`],
         [`the short id of target()`, `ERR:parse err`],
         [`the short id of (target())`, `ERR:no such function`],
-        [`the short id of (target)`, `ERR:notfound`], /* tries to pull its contents */
+        [
+            `the short id of (target)`,
+            `ERR:only support reading text`
+        ] /* tries to pull its contents */,
         [`the short id of the me`, `ERR:parse err`],
         [`the short id of me()`, `ERR:parse err`],
         [`the short id of (me)`, `ERR:parse err`],
@@ -394,22 +397,55 @@ t.test('_vpcProperties', () => {
         ['the rect of cd btn "p1"', '10,20,30,40'],
         ['set the rect of cd btn "p1" to " 10 , 20 , 30 , 40 "\\0', '0'],
         ['the rect of cd btn "p1"', '10,20,30,40'],
-        ['set the rect of cd btn "p1" to " 10 , 20.0000000001 , 29.99999999999 , 40 "\\0', '0'],
+        [
+            'set the rect of cd btn "p1" to " 10 , 20.0000000001 , 29.99999999999 , 40 "\\0',
+            '0'
+        ],
         ['the rect of cd btn "p1"', '10,20,30,40'],
         ['set the rect of cd btn "p1" to 10\\0', 'ERR:Not a list of integers'],
         ['set the rect of cd btn "p1" to 10,20\\0', 'ERR:expected 4 numbers but got 2'],
-        ['set the rect of cd btn "p1" to 10,20,30\\0', 'ERR:expected 4 numbers but got 3'],
+        [
+            'set the rect of cd btn "p1" to 10,20,30\\0',
+            'ERR:expected 4 numbers but got 3'
+        ],
         ['set the rect of cd btn "p1" to "10"\\0', 'ERR:Not a list of integers'],
         ['set the rect of cd btn "p1" to "10,20"\\0', 'ERR:expected 4 numbers but got 2'],
-        ['set the rect of cd btn "p1" to "10,20,30"\\0', 'ERR:expected 4 numbers but got 3'],
-        ['set the rect of cd btn "p1" to "10,20,30,40a"\\0', 'ERR:Not a list of integers'],
-        ['set the rect of cd btn "p1" to "10,20,30a,40"\\0', 'ERR:Not a list of integers'],
-        ['set the rect of cd btn "p1" to "10,20a,30,40"\\0', 'ERR:Not a list of integers'],
-        ['set the rect of cd btn "p1" to "10a,20,30,40"\\0', 'ERR:Not a list of integers'],
-        ['set the rect of cd btn "p1" to "10,20,30,40.1"\\0', 'ERR:Not a list of integers'],
-        ['set the rect of cd btn "p1" to "10,20,30.1,40"\\0', 'ERR:Not a list of integers'],
-        ['set the rect of cd btn "p1" to "10,20.1,30,40"\\0', 'ERR:Not a list of integers'],
-        ['set the rect of cd btn "p1" to "10.1,20,30,40"\\0', 'ERR:Not a list of integers'],
+        [
+            'set the rect of cd btn "p1" to "10,20,30"\\0',
+            'ERR:expected 4 numbers but got 3'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10,20,30,40a"\\0',
+            'ERR:Not a list of integers'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10,20,30a,40"\\0',
+            'ERR:Not a list of integers'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10,20a,30,40"\\0',
+            'ERR:Not a list of integers'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10a,20,30,40"\\0',
+            'ERR:Not a list of integers'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10,20,30,40.1"\\0',
+            'ERR:Not a list of integers'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10,20,30.1,40"\\0',
+            'ERR:Not a list of integers'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10,20.1,30,40"\\0',
+            'ERR:Not a list of integers'
+        ],
+        [
+            'set the rect of cd btn "p1" to "10.1,20,30,40"\\0',
+            'ERR:Not a list of integers'
+        ],
         ['set the topleft of cd btn "p1" to "10"\\0', 'ERR:Not a list of integers'],
         ['set the topleft of cd btn "p1" to "10,20a"\\0', 'ERR:Not a list of integers'],
         ['set the topleft of cd btn "p1" to "10a,20"\\0', 'ERR:Not a list of integers'],
@@ -1232,12 +1268,12 @@ t.test('_builtinFunctions', () => {
         ['the result', ''],
 
         /* we now accept fn calls without parens. */
-        ['the screenrect', "0,0,928,416"],
-        ['the sin', "ERR:arg expected"],
-        ['the offset', "ERR:args expected"],
-        ['the random', "ERR:args expected"],
+        ['the screenrect', '0,0,928,416'],
+        ['the sin', 'ERR:arg expected'],
+        ['the offset', 'ERR:args expected'],
+        ['the random', 'ERR:args expected'],
         ['round(100 * the sin of 2)', '91'],
-        ['the xyz', "ERR:no such function"],
+        ['the xyz', 'ERR:no such function'],
         ['sin of 2', 'ERR:parse err']
     ];
     h.testBatchEvaluate(batch);
@@ -1286,7 +1322,7 @@ t.test('_builtinFunctions', () => {
         ['min(",1,2,3")', '0'],
         ['min(",1,2,3,")', '0'],
         ['min("1,2,3,,")', '0'],
-        ['sum("")', 'ERR:Wrong arguments'], /* confirmed in emulator */
+        ['sum("")', 'ERR:Wrong arguments'] /* confirmed in emulator */,
         ['sum(1)', '1'],
         ['sum("1")', '1'],
         ['sum(" 1 ")', '1'],
@@ -1319,7 +1355,7 @@ t.test('_builtinFunctions', () => {
         ['ticks() - ticks() >= 0', 'true'],
         ['the ticks - the ticks >= 0', 'true'],
         ['seconds() - seconds() >= 0', 'true'],
-        ['the seconds - the seconds >= 0', 'true'],
+        ['the seconds - the seconds >= 0', 'true']
     ];
 
     h.testBatchEvaluate(batch);

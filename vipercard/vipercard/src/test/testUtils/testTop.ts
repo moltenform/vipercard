@@ -56,7 +56,7 @@ export class SimpleUtil512Tests {
 
             testCollectionvpcScriptEval,
             testCollectionvpcScriptRunSyntax,
-            vpcTestCollectionScriptExprLvl,
+            vpcTestCollectionScriptExprLvl
             //~ testCollectionvpcScriptParseCmd,
             //~ testCollectionvpcScriptParseExpr,
             //~ testCollectionvpcChunkResolution,

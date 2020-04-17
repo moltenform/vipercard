@@ -66,7 +66,7 @@ export class VpcRewriteForCommands {
         /* turn "spray can" into "spray" */
         found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'can');
         if (found !== -1 && found !== 0) {
-            if (line[found-1].image === 'spray') {
+            if (line[found - 1].image === 'spray') {
                 line.splice(found, 1);
             }
         }
@@ -74,7 +74,7 @@ export class VpcRewriteForCommands {
         /* turn "round rect" into "round" */
         found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'rect');
         if (found !== -1 && found !== 0) {
-            if (line[found-1].image === 'round') {
+            if (line[found - 1].image === 'round') {
                 line.splice(found, 1);
             }
         }
@@ -82,7 +82,7 @@ export class VpcRewriteForCommands {
         /* turn "reg poly" into "reg", "regular poly" into "regular" */
         found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'poly');
         if (found !== -1 && found !== 0) {
-            if (line[found-1].image === 'reg' || line[found-1].image === 'regular') {
+            if (line[found - 1].image === 'reg' || line[found - 1].image === 'regular') {
                 line.splice(found, 1);
             }
         }
@@ -90,17 +90,17 @@ export class VpcRewriteForCommands {
         /* turn "reg polygon" into "reg", "regular polygon" into "regular" */
         found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'polygon');
         if (found !== -1 && found !== 0) {
-            if (line[found-1].image === 'reg' || line[found-1].image === 'regular') {
+            if (line[found - 1].image === 'reg' || line[found - 1].image === 'regular') {
                 line.splice(found, 1);
             }
         }
 
         /* turn any plain identifiers that are valid VpcTools into string literals */
-        for (let i=0; i<line.length; i++) {
-            let im = line[i].image
-            let en = findStrToEnum<VpcTool>(VpcTool, im)
+        for (let i = 0; i < line.length; i++) {
+            let im = line[i].image;
+            let en = findStrToEnum<VpcTool>(VpcTool, im);
             if (en !== undefined) {
-                line[i] = BuildFakeTokens.inst.makeStringLiteral(line[i], im)
+                line[i] = BuildFakeTokens.inst.makeStringLiteral(line[i], im);
             }
         }
 
@@ -222,7 +222,7 @@ if there is a %ARG0% card then
 end if`;
         } else {
             /* the id might refer to a bg or stack, we will correctly handle that.
-            also note that `the id of back` is correctly understood. 
+            also note that `the id of back` is correctly understood.
             to match the product, we need to say 'short id' */
             template = `
 if there is a %ARG0% then
