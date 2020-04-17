@@ -334,10 +334,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         }
 
         if (!resolved[0]) {
-            checkThrow(false, `8/|could not set ${prop}, could not find that object.`)
+            checkThrow(false, `8/|could not set ${prop}, could not find that object.`);
         }
-        
-        let vel = resolved[0]
+
+        let vel = resolved[0];
         let cardId = resolved[1].id;
         if (chunk) {
             let fld = vel as VpcElField;
@@ -360,10 +360,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         }
 
         if (!resolved[0]) {
-            checkThrow(false, `8-|could not get ${prop}, could not find that object.`)
+            checkThrow(false, `8-|could not get ${prop}, could not find that object.`);
         }
 
-        let vel = resolved[0]
+        let vel = resolved[0];
         let cardId = resolved[1].id;
         let resolver = new VelResolveName(this.vci.getModel());
         /* handled here are the cases where "adjective" matters */

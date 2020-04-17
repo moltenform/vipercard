@@ -12,7 +12,7 @@
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, arLast, castVerifyIsStr, getStrToEnum, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, arLast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 
@@ -104,8 +104,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return ret;
         }
 
-        
-
         RuleObjectCard(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Card);
             if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
@@ -114,7 +112,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx._marked && ctx._marked[0]) {
                 ret.cardLookAtMarkedOnly = true;
             }
-            
+
             if (ctx._recent && ctx._recent[0]) {
                 ret.cardIsRecentHistory = 'recent';
             } else if (ctx._back && ctx._back[0]) {
@@ -132,11 +130,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
-                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression); 
+                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else {
-                checkThrow(false, "no branch taken")
+                checkThrow(false, 'no branch taken');
             }
 
             return ret;
@@ -151,16 +149,16 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectBg.name).readAsStrictNumeric(
                     this.tmpArr
                 );
-            }  else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
+            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
-            }else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
+            } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else {
-                checkThrow(false, "no branch taken")
+                checkThrow(false, 'no branch taken');
             }
 
             return ret;
@@ -174,14 +172,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     tkstr.RuleLvl6Expression,
                     this.RuleObjectStack.name
                 ).readAsStrictNumeric(this.tmpArr);
-            }  else if (ctx.RulePosition && ctx.RulePosition[0]) {
+            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else if (ctx.tkStackAtEndOfLine && ctx.tkStackAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
             } else {
-                checkThrow(false, "no branch taken")
+                checkThrow(false, 'no branch taken');
             }
 
             return ret;
@@ -218,7 +216,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 /* here we're looking up a true object, not reading the results of a variable */
                 let ref = new RequestedVelRef(VpcElType.Unknown);
                 ref.isReferenceToTarget = true;
-                return ref
+                return ref;
             } else if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
                 val = this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
             } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {

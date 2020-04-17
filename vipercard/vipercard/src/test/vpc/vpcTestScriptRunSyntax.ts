@@ -401,20 +401,6 @@ put x into x\\x`,
     }
 });
 t.test('ifStatementsAndRepeats', () => {
-    /*
-        important to reset flags in a loop:
-        the state of which if branch has been taken
-        must not be used after encountering "next repeat"
-            repeat with x = 1 to 4
-                if x = 2 then
-                    print "a"
-                else if x = 3 then
-                    next repeat
-                else
-                    print "b"
-                end if
-            end repeat
-        */
     let batch: [string, string][];
     batch = [
         [
@@ -997,6 +983,74 @@ else
 put "_" into s
 end if\\s`,
             `a 1 2 3`
+        ],
+        /*
+        important to reset flags in a loop:
+        the state of which if branch has been taken
+        must not be re-used after encountering "next repeat"
+        */
+        [
+            `put "" into s
+    repeat with x = 1 to 4
+        if x = 2 then
+            put "a" after s
+        else if x = 3 then
+            next repeat
+        else
+            put "b" after s
+        end if
+        put "." after s
+    end repeat
+        \\s`,
+            `b.a.b.`
+        ],
+        /* test that flags are reset 2 */
+        [
+            `put "" into s
+    repeat with x = 1 to 4
+        if x = 2 then
+            next repeat
+        else if x = 3 then
+            put "a" after s
+        else
+            put "b" after s
+        end if
+        put "." after s
+    end repeat
+        \\s`,
+            `b.a.b.`
+        ] /* test that flags are reset 3 */,
+        [
+            `put "" into s
+    repeat with x = 4 down to 1
+        if x = 2 then
+            next repeat
+        else if x = 3 then
+            put "a" after s
+        else
+            put "b" after s
+        end if
+        put "." after s
+    end repeat
+        \\s`,
+            `b.a.b.`
+        ] /* test that flags are reset 4 */,
+        [
+            `put "" into s
+    repeat with x = 4 down to 1
+        if x = 2 then
+            next repeat
+        else if x = 4 then
+            put "a" after s
+        else if x = 3 then
+            put "c" after s
+        else
+            put "b" after s
+        end if
+        put "." after s
+    end repeat
+        \\s`,
+            `a.c.b.`
         ]
     ];
     h.testBatchEvaluate(batch);

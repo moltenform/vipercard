@@ -296,14 +296,19 @@ export class VelResolveReference {
             return [this.model.stack, currentCard];
         } else if (ref.lookByAbsolute === 1) {
             return [this.model.stack, currentCard];
-        } else if (ref.lookByRelative === OrdinalOrPosition.Any ||
+        } else if (
+            ref.lookByRelative === OrdinalOrPosition.Any ||
             ref.lookByRelative === OrdinalOrPosition.Middle ||
             ref.lookByRelative === OrdinalOrPosition.Last ||
             ref.lookByRelative === OrdinalOrPosition.First ||
-            ref.lookByRelative === OrdinalOrPosition.This) {
+            ref.lookByRelative === OrdinalOrPosition.This
+        ) {
             return [this.model.stack, currentCard];
-        } else  {
-            checkThrow(!ref || ref.onlyThisSpecified(), `Jx|we don't currently support referring to stacks other than "this stack"`);
+        } else {
+            checkThrow(
+                !ref || ref.onlyThisSpecified(),
+                `Jx|we don't currently support referring to stacks other than "this stack"`
+            );
             return [this.model.stack, currentCard];
         }
     }

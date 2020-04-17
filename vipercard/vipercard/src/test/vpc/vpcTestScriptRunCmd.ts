@@ -975,34 +975,34 @@ t.test('_dynamicCode send', () => {
     batch = [
         /* valid */
         [
-        `global g
+            `global g
         put "global g" & cr & "put the short id of me into g" into code
         send code to cd fld id ${h.elIds.fld_c_d_1}\\g`,
-        `${h.elIds.fld_c_d_1}`
+            `${h.elIds.fld_c_d_1}`
         ],
         [
-        `global g
+            `global g
         put "global g" & cr & "put the short id of me into g" into code
         send code to cd btn id ${h.elIds.btn_b_c_1}\\g`,
-        `${h.elIds.btn_b_c_1}`
+            `${h.elIds.btn_b_c_1}`
         ],
         [
-        `global g
+            `global g
         put "global g" & cr & "put the short id of me into g" into code
         send code to card "a"\\g`,
-        `${h.elIds.card_a_a}`
+            `${h.elIds.card_a_a}`
         ],
         [
-        `global g
+            `global g
         put "global g" & cr & "put the short id of me into g" into code
         send code to card id ${h.elIds.card_c_d}\\g`,
-        `${h.elIds.card_c_d}`
+            `${h.elIds.card_c_d}`
         ],
         [
-        `global g
+            `global g
         put "global g" & cr & "put the short id of me into g" into code
         send code to bg "b"\\g`,
-        `${h.elIds.bg_b}`
+            `${h.elIds.bg_b}`
         ],
         [
             `global g
