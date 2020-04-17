@@ -82,6 +82,7 @@ export class VpcCacheParsedCST {
             checkThrow(false, '4:|parse error: ' + s);
         }
 
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
         VpcCurrentScriptStage.origClass = undefined;

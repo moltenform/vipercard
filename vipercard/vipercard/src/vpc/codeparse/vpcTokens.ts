@@ -256,8 +256,8 @@ name: "tkNewLine",
 pattern: /\n+/i,
 line_breaks:true,
 }),
-tkSyntaxPlaceholder: chevrotain.createToken({
-name: "tkSyntaxPlaceholder",
+tkSyntaxMark: chevrotain.createToken({
+name: "tkSyntaxMark",
 pattern: /\?{9}/i,
 }),
 tkNumLiteral: chevrotain.createToken({
@@ -496,7 +496,7 @@ tks.tkCardAtEndOfLine,
 tks.tkBgAtEndOfLine,
 tks.tkStackAtEndOfLine,
 tks.tkNewLine,
-tks.tkSyntaxPlaceholder,
+tks.tkSyntaxMark,
 tks.tkNumLiteral,
 tks.tkStack,
 tks.tkBg,
@@ -1041,7 +1041,7 @@ export const tkstr = {
     tkBgAtEndOfLine: 'tkBgAtEndOfLine',
     tkStackAtEndOfLine: 'tkStackAtEndOfLine',
     tkNewLine: 'tkNewLine',
-    tkSyntaxPlaceholder: 'tkSyntaxPlaceholder',
+    tkSyntaxMark: 'tkSyntaxMark',
     tkNumLiteral: 'tkNumLiteral',
     tkStack: 'tkStack',
     tkBg: 'tkBg',
@@ -1119,8 +1119,8 @@ listOfAllWordLikeTokens['>'] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['>='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['=='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['\n'] = tks.tkNewLine;
-listOfAllWordLikeTokens['%SYNPLACEHOLDER%'] = tks.tkSyntaxPlaceholder;
-listOfAllWordLikeTokens['%MARK%'] = tks.tkSyntaxPlaceholder;
+listOfAllWordLikeTokens['%SYNPLACEHOLDER%'] = tks.tkSyntaxMark;
+listOfAllWordLikeTokens['%MARK%'] = tks.tkSyntaxMark;
 
 /**
  * when re-writing syntax, sometimes we want to construct a token, and make it
@@ -1133,7 +1133,7 @@ export class BuildFakeTokens {
     constructor() {
         this.knownImages[tks.tkNewLine.name] = '\n';
         this.knownImages[tks.tkComma.name] = ',';
-        this.knownImages[tks.tkSyntaxPlaceholder.name] = Util512.repeat(9, '?').join('');
+        this.knownImages[tks.tkSyntaxMark.name] = Util512.repeat(9, '?').join('');
     }
 
     /**
@@ -1143,7 +1143,7 @@ export class BuildFakeTokens {
         if (whichMarker === ',') {
             return this.make(basis, tks.tkComma);
         } else if (whichMarker === '') {
-            return this.make(basis, tks.tkSyntaxPlaceholder);
+            return this.make(basis, tks.tkSyntaxMark);
         } else {
             assertTrue(false, '8]|expected "" or ","', whichMarker);
         }

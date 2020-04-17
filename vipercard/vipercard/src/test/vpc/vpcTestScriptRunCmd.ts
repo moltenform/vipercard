@@ -40,12 +40,12 @@ t.test('_execCommands choose', () => {
     let batch: [string, string][];
     batch = [
         /* not valid */
-        //~ ['choose tool\\tool()', 'ERR:not a valid tool'],
-        //~ ['choose pencil def tool\\tool()', 'ERR:NotAllInputParsedException'],
-        //~ ['choose tool 3 tool\\tool()', 'ERR:Redundant input'],
-        //~ ['choose tool "pencil" tool\\tool()', 'ERR:NotAllInputParsedException'],
-        //~ ['choose tool "pencil" xyz\\tool()', 'ERR:NotAllInputParsedException'],
-        //~ ['choose tool "pencil" "tool"\\tool()', 'ERR:NotAllInputParsedException'],
+        ['choose tool\\tool()', 'ERR:not a valid tool'],
+        ['choose pencil def tool\\tool()', 'ERR:NotAllInputParsedException'],
+        ['choose tool 3 tool\\tool()', 'ERR:Redundant input'],
+        ['choose tool "pencil" tool\\tool()', 'ERR:NotAllInputParsedException'],
+        ['choose tool "pencil" xyz\\tool()', 'ERR:NotAllInputParsedException'],
+        ['choose tool "pencil" "tool"\\tool()', 'ERR:NotAllInputParsedException'],
         ['choose', 'PREPARSEERR:not enough args'],
         ['choose brush', 'PREPARSEERR:tool'],
         ['choose 3', 'PREPARSEERR:tool'],
@@ -53,80 +53,80 @@ t.test('_execCommands choose', () => {
         ['choose abc', 'PREPARSEERR:tool'],
         ['choose pencil def', 'PREPARSEERR:tool'],
         ['choose "pencil" xyz', 'PREPARSEERR:tool'],
-        ['choose "pencil" "tool"', 'PREPARSEERR:tool']
+        ['choose "pencil" "tool"', 'PREPARSEERR:tool'],
 
         /* updated style */
-        //~ ['choose "browse" tool\\tool()', 'browse'],
-        //~ ['choose "button" tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose "field" tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose "select" tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose "brush" tool\\tool()', 'brush'],
-        //~ ['choose "bucket" tool\\tool()', 'bucket'],
-        //~ ['choose "stamp" tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose "pencil" tool\\tool()', 'pencil'],
-        //~ ['choose "line" tool\\tool()', 'line'],
-        //~ ['choose "curve" tool\\tool()', 'curve'],
-        //~ ['choose "lasso" tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose "eraser" tool\\tool()', 'eraser'],
-        //~ ['choose "rect" tool\\tool()', 'rect'],
-        //~ ['choose "oval" tool\\tool()', 'oval'],
-        //~ ['choose "roundrect" tool\\tool()', 'roundrect'],
-        //~ ['choose "spray" tool\\tool()', 'spray'],
-        //~ ['choose "spray can" tool\\tool()', 'spray'],
-        //~ ['choose "round rect" tool\\tool()', 'roundrect'],
-        //~ ['choose "round  rect" tool\\tool()', 'roundrect'],
-        //~ ['choose "xyz" tool\\tool()', 'ERR:Not a valid choice'],
-        //~ ['choose "" tool\\tool()', 'ERR:valid tool name'],
+        ['choose "browse" tool\\tool()', 'browse'],
+        ['choose "button" tool\\tool()', 'ERR:drawing only'],
+        ['choose "field" tool\\tool()', 'ERR:drawing only'],
+        ['choose "select" tool\\tool()', 'ERR:drawing only'],
+        ['choose "brush" tool\\tool()', 'brush'],
+        ['choose "bucket" tool\\tool()', 'bucket'],
+        ['choose "stamp" tool\\tool()', 'ERR:drawing only'],
+        ['choose "pencil" tool\\tool()', 'pencil'],
+        ['choose "line" tool\\tool()', 'line'],
+        ['choose "curve" tool\\tool()', 'curve'],
+        ['choose "lasso" tool\\tool()', 'ERR:drawing only'],
+        ['choose "eraser" tool\\tool()', 'eraser'],
+        ['choose "rect" tool\\tool()', 'rect'],
+        ['choose "oval" tool\\tool()', 'oval'],
+        ['choose "roundrect" tool\\tool()', 'roundrect'],
+        ['choose "spray" tool\\tool()', 'spray'],
+        ['choose "spray can" tool\\tool()', 'spray'],
+        ['choose "round rect" tool\\tool()', 'roundrect'],
+        ['choose "round  rect" tool\\tool()', 'roundrect'],
+        ['choose "xyz" tool\\tool()', 'ERR:Not a valid choice'],
+        ['choose "" tool\\tool()', 'ERR:valid tool name'],
 
-        //~ /* classic style */
-        //~ ['choose browse tool\\tool()', 'browse'],
-        //~ ['choose button tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose field tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose select tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose brush tool\\tool()', 'brush'],
-        //~ ['choose bucket tool\\tool()', 'bucket'],
-        //~ ['choose stamp tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose pencil tool\\tool()', 'pencil'],
-        //~ ['choose line tool\\tool()', 'line'],
-        //~ ['choose curve tool\\tool()', 'curve'],
-        //~ ['choose lasso tool\\tool()', 'ERR:drawing only'],
-        //~ ['choose eraser tool\\tool()', 'eraser'],
-        //~ ['choose rect tool\\tool()', 'rect'],
-        //~ ['choose oval tool\\tool()', 'oval'],
-        //~ ['choose roundrect tool\\tool()', 'roundrect'],
-        //~ ['choose spray tool\\tool()', 'spray'],
-        //~ ['choose spray can tool\\tool()', 'spray'],
-        //~ ['choose round rect tool\\tool()', 'roundrect'],
-        //~ ['choose round  rect tool\\tool()', 'roundrect'],
-        //~ ['choose xyz tool\\tool()', 'ERR:no variable found'],
+        /* classic style */
+        ['choose browse tool\\tool()', 'browse'],
+        ['choose button tool\\tool()', 'ERR:drawing only'],
+        ['choose field tool\\tool()', 'ERR:drawing only'],
+        ['choose select tool\\tool()', 'ERR:drawing only'],
+        ['choose brush tool\\tool()', 'brush'],
+        ['choose bucket tool\\tool()', 'bucket'],
+        ['choose stamp tool\\tool()', 'ERR:drawing only'],
+        ['choose pencil tool\\tool()', 'pencil'],
+        ['choose line tool\\tool()', 'line'],
+        ['choose curve tool\\tool()', 'curve'],
+        ['choose lasso tool\\tool()', 'ERR:drawing only'],
+        ['choose eraser tool\\tool()', 'eraser'],
+        ['choose rect tool\\tool()', 'rect'],
+        ['choose oval tool\\tool()', 'oval'],
+        ['choose roundrect tool\\tool()', 'roundrect'],
+        ['choose spray tool\\tool()', 'spray'],
+        ['choose spray can tool\\tool()', 'spray'],
+        ['choose round rect tool\\tool()', 'roundrect'],
+        ['choose round  rect tool\\tool()', 'roundrect'],
+        ['choose xyz tool\\tool()', 'ERR:no variable found'],
 
-        //~ /* numeric style */
-        //~ ['choose tool 1\\tool()', 'browse'],
-        //~ ['choose tool 2\\tool()', 'ERR:drawing only'],
-        //~ ['choose tool 4\\tool()', 'ERR:drawing only'],
-        //~ ['choose tool 9\\tool()', 'line'],
-        //~ ['choose tool 10\\tool()', 'spray'],
-        //~ ['choose tool 15\\tool()', 'curve'],
-        //~ ['choose tool 17\\tool()', 'ERR:unknown or unsupported'],
-        //~ ['choose tool 99\\tool()', 'ERR:unknown or unsupported'],
-        //~ ['choose tool 0\\tool()', 'ERR:unknown or unsupported'],
-        //~ ['choose tool -1\\tool()', 'ERR:unknown or unsupported'],
+        /* numeric style */
+        ['choose tool 1\\tool()', 'browse'],
+        ['choose tool 2\\tool()', 'ERR:drawing only'],
+        ['choose tool 4\\tool()', 'ERR:drawing only'],
+        ['choose tool 9\\tool()', 'line'],
+        ['choose tool 10\\tool()', 'spray'],
+        ['choose tool 15\\tool()', 'curve'],
+        ['choose tool 17\\tool()', 'ERR:unknown or unsupported'],
+        ['choose tool 99\\tool()', 'ERR:unknown or unsupported'],
+        ['choose tool 0\\tool()', 'ERR:unknown or unsupported'],
+        ['choose tool -1\\tool()', 'ERR:unknown or unsupported'],
 
-        //~ /* we'll allow this */
-        //~ ['choose tool "pencil"\\tool()', 'pencil'],
-        //~ ['choose 10 tool\\tool()', 'spray'],
+        /* we'll allow this */
+        ['choose tool "pencil"\\tool()', 'pencil'],
+        ['choose 10 tool\\tool()', 'spray'],
 
-        //~ /* by expression */
-        //~ ['choose "pen" & "cil" tool\\tool()', 'pencil'],
-        //~ ['choose ("pen" & "cil") tool\\tool()', 'pencil'],
-        //~ ['put "pencil" into x\nchoose x tool\\tool()', 'pencil'],
-        //~ ['put "spray can" into x\nchoose x tool\\tool()', 'spray'],
-        //~ ['put "spray can" into x\nchoose (x) tool\\tool()', 'spray'],
-        //~ ['choose tool 10 + 5\\tool()', 'curve'],
-        //~ ['choose tool 100/10\\tool()', 'spray'],
-        //~ ['choose tool (10 - 1)\\tool()', 'line'],
-        //~ ['put 15 into x\nchoose tool x\\tool()', 'curve'],
-        //~ ['put 15 into x\nchoose tool (x)\\tool()', 'curve']
+        /* by expression */
+        ['choose "pen" & "cil" tool\\tool()', 'pencil'],
+        ['choose ("pen" & "cil") tool\\tool()', 'pencil'],
+        ['put "pencil" into x\nchoose x tool\\tool()', 'pencil'],
+        ['put "spray can" into x\nchoose x tool\\tool()', 'spray'],
+        ['put "spray can" into x\nchoose (x) tool\\tool()', 'spray'],
+        ['choose tool 10 + 5\\tool()', 'curve'],
+        ['choose tool 100/10\\tool()', 'spray'],
+        ['choose tool (10 - 1)\\tool()', 'line'],
+        ['put 15 into x\nchoose tool x\\tool()', 'curve'],
+        ['put 15 into x\nchoose tool (x)\\tool()', 'curve']
     ];
 
     h.testBatchEvaluate(batch);
@@ -934,7 +934,7 @@ t.test('_dynamicCode do', () => {
         ],
         ['global g\ndo "callNonExist"\\g', 'ERR:5:of this name found'],
         /* lex error */
-        ['put "$$$" into code\ndo code\\0', 'ERR:5:lex error'],
+        ['put "$$$" into code\ndo code\\0', 'ERR:3:lex error'],
         ['put "put " & quote & "unterminated" into code\ndo code\\0', 'ERR:5:unexpected'],
         /* syntax error */
         ['put "on abc" into code\ndo code\\0', 'ERR:5:cannot begin'],
@@ -974,65 +974,65 @@ t.test('_dynamicCode send', () => {
     let batch: [string, string][];
     batch = [
         /* valid */
-        //~ [
-        //~ `global g
-        //~ put "global g" & cr & "put the short id of me into g" into code
-        //~ send code to cd fld id ${h.elIds.fld_c_d_1}\\g`,
-        //~ `${h.elIds.fld_c_d_1}`
-        //~ ],
-        //~ [
-        //~ `global g
-        //~ put "global g" & cr & "put the short id of me into g" into code
-        //~ send code to cd btn id ${h.elIds.btn_b_c_1}\\g`,
-        //~ `${h.elIds.btn_b_c_1}`
-        //~ ],
-        //~ [
-        //~ `global g
-        //~ put "global g" & cr & "put the short id of me into g" into code
-        //~ send code to card "a"\\g`,
-        //~ `${h.elIds.card_a_a}`
-        //~ ],
-        //~ [
-        //~ `global g
-        //~ put "global g" & cr & "put the short id of me into g" into code
-        //~ send code to card id ${h.elIds.card_c_d}\\g`,
-        //~ `${h.elIds.card_c_d}`
-        //~ ],
-        //~ [
-        //~ `global g
-        //~ put "global g" & cr & "put the short id of me into g" into code
-        //~ send code to bg "b"\\g`,
-        //~ `${h.elIds.bg_b}`
-        //~ ],
+        [
+        `global g
+        put "global g" & cr & "put the short id of me into g" into code
+        send code to cd fld id ${h.elIds.fld_c_d_1}\\g`,
+        `${h.elIds.fld_c_d_1}`
+        ],
+        [
+        `global g
+        put "global g" & cr & "put the short id of me into g" into code
+        send code to cd btn id ${h.elIds.btn_b_c_1}\\g`,
+        `${h.elIds.btn_b_c_1}`
+        ],
+        [
+        `global g
+        put "global g" & cr & "put the short id of me into g" into code
+        send code to card "a"\\g`,
+        `${h.elIds.card_a_a}`
+        ],
+        [
+        `global g
+        put "global g" & cr & "put the short id of me into g" into code
+        send code to card id ${h.elIds.card_c_d}\\g`,
+        `${h.elIds.card_c_d}`
+        ],
+        [
+        `global g
+        put "global g" & cr & "put the short id of me into g" into code
+        send code to bg "b"\\g`,
+        `${h.elIds.bg_b}`
+        ],
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
             `${h.elIds.stack}`
-        ]
-        //~ /* not valid */
-        //~ ['send\\0', 'ERR:too short'],
-        //~ ['send "put 1 into x"\\0', 'ERR:MismatchedTokenException'],
-        //~ ['send to\\0', 'ERR:NoViableAltException'],
-        //~ ['send to this stack\\0', 'ERR:NoViableAltException'],
-        //~ ['send "put 1 into x" to\\0', 'ERR:NoViableAltException'],
-        //~ ['send "put 1 into x" this stack\\0', 'ERR:MismatchedTokenException'],
-        //~ ['send "put 1 into x" of this stack\\0', 'ERR:MismatchedTokenException'],
-        //~ ['send "put 1 into x" to "string"\\0', 'ERR:NoViableAltException'],
-        //~ ['put 123 into send\\0', `ERR:variable name not allowed`],
-        //~ /* syntax error in sent code */
-        //~ ['send "put" to this stack\\0', 'ERR:4:NoViableAltException'],
-        //~ ['send "put 1 into" to this stack\\0', 'ERR:4:not defined'],
-        //~ ['send "put \'1 into" to this stack\\0', 'ERR:4:lex error'],
-        //~ ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:unexpected character'],
-        //~ ['send "on h" to this stack\\0', 'ERR:4:cannot begin'],
-        //~ ['send "put 10 11 into x" to this stack\\0', 'ERR:4:MismatchedTokenException'],
-        //~ ['send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:4:element not found'],
-        //~ /* not exist */
-        //~ ['send "put 1 into x" to card 10\\0', "ERR:target of 'send' not found"],
-        //~ ['send "put 1 into x" to bg "notfound"\\0', "ERR:target of 'send' not found"],
-        //~ ['send "put 1 into x" to cd btn 99999\\0', "ERR:target of 'send' not found"],
-        //~ ['send "put 1 into x" to cd btn id 99999\\0', "ERR:target of 'send' not found"]
+        ],
+        /* not valid */
+        ['send\\0', 'PREPARSEERR:too short'],
+        ['send "put 1 into x"\\0', 'ERR:MismatchedTokenException'],
+        ['send to\\0', 'ERR:NoViableAltException'],
+        ['send to this stack\\0', 'ERR:NoViableAltException'],
+        ['send "put 1 into x" to\\0', 'ERR:NoViableAltException'],
+        ['send "put 1 into x" this stack\\0', 'ERR:MismatchedTokenException'],
+        ['send "put 1 into x" of this stack\\0', 'ERR:MismatchedTokenException'],
+        ['send "put 1 into x" to "string"\\0', 'ERR:expected something like'],
+        ['put 123 into send\\0', `ERR:variable name not allowed`],
+        /* syntax error in sent code */
+        ['send "put" to this stack\\0', 'ERR:4:not enough args'],
+        ['send "put 1 into" to this stack\\0', 'ERR:4:parse err'],
+        ['send "put \'1 into" to this stack\\0', 'ERR:4:lex error'],
+        ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:unexpected character'],
+        ['send "on h" to this stack\\0', 'ERR:4:cannot begin'],
+        ['send "put 10 11 into x" to this stack\\0', 'ERR:4:MismatchedTokenException'],
+        ['send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:4:element not found'],
+        /* not exist */
+        ['send "put 1 into x" to card 10\\0', "ERR:target of 'send' not found"],
+        ['send "put 1 into x" to bg "notfound"\\0', "ERR:target of 'send' not found"],
+        ['send "put 1 into x" to cd btn 99999\\0', "ERR:target of 'send' not found"],
+        ['send "put 1 into x" to cd btn id 99999\\0', "ERR:target of 'send' not found"]
     ];
     h.testBatchEvaluate(batch);
 

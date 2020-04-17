@@ -207,7 +207,7 @@ export interface VisitingContext {
     tkBgAtEndOfLine: ChvITk[];
     tkStackAtEndOfLine: ChvITk[];
     tkNewLine: ChvITk[];
-    tkSyntaxPlaceholder: ChvITk[];
+    tkSyntaxMark: ChvITk[];
     tkNumLiteral: ChvITk[];
     tkStack: ChvITk[];
     tkBg: ChvITk[];

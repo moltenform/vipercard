@@ -472,43 +472,6 @@ export class VpcPresenterEvents {
     }
 
     /**
-     * send messages when card changes
-     */
-    static sendCardChangeMsgs(
-        pr: VpcPresenterInterface,
-        vci: VpcStateInterface,
-        before: boolean,
-        wasCardId: string,
-        nextCardId: string
-    ) {
-        //~ let wasCard = vci.getModel().getCardById(wasCardId);
-        //~ let nextCard = vci.getModel().getCardById(nextCardId);
-        //~ let wasBgId = wasCard.parentId;
-        //~ let nextBgId = nextCard.parentId;
-        //~ if (before) {
-        //~ /* send closing messages */
-        //~ if (wasCardId !== nextCardId) {
-        //~ let msg = new VpcScriptMessage(wasCardId, VpcBuiltinMsg.Closecard);
-        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-        //~ }
-        //~ if (wasBgId !== nextBgId) {
-        //~ let msg = new VpcScriptMessage(wasBgId, VpcBuiltinMsg.Closebackground);
-        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-        //~ }
-        //~ } else {
-        //~ /* send opening messages */
-        //~ if (wasCardId !== nextCardId) {
-        //~ let msg = new VpcScriptMessage(nextCardId, VpcBuiltinMsg.Opencard);
-        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-        //~ }
-        //~ if (wasBgId !== nextBgId) {
-        //~ let msg = new VpcScriptMessage(nextBgId, VpcBuiltinMsg.Openbackground);
-        //~ pr.vci.getCodeExec().scheduleCodeExec(msg);
-        //~ }
-        //~ }
-    }
-
-    /**
      * finds target vel id and
      * schedules a script message (only if browse tool is active)
      */

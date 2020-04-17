@@ -11,27 +11,27 @@
 
 // this is the syntax seen by the parser, which isn't the same 
 // as what is typed by the user -- we'll apply transformations during "rewrite".
-// all commands start with ..., which means 3 tkSyntaxPlaceholder tokens
+// all commands start with ..., which means 3 tkSyntaxMark tokens
 
 // addition. supports customfns
 BuiltinCmdAdd:=... <Lvl1Expression> _to <HContainer>                                                             
-// show dialog. software rewrite "with" to tkSyntaxPlaceholder. it's a Lvl6Expression not an Expr so that Or works
+// show dialog. software rewrite "with" to tkSyntaxMark. it's a Lvl6Expression not an Expr so that Or works
 // during software rewrite, check for "answer file" and "answer program" and show NYI
-BuiltinCmdAnswer:=... <Expr> [tkSyntaxPlaceholder <Lvl6Expression> [ _or <Lvl6Expression> [ _or <Lvl6Expression>]]]                 
+BuiltinCmdAnswer:=... <Expr> [tkSyntaxMark <Lvl6Expression> [ _or <Lvl6Expression> [ _or <Lvl6Expression>]]]                 
 // arrowkey. simply sends an arrow key message. if not trapped, goes to next cd etc. 
 // left and right are constants, so you can say `arrowkey left`, we don't need to rewrite syntax
 // we have the default arrowkey in standardlib but user can override
-// show dialog. software rewrite `with` to tkSyntaxPlaceholder and `ask password` to `ask ," and `ask file` to NYI
+// show dialog. software rewrite `with` to tkSyntaxMark and `ask password` to `ask ," and `ask file` to NYI
 // original product lets you omit quotes ask "g" with why is this happening but I don't think i will
-BuiltinCmdAsk:=... [tkComma] <Expr> [tkSyntaxPlaceholder <Expr>]                                            
+BuiltinCmdAsk:=... [tkComma] <Expr> [tkSyntaxMark <Expr>]                                            
 // play beep sound.
 BuiltinCmdBeep:=... [<Expr>]
 // choose tool. rewrite will turn `choose brush tool` into `choose "brush"`
 // for compatibility the choose message can be trapped, but in standardlib it will call BuiltinCmdVpccalluntrappablechoose to actually change the tool
 // in vipercard this only changes the tool for script running-simulated drawing purposes
 BuiltinCmdVpccalluntrappablechoose:=... <Expr>
-// simulate click. software rewrite "with" to tkSyntaxPlaceholder. supports click at x if x contains coords.
-BuiltinCmdClick:=... tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
+// simulate click. software rewrite "with" to tkSyntaxMark. supports click at x if x contains coords.
+BuiltinCmdClick:=... tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] [ tkSyntaxMark tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
 // close. show NYI in rewrite
 // commandKeyDown, a way to simulate a keypress like Cmd+A. show NYI in rewrite
 // controlkey: goes up through message hierarchy, handled by vipercardstdlib
@@ -45,19 +45,19 @@ BuiltinCmdDelete:=... { <HChunk> <HSimpleContainer> | <ObjectPart> }
 BuiltinCmdDial:=... <Expr>                                                                           
 // disable a button. in rewrite error on mention of "menu"
 BuiltinCmdDisable:=... <ObjectBtn>                                                                     
-// divide. rewrite "by" to a  tkSyntaxPlaceholder
+// divide. rewrite "by" to a  tkSyntaxMark
 // the rewrite isn't really needed, but it's a good idea in case we ever need two consecutive tkidentifiers
 // to be a valid expression
-BuiltinCmdDivide:=... <HContainer> tkSyntaxPlaceholder <Lvl1Expression>                                                              
+BuiltinCmdDivide:=... <HContainer> tkSyntaxMark <Lvl1Expression>                                                              
 // domenu. currently supports New Card, Delete Card, Back, First, Prev, Next, Last, New Button, New Field, New Background 
 // and also support doMenu "New Card", "Object" like in the product
 // note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
 // in rewrite syntax say we don't support "without dialog" or "with keys"
 BuiltinCmdVpccalluntrappabledomenu:=... <Expr> [tkComma <Expr>]       
 // drag, simulate mouse drag
-// in rewrite syntax from "with" to tkSyntaxPlaceholder
+// in rewrite syntax from "with" to tkSyntaxMark
 // do. in rewrite, turned into send x to me
-BuiltinCmdDrag:=... tkIdentifier MANYSEP{{ _to / <HBuiltinCmdDrag_1> }}ENDMANYSEP [ tkSyntaxPlaceholder tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]   
+BuiltinCmdDrag:=... tkIdentifier MANYSEP{{ _to / <HBuiltinCmdDrag_1> }}ENDMANYSEP [ tkSyntaxMark tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]   
 HBuiltinCmdDrag_1:=<Lvl4Expression> [tkComma <Lvl4Expression>]                      --->BuildMap
 // edit. show NYI in rewrite
 // enable a button. in rewrite error on mention of "menu"
@@ -83,27 +83,27 @@ BuiltinCmdHide:=... <ObjectPart>
 BuiltinCmdLock:=... tkIdentifier
 // mark. other parsing done in software
 // not supported yet but I'll leave this syntax here
-BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCard> | tkComma <Expr> <Of> <ObjectFld> }
+BuiltinCmdMark:=... [_not] {tkSyntaxMark <ObjectCard> | tkComma <Expr> <Of> <ObjectFld> }
 // multiply. rewrite from "by" the tkIdentifier is "by"
-BuiltinCmdMultiply:=...<HContainer> tkSyntaxPlaceholder <Lvl1Expression>                                                               
+BuiltinCmdMultiply:=...<HContainer> tkSyntaxMark <Lvl1Expression>                                                               
 // open. show NYI in rewrite
 // pop card. has a little stack to go to. implemented entirely in software
 // BuiltinCmdPop:=... into|before|after container 
-// play. "tempo" to tkSyntaxPlaceholder
-BuiltinCmdPlay:=... <Expr>  [tkSyntaxPlaceholder <Expr>]                                                       
+// play. "tempo" to tkSyntaxMark
+BuiltinCmdPlay:=... <Expr>  [tkSyntaxMark <Expr>]                                                       
 // push card. has a little stack to go to. implemented entirely in software
 // put variable in. in rewrite, reject if "menu" is mentioned.
 // tkIdentifier here is 'before' 'after' 'into'
 // the traditional <Expr> [ tkIdentifier [ <HContainer> ]] does work for now, but breaks if an Expr can ever have 2 consecutive tkIdentifiers
 // buildmap would work fine, but returns an array for performance reasons
 // rewrites make the HContainer always present.
-BuiltinCmdPut:=... <Expr> tkSyntaxPlaceholder tkIdentifier tkSyntaxPlaceholder <HContainer>                      --->Custom--->any
+BuiltinCmdPut:=... <Expr> tkSyntaxMark tkIdentifier tkSyntaxMark <HContainer>                      --->Custom--->any
 // read. show NYI in rewrite
 // reply. show NYI in rewrite
 // request. show NYI in rewrite
 // reset. reset paint | menubar | printing. reset paint might be useful, let's support that.
 BuiltinCmdReset:=... tkIdentifier
-BuiltinCmdReplace:=... <Expr> tkSyntaxPlaceholder <Expr> tkInOnly  <HSimpleContainer>
+BuiltinCmdReplace:=... <Expr> tkSyntaxMark <Expr> tkInOnly  <HSimpleContainer>
 // returnInField. sent up the message hierarchy, usually does nothing. takes no args
 // returnKey. sent up the message hierarchy, usually does nothing. takes no args
 // save. show NYI in rewrite
@@ -123,7 +123,7 @@ BuiltinCmdStart:=... tkIdentifier <ObjectStack>
 // stop using, currently a no-op
 BuiltinCmdStop:=... tkIdentifier <ObjectStack>
 // subtraction. rewrite 'from' to syntaxmarker
-BuiltinCmdSubtract:=... <Lvl1Expression> tkSyntaxPlaceholder <HContainer>      
+BuiltinCmdSubtract:=... <Lvl1Expression> tkSyntaxMark <HContainer>      
 // tabkey. sent up the message hierarchy, usually goes from one field to the next. takes no args
 // type. set NYI during rewrites
 // unlock.

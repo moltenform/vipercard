@@ -93,7 +93,7 @@ def processRule(result, line):
         ruleVisitorReturnType = 'ChvITk'
     if not ruleVisitorReturnType:
         ruleVisitorReturnType = 'string | VpcIntermedValBase'
-    ruleDefn = ruleDefn.replace('...', 'tkSyntaxPlaceholder tkSyntaxPlaceholder tkSyntaxPlaceholder ')
+    ruleDefn = ruleDefn.replace('...', 'tkSyntaxMark tkSyntaxMark tkSyntaxMark ')
     ret.ruleVisitorReturnType = ruleVisitorReturnType
     ret.origLine = line
     ret.name = ruleName

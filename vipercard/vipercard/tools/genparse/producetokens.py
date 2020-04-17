@@ -218,7 +218,7 @@ def checkThatEveryTokensIsReferencedInARule(st, outfiles):
     trace('checking that every token is referenced in the parser...')
     contents = files.readall(outfiles.parse, encoding = 'utf-8')
     inside = contents.split(gStart)[1].split(gEnd)[0]
-    namesOkIfNotSeen = dict(tkNewLine=True, tkSyntaxPlaceholder=True)
+    namesOkIfNotSeen = dict(tkNewLine=True, tkSyntaxMark=True)
     for token in st.tokens:
         if 'SKIPPED' not in token.tokenParams and not token.name in namesOkIfNotSeen:
             searchFor = r'\btks\.' + token.name + r'\b'

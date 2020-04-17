@@ -16,6 +16,9 @@ export class VpcStandardLibScript {
 -- we have a list of handlers where it's always ok if they are missing (equivalent).
 -- perhaps a slight benefit, because events like "idle" won't create a stack frame
 
+
+
+
 -- "trappable" messages can go here.
 -- note that they won't be trapped unless the current tool is the browse tool
 on choose whichTool

@@ -1237,21 +1237,21 @@ this.SUBRULE2(this.RuleLvl3Expression)
 });
 
 RuleBuiltinCmdAdd = this.RULE('RuleBuiltinCmdAdd', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleLvl1Expression)
 this.CONSUME1(tks._to)
 this.SUBRULE1(this.RuleHContainer)
 });
 
 RuleBuiltinCmdAnswer = this.RULE('RuleBuiltinCmdAnswer', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 this.OPTION1(() => {
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleLvl6Expression)
 this.OPTION2(() => {
 this.CONSUME1(tks._or)
@@ -1265,39 +1265,39 @@ this.SUBRULE3(this.RuleLvl6Expression)
 });
 
 RuleBuiltinCmdAsk = this.RULE('RuleBuiltinCmdAsk', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.OPTION1(() => {
 this.CONSUME1(tks.tkComma)
 });
 this.SUBRULE1(this.RuleExpr)
 this.OPTION2(() => {
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE2(this.RuleExpr)
 });
 });
 
 RuleBuiltinCmdBeep = this.RULE('RuleBuiltinCmdBeep', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.OPTION1(() => {
 this.SUBRULE1(this.RuleExpr)
 });
 });
 
 RuleBuiltinCmdVpccalluntrappablechoose = this.RULE('RuleBuiltinCmdVpccalluntrappablechoose', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 });
 
 RuleBuiltinCmdClick = this.RULE('RuleBuiltinCmdClick', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 this.SUBRULE1(this.RuleLvl4Expression)
 this.OPTION1(() => {
@@ -1305,7 +1305,7 @@ this.CONSUME1(tks.tkComma)
 this.SUBRULE2(this.RuleLvl4Expression)
 });
 this.OPTION2(() => {
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkIdentifier)
 this.OPTION3(() => {
 this.CONSUME2(tks.tkComma)
@@ -1319,9 +1319,9 @@ this.CONSUME4(tks.tkIdentifier)
 });
 
 RuleBuiltinCmdDelete = this.RULE('RuleBuiltinCmdDelete', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.OR1([
 {
 ALT: () => {
@@ -1338,32 +1338,32 @@ this.SUBRULE1(this.RuleObjectPart)
 });
 
 RuleBuiltinCmdDial = this.RULE('RuleBuiltinCmdDial', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 });
 
 RuleBuiltinCmdDisable = this.RULE('RuleBuiltinCmdDisable', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleObjectBtn)
 });
 
 RuleBuiltinCmdDivide = this.RULE('RuleBuiltinCmdDivide', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleHContainer)
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleLvl1Expression)
 });
 
 RuleBuiltinCmdVpccalluntrappabledomenu = this.RULE('RuleBuiltinCmdVpccalluntrappabledomenu', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 this.OPTION1(() => {
 this.CONSUME1(tks.tkComma)
@@ -1372,9 +1372,9 @@ this.SUBRULE2(this.RuleExpr)
 });
 
 RuleBuiltinCmdDrag = this.RULE('RuleBuiltinCmdDrag', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 this.MANY_SEP1({
 SEP: tks._to,
@@ -1383,7 +1383,7 @@ this.SUBRULE1(this.RuleHBuiltinCmdDrag_1);
 }
 });
 this.OPTION1(() => {
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkIdentifier)
 this.OPTION2(() => {
 this.CONSUME1(tks.tkComma)
@@ -1405,37 +1405,37 @@ this.SUBRULE2(this.RuleLvl4Expression)
 });
 
 RuleBuiltinCmdEnable = this.RULE('RuleBuiltinCmdEnable', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleObjectBtn)
 });
 
 RuleBuiltinCmdHide = this.RULE('RuleBuiltinCmdHide', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleObjectPart)
 });
 
 RuleBuiltinCmdLock = this.RULE('RuleBuiltinCmdLock', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 });
 
 RuleBuiltinCmdMark = this.RULE('RuleBuiltinCmdMark', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.OPTION1(() => {
 this.CONSUME1(tks._not)
 });
 this.OR1([
 {
 ALT: () => {
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleObjectCard)
 }
 },
@@ -1451,58 +1451,58 @@ this.SUBRULE1(this.RuleObjectFld)
 });
 
 RuleBuiltinCmdMultiply = this.RULE('RuleBuiltinCmdMultiply', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleHContainer)
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleLvl1Expression)
 });
 
 RuleBuiltinCmdPlay = this.RULE('RuleBuiltinCmdPlay', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 this.OPTION1(() => {
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE2(this.RuleExpr)
 });
 });
 
 RuleBuiltinCmdPut = this.RULE('RuleBuiltinCmdPut', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
-this.CONSUME5(tks.tkSyntaxPlaceholder)
+this.CONSUME5(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleHContainer)
 });
 
 RuleBuiltinCmdReset = this.RULE('RuleBuiltinCmdReset', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 });
 
 RuleBuiltinCmdReplace = this.RULE('RuleBuiltinCmdReplace', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE2(this.RuleExpr)
 this.CONSUME1(tks.tkInOnly)
 this.SUBRULE1(this.RuleHSimpleContainer)
 });
 
 RuleBuiltinCmdSelect = this.RULE('RuleBuiltinCmdSelect', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkStringLiteral)
 this.OPTION1(() => {
 this.SUBRULE1(this.RuleHContainer)
@@ -1510,9 +1510,9 @@ this.SUBRULE1(this.RuleHContainer)
 });
 
 RuleBuiltinCmdSet = this.RULE('RuleBuiltinCmdSet', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.OPTION1(() => {
 this.CONSUME1(tks._the)
 });
@@ -1538,9 +1538,9 @@ this.SUBRULE1(this.RuleAnyPropertyVal)
 });
 
 RuleBuiltinCmdShow = this.RULE('RuleBuiltinCmdShow', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleObjectPart)
 this.OPTION1(() => {
 this.CONSUME1(tks.tkIdentifier)
@@ -1553,9 +1553,9 @@ this.SUBRULE2(this.RuleLvl4Expression)
 });
 
 RuleBuiltinCmdSort = this.RULE('RuleBuiltinCmdSort', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkStringLiteral)
 this.CONSUME2(tks.tkStringLiteral)
 this.CONSUME3(tks.tkStringLiteral)
@@ -1563,34 +1563,34 @@ this.SUBRULE1(this.RuleHAnyAllowedVariableName)
 });
 
 RuleBuiltinCmdStart = this.RULE('RuleBuiltinCmdStart', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 this.SUBRULE1(this.RuleObjectStack)
 });
 
 RuleBuiltinCmdStop = this.RULE('RuleBuiltinCmdStop', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 this.SUBRULE1(this.RuleObjectStack)
 });
 
 RuleBuiltinCmdSubtract = this.RULE('RuleBuiltinCmdSubtract', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleLvl1Expression)
-this.CONSUME4(tks.tkSyntaxPlaceholder)
+this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleHContainer)
 });
-
+ 
 RuleBuiltinCmdUnlock = this.RULE('RuleBuiltinCmdUnlock', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 this.OPTION1(() => {
 this.CONSUME1(tks.tkStringLiteral)
@@ -1601,9 +1601,9 @@ this.CONSUME4(tks.tkStringLiteral)
 });
 
 RuleBuiltinCmdVisual = this.RULE('RuleBuiltinCmdVisual', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkIdentifier)
 this.OPTION1(() => {
 this.CONSUME1(tks.tkStringLiteral)
@@ -1614,9 +1614,9 @@ this.CONSUME4(tks.tkStringLiteral)
 });
 
 RuleBuiltinCmdWait = this.RULE('RuleBuiltinCmdWait', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 this.OPTION1(() => {
 this.CONSUME1(tks.tkIdentifier)
@@ -1624,25 +1624,25 @@ this.CONSUME1(tks.tkIdentifier)
 });
 
 RuleCmdSend = this.RULE('RuleCmdSend', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 this.CONSUME1(tks._to)
 this.SUBRULE1(this.RuleObject)
 });
 
 RuleInternalCmdRequestEval = this.RULE('RuleInternalCmdRequestEval', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 });
 
 RuleInternalCmdUserHandler = this.RULE('RuleInternalCmdUserHandler', () => {
-this.CONSUME1(tks.tkSyntaxPlaceholder)
-this.CONSUME2(tks.tkSyntaxPlaceholder)
-this.CONSUME3(tks.tkSyntaxPlaceholder)
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
 this.MANY_SEP1({
 SEP: tks.tkComma,
 DEF: () => {

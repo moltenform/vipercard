@@ -186,6 +186,7 @@ export class VpcExecTop {
         VpcCurrentScriptStage.origClass = undefined;
         VpcCurrentScriptStage.latestVelID = undefined;
         VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
 
         this.outside.SetOption('screenLocked', false);
         this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
@@ -207,6 +208,7 @@ export class VpcExecTop {
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
         VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
 
         let first = this.workQueue[0];
         let currentCardId = this.outside.GetOptionS('currentCardId');
@@ -284,6 +286,14 @@ export class VpcExecTop {
             scriptErr.scriptErrVelid = scriptErr.dynamicCodeOrigin[0];
             scriptErr.scriptErrLine = scriptErr.dynamicCodeOrigin[1];
         }
+
+        /* reset state */
+        VpcCurrentScriptStage.latestSrcLineSeen = undefined;
+        VpcCurrentScriptStage.latestDestLineSeen = undefined;
+        VpcCurrentScriptStage.origClass = undefined;
+        VpcCurrentScriptStage.latestVelID = undefined;
+        VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
+        VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
 
         if (this.cbOnScriptError) {
             this.cbOnScriptError(scriptErr);
