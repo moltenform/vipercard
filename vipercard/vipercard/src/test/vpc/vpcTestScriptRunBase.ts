@@ -227,7 +227,11 @@ export class TestVpcScriptRunBase {
             makeWarningUseful += ` v=${velId} msg=\n${msg}`;
 
             if (expectErrMsg !== undefined) {
-                if (msg.includes('vpc parse error:')) {
+                if (expectErrMsg.startsWith('ERR:')) {
+                    expectErrMsg = expectErrMsg.slice('ERR:'.length)
+                }
+
+                if (msg.includes('parse error:')) {
                     /* add the exception name for compatibility */
                     if (getParsingObjects()[1].errors?.length) {
                         msg = getParsingObjects()[1].errors[0].name + ': ' + msg;
@@ -343,7 +347,7 @@ ${codeBefore}\n${codeIn}\n`,
         return this.runGeneralCode('', s, expectErrMsg, expectErrLine, true);
     }
 
-    assertLineErr(s: string, expectErrMsg: string, expectErrLine: number) {
+    assertLineErr(s: string, expectErrMsg: string, expectErrLine?: number) {
         return this.runGeneralCode('', s, expectErrMsg, expectErrLine, false);
     }
 

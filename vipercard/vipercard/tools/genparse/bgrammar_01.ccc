@@ -80,6 +80,7 @@
 //      match the product: you can't say 'get the id of target' or 'get the id of target()', you have to say 'get the id of the target'
 //      match the product: we no longer support the in some cases, "the me" and "the hypercard" are no longer valid
 //      match the product: we support 'put the name of target' via string rewrites to match the product
+//      single line ifs match the product better. last line is "else answer 'hi'" not "else then answer 'hi'"
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
 tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/

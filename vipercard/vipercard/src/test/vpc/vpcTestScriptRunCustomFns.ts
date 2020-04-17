@@ -34,29 +34,29 @@ t.atest('--init--vpcTestScriptRunCustomFns', async () => {
 });
 t.test('testcompareRewrittenCodeHelper', () => {
     /* correct results */
-    let inp = `\non myCode\nif 0 is 1 then\na\nend if\nend myCode`;
-    let expected = `\nHandlerStart\nif~0~is~1~then~\na~\nIfEnd\nHandlerEnd`;
+    let inp = `on myCode\nif 0 is 1 then\nb\nend if\nend myCode`;
+    let expected = `HandlerStart\nif~0~is~1~then~\nb~\nIfEnd\nHandlerEnd`;
     h.compareRewrittenCode(inp, expected);
     /* wrong results */
-    assertAsserts('', 'xxx', ()=>{
-        inp = `\non myCode\nif 0 is 1 then\na\nend if\nend myCode`;
-        expected = `\nHandlerStart\nif~0~is~2~then~\na~\nIfEnd\nHandlerEnd`;
+    assertAsserts('', 'but got', ()=>{
+        inp = `on myCode\nif 0 is 1 then\nb\nend if\nend myCode`;
+        expected = `HandlerStart\nif~0~is~2~then~\nb~\nIfEnd\nHandlerEnd`;
         h.compareRewrittenCode(inp, expected);
     })
     /* compile error */
-    assertAsserts('', 'xxx', ()=>{
-        let inp = `\non myCode\na\nend if\nend myCode`;
-        let expected = `\nHandlerStart\na~\nIfEnd\nHandlerEnd`;
+    assertAsserts('', 'unexpected err', ()=>{
+        let inp = `on myCode\nb\nend if\nend myCode`;
+        let expected = `HandlerStart\nb~\nIfEnd\nHandlerEnd`;
         h.compareRewrittenCode(inp, expected);
     })
     /* compile error with wrong err message */
-    assertAsserts('', 'xxx', ()=>{
-        let inp = `\non myCode\na\nend if\nend myCode`;
+    assertAsserts('', 'wrong err message', ()=>{
+        let inp = `on myCode\nb\nend if\nend myCode`;
         h.compareRewrittenCode(inp, 'ERR:(incorrect message)');
     })
     /* works when we said it should fail */
-    assertAsserts('', 'xxx', ()=>{
-        let inp = `\non myCode\nif 0 is 1 then\na\nend if\nend myCode`;
+    assertAsserts('', 'expected an err', ()=>{
+        let inp = `on myCode\nif 0 is 1 then\nb\nend if\nend myCode`;
         h.compareRewrittenCode(inp, 'ERR:');
     })
 });
@@ -424,19 +424,28 @@ HandlerEnd
     h.compareRewrittenCode(inp, expected);
 
     /* two lines */
+    expected = `
+HandlerStart
+if~x~>~1~then~
+    c1~
+IfElsePlain
+    c2~
+IfEnd
+HandlerEnd
+`;
     inp = `
 on myCode
 if x > 1 then c1
 else c2
 end myCode`;
-    h.compareRewrittenCode(inp, "ERR:expect line starting with")
+    h.compareRewrittenCode(inp, expected)
     inp = `
 on myCode
 if x > 1 then
     c1
 else c2
 end myCode`;
-h.compareRewrittenCode(inp, "ERR:expect line starting with")
+h.compareRewrittenCode(inp, expected)
     inp = `
 on myCode
 if x > 1 then
@@ -451,16 +460,7 @@ else
     c2
 end if
 end myCode`;
-h.compareRewrittenCode(inp, "ERR:else outside")
-expected = `
-HandlerStart
-if~x~>~1~then~
-    c1~
-IfElsePlain
-    c2~
-IfEnd
-HandlerEnd
-`;
+h.compareRewrittenCode(inp, expected)
     inp = `
 on myCode
 if x > 1 then
@@ -485,6 +485,14 @@ IfElsePlain
 IfEnd
 HandlerEnd
 `;
+    /* explicitly check for else then*/
+    inp = `
+on myCode
+if x > 1 then c1
+else if x > 2 then c2
+else then c3
+end myCode`;
+    h.compareRewrittenCode(inp, "ERR:not 'else then");
     inp = `
 on myCode
 if x > 1 then c1
@@ -1643,19 +1651,32 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
         script = script.trim();
         checkThrow(script.includes('on myCode'), "test expects handler is myCode")
         let transformedCode:O<VpcParsedCodeCollection>
-        let f = ()=> {
+        let err:O<Error>
+        try {
             let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
             h.vcstate.vci.undoableAction(() => btnGo.set('script', script));
             transformedCode = h.vcstate.vci
                 .getCodeExec()
                 .cachedAST.getHandlerOrThrow(script, 'myCode', btnGo.id)[0];
+        } catch (e) {
+            /* catch the errors here,
+            otherwise the error site will be far away and hard to correlate
+            with which test actually failed. */
+            err = e
         }
-        if (expected.startsWith('ERR:')){
-            expected = expected.slice('ERR:'.length)
-            assertThrows('', expected, f)
+
+        if (err) {
+            if (expected.startsWith('ERR:')){
+                expected = expected.slice('ERR:'.length)
+                assertWarn(err.message.includes(expected), 'wrong err message')
+            } else {
+                assertWarn(false, 'unexpected err', err.message)
+            }
+            
+            return;
+        } else if (expected.startsWith('ERR:')) {
+            assertWarn(false, "expected an error but succeeded")
             return
-        } else {
-            f()
         }
 
         checkThrow(transformedCode instanceof VpcParsedCodeCollection, '');

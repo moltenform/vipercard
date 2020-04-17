@@ -386,7 +386,7 @@ put x into x\\x`,
         } else if (reserved === 'if') {
             expectErr = 'no "then"';
         } else if (reserved === 'else') {
-            expectErr = 'else *if*';
+            expectErr = 'else outside';
         } else if (reserved === 'return') {
             expectErr = 'Redundant';
             isPreparse = false;
@@ -1823,8 +1823,7 @@ next repeat`,
     h.assertPreparseErrLn(
         `if false then
     else then`,
-        'else if condition then',
-        4
+        "ERR:not 'else then"
     );
     /* cannot say just "if" */
     h.assertPreparseErrLn(

@@ -135,6 +135,7 @@ export namespace VpcTopPreparse {
         let rewrites = new VpcRewriteForCommands(rw);
         let exp = new ExpandCustomFunctions(idGen, new CheckReservedWords());
         let buildTree = new VpcRewriteNoElseIfClauses.TreeBuilder();
+        let ifSplitter = new VpcSplitSingleLineIf()
         while (true) {
             let next = splitter.next();
             if (!next) {
@@ -146,10 +147,16 @@ export namespace VpcTopPreparse {
             let nextSublines = stage1Process(next, rw);
             if (nextSublines) {
                 for (let subline of nextSublines) {
-                    buildTree.addLine(subline);
+                    let sublines2 = ifSplitter.go(subline, rw);
+                    for (let subline2 of sublines2) {
+                        buildTree.addLine(subline2);
+                    }
                 }
             } else {
-                buildTree.addLine(next);
+                let sublines2 = ifSplitter.go(next, rw);
+                for (let subline2 of sublines2) {
+                    buildTree.addLine(subline2);
+                }
             }
         }
 
@@ -201,9 +208,7 @@ export namespace VpcTopPreparse {
     }
 
     function stage1Process(line: ChvITk[], rw: VpcSuperRewrite): O<ChvITk[][]> {
-        if (line.length && line[0].image === 'if') {
-            return VpcSplitSingleLineIf.go(line, rw);
-        } else if (line.length && line[0].image === 'repeat') {
+        if (line.length && line[0].image === 'repeat') {
             return VpcRewritesLoops.Go(line, rw);
         } else {
             return undefined;
