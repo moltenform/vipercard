@@ -1132,11 +1132,12 @@ listOfAllWordLikeTokens['%MARK%'] = tks.tkSyntaxMark;
  */
 export class BuildFakeTokens {
     readonly knownImages: { [tkname: string]: string } = {};
+    readonly strSyntaxMark = Util512.repeat(9, '?').join('')
     static inst = new BuildFakeTokens();
     constructor() {
         this.knownImages[tks.tkNewLine.name] = '\n';
         this.knownImages[tks.tkComma.name] = ',';
-        this.knownImages[tks.tkSyntaxMark.name] = Util512.repeat(9, '?').join('');
+        this.knownImages[tks.tkSyntaxMark.name] = this.strSyntaxMark;
     }
 
     /**

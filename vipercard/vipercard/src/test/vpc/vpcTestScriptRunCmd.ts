@@ -36,7 +36,7 @@ t.atest('--init--vpcTestScriptRunCmd', async () => {
     h = new TestVpcScriptRunBase(t);
     return h.initEnvironment();
 });
-t.test('_execCommands choose', () => {
+t.test('execCommands choose', () => {
     let batch: [string, string][];
     batch = [
         /* not valid */
@@ -131,7 +131,7 @@ t.test('_execCommands choose', () => {
 
     h.testBatchEvaluate(batch);
 });
-t.test('_execCommands arithmetic invalid parse', () => {
+t.test('execCommands arithmetic invalid parse', () => {
     /* add, subtract, divide, multiply */
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     h.runGeneralCode('', 'put "0" into cd fld "p1"');
@@ -160,7 +160,7 @@ t.test('_execCommands arithmetic invalid parse', () => {
     h.assertPreparseErrLn('multiply cd fld "by" from 4', 'did not see', 3);
     h.assertLineErr('multiply cd fld "p1" by', 'NoViableAltException', 3);
 });
-t.test('_execCommands arithmetic valid', () => {
+t.test('execCommands arithmetic valid', () => {
     let batch: [string, string][];
     batch = [
         /* operations */
@@ -224,7 +224,7 @@ t.test('_execCommands arithmetic valid', () => {
 
     h.testBatchEvaluate(batch, true);
 });
-//~ t.test('_execCommands go to card', () => {
+//~ t.test('execCommands go to card', () => {
 //~ /* changing current card */
 //~ h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
 //~ h.assertPreparseErrLn('go', 'on its own', 3);
@@ -378,7 +378,7 @@ t.test('_execCommands arithmetic valid', () => {
 //~ h.testBatchEvaluate(batch);
 //~
 //~ });
-t.test('_execCommands disable and enable', () => {
+t.test('execCommands disable and enable', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [
@@ -398,7 +398,7 @@ t.test('_execCommands disable and enable', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_execCommands hide and show', () => {
+t.test('execCommands hide and show', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [
@@ -447,7 +447,7 @@ t.test('_execCommands hide and show', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-//~ t.test('_execCommands sort', () => {
+//~ t.test('execCommands sort', () => {
 //~ let batch: [string, string][];
 //~ batch = [
 //~ ['put "pear,Apple2,z11,z2,11,2,apple1,peach" into initlist\\0', '0'],
@@ -496,7 +496,7 @@ t.test('_execCommands hide and show', () => {
 //~ ];
 //~ h.testBatchEvaluate(batch);
 //~ });
-t.test('_execCommands delete', () => {
+t.test('execCommands delete', () => {
     let batch: [string, string][];
     batch = [
         /* not yet supported */
@@ -551,7 +551,7 @@ t.test('_execCommands delete', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_execCommands put', () => {
+t.test('execCommands put', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [
@@ -725,7 +725,7 @@ t.test('_execCommands put', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_execCommands get', () => {
+t.test('execCommands get', () => {
     let batch: [string, string][];
     batch = [
         ['get 1+2\\it', `3`],
@@ -743,7 +743,7 @@ t.test('_execCommands get', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_execCommands replace', () => {
+t.test('execCommands replace', () => {
     let batch: [string, string][];
     batch = [
         /* incorrect usage */
@@ -914,7 +914,7 @@ replace "aa" with "bb" in cd fld "pnotexist"
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_dynamicCode do', () => {
+t.test('dynamicCode do', () => {
     let batch: [string, string][];
     batch = [
         /* valid */
@@ -934,7 +934,7 @@ t.test('_dynamicCode do', () => {
         ],
         ['global g\ndo "callNonExist"\\g', 'ERR:5:of this name found'],
         /* lex error */
-        ['put "$$$" into code\ndo code\\0', 'ERR:3:lex error'],
+        ['put "$$$" into code\ndo code\\0', 'ERR:5:lex error'],
         ['put "put " & quote & "unterminated" into code\ndo code\\0', 'ERR:5:unexpected'],
         /* syntax error */
         ['put "on abc" into code\ndo code\\0', 'ERR:5:cannot begin'],
@@ -969,7 +969,7 @@ do s\\counting() - cfirst`,
 
     h.testBatchEvaluate(batch);
 });
-t.test('_dynamicCode send', () => {
+t.test('dynamicCode send', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_a_a);
     let batch: [string, string][];
     batch = [

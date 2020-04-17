@@ -64,7 +64,7 @@ export function checkIsProductionBuild(): boolean {
  * V8's perf can be affected if there's a debugger statement around,
  * so this makes sure it's not even there.
  */
-export function callDebuggerIfNotInProduction() {
+export function callDebuggerIfNotInProduction(context?:string) {
     window['DBG' + 'PLACEHOLDER'] = true;
     /* eslint-disable-next-line no-unused-expressions */
     DBGPLACEHOLDER;

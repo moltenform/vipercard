@@ -127,8 +127,9 @@ export function assertTrue(
 ): asserts condition {
     if (!condition) {
         if (!UI512ErrorHandling.silenceAssertMsgs) {
-            console.error(s1, s2 ?? '', s3 ?? '');
-            callDebuggerIfNotInProduction();
+            let msg = joinIntoMessage('assertTrue:', 'ui512', s1, s2, s3);
+            console.error(msg);
+            callDebuggerIfNotInProduction(msg);
         }
 
         throw make512Error('assert:', s1, s2, s3).clsAsErr();
@@ -146,9 +147,9 @@ export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: un
             throw new Error('assert:' + s1 + (s2 ?? '') + (s3 ?? ''));
         }
 
-        console.error(s1, s2 ?? '', s3 ?? '');
-        callDebuggerIfNotInProduction();
         let msg = joinIntoMessage('assert:', 'ui512', s1, s2, s3);
+        console.error(msg);
+        callDebuggerIfNotInProduction(msg);
         if (!UI512ErrorHandling.silenceWarnings) {
             /* we won't throw this error, but we'll make it
             so we can save it + the callstack to logs */
@@ -260,7 +261,7 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
     let message = Util512BaseErr.errAsCls(Util512Message.name, e);
     let warn = Util512BaseErr.errAsCls(Util512Warn.name, e);
     let structure = Util512BaseErr.errAsCls(Util512BaseErr.name, e);
-    callDebuggerIfNotInProduction();
+    callDebuggerIfNotInProduction(e.message);
     if (message) {
         /* not really an error, just a message */
         if (logOnly) {

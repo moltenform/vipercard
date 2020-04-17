@@ -241,8 +241,9 @@ export class VpcPresenter extends VpcPresenterInit {
                 } else if (vel?.getType() !== VpcElType.Stack) {
                     /* for example, error in standardlib,
                     or script error from a deleted object (which is fine) */
-                    console.error(`script err in id${velId} line${lineNum} ${msg}`);
-                    callDebuggerIfNotInProduction();
+                    let s = `script err in id${velId} line${lineNum} ${msg}`
+                    console.error(s);
+                    callDebuggerIfNotInProduction(s);
                     /* fall back to current card */
                     velId = this.vci.getModel().getCurrentCard().id;
                     lineNum = 1;

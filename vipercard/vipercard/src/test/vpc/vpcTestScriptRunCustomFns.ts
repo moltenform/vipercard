@@ -1,14 +1,15 @@
 
 /* auto */ import { VpcParsedCodeCollection } from './../../vpc/codepreparse/vpcTopPreparse';
+/* auto */ import { BuildFakeTokens } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcLineCategory } from './../../vpc/codepreparse/vpcPreparseCommon';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { cProductName } from './../../ui512/utils/util512Base';
+/* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
-/* auto */ import { getEnumToStrOrFallback, util512Sort } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
+/* auto */ import { Util512, getEnumToStrOrFallback, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertThrows, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -17,7 +18,7 @@
  * test running ViperCard scripts.
  *
  * test lexing, syntax structures like loops, functions, and handlers
- * see _TestVpcScriptRunCmd_ for a description of testBatchEvaluate
+ * see TestVpcScriptRunCmd for a description of testBatchEvaluate
  */
 
 let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptRunCustomFns');
@@ -27,12 +28,39 @@ export let vpcTestCollectionScriptRunCustomFns = t;
  * setup
  */
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunCustomFns>();
-t.atest('--init--vpcTestScriptEval', async () => {
+t.atest('--init--vpcTestScriptRunCustomFns', async () => {
     h = new TestVpcScriptRunCustomFns(t);
     return h.initEnvironment();
 });
-
-t.test('_expand if + if else', () => {
+t.test('testcompareRewrittenCodeHelper', () => {
+    /* correct results */
+    let inp = `\non myCode\nif 0 is 1 then\na\nend if\nend myCode`;
+    let expected = `\nHandlerStart\nif~0~is~1~then~\na~\nIfEnd\nHandlerEnd`;
+    h.compareRewrittenCode(inp, expected);
+    /* wrong results */
+    assertAsserts('', 'xxx', ()=>{
+        inp = `\non myCode\nif 0 is 1 then\na\nend if\nend myCode`;
+        expected = `\nHandlerStart\nif~0~is~2~then~\na~\nIfEnd\nHandlerEnd`;
+        h.compareRewrittenCode(inp, expected);
+    })
+    /* compile error */
+    assertAsserts('', 'xxx', ()=>{
+        let inp = `\non myCode\na\nend if\nend myCode`;
+        let expected = `\nHandlerStart\na~\nIfEnd\nHandlerEnd`;
+        h.compareRewrittenCode(inp, expected);
+    })
+    /* compile error with wrong err message */
+    assertAsserts('', 'xxx', ()=>{
+        let inp = `\non myCode\na\nend if\nend myCode`;
+        h.compareRewrittenCode(inp, 'ERR:(incorrect message)');
+    })
+    /* works when we said it should fail */
+    assertAsserts('', 'xxx', ()=>{
+        let inp = `\non myCode\nif 0 is 1 then\na\nend if\nend myCode`;
+        h.compareRewrittenCode(inp, 'ERR:');
+    })
+});
+t.test('expand if + if else', () => {
     let inp = `
 on myCode
 test001
@@ -311,7 +339,7 @@ IfEnd
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 });
-t.test('_expand single-line if and else-if', () => {
+t.test('expand single-line if and else-if', () => {
     let inp = `
 on myCode
 if x > 1 then c1
@@ -396,7 +424,35 @@ HandlerEnd
     h.compareRewrittenCode(inp, expected);
 
     /* two lines */
-    expected = `
+    inp = `
+on myCode
+if x > 1 then c1
+else c2
+end myCode`;
+    h.compareRewrittenCode(inp, "ERR:expect line starting with")
+    inp = `
+on myCode
+if x > 1 then
+    c1
+else c2
+end myCode`;
+h.compareRewrittenCode(inp, "ERR:expect line starting with")
+    inp = `
+on myCode
+if x > 1 then
+    c1
+else if c2 then
+end myCode`;
+h.compareRewrittenCode(inp, "ERR:interleaved")
+    inp = `
+on myCode
+if x > 1 then c1
+else
+    c2
+end if
+end myCode`;
+h.compareRewrittenCode(inp, "ERR:else outside")
+expected = `
 HandlerStart
 if~x~>~1~then~
     c1~
@@ -405,28 +461,6 @@ IfElsePlain
 IfEnd
 HandlerEnd
 `;
-    inp = `
-on myCode
-if x > 1 then c1
-else c2
-end myCode`;
-
-    h.compareRewrittenCode(inp, expected);
-    inp = `
-on myCode
-if x > 1 then
-    c1
-else c2
-end myCode`;
-    h.compareRewrittenCode(inp, expected);
-    inp = `
-on myCode
-if x > 1 then c1
-else
-    c2
-end if
-end myCode`;
-    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
@@ -626,12 +660,12 @@ HandlerEnd
 `;
     h.compareRewrittenCode(inp, expected);
 });
-t.test('_put into message box', () => {
+t.test('put into message box', () => {
     let inp = `on myCode
 put "abc"
 end myCode`;
     let expected = `HandlerStart
-    put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+    put~"abc"~^^~into~^^~vpc__internal__msgbox~
     HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -640,8 +674,8 @@ put "abc"
 put "def"
 end myCode`;
     expected = `HandlerStart
-    put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
-    put~"def"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+    put~"abc"~^^~into~^^~vpc__internal__msgbox~
+    put~"def"~^^~into~^^~vpc__internal__msgbox~
     HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -649,7 +683,7 @@ end myCode`;
 put "a" & "b" & "c"
 end myCode`;
     expected = `HandlerStart
-    put~"a"~&~"b"~&~"c"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+    put~"a"~&~"b"~&~"c"~^^~into~^^~vpc__internal__msgbox~
     HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -657,7 +691,7 @@ end myCode`;
 put "a" & "b into c"
 end myCode`;
     expected = `HandlerStart
-put~"a"~&~"b into c"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+put~"a"~&~"b into c"~^^~into~^^~vpc__internal__msgbox~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -665,7 +699,7 @@ HandlerEnd`;
 put "abc" into x
 end myCode`;
     expected = `HandlerStart
-    put~"abc"~syntaxmarker~into~syntaxmarker~x~
+    put~"abc"~^^~into~^^~x~
     HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -673,7 +707,7 @@ end myCode`;
 put "abc" into msgbox
 end myCode`;
     expected = `HandlerStart
-put~"abc"~syntaxmarker~into~syntaxmarker~msgbox~
+put~"abc"~^^~into~^^~msgbox~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -689,7 +723,7 @@ HandlerEnd`;
 put "abc" into msg boxb
 end myCode`;
     expected = `HandlerStart
-put~"abc"~syntaxmarker~into~syntaxmarker~msg~boxb~
+put~"abc"~^^~into~^^~msg~boxb~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -697,7 +731,7 @@ HandlerEnd`;
 put "abc" into bmsg box
 end myCode`;
     expected = `HandlerStart
-put~"abc"~syntaxmarker~into~syntaxmarker~bmsg~box~
+put~"abc"~^^~into~^^~bmsg~box~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -705,7 +739,7 @@ HandlerEnd`;
 put "abc" into msg box
 end myCode`;
     expected = `HandlerStart
-put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+put~"abc"~^^~into~^^~vpc__internal__msgbox~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -714,8 +748,8 @@ put "abc" into msg box
 put "def" into msg box
 end myCode`;
     expected = `HandlerStart
-put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
-put~"def"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+put~"abc"~^^~into~^^~vpc__internal__msgbox~
+put~"def"~^^~into~^^~vpc__internal__msgbox~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -723,7 +757,7 @@ HandlerEnd`;
 put "abc" into the msg boxb
 end myCode`;
     expected = `HandlerStart
-    put~"abc"~syntaxmarker~into~syntaxmarker~the~msg~boxb~
+    put~"abc"~^^~into~^^~the~msg~boxb~
     HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -731,7 +765,7 @@ end myCode`;
 put "abc" into xthe msg box
 end myCode`;
     expected = `HandlerStart
-put~"abc"~syntaxmarker~into~syntaxmarker~xthe~vpc__internal__msgbox~
+put~"abc"~^^~into~^^~xthe~vpc__internal__msgbox~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 
@@ -739,11 +773,11 @@ HandlerEnd`;
 put "abc" into the msg box
 end myCode`;
     expected = `HandlerStart
-put~"abc"~syntaxmarker~into~syntaxmarker~vpc__internal__msgbox~
+put~"abc"~^^~into~^^~vpc__internal__msgbox~
 HandlerEnd`;
     h.compareRewrittenCode(inp, expected);
 });
-t.test('_run code with single-line if', () => {
+t.test('run code with single-line if', () => {
     let batch: [string, string][] = [
         [
             `
@@ -879,7 +913,7 @@ end if
 
     h.testBatchEvaluate(batch);
 });
-t.test('_expand with nested calls', () => {
+t.test('expand with nested calls', () => {
     h.provideCustomFnInStackScript(`
 function myConcat p1, p2, p3
 global countCalls
@@ -1049,7 +1083,7 @@ global a, myFn(1, 2)
 end myHandler`;
     h.assertPreparseErr(inp, 'required comma', 3);
 });
-t.test('_expand in VpcLineCategory_.ReturnExpr', () => {
+t.test('expand in VpcLineCategory_.ReturnExpr', () => {
     h.provideCustomFnInStackScript(`
 on theTest
     global countCalls
@@ -1066,7 +1100,7 @@ end theTest
 
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory_.IfStart', () => {
+t.test('expand in VpcLineCategory_.IfStart', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1096,7 +1130,7 @@ end if\\ret && countCalls`,
 
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory_.IfElse', () => {
+t.test('expand in VpcLineCategory_.IfElse', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1222,7 +1256,7 @@ end if\\ret && countCalls`,
 
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in simple repeats', () => {
+t.test('expand in simple repeats', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1303,7 +1337,7 @@ end repeat\\s && countCalls`,
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in repeat while/until', () => {
+t.test('expand in repeat while/until', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1372,7 +1406,7 @@ end repeat\\s && countCalls`,
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory_.built in command', () => {
+t.test('expand in VpcLineCategory_.built in command', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1490,7 +1524,7 @@ put 6 + \\\n myMult(1, \\\n 3) + myMult(\\\n 1, 3) + myMult(1, 3 \\\n) into x
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory_.GoCardImpl', () => {
+t.test('expand in VpcLineCategory_.GoCardImpl', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1530,7 +1564,7 @@ put the short id of this cd is the short id of card 4 into ret
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory_.CallDynamic', () => {
+t.test('expand in VpcLineCategory_.CallDynamic', () => {
     h.provideCustomFnInStackScript();
     let batch: [string, string][] = [
         ['global countCalls\\0', '0'],
@@ -1553,7 +1587,7 @@ send "global g" & cr & "put " & myMult(2,3) & " + 1 into g" to this card
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_expand in VpcLineCategory_.CallHandler', () => {
+t.test('expand in VpcLineCategory_.CallHandler', () => {
     h.provideCustomFnInStackScript(`
 on theTest p1, p2
 global g
@@ -1607,17 +1641,29 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
      */
     compareRewrittenCode(script: string, expected: string) {
         script = script.trim();
-        let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
-        h.vcstate.vci.undoableAction(() => btnGo.set('script', script));
-        let transformedCode = h.vcstate.vci
-            .getCodeExec()
-            .cachedAST.getHandlerOrThrow(script, 'handlerNotExist', btnGo.id)[0];
-        checkThrow(transformedCode instanceof VpcParsedCodeCollection, '');
+        checkThrow(script.includes('on myCode'), "test expects handler is myCode")
+        let transformedCode:O<VpcParsedCodeCollection>
+        let f = ()=> {
+            let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
+            h.vcstate.vci.undoableAction(() => btnGo.set('script', script));
+            transformedCode = h.vcstate.vci
+                .getCodeExec()
+                .cachedAST.getHandlerOrThrow(script, 'myCode', btnGo.id)[0];
+        }
+        if (expected.startsWith('ERR:')){
+            expected = expected.slice('ERR:'.length)
+            assertThrows('', expected, f)
+            return
+        } else {
+            f()
+        }
 
+        checkThrow(transformedCode instanceof VpcParsedCodeCollection, '');
+        let reSyntaxMark = new RegExp(Util512.escapeForRegex(BuildFakeTokens.inst.strSyntaxMark), 'g')
         let got = transformedCode.lines.map(
             o => o.allImages ?? getEnumToStrOrFallback(VpcLineCategory, o.ctg)
         );
-        got = got.map(o => o.replace(/\n/g, 'syntaxmarker'));
+        got = got.map(o => o.replace(reSyntaxMark, '^^'));
         let exp = expected
             .trim()
             .split('\n')

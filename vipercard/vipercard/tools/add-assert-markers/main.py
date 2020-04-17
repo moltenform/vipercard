@@ -26,6 +26,7 @@ desiredArgIndex = {
     'ensureDefined': 1,
     'assertThrows': 0,
     'assertThrowsAsync': 0,
+    'assertAsserts': 0,
 }
 
 skipThese = {

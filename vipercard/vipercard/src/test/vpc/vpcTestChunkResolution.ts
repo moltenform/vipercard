@@ -430,7 +430,7 @@ t.test('ChunkSetWord2', () => {
     testSetChunk('ABC   DEF  GHI123', 'ABC   DEF  GHI', VpcGranularity.Words, 4, 6);
     testSetChunk('ABC   DEF  GHI123', 'ABC   DEF  GHI', VpcGranularity.Words, 5, 5);
 });
-t.test('_cornercases', () => {
+t.test('cornercases', () => {
     testGetChunk('', '', VpcGranularity.Chars, 0, 0);
     testGetChunk('', '', VpcGranularity.Chars, 0, 2);
     testGetChunk('', '', VpcGranularity.Chars, 1, 1);

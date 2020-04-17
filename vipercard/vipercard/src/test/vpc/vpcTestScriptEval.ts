@@ -47,7 +47,7 @@ t.atest('--init--vpcTestScriptExprLvl', async () => {
     return h.initEnvironment();
 });
 
-t.test('_getProp', () => {
+t.test('getProp', () => {
     let batch: [string, string][];
 
     /* object resolution */
@@ -222,7 +222,7 @@ t.test('_getProp', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_vpcProperties', () => {
+t.test('vpcProperties', () => {
     let batch: [string, string][];
 
     batch = [
@@ -1086,7 +1086,7 @@ t.test('_vpcProperties', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_setting a property can use variety of expression levels', () => {
+t.test('setting a property can use variety of expression levels', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][] = [
         ['set hilite of cd btn "p1" to 2 == 3\\hilite of cd btn "p1"', 'false'],
@@ -1106,7 +1106,7 @@ t.test('_setting a property can use variety of expression levels', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_builtinFunctions', () => {
+t.test('builtinFunctions', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [

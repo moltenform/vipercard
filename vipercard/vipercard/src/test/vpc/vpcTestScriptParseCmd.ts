@@ -396,7 +396,7 @@ function assertFailsCmdSet(sInput: string, sErrExpected: string) {
  */
 function testCmd(sInput: string, sExpected: string) {
     /* manually make a syntax marker */
-    let sSyntaxMarker = Util512.repeat(9, '?').join('');
+    let sSyntaxMarker = BuildFakeTokens.inst.strSyntaxMark;
     sInput = sInput.replace(/\{MK\}/g, sSyntaxMarker);
     let sCmd = sInput.split(' ')[0];
     assertTrue(sInput.startsWith(sCmd + ' '), '1.|expected start with ' + sCmd);
