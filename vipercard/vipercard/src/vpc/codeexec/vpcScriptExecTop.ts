@@ -275,6 +275,16 @@ export class VpcExecTop {
             scriptErr.origClass = VpcCurrentScriptStage.origClass;
         }
 
+        /* for errors in dynamic code, the line number should be adjusted */
+        if (scriptErr.dynamicCodeOrigin) {
+            scriptErr.origClass += ';'
+            scriptErr.origClass += scriptErr.scriptErrVelid
+            scriptErr.origClass += ';'
+            scriptErr.origClass += scriptErr.scriptErrLine
+            scriptErr.scriptErrVelid = scriptErr.dynamicCodeOrigin[0]
+            scriptErr.scriptErrLine = scriptErr.dynamicCodeOrigin[1]
+        }
+
         if (this.cbOnScriptError) {
             this.cbOnScriptError(scriptErr);
         } else {

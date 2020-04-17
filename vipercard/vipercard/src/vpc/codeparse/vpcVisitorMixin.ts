@@ -209,6 +209,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 val = this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
             } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
                 val = this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
+            } else if (ctx.RuleExpr && ctx.RuleExpr[0]) {
+                val = this.visit(ctx.RuleExpr[0]);
             } else if (ctx.tkStringLiteral && ctx.tkStringLiteral[0]) {
                 let im = ctx.tkStringLiteral[0].image;
                 val = VpcValS(im.slice(1, -1));

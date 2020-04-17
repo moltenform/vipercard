@@ -38,7 +38,7 @@ end arrowkey
 -- implementation of push and pop
 on push
     global internalvpcpushimpl
-    put return & the id of this cd after internalvpcpushimpl
+    put return & the short id of this cd after internalvpcpushimpl
 end push
 
 on pop actuallyMove
@@ -47,13 +47,13 @@ on pop actuallyMove
     if actuallyMove then
         go to cd id theId
     end if
-    return the long name of cd id theId
+    return the long id of cd id theId
 end pop
 
 function internalvpcpushimplgetlastonstack
     global internalvpcpushimpl
     if the number of lines of internalvpcpushimpl <= 1 then
-        return the id of cd 1
+        return the short id of cd 1
     end if
     repeat with x = the number of lines of internalvpcpushimpl down to 1
         if there is a cd id (line x of internalvpcpushimpl) then
@@ -62,7 +62,7 @@ function internalvpcpushimplgetlastonstack
             return ret
         end if
     end repeat
-    return the id of cd 1
+    return the short id of cd 1
 end internalvpcpushimplgetlastonstack
 
 -- it's simpler to send these messages in code
@@ -72,10 +72,10 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
     -- order confirmed for all of these, in the product
     put goCardDestinationFromObjectId(nextId) into nextCard
     put the short id of this cd into prevCard
-    if cardId != nextCard and length(nextCard) then
+    if prevCard != nextCard and length(nextCard) > 0 then
         internalvpcmessagesdirective "closeorexitfield" prevCard
         send "closecard" to cd id prevCard
-        if the id of the owner of cd id prevCard is not the id of the owner of cd id nextCard then
+        if the short id of (the owner of cd id prevCard) is not the short id of (the owner of cd id nextCard) then
             send "closebackground" to cd id prevCard
         end if
         global internalvpcmovecardimplsuspendhistory
@@ -85,14 +85,14 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
         internalvpcmessagesdirective "viseffect" nextCard
         internalvpcmessagesdirective "gotocardsendnomessages" nextCard
         put 0 into internalvpcmovecardimplsuspendhistory
-        if the id of the owner of cd id prevCard is not the id of the owner of cd id nextCard then
+        if the short id of (the owner of cd id prevCard) is not the short id of (the owner of cd id nextCard) then
             send "openbackground" to cd id nextCard
         end if
         send "opencard" to cd id nextCard
-    else if length(nextCard) then
+    else if length(nextCard) > 0 then
         internalvpcmessagesdirective "viseffect" nextCard
     end if
-    if length(nextCard) then
+    if length(nextCard) > 0 then
         return ""
     else
         return "No such card"
@@ -105,25 +105,25 @@ function goCardDestinationFromObjectId nextId
     if objType == "card" then
         return nextId
     else if objType == "bkgnd" then
-        if the id of the owner of this cd is nextId then
-            return the id of this cd
+        if the short id of (the owner of this cd) is nextId then
+            return the short id of this cd
         else
-            return the id of cd 1 of bkgnd id nextId
+            return the short id of cd 1 of bkgnd id nextId
         end if
     else if objType == "stack" then
-        return the id of this cd
+        return the short id of this cd
     else
         return ""
     end if
 end goCardDestinationFromObjectId
 
 --on internalvpcdeletebghelper bgId
---    if the id of the owner of this cd is bgId then
+--    if the short id of (the owner of this cd) is bgId then
 --        -- try to find the first card that's not not in the bg and go there
 --        put "" into found
 --        repeat with x = 1 to the number of cards
---            if the id of the owner of cd x is not bgId then
---                put the id of cd x into found
+--            if the short id of (the owner of cd x) is not bgId then
+--                put the short id of cd x into found
 --                exit repeat
 --            end if
 --        end repeat
@@ -135,7 +135,7 @@ end goCardDestinationFromObjectId
 --    end if
 --    put "" into toDelete
 --    repeat with x = 1 to the number of cards in bg id bgId
---        put the id of cd x of bg id bgId into line x of toDelete
+--        put the short id of cd x of bg id bgId into line x of toDelete
 --    end repeat
 --    repeat with x = 1 to the number of lines in toDelete
 --        doMenu "deletecard", line x of toDelete

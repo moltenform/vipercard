@@ -22,7 +22,6 @@ export class VpcScriptExecuteStatementHelpers {
     goMathAlter(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, fn: (a: number, b: number) => number) {
         let val = ensureDefined(this.findChildVal(vals, tkstr.RuleLvl1Expression), '5M|');
         let container = ensureDefined(this.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '5L|');
-
         let getResultAsString = (s: string) => {
             let f1 = VpcValS(s).readAsStrictNumeric();
             let f2 = val.readAsStrictNumeric();

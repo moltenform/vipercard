@@ -4,7 +4,7 @@
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcTool, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
-/* auto */ import { arLast, findStrToEnum, getStrToEnum, longstr } from './../../ui512/utils/util512';
+/* auto */ import { arLast, findStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -141,6 +141,10 @@ export class VpcRewriteForCommands {
     rewriteDisable(line: ChvITk[]): ChvITk[][] {
         return this.hReturnNyiIfMenuMentionedOutsideParens(line);
     }
+    rewriteDivide(line: ChvITk[]): ChvITk[][] {
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'by', true);
+        return [line];
+    }
     rewriteDo(line: ChvITk[]): ChvITk[][] {
         let template = `send ( %ARG0% ) to me`;
         return this.rw.gen(template, line[0], [line.slice(1)]);
@@ -214,15 +218,15 @@ export class VpcRewriteForCommands {
         if (line.length === 2 && (line[1].tokenType === tks.tkOrdinal || line[1].tokenType === tks.tkPosition)) {
             template = `
 if there is a %ARG0% card then
-    internalvpcmovecardhelper ( the id of %ARG0% card ) , ${shouldSuspendHistory}
+    internalvpcmovecardhelper ( the short id of %ARG0% card ) , ${shouldSuspendHistory}
 end if`;
         } else {
             /* the id might refer to a bg or stack, we will correctly handle that.
-            also note that `the id of back` is correctly understood. */
-
+            also note that `the id of back` is correctly understood. 
+            to match the product, we need to say 'short id' */
             template = `
 if there is a %ARG0% then
-    internalvpcmovecardhelper  ( the id of %ARG0% ) , ${shouldSuspendHistory}
+    internalvpcmovecardhelper  ( the short id of %ARG0% ) , ${shouldSuspendHistory}
 end if`;
         }
         return this.rw.gen(template, line[0], [line.slice(1)]);
@@ -247,6 +251,10 @@ end if`;
     }
     rewriteMark(line: ChvITk[]): ChvITk[][] {
         return [this.hBuildNyi('the mark command', line[0])];
+    }
+    rewriteMultiply(line: ChvITk[]): ChvITk[][] {
+        this.rw.replaceWithSyntaxMarkerAtLvl0(line, line[0], 'by', true);
+        return [line];
     }
     rewritePass(line: ChvITk[]): ChvITk[][] {
         /* add a return statement afterwards, solely to make code exec simpler. */

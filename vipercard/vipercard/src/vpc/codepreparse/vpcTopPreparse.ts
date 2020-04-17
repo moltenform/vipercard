@@ -218,6 +218,7 @@ export namespace VpcTopPreparse {
     function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
         line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line);
         line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);
+        line = VpcRewritesGlobal.rewriteOfTarget(line, rw);
         let outlines = exp.go(line);
         return outlines;
     }

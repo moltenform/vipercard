@@ -476,6 +476,13 @@ this.SUBRULE1(this.RuleHOldStyleFnNullaryOrNullaryPropGet)
 ALT: () => {
 this.CONSUME1(tks.tkStringLiteral)
 }
+},
+{
+ALT: () => {
+this.CONSUME1(tks.tkLParen)
+this.SUBRULE1(this.RuleExpr)
+this.CONSUME1(tks.tkRParen)
+}
 }
 ]);
 });
@@ -1263,7 +1270,7 @@ this.CONSUME1(tks.tkSyntaxPlaceholder)
 this.CONSUME2(tks.tkSyntaxPlaceholder)
 this.CONSUME3(tks.tkSyntaxPlaceholder)
 this.SUBRULE1(this.RuleHContainer)
-this.CONSUME1(tks.tkIdentifier)
+this.CONSUME4(tks.tkSyntaxPlaceholder)
 this.SUBRULE1(this.RuleLvl1Expression)
 });
 
@@ -1362,7 +1369,7 @@ this.CONSUME1(tks.tkSyntaxPlaceholder)
 this.CONSUME2(tks.tkSyntaxPlaceholder)
 this.CONSUME3(tks.tkSyntaxPlaceholder)
 this.SUBRULE1(this.RuleHContainer)
-this.CONSUME1(tks.tkIdentifier)
+this.CONSUME4(tks.tkSyntaxPlaceholder)
 this.SUBRULE1(this.RuleLvl1Expression)
 });
 

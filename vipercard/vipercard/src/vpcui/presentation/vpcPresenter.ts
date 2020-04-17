@@ -211,21 +211,14 @@ export class VpcPresenter extends VpcPresenterInit {
             let lineNum = scriptErr.scriptErrLine ?? 1;
             let msg = cleanExceptionMsg(scriptErr.clsAsErr());
 
-            /* did this come from the messagebox? */
-            if (scriptErr.dynamicCodeOrigin && scriptErr.dynamicCodeOrigin[0] === 'messagebox') {
+            /* did this come from the messagebox? note that
+            we've already applied changes from dynamicCodeOrigin */
+            if (velId === 'messagebox') {
                 if (this.lyrNonModalDlgHolder.current && this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox) {
                     this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
                 }
 
                 return;
-            }
-
-            /* look at dynamic code origin: send "xsdfsdf" to cd 1 should show
-            the error being from the offending send statement, not the target,
-            especially because the linenumber on the target will be wrong */
-            if (scriptErr.dynamicCodeOrigin) {
-                velId = scriptErr.dynamicCodeOrigin[0];
-                lineNum = scriptErr.dynamicCodeOrigin[1];
             }
 
             /* move to the card where the error happened. */

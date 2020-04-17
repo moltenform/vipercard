@@ -57,8 +57,13 @@ t.test('_getProp', () => {
         [`the short id of xyz`, `ERR:no variable`],
         [`the short id of the xyz`, `ERR:no such function`],
 
-        /* target, me, productOpts */
+        /* target, me, productOpts
+        confirmed these in emulator */
         [`the short id of the target`, `${h.elIds.btn_go}`],
+        [`the short id of target`, `${h.elIds.btn_go}`],
+        [`the short id of target()`, `ERR:no such function`],
+        [`the short id of (target())`, `ERR:no such function`],
+        [`the short id of the me`, `ERR:parse err`],
         [`the short id of me`, `${h.elIds.btn_go}`],
         [`the short id of ${cProductName}`, `WILD`],
         [`the short id of ${cAltProductName}`, `WILD`],

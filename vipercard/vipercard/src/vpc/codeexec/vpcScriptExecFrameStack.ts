@@ -11,7 +11,7 @@
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcErrStage, VpcTool, VpcVisualEffectSpec, checkThrow, checkThrowEq, VpcElType } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErrStage, VpcTool, VpcVisualEffectSpec, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
@@ -721,13 +721,17 @@ export class VpcExecFrameStack {
     visitIsInternalvpcmessagesdirective(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         curFrame.next();
         checkThrowEq(3, curLine.excerptToParse.length, '');
-        checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1], '');
-        checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2], '');
+        checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, '');
         let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
-        let variable = curLine.excerptToParse[2].image;
+        let variable:O<string>
+        if (curLine.excerptToParse.length >= 2) {
+            checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, '');
+            variable = curLine.excerptToParse[2].image;
+        }
+
         let sendMsg = '';
         let sendMsgTarget = '';
-        if (directive === 'closeorexit') {
+        if (directive === 'closeorexitfield') {
             let currentCardId = this.outside.GetOptionS('currentCardId');
             let seld = this.outside.GetSelectedField();
             if (seld && seld.parentId === currentCardId) {
@@ -745,11 +749,11 @@ export class VpcExecFrameStack {
                 this.outside.GetFieldsRecentlyEdited().val = {};
             }
         } else if (directive === 'gotocardsendnomessages') {
-            let nextCardId = curFrame.locals.get(variable);
+            let nextCardId = curFrame.locals.get(ensureDefined(variable, ''));
             checkThrow(nextCardId && nextCardId.isItInteger(), '');
             this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
         } else if (directive === 'viseffect') {
-            let nextCard = curFrame.locals.get(variable);
+            let nextCard = curFrame.locals.get(ensureDefined(variable, ''));
             let spec = this.globals.get('$currentVisEffect').readAsString().split('|');
             this.globals.set('$currentVisEffect', VpcValS(''));
             if (spec.length >= 4) {

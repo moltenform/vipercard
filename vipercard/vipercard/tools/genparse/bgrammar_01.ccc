@@ -55,6 +55,7 @@
 //      NEW FEATURE: label and name are separate properties
 //      CHANGE: the "long id" of objects is now more useful. 
 //      the string versions of "the target" and "the owner of" look a little different, they return the long id
+//      we need parens for if the short id of the owner of cd id prevCard is not the short id of the owner of cd id nextCard then answer "j"
 //      we don't support char x + 1 of abc, need char (x + 1) of abc
             
             
@@ -78,6 +79,7 @@
 //      you can no longer say put the result() into x, you have to say either put the result into x or put result() into x
 //      match the product: you can't say 'get the id of target' or 'get the id of target()', you have to say 'get the id of the target'
 //      match the product: we no longer support the in some cases, "the me" and "the hypercard" are no longer valid
+//      match the product: we support 'put the name of target'
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
 tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/
@@ -119,7 +121,7 @@ tkPartPlural=OneOfWords(parts)
 tkProductName=OneOfWords(hypercard,vipercard)
 tkAdjective=OneOfWords(long,short,abbrev,abbr,abbreviated)
 tkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth)
-tkPosition=OneOfWords(this,prev,next)
+tkPosition=OneOfWords(this,prev,previous,next)
 tkChunkGranularity=OneOfWords(characters?,chars?,words?,items?,lines?)
 tkInOnly=OneOfWords(in)
 tkOfOnly=OneOfWords(of)
@@ -152,6 +154,7 @@ _menu=OneOfWords(menu)
 _id=OneOfWords(id)
 _number=OneOfWords(number)
 _selection=OneOfWords(selection)
+_target=OneOfWords(target)
 
 // comma
 tkComma=/,/
@@ -179,6 +182,7 @@ tkGreaterOrLessEqualOrEqual=OneOfOr(<> |or| >=? |or| <=? |or| != |or| ==? |or| \
 // the list below contains only the long form, synonyms like 'loc' will be rewritten via rewritePropertySynonyms
 // checkmark isn't new to us, it is already in list
 tkUnaryVipercardProperties=OneOfWords(alltext,label,showlabel,singleline,defaulttextstyle,defaulttextfont,defaulttextsize)
+NullaryVipercardProperties:=_target                                 --->ProcessOr--->IToken
 
 /* generated code, any changes past this point will be lost: --------------- */
 tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom,bottomright,cantabort,cantdelete,cantmodify,cantpeek,checkmark,commandchar,dontsearch,dontwrap,enabled,family,fixedlineheight,freesize,height,hilite,icon,left,location,locktext,markchar,menumessage,multiplelines,name,owner,partnumber,rectangle,reporttemplates,right,script,scroll,sharedhilite,sharedtext,showlines,showname,showpict,size,style,textalign,titlewidth,top,topleft,visible,widemargins,width,zoomed)
@@ -202,7 +206,7 @@ HAnyAllowedVariableName:={ tkIdentifier | _number | tkA | tkAllUnaryPropertiesIf
 // it's also possible to make all binary operators the same level and work out the precedence in software = smaller parse tree to hold in memory
 
 // must be last, or it would take precedence over most of the rest
-tkIdentifier=/[a-zA-Z][0-9a-zA-Z_]*/
+tkIdentifier=/[a-zA-Z][0-9a-zA-Z$_]*/
 
 //////////// Objects
 // note use of Lvl6Expression - confirmed in product. you have to say 'cd btn (1+1)' and not 'cd btn 1+1'
@@ -219,10 +223,10 @@ ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | tkBgAtEndOfLine |
 ObjectStack:={<Position> tkStack | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                                                                 --->Custom--->RequestedVelRef  
 ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expression> | tkPart <Lvl6Expression> | <Ordinal> tkPart} [ <Of> <ObjectCard> ] }     --->Custom--->RequestedVelRef
 
-// note that "me" is different than "the target". the target returns a string that can be used as an object, but me refers to a true 
-ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
+// note that "me" is different than "the target". the target returns a string that can be used as an object, but me refers to a true object
+ObjectSpecial:={tkProductName | _me | _target }       --->Custom--->RequestedVelRef
 // support variables, HOldStyleFnNonNullary (basically for the target), and HOldStyleFnNullaryOrNullaryPropGet (basically for the owner of),
-ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullary> |  <HOldStyleFnNullaryOrNullaryPropGet> | tkStringLiteral }              --->Custom--->RequestedVelRef
+ObjectInterpretedFromString:={ <HAnyAllowedVariableName> | <HOldStyleFnNonNullary> |  <HOldStyleFnNullaryOrNullaryPropGet> | tkStringLiteral | tkLParen <Expr> tkRParen }              --->Custom--->RequestedVelRef
 
 // put "a" && the me into cd fld "myf" -- syntax error
 // put "a" && the target into cd fld "myf" -- treated as objectname

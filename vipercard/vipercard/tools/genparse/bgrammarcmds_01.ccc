@@ -45,8 +45,10 @@ BuiltinCmdDelete:=... { <HChunk> <HSimpleContainer> | <ObjectPart> }
 BuiltinCmdDial:=... <Expr>                                                                           
 // disable a button. in rewrite error on mention of "menu"
 BuiltinCmdDisable:=... <ObjectBtn>                                                                     
-// divide. the tkIdentifier is "by"
-BuiltinCmdDivide:=... <HContainer> tkIdentifier <Lvl1Expression>                                                              
+// divide. rewrite "by" to a  tkSyntaxPlaceholder
+// the rewrite isn't really needed, but it's a good idea in case we ever need two consecutive tkidentifiers
+// to be a valid expression
+BuiltinCmdDivide:=... <HContainer> tkSyntaxPlaceholder <Lvl1Expression>                                                              
 // domenu. currently supports New Card, Delete Card, Back, First, Prev, Next, Last, New Button, New Field, New Background 
 // and also support doMenu "New Card", "Object" like in the product
 // note that cards can override the domenu message. and that in the product you can omit quotes, domenu new button works
@@ -82,8 +84,8 @@ BuiltinCmdLock:=... tkIdentifier
 // mark. other parsing done in software
 // not supported yet but I'll leave this syntax here
 BuiltinCmdMark:=... [_not] {tkSyntaxPlaceholder <ObjectCard> | tkComma <Expr> <Of> <ObjectFld> }
-// multiply. the tkIdentifier is "by"
-BuiltinCmdMultiply:=...<HContainer> tkIdentifier <Lvl1Expression>                                                               
+// multiply. rewrite from "by" the tkIdentifier is "by"
+BuiltinCmdMultiply:=...<HContainer> tkSyntaxPlaceholder <Lvl1Expression>                                                               
 // open. show NYI in rewrite
 // pop card. has a little stack to go to. implemented entirely in software
 // BuiltinCmdPop:=... into|before|after container 

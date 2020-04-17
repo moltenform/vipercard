@@ -322,7 +322,7 @@ pattern: /(?:last(?![a-zA-Z0-9_]))|(?:mid(?![a-zA-Z0-9_]))|(?:middle(?![a-zA-Z0-
 }),
 tkPosition: chevrotain.createToken({
 name: "tkPosition",
-pattern: /(?:this(?![a-zA-Z0-9_]))|(?:prev(?![a-zA-Z0-9_]))|(?:next(?![a-zA-Z0-9_]))/i,
+pattern: /(?:this(?![a-zA-Z0-9_]))|(?:prev(?![a-zA-Z0-9_]))|(?:previous(?![a-zA-Z0-9_]))|(?:next(?![a-zA-Z0-9_]))/i,
 }),
 tkChunkGranularity: chevrotain.createToken({
 name: "tkChunkGranularity",
@@ -478,7 +478,7 @@ pattern: /(?:scriptinglanguage(?![a-zA-Z0-9_]))|(?:textfont(?![a-zA-Z0-9_]))|(?:
 }),
 tkIdentifier: chevrotain.createToken({
 name: "tkIdentifier",
-pattern: /[a-zA-Z][0-9a-zA-Z_]*/i,
+pattern: /[a-zA-Z][0-9a-zA-Z$_]*/i,
 }),
 }
 
@@ -597,6 +597,7 @@ alsoReservedWordsList['ninth'] = true;
 alsoReservedWordsList['tenth'] = true;
 alsoReservedWordsList['this'] = true;
 alsoReservedWordsList['prev'] = true;
+alsoReservedWordsList['previous'] = true;
 alsoReservedWordsList['next'] = true;
 alsoReservedWordsList['characters'] = true;
 alsoReservedWordsList['character'] = true;
@@ -692,6 +693,7 @@ listOfAllWordLikeTokens['ninth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['tenth'] = tks.tkOrdinal;
 listOfAllWordLikeTokens['this'] = tks.tkPosition;
 listOfAllWordLikeTokens['prev'] = tks.tkPosition;
+listOfAllWordLikeTokens['previous'] = tks.tkPosition;
 listOfAllWordLikeTokens['next'] = tks.tkPosition;
 listOfAllWordLikeTokens['characters'] = tks.tkChunkGranularity;
 listOfAllWordLikeTokens['character'] = tks.tkChunkGranularity;

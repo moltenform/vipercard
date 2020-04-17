@@ -37,97 +37,96 @@ t.atest('--init--vpcTestScriptRunCmd', async () => {
     return h.initEnvironment();
 });
 t.test('_execCommands choose', () => {
-    h.assertPreparseErrLn('choose', "not enough args")
-    h.assertPreparseErrLn('choose brush', "tool")
     let batch: [string, string][];
     batch = [
         /* not valid */
-        ['choose tool\\tool()', 'ERR:not enough args'],
-        ['choose 3\\tool()', 'ERR:not enough args'],
-        ['choose pencil\\tool()', 'ERR:not enough args'],
-        ['choose abc\\tool()', 'ERR:not enough args'],
-        ['choose pencil def\\tool()', 'ERR:not see the keyword'],
-        ['choose pencil def tool\\tool()', 'ERR:NotAllInputParsedException'],
-        ['choose tool 3 tool\\tool()', 'ERR:Redundant input'],
-        ['choose tool "pencil" tool\\tool()', 'ERR:NotAllInputParsedException'],
-        ['choose tool "pencil" xyz\\tool()', 'ERR:NotAllInputParsedException'],
-        ['choose tool "pencil" "tool"\\tool()', 'ERR:NotAllInputParsedException'],
-        ['choose "pencil" xyz\\tool()', 'ERR:not see the keyword'],
-        ['choose "pencil" "tool"\\tool()', 'ERR:not see the keyword'],
+        //~ ['choose tool\\tool()', 'ERR:not a valid tool'],
+        //~ ['choose pencil def tool\\tool()', 'ERR:NotAllInputParsedException'],
+        //~ ['choose tool 3 tool\\tool()', 'ERR:Redundant input'],
+        //~ ['choose tool "pencil" tool\\tool()', 'ERR:NotAllInputParsedException'],
+        //~ ['choose tool "pencil" xyz\\tool()', 'ERR:NotAllInputParsedException'],
+        //~ ['choose tool "pencil" "tool"\\tool()', 'ERR:NotAllInputParsedException'],
+        ['choose', "PREPARSEERR:not enough args"],
+        ['choose brush', "PREPARSEERR:tool"],
+        ['choose 3', "PREPARSEERR:tool"],
+        ['choose pencil', "PREPARSEERR:tool"],
+        ['choose abc', "PREPARSEERR:tool"],
+        ['choose pencil def', "PREPARSEERR:tool"],
+        ['choose "pencil" xyz', "PREPARSEERR:tool"],
+        ['choose "pencil" "tool"', "PREPARSEERR:tool"],
 
         /* updated style */
-        ['choose "browse" tool\\tool()', 'browse'],
-        ['choose "button" tool\\tool()', 'ERR:drawing only'],
-        ['choose "field" tool\\tool()', 'ERR:drawing only'],
-        ['choose "select" tool\\tool()', 'ERR:drawing only'],
-        ['choose "brush" tool\\tool()', 'brush'],
-        ['choose "bucket" tool\\tool()', 'bucket'],
-        ['choose "stamp" tool\\tool()', 'ERR:drawing only'],
-        ['choose "pencil" tool\\tool()', 'pencil'],
-        ['choose "line" tool\\tool()', 'line'],
-        ['choose "curve" tool\\tool()', 'curve'],
-        ['choose "lasso" tool\\tool()', 'ERR:drawing only'],
-        ['choose "eraser" tool\\tool()', 'eraser'],
-        ['choose "rect" tool\\tool()', 'rect'],
-        ['choose "oval" tool\\tool()', 'oval'],
-        ['choose "roundrect" tool\\tool()', 'roundrect'],
-        ['choose "spray" tool\\tool()', 'spray'],
-        ['choose "spray can" tool\\tool()', 'spray'],
-        ['choose "round rect" tool\\tool()', 'roundrect'],
-        ['choose "round  rect" tool\\tool()', 'roundrect'],
-        ['choose "xyz" tool\\tool()', 'ERR:Not a valid choice'],
-        ['choose "" tool\\tool()', 'ERR:valid tool name'],
+        //~ ['choose "browse" tool\\tool()', 'browse'],
+        //~ ['choose "button" tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose "field" tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose "select" tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose "brush" tool\\tool()', 'brush'],
+        //~ ['choose "bucket" tool\\tool()', 'bucket'],
+        //~ ['choose "stamp" tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose "pencil" tool\\tool()', 'pencil'],
+        //~ ['choose "line" tool\\tool()', 'line'],
+        //~ ['choose "curve" tool\\tool()', 'curve'],
+        //~ ['choose "lasso" tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose "eraser" tool\\tool()', 'eraser'],
+        //~ ['choose "rect" tool\\tool()', 'rect'],
+        //~ ['choose "oval" tool\\tool()', 'oval'],
+        //~ ['choose "roundrect" tool\\tool()', 'roundrect'],
+        //~ ['choose "spray" tool\\tool()', 'spray'],
+        //~ ['choose "spray can" tool\\tool()', 'spray'],
+        //~ ['choose "round rect" tool\\tool()', 'roundrect'],
+        //~ ['choose "round  rect" tool\\tool()', 'roundrect'],
+        //~ ['choose "xyz" tool\\tool()', 'ERR:Not a valid choice'],
+        //~ ['choose "" tool\\tool()', 'ERR:valid tool name'],
 
-        /* classic style */
-        ['choose browse tool\\tool()', 'browse'],
-        ['choose button tool\\tool()', 'ERR:drawing only'],
-        ['choose field tool\\tool()', 'ERR:drawing only'],
-        ['choose select tool\\tool()', 'ERR:drawing only'],
-        ['choose brush tool\\tool()', 'brush'],
-        ['choose bucket tool\\tool()', 'bucket'],
-        ['choose stamp tool\\tool()', 'ERR:drawing only'],
-        ['choose pencil tool\\tool()', 'pencil'],
-        ['choose line tool\\tool()', 'line'],
-        ['choose curve tool\\tool()', 'curve'],
-        ['choose lasso tool\\tool()', 'ERR:drawing only'],
-        ['choose eraser tool\\tool()', 'eraser'],
-        ['choose rect tool\\tool()', 'rect'],
-        ['choose oval tool\\tool()', 'oval'],
-        ['choose roundrect tool\\tool()', 'roundrect'],
-        ['choose spray tool\\tool()', 'spray'],
-        ['choose spray can tool\\tool()', 'spray'],
-        ['choose round rect tool\\tool()', 'roundrect'],
-        ['choose round  rect tool\\tool()', 'roundrect'],
-        ['choose xyz tool\\tool()', 'ERR:no variable found'],
-        ['choose tool\\tool()', 'ERR:not enough args'],
+        //~ /* classic style */
+        //~ ['choose browse tool\\tool()', 'browse'],
+        //~ ['choose button tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose field tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose select tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose brush tool\\tool()', 'brush'],
+        //~ ['choose bucket tool\\tool()', 'bucket'],
+        //~ ['choose stamp tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose pencil tool\\tool()', 'pencil'],
+        //~ ['choose line tool\\tool()', 'line'],
+        //~ ['choose curve tool\\tool()', 'curve'],
+        //~ ['choose lasso tool\\tool()', 'ERR:drawing only'],
+        //~ ['choose eraser tool\\tool()', 'eraser'],
+        //~ ['choose rect tool\\tool()', 'rect'],
+        //~ ['choose oval tool\\tool()', 'oval'],
+        //~ ['choose roundrect tool\\tool()', 'roundrect'],
+        //~ ['choose spray tool\\tool()', 'spray'],
+        //~ ['choose spray can tool\\tool()', 'spray'],
+        //~ ['choose round rect tool\\tool()', 'roundrect'],
+        //~ ['choose round  rect tool\\tool()', 'roundrect'],
+        //~ ['choose xyz tool\\tool()', 'ERR:no variable found'],
 
-        /* numeric style */
-        ['choose tool 1\\tool()', 'browse'],
-        ['choose tool 2\\tool()', 'ERR:drawing only'],
-        ['choose tool 4\\tool()', 'ERR:drawing only'],
-        ['choose tool 9\\tool()', 'line'],
-        ['choose tool 10\\tool()', 'spray'],
-        ['choose tool 15\\tool()', 'curve'],
-        ['choose tool 17\\tool()', 'ERR:unknown or unsupported'],
-        ['choose tool 99\\tool()', 'ERR:unknown or unsupported'],
-        ['choose tool 0\\tool()', 'ERR:unknown or unsupported'],
-        ['choose tool -1\\tool()', 'ERR:unknown or unsupported'],
+        //~ /* numeric style */
+        //~ ['choose tool 1\\tool()', 'browse'],
+        //~ ['choose tool 2\\tool()', 'ERR:drawing only'],
+        //~ ['choose tool 4\\tool()', 'ERR:drawing only'],
+        //~ ['choose tool 9\\tool()', 'line'],
+        //~ ['choose tool 10\\tool()', 'spray'],
+        //~ ['choose tool 15\\tool()', 'curve'],
+        //~ ['choose tool 17\\tool()', 'ERR:unknown or unsupported'],
+        //~ ['choose tool 99\\tool()', 'ERR:unknown or unsupported'],
+        //~ ['choose tool 0\\tool()', 'ERR:unknown or unsupported'],
+        //~ ['choose tool -1\\tool()', 'ERR:unknown or unsupported'],
 
-        /* we'll allow this */
-        ['choose tool "pencil"\\tool()', 'pencil'],
-        ['choose 10 tool\\tool()', 'spray'],
+        //~ /* we'll allow this */
+        //~ ['choose tool "pencil"\\tool()', 'pencil'],
+        //~ ['choose 10 tool\\tool()', 'spray'],
 
-        /* by expression */
-        ['choose "pen" & "cil" tool\\tool()', 'pencil'],
-        ['choose ("pen" & "cil") tool\\tool()', 'pencil'],
-        ['put "pencil" into x\nchoose x tool\\tool()', 'pencil'],
-        ['put "spray can" into x\nchoose x tool\\tool()', 'spray'],
-        ['put "spray can" into x\nchoose (x) tool\\tool()', 'spray'],
-        ['choose tool 10 + 5\\tool()', 'curve'],
-        ['choose tool 100/10\\tool()', 'spray'],
-        ['choose tool (10 - 1)\\tool()', 'line'],
-        ['put 15 into x\nchoose tool x\\tool()', 'curve'],
-        ['put 15 into x\nchoose tool (x)\\tool()', 'curve']
+        //~ /* by expression */
+        //~ ['choose "pen" & "cil" tool\\tool()', 'pencil'],
+        //~ ['choose ("pen" & "cil") tool\\tool()', 'pencil'],
+        //~ ['put "pencil" into x\nchoose x tool\\tool()', 'pencil'],
+        //~ ['put "spray can" into x\nchoose x tool\\tool()', 'spray'],
+        //~ ['put "spray can" into x\nchoose (x) tool\\tool()', 'spray'],
+        //~ ['choose tool 10 + 5\\tool()', 'curve'],
+        //~ ['choose tool 100/10\\tool()', 'spray'],
+        //~ ['choose tool (10 - 1)\\tool()', 'line'],
+        //~ ['put 15 into x\nchoose tool x\\tool()', 'curve'],
+        //~ ['put 15 into x\nchoose tool (x)\\tool()', 'curve']
     ];
 
     h.testBatchEvaluate(batch);
@@ -142,23 +141,23 @@ t.test('_execCommands arithmetic invalid parse', () => {
     h.assertLineErr('add 4 from cd fld "to"', 'MismatchedTokenException', 3);
     h.assertLineErr('add 4 to', 'NoViableAltException', 3);
     h.assertLineErr('add to cd fld "p1"', 'NoViableAltException', 3);
-    h.assertPreparseErrLn('subtract 4 with cd fld "p1"', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('subtract 4 into cd fld "p1"', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('subtract 4 to cd fld "p1"', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('subtract 4 to cd fld "from"', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('subtract 4 with cd fld "p1"', 'did not see', 3);
+    h.assertPreparseErrLn('subtract 4 into cd fld "p1"', 'did not see', 3);
+    h.assertPreparseErrLn('subtract 4 to cd fld "p1"', 'did not see', 3);
+    h.assertPreparseErrLn('subtract 4 to cd fld "from"', 'did not see', 3);
     h.assertLineErr('subtract 4 from', 'NoViableAltException', 3);
     h.assertLineErr('subtract from cd fld "p1"', 'NoViableAltException', 3);
-    h.assertPreparseErrLn('divide cd fld "p1"', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('divide cd fld "p1" to 4', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('divide cd fld "p1" with 4', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('divide cd fld "p1" from 4', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('divide cd fld "by" from 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('divide cd fld "p1"', 'did not see', 3);
+    h.assertPreparseErrLn('divide cd fld "p1" to 4', 'did not see', 3);
+    h.assertPreparseErrLn('divide cd fld "p1" with 4', 'did not see', 3);
+    h.assertPreparseErrLn('divide cd fld "p1" from 4', 'did not see', 3);
+    h.assertPreparseErrLn('divide cd fld "by" from 4', 'did not see', 3);
     h.assertLineErr('divide cd fld "p1" by', 'NoViableAltException', 3);
-    h.assertPreparseErrLn('multiply cd fld "p1"', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('multiply cd fld "p1" to 4', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('multiply cd fld "p1" with 4', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('multiply cd fld "p1" from 4', 'did not see the keyword', 3);
-    h.assertPreparseErrLn('multiply cd fld "by" from 4', 'did not see the keyword', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1"', 'did not see', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1" to 4', 'did not see', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1" with 4', 'did not see', 3);
+    h.assertPreparseErrLn('multiply cd fld "p1" from 4', 'did not see', 3);
+    h.assertPreparseErrLn('multiply cd fld "by" from 4', 'did not see', 3);
     h.assertLineErr('multiply cd fld "p1" by', 'NoViableAltException', 3);
 });
 t.test('_execCommands arithmetic valid', () => {
@@ -225,136 +224,162 @@ t.test('_execCommands arithmetic valid', () => {
 
     h.testBatchEvaluate(batch, true);
 });
-t.test('_execCommands go to card', () => {
-    /* changing current card */
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
-    h.assertPreparseErrLn('go', 'on its own', 3);
-    h.assertLineErr('go "a"', 'not this', 3);
-    h.assertLineErr('go 1', 'NoViableAltException', 3);
-    h.assertLineErr('go to cd btn id 1', 'NoViableAltException', 3);
-    h.assertLineErr('go to cd btn "p1"', 'NoViableAltException', 3);
-    h.assertLineErr('go xyz', 'Not a valid choice', 3);
-    let batch: [string, string][];
-    batch = [
-        /* go by id */
-        [
-            `go to card id ${h.elIds.card_b_c}\\the short id of this cd`,
-            `${h.elIds.card_b_c}`
-        ],
-        [
-            `go to card id ${h.elIds.card_b_d}\\the short id of this cd`,
-            `${h.elIds.card_b_d}`
-        ],
-        [
-            `go to card id ${h.elIds.card_c_d}\\the short id of this cd`,
-            `${h.elIds.card_c_d}`
-        ],
+//~ t.test('_execCommands go to card', () => {
+    //~ /* changing current card */
+    //~ h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    //~ h.assertPreparseErrLn('go', 'on its own', 3);
+    //~ h.assertLineErr('go "a"', 'something like', 3);
+    //~ h.assertLineErr('go 1', 'NoViableAltException', 3);
+    //~ h.assertLineErr('go xyz', 'no variable found', 3);
+    //~ let batch: [string, string][];
+    //~ batch = [
+        //~ /* go by id */
+        //~ [
+            //~ `go to card id ${h.elIds.card_b_d}\\the short id of this cd`,
+            //~ `${h.elIds.card_b_d}`
+        //~ ],
+        //~ /* go by variable lookup */
+        //~ [
+            //~ `put the long id of cd id ${h.elIds.card_b_c} into xx\ngo to card xx\\the short id of this cd`,
+            //~ `${h.elIds.card_b_c}`
+        //~ ],
+        //~ [
+            //~ `put "card id ${h.elIds.card_b_d}" into xx\ngo to card xx\\the short id of this cd`,
+            //~ `${h.elIds.card_b_d}`
+        //~ ],
+        //~ [
+            //~ `put "cd id ${h.elIds.card_b_c}" into xx\ngo to card xx\\the short id of this cd`,
+            //~ `${h.elIds.card_b_c}`
+        //~ ],
+        //~ /* going to different types of objects is a no-op */
+        //~ [
+            //~ `go to cd btn id 1\\the short id of this cd`,
+            //~ `${h.elIds.card_b_c}`
+        //~ ],
+        //~ [
+            //~ `go to cd btn "p1"\\the short id of this cd`,
+            //~ `${h.elIds.card_b_c}`
+        //~ ],
+        //~ [
+            //~ `go to cd fld 1\\the short id of this cd`,
+            //~ `${h.elIds.card_b_c}`
+        //~ ],
+        //~ /* go by id */
+        //~ [
+            //~ `go to card id ${h.elIds.card_b_d}\\the short id of this cd`,
+            //~ `${h.elIds.card_b_d}`
+        //~ ],
+        //~ [
+            //~ `go to card id ${h.elIds.card_c_d}\\the short id of this cd`,
+            //~ `${h.elIds.card_c_d}`
+        //~ ],
 
-        /* go by number */
-        ['go to card 1\\the short id of this cd', `${h.elIds.card_a_a}`],
-        ['go to card 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-        ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
-        ['go to card 4\\the short id of this cd', `${h.elIds.card_b_d}`],
-        ['go to card 5\\the short id of this cd', `${h.elIds.card_c_d}`],
+        //~ /* go by number */
+        //~ ['go to card 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+        //~ ['go to card 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ ['go to card 4\\the short id of this cd', `${h.elIds.card_b_d}`],
+        //~ ['go to card 5\\the short id of this cd', `${h.elIds.card_c_d}`],
 
-        /* get by relative (tests getCardByOrdinal) */
-        ['go to card 1\\the short id of next cd', `${h.elIds.card_b_b}`],
-        ['go to card 2\\the short id of next cd', `${h.elIds.card_b_c}`],
-        ['go to card 3\\the short id of next cd', `${h.elIds.card_b_d}`],
-        ['go to card 4\\the short id of next cd', `${h.elIds.card_c_d}`],
-        ['go to card 2\\the short id of prev cd', `${h.elIds.card_a_a}`],
-        ['go to card 3\\the short id of prev cd', `${h.elIds.card_b_b}`],
-        ['go to card 4\\the short id of prev cd', `${h.elIds.card_b_c}`],
-        ['go to card 5\\the short id of prev cd', `${h.elIds.card_b_d}`],
+        //~ /* get by relative (tests getCardByOrdinal) */
+        //~ ['go to card 1\\the short id of next cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 2\\the short id of next cd', `${h.elIds.card_b_c}`],
+        //~ ['go to card 3\\the short id of next cd', `${h.elIds.card_b_d}`],
+        //~ ['go to card 4\\the short id of next cd', `${h.elIds.card_c_d}`],
+        //~ ['go to card 2\\the short id of prev cd', `${h.elIds.card_a_a}`],
+        //~ ['go to card 3\\the short id of prev cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 4\\the short id of prev cd', `${h.elIds.card_b_c}`],
+        //~ ['go to card 5\\the short id of prev cd', `${h.elIds.card_b_d}`],
 
-        /* ord/position */
-        ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
-        ['go next\\the short id of this cd', `${h.elIds.card_b_d}`],
-        ['go prev\\the short id of this cd', `${h.elIds.card_b_c}`],
-        ['go previous\\the short id of this cd', `${h.elIds.card_b_b}`],
-        ['go next\\the short id of this cd', `${h.elIds.card_b_c}`],
-        ['go first\\the short id of this cd', `${h.elIds.card_a_a}`],
-        ['go last\\the short id of this cd', `${h.elIds.card_c_d}`],
-        ['go third\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ /* ord/position */
+        //~ ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ ['go next\\the short id of this cd', `${h.elIds.card_b_d}`],
+        //~ ['go prev\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ ['go previous\\the short id of this cd', `${h.elIds.card_b_b}`],
+        //~ ['go next\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ ['go first\\the short id of this cd', `${h.elIds.card_a_a}`],
+        //~ ['go last\\the short id of this cd', `${h.elIds.card_c_d}`],
+        //~ ['go third\\the short id of this cd', `${h.elIds.card_b_c}`],
 
-        /* should wrap around */
-        ['go first\ngo prev\\the short id of this cd', `${h.elIds.card_c_d}`],
-        ['go last\ngo next\\the short id of this cd', `${h.elIds.card_a_a}`],
+        //~ /* should wrap around */
+        //~ ['go first\ngo prev\\the short id of this cd', `${h.elIds.card_c_d}`],
+        //~ ['go last\ngo next\\the short id of this cd', `${h.elIds.card_a_a}`],
 
-        /* reference by name */
-        ['go to card 1\ngo to card "a"\\the short id of this cd', `${h.elIds.card_a_a}`],
-        ['go to card 1\ngo to card "b"\\the short id of this cd', `${h.elIds.card_b_b}`],
-        ['go to card 1\ngo to card "c"\\the short id of this cd', `${h.elIds.card_b_c}`],
-        ['go to card 1\ngo to card "d"\\the short id of this cd', `${h.elIds.card_b_d}`],
-        [
-            'go to card 1\ngo to card "d" of bg 2\\the short id of this cd',
-            `${h.elIds.card_b_d}`
-        ],
-        [
-            'go to card 1\ngo to card "d" of bg 3\\the short id of this cd',
-            `${h.elIds.card_c_d}`
-        ],
+        //~ /* reference by name */
+        //~ ['go to card 1\ngo to card "a"\\the short id of this cd', `${h.elIds.card_a_a}`],
+        //~ ['go to card 1\ngo to card "b"\\the short id of this cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 1\ngo to card "c"\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ ['go to card 1\ngo to card "d"\\the short id of this cd', `${h.elIds.card_b_d}`],
+        //~ [
+            //~ 'go to card 1\ngo to card "d" of bg 2\\the short id of this cd',
+            //~ `${h.elIds.card_b_d}`
+        //~ ],
+        //~ [
+            //~ 'go to card 1\ngo to card "d" of bg 3\\the short id of this cd',
+            //~ `${h.elIds.card_c_d}`
+        //~ ],
 
-        /* confirmed in emulator: if there are ambiguous card names,
-            use whichever comes first in the stack, regardless of current bg */
-        [
-            `go to card id ${h.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`,
-            `${h.elIds.card_b_d}`
-        ],
-        [
-            `go to card id ${h.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`,
-            `${h.elIds.card_b_d}`
-        ],
-        [
-            `go to card id ${h.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`,
-            `${h.elIds.card_b_d}`
-        ],
+        //~ /* confirmed in emulator: if there are ambiguous card names,
+            //~ use whichever comes first in the stack, regardless of current bg */
+        //~ [
+            //~ `go to card id ${h.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`,
+            //~ `${h.elIds.card_b_d}`
+        //~ ],
+        //~ [
+            //~ `go to card id ${h.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`,
+            //~ `${h.elIds.card_b_d}`
+        //~ ],
+        //~ [
+            //~ `go to card id ${h.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`,
+            //~ `${h.elIds.card_b_d}`
+        //~ ],
 
-        /* reference by bg */
-        ['go to card 1\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
-        ['go to card 2\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
-        ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-        ['go to card 5\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-        ['go to card 5\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
-        ['go to card 2\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+        //~ /* reference by bg */
+        //~ ['go to card 1\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+        //~ ['go to card 2\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+        //~ ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 5\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 5\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+        //~ ['go to card 2\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
 
-        /* confirmed in emulator: if sent to the same bg,
-            do not change the current card */
-        ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-        ['go to card 3\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_c}`],
-        ['go to card 4\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_d}`],
+        //~ /* confirmed in emulator: if sent to the same bg,
+            //~ do not change the current card */
+        //~ ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 3\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ ['go to card 4\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_d}`],
 
-        /* object reference */
-        ['go third\ngo to this stack\\the short id of this cd', `${h.elIds.card_b_c}`],
-        ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
-        ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
-        [
-            `go to stack id ${h.vcstate.model.stack.id}\\the short id of this cd`,
-            `ERR:NoViableAltException`
-        ],
-        [
-            'go to card 1 of this stack\\the short id of this cd',
-            `ERR:MismatchedTokenException`
-        ],
-        [
-            'go to card 4 of this stack\\the short id of this cd',
-            `ERR:MismatchedTokenException`
-        ],
-        ['go to card 1 of bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-        ['go to card 1 of bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
-        [
-            'go to card 1 of bg 2 of this stack\\the short id of this cd',
-            `${h.elIds.card_b_b}`
-        ],
-        [
-            'go to card 1 of bg 3 of this stack\\the short id of this cd',
-            `${h.elIds.card_c_d}`
-        ]
-    ];
-    h.testBatchEvaluate(batch);
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
-});
+        //~ /* object reference */
+        //~ ['go third\ngo to this stack\\the short id of this cd', `${h.elIds.card_b_c}`],
+        //~ ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
+        //~ ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
+        //~ [
+            //~ `go to stack id ${h.vcstate.model.stack.id}\\the short id of this cd`,
+            //~ `ERR:NoViableAltException`
+        //~ ],
+        //~ [
+            //~ 'go to card 1 of this stack\\the short id of this cd',
+            //~ `ERR:MismatchedTokenException`
+        //~ ],
+        //~ [
+            //~ 'go to card 4 of this stack\\the short id of this cd',
+            //~ `ERR:MismatchedTokenException`
+        //~ ],
+        //~ ['go to card 1 of bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+        //~ ['go to card 1 of bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+        //~ [
+            //~ 'go to card 1 of bg 2 of this stack\\the short id of this cd',
+            //~ `${h.elIds.card_b_b}`
+        //~ ],
+        //~ [
+            //~ 'go to card 1 of bg 3 of this stack\\the short id of this cd',
+            //~ `${h.elIds.card_c_d}`
+        //~ ]
+    //~ ];
+    //~ h.testBatchEvaluate(batch);
+    //~ 
+//~ });
 t.test('_execCommands disable and enable', () => {
+    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];
     batch = [
         /* not valid */
@@ -381,20 +406,20 @@ t.test('_execCommands hide and show', () => {
         ['hide\\0', `ERR:NoViableAltException`],
         ['hide cd 1\\0', `ERR:NoViableAltException`],
         ['hide bg 1\\0', `ERR:NoViableAltException`],
-        ['hide this stack\\0', `ERR:NotAllInputParsedException`],
+        ['hide this stack\\0', `ERR:parse err`],
         ['show\\0', `ERR:NoViableAltException`],
-        ['show cd 1\\0', `ERR:NotAllInputParsedException`],
+        ['show cd 1\\0', `ERR:parse error`],
         ['show bg 1\\0', `ERR:NoViableAltException`],
-        ['show this stack\\0', `ERR:NotAllInputParsedException`],
-        ['show cd btn "p1" from 12, 23\\0', `ERR:NotAllInputParsedException`],
-        ['show cd btn "p1" into 12, 23\\0', `ERR:NotAllInputParsedException`],
-        ['show cd btn "p1" xyz 12, 23\\0', `ERR:NotAllInputParsedException`],
-        ['show cd btn "p1" at 12\\0', `ERR:MismatchedTokenException`],
-        ['show cd btn "p1" at "12a,23"\\0', `ERR:MismatchedTokenException`],
-        ['show cd btn "p1" at "12,23a"\\0', `ERR:MismatchedTokenException`],
-        ['show cd btn "p1" at 12, 23, 34\\0', `ERR:NotAllInputParsedException`],
-        ['show cd btn "p1" at "12", "23", "34"\\0', `ERR:NotAllInputParsedException`],
-        ['show cd btn "p1" at "12, 23, 34"\\0', `ERR:MismatchedTokenException`],
+        ['show this stack\\0', `ERR:parse error`],
+        ['show cd btn "p1" from 12, 23\\0', `ERR:must be show *at*`],
+        ['show cd btn "p1" into 12, 23\\0', `ERR:must be show *at*`],
+        ['show cd btn "p1" xyz 12, 23\\0', `ERR:must be show *at*`],
+        ['show cd btn "p1" at 12\\0', `ERR:Not a list`],
+        ['show cd btn "p1" at "12a,23"\\0', `ERR:Not a list`],
+        ['show cd btn "p1" at "12,23a"\\0', `ERR:Not a list`],
+        ['show cd btn "p1" at 12, 23, 34\\0', `ERR:parse err`],
+        ['show cd btn "p1" at "12", "23", "34"\\0', `ERR:parse err`],
+        ['show cd btn "p1" at "12, 23, 34"\\0', `ERR:expected 2 numbers`],
 
         /* valid */
         ['hide cd btn "p1"\\the visible of cd btn "p1"', `false`],
@@ -412,8 +437,8 @@ t.test('_execCommands hide and show', () => {
         ['show cd btn "p1" at 12, 23\\the loc of cd btn "p1"', `12,23`],
         ['show cd btn "p1" at "12", "23"\\the loc of cd btn "p1"', `12,23`],
         [
-            'show cd btn "p1" at "12, 23"\\the loc of cd btn "p1"',
-            `ERR:MismatchedTokenException`
+            'show cd btn "p1" at "13,24"\\the loc of cd btn "p1"',
+            `13,24`
         ],
         ['show cd btn "p1" at (12), (" 23 ")\\the loc of cd btn "p1"', `12,23`],
         ['set the rect of cd fld "p1" to 10, 20, 40, 60\\0', `0`],
@@ -422,61 +447,61 @@ t.test('_execCommands hide and show', () => {
         ['show cd fld "p1" at "12", "23"\\the loc of cd fld "p1"', `12,23`],
         [
             'show cd fld "p1" at "12, 23"\\the loc of cd fld "p1"',
-            `ERR:MismatchedTokenException`
+            `12,23`
         ],
         ['show cd fld "p1" at (12), (" 23 ")\\the loc of cd fld "p1"', `12,23`]
     ];
     h.testBatchEvaluate(batch);
 });
-t.test('_execCommands sort', () => {
-    let batch: [string, string][];
-    batch = [
-        ['put "pear,Apple2,z11,z2,11,2,apple1,peach" into initlist\\0', '0'],
-        ['put initlist into x\\0', `0`],
-        ['sort items of x\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
-        ['put initlist into x\\0', `0`],
-        ['sort ascending items of x text\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
-        ['put initlist into x\\0', `0`],
-        ['sort descending items of x text\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
-        ['put initlist into x\\0', `0`],
-        ['sort items of x numeric\\x', `2,11,apple1,Apple2,peach,pear,z11,z2`],
-        ['put initlist into x\\0', `0`],
-        ['sort descending items of x numeric\\x', `z2,z11,pear,peach,Apple2,apple1,11,2`],
-        [
-            longstr(
-                `put "pear"&cr&"Apple2"&cr&"z11"&cr&
-                "z2"&cr&"11"&cr&"2"&cr&"apple1"&cr&"peach" into initlist\\0`,
-                ''
-            ),
-            `0`
-        ],
-        ['put initlist into x\\0', `0`],
-        ['sort lines of x\\x', `11\n2\napple1\nApple2\npeach\npear\nz11\nz2`],
-        ['put initlist into x\\0', `0`],
-        [
-            'sort ascending lines of x text\\x',
-            `11\n2\napple1\nApple2\npeach\npear\nz11\nz2`
-        ],
-        ['put initlist into x\\0', `0`],
-        [
-            'sort descending lines of x text\\x',
-            `z2\nz11\npear\npeach\nApple2\napple1\n2\n11`
-        ],
-        ['put initlist into x\\0', `0`],
-        ['sort lines of x numeric\\x', `2\n11\napple1\nApple2\npeach\npear\nz11\nz2`],
-        ['put initlist into x\\0', `0`],
-        [
-            'sort descending lines of x numeric\\x',
-            `z2\nz11\npear\npeach\nApple2\napple1\n11\n2`
-        ],
-        ['sort xyz items of x\\x', `ERR:Not a valid choice`],
-        ['sort xyz items of x xyz\\x', `ERR:Not a valid choice`],
-        ['sort items of x xyz\\x', `ERR:Not a valid choice`],
-        ['sort xyz of x\\x', `ERR:MismatchedTokenException`],
-        ['sort xyz xyz of x\\x', `ERR:MismatchedTokenException`]
-    ];
-    h.testBatchEvaluate(batch);
-});
+//~ t.test('_execCommands sort', () => {
+    //~ let batch: [string, string][];
+    //~ batch = [
+        //~ ['put "pear,Apple2,z11,z2,11,2,apple1,peach" into initlist\\0', '0'],
+        //~ ['put initlist into x\\0', `0`],
+        //~ ['sort items of x\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
+        //~ ['put initlist into x\\0', `0`],
+        //~ ['sort ascending items of x text\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
+        //~ ['put initlist into x\\0', `0`],
+        //~ ['sort descending items of x text\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
+        //~ ['put initlist into x\\0', `0`],
+        //~ ['sort items of x numeric\\x', `2,11,apple1,Apple2,peach,pear,z11,z2`],
+        //~ ['put initlist into x\\0', `0`],
+        //~ ['sort descending items of x numeric\\x', `z2,z11,pear,peach,Apple2,apple1,11,2`],
+        //~ [
+            //~ longstr(
+                //~ `put "pear"&cr&"Apple2"&cr&"z11"&cr&
+                //~ "z2"&cr&"11"&cr&"2"&cr&"apple1"&cr&"peach" into initlist\\0`,
+                //~ ''
+            //~ ),
+            //~ `0`
+        //~ ],
+        //~ ['put initlist into x\\0', `0`],
+        //~ ['sort lines of x\\x', `11\n2\napple1\nApple2\npeach\npear\nz11\nz2`],
+        //~ ['put initlist into x\\0', `0`],
+        //~ [
+            //~ 'sort ascending lines of x text\\x',
+            //~ `11\n2\napple1\nApple2\npeach\npear\nz11\nz2`
+        //~ ],
+        //~ ['put initlist into x\\0', `0`],
+        //~ [
+            //~ 'sort descending lines of x text\\x',
+            //~ `z2\nz11\npear\npeach\nApple2\napple1\n2\n11`
+        //~ ],
+        //~ ['put initlist into x\\0', `0`],
+        //~ ['sort lines of x numeric\\x', `2\n11\napple1\nApple2\npeach\npear\nz11\nz2`],
+        //~ ['put initlist into x\\0', `0`],
+        //~ [
+            //~ 'sort descending lines of x numeric\\x',
+            //~ `z2\nz11\npear\npeach\nApple2\napple1\n11\n2`
+        //~ ],
+        //~ ['sort xyz items of x\\x', `ERR:Not a valid choice`],
+        //~ ['sort xyz items of x xyz\\x', `ERR:Not a valid choice`],
+        //~ ['sort items of x xyz\\x', `ERR:Not a valid choice`],
+        //~ ['sort xyz of x\\x', `ERR:MismatchedTokenException`],
+        //~ ['sort xyz xyz of x\\x', `ERR:MismatchedTokenException`]
+    //~ ];
+    //~ h.testBatchEvaluate(batch);
+//~ });
 t.test('_execCommands delete', () => {
     let batch: [string, string][];
     batch = [
@@ -544,24 +569,24 @@ t.test('_execCommands put', () => {
             'put "abc" xyz line 1 to into of cd fld "p1"\\0',
             'ERR:MismatchedTokenException'
         ],
-        ['put "abc" into line 1 to into of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" into line 1 to before of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" into line 1 to after of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" before line 1 to into of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" before line 1 to before of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" before line 1 to after of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" after line 1 to into of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" after line 1 to before of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" after line 1 to after of cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" into into cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" into after cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" into before cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" before into cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" before after cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" before before cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" after into cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" after after cd fld "p1"\\0', 'ERR:only see one'],
-        ['put "abc" after before cd fld "p1"\\0', 'ERR:only see one'],
+        ['put "abc" into line 1 to into of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" into line 1 to before of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" into line 1 to after of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" before line 1 to into of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" before line 1 to before of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" before line 1 to after of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" after line 1 to into of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" after line 1 to before of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" after line 1 to after of cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" into into cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" into after cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" into before cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" before into cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" before after cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" before before cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" after into cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" after after cd fld "p1"', 'PREPARSEERR:only see one'],
+        ['put "abc" after before cd fld "p1"', 'PREPARSEERR:only see one'],
         ['put "ab,cd,ef,12,34,56,78" into inititms\\0', '0'],
         ['put "abcdef,123,456" into initlist\\0', '0'],
 
@@ -712,14 +737,15 @@ t.test('_execCommands get', () => {
         ['get 1+2\\it', `3`],
         ['get xyz()\\it', `ERR:no handler`],
         ['get the environment\\it', `development`],
-        ['get the systemversion()\\it', `7.55`],
+        ['get the systemversion\\it', `7.55`],
+        ['get the systemversion()\\it', `ERR:parse err`],
         ['get abs(-2)\\it', `2`],
         ['get sum(3,4,5)\\it', `12`],
         ['get - char 1 to 2 of 345\\it', `-34`],
         ['get not true\\it', `false`],
         ['get\\0', `ERR:NoViableAltException`],
         ['get the\\0', `ERR:NoViableAltException`],
-        ['put 123 into it\\0', `ERR:variable name not allowed`]
+        ['put 123 into it\\it', `123`]
     ];
     h.testBatchEvaluate(batch);
 });
@@ -728,20 +754,20 @@ t.test('_execCommands replace', () => {
     batch = [
         /* incorrect usage */
         ['put 123 into replace\\0', `ERR:variable name not allowed`],
-        ['replace\\0', `ERR:see the keyword`],
+        ['replace\\0', `PREPARSEERR:did not see`],
         ['replace with\\0', `ERR:NoViableAltException`],
-        ['replace in\\0', `ERR:see the keyword`],
-        ['replace "aa" "bb" \\0', `ERR:see the keyword`],
+        ['replace in\\0', `PREPARSEERR:did not see`],
+        ['replace "aa" "bb" \\0', `PREPARSEERR:did not see`],
         ['replace "aa" with "bb" \\0', `ERR:MismatchedTokenException`],
-        ['replace "aa" in "bb" \\0', `ERR:see the keyword`],
+        ['replace "aa" in "bb" \\0', `PREPARSEERR:did not see`],
         ['replace with in \\0', `ERR:NoViableAltException`],
         ['replace with "bb" in \\0', `ERR:NoViableAltException`],
         ['replace "aa" with in \\0', `ERR:NoViableAltException`],
         ['replace "aa" with in "bb" \\0', `ERR:NoViableAltException`],
         ['replace "aa" with "bb" in "cc" \\0', `ERR:NoViableAltException`],
         ['replace "aa" with "bb" in 123 \\0', `ERR:NoViableAltException`],
-        ['replace "aa" with "bb" in this stack \\0', `ERR:NotAllInputParsedException`],
-        ['replace "aa" with "bb" in this card \\0', `ERR:NotAllInputParsedException`],
+        ['replace "aa" with "bb" in this stack \\0', `ERR:parse err`],
+        ['replace "aa" with "bb" in this card \\0', `ERR:parse err`],
         [
             `put "" into s
 replace "aa" with "bb" of s
@@ -918,9 +944,9 @@ t.test('_dynamicCode do', () => {
         ['put "put " & quote & "unterminated" into code\ndo code\\0', 'ERR:5:unexpected'],
         /* syntax error */
         ['put "on abc" into code\ndo code\\0', 'ERR:5:cannot begin'],
-        ['put "end if" into code\ndo code\\0', 'ERR:5:interleaved'],
-        ['put "if true then" into code\ndo code\\0', 'ERR:14:interleaved'],
-        ['put "put" into code\ndo code\\0', 'ERR:5:NoViableAltException'],
+        ['put "end if" into code\ndo code\\0', 'ERR:5:outside of if'],
+        ['put "if true then" into code\ndo code\\0', 'ERR:5:interleaved'],
+        ['put "put" into code\ndo code\\0', 'ERR:5:not enough args'],
         ['put 123 into do\\0', `ERR:variable name not allowed`],
         /* nested (do calls do) */
         ['put counting() into cfirst\\counting() - cfirst', '1'],
@@ -954,65 +980,65 @@ t.test('_dynamicCode send', () => {
     let batch: [string, string][];
     batch = [
         /* valid */
-        [
-            `global g
-put "global g" & cr & "put the short id of me into g" into code
-send code to cd fld id ${h.elIds.fld_c_d_1}\\g`,
-            `${h.elIds.fld_c_d_1}`
-        ],
-        [
-            `global g
-put "global g" & cr & "put the short id of me into g" into code
-send code to cd btn id ${h.elIds.btn_b_c_1}\\g`,
-            `${h.elIds.btn_b_c_1}`
-        ],
-        [
-            `global g
-put "global g" & cr & "put the short id of me into g" into code
-send code to card "a"\\g`,
-            `${h.elIds.card_a_a}`
-        ],
-        [
-            `global g
-put "global g" & cr & "put the short id of me into g" into code
-send code to card id ${h.elIds.card_c_d}\\g`,
-            `${h.elIds.card_c_d}`
-        ],
-        [
-            `global g
-put "global g" & cr & "put the short id of me into g" into code
-send code to bg "b"\\g`,
-            `${h.elIds.bg_b}`
-        ],
+        //~ [
+            //~ `global g
+//~ put "global g" & cr & "put the short id of me into g" into code
+//~ send code to cd fld id ${h.elIds.fld_c_d_1}\\g`,
+            //~ `${h.elIds.fld_c_d_1}`
+        //~ ],
+        //~ [
+            //~ `global g
+//~ put "global g" & cr & "put the short id of me into g" into code
+//~ send code to cd btn id ${h.elIds.btn_b_c_1}\\g`,
+            //~ `${h.elIds.btn_b_c_1}`
+        //~ ],
+        //~ [
+            //~ `global g
+//~ put "global g" & cr & "put the short id of me into g" into code
+//~ send code to card "a"\\g`,
+            //~ `${h.elIds.card_a_a}`
+        //~ ],
+        //~ [
+            //~ `global g
+//~ put "global g" & cr & "put the short id of me into g" into code
+//~ send code to card id ${h.elIds.card_c_d}\\g`,
+            //~ `${h.elIds.card_c_d}`
+        //~ ],
+        //~ [
+            //~ `global g
+//~ put "global g" & cr & "put the short id of me into g" into code
+//~ send code to bg "b"\\g`,
+            //~ `${h.elIds.bg_b}`
+        //~ ],
         [
             `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
             `${h.elIds.stack}`
         ],
-        /* not valid */
-        ['send\\0', 'ERR:too short'],
-        ['send "put 1 into x"\\0', 'ERR:MismatchedTokenException'],
-        ['send to\\0', 'ERR:NoViableAltException'],
-        ['send to this stack\\0', 'ERR:NoViableAltException'],
-        ['send "put 1 into x" to\\0', 'ERR:NoViableAltException'],
-        ['send "put 1 into x" this stack\\0', 'ERR:MismatchedTokenException'],
-        ['send "put 1 into x" of this stack\\0', 'ERR:MismatchedTokenException'],
-        ['send "put 1 into x" to "string"\\0', 'ERR:NoViableAltException'],
-        ['put 123 into send\\0', `ERR:variable name not allowed`],
-        /* syntax error in sent code */
-        ['send "put" to this stack\\0', 'ERR:4:NoViableAltException'],
-        ['send "put 1 into" to this stack\\0', 'ERR:4:not defined'],
-        ['send "put \'1 into" to this stack\\0', 'ERR:4:lex error'],
-        ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:unexpected character'],
-        ['send "on h" to this stack\\0', 'ERR:4:cannot begin'],
-        ['send "put 10 11 into x" to this stack\\0', 'ERR:4:MismatchedTokenException'],
-        ['send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:4:element not found'],
-        /* not exist */
-        ['send "put 1 into x" to card 10\\0', "ERR:target of 'send' not found"],
-        ['send "put 1 into x" to bg "notfound"\\0', "ERR:target of 'send' not found"],
-        ['send "put 1 into x" to cd btn 99999\\0', "ERR:target of 'send' not found"],
-        ['send "put 1 into x" to cd btn id 99999\\0', "ERR:target of 'send' not found"]
+        //~ /* not valid */
+        //~ ['send\\0', 'ERR:too short'],
+        //~ ['send "put 1 into x"\\0', 'ERR:MismatchedTokenException'],
+        //~ ['send to\\0', 'ERR:NoViableAltException'],
+        //~ ['send to this stack\\0', 'ERR:NoViableAltException'],
+        //~ ['send "put 1 into x" to\\0', 'ERR:NoViableAltException'],
+        //~ ['send "put 1 into x" this stack\\0', 'ERR:MismatchedTokenException'],
+        //~ ['send "put 1 into x" of this stack\\0', 'ERR:MismatchedTokenException'],
+        //~ ['send "put 1 into x" to "string"\\0', 'ERR:NoViableAltException'],
+        //~ ['put 123 into send\\0', `ERR:variable name not allowed`],
+        //~ /* syntax error in sent code */
+        //~ ['send "put" to this stack\\0', 'ERR:4:NoViableAltException'],
+        //~ ['send "put 1 into" to this stack\\0', 'ERR:4:not defined'],
+        //~ ['send "put \'1 into" to this stack\\0', 'ERR:4:lex error'],
+        //~ ['send "put " & quote & "1 into" to this stack\\0', 'ERR:4:unexpected character'],
+        //~ ['send "on h" to this stack\\0', 'ERR:4:cannot begin'],
+        //~ ['send "put 10 11 into x" to this stack\\0', 'ERR:4:MismatchedTokenException'],
+        //~ ['send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:4:element not found'],
+        //~ /* not exist */
+        //~ ['send "put 1 into x" to card 10\\0', "ERR:target of 'send' not found"],
+        //~ ['send "put 1 into x" to bg "notfound"\\0', "ERR:target of 'send' not found"],
+        //~ ['send "put 1 into x" to cd btn 99999\\0', "ERR:target of 'send' not found"],
+        //~ ['send "put 1 into x" to cd btn id 99999\\0', "ERR:target of 'send' not found"]
     ];
     h.testBatchEvaluate(batch);
 

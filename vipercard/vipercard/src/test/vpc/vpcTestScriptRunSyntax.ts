@@ -24,9 +24,6 @@ t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
     return h.initEnvironment();
 });
 t.test('vpcTestScriptBasics', () => {
-    /* preparse error */
-    h.assertPreparseErrLn('x = 4', "this isn't C", 3);
-    h.assertPreparseErrLn('put ?? into x', '', 3);
     let batch: [string, string][];
     batch = [
         /* runtime error */
@@ -34,12 +31,19 @@ t.test('vpcTestScriptBasics', () => {
         /* valid statement */
         ['put 9 into x\\x', '9'],
         /* also a valid statement */
-        ['9', '9']
+        ['9', '9'],
+        /* preparse error1 */
+        ['x = 4', "PREPARSEERR:this isn't C"],
+        /* preparse error2 */
+        ['put ?? into x', 'PREPARSEERR:']
     ];
     h.testBatchEvaluate(batch);
     /* get a different string */
     assertAsserts('', 'assert:', () => {
-        h.assertPreparseErrLn('x = 4', '(incorrectmessage)', 3);
+        batch = [
+['x = 4', 'PREPARSEERR:(incorrectmessage)']
+        ]
+    h.testBatchEvaluate(batch);
     });
     assertAsserts('', 'assert:', () => {
         batch = [['put unknownVar into x\\x', 'ERR:(incorrectmessage)x']];
@@ -51,7 +55,8 @@ t.test('vpcTestScriptBasics', () => {
     //~ });
     /* failure expected, but succeeds */
     assertAsserts('', 'assert:', () => {
-        h.assertPreparseErrLn('put 9 into x', '', 3);
+        batch = [['put 9 into x', 'PREPARSEERR:']];
+        h.testBatchEvaluate(batch);
     });
     assertAsserts('', 'assert:', () => {
         batch = [['put 9 into x\\x', 'ERR:']];

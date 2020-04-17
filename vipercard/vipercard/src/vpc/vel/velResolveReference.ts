@@ -58,7 +58,7 @@ export class VelResolveReference {
         } else if (ref.lookById && !ref.partIsBg) {
             /* looking up by id is very fast, and the same for every type */
             let ret = this.model.findByIdUntyped(ref.lookById.toString());
-            checkThrow(!ret || bool(ret.getType() === ref.type), 'J+|wrong type', ref.type, ret ? ret.getType() : '');
+            checkThrow(!ret || ret.getType() === ref.type|| ref.type === VpcElType.Unknown, 'J+|wrong type', ref.type, ret ? ret.getType() : '');
             return [ret, currentCard];
         }
 
