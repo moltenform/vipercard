@@ -77,24 +77,31 @@ t.test('_getProp', () => {
 
         /* stack */
         [`the short id of this stack`, `901`],
-        [`the short id of next stack`, 'ERR:only accept referring to a stack'],
-        [`the short id of stack 6`, 'ERR:only accept referring to a stack'],
+        [`the short id of previous stack`, `ERR:could not find`],
+        [`the short id of next stack`, `ERR:could not find`],
+        [`the short id of stack 1`, `901`],
+        [`the short id of stack 6`, 'ERR:could not find'],
+        [`the short id of stack "teststack"`, `901`],
+        [`the short id of stack "other"`, `ERR:could not find`],
+        [`the short id of stack id 901`, `901`],
+        [`the short id of stack id 600`, `ERR:could not find`],
+        [`the short id of stack id ${h.elIds.bg_a}`, `ERR:could not find`],
 
         /* bg absolute */
         [`the short id of bg id ${h.elIds.bg_a}`, `${h.elIds.bg_a}`],
         [`the short id of bg id ${h.elIds.bg_c}`, `${h.elIds.bg_c}`],
         [`the short id of bg id (${h.elIds.bg_c})`, `${h.elIds.bg_c}`],
-        [`the short id of bg id 99`, `ERR: could not find the specified`],
+        [`the short id of bg id 99`, `ERR:could not find`],
         [`the short id of bg "a"`, `${h.elIds.bg_a}`],
         [`the short id of bg "c"`, `${h.elIds.bg_c}`],
         [`the short id of bg ("c")`, `${h.elIds.bg_c}`],
-        [`the short id of bg ""`, `ERR: could not find the specified`],
-        [`the short id of bg "notfound"`, `ERR: could not find the specified`],
+        [`the short id of bg ""`, `ERR:could not find`],
+        [`the short id of bg "notfound"`, `ERR:could not find`],
         [`the short id of bg 1`, `${h.elIds.bg_a}`],
         [`the short id of bg 3`, `${h.elIds.bg_c}`],
         [`the short id of bg (3)`, `${h.elIds.bg_c}`],
-        [`the short id of bg -1`, `ERR:could not find the specified`],
-        [`the short id of bg 5`, `ERR:could not find the specified`],
+        [`the short id of bg -1`, `ERR:could not find`],
+        [`the short id of bg 5`, `ERR:could not find`],
 
         /* bg relative */
         [`the short id of this bg`, `${h.elIds.bg_b}`],
@@ -117,12 +124,12 @@ t.test('_getProp', () => {
         [`the short id of card id ${h.elIds.card_a_a}`, `${h.elIds.card_a_a}`],
         [`the short id of card id ${h.elIds.card_c_d}`, `${h.elIds.card_c_d}`],
         [`the short id of card id (${h.elIds.card_c_d})`, `${h.elIds.card_c_d}`],
-        [`the short id of card id 99`, `ERR: could not find the specified`],
+        [`the short id of card id 99`, `ERR:could not find`],
         [`the short id of card "a"`, `${h.elIds.card_a_a}`],
         [`the short id of card "d"`, `${h.elIds.card_b_d}`],
         [`the short id of card ("d")`, `${h.elIds.card_b_d}`],
-        [`the short id of card ""`, `ERR: could not find the specified`],
-        [`the short id of card "notfound"`, `ERR: could not find the specified`],
+        [`the short id of card ""`, `ERR:could not find`],
+        [`the short id of card "notfound"`, `ERR:could not find`],
         [`the short id of card 1`, `${h.elIds.card_a_a}`],
         [`the short id of card 3`, `${h.elIds.card_b_c}`],
         [`the short id of card (3)`, `${h.elIds.card_b_c}`],
@@ -148,18 +155,18 @@ t.test('_getProp', () => {
         [`the short id of card 1 of bg 2`, `${h.elIds.card_b_b}`],
         [`the short id of card 1 of bg 3`, `${h.elIds.card_c_d}`],
         [`the short id of card 2 of bg 2`, `${h.elIds.card_b_c}`],
-        [`the short id of card 2 of bg 1`, `ERR: could not find the specified`],
+        [`the short id of card 2 of bg 1`, `ERR:could not find`],
         [`the short id of card "d" of this bg of this stack`, `${h.elIds.card_b_d}`],
 
         /* field */
         [`the short id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`],
         [`the short id of cd fld id ${h.elIds.fld_c_d_1}`, `${h.elIds.fld_c_d_1}`],
         [`the short id of cd fld id (${h.elIds.fld_c_d_1})`, `${h.elIds.fld_c_d_1}`],
-        [`the short id of cd fld id 99`, `ERR:could not find the specified`],
+        [`the short id of cd fld id 99`, `ERR:could not find`],
         [`the short id of cd fld "p1"`, `${h.elIds.fld_b_c_1}`],
         [`the short id of cd fld "p2"`, `${h.elIds.fld_b_c_2}`],
         [`the short id of cd fld ("p2")`, `${h.elIds.fld_b_c_2}`],
-        [`the short id of cd fld "notfound"`, `ERR:could not find the specified`],
+        [`the short id of cd fld "notfound"`, `ERR:could not find`],
         [`the short id of cd fld 1`, `${h.elIds.fld_b_c_1}`],
 
         /* field with parent */
@@ -171,7 +178,7 @@ t.test('_getProp', () => {
             `the short id of cd fld id ${h.elIds.fld_c_d_1} of this cd`,
             `${h.elIds.fld_c_d_1}`
         ],
-        [`the short id of cd fld "p1" of cd 1`, `ERR:could not find the specified`],
+        [`the short id of cd fld "p1" of cd 1`, `ERR:could not find`],
         [`the short id of cd fld "p1" of this cd`, `${h.elIds.fld_b_c_1}`],
         [`the short id of cd fld "p1" of fifth cd`, `${h.elIds.fld_c_d_1}`],
         [`the short id of cd fld "p1" of cd 4`, `${h.elIds.fld_b_d_1}`],
@@ -186,11 +193,11 @@ t.test('_getProp', () => {
         [`the short id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`],
         [`the short id of cd btn id ${h.elIds.btn_c_d_1}`, `${h.elIds.btn_c_d_1}`],
         [`the short id of cd btn id (${h.elIds.btn_c_d_1})`, `${h.elIds.btn_c_d_1}`],
-        [`the short id of cd btn id 99`, `ERR:could not find the specified`],
+        [`the short id of cd btn id 99`, `ERR:could not find`],
         [`the short id of cd btn "p1"`, `${h.elIds.btn_b_c_1}`],
         [`the short id of cd btn "p2"`, `${h.elIds.btn_b_c_2}`],
         [`the short id of cd btn ("p2")`, `${h.elIds.btn_b_c_2}`],
-        [`the short id of cd btn "notfound"`, `ERR:could not find the specified`],
+        [`the short id of cd btn "notfound"`, `ERR:could not find`],
         [`the short id of cd btn 1`, `${h.elIds.btn_b_c_1}`],
 
         /* button with parent */
@@ -202,7 +209,7 @@ t.test('_getProp', () => {
             `the short id of cd btn id ${h.elIds.btn_c_d_1} of this cd`,
             `${h.elIds.btn_c_d_1}`
         ],
-        [`the short id of cd btn "p1" of cd 1`, `ERR:could not find the specified`],
+        [`the short id of cd btn "p1" of cd 1`, `ERR:could not find`],
         [`the short id of cd btn "p1" of this cd`, `${h.elIds.btn_b_c_1}`],
         [`the short id of cd btn "p1" of fifth cd`, `${h.elIds.btn_c_d_1}`],
         [`the short id of cd btn "p1" of cd 4`, `${h.elIds.btn_b_d_1}`],
@@ -1161,7 +1168,7 @@ t.test('_builtinFunctions', () => {
         /* counting objects */
         ['the number of bgs', '3'],
         ['the number of bgs of this stack', '3'],
-        ['the number of bgs of next stack', 'ERR:only accept referring to a stack'],
+        ['the number of bgs of next stack', 'ERR:find this object'],
         ['the number of bgs of second stack', 'ERR:parse error'],
         ['the number of cds', '5'],
         ['the number of cds of this stack', '5'],
@@ -1177,7 +1184,7 @@ t.test('_builtinFunctions', () => {
         ['the number of cards of bg 3', '1'],
         [
             'the number of cards of bg 4',
-            'ERR:Cannot find this element'
+            'ERR:find this object'
         ] /* confirmed in emulator that it should throw */,
         ['the number of bgs', '3'],
         ['the number of bgs of this stack', '3'],
@@ -1192,8 +1199,8 @@ t.test('_builtinFunctions', () => {
         [`there _is_ a me`, 'true'],
         [`there _is_ a xyz`, 'ERR:variable found'],
         [`there _is_ a this stack`, 'true'],
-        [`there _is_ a next stack`, 'ERR:we only accept referring to a stack'],
-        [`there _is_ a second stack`, 'ERR:NoViableAltException'],
+        [`there _is_ a next stack`, 'false'],
+        [`there _is_ a second stack`, 'ERR:parse err'],
         [`there _is_ a xyz stack`, 'ERR:parse err'],
 
         /* bg */

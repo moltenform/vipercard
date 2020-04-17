@@ -779,16 +779,16 @@ t.test('evalRuleLvl6', () => {
 
         /* no short-circuit evaluation */
         ['the autohilite of cd btn "p1"', 'true'],
-        ['the autohilite of cd btn "notexist"', 'ERR:find the specified element'],
+        ['the autohilite of cd btn "notexist"', 'ERR:could not find'],
         [
             '(the autohilite of cd btn "p1") or (the autohilite of cd btn "notexist")',
-            'ERR:find the specified element'
+            'ERR:could not find'
         ],
         ['the locktext of cd fld "p1"', 'false'],
-        ['the locktext of cd fld "notexist"', 'ERR:find the specified element'],
+        ['the locktext of cd fld "notexist"', 'ERR:could not find'],
         [
             '(the locktext of cd fld "p1") and (the locktext of cd fld "notexist")',
-            'ERR:find the specified element'
+            'ERR:could not find'
         ],
 
         [

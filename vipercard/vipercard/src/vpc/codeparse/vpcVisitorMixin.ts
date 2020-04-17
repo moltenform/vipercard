@@ -104,26 +104,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return ret;
         }
 
-        RuleObjectBg(ctx: VisitingContext): RequestedVelRef {
-            let ret = new RequestedVelRef(VpcElType.Bg);
-            if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
-                ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
-            }
-            if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectBg.name).readAsStrictNumeric(
-                    this.tmpArr
-                );
-            } else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
-                ret.lookByRelative = OrdinalOrPosition.This;
-            } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
-            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
-            } else {
-                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
-            }
-            return ret;
-        }
+        
 
         RuleObjectCard(ctx: VisitingContext): RequestedVelRef {
             let ret = new RequestedVelRef(VpcElType.Card);
@@ -133,6 +114,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx._marked && ctx._marked[0]) {
                 ret.cardLookAtMarkedOnly = true;
             }
+            
             if (ctx._recent && ctx._recent[0]) {
                 ret.cardIsRecentHistory = 'recent';
             } else if (ctx._back && ctx._back[0]) {
@@ -145,15 +127,42 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     tkstr.RuleLvl6Expression,
                     this.RuleObjectCard.name
                 ).readAsStrictNumeric(this.tmpArr);
-            } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
-                ret.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
                 ret.lookByRelative = this.visit(ctx.RulePosition[0]);
+            } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
+                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression); 
+            } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
+                ret.lookByRelative = OrdinalOrPosition.This;
             } else {
-                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
+                checkThrow(false, "no branch taken")
             }
+
+            return ret;
+        }
+
+        RuleObjectBg(ctx: VisitingContext): RequestedVelRef {
+            let ret = new RequestedVelRef(VpcElType.Bg);
+            if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
+                ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
+            }
+            if (ctx._id && ctx._id[0]) {
+                ret.lookById = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl6Expression, this.RuleObjectBg.name).readAsStrictNumeric(
+                    this.tmpArr
+                );
+            }  else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
+                ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
+            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
+                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
+            } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
+                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
+            }else if (ctx.tkBgAtEndOfLine && ctx.tkBgAtEndOfLine[0]) {
+                ret.lookByRelative = OrdinalOrPosition.This;
+            } else {
+                checkThrow(false, "no branch taken")
+            }
+
             return ret;
         }
 
@@ -165,19 +174,16 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                     tkstr.RuleLvl6Expression,
                     this.RuleObjectStack.name
                 ).readAsStrictNumeric(this.tmpArr);
+            }  else if (ctx.RulePosition && ctx.RulePosition[0]) {
+                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else if (ctx.tkStackAtEndOfLine && ctx.tkStackAtEndOfLine[0]) {
                 ret.lookByRelative = OrdinalOrPosition.This;
-            } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
-            } else {
+            } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
+            } else {
+                checkThrow(false, "no branch taken")
             }
 
-            checkThrow(
-                ret.lookByRelative === OrdinalOrPosition.This,
-                longstr(`9R|currently, we only accept referring to a stack as "this stack",
-                and don't support referencing other stacks.`)
-            );
             return ret;
         }
 

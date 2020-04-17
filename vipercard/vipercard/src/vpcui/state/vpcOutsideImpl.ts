@@ -129,7 +129,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             parentRef.cardLookAtMarkedOnly = false;
         }
 
-        let parent = ensureDefined(this.ResolveVelRef(parentRef)[0], '6t|Cannot find this element');
+        let parent = ensureDefined(this.ResolveVelRef(parentRef)[0], '6t|Cannot find this object.');
         let parentAsCard = parent as VpcElCard;
         let parentAsBg = parent as VpcElBg;
         let parentAsStack = parent as VpcElStack;
@@ -333,7 +333,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             resolved = [this.vci.getModel().productOpts, this.vci.getModel().getCurrentCard()];
         }
 
-        let vel = ensureDefined(resolved[0], `8/|could not get ${prop} because could not find the specified element.`);
+        if (!resolved[0]) {
+            checkThrow(false, `8/|could not set ${prop}, could not find that object.`)
+        }
+        
+        let vel = resolved[0]
         let cardId = resolved[1].id;
         if (chunk) {
             let fld = vel as VpcElField;
@@ -355,7 +359,11 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             resolved = [this.vci.getModel().productOpts, this.vci.getModel().getCurrentCard()];
         }
 
-        let vel = ensureDefined(resolved[0], `8-|could not get ${prop} because could not find the specified element.`);
+        if (!resolved[0]) {
+            checkThrow(false, `8-|could not get ${prop}, could not find that object.`)
+        }
+
+        let vel = resolved[0]
         let cardId = resolved[1].id;
         let resolver = new VelResolveName(this.vci.getModel());
         /* handled here are the cases where "adjective" matters */

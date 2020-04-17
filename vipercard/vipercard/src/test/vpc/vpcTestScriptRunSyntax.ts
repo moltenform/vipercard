@@ -1434,8 +1434,8 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         ],
         ['get abs(mm(1))\\0', 'ERR:expected a number'],
         ['there is a cd btn mm(1)', 'false'],
-        ['show cd btn mm(1)\\0', 'ERR:could not find the specified element'],
-        ['enable cd btn mm(1)\\0', 'ERR:could not find the specified element'],
+        ['show cd btn mm(1)\\0', 'ERR:could not find'],
+        ['enable cd btn mm(1)\\0', 'ERR:could not find'],
         /* can expand custom functions in condition */
         [
             `if char 1 of mm(1) is "m" then
@@ -1452,47 +1452,47 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
             `put "abc" into x
 
         show cd btn "notfound"\\0`,
-            'ERR:6:could not find the specified'
+            'ERR:6:could not find'
         ],
         [
             `put "abc" into x
 
 
         show cd btn "notfound"\\0`,
-            'ERR:7:could not find the specified'
+            'ERR:7:could not find'
         ],
         /* using continued lines, line number reporting should be affected */
         [
             `put "abc" {BSLASH}\n into x
         show cd btn "notfound"\\0`,
-            'ERR:6:could not find the specified'
+            'ERR:6:could not find'
         ],
         [
             `put "abc" {BSLASH}\n into {BSLASH}\n x
         show cd btn "notfound"\\0`,
-            'ERR:7:could not find the specified'
+            'ERR:7:could not find'
         ],
         [
             `put {BSLASH}\n "abc" {BSLASH}\n into {BSLASH}\n x
         show cd btn "notfound"\\0`,
-            'ERR:8:could not find the specified'
+            'ERR:8:could not find'
         ],
         /* but using put-expansion, line number reporting
         should not be affected, even though we're adding calls */
         [
             `put mm(1) into x
         show cd btn "notfound"\\0`,
-            'ERR:5:could not find the specified'
+            'ERR:5:could not find'
         ],
         [
             `put mm(1) && mm(1) into x
         show cd btn "notfound"\\0`,
-            'ERR:5:could not find the specified'
+            'ERR:5:could not find'
         ],
         [
             `put mm(mm(1)) into x
         show cd btn "notfound"\\0`,
-            'ERR:5:could not find the specified'
+            'ERR:5:could not find'
         ],
         ['global g\nput 0 into g\\0', '0'],
         ['mm ("")\\the result', 'm1(,,)'],

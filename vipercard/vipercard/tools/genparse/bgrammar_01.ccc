@@ -215,12 +215,15 @@ tkIdentifier=/[a-zA-Z][0-9a-zA-Z$_]*/
 // tkStackAtEndOfLine is confirmed in emulator, for example 'answer the id of cd 1 of bg'
 // you can't usually "skip levels". card 1 of this stack and fld 1 of this bg are not allowed. also "answer the id of back" works
 
-Object:={ <ObjectSpecial> | <ObjectInterpretedFromString> | <ObjectBtn> | <ObjectFld> | <ObjectCard> |    <ObjectBg> | <ObjectStack>     }                                                         --->ProcessOr--->RequestedVelRef
+Object:={ <ObjectSpecial> | <ObjectInterpretedFromString> | <ObjectBtn> | <ObjectFld> | <ObjectCard> |    <ObjectBg> | <ObjectStack>     }                     --->ProcessOr--->RequestedVelRef
 ObjectBtn:=[<Ordinal>] {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6Expression> } [ <Of> <ObjectCard> ]                                       --->Custom--->RequestedVelRef
 ObjectFld:=[<Ordinal>] {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} [ <Of> <ObjectCard> ]                                      --->Custom--->RequestedVelRef
-ObjectCard:= { _recent tkCard | _back | _forth | tkCard _id <Lvl6Expression> | [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | <Ordinal> [_marked] tkCard | <Position> [_marked] tkCard } [ <Of> <ObjectBg> ]   --->Custom--->RequestedVelRef
-ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | tkBgAtEndOfLine | <Ordinal> tkBg | <Position> tkBg } [ <Of> <ObjectStack> ]                              --->Custom--->RequestedVelRef
-ObjectStack:={<Position> tkStack | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                                                                 --->Custom--->RequestedVelRef  
+ObjectCard:= { _recent { tkCard | tkCardPlural | tkCardAtEndOfLine} | _back | _forth | tkCard _id <Lvl6Expression> | \
+                     [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | <Ordinal> [_marked] { tkCard | tkCardAtEndOfLine} | \
+                     <Position> [_marked] { tkCard | tkCardAtEndOfLine} } [ <Of> <ObjectBg> ]                                                           --->Custom--->RequestedVelRef
+ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | <Ordinal> { tkBg | tkBgAtEndOfLine } | <Position> { tkBg | \
+                        tkBgAtEndOfLine } | tkBgAtEndOfLine} [ <Of> <ObjectStack> ]                                                                          --->Custom--->RequestedVelRef
+ObjectStack:={<Position> { tkStack | tkStackAtEndOfLine} | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                         --->Custom--->RequestedVelRef  
 ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expression> | tkPart <Lvl6Expression> | <Ordinal> tkPart} [ <Of> <ObjectCard> ] }     --->Custom--->RequestedVelRef
 
 ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef

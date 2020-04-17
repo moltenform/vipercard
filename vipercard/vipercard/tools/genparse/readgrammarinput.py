@@ -16,6 +16,7 @@ def readGrammarFiles(files, skipGenerated):
 
 def readGrammarFile(file, result, skipGenerated):
     content = files.readall(file, encoding='utf-8')
+    content = content.replace('\\\n', ' ') # continued lines
     if skipGenerated and gStart in content:
         content = content.split(gStart)[0] + '\n' + content.split(gEnd)[1]
     if 'list-all' in files.getname(file):

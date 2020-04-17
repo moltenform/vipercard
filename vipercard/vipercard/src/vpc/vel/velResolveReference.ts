@@ -289,10 +289,23 @@ export class VelResolveReference {
         checkThrow(!parentCd, "J |this type can't have a parent card");
         checkThrow(!parentBg, "Jz|this type can't have a parent bg");
         checkThrow(!isBg, "Jy|this type can't be in a bkgnd");
-        checkThrow(!ref || ref.onlyThisSpecified(), `Jx|we don't currently support referring to stacks other than "this stack"`);
-
         let currentCard = this.model.getCurrentCard();
-        return [this.model.stack, currentCard];
+        if (ref.lookByName && ref.lookByName === this.model.stack.getS('name')) {
+            return [this.model.stack, currentCard];
+        } else if (ref.lookById && ref.lookById.toString() === this.model.stack.id) {
+            return [this.model.stack, currentCard];
+        } else if (ref.lookByAbsolute === 1) {
+            return [this.model.stack, currentCard];
+        } else if (ref.lookByRelative === OrdinalOrPosition.Any ||
+            ref.lookByRelative === OrdinalOrPosition.Middle ||
+            ref.lookByRelative === OrdinalOrPosition.Last ||
+            ref.lookByRelative === OrdinalOrPosition.First ||
+            ref.lookByRelative === OrdinalOrPosition.This) {
+            return [this.model.stack, currentCard];
+        } else  {
+            checkThrow(!ref || ref.onlyThisSpecified(), `Jx|we don't currently support referring to stacks other than "this stack"`);
+            return [this.model.stack, currentCard];
+        }
     }
 
     /**
