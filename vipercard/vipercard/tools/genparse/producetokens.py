@@ -208,7 +208,7 @@ def writePropertiesListIntoGrammar(infiles):
         s += '|'.join(addAlreadyTokens)
         s += '}'
     else:
-        s += '\nHAnyFnName:= tkIdentifier'
+        s += '\nHAnyFnName:=  tkIdentifier '
     s += '                      --->ProcessOr--->IToken'
     
     s += '\n'

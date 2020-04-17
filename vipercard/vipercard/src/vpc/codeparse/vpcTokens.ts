@@ -436,6 +436,10 @@ _selection: chevrotain.createToken({
 name: "_selection",
 pattern: /(?:selection(?![a-zA-Z0-9_]))/i,
 }),
+_target: chevrotain.createToken({
+name: "_target",
+pattern: /(?:target(?![a-zA-Z0-9_]))/i,
+}),
 tkComma: chevrotain.createToken({
 name: "tkComma",
 pattern: /,/i,
@@ -537,6 +541,7 @@ tks._menu,
 tks._id,
 tks._number,
 tks._selection,
+tks._target,
 tks.tkComma,
 tks.tkLParen,
 tks.tkRParen,
@@ -639,6 +644,7 @@ alsoReservedWordsList['menu'] = true;
 alsoReservedWordsList['id'] = true;
 alsoReservedWordsList['number'] = true;
 alsoReservedWordsList['selection'] = true;
+alsoReservedWordsList['target'] = true;
 alsoReservedWordsList['alltext'] = true;
 alsoReservedWordsList['label'] = true;
 alsoReservedWordsList['showlabel'] = true;
@@ -735,6 +741,7 @@ listOfAllWordLikeTokens['menu'] = tks._menu;
 listOfAllWordLikeTokens['id'] = tks._id;
 listOfAllWordLikeTokens['number'] = tks._number;
 listOfAllWordLikeTokens['selection'] = tks._selection;
+listOfAllWordLikeTokens['target'] = tks._target;
 listOfAllWordLikeTokens['alltext'] = tks.tkUnaryVipercardProperties;
 listOfAllWordLikeTokens['label'] = tks.tkUnaryVipercardProperties;
 listOfAllWordLikeTokens['showlabel'] = tks.tkUnaryVipercardProperties;
@@ -1079,6 +1086,7 @@ export const tkstr = {
     _id: '_id',
     _number: '_number',
     _selection: '_selection',
+    _target: '_target',
     tkComma: 'tkComma',
     tkLParen: 'tkLParen',
     tkRParen: 'tkRParen',

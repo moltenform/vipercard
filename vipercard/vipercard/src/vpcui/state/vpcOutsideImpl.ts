@@ -83,6 +83,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     ResolveVelRef(ref: RequestedVelRef): [O<VpcElBase>, VpcElCard] {
         let frame = this.vci.findExecFrameStack()[1];
         let me: O<VpcElBase> = this.FindVelById(frame?.meId);
+        let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
         let cardHistory = this.vci.getCodeExec().cardHistory;
 
         let resolver = new VelResolveReference(this.vci.getModel());
@@ -90,7 +91,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         try {
             /* for convenience, let's throw exceptions when
             the vel can't be found. */
-            ret = resolver.go(ref, me, cardHistory);
+            ret = resolver.go(ref, me, target, cardHistory);
         } catch (e) {
             let as = Util512BaseErr.errAsCls(VpcErr.name, e);
             if (as) {

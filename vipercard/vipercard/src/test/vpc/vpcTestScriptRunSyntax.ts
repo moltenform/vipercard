@@ -377,7 +377,7 @@ put x into x\\x`,
         owner,name,`,
         ''
     );
-    let diffTks = ',short,long,id,any,tenth,';
+    let diffTks = ',short,long,id,any,tenth,target,';
     for (let reserved of disallowedAsHandler) {
         let isPreparse = true;
         let expectErr = "don't support";

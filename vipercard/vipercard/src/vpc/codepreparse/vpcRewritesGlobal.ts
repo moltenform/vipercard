@@ -31,23 +31,6 @@ export namespace VpcRewritesGlobal {
         return line
     }
     /**
-     * from "short id of target" to "short id of the target"
-     * to match behavior in the emulator
-     */
-    export function rewriteOfTarget(line: ChvITk[], rw:VpcSuperRewrite): ChvITk[] {
-        let newRet = []
-        for (let i = 0; i < line.length - 1; i++) {
-            if (line[i].image === 'of' && line[i+1].image==='target') {
-                newRet.push(line[i])
-                newRet.push(rw.tokenFromEnglishTerm("the", line[i]))
-            } else {
-                newRet.push(line[i])
-            }
-        }
-
-        return newRet
-    }
-    /**
      * from "short id of fld 1" to "short id of bg fld 1"
      * do this in software, at parse time it is difficult to clear
      * the ambiguity. the name of cd fld 1 could mean either.

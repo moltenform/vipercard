@@ -252,6 +252,7 @@ export interface VisitingContext {
     _id: ChvITk[];
     _number: ChvITk[];
     _selection: ChvITk[];
+    _target: ChvITk[];
     tkComma: ChvITk[];
     tkLParen: ChvITk[];
     tkRParen: ChvITk[];

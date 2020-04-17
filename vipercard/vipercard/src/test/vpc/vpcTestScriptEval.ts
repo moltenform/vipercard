@@ -61,9 +61,13 @@ t.test('_getProp', () => {
         confirmed these in emulator */
         [`the short id of the target`, `${h.elIds.btn_go}`],
         [`the short id of target`, `${h.elIds.btn_go}`],
-        [`the short id of target()`, `ERR:no such function`],
+        [`put 1 into target\\0`, `ERR:kkkk`],
+        [`the short id of target()`, `ERR:parse err`],
         [`the short id of (target())`, `ERR:no such function`],
+        [`the short id of (target)`, `ERR:notfound`], /* tries to pull its contents */
         [`the short id of the me`, `ERR:parse err`],
+        [`the short id of me()`, `ERR:parse err`],
+        [`the short id of (me)`, `ERR:parse err`],
         [`the short id of me`, `${h.elIds.btn_go}`],
         [`the short id of ${cProductName}`, `WILD`],
         [`the short id of ${cAltProductName}`, `WILD`],

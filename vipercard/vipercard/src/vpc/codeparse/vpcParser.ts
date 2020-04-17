@@ -80,6 +80,11 @@ this.CONSUME1(tks.tkIdentifier)
 },
 {
 ALT: () => {
+this.CONSUME1(tks._target)
+}
+},
+{
+ALT: () => {
 this.CONSUME1(tks._windows)
 }
 }
@@ -450,6 +455,11 @@ this.CONSUME1(tks.tkProductName)
 {
 ALT: () => {
 this.CONSUME1(tks._me)
+}
+},
+{
+ALT: () => {
+this.CONSUME1(tks._target)
 }
 }
 ]);

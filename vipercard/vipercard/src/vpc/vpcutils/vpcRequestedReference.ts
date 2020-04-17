@@ -31,6 +31,7 @@ export class RequestedVelRef extends VpcIntermedValBase {
     partIsBg = false;
     partIsCd = false;
     isReferenceToMe = false;
+    isReferenceToTarget = false;
     cardLookAtMarkedOnly = false;
     cardIsRecentHistory = '';
     constructor(type: VpcElType) {

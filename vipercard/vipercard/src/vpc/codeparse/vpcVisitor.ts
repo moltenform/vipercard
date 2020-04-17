@@ -133,6 +133,10 @@ if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
  return ctx.tkIdentifier[0]; 
 }
  else 
+if (ctx._target && ctx._target[0]) {
+ return ctx._target[0]; 
+}
+ else 
 if (ctx._windows && ctx._windows[0]) {
  return ctx._windows[0]; 
 }
