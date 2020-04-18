@@ -143,7 +143,8 @@ export function assertTrue(
 export function assertWarn(condition: unknown, s1: string, s2?: unknown, s3?: unknown) {
     if (!condition) {
         if (UI512ErrorHandling.silenceAssertMsgs) {
-            /* we are in a assertAsserts test */
+            /* we are in a assertAsserts test,
+            for testing convenience throw, we won't normally. */
             throw new Error('assert:' + s1 + (s2 ?? '') + (s3 ?? ''));
         }
 
@@ -338,7 +339,7 @@ export function joinIntoMessage(
     let markers: string[] = [];
     c0 = findMarkers(c0, markers) ?? '';
     s1 = findMarkers(s1, markers);
-    let message = level + ' ' + c0;
+    let message = level + ': ' + c0;
     message += s1 ? '\n' + s1 : '';
     message += s2 ? ', ' + s2 : '';
     message += s3 ? ', ' + s3 : '';

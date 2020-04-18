@@ -1700,10 +1700,9 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
             .map(s => s.trim());
         
         if (util512Sort(exp, got) !== 0) {
-            console.log('\ncontext\n\n', script);
             assertWarn(
                 false,
-                `\nexpected\n${exp.join('\n')}\nbut got\n',${got.join('\n')}\n\n`
+                `\nexpected\n${exp.join('\n')}\nbut got\n',${got.join('\n')}\n\n'\ncontext\n\n`, script
             );
         }
     }

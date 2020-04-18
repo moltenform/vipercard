@@ -449,8 +449,8 @@ export class VpcPresenterEvents {
             if (pr.timerRunMaintenance.isDue()) {
                 pr.timerRunMaintenance.reset();
                 if (!pr.vci.isCurrentlyUndoing()) {
-                    justConsoleMsgIfExceptionThrown(pr.lyrPaintRender.doMaintenance, 'lyrPaintRender.doMaintenance');
-                    justConsoleMsgIfExceptionThrown(pr.vci.getCodeExec().doMaintenance, 'getCodeExec.doMaintenance');
+                    justConsoleMsgIfExceptionThrown(() => pr.lyrPaintRender.doMaintenance(), 'lyrPaintRender.doMaintenance');
+                    justConsoleMsgIfExceptionThrown(() => pr.vci.getCodeExec().doMaintenance(), 'getCodeExec.doMaintenance');
                 }
             }
         }

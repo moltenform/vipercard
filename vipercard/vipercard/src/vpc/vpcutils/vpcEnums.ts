@@ -667,6 +667,10 @@ export function checkThrowInternal(condition: unknown, msg: string, s1: unknown 
     }
 }
 
+/**
+ * an exception that doesn't represent an error state,
+ * just a message we want to show the user.
+ */
 export class VpcNotificationMsg extends Util512Message {
     isVpcNotificationMsg = true;
     origClass = VpcNotificationMsg.name;
@@ -690,11 +694,21 @@ export function checkThrowNotifyMsg(condition: unknown, msg: string, s1: unknown
     }
 }
 
+/**
+ * we're about to show it to the user, so make it look nicer
+ */
 export function cleanExceptionMsg(e: Error): string {
     let asNotification = Util512BaseErr.errAsCls(VpcNotificationMsg.name, e);
+    let msg = e.message
+    if (msg.startsWith('vpcinternal:')) {
+        msg = msg.slice('vpcinternal:'.length) + ' (internal)'
+    } else if (msg.startsWith('vpc:')) {
+        msg = msg.slice('vpc:'.length)
+    }
+
     if (asNotification) {
-        return e.message;
+        return msg;
     } else {
-        return 'Note: ' + e.message;
+        return 'Note: ' + msg;
     }
 }

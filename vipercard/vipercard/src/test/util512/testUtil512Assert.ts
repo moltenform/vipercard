@@ -63,58 +63,58 @@ t.test('GetAssertMessages', () => {
     checkThrowEq('a', 'a', '');
     checkThrowInternal(1, '');
     checkThrowNotifyMsg(1, '');
-    assertThrows('', 'ui512 a (;0)', () => {
+    assertThrows('', 'ui512: a (;0)', () => {
         checkThrow512(false, ';0|a');
     });
-    assertThrows('', 'ui512 a\nb (;1)', () => {
+    assertThrows('', 'ui512: a\nb (;1)', () => {
         checkThrow512(false, ';1|a', 'b');
     });
-    assertThrows('', 'ui512 a\nb, c (;2)', () => {
+    assertThrows('', 'ui512: a\nb, c (;2)', () => {
         checkThrow512(false, ';2|a', 'b', 'c');
     });
-    assertThrows('', "ui512 a expected 'a' but got 'b'. (;3)", () => {
+    assertThrows('', "ui512: a expected 'a' but got 'b'. (;3)", () => {
         checkThrowEq512('a', 'b', ';3|a');
     });
-    assertThrows('', "ui512 a expected 'a' but got 'b'.\nc1 (;4)", () => {
+    assertThrows('', "ui512: a expected 'a' but got 'b'.\nc1 (;4)", () => {
         checkThrowEq512('a', 'b', ';4|a', 'c1');
     });
-    assertThrows('', "ui512 a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
+    assertThrows('', "ui512: a expected 'a' but got 'b'.\nc1, c2 (;5)", () => {
         checkThrowEq512('a', 'b', ';5|a', 'c1', 'c2');
     });
-    assertThrows('', 'vpc a (;6)', () => {
+    assertThrows('', 'vpc: a (;6)', () => {
         checkThrow(false, ';6|a');
     });
-    assertThrows('', 'vpc a\nb (;7)', () => {
+    assertThrows('', 'vpc: a\nb (;7)', () => {
         checkThrow(false, ';7|a', 'b');
     });
-    assertThrows('', 'vpc a\nb, c (;8)', () => {
+    assertThrows('', 'vpc: a\nb, c (;8)', () => {
         checkThrow(false, ';8|a', 'b', 'c');
     });
-    assertThrows('', "vpc a expected 'a' but got 'b'. (;9)", () => {
+    assertThrows('', "vpc: a expected 'a' but got 'b'. (;9)", () => {
         checkThrowEq('a', 'b', ';9|a');
     });
-    assertThrows('', "vpc a expected 'a' but got 'b'.\nc1 (;a)", () => {
+    assertThrows('', "vpc: a expected 'a' but got 'b'.\nc1 (;a)", () => {
         checkThrowEq('a', 'b', ';a|a', 'c1');
     });
-    assertThrows('', "vpc a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
+    assertThrows('', "vpc: a expected 'a' but got 'b'.\nc1, c2 (;b)", () => {
         checkThrowEq('a', 'b', ';b|a', 'c1', 'c2');
     });
-    assertThrows('', 'vpcinternal a (;c)', () => {
+    assertThrows('', 'vpcinternal: a (;c)', () => {
         checkThrowInternal(false, ';c|a');
     });
-    assertThrows('', 'vpcinternal a\nb (;d)', () => {
+    assertThrows('', 'vpcinternal: a\nb (;d)', () => {
         checkThrowInternal(false, ';d|a', 'b');
     });
-    assertThrows('', 'vpcinternal a\nb, c (;e)', () => {
+    assertThrows('', 'vpcinternal: a\nb, c (;e)', () => {
         checkThrowInternal(false, ';e|a', 'b', 'c');
     });
-    assertThrows('', 'vpcmessage a (;f)', () => {
+    assertThrows('', 'vpcmessage: a (;f)', () => {
         checkThrowNotifyMsg(false, ';f|a');
     });
-    assertThrows('', 'vpcmessage a\nb (;g)', () => {
+    assertThrows('', 'vpcmessage: a\nb (;g)', () => {
         checkThrowNotifyMsg(false, ';g|a', 'b');
     });
-    assertThrows('', 'vpcmessage a\nb, c (;h)', () => {
+    assertThrows('', 'vpcmessage: a\nb, c (;h)', () => {
         checkThrowNotifyMsg(false, ';h|a', 'b', 'c');
     });
 });
@@ -150,15 +150,15 @@ t.test('ThrowIfUndefined', () => {
 t.test('JoinIntoMessage', () => {
     t.say(/*——————————*/ 'WithoutMarks');
     let got = joinIntoMessage('without|marks', 'prefix:');
-    assertEq('prefix: without|marks', got, 'Cc|');
+    assertEq('prefix:: without|marks', got, 'Cc|');
 
     t.say(/*——————————*/ 'ShouldMoveMarksToTheEnd');
     got = joinIntoMessage('ab|', 'prefix:', 'c', 'd', 'e');
-    assertEq('prefix: \nc, d, e (ab)', got, 'Cb|');
+    assertEq('prefix:: \nc, d, e (ab)', got, 'Cb|');
     got = joinIntoMessage('ab|the message', 'prefix:');
-    assertEq('prefix: the message (ab)', got, 'Ca|');
+    assertEq('prefix:: the message (ab)', got, 'Ca|');
     got = joinIntoMessage('the message', 'prefix:', 'ab|c');
-    assertEq('prefix: the message\nc (ab)', got, 'CZ|');
+    assertEq('prefix:: the message\nc (ab)', got, 'CZ|');
 });
 t.test('CompressString', () => {
     assertEq('\u2020 ', UI512Compress.compressString(''), 'CY|');
