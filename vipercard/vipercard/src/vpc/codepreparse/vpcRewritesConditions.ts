@@ -15,9 +15,11 @@
 enum IfTypes {
     other = 1,
     ifnormal,
-    ifsingleline,
+    if_jammed,
+    elseifnormal,
+    elseif_jammed,
     elsenormal,
-    elsesingleline,
+    else_jammed,
 }
 
 export class VpcSplitSingleLineIf {
@@ -45,16 +47,16 @@ export class VpcSplitSingleLineIf {
             );
             checkThrow(findThen !== -1, 'elseif statement, no "then" found');
             if (findThen === line.length - 1) {
-                return [IfTypes.elsenormal, -1, -1 ]
+                return [IfTypes.elseifnormal, -1, -1 ]
             } else {
-                return [IfTypes.elsesingleline, findThen, findThen ]
+                return [IfTypes.elseif_jammed, findThen, findThen ]
             }
         } else if (line[0].image === 'else') {
             if (line.length === 1) {
                 return [IfTypes.elsenormal, -1, -1 ]
             } else {
                 checkThrow(line[1].image !=='then', "use 'else', not 'else then'")
-                return [IfTypes.elsesingleline, 0, 0 ]
+                return [IfTypes.else_jammed, 0, 0 ]
             }
         } else {
             return [IfTypes.other, -1, -1 ]
@@ -68,8 +70,10 @@ export class VpcSplitSingleLineIf {
         let cutStart = got[1]
         let cutEnd = got[2]
         if (this.holdingFromBefore) {
-            if (type === IfTypes.elsesingleline) {
-            } else if (type === IfTypes.elsenormal) {
+            if (type === IfTypes.else_jammed || type === IfTypes.elseif_jammed) {
+                // defer the endif until later
+            } else if (type === IfTypes.elsenormal || type === IfTypes.elseifnormal) {
+                /* it will have it's own end if */
                 this.holdingFromBefore = undefined;
             } else {
                 ret.push(this.holdingFromBefore);
@@ -84,7 +88,15 @@ export class VpcSplitSingleLineIf {
             if (secondPart.length) {
                 ret.push(secondPart);
             }
-            this.holdingFromBefore = rw.gen('end if', line[0])[0];
+
+            let endif = rw.gen('end if', line[0])[0];
+            if (type===IfTypes.else_jammed) {
+                ret.push(endif)
+                this.holdingFromBefore = undefined
+            } else {
+                this.holdingFromBefore = endif
+            }
+            
             return ret;
         } else {
             /* already on different lines, we are fine */

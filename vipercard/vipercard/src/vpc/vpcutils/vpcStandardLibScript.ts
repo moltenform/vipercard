@@ -46,7 +46,7 @@ end push
 
 on pop actuallyMove
     global internalvpcpushimpl
-    put internalvpcpushimplgetlastonstack(peekOnly) into theId
+    put internalvpcpushimplgetlastonstack() into theId
     if actuallyMove then
         go to cd id theId
     end if

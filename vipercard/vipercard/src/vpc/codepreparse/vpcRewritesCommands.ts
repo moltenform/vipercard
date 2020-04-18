@@ -311,7 +311,8 @@ put the result %ARG0%`;
             /* you can say `put 1+1` to add to the message box */
             foundPreposition = line.length;
             line.push(this.rw.tokenFromEnglishTerm('into', line[0]));
-            line.push(this.rw.tokenFromEnglishTerm(LogToReplMsgBox.redirectThisVariableToMsgBox, line[0]));
+            line.push(this.rw.tokenFromEnglishTerm('msg', line[0]));
+            line.push(this.rw.tokenFromEnglishTerm('box', line[0]));
         }
 
         /* transform to put "abc" (TkSyntaxMarker) into (TkSyntaxMarker) x */

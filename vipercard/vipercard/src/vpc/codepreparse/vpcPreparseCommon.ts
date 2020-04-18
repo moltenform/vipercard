@@ -244,7 +244,8 @@ export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
         tk.tokenType === tks.tkA ||
         tk.tokenType === tks.tkIdentifier ||
         tk.tokenType === tks.tkAllNullaryOrUnaryPropertiesIfNotAlready ||
-        tk.tokenType === tks.tkAllUnaryPropertiesIfNotAlready
+        tk.tokenType === tks.tkAllUnaryPropertiesIfNotAlready ||
+        tk.tokenType === tks._box /* i.e. message box */
     ) {
         /* these ones we've explicitly said are ok variable names */
         return;

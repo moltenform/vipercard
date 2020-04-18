@@ -4,7 +4,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrowInternal, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { VpcChangeSelectedFont } from './vpcChangeSelectedFont';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
@@ -16,6 +16,7 @@
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+import { VpcSession } from '../../vpc/request/vpcRequest';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -52,18 +53,19 @@ export class VpcMenuActions {
      * show report error window
      */
     goMnuReportErr() {
-        if (getRoot().getSession()) {
-            let dlg = new VpcNonModalFormSendReport(this.vci);
-            this.vci.setNonModalDialog(dlg);
-        } else {
-            let form = new VpcNonModalFormLogin(this.vci, true /* newUserOk*/);
-            VpcNonModalFormBase.standardWindowBounds(form, this.vci);
-            form.fnCbWhenSignedIn = () => {
-                this.goMnuReportErr();
-            };
-
-            this.vci.setNonModalDialog(form);
-        }
+        this.throwIfServerCodeInactive()
+            if (getRoot().getSession()) {
+                let dlg = new VpcNonModalFormSendReport(this.vci);
+                this.vci.setNonModalDialog(dlg);
+            } else {
+                let form = new VpcNonModalFormLogin(this.vci, true /* newUserOk*/);
+                VpcNonModalFormBase.standardWindowBounds(form, this.vci);
+                form.fnCbWhenSignedIn = () => {
+                    this.goMnuReportErr();
+                };
+    
+                this.vci.setNonModalDialog(form);
+            }
     }
 
     /**
@@ -89,17 +91,19 @@ export class VpcMenuActions {
      * begin async save
      */
     goMnuSave() {
-        if (this.save.busy) {
-            console.log("Cannot start a new task until we've finished the other task.");
-        } else {
-            this.save.beginSave();
-        }
+        this.throwIfServerCodeInactive()
+            if (this.save.busy) {
+                console.log("Cannot start a new task until we've finished the other task.");
+            } else {
+                this.save.beginSave();
+            }
     }
 
     /**
      * begin save as
      */
     goMnuSaveAs() {
+        this.throwIfServerCodeInactive()
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {
@@ -122,6 +126,7 @@ export class VpcMenuActions {
      * share a link
      */
     goMnuShareALink() {
+        this.throwIfServerCodeInactive()
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {
@@ -222,6 +227,7 @@ export class VpcMenuActions {
      * show publish stack info
      */
     goMnuPublishFeatured() {
+        this.throwIfServerCodeInactive()
         this.showModal(
             longstr(`lngYour project could be featured on ViperCard's
                 front page! Save the project, choose 'Share a link' from
@@ -503,6 +509,15 @@ export class VpcMenuActions {
      */
     runFontMenuActionsIfApplicable(s: string) {
         return this.fontChanger.runFontMenuActionsIfApplicable(s);
+    }
+
+    /**
+     * sometimes we disable saving to the server. you
+     * can still save to json though.
+     */
+    protected throwIfServerCodeInactive() {
+        checkThrowNotifyMsg(VpcSession.enableServerCode, 
+            "Server code currently not enabled. You can still save as a .json file, though.")
     }
 
     /**

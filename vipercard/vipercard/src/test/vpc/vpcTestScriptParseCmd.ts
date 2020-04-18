@@ -175,8 +175,8 @@ t.test('VpcParseCmdAnswer', () => {
     testCmd('ask x {MK} y', 'parses');
 });
 t.test('VpcParseCmdMultiply', () => {
-    testCmd('multiply x by 2', 'parses');
-    testCmd('multiply x by "2"', 'parses');
+    testCmd('multiply x {MK} 2', 'parses');
+    testCmd('multiply x {MK} "2"', 'parses');
 });
 t.test('VpcParseCmdDrag', () => {
     testCmd('drag from 2,3 to 4,5', 'parses');
