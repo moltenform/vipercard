@@ -228,7 +228,7 @@ export class TestVpcScriptRunBase {
 
             if (expectErrMsg !== undefined) {
                 if (expectErrMsg.startsWith('ERR:')) {
-                    expectErrMsg = expectErrMsg.slice('ERR:'.length)
+                    expectErrMsg = expectErrMsg.slice('ERR:'.length);
                 }
 
                 if (msg.includes('parse error:')) {

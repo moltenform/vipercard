@@ -497,14 +497,8 @@ t.test('ScriptParse Invalid There-is-a, we require "cd btn", not "btn" alone', (
         `NoViableAltException: Expecting: one of these poss`
     );
     /* these now parse, as if we are reading the contents out of the container. */
-    testExp(
-        `there is a (cd btn 1)`,
-        `parses`
-    );
-    testExp(
-        `there is a (cd fld 1)`,
-        `parses`
-    );
+    testExp(`there is a (cd btn 1)`, `parses`);
+    testExp(`there is a (cd fld 1)`, `parses`);
 });
 t.test('ScriptParse1', () => {
     t.say(longstr(`ScriptParse there is not a`));

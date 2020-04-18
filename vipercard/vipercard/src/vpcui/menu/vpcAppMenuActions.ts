@@ -53,19 +53,19 @@ export class VpcMenuActions {
      * show report error window
      */
     goMnuReportErr() {
-        this.throwIfServerCodeInactive()
-            if (getRoot().getSession()) {
-                let dlg = new VpcNonModalFormSendReport(this.vci);
-                this.vci.setNonModalDialog(dlg);
-            } else {
-                let form = new VpcNonModalFormLogin(this.vci, true /* newUserOk*/);
-                VpcNonModalFormBase.standardWindowBounds(form, this.vci);
-                form.fnCbWhenSignedIn = () => {
-                    this.goMnuReportErr();
-                };
-    
-                this.vci.setNonModalDialog(form);
-            }
+        this.throwIfServerCodeInactive();
+        if (getRoot().getSession()) {
+            let dlg = new VpcNonModalFormSendReport(this.vci);
+            this.vci.setNonModalDialog(dlg);
+        } else {
+            let form = new VpcNonModalFormLogin(this.vci, true /* newUserOk*/);
+            VpcNonModalFormBase.standardWindowBounds(form, this.vci);
+            form.fnCbWhenSignedIn = () => {
+                this.goMnuReportErr();
+            };
+
+            this.vci.setNonModalDialog(form);
+        }
     }
 
     /**
@@ -91,19 +91,19 @@ export class VpcMenuActions {
      * begin async save
      */
     goMnuSave() {
-        this.throwIfServerCodeInactive()
-            if (this.save.busy) {
-                console.log("Cannot start a new task until we've finished the other task.");
-            } else {
-                this.save.beginSave();
-            }
+        this.throwIfServerCodeInactive();
+        if (this.save.busy) {
+            console.log("Cannot start a new task until we've finished the other task.");
+        } else {
+            this.save.beginSave();
+        }
     }
 
     /**
      * begin save as
      */
     goMnuSaveAs() {
-        this.throwIfServerCodeInactive()
+        this.throwIfServerCodeInactive();
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {
@@ -126,7 +126,7 @@ export class VpcMenuActions {
      * share a link
      */
     goMnuShareALink() {
-        this.throwIfServerCodeInactive()
+        this.throwIfServerCodeInactive();
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {
@@ -227,7 +227,7 @@ export class VpcMenuActions {
      * show publish stack info
      */
     goMnuPublishFeatured() {
-        this.throwIfServerCodeInactive()
+        this.throwIfServerCodeInactive();
         this.showModal(
             longstr(`lngYour project could be featured on ViperCard's
                 front page! Save the project, choose 'Share a link' from
@@ -516,8 +516,10 @@ export class VpcMenuActions {
      * can still save to json though.
      */
     protected throwIfServerCodeInactive() {
-        checkThrowNotifyMsg(VpcSession.enableServerCode, 
-            "Server code currently not enabled. You can still save as a .json file, though.")
+        checkThrowNotifyMsg(
+            VpcSession.enableServerCode,
+            'Server code currently not enabled. You can still save as a .json file, though.'
+        );
     }
 
     /**

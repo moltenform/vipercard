@@ -1,3 +1,4 @@
+
 /* auto */ import { ChvITk } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
@@ -19,56 +20,46 @@ enum IfTypes {
     elseifnormal,
     elseif_jammed,
     elsenormal,
-    else_jammed,
+    else_jammed
 }
 
 export class VpcSplitSingleLineIf {
     holdingFromBefore: O<ChvITk[]>;
-    protected classify(line: ChvITk[], rw: VpcSuperRewrite):[IfTypes, number, number] {
+    protected classify(line: ChvITk[], rw: VpcSuperRewrite): [IfTypes, number, number] {
         if (line[0].image === 'if') {
-            let findThen = rw.searchTokenGivenEnglishTermInParensLevel(
-                0,
-                line,
-                line[0],
-                'then'
-            );
+            let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
             checkThrow(findThen !== -1, 'if statement, no "then" found');
             if (findThen === line.length - 1) {
-                return [IfTypes.ifnormal, -1, -1 ]
+                return [IfTypes.ifnormal, -1, -1];
             } else {
-                return [IfTypes.ifnormal, findThen, findThen ]
+                return [IfTypes.ifnormal, findThen, findThen];
             }
         } else if (line.length >= 2 && line[0].image === 'else' && line[1].image === 'if') {
-            let findThen = rw.searchTokenGivenEnglishTermInParensLevel(
-                0,
-                line,
-                line[0],
-                'then'
-            );
+            let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
             checkThrow(findThen !== -1, 'elseif statement, no "then" found');
             if (findThen === line.length - 1) {
-                return [IfTypes.elseifnormal, -1, -1 ]
+                return [IfTypes.elseifnormal, -1, -1];
             } else {
-                return [IfTypes.elseif_jammed, findThen, findThen ]
+                return [IfTypes.elseif_jammed, findThen, findThen];
             }
         } else if (line[0].image === 'else') {
             if (line.length === 1) {
-                return [IfTypes.elsenormal, -1, -1 ]
+                return [IfTypes.elsenormal, -1, -1];
             } else {
-                checkThrow(line[1].image !=='then', "use 'else', not 'else then'")
-                return [IfTypes.else_jammed, 0, 0 ]
+                checkThrow(line[1].image !== 'then', "use 'else', not 'else then'");
+                return [IfTypes.else_jammed, 0, 0];
             }
         } else {
-            return [IfTypes.other, -1, -1 ]
+            return [IfTypes.other, -1, -1];
         }
     }
 
     public go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         let ret: ChvITk[][] = [];
-        let got = this.classify(line, rw)
-        let type = got[0]
-        let cutStart = got[1]
-        let cutEnd = got[2]
+        let got = this.classify(line, rw);
+        let type = got[0];
+        let cutStart = got[1];
+        let cutEnd = got[2];
         if (this.holdingFromBefore) {
             if (type === IfTypes.else_jammed || type === IfTypes.elseif_jammed) {
                 // defer the endif until later
@@ -90,13 +81,13 @@ export class VpcSplitSingleLineIf {
             }
 
             let endif = rw.gen('end if', line[0])[0];
-            if (type===IfTypes.else_jammed) {
-                ret.push(endif)
-                this.holdingFromBefore = undefined
+            if (type === IfTypes.else_jammed) {
+                ret.push(endif);
+                this.holdingFromBefore = undefined;
             } else {
-                this.holdingFromBefore = endif
+                this.holdingFromBefore = endif;
             }
-            
+
             return ret;
         } else {
             /* already on different lines, we are fine */
@@ -130,15 +121,8 @@ export namespace VpcRewriteNoElseIfClauses {
 
     function isLineIf(l: ChvITk[]) {
         if (l.length >= 1 && l[0].image === 'if') {
-            checkThrow(
-                l.length >= 3,
-                "expect line starting with if to be 'if condition then'"
-            );
-            checkThrowEq(
-                'then',
-                arLast(l).image,
-                "expect line starting with else to be 'if condition *then*'"
-            );
+            checkThrow(l.length >= 3, "expect line starting with if to be 'if condition then'");
+            checkThrowEq('then', arLast(l).image, "expect line starting with else to be 'if condition *then*'");
             return l.slice(1, -1);
         }
 
@@ -151,20 +135,9 @@ export namespace VpcRewriteNoElseIfClauses {
 
     function isLineElseCondition(l: ChvITk[]) {
         if (l.length > 1 && l[0].image === 'else') {
-            checkThrow(
-                l.length >= 4,
-                "expect line starting with else to be 'else if condition then'"
-            );
-            checkThrowEq(
-                'if',
-                l[1].image,
-                "expect line starting with else to be 'else *if* condition then'"
-            );
-            checkThrowEq(
-                'then',
-                arLast(l).image,
-                "expect line starting with else to be 'else if condition *then*'"
-            );
+            checkThrow(l.length >= 4, "expect line starting with else to be 'else if condition then'");
+            checkThrowEq('if', l[1].image, "expect line starting with else to be 'else *if* condition then'");
+            checkThrowEq('then', arLast(l).image, "expect line starting with else to be 'else if condition *then*'");
             return l.slice(2, -1);
         }
         return undefined;
@@ -207,10 +180,7 @@ export namespace VpcRewriteNoElseIfClauses {
                 this.current = construct;
             } else if (arisLineElseCondition) {
                 checkThrow(!this.current.isRoot, 'else outside of if?');
-                checkThrow(
-                    !this.current.hasSeenPlainElse,
-                    "can't have conditional else after plain else"
-                );
+                checkThrow(!this.current.hasSeenPlainElse, "can't have conditional else after plain else");
                 let clause = new IfConstructClause(arisLineElseCondition, false);
                 this.current.clauses.push(clause);
             } else if (isLineElsePlain(line)) {
@@ -220,10 +190,7 @@ export namespace VpcRewriteNoElseIfClauses {
                 let clause = new IfConstructClause([], false);
                 this.current.clauses.push(clause);
             } else if (isLineEndIf(line)) {
-                checkThrow(
-                    !this.current.isRoot && this.current.parent,
-                    "can't have an end if outside of if"
-                );
+                checkThrow(!this.current.isRoot && this.current.parent, "can't have an end if outside of if");
                 this.current = this.current.parent;
             } else {
                 arLast(this.current.clauses).children.push(line);
@@ -235,34 +202,22 @@ export namespace VpcRewriteNoElseIfClauses {
      * flatten the tree, and while doing so,
      * write out the clauses as separate if statements.
      */
-    function flattenTreeRecurse(
-        node: IfConstruct,
-        rw: VpcSuperRewrite,
-        output: ChvITk[][]
-    ) {
+    function flattenTreeRecurse(node: IfConstruct, rw: VpcSuperRewrite, output: ChvITk[][]) {
         let numberOfEndIfsNeeded = 0;
         if (!node.isRoot) {
-            let firstLine = rw.gen('if %ARG0% then', node.clauses[0].condition[0], [
-                node.clauses[0].condition
-            ]);
+            let firstLine = rw.gen('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
             output.push(firstLine[0]);
             numberOfEndIfsNeeded = 1;
         }
         for (let clause of node.clauses) {
             if (!clause.isFirst) {
                 if (clause.condition.length) {
-                    output.push([
-                        rw.tokenFromEnglishTerm('else', node.clauses[0].condition[0])
-                    ]);
-                    let line = rw.gen('if %ARG0% then', clause.condition[0], [
-                        clause.condition
-                    ]);
+                    output.push([rw.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
+                    let line = rw.gen('if %ARG0% then', clause.condition[0], [clause.condition]);
                     output.push(line[0]);
                     numberOfEndIfsNeeded += 1;
                 } else {
-                    output.push([
-                        rw.tokenFromEnglishTerm('else', node.clauses[0].condition[0])
-                    ]);
+                    output.push([rw.tokenFromEnglishTerm('else', node.clauses[0].condition[0])]);
                 }
             }
             for (let item of clause.children) {

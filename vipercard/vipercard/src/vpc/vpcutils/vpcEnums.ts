@@ -699,11 +699,11 @@ export function checkThrowNotifyMsg(condition: unknown, msg: string, s1: unknown
  */
 export function cleanExceptionMsg(e: Error): string {
     let asNotification = Util512BaseErr.errAsCls(VpcNotificationMsg.name, e);
-    let msg = e.message
+    let msg = e.message;
     if (msg.startsWith('vpcinternal:')) {
-        msg = msg.slice('vpcinternal:'.length) + ' (internal)'
+        msg = msg.slice('vpcinternal:'.length) + ' (internal)';
     } else if (msg.startsWith('vpc:')) {
-        msg = msg.slice('vpc:'.length)
+        msg = msg.slice('vpc:'.length);
     }
 
     if (asNotification) {

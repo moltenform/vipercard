@@ -38,27 +38,27 @@ t.test('testcompareRewrittenCodeHelper', () => {
     let expected = `HandlerStart\nif~0~is~1~then~\nb~\nIfEnd\nHandlerEnd`;
     h.compareRewrittenCode(inp, expected);
     /* wrong results */
-    assertAsserts('', 'but got', ()=>{
+    assertAsserts('', 'but got', () => {
         inp = `on myCode\nif 0 is 1 then\nb\nend if\nend myCode`;
         expected = `HandlerStart\nif~0~is~2~then~\nb~\nIfEnd\nHandlerEnd`;
         h.compareRewrittenCode(inp, expected);
-    })
+    });
     /* compile error */
-    assertAsserts('', 'unexpected err', ()=>{
+    assertAsserts('', 'unexpected err', () => {
         let inp = `on myCode\nb\nend if\nend myCode`;
         let expected = `HandlerStart\nb~\nIfEnd\nHandlerEnd`;
         h.compareRewrittenCode(inp, expected);
-    })
+    });
     /* compile error with wrong err message */
-    assertAsserts('', 'wrong err message', ()=>{
+    assertAsserts('', 'wrong err message', () => {
         let inp = `on myCode\nb\nend if\nend myCode`;
         h.compareRewrittenCode(inp, 'ERR:(incorrect message)');
-    })
+    });
     /* works when we said it should fail */
-    assertAsserts('', 'expected an err', ()=>{
+    assertAsserts('', 'expected an err', () => {
         let inp = `on myCode\nif 0 is 1 then\nb\nend if\nend myCode`;
         h.compareRewrittenCode(inp, 'ERR:');
-    })
+    });
 });
 t.test('expand if + if else', () => {
     let inp = `
@@ -438,21 +438,21 @@ on myCode
 if x > 1 then c1
 else c2
 end myCode`;
-    h.compareRewrittenCode(inp, expected)
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
     c1
 else c2
 end myCode`;
-h.compareRewrittenCode(inp, expected)
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
     c1
 else if c2 then
 end myCode`;
-h.compareRewrittenCode(inp, "ERR:interleaved")
+    h.compareRewrittenCode(inp, 'ERR:interleaved');
     inp = `
 on myCode
 if x > 1 then c1
@@ -460,7 +460,7 @@ else
     c2
 end if
 end myCode`;
-h.compareRewrittenCode(inp, expected)
+    h.compareRewrittenCode(inp, expected);
     inp = `
 on myCode
 if x > 1 then
@@ -1039,8 +1039,8 @@ if true then
 else myFn(1, 2)
 end if
 end myHandler`;
-    h.assertPreparseErr(inp, "outside of if", 5);
-    
+    h.assertPreparseErr(inp, 'outside of if', 5);
+
     /* VpcLineCategory_.IfElsePlain */
     inp = `
 on myHandler
@@ -1543,40 +1543,40 @@ put 6 + \\\n myMult(1, \\\n 3) + myMult(\\\n 1, 3) + myMult(1, 3 \\\n) into x
 t.test('expand in VpcLineCategory_.GoCardImpl', () => {
     h.provideCustomFnInStackScript();
     //~ let batch: [string, string][] = [
-        //~ ['global countCalls\\0', '0'],
-        //~ /* go to card */
-        //~ [
-            //~ `
-//~ put 0 into countCalls
-//~ go to card myMult(1,1)
-//~ put the short id of this cd is the short id of card 1 into ret
-//~ \\ret && countCalls`,
-            //~ 'true 1'
-        //~ ],
-        //~ [
-            //~ `
-//~ put 0 into countCalls
-//~ go to card (1 + myMult(1,1))
-//~ put the short id of this cd is the short id of card 2 into ret
-//~ \\ret && countCalls`,
-            //~ 'true 1'
-        //~ ],
-        //~ [
-            //~ `
-//~ put 0 into countCalls
-//~ go to card myMult(1,3)
-//~ put the short id of this cd is the short id of card 3 into ret
-//~ \\ret && countCalls`,
-            //~ 'true 1'
-        //~ ],
-        //~ [
-            //~ `
-//~ put 0 into countCalls
-//~ go to card (myMult(3,1) + myMult(1,1))
-//~ put the short id of this cd is the short id of card 4 into ret
-//~ \\ret && countCalls`,
-            //~ 'true 2'
-        //~ ]
+    //~ ['global countCalls\\0', '0'],
+    //~ /* go to card */
+    //~ [
+    //~ `
+    //~ put 0 into countCalls
+    //~ go to card myMult(1,1)
+    //~ put the short id of this cd is the short id of card 1 into ret
+    //~ \\ret && countCalls`,
+    //~ 'true 1'
+    //~ ],
+    //~ [
+    //~ `
+    //~ put 0 into countCalls
+    //~ go to card (1 + myMult(1,1))
+    //~ put the short id of this cd is the short id of card 2 into ret
+    //~ \\ret && countCalls`,
+    //~ 'true 1'
+    //~ ],
+    //~ [
+    //~ `
+    //~ put 0 into countCalls
+    //~ go to card myMult(1,3)
+    //~ put the short id of this cd is the short id of card 3 into ret
+    //~ \\ret && countCalls`,
+    //~ 'true 1'
+    //~ ],
+    //~ [
+    //~ `
+    //~ put 0 into countCalls
+    //~ go to card (myMult(3,1) + myMult(1,1))
+    //~ put the short id of this cd is the short id of card 4 into ret
+    //~ \\ret && countCalls`,
+    //~ 'true 2'
+    //~ ]
     //~ ];
     //~ h.testBatchEvaluate(batch);
 });
@@ -1657,9 +1657,9 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
      */
     compareRewrittenCode(script: string, expected: string) {
         script = script.trim();
-        checkThrow(script.includes('on myCode'), "test expects handler is myCode")
-        let transformedCode:O<VpcParsedCodeCollection>
-        let err:O<Error>
+        checkThrow(script.includes('on myCode'), 'test expects handler is myCode');
+        let transformedCode: O<VpcParsedCodeCollection>;
+        let err: O<Error>;
         try {
             let btnGo = h.vcstate.model.getById(VpcElButton, h.elIds.btn_go);
             h.vcstate.vci.undoableAction(() => btnGo.set('script', script));
@@ -1670,39 +1670,45 @@ class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
             /* catch the errors here,
             otherwise the error site will be far away and hard to correlate
             with which test actually failed. */
-            err = e
+            err = e;
         }
 
         if (err) {
-            if (expected.startsWith('ERR:')){
-                expected = expected.slice('ERR:'.length)
-                assertWarn(err.message.includes(expected), 'wrong err message')
+            if (expected.startsWith('ERR:')) {
+                expected = expected.slice('ERR:'.length);
+                assertWarn(err.message.includes(expected), 'wrong err message');
             } else {
-                assertWarn(false, 'unexpected err', err.message)
+                assertWarn(false, 'unexpected err', err.message);
             }
-            
+
             return;
         } else if (expected.startsWith('ERR:')) {
-            assertWarn(false, "expected an error but succeeded")
-            return
+            assertWarn(false, 'expected an error but succeeded');
+            return;
         }
 
         checkThrow(transformedCode instanceof VpcParsedCodeCollection, '');
-        let reSyntaxMark = new RegExp(Util512.escapeForRegex(BuildFakeTokens.inst.strSyntaxMark), 'g')
+        let reSyntaxMark = new RegExp(
+            Util512.escapeForRegex(BuildFakeTokens.inst.strSyntaxMark),
+            'g'
+        );
         let got = transformedCode.lines.map(
             o => o.allImages ?? getEnumToStrOrFallback(VpcLineCategory, o.ctg)
         );
         got = got.map(o => o.replace(reSyntaxMark, '^^'));
-        got[0] = got[0].replace(/,HandlerStart/g, 'HandlerStart')
+        got[0] = got[0].replace(/,HandlerStart/g, 'HandlerStart');
         let exp = expected
             .trim()
             .split('\n')
             .map(s => s.trim());
-        
+
         if (util512Sort(exp, got) !== 0) {
             assertWarn(
                 false,
-                `\nexpected\n${exp.join('\n')}\nbut got\n',${got.join('\n')}\n\n'\ncontext\n\n`, script
+                `\nexpected\n${exp.join('\n')}\nbut got\n',${got.join(
+                    '\n'
+                )}\n\n'\ncontext\n\n`,
+                script
             );
         }
     }

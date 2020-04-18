@@ -135,7 +135,7 @@ export namespace VpcTopPreparse {
         let rewrites = new VpcRewriteForCommands(rw);
         let exp = new ExpandCustomFunctions(idGen, new CheckReservedWords());
         let buildTree = new VpcRewriteNoElseIfClauses.TreeBuilder();
-        let ifSplitter = new VpcSplitSingleLineIf()
+        let ifSplitter = new VpcSplitSingleLineIf();
         while (true) {
             let next = splitter.next();
             if (!next) {
