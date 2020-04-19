@@ -62,14 +62,14 @@ export class ChunkResolutionSort {
         cont.splice(0, cont.len(), result);
     }
 
-    static writeCodeCustomSort(sortOptions: Map<string, string>) {
+    static writeCodeCustomSort(granularity:string, sortOptions: Map<string, string>) {
         /* let's build a sort here! use decorate-sort-undecorate */
-        if (sortOptions['granularity'] !== 'items' && sortOptions['granularity'] !== 'lines') {
+        if (granularity !== 'items' && granularity !== 'lines') {
             checkThrow(false, 'We only support sorting by lines or items');
         }
 
         /* check_long_lines_silence_subsequent */
-        let delimExpr = sortOptions['granularity'] === 'items' ? 'the itemDel' : 'cr';
+        let delimExpr = granularity === 'items' ? 'the itemDel' : 'cr';
         /* the first char of the delim should probably be a 'small' character */
         let internalDelim = '\x01\x01\x01vpcinternal\x01\x01\x01';
         let template = `
@@ -79,17 +79,17 @@ if "${internalDelim}" is in content%UNIQUE% then
     answer "Cannot sort by this type of expression."
     exit to ViperCard
 end if
-put "" %INTO% container%UNIQUE%
-repeat with loop%UNIQUE% = 1 to the number of ${sortOptions['granularity']} of content%UNIQUE%
-    put ${sortOptions['granularity']} loop%UNIQUE% of content%UNIQUE% %INTO% each
+put "" %INTO% tosort%UNIQUE%
+repeat with loop%UNIQUE% = 1 to the number of ${granularity} of content%UNIQUE%
+    put ${granularity} loop%UNIQUE% of content%UNIQUE% %INTO% each
     put ( %ARG1% ) %INTO% sortkey%UNIQUE%
-    put sortkey%UNIQUE% && "${internalDelim}" && each & ${delimExpr} %AFTER% container%UNIQUE%
+    put sortkey%UNIQUE% && "${internalDelim}" && each & ${delimExpr} %AFTER% tosort%UNIQUE%
 end repeat
-put char 1 to (the length of container%UNIQUE% - the length of ${delimExpr}) of container%UNIQUE% %INTO% container%UNIQUE%
-%ARG2%
+put char 1 to ( length ( tosort%UNIQUE% ) - length ( ${delimExpr} ) ) of tosort%UNIQUE% %INTO% tosort%UNIQUE%
+sort "${sortOptions['method']}" "${sortOptions['order']}" ${granularity} of tosort%UNIQUE%
 put "" %INTO% result%UNIQUE%
-repeat with loop%UNIQUE% = 1 to the number of ${sortOptions['granularity']} of container%UNIQUE%
-    put ${sortOptions['granularity']} loop%UNIQUE% of container%UNIQUE% %INTO% each
+repeat with loop%UNIQUE% = 1 to the number of ${granularity} of tosort%UNIQUE%
+    put ${granularity} loop%UNIQUE% of tosort%UNIQUE% %INTO% each
     put char ( offset ( "${internalDelim}" , each ) + ${internalDelim.length} ) to ( the length of each ) of each %INTO% each
     put each & ${delimExpr} %AFTER% result%UNIQUE%
 end repeat

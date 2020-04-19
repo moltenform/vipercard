@@ -1,0 +1,64 @@
+
+=====
+if/then
+=====
+
+        Use to run certain code based on a condition that can be true or false.
+
+        In the example
+
+        `
+        put 2 into x
+        if x > 0 then
+            answer "x is greater than 0"
+        end if`
+
+        First, we'll check the expression `x > 0`. Since it evaluates to true,
+        the code inside is run. 
+
+        You can also include an "else" section that will be run only if the expression evaluated to false.
+
+        `if x > 0 then
+            answer "x is greater than 0"
+        else
+            answer "x is not greater than 0"
+        end if`
+
+        You can chain together many different conditions with "else if". 
+
+        `
+        put 3 into x
+        if x > 3 then
+            answer "x is greater than 3"
+        else if x < 3 then
+            answer "x is less than 3"
+        else if x is 3 then
+            answer "x is 3"
+        end if`
+
+        Like in other programming languages, as soon as one of the branches
+        is taken, all of the remaining branches are skipped -- even if the condition is true.
+
+        `
+        if 3+3 is 6 then
+            answer "aaa"
+        else if 2+2 is 4 then
+            -- this not run, even though the expression is true
+            answer "bbb"
+        end if
+        `
+
+=====
+if/then on a single-line
+=====
+
+       This is implemented in 0.3.
+       
+        Examples:
+        
+        if 3+3 is 6 then answer "it is"
+        
+        -- you can even do this
+        
+        if 3+3 is 7 then answer "it is not"
+        else answer "it is"

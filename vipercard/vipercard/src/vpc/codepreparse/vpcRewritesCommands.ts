@@ -4,6 +4,7 @@
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcTool, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { arLast, findStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -385,6 +386,7 @@ put the result %ARG0%`;
         return [line];
     }
     rewriteSort(line: ChvITk[]): ChvITk[][] {
+        let origLine = line.slice()
         let allImages = line.map(t => t.image).join('***') + '***';
         if (
             allImages.startsWith('sort***cards') ||
@@ -395,54 +397,64 @@ put the result %ARG0%`;
             return [this.hBuildNyi(`sorting by cards`, line[0])];
         }
 
-        /* delete of */
-        let ofLvl0 = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'of') 
-        if (ofLvl0 !== -1) {
-            line.splice(ofLvl0, 1)
+        /* split off by */
+        let byPhrase: O<ChvITk[]>
+        let byLvl0 = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'by') 
+        if (byLvl0 !== -1) {
+            byPhrase = line.slice(byLvl0 + 1)
+            line = line.slice(0, byLvl0)
+            checkThrow(byPhrase.length, "expect something like 'sort lines of x by char 1 of each'")
         }
 
+        
+
+        /* go backwards and pick up sort options until we don't see the first that isn't one */
         let sortOptions = new Map<string, string>();
         sortOptions['order'] = 'ascending';
-        sortOptions['granularity'] = 'lines';
         sortOptions['method'] = 'text';
-        let lastOpt = 1;
-        let foundBy = -1;
-        for (let i = 0; i < line.length; i++) {
+
+        /* support old-style ones where ascending/descending could be anywhere*/
+        let found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'ascending') 
+        if (found !== -1) {
+            sortOptions['order'] = 'ascending';
+            line.splice(found, 1)
+        }
+        found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'descending') 
+        if (found !== -1) {
+            sortOptions['order'] = 'descending';
+            line.splice(found, 1)
+        }
+
+        /* check correct syntax */
+        checkThrow(line.length >= 3 && line[1].tokenType === tks.tkChunkGranularity && line[2].image === 'of',
+         "expect something like 'sort lines of x")
+
+        /* look backwards for any keywords. */
+        let i = line.length-1
+        for (; i >= 0; i--) {
             let t = line[i];
             if (t.image === 'ascending' || t.image === 'descending') {
-                lastOpt = i;
                 sortOptions['order'] = t.image;
             } else if (t.image === 'text' || t.image === 'numeric' || t.image === 'international' || t.image === 'datetime') {
-                lastOpt = i;
                 sortOptions['method'] = t.image;
-            } else if (t.image === 'lines' || t.image === 'items') {
-                lastOpt = i;
-                sortOptions['granularity'] = t.image;
-            } else if (t.image === 'by') {
-                foundBy = i;
+            } else {
                 break;
             }
         }
-        lastOpt += 1;
-
-        let containerExpression = line.slice(lastOpt);
-        if (foundBy !== -1) {
-            containerExpression = line.slice(lastOpt, foundBy);
-        }
-
+        
+        /* grab just the part before the options */
         let template = longstr(
             `sort
-            "${sortOptions['granularity']}"
             "${sortOptions['method']}"
             "${sortOptions['order']}" %ARG0%`
         );
-        let cmd = this.rw.gen(template, line[0], [containerExpression]);
-        if (foundBy === -1) {
-            return cmd;
+        if (!byPhrase) {
+            return this.rw.gen(template, line[0], [line.slice(1, i+1)]);
         } else {
-            let byExpr = line.slice(foundBy + 1);
-            let template = ChunkResolutionSort.writeCodeCustomSort(sortOptions);
-            return this.rw.gen(template, line[0], [containerExpression, byExpr, cmd[0]]);
+            let granularity = line[1]
+            let container = line.slice(3, i+1)
+            let template = ChunkResolutionSort.writeCodeCustomSort(granularity.image, sortOptions);
+            return this.rw.gen(template, line[0], [container, byPhrase]);
         }
     }
     rewriteStart(line: ChvITk[]): ChvITk[][] {

@@ -131,9 +131,9 @@ on runTestValOps
 	assertEq "ddd,aaa,fff", x
 	sort items of x
 	assertEq "aaa,ddd,fff", x
-	sort ascending items of x
+	sort  items of x ascending
 	assertEq "aaa,ddd,fff", x
-	sort descending items of x
+	sort  items of x descending
 	assertEq "fff,ddd,aaa", x
 	disable cd btn "btnTest1"
 	answer "btnTest1 should be disabled."

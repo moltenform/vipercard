@@ -456,11 +456,11 @@ batch = [
 ['put initlist into x\\0', `0`],
 ['sort ascending items of x text\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
 ['put initlist into x\\0', `0`],
-['sort items of x text descending\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
+['sort items of x text descending\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
 ['put initlist into x\\0', `0`],
 ['sort descending items of x text\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
 ['put initlist into x\\0', `0`],
-['sort items of x text ascending\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
+['sort items of x text ascending\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
 ['put initlist into x\\0', `0`],
 ['sort items of x numeric\\x', `2,11,apple1,Apple2,peach,pear,z11,z2`],
 ['put initlist into x\\0', `0`],
@@ -492,11 +492,11 @@ longstr(
 'sort descending lines of x numeric\\x',
 `z2\nz11\npear\npeach\nApple2\napple1\n11\n2`
 ],
-//~ ['sort xyz items of x\\x', `ERR:Not a valid choice`],
-//~ ['sort xyz items of x xyz\\x', `ERR:Not a valid choice`],
-//~ ['sort items of x xyz\\x', `ERR:Not a valid choice`],
-//~ ['sort xyz of x\\x', `ERR:MismatchedTokenException`],
-//~ ['sort xyz xyz of x\\x', `ERR:MismatchedTokenException`]
+['sort xyz items of x\\x', `PREPARSEERR:expect something like`],
+['sort xyz items of x xyz\\x', `PREPARSEERR:expect something like`],
+['sort items of x xyz\\x', `ERR:parse err`],
+['sort xyz of x\\x', `PREPARSEERR:expect something like`],
+['sort xyz xyz of x\\x', `PREPARSEERR:expect something like`]
 ];
 h.testBatchEvaluate(batch);
 });

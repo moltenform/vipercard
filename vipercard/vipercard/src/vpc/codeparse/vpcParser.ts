@@ -1558,7 +1558,8 @@ this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
 this.CONSUME1(tks.tkStringLiteral)
 this.CONSUME2(tks.tkStringLiteral)
-this.CONSUME3(tks.tkStringLiteral)
+this.CONSUME1(tks.tkChunkGranularity)
+this.CONSUME1(tks.tkOfOnly)
 this.SUBRULE1(this.RuleHSimpleContainer)
 });
 

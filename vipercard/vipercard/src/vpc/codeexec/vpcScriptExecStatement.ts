@@ -376,14 +376,15 @@ export class ExecuteStatement {
         }
     }
     /**
-     * sort [lines|items|chars] of {container}
+     * sort (has been rewritten to add string literal params)
      */
     goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals);
-        checkThrowEq(3, params.length, '');
+        checkThrowEq(2, params.length, '');
         let itemDel = this.outside.GetItemDelim();
-        let [sgranularity, smethod, sorder] = params;
-        let granularity = getStrToEnum<VpcGranularity>(VpcGranularity, 'Granularity', sgranularity);
+        let [smethod, sorder] = params;
+        let sg = ensureDefined(this.h.findChildStr(vals, tkstr.tkChunkGranularity), '')
+        let granularity = getStrToEnum<VpcGranularity>(VpcGranularity, 'Granularity', sg);
         let method = getStrToEnum<SortType>(SortType, 'SortType', smethod);
         let ascend = sorder.toLowerCase() !== 'descending';
         let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), '4[|');

@@ -1,0 +1,26 @@
+
+=====
+sort [lines|items|chars] of {container}
+sort [lines|items|chars] of {container} [descending|ascending]
+sort [lines|items|chars] of {container} [numeric|text|international]
+sort [lines|items|chars] of {container} by {expression}
+=====
+        New in ViperCard 0.3: 'sort by each' expressions.
+
+        Sort styles:
+        text sorting (default), compares text, not case sensitive.
+        numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
+        international sorting, compares text using the current locale
+                (because macosroman encoding is not unicode, international
+                sorting likely won't give the expected results).
+
+        Examples:
+
+        put "aa,cc,bb" into x
+        sort items of x
+        answer x -- displays "aa,bb,cc"
+        
+        put "ac,bb,ca" into x
+        sort items of x by char 2 of each
+        answer x -- displays "ca,bb,ac"
+        
