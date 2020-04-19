@@ -242,13 +242,6 @@ export class TestVpcScriptRunBase {
                     `wrong err message, expected <${expectErrMsg}>`,
                     makeWarningUseful
                 );
-                //~ if (!msg.includes(expectErrMsg) && !UI512ErrorHandling.silenceAssertMsgs) {
-                //~ console.error(
-                //~ 'fghfghddfg',
-                //~ `wrong err message, expected <${expectErrMsg}>`,
-                //~ makeWarningUseful
-                //~ );
-                //~ }
             }
 
             if (expectErrLine !== undefined) {
@@ -476,8 +469,7 @@ put ${s} into testresult`;
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
                 }
-                //~ assertWarn(false, 'DIFF RESULT');
-                console.error('DIFF RESULT dfgdfgdfg');
+                assertWarn(false, 'DIFF RESULT');
             }
         } else {
             let gt = got.readAsString();
@@ -493,8 +485,7 @@ put ${s} into testresult`;
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
                 }
-                //~ assertWarn(false, 'DIFF RESULT');
-                console.error('DIFF RESULT dfgdfgdfg');
+                assertWarn(false, 'DIFF RESULT');
             }
         }
     }

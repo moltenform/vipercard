@@ -47,10 +47,10 @@ t.test('vpcTestScriptBasics', () => {
         batch = [['put unknownVar into x\\x', 'ERR:(incorrectmessage)x']];
         h.testBatchEvaluate(batch);
     });
-    //~ assertAsserts('', 'assert:', () => {
-    //~ batch = [['put 9 into x\\x', '11111']];
-    //~ h.testBatchEvaluate(batch);
-    //~ });
+    assertAsserts('', 'assert:', () => {
+    batch = [['put 9 into x\\x', '11111']];
+    h.testBatchEvaluate(batch);
+    });
     /* failure expected, but succeeds */
     assertAsserts('', 'assert:', () => {
         batch = [['put 9 into x', 'PREPARSEERR:']];

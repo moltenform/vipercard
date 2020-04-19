@@ -458,10 +458,8 @@ t.test('ScriptParseFunctionCalls number of, nested', () => {
     testExp(`the number of cds of bg 1 of this stack`, 'parses');
     testExp(`the number of bgs`, 'parses');
     testExp(`the number of bgs of this stack`, 'parses');
-    /* confirmed in emulator */
-    /* you can't skip levels like this */
-    assertFailsParseExp(`the name of cd 1 of this stack`, 'Exception');
-    /* but you can skip levels here */
+    /* we let you skip levels here */
+    testExp(`the name of cd 1 of this stack`, 'parses');
     testExp(`the number of cds of this stack`, 'parses');
 });
 t.test('ScriptParseFunctionCalls number of, invalid', () => {

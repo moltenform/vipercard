@@ -1542,43 +1542,45 @@ put 6 + \\\n myMult(1, \\\n 3) + myMult(\\\n 1, 3) + myMult(1, 3 \\\n) into x
 });
 t.test('expand in VpcLineCategory_.GoCardImpl', () => {
     h.provideCustomFnInStackScript();
-    //~ let batch: [string, string][] = [
-    //~ ['global countCalls\\0', '0'],
-    //~ /* go to card */
-    //~ [
-    //~ `
-    //~ put 0 into countCalls
-    //~ go to card myMult(1,1)
-    //~ put the short id of this cd is the short id of card 1 into ret
-    //~ \\ret && countCalls`,
-    //~ 'true 1'
-    //~ ],
-    //~ [
-    //~ `
-    //~ put 0 into countCalls
-    //~ go to card (1 + myMult(1,1))
-    //~ put the short id of this cd is the short id of card 2 into ret
-    //~ \\ret && countCalls`,
-    //~ 'true 1'
-    //~ ],
-    //~ [
-    //~ `
-    //~ put 0 into countCalls
-    //~ go to card myMult(1,3)
-    //~ put the short id of this cd is the short id of card 3 into ret
-    //~ \\ret && countCalls`,
-    //~ 'true 1'
-    //~ ],
-    //~ [
-    //~ `
-    //~ put 0 into countCalls
-    //~ go to card (myMult(3,1) + myMult(1,1))
-    //~ put the short id of this cd is the short id of card 4 into ret
-    //~ \\ret && countCalls`,
-    //~ 'true 2'
-    //~ ]
-    //~ ];
-    //~ h.testBatchEvaluate(batch);
+    let numExpectedCalls = 2 
+    /* in rewrites we currently expand it twice, not perfect but good enough */
+    let batch: [string, string][] = [
+    ['global countCalls\\0', '0'],
+    /* go to card */
+    [
+    `
+    put 0 into countCalls
+    go to card myMult(1,1)
+    put the short id of this cd is the short id of card 1 into ret
+    \\ret && countCalls`,
+    `true ${numExpectedCalls}`
+    ],
+    [
+    `
+    put 0 into countCalls
+    go to card (1 + myMult(1,1))
+    put the short id of this cd is the short id of card 2 into ret
+    \\ret && countCalls`,
+    `true ${numExpectedCalls}`
+    ],
+    [
+    `
+    put 0 into countCalls
+    go to card myMult(1,3)
+    put the short id of this cd is the short id of card 3 into ret
+    \\ret && countCalls`,
+    `true ${numExpectedCalls}`
+    ],
+    [
+    `
+    put 0 into countCalls
+    go to card (myMult(3,1) + myMult(1,1))
+    put the short id of this cd is the short id of card 4 into ret
+    \\ret && countCalls`,
+    `true ${2 * numExpectedCalls}`
+    ]
+    ];
+    h.testBatchEvaluate(batch);
 });
 t.test('expand in VpcLineCategory_.CallDynamic', () => {
     h.provideCustomFnInStackScript();

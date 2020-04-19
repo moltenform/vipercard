@@ -216,8 +216,6 @@ export class VpcRewriteForCommands {
             return [this.hBuildNyi(`go without dialog`, line[0])];
         }
 
-        //~ undefined
-        //~ // if there is a cd id undefined
         let template = '';
         if (line.length === 2 && (line[1].tokenType === tks.tkOrdinal || line[1].tokenType === tks.tkPosition)) {
             template = `

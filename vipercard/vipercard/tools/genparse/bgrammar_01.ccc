@@ -57,6 +57,7 @@
 //      the string versions of "the target" and "the owner of" look a little different, they return the long id
 //      we need parens for if the short id of the owner of cd id prevCard is not the short id of the owner of cd id nextCard then answer "j"
 //      we don't support char x + 1 of abc, need char (x + 1) of abc
+//      we allow 'get the name of cd 1 of this stack', after all 'go to cd 1 of this stack' and 'the number of cards in this stack' is valid
             
             
 // aren't yet supported in software include:
