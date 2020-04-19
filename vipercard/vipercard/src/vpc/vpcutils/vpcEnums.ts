@@ -1,6 +1,6 @@
 
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, Util512Message, joinIntoMessage } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { fitIntoInclusive, getStrToEnum, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
@@ -700,13 +700,18 @@ export function checkThrowNotifyMsg(condition: unknown, msg: string, s1: unknown
 export function cleanExceptionMsg(e: Error): string {
     let asNotification = Util512BaseErr.errAsCls(VpcNotificationMsg.name, e);
     let msg = e.message;
+    let isMsg = bool(asNotification) || msg.startsWith('vpcmessage:');
     if (msg.startsWith('vpcinternal:')) {
         msg = msg.slice('vpcinternal:'.length) + ' (internal)';
     } else if (msg.startsWith('vpc:')) {
         msg = msg.slice('vpc:'.length);
+    } else if (msg.startsWith('vpcmessage:')) {
+        msg = msg.slice('vpcmessage:'.length);
+    } else if (msg.startsWith('ui512:')) {
+        msg = msg.slice('ui512:'.length)+ ' (ui512)';
     }
 
-    if (asNotification) {
+    if (isMsg) {
         return msg;
     } else {
         return 'Note: ' + msg;

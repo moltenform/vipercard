@@ -447,55 +447,59 @@ t.test('execCommands hide and show', () => {
     ];
     h.testBatchEvaluate(batch);
 });
-//~ t.test('execCommands sort', () => {
-//~ let batch: [string, string][];
-//~ batch = [
-//~ ['put "pear,Apple2,z11,z2,11,2,apple1,peach" into initlist\\0', '0'],
-//~ ['put initlist into x\\0', `0`],
-//~ ['sort items of x\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
-//~ ['put initlist into x\\0', `0`],
-//~ ['sort ascending items of x text\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
-//~ ['put initlist into x\\0', `0`],
-//~ ['sort descending items of x text\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
-//~ ['put initlist into x\\0', `0`],
-//~ ['sort items of x numeric\\x', `2,11,apple1,Apple2,peach,pear,z11,z2`],
-//~ ['put initlist into x\\0', `0`],
-//~ ['sort descending items of x numeric\\x', `z2,z11,pear,peach,Apple2,apple1,11,2`],
-//~ [
-//~ longstr(
-//~ `put "pear"&cr&"Apple2"&cr&"z11"&cr&
-//~ "z2"&cr&"11"&cr&"2"&cr&"apple1"&cr&"peach" into initlist\\0`,
-//~ ''
-//~ ),
-//~ `0`
-//~ ],
-//~ ['put initlist into x\\0', `0`],
-//~ ['sort lines of x\\x', `11\n2\napple1\nApple2\npeach\npear\nz11\nz2`],
-//~ ['put initlist into x\\0', `0`],
-//~ [
-//~ 'sort ascending lines of x text\\x',
-//~ `11\n2\napple1\nApple2\npeach\npear\nz11\nz2`
-//~ ],
-//~ ['put initlist into x\\0', `0`],
-//~ [
-//~ 'sort descending lines of x text\\x',
-//~ `z2\nz11\npear\npeach\nApple2\napple1\n2\n11`
-//~ ],
-//~ ['put initlist into x\\0', `0`],
-//~ ['sort lines of x numeric\\x', `2\n11\napple1\nApple2\npeach\npear\nz11\nz2`],
-//~ ['put initlist into x\\0', `0`],
-//~ [
-//~ 'sort descending lines of x numeric\\x',
-//~ `z2\nz11\npear\npeach\nApple2\napple1\n11\n2`
-//~ ],
+t.test('execCommands sort', () => {
+let batch: [string, string][];
+batch = [
+['put "pear,Apple2,z11,z2,11,2,apple1,peach" into initlist\\0', '0'],
+['put initlist into x\\0', `0`],
+['sort items of x\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
+['put initlist into x\\0', `0`],
+['sort ascending items of x text\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
+['put initlist into x\\0', `0`],
+['sort items of x text descending\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`],
+['put initlist into x\\0', `0`],
+['sort descending items of x text\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
+['put initlist into x\\0', `0`],
+['sort items of x text ascending\\x', `z2,z11,pear,peach,Apple2,apple1,2,11`],
+['put initlist into x\\0', `0`],
+['sort items of x numeric\\x', `2,11,apple1,Apple2,peach,pear,z11,z2`],
+['put initlist into x\\0', `0`],
+['sort descending items of x numeric\\x', `z2,z11,pear,peach,Apple2,apple1,11,2`],
+[
+longstr(
+`put "pear"&cr&"Apple2"&cr&"z11"&cr&
+"z2"&cr&"11"&cr&"2"&cr&"apple1"&cr&"peach" into initlist\\0`,
+''
+),
+`0`
+],
+['put initlist into x\\0', `0`],
+['sort lines of x\\x', `11\n2\napple1\nApple2\npeach\npear\nz11\nz2`],
+['put initlist into x\\0', `0`],
+[
+'sort ascending lines of x text\\x',
+`11\n2\napple1\nApple2\npeach\npear\nz11\nz2`
+],
+['put initlist into x\\0', `0`],
+[
+'sort descending lines of x text\\x',
+`z2\nz11\npear\npeach\nApple2\napple1\n2\n11`
+],
+['put initlist into x\\0', `0`],
+['sort lines of x numeric\\x', `2\n11\napple1\nApple2\npeach\npear\nz11\nz2`],
+['put initlist into x\\0', `0`],
+[
+'sort descending lines of x numeric\\x',
+`z2\nz11\npear\npeach\nApple2\napple1\n11\n2`
+],
 //~ ['sort xyz items of x\\x', `ERR:Not a valid choice`],
 //~ ['sort xyz items of x xyz\\x', `ERR:Not a valid choice`],
 //~ ['sort items of x xyz\\x', `ERR:Not a valid choice`],
 //~ ['sort xyz of x\\x', `ERR:MismatchedTokenException`],
 //~ ['sort xyz xyz of x\\x', `ERR:MismatchedTokenException`]
-//~ ];
-//~ h.testBatchEvaluate(batch);
-//~ });
+];
+h.testBatchEvaluate(batch);
+});
 t.test('execCommands delete', () => {
     let batch: [string, string][];
     batch = [

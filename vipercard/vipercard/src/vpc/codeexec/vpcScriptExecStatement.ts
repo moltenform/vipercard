@@ -6,6 +6,7 @@
 /* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
+/* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
@@ -385,9 +386,9 @@ export class ExecuteStatement {
         let granularity = getStrToEnum<VpcGranularity>(VpcGranularity, 'Granularity', sgranularity);
         let method = getStrToEnum<SortType>(SortType, 'SortType', smethod);
         let ascend = sorder.toLowerCase() !== 'descending';
-        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '4[|');
+        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), '4[|');
         let cont = this.outside.ResolveContainerWritable(contRef);
-        ChunkResolution.applySort(cont, itemDel, granularity, method, ascend);
+        ChunkResolutionSort.applySort(cont, itemDel, granularity, method, ascend);
     }
     /**
      * subtract [chunk of] {container} from {number}

@@ -20,6 +20,8 @@ export namespace VpcRewritesGlobal {
         autohighlite: 'autohilite',
         loc: 'location',
         botright: 'bottomright'
+        /* itemdel and itemdelimiter too, but it's
+        a nullary prop, see productopts */
     };
     export function rewritePropertySynonyms(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
         for (let i = 0; i < line.length - 1; i++) {
@@ -136,6 +138,10 @@ export class VpcSuperRewrite {
             tktype = tks.tkNumLiteral;
         } else if (!tktype && term === ',') {
             tktype = tks.tkComma;
+        } else if (!tktype && term === '==') {
+            tktype = tks.tkGreaterOrLessEqualOrEqual;
+        } else if (!tktype && term === '=') {
+            tktype = tks.tkGreaterOrLessEqualOrEqual;
         } else if (!tktype) {
             tktype = tks.tkIdentifier;
             checkThrow(

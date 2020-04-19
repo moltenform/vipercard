@@ -1,9 +1,9 @@
 
-/* auto */ import { LogToReplMsgBox } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcTool, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
 /* auto */ import { arLast, findStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -394,6 +394,13 @@ put the result %ARG0%`;
         ) {
             return [this.hBuildNyi(`sorting by cards`, line[0])];
         }
+
+        /* delete of */
+        let ofLvl0 = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'of') 
+        if (ofLvl0 !== -1) {
+            line.splice(ofLvl0, 1)
+        }
+
         let sortOptions = new Map<string, string>();
         sortOptions['order'] = 'ascending';
         sortOptions['granularity'] = 'lines';
@@ -405,7 +412,7 @@ put the result %ARG0%`;
             if (t.image === 'ascending' || t.image === 'descending') {
                 lastOpt = i;
                 sortOptions['order'] = t.image;
-            } else if (t.image === 'text' || t.image === 'numeric' || t.image === 'international' || t.image === 'dateTime') {
+            } else if (t.image === 'text' || t.image === 'numeric' || t.image === 'international' || t.image === 'datetime') {
                 lastOpt = i;
                 sortOptions['method'] = t.image;
             } else if (t.image === 'lines' || t.image === 'items') {
@@ -417,12 +424,9 @@ put the result %ARG0%`;
             }
         }
         lastOpt += 1;
-        if (line[lastOpt].image === 'of') {
-            lastOpt += 1;
-        }
 
         let containerExpression = line.slice(lastOpt);
-        if (foundBy) {
+        if (foundBy !== -1) {
             containerExpression = line.slice(lastOpt, foundBy);
         }
 
@@ -433,41 +437,11 @@ put the result %ARG0%`;
             "${sortOptions['order']}" %ARG0%`
         );
         let cmd = this.rw.gen(template, line[0], [containerExpression]);
-        if (!foundBy) {
+        if (foundBy === -1) {
             return cmd;
         } else {
-            // let's build a sort here! use decorate-sort-undecorate
-            if (sortOptions['granularity'] !== 'items' && sortOptions['granularity'] !== 'lines') {
-                return [this.hBuildNyi('for expr, we only support sorting by lines or items', line[0])];
-            }
-
-            /* check_long_lines_silence_subsequent */
-            let delimExpr = sortOptions['granularity'] === 'items' ? 'the itemDel' : 'cr';
             let byExpr = line.slice(foundBy + 1);
-            let internalDelim = '\x01\x01\x01vpcinternal\x01\x01\x01';
-            let template = `
-put ( %ARG0% ) %INTO% content%UNIQUE%
-if length ( content%UNIQUE% ) then
-    if "${internalDelim}" is in content%UNIQUE% then
-        cantSortTextByExpressionThatHasThis
-    end if
-    put "" %INTO% container%UNIQUE%
-    repeat with loop%UNIQUE% = 1 to the number of ${sortOptions['granularity']} of content%UNIQUE%
-        put ${sortOptions['granularity']} loop%UNIQUE% of content%UNIQUE% %INTO% each
-        put ( %ARG1% ) %INTO% sortkey%UNIQUE%
-        put sortkey%UNIQUE% && "${internalDelim}" && each & ${delimExpr} %AFTER% container%UNIQUE%
-    end repeat
-    put char 1 to (the length of container%UNIQUE% - the length of ${delimExpr}) of container%UNIQUE% %INTO% container%UNIQUE%
-    %ARG2%
-    put "" %INTO% result%UNIQUE%
-    repeat with loop%UNIQUE% = 1 to the number of ${sortOptions['granularity']} of container%UNIQUE%
-        put ${sortOptions['granularity']} loop%UNIQUE% of container%UNIQUE% %INTO% each
-        put char ( offset ( "${internalDelim}" , each ) + ${internalDelim.length} ) to ( the length of each ) of each %INTO% each
-        put each & ${delimExpr} %AFTER% result%UNIQUE%
-    end repeat
-    put char 1 to (the length of result%UNIQUE% - the length of ${delimExpr}) of result%UNIQUE% %INTO% result%UNIQUE%
-    put result%UNIQUE% %INTO% %ARG0%
-end if`;
+            let template = ChunkResolutionSort.writeCodeCustomSort(sortOptions);
             return this.rw.gen(template, line[0], [containerExpression, byExpr, cmd[0]]);
         }
     }

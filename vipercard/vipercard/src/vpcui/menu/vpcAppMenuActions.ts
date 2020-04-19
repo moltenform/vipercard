@@ -1,10 +1,11 @@
 
+/* auto */ import { VpcSession } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcNonModalFormBase } from './../nonmodaldialogs/vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrowInternal, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrowInternal, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { VpcChangeSelectedFont } from './vpcChangeSelectedFont';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
@@ -16,7 +17,6 @@
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
-import { VpcSession } from '../../vpc/request/vpcRequest';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

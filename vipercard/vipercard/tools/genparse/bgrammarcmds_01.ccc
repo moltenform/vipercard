@@ -116,8 +116,8 @@ BuiltinCmdSet:=... [_the] <HCouldBeAPropertyToSet> [ tkOfOnly { <HChunk> <Object
 // show an object, or show all cards. if "menu" or "picture of", or "window", error in rewrite
 // we don't yet support show all cards or show 6 cards
 BuiltinCmdShow:=...  <ObjectPart> [ tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>]  ]                                  
-// we'll build an actual sort in software. tkStringLiteral1 is "items|lines" tkStringLiteral2 is "numeric|alphabetic" tkStringLiteral3 is "ascending|descending"
-BuiltinCmdSort:=... tkStringLiteral tkStringLiteral tkStringLiteral <HAnyAllowedVariableName>
+// the "by each line" part we'll do in software
+BuiltinCmdSort:=... tkChunkGranularity _of <HSimpleContainer> MANY{{ tkIdentifier }}ENDMANY      
 // start using, currently a no-op
 BuiltinCmdStart:=... tkIdentifier <ObjectStack>
 // stop using, currently a no-op

@@ -9,7 +9,7 @@
 /* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
 /* auto */ import { Util512, getEnumToStrOrFallback, util512Sort } from './../../ui512/utils/util512';
-/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertThrows, assertAsserts } from './../testUtils/testUtils';
+/* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
