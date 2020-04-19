@@ -86,6 +86,7 @@ export interface VpcCompleteVisitor {
     RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleHBuiltinCmdDrag_1(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdEnable(ctx: VisitingContext): IntermedMapOfIntermedVals;
+    RuleBuiltinCmdVpccalluntrappableerrordialog(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdLock(ctx: VisitingContext): IntermedMapOfIntermedVals;
     RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals;
@@ -178,6 +179,7 @@ export interface VisitingContext {
     RuleBuiltinCmdDrag: any[];
     RuleHBuiltinCmdDrag_1: any[];
     RuleBuiltinCmdEnable: any[];
+    RuleBuiltinCmdVpccalluntrappableerrordialog: any[];
     RuleBuiltinCmdHide: any[];
     RuleBuiltinCmdLock: any[];
     RuleBuiltinCmdMark: any[];

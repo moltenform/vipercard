@@ -886,6 +886,7 @@ listOfAllBuiltinCommandsInOriginalProduct['if'] = true;
 // ones we've defined
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappablechoose'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappabledomenu'] = true;
+listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappableerrordialog'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['replace'] = true;
 
 export const listOfAllBuiltinEventsInOriginalProduct:{ [key: string]: boolean } = { }
@@ -1012,6 +1013,7 @@ export const tkstr = {
     RuleBuiltinCmdDrag: 'RuleBuiltinCmdDrag',
     RuleHBuiltinCmdDrag_1: 'RuleHBuiltinCmdDrag_1',
     RuleBuiltinCmdEnable: 'RuleBuiltinCmdEnable',
+    RuleBuiltinCmdVpccalluntrappableerrordialog: 'RuleBuiltinCmdVpccalluntrappableerrordialog',
     RuleBuiltinCmdHide: 'RuleBuiltinCmdHide',
     RuleBuiltinCmdLock: 'RuleBuiltinCmdLock',
     RuleBuiltinCmdMark: 'RuleBuiltinCmdMark',

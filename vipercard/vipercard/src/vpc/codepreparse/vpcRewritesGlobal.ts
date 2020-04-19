@@ -132,16 +132,17 @@ export class VpcSuperRewrite {
     tokenFromEnglishTerm(term: string, realTokenAsBasis: ChvITk) {
         let tktype = listOfAllWordLikeTokens[term];
         if (!tktype && term.startsWith('"') && term.endsWith('"')) {
-            // we can make a simple string literal, not one that contains spaces though.
+            /* we can make a simple string literal, not one that contains spaces though. */
             tktype = tks.tkStringLiteral;
+            term = term.replace(/~/g, ' ')
         } else if (!tktype && term.match(/^[0-9]+$/)) {
             tktype = tks.tkNumLiteral;
         } else if (!tktype && term === ',') {
             tktype = tks.tkComma;
-        } else if (!tktype && term === '==') {
+        } else if (!tktype && (term === '=='||term === '=')) {
             tktype = tks.tkGreaterOrLessEqualOrEqual;
-        } else if (!tktype && term === '=') {
-            tktype = tks.tkGreaterOrLessEqualOrEqual;
+        } else if (!tktype && (term === '&&'||term === '&')) {
+            tktype = tks.tkStringConcat;
         } else if (!tktype) {
             tktype = tks.tkIdentifier;
             checkThrow(

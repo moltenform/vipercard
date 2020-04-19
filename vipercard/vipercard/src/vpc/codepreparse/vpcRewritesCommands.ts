@@ -5,7 +5,8 @@
 /* auto */ import { VpcTool, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { arLast, findStrToEnum, longstr } from './../../ui512/utils/util512';
+/* auto */ import { arLast, findStrToEnum, longstr, Util512 } from './../../ui512/utils/util512';
+import { VpcRewritesLoops } from './vpcRewritesLoops';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -30,7 +31,7 @@
  * you shouldn't write
  *      'put 3 into x'
  * you should write
- *      'put 3 %MARK% into %MARK% x'
+ *      'put 3 %INTO% x'
  * since that's what the put-rewriter would do.
  *
  * we will do a final pass for custom functions,
@@ -394,7 +395,7 @@ put the result %ARG0%`;
             allImages.startsWith('sort***marked***cards') ||
             allImages.startsWith('sort***marked***cds')
         ) {
-            return [this.hBuildNyi(`sorting by cards`, line[0])];
+            return [this.hBuildNyi(`We don't yet support sorting by cards`, line[0])];
         }
 
         /* split off by */
@@ -427,7 +428,7 @@ put the result %ARG0%`;
 
         /* check correct syntax */
         checkThrow(line.length >= 3 && line[1].tokenType === tks.tkChunkGranularity && line[2].image === 'of',
-         "expect something like 'sort lines of x")
+         "expect something like 'sort lines of x'")
 
         /* look backwards for any keywords. */
         let i = line.length-1
@@ -454,7 +455,25 @@ put the result %ARG0%`;
             let granularity = line[1]
             let container = line.slice(3, i+1)
             let template = ChunkResolutionSort.writeCodeCustomSort(granularity.image, sortOptions);
-            return this.rw.gen(template, line[0], [container, byPhrase]);
+            let newcode = this.rw.gen(template, line[0], [container, byPhrase]);
+            /* expand the repeats in the new code, I'm too lazy to do this manually */
+            let ret: ChvITk[][] = []
+            for (let line of newcode) {
+                if (line[0].image === 'repeat') {
+                    let newlines = VpcRewritesLoops.Go(line, this.rw)
+                    for (let newline of newlines) {
+                        if (newline[0].image === 'put') {
+                            Util512.extendArray(ret, this.rewritePut(newline))
+                        } else {
+                            ret.push(newline)
+                        }
+                    }
+                } else {
+                    ret.push(line)
+                }
+            }
+
+            return ret
         }
     }
     rewriteStart(line: ChvITk[]): ChvITk[][] {
@@ -559,7 +578,7 @@ end repeat`;
 
     hBuildNyi(msg: string, basis: ChvITk) {
         return [
-            BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, 'internalshownyimessage'),
+            BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, 'errordialog'),
             BuildFakeTokens.inst.makeStringLiteral(basis, msg)
         ];
     }

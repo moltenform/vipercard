@@ -25,9 +25,13 @@ on choose whichTool
     vpccalluntrappablechoose whichTool
 end choose
 
-on domenu a, b
-    vpccalluntrappabledomenu a, b
+on domenu pa, pb
+    vpccalluntrappabledomenu pa, pb
 end domenu
+
+on errorDialog pa
+    vpccalluntrappableerrordialog pa
+end errorDialog
 
 on arrowkey direction
     if direction == "right" then

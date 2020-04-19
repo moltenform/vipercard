@@ -1411,6 +1411,13 @@ this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleObjectBtn)
 });
 
+RuleBuiltinCmdVpccalluntrappableerrordialog = this.RULE('RuleBuiltinCmdVpccalluntrappableerrordialog', () => {
+this.CONSUME1(tks.tkSyntaxMark)
+this.CONSUME2(tks.tkSyntaxMark)
+this.CONSUME3(tks.tkSyntaxMark)
+this.SUBRULE1(this.RuleExpr)
+});
+
 RuleBuiltinCmdHide = this.RULE('RuleBuiltinCmdHide', () => {
 this.CONSUME1(tks.tkSyntaxMark)
 this.CONSUME2(tks.tkSyntaxMark)

@@ -499,6 +499,14 @@ longstr(
 ['sort xyz xyz of x\\x', `PREPARSEERR:expect something like`]
 ];
 h.testBatchEvaluate(batch);
+        /* cool new sort-by-expression feature */
+        batch = [
+            ['put "ac,bb,ca" into li\\0', '0'],
+            ['sort items of li by char 2 of each\\li', 'ca,bb,ac'],
+            ['put "ac" & cr & "bb" & cr & "ca" into li\\0', '0'],
+            ['sort lines of li by char 2 of each\\li', 'ca\nbb\nac'],
+        ]
+h.testBatchEvaluate(batch);
 });
 t.test('execCommands delete', () => {
     let batch: [string, string][];

@@ -596,6 +596,11 @@ return this.H$BuildMap(ctx);
 }
 
 
+RuleBuiltinCmdVpccalluntrappableerrordialog(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
 RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals {
 return this.H$BuildMap(ctx);
 }

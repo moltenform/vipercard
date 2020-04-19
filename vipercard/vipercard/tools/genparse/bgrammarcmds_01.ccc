@@ -65,6 +65,8 @@ BuiltinCmdEnable:=... <ObjectBtn>
 // enterInField. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // enterKey. sent up the message hierarchy, usually does nothing, handled by vipercardstdlib. takes no args
 // export. show NYI in rewrite
+// errorDialog. in emulator it can be trapped, so let's follow suit I guess
+BuiltinCmdVpccalluntrappableerrordialog:=... <Expr>       
 // find. show NYI in rewrite
 // functionkey: sent up the message hierarchy, usually does nothing, handled by vipercardstdlib.
 // software rewrites "Get" to "Put"...into it

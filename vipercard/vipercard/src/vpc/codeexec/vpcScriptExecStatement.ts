@@ -5,7 +5,7 @@
 /* auto */ import { AsyncCodeOpState, FnAnswerMsgCallback, FnAskMsgCallback, VpcPendingAsyncOps, VpcScriptExecAsync } from './vpcScriptExecAsync';
 /* auto */ import { RequestedContainerRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
+/* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
@@ -202,6 +202,14 @@ export class ExecuteStatement {
      */
     goEnable(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         this.setEnabled(line, vals, true);
+    }
+    /**
+     * show an error, appears as a script error conveniently
+     */
+    goVpccalluntrappableerrordialog(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
+        let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
+        let s = args[0].readAsString();
+        checkThrowNotifyMsg(false, s)
     }
     /**
      * hide {button|field}
