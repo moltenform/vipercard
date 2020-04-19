@@ -209,7 +209,7 @@ export class ExecuteStatement {
     goVpccalluntrappableerrordialog(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
         let s = args[0].readAsString();
-        checkThrowNotifyMsg(false, s)
+        checkThrowNotifyMsg(false, s);
     }
     /**
      * hide {button|field}
@@ -391,7 +391,7 @@ export class ExecuteStatement {
         checkThrowEq(2, params.length, '');
         let itemDel = this.outside.GetItemDelim();
         let [smethod, sorder] = params;
-        let sg = ensureDefined(this.h.findChildStr(vals, tkstr.tkChunkGranularity), '')
+        let sg = ensureDefined(this.h.findChildStr(vals, tkstr.tkChunkGranularity), '');
         let granularity = getStrToEnum<VpcGranularity>(VpcGranularity, 'Granularity', sg);
         let method = getStrToEnum<SortType>(SortType, 'SortType', smethod);
         let ascend = sorder.toLowerCase() !== 'descending';

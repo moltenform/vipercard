@@ -3,8 +3,7 @@
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
-/* auto */ import { VelResolveId } from './../vel/velResolveName';
+/* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
@@ -646,7 +645,7 @@ export class VpcBuiltinFunctions {
         let request = new RequestedVelRef(VpcElType.Unknown);
         request.lookById = id;
         let s = this.readoutside.ElementExists(request);
-        return VpcValS(s ?? "");
+        return VpcValS(s ?? '');
     }
 
     /**

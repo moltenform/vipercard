@@ -700,7 +700,7 @@ export function checkThrowNotifyMsg(condition: unknown, msg: string, s1: unknown
 export function cleanExceptionMsg(e: Error): string {
     let asNotification = Util512BaseErr.errAsCls(VpcNotificationMsg.name, e);
     let msg = e.message.trim();
-    let isMsg = bool(asNotification) || msg.startsWith('vpcmessage:');
+    let isMsg = bool(asNotification) || bool(msg.startsWith('vpcmessage:'));
     if (msg.startsWith('vpcinternal:')) {
         msg = msg.slice('vpcinternal:'.length) + ' (internal)';
     } else if (msg.startsWith('vpc:')) {
@@ -708,7 +708,7 @@ export function cleanExceptionMsg(e: Error): string {
     } else if (msg.startsWith('vpcmessage:')) {
         msg = msg.slice('vpcmessage:'.length);
     } else if (msg.startsWith('ui512:')) {
-        msg = msg.slice('ui512:'.length)+ ' (ui512)';
+        msg = msg.slice('ui512:'.length) + ' (ui512)';
     }
 
     if (isMsg) {

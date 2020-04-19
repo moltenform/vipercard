@@ -9,7 +9,7 @@ export class VpcStandardLibScript {
         internalvpcdeletebghelper: true,
         choose: true,
         domenu: true,
-        help: true,
+        help: true
     };
 
     static script = `

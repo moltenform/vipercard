@@ -3,7 +3,6 @@
 /* auto */ import { SortType, VpcGranularity, checkThrow } from './vpcEnums';
 /* auto */ import { util512Sort } from './../../ui512/utils/util512';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -67,7 +66,7 @@ export class ChunkResolutionSort {
      * written in vipercard itself so that it's easy to plug in the expression.
      */
     static internalDelim = '\x01\x01\x01vpcinternal\x01\x01\x01';
-    static writeCodeCustomSort(granularity:string, sortOptions: Map<string, string>) {
+    static writeCodeCustomSort(granularity: string, sortOptions: Map<string, string>) {
         /* let's build a sort here! use decorate-sort-undecorate */
         if (granularity !== 'items' && granularity !== 'lines') {
             checkThrow(false, 'We only support sorting by lines or items');

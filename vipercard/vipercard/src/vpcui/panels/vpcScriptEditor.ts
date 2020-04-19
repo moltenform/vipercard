@@ -288,11 +288,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             } else if (short === 'status2b') {
                 /* user clicked the error message, show the details */
                 if (this.lastErrInfo) {
-                    let sDetails = this.lastErrInfo[1]
+                    let sDetails = this.lastErrInfo[1];
                     if (!sDetails.startsWith('Note:')) {
-                        sDetails = 'Details: ' + sDetails
+                        sDetails = 'Details: ' + sDetails;
                     }
-                    
+
                     this.cbAnswerMsg(sDetails, () => {});
                     /* remember to not run other code after showing modal dialog */
                 }

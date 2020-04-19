@@ -387,7 +387,7 @@ put the result %ARG0%`;
         return [line];
     }
     rewriteSort(line: ChvITk[]): ChvITk[][] {
-        let origLine = line.slice()
+        let origLine = line.slice();
         let allImages = line.map(t => t.image).join('***') + '***';
         if (
             allImages.startsWith('sort***cards') ||
@@ -399,15 +399,13 @@ put the result %ARG0%`;
         }
 
         /* split off by */
-        let byPhrase: O<ChvITk[]>
-        let byLvl0 = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'by') 
+        let byPhrase: O<ChvITk[]>;
+        let byLvl0 = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'by');
         if (byLvl0 !== -1) {
-            byPhrase = line.slice(byLvl0 + 1)
-            line = line.slice(0, byLvl0)
-            checkThrow(byPhrase.length, "expect something like 'sort lines of x by char 1 of each'")
+            byPhrase = line.slice(byLvl0 + 1);
+            line = line.slice(0, byLvl0);
+            checkThrow(byPhrase.length, "expect something like 'sort lines of x by char 1 of each'");
         }
-
-        
 
         /* go backwards and pick up sort options until we don't see the first that isn't one */
         let sortOptions = new Map<string, string>();
@@ -415,23 +413,25 @@ put the result %ARG0%`;
         sortOptions['method'] = 'text';
 
         /* support old-style ones where ascending/descending could be anywhere*/
-        let found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'ascending') 
+        let found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'ascending');
         if (found !== -1) {
             sortOptions['order'] = 'ascending';
-            line.splice(found, 1)
+            line.splice(found, 1);
         }
-        found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'descending') 
+        found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'descending');
         if (found !== -1) {
             sortOptions['order'] = 'descending';
-            line.splice(found, 1)
+            line.splice(found, 1);
         }
 
         /* check correct syntax */
-        checkThrow(line.length >= 3 && line[1].tokenType === tks.tkChunkGranularity && line[2].image === 'of',
-         "expect something like 'sort lines of x'")
+        checkThrow(
+            line.length >= 3 && line[1].tokenType === tks.tkChunkGranularity && line[2].image === 'of',
+            "expect something like 'sort lines of x'"
+        );
 
         /* look backwards for any keywords. */
-        let i = line.length-1
+        let i = line.length - 1;
         for (; i >= 0; i--) {
             let t = line[i];
             if (t.image === 'ascending' || t.image === 'descending') {
@@ -442,7 +442,7 @@ put the result %ARG0%`;
                 break;
             }
         }
-        
+
         /* grab just the part before the options */
         let template = longstr(
             `sort
@@ -450,30 +450,30 @@ put the result %ARG0%`;
             "${sortOptions['order']}" %ARG0%`
         );
         if (!byPhrase) {
-            return this.rw.gen(template, line[0], [line.slice(1, i+1)]);
+            return this.rw.gen(template, line[0], [line.slice(1, i + 1)]);
         } else {
-            let granularity = line[1]
-            let container = line.slice(3, i+1)
+            let granularity = line[1];
+            let container = line.slice(3, i + 1);
             let template = ChunkResolutionSort.writeCodeCustomSort(granularity.image, sortOptions);
             let newcode = this.rw.gen(template, line[0], [container, byPhrase]);
             /* expand the repeats in the new code, I'm too lazy to do this manually */
-            let ret: ChvITk[][] = []
+            let ret: ChvITk[][] = [];
             for (let line of newcode) {
                 if (line[0].image === 'repeat') {
-                    let newlines = VpcRewritesLoops.Go(line, this.rw)
+                    let newlines = VpcRewritesLoops.Go(line, this.rw);
                     for (let newline of newlines) {
                         if (newline[0].image === 'put') {
-                            Util512.extendArray(ret, this.rewritePut(newline))
+                            Util512.extendArray(ret, this.rewritePut(newline));
                         } else {
-                            ret.push(newline)
+                            ret.push(newline);
                         }
                     }
                 } else {
-                    ret.push(line)
+                    ret.push(line);
                 }
             }
 
-            return ret
+            return ret;
         }
     }
     rewriteStart(line: ChvITk[]): ChvITk[][] {

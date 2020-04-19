@@ -104,8 +104,8 @@ export class VpcElProductOpts extends VpcElBase {
         getters['stacksinuse'] = [PrpTyp.Str, () => ''];
         getters['suspended'] = [PrpTyp.Bool, () => false];
         getters['itemdelimiter'] = [PrpTyp.Str, 'itemDel'];
-        getters['itemdel'] = getters['itemdelimiter']
-        getters['itemdelim'] = getters['itemdelimiter']
+        getters['itemdel'] = getters['itemdelimiter'];
+        getters['itemdelim'] = getters['itemdelimiter'];
         getters['cursor'] = [
             PrpTyp.Str,
             (me: VpcElProductOpts) => {
@@ -127,8 +127,8 @@ export class VpcElProductOpts extends VpcElBase {
                 me.set('itemDel', s);
             }
         ];
-        setters['itemdel'] = setters['itemdelimiter']
-        setters['itemdelim'] = setters['itemdelimiter']
+        setters['itemdel'] = setters['itemdelimiter'];
+        setters['itemdelim'] = setters['itemdelimiter'];
 
         setters['cursor'] = [
             PrpTyp.Str,

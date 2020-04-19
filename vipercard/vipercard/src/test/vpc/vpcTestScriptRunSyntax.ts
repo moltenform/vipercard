@@ -48,8 +48,8 @@ t.test('vpcTestScriptBasics', () => {
         h.testBatchEvaluate(batch);
     });
     assertAsserts('', 'assert:', () => {
-    batch = [['put 9 into x\\x', '11111']];
-    h.testBatchEvaluate(batch);
+        batch = [['put 9 into x\\x', '11111']];
+        h.testBatchEvaluate(batch);
     });
     /* failure expected, but succeeds */
     assertAsserts('', 'assert:', () => {
