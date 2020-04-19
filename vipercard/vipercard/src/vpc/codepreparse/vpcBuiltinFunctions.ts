@@ -4,6 +4,7 @@
 /* auto */ import { VpcScriptMessage } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { PropAdjective, VpcElType, VpcTool, checkThrow, checkThrowEq, vpcElTypeShowInUI } from './../vpcutils/vpcEnums';
+/* auto */ import { VelResolveId } from './../vel/velResolveName';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
@@ -90,7 +91,7 @@ export class VpcBuiltinFunctions {
         selectedline: 0,
         selectedtext: 0,
         tool: 0,
-        typeofobject: 1
+        objectbyid: 1
     };
 
     /**
@@ -638,14 +639,14 @@ export class VpcBuiltinFunctions {
     }
 
     /**
-     * what is the type of this object?
+     * what is the long id of this object, by id? return empty if object not found
      */
-    callTypeofobject(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
+    callObjectbyid(args: VpcVal[], frmMsg: VpcScriptMessage, frmParams: VpcVal[]) {
         let id = args[0].readAsStrictNumeric();
         let request = new RequestedVelRef(VpcElType.Unknown);
         request.lookById = id;
-        let found = this.readoutside.ElementExists(request);
-        return VpcValS(found ? vpcElTypeShowInUI(found) : '');
+        let s = this.readoutside.ElementExists(request);
+        return VpcValS(s ?? "");
     }
 
     /**

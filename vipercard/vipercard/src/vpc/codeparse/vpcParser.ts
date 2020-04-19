@@ -355,6 +355,10 @@ this.OPTION4(() => {
 this.SUBRULE1(this.RuleOf)
 this.SUBRULE1(this.RuleObjectBg)
 });
+this.OPTION5(() => {
+this.SUBRULE2(this.RuleOf)
+this.SUBRULE1(this.RuleObjectStack)
+});
 });
 
 RuleObjectBg = this.RULE('RuleObjectBg', () => {

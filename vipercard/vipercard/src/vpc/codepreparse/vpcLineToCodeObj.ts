@@ -1,8 +1,7 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, isTkType, listOfAllBuiltinCommandsInOriginalProduct, tks } from './../codeparse/vpcTokens';
-/* auto */ import { VpcStandardLibScript } from './../vpcutils/vpcStandardLibScript';
+/* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcCodeLine, VpcLineCategory, checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
@@ -185,9 +184,10 @@ export class VpcLineToCodeObj {
      */
     goCustomHandler(line: ChvITk[], output: VpcCodeLine) {
         let cmd = line[0].image.toLowerCase();
-        if (listOfAllBuiltinCommandsInOriginalProduct[cmd] && !VpcStandardLibScript.handlersImplementedInSoftware[cmd]) {
-            checkThrow(false, "It looks like we haven't implemented this command yet.");
-        }
+        /* we used to check listOfAllBuiltinCommandsInOriginalProduct
+        and throw if it wasn't in handlersImplementedInSoftware,
+        but that would make this a preparse-time error,
+        and it'd be nicer just as a runtime error, if importing stacks */
 
         if (line.length > 1) {
             /* kind reminders to the user */

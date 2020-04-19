@@ -716,7 +716,9 @@ export class VpcExecFrameStack {
     }
 
     /**
-     * send a directive that can't be done solely in software
+     * some commands like "go to card"
+     * are done mostly in software, but need help here
+     * to say, send closefield/exitfield events or do visual effects.
      */
     visitIsInternalvpcmessagesdirective(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         curFrame.next();

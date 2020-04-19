@@ -8,7 +8,8 @@ export class VpcStandardLibScript {
         pop: true,
         internalvpcdeletebghelper: true,
         choose: true,
-        domenu: true
+        domenu: true,
+        help: true,
     };
 
     static script = `
@@ -32,6 +33,10 @@ end domenu
 on errorDialog pa
     vpccalluntrappableerrordialog pa
 end errorDialog
+
+on help
+    errorDialog "Help is not supported."
+end help
 
 on arrowkey direction
     if direction == "right" then
@@ -107,9 +112,16 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
 end internalvpcmovecardhelper
 
 function goCardDestinationFromObjectId nextId
-    -- also checks for existence.
-    put typeOfObject(nextId) into objType
-    if objType == "card" then
+    if objectById(nextId) == "" then
+        -- returns "" if the object does not exist
+        return ""
+    end if
+    put word 1 of objectById(nextId) into objType
+    if word 2 of objectById(nextId) is "button" then
+        errordialog "Cannot go to a button"
+    else if word 2 of objectById(nextId) is "field" then
+        errordialog "Cannot go to a field"
+    else if objType == "card" then
         return nextId
     else if objType == "bkgnd" then
         if the short id of (the owner of this cd) is nextId then
@@ -120,7 +132,7 @@ function goCardDestinationFromObjectId nextId
     else if objType == "stack" then
         return the short id of this cd
     else
-        return ""
+        errordialog "Cannot go to this type of object"
     end if
 end goCardDestinationFromObjectId
 

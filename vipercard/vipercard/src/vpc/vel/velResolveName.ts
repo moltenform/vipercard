@@ -236,8 +236,8 @@ export class VelResolveId {
         if (
             words.length >= 3 &&
             arLast(words) === 'stack' &&
-            words[words.length - 1] === 'this' &&
-            words[words.length - 2] === 'of'
+            words[words.length - 2] === 'this' &&
+            words[words.length - 3] === 'of'
         ) {
             words = words.slice(0, -3);
         }

@@ -114,9 +114,13 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * try resolving a RequestedVelRef, and if resolution fails, return false
      */
-    ElementExists(vel: RequestedVelRef): O<VpcElType> {
+    ElementExists(vel: RequestedVelRef): O<string> {
         let found = this.ResolveVelRef(vel);
-        return found[0]?.getType();
+        if (found[0]) {
+            return new VelResolveId(this.vci.getModel()).go(found[0], PropAdjective.Long)
+        } else {
+            return undefined
+        }
     }
 
     /**
@@ -581,7 +585,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     /**
      * put the target into x (the vel that was interacted with)
      */
-    protected getTargetFullString(adjective: PropAdjective) {
+    protected getTargetFullString(adjective: PropAdjective):string {
         /* get a longer form of the id unless specifically said "short" */
         let frame = this.vci.findExecFrameStack()[1];
         let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);

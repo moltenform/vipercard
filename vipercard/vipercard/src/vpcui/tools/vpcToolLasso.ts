@@ -2,7 +2,7 @@
 /* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from './vpcToolSelectBase';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { arLast, cast } from './../../ui512/utils/util512';
+/* auto */ import { cast, lastIfThere } from './../../ui512/utils/util512';
 /* auto */ import { clrBlack } from './../../ui512/draw/ui512DrawPatterns';
 /* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
 /* auto */ import { UI512PaintDispatch, UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -39,7 +39,7 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
             );
 
             UI512PaintDispatch.go(args, painter);
-            if (prevTX !== arLast(this.st.recordXpts) || prevTY !== arLast(this.st.recordYpts)) {
+            if (prevTX !== lastIfThere(this.st.recordXpts) || prevTY !== lastIfThere(this.st.recordYpts)) {
                 this.st.recordXpts.push(prevTX);
                 this.st.recordYpts.push(prevTY);
             }

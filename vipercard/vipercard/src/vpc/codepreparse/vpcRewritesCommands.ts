@@ -1,12 +1,12 @@
 
 /* auto */ import { BuildFakeTokens, ChvITk, tks } from './../codeparse/vpcTokens';
+/* auto */ import { VpcRewritesLoops } from './vpcRewritesLoops';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { VpcTool, VpcVisualEffectType, VpcVisualEffectTypeDestination, VpcVisualEffectTypeDirection, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { arLast, findStrToEnum, longstr, Util512 } from './../../ui512/utils/util512';
-import { VpcRewritesLoops } from './vpcRewritesLoops';
+/* auto */ import { Util512, arLast, findStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -216,6 +216,8 @@ export class VpcRewriteForCommands {
             return [this.hBuildNyi(`go without dialog`, line[0])];
         }
 
+        //~ undefined
+        //~ // if there is a cd id undefined
         let template = '';
         if (line.length === 2 && (line[1].tokenType === tks.tkOrdinal || line[1].tokenType === tks.tkPosition)) {
             template = `

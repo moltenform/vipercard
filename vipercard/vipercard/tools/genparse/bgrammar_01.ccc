@@ -50,7 +50,7 @@
 //      we don't yet support `put "c" into char 2 of item 3 of line 2 of cd fld 1`
 //      or put "c" into char 2 of item 3 to 5 of line 2 of cd fld 1
 //      you can't omit items in a list, like average(1,2,,3)
-//      NEW FEATURE: typeOfObject(id)
+//      NEW FEATURE: objectById(id)
 //      NEW FEATURE: owner is more useful
 //      NEW FEATURE: label and name are separate properties
 //      CHANGE: the "long id" of objects is now more useful. 
@@ -214,14 +214,16 @@ tkIdentifier=/[a-zA-Z][0-9a-zA-Z$_]*/
 // in software we'll stop you from saying "first cd btn 1"
 // note that saying "of card" just means "of this card". "fld 1 of this card" still refers to a bg fld.
 // tkStackAtEndOfLine is confirmed in emulator, for example 'answer the id of cd 1 of bg'
-// you can't usually "skip levels". card 1 of this stack and fld 1 of this bg are not allowed. also "answer the id of back" works
+// interestingly, back and forth are cards. "answer the id of back" works.
+// you can't usually "skip levels". card 1 of this stack and fld 1 of this bg are not allowed. 
+// but let's allow card 1 of this stack because in the "go" command that is supported. 
 
 Object:={ <ObjectSpecial> | <ObjectInterpretedFromString> | <ObjectBtn> | <ObjectFld> | <ObjectCard> |    <ObjectBg> | <ObjectStack>     }                     --->ProcessOr--->RequestedVelRef
 ObjectBtn:=[<Ordinal>] {tkCard | tkBg} {tkBtn _id <Lvl6Expression> | tkBtn <Lvl6Expression> } [ <Of> <ObjectCard> ]                                       --->Custom--->RequestedVelRef
 ObjectFld:=[<Ordinal>] {tkCard | tkBg} {tkFld _id <Lvl6Expression> | tkFld <Lvl6Expression>} [ <Of> <ObjectCard> ]                                      --->Custom--->RequestedVelRef
 ObjectCard:= { _recent { tkCard | tkCardPlural | tkCardAtEndOfLine} | _back | _forth | tkCard _id <Lvl6Expression> | \
                      [_marked] tkCard <Lvl6Expression> | tkCardAtEndOfLine | <Ordinal> [_marked] { tkCard | tkCardAtEndOfLine} | \
-                     <Position> [_marked] { tkCard | tkCardAtEndOfLine} } [ <Of> <ObjectBg> ]                                                           --->Custom--->RequestedVelRef
+                     <Position> [_marked] { tkCard | tkCardAtEndOfLine} } [ <Of> <ObjectBg> ]  [ <Of> <ObjectStack> ]                            --->Custom--->RequestedVelRef
 ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | <Ordinal> { tkBg | tkBgAtEndOfLine } | <Position> { tkBg | \
                         tkBgAtEndOfLine } | tkBgAtEndOfLine} [ <Of> <ObjectStack> ]                                                                          --->Custom--->RequestedVelRef
 ObjectStack:={<Position> { tkStack | tkStackAtEndOfLine} | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                         --->Custom--->RequestedVelRef  

@@ -109,6 +109,9 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
                 ret.parentBgInfo = this.visit(ctx.RuleObjectBg[0]);
             }
+            if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
+                ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
+            }
             if (ctx._marked && ctx._marked[0]) {
                 ret.cardLookAtMarkedOnly = true;
             }

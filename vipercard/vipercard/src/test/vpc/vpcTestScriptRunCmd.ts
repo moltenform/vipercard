@@ -224,160 +224,193 @@ t.test('execCommands arithmetic valid', () => {
 
     h.testBatchEvaluate(batch, true);
 });
-//~ t.test('execCommands go to card', () => {
-//~ /* changing current card */
-//~ h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
-//~ h.assertPreparseErrLn('go', 'on its own', 3);
-//~ h.assertLineErr('go "a"', 'something like', 3);
-//~ h.assertLineErr('go 1', 'NoViableAltException', 3);
-//~ h.assertLineErr('go xyz', 'no variable found', 3);
-//~ let batch: [string, string][];
-//~ batch = [
-//~ /* go by id */
-//~ [
-//~ `go to card id ${h.elIds.card_b_d}\\the short id of this cd`,
-//~ `${h.elIds.card_b_d}`
-//~ ],
-//~ /* go by variable lookup */
-//~ [
-//~ `put the long id of cd id ${h.elIds.card_b_c} into xx\ngo to card xx\\the short id of this cd`,
-//~ `${h.elIds.card_b_c}`
-//~ ],
-//~ [
-//~ `put "card id ${h.elIds.card_b_d}" into xx\ngo to card xx\\the short id of this cd`,
-//~ `${h.elIds.card_b_d}`
-//~ ],
-//~ [
-//~ `put "cd id ${h.elIds.card_b_c}" into xx\ngo to card xx\\the short id of this cd`,
-//~ `${h.elIds.card_b_c}`
-//~ ],
-//~ /* going to different types of objects is a no-op */
-//~ [
-//~ `go to cd btn id 1\\the short id of this cd`,
-//~ `${h.elIds.card_b_c}`
-//~ ],
-//~ [
-//~ `go to cd btn "p1"\\the short id of this cd`,
-//~ `${h.elIds.card_b_c}`
-//~ ],
-//~ [
-//~ `go to cd fld 1\\the short id of this cd`,
-//~ `${h.elIds.card_b_c}`
-//~ ],
-//~ /* go by id */
-//~ [
-//~ `go to card id ${h.elIds.card_b_d}\\the short id of this cd`,
-//~ `${h.elIds.card_b_d}`
-//~ ],
-//~ [
-//~ `go to card id ${h.elIds.card_c_d}\\the short id of this cd`,
-//~ `${h.elIds.card_c_d}`
-//~ ],
+t.test('execCommands go to card', () => {
+/* changing current card */
+h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+h.assertPreparseErrLn('go', 'on its own', 3);
+h.assertLineErr('go "a"', 'something like', 3);
+h.assertLineErr('go 1', 'NoViableAltException', 3);
+h.assertLineErr('go xyz', 'no variable found', 3);
+let batch: [string, string][];
+batch = [
+/* go by id */
+[
+`go card 1\ngo to card id ${h.elIds.card_b_d}\\the short id of this cd`,
+`${h.elIds.card_b_d}`
+],
 
-//~ /* go by number */
-//~ ['go to card 1\\the short id of this cd', `${h.elIds.card_a_a}`],
-//~ ['go to card 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
-//~ ['go to card 4\\the short id of this cd', `${h.elIds.card_b_d}`],
-//~ ['go to card 5\\the short id of this cd', `${h.elIds.card_c_d}`],
 
-//~ /* get by relative (tests getCardByOrdinal) */
-//~ ['go to card 1\\the short id of next cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 2\\the short id of next cd', `${h.elIds.card_b_c}`],
-//~ ['go to card 3\\the short id of next cd', `${h.elIds.card_b_d}`],
-//~ ['go to card 4\\the short id of next cd', `${h.elIds.card_c_d}`],
-//~ ['go to card 2\\the short id of prev cd', `${h.elIds.card_a_a}`],
-//~ ['go to card 3\\the short id of prev cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 4\\the short id of prev cd', `${h.elIds.card_b_c}`],
-//~ ['go to card 5\\the short id of prev cd', `${h.elIds.card_b_d}`],
+/* going to nonexistant cards is a no-op,
+confirmed in emulator */
+[
+    `go card 1\ngo to cd id 8888\\the short id of this cd`,
+    `${h.elIds.card_a_a}`
+    ],
+[
+    `go card 1\ngo to cd "notexist"\\the short id of this cd`,
+    `${h.elIds.card_a_a}`
+    ],
+    [
+        `go card 1\ngo to bg 8888\\the short id of this cd`,
+        `${h.elIds.card_a_a}`
+        ],
+/* going to different types of objects is an error,
+confirmed in emulator  */
+[
+`go card id ${h.elIds.card_b_c}\ngo to cd btn "p1"\\the short id of this cd`,
+`ERR:5:Cannot go to a`
+],
+[
+`go card id ${h.elIds.card_b_c}\ngo to cd fld 1\\the short id of this cd`,
+`ERR:5:Cannot go to a`
+],
+[
+`go to vipercard\\the short id of this cd`,
+`ERR:expected a number`
+],
+[
+    `go card 1\ngo to cd btn id 1\\the short id of this cd`,
+    `${h.elIds.card_a_a}`
+    ],
+/* go by id */
+[
+`go card 1\ngo to card id ${h.elIds.card_b_d}\\the short id of this cd`,
+`${h.elIds.card_b_d}`
+],
+[
+`go card 1\ngo to card id ${h.elIds.card_c_d}\\the short id of this cd`,
+`${h.elIds.card_c_d}`
+],
 
-//~ /* ord/position */
-//~ ['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
-//~ ['go next\\the short id of this cd', `${h.elIds.card_b_d}`],
-//~ ['go prev\\the short id of this cd', `${h.elIds.card_b_c}`],
-//~ ['go previous\\the short id of this cd', `${h.elIds.card_b_b}`],
-//~ ['go next\\the short id of this cd', `${h.elIds.card_b_c}`],
-//~ ['go first\\the short id of this cd', `${h.elIds.card_a_a}`],
-//~ ['go last\\the short id of this cd', `${h.elIds.card_c_d}`],
-//~ ['go third\\the short id of this cd', `${h.elIds.card_b_c}`],
+/* go by number */
+['go to card 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+['go to card 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go to card 4\\the short id of this cd', `${h.elIds.card_b_d}`],
+['go to card 5\\the short id of this cd', `${h.elIds.card_c_d}`],
 
-//~ /* should wrap around */
-//~ ['go first\ngo prev\\the short id of this cd', `${h.elIds.card_c_d}`],
-//~ ['go last\ngo next\\the short id of this cd', `${h.elIds.card_a_a}`],
+/* get by relative (tests getCardByOrdinal) */
+['go to card 1\\the short id of next cd', `${h.elIds.card_b_b}`],
+['go to card 2\\the short id of next cd', `${h.elIds.card_b_c}`],
+['go to card 3\\the short id of next cd', `${h.elIds.card_b_d}`],
+['go to card 4\\the short id of next cd', `${h.elIds.card_c_d}`],
+['go to card 2\\the short id of prev cd', `${h.elIds.card_a_a}`],
+['go to card 3\\the short id of prev cd', `${h.elIds.card_b_b}`],
+['go to card 4\\the short id of prev cd', `${h.elIds.card_b_c}`],
+['go to card 5\\the short id of prev cd', `${h.elIds.card_b_d}`],
 
-//~ /* reference by name */
-//~ ['go to card 1\ngo to card "a"\\the short id of this cd', `${h.elIds.card_a_a}`],
-//~ ['go to card 1\ngo to card "b"\\the short id of this cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 1\ngo to card "c"\\the short id of this cd', `${h.elIds.card_b_c}`],
-//~ ['go to card 1\ngo to card "d"\\the short id of this cd', `${h.elIds.card_b_d}`],
-//~ [
-//~ 'go to card 1\ngo to card "d" of bg 2\\the short id of this cd',
-//~ `${h.elIds.card_b_d}`
-//~ ],
-//~ [
-//~ 'go to card 1\ngo to card "d" of bg 3\\the short id of this cd',
-//~ `${h.elIds.card_c_d}`
-//~ ],
+/* ord/position */
+['go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go next\\the short id of this cd', `${h.elIds.card_b_d}`],
+['go prev\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go previous\\the short id of this cd', `${h.elIds.card_b_b}`],
+['go next\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go first\\the short id of this cd', `${h.elIds.card_a_a}`],
+['go last\\the short id of this cd', `${h.elIds.card_c_d}`],
+['go third\\the short id of this cd', `${h.elIds.card_b_c}`],
 
-//~ /* confirmed in emulator: if there are ambiguous card names,
-//~ use whichever comes first in the stack, regardless of current bg */
-//~ [
-//~ `go to card id ${h.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`,
-//~ `${h.elIds.card_b_d}`
-//~ ],
-//~ [
-//~ `go to card id ${h.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`,
-//~ `${h.elIds.card_b_d}`
-//~ ],
-//~ [
-//~ `go to card id ${h.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`,
-//~ `${h.elIds.card_b_d}`
-//~ ],
+/* should wrap around */
+['go first\ngo prev\\the short id of this cd', `${h.elIds.card_c_d}`],
+['go last\ngo next\\the short id of this cd', `${h.elIds.card_a_a}`],
 
-//~ /* reference by bg */
-//~ ['go to card 1\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
-//~ ['go to card 2\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
-//~ ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 5\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 5\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
-//~ ['go to card 2\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+/* reference by name */
+['go card 1\ngo to card "a"\\the short id of this cd', `${h.elIds.card_a_a}`],
+['go card 1\ngo to card "b"\\the short id of this cd', `${h.elIds.card_b_b}`],
+['go card 1\ngo to card "c"\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go card 1\ngo to card "d"\\the short id of this cd', `${h.elIds.card_b_d}`],
+[
+'go card 1\ngo to card "d" of bg 2\\the short id of this cd',
+`${h.elIds.card_b_d}`
+],
+[
+'go card 1\ngo to card "d" of bg 3\\the short id of this cd',
+`${h.elIds.card_c_d}`
+],
 
-//~ /* confirmed in emulator: if sent to the same bg,
-//~ do not change the current card */
-//~ ['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 3\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_c}`],
-//~ ['go to card 4\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_d}`],
+/* confirmed in emulator: if there are ambiguous card names,
+use whichever comes first in the stack, regardless of current bg */
+[
+`go card id ${h.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`,
+`${h.elIds.card_b_d}`
+],
+[
+`go card id ${h.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`,
+`${h.elIds.card_b_d}`
+],
+[
+`go card id ${h.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`,
+`${h.elIds.card_b_d}`
+],
 
-//~ /* object reference */
-//~ ['go third\ngo to this stack\\the short id of this cd', `${h.elIds.card_b_c}`],
-//~ ['go to stack "other"\\the short id of this cd', `ERR:NoViableAltException`],
-//~ ['go to stack id 999\\the short id of this cd', `ERR:NoViableAltException`],
-//~ [
-//~ `go to stack id ${h.vcstate.model.stack.id}\\the short id of this cd`,
-//~ `ERR:NoViableAltException`
-//~ ],
-//~ [
-//~ 'go to card 1 of this stack\\the short id of this cd',
-//~ `ERR:MismatchedTokenException`
-//~ ],
-//~ [
-//~ 'go to card 4 of this stack\\the short id of this cd',
-//~ `ERR:MismatchedTokenException`
-//~ ],
-//~ ['go to card 1 of bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
-//~ ['go to card 1 of bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
-//~ [
-//~ 'go to card 1 of bg 2 of this stack\\the short id of this cd',
-//~ `${h.elIds.card_b_b}`
-//~ ],
-//~ [
-//~ 'go to card 1 of bg 3 of this stack\\the short id of this cd',
-//~ `${h.elIds.card_c_d}`
-//~ ]
-//~ ];
-//~ h.testBatchEvaluate(batch);
-//~
-//~ });
+/* reference by bg */
+['go to card 1\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+['go to card 2\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`],
+['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+['go to card 5\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+['go to card 5\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+['go to card 2\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+
+/* confirmed in emulator: if sent to the same bg,
+do not change the current card */
+['go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+['go to card 3\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go to card 4\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_d}`],
+
+/* object reference */
+['go third\ngo to this stack\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go third\ngo to stack "other"\\the short id of this cd', `${h.elIds.card_b_c}`],
+['go third\ngo to stack id 999\\the short id of this cd', `${h.elIds.card_b_c}`],
+[
+`go third\ngo to stack id ${h.vcstate.model.stack.id}\\the short id of this cd`,
+`${h.elIds.card_b_c}`
+],
+[
+'go to card 1 of this stack\\the short id of this cd',
+`${h.elIds.card_a_a}`
+],
+[
+'go to card 4 of this stack\\the short id of this cd',
+`${h.elIds.card_b_d}`
+],
+['go to card 1 of bg 2\\the short id of this cd', `${h.elIds.card_b_b}`],
+['go to card 1 of bg 3\\the short id of this cd', `${h.elIds.card_c_d}`],
+[
+'go to card 1 of bg 2 of this stack\\the short id of this cd',
+`${h.elIds.card_b_b}`
+],
+[
+'go to card 1 of bg 3 of this stack\\the short id of this cd',
+`${h.elIds.card_c_d}`
+],
+/* go by variable lookup - correct, confirmed in emulator */
+[
+    `go card 1\nput "card id ${h.elIds.card_b_d}" into xx\ngo to xx\\the short id of this cd`,
+    `${h.elIds.card_b_d}`
+    ],
+[
+    `go card 1\nput the long id of card id ${h.elIds.card_b_d} into xx\ngo to xx\\the short id of this cd`,
+    `${h.elIds.card_b_d}`
+    ],
+[
+    `go card 1\nput the short name of card id ${h.elIds.card_b_d} into xx\ngo to card xx\\the short id of this cd`,
+    `${h.elIds.card_b_d}`
+    ],
+/* go by variable lookup - incorrect, confirmed in emulator */
+[
+    `go card 1\nput "card id ${h.elIds.card_b_d}" into xx\ngo to card xx\\the short id of this cd`,
+    `${h.elIds.card_a_a}`
+    ],
+    [
+    `go card 1\nput "cd id ${h.elIds.card_b_c}" into xx\ngo to card xx\\the short id of this cd`,
+    `${h.elIds.card_a_a}`
+    ],
+[
+`go card 1\nput the long id of cd id ${h.elIds.card_b_c} into xx\ngo to card xx\\the short id of this cd`,
+`${h.elIds.card_a_a}`
+],
+];
+h.testBatchEvaluate(batch);
+});
 t.test('execCommands disable and enable', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let batch: [string, string][];

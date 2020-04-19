@@ -27,7 +27,7 @@ export interface OutsideWorldRead {
     /**
      * try resolving a RequestedVelRef, and if resolution fails, return false
      */
-    ElementExists(vel: RequestedVelRef): O<VpcElType>;
+    ElementExists(vel: RequestedVelRef): O<string>;
 
     /**
      * read variable contents
