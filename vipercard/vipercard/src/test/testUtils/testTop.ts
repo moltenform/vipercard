@@ -54,7 +54,7 @@ export class SimpleUtil512Tests {
             //~ testCollectionvpcuiServer,
             vpcTestCollectionScriptExtensive,
             vpcTestCollectionScriptRunCustomFns,
-            vpcTestCollectionScriptRunCmd,
+            vpcTestCollectionScriptRunCmd
 
             //~ testCollectionvpcScriptEval,
             //~ testCollectionvpcScriptRunSyntax,

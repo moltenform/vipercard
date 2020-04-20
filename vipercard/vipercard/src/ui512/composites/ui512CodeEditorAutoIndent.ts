@@ -89,7 +89,7 @@ export class UI512AutoIndent {
      * child classes can override this
      */
     lineDoesNotActuallyStartBlock(s: string) {
-        return false
+        return false;
     }
 
     /**

@@ -29,12 +29,13 @@ def getWereReferenced(f, origLines):
     assertTrueMsg(len(pts) == 2, f"did not see 'let colls = ['", file=f)
     assertTrueMsg(']' in pts[1], f"did not see ']' after let colls", file=f)
     listColls = pts[1].split(']')[0]
-    listColls = [s.strip() for s in listColls.split(',')]
+    listColls = [s.strip() for s in re.split(',|\n', listColls)]
     for s in listColls:
         s = s.replace('//~', '').replace('//', '').strip()
-        assertTrueMsg(re.match('^[a-zA-Z0-9_]+$', s), f'weird collection name {s}', file=f)
-        assertTrueMsg(not s in state.wereReferenced, 'dupe entry', s, file=f)
-        state.wereReferenced[s] = True
+        if s:
+            assertTrueMsg(re.match('^[a-zA-Z0-9_]+$', s), f'weird collection name "{s}"', file=f)
+            assertTrueMsg(not s in state.wereReferenced, 'dupe entry', s, file=f)
+            state.wereReferenced[s] = True
     
 def getNeedToReference(f, lines):
     assertTrue(isinstance(f, str))
