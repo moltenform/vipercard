@@ -60,7 +60,7 @@ export class UI512AutoIndent {
         endText: string
     ) {
         let matched = s.match(st);
-        if (matched) {
+        if (matched && !this.lineDoesNotActuallyStartBlock(s)) {
             let nextWord = '';
             if (endText.includes('%MATCH%')) {
                 assertTrue(
@@ -83,6 +83,13 @@ export class UI512AutoIndent {
         }
 
         return 0;
+    }
+
+    /**
+     * child classes can override this
+     */
+    lineDoesNotActuallyStartBlock(s: string) {
+        return false
     }
 
     /**
@@ -122,6 +129,7 @@ export class UI512AutoIndent {
                 end,
                 endInsert
             );
+
             if (rt !== 0) {
                 isBlockStart = true;
                 break;

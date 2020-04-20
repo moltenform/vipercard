@@ -58,6 +58,8 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.autoIndent.useTabs = true;
         this.autoIndent.useAutoIndent = true;
         this.autoIndent.useAutoCreateBlock = true;
+        this.autoIndent.lineDoesNotActuallyStartBlock = (s) => this.lineDoesNotActuallyStartBlock(s)
+
     }
 
     /**
@@ -208,8 +210,6 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.needsToBeSaved.remove(vel.id);
         this.refreshStatusLabels(this.vci.UI512App());
         this.vci.causeUIRedraw();
-
-        /* we used to check for syntax errors here. */
     }
 
     /**
@@ -298,6 +298,45 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 }
             }
         }
+    }
+
+    /** strip these */
+    protected stripStringsAndComments(s:string) {
+        s = s.split('--')[0]
+        s = s.replace(/"[^"]+"/g, "")
+        return s
+    }
+
+    /**
+     * let's support single-line ifs...
+     * and singleline else statements.
+     */
+    protected lineDoesNotActuallyStartBlock(s: string) {
+        s = s.toLowerCase().trim()
+        if (s.startsWith('if ')) {
+            s = this.stripStringsAndComments(s)
+            if (!s.endsWith(' then')) {
+                let findThen = s.indexOf(' then ')
+                if (findThen !== -1) {
+                    return true
+                }
+            }
+        }
+        else if (s.startsWith('else if ')) {
+            s = this.stripStringsAndComments(s)
+            if (!s.endsWith(' then')) {
+                let findThen = s.indexOf(' then ')
+                if (findThen !== -1) {
+                    return true
+                }
+            }
+        }
+        else if (s.trim() === 'else') {
+        } else if (s.startsWith('else ')) {
+            return true
+        }
+
+        return false
     }
 
     /**
