@@ -1,7 +1,7 @@
 
 /* auto */ import { checkThrowEq } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, OrderedHash, Util512, ValHolder, arLast, assertEq, cast, findStrToEnum, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr, slength, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, sorted } from './../testUtils/testUtils';
 

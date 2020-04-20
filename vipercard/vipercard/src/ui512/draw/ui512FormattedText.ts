@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../utils/util512Assert';
 /* auto */ import { BrowserOSInfo, assertEq, assertWarnEq } from './../utils/util512';
 /* auto */ import { TranslateCharset } from './ui512TranslateCharset';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
@@ -11,7 +11,7 @@
 
 /**
  * the formatted text class for UI512.
- * can be easily serialized to/from a plain string.
+ * can be losslessly serialized to/from a plain string.
  */
 export class FormattedText {
     /* every character has an associated font. */

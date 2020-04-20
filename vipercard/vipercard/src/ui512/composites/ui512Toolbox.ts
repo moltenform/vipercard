@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertWarn, ensureDefined } from './../utils/util512AssertCustom';
+/* auto */ import { assertWarn, ensureDefined } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512Application } from './../elements/ui512ElementApp';

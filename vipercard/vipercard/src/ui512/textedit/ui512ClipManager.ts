@@ -1,7 +1,7 @@
 
 /* auto */ import { RepeatingTimer, RespondToErr, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { bool } from './../utils/util512Base';
-/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { ClipManagerInterface } from './../draw/ui512Interfaces';
 /* auto */ import { PasteTextEventDetails } from './../menu/ui512Events';
 

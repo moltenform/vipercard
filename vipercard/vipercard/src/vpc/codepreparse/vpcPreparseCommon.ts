@@ -3,7 +3,7 @@
 /* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { IVpcCodeLine, VpcErrStage, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -28,8 +28,8 @@ export class SplitIntoLinesAndMakeLowercase {
     index = 0;
     constructor(protected instream: ChvITk[], protected makeLower: MakeLowerCase) {}
 
-        /* splits the list by newlines */
-        nextWithNewlines(): O<ChvITk[]> {
+    /* splits the list by newlines */
+    nextWithNewlines(): O<ChvITk[]> {
         let currentLine: ChvITk[] = [];
         let limit = new LoopLimit(CodeLimits.MaxTokensInLine, 'maxTokensInLine');
         while (limit.next()) {

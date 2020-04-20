@@ -1,6 +1,6 @@
 
 /* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { assertTrue, assertWarn, checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { assertEq, slength } from './../utils/util512';
 /* auto */ import { UI512Patterns, clrBlack, clrTransp, clrWhite, needsPatternSupport, simplifyPattern } from './ui512DrawPatterns';
 /* auto */ import { UI512Painter } from './ui512DrawPainterClasses';

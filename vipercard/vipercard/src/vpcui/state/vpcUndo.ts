@@ -7,7 +7,7 @@
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O, UI512Compress, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { arLast } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';

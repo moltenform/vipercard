@@ -2,7 +2,7 @@
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, UI512IsPresenterInterface, VoidFn } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { UI512ErrorHandling } from './../utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling } from './../utils/util512Assert';
 /* auto */ import { Util512, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { TemporarilySuspendEvents } from './../menu/ui512SuspendEvents';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';

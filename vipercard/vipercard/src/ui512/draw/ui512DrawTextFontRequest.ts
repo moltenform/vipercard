@@ -1,7 +1,7 @@
 
 /* auto */ import { RespondToErr, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, ensureDefined } from './../utils/util512Assert';
 /* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, UI512FontGrid, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */

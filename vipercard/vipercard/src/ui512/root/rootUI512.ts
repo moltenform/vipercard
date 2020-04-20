@@ -7,7 +7,7 @@
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertWarn } from './../utils/util512AssertCustom';
+/* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512 } from './../utils/util512';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';

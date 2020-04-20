@@ -11,7 +11,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { cProductName, vpcVersion } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';

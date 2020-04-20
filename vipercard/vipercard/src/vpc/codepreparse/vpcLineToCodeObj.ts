@@ -7,7 +7,7 @@
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, arLast, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

@@ -9,6 +9,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/**
+ * a set of useful event-handler methods
+ */
 export class BasicHandlers {
     /**
      * keep a record of which mouse buttons are currently down.

@@ -4,7 +4,7 @@
 /* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { slength } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';

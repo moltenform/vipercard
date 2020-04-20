@@ -28,31 +28,31 @@ export namespace VpcBuiltinFunctionsDateUtils {
     const month_names_short = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const day_names = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const day_names_short = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    
+
     /* render short date. */
     function getShortDate() {
         let [nDay, nMonth, nYear] = getDateCurrent();
         return `${nMonth + 1}/${nDay}/${nYear}`;
     }
-    
+
     /* render abbrev date. */
     function getAbbrevDate() {
         let [nDay, nMonth, nYear] = getDateCurrent();
         return `${day_names_short[nDay]}, ${month_names_short[nMonth]} ${nDay}, ${nYear}`;
     }
-    
+
     /* render long date. */
     function getLongDate() {
         let [nDay, nMonth, nYear] = getDateCurrent();
         return `${day_names[nDay]}, ${month_names[nMonth]} ${nDay}, ${nYear}`;
     }
-    
+
     /* get date info from javascript. month is 0-based. */
     function getDateCurrent(): [number, number, number] {
         let d = new Date();
         return [d.getDay(), d.getMonth(), d.getFullYear()];
     }
-    
+
     /* get the current date as a string */
     export function go(adjective: PropAdjective) {
         if (adjective === PropAdjective.Abbrev) {
@@ -63,7 +63,7 @@ export namespace VpcBuiltinFunctionsDateUtils {
             return VpcValS(getShortDate());
         }
     }
-    
+
     /* get the product version */
     export function getVersion(adjective: PropAdjective) {
         if (adjective === PropAdjective.Long) {

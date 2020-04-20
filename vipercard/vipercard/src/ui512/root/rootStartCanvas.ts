@@ -2,7 +2,7 @@
 /* auto */ import { toShortcutString, ui512TranslateModifiers } from './../utils/utilsKeypressHelpers';
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { setRoot, showMsgIfExceptionThrown } from './../utils/util512Higher';
-/* auto */ import { assertWarn, respondUI512Error } from './../utils/util512AssertCustom';
+/* auto */ import { assertWarn, respondUI512Error } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { FullRootUI512 } from './rootUI512';

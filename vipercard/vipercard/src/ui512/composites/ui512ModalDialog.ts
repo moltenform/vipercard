@@ -3,7 +3,7 @@
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../utils/utilsCursors';
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { addDefaultListeners } from './../textedit/ui512TextEvents';
 /* auto */ import { TemporarilySuspendEvents } from './../menu/ui512SuspendEvents';
 /* auto */ import { UI512PresenterBase } from './../presentation/ui512PresenterBase';

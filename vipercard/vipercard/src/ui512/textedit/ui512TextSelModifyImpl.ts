@@ -1,7 +1,7 @@
 
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { GetCharClass } from './../utils/util512Higher';
-/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { UI512Lines } from './ui512TextLines';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';

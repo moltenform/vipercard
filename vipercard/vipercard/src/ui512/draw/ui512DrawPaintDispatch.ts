@@ -2,7 +2,7 @@
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512, assertEq } from './../utils/util512';
 /* auto */ import { clrWhite, needsPatternSupport, simplifyPattern } from './ui512DrawPatterns';
 /* auto */ import { UI512Painter } from './ui512DrawPainterClasses';

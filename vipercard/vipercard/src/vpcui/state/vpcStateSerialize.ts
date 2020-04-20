@@ -4,7 +4,7 @@
 /* auto */ import { SerializedVelStructure, SerializedVpcDocStructure, VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O, UI512Compress, vpcVersion } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

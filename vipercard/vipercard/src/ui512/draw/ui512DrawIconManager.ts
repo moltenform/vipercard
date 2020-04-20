@@ -1,7 +1,7 @@
 
 /* auto */ import { UI512IsDrawIconInterface, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { RenderIcon, RenderIconGroup } from './ui512DrawIconClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -15,6 +15,9 @@
 export class UI512IconManager implements UI512IsDrawIconInterface {
     cachedIconGroups: { [key: string]: RenderIconGroup } = {};
 
+    /**
+     * find an icon by id and number
+     */
     findIcon(iconGroupId: string, iconNumber: number): O<RenderIcon> {
         let cached = this.cachedIconGroups[iconGroupId];
         if (cached === undefined) {

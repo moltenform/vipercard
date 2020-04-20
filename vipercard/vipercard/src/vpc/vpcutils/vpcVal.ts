@@ -2,7 +2,7 @@
 /* auto */ import { CodeLimits } from './vpcUtils';
 /* auto */ import { OrdinalOrPosition, checkThrow } from './vpcEnums';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

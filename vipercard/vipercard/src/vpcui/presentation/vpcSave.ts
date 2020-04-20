@@ -8,7 +8,7 @@
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { RespondToErr, Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
-/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';

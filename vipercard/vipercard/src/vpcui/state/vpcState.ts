@@ -12,7 +12,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserver, ElementObserverNoOp, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 

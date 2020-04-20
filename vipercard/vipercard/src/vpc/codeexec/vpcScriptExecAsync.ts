@@ -5,7 +5,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { RespondToErr, Util512Higher, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompStdDialogResult } from './../../ui512/composites/ui512ModalDialog';
 

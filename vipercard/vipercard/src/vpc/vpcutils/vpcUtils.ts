@@ -2,7 +2,7 @@
 /* auto */ import { VpcBuiltinMsg } from './vpcEnums';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, fitIntoInclusive, getEnumToStrOrFallback, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

@@ -2,7 +2,7 @@
 /* auto */ import { IsUtil512Serializable, Util512SerializableHelpers } from './../../ui512/utils/util512Serialize';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows, assertThrowsAsync, sorted } from './../testUtils/testUtils';
 
@@ -328,6 +328,7 @@ t.atest('canChainACall', async () => {
     return exampleAsyncFn();
 });
 
+/* an example async function */
 async function exampleAsyncFn() {
     t.say(/*——————————*/ '1...');
     await Util512Higher.sleep(100);

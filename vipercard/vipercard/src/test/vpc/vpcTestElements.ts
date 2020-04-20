@@ -6,7 +6,7 @@
 /* auto */ import { WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';

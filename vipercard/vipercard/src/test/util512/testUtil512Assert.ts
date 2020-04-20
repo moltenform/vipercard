@@ -1,7 +1,7 @@
 
 /* auto */ import { checkThrow, checkThrowEq, checkThrowInternal, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RingBuffer, UI512Compress, tostring } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, joinIntoMessage, make512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, assertWarnEq, checkThrowEq512 } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts, assertThrows } from './../testUtils/testUtils';
 

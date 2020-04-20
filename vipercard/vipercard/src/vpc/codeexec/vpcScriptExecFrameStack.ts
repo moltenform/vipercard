@@ -16,7 +16,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, cast, getEnumToStrOrFallback, getStrToEnum, lastIfThere, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 

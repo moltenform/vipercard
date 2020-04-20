@@ -6,7 +6,7 @@
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, fitIntoInclusive, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 

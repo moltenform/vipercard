@@ -6,7 +6,7 @@
 /* auto */ import { VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { findEnumToStr, getStrToEnum, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';

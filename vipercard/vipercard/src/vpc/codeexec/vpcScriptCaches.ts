@@ -7,7 +7,7 @@
 /* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { VpcErrStage, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObject, Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
@@ -127,7 +127,7 @@ export class VpcCacheParsedAST {
         }
     }
 
-    /* parse+compile code, and find a handler. 
+    /* parse+compile code, and find a handler.
         if the handler isn't found, returns undefined for the 2nd item */
     getHandlerOrThrow(
         code: string,

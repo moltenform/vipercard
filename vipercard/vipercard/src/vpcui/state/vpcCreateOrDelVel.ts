@@ -9,7 +9,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
-/* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertWarnEq } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

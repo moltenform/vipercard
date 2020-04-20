@@ -101,7 +101,7 @@ repeat with loop%UNIQUE% = 1 to the number of ${granularity} of tosort%UNIQUE%
 end repeat
 put char 1 to ( the length of result%UNIQUE% - the length of ${delimExpr} ) of result%UNIQUE% %INTO% result%UNIQUE%
 put result%UNIQUE% %INTO% %ARG0%
-end if`
+end if`;
 
         return template;
     }

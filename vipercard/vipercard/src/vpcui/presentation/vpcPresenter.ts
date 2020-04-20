@@ -16,7 +16,7 @@
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, SetToInvalidObjectAtEndOfExecution, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, callDebuggerIfNotInProduction, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';

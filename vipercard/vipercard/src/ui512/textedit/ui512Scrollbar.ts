@@ -3,7 +3,7 @@
 /* auto */ import { CanvasWrapper, RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
 /* auto */ import { O, bool } from './../utils/util512Base';
-/* auto */ import { assertTrue } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { Util512, assertWarnEq, cast, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';

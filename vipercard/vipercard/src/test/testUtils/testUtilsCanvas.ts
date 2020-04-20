@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper, DrawableImage } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { clrThreshold } from './../../ui512/draw/ui512DrawPainter';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';

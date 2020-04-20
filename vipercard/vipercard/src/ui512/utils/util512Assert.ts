@@ -5,6 +5,30 @@
 /* Released under the GPLv3 license */
 
 /**
+ * EXCEPTION HANDLING STRATEGY:
+ *
+ * We don't want any exception to be accidentally swallowed silently.
+ * It's not enough to just put an alert in assertTrue,
+ * because this won't cover base javascript errors like null-reference.
+ * it's important to show errors visibly so not to silently fall into
+ * a bad state, and also we can log into local storage.
+ * So, EVERY TOP OF THE CALL STACK must catch errors and send them to respondUI512Error
+ * This includes:
+ *          events from the browser (e.g. via golly)
+ *              make sure they are wrapped in trycatch
+ *          onload callbacks
+ *              for images, json, server requests, dynamic script loading
+ *              look for "addEventListener" and "onload"
+ *              make sure they are wrapped in showMsgIfExceptionThrown
+ *          setinterval and settimeout. use eslint ban / ban to stop them.
+ *              use syncToAsyncAfterPause instead
+ *          all async code
+ *              use syncToAsyncTransition
+ *          placeCallbackInQueue
+ *              already ok because it's under the drawframe event.
+ */
+
+/**
  * If I wanted true custom Error objects,
  * approaches like https://github.com/bjyoungblood/es6-error
  * look good, but I don't think I need that now.
@@ -229,28 +253,6 @@ export class UI512ErrorHandling {
 }
 
 /**
- * EXCEPTION HANDLING STRATEGY:
- *
- * We don't want any exception to be accidentally swallowed silently.
- * It's not enough to just put an alert in assertTrue,
- * because this won't cover base javascript errors like null-reference.
- * it's important to show errors visibly so not to silently fall into
- * a bad state, and also we can log into local storage.
- * So, EVERY TOP OF THE CALL STACK must catch errors and send them to respondUI512Error
- * This includes:
- *          events from the browser (usually via golly)
- *              fix: wrap in trycatch
- *          onload callbacks
- *              for images, json, server requests, dynamic script loading
- *              look for "addEventListener" and "onload"
- *              fix: wrap in trycatch or showMsgIfExceptionThrown
- *          setinterval and settimeout. use eslint ban / ban to stop them.
- *              fix: replace with syncToAsyncAfterPause
- *          all async code
- *              fix: use syncToAsyncTransition
- *          placeCallbackInQueue
- *              already ok because it's under the drawframe event.
- *
  * I used to show a dialog in assertTrue, but that's not needed,
  * since we'll show a dialog in the respondtoui512. and by putting the
  * logging in just the response and not the error site, we won't have

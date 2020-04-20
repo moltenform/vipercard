@@ -15,7 +15,7 @@
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObject, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';

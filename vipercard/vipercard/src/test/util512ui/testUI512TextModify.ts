@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModifyImpl } from './../../ui512/textedit/ui512TextSelModifyImpl';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
@@ -264,6 +264,7 @@ t.test('changeTextInsert.TypedCharactersShouldMatchAdjacentFont', () => {
     );
 });
 
+/* returns the tuple  expectedTxt, expectedCaret, expectedEnd */
 type FnChangesSelection = (...args: unknown[]) => [FormattedText, number, number];
 
 /**
@@ -271,7 +272,6 @@ type FnChangesSelection = (...args: unknown[]) => [FormattedText, number, number
  * then run the callback with the provided args,
  * then compare expected and received results
  */
-
 function runT(
     expected: string,
     input: string,

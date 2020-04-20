@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { BrowserOSInfo, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './../../ui512/draw/ui512DrawTextFontRequest';

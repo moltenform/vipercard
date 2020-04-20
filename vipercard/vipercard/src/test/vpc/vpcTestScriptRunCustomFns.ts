@@ -7,7 +7,7 @@
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { O, cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, getEnumToStrOrFallback, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
@@ -998,18 +998,17 @@ put myMult(2,myMult(myMult((2), 3), (4))) into ret
 
     h.testBatchEvaluate(batch);
 });
-t.test("global rewrites", () => {
-//~ /* english date -> long date */    
-/* CdOrBgPart */    
+t.test('global rewrites', () => {
+    //~ /* english date -> long date */
+    /* CdOrBgPart */
     //~ inp = `on myCode
-//~ add 1 to the msg box
-//~ end myCode`;
+    //~ add 1 to the msg box
+    //~ end myCode`;
     //~ expected = `HandlerStart
-//~ add~1~to~the~msg~box~
-//~ HandlerEnd`;
+    //~ add~1~to~the~msg~box~
+    //~ HandlerEnd`;
     //~ h.compareRewrittenCode(inp, expected);
-
-})
+});
 t.test("don't need to expand custom fns on these lines", () => {
     /* VpcLineCategory_.HandlerStart */
     let inp = `

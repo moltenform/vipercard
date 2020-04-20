@@ -4,7 +4,7 @@
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, arLast, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

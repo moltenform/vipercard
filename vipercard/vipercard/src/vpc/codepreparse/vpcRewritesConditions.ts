@@ -241,4 +241,3 @@ export namespace VpcRewriteNoElseIfClauses {
         }
     }
 }
-

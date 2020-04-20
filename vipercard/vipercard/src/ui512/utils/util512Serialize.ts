@@ -1,5 +1,5 @@
 
-/* auto */ import { checkThrow512 } from './util512AssertCustom';
+/* auto */ import { checkThrow512 } from './util512Assert';
 /* auto */ import { NoParameterCtor, Util512 } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

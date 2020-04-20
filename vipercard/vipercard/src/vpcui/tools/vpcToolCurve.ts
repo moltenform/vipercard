@@ -29,5 +29,5 @@ export class VpcAppUIToolCurve extends VpcAppUIToolShape {
  */
 enum CurveToolMode {
     StraightLine = 1,
-    AddCurve,
+    AddCurve
 }

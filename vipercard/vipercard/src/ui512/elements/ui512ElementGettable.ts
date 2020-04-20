@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { assertEq, assertWarnEq, slength } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../draw/ui512FormattedText';

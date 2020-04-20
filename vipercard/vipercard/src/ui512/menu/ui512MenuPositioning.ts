@@ -2,7 +2,7 @@
 /* auto */ import { MenuConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { RenderComplete, getRoot } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertWarn } from './../utils/util512AssertCustom';
+/* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512, assertEq, cast, slength } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './ui512PresenterWithMenu';
 /* auto */ import { UI512MenuDropdown, UI512MenuItem, UI512MenuRoot } from './../elements/ui512ElementMenu';

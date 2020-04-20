@@ -9,7 +9,7 @@
 /* auto */ import { VpcElProductOpts } from './../vel/velProductOpts';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */

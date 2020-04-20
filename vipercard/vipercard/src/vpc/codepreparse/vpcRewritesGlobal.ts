@@ -38,7 +38,7 @@ export namespace VpcRewritesGlobal {
                 if (mapped) {
                     line[i] = rw.tokenFromEnglishTerm(mapped, line[i]);
                 }
-            } else if (line[i+1].image === 'date' && line[i].image === 'english') {
+            } else if (line[i + 1].image === 'date' && line[i].image === 'english') {
                 line[i] = rw.tokenFromEnglishTerm('long', line[i]);
             }
         }
@@ -99,7 +99,7 @@ export namespace VpcRewritesGlobal {
  */
 export class VpcSuperRewrite {
     constructor(protected idGen: CountNumericId) {}
-        
+
     /* go from the string template to lines of lexed code */
     gen(s: string, realTokenAsBasis: ChvITk, args?: ChvITk[][], argMany?: ChvITk[][], needsToBePostProcess = true): ChvITk[][] {
         args = args ?? [];
@@ -201,10 +201,10 @@ export class VpcSuperRewrite {
     }
 
     /* sometimes you only want to search at a paren level.
-     example: add x to y, we want to replace "to" with a syntax marker. 
+     example: add x to y, we want to replace "to" with a syntax marker.
      we should only do the replacement at 0-parens level so that
     add (char 2 to 3 of x) to y
-    won't replace the wrong 'to' token. 
+    won't replace the wrong 'to' token.
     */
     searchTokenGivenEnglishTermInParensLevel(wantedLevel: number, line: ChvITk[], realTokenAsBasis: ChvITk, term: string) {
         let tk1 = this.tokenFromEnglishTerm(term, realTokenAsBasis);

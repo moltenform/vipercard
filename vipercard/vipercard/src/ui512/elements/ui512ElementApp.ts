@@ -1,7 +1,7 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { O, tostring } from './../utils/util512Base';
-/* auto */ import { ensureDefined } from './../utils/util512AssertCustom';
+/* auto */ import { ensureDefined } from './../utils/util512Assert';
 /* auto */ import { OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { UI512ApplicationInterface, UI512ElGroup } from './ui512ElementGroup';

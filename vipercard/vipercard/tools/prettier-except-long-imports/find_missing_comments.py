@@ -14,10 +14,10 @@ def go(srcdirectory):
 def goPerFile(f):
     if '/bridge/' in f:
         return
-    isTestCode = '/test/' in f or files.getname(f).lower() in ('vpctokens.ts', 'vpcvisitor.ts','vpcparser.ts','vpcvisitormixin.ts')
-    states = Bucket(wantComment=1, inClassWantComment=2,
-        ok=3, inClassOk=4)
-    state = 'wantAComment'
+    isTestCode = '/test/' in f  or '/ui512demo/' in f 
+    if files.getname(f).lower() in ('vpctokens.ts', 'vpcvisitor.ts','vpcparser.ts','vpcvisitormixin.ts'):
+        isTestCode = True
+        
     lines = getFileLines(f, 'singlelineonly')
     results = []
     for i, line in enumerate(lines):
@@ -32,6 +32,11 @@ def goPerFile(f):
             linestrip.startswith('interface ') or \
             linestrip.startswith('namespace ') or \
             linestrip.startswith('abstract ') or \
+            linestrip.startswith('static ') or \
+            linestrip.startswith('async ') or \
+            linestrip.startswith('protected ') or \
+            linestrip.startswith('private ') or \
+            linestrip.startswith('public ') or \
             linestrip.startswith('type '):
                 curLineStart = True
         
@@ -40,7 +45,8 @@ def goPerFile(f):
         if not isTestCode and not line.endswith(';') and re.search('^ +[a-zA-Z0-9]+\(', line):
             curLineStart = True
         
-        if line.strip().startswith('constructor('): curLineStart = False
+        if line.strip().startswith('constructor('):
+            curLineStart = False
         
         if curLineStart and not prevLineComment and not prevLine.endswith(';') and not prevLine.endswith(',') and not prevLine.endswith('{') and not prevLine.endswith('(') \
             and not prevLine.endswith(':') \
@@ -56,6 +62,5 @@ def goPerFile(f):
         showWarningGccStyle(a,b,c)
 
 if __name__ == '__main__':
-    #~ dir = os.path.abspath('../../src')
-    dir = os.path.abspath('../../src/vpc')
+    dir = os.path.abspath('../../src')
     go(dir)

@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper, DrawableImage } from './../utils/utilsCanvasDraw';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, ensureDefined } from './../utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

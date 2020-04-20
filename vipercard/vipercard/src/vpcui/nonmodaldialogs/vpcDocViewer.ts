@@ -4,7 +4,7 @@
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, tostring } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, cast } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';

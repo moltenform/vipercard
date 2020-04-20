@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from './util512Base';
-/* auto */ import { assertTrue, assertWarn, checkThrow512, respondUI512Error } from './util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, respondUI512Error } from './util512Assert';
 /* auto */ import { AnyUnshapedJson, BrowserOSInfo, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

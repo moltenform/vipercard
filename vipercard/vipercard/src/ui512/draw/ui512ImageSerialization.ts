@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { UI512Compress } from './../utils/util512Base';
-/* auto */ import { checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { assertEq } from './../utils/util512';
 /* auto */ import { clrBlack, clrTransp, clrWhite } from './ui512DrawPatterns';
 /* auto */ import { UI512PainterCvData } from './ui512DrawPainter';

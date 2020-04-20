@@ -1,10 +1,13 @@
 
 /* auto */ import { O, tostring } from './util512Base';
-/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn, checkThrow512, ensureDefined, make512Error } from './util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
+/**
+ * typescript utilities
+ */
 export class Util512 {
     /**
      * checks for NaN and Infinity
@@ -896,6 +899,9 @@ export function assertEq<T>(
     }
 }
 
+/**
+ * if expected and msg are not the same, assertWarn.
+ */
 export function assertWarnEq(
     expected: unknown,
     got: unknown,

@@ -12,7 +12,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, cast, getStrToEnum, longstr } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

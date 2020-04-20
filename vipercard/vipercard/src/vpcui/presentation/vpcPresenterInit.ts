@@ -30,7 +30,7 @@
 /* auto */ import { ScreenConsts, getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { RepeatingTimer } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, checkIsProductionBuild } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
 /* auto */ import { ElementObserverToTwo } from './../../ui512/elements/ui512ElementGettable';

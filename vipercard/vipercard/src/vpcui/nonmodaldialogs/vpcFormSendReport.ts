@@ -4,7 +4,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { checkIsProductionBuild, vpcVersion } from './../../ui512/utils/util512Base';
-/* auto */ import { UI512ErrorHandling } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';

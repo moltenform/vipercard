@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 

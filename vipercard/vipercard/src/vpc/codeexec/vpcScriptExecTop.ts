@@ -12,7 +12,7 @@
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBg } from './../vel/velBg';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { ValHolder, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

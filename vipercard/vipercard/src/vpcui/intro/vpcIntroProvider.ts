@@ -16,7 +16,7 @@
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { RespondToErr, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
 /* auto */ import { bool, vpcWebsite } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, respondUI512Error } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, respondUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertWarnEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';

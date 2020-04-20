@@ -23,7 +23,7 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512BaseErr, assertTrue, ensureDefined } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { Util512BaseErr, assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';

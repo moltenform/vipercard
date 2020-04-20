@@ -1,7 +1,7 @@
 
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling, assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, util512Sort } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -115,14 +115,27 @@ export class SimpleUtil512TestCollection {
     tests: [string, VoidFn][] = [];
     atests: [string, AsyncFn][] = [];
     _context = '';
+
+    /**
+     * add a non-async test to the collection
+     */
     public test(s: string, fn: VoidFn) {
         this.tests.push([s, fn]);
         return this;
     }
+
+    /**
+     * add an async test to the collection
+     */
     public atest(s: string, fn: AsyncFn) {
         this.atests.push([s, fn]);
         return this;
     }
+
+    /**
+     * writes a string to the console,
+     * often used to indicate that a test is divided into subtests.
+     */
     public say(context: string) {
         this._context = context;
         console.log(Util512.repeat(25, ' ').join('') + this._context);

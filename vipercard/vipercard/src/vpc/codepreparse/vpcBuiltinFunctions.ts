@@ -7,7 +7,7 @@
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { ScreenConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, findEnumToStr, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Lines } from './../../ui512/textedit/ui512TextLines';
 

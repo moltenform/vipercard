@@ -20,7 +20,6 @@
  * run floodfill for solid black solid white and pattern,
  * and then compare the results with expected results.
  */
-
 export class FloodFillTest {
     readonly columns = [true, true, true, true, true];
     readonly iconNumbers = [33, 85, 170];

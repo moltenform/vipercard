@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, checkThrow512 } from './../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, checkThrow512 } from './../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq } from './../ui512/utils/util512';
 /* auto */ import { ExpTextEncoder } from './bridgeTextEncoding';
 
@@ -44,7 +44,9 @@ export async function pbkdf2(
     const pwUtf8 = new ExpTextEncoder('utf-8').encode(password);
 
     /* create pw key */
-    const pwKey = await window.crypto.subtle.importKey('raw', pwUtf8, 'PBKDF2', false, ['deriveBits']);
+    const pwKey = await window.crypto.subtle.importKey('raw', pwUtf8, 'PBKDF2', false, [
+        'deriveBits'
+    ]);
 
     /* pbkdf2 params */
     const params = {
@@ -57,6 +59,10 @@ export async function pbkdf2(
     /* derive key */
     const keyBuffer = await window.crypto.subtle.deriveBits(params, pwKey, 256);
     const keyBufferAr = new Uint8Array(keyBuffer);
-    return [iterations, keyBuffer, Util512.arrayToBase64(keyBufferAr), Util512.arrayToBase64(saltUint8)];
+    return [
+        iterations,
+        keyBuffer,
+        Util512.arrayToBase64(keyBufferAr),
+        Util512.arrayToBase64(saltUint8)
+    ];
 }
-

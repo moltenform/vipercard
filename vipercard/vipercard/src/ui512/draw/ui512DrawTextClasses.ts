@@ -1,5 +1,5 @@
 
-/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { assertTrue, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

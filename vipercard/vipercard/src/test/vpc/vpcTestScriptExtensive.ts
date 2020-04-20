@@ -3,7 +3,7 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
@@ -104,10 +104,13 @@ end testveryWeakHash
     async testHelpers() {
         h.runGeneralCode(this.helperCodeTests, 'testPrepConditions');
         let got = h.vcstate.runtime.codeExec.globals.get('allout');
-        let expected = longstr(`00000,10000,01000,11000,00100,10100,01100,
+        let expected = longstr(
+            `00000,10000,01000,11000,00100,10100,01100,
             11100,00010,10010,01010,11010,00110,10110,01110,11110,00001,
             10001,01001,11001,00101,10101,01101,11101,00011,10011,01011,
-            11011,00111,10111,01111,11111,`, '');
+            11011,00111,10111,01111,11111,`,
+            ''
+        );
         assertWarnEq(expected, got.readAsString(), '');
         h.runGeneralCode(this.helperCodeTests, 'testveryWeakHash');
         got = h.vcstate.runtime.codeExec.globals.get('allout');
@@ -134,6 +137,14 @@ end if
         assertWarnEq('2a34c', got.readAsString(), '');
     }
 
+    /*
+
+    by turning on silenceAssertMsgs, this makes assertWarns throw,
+      which is useful because we can catch the exception and not show
+     any dialogs. */
+    /**
+     * Many of the tests here throw.
+     */
     async go() {
         UI512ErrorHandling.silenceAssertMsgs = true;
         try {
@@ -143,6 +154,7 @@ end if
         }
     }
 
+    /* runs the test */
     async goImpl() {
         let stack = h.vcstate.model.getById(VpcElStack, h.elIds.stack);
         h.vcstate.vci.undoableAction(() => stack.set('script', this.helperCode));

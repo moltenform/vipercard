@@ -1,7 +1,7 @@
 
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { assertWarn, checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { assertWarn, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { UI512BasePainterUtils } from './ui512DrawPatterns';
 
 /* (c) 2019 moltenform(Ben Fisher) */

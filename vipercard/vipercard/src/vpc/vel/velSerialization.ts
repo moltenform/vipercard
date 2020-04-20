@@ -2,7 +2,7 @@
 /* auto */ import { VpcElType, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { IsUtil512Serializable } from './../../ui512/utils/util512Serialize';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';

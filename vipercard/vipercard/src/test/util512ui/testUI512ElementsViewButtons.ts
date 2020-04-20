@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { UI512ViewDraw } from './../../ui512/elements/ui512ElementView';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';

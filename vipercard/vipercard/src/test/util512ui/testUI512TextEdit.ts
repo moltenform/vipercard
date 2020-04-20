@@ -2,7 +2,7 @@
 /* auto */ import { ScreenConsts, ScrollConsts } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete } from './../../ui512/utils/util512Higher';
-/* auto */ import { assertTrue } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -214,11 +214,9 @@ export class TestDrawUI512TextEdit {
         had actual word wrapping, */
         /* instead of rewriting the test just use NonBreakingSpace
         so that it matches what was rendered before. */
-        let shortSampleText = loremText
-            .substr(0, 70)
-        let longSampleText = loremText
-            .substr(0, 700)
-        
+        let shortSampleText = loremText.substr(0, 70);
+        let longSampleText = loremText.substr(0, 700);
+
         if (!this.enableWordWrap) {
             /* uses the results from back before we had
             word-wrapping. */
@@ -382,7 +380,7 @@ export class TestDrawUI512TextEdit {
         };
 
         const totalH = h * screensToDraw;
-        let hasWrap = this.enableWordWrap ? '' : 'no'
+        let hasWrap = this.enableWordWrap ? '' : 'no';
         return new CanvasTestParams(
             'drawTextEdit',
             `/resources/test/drawtextedit${hasWrap}wrapexpected.png`,

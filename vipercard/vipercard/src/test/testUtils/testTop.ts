@@ -14,7 +14,7 @@
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
-/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
 /* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
@@ -39,6 +39,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
+/**
+ * a very simple testing framework.
+ */
 export class SimpleUtil512Tests {
     static async runTests(includeSlow: boolean) {
         if (UI512ErrorHandling.runningTests) {
@@ -75,7 +78,7 @@ export class SimpleUtil512Tests {
             //~ testCollectionUI512FormattedText,
             //~ testCollectionUI512MenuRender,
             //~ testCollectionUI512Paint,
-            testCollectionUI512TextEdit,
+            testCollectionUI512TextEdit
             //~ testCollectionUI512TextModify,
             //~ testCollectionUI512TextSelectEvents,
 
@@ -128,6 +131,9 @@ export class SimpleUtil512Tests {
         }
     }
 
+    /**
+     * run a collection of tests
+     */
     static async runCollection(
         coll: SimpleUtil512TestCollection,
         countTotal: number,
@@ -149,6 +155,7 @@ export class SimpleUtil512Tests {
                 assertWarn(false, 'Or|duplicate test name', tstname);
             }
 
+            /* it's totally fine to await on a synchronous fn. */
             mapSeen.set(tstname.toLowerCase(), true);
             console.log(`Test ${counter.val}/${countTotal}: ${tstname}`);
             await tstfn();

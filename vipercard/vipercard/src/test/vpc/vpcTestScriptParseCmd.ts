@@ -2,7 +2,7 @@
 /* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { BuildFakeTokens, cloneToken } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { VpcChvParser } from './../../vpc/codeparse/vpcParser';
-/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512AssertCustom';
+/* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, assertWarnEq, longstr, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
 

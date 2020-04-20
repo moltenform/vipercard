@@ -1,6 +1,6 @@
 
 /* auto */ import { O } from './../utils/util512Base';
-/* auto */ import { checkThrow512 } from './../utils/util512AssertCustom';
+/* auto */ import { checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { OrderedHash } from './../utils/util512';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { ElementObserver, elementObserverDefault } from './ui512ElementGettable';
