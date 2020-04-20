@@ -40,12 +40,18 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512Composites');
 export let testCollectionUI512Composites = t;
 
-t.atest('async/Test Drawing Composites', () =>
+t.atest('Test Drawing Composites', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512Composites().testDrawComposites()
     )
 );
 
+/**
+ * an example layout with 'composites'
+ * can be used interactively if you add the line
+ * this.presenter = new UI512DemoComposites();
+ * to rootUI512.ts, and it's also part of our test suite
+ */
 export class TestDrawUI512Composites {
     uiContext = false;
     addElements(pr: UI512TestCompositesPresenter, bounds: number[]) {

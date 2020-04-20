@@ -1044,7 +1044,7 @@ t.test('ModelFindById.when not exists', () => {
     assertThrows('L*|', 'not found', () => h.vcstate.model.getCardById(''));
     assertThrows('L)|', 'not found', () => h.vcstate.model.getById(VpcElStack, ''));
 });
-t.atest('async/testVpcStateSerialize', async () => {
+t.atest('testVpcStateSerialize', async () => {
     let txt = FormattedText.newFromUnformatted('');
     h.vcstate.undoManager.doWithoutAbilityToUndo(() => {
         txt = h.modifyVcState();

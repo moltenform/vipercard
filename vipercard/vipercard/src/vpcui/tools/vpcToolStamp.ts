@@ -222,8 +222,8 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         /* draw bottom-left label */
         let lbl2 = new UI512ElLabel('grpVpcAppUIToolStampLbl2');
         grp.addElement(this.vci.UI512App(), lbl2);
-        lbl2.set('labeltext', lng('lng"Art Bits" (1987)'));
-        lbl2.setDimensions(px + 13, py + 280, 200, 20);
+        lbl2.set('labeltext', lng('lng"Art Bits" (1987)       Click on the page to draw art!'));
+        lbl2.setDimensions(px + 13, py + 280, 400, 20);
 
         /* optimize group */
         grp.updateBoundsBasedOnChildren();

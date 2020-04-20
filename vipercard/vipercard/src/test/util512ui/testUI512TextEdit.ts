@@ -36,14 +36,23 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512TextEdit');
 export let testCollectionUI512TextEdit = t;
 
-t.atest('async/Test Drawing Text Edits', () =>
+t.atest('Test Drawing Text Edits', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512TextEdit().testDrawTextEdit()
     )
 );
+t.atest('Test Drawing Text Edits, No Word Wrap', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () =>
+        new TestDrawUI512TextEdit(false).testDrawTextEdit()
+    )
+);
 
+/**
+ * an example layout showing editable text.
+ */
 export class TestDrawUI512TextEdit {
     uiContext = false;
+    constructor(public enableWordWrap = true) {}
 
     addElements(pr: UI512Presenter, bounds: number[]) {
         const b0 = 45;
@@ -207,10 +216,16 @@ export class TestDrawUI512TextEdit {
         so that it matches what was rendered before. */
         let shortSampleText = loremText
             .substr(0, 70)
-            .replace(/ /g, specialCharNonBreakingSpace);
         let longSampleText = loremText
             .substr(0, 700)
-            .replace(/ /g, specialCharNonBreakingSpace);
+        
+        if (!this.enableWordWrap) {
+            /* uses the results from back before we had
+            word-wrapping. */
+            shortSampleText = shortSampleText.replace(/ /g, specialCharNonBreakingSpace);
+            longSampleText = longSampleText.replace(/ /g, specialCharNonBreakingSpace);
+        }
+
         let rowsTextContent = [shortSampleText, longSampleText];
         let cols = [
             [true, true],
@@ -367,9 +382,10 @@ export class TestDrawUI512TextEdit {
         };
 
         const totalH = h * screensToDraw;
+        let hasWrap = this.enableWordWrap ? '' : 'no'
         return new CanvasTestParams(
             'drawTextEdit',
-            '/resources/test/drawtexteditexpected.png',
+            `/resources/test/drawtextedit${hasWrap}wrapexpected.png`,
             draw,
             w,
             totalH,

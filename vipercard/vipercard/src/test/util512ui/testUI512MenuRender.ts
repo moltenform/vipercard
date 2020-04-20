@@ -30,12 +30,15 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512MenuRender');
 export let testCollectionUI512MenuRender = t;
 
-t.atest('async/Test Drawing Menus', () =>
+t.atest('Test Drawing Menus', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512Menus().testDrawMenus()
     )
 );
 
+/**
+ * a test layout showing menus
+ */
 export class TestDrawUI512Menus {
     uiContext = false;
 

@@ -30,12 +30,16 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512ElementsViewButtons');
 export let testCollectionUI512ElementsViewButtons = t;
 
-t.atest('async/Test Drawing Buttons', () =>
+t.atest('Test Drawing Buttons', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512Buttons().testDrawButtons()
     )
 );
 
+/**
+ * an example layout showing many buttons with different styles
+ * and properties
+ */
 export class TestDrawUI512Buttons {
     uiContext = false;
     readonly stylesToTest: number[] = [

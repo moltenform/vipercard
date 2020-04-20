@@ -27,19 +27,22 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512DrawText', true);
 export let testCollectionUI512DrawText = t;
 
-t.atest('async/Text Core Fonts', () =>
+t.atest('Text Core Fonts', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw1())
 );
-t.atest('async/Text All Fonts', () =>
+t.atest('Text All Fonts', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw2())
 );
-t.atest('async/Text Wrap, align, underlign', () =>
+t.atest('Text Wrap, align, underlign', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw3())
 );
-t.atest('async/Text corner cases', () =>
+t.atest('Text corner cases', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw4())
 );
 
+/**
+ * A demo project showing text drawn in many fonts and alignments
+ */
 export class TestDrawUI512Text {
     uiContext = false;
     readonly margin = 1;

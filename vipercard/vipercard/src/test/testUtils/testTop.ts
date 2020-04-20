@@ -52,9 +52,9 @@ export class SimpleUtil512Tests {
         // order tests from high to low
         let colls = [
             //~ testCollectionvpcuiServer,
-            vpcTestCollectionScriptExtensive,
+            //~ vpcTestCollectionScriptExtensive,
             vpcTestCollectionScriptRunCustomFns,
-            vpcTestCollectionScriptRunCmd
+            vpcTestCollectionScriptRunCmd,
 
             //~ testCollectionvpcScriptEval,
             //~ testCollectionvpcScriptRunSyntax,
@@ -75,7 +75,7 @@ export class SimpleUtil512Tests {
             //~ testCollectionUI512FormattedText,
             //~ testCollectionUI512MenuRender,
             //~ testCollectionUI512Paint,
-            //~ testCollectionUI512TextEdit,
+            testCollectionUI512TextEdit,
             //~ testCollectionUI512TextModify,
             //~ testCollectionUI512TextSelectEvents,
 

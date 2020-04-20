@@ -38,17 +38,20 @@
 let t = new SimpleUtil512TestCollection('testCollectionUI512Paint');
 export let testCollectionUI512Paint = t;
 
-t.atest('async/Test Shape', () =>
+t.atest('Test Shape', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512Paint().testDrawShape()
     )
 );
-t.atest('async/Test Flood Fill', () =>
+t.atest('Test Flood Fill', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
         new TestDrawUI512Paint().testDrawFloodFill()
     )
 );
 
+/**
+ * a test layout showing drawing features
+ */
 export class TestDrawUI512Paint {
     uiContext = false;
 

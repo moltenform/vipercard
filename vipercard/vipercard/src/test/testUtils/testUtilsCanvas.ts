@@ -9,6 +9,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/**
+ * tools for testing code that draws to a canvas
+ */
 export class TestUtilsCanvas {
     /**
      * compare an image to a known-good expected image.
