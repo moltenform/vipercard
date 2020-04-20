@@ -538,6 +538,7 @@ end repeat`;
         }
     }
 
+    /* interpret a visual effect, currently order doesn't matter */
     hParseVisualEffect(line: ChvITk[], prefix: string) {
         let opts = new Map<string, string>();
         opts['speed'] = '';
@@ -576,6 +577,7 @@ end repeat`;
         return this.rw.gen(template, line[0]);
     }
 
+    /* doesn't produce a pre-parse error, produces a runtime error */
     hBuildNyi(msg: string, basis: ChvITk) {
         return [
             BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, 'errordialog'),
@@ -583,6 +585,7 @@ end repeat`;
         ];
     }
 
+    /* helper that builds an nyi if 'menu' is seen */
     hReturnNyiIfMenuMentionedOutsideParens(line: ChvITk[]): ChvITk[][] {
         let found = this.rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'menu');
         if (found !== -1) {
@@ -592,6 +595,7 @@ end repeat`;
         }
     }
 
+    /* insert code that does nothing. leaving out the line entirely might destabalize syntax. */
     hReturnNoOp(line: ChvITk[]): ChvITk[][] {
         let template = `put "no-op" %INTO% c%UNIQUE% `;
         return this.rw.gen(template, line[0]);

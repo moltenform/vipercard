@@ -14,6 +14,8 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
+/* see the top of vpcTopPreparse.ts to read how we execute code. */
+
 /**
  * why do frames require a value for both "me" and "parent"?
  * when executing code dynamically with 'send',

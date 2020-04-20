@@ -19,6 +19,7 @@
 
 /* generated code, any changes past this point will be lost: --------------- */
 
+/* ensures we have all the expected Rule methods */
 export interface VpcCompleteVisitor {
     RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): ChvITk;
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): ChvITk;
@@ -110,9 +111,10 @@ export interface VpcCompleteVisitor {
     RuleInternalCmdUserHandler(ctx: VisitingContext): any;
 }
 
+/* for nicer auto-complete in a visitor implementation */
 export interface VisitingContext {
-    // you can add something like [index: string]: any if you want to
-    // silence type errors during development
+/* you can add something like [index: string]: any if you want to */
+/* silence type errors during development */
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];

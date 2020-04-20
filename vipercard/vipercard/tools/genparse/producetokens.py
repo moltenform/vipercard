@@ -10,6 +10,7 @@ def goTokensDefnOne(st):
         'expect the last to be tkIdentifier')
     
     # the map, and the creation
+    out.append('/* as a map so that we get quick access */')
     out.append('export const tks = {')
     for tk in st.tokens:
         out.append(f'{tk.name}: chevrotain.createToken' + '({')
@@ -23,6 +24,7 @@ def goTokensDefnOne(st):
     out.append('')
     
     # the array (needed since order matters)
+    out.append('/* as an array, since order matters */')
     out.append('export const allVpcTokens = [')
     for tk in st.tokens:
         out.append(f'tks.{tk.name},')
@@ -34,6 +36,7 @@ def goTokensDefnOne(st):
     addToListOfReservedWords(st, out, st.tokens)
     
     # this simply helps us syntax-check for spelling typos
+    out.append('/* so that we\'ll get compile-time error if a rule name is misspelled */')
     out.append('export const tkstr = {')
     for rule in st.rules:
         out.append(f"    Rule{rule.name}: 'Rule{rule.name}',")
@@ -122,12 +125,15 @@ def addToListOfReservedWords(st, out, tokens):
     out.append('')
     out.append('')
     
+    out.append('/* map word-like tokens to the token type, useful for ')
+    out.append(' fabricating new tokens in rewrite stage. */')
     out.append('export const listOfAllWordLikeTokens:{ [key: string]: chevrotain.TokenType } = { }')
     for v, tk in getListOfWordLikeTokens(tokens, True):
         out.append(f"listOfAllWordLikeTokens['{v.lower()}'] = tks.{tk.name};")
     out.append('')
     out.append('')
     
+    out.append('/* list commands, even the ones we don\'t support. */')
     out.append('export const listOfAllBuiltinCommandsInOriginalProduct:{ [key: string]: boolean } = { }')
     out.append('')
     did = {}
@@ -143,12 +149,14 @@ def addToListOfReservedWords(st, out, tokens):
                 out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{s}'] = true;")
     out.append('')
     
+    out.append('/* list events, even the ones we don\'t support. */')
     out.append('export const listOfAllBuiltinEventsInOriginalProduct:{ [key: string]: boolean } = { }')
     out.append('')
     for v in st.listEvents:
         out.append(f"listOfAllBuiltinEventsInOriginalProduct['{v.split(' ')[0].lower()}'] = true;")
     out.append('')
     
+    out.append('/* it would be too restrictive to say a variable can only be a tkidentifier. */')
     out.append('export function couldTokenTypeBeAVariableName(t: chevrotain.IToken) {')
     for rule in st.rules:
         if rule.name == 'HAnyAllowedVariableName':

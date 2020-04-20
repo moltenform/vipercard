@@ -11,18 +11,10 @@
 /**
  * in the original product you can write a one-line if like this,
  *       'if true then put 1+1 into x'
+ * it is convenient, so I suppose I will support it.
  * let's split it into different lines so it's easier to parse.
+ * verified by both unit tests and vpcTestScriptExtensive.ts
  */
-enum IfTypes {
-    other = 1,
-    ifnormal,
-    if_jammed,
-    elseifnormal,
-    elseif_jammed,
-    elsenormal,
-    else_jammed
-}
-
 export class VpcSplitSingleLineIf {
     holdingFromBefore: O<ChvITk[]>;
     protected classify(line: ChvITk[], rw: VpcSuperRewrite): [IfTypes, number, number] {
@@ -97,12 +89,24 @@ export class VpcSplitSingleLineIf {
     }
 }
 
+/* "jammed" is a single-line case
+where you have both a condition and a statement on the same line. */
+enum IfTypes {
+    other = 1,
+    ifnormal,
+    if_jammed,
+    elseifnormal,
+    elseif_jammed,
+    elsenormal,
+    else_jammed
+}
+
 /**
- * get rid of else-if clauses, they don't support custom function calls
- * (which we expand into multiple lines)
- * also, at runtime, they require the framestack to have more state
+ * get rid of else-if clauses, mostly because they don't support custom function calls
+ * (which we expand onto multiple lines)
+ * also, at runtime, an else-if requires the framestack to hold more state
  * (remembering if a clause has been taken) so it's more complex.
- * ideally this one needs access to the entire array.
+ * verified by both unit tests and vpcTestScriptExtensive.ts
  */
 export namespace VpcRewriteNoElseIfClauses {
     /**
@@ -237,3 +241,4 @@ export namespace VpcRewriteNoElseIfClauses {
         }
     }
 }
+

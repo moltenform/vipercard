@@ -7,7 +7,13 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/**
+ * let's turn all loops into infinite loops and break statements.
+ * this makes code-execution simpler because it doesn't have to hold separate state,
+ * the state is now held in a normal local variable.
+ */
 export namespace VpcRewritesLoops {
+    /* begin to rewrite a loop */
     export function Go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         if (line.length === 1) {
@@ -31,13 +37,15 @@ export namespace VpcRewritesLoops {
             return goWithImpl(firstExpr, secondExpr, loopVar, false, rw);
         }
     }
+    
+    /* rewrite a loop of the form "repeat while" or "repeat until" */
     function goUntilWhile(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         let template = `
 repeat
     if %NOTSTART% %ARG0% %NOTEND% then
         exit repeat
     end if
-`; // the end repeat comes later
+`;  /* the end repeat comes later */
         if (line[1].image === 'until') {
             template = template.replace(/%NOTSTART%/g, '');
             template = template.replace(/%NOTEND%/g, '');
@@ -50,6 +58,8 @@ repeat
         checkThrow(conditionExpression?.length, 'without an expression');
         return rw.gen(template, line[0], [conditionExpression], undefined, false);
     }
+    
+    /* rewrite a loop of the form "repeat with x = 1 to 5" */
     function goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, '');
         checkThrowEq('with', line[1].image, '');
@@ -68,6 +78,8 @@ repeat
         let secondExpr = line.slice(findTo + 1);
         return goWithImpl(firstExpr, secondExpr, line[2], isDown, rw);
     }
+    
+    /* build the code for a loop of the form "repeat with x = 1 to 5" */
     function goWithImpl(
         firstExpr: ChvITk[],
         secondExpr: ChvITk[],

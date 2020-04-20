@@ -596,10 +596,16 @@ export enum VpcErrStage {
     SyntaxStep
 }
 
+/**
+ * placeholder interface, is actually a LineOfCode object
+ */
 export interface IVpcCodeLine {
     readonly lineId: number;
 }
 
+/**
+ * a vpc error. doesn't have to be a script error, but often is.
+ */
 export class VpcErr extends Util512BaseErr {
     isVpcErr = true;
     origClass = VpcErr.name;
@@ -617,6 +623,9 @@ export class VpcErr extends Util512BaseErr {
     }
 }
 
+/**
+ * make a vpc error
+ */
 export function makeVpcError(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
     let level = 'vpc';
     let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
@@ -644,6 +653,10 @@ export function checkThrowEq<T>(expected: T, got: unknown, msg: string, c1: unkn
     }
 }
 
+/**
+ * distinguish between expected script errors, like bad syntax in the script,
+ * and 'internal' unexpected conditions
+ */
 export class VpcInternalErr extends Util512BaseErr {
     isVpcInternalErr = true;
     origClass = VpcInternalErr.name;
@@ -655,12 +668,18 @@ export class VpcInternalErr extends Util512BaseErr {
     }
 }
 
+/**
+ * make an internal error
+ */
 export function makeVpcInternalErr(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
     let level = 'vpcinternal';
     let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
     return VpcInternalErr.createError(msgTotal, level);
 }
 
+/**
+ * if condition is false, throw a 'internal' exception
+ */
 export function checkThrowInternal(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
         throw makeVpcInternalErr(msg, s1, s2).clsAsErr();
@@ -682,12 +701,18 @@ export class VpcNotificationMsg extends Util512Message {
     }
 }
 
+/**
+ * make a notification type of message
+ */
 export function makeVpcNotificationMsg(msg: string, s1: unknown = '', s2: unknown = '', s3: unknown = '') {
     let level = 'vpcmessage';
     let msgTotal = joinIntoMessage(msg, level, s1, s2, s3);
     return VpcNotificationMsg.createError(msgTotal, level);
 }
 
+/**
+ * if condition is false, throw a notification
+ */
 export function checkThrowNotifyMsg(condition: unknown, msg: string, s1: unknown = '', s2: unknown = ''): asserts condition {
     if (!condition) {
         throw makeVpcNotificationMsg(msg, s1, s2).clsAsErr();

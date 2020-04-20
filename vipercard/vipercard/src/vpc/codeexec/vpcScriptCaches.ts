@@ -14,6 +14,8 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/* see the top of vpcTopPreparse.ts to read how we execute code. */
+
 /**
  * cache the CST from a parsed line of code, for better perf.
  * it can be re-evaluated by calling visit() again.
@@ -125,6 +127,8 @@ export class VpcCacheParsedAST {
         }
     }
 
+    /* parse+compile code, and find a handler. 
+        if the handler isn't found, returns undefined for the 2nd item */
     getHandlerOrThrow(
         code: string,
         handlername: string,

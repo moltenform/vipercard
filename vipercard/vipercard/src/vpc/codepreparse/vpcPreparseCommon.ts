@@ -28,7 +28,8 @@ export class SplitIntoLinesAndMakeLowercase {
     index = 0;
     constructor(protected instream: ChvITk[], protected makeLower: MakeLowerCase) {}
 
-    nextWithNewlines(): O<ChvITk[]> {
+        /* splits the list by newlines */
+        nextWithNewlines(): O<ChvITk[]> {
         let currentLine: ChvITk[] = [];
         let limit = new LoopLimit(CodeLimits.MaxTokensInLine, 'maxTokensInLine');
         while (limit.next()) {
@@ -51,6 +52,7 @@ export class SplitIntoLinesAndMakeLowercase {
         return undefined;
     }
 
+    /* get the next line */
     next(): O<ChvITk[]> {
         while (true) {
             let next = this.nextWithNewlines();
@@ -102,6 +104,7 @@ export class LoopLimit {
         this.count = maxcount;
     }
 
+    /* return true if it's ok to keep looping */
     next(): true {
         this.count--;
         if (this.count < 0) {
@@ -117,6 +120,9 @@ export class LoopLimit {
     }
 }
 
+/**
+ * chevrotain 'rules' take these arguments
+ */
 export type ChvRuleFnType = (idxInCallingRule?: number, ...args: any[]) => chevrotain.CstNode;
 
 /**

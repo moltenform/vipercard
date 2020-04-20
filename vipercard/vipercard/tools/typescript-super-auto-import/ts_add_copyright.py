@@ -4,6 +4,9 @@
 from ts_parsing import *
 
 def whichLicense(f):
+    if '/bridge/' in f.replace('\\', '/'):
+        return None
+    
     isMIT = {}
     isMIT['util512.ts'] = 1
     isMIT['util512assert.ts'] = 1

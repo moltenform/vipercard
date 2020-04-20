@@ -7,14 +7,16 @@ def goForVisitorInterface(st):
     out = []
     out.append('')
     out.append('')
+    out.append('/* ensures we have all the expected Rule methods */')
     out.append('export interface VpcCompleteVisitor {')
     for rule in st.rules:
         out.append(f'    Rule{rule.name}(ctx: VisitingContext): {rule.ruleVisitorReturnType};')
     out.append('}')
     out.append('')
+    out.append('/* for nicer auto-complete in a visitor implementation */')
     out.append('export interface VisitingContext {')
-    out.append('// you can add something like [index: string]: any if you want to')
-    out.append('// silence type errors during development')
+    out.append('/* you can add something like [index: string]: any if you want to */')
+    out.append('/* silence type errors during development */')
     for rule in st.rules:
         out.append(f'    Rule{rule.name}: any[];')
     for tk in st.tokens:

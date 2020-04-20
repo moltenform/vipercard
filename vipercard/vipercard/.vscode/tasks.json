@@ -55,5 +55,13 @@
             ],
             "group": "build"
         },
+        {
+            "type": "npm",
+            "script": "findmissingcomments",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
     ]
 }

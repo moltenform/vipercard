@@ -21,6 +21,9 @@ export class VpcLineToCodeObj {
     cachedStartOnes: ChvITk[];
     constructor(protected idGen: CountNumericId, protected check: CheckReservedWords) {}
 
+    /**
+     * cache a few tokens for efficiency
+     */
     init(basis: ChvITk) {
         this.parser = getParsingObjects()[1];
 
@@ -32,6 +35,9 @@ export class VpcLineToCodeObj {
         ];
     }
 
+    /**
+     * top-level creating a VpcCodeLine object, and determining what type of line it is.
+     */
     toCodeLine(line: ChvITk[]) {
         checkThrow(line && line.length > 0, "8O|we don't allow empty lines of code");
         checkThrow(

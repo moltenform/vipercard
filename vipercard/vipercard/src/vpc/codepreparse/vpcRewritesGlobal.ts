@@ -8,6 +8,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/**
+ * preparsing rewrites that aren't specific to a certain command
+ */
 export namespace VpcRewritesGlobal {
     const mapSynonyms = {
         rect: 'rectangle',
@@ -23,6 +26,11 @@ export namespace VpcRewritesGlobal {
         /* itemdel and itemdelimiter too, but it's
         a nullary prop, see productopts */
     };
+
+    /**
+     * replace properties.
+     * also go from 'the english date' to 'the long date' for compat.
+     */
     export function rewritePropertySynonyms(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
         for (let i = 0; i < line.length - 1; i++) {
             if (line[i + 1].image === 'of') {
@@ -30,6 +38,8 @@ export namespace VpcRewritesGlobal {
                 if (mapped) {
                     line[i] = rw.tokenFromEnglishTerm(mapped, line[i]);
                 }
+            } else if (line[i+1].image === 'date' && line[i].image === 'english') {
+                line[i] = rw.tokenFromEnglishTerm('long', line[i]);
             }
         }
 
@@ -69,6 +79,13 @@ export namespace VpcRewritesGlobal {
 
 /**
  * helps rewrite code
+ * rewriting used to be done with code like
+ * outputLine.push(tokenBuilder.build('put'))
+ * outputLine.push(tokenBuilder.build('3'))
+ * outputLine.push(tokenBuilder.build('into'))
+ * outputLine.push(tokenBuilder.build('x'))
+ * but what we have now is much more convenient to write (and read).
+
    example:
    `
     put %ARG0% into x
@@ -78,13 +95,12 @@ export namespace VpcRewritesGlobal {
             exit repeat
         end if
         put x + 1 into x
-        %SYNPLACEHOLDER%
-        %ARGMANY%
     end repeat`
  */
 export class VpcSuperRewrite {
     constructor(protected idGen: CountNumericId) {}
-
+        
+    /* go from the string template to lines of lexed code */
     gen(s: string, realTokenAsBasis: ChvITk, args?: ChvITk[][], argMany?: ChvITk[][], needsToBePostProcess = true): ChvITk[][] {
         args = args ?? [];
         let ret: ChvITk[][] = [];
@@ -107,6 +123,9 @@ export class VpcSuperRewrite {
         return ret;
     }
 
+    /* when generating a token from a template, add the term.
+     in most cases, the template must say %INTO% and not into,
+     since rewritePut() has already been called and won't be called again! */
     protected addTerm(ret: ChvITk[][], term: string, args: ChvITk[][], realTokenAsBasis: ChvITk, needsToBePostProcess: boolean) {
         if (term.startsWith('%ARG')) {
             checkThrowEq('%', term[term.length - 1], '');
@@ -129,6 +148,8 @@ export class VpcSuperRewrite {
         }
     }
 
+    /* much safer than just building a tkidentifier or trying to remember what has its own token type
+     this looks at the script-generated table to know what token-type to generate. */
     tokenFromEnglishTerm(term: string, realTokenAsBasis: ChvITk) {
         let tktype = listOfAllWordLikeTokens[term];
         if (!tktype && term.startsWith('"') && term.endsWith('"')) {
@@ -154,6 +175,7 @@ export class VpcSuperRewrite {
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tktype, term);
     }
 
+    /* safer to replace only when not in parens, see searchTokenGivenEnglishTermInParensLevel */
     replaceWithSyntaxMarkerAtLvl0(
         line: ChvITk[],
         realTokenAsBasis: ChvITk,
@@ -172,11 +194,18 @@ export class VpcSuperRewrite {
         }
     }
 
+    /* combines generating a token and searching */
     searchTokenGivenEnglishTerm(line: ChvITk[], realTokenAsBasis: ChvITk, term: string) {
         let tk1 = this.tokenFromEnglishTerm(term, realTokenAsBasis);
         return line.findIndex(t => t.tokenType === tk1.tokenType && t.image === tk1.image);
     }
 
+    /* sometimes you only want to search at a paren level.
+     example: add x to y, we want to replace "to" with a syntax marker. 
+     we should only do the replacement at 0-parens level so that
+    add (char 2 to 3 of x) to y
+    won't replace the wrong 'to' token. 
+    */
     searchTokenGivenEnglishTermInParensLevel(wantedLevel: number, line: ChvITk[], realTokenAsBasis: ChvITk, term: string) {
         let tk1 = this.tokenFromEnglishTerm(term, realTokenAsBasis);
         let lvl = 0;
@@ -193,6 +222,7 @@ export class VpcSuperRewrite {
         return -1;
     }
 
+    /* generates a unique variable name */
     generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
         let image = '$unique_' + prefix + this.idGen.nextAsStr();
         return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tks.tkIdentifier, image);

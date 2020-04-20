@@ -23,6 +23,8 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/* see the top of vpcTopPreparse.ts to read how we execute code. */
+
 /**
  * messages and our support for them
  *
@@ -609,6 +611,9 @@ export class VpcExecFrameStack {
         return [val, vel];
     }
 
+    /**
+     * run dynamically built code.
+     */
     visitCallDynamic(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         let [val, velTarget] = this.visitSendStatement(curLine, parsed);
         let codeToCompile = val.readAsString();

@@ -12,23 +12,25 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/* see the top of vpcTopPreparse.ts to read how we execute code. */
+
 /**
  * execute an asynchronous statement
  *
  * case 1) when you first hit the statement:
  *      add an entry to "waitingFor"
  *      begin the async op
- *      return with 'blocked=true' so that the script can exit early
+ *      return with 'AsyncCodeOpState.DisallowNext' so that the script can exit early
  *
  * case 2) when you next hit the statement, and it's not done yet:
  *      we can tell it's not done because there's no entry in completed
- *      return with 'blocked=true' so that the script can exit early
+ *      return with 'AsyncCodeOpState.DisallowNext' so that the script can exit early
  *
  * case 3) when you hit the statement, and it's done:
  *      we can tell it's done because there's an entry in completed
  *      clear out everything
  *      return what was set in completed
- *      return with 'blocked=false' (the default) so script can continue
+ *      return with 'AsyncCodeOpState.AllowNext' (the default) so script can continue
  *
  */
 export class VpcScriptExecAsync {
@@ -203,6 +205,7 @@ export class VpcPendingAsyncOps {
     }
 }
 
+/* callback structure for 'answer' */
 export type FnAnswerMsgCallback = (
     prompt: string,
     fnOnResult: (n: number) => void,
@@ -210,8 +213,11 @@ export type FnAnswerMsgCallback = (
     choice2: string,
     choice3: string
 ) => void;
+
+/* callback structure for 'ask' */
 export type FnAskMsgCallback = (prompt: string, deftxt: string, fnOnResult: (ret: O<string>, n: number) => void) => void;
 
+/* use this flag to indicate that the script is temporarily blocked */
 export enum AsyncCodeOpState {
     AllowNext = 'AllowNext0',
     DisallowNext = 'DisallowNext1'

@@ -2,6 +2,13 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
+/**
+ * some of ViperCard is implemented in ViperCard!
+ * commands like push and pop are simple enough to be
+ * implemented right here without much custom parsing.
+ * if code here needs special abilities, we'll call
+ * internalvpcmessagesdirective, which can do anything.
+ */
 export class VpcStandardLibScript {
     static handlersImplementedInSoftware = {
         push: true,

@@ -207,6 +207,7 @@ export namespace VpcTopPreparse {
         return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput);
     }
 
+    /* apply the 1st stage of rewriting */
     function stage1Process(line: ChvITk[], rw: VpcSuperRewrite): O<ChvITk[][]> {
         if (line.length && line[0].image === 'repeat') {
             return VpcRewritesLoops.Go(line, rw);
@@ -215,11 +216,13 @@ export namespace VpcTopPreparse {
         }
     }
 
+    /* apply the 3nd stage of rewriting */
     function stage2Process(line: ChvITk[], rwcmd: VpcRewriteForCommands): O<ChvITk[][]> {
         let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image);
         return Util512.callAsMethodOnClass(VpcRewriteForCommands.name, rwcmd, methodName, [line], true) as O<ChvITk[][]>;
     }
 
+    /* apply the 3rd stage of rewriting */
     function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
         line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line);
         line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);

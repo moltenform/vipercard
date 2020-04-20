@@ -18,6 +18,8 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/* see the top of vpcTopPreparse.ts to read how we execute code. */
+
 /**
  * script execution in ViperCard
  *
@@ -180,6 +182,9 @@ export class VpcExecTop {
         }
     }
 
+    /**
+     * some state should be reset after the call returns.
+     */
     resetAfterFrameStackIsDone() {
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;

@@ -5,9 +5,13 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/**
+ * specify the icon dimensions for ViperCard-specific icons.
+ * define rectangles where each icon is in the image.
+ */
 export class VpcInitIcons {
     /**
-     * specify the icon dimensions for ViperCard-specific icons.
+     * define icons, if needed.
      */
     static go() {
         if (RenderIconGroup.cachedGridInfo['000']) {

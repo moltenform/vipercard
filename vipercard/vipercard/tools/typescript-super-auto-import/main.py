@@ -43,8 +43,8 @@ def autoAddImports(srcdirectory, layers, useSingleQuotes):
         layerfullpath, layershortnoext, layerdepth = layer
         trace(layerfullpath)
         
-        if layershortnoext.startswith('bridge'):
-            continue
+        #~ if layershortnoext.startswith('bridge'):
+            #~ continue
         
         lines = getFileLines(layerfullpath, tryToStripComments)
         

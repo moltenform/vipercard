@@ -998,7 +998,19 @@ put myMult(2,myMult(myMult((2), 3), (4))) into ret
 
     h.testBatchEvaluate(batch);
 });
-t.test("test_don't need to expand custom fns on these lines", () => {
+t.test("global rewrites", () => {
+//~ /* english date -> long date */    
+/* CdOrBgPart */    
+    //~ inp = `on myCode
+//~ add 1 to the msg box
+//~ end myCode`;
+    //~ expected = `HandlerStart
+//~ add~1~to~the~msg~box~
+//~ HandlerEnd`;
+    //~ h.compareRewrittenCode(inp, expected);
+
+})
+t.test("don't need to expand custom fns on these lines", () => {
     /* VpcLineCategory_.HandlerStart */
     let inp = `
 on myHandler myFn(1, 2)

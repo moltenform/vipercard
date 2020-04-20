@@ -13,7 +13,10 @@
 
 /**
  * provides ways to see if a certain term is ok to use as a variable name,
- * or if it is a reserved term that is disallowed
+ * or if it is a reserved term that is disallowed.
+ * Needed because many keywords aren't separate tokens,
+ * you shouldn't be able to create a variable named "repeat" even though
+ * it lexes as a tkidentifier.
  */
 export class CheckReservedWords {
     readonly constants = new VariableCollectionConstants();
@@ -51,8 +54,9 @@ export class CheckReservedWords {
     }
 
     okHandlerName(s: string) {
+        /* user is making a new handler like on myOperation */
         checkThrow(slength(s), `7)|invalid identifier ${s}`);
-        if (!s.match(/^[A-Za-z$]/)) {
+        if (!s.match(/^[A-Za-z_$]/)) {
             return false;
         }
         return (
