@@ -400,6 +400,7 @@ export class VpcLineToCodeObj {
                     this.check.okLocalVar(line[i].image),
                     `8I|name of parameter is a reserved word, we don't support here.`
                 );
+                
                 output.excerptToParse.push(line[i]);
             }
         }

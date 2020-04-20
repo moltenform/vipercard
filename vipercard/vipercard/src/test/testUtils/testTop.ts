@@ -8,6 +8,7 @@
 /* auto */ import { vpcTestCollectionScriptRunCmd } from './../vpc/vpcTestScriptRunCmd';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
 /* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
+/* auto */ import { vpcTestCollectionScriptExtensive } from './../vpc/vpcTestScriptExtensive';
 /* auto */ import { vpcTestCollectionScriptExprLvl } from './../vpc/vpcTestScriptExprLvl';
 /* auto */ import { testCollectionvpcScriptEval } from './../vpc/vpcTestScriptEval';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
@@ -51,39 +52,40 @@ export class SimpleUtil512Tests {
         // order tests from high to low
         let colls = [
             //~ testCollectionvpcuiServer,
+            vpcTestCollectionScriptExtensive,
             vpcTestCollectionScriptRunCustomFns,
             vpcTestCollectionScriptRunCmd,
 
-            testCollectionvpcScriptEval,
-            testCollectionvpcScriptRunSyntax,
-            vpcTestCollectionScriptExprLvl,
-            testCollectionvpcScriptParseCmd,
-            testCollectionvpcScriptParseExpr,
-            testCollectionvpcChunkResolution,
-            testCollectionvpcElements,
-            testCollectionvpcuiMsgBox,
-            testCollectionvpcuiIntroProvider,
-            testCollectionvpcVpcVal,
+            //~ testCollectionvpcScriptEval,
+            //~ testCollectionvpcScriptRunSyntax,
+            //~ vpcTestCollectionScriptExprLvl,
+            //~ testCollectionvpcScriptParseCmd,
+            //~ testCollectionvpcScriptParseExpr,
+            //~ testCollectionvpcChunkResolution,
+            //~ testCollectionvpcElements,
+            //~ testCollectionvpcuiMsgBox,
+            //~ testCollectionvpcuiIntroProvider,
+            //~ testCollectionvpcVpcVal,
 
-            testCollectionUI512CodeEditor,
-            testCollectionUI512Composites,
-            testCollectionUI512DrawText,
-            testCollectionUI512Elements,
-            testCollectionUI512ElementsViewButtons,
-            testCollectionUI512FormattedText,
-            testCollectionUI512MenuRender,
-            testCollectionUI512Paint,
-            testCollectionUI512TextEdit,
-            testCollectionUI512TextModify,
-            testCollectionUI512TextSelectEvents,
+            //~ testCollectionUI512CodeEditor,
+            //~ testCollectionUI512Composites,
+            //~ testCollectionUI512DrawText,
+            //~ testCollectionUI512Elements,
+            //~ testCollectionUI512ElementsViewButtons,
+            //~ testCollectionUI512FormattedText,
+            //~ testCollectionUI512MenuRender,
+            //~ testCollectionUI512Paint,
+            //~ testCollectionUI512TextEdit,
+            //~ testCollectionUI512TextModify,
+            //~ testCollectionUI512TextSelectEvents,
 
-            testCollectionUtilsCanvasWrapper,
-            testCollectionUtilsDraw,
-            testCollectionUtil512Higher,
-            testCollectionUtil512Class,
-            testCollectionUtil512,
-            testCollectionUtil512Assert,
-            testCollectionExternalLibs
+            //~ testCollectionUtilsCanvasWrapper,
+            //~ testCollectionUtilsDraw,
+            //~ testCollectionUtil512Higher,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Assert,
+            //~ testCollectionExternalLibs
         ];
 
         /* run tests from low level to high level */

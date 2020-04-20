@@ -365,34 +365,34 @@ do not change the current card */
         ],
         /* go by variable lookup - correct, confirmed in emulator */
         [
-             longstr(`go card 1\nput "card id ${h.elIds.card_b_d}" into
-                xx\ngo to xx\\the short id of this cd`),
+             longstr(`go card 1{{NEWLINE}}put "card id ${h.elIds.card_b_d}" into
+                xx{{NEWLINE}}go to xx\\the short id of this cd`),
             `${h.elIds.card_b_d}`
         ],
         [
-             longstr(`go card 1\nput the long id of card id ${h.elIds.card_b_d} into
-                xx\ngo to xx\\the short id of this cd`),
+             longstr(`go card 1{{NEWLINE}}put the long id of card id ${h.elIds.card_b_d} into
+                xx{{NEWLINE}}go to xx\\the short id of this cd`),
             `${h.elIds.card_b_d}`
         ],
         [
-             longstr(`go card 1\nput the short name of card id ${h.elIds.card_b_d} into
-                xx\ngo to card xx\\the short id of this cd`),
+             longstr(`go card 1{{NEWLINE}}put the short name of card id ${h.elIds.card_b_d} into
+                xx{{NEWLINE}}go to card xx\\the short id of this cd`),
             `${h.elIds.card_b_d}`
         ],
         /* go by variable lookup - incorrect, confirmed in emulator */
         [
-             longstr(`go card 1\nput "card id ${h.elIds.card_b_d}" into xx\ngo to
+             longstr(`go card 1{{NEWLINE}}put "card id ${h.elIds.card_b_d}" into xx{{NEWLINE}}go to
                 card xx\\the short id of this cd`),
             `${h.elIds.card_a_a}`
         ],
         [
-             longstr(`go card 1\nput "cd id ${h.elIds.card_b_c}" into
-                xx\ngo to card xx\\the short id of this cd`),
+             longstr(`go card 1{{NEWLINE}}put "cd id ${h.elIds.card_b_c}" into
+                xx{{NEWLINE}}go to card xx\\the short id of this cd`),
             `${h.elIds.card_a_a}`
         ],
         [
-             longstr(`go card 1\nput the long id of cd id ${h.elIds.card_b_c} into
-                xx\ngo to card xx\\the short id of this cd`),
+             longstr(`go card 1{{NEWLINE}}put the long id of cd id ${h.elIds.card_b_c} into
+                xx{{NEWLINE}}go to card xx\\the short id of this cd`),
             `${h.elIds.card_a_a}`
         ]
     ];
