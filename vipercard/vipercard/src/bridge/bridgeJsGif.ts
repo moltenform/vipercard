@@ -5,7 +5,7 @@
 
 // this library is loaded dynamically
 
-export declare class GIFEncoder {
+export declare class GIFEncoderInterface {
     public setRepeat(n: number): void;
     public setDelay(n: number): void;
     public start(): void;
@@ -15,3 +15,10 @@ export declare class GIFEncoder {
     // method exposed by Ben Fisher
     public getUint8Array(): Uint8Array;
 }
+
+export function getGIFEncoderInst() {
+    let inst = GIFEncoder()
+    return inst as any as GIFEncoderInterface
+}
+
+declare const GIFEncoder:VoidFunction

@@ -76,14 +76,14 @@ t.test('getProp', () => {
         [`the short id of ${cAltProductName}`, `WILD`],
 
         /* stack */
-        [`the short id of this stack`, `901`],
+        [`the short id of this stack`, `921`],
         [`the short id of previous stack`, `ERR:could not find`],
         [`the short id of next stack`, `ERR:could not find`],
-        [`the short id of stack 1`, `901`],
+        [`the short id of stack 1`, `921`],
         [`the short id of stack 6`, 'ERR:could not find'],
-        [`the short id of stack "teststack"`, `901`],
+        [`the short id of stack "teststack"`, `921`],
         [`the short id of stack "other"`, `ERR:could not find`],
-        [`the short id of stack id 901`, `901`],
+        [`the short id of stack id 921`, `921`],
         [`the short id of stack id 600`, `ERR:could not find`],
         [`the short id of stack id ${h.elIds.bg_a}`, `ERR:could not find`],
 
@@ -916,10 +916,10 @@ t.test('vpcProperties', () => {
         ['the abbr name of this stack', 'stack "teststack"'],
         ['the short name of this stack', 'teststack'],
         ['the long name of this stack', 'stack "Hard Drive:teststack"'],
-        ['the id of this stack', '901'],
-        ['the abbr id of this stack', '901'],
-        ['the short id of this stack', '901'],
-        ['the long id of this stack', 'stack id 901'],
+        ['the id of this stack', '921'],
+        ['the abbr id of this stack', '921'],
+        ['the short id of this stack', '921'],
+        ['the long id of this stack', 'stack id 921'],
 
         /* bkgnd with a name */
         ['the name of bg 2', 'bkgnd "b"'],
@@ -1074,7 +1074,7 @@ t.test('vpcProperties', () => {
         /* owner */
         ['the owner of vipercard', 'ERR:get owner'],
         ['the owner of this stack', 'ERR:get owner'],
-        ['the owner of bg 1', 'stack id 901'],
+        ['the owner of bg 1', 'stack id 921'],
         ['the owner of cd fld "p1"', 'card id 1005 of this stack'],
         ['the owner of cd btn "p1"', 'card id 1005 of this stack'],
         ['the owner of cd btn "xyz"', 'ERR:could not find'],

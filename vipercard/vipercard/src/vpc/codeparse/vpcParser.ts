@@ -1476,6 +1476,9 @@ this.CONSUME2(tks.tkSyntaxMark)
 this.CONSUME3(tks.tkSyntaxMark)
 this.SUBRULE1(this.RuleExpr)
 this.OPTION1(() => {
+this.CONSUME1(tks.tkIdentifier)
+});
+this.OPTION2(() => {
 this.CONSUME4(tks.tkSyntaxMark)
 this.SUBRULE2(this.RuleExpr)
 });

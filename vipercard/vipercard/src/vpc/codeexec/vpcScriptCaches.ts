@@ -116,7 +116,7 @@ export class VpcCacheParsedAST {
         VpcCurrentScriptStage.latestVelID = velIdForErrMsg;
 
         if (code.match(/^\s*$/)) {
-            return new VpcParsedCodeCollection(new MapKeyToObject<VpcCodeLineReference>(), []);
+            return VpcParsedCodeCollection.makeEmptyInst();
         }
 
         let found = this.cache.get(code);

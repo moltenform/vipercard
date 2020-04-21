@@ -205,8 +205,8 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                 Ctrl-N
         */
 
-        this.keyMappings['ArrowLeft'] = 'onlyIfNotInTextField/mnuOnArrowLeft';
-        this.keyMappings['ArrowRight'] = 'onlyIfNotInTextField/mnuOnArrowRight';
+        //~ this.keyMappings['ArrowLeft'] = 'onlyIfNotInTextField/mnuOnArrowLeft';
+        //~ this.keyMappings['ArrowRight'] = 'onlyIfNotInTextField/mnuOnArrowRight';
         this.keyMappings['Home'] = 'onlyIfNotInTextField/mnuGoCardFirst';
         this.keyMappings['End'] = 'onlyIfNotInTextField/mnuGoCardLast';
         this.keyMappings['Backspace'] = 'onlyIfNotInTextField/mnuClear';

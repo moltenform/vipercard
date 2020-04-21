@@ -7,7 +7,7 @@
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
-/* auto */ import { GIFEncoder } from './../../bridge/bridgeJsGif';
+/* auto */ import { getGIFEncoderInst } from './../../bridge/bridgeJsGif';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -118,7 +118,7 @@ export class PaintGifExport {
         /* 1-> 0.5 fps, 10-> 20fps */
         let fpsDesired = 0.5 + (speed - 1) * (19.5 / 9);
         let delay = Math.round(1000 / fpsDesired);
-        let encoder = new GIFEncoder();
+        let encoder = getGIFEncoderInst();
 
         /* loop forever */
         encoder.setRepeat(0);

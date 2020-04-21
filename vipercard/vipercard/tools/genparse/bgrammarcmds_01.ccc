@@ -92,7 +92,8 @@ BuiltinCmdMultiply:=...<HContainer> tkSyntaxMark <Lvl1Expression>
 // pop card. has a little stack to go to. implemented entirely in software
 // BuiltinCmdPop:=... into|before|after container 
 // play. "tempo" to tkSyntaxMark
-BuiltinCmdPlay:=... <Expr>  [tkSyntaxMark <Expr>]                                                       
+// currently there is a    tkIdentifier for "load"                                               
+BuiltinCmdPlay:=... <Expr> [tkIdentifier] [tkSyntaxMark <Expr>]
 // push card. has a little stack to go to. implemented entirely in software
 // put variable in. in rewrite, reject if "menu" is mentioned.
 // tkIdentifier here is 'before' 'after' 'into'

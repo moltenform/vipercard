@@ -162,6 +162,9 @@ export namespace VpcTopPreparse {
         /* transform else-if into their own if-end */
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         let lines = VpcRewriteNoElseIfClauses.go(buildTree, rw);
+        if (!lines.length) {
+            return VpcParsedCodeCollection.makeEmptyInst()
+        }
 
         /* now do these as stages, they don't need access to the entire array */
         /* by passing the result of one to the next, we're saving some allocations */
@@ -273,5 +276,12 @@ export class VpcParsedCodeCollection {
 
         /* line is after all handlers */
         return -1;
+    }
+
+    /**
+     * for cases like where the script is only comments
+     */
+    static makeEmptyInst() {
+        return new VpcParsedCodeCollection(new MapKeyToObject<VpcCodeLineReference>(), []);
     }
 }
