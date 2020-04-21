@@ -49,8 +49,6 @@ export class FullRootUI512 implements Root {
         domCanvas.setAttribute('id', 'mainDomCanvas');
         UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor);
         VpcInitIcons.go();
-
-        /* add a try/catch, this is a naked call */
         showMsgIfExceptionThrown(() => this.presenter.init(), 'root.init');
     }
 

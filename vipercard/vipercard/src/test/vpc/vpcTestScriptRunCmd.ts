@@ -28,8 +28,8 @@
  *
  */
 
-let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptRunCmd');
-export let vpcTestCollectionScriptRunCmd = t;
+let t = new SimpleUtil512TestCollection('testCollectionScriptRunCmd');
+export let testCollectionScriptRunCmd = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
 t.atest('--init--vpcTestScriptRunCmd', async () => {

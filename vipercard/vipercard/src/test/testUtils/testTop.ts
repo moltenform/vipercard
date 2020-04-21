@@ -4,12 +4,13 @@
 /* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
 /* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
 /* auto */ import { testCollectionvpcScriptRunSyntax } from './../vpc/vpcTestScriptRunSyntax';
-/* auto */ import { vpcTestCollectionScriptRunCustomFns } from './../vpc/vpcTestScriptRunCustomFns';
-/* auto */ import { vpcTestCollectionScriptRunCmd } from './../vpc/vpcTestScriptRunCmd';
+/* auto */ import { testCollectionScriptRunCustomFns } from './../vpc/vpcTestScriptRunCustomFns';
+/* auto */ import { testCollectionScriptRunCmd } from './../vpc/vpcTestScriptRunCmd';
+/* auto */ import { testCollectionScriptRewrites } from './../vpc/vpcTestScriptRewrites';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
 /* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
-/* auto */ import { vpcTestCollectionScriptExtensive } from './../vpc/vpcTestScriptExtensive';
-/* auto */ import { vpcTestCollectionScriptExprLvl } from './../vpc/vpcTestScriptExprLvl';
+/* auto */ import { testCollectionScriptExtensive } from './../vpc/vpcTestScriptExtensive';
+/* auto */ import { testCollectionScriptExprLvl } from './../vpc/vpcTestScriptExprLvl';
 /* auto */ import { testCollectionvpcScriptEval } from './../vpc/vpcTestScriptEval';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
@@ -55,13 +56,15 @@ export class SimpleUtil512Tests {
         // order tests from high to low
         let colls = [
             //~ testCollectionvpcuiServer,
-            //~ vpcTestCollectionScriptExtensive,
-            vpcTestCollectionScriptRunCustomFns,
-            vpcTestCollectionScriptRunCmd,
+            testCollectionScriptRewrites,
+            //~ testCollectionScriptExtensive,
+            testCollectionScriptRunCustomFns,
+            //~ testCollectionScriptRunCmd,
 
             //~ testCollectionvpcScriptEval,
+            //~ testCollectionvpcScriptEval,
             //~ testCollectionvpcScriptRunSyntax,
-            //~ vpcTestCollectionScriptExprLvl,
+            testCollectionScriptExprLvl,
             //~ testCollectionvpcScriptParseCmd,
             //~ testCollectionvpcScriptParseExpr,
             //~ testCollectionvpcChunkResolution,
@@ -78,7 +81,7 @@ export class SimpleUtil512Tests {
             //~ testCollectionUI512FormattedText,
             //~ testCollectionUI512MenuRender,
             //~ testCollectionUI512Paint,
-            testCollectionUI512TextEdit
+            //~ testCollectionUI512TextEdit
             //~ testCollectionUI512TextModify,
             //~ testCollectionUI512TextSelectEvents,
 

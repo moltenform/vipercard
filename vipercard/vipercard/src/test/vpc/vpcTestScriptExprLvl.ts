@@ -44,12 +44,12 @@
  * b == a, a != b, and b != a
  */
 
-let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptExprLvl');
-export let vpcTestCollectionScriptExprLvl = t;
+let t = new SimpleUtil512TestCollection('testCollectionScriptExprLvl');
+export let testCollectionScriptExprLvl = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBaseForScriptExpr>();
 
-t.atest('--init--vpcTestScriptEval', async () => {
+t.atest('--init--testScriptExprLvl', async () => {
     h = new TestVpcScriptRunBaseForScriptExpr(t);
     return h.initEnvironment();
 });

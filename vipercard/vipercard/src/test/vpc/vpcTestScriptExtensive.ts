@@ -10,11 +10,11 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-let t = new SimpleUtil512TestCollection('vpcTestCollectionScriptExtensive');
-export let vpcTestCollectionScriptExtensive = t;
+let t = new SimpleUtil512TestCollection('testCollectionScriptExtensive', true);
+export let testCollectionScriptExtensive = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
-t.atest('--init--vpcTestCollectionScriptExtensive', async () => {
+t.atest('--init--testCollectionScriptExtensive', async () => {
     h = new TestVpcScriptRunBase(t);
     return h.initEnvironment();
 });

@@ -127,6 +127,7 @@ export class VpcCacheParsedAST {
             if (VpcCacheParsedCST.ensureNotChanged) {
                 Util512.freezeRecurse(got);
             }
+            
             this.cache.set(code, got);
             return got;
         }
