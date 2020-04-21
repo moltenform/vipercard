@@ -47,6 +47,10 @@ def goPerFile(f):
         
         if line.strip().startswith('constructor('):
             curLineStart = False
+        if line.strip().startswith('assert'):
+            curLineStart = False
+        if line.strip().startswith('checkThrow'):
+            curLineStart = False
         
         if curLineStart and not prevLineComment and not prevLine.endswith(';') and not prevLine.endswith(',') and not prevLine.endswith('{') and not prevLine.endswith('(') \
             and not prevLine.endswith(':') \

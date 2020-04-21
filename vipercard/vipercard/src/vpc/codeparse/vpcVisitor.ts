@@ -27,7 +27,6 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
         evalHelp = new VpcEvalHelpers();
         outside: OutsideWorldRead;
         tmpArr: [boolean, any] = [false, undefined];
-        public warningFlags: string[] = [];
         constructor() {
             super();
             this.validateVisitor();

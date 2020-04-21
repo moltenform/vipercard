@@ -106,8 +106,8 @@ export class VpcExecFrameStack {
         let statedParentId = this.outside.GetCurrentCardId();
         let targetId = this.outside.GetCurrentCardId();
         let codeToCompile = obj.msgBoxCodeBody;
-        if (obj.addIntentionalError) {
-            codeToCompile += '\n' + VpcScriptMessageMsgBoxCode.markIntentionalErr;
+        if (obj.returnToMsgBox) {
+            codeToCompile += `\ninternalvpcmessagesdirective "returntomsgbox"`
         }
 
         let dynamicCodeOrigin: [string, number] = ['messagebox', 0];
@@ -118,6 +118,7 @@ export class VpcExecFrameStack {
             targetId,
             dynamicCodeOrigin
         );
+
         this.pushStackFrame(newHandlerName, obj, ast, lineRef, meId, statedParentId, dynamicCodeOrigin);
     }
 
@@ -621,6 +622,11 @@ export class VpcExecFrameStack {
         let meId = velTarget.id;
         let statedParentId = velTarget.id;
         let dynamicCodeOrigin: [string, number] = [curFrame.meId, curLine.firstToken.startLine ?? 0];
+
+        /* confirmed in original product: if there's no return statement,
+        return the last result that was computed. send "myCompute" to cd btn 4,
+        it would make sense that the result is set to the result of myCompute. */
+        codeToCompile += '\nreturn the result'
         let [ast, lineref, newHandlerName] = this.visitCallDynamicHelper(
             codeToCompile,
             meId,
@@ -653,10 +659,7 @@ export class VpcExecFrameStack {
         targetId: string,
         dynamicCodeOrigin: [string, number]
     ): [VpcParsedCodeCollection, VpcCodeLineReference, string] {
-        /* confirmed in original product: if there's no return statement,
-        return the last result that was computed. send "myCompute" to cd btn 4,
-        it would make sense that the result is set to the result of myCompute.
-
+        /*
         build a new temporary handler, then call it.
         give the temp handler a unique name?
         seems safer, but then it couldn't be cached. */
@@ -665,7 +668,6 @@ export class VpcExecFrameStack {
             `
         on ${newHandlerName}
         ${codeToCompile}
-        return the result
         end ${newHandlerName}
         `,
             '\n'
@@ -730,11 +732,11 @@ export class VpcExecFrameStack {
      */
     visitIsInternalvpcmessagesdirective(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         curFrame.next();
-        checkThrowEq(3, curLine.excerptToParse.length, '');
+        checkThrow(curLine.excerptToParse.length === 2  || curLine.excerptToParse.length === 3, '');
         checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, '');
         let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
         let variable: O<string>;
-        if (curLine.excerptToParse.length >= 2) {
+        if (curLine.excerptToParse.length > 2) {
             checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, '');
             variable = curLine.excerptToParse[2].image;
         }
@@ -770,6 +772,8 @@ export class VpcExecFrameStack {
                 let parsed = VpcVisualEffectSpec.getVisualEffect(spec);
                 console.log(nextCard, parsed);
             }
+        } else if (directive === 'returntomsgbox') {
+            this.outside.WriteToReplMessageBox('', true)
         } else {
             checkThrow(false, 'unknown directive', directive);
         }

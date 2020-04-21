@@ -352,7 +352,7 @@ export class VpcLineToCodeObj {
      * line begins with internalvpcmessagesdirective
      */
     goInternalvpcmessagesdirective(line: ChvITk[], output: VpcCodeLine) {
-        checkThrow(line.length === 3, `line must contain 3 tokens.`);
+        checkThrow(line.length === 3 || line.length === 2, `line must contain 2 or 3 tokens.`);
         output.excerptToParse = line.slice();
         output.ctg = VpcLineCategory.IsInternalvpcmessagesdirective;
     }

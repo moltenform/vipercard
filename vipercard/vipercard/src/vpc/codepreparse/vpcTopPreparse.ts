@@ -19,7 +19,6 @@
 /* Released under the GPLv3 license */
 
 /*
-==========================================================
 How Code Compilation + Execution Works In ViperCard
 ==========================================================
 

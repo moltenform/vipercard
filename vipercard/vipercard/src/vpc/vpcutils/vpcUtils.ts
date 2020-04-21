@@ -66,13 +66,8 @@ export class VpcScriptMessage {
  * for running code in the messagebox
  */
 export class VpcScriptMessageMsgBoxCode extends VpcScriptMessage {
-    addIntentionalError = true;
+    returnToMsgBox = false
     msgBoxCodeBody = '';
-
-    /**
-     * use this unique marker to know if the error was intentional
-     */
-    static readonly markIntentionalErr = 'intentionalcausescripterrorleavingreplbox';
 }
 
 /**

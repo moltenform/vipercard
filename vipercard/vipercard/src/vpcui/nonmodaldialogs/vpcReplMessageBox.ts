@@ -1,5 +1,5 @@
 
-/* auto */ import { RememberHistory, VpcScriptMessageMsgBoxCode } from './../../vpc/vpcutils/vpcUtils';
+/* auto */ import { RememberHistory } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { VpcNonModalBase, VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcErr, VpcTool, cleanExceptionMsg } from './../../vpc/vpcutils/vpcEnums';
@@ -97,13 +97,15 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     }
 
     /**
-     * set the font and text fo a field
+     * set the font and text of a field
      */
     setFontAndText(el: UI512ElTextField, s: string, typfacename: string, pts: number) {
         let spec = new TextFontSpec(typfacename, TextFontStyling.Default, pts);
         el.set('defaultFont', spec.toSpecString());
         let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
         el.setFmTxt(t);
+        let gel = new UI512ElTextFieldAsGeneric(el)
+        TextSelModify.fixSelection(gel)
     }
 
     /**
@@ -204,23 +206,27 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
 
     /**
      * respond to a script error
-     * sometimes it's a script error we intentionally made!
      */
     onScriptErr(scriptErr: VpcErr) {
-        /* note that script errors are to be expected --
-        it's how we get the signal back after running a script,
-        we intentionally try to call a handler that doesn't exist. */
         /* go back to the previous tool */
         this.vci.setTool(this.rememberedTool);
-        if (scriptErr && scriptErr.message && scriptErr.message.includes(VpcScriptMessageMsgBoxCode.markIntentionalErr)) {
-            /* it wasn't actually an error, we internally caused it */
-        } else if (scriptErr) {
-            this.appendToOutput('Error: ' + cleanExceptionMsg(scriptErr.clsAsErr()), true);
+        if (scriptErr) {
+            this.appendToOutput(cleanExceptionMsg(scriptErr.clsAsErr()), true);
         } else {
             this.appendToOutput('Unknown', true);
         }
 
         /* set focus back */
+        this.vci.getPresenter().setCurrentFocus(this.entry.id);
+    }
+
+    /**
+     * might will be called after script completes.
+     * if the script takes a while and has closed the message box, that's fine,
+     * this won't ever get called. 
+     */
+    returnFocus() {
+        this.vci.setTool(this.rememberedTool);
         this.vci.getPresenter().setCurrentFocus(this.entry.id);
     }
 

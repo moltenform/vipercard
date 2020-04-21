@@ -307,6 +307,9 @@ export class VpcExecTop {
         VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
         VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
 
+        /* reset flags */
+        this.resetAfterFrameStackIsDone();
+
         if (this.cbOnScriptError) {
             this.cbOnScriptError(scriptErr);
         } else {
@@ -325,10 +328,10 @@ export class VpcExecTop {
     /**
      * run messagebox code
      */
-    runMsgBoxCodeOrThrow(codeBody: string, curCardId: string, addIntentionalError: boolean) {
+    runMsgBoxCodeOrThrow(codeBody: string, curCardId: string, addReturnToMsgBox: boolean) {
         let msg = new VpcScriptMessageMsgBoxCode(curCardId, VpcBuiltinMsg.SendCode);
         msg.msgBoxCodeBody = codeBody;
-        msg.addIntentionalError = addIntentionalError;
+        msg.returnToMsgBox = addReturnToMsgBox;
         this.scheduleCodeExec(msg);
     }
 

@@ -348,8 +348,8 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    writeToReplMessageBox(s: string): void {
-        return this.pr.writeToReplMessageBox(s);
+    writeToReplMessageBox(s: string, returnFocus:boolean): void {
+        return this.pr.writeToReplMessageBox(s, returnFocus);
     }
 
     /**

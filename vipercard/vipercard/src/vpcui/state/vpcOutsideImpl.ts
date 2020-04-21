@@ -222,7 +222,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         assertTrue(slength(varName), '6n|bad varName', varName);
 
         if (varName === LogToReplMsgBox.redirectThisVariableToMsgBox) {
-            this.WriteToReplMessageBox(v.readAsString());
+            this.WriteToReplMessageBox(v.readAsString(), false);
             return;
         }
 
@@ -573,8 +573,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    WriteToReplMessageBox(s: string): void {
-        return this.vci.writeToReplMessageBox(s);
+    WriteToReplMessageBox(s: string, returnFocus:boolean): void {
+        return this.vci.writeToReplMessageBox(s, returnFocus);
     }
 
     /**
