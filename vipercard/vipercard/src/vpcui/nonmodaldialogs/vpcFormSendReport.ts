@@ -1,10 +1,10 @@
 
-/* auto */ import { VpcSession } from './../../vpc/request/vpcRequest';
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { checkIsProductionBuild, vpcVersion } from './../../ui512/utils/util512Base';
-/* auto */ import { UI512ErrorHandling } from './../../ui512/utils/util512Assert';
+/* auto */ import { UI512ErrorHandling, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
@@ -136,13 +136,13 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
      * send the err report
      */
     async asyncSendErrReport(vci: VpcStateInterface, userdesc: string) {
-        let ses = VpcSession.fromRoot() as VpcSession;
+        let ses = ensureDefined(getVpcSessionTools().fromRoot(), 'session');
 
         /* get the last 30 logged errors, which might be useful. */
         let lastClientLogs = vpcVersion;
         lastClientLogs += '\n' + UI512ErrorHandling.getLatestErrLogs(30).join('\n\n\n\n');
         let info = this.vci.getModel().stack.getLatestStackLineage();
-        let fullStackId = VpcSession.getFullStackId(info.stackOwner, info.stackGuid);
+        let fullStackId = getVpcSessionTools().getFullStackId(info.stackOwner, info.stackGuid);
 
         /* ok to set props on lblStatus, since we have a
         firm reference, if form has been closed is a no-op */

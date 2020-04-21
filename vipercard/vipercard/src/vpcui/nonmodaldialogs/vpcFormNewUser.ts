@@ -1,5 +1,5 @@
 
-/* auto */ import { vpcUsersCreate } from './../../vpc/request/vpcRequest';
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalFormBase } from './vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
@@ -92,7 +92,7 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
         let fn = async () => {
             let result: boolean;
             try {
-                result = await vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email']);
+                result = await getVpcSessionTools().vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email']);
             } catch (e) {
                 this.setStatus(e.toString());
                 return;

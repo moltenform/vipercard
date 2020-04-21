@@ -12,7 +12,7 @@
 /* auto */ import { VpcAppUIToolBase } from './../tools/vpcToolBase';
 /* auto */ import { VpcRuntime } from './../state/vpcState';
 /* auto */ import { VpcSave } from './vpcSave';
-/* auto */ import { VpcSession } from './../../vpc/request/vpcRequest';
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcPresenterEvents } from './vpcPresenterEvents';
 /* auto */ import { VpcPaintRender } from './../modelrender/vpcPaintRender';
@@ -241,7 +241,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
             this.lyrCoverArea.hideMyMessage();
         }
 
-        let ses = VpcSession.fromRoot();
+        let ses = getVpcSessionTools().fromRoot();
         let username = ses ? ses.username : '';
         if (username) {
             this.lyrCoverArea.hideMyMessage();

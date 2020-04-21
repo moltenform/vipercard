@@ -4,7 +4,7 @@
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcRuntime, VpcState } from './../state/vpcState';
 /* auto */ import { VpcExecTop } from './../../vpc/codeexec/vpcScriptExecTop';
-/* auto */ import { VpcSession, vpcStacksGetData } from './../../vpc/request/vpcRequest';
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { VpcOutsideImpl } from './../state/vpcOutsideImpl';
 /* auto */ import { VpcStateInterfaceImpl } from './vpcInterfaceImpl';
@@ -116,7 +116,7 @@ export class VpcIntroProvider {
             serializedSavedData = this.identifier;
         } else if (this.loc === VpcDocumentLocation.FromStackIdOnline) {
             /* ask the server for the data */
-            let got = await vpcStacksGetData(this.identifier);
+            let got = await getVpcSessionTools().vpcStacksGetData(this.identifier);
             serializedSavedData = got.stackdata;
         } else {
             checkThrow(false, 'KG|cannot open from location ' + this.loc);
@@ -218,7 +218,7 @@ export class VpcIntroProvider {
             fullVci.doWithoutAbilityToUndo(() => {
                 let en = new VpcElStackLineageEntry(
                     vci.model.stack.lineageUsernameNull(),
-                    VpcSession.generateStackPartialId(),
+                    getVpcSessionTools().generateStackPartialId(),
                     'untitled'
                 );
 
@@ -266,7 +266,7 @@ export class VpcIntroProvider {
         } else if (this.loc === VpcDocumentLocation.FromStackIdOnline) {
             /* tell the presenter to show a dialog explaining that this is someone else's stack */
             let fn = () => {
-                let ses = VpcSession.fromRoot();
+                let ses = getVpcSessionTools().fromRoot();
                 let username = ses ? ses.username : '';
                 let info = vpcState.vci.getModel().stack.getLatestStackLineage();
                 if (info.stackOwner !== username) {

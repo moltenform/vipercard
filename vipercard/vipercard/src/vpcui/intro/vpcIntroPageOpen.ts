@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcSession } from './../../vpc/request/vpcRequest';
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './vpcIntroProvider';
 /* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
@@ -124,7 +124,7 @@ export class IntroPageOpen extends IntroPageBase {
      * get a list of stacks from the server
      */
     async getListChoicesAsync(prompt: UI512Element) {
-        let ses = VpcSession.fromRoot();
+        let ses = getVpcSessionTools().fromRoot();
         if (!this.listBox) {
             return;
         }

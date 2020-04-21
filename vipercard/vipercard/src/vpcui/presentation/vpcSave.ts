@@ -1,5 +1,6 @@
 
-/* auto */ import { VpcSession, vpcStacksFlagContent } from './../../vpc/request/vpcRequest';
+/* auto */ import { VpcSessionInterface } from './../../vpc/request/vpcRequestBase';
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
@@ -29,7 +30,7 @@ export class VpcSave implements VpcSaveInterface {
      * save to server with a new name
      */
     beginSaveAs() {
-        let ses = VpcSession.fromRoot();
+        let ses = getVpcSessionTools().fromRoot();
         if (ses) {
             this.busy = true;
             Util512Higher.syncToAsyncTransition(
@@ -53,7 +54,7 @@ export class VpcSave implements VpcSaveInterface {
      * save to server
      */
     beginSave() {
-        let ses = VpcSession.fromRoot();
+        let ses = getVpcSessionTools().fromRoot();
         if (ses) {
             this.busy = true;
             Util512Higher.syncToAsyncTransition(
@@ -76,7 +77,7 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * save as, show dialog upon failure
      */
-    protected async goSaveAsAsyncImpl(ses: VpcSession) {
+    protected async goSaveAsAsyncImpl(ses: VpcSessionInterface) {
         let didSave = false;
         try {
             let newStackData = this.pr.getSerializedStack();
@@ -106,7 +107,7 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * save, show dialog upon failure
      */
-    protected async goSaveAsyncImpl(ses: VpcSession) {
+    protected async goSaveAsyncImpl(ses: VpcSessionInterface) {
         let didSave = false;
         try {
             let newStackData = this.pr.getSerializedStack();
@@ -139,7 +140,7 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * stack was already saved, so we can quietly send our updated version
      */
-    protected async goSaveQuietUpdate(ses: VpcSession, stackId: string, stackName: string, newStackData: string) {
+    protected async goSaveQuietUpdate(ses: VpcSessionInterface, stackId: string, stackName: string, newStackData: string) {
         await ses.vpcStacksSave(stackId, newStackData);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
         return true;
@@ -148,7 +149,7 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * ensures 'busy' flag reset
      */
-    protected async goSaveAsAsync(ses: VpcSession) {
+    protected async goSaveAsAsync(ses: VpcSessionInterface) {
         try {
             await this.goSaveAsAsyncImpl(ses);
         } finally {
@@ -159,7 +160,7 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * ensures 'busy' flag reset
      */
-    protected async goSaveAsync(ses: VpcSession) {
+    protected async goSaveAsync(ses: VpcSessionInterface) {
         try {
             await this.goSaveAsyncImpl(ses);
         } finally {
@@ -170,7 +171,7 @@ export class VpcSave implements VpcSaveInterface {
     /**
      * ask the user to choose a new name
      */
-    protected async goSaveAsWithNewName(ses: VpcSession, prevStackName: string, newStackData: string) {
+    protected async goSaveAsWithNewName(ses: VpcSessionInterface, prevStackName: string, newStackData: string) {
         let prevStackNameToShow = coalesceIfFalseLike(prevStackName, 'untitled');
         if (prevStackNameToShow === 'untitled') {
             prevStackNameToShow = 'Untitled ' + Util512Higher.getRandIntInclusiveWeak(1, 100);
@@ -183,7 +184,7 @@ export class VpcSave implements VpcSaveInterface {
             try {
                 /* add new part to stack lineage! */
                 let stack = this.pr.vci.getModel().stack;
-                let newPartialId = VpcSession.generateStackPartialId();
+                let newPartialId = getVpcSessionTools().generateStackPartialId();
                 let en = new VpcElStackLineageEntry(ses.username, newPartialId, newName);
                 stack.appendToStackLineage(en);
 
@@ -238,12 +239,12 @@ export class VpcSave implements VpcSaveInterface {
 
         /* count json saves, send to our server to count */
         let info = this.pr.vci.getModel().stack.getLatestStackLineage();
-        let ses = VpcSession.fromRoot();
+        let ses = getVpcSessionTools().fromRoot();
         let currentUsername = ses ? ses.username : '';
 
         /* telemetry on how often people save stacks */
         Util512Higher.syncToAsyncTransition(
-            VpcSession.vpcStacksCountJsonSaves(info.stackOwner, info.stackGuid, currentUsername),
+            getVpcSessionTools().vpcStacksCountJsonSaves(info.stackOwner, info.stackGuid, currentUsername),
             'count json saves',
             RespondToErr.ConsoleErrOnly
         );
@@ -288,7 +289,7 @@ export class VpcSave implements VpcSaveInterface {
 
         if (choice === 0) {
             try {
-                let ses = VpcSession.fromRoot();
+                let ses = getVpcSessionTools().fromRoot();
                 let currentUsername = ses ? ses.username : '';
                 let info = this.pr.vci.getModel().stack.getLatestStackLineage();
                 if (
@@ -297,7 +298,7 @@ export class VpcSave implements VpcSaveInterface {
                     info.stackOwner !== this.pr.vci.getModel().stack.lineageUsernameNull() &&
                     info.stackOwner !== currentUsername
                 ) {
-                    await vpcStacksFlagContent(info.stackOwner, info.stackGuid, currentUsername);
+                    await getVpcSessionTools().vpcStacksFlagContent(info.stackOwner, info.stackGuid, currentUsername);
                 } else {
                     let e = new Error('Could not get info, or it looks like you own this stack.');
                     throw e;
@@ -339,12 +340,12 @@ export class VpcSave implements VpcSaveInterface {
                 checkThrowInternal(false, lng('lngFirst, go to File->Save to upload the stack.'));
             }
 
-            let ses = VpcSession.fromRoot();
+            let ses = getVpcSessionTools().fromRoot();
             let currentUsername = ses ? ses.username : '';
 
             if (info.stackOwner !== currentUsername) {
                 /* case 3) from a stack we don't own -- don't check if changes need to be saved */
-                return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
+                return getVpcSessionTools().getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
             } else {
                 /* case 4) from a stack we do own */
                 if (this.pr.isDocDirty()) {
@@ -355,7 +356,7 @@ export class VpcSave implements VpcSaveInterface {
                     checkThrowInternal(false, msg);
                 }
 
-                return VpcSession.getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
+                return getVpcSessionTools().getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);
             }
         }
     }

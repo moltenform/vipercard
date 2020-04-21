@@ -1,5 +1,5 @@
 
-/* auto */ import { VpcSession } from './../../vpc/request/vpcRequest';
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcNonModalFormBase } from './../nonmodaldialogs/vpcLyrNonModalHolder';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
@@ -517,7 +517,7 @@ export class VpcMenuActions {
      */
     protected throwIfServerCodeInactive() {
         checkThrowNotifyMsg(
-            VpcSession.enableServerCode,
+            getVpcSessionTools().enableServerCode,
             'Server code currently not enabled. You can still save as a .json file, though.'
         );
     }
