@@ -837,7 +837,12 @@ export class MapKeyToObject<T> {
         return ensureDefined(this.objects[key], '3_|id not found', key);
     }
 
-    find(key: O<string>) {
+    getOrFallback(key:string, fallback:T) {
+        let found = this.objects[key]
+        return found ?? fallback
+    }
+
+    find(key: O<string>):O<T> {
         if (key) {
             return this.objects[key];
         } else {

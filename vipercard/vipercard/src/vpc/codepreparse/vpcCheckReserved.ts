@@ -72,7 +72,7 @@ export class CheckReservedWords {
             return true;
         }
 
-        if (!s.match(/^[A-Za-z$_]/)) {
+        if (!s.match(/^[A-Za-z$_][A-Za-z0-9$_]*$/)) {
             return false;
         }
 

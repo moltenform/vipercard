@@ -647,13 +647,6 @@ alsoReservedWordsList['id'] = true;
 alsoReservedWordsList['number'] = true;
 alsoReservedWordsList['selection'] = true;
 alsoReservedWordsList['target'] = true;
-alsoReservedWordsList['alltext'] = true;
-alsoReservedWordsList['label'] = true;
-alsoReservedWordsList['showlabel'] = true;
-alsoReservedWordsList['singleline'] = true;
-alsoReservedWordsList['defaulttextstyle'] = true;
-alsoReservedWordsList['defaulttextfont'] = true;
-alsoReservedWordsList['defaulttextsize'] = true;
 
 
 /* map word-like tokens to the token type, useful for 

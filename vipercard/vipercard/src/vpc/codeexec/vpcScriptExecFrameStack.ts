@@ -766,7 +766,7 @@ export class VpcExecFrameStack {
             this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
         } else if (directive === 'viseffect') {
             let nextCard = curFrame.locals.get(ensureDefined(variable, ''));
-            let spec = this.globals.get('$currentVisEffect').readAsString().split('|');
+            let spec = this.globals.getOrFallback('$currentVisEffect', VpcVal.Empty).readAsString().split('|');
             this.globals.set('$currentVisEffect', VpcValS(''));
             if (spec.length >= 4) {
                 let parsed = VpcVisualEffectSpec.getVisualEffect(spec);

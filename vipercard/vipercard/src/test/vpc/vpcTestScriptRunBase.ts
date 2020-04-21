@@ -348,13 +348,15 @@ ${codeBefore}\n${codeIn}\n`,
         beforeLine: string,
         s: string,
         expectErrMsg?: string,
-        expectErrLine?: number
+        expectErrLine?: number,
+        codeBefore = ''
     ) {
+        assertWarn(!s.startsWith('put ') && !s.startsWith('set '), "this is supposed to be an expression but it looks like a command")
         this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
         let codeIn = `global testresult
 ${beforeLine}
 put ${s} into testresult`;
-        this.runGeneralCode('', codeIn, expectErrMsg, expectErrLine);
+        this.runGeneralCode(codeBefore, codeIn, expectErrMsg, expectErrLine);
         return this.vcstate.runtime.codeExec.globals.get('testresult');
     }
 

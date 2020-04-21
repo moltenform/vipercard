@@ -2,7 +2,7 @@
 /* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
-/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { longstr, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -1170,4 +1170,25 @@ end myCompute`
         ]
     ];
     h.testBatchEvaluate(batch);
+
+    /* the 'result' must be cleared out between calls */
+    let codeBefore = `
+function sometimesSetResult p
+    if p>=1 then return p * 2
+end sometimesSetResult`
+let got = h.testOneEvaluate('', 'sometimesSetResult(1) & sometimesSetResult(0) & "a"', undefined, undefined, codeBefore )
+assertWarnEq('2a', got.readAsString(), '')
+    codeBefore = `
+on sometimesSetResult p
+    if p>=1 then return p * 2
+end sometimesSetResult`
+got = h.testOneEvaluate('', 'sometimesSetResult(1) & sometimesSetResult(0) & "a"', undefined, undefined, codeBefore )
+assertWarnEq('2a', got.readAsString(), '')
+codeBefore = `
+function sometimesSetResult p
+    if length(the result) > 0 then return "hmm"
+    if p>=1 then return p * 2
+end sometimesSetResult`
+ got = h.testOneEvaluate('', 'sometimesSetResult(1) & sometimesSetResult(0) & "a"', undefined, undefined, codeBefore )
+assertWarnEq('2a', got.readAsString(), '')
 });

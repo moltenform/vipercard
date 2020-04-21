@@ -65,6 +65,8 @@ export class VariableCollectionConstants extends VarCollection {
         this.add('false', VpcValS('false'));
         this.add('up', VpcValS('up'));
         this.add('down', VpcValS('down'));
+        this.add('left', VpcValS('left'));
+        this.add('right', VpcValS('right'));
         this.add('pi', VpcValS('3.14159265358979323846'));
         this.add('quote', VpcValS('"'));
         this.add('space', VpcValS(' '));
@@ -74,6 +76,19 @@ export class VariableCollectionConstants extends VarCollection {
         this.add('cr', VpcValS('\n'));
         this.add('formfeed', VpcValS('\x0C'));
         this.add('linefeed', VpcValS('\n'));
+
+        /**
+         * in the original product you can say
+         * 'set the style of cd btn 1 to roundrect'
+         * and it works, even though roundrect isn't
+         * a constant. it's because unset variables
+         * are considered to contain their names.
+         * Should I add preparse in 'set' to
+         * only treat these as constants in that context?
+         * no, because for compatibility, code like
+         * 'if the style of cd btn 1 is roundrect' should
+         * still be valid.
+         */
 
         /* text style */
         this.add('plain', VpcValS('plain'));
@@ -99,8 +114,6 @@ export class VariableCollectionConstants extends VarCollection {
 
         /* textalign */
         this.add('center', VpcValS('center'));
-        this.add('left', VpcValS('left'));
-        this.add('right', VpcValS('right'));
         this.add('centre', VpcValS('center'));
 
         /* field style */

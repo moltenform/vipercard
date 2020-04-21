@@ -154,21 +154,52 @@ t.test('checkLexing', () => {
         ['put 9 into a\\a', '9'] /* used to be disallowed */,
         ['put 9 into aa\\aa', '9'],
         ['put 9 into a4\\a4', '9'],
-        ['put 9 into number\\number', '9'],
 
-        /* dest needs to be a token of type TkIdentifier */
+        /* most token types can't be used as a var name */
         ['put 9 into length\\0', 'ERR:name not'],
         ['put 9 into if\\0', 'ERR:name not allowed'],
         ['put 9 into 4\\0', 'ERR:parse error'],
-        ['put 9 into autohilite\\autohilite', '9']
+        ['put 9 into short', 'PREPARSEERR:'],
+        ['put 9 into long', 'PREPARSEERR:'],
+        ['put 9 into id', 'PREPARSEERR:'],
+        ['put 9 into in', 'PREPARSEERR:'],
+        ['put 9 into and', 'PREPARSEERR:'],
+
+        /* constants can't be used as a var name */
+        ['put 9 into pi\\0', 'ERR:a constant'],
+        ['put 9 into space\\0', 'ERR:a constant'],
+        ['put 9 into left\\0', 'ERR:a constant'],
+        ['put 9 into underline\\0', 'ERR:a constant'],
+        ['put 9 into radio\\0', 'ERR:a constant'],
+
+        /* other reserved words can't be used as a var name */
+        ['put 9 into dialogs\\0', 'ERR:name not allowed'],
+        ['put 9 into set\\0', 'ERR:name not allowed'],
+        ['put 9 into pass\\0', 'ERR:name not allowed'],
+        ['put 9 into exit\\0', 'ERR:name not allowed'],
+
+        /* property names can be used as a var name, even
+        if they are a different token type.
+        go through every HAnyAllowedVariableName */
+        ['put 9 into autohilite\\autohilite', '9'],
+        ['put 9 into number\\number', '9'],
+        ['put 9 into a\\a', '9'],
+        ['put 9 into autotab\\autotab', '9'],
+        ['put 9 into enabled\\enabled', '9'],
+        ['put 9 into textfont\\textfont', '9'],
+        ['put 9 into label\\label', '9'],
+        ['put 9 into alltext\\alltext', '9'],
+
+        /* different tkidentifiers */
+        ['put 9 into _underscore_ok\\_underscore_ok', 'PREPARSEERR:lex err'],
+        ['put 9 into underscore_ok\\underscore_ok', '9'],
+        ['put 9 into $dollar$ok\\$dollar$ok', 'PREPARSEERR:lex err'],
+        ['put 9 into dollar$ok\\dollar$ok', '9'],
+        ['put 9 into 1var1\\1var1', 'PREPARSEERR:lex err'],
+        ['put 9 into var1\\var1', '9'],
     ];
 
     h.testBatchEvaluate(batch);
-    h.assertPreparseErrLn('put 9 into short', '', 3);
-    h.assertPreparseErrLn('put 9 into long', '', 3);
-    h.assertPreparseErrLn('put 9 into id', '', 3);
-    h.assertPreparseErrLn('put 9 into in', '', 3);
-    h.assertPreparseErrLn('put 9 into and', '', 3);
 
     /* string literal cannot contain contline symbol since it has a newline */
     h.assertPreparseErrLn('put "a\nb" into test', '', 3);

@@ -86,10 +86,11 @@ def getPatternFromTk(tk):
     theRe += 'i' # everything is case insensitive
     return theRe
 
-def getListOfWordLikeTokens(tokens, includeLongListOfPropertyNames):
+def getListOfWordLikeTokens(tokens, includeAllProperties):
     skipped = 0
+    propertiesToSkip = ('tkAllUnaryPropertiesIfNotAlready', 'tkAllNullaryOrUnaryPropertiesIfNotAlready', 'tkUnaryVipercardProperties')
     for tk in tokens:
-        if not includeLongListOfPropertyNames and (tk.name == 'tkAllUnaryPropertiesIfNotAlready' or tk.name == 'tkAllNullaryOrUnaryPropertiesIfNotAlready'):
+        if not includeAllProperties and tk.name in propertiesToSkip:
             skipped += 1
             continue
         if tk.type == 'OneOfWords':
@@ -114,8 +115,8 @@ def getListOfWordLikeTokens(tokens, includeLongListOfPropertyNames):
                 warn(f'this looks like a word, maybe use OneOfWords and not regex?', tk.val, tk.origLine)
         else:
             assertTrue('unknown type', tk.type)
-    if not includeLongListOfPropertyNames:
-        assertEq(2, skipped, 'expected to skip two, were these renamed?')
+    if not includeAllProperties:
+        assertEq(3, skipped, 'expected to skip prooperties- were any of these renamed?\n', propertiesToSkip)
 
 def addToListOfReservedWords(st, out, tokens):
     out.append('')
