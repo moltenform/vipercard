@@ -125,9 +125,9 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
         assertTrue(!idSpecific || pos === OrdinalOrPosition.This, 'specifying an id, should set to This');
-        let targetCardId = idSpecific ? idSpecific : this.vci.getModel().getCardRelative(pos);
+        let targetCardId = idSpecific ?? this.vci.getModel().getCardRelative(pos);
         if (this.getTool() === VpcTool.Browse) {
-            this.vci.getCodeExec().runMsgBoxCodeOrThrow(`go to card id ${idSpecific}`, tostring(this.getCurrentCardNum()), false);
+            this.vci.getCodeExec().runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
         } else {
             this.setCurCardNoOpenCardEvt(targetCardId);
         }
@@ -216,6 +216,8 @@ export class VpcPresenter extends VpcPresenterInit {
             if (velId === 'messagebox') {
                 if (this.lyrNonModalDlgHolder.current && this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox) {
                     this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
+                } else {
+                    this.answerMsg(msg)
                 }
 
                 return;
