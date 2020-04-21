@@ -89,7 +89,8 @@ export class VpcGettableSerialization {
 
     protected static okNotToSee: { [key: string]: boolean } = {
         sharedtext: true,
-        sharedhilite: true
+        sharedhilite: true,
+        marked: true,
     };
 
     /**

@@ -97,17 +97,18 @@ export enum VpcChunkPreposition {
 
 /**
  * type of vpc element
+ * this is serialized -- do not change the order
  */
 export enum VpcElType {
     __isUI512Enum = 1,
     __UI512EnumCapitalize,
-    Unknown,
     Btn,
     Fld,
     Card,
     Bg,
     Stack,
     Product,
+    Unknown,
     __AlternateForm__Button = Btn,
     __AlternateForm__Field = Fld,
     __AlternateForm__Cd = Card,

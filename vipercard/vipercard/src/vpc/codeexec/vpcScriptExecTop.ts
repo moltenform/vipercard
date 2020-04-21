@@ -340,6 +340,7 @@ export class VpcExecTop {
      */
     static checkNoRepeatedIds(stack: VpcElStack) {
         let idsSeen = new Map<string, boolean>();
+        idsSeen.set(stack.parentId, true)
         for (let vel of stack.iterEntireStack()) {
             if (idsSeen.has(vel.id)) {
                 /* use assertwarn, not throw, because it's sure to show

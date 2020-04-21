@@ -26,11 +26,11 @@ export class VpcElStack extends VpcElBase {
     /* cached setters */
     static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
 
-    /* stacks are always given this id. */
-    static readonly initStackId = '900';
-
     /* productopts are always given this id. */
-    static readonly initProductOptsId = '901';
+    static readonly initProductOptsId = '920';
+
+    /* stacks are always given this id. */
+    static readonly initStackId = '921';
 
     /* initial value for counter used for internal script line numbers. */
     static readonly initIncreasingNumberId = 50000;
@@ -223,6 +223,7 @@ export class VpcElStack extends VpcElBase {
 
     /**
      * iterate through a stack
+     * does not include productopts.
      */
     *iterEntireStack(): IterableIterator<VpcElBase> {
         yield this;

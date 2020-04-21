@@ -8,7 +8,7 @@
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { AnyParameterCtor, Util512 } from './../../ui512/utils/util512';
+/* auto */ import { AnyParameterCtor, Util512, cast } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -41,14 +41,13 @@ export class VpcScriptExecuteStatementHelpers {
      * click, drag implementation
      */
     clickOrDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, expectSee: string) {
-        let nm = tkstr.RuleLvl4Expression;
         let argsGiven: number[] = [];
-        let ar = vals.vals[nm];
-        if (ar && ar.length) {
-            let arVals = ar as VpcVal[];
-            for (let i = 0, len = arVals.length; i < len; i++) {
-                let item = arVals[i];
+        checkThrow(vals.vals[tkstr.RuleHBuiltinCmdDrag_1] && vals.vals[tkstr.RuleHBuiltinCmdDrag_1].length, "no RuleHBuiltinCmdDrag_1" )
+        for (let big of vals.vals[tkstr.RuleHBuiltinCmdDrag_1]) {
+            let a1 = cast(IntermedMapOfIntermedVals, big)
+            for (let item of a1.vals[tkstr.RuleLvl4Expression]) {
                 assertTrue(item instanceof VpcVal, 'JO|every item must be a vpcval');
+                /* confirmed in emulator that floats are not accepted here */
                 let coords = item.isIntegerList(2);
                 if (coords) {
                     Util512.extendArray(argsGiven, coords);

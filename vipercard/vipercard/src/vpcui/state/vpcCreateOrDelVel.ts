@@ -119,14 +119,14 @@ export abstract class UndoableActionCreateOrDelVel {
         let model = vci.getModel();
         if (!model.productOpts) {
             vci.doWithoutAbilityToUndo(() => {
-                model.productOpts = vci.rawCreate(VpcElStack.initStackId, '(VpcElProductOpts has no parent)', VpcElProductOpts);
+                model.productOpts = vci.rawCreate(VpcElStack.initProductOptsId, '(VpcElProductOpts has no parent)', VpcElProductOpts);
             });
         }
 
         if (!model.stack) {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
-                model.stack = vci.rawCreate(VpcElStack.initProductOptsId, model.productOpts.id, VpcElStack);
+                model.stack = vci.rawCreate(VpcElStack.initStackId, model.productOpts.id, VpcElStack);
                 if (createFirstCard) {
                     let firstBg = vci.createVel(model.stack.id, VpcElType.Bg, -1);
                     vci.createVel(firstBg.id, VpcElType.Card, -1);
