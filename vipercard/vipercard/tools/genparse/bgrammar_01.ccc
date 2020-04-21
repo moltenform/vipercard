@@ -40,7 +40,7 @@
 // changes from original product:
 //      you can't read from a variable you have never written to
 //      NEW FEATURE: numbers can be written as 1e10 and 1e-10
-//      NEW FEATURE: block comments  --[[ to ]
+//      NEW FEATURE: block comments  --[[ to ]]
 //      NEW FEATURE: get the number of btns in cd 2
 //      continued lines can use either \ or logical not
 //      you can use != instead of <>, you can use == instead of =
@@ -85,9 +85,8 @@
 
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
 tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/
-// comments are highest precedence. similar but not the same as lua. --[[ to ] x5d is ]
-// not using .*? because that causes slow backtracking 
-tkBlockComment=/--\[\[[^\x5d]+\x5d/|||||group: chevrotain.Lexer.SKIPPED,line_breaks:true
+// block comments, based on lua. --[[ to ]]
+tkBlockComment=/--\[\[.*?\]\]/|||||group: chevrotain.Lexer.SKIPPED,line_breaks:true
 // line comment
 tkLineComment=/--[^\n]*/|||||group: chevrotain.Lexer.SKIPPED
 // whitespace or a line-continuation. \xC2 is logical not in mac-roman encoding
@@ -213,6 +212,7 @@ tkIdentifier=/[a-zA-Z][0-9a-zA-Z$_]*/
 // note use of Lvl6Expression - confirmed in product. you have to say 'cd btn (1+1)' and not 'cd btn 1+1'
 // note that "btn 1" refers to a card button and "fld 1" refers to a bg fld. so you should typically specify.
 // in software we'll stop you from saying "first cd btn 1"
+// need to remember through which card it was accessed, "bg fld 1 of card 2" is different than "bg fld 1 of card 1"
 // note that saying "of card" just means "of this card". "fld 1 of this card" still refers to a bg fld.
 // tkStackAtEndOfLine is confirmed in emulator, for example 'answer the id of cd 1 of bg'
 // interestingly, back and forth are cards. "answer the id of back" works.

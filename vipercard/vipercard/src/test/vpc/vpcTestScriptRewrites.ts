@@ -58,6 +58,163 @@ t.test('testcompareRewrittenCodeHelper', () => {
         h.compareRewrittenCode(inp, 'ERR:');
     });
 });
+t.test('rewrites-empty lines are ok', () => {
+    let inp = `
+        code1
+
+
+        code2`;
+        let expected = `
+    code1~
+    code2~`;
+        h.compareRewrittenCode(inp, expected);
+    inp = `
+        code1 -- a comment here
+        -- comment.
+        code2
+
+        `;
+    expected = `
+    code1~
+    code2~`;
+        h.compareRewrittenCode(inp, expected);
+    inp = `
+        code1 -- a comment here
+        -- comment.
+\t\t
+        code2\t\t
+
+        `;
+    expected = `
+    code1~
+    code2~`;
+        h.compareRewrittenCode(inp, expected);
+});
+t.test('rewrites-make lowercase', () => {
+    let inp = `put aBcDe into TheVar`;
+    let expected = `put~abcde~^^~into~^^~thevar~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put "aBcDe" into TheVar`;
+    expected = `put~"aBcDe"~^^~into~^^~thevar~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `PUT aBcDe INTO THEVAR`;
+    expected = `put~abcde~^^~into~^^~thevar~`;
+    h.compareRewrittenCode(inp, expected);
+});
+t.test('rewrites-cd and bg part', () => {
+    t.say(/*——————————*/ 'number of should be unaffected');
+    let inp = `put the number of btns into x`;
+    let expected = `put~the~number~of~btns~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put the number of flds into x`;
+    expected = `put~the~number~of~flds~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put the number of cd btns into x`;
+    expected = `put~the~number~of~cd~btns~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put the number of cd flds into x`;
+    expected = `put~the~number~of~cd~flds~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    t.say(/*——————————*/ 'btn-insert it if needed');
+    inp = `put btn 1 into x`;
+    expected = `put~cd~btn~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put button 1 into x`;
+    expected = `put~cd~button~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put cd button 1 into x`;
+    expected = `put~cd~button~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put card button 1 into x`;
+    expected = `put~card~button~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put bg button 1 into x`;
+    expected = `put~bg~button~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put background button 1 into x`;
+    expected = `put~background~button~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put there is a btn 1 into x`;
+    expected = `put~there~is~a~cd~btn~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put there is a button 1 into x`;
+    expected = `put~there~is~a~cd~button~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put 1 > btn 1 into x`;
+    expected = `put~1~>~cd~btn~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    t.say(/*——————————*/ 'btn-insert it if needed');
+    inp = `put fld 1 into x`;
+    expected = `put~bg~fld~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put field 1 into x`;
+    expected = `put~bg~field~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put cd field 1 into x`;
+    expected = `put~cd~field~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put card field 1 into x`;
+    expected = `put~card~field~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put bg field 1 into x`;
+    expected = `put~bg~field~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put background field 1 into x`;
+    expected = `put~background~field~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put there is a fld 1 into x`;
+    expected = `put~there~is~a~bg~fld~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put there is a field 1 into x`;
+    expected = `put~there~is~a~bg~field~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+    inp = `put 1 > fld 1 into x`;
+    expected = `put~1~>~bg~fld~1~^^~into~^^~x~`;
+    h.compareRewrittenCode(inp, expected);
+});
+t.test('rewrites-synonyms', () => {
+    let inp = `mycode the rect of cd btn 1`;
+    let exp = `mycode~the~rectangle~of~cd~btn~1~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the rectangle of cd btn 1`;
+    exp = `mycode~the~rectangle~of~cd~btn~1~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the hilight of cd btn 1`;
+    exp = `mycode~the~hilite~of~cd~btn~1~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the highlight of cd btn 1`;
+    exp = `mycode~the~hilite~of~cd~btn~1~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the hilite of cd btn 1`;
+    exp = `mycode~the~hilite~of~cd~btn~1~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the loc of cd btn 1`;
+    exp = `mycode~the~location~of~cd~btn~1~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the itemdel`;
+    exp = `mycode~the~itemdel~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the itemdelimiter`;
+    exp = `mycode~the~itemdelimiter~`;
+    h.compareRewrittenCode(inp, exp);
+});
+t.test('rewrites-date', () => {
+    let inp = `mycode the long date`;
+    let exp = `mycode~the~long~date~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the short date`;
+    exp = `mycode~the~short~date~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the English date`;
+    exp = `mycode~the~long~date~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the english date`;
+    exp = `mycode~the~long~date~`;
+    h.compareRewrittenCode(inp, exp);
+    inp = `mycode the ENGLISH date of x`;
+    exp = `mycode~the~long~date~of~x~`;
+    h.compareRewrittenCode(inp, exp);
+})
 t.test('expand if + if else', () => {
     let inp = `
 test001
@@ -691,7 +848,6 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
             o => o.allImages ?? getEnumToStrOrFallback(VpcLineCategory, o.ctg)
         );
         got = got.map(o => o.replace(reSyntaxMark, '^^'));
-        got[0] = got[0].replace(/,HandlerStart/g, 'HandlerStart');
         let exp = expected
             .split('\n')
             .map(s => s.trim());
@@ -699,7 +855,7 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
         if (util512Sort(exp, got) !== 0) {
             assertWarn(
                 false,
-                `\nexpected\n${exp.join('\n')}\nbut got\n',${got.join(
+                `\nexpected\n${exp.join('\n')}\nbut got,\n'${got.join(
                     '\n'
                 )}\n\n'\ncontext\n\n`,
                 script

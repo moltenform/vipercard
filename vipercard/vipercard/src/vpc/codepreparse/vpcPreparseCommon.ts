@@ -21,81 +21,6 @@ export class MakeLowerCase {
 }
 
 /**
- * efficiently splits an array of tokens by line,
- * producing an iterator
- */
-export class SplitIntoLinesAndMakeLowercase {
-    index = 0;
-    constructor(protected instream: ChvITk[], protected makeLower: MakeLowerCase) {}
-
-    /* splits the list by newlines */
-    nextWithNewlines(): O<ChvITk[]> {
-        let currentLine: ChvITk[] = [];
-        let limit = new LoopLimit(CodeLimits.MaxTokensInLine, 'maxTokensInLine');
-        while (limit.next()) {
-            let tk = this.instream[this.index];
-            this.index += 1;
-
-            /* have we reached the end of the stream? */
-            if (tk === undefined) {
-                return currentLine.length ? currentLine : undefined;
-            }
-
-            if (isTkType(tk, tks.tkNewLine)) {
-                return currentLine;
-            } else {
-                this.makeLower.go(tk);
-                currentLine.push(tk);
-            }
-        }
-
-        return undefined;
-    }
-
-    /* get the next line */
-    next(): O<ChvITk[]> {
-        while (true) {
-            let next = this.nextWithNewlines();
-            if (next === undefined) {
-                return undefined;
-            } else if (next && next.length === 0) {
-                continue; /* skip empty lines */
-            } else if (next && next.length === 1 && isTkType(next[0], tks.tkNewLine)) {
-                continue; /* skip only newlines */
-            } else {
-                return next;
-            }
-        }
-    }
-}
-
-/**
- * every line of code is assigned a category
- */
-export enum VpcLineCategory {
-    __isUI512Enum = 1,
-    Invalid,
-    HandlerStart,
-    HandlerEnd,
-    HandlerExit,
-    ProductExit,
-    HandlerPass,
-    ReturnExpr,
-    IfStart,
-    IfElsePlain,
-    IfEnd,
-    RepeatExit,
-    RepeatNext,
-    RepeatForever,
-    RepeatEnd,
-    DeclareGlobal,
-    Statement,
-    IsInternalvpcmessagesdirective,
-    CallDynamic,
-    CallHandler
-}
-
-/**
  * enforce an upper bound on the number of iterations in a loop
  */
 export class LoopLimit {
@@ -195,6 +120,82 @@ export class VpcCodeLine implements IVpcCodeLine {
         }
     }
 }
+
+/**
+ * efficiently splits an array of tokens by line,
+ * producing an iterator
+ */
+export class SplitIntoLinesAndMakeLowercase {
+    index = 0;
+    constructor(protected instream: ChvITk[], protected makeLower: MakeLowerCase) {}
+
+    /* splits the list by newlines */
+    nextWithNewlines(): O<ChvITk[]> {
+        let currentLine: ChvITk[] = [];
+        let limit = new LoopLimit(CodeLimits.MaxTokensInLine, 'maxTokensInLine');
+        while (limit.next()) {
+            let tk = this.instream[this.index];
+            this.index += 1;
+
+            /* have we reached the end of the stream? */
+            if (tk === undefined) {
+                return currentLine.length ? currentLine : undefined;
+            }
+
+            if (isTkType(tk, tks.tkNewLine)) {
+                return currentLine;
+            } else {
+                this.makeLower.go(tk);
+                currentLine.push(tk);
+            }
+        }
+
+        return undefined;
+    }
+
+    /* get the next line */
+    next(): O<ChvITk[]> {
+        while (true) {
+            let next = this.nextWithNewlines();
+            if (next === undefined) {
+                return undefined;
+            } else if (next && next.length === 0) {
+                continue; /* skip empty lines */
+            } else if (next && next.length === 1 && isTkType(next[0], tks.tkNewLine)) {
+                continue; /* skip only newlines */
+            } else {
+                return next;
+            }
+        }
+    }
+}
+
+/**
+ * every line of code is assigned a category
+ */
+export enum VpcLineCategory {
+    __isUI512Enum = 1,
+    Invalid,
+    HandlerStart,
+    HandlerEnd,
+    HandlerExit,
+    ProductExit,
+    HandlerPass,
+    ReturnExpr,
+    IfStart,
+    IfElsePlain,
+    IfEnd,
+    RepeatExit,
+    RepeatNext,
+    RepeatForever,
+    RepeatEnd,
+    DeclareGlobal,
+    Statement,
+    IsInternalvpcmessagesdirective,
+    CallDynamic,
+    CallHandler
+}
+
 
 /**
  * we could tag all exceptions and attach line information.

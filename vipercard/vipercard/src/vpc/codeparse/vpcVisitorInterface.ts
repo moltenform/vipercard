@@ -113,8 +113,8 @@ export interface VpcCompleteVisitor {
 
 /* for nicer auto-complete in a visitor implementation */
 export interface VisitingContext {
-    /* you can add something like [index: string]: any if you want to */
-    /* silence type errors during development */
+/* you can add something like [index: string]: any if you want to */
+/* silence type errors during development */
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];

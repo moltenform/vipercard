@@ -24,7 +24,7 @@ export namespace VpcRewritesGlobal {
         loc: 'location',
         botright: 'bottomright'
         /* itemdel and itemdelimiter too, but it's
-        a nullary prop, see productopts */
+        a nullary prop, so it's done in productopts */
     };
 
     /**
@@ -45,10 +45,11 @@ export namespace VpcRewritesGlobal {
 
         return line;
     }
+
     /**
      * from "short id of fld 1" to "short id of bg fld 1"
      * do this in software, at parse time it is difficult to clear
-     * the ambiguity. the name of cd fld 1 could mean either.
+     * the ambiguity: the name of cd fld 1 could be parsed either way.
      */
     export function rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
         let ret: ChvITk[] = [];

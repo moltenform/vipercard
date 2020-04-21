@@ -4,7 +4,7 @@
 from ts_parsing import *
 
 def whichLicense(f):
-    if '/bridge/' in f.replace('\\', '/'):
+    if '/bridge/' in f.lower().replace('\\', '/'):
         return None
     
     isMIT = {}
