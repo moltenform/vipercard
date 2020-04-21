@@ -9,8 +9,8 @@
  *
  * We don't want any exception to be accidentally swallowed silently.
  * It's not enough to just put an alert in assertTrue,
- * because this won't cover base javascript errors like null-reference.
- * it's important to show errors visibly so not to silently fall into
+ * because this won't cover base javascript errors like null-dereference.
+ * It's important to show errors visibly so not to silently fall into
  * a bad state, and also we can log into local storage.
  * So, EVERY TOP OF THE CALL STACK must catch errors and send them to respondUI512Error
  * This includes:
@@ -28,30 +28,27 @@
  *              already ok because it's under the drawframe event.
  */
 
-/**
- * If I wanted true custom Error objects,
- * approaches like https://github.com/bjyoungblood/es6-error
- * look good, but I don't think I need that now.
- *
- * throwing an assert does *not* need to show an alert or
- * record error information. in any context, there should be a
- * catch() at the top, which we need in any case to catch
- * generic javascript exceptions.
- */
 
 /**
  * It's useful to distinguish between errors we've thrown
  * and generic javascript errors.
- * the errors we deal with will be true Error,
- * with no es6 custom-error-inheritance,
- * but they will be the same shape as types Util512BaseErr,
- * although instanceof won't know it.
+ * 
+ * Currently we use a plain Error object and expando our
+ * own properties onto it. Works for everything except
+ * instanceof, because it's not actually a different class.
+ * If I wanted true custom Error objects I'd have to navigate
+ * a lot of browser differences, see 
+ * https://github.com/bjyoungblood/es6-error
  */
 export class Util512BaseErr {
     isUtil512BaseErr = true;
     origClass = Util512BaseErr.name;
     protected constructor(public message: string, public level: string) {}
 
+    /**
+     * cast an Error instance to a Util512BaseErr, or return undefined
+     * if the Error isn't marked as that classs.
+     */
     static errAsCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
         let fld = 'is' + nm;
         if ((e as any)[fld]) {
@@ -61,12 +58,19 @@ export class Util512BaseErr {
         }
     }
 
+    /**
+     * cast a class to an Error
+     */
     clsAsErr() {
         assertWarn((this as any).isUtil512BaseErr, '');
         assertWarn((this as any).message, '');
         return (this as any) as Error;
     }
 
+    /**
+     * take the information from another Error object
+     * and put it into the information in this object.
+     */
     addErr(e: Error) {
         (this as any).message += '\n' + e.message;
         (this as any).stack = e.stack;
@@ -74,6 +78,11 @@ export class Util512BaseErr {
         (this as any).sourceURL = (e as any).sourceURL;
     }
 
+    /**
+     * create an Error instance that also acts like a 
+     * Util512BaseErr instance (it isn't really, but because
+     * it has the same shape, it works fine)
+     */
     static createErrorImpl<T extends Util512BaseErr>(
         fnCtor: (...args: unknown[]) => T,
         ...params: unknown[]
@@ -87,10 +96,16 @@ export class Util512BaseErr {
         return cls;
     }
 
+    /**
+     * workaround because constructor is protected
+     */
     protected static gen(message: string, level: string) {
         return new Util512BaseErr(message, level);
     }
 
+    /**
+     * create a Util512BaseErr (or at least something that acts like one)
+     */
     static createError(...params: unknown[]) {
         return Util512BaseErr.createErrorImpl(Util512BaseErr.gen, ...params);
     }
@@ -125,6 +140,9 @@ export class Util512Message extends Util512BaseErr {
     }
 }
 
+/**
+ * helper for making a Util512BaseErr, at any level
+ */
 function makeUtil512BaseErrGeneric(
     firstMsg: string,
     level: string,
@@ -136,6 +154,9 @@ function makeUtil512BaseErrGeneric(
     return Util512BaseErr.createError(msg, level);
 }
 
+/**
+ * make a Util512BaseErr
+ */
 export function make512Error(msg: string, s1?: unknown, s2?: unknown, s3?: unknown) {
     return makeUtil512BaseErrGeneric(msg, 'ui512', s1, s2, s3);
 }
@@ -307,7 +328,7 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
     }
 
     /* let's always show at least some type of dialog,
-    unless user has silenced it. */
+    unless user has explicitly silenced it. */
     if (!(warn && UI512ErrorHandling.silenceWarnings)) {
         UI512ErrorHandling.silenceWarningsAndMoreCount += 1;
         if (logOnly || UI512ErrorHandling.silenceWarningsAndMore) {

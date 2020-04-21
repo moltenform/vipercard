@@ -6,6 +6,10 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 
+/**
+ * typescript utilities
+ * contains utilities like RNG that aren't as straightforward to test.
+ */
 export class Util512Higher {
     /**
      * weakUuid, by broofa

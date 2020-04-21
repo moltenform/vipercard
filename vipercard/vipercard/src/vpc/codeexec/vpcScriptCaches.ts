@@ -103,6 +103,11 @@ export class VpcCacheParsedCST {
 export class VpcCacheParsedAST {
     cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyScripts);
     constructor(public idGen: CountNumericId) {}
+
+    /**
+     * if there is a lex error, preparse error or syntax error, throws.
+     * parse errors and runtime errors will not be seen until later
+     */
     protected getParsedCodeCollectionOrThrow(code: string, velIdForErrMsg: string): VpcParsedCodeCollection {
         VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
@@ -127,8 +132,10 @@ export class VpcCacheParsedAST {
         }
     }
 
-    /* parse+compile code, and find a handler.
-        if the handler isn't found, returns undefined for the 2nd item */
+    /**
+     * parse+compile code, and find a handler.
+     * if the handler isn't found, returns undefined for the 2nd item
+     */
     getHandlerOrThrow(
         code: string,
         handlername: string,

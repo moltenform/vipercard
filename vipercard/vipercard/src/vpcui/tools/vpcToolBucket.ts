@@ -9,6 +9,9 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/**
+ * a bucket (aka floodfill) tool
+ */
 export class VpcAppUIToolBucket extends VpcAppUIToolBase {
     /**
      * respond to mouse down event

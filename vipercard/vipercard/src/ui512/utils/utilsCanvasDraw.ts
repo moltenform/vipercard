@@ -6,8 +6,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-export type DrawableImage = HTMLCanvasElement | HTMLImageElement;
-
 /**
  * wrap a canvas element.
  */
@@ -546,6 +544,11 @@ export class RectUtils {
         }
     }
 }
+
+/**
+ * either of these can be drawn onto a canvas
+ */
+export type DrawableImage = HTMLCanvasElement | HTMLImageElement;
 
 /**
  * for determining overlap between two rectangles

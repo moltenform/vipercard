@@ -254,6 +254,12 @@ export class VpcExecTop {
         }
     }
 
+    /**
+     * respond to an exception when running a script.
+     * because the error is likely from the last line that
+     * was encountered, we'll attach the information from
+     * VpcCurrentScriptStage to the error.
+     */
     protected handleScriptException(e: Error, context: string) {
         this.forceStopRunning();
 

@@ -612,8 +612,15 @@ export class VpcErr extends Util512BaseErr {
     scriptErrLine: O<number>;
     scriptErrVelid: O<string>;
     lineObj: O<IVpcCodeLine>;
-    dynamicCodeOrigin: O<[string, number]>;
     stage = VpcErrStage.Unknown;
+
+    /**
+     * for example, when you say 'send "#$@#$@#" to cd btn 1'
+     * the code is run in the context of cd btn 1,
+     * but the resulting script error should actually be
+     * shown to originate from the original line. 
+     */
+    dynamicCodeOrigin: O<[string, number]>;
 
     protected static gen(message: string, level: string) {
         return new VpcErr(message, level);

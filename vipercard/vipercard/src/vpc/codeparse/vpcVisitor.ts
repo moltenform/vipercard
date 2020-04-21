@@ -576,24 +576,25 @@ class CachedObjects {
     parser: O<VpcChvParser> = undefined;
     visitor: O<VpcVisitorInterface> = undefined;
 
-    static staticCache = new CachedObjects();
+    /* singleton */
+    static inst = new CachedObjects();
 }
 
 /**
  * retrieve cached objects, creating if needed
  */
 export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser] {
-    if (!CachedObjects.staticCache.lexer) {
-        CachedObjects.staticCache.lexer = new chevrotain.Lexer(allVpcTokens, {
+    if (!CachedObjects.inst.lexer) {
+        CachedObjects.inst.lexer = new chevrotain.Lexer(allVpcTokens, {
             ensureOptimizations: true
         });
     }
 
-    if (!CachedObjects.staticCache.parser) {
-        CachedObjects.staticCache.parser = new VpcChvParser();
+    if (!CachedObjects.inst.parser) {
+        CachedObjects.inst.parser = new VpcChvParser();
     }
 
-    return [CachedObjects.staticCache.lexer, CachedObjects.staticCache.parser];
+    return [CachedObjects.inst.lexer, CachedObjects.inst.parser];
 }
 
 /**
@@ -602,10 +603,10 @@ export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser] {
  */
 export function getChvVisitor(outside: OutsideWorldRead): VpcVisitorInterface {
     let parser = getParsingObjects()[1];
-    if (!CachedObjects.staticCache.visitor) {
-        CachedObjects.staticCache.visitor = createVisitor(parser);
+    if (!CachedObjects.inst.visitor) {
+        CachedObjects.inst.visitor = createVisitor(parser);
     }
 
-    CachedObjects.staticCache.visitor.outside = outside;
-    return CachedObjects.staticCache.visitor;
+    CachedObjects.inst.visitor.outside = outside;
+    return CachedObjects.inst.visitor;
 }

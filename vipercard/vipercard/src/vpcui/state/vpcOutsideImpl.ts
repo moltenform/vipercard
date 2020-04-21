@@ -459,6 +459,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         return this.builtinFns.call(s, args);
     }
 
+    /**
+     * get the current card id
+     */
     GetCurrentCardId(): string {
         return this.vci.getOptionS('currentCardId');
     }

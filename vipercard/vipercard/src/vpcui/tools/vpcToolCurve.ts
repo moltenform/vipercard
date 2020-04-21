@@ -6,6 +6,12 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+/**
+ * the curve tool.
+ * in original product, acted like the pencil tool but if in a filled mode,
+ * it would fill the interior.
+ * for us we draw a bezier.
+ */
 export class VpcAppUIToolCurve extends VpcAppUIToolShape {
     /**
      * draw one bezier curve

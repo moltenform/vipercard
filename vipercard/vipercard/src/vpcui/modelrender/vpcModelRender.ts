@@ -103,6 +103,10 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         }
     }
 
+    /**
+     * getting properties from a vel is complicated
+     * because sometimes you have to look via the current card
+     */
     protected getCardSpecific(vel: VpcElBase, propName: string, currentCardId: string) {
         let spl = propName.split('_oncard_');
         if (spl.length > 1) {

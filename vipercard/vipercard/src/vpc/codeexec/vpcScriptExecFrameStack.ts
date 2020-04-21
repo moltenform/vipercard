@@ -688,6 +688,9 @@ export class VpcExecFrameStack {
         return [codeColl, lineRef, newHandlerName];
     }
 
+    /**
+     * call code in the context of another object. "me" is set correctly.
+     */
     private callCodeAtATarget(
         curFrame: VpcExecFrame,
         code: VpcParsedCodeCollection,

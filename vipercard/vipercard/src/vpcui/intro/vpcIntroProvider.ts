@@ -174,6 +174,9 @@ export class VpcIntroProvider {
         return { pr, fullVci, vpcState };
     }
 
+    /**
+     * construct the presenter object
+     */
     protected async initPrUI(pr: VpcPresenter, serializedSavedData: string, fullVci: VpcStateInterfaceImpl, vpcState: VpcState) {
         /* load saved data */
         if (serializedSavedData.length) {

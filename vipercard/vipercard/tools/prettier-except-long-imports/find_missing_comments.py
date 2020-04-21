@@ -50,6 +50,7 @@ def goPerFile(f):
         
         if curLineStart and not prevLineComment and not prevLine.endswith(';') and not prevLine.endswith(',') and not prevLine.endswith('{') and not prevLine.endswith('(') \
             and not prevLine.endswith(':') \
+            and not prevLine.endswith('>') \
             and not prevLine.endswith('+') \
             and not prevLine.endswith('-') \
             and not prevLine.endswith('&&') \
