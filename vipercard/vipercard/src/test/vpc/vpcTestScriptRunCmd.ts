@@ -1191,4 +1191,46 @@ function sometimesSetResult p
 end sometimesSetResult`
  got = h.testOneEvaluate('', 'sometimesSetResult(1) & sometimesSetResult(0) & "a"', undefined, undefined, codeBefore )
 assertWarnEq('2a', got.readAsString(), '')
+
+/* sending an event down, it can bubble back up */
+
+h.vcstate.vci.undoableAction(() =>
+h.vcstate.model.stack.set(
+            'script',
+            `
+function myCompute a, b
+return a * a + b
+end myCompute
+
+on doTest
+    send "myCompute 3, 4" to cd btn id ${h.elIds.btn_go}
+    return the result
+end doTest
+`
+        )
+    );
+    got = h.testOneEvaluate('', 'doTest()' )
+    assertWarnEq('13', got.readAsString(), '')
+
+/* unless it is overridden in the button */
+    let differentFn = `
+function myCompute a, b
+    return 0
+end myCompute`
+got = h.testOneEvaluate('', 'doTest()', undefined, undefined, differentFn )
+    assertWarnEq('0', got.readAsString(), '')
+
+/* or it is overridden in the card */
+h.vcstate.vci.undoableAction(() =>
+h.vcstate.model.getCurrentCard().set(
+            'script',
+            `
+function myCompute a, b
+    return 1
+end myCompute`
+        )
+    );
+    got = h.testOneEvaluate('', 'doTest()' )
+    assertWarnEq('1', got.readAsString(), '')
+
 });
