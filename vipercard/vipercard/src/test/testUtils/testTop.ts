@@ -53,7 +53,7 @@ export class SimpleUtil512Tests {
         UI512ErrorHandling.runningTests = true;
         console.log('Running tests...');
 
-        // order tests from high to low
+        /* order tests from high to low */
         let colls = [
             testCollectionvpcuiServer,
             testCollectionScriptRewrites,

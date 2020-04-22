@@ -6,7 +6,7 @@
 /* auto */ import { ChvITk, allVpcTokens } from './vpcTokens';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcChvParser } from './vpcParser';
-/* auto */ import { VpcOpCtg, checkThrow, makeVpcInternalErr } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
@@ -111,7 +111,7 @@ if (ctx._marked && ctx._marked[0]) {
 if (ctx._number && ctx._number[0]) {
  return ctx._number[0]; 
 }
- else { throw makeVpcInternalErr('OR in HAllPropertiesThatCouldBeUnary, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<,|OR in HAllPropertiesThatCouldBeUnary, no branch found'); }
 }
 
 
@@ -123,7 +123,7 @@ if (ctx.RuleHAnyFnName && ctx.RuleHAnyFnName[0]) {
 if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
  return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
 }
- else { throw makeVpcInternalErr('OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<-|OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found'); }
 }
 
 
@@ -139,7 +139,7 @@ if (ctx._target && ctx._target[0]) {
 if (ctx._windows && ctx._windows[0]) {
  return ctx._windows[0]; 
 }
- else { throw makeVpcInternalErr('OR in HAnyFnName, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<.|OR in HAnyFnName, no branch found'); }
 }
 
 
@@ -151,7 +151,7 @@ if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
 if (ctx.RuleHAllPropertiesThatCouldBeUnary && ctx.RuleHAllPropertiesThatCouldBeUnary[0]) {
  return this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]); 
 }
- else { throw makeVpcInternalErr('OR in HCouldBeAPropertyToSet, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '</|OR in HCouldBeAPropertyToSet, no branch found'); }
 }
 
 
@@ -179,7 +179,7 @@ if (ctx.tkUnaryVipercardProperties && ctx.tkUnaryVipercardProperties[0]) {
 if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
  return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
 }
- else { throw makeVpcInternalErr('OR in HAnyAllowedVariableName, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<:|OR in HAnyAllowedVariableName, no branch found'); }
 }
 
 
@@ -211,7 +211,7 @@ if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
 if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
  return this.visit(ctx.RuleObjectStack[0]); 
 }
- else { throw makeVpcInternalErr('OR in Object, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<;|OR in Object, no branch found'); }
 }
 
 
@@ -239,7 +239,7 @@ if (ctx.tkOfOnly && ctx.tkOfOnly[0]) {
 if (ctx.tkInOnly && ctx.tkInOnly[0]) {
  return ctx.tkInOnly[0]; 
 }
- else { throw makeVpcInternalErr('OR in Of, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<<|OR in Of, no branch found'); }
 }
 
 
@@ -316,7 +316,7 @@ if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
 if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
  return this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]); 
 }
- else { throw makeVpcInternalErr('OR in HGenericFunctionCall, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<=|OR in HGenericFunctionCall, no branch found'); }
 }
 
 
@@ -344,7 +344,7 @@ if (ctx.RuleFnCallNumberOf_8 && ctx.RuleFnCallNumberOf_8[0]) {
 if (ctx.RuleFnCallNumberOf_9 && ctx.RuleFnCallNumberOf_9[0]) {
  return this.visit(ctx.RuleFnCallNumberOf_9[0]); 
 }
- else { throw makeVpcInternalErr('OR in FnCallNumberOf, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '<>|OR in FnCallNumberOf, no branch found'); }
 }
 
 
@@ -372,19 +372,19 @@ return this.H$BuildMap(ctx);
             let operatorList = ctx.RuleAndOrOr
             let operatorListLen = operatorList ? operatorList.length : 0
             if (!ctx.RuleLvl1Expression || !ctx.RuleLvl1Expression.length || operatorListLen + 1 !== ctx.RuleLvl1Expression.length) {
-                throw makeVpcInternalErr(`RuleExpr:${operatorListLen},${ctx.RuleLvl1Expression.length}.`).clsAsErr();
+                checkThrowInternal(false, `<?|RuleExpr:${operatorListLen},${ctx.RuleLvl1Expression.length}.`);
             }
 
             let total = this.visit(ctx.RuleLvl1Expression[0]) as VpcVal;
-            checkThrow(total instanceof VpcVal, 'RuleExpr: first not a vpcval');
+            checkThrow(total instanceof VpcVal, '<@|RuleExpr: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpLogicalOrAnd;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = this.visit(ctx.RuleAndOrOr[i]);
-                checkThrow(typeof whichop === 'string', 'RuleExpr: op not a string');
+                checkThrow(typeof whichop === 'string', '<[|RuleExpr: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl1Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total instanceof VpcVal, 'RuleExpr: not a vpcval');
+                checkThrow(total instanceof VpcVal, '<]|RuleExpr: not a vpcval');
             }
 
             return total;
@@ -397,19 +397,19 @@ return this.H$BuildMap(ctx);
             let operatorList = ctx.RuleContainsOrGreaterLessEqual
             let operatorListLen = operatorList ? operatorList.length : 0
             if (!ctx.RuleLvl2Expression || !ctx.RuleLvl2Expression.length || operatorListLen + 1 !== ctx.RuleLvl2Expression.length) {
-                throw makeVpcInternalErr(`RuleLvl1Expression:${operatorListLen},${ctx.RuleLvl2Expression.length}.`).clsAsErr();
+                checkThrowInternal(false, `<^|RuleLvl1Expression:${operatorListLen},${ctx.RuleLvl2Expression.length}.`);
             }
 
             let total = this.visit(ctx.RuleLvl2Expression[0]) as VpcVal;
-            checkThrow(total instanceof VpcVal, 'RuleLvl1Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, '<_|RuleLvl1Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpEqualityGreaterLessOrContains;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = this.visit(ctx.RuleContainsOrGreaterLessEqual[i]);
-                checkThrow(typeof whichop === 'string', 'RuleLvl1Expression: op not a string');
+                checkThrow(typeof whichop === 'string', '<{|RuleLvl1Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl2Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total instanceof VpcVal, 'RuleLvl1Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, '<||RuleLvl1Expression: not a vpcval');
             }
 
             return total;
@@ -424,19 +424,19 @@ return this.H$BuildMap(ctx);
             let operatorList = ctx.tkStringConcat
             let operatorListLen = operatorList ? operatorList.length : 0
             if (!ctx.RuleLvl4Expression || !ctx.RuleLvl4Expression.length || operatorListLen + 1 !== ctx.RuleLvl4Expression.length) {
-                throw makeVpcInternalErr(`RuleLvl3Expression:${operatorListLen},${ctx.RuleLvl4Expression.length}.`).clsAsErr();
+                checkThrowInternal(false, `<}|RuleLvl3Expression:${operatorListLen},${ctx.RuleLvl4Expression.length}.`);
             }
 
             let total = this.visit(ctx.RuleLvl4Expression[0]) as VpcVal;
-            checkThrow(total instanceof VpcVal, 'RuleLvl3Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, '<~|RuleLvl3Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpStringConcat;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = ctx.tkStringConcat[i].image;
-                checkThrow(typeof whichop === 'string', 'RuleLvl3Expression: op not a string');
+                checkThrow(typeof whichop === 'string', '=0|RuleLvl3Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl4Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total instanceof VpcVal, 'RuleLvl3Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, '=1|RuleLvl3Expression: not a vpcval');
             }
 
             return total;
@@ -449,19 +449,19 @@ return this.H$BuildMap(ctx);
             let operatorList = ctx.tkPlusOrMinus
             let operatorListLen = operatorList ? operatorList.length : 0
             if (!ctx.RuleLvl5Expression || !ctx.RuleLvl5Expression.length || operatorListLen + 1 !== ctx.RuleLvl5Expression.length) {
-                throw makeVpcInternalErr(`RuleLvl4Expression:${operatorListLen},${ctx.RuleLvl5Expression.length}.`).clsAsErr();
+                checkThrowInternal(false, `=2|RuleLvl4Expression:${operatorListLen},${ctx.RuleLvl5Expression.length}.`);
             }
 
             let total = this.visit(ctx.RuleLvl5Expression[0]) as VpcVal;
-            checkThrow(total instanceof VpcVal, 'RuleLvl4Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, '=3|RuleLvl4Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpPlusMinus;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = ctx.tkPlusOrMinus[i].image;
-                checkThrow(typeof whichop === 'string', 'RuleLvl4Expression: op not a string');
+                checkThrow(typeof whichop === 'string', '=4|RuleLvl4Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl5Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total instanceof VpcVal, 'RuleLvl4Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, '=5|RuleLvl4Expression: not a vpcval');
             }
 
             return total;
@@ -474,19 +474,19 @@ return this.H$BuildMap(ctx);
             let operatorList = ctx.tkMultDivideExpDivMod
             let operatorListLen = operatorList ? operatorList.length : 0
             if (!ctx.RuleLvl6Expression || !ctx.RuleLvl6Expression.length || operatorListLen + 1 !== ctx.RuleLvl6Expression.length) {
-                throw makeVpcInternalErr(`RuleLvl5Expression:${operatorListLen},${ctx.RuleLvl6Expression.length}.`).clsAsErr();
+                checkThrowInternal(false, `=6|RuleLvl5Expression:${operatorListLen},${ctx.RuleLvl6Expression.length}.`);
             }
 
             let total = this.visit(ctx.RuleLvl6Expression[0]) as VpcVal;
-            checkThrow(total instanceof VpcVal, 'RuleLvl5Expression: first not a vpcval');
+            checkThrow(total instanceof VpcVal, '=7|RuleLvl5Expression: first not a vpcval');
             const oprulecategory = VpcOpCtg.OpMultDivideExpDivMod;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = ctx.tkMultDivideExpDivMod[i].image;
-                checkThrow(typeof whichop === 'string', 'RuleLvl5Expression: op not a string');
+                checkThrow(typeof whichop === 'string', '=8|RuleLvl5Expression: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.RuleLvl6Expression[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total instanceof VpcVal, 'RuleLvl5Expression: not a vpcval');
+                checkThrow(total instanceof VpcVal, '=9|RuleLvl5Expression: not a vpcval');
             }
 
             return total;
@@ -504,7 +504,7 @@ if (ctx._or && ctx._or[0]) {
 if (ctx._and && ctx._and[0]) {
  return ctx._and[0].image; 
 }
- else { throw makeVpcInternalErr('OR in AndOrOr, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '=A|OR in AndOrOr, no branch found'); }
 }
 
 
@@ -516,7 +516,7 @@ if (ctx._contains && ctx._contains[0]) {
 if (ctx.tkGreaterOrLessEqualOrEqual && ctx.tkGreaterOrLessEqualOrEqual[0]) {
  return ctx.tkGreaterOrLessEqualOrEqual[0].image; 
 }
- else { throw makeVpcInternalErr('OR in ContainsOrGreaterLessEqual, no branch found').clsAsErr(); }
+ else { checkThrowInternal(false, '=B|OR in ContainsOrGreaterLessEqual, no branch found'); }
 }
 
 

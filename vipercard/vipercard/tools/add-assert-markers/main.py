@@ -63,8 +63,7 @@ def go(srcdirectory, previewOnly):
     try:
         for f, short in files.recursefiles(srcdirectory):
             if short.lower().endswith('.ts') and not short in skipFiles:
-                if not '/test/' in f and not '\\test\\' in f:
-                    goForFile(f, previewOnly, state, marksAleadySeen)
+                goForFile(f, previewOnly, state, marksAleadySeen)
     finally:
         if not previewOnly:
             trace(f'first={firstNum} last={state.latestMarker}')
@@ -84,7 +83,7 @@ def goForFile(f, previewOnly, state, marksAleadySeen):
             files.writeall(f, newcontent, encoding='utf-8')
 
 def goForFileProcess(f, previewOnly, state, marksAleadySeen, content):
-    skipIfInGeneratedCode = GeneratedCodeDetector(content)
+    skipIfInGeneratedCode = GeneratedCodeDetector(content, f)
     matches = []
     for m in re.finditer(reAssertsToMarker, content):
         which = m.group(0).split('(')[0]
@@ -158,7 +157,7 @@ class GeneratedCodeDetector(object):
     gEnd = '/* generated code, any changes above this point will be lost: --------------- */'
     startInd = None
     endInd = None
-    def __init__(self, contents):
+    def __init__(self, contents, f=''):
         pts = contents.split(self.gStart)
         if len(pts)==1:
             return
@@ -193,11 +192,24 @@ def tests():
     assertEq(('fn(', ['1', '2', '3'], ')', 9), parseArguments("'test_test' otherotherotherotherotherother fn(1,2,3)", 43))
     assertEq(('fn(', ['1', '2', '3'], ')', 9), parseArguments("'test\\'tes' otherotherotherotherotherother fn(1,2,3)", 43))
 
+    gStart = GeneratedCodeDetector('').gStart
+    gEnd = GeneratedCodeDetector('').gEnd
+    exampleDoc = f'first\nlines\n\nthen\n{gStart}\ninside\nthe_generated\narea\n{gEnd}outside\nagain'
+    detector = GeneratedCodeDetector(exampleDoc)
+    assertTrue(not detector.isInsideGeneratedCode(0))
+    assertTrue(not detector.isInsideGeneratedCode(1))
+    assertTrue(not detector.isInsideGeneratedCode(exampleDoc.find('then')))
+    assertTrue(detector.isInsideGeneratedCode(exampleDoc.find('inside')))
+    assertTrue(detector.isInsideGeneratedCode(exampleDoc.find('the_generated')))
+    assertTrue(detector.isInsideGeneratedCode(exampleDoc.find('area')))
+    assertTrue(not detector.isInsideGeneratedCode(exampleDoc.find('outside')))
+    assertTrue(not detector.isInsideGeneratedCode(exampleDoc.find('again')))
+
 tests()
 
 if __name__=='__main__':
     previewOnly = True
     # previewOnly = False
-    dir = os.path.abspath('../../src')
-    go(dir, previewOnly)
+    #~ dir = os.path.abspath('../../src')
+    #~ go(dir, previewOnly)
 

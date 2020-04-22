@@ -93,6 +93,10 @@ export class Util512BaseErr {
         let cls = (e as any) as T;
         cls.clsAsErr = err.clsAsErr.bind(e);
         cls.addErr = err.addErr.bind(e);
+        if (!UI512ErrorHandling.runningTests) {
+            callDebuggerIfNotInProduction(e.message)
+        }
+        
         return cls;
     }
 

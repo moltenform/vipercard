@@ -8,7 +8,7 @@
 /* auto */ import { VpcErrStage, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { MapKeyToObject, Util512, assertEq } from './../../ui512/utils/util512';
+/* auto */ import { Util512, assertEq } from './../../ui512/utils/util512';
 /* auto */ import { BridgedLRUMap } from './../../bridge/bridgeJsLru';
 
 /* (c) 2019 moltenform(Ben Fisher) */

@@ -2,6 +2,9 @@
 from readgrammarinput import *
 from produceparser import *
 import itertools
+import sys
+sys.path.append('../add-assert-markers')
+import base90
 
 def goForVisitorInterface(st):
     out = []
@@ -61,6 +64,7 @@ def makeAllVisitors(st):
             out.append('')
             out.extend(method(rule, rule.ruleVisitorOpts, rule.ruleVisitorReturnType))
     out.append('')
+    giveAssertMarks(out)
     return out
             
 def renderTokenForVisitor(s):
@@ -115,7 +119,7 @@ class MakingVisitors(object):
                 maybeGetImage = '.image' if returnType=='string' else ''
                 branches.append(f'if (ctx.{renderTokenForVisitor(item)} && ctx.{renderTokenForVisitor(item)}[0]) {{\n return ctx.{renderTokenForVisitor(item)}[0]{maybeGetImage}; \n}}')
         out.append('\n else \n'.join(branches))
-        out.append(" else { throw makeVpcInternalErr('OR in " + rule.name + ", no branch found').clsAsErr(); }")
+        out.append(" else { checkThrowInternal(false, '%MARK%OR in " + rule.name + ", no branch found'); }")
         out.append('}')
         return out
         
@@ -142,19 +146,19 @@ class MakingVisitors(object):
             let operatorList = ctx.%OPERATORNAME%
             let operatorListLen = operatorList ? operatorList.length : 0
             if (!ctx.%NEXTRULE% || !ctx.%NEXTRULE%.length || operatorListLen + 1 !== ctx.%NEXTRULE%.length) {
-                throw makeVpcInternalErr(`%METHODNAME%:${operatorListLen},${ctx.%NEXTRULE%.length}.`).clsAsErr();
+                checkThrowInternal(false, `%MARK%%METHODNAME%:${operatorListLen},${ctx.%NEXTRULE%.length}.`);
             }
 
             let total = this.visit(ctx.%NEXTRULE%[0]) as VpcVal;
-            checkThrow(total instanceof VpcVal, '%METHODNAME%: first not a vpcval');
+            checkThrow(total instanceof VpcVal, '%MARK%%METHODNAME%: first not a vpcval');
             const oprulecategory = VpcOpCtg.%OPCATEGORY%;
             for (let i = 0; i < operatorListLen; i++) {
                 let whichop = %GETOPIMAGE%;
-                checkThrow(typeof whichop === 'string', '%METHODNAME%: op not a string');
+                checkThrow(typeof whichop === 'string', '%MARK%%METHODNAME%: op not a string');
                 let val1 = total;
                 let val2 = this.visit(ctx.%NEXTRULE%[i + 1]);
                 total = this.evalHelp.evalOp(val1, val2, oprulecategory, whichop);
-                checkThrow(total instanceof VpcVal, '%METHODNAME%: not a vpcval');
+                checkThrow(total instanceof VpcVal, '%MARK%%METHODNAME%: not a vpcval');
             }
 
             return total;
@@ -189,6 +193,15 @@ class MakingVisitors(object):
         assertEq('Custom', visitorOpts[0])
         assertEq(1, len(visitorOpts))
         return []
+
+def giveAssertMarks(out):
+    current = 7000
+    for i, line in enumerate(out):
+        if '%MARK%' in line:
+            current += 1
+            s = base90.toBase90(current)
+            assertEq(2, len(s), 'unexpected length')
+            out[i] = line.replace('%MARK%', f'{s}|')
 
 def tests():
     assertEq([[], ['b', 'c']], splitListByDelim('a,b,c'.split(','), 'a'))
