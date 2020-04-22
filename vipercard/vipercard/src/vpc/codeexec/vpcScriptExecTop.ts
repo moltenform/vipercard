@@ -195,7 +195,7 @@ export class VpcExecTop {
 
         this.outside.SetOption('screenLocked', false);
         this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
-        this.outside.Model().productOpts.set('itemDel', ',');
+        //~ this.outside.Model().productOpts.set('itemDel', ',');
         this.globals.set('$currentVisEffect', VpcValS(''));
 
         /* nyi: new style ui actions */
