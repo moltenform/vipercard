@@ -337,7 +337,7 @@ export class VpcSave implements VpcSaveInterface {
                 !info.stackOwner.length ||
                 info.stackOwner === this.pr.vci.getModel().stack.lineageUsernameNull()
             ) {
-                checkThrowNotifyMsg(false, 'First, go to File->Save to upload the stack.')
+                checkThrowNotifyMsg(false, 'First, go to File->Save to upload the stack.');
             }
 
             let ses = getVpcSessionTools().fromRoot();
@@ -349,8 +349,11 @@ export class VpcSave implements VpcSaveInterface {
             } else {
                 /* case 4) from a stack we do own */
                 if (this.pr.isDocDirty()) {
-                    checkThrowNotifyMsg(false, longstr(`It looks like you have unsaved
-                    changes, we're reminding you to hit Save first.`));
+                    checkThrowNotifyMsg(
+                        false,
+                        longstr(`It looks like you have unsaved
+                    changes, we're reminding you to hit Save first.`)
+                    );
                 }
 
                 return getVpcSessionTools().getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);

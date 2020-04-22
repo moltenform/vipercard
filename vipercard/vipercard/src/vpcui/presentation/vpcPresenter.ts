@@ -488,9 +488,9 @@ export class VpcPresenter extends VpcPresenterInit {
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             this.pasteVelImpl(id);
         } else if (id && id.length) {
-            checkThrowNotifyMsg(false, 'Pasting this type of element is not yet supported.')
+            checkThrowNotifyMsg(false, 'Pasting this type of element is not yet supported.');
         } else {
-            checkThrowNotifyMsg(false, 'Nothing has been copied.')
+            checkThrowNotifyMsg(false, 'Nothing has been copied.');
         }
     }
 

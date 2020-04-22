@@ -736,8 +736,8 @@ export function cleanExceptionMsg(e: Error): string {
     let isMsg = bool(asNotification) || bool(msg.startsWith('vpcmessage:'));
     if (isMsg) {
         /* remove the marker */
-        let r = /\(..\|\)$/g
-        msg = msg.replace(r, '')
+        let r = /\(..\|\)$/g;
+        msg = msg.replace(r, '');
     }
 
     if (msg.startsWith('vpcinternal:')) {

@@ -8,29 +8,14 @@ import check_for_long_lines
 import check_tests_referenced
 import check_more
 import help_fix_long_lines
-
-doPlaceImportsOnOneLine = True
-prettierCfg = '../../.prettierrc.js'
-prettierPath = '../../node_modules/prettier/bin-prettier.js'
-allowLongerLinesOn = [
-    #'../../src/vpc/codeparse/vpcVisitor.ts', '../../src/vpc/codeparse/vpcVisitorMixin.ts',
-    '../../src/vpc/**/*.ts',
-    '../../src/vpcui/**/*.ts'
-]
+import readconfig
 
 def go(srcdirectory):
-    global prettierCfg, prettierPath
-    assertTrueMsg(files.isdir(srcdirectory), 'directory not found', srcdirectory)
-    if not files.isfile(prettierCfg):
-        prettierCfg = searchForNearbyFile(dir, '.prettierrc.js')
-    if not files.isfile(prettierPath):
-        prettierPath = searchForNearbyFile(dir, 'node_modules/prettier/bin-prettier.js')
-        
-    assertTrueMsg(prettierCfg and files.isfile(prettierCfg), 
-        'could not find .prettierrc.js')
-    assertTrueMsg(prettierPath and files.isfile(prettierPath),
-        'could not find node_modules/prettier/bin-prettier.js')
+    global counting
+    counting = [0, 0]
     goPrettierAll(srcdirectory, prettierPath, prettierCfg)
+    trace('count of files, longer lines not accepted:', counting[0])
+    trace('count of files, longer lines accepted:', counting[1])
 
 def runPrettier(args):
     retcode, stderr, stdout = files.run(args, throwOnFailure=None)
@@ -67,6 +52,7 @@ def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
     # allow long lines in certain files
     if allowLongerLinesOn:
         prettierCfgLonger = prettierCfg.replace('prettierrc', 'prettierrc_longer')
+        assertTrueMsg(files.isfile(prettierCfgLonger), f"file not found: '{prettierCfgLonger}'")
         for file in allowLongerLinesOn:
             args = ['node', prettierPath, '--config', prettierCfgLonger, '--write', file]
             runPrettier(args)
@@ -78,7 +64,8 @@ def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
             trace(f)
             goPerFile(srcdirectory, f, prettierPath, prettierCfg)
     
-    check_tests_referenced.checkTestCollectionsReferenced()
+    if not tasksDisabled.check_tests_referenced:
+        check_tests_referenced.checkTestCollectionsReferenced()
 
 def goPerFile(srcdirectory, f, prettierPath, prettierCfg):
     # first do operations that potentially change file contents
@@ -92,7 +79,7 @@ def doOperationsThatMightChangeFile(srcdirectory, f, prettierPath, prettierCfg):
     # put long import statements on one line
     # we don't want the import to spill across multiple lines.
     # could maybe do this by passing a range-start to prettier, but let's write it ourselves.
-    if doPlaceImportsOnOneLine:
+    if not tasksDisabled.doPlaceImportsOnOneLine:
         alltxt = files.readall(f, encoding='utf-8')
         alltxtNew = placeImportsOnOneLine(alltxt)
         if alltxt != alltxtNew:
@@ -102,25 +89,39 @@ def doOperationsThatMightChangeFile(srcdirectory, f, prettierPath, prettierCfg):
     # some simple formatting
     lines = getFileLines(f, False)
     linesOrig = list(lines)
-    addFinalLineAndRemoveRightWhitespace(lines)
+    if not tasksDisabled.addFinalLineAndRemoveRightWhitespace:
+        addFinalLineAndRemoveRightWhitespace(lines)
     
-    help_fix_long_lines.autoHelpIfTestNamesTooLong(f, lines)
-    help_fix_long_lines.autoHelpLongLines(f, lines, prettierCfg)
-    check_tests_referenced.autoHelpSetTestCollectionName(f, lines)
+    if not tasksDisabled.autoHelpIfTestNamesTooLong:
+        help_fix_long_lines.autoHelpIfTestNamesTooLong(f, lines)
+        
+    if not tasksDisabled.autoHelpLongLines:
+        help_fix_long_lines.autoHelpLongLines(f, lines, prettierCfg)
+    
+    if not tasksDisabled.autoHelpSetTestCollectionName:
+        check_tests_referenced.autoHelpSetTestCollectionName(f, lines)
+    
     if linesOrig != lines:
         files.writeall(f, '\n'.join(lines), encoding='utf-8')
     return lines
-        
+
 def doOperationsThatAskQuestions(srcdirectory, f, lines, prettierPath, prettierCfg):
-    check_tests_referenced.checkText(f, lines)
-    check_for_null_coalesce.checkText(f, lines)
-    assertTrue('../../src/vpc/**/*.ts' in allowLongerLinesOn)
-    assertTrue('../../src/vpcui/**/*.ts' in allowLongerLinesOn)
-    if '/src/vpc/' not in f.lower().replace('\\', '/') and '/src/vpcui/' not in f.lower().replace('\\', '/'):
+    if not tasksDisabled.check_tests_referenced:
+        check_tests_referenced.checkText(f, lines)
+        
+    if not tasksDisabled.check_for_null_coalesce:
+        check_for_null_coalesce.checkText(f, lines)
+    
+    if not readconfig.shouldAllowLongerLinesOn(f, allowLongerLinesOn):
         check_for_long_lines.checkText(f, lines, prettierCfg)
-    check_more.checkText(f, lines)
+        counting[0] += 1
+    else:
+        counting[1] += 1
+   
+    if not tasksDisabled.additional_checks:
+        check_more.checkText(f, lines)
 
 if __name__ == '__main__':
-    dir = os.path.abspath('../../src')
-    go(dir)
+    srcdirectory, prettierCfg, prettierPath, allowLongerLinesOn, tasksDisabled = readconfig.readconfig()
+    go(srcdirectory)
 

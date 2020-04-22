@@ -89,7 +89,8 @@ export class VpcChangeSelectedFont {
     protected setFont(v: string, type: string) {
         let worked = this.setFontImpl(v, type);
         if (!worked) {
-            checkThrowNotifyMsg(false,
+            checkThrowNotifyMsg(
+                false,
                 longstr(`lngNo selection found. Either select a
             button or {{NEWLINE}}field, or use the browse tool to select a
             few{{NEWLINE}} letters.`)
