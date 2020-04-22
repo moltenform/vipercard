@@ -495,7 +495,17 @@ t.test('evalArithmetic', () => {
         ['2 mod 2', '0'],
         ['1 mod -1', '0'],
         ['123 mod 0', 'ERR:> 1e18'],
-        ['123 mod -0', 'ERR:> 1e18']
+        ['123 mod -0', 'ERR:> 1e18'],
+
+        /* negative numbers */
+        ['34 div 5', '6'],
+        ['34 div -5', '-6'],
+        ['-34 div 5', '-6'],
+        ['-34 div -5', '6'],
+        ['34 mod 5', '4'],
+        ['34 mod -5', '4'],
+        ['-34 mod 5', '-4'],
+        ['-34 mod -5', '-4'],
     ];
     h.testBatchEvaluate(batch, false);
 
