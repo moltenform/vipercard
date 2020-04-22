@@ -66,7 +66,7 @@ export class VpcScriptMessage {
  * for running code in the messagebox
  */
 export class VpcScriptMessageMsgBoxCode extends VpcScriptMessage {
-    returnToMsgBox = false
+    returnToMsgBox = false;
     msgBoxCodeBody = '';
 }
 

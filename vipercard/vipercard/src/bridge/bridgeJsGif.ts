@@ -17,8 +17,8 @@ export declare class GIFEncoderInterface {
 }
 
 export function getGIFEncoderInst() {
-    let inst = GIFEncoder()
-    return inst as any as GIFEncoderInterface
+    let inst = GIFEncoder();
+    return (inst as any) as GIFEncoderInterface;
 }
 
-declare const GIFEncoder:VoidFunction
+declare const GIFEncoder: VoidFunction;

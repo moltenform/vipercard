@@ -28,16 +28,15 @@
  *              already ok because it's under the drawframe event.
  */
 
-
 /**
  * It's useful to distinguish between errors we've thrown
  * and generic javascript errors.
- * 
+ *
  * Currently we use a plain Error object and expando our
  * own properties onto it. Works for everything except
  * instanceof, because it's not actually a different class.
  * If I wanted true custom Error objects I'd have to navigate
- * a lot of browser differences, see 
+ * a lot of browser differences, see
  * https://github.com/bjyoungblood/es6-error
  */
 export class Util512BaseErr {
@@ -79,7 +78,7 @@ export class Util512BaseErr {
     }
 
     /**
-     * create an Error instance that also acts like a 
+     * create an Error instance that also acts like a
      * Util512BaseErr instance (it isn't really, but because
      * it has the same shape, it works fine)
      */
@@ -94,9 +93,9 @@ export class Util512BaseErr {
         cls.clsAsErr = err.clsAsErr.bind(e);
         cls.addErr = err.addErr.bind(e);
         if (!UI512ErrorHandling.runningTests) {
-            callDebuggerIfNotInProduction(e.message)
+            callDebuggerIfNotInProduction(e.message);
         }
-        
+
         return cls;
     }
 

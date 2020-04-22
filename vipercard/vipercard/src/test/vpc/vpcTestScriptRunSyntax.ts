@@ -196,7 +196,7 @@ t.test('checkLexing', () => {
         ['put 9 into $dollar$ok\\$dollar$ok', 'PREPARSEERR:lex err'],
         ['put 9 into dollar$ok\\dollar$ok', '9'],
         ['put 9 into 1var1\\1var1', 'PREPARSEERR:lex err'],
-        ['put 9 into var1\\var1', '9'],
+        ['put 9 into var1\\var1', '9']
     ];
 
     h.testBatchEvaluate(batch);

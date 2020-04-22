@@ -107,7 +107,7 @@ export class VpcExecFrameStack {
         let targetId = this.outside.GetCurrentCardId();
         let codeToCompile = obj.msgBoxCodeBody;
         if (obj.returnToMsgBox) {
-            codeToCompile += `\ninternalvpcmessagesdirective "returntomsgbox"`
+            codeToCompile += `\ninternalvpcmessagesdirective "returntomsgbox"`;
         }
 
         let dynamicCodeOrigin: [string, number] = ['messagebox', 0];
@@ -626,7 +626,7 @@ export class VpcExecFrameStack {
         /* confirmed in original product: if there's no return statement,
         return the last result that was computed. send "myCompute" to cd btn 4,
         it would make sense that the result is set to the result of myCompute. */
-        codeToCompile += '\nreturn the result'
+        codeToCompile += '\nreturn the result';
         let [ast, lineref, newHandlerName] = this.visitCallDynamicHelper(
             codeToCompile,
             meId,
@@ -732,7 +732,7 @@ export class VpcExecFrameStack {
      */
     visitIsInternalvpcmessagesdirective(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         curFrame.next();
-        checkThrow(curLine.excerptToParse.length === 2  || curLine.excerptToParse.length === 3, '');
+        checkThrow(curLine.excerptToParse.length === 2 || curLine.excerptToParse.length === 3, '');
         checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, '');
         let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
         let variable: O<string>;
@@ -773,7 +773,7 @@ export class VpcExecFrameStack {
                 console.log(nextCard, parsed);
             }
         } else if (directive === 'returntomsgbox') {
-            this.outside.WriteToReplMessageBox('', true)
+            this.outside.WriteToReplMessageBox('', true);
         } else {
             checkThrow(false, 'unknown directive', directive);
         }

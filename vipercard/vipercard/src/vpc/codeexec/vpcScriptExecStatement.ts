@@ -126,7 +126,8 @@ export class ExecuteStatement {
         } else {
             checkThrow(
                 false,
-                longstr(`5F|the choose command is currently used for
+                `5F|` +
+                    longstr(`the choose command is currently used for
                 simulating drawing only, so it must be one of the
                 paint tools like "pencil" or "brush" chosen`)
             );

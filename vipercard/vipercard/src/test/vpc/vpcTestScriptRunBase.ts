@@ -351,7 +351,10 @@ ${codeBefore}\n${codeIn}\n`,
         expectErrLine?: number,
         codeBefore = ''
     ) {
-        assertWarn(!s.startsWith('put ') && !s.startsWith('set '), "this is supposed to be an expression but it looks like a command")
+        assertWarn(
+            !s.startsWith('put ') && !s.startsWith('set '),
+            'this is supposed to be an expression but it looks like a command'
+        );
         this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
         let codeIn = `global testresult
 ${beforeLine}

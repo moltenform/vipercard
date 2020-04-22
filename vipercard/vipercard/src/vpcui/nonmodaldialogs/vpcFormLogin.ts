@@ -94,7 +94,11 @@ export class VpcNonModalFormLogin extends VpcNonModalFormLoginInterface {
         let fn = async () => {
             let result: VpcSessionInterface;
             try {
-                result = await getVpcSessionTools().vpcUsersEnterEmailVerifyCode(paramFields['username'], keybuffer, paramFields['codeEmailVerify']);
+                result = await getVpcSessionTools().vpcUsersEnterEmailVerifyCode(
+                    paramFields['username'],
+                    keybuffer,
+                    paramFields['codeEmailVerify']
+                );
             } catch (e) {
                 /* login was not successful -- prob wrong password */
                 this.setStatus(`${e}`);

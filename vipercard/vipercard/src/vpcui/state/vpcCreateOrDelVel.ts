@@ -119,7 +119,11 @@ export abstract class UndoableActionCreateOrDelVel {
         let model = vci.getModel();
         if (!model.productOpts) {
             vci.doWithoutAbilityToUndo(() => {
-                model.productOpts = vci.rawCreate(VpcElStack.initProductOptsId, '(VpcElProductOpts has no parent)', VpcElProductOpts);
+                model.productOpts = vci.rawCreate(
+                    VpcElStack.initProductOptsId,
+                    '(VpcElProductOpts has no parent)',
+                    VpcElProductOpts
+                );
             });
         }
 

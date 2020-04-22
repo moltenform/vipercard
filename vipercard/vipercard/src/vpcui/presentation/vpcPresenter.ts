@@ -127,7 +127,9 @@ export class VpcPresenter extends VpcPresenterInit {
         assertTrue(!idSpecific || pos === OrdinalOrPosition.This, 'specifying an id, should set to This');
         let targetCardId = idSpecific ?? this.vci.getModel().getCardRelative(pos);
         if (this.getTool() === VpcTool.Browse) {
-            this.vci.getCodeExec().runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
+            this.vci
+                .getCodeExec()
+                .runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
         } else {
             this.setCurCardNoOpenCardEvt(targetCardId);
         }
@@ -217,7 +219,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 if (this.lyrNonModalDlgHolder.current && this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox) {
                     this.lyrNonModalDlgHolder.current.onScriptErr(scriptErr);
                 } else {
-                    this.answerMsg(msg)
+                    this.answerMsg(msg);
                 }
 
                 return;
@@ -702,10 +704,10 @@ export class VpcPresenter extends VpcPresenterInit {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    writeToReplMessageBox(s: string, returnFocus:boolean): void {
+    writeToReplMessageBox(s: string, returnFocus: boolean): void {
         if (this.lyrNonModalDlgHolder.current && this.lyrNonModalDlgHolder.current instanceof VpcNonModalReplBox) {
             if (returnFocus) {
-                this.lyrNonModalDlgHolder.current.returnFocus()
+                this.lyrNonModalDlgHolder.current.returnFocus();
             } else {
                 this.lyrNonModalDlgHolder.current.appendToOutput(s, false);
             }

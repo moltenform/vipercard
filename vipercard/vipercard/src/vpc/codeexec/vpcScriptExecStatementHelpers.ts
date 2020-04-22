@@ -42,9 +42,12 @@ export class VpcScriptExecuteStatementHelpers {
      */
     clickOrDrag(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, expectSee: string) {
         let argsGiven: number[] = [];
-        checkThrow(vals.vals[tkstr.RuleHBuiltinCmdDrag_1] && vals.vals[tkstr.RuleHBuiltinCmdDrag_1].length, "no RuleHBuiltinCmdDrag_1" )
+        checkThrow(
+            vals.vals[tkstr.RuleHBuiltinCmdDrag_1] && vals.vals[tkstr.RuleHBuiltinCmdDrag_1].length,
+            'no RuleHBuiltinCmdDrag_1'
+        );
         for (let big of vals.vals[tkstr.RuleHBuiltinCmdDrag_1]) {
-            let a1 = cast(IntermedMapOfIntermedVals, big)
+            let a1 = cast(IntermedMapOfIntermedVals, big);
             for (let item of a1.vals[tkstr.RuleLvl4Expression]) {
                 assertTrue(item instanceof VpcVal, 'JO|every item must be a vpcval');
                 /* confirmed in emulator that floats are not accepted here */

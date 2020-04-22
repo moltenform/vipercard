@@ -104,8 +104,8 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         el.set('defaultFont', spec.toSpecString());
         let t = FormattedText.newFromSerialized(UI512DrawText.setFont(s, spec.toSpecString()));
         el.setFmTxt(t);
-        let gel = new UI512ElTextFieldAsGeneric(el)
-        TextSelModify.fixSelection(gel)
+        let gel = new UI512ElTextFieldAsGeneric(el);
+        TextSelModify.fixSelection(gel);
     }
 
     /**
@@ -223,7 +223,7 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
     /**
      * might will be called after script completes.
      * if the script takes a while and has closed the message box, that's fine,
-     * this won't ever get called. 
+     * this won't ever get called.
      */
     returnFocus() {
         this.vci.setTool(this.rememberedTool);

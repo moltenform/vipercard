@@ -92,7 +92,11 @@ export class VpcNonModalFormNewUser extends VpcNonModalFormBase {
         let fn = async () => {
             let result: boolean;
             try {
-                result = await getVpcSessionTools().vpcUsersCreate(paramFields['username'], paramFields['pw'], paramFields['email']);
+                result = await getVpcSessionTools().vpcUsersCreate(
+                    paramFields['username'],
+                    paramFields['pw'],
+                    paramFields['email']
+                );
             } catch (e) {
                 this.setStatus(e.toString());
                 return;

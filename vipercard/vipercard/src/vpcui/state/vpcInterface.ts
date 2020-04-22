@@ -231,7 +231,7 @@ export interface VpcStateInterface {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    writeToReplMessageBox(s: string, returnFocus:boolean): void;
+    writeToReplMessageBox(s: string, returnFocus: boolean): void;
 
     /**
      * releases memory by nulling out everything owned by the class

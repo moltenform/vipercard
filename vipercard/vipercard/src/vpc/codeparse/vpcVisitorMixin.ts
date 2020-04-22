@@ -331,7 +331,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
-            checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], tkstr.RuleHChunk);
+            checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], 'RuleHChunk');
             ret.type = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
             if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
                 ret.ordinal = this.visit(ctx.RuleOrdinal[0]);

@@ -894,7 +894,6 @@ theTest myMult(2,myMult(3,4)), myMult(5,6)
  * new features of TestVpcScriptRunBase for running custom functions
  */
 class TestVpcScriptRunCustomFns extends TestVpcScriptRunBase {
-
     /**
      * in case it's not already there, provide myMult in the stack script
      */

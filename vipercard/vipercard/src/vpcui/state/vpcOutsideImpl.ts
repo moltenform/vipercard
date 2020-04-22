@@ -573,7 +573,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    WriteToReplMessageBox(s: string, returnFocus:boolean): void {
+    WriteToReplMessageBox(s: string, returnFocus: boolean): void {
         return this.vci.writeToReplMessageBox(s, returnFocus);
     }
 

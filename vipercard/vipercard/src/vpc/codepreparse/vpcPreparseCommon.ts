@@ -196,7 +196,6 @@ export enum VpcLineCategory {
     CallHandler
 }
 
-
 /**
  * we could tag all exceptions and attach line information.
  * this is simpler (though perhaps less accurate),

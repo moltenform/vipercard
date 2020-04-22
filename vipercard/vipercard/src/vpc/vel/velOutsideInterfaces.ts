@@ -213,7 +213,7 @@ export interface OutsideWorldReadWrite extends OutsideWorldRead {
      * append text to the message box
      * ignored if the message box is not currently open
      */
-    WriteToReplMessageBox(s: string, returnFocus:boolean): void;
+    WriteToReplMessageBox(s: string, returnFocus: boolean): void;
 
     /**
      * get access to FieldsRecentlyEdited, used to determine

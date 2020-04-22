@@ -1175,27 +1175,45 @@ end myCompute`
     let codeBefore = `
 function sometimesSetResult p
     if p>=1 then return p * 2
-end sometimesSetResult`
-let got = h.testOneEvaluate('', 'sometimesSetResult(1) & sometimesSetResult(0) & "a"', undefined, undefined, codeBefore )
-assertWarnEq('2a', got.readAsString(), '')
+end sometimesSetResult`;
+    let got = h.testOneEvaluate(
+        '',
+        'sometimesSetResult(1) & sometimesSetResult(0) & "a"',
+        undefined,
+        undefined,
+        codeBefore
+    );
+    assertWarnEq('2a', got.readAsString(), '');
     codeBefore = `
 on sometimesSetResult p
     if p>=1 then return p * 2
-end sometimesSetResult`
-got = h.testOneEvaluate('', 'sometimesSetResult(1) & sometimesSetResult(0) & "a"', undefined, undefined, codeBefore )
-assertWarnEq('2a', got.readAsString(), '')
-codeBefore = `
+end sometimesSetResult`;
+    got = h.testOneEvaluate(
+        '',
+        'sometimesSetResult(1) & sometimesSetResult(0) & "a"',
+        undefined,
+        undefined,
+        codeBefore
+    );
+    assertWarnEq('2a', got.readAsString(), '');
+    codeBefore = `
 function sometimesSetResult p
     if length(the result) > 0 then return "hmm"
     if p>=1 then return p * 2
-end sometimesSetResult`
- got = h.testOneEvaluate('', 'sometimesSetResult(1) & sometimesSetResult(0) & "a"', undefined, undefined, codeBefore )
-assertWarnEq('2a', got.readAsString(), '')
+end sometimesSetResult`;
+    got = h.testOneEvaluate(
+        '',
+        'sometimesSetResult(1) & sometimesSetResult(0) & "a"',
+        undefined,
+        undefined,
+        codeBefore
+    );
+    assertWarnEq('2a', got.readAsString(), '');
 
-/* sending an event down, it can bubble back up */
+    /* sending an event down, it can bubble back up */
 
-h.vcstate.vci.undoableAction(() =>
-h.vcstate.model.stack.set(
+    h.vcstate.vci.undoableAction(() =>
+        h.vcstate.model.stack.set(
             'script',
             `
 function myCompute a, b
@@ -1209,20 +1227,20 @@ end doTest
 `
         )
     );
-    got = h.testOneEvaluate('', 'doTest()' )
-    assertWarnEq('13', got.readAsString(), '')
+    got = h.testOneEvaluate('', 'doTest()');
+    assertWarnEq('13', got.readAsString(), '');
 
-/* unless it is overridden in the button */
+    /* unless it is overridden in the button */
     let differentFn = `
 function myCompute a, b
     return 0
-end myCompute`
-got = h.testOneEvaluate('', 'doTest()', undefined, undefined, differentFn )
-    assertWarnEq('0', got.readAsString(), '')
+end myCompute`;
+    got = h.testOneEvaluate('', 'doTest()', undefined, undefined, differentFn);
+    assertWarnEq('0', got.readAsString(), '');
 
-/* or it is overridden in the card */
-h.vcstate.vci.undoableAction(() =>
-h.vcstate.model.getCurrentCard().set(
+    /* or it is overridden in the card */
+    h.vcstate.vci.undoableAction(() =>
+        h.vcstate.model.getCurrentCard().set(
             'script',
             `
 function myCompute a, b
@@ -1230,7 +1248,6 @@ function myCompute a, b
 end myCompute`
         )
     );
-    got = h.testOneEvaluate('', 'doTest()' )
-    assertWarnEq('1', got.readAsString(), '')
-
+    got = h.testOneEvaluate('', 'doTest()');
+    assertWarnEq('1', got.readAsString(), '');
 });

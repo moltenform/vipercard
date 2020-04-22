@@ -10,7 +10,6 @@
 /* auto */ import { Util512, getEnumToStrOrFallback, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -21,8 +20,8 @@ let t = new SimpleUtil512TestCollection('testCollectionScriptRewrites');
 export let testCollectionScriptRewrites = t;
 
 interface IVpcCacheParsedASTForTest {
-    compareRewrittenCode(script: string, expected: string):void;    
-} 
+    compareRewrittenCode(script: string, expected: string): void;
+}
 
 let h = YetToBeDefinedTestHelper<IVpcCacheParsedASTForTest>();
 
@@ -64,10 +63,10 @@ t.test('rewrites-empty lines are ok', () => {
 
 
         code2`;
-        let expected = `
+    let expected = `
     code1~
     code2~`;
-        h.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
         code1 -- a comment here
         -- comment.
@@ -77,7 +76,7 @@ t.test('rewrites-empty lines are ok', () => {
     expected = `
     code1~
     code2~`;
-        h.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
     inp = `
         code1 -- a comment here
         -- comment.
@@ -88,7 +87,7 @@ t.test('rewrites-empty lines are ok', () => {
     expected = `
     code1~
     code2~`;
-        h.compareRewrittenCode(inp, expected);
+    h.compareRewrittenCode(inp, expected);
 });
 t.test('rewrites-make lowercase', () => {
     let inp = `put aBcDe into TheVar`;
@@ -214,7 +213,7 @@ t.test('rewrites-date', () => {
     inp = `mycode the ENGLISH date of x`;
     exp = `mycode~the~long~date~of~x~`;
     h.compareRewrittenCode(inp, exp);
-})
+});
 t.test('expand if + if else', () => {
     let inp = `
 test001
@@ -792,32 +791,31 @@ put "abc" into the msg box`;
     h.compareRewrittenCode(inp, expected);
 });
 
-
 /**
  * test helpers for comparing rewritten code
  */
 class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
     constructor() {
-        super(new CountNumericIdNormal(1))
+        super(new CountNumericIdNormal(1));
     }
 
     /**
      * check that the preparsed/rewritten code is as expected
      */
-     compareRewrittenCode(script: string, expected: string) {
+    compareRewrittenCode(script: string, expected: string) {
         script = script.trim();
         expected = expected.trim();
         if (!script.startsWith('on ')) {
-            script = 'on myCode\n' + script + '\nend myCode'
+            script = 'on myCode\n' + script + '\nend myCode';
             if (!expected.startsWith('ERR:')) {
-                expected = 'HandlerStart\n' + expected + '\nHandlerEnd'
+                expected = 'HandlerStart\n' + expected + '\nHandlerEnd';
             }
         }
 
         let transformedCode: O<VpcParsedCodeCollection>;
         let err: O<Error>;
         try {
-            transformedCode = this.getParsedCodeCollectionOrThrow(script, 'unknown-vel')
+            transformedCode = this.getParsedCodeCollectionOrThrow(script, 'unknown-vel');
         } catch (e) {
             /* catch the errors here,
             otherwise the error site will be far away and hard to correlate
@@ -848,9 +846,7 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
             o => o.allImages ?? getEnumToStrOrFallback(VpcLineCategory, o.ctg)
         );
         got = got.map(o => o.replace(reSyntaxMark, '^^'));
-        let exp = expected
-            .split('\n')
-            .map(s => s.trim());
+        let exp = expected.split('\n').map(s => s.trim());
 
         if (util512Sort(exp, got) !== 0) {
             assertWarn(

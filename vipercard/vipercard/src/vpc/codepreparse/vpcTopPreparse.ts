@@ -163,7 +163,7 @@ export namespace VpcTopPreparse {
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         let lines = VpcRewriteNoElseIfClauses.go(buildTree, rw);
         if (!lines.length) {
-            return VpcParsedCodeCollection.makeEmptyInst()
+            return VpcParsedCodeCollection.makeEmptyInst();
         }
 
         /* now do these as stages, they don't need access to the entire array */

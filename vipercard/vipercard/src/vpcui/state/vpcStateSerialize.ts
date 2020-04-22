@@ -23,7 +23,7 @@ export class VpcStateSerialize {
      * fileformatmajor 1, not released to public
      * fileformatmajor 2, initial March release
      * fileformatmajor 3, supports base64
-     * 
+     *
      * a change in major number means that a previous version
      * won't be able to open the document
      */
@@ -36,11 +36,11 @@ export class VpcStateSerialize {
         ret.uuid = vci.getModel().uuid;
         ret.elements = [];
         let stack = vci.getModel().stack;
-        let i =0;
+        let i = 0;
         for (let vel of stack.iterEntireStack()) {
             let serialized = this.serializeVel(vel, i);
             ret.elements.push(serialized);
-            i+=1
+            i += 1;
         }
 
         return ret;
@@ -49,12 +49,12 @@ export class VpcStateSerialize {
     /**
      * serialize a vel
      */
-    serializeVel(vel: VpcElBase, i:number):SerializedVelStructure {
+    serializeVel(vel: VpcElBase, i: number): SerializedVelStructure {
         let ret = new SerializedVelStructure();
         ret.type = vel.getType();
         ret.id = vel.id;
         ret.parent_id = vel.parentId;
-        ret.insertIndex = i
+        ret.insertIndex = i;
 
         ret.attrs = VpcGettableSerialization.serializeGettable(vel);
         return ret;
@@ -91,7 +91,7 @@ export class VpcStateSerialize {
     deserializeVel(building: VpcStateInterface, incoming: SerializedVelStructure) {
         if (incoming.type === VpcElType.Stack) {
             /* the parent of a stack is always the product opts */
-            incoming.parent_id = building.getModel().productOpts.id
+            incoming.parent_id = building.getModel().productOpts.id;
             /* don't create a new element, just copy over the attrs */
             VpcGettableSerialization.deserializeSettable(building.getModel().stack, incoming.attrs);
         } else if (
@@ -102,7 +102,7 @@ export class VpcStateSerialize {
         ) {
             /* the parent of a bg is always the stack */
             if (incoming.type === VpcElType.Bg) {
-                incoming.parent_id = building.getModel().stack.id
+                incoming.parent_id = building.getModel().stack.id;
             }
 
             let created = building.createVel(incoming.parent_id, incoming.type, -1, incoming.id);
