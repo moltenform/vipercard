@@ -157,7 +157,7 @@ export class VpcSuperRewrite {
             /* we can make a simple string literal, not one that contains spaces though. */
             tktype = tks.tkStringLiteral;
             term = term.replace(/~/g, ' ');
-        } else if (!tktype && term.match(/^[0-9]+$/)) {
+        } else if (!tktype && term.match(/^-?[0-9]+$/)) {
             tktype = tks.tkNumLiteral;
         } else if (!tktype && term === ',') {
             tktype = tks.tkComma;

@@ -1,8 +1,6 @@
 
 on log s
-	go to card 1
-	put cd fld "log" into prevs
-	put prevs & cr & s into cd fld "log"
+	put cr & s after cd fld "log" of cd 1
 end log
 
 on openStack
@@ -14,3 +12,4 @@ on openBackground
 	global openBgWasCalled
 	put true into openBgWasCalled
 end openBackground
+

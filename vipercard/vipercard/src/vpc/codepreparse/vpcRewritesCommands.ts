@@ -221,6 +221,8 @@ export class VpcRewriteForCommands {
             template = `
 if there is a %ARG0% card then
     internalvpcmovecardhelper ( the short id of %ARG0% card ) , ${shouldSuspendHistory}
+else
+    internalvpcmovecardhelper -1000
 end if`;
         } else {
             /* the id might refer to a bg or stack, we will correctly handle that.
@@ -229,6 +231,8 @@ end if`;
             template = `
 if there is a %ARG0% then
     internalvpcmovecardhelper  ( the short id of %ARG0% ) , ${shouldSuspendHistory}
+else
+    internalvpcmovecardhelper -1000
 end if`;
         }
         return this.rw.gen(template, line[0], [line.slice(1)]);

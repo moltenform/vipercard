@@ -22,13 +22,14 @@ on mouseUp
 	end if
 end mouseUp
 
-on assertEq expected, got
-	put "expected '"&expected&"' but got '"&got&"'" into tmsg
-	assertTrue (expected==got), tmsg
+on assertEq marker, expected, got
+	put "expected '"&expected&"' but got '"&got&"'"  into tmsg
+	assertTrue marker, (expected==got), tmsg
 end assertEq
 
-on assertTrue b, tmsg
+on assertTrue marker, b, tmsg
 	if not b then
+		put tmsg && "(" & marker & ")" into tmsg
 		log ("assertion failed " & tmsg)
 		answer ("assertion failed " & tmsg)
 		intentionallyStopScript
@@ -60,38 +61,38 @@ on runTestDlgs
 	
 	answer "this is an answer dialog with btn 'Ok'" & cr & "line 2"
 	put it into res
-	assertEq 1, res
+	assertEq @, 1, res
 	answer "dialog with btn 'opt1'" \
 		with "opt1"
 	put it into res
-	assertEq 1, res
+	assertEq @, 1, res
 	answer "please click 'opt1'" \
 		with "opt1" or "opt2" or "opt3"
 	put it into res
-	assertEq 1, res
+	assertEq @, 1, res
 	answer "please click 'opt2'" \
 		with "opt1" or "opt2" or "opt3"
 	put it into res
-	assertEq 2, res
+	assertEq @, 2, res
 	answer "please click 'opt3'" \
 		with "opt1" or "opt2" or "opt3"
 	put it into res
-	assertEq 3, res
+	assertEq @, 3, res
 	ask "sample ask dialog"
 	ask "sample ask dialog, text should say 'example'" \
 		with "example"
 	ask "please click OK" \
 		with "example"
 	put it into res
-	assertEq "example", res
+	assertEq @, "example", res
 	ask "please click cancel" \
 		with "example"
 	put it into res
-	assertEq "", res
+	assertEq @, "", res
 	ask "please type test1 and click OK" \
 		with "example"
 	put it into res
-	assertEq "test1", res
+	assertEq @, "test1", res
 	repeat
 		answer ("let's see if we can exit an infinite "&\
 			"loop. click the stop icon (black "&\
@@ -99,42 +100,42 @@ on runTestDlgs
 		log "."
 	end repeat
 	answer "should not see this."
-	assertTrue false, "notreached"
+	assertTrue @, false, "notreached"
 end runTestDlgs
 
 on runTestValOps
 	put "3" into cd fld "fldTest"
 	multiply cd fld "fldTest" by 4
-	assertEq 12, cd fld "fldTest"
+	assertEq @, 12, cd fld "fldTest"
 	multiply cd fld "fldTest" by 5
-	assertEq 60, cd fld "fldTest"
+	assertEq @, 60, cd fld "fldTest"
 	divide cd fld "fldTest" by 3
-	assertEq 20, cd fld "fldTest"
+	assertEq @, 20, cd fld "fldTest"
 	divide cd fld "fldTest" by 2
-	assertEq 10, cd fld "fldTest"
+	assertEq @, 10, cd fld "fldTest"
 	add 4 to cd fld "fldTest"
-	assertEq 14, cd fld "fldTest"
+	assertEq @, 14, cd fld "fldTest"
 	add 6 to cd fld "fldTest"
-	assertEq 20, cd fld "fldTest"
+	assertEq @, 20, cd fld "fldTest"
 	subtract 15 from cd fld "fldTest"
-	assertEq 5, cd fld "fldTest"
+	assertEq @, 5, cd fld "fldTest"
 	subtract 6 from cd fld "fldTest"
-	assertEq -1, cd fld "fldTest"
+	assertEq @, -1, cd fld "fldTest"
 	put "aa,cc" into cd fld "fldTest"
 	delete char 2 of cd fld "fldTest"
-	assertEq "a,cc", cd fld "fldTest"
+	assertEq @, "a,cc", cd fld "fldTest"
 	delete char 2 to 3 of cd fld "fldTest"
-	assertEq "ac", cd fld "fldTest"
+	assertEq @, "ac", cd fld "fldTest"
 	put "" into cd fld "fldTest"
 	
 	put "ddd,aaa,fff" into x
-	assertEq "ddd,aaa,fff", x
+	assertEq @, "ddd,aaa,fff", x
 	sort items of x
-	assertEq "aaa,ddd,fff", x
+	assertEq @, "aaa,ddd,fff", x
 	sort  items of x ascending
-	assertEq "aaa,ddd,fff", x
+	assertEq @, "aaa,ddd,fff", x
 	sort  items of x descending
-	assertEq "fff,ddd,aaa", x
+	assertEq @, "fff,ddd,aaa", x
 	disable cd btn "btnTest1"
 	answer "btnTest1 should be disabled."
 	enable cd btn "btnTest1"
@@ -288,69 +289,69 @@ end runTestDraw
 on runTestGoCardAndOpenCard
 	global openStackWasCalled
 	global openBgWasCalled
-	assertTrue openStackWasCalled, "failed: openStack Was not Called"
-	assertTrue openBgWasCalled, "failed: openBg Was not Called"
+	assertTrue @, openStackWasCalled, "failed: openStack Was not Called"
+	assertTrue @, openBgWasCalled, "failed: openBg Was not Called"
 	
 	global logCardEvts
 	put "" into logCardEvts
 	
 	-- go to nonexistent card, should fail silently
 	go to card 999
-	assertEq "No such card.", the result
-	assertEq "", logCardEvts
+	assertEq @, "No such card", the result
+	assertEq @, "", logCardEvts
 	go to this card
-	assertEq "", the result
+	assertEq @, "", the result
 	go next
-	assertEq "", the result
+	assertEq @, "", the result
 	
 	-- go by relative, by ordinal
 	go first
 	go next
-	assertEq the short id of card 2, the short id of this card
+	assertEq @, the short id of card 2, the short id of this card
 	go prev
-	assertEq the short id of card 1, the short id of this card
+	assertEq @, the short id of card 1, the short id of this card
 	go second
-	assertEq the short id of card 2, the short id of this card
+	assertEq @, the short id of card 2, the short id of this card
 	go first
-	assertEq the short id of card 1, the short id of this card
+	assertEq @, the short id of card 1, the short id of this card
 	
 	-- test back and forth
 	repeat 3 times
 		go first
-		assertEq the short id of card 1, the short id of this card
+		assertEq @, the short id of card 1, the short id of this card
 		go next
-		assertEq the short id of card 2, the short id of this card
+		assertEq @, the short id of card 2, the short id of this card
 		go next
-		assertEq the short id of card 3, the short id of this card
+		assertEq @, the short id of card 3, the short id of this card
 		go back
-		assertEq the short id of card 2, the short id of this card
+		assertEq @, the short id of card 2, the short id of this card
 		go back
-		assertEq the short id of card 1, the short id of this card
+		assertEq @, the short id of card 1, the short id of this card
 		go forth
-		assertEq the short id of card 2, the short id of this card
+		assertEq @, the short id of card 2, the short id of this card
 		go forth
-		assertEq the short id of card 3, the short id of this card
+		assertEq @, the short id of card 3, the short id of this card
 	end repeat
 	
 	-- going to the same card already on, shouldn't call anything
 	go first
-	assertEq the short id of card 1, the short id of this card
+	assertEq @, the short id of card 1, the short id of this card
 	put "" into logCardEvts
 	go first
-	assertEq the short id of card 1, the short id of this card
-	assertEq "", logCardEvts
+	assertEq @, the short id of card 1, the short id of this card
+	assertEq @, "", logCardEvts
 	
 	-- test going to different cards
 	go first
 	put "" into logCardEvts
 	go to card id (the short id of card 2)
-	assertEq the short id of card 2, the short id of this card
+	assertEq @, the short id of card 2, the short id of this card
 	go to card id (the short id of card 3)
-	assertEq the short id of card 3, the short id of this card
+	assertEq @, the short id of card 3, the short id of this card
 	go to card "card1"
-	assertEq the short id of card 1, the short id of this card
+	assertEq @, the short id of card 1, the short id of this card
 	put ",closecd card1 cur=card1,opencd card2 cur=card2,closecd card2 cur=card2,opencd card3 cur=card3,closecd card3 cur=card3,opencd card1 cur=card1" into expected
-	assertEq expected, logCardEvts
+	assertEq @, expected, logCardEvts
 	
 	answer "test complete."
 end runTestGoCardAndOpenCard
