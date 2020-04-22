@@ -5,7 +5,7 @@
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
-/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
@@ -488,9 +488,9 @@ export class VpcPresenter extends VpcPresenterInit {
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             this.pasteVelImpl(id);
         } else if (id && id.length) {
-            checkThrowInternal(false, lng('lngPasting this type of element is not yet supported.'));
+            checkThrowNotifyMsg(false, 'Pasting this type of element is not yet supported.')
         } else {
-            checkThrowInternal(false, lng('lngNothing has been copied.'));
+            checkThrowNotifyMsg(false, 'Nothing has been copied.')
         }
     }
 
@@ -570,7 +570,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 dupe.getN('h')
             );
         } else {
-            checkThrowInternal(false, lng("lngCan't paste this."));
+            checkThrowNotifyMsg(false, "Can't paste this.");
         }
     }
 
@@ -632,7 +632,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 this.lyrModelRender.fullRedrawNeeded();
             });
         } else {
-            checkThrowInternal(false, lng(msgIfFalse));
+            checkThrowNotifyMsg(false, lng(msgIfFalse));
         }
     }
 

@@ -2,13 +2,12 @@
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, fitIntoInclusive, longstr } from './../../ui512/utils/util512';
-/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -57,7 +56,7 @@ export class VpcChangeSelectedFont {
     protected setAlign(v: string) {
         let worked = this.setAlignImpl(v);
         if (!worked) {
-            checkThrowInternal(false, lng('lngNo selection found. Select a button or field.'));
+            checkThrow(false, 'No selection found. Select a button or field.');
         }
     }
 
@@ -90,13 +89,11 @@ export class VpcChangeSelectedFont {
     protected setFont(v: string, type: string) {
         let worked = this.setFontImpl(v, type);
         if (!worked) {
-            let msg = lng(
+            checkThrowNotifyMsg(false,
                 longstr(`lngNo selection found. Either select a
             button or {{NEWLINE}}field, or use the browse tool to select a
             few{{NEWLINE}} letters.`)
             );
-
-            checkThrowInternal(false, msg);
         }
     }
 

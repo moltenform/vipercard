@@ -1,11 +1,10 @@
 
 /* auto */ import { VpcAppUIToolBase } from './vpcToolBase';
-/* auto */ import { VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcTool, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
-/* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -60,6 +59,6 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
      * respond to backspace and edit->clear
      */
     onDeleteSelection() {
-        checkThrowInternal(false, lng('lngPlease press Backspace on the keyboard to \ndelete text.'));
+        checkThrowNotifyMsg(false, 'Please press Backspace on the keyboard to \ndelete text.');
     }
 }

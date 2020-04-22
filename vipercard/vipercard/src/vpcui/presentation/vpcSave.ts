@@ -4,7 +4,7 @@
 /* auto */ import { VpcPresenterInterface } from './vpcPresenterInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcSaveInterface } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { RespondToErr, Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
@@ -337,7 +337,7 @@ export class VpcSave implements VpcSaveInterface {
                 !info.stackOwner.length ||
                 info.stackOwner === this.pr.vci.getModel().stack.lineageUsernameNull()
             ) {
-                checkThrowInternal(false, lng('lngFirst, go to File->Save to upload the stack.'));
+                checkThrowNotifyMsg(false, 'First, go to File->Save to upload the stack.')
             }
 
             let ses = getVpcSessionTools().fromRoot();
@@ -349,11 +349,8 @@ export class VpcSave implements VpcSaveInterface {
             } else {
                 /* case 4) from a stack we do own */
                 if (this.pr.isDocDirty()) {
-                    let msg = lng(
-                        longstr(`lngIt looks like you have unsaved
-                         changes, we're reminding you to hit Save first.`)
-                    );
-                    checkThrowInternal(false, msg);
+                    checkThrowNotifyMsg(false, longstr(`It looks like you have unsaved
+                    changes, we're reminding you to hit Save first.`));
                 }
 
                 return getVpcSessionTools().getUrlForOpeningStack(loc, info.stackOwner, info.stackGuid, info.stackName);

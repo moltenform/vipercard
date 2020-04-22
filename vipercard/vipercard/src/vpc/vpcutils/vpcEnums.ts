@@ -734,6 +734,12 @@ export function cleanExceptionMsg(e: Error): string {
     let asNotification = Util512BaseErr.errAsCls(VpcNotificationMsg.name, e);
     let msg = e.message.trim();
     let isMsg = bool(asNotification) || bool(msg.startsWith('vpcmessage:'));
+    if (isMsg) {
+        /* remove the marker */
+        let r = /\(..\|\)$/g
+        msg = msg.replace(r, '')
+    }
+
     if (msg.startsWith('vpcinternal:')) {
         msg = msg.slice('vpcinternal:'.length) + ' (internal)';
     } else if (msg.startsWith('vpc:')) {

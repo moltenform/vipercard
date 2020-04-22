@@ -8,10 +8,6 @@ import readconfig
 # it even works if there is a complex condition to be tested
 # and it works across multiple lines
 
-dir, desiredArgIndex, skipThese, skipFiles = readconfig.readconfig()
-sAssertsToMarker = '|'.join( '\\b' + k + '\\(' for k in desiredArgIndex.keys())
-reAssertsToMarker = re.compile(sAssertsToMarker)
-
 def go(srcdirectory, previewOnly):
     assertTrueMsg(files.isdir(srcdirectory), 'directory not found', srcdirectory)
     currentSavedFile = './current_assert_id.txt'
@@ -31,7 +27,7 @@ def go(srcdirectory, previewOnly):
     for key in skipThese:
         if skipThese[key] != 'seen':
             warn('expected to skip this, but not seen. this might mean we accidentally wrote an assert marker ' +
-                'to assertTrue itself, or it could just mean that the list is not up to date. ' + key)
+                'to the signature of an assert itself, or it could just mean that the list is not up to date. \n' + key)
 
 
 def goForFile(f, previewOnly, state, marksAleadySeen):
@@ -66,8 +62,10 @@ def goForFileProcess(f, previewOnly, state, marksAleadySeen, content):
     return content
 
 def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, which, prefix, args, suffix, totalLength):
-    reFindMarker = r'''^\s*("[^"][^"]|'[^'][^']|`[^`][^`])\|'''
-    reFindQuote = r'''^\s*(["'`])'''
+    reFindMarker = r'''^\s*LS("[^"][^"]|'[^'][^']|`[^`][^`])\|'''
+    reFindQuote = r'''^\s*LS(["'`])'''
+    reFindMarker = reFindMarker.replace('LS', r'(?:longstr\(\s*)?')
+    reFindQuote = reFindQuote.replace('LS', r'(?:longstr\(\s*)?')
 
     for key in skipThese:
         if key in looksLike:
@@ -103,7 +101,16 @@ def processOneCall(f, state, content, looksLike, marksAleadySeen, posStart, whic
                     args[narg] = splice(args[narg], ind, 0, newmarker + '|' )
                     return True
     # no string literals found at all
-    assertTrueMsg(False, 'no string literals found', looksLike, file=f)
+    assertTrueMsg(False, 'no string literals found', looksLike, file=f, linenum=lineOffset(content, posStart))
+
+def lineOffset(contents, posStart):
+    lines = contents.split('\n')
+    total = 0
+    for i, line in enumerate(lines):
+        total += len(line) + 1
+        if total >= posStart:
+            return i + 1
+    return 1
 
 def genNewMarker(state):
     state.latestMarker += 1
@@ -167,6 +174,10 @@ def tests():
 tests()
 
 if __name__=='__main__':
+    dir, desiredArgIndex, skipThese, skipFiles = readconfig.readconfig()
+    sAssertsToMarker = '|'.join( '\\b' + k + '\\(' for k in desiredArgIndex.keys())
+    reAssertsToMarker = re.compile(sAssertsToMarker)
+
     previewOnly = True
     # previewOnly = False
     go(dir, previewOnly)

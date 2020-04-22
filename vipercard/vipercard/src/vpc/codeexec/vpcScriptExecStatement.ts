@@ -126,8 +126,7 @@ export class ExecuteStatement {
         } else {
             checkThrow(
                 false,
-                `5F|` +
-                    longstr(`the choose command is currently used for
+                longstr(`5F|the choose command is currently used for
                 simulating drawing only, so it must be one of the
                 paint tools like "pencil" or "brush" chosen`)
             );
@@ -212,7 +211,7 @@ export class ExecuteStatement {
     goVpccalluntrappableerrordialog(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
         let s = args[0].readAsString();
-        checkThrowNotifyMsg(false, s);
+        checkThrowNotifyMsg(false, '' + s);
     }
     /**
      * hide {button|field}

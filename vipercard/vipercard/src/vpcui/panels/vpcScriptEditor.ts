@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcEditPanels } from './vpcPanelsInterface';
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
-/* auto */ import { VpcErrStage, checkThrowInternal, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcErrStage, checkThrowNotifyMsg, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { MapKeyToObjectCanSet, getEnumToStrOrFallback } from './../../ui512/utils/util512';
@@ -356,7 +356,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         if (onlyCheckIfDirty) {
             let current = vel.getS('script');
             if (current !== newscript) {
-                checkThrowInternal(false, VpcPanelScriptEditor.thereArePendingChanges);
+                checkThrowNotifyMsg(false, VpcPanelScriptEditor.thereArePendingChanges);
             }
         } else {
             vel.set('script', newscript);
