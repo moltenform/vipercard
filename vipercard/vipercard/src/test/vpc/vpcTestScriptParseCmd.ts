@@ -341,22 +341,22 @@ export class TestParseHelpers {
                 let compatName =
                     this.parser.errors[0].name + ': ' + this.parser.errors[0].message;
                 if (!compatName.includes(sErrExpected)) {
-                    let s = longstr(
+                    let sParseErr = longstr(
                         `1+|for input ${sInput} got different
                         failure message, expected ${sErrExpected} ${this.parser.errors}`
                     );
-                    assertWarn(false, s);
+                    assertWarn(false, sParseErr);
                 }
 
                 return false;
             } else {
-                let s = `1*|for input ${sInput} got parse errors ${this.parser.errors}`;
-                assertWarn(false, s);
+                let sParseErr = `1*|for input ${sInput} got parse errors ${this.parser.errors}`;
+                assertWarn(false, sParseErr);
             }
         } else {
             if (sErrExpected.length > 0) {
-                let s = `1&|for input ${sInput} expected failure but succeeded.`;
-                assertWarn(false, s);
+                let sParseErr = `1&|for input ${sInput} expected failure but succeeded.`;
+                assertWarn(false, sParseErr);
             }
         }
 

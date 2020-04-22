@@ -1,55 +1,14 @@
 
 from base90 import *
 from assertmarkerutils import *
+import readconfig
 
 # Ben Fisher, 2018
 # this script adds markers to asserts
 # it even works if there is a complex condition to be tested
 # and it works across multiple lines
 
-desiredArgIndex = {
-    # base
-    'assertTrue': 1,
-    'assertWarn': 1,
-    'checkThrow512': 1,
-    'assertEq': 2,
-    'assertWarnEq': 2,
-    'checkThrowEq512': 2,
-    # vpc level
-    'checkThrow': 1,
-    'checkThrowEq': 2,
-    # vpc level helpers
-    'checkThrowInternal': 1,
-    'checkThrowNotifyMessage': 1,
-    
-    # other
-    'ensureDefined': 1,
-    'assertThrows': 0,
-    'assertThrowsAsync': 0,
-    'assertAsserts': 0,
-}
-
-skipThese = {
-    # signatures
-    'assertThrows(msgWithMark: string': True,
-    'assertEqWarn(\n    expected: unknown': True,
-    'expected: unknown': True,
-    'condition: unknown': True,
-    # ok calls that have the tag
-    'makeUI512Error(msgAssertEq, c1, c2, c3': True,
-    'makeUI512Error(msgInAssertEqWarn,': True,
-    'makeUI512Error(msgInThrowIfUndefined': True,
-    'makeUI512Error(msg: string,': True,
-    # vpc only
-    'checkThrow(condition: any': True,
-}
-
-skipFiles = {
-    'vpcParser.ts': True,
-    'vpcTokens.ts': True,
-    'vpcVisitor.ts': True,
-}
-
+dir, desiredArgIndex, skipThese, skipFiles = readconfig.readconfig()
 sAssertsToMarker = '|'.join( '\\b' + k + '\\(' for k in desiredArgIndex.keys())
 reAssertsToMarker = re.compile(sAssertsToMarker)
 
@@ -210,6 +169,5 @@ tests()
 if __name__=='__main__':
     previewOnly = True
     # previewOnly = False
-    #~ dir = os.path.abspath('../../src')
-    #~ go(dir, previewOnly)
+    go(dir, previewOnly)
 
