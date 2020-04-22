@@ -2,7 +2,7 @@
 /* auto */ import { O, RingBufferLocalStorage, UI512Compress, callDebuggerIfNotInProduction, tostring } from './util512Base';
 
 /* (c) 2019 moltenform(Ben Fisher) */
-/* Released under the GPLv3 license */
+/* Released under the MIT license */
 
 /**
  * EXCEPTION HANDLING STRATEGY:

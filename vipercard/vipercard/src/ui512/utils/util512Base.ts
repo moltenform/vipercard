@@ -2,7 +2,7 @@
 /* auto */ import { BridgedLZString } from './../../bridge/bridgeLzString';
 
 /* (c) 2019 moltenform(Ben Fisher) */
-/* Released under the GPLv3 license */
+/* Released under the MIT license */
 
 /**
  * is it truthy? anything except false, 0, "", null, undefined, and NaN

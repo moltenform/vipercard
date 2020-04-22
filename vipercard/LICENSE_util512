@@ -1,6 +1,7 @@
 As seen in the headers, applies to only these files:
 
   src/ui512/utils/util512.ts
+  src/ui512/utils/util512Base.ts
   src/ui512/utils/util512Assert.ts
   src/ui512/utils/util512Higher.ts
   src/test/testUtils/testTop.ts

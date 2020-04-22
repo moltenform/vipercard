@@ -38,13 +38,6 @@ def searchForNearbyFile(srcdirectory, name):
         return files.join(srcdirectory, f'../../{name}')
     return None
 
-def readPrettierRcContents(dir):
-    cfg = searchForNearbyFile(dir, '.prettierrc.js')
-    if cfg:
-        return '\n'.join(getFileLines(cfg, tryToStripComments=True))
-    else:
-        return None
-
 def simpleStripMultilineComments(text, open, close):
     # still fails on strings, but handles complicated/nested cases better
     # tests in check_for_null_coalesce.py

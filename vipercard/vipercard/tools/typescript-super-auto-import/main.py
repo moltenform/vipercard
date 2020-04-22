@@ -6,22 +6,17 @@ from ts_exports_read import *
 from ts_layers_read import *
 from ts_parsing import *
 from ts_add_copyright import *
+import readconfig
 
-# extensionInImportStatement = '.ts'
-extensionInImportStatement = ''
-# addCopyright = None
-addCopyright = '/* (c) 2019 moltenform(Ben Fisher) */'
-
-def go(dir):
-    assertTrueMsg(files.isdir(dir), 'directory not found', dir)
-    useSingleQuotes = checkSingleQuotes(dir)
+def go():
+    dir, useSingleQuotes, config = readconfig.readconfig()
     confirmNoDuplicateFilenames(dir)
     layers, filesReferencedInLayers, filenamesReferencedInLayers, layersCfg = readLayersFile(dir)
     confirmLayersIncludesFiles(layersCfg, dir, filenamesReferencedInLayers)
-    autoAddImports(dir, layers, useSingleQuotes)
+    autoAddImports(config, dir, layers, useSingleQuotes)
     enforceLayering(dir)
 
-def autoAddImports(srcdirectory, layers, useSingleQuotes):
+def autoAddImports(config, srcdirectory, layers, useSingleQuotes):
     mapSymbolNameToLayer = {}
     
     # get a map of symbol to filename where exported from
@@ -72,7 +67,7 @@ def autoAddImports(srcdirectory, layers, useSingleQuotes):
         newLinesToAdd = []
         for parts in whatToAdd:
             theImports = parts[1:]
-            importFromFile = getImportFromFile(srcdirectory, layerfullpath, parts[0])
+            importFromFile = getImportFromFile(config, srcdirectory, layerfullpath, parts[0])
             quote = "'" if useSingleQuotes else '"'
             s = f'''/* auto */ import {{ {', '.join(theImports)} }} from {quote}{importFromFile}{quote};'''
             newLinesToAdd.append(s)
@@ -84,7 +79,7 @@ def autoAddImports(srcdirectory, layers, useSingleQuotes):
             addNewLine = linesWithNoAuto[1] != ''
             if addNewLine:
                 newLinesToAdd.append('')
-            addCopyrightIfRequested(layerfullpath, linesWithNoAuto, newLinesToAdd, addCopyright)
+            addCopyrightIfEnabled(config, layerfullpath, linesWithNoAuto, newLinesToAdd)
             linesWithNoAuto[1:1] = newLinesToAdd
             
             alltxtNew = '\n'.join(linesWithNoAuto)
@@ -93,29 +88,15 @@ def autoAddImports(srcdirectory, layers, useSingleQuotes):
                 print('\n'.join(newLinesToAdd))
                 files.writeall(layerfullpath, alltxtNew, encoding='utf-8')
 
-def getImportFromFile(srcdirectory, layerfullpath, srcfilename):
+def getImportFromFile(config, srcdirectory, layerfullpath, srcfilename):
     srcfilenameWithoutExt = files.splitext(srcfilename)[0]
     startdir = files.getparent(layerfullpath)
     s = './' + os.path.relpath(srcfilenameWithoutExt, startdir).replace('\\', '/')
+    s += config['main']['fileExtensionInImportStatement'].strip()
     return s
     
 def countDirDepth(s):
     return len(s.replace('\\', '/').split('/')) - 1
-
-def checkSingleQuotes(dir):
-    content = readPrettierRcContents(dir)
-    if not content:
-        alert('could not find .prettierrc.js, assuming single quotes')
-        return True
-    elif 'singleQuote:true' in content.replace(' ', ''):
-        return True
-    elif 'singleQuote:false' in content.replace(' ', ''):
-        trace('super-auto-import supports single quotes, but most other scripts here do not.')
-        trace("it'd be a good idea to audit all the scripts here and then remove this warning")
-        warn('')
-        return False
-    else:
-        assertTrueMsg(False, 'could not find singleQuote:true in prettierrc')
 
 def enforceLayering(srcdirectory):
     print('running enforceLayering...')
@@ -141,7 +122,5 @@ def enforceLayering(srcdirectory):
                     warn(sErr)
     print('layer check complete')
 
-
 if __name__ == '__main__':
-    dir = os.path.abspath('../../src')
-    go(dir)
+    go()

@@ -12,7 +12,7 @@
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
-/* Released under the MIT license */
+/* Released under the GPLv3 license */
 
 /* see the top of vpcTopPreparse.ts to read how we execute code. */
 

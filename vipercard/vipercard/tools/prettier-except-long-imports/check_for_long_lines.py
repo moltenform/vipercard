@@ -39,6 +39,15 @@ def getCurrentPrintWidth(prettierCfg):
     
     return width
 
+def checkCurrentQuoteChar(prettierCfg):
+    content = '\n'.join(getFileLines(prettierCfg, tryToStripComments=True))
+    if 'singleQuote:true' in content.replace(' ', ''):
+        return True
+    elif 'singleQuote:false' in content.replace(' ', ''):
+        assertTrueMsg(False, "this script hasn't been tested with double quotes (singleQuote:false)", file=prettierCfg)
+    else:
+        assertTrueMsg(False, 'could not find singleQuote:true in prettierrc', file=prettierCfg)
+
 def isLineTooLong(lines, i):
     line = lines[i]
     if len(line) > currentPrintWidth.val + allowSlightlyLonger:

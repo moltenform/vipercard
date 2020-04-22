@@ -42,6 +42,7 @@ def goPrettierAll(srcdirectory, prettierPath, prettierCfg):
     # but it is a lot faster to run prettier in batch for all files at once.
     # if you need to skip prettier, add a comment in the file or make a .prettierignore file.
     trace('running prettier...')
+    check_for_long_lines.checkCurrentQuoteChar(prettierCfg)
     assertTrueMsg(files.exists(prettierPath), 'does not exist', prettierPath)
     assertTrueMsg(files.exists(prettierCfg), 'does not exist', prettierCfg)
     assertTrueMsg(not srcdirectory.endswith('/'))
