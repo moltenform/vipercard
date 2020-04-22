@@ -83,7 +83,7 @@ export class VpcInitIcons {
         grp002.gridSize = 32;
         grp002.gridSpacing = 1;
         grp002.gridWidth = 12;
-        grp002.totalIcons = 20 * 13;
+        grp002.totalIcons = 12 * 23;
     }
 
     /**

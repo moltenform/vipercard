@@ -1,4 +1,5 @@
 
+/* auto */ import { getVpcSessionTools } from './../../vpc/request/vpcRequest';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './vpcIntroProvider';
 /* auto */ import { IntroPagePickFile } from './vpcIntroPagePickFile';
 /* auto */ import { IntroPageOpen } from './vpcIntroPageOpen';
@@ -14,6 +15,8 @@
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+
+import { getVpcSessionTools } from '../../vpc/request/vpcRequest';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -64,7 +67,7 @@ export class IntroPageFirst extends IntroPageBase {
         opaqueWhiteBehindBtns.setDimensions(btnX, centeredY, btnWidth, ySpacebtns);
 
         const btnKeywords = ['openStack', 'showFeatured', 'newStack', 'showAbout'];
-        const btnLabels = ['lngOpen stack...', 'lngShow featured stacks...', 'lngNew stack', 'lngAbout...', ''];
+        const btnLabels = ['lngOpen stack...', 'lngFeatured stacks...', 'lngNew stack', 'lngAbout...', ''];
         let layout = new GridLayout(
             btnX,
             centeredY,
@@ -219,21 +222,25 @@ export class IntroPageFirst extends IntroPageBase {
         } else if (el.id.endsWith('choiceShowFeatured')) {
             IntroPageFirst.goPage(pr, VpcDocumentLocation.FromStaticDemo);
         } else if (el.id.endsWith('choiceOpenStack')) {
-            pr.getModal().standardAnswer(
-                pr,
-                pr.app,
-                'From which location would you like to open?',
-                n => {
-                    if (n === 0) {
-                        IntroPageFirst.goPage(pr, VpcDocumentLocation.ShowLoginForm);
-                    } else if (n === 1) {
-                        IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
-                    }
-                },
-                'Online',
-                'Json file',
-                'Cancel'
-            );
+            if (getVpcSessionTools().enableServerCode) {
+                pr.getModal().standardAnswer(
+                    pr,
+                    pr.app,
+                    'From which location would you like to open?',
+                    n => {
+                        if (n === 0) {
+                            IntroPageFirst.goPage(pr, VpcDocumentLocation.ShowLoginForm);
+                        } else if (n === 1) {
+                            IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
+                        }
+                    },
+                    'Online',
+                    'Json file',
+                    'Cancel'
+                );
+            } else {
+                IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
+            }
         }
     }
 

@@ -243,11 +243,13 @@ export class VpcSave implements VpcSaveInterface {
         let currentUsername = ses ? ses.username : '';
 
         /* telemetry on how often people save stacks */
-        Util512Higher.syncToAsyncTransition(
-            getVpcSessionTools().vpcStacksCountJsonSaves(info.stackOwner, info.stackGuid, currentUsername),
-            'count json saves',
-            RespondToErr.ConsoleErrOnly
-        );
+        if (getVpcSessionTools().enableServerCode) {
+            Util512Higher.syncToAsyncTransition(
+                getVpcSessionTools().vpcStacksCountJsonSaves(info.stackOwner, info.stackGuid, currentUsername),
+                'count json saves',
+                RespondToErr.ConsoleErrOnly
+            );
+        }
 
         /* now rethrow if we got an error */
         if (eThrown) {

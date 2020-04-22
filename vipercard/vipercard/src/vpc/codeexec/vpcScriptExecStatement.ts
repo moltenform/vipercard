@@ -211,7 +211,7 @@ export class ExecuteStatement {
     goVpccalluntrappableerrordialog(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let args = this.h.getChildVpcVals(vals, tkstr.RuleExpr, true);
         let s = args[0].readAsString();
-        checkThrowNotifyMsg(false, '' + s);
+        checkThrowNotifyMsg(false, 'aa|' + s);
     }
     /**
      * hide {button|field}

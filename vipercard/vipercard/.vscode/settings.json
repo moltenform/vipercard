@@ -26,5 +26,6 @@
 	"dist": true,
 	"tools": true,
 	"vpserver": true,
+	"resources/fonts": true,
     }
 }

@@ -57,6 +57,9 @@ export class VpcStateSerialize {
         ret.insertIndex = i;
 
         ret.attrs = VpcGettableSerialization.serializeGettable(vel);
+
+        /* adds unnecessary noise to the file */
+        delete ret['__isUtil512Serializable']
         return ret;
     }
 

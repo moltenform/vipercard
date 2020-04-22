@@ -115,15 +115,32 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.status2b = this.genChild(app, grp, 'status2b', UI512ElLabel);
         this.status2b.setDimensions(this.el.x + 60, this.el.bottom + 22, 224, 20);
 
+        /* draw Help buttton */
+        const hlpspaceFromRight = 9;
+        const hlpspaceFromBottom = 41;
+        const hlpbtnW = 21;
+        const hlpbtnH = 23;
+        let btnHelp = this.genBtn(app, grp, 'btnScriptHelp');
+        btnHelp.set('labeltext', '');
+        btnHelp.set('icongroupid', '002');
+        btnHelp.set('iconnumber', 248);
+        btnHelp.set('style', UI512BtnStyle.OSStandard);
+        btnHelp.setDimensions(
+            this.x + this.logicalWidth - (hlpbtnW + hlpspaceFromRight),
+            this.y + this.logicalHeight - (hlpbtnH + hlpspaceFromBottom),
+            hlpbtnW,
+            hlpbtnH
+        );
+
         /* draw Save buttton */
         const spaceFromRight = 9;
         const spaceFromBottom = 17;
         const btnW = 68 + 15;
         const btnH = 23;
-        let btnCompile = this.genBtn(app, grp, 'btnScriptEditorCompile');
-        btnCompile.set('labeltext', '');
-        btnCompile.set('style', UI512BtnStyle.OSStandard);
-        btnCompile.setDimensions(
+        let btnSave = this.genBtn(app, grp, 'btnScriptEditorSave');
+        btnSave.set('labeltext', '');
+        btnSave.set('style', UI512BtnStyle.OSStandard);
+        btnSave.setDimensions(
             this.x + this.logicalWidth - (btnW + spaceFromRight),
             this.y + this.logicalHeight - (btnH + spaceFromBottom),
             btnW,
@@ -184,11 +201,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         let velid = this.vci.getOptionS('viewingScriptVelId');
 
         let grp = app.getGroup(this.grpId);
-        let btnCompile = grp.getEl(this.getElId('btnScriptEditorCompile'));
+        let btnSave = grp.getEl(this.getElId('btnScriptEditorSave'));
         if (this.needsToBeSaved.find(velid)) {
-            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
+            btnSave.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaBold));
         } else {
-            btnCompile.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
+            btnSave.set('labeltext', UI512DrawText.setFont(lng('lngSave Script'), this.genevaPlain));
         }
     }
 
@@ -278,9 +295,12 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
                 /* clicked the close box */
                 this.saveChangesToModel(app, false);
                 this.vci.setOption('viewingScriptVelId', '');
-            } else if (short === 'btnScriptEditorCompile') {
+            } else if (short === 'btnScriptEditorSave') {
                 /* user clicked 'save script' */
                 this.onBtnSaveScript();
+            } else if (short === 'btnScriptHelp') {
+                /* user clicked help */
+                this.vci.setNonModalDialogByStr('VpcNonModalDocViewerReference');
             } else if (short === 'status2a') {
                 /* user clicked the line number, scroll to that line */
                 this.scrollToErrorPosition(undefined);

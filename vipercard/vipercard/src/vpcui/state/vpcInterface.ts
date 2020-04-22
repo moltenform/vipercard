@@ -182,6 +182,11 @@ export interface VpcStateInterface {
     setNonModalDialog(form: O<UI512CompBase>): void;
 
     /**
+     * show a non-modal form, closing any other active form
+     */
+    setNonModalDialogByStr(form: O<string>): void;
+
+    /**
      * get the currently focused vel
      */
     getCurrentFocusVelField(): O<VpcElField>;

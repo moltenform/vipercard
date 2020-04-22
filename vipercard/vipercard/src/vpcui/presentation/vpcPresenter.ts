@@ -440,7 +440,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * exit the stack, after asking user if they are sure
      */
     exit(dest: string) {
-        if (this.isDocDirty()) {
+        if (this.isDocDirty() && !this.cameFromDemoSoNeverPromptSave.length) {
             this.answerMsg(
                 lng('lngReminder that unsaved changes will be lost.\nContinue?'),
                 n => {

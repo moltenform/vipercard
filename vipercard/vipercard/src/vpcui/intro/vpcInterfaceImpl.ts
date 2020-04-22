@@ -7,6 +7,7 @@
 /* auto */ import { VpcPresenter } from './../presentation/vpcPresenter';
 /* auto */ import { TypeOfUndoAction, VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrow } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
@@ -278,6 +279,20 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
      */
     setNonModalDialog(form: O<UI512CompBase>) {
         return this.pr.lyrNonModalDlgHolder.setNonModalDialog(form);
+    }
+
+    /**
+     * show a non-modal form, closing any other active form
+     */
+    setNonModalDialogByStr(form: O<string>) {
+        if (form === 'VpcNonModalDocViewerReference') {
+            let dlg = new VpcNonModalDocViewer(this, DialogDocsType.Reference);
+            this.setNonModalDialog(dlg)
+        } else if (!form) {
+            this.setNonModalDialog(undefined)
+        } else {
+            checkThrow(false, "unknown dialog", form)
+        }
     }
 
     /**

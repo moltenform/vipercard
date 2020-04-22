@@ -126,7 +126,7 @@ export class VpcAboutDialog {
             pr.app,
             longstr(
                 `ViperCard, by moltenform(Ben Fisher).{{NEWLINE}}{{NEWLINE}}
-                'Uses Chevrotain (Apache), FileSaver.js (MIT),
+                'Uses Chevrotain (Apache), base64-js (MIT), FileSaver.js (MIT),
                 Golly (MIT), JSGIF (MIT), js-lru (MIT), lz-string,
                 Clipboard.js (MIT), and easy.filter.`,
                 ' '
