@@ -212,9 +212,9 @@ export class BasicHandlers {
      * show an image saying that we're running tests
      */
     static showTestImage() {
-        let img = document.createElement('img')
+        let img = window.document.createElement('img')
         img.src = '/resources/test/messagefortests.png'
-        document.body.appendChild(img)
+        window.document.body.appendChild(img)
 
         /* center image in the browser */
         img.style.position = 'absolute'
