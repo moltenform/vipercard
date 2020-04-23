@@ -7,10 +7,10 @@
 /* auto */ import { checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcSaveInterface } from './../menu/vpcAppMenuActions';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
-/* auto */ import { RespondToErr, Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { BrowserInfo, BrowserOSInfo, RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 /* auto */ import { bridgedSaveAs } from './../../bridge/bridgeFileSaver';
 
@@ -209,7 +209,7 @@ export class VpcSave implements VpcSaveInterface {
      */
     beginShareLink() {
         let gotLink = this.getShareLink();
-        let br = getRoot().getBrowserInfo();
+        let br = BrowserInfo.inst().os;
         let key = br === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
         this.pr.askMsg(lng(`lngPress ${key}+C to copy this link!`), gotLink, () => {});
     }

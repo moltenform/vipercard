@@ -1,7 +1,8 @@
 
+/* auto */ import { BrowserOSInfo } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../utils/util512Assert';
-/* auto */ import { BrowserOSInfo, assertEq, assertWarnEq } from './../utils/util512';
+/* auto */ import { assertEq, assertWarnEq } from './../utils/util512';
 /* auto */ import { TranslateCharset } from './ui512TranslateCharset';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { specialCharFontChange } from './ui512DrawTextClasses';

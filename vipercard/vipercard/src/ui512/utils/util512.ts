@@ -112,24 +112,6 @@ export class Util512 {
     }
 
     /**
-     * guess OS based on navstring.
-     */
-    static getBrowserOS(navString: string): BrowserOSInfo {
-        if (navString.includes('Windows')) {
-            return BrowserOSInfo.Windows;
-        } else if (
-            /(iPhone|iPad|iPod)/.test(navString) ||
-            navString.includes('Mac OS X') ||
-            /(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/.test(navString)
-        ) {
-            return BrowserOSInfo.Mac;
-        } else if (/(Linux|X11|UNIX)/.test(navString)) {
-            return BrowserOSInfo.Linux;
-        }
-        return BrowserOSInfo.Unknown;
-    }
-
-    /**
      * is map empty
      */
     static isMapEmpty<U>(map: { [key: string]: U }) {
@@ -811,17 +793,6 @@ export class OrderedHash<TValue> {
             yield this.vals[this.keys[i]];
         }
     }
-}
-
-/**
- * currently just the detected OS
- */
-export enum BrowserOSInfo {
-    __isUI512Enum = 1,
-    Unknown,
-    Windows,
-    Linux,
-    Mac
 }
 
 /**

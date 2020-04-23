@@ -1,5 +1,5 @@
 
-/* auto */ import { BrowserOSInfo } from './util512';
+/* auto */ import { BrowserOSInfo } from './util512Higher';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

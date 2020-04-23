@@ -1,12 +1,12 @@
 
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { IntroPageFirst } from './../../vpcui/intro/vpcIntroPageFirst';
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
-/* auto */ import { Root, Util512Higher, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
+/* auto */ import { BrowserInfo, Root, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
-/* auto */ import { Util512, slength, BrowserOSInfo } from './../utils/util512';
+/* auto */ import { Util512, slength } from './../utils/util512';
 /* auto */ import { lng } from './../lang/langBase';
+/* auto */ import { BowserBrowsers, BowserPlatform } from './../../bridge/bridgeBrowserInfo';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -16,33 +16,47 @@
  */
 export class RootSetupHelpers {
     static mainOnResize(root: RootHigher, gly: any) {
-        if (root.getBrowserInfo() === BrowserOSInfo.Windows || document.location.href.includes("newscaling")) {
+        if (RootSetupHelpers.useNewResize()) {
             RootSetupHelpers.mainOnResizeNew(root, gly)
         } else {
             RootSetupHelpers.mainOnResizeClassic(root, gly)
         }
     }
+
+    static useNewResize() {
+        if (document.location.href.includes("newscaling")) {
+            return true
+        }
+        
+        if (BrowserInfo.inst().platform === BowserPlatform.desktop) {
+            if (BrowserInfo.inst().browser === BowserBrowsers.chrome ||
+            BrowserInfo.inst().browser === BowserBrowsers.firefox) {
+                return true
+            }
+        }
+
+        return false
+    }
     
     static mainOnResizeNew(root: RootHigher, gly: any) {
-        /* there are two types of scaling we do:
-        1) css "transform"
+        /* 
+        css "transform"
             use to negate the effects of the "devicePixelRatio"
-            for example, the OS will notice a high-dpi screen and 
+            for example, the OS will often for a high-dpi screen 
             set devicePixelRatio to 1.25 by default. This doesn't blur
-            our canvas, but it looks nearest-neighbor-aliased and still bad.
-            we used to have to tell the user to set the browser zoom,
+            our canvas, but it still looks nearest-neighbor-aliased and bad.
+            We used to have to tell the user to set the browser zoom,
             but using css transform seems to solve it.
-        2) canvas sizing
-            we see if the innerWidth can hold multiple copies of the screen,
-            if so, we do this:
-            set the width of the dom element to 800 pixels
-            set the internal width of the canvas to 400 pixels
-            this has the effect of scaling all the output: 
+            Also use to fit  
             
-        for both of these we need to scale the coordinates of mouse events
-        to compensate.
+        we need to scale the coordinates of mouse events to compensate.
         
-        scaling methods that I'm not using:
+        scaling methods that I'm not currently using:
+            canvas sizing
+                set the width of the dom element to 800 pixels
+                set the internal width of the canvas to 400 pixels
+                this has the effect of scaling all the output.
+                works well, used in v0.2.
             tab.setZoom() only available for browser extensions
             css "zoom", non-standard
             canvasCtx.scale(0.8, 0.8) makes canvas blurred
@@ -108,7 +122,6 @@ export class RootSetupHelpers {
         let totalScaleR = window.devicePixelRatio / canFit
         document.body.style.transform = `matrix(${totalScale}, 0, 0, ${totalScale}, 0, 0)`
         document.body.style.transformOrigin = 'top left'
-        document.title = 'translated'
 
         root.scaleMouseCoords = totalScaleR
         root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);

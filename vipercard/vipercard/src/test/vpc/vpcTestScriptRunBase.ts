@@ -9,7 +9,7 @@
 /* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
+/* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
@@ -276,7 +276,7 @@ export class TestVpcScriptRunBase {
             ${codeIn}
             end mouseup`;
         built = built.replace(/{BSLASH}/g, '\\');
-        built = FormattedText.fromExternalCharset(built, getRoot().getBrowserInfo());
+        built = FormattedText.fromExternalCharset(built, BrowserInfo.inst().os);
 
         let btnGo = this.vcstate.model.getById(VpcElButton, this.elIds.btn_go);
         this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));

@@ -8,13 +8,12 @@
 /* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
-/* auto */ import { BrowserOSInfo, Util512 } from './../utils/util512';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
-/* auto */ import { RootHigher, RootSetupHelpers } from './rootSetupHelpers';
+/* auto */ import { RootHigher } from './rootSetupHelpers';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -24,7 +23,6 @@ export class FullRootUI512 implements RootHigher {
     presenter: UI512Presenter;
     drawText: UI512DrawText;
     iconManager: UI512IconManager;
-    browserOSInfo: BrowserOSInfo;
     prevMouseDown: O<MouseDownEventDetails>;
     scaleMouseCoords: O<number>;
     session: O<UI512IsSessionInterface>;
@@ -35,7 +33,6 @@ export class FullRootUI512 implements RootHigher {
 
     init(gly:any) {
         let domCanvas: HTMLCanvasElement = gly.domElement
-        this.browserOSInfo = Util512.getBrowserOS(window.navigator.userAgent);
         this.drawText = new UI512DrawText();
         this.iconManager = new UI512IconManager();
         this.domCanvas = new CanvasWrapper(domCanvas);
@@ -73,10 +70,6 @@ export class FullRootUI512 implements RootHigher {
 
     setSession(ss: O<UI512IsSessionInterface>) {
         this.session = ss;
-    }
-
-    getBrowserInfo() {
-        return this.browserOSInfo;
     }
 
     /* these are coming straight from golly, need to wrap in try/catch */

@@ -1,7 +1,8 @@
 
 /* auto */ import { O } from './util512Base';
 /* auto */ import { assertTrue, assertWarn, checkThrow512, respondUI512Error } from './util512Assert';
-/* auto */ import { AnyUnshapedJson, BrowserOSInfo, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
+/* auto */ import { AnyUnshapedJson, Util512, arLast, assertEq, fitIntoInclusive } from './util512';
+/* auto */ import { BowserBrowsers, BowserOS, BowserPlatform, bridgedGetAllBrowserInfo } from './../../bridge/bridgeBrowserInfo';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -394,11 +395,61 @@ export interface Root {
     getDrawIcon(): UI512IsDrawIconInterface;
     getSession(): O<UI512IsSessionInterface>;
     setSession(session: O<UI512IsSessionInterface>): void;
-    getBrowserInfo(): BrowserOSInfo;
     setTimerRate(s: string): void;
     sendEvent(evt: UI512IsEventInterface): void;
     replaceCurrentPresenter(pr: O<UI512IsPresenterInterface>): void;
     runTests(all: boolean): void;
+}
+
+/**
+ * currently just the detected OS
+ */
+export enum BrowserOSInfo {
+    __isUI512Enum = 1,
+    Unknown,
+    Windows,
+    Linux,
+    Mac
+}
+
+/**
+ * stores browser/platform information
+ */
+export class BrowserInfo {
+    os = BrowserOSInfo.Unknown
+    bowserOs = BowserOS.unknown
+    browser= BowserBrowsers.unknown
+    platform = BowserPlatform.unknown
+    static cached:O<BrowserInfo>
+    static inst() {
+        if (!BrowserInfo.cached) {
+            BrowserInfo.cached = new BrowserInfo()
+        }
+
+        return BrowserInfo.cached
+    }
+
+    /**
+     * use the bowser library to get information
+     */
+    constructor(nav?:string) {
+        nav = nav ?? window.navigator.userAgent
+        try {
+            let [br, os, platform] = bridgedGetAllBrowserInfo(nav)
+            this.browser = br
+            this.bowserOs = os
+            this.platform = platform
+            if (os === BowserOS.windows) {
+                this.os = BrowserOSInfo.Windows
+            } else if (os === BowserOS.macos || os === BowserOS.ios) {
+                this.os = BrowserOSInfo.Mac
+            } else if (os === BowserOS.linux) {
+                this.os = BrowserOSInfo.Linux
+            }
+        } catch(e) {
+            console.error(e)
+        }
+    }
 }
 
 /**

@@ -1,7 +1,8 @@
 
 /* auto */ import { ModifierKeys, toShortcutString, ui512TranslateModifiers } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { RectUtils } from './../../ui512/utils/utilsCanvasDraw';
-/* auto */ import { BrowserOSInfo, assertEq } from './../../ui512/utils/util512';
+/* auto */ import { BrowserOSInfo } from './../../ui512/utils/util512Higher';
+/* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

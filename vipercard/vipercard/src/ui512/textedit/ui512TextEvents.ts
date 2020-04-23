@@ -1,7 +1,7 @@
 
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
-/* auto */ import { getRoot } from './../utils/util512Higher';
+/* auto */ import { BrowserInfo } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { TextSelModify } from './ui512TextSelModify';
 /* auto */ import { ScrollbarImpl, fldIdToScrollbarPartId, getAmountIfScrollArrowClicked } from './ui512Scrollbar';
@@ -311,7 +311,7 @@ export class UI512TextEvents {
             let charcode = d.keyChar.charCodeAt(0);
             let toRoman = FormattedText.fromHostCharsetStrict(
                 char,
-                getRoot().getBrowserInfo()
+                BrowserInfo.inst().os
             );
             if (
                 toRoman &&
@@ -366,7 +366,7 @@ export class UI512TextEvents {
         let el = TextSelModify.getSelectedField(pr);
         if (el && !(d.fromOS && !pr.useOSClipboard)) {
             let text = d.fromOS
-                ? FormattedText.fromExternalCharset(d.text, getRoot().getBrowserInfo())
+                ? FormattedText.fromExternalCharset(d.text, BrowserInfo.inst().os)
                 : d.text;
             let gel = this.gelFromEl(el);
             if (gel) {
@@ -397,7 +397,7 @@ export class UI512TextEvents {
             let sel = TextSelModify.getSelectedText(gel);
             if (sel && sel.length > 0) {
                 let text = pr.useOSClipboard
-                    ? FormattedText.toExternalCharset(sel, getRoot().getBrowserInfo())
+                    ? FormattedText.toExternalCharset(sel, BrowserInfo.inst().os)
                     : sel;
                 let succeeded = pr.clipManager.copy(text, pr.useOSClipboard);
                 if (succeeded && isCut && sel.length > 0) {

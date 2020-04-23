@@ -1,8 +1,7 @@
 
 /* auto */ import { toShortcutString, ui512TranslateModifiers } from './../utils/utilsKeypressHelpers';
-/* auto */ import { setRoot, showMsgIfExceptionThrown } from './../utils/util512Higher';
+/* auto */ import { BrowserInfo, setRoot, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { respondUI512Error } from './../utils/util512Assert';
-/* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { FullRootUI512 } from './rootUI512';
 /* auto */ import { RootSetupHelpers } from './rootSetupHelpers';
@@ -27,7 +26,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         }
     };
 
-    let browserOSInfo = Util512.getBrowserOS(window.navigator.userAgent);
+    let browserOSInfo = BrowserInfo.inst().os
     let root = new FullRootUI512();
     let gly: any = fnMakeGolly(gollyParams);
     gly.desiredFrameTime = 60;
