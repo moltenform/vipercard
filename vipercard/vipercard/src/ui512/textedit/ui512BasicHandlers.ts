@@ -190,9 +190,11 @@ export class BasicHandlers {
                     );
                     break;
                 case runTestsShortcut:
+                    BasicHandlers.showTestImage()
                     getRoot().runTests(false);
                     break;
                 case 'Cmd+Opt+Shift+T':
+                    BasicHandlers.showTestImage()
                     getRoot().runTests(true);
                     break;
                 default:
@@ -204,6 +206,24 @@ export class BasicHandlers {
                 d.setHandled();
             }
         }
+    }
+
+    /**
+     * show an image saying that we're running tests
+     */
+    static showTestImage() {
+        let img = document.createElement('img')
+        img.src = '/resources/test/messagefortests.png'
+        document.body.appendChild(img)
+
+        /* center image in the browser */
+        img.style.position = 'absolute'
+        const imgh = 160
+        const imgw = 456
+        let top = Math.round(window.innerHeight / 2 - imgh / 2)
+        let left = Math.round(window.innerWidth / 2 - imgw / 2)
+        img.style.top = top + 'px'
+        img.style.left = left + 'px'
     }
 
     /**
