@@ -108,7 +108,6 @@ export class IntroPagePickFile extends IntroPageBase {
         pLabel.innerText = ' ';
 
         let img = window.document.createElement('img');
-        //~ img.src = '/resources/images/choosejsonfile.png';
         img.src = '/resources/images/choosejsonfilenearlytransparent.png';
         img.style.position = 'fixed'; /* not absolute */
         img.style.left = `${clickBounds[0]}px`;

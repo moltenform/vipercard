@@ -142,7 +142,7 @@ def addToListOfReservedWords(st, out, tokens):
         s = v.split(' ')[0].lower()
         did[s] = True
         out.append(f"listOfAllBuiltinCommandsInOriginalProduct['{s}'] = true;")
-    out.append("// ones we've defined")
+    out.append("/* ones we've defined */")
     for rule in st.rules:
         if rule.name.startswith('BuiltinCmd'):
             s = rule.name[len('BuiltinCmd'):].lower()
@@ -189,7 +189,7 @@ def writePropertiesListIntoGrammar(infiles):
     s += ')'
     s += '\n'
     
-    s += "\n// we've automatically searched through all word-like tokens to check for any overlap (like how _id is both a token and a property name)"
+    s += "\n/* we've automatically searched through all word-like tokens to check for any overlap (like how _id is both a token and a property name) */"
     
     addAlreadyTokens = [('_' + s.lower().strip()) for s in tempst.listPropertiesUnary if s.lower().strip() in alreadyAToken]
     addAlreadyTokens.extend([('_' + s.lower().strip()) for s in tempst.listPropertiesNullaryOrUnary if s.lower().strip() in alreadyAToken])

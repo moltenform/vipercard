@@ -9,8 +9,6 @@
 /* auto */ import { O, bool, cProductName, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback } from './../../ui512/utils/util512';
 
-import { Util512Higher } from '../../ui512/utils/util512Higher';
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 

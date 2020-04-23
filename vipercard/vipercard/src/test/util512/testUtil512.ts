@@ -108,9 +108,9 @@ t.test('getEnumToStr.ShouldNotBeAbleToAccessFlags', () => {
     );
 });
 t.test('getStrToEnum.HasExpectedReturnType', () => {
-    // check that the return value is the correct type.
-    // unfortunately this seems to require manually entering the type
-    // as a parameter, in the redundant form getStrToEnum<TestEnum>(TestEnum)
+    /* check that the return value is the correct type.
+    unfortunately this seems to require manually entering the type
+    as a parameter, in the redundant form getStrToEnum<TestEnum>(TestEnum) */
     function takesEnumVal(__unused_v: TestEnum) {}
     let r = getStrToEnum<TestEnum>(TestEnum, 'TestEnum', 'First');
     takesEnumVal(r);

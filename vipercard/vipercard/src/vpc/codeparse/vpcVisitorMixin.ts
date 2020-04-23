@@ -427,7 +427,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleFnCallNumberOf_5(ctx: VisitingContext): VpcVal {
-            // number of marked cards
+            /* number of marked cards */
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.cardLookAtMarkedOnly = true;
             parentRef.lookByRelative = OrdinalOrPosition.This;
@@ -467,7 +467,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleHFnCallWParens(ctx: VisitingContext): VpcVal {
-            // note: custom functions are handled separately
+            /* note: custom functions are handled separately */
             let fnName = this.visit(ctx.RuleHAnyFnName[0]).image;
             let args: VpcVal[] = [];
             if (ctx.RuleExpr) {
@@ -522,7 +522,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 refProductOps.lookByRelative = OrdinalOrPosition.This;
                 return this.outside.GetProp(refProductOps, fnOrPropName, adjective, undefined);
             } else {
-                // we'll match the product and let you say "get the long sin of 4" and ignore the nonsensical adjective
+                /* we'll match the product and let you say "get the long sin of 4" and ignore the nonsensical adjective */
                 return this.outside.CallBuiltinFunction(fnOrPropName, []);
             }
         }

@@ -230,13 +230,6 @@ end if`;
             /* the id might refer to a bg or stack, we will correctly handle that.
             also note that `the id of back` is correctly understood.
             to match the product, we need to say 'short id' */
-            let applyIt = ''
-            if (line[1].image === 'back' ||line[1].image === 'recent') {
-                applyIt = 'internalvpcmessagesdirective "applyback"'
-            } else if (line[1].image === 'forth') {
-                applyIt = 'internalvpcmessagesdirective "applyforth"'
-            }
-
             template = `
 if there is a %ARG0% then
     internalvpcmovecardhelper  ( the short id of %ARG0% ) , ${shouldSuspendHistory}
@@ -281,7 +274,7 @@ return 0`,
         );
     }
     rewritePop(line: ChvITk[]): ChvITk[][] {
-        // two forms: only one actually moves it
+        /* two forms: only one actually moves it */
         checkThrow(line.length >= 2, 'S_|not enough args');
         checkThrowEq(tks.tkCard, line[1], 'S^|must be pop *card*');
         if (line.length === 2) {
@@ -400,7 +393,6 @@ put the result %ARG0%`;
         return [line];
     }
     rewriteSort(line: ChvITk[]): ChvITk[][] {
-        let origLine = line.slice();
         let allImages = line.map(t => t.image).join('***') + '***';
         if (
             allImages.startsWith('sort***cards') ||

@@ -189,7 +189,6 @@ export class VpcLineToCodeObj {
      * this line is a call to a custom handler "myHandler 1,2,3"
      */
     goCustomHandler(line: ChvITk[], output: VpcCodeLine) {
-        let cmd = line[0].image.toLowerCase();
         /* we used to check listOfAllBuiltinCommandsInOriginalProduct
         and throw if it wasn't in handlersImplementedInSoftware,
         but that would make this a preparse-time error,

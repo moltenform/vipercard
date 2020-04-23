@@ -189,7 +189,7 @@ tkAllUnaryPropertiesIfNotAlready=OneOfWords(autohilite,autoselect,autotab,bottom
 
 tkAllNullaryOrUnaryPropertiesIfNotAlready=OneOfWords(scriptinglanguage,textfont,textheight,textsize,textstyle,version)
 
-// we've automatically searched through all word-like tokens to check for any overlap (like how _id is both a token and a property name)
+/* we've automatically searched through all word-like tokens to check for any overlap (like how _id is both a token and a property name) */
 HAllPropertiesThatCouldBeUnary:={tkAllUnaryPropertiesIfNotAlready | tkUnaryVipercardProperties | tkAllNullaryOrUnaryPropertiesIfNotAlready |_id|_marked|_number}                      --->ProcessOr--->IToken
 HAnyFnNameOrAllPropertiesThatCouldBeNullary:={ <HAnyFnName> | tkAllNullaryOrUnaryPropertiesIfNotAlready }                      --->ProcessOr--->IToken
 HAnyFnName:= { tkIdentifier | _target|_windows}                      --->ProcessOr--->IToken

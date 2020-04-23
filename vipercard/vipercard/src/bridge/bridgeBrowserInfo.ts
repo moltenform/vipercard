@@ -1,6 +1,5 @@
 
 import type { Bowser } from '../../external/bowser-2.9/bowser';
-import { assignOccurrenceIndices } from '../../external/chevrotain-6.5.0/chevrotaintyping';
 declare const bowser: typeof Bowser;
 
 /* [Bowser](https://github.com/lancedikson/bowser) */

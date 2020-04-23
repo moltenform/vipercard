@@ -202,17 +202,21 @@ export class Util512Higher {
             script.setAttribute('src', url);
 
             /* prevents cb from being called twice */
-            let loaded = false;
-            /* prevents cb from being called twice */
+            let cbCalled = false;
             let on_error = () => {
-                let urlsplit = url.split('/');
-                reject(new Error('Did not load ' + arLast(urlsplit)));
+                if (!cbCalled) {
+                    cbCalled = true
+                    let urlsplit = url.split('/');
+                    reject(new Error('Did not load ' + arLast(urlsplit)));
+                }
             };
 
             let on_load = () => {
-                Util512Higher.scriptsAlreadyLoaded[url] = true;
-                loaded = true;
-                resolve();
+                if (!cbCalled) {
+                    cbCalled = true;
+                    Util512Higher.scriptsAlreadyLoaded[url] = true;
+                    resolve();
+                }
             };
 
             script.addEventListener('load', () =>

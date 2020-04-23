@@ -29,11 +29,3 @@ export class VpcAppUIToolCurve extends VpcAppUIToolShape {
         );
     }
 }
-
-/**
- * which stage of the curve tool lifecycle
- */
-enum CurveToolMode {
-    StraightLine = 1,
-    AddCurve
-}

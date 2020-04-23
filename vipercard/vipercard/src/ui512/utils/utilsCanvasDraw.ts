@@ -537,7 +537,7 @@ export class RectUtils {
         padY: number
     ) {
         if (w > padX * 2 && h > padY * 2) {
-            // prettier-ignore
+            /* prettier-ignore */
             return [x + padX, y + padY, w - (padX * 2), h - (padY * 2)];
         } else {
             return undefined;

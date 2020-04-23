@@ -54,7 +54,7 @@ export class VpcSplitSingleLineIf {
         let cutEnd = got[2];
         if (this.holdingFromBefore) {
             if (type === IfTypes.else_jammed || type === IfTypes.elseif_jammed) {
-                // defer the endif until later
+                /* defer the endif until later */
             } else if (type === IfTypes.elsenormal || type === IfTypes.elseifnormal) {
                 /* it will have it's own end if */
                 this.holdingFromBefore = undefined;

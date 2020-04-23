@@ -881,7 +881,7 @@ listOfAllBuiltinCommandsInOriginalProduct['pass'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['return'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['send'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['if'] = true;
-// ones we've defined
+/* ones we've defined */
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappablechoose'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappabledomenu'] = true;
 listOfAllBuiltinCommandsInOriginalProduct['vpccalluntrappableerrordialog'] = true;
