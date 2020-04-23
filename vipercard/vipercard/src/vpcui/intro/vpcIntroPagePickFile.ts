@@ -38,9 +38,9 @@ export class IntroPagePickFile extends IntroPageBase {
             'labeltext',
             lng(
                 longstr(
-                    `lngOpen from .json file.{{NEWLINE}}{{NEWLINE}}
-                    {{NEWLINE}}Please click anywhere on this page{{NEWLINE}}
-                    to choose a .json file to open...`
+                    `lngOpen from .json file:{{NEWLINE}}{{NEWLINE}}
+                    {{NEWLINE}}Please click here to choose{{NEWLINE}}
+                    a .json file to open...`
                 )
             )
         );
@@ -108,6 +108,7 @@ export class IntroPagePickFile extends IntroPageBase {
         pLabel.innerText = ' ';
 
         let img = window.document.createElement('img');
+        //~ img.src = '/resources/images/choosejsonfile.png';
         img.src = '/resources/images/choosejsonfilenearlytransparent.png';
         img.style.position = 'fixed'; /* not absolute */
         img.style.left = `${clickBounds[0]}px`;

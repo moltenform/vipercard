@@ -55,9 +55,9 @@ export class SimpleUtil512Tests {
 
         /* order tests from high to low */
         let colls = [
-            testCollectionvpcuiServer,
+            /* testCollectionvpcuiServer, */
+            /* testCollectionScriptExtensive, */
             testCollectionScriptRewrites,
-            testCollectionScriptExtensive,
             testCollectionScriptRunCustomFns,
             testCollectionScriptRunCmd,
 

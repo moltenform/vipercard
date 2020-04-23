@@ -40,6 +40,8 @@ Libraries:
 - [Pizzicato](https://github.com/alemangui/pizzicato)
 
 - [Bowser](https://github.com/lancedikson/bowser)
+- 
+- [TypeScript Types for TextEncoding](https://github.com/DefinitelyTyped/DefinitelyTyped)
   
 - pbkdf2 gist by Chris Veness
 
