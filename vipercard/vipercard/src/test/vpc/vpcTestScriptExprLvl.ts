@@ -505,7 +505,7 @@ t.test('evalArithmetic', () => {
         ['34 mod 5', '4'],
         ['34 mod -5', '4'],
         ['-34 mod 5', '-4'],
-        ['-34 mod -5', '-4'],
+        ['-34 mod -5', '-4']
     ];
     h.testBatchEvaluate(batch, false);
 
@@ -1151,13 +1151,21 @@ class TestVpcScriptRunBaseForScriptExpr extends TestVpcScriptRunBase {
                 bgfld.getProp('scroll', h.elIds.card_b_b).readAsStrictInteger(),
                 'Qy|'
             );
-            assertEq('forbb', bgfld.getCardFmTxt(h.elIds.card_b_b).toUnformatted(), 'Qx|');
+            assertEq(
+                'forbb',
+                bgfld.getCardFmTxt(h.elIds.card_b_b).toUnformatted(),
+                'Qx|'
+            );
             assertEq(
                 456,
                 bgfld.getProp('scroll', h.elIds.card_b_c).readAsStrictInteger(),
                 'Qw|'
             );
-            assertEq('forbc', bgfld.getCardFmTxt(h.elIds.card_b_c).toUnformatted(), 'Qv|');
+            assertEq(
+                'forbc',
+                bgfld.getCardFmTxt(h.elIds.card_b_c).toUnformatted(),
+                'Qv|'
+            );
             assertEq(
                 0,
                 bgfld.getProp('scroll', h.elIds.card_b_d).readAsStrictInteger(),

@@ -837,7 +837,10 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
             return;
         }
 
-        checkThrow(transformedCode instanceof VpcParsedCodeCollection, 'Q_|preparse failed');
+        checkThrow(
+            transformedCode instanceof VpcParsedCodeCollection,
+            'Q_|preparse failed'
+        );
         let reSyntaxMark = new RegExp(
             Util512.escapeForRegex(BuildFakeTokens.inst.strSyntaxMark),
             'g'

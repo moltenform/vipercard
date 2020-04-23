@@ -92,7 +92,7 @@ export class VpcMenuActions {
      */
     goMnuSave() {
         if (!getVpcSessionTools().enableServerCode) {
-            this.goMnuExportStack()
+            this.goMnuExportStack();
         } else {
             this.throwIfServerCodeInactive();
             if (this.save.busy) {

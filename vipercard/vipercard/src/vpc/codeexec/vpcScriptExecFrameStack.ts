@@ -594,7 +594,10 @@ export class VpcExecFrameStack {
 
         let visited = this.evalGeneralVisit(parsed, curLine);
         checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
-        checkThrow(visited.vals.RuleExpr && visited.vals.RuleObject, 'Rt|visitSendStatement expected both RuleExpr and RuleObject');
+        checkThrow(
+            visited.vals.RuleExpr && visited.vals.RuleObject,
+            'Rt|visitSendStatement expected both RuleExpr and RuleObject'
+        );
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
         checkThrow(val instanceof VpcVal, 'Rs|visitSendStatement expected a string.');
@@ -774,12 +777,12 @@ export class VpcExecFrameStack {
             }
         } else if (directive === 'returntomsgbox') {
             this.outside.WriteToReplMessageBox('', true);
-        }else if (directive === 'applyback' || directive === 'applyforth') {
+        } else if (directive === 'applyback' || directive === 'applyforth') {
             let fallback = () => currentCardId;
             let cardExists = (s: string) => {
-                let ref = new RequestedVelRef(VpcElType.Card)
-                ref.lookById = Util512.parseInt(s)
-                return bool(this.outside.ElementExists(ref))
+                let ref = new RequestedVelRef(VpcElType.Card);
+                ref.lookById = Util512.parseInt(s);
+                return bool(this.outside.ElementExists(ref));
             };
 
             if (directive === 'applyback') {

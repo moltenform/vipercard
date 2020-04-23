@@ -182,9 +182,9 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      */
     refreshStatusLabels(app: UI512Application) {
         if (this.lastErrInfo) {
-            let errDetails = this.lastErrInfo[1]
-            let lineNum = this.lastErrInfo[2]
-            let stage = this.lastErrInfo[3]
+            let errDetails = this.lastErrInfo[1];
+            let lineNum = this.lastErrInfo[2];
+            let stage = this.lastErrInfo[3];
             let sStage = getEnumToStrOrFallback(VpcErrStage, stage);
             this.status1a.set('labeltext', sStage);
             let sLine = ` ${lineNum}`;

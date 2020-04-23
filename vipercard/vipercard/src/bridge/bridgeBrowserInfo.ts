@@ -46,7 +46,7 @@ export enum BowserBrowsers {
     vivaldi,
     webos,
     wechat,
-    yandex,
+    yandex
 }
 
 export enum BowserOS {
@@ -64,7 +64,7 @@ export enum BowserOS {
     linux,
     chromeos,
     playstation4,
-    roku,
+    roku
 }
 
 export enum BowserPlatform {
@@ -73,100 +73,100 @@ export enum BowserPlatform {
     tablet,
     mobile,
     desktop,
-    tv,
+    tv
 }
 
-function mapToBowserBrowsers(s:string):BowserBrowsers {
+function mapToBowserBrowsers(s: string): BowserBrowsers {
     let map = Object.create(null);
-    let assign = (k:string, v:string) => {
-        k = k.toLowerCase()
-        v = v.toLowerCase()
+    let assign = (k: string, v: string) => {
+        k = k.toLowerCase();
+        v = v.toLowerCase();
         if (!BowserBrowsers[v]) {
-            console.error('get the latest bowser?', k, v)
+            console.error('get the latest bowser?', k, v);
         } else {
-            map[k] = BowserBrowsers[v]
+            map[k] = BowserBrowsers[v];
         }
-    }
+    };
 
     for (let key in bowser.BROWSER_MAP) {
         if (typeof key === 'string' && typeof bowser.BROWSER_MAP[key] === 'string') {
-            assign(key, key)
-            assign(bowser.BROWSER_MAP[key], key)
+            assign(key, key);
+            assign(bowser.BROWSER_MAP[key], key);
         }
     }
 
-    let ret = map[s.toLowerCase()]
-    return ret ?? BowserBrowsers.unknown
+    let ret = map[s.toLowerCase()];
+    return ret ?? BowserBrowsers.unknown;
 }
 
-function mapToBowserOs(s:string):BowserOS {
+function mapToBowserOs(s: string): BowserOS {
     let map = Object.create(null);
-    let assign = (k:string, v:string) => {
-        k = k.toLowerCase()
-        v = v.toLowerCase()
+    let assign = (k: string, v: string) => {
+        k = k.toLowerCase();
+        v = v.toLowerCase();
         if (!BowserOS[v]) {
-            console.error('get the latest bowser?', k, v)
+            console.error('get the latest bowser?', k, v);
         } else {
-            map[k] = BowserOS[v]
+            map[k] = BowserOS[v];
         }
-    }
+    };
 
     for (let key in bowser.OS_MAP) {
         if (typeof key === 'string' && typeof bowser.OS_MAP[key] === 'string') {
-            assign(key, key)
-            assign(bowser.OS_MAP[key], key)
+            assign(key, key);
+            assign(bowser.OS_MAP[key], key);
         }
     }
 
-    let ret = map[s.toLowerCase()]
-    return ret ?? BowserOS.unknown
+    let ret = map[s.toLowerCase()];
+    return ret ?? BowserOS.unknown;
 }
 
-function mapToBowserPlatform(s:string):BowserPlatform {
+function mapToBowserPlatform(s: string): BowserPlatform {
     let map = Object.create(null);
-    let assign = (k:string, v:string) => {
-        k = k.toLowerCase()
-        v = v.toLowerCase()
+    let assign = (k: string, v: string) => {
+        k = k.toLowerCase();
+        v = v.toLowerCase();
         if (!BowserPlatform[v]) {
-            console.error('get the latest bowser?', k, v)
+            console.error('get the latest bowser?', k, v);
         } else {
-            map[k] = BowserPlatform[v]
+            map[k] = BowserPlatform[v];
         }
-    }
+    };
 
     for (let key in bowser.PLATFORMS_MAP) {
         if (typeof key === 'string' && typeof bowser.PLATFORMS_MAP[key] === 'string') {
-            assign(key, key)
-            assign(bowser.PLATFORMS_MAP[key], key)
+            assign(key, key);
+            assign(bowser.PLATFORMS_MAP[key], key);
         }
     }
 
-    let ret = map[s.toLowerCase()]
-    return ret ?? BowserPlatform.unknown
+    let ret = map[s.toLowerCase()];
+    return ret ?? BowserPlatform.unknown;
 }
 
-
-export function bridgedGetAllBrowserInfo(s:string):[BowserBrowsers, BowserOS, BowserPlatform] {
-    let rBowserBrowsers = BowserBrowsers.unknown
-    let rBowserOS = BowserOS.unknown
-    let rBowserPlatform = BowserPlatform.unknown
+export function bridgedGetAllBrowserInfo(
+    s: string
+): [BowserBrowsers, BowserOS, BowserPlatform] {
+    let rBowserBrowsers = BowserBrowsers.unknown;
+    let rBowserOS = BowserOS.unknown;
+    let rBowserPlatform = BowserPlatform.unknown;
     let obj = bowser.parse(s);
-    
-    let rawBrowsername = obj?.browser?.name
+
+    let rawBrowsername = obj?.browser?.name;
     if (rawBrowsername) {
-        rBowserBrowsers = mapToBowserBrowsers(rawBrowsername)
+        rBowserBrowsers = mapToBowserBrowsers(rawBrowsername);
     }
 
-    let rawOsName = obj?.os?.name
+    let rawOsName = obj?.os?.name;
     if (rawOsName) {
-        rBowserOS = mapToBowserOs(rawOsName)
+        rBowserOS = mapToBowserOs(rawOsName);
     }
 
-    let rawPlatform = obj?.platform?.type
+    let rawPlatform = obj?.platform?.type;
     if (rawPlatform) {
-        rBowserPlatform = mapToBowserPlatform(rawPlatform)
+        rBowserPlatform = mapToBowserPlatform(rawPlatform);
     }
 
-    return [rBowserBrowsers, rBowserOS, rBowserPlatform ]
+    return [rBowserBrowsers, rBowserOS, rBowserPlatform];
 }
-

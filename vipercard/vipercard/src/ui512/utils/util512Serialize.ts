@@ -62,7 +62,10 @@ export namespace Util512SerializableHelpers {
         incoming: IsUtil512Serializable
     ): T {
         let objNew = new ctor();
-        checkThrow512(objNew.__isUtil512Serializable, 'Rd|must be a isUtil512Serializable');
+        checkThrow512(
+            objNew.__isUtil512Serializable,
+            'Rd|must be a isUtil512Serializable'
+        );
         let prop = '';
         for (prop in objNew) {
             if (shouldSerializeProperty(objNew, prop)) {

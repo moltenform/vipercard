@@ -31,8 +31,8 @@ export class FullRootUI512 implements RootHigher {
     timerSendIdleEvent = new RepeatingTimer(100);
     mouseButtonsExpected = 0;
 
-    init(gly:any) {
-        let domCanvas: HTMLCanvasElement = gly.domElement
+    init(gly: any) {
+        let domCanvas: HTMLCanvasElement = gly.domElement;
         this.drawText = new UI512DrawText();
         this.iconManager = new UI512IconManager();
         this.domCanvas = new CanvasWrapper(domCanvas);
@@ -46,8 +46,11 @@ export class FullRootUI512 implements RootHigher {
         /* this.presenter = new UI512DemoTextEdit(); */
         this.presenter = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
-        showMsgIfExceptionThrown(() => UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor), UI512CursorAccess.setCursor.name);
-        showMsgIfExceptionThrown(VpcInitIcons.go, VpcInitIcons.name)
+        showMsgIfExceptionThrown(
+            () => UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor),
+            UI512CursorAccess.setCursor.name
+        );
+        showMsgIfExceptionThrown(VpcInitIcons.go, VpcInitIcons.name);
         showMsgIfExceptionThrown(() => this.presenter.init(), 'root.init');
     }
 

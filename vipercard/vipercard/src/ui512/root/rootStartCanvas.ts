@@ -26,7 +26,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         }
     };
 
-    let browserOSInfo = BrowserInfo.inst().os
+    let browserOSInfo = BrowserInfo.inst().os;
     let root = new FullRootUI512();
     let gly: any = fnMakeGolly(gollyParams);
     gly.desiredFrameTime = 60;
@@ -225,8 +225,6 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         RootSetupHelpers.mainOnResize(root, gly);
     }, 'rootStartCanvas');
 }
-
-
 
 /* expose this function globally */
 (window as any).mainVPCStartCanvas = mainVPCStartCanvas; /* on window */

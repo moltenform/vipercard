@@ -205,7 +205,7 @@ export class Util512Higher {
             let cbCalled = false;
             let on_error = () => {
                 if (!cbCalled) {
-                    cbCalled = true
+                    cbCalled = true;
                     let urlsplit = url.split('/');
                     reject(new Error('Did not load ' + arLast(urlsplit)));
                 }
@@ -436,38 +436,38 @@ export enum BrowserOSInfo {
  * stores browser/platform information
  */
 export class BrowserInfo {
-    os = BrowserOSInfo.Unknown
-    bowserOs = BowserOS.unknown
-    browser= BowserBrowsers.unknown
-    platform = BowserPlatform.unknown
-    static cached:O<BrowserInfo>
+    os = BrowserOSInfo.Unknown;
+    bowserOs = BowserOS.unknown;
+    browser = BowserBrowsers.unknown;
+    platform = BowserPlatform.unknown;
+    static cached: O<BrowserInfo>;
     static inst() {
         if (!BrowserInfo.cached) {
-            BrowserInfo.cached = new BrowserInfo()
+            BrowserInfo.cached = new BrowserInfo();
         }
 
-        return BrowserInfo.cached
+        return BrowserInfo.cached;
     }
 
     /**
      * use the bowser library to get information
      */
-    constructor(nav?:string) {
-        nav = nav ?? window.navigator.userAgent
+    constructor(nav?: string) {
+        nav = nav ?? window.navigator.userAgent;
         try {
-            let [br, os, platform] = bridgedGetAllBrowserInfo(nav)
-            this.browser = br
-            this.bowserOs = os
-            this.platform = platform
+            let [br, os, platform] = bridgedGetAllBrowserInfo(nav);
+            this.browser = br;
+            this.bowserOs = os;
+            this.platform = platform;
             if (os === BowserOS.windows) {
-                this.os = BrowserOSInfo.Windows
+                this.os = BrowserOSInfo.Windows;
             } else if (os === BowserOS.macos || os === BowserOS.ios) {
-                this.os = BrowserOSInfo.Mac
+                this.os = BrowserOSInfo.Mac;
             } else if (os === BowserOS.linux) {
-                this.os = BrowserOSInfo.Linux
+                this.os = BrowserOSInfo.Linux;
             }
-        } catch(e) {
-            console.error(e)
+        } catch (e) {
+            console.error(e);
         }
     }
 }

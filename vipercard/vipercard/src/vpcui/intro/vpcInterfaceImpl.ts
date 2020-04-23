@@ -287,11 +287,11 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
     setNonModalDialogByStr(form: O<string>) {
         if (form === 'VpcNonModalDocViewerReference') {
             let dlg = new VpcNonModalDocViewer(this, DialogDocsType.Reference);
-            this.setNonModalDialog(dlg)
+            this.setNonModalDialog(dlg);
         } else if (!form) {
-            this.setNonModalDialog(undefined)
+            this.setNonModalDialog(undefined);
         } else {
-            checkThrow(false, "T~|unknown dialog", form)
+            checkThrow(false, 'T~|unknown dialog', form);
         }
     }
 
