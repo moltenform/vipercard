@@ -98,7 +98,7 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
             send "closebackground" to cd id prevCard
         end if
         global internalvpcmovecardimplsuspendhistory
-        if shouldSuspendHistory then
+        if length(shouldSuspendHistory) > 0 then
             put 1 into internalvpcmovecardimplsuspendhistory
         end if
         internalvpcmessagesdirective "viseffect" nextCard
@@ -110,6 +110,11 @@ on internalvpcmovecardhelper nextId, shouldSuspendHistory
         send "opencard" to cd id nextCard
     else if length(nextCard) > 0 then
         internalvpcmessagesdirective "viseffect" nextCard
+    end if
+    if shouldSuspendHistory == "applyback" then
+        internalvpcmessagesdirective "applyback"
+    else if shouldSuspendHistory == "applyforth" then
+        internalvpcmessagesdirective "applyforth"
     end if
     if length(nextCard) > 0 then
         return ""

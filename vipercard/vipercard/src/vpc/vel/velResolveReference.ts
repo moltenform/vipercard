@@ -95,6 +95,8 @@ export class VelResolveReference {
             let cd = this.model.findByIdUntyped(s);
             return trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card;
         };
+
+        /* confirmed in the emulator that refering to 'back' doesn't alter its state */
         if (ref.cardIsRecentHistory === 'recent' || ref.cardIsRecentHistory === 'back') {
             refersTo = cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
             cardHistory.walkNextWhileAcceptible(fallback, cardExists);
@@ -102,6 +104,7 @@ export class VelResolveReference {
             refersTo = cardHistory.walkNextWhileAcceptible(fallback, cardExists);
             cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
         }
+
         checkThrow(refersTo, `can't see card "${ref.cardIsRecentHistory}"`);
         let cd = this.model.findByIdUntyped(refersTo);
         checkThrow(trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card, 'J+|wrong type');

@@ -15,7 +15,7 @@
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBase } from './../vel/velBase';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, ValHolder, arLast, assertEq, assertWarnEq, cast, getEnumToStrOrFallback, getStrToEnum, lastIfThere, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -743,8 +743,8 @@ export class VpcExecFrameStack {
 
         let sendMsg = '';
         let sendMsgTarget = '';
+        let currentCardId = this.outside.GetOptionS('currentCardId');
         if (directive === 'closeorexitfield') {
-            let currentCardId = this.outside.GetOptionS('currentCardId');
             let seld = this.outside.GetSelectedField();
             if (seld && seld.parentId === currentCardId) {
                 let fieldsRecent = this.outside.GetFieldsRecentlyEdited().val;
@@ -774,6 +774,19 @@ export class VpcExecFrameStack {
             }
         } else if (directive === 'returntomsgbox') {
             this.outside.WriteToReplMessageBox('', true);
+        }else if (directive === 'applyback' || directive === 'applyforth') {
+            let fallback = () => currentCardId;
+            let cardExists = (s: string) => {
+                let ref = new RequestedVelRef(VpcElType.Card)
+                ref.lookById = Util512.parseInt(s)
+                return bool(this.outside.ElementExists(ref))
+            };
+
+            if (directive === 'applyback') {
+                this.cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
+            } else {
+                this.cardHistory.walkNextWhileAcceptible(fallback, cardExists);
+            }
         } else {
             checkThrow(false, 'unknown directive', directive);
         }

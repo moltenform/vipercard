@@ -199,14 +199,16 @@ export class VpcRewriteForCommands {
     }
     rewriteGo(line: ChvITk[]): ChvITk[][] {
         checkThrow(line.length > 1, "8k|can't have just 'go' on its own. try 'go next' or 'go prev' ");
-        let shouldSuspendHistory = 'false';
-        if (line[1].image === 'back' || line[1].image === 'forth' || line[1].image === 'recent') {
-            shouldSuspendHistory = 'true';
-        }
-
         /* remove the "to" */
         if (line[1].image === 'to') {
             line.splice(1, 1);
+        }
+
+        let shouldSuspendHistory = '""';
+        if (line[1].image === 'back' || line[1].image === 'recent') {
+            shouldSuspendHistory = '"applyback"';
+        } else if (line[1].image === 'forth') {
+            shouldSuspendHistory = '"applyforth"';
         }
 
         let allImages = line.map(t => t.image).join('***') + '***';
@@ -222,17 +224,24 @@ export class VpcRewriteForCommands {
 if there is a %ARG0% card then
     internalvpcmovecardhelper ( the short id of %ARG0% card ) , ${shouldSuspendHistory}
 else
-    internalvpcmovecardhelper -1000
+    internalvpcmovecardhelper -1000 , ${shouldSuspendHistory}
 end if`;
         } else {
             /* the id might refer to a bg or stack, we will correctly handle that.
             also note that `the id of back` is correctly understood.
             to match the product, we need to say 'short id' */
+            let applyIt = ''
+            if (line[1].image === 'back' ||line[1].image === 'recent') {
+                applyIt = 'internalvpcmessagesdirective "applyback"'
+            } else if (line[1].image === 'forth') {
+                applyIt = 'internalvpcmessagesdirective "applyforth"'
+            }
+
             template = `
 if there is a %ARG0% then
     internalvpcmovecardhelper  ( the short id of %ARG0% ) , ${shouldSuspendHistory}
 else
-    internalvpcmovecardhelper -1000
+    internalvpcmovecardhelper -1000 , ${shouldSuspendHistory}
 end if`;
         }
         return this.rw.gen(template, line[0], [line.slice(1)]);
