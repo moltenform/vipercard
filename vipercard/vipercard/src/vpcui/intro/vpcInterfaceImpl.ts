@@ -291,7 +291,7 @@ export class VpcStateInterfaceImpl implements VpcStateInterface {
         } else if (!form) {
             this.setNonModalDialog(undefined)
         } else {
-            checkThrow(false, "unknown dialog", form)
+            checkThrow(false, "T~|unknown dialog", form)
         }
     }
 

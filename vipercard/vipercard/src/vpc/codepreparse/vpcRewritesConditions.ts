@@ -20,7 +20,7 @@ export class VpcSplitSingleLineIf {
     protected classify(line: ChvITk[], rw: VpcSuperRewrite): [IfTypes, number, number] {
         if (line[0].image === 'if') {
             let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
-            checkThrow(findThen !== -1, 'if statement, no "then" found');
+            checkThrow(findThen !== -1, 'TE|if statement, no "then" found');
             if (findThen === line.length - 1) {
                 return [IfTypes.ifnormal, -1, -1];
             } else {
@@ -28,7 +28,7 @@ export class VpcSplitSingleLineIf {
             }
         } else if (line.length >= 2 && line[0].image === 'else' && line[1].image === 'if') {
             let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
-            checkThrow(findThen !== -1, 'elseif statement, no "then" found');
+            checkThrow(findThen !== -1, 'TD|elseif statement, no "then" found');
             if (findThen === line.length - 1) {
                 return [IfTypes.elseifnormal, -1, -1];
             } else {
@@ -38,7 +38,7 @@ export class VpcSplitSingleLineIf {
             if (line.length === 1) {
                 return [IfTypes.elsenormal, -1, -1];
             } else {
-                checkThrow(line[1].image !== 'then', "use 'else', not 'else then'");
+                checkThrow(line[1].image !== 'then', "TC|use 'else', not 'else then'");
                 return [IfTypes.else_jammed, 0, 0];
             }
         } else {
@@ -125,8 +125,8 @@ export namespace VpcRewriteNoElseIfClauses {
 
     function isLineIf(l: ChvITk[]) {
         if (l.length >= 1 && l[0].image === 'if') {
-            checkThrow(l.length >= 3, "expect line starting with if to be 'if condition then'");
-            checkThrowEq('then', arLast(l).image, "expect line starting with else to be 'if condition *then*'");
+            checkThrow(l.length >= 3, "TB|expect line starting with if to be 'if condition then'");
+            checkThrowEq('then', arLast(l).image, "TA|expect line starting with else to be 'if condition *then*'");
             return l.slice(1, -1);
         }
 
@@ -139,9 +139,9 @@ export namespace VpcRewriteNoElseIfClauses {
 
     function isLineElseCondition(l: ChvITk[]) {
         if (l.length > 1 && l[0].image === 'else') {
-            checkThrow(l.length >= 4, "expect line starting with else to be 'else if condition then'");
-            checkThrowEq('if', l[1].image, "expect line starting with else to be 'else *if* condition then'");
-            checkThrowEq('then', arLast(l).image, "expect line starting with else to be 'else if condition *then*'");
+            checkThrow(l.length >= 4, "T9|expect line starting with else to be 'else if condition then'");
+            checkThrowEq('if', l[1].image, "T8|expect line starting with else to be 'else *if* condition then'");
+            checkThrowEq('then', arLast(l).image, "T7|expect line starting with else to be 'else if condition *then*'");
             return l.slice(2, -1);
         }
         return undefined;
@@ -183,18 +183,18 @@ export namespace VpcRewriteNoElseIfClauses {
                 arLast(this.current.clauses).children.push(construct);
                 this.current = construct;
             } else if (arisLineElseCondition) {
-                checkThrow(!this.current.isRoot, 'else outside of if?');
-                checkThrow(!this.current.hasSeenPlainElse, "can't have conditional else after plain else");
+                checkThrow(!this.current.isRoot, 'T6|else outside of if?');
+                checkThrow(!this.current.hasSeenPlainElse, "T5|can't have conditional else after plain else");
                 let clause = new IfConstructClause(arisLineElseCondition, false);
                 this.current.clauses.push(clause);
             } else if (isLineElsePlain(line)) {
-                checkThrow(!this.current.isRoot, 'else outside of if?');
-                checkThrow(!this.current.hasSeenPlainElse, "can't have two plain elses");
+                checkThrow(!this.current.isRoot, 'T4|else outside of if?');
+                checkThrow(!this.current.hasSeenPlainElse, "T3|can't have two plain elses");
                 this.current.hasSeenPlainElse = true;
                 let clause = new IfConstructClause([], false);
                 this.current.clauses.push(clause);
             } else if (isLineEndIf(line)) {
-                checkThrow(!this.current.isRoot && this.current.parent, "can't have an end if outside of if");
+                checkThrow(!this.current.isRoot && this.current.parent, "T2|can't have an end if outside of if");
                 this.current = this.current.parent;
             } else {
                 arLast(this.current.clauses).children.push(line);

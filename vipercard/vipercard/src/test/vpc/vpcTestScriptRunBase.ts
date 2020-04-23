@@ -296,12 +296,12 @@ export class TestVpcScriptRunBase {
 
         assertTrue(
             !expectPreparseErr || expectErrMsg !== undefined,
-            "please pass an expectErrMsg, even if it's an empty string"
+            "R9|please pass an expectErrMsg, even if it's an empty string"
         );
         if (expectPreparseErr && expectErrMsg !== undefined && !caughtErr) {
             assertWarn(
                 false,
-                '2U|preparse error expected but not seen',
+                'R8|preparse error expected but not seen',
                 codeBefore,
                 codeIn
             );
@@ -353,7 +353,7 @@ ${codeBefore}\n${codeIn}\n`,
     ) {
         assertWarn(
             !s.startsWith('put ') && !s.startsWith('set '),
-            'this is supposed to be an expression but it looks like a command'
+            'R7|this is supposed to be an expression but it looks like a command'
         );
         this.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
         let codeIn = `global testresult
@@ -364,11 +364,11 @@ put ${s} into testresult`;
     }
 
     testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
-        assertWarn(tests.length > 0, '');
+        assertWarn(tests.length > 0, 'R6|');
         let getBeforeLine = (s: string): [string, string] => {
             let ptsWithRes = s.split('{RESULT}');
             if (ptsWithRes.length > 1) {
-                assertTrue(ptsWithRes.length === 2, 'too many {RESULT}');
+                assertTrue(ptsWithRes.length === 2, 'R5|too many {RESULT}');
                 return [ptsWithRes[0], ptsWithRes[1]];
             } else {
                 let pts = s.split('\\');
@@ -474,7 +474,7 @@ put ${s} into testresult`;
                     console.error(`${expectString} output=`);
                     console.error(`${got.readAsString()}`);
                 }
-                assertWarn(false, 'DIFF RESULT');
+                assertWarn(false, 'R4|DIFF RESULT');
             }
         } else {
             let gt = got.readAsString();
@@ -490,7 +490,7 @@ put ${s} into testresult`;
                     console.error(`${expt.replace(/\n/g, '; ')} output=`);
                     console.error(`${gt.replace(/\n/g, '; ')}`);
                 }
-                assertWarn(false, 'DIFF RESULT');
+                assertWarn(false, 'R3|DIFF RESULT');
             }
         }
     }

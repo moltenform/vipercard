@@ -232,7 +232,7 @@ export class VpcEvalHelpers {
      * should do the same thing.
      */
     numberListFromArgsGiven(fnname: string, vAr: VpcVal[], sep: string): number[] {
-        checkThrow(vAr.length > 0, `8r|Wrong number of arguments given to ${fnname}, need at least 1`);
+        checkThrow(vAr.length > 0, `T}|Wrong number of arguments given to ${fnname}, need at least 1`);
         checkThrowEq(1, sep.length, `8q|numberListFromArgsGiven`);
         if (vAr.length === 1 && !vAr[0].isItNumeric()) {
             /* first, a trailing comma is removed if present.
@@ -246,7 +246,7 @@ export class VpcEvalHelpers {
             }
 
             let found = VpcValS(s).isItNumberList();
-            checkThrow(found, `8r|Wrong arguments given to ${fnname}, wanted numbers`);
+            checkThrow(found, `T||Wrong arguments given to ${fnname}, wanted numbers`);
             checkThrow(found.length >= 1, `8r|Wrong arguments given to ${fnname}, wanted at least one number`);
             return found;
         } else {

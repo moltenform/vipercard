@@ -40,7 +40,7 @@
 export class VpcRewriteForCommands {
     constructor(protected rw: VpcSuperRewrite) {}
     rewriteAnswer(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'T1|not enough args');
         if (line[1].image === 'file' || line[1].image === 'program') {
             return [this.hBuildNyi('answer ' + line[1].image, line[0])];
         }
@@ -48,7 +48,7 @@ export class VpcRewriteForCommands {
         return [line];
     }
     rewriteAsk(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'T0|not enough args');
         if (line[1].image === 'file' || line[1].image === 'program') {
             return [this.hBuildNyi('ask ' + line[1].image, line[0])];
         }
@@ -58,11 +58,11 @@ export class VpcRewriteForCommands {
         return [line];
     }
     rewriteChoose(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'S~|not enough args');
 
         /* delete "tool" */
         let found = this.rw.searchTokenGivenEnglishTerm(line, line[0], 'tool');
-        checkThrow(found !== -1, "expected to see something like 'choose brush tool'");
+        checkThrow(found !== -1, "S}|expected to see something like 'choose brush tool'");
         line.splice(found, 1);
 
         /* turn "spray can" into "spray" */
@@ -184,7 +184,7 @@ export class VpcRewriteForCommands {
     }
     rewriteExit(line: ChvITk[]): ChvITk[][] {
         /* remove the 'to' for easier parsing later */
-        checkThrow(line.length > 1, 'exit: not enough args');
+        checkThrow(line.length > 1, 'S||exit: not enough args');
         if (line[1].image === 'to') {
             line.splice(1, 1);
         }
@@ -256,7 +256,7 @@ end if`;
         return [this.hBuildNyi('the keydown command', line[0])];
     }
     rewriteLock(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length === 2, "we only support 'lock screen");
+        checkThrow(line.length === 2, "S{|we only support 'lock screen");
         if (line[1].image !== 'screen') {
             return [this.hBuildNyi('any type of unlock besides unlock screen', line[0])];
         } else {
@@ -282,8 +282,8 @@ return 0`,
     }
     rewritePop(line: ChvITk[]): ChvITk[][] {
         // two forms: only one actually moves it
-        checkThrow(line.length >= 2, 'not enough args');
-        checkThrowEq(tks.tkCard, line[1], 'must be pop *card*');
+        checkThrow(line.length >= 2, 'S_|not enough args');
+        checkThrowEq(tks.tkCard, line[1], 'S^|must be pop *card*');
         if (line.length === 2) {
             return this.rw.gen('pop true', line[0]);
         } else {
@@ -300,12 +300,12 @@ put the result %ARG0%`;
         return [line];
     }
     rewritePush(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length === 2, 'expect 2 args');
-        checkThrowEq(tks.tkCard, line[1], 'must be push *card*');
+        checkThrow(line.length === 2, 'S]|expect 2 args');
+        checkThrowEq(tks.tkCard, line[1], 'S[|must be push *card*');
         return this.rw.gen('push "card"', line[0]);
     }
     rewritePut(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'S@|not enough args');
 
         let foundPreposition = -1;
         for (let i = 0; i < line.length; i++) {
@@ -349,7 +349,7 @@ put the result %ARG0%`;
         return [this.hBuildNyi('the request command', line[0])];
     }
     rewriteReset(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length === 2, "we only support 'reset paint");
+        checkThrow(line.length === 2, "S?|we only support 'reset paint");
         if (line[1].image !== 'paint') {
             return [this.hBuildNyi('any type of unlock besides reset paint', line[0])];
         } else {
@@ -360,9 +360,9 @@ put the result %ARG0%`;
         return [this.hBuildNyi('the save command', line[0])];
     }
     rewriteSelect(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'S>|not enough args');
         if (line[1].image === 'empty') {
-            checkThrowEq(1, line.length, 'select empty should be alone');
+            checkThrowEq(1, line.length, 'S=|select empty should be alone');
             return [[line[0], BuildFakeTokens.inst.makeStringLiteral(line[0], 'empty')]];
         } else {
             let startContainer = 1;
@@ -378,11 +378,11 @@ put the result %ARG0%`;
 
             checkThrow(
                 line[startContainer].tokenType === tks.tkChunkGranularity || 'text' === line[startContainer].image,
-                'we only support `select *text* of` or `select char 2 of'
+                'S<|we only support `select *text* of` or `select char 2 of'
             );
             if ('text' === line[startContainer].image) {
                 startContainer += 1;
-                checkThrowEq('of', line[startContainer].image, 'we only support `select text *of*`');
+                checkThrowEq('of', line[startContainer].image, 'S;|we only support `select text *of*`');
                 startContainer += 1;
             }
 
@@ -417,7 +417,7 @@ put the result %ARG0%`;
         if (byLvl0 !== -1) {
             byPhrase = line.slice(byLvl0 + 1);
             line = line.slice(0, byLvl0);
-            checkThrow(byPhrase.length, "expect something like 'sort lines of x by char 1 of each'");
+            checkThrow(byPhrase.length, "S:|expect something like 'sort lines of x by char 1 of each'");
         }
 
         /* go backwards and pick up sort options until we don't see the first that isn't one */
@@ -440,7 +440,7 @@ put the result %ARG0%`;
         /* check correct syntax */
         checkThrow(
             line.length >= 3 && line[1].tokenType === tks.tkChunkGranularity && line[2].image === 'of',
-            "expect something like 'sort lines of x'"
+            "S/|expect something like 'sort lines of x'"
         );
 
         /* look backwards for any keywords. */
@@ -503,7 +503,7 @@ put the result %ARG0%`;
         return [this.hBuildNyi('the type command', line[0])];
     }
     rewriteUnlock(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'S.|not enough args');
         if (line[1].image !== 'screen') {
             return [this.hBuildNyi('any type of unlock besides unlock screen', line[0])];
         } else if (line.length === 2) {
@@ -522,7 +522,7 @@ put the result %ARG0%`;
         return [this.hBuildNyi('the unmark command', line[0])];
     }
     rewriteVisual(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'S-|not enough args');
         if (line[1].image !== 'effect') {
             return [this.hBuildNyi('any type of visual besides visual effect', line[0])];
         } else {
@@ -530,7 +530,7 @@ put the result %ARG0%`;
         }
     }
     rewriteWait(line: ChvITk[]): ChvITk[][] {
-        checkThrow(line.length > 1, 'not enough args');
+        checkThrow(line.length > 1, 'S,|not enough args');
         if (line[1].image === 'for') {
             line.splice(1, 1);
         }
@@ -574,7 +574,7 @@ end repeat`;
                 } else if (foundDest) {
                     opts['dest'] = t.image;
                 } else if (t.image !== 'to' && t.image !== 'from' && t.image !== 'door' && t.image !== 'blinds') {
-                    checkThrow(false, 'unknown visual effect term', t.image);
+                    checkThrow(false, 'S+|unknown visual effect term', t.image);
                 }
             }
         }

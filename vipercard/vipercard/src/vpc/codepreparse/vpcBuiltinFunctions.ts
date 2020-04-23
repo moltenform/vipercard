@@ -179,7 +179,7 @@ export class VpcBuiltinFunctions {
      */
     callMax(args: VpcVal[]) {
         let f = (ar: number[]) => {
-            assertTrue(ar.length < 100, 'too many args');
+            assertTrue(ar.length < 100, 'SJ|too many args');
             return Math.max.apply(null, ar); /* warn-apply-ok */
         };
 
@@ -191,7 +191,7 @@ export class VpcBuiltinFunctions {
      */
     callMin(args: VpcVal[]) {
         let f = (ar: number[]) => {
-            assertTrue(ar.length < 100, 'too many args');
+            assertTrue(ar.length < 100, 'SI|too many args');
             return Math.min.apply(null, ar); /* warn-apply-ok */
         };
 

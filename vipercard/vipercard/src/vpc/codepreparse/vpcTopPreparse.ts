@@ -194,7 +194,7 @@ export namespace VpcTopPreparse {
                     branchProcessor.go(lineObj);
                     totalOutput[lineNumber] = lineObj;
                     lineNumber += 1;
-                    checkThrow(lineNumber < CodeLimits.MaxLinesInScript, 'maxLinesInScript');
+                    checkThrow(lineNumber < CodeLimits.MaxLinesInScript, 'TV|maxLinesInScript');
 
                     /* save memory, we don't need this anymore */
                     lineObj.tmpEntireLine = undefined;

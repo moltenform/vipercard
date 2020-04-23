@@ -72,7 +72,7 @@ export class ChunkResolutionSort {
     static writeCodeCustomSort(granularity: string, sortOptions: Map<string, string>) {
         /* let's build a sort here! use decorate-sort-undecorate */
         if (granularity !== 'items' && granularity !== 'lines') {
-            checkThrow(false, 'We only support sorting by lines or items');
+            checkThrow(false, 'T[|We only support sorting by lines or items');
         }
 
         /* check_long_lines_silence_subsequent */

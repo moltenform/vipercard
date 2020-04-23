@@ -345,7 +345,7 @@ export class VpcExecTop {
             if (idsSeen.has(vel.id)) {
                 /* use assertwarn, not throw, because it's sure to show
                 a dialog, but the user can also ignore subsquent ones */
-                assertWarn(false, 'duplicate id seen: ' + vel.id);
+                assertWarn(false, 'R?|duplicate id seen: ' + vel.id);
             }
 
             idsSeen.set(vel.id, true);

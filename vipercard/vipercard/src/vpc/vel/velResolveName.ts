@@ -216,7 +216,7 @@ export class VelResolveId {
             if (vel instanceof VpcElButton || vel instanceof VpcElField) {
                 let parent = this.model.getOwnerUntyped(vel);
                 if (parent instanceof VpcElBg) {
-                    checkThrow(false, `nyi. probably write something like "bg id 123 via cd id 567"`);
+                    checkThrow(false, `T(|nyi. probably write something like "bg id 123 via cd id 567"`);
                 } else {
                     return `${vpcElTypeShowInUI(VpcElType.Card)} ${vpcElTypeShowInUI(vel.getType())} id ${vel.id}`;
                 }
@@ -248,25 +248,25 @@ export class VelResolveId {
             return ref;
         }
 
-        checkThrow(!words.some(w => w === 'name'), 'we only support looking by id, like `card id 123`');
-        checkThrow(!words.some(w => w.startsWith('"')), 'we only support looking by id, like `card id 123`');
-        checkThrow(words.length === 3 || words.length === 4, 'expected something like `card id 123`');
+        checkThrow(!words.some(w => w === 'name'), 'T&|we only support looking by id, like `card id 123`');
+        checkThrow(!words.some(w => w.startsWith('"')), 'T%|we only support looking by id, like `card id 123`');
+        checkThrow(words.length === 3 || words.length === 4, 'T#|expected something like `card id 123`');
         let getType = (s: string) => {
             return getStrToEnum<VpcElType>(VpcElType, 'expected something like `card id 123`', s);
         };
         let firstType = getType(words[0]);
         let realType = VpcElType.Unknown;
         if ((firstType === VpcElType.Card || firstType === VpcElType.Bg) && words[1] !== 'id') {
-            checkThrow(firstType !== VpcElType.Bg, 'nyi, would probably need something like via card 2');
+            checkThrow(firstType !== VpcElType.Bg, 'T!|nyi, would probably need something like via card 2');
             realType = getType(words[1]);
             words.splice(1, 1);
         } else {
             realType = firstType;
         }
 
-        checkThrow(words[1] === 'id', 'expected something like `card id 123`');
+        checkThrow(words[1] === 'id', 'T |expected something like `card id 123`');
         let theId = Util512.parseInt(words[2]);
-        checkThrow(theId, 'invalid number. expected something like `card id 123`');
+        checkThrow(theId, 'Tz|invalid number. expected something like `card id 123`');
         let ret = new RequestedVelRef(realType);
         ret.lookById = theId;
         return ret;
@@ -283,9 +283,9 @@ export class VelResolveNumber {
      */
     go(vel: VpcElBase) {
         if (vel instanceof VpcElStack) {
-            checkThrow(false, 'This type of object does not have a number.');
+            checkThrow(false, 'Ty|This type of object does not have a number.');
         } else if (vel instanceof VpcElProductOpts) {
-            checkThrow(false, 'This type of object does not have a number.');
+            checkThrow(false, 'Tx|This type of object does not have a number.');
         } else {
             return this.goOtherTypes(vel);
         }
@@ -304,17 +304,17 @@ export class VelResolveNumber {
             parentList = parent.cards;
         } else if (vel.getType() === VpcElType.Btn) {
             let parent = this.model.getOwnerUntyped(vel);
-            checkThrow(parent instanceof VpcElCard, 'bg not yet implemented');
+            checkThrow(parent instanceof VpcElCard, 'Tw|bg not yet implemented');
             parentList = parent.parts.filter(e => e.getType() === VpcElType.Btn);
         } else if (vel.getType() === VpcElType.Fld) {
             let parent = this.model.getOwnerUntyped(vel);
-            checkThrow(parent instanceof VpcElCard, 'bg not yet implemented');
+            checkThrow(parent instanceof VpcElCard, 'Tv|bg not yet implemented');
             parentList = parent.parts.filter(e => e.getType() === VpcElType.Fld);
         }
 
-        checkThrow(parentList && parentList.length, 'parent list not found or empty');
+        checkThrow(parentList && parentList.length, 'Tu|parent list not found or empty');
         let index = parentList.findIndex(e => e.id === vel.id);
-        checkThrow(index !== -1, 'object not found belonging to its parent');
+        checkThrow(index !== -1, 'Tt|object not found belonging to its parent');
         return index + 1; /* one-based indexing */
     }
 }

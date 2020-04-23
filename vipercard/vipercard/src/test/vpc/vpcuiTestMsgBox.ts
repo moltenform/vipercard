@@ -68,7 +68,7 @@ t.test('VpcNonModalReplBox.makeAllVarsGlobals, propnames can be vars', () => {
     let s = 'put result + card background sin italic autohilite into on mouseUp';
     let got: string[] = [];
     VpcNonModalReplBox.makeAllVarsGlobals(got, s);
-    assertEq(['global autohilite'], got, 'Gb|');
+    assertEq(['global autohilite'], got, 'RS|');
 });
 t.test('VpcNonModalReplBox.makeAllVarsGlobals with only reserved keywords', () => {
     let s = 'put result + card background sin italic into on mouseUp';

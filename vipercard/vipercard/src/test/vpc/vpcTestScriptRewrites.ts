@@ -35,24 +35,24 @@ t.test('testcompareRewrittenCodeHelper', () => {
     let expected = `if~0~is~1~then~\nb~\nIfEnd`;
     h.compareRewrittenCode(inp, expected);
     /* wrong results */
-    assertAsserts('', 'but got', () => {
+    assertAsserts('R2|', 'but got', () => {
         inp = `if 0 is 1 then\nb\nend if`;
         expected = `if~0~is~2~then~\nb~\nIfEnd`;
         h.compareRewrittenCode(inp, expected);
     });
     /* compile error */
-    assertAsserts('', 'unexpected err', () => {
+    assertAsserts('R1|', 'unexpected err', () => {
         let inp = `b\nend if`;
         let expected = `b~\nIfEnd`;
         h.compareRewrittenCode(inp, expected);
     });
     /* compile error with wrong err message */
-    assertAsserts('', 'wrong err message', () => {
+    assertAsserts('R0|', 'wrong err message', () => {
         let inp = `b\nend if`;
         h.compareRewrittenCode(inp, 'ERR:(incorrect message)');
     });
     /* works when we said it should fail */
-    assertAsserts('', 'expected an err', () => {
+    assertAsserts('Q~|', 'expected an err', () => {
         let inp = `if 0 is 1 then\nb\nend if`;
         h.compareRewrittenCode(inp, 'ERR:');
     });
@@ -826,18 +826,18 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
         if (err) {
             if (expected.startsWith('ERR:')) {
                 expected = expected.slice('ERR:'.length);
-                assertWarn(err.message.includes(expected), 'wrong err message');
+                assertWarn(err.message.includes(expected), 'Q}|wrong err message');
             } else {
-                assertWarn(false, 'unexpected err', err.message);
+                assertWarn(false, 'Q||unexpected err', err.message);
             }
 
             return;
         } else if (expected.startsWith('ERR:')) {
-            assertWarn(false, 'expected an error but succeeded');
+            assertWarn(false, 'Q{|expected an error but succeeded');
             return;
         }
 
-        checkThrow(transformedCode instanceof VpcParsedCodeCollection, 'preparse failed');
+        checkThrow(transformedCode instanceof VpcParsedCodeCollection, 'Q_|preparse failed');
         let reSyntaxMark = new RegExp(
             Util512.escapeForRegex(BuildFakeTokens.inst.strSyntaxMark),
             'g'
@@ -851,7 +851,7 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
         if (util512Sort(exp, got) !== 0) {
             assertWarn(
                 false,
-                `\nexpected\n${exp.join('\n')}\nbut got,\n'${got.join(
+                `Q^|\nexpected\n${exp.join('\n')}\nbut got,\n'${got.join(
                     '\n'
                 )}\n\n'\ncontext\n\n`,
                 script

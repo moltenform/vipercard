@@ -1,5 +1,4 @@
 
-/* auto */ import { testCollectionvpcuiServer } from './../vpc/vpcuiTestServer';
 /* auto */ import { testCollectionvpcuiMsgBox } from './../vpc/vpcuiTestMsgBox';
 /* auto */ import { testCollectionvpcuiIntroProvider } from './../vpc/vpcuiTestIntroProvider';
 /* auto */ import { testCollectionvpcVpcVal } from './../vpc/vpcTestVpcVal';
@@ -9,7 +8,6 @@
 /* auto */ import { testCollectionScriptRewrites } from './../vpc/vpcTestScriptRewrites';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
 /* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
-/* auto */ import { testCollectionScriptExtensive } from './../vpc/vpcTestScriptExtensive';
 /* auto */ import { testCollectionScriptExprLvl } from './../vpc/vpcTestScriptExprLvl';
 /* auto */ import { testCollectionvpcScriptEval } from './../vpc/vpcTestScriptEval';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';

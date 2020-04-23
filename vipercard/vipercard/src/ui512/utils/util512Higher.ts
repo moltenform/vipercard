@@ -290,7 +290,7 @@ export class Util512Higher {
         let ps = [fn, fTimeout()];
         let ret = await Promise.race(ps);
         if (ret instanceof SentinelClass) {
-            checkThrow512(false, 'Timed out.');
+            checkThrow512(false, 'RX|Timed out.');
         } else {
             return ret;
         }
@@ -402,6 +402,22 @@ export interface Root {
 }
 
 /**
+ * get top-level object
+ */
+let rootHolder: Root[] = [];
+export function getRoot(): Root {
+    assertWarn(rootHolder[0], 'J6|root not yet set.');
+    return rootHolder[0];
+}
+
+/**
+ * set top-level object
+ */
+export function setRoot(r: Root) {
+    rootHolder[0] = r;
+}
+
+/**
  * currently just the detected OS
  */
 export enum BrowserOSInfo {
@@ -450,22 +466,6 @@ export class BrowserInfo {
             console.error(e)
         }
     }
-}
-
-/**
- * get top-level object
- */
-let rootHolder: Root[] = [];
-export function getRoot(): Root {
-    assertWarn(rootHolder[0], 'J6|root not yet set.');
-    return rootHolder[0];
-}
-
-/**
- * set top-level object
- */
-export function setRoot(r: Root) {
-    rootHolder[0] = r;
 }
 
 /**

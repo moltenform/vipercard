@@ -41,10 +41,10 @@ export function assertThrows(msgWithMark: string, expectedErr: string, fn: VoidF
         msg = e.message ?? '';
     }
 
-    assertTrue(msg !== undefined, `3{|did not throw`, msgWithMark);
+    assertTrue(msg !== undefined, `O?|did not throw`, msgWithMark);
     assertTrue(
         msg !== undefined && msg.includes(expectedErr),
-        `9d|message "${msg}" did not contain "${expectedErr}"`,
+        `O>|message "${msg}" did not contain "${expectedErr}"`,
         msgWithMark
     );
 }
@@ -67,7 +67,7 @@ export function assertAsserts(msgWithMark: string, expectedErr: string, fn: Void
     assertTrue(msg !== undefined, `3{|did not throw`, msgWithMark);
     assertTrue(
         msg.toLowerCase().includes('assert:'),
-        `not an assertion exception`,
+        `O=|not an assertion exception`,
         msgWithMark
     );
     assertTrue(

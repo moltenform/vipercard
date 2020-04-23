@@ -53,23 +53,23 @@ t.test('changeTextDuplicate', () => {
 t.test('modifyConfirmThatFailureAsserts', () => {
     runT('abcd^#|abcd', 'abcd^#', dup);
     /* getting the wrong text should assert */
-    assertAsserts('', 'wrong text', () => {
+    assertAsserts('QG|', 'wrong text', () => {
         runT('abcd^#|Abcd', 'abcd^#', dup);
     });
     /* missing caret should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('QF|', 'assert:', () => {
         runT('abcd#|abcd', 'abcd^#', dup);
     });
     /* missing end should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('QE|', 'assert:', () => {
         runT('abcd^|abcd', 'abcd^#', dup);
     });
     /* getting the wrong caret should assert */
-    assertAsserts('', 'incorrect caret', () => {
+    assertAsserts('QD|', 'incorrect caret', () => {
         runT('abc^d#|abcd', 'abcd^#', dup);
     });
     /* getting the wrong end should assert */
-    assertAsserts('', 'incorrect select-end', () => {
+    assertAsserts('QC|', 'incorrect select-end', () => {
         runT('abcd^|#abcd', 'abcd^#', dup);
     });
 });
@@ -282,7 +282,7 @@ function runT(
     input = input.replace(/\|/g, '\n');
     let [t, selcaret, selend] = FormattedTextFromPlainText.fromPlainText(input);
     let args = [t, selcaret, selend, ...moreargs];
-    assertTrue(args.length < 100, 'too many args passed to testChangeText');
+    assertTrue(args.length < 100, 'QB|too many args passed to testChangeText');
     let [gotTxt, gotSelCaret, gotSelEnd] = fn(...args);
     let [
         expectedTxt,

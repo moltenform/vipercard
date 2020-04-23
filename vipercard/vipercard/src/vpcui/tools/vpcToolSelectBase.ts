@@ -253,7 +253,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 );
 
             this.st.elMask.getCanvasForWrite().temporarilyChangeCompositeMode('source-in', () => {
-                checkThrow(this.st, '');
+                checkThrow(this.st, 'UQ|');
                 this.st.elMask
                     .getCanvasForWrite()
                     .fillRect(
@@ -288,7 +288,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
             /* make cvPiece a cut-out of the main bg */
             let basePaint = this.cbPaintRender().getMainBg();
             this.st.cvPiece.temporarilyChangeCompositeMode('source-in', () => {
-                checkThrow(this.st, '');
+                checkThrow(this.st, 'UP|');
                 this.st.cvPiece.drawFromImage(
                     basePaint.getCanvasForWrite().canvas,
                     0,

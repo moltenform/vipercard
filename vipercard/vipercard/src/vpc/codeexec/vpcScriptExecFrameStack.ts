@@ -546,9 +546,9 @@ export class VpcExecFrameStack {
      */
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         let newHandlerName = curLine.firstToken.image;
-        checkThrow(curLine.getParseRule() === this.cacheParsedCST.parser.RuleInternalCmdUserHandler, '');
+        checkThrow(curLine.getParseRule() === this.cacheParsedCST.parser.RuleInternalCmdUserHandler, 'Rw|');
         let evaluated = this.evalGeneralVisit(parsed, curLine, true);
-        checkThrow(Array.isArray(evaluated), '');
+        checkThrow(Array.isArray(evaluated), 'Rv|');
         let args = evaluated as VpcVal[];
         curFrame.next();
         this.callHandlerAndThrowIfNotExist(curFrame, curLine, args, newHandlerName);
@@ -590,24 +590,24 @@ export class VpcExecFrameStack {
      * so can't use the same old evalRequestedExpression
      */
     protected visitSendStatement(curLine: VpcCodeLine, parsed: VpcParsed): [VpcVal, VpcElBase] {
-        assertTrue(this.cacheParsedCST.parser.RuleCmdSend === curLine.getParseRule(), 'expected "send" parse rule');
+        assertTrue(this.cacheParsedCST.parser.RuleCmdSend === curLine.getParseRule(), 'Ru|expected "send" parse rule');
 
         let visited = this.evalGeneralVisit(parsed, curLine);
         checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
-        checkThrow(visited.vals.RuleExpr && visited.vals.RuleObject, 'visitSendStatement expected both RuleExpr and RuleObject');
+        checkThrow(visited.vals.RuleExpr && visited.vals.RuleObject, 'Rt|visitSendStatement expected both RuleExpr and RuleObject');
 
         let val = visited.vals.RuleExpr[0] as VpcVal;
-        checkThrow(val instanceof VpcVal, 'visitSendStatement expected a string.');
+        checkThrow(val instanceof VpcVal, 'Rs|visitSendStatement expected a string.');
         let newLineAndLowercaseCode = '\n' + val.readAsString().toLowerCase();
         checkThrow(
             !newLineAndLowercaseCode.includes('\nfunction\n') && !newLineAndLowercaseCode.includes('\non\n'),
-            `defining custom handlers in dynamic code
+            `Rr|defining custom handlers in dynamic code
             is an interesting idea, but it's not supported yet.`
         );
 
         let velRef = visited.vals.RuleObject[0] as RequestedVelRef;
-        checkThrow(velRef instanceof RequestedVelRef, 'visitSendStatement expected vel reference.');
-        let vel = ensureDefined(this.outside.ResolveVelRef(velRef)[0], "target of 'send' not found");
+        checkThrow(velRef instanceof RequestedVelRef, 'Rq|visitSendStatement expected vel reference.');
+        let vel = ensureDefined(this.outside.ResolveVelRef(velRef)[0], "Rp|target of 'send' not found");
 
         return [val, vel];
     }
@@ -680,7 +680,7 @@ export class VpcExecFrameStack {
         VpcCurrentScriptStage.latestVelID = meId;
         VpcCurrentScriptStage.dynamicCodeOrigin = dynamicCodeOrigin;
         let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(code, newHandlerName, meId);
-        checkThrow(lineRef, 'did not find the handler we just created?');
+        checkThrow(lineRef, 'Ro|did not find the handler we just created?');
         VpcCurrentScriptStage.currentStage = VpcErrStage.SyntaxStep;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
@@ -732,12 +732,12 @@ export class VpcExecFrameStack {
      */
     visitIsInternalvpcmessagesdirective(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         curFrame.next();
-        checkThrow(curLine.excerptToParse.length === 2 || curLine.excerptToParse.length === 3, '');
-        checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, '');
+        checkThrow(curLine.excerptToParse.length === 2 || curLine.excerptToParse.length === 3, 'Rn|');
+        checkThrowEq(tks.tkStringLiteral, curLine.excerptToParse[1].tokenType, 'Rm|');
         let directive = curLine.excerptToParse[1].image.replace(/"/g, '').toLowerCase();
         let variable: O<string>;
         if (curLine.excerptToParse.length > 2) {
-            checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, '');
+            checkThrowEq(tks.tkIdentifier, curLine.excerptToParse[2].tokenType, 'Rl|');
             variable = curLine.excerptToParse[2].image;
         }
 
@@ -761,11 +761,11 @@ export class VpcExecFrameStack {
                 this.outside.GetFieldsRecentlyEdited().val = {};
             }
         } else if (directive === 'gotocardsendnomessages') {
-            let nextCardId = curFrame.locals.get(ensureDefined(variable, ''));
-            checkThrow(nextCardId && nextCardId.isItInteger(), '');
+            let nextCardId = curFrame.locals.get(ensureDefined(variable, 'Rk|'));
+            checkThrow(nextCardId && nextCardId.isItInteger(), 'Rj|');
             this.outside.SetCurCardNoOpenCardEvt(nextCardId.readAsString());
         } else if (directive === 'viseffect') {
-            let nextCard = curFrame.locals.get(ensureDefined(variable, ''));
+            let nextCard = curFrame.locals.get(ensureDefined(variable, 'Ri|'));
             let spec = this.globals.getOrFallback('$currentVisEffect', VpcVal.Empty).readAsString().split('|');
             this.globals.set('$currentVisEffect', VpcValS(''));
             if (spec.length >= 4) {
@@ -788,7 +788,7 @@ export class VpcExecFrameStack {
                 this.cardHistory.walkNextWhileAcceptible(fallback, cardExists);
             }
         } else {
-            checkThrow(false, 'unknown directive', directive);
+            checkThrow(false, 'Rh|unknown directive', directive);
         }
 
         if (slength(sendMsg)) {

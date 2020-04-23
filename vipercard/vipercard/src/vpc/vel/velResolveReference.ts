@@ -38,11 +38,11 @@ export class VelResolveReference {
             !ref.parentStackInfo || ref.parentStackInfo.onlyThisSpecified(),
             `J,|we don't currently support referring to stacks other than "this stack"`
         );
-        checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, '');
-        checkThrow(!ref.cardIsRecentHistory || ref.type === VpcElType.Card, '');
+        checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, 'T<|');
+        checkThrow(!ref.cardIsRecentHistory || ref.type === VpcElType.Card, 'T;|');
 
         if (ref.isReferenceToMe) {
-            checkThrowEq(VpcElType.Unknown, ref.type, '6}|');
+            checkThrowEq(VpcElType.Unknown, ref.type, 'T:|');
             return [me, currentCard];
         } else if (ref.isReferenceToTarget) {
             checkThrowEq(VpcElType.Unknown, ref.type, '6}|');
@@ -63,7 +63,7 @@ export class VelResolveReference {
             let ret = this.model.findByIdUntyped(ref.lookById.toString());
             checkThrow(
                 !ret || ret.getType() === ref.type || ref.type === VpcElType.Unknown,
-                'J+|wrong type',
+                'T/|wrong type',
                 ref.type,
                 ret ? ret.getType() : ''
             );
@@ -77,7 +77,7 @@ export class VelResolveReference {
             [ref, parentCard, parentBg, ref.partIsBg],
             false
         ) as [O<VpcElBase>, VpcElCard];
-        checkThrow(Array.isArray(ret) && ret[1] instanceof VpcElCard, '');
+        checkThrow(Array.isArray(ret) && ret[1] instanceof VpcElCard, 'T.|');
         return ret;
     }
 
@@ -105,7 +105,7 @@ export class VelResolveReference {
             cardHistory.walkPreviousWhileAcceptible(fallback, cardExists);
         }
 
-        checkThrow(refersTo, `can't see card "${ref.cardIsRecentHistory}"`);
+        checkThrow(refersTo, `T-|can't see card "${ref.cardIsRecentHistory}"`);
         let cd = this.model.findByIdUntyped(refersTo);
         checkThrow(trueIfDefinedAndNotNull(cd) && cd.getType() === VpcElType.Card, 'J+|wrong type');
         return [cd, currentCard];
@@ -155,7 +155,7 @@ export class VelResolveReference {
                     vel => vel.getType() === ref.type && vel.getS('name').toLowerCase() === ref.lookByName?.toLowerCase()
                 );
             } else {
-                checkThrow(false, 'J(|unknown object reference');
+                checkThrow(false, 'T,|unknown object reference');
             }
         } else {
             if (ref.lookByAbsolute !== undefined) {
@@ -189,7 +189,7 @@ export class VelResolveReference {
         let currentCard = this.model.getCurrentCard();
         let retCard: O<VpcElBase>;
         if (parentBg) {
-            checkThrow(!ref.cardLookAtMarkedOnly, "can't look at only marked cds of a bg");
+            checkThrow(!ref.cardLookAtMarkedOnly, "T+|can't look at only marked cds of a bg");
             let arr = parentBg.cards;
             if (ref.lookByAbsolute !== undefined) {
                 /* put the name of card 2 of bg "myBg" into x */
@@ -216,11 +216,11 @@ export class VelResolveReference {
                 if (currentCard.getB('marked')) {
                     retCard = currentCard;
                 } else {
-                    checkThrow(false, 'no such card');
+                    checkThrow(false, 'T*|no such card');
                 }
             } else if (ref.lookByRelative === OrdinalOrPosition.Next || ref.lookByRelative === OrdinalOrPosition.Previous) {
                 let curPos = arrAllCards.findIndex(c => c.id === currentCard.id);
-                checkThrow(curPos !== -1, '');
+                checkThrow(curPos !== -1, 'T)|');
                 if (ref.lookByRelative === OrdinalOrPosition.Next) {
                     let subArr = arrAllCards.slice(curPos);
                     retCard = subArr.find(c => c.getB('marked'));

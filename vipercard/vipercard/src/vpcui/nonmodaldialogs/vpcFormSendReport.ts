@@ -136,7 +136,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
      * send the err report
      */
     async asyncSendErrReport(vci: VpcStateInterface, userdesc: string) {
-        let ses = ensureDefined(getVpcSessionTools().fromRoot(), 'session');
+        let ses = ensureDefined(getVpcSessionTools().fromRoot(), 'U5|session');
 
         /* get the last 30 logged errors, which might be useful. */
         let lastClientLogs = vpcVersion;

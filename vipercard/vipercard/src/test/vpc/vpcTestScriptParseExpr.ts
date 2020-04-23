@@ -25,17 +25,17 @@ t.test('ExprConfirmThatFailureAsserts', () => {
     testExp('1+2', 'parses');
     assertFailsParseExp('1+', 'Exception');
     /* test that the tests can fail */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q]|', 'assert:', () => {
         testExp('1+', 'parses');
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q[|', 'assert:', () => {
         assertFailsParseExp('1+2', 'Exception');
     });
     /* incorrect message */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q@|', 'assert:', () => {
         testExp('1+2', 'Exception');
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q?|', 'assert:', () => {
         assertFailsParseExp('1+', 'parses');
     });
 });

@@ -69,17 +69,17 @@ t.test('EvalHelpers.String Comparisons Must Be A Strict Match', () => {
 t.test('EvalConfirmThatFailureAsserts', () => {
     testEquality(true, '12', '12 ');
     /* test for false positives */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RR|', 'assert:', () => {
         testEquality(true, '13', '12 ');
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RQ|', 'assert:', () => {
         testEquality(true, '12 ', '13');
     });
     /* test for false negatives */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RP|', 'assert:', () => {
         testEquality(false, '12', '12 ');
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RO|', 'assert:', () => {
         testEquality(false, '12 ', '12');
     });
 });

@@ -179,6 +179,6 @@ if __name__=='__main__':
     reAssertsToMarker = re.compile(sAssertsToMarker)
 
     previewOnly = True
-    # previewOnly = False
+    #~ previewOnly = False
     go(dir, previewOnly)
 

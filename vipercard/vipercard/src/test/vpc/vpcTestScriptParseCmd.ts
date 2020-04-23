@@ -26,17 +26,17 @@ t.test('VpcParseCmdSet.ConfirmThatFailureAsserts', () => {
     testCmdSet(`set the topleft to 1`, 'parses');
     assertFailsCmdSet(`set topleft in cd btn 1 to 2`, `Exception`);
     /* test that the tests can fail */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q>|', 'assert:', () => {
         testCmdSet(`set topleft in cd btn 1 to 2`, 'parses');
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q=|', 'assert:', () => {
         assertFailsCmdSet(`set the topleft to 1`, 'Exception');
     });
     /* incorrect message */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q<|', 'assert:', () => {
         testCmdSet(`set the topleft to 1`, 'Exception');
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q;|', 'assert:', () => {
         assertFailsCmdSet(`set topleft in cd btn 1 to 2`, 'parses');
     });
 });
@@ -294,7 +294,7 @@ export class TestParseHelpers {
             if (!lexResult.errors.length) {
                 assertWarn(
                     false,
-                    "expected a lexer error but there weren't any",
+                    "Q:|expected a lexer error but there weren't any",
                     `${lexResult.errors[0]?.message}`
                 );
             } else {
@@ -322,7 +322,7 @@ export class TestParseHelpers {
         );
         assertWarn(
             sExpected === '' || sExpected === 'parses',
-            "we don't check the cst anymore"
+            "Q/|we don't check the cst anymore"
         );
         let shouldCont = this.testParseRespondToErrs(sInput, sErrExpected, cst);
         if (!shouldCont) {

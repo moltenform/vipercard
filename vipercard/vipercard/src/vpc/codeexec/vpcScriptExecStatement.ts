@@ -190,7 +190,7 @@ export class ExecuteStatement {
      * simulate a menu command
      */
     goVpccalluntrappabledomenu(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        checkThrow(false, 'not yet implemented');
+        checkThrow(false, 'R=|not yet implemented');
     }
     /**
      * drag from {x1}, {y1} to {x2}, {y2}
@@ -236,14 +236,14 @@ export class ExecuteStatement {
      */
     goLock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
-        checkThrow(params[0] === 'screen', 'only support lock screen');
+        checkThrow(params[0] === 'screen', 'R<|only support lock screen');
         this.outside.SetOption('screenLocked', true);
     }
     /**
      * mark cards
      */
     goMark(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        checkThrow(false, 'not yet implemented');
+        checkThrow(false, 'R;|not yet implemented');
     }
     /**
      * multiply [chunk of] {container} by {number}
@@ -297,7 +297,7 @@ export class ExecuteStatement {
      */
     goReset(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
-        checkThrow(params[0] === 'paint', 'only support reset paint');
+        checkThrow(params[0] === 'paint', 'R:|only support reset paint');
         checkThrow(false, "52|the 'reset' command is not yet implemented.");
     }
     /**
@@ -307,13 +307,13 @@ export class ExecuteStatement {
         let exprs = vals.vals[tkstr.RuleExpr];
         let expr1 = exprs[0] as VpcVal;
         let expr2 = exprs[1] as VpcVal;
-        checkThrowEq(2, exprs.length, '');
-        checkThrow(expr1 instanceof VpcVal, '');
-        checkThrow(expr2 instanceof VpcVal, '');
+        checkThrowEq(2, exprs.length, 'R/|');
+        checkThrow(expr1 instanceof VpcVal, 'R.|');
+        checkThrow(expr2 instanceof VpcVal, 'R-|');
         let searchFor = expr1.readAsString();
         let replaceWith = expr2.readAsString();
 
-        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), '53|');
+        let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHSimpleContainer), 'R,|');
         let cont = this.outside.ResolveContainerWritable(contRef);
         cont.replaceAll(searchFor, replaceWith);
     }
@@ -323,12 +323,12 @@ export class ExecuteStatement {
     goSelect(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals);
         if (params[0] === 'empty') {
-            checkThrow(false, 'nyi: deselecting text');
+            checkThrow(false, 'R+|nyi: deselecting text');
         } else {
             let contRef = ensureDefined(this.h.findChildAndCast(RequestedContainerRef, vals, tkstr.RuleHContainer), '53|');
-            checkThrow(contRef.vel, 'has to be a field, not a variable');
+            checkThrow(contRef.vel, 'R*|has to be a field, not a variable');
             this.outside.ResolveContainerWritable(contRef);
-            checkThrow(false, 'nyi: selecting text');
+            checkThrow(false, 'R)|nyi: selecting text');
         }
     }
     /**
@@ -338,7 +338,7 @@ export class ExecuteStatement {
         let velRef = this.h.findChildVelRef(vals, tkstr.RuleObject);
         let velRefFld = this.h.findChildVelRef(vals, tkstr.RuleObjectFld);
         let velRefChunk = this.h.findChildAndCast(RequestedChunk, vals, tkstr.RuleHChunk);
-        let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], '')[0];
+        let tk = ensureDefined(vals.vals[tkstr.RuleHCouldBeAPropertyToSet], 'R(|')[0];
         let propName = (tk as ChvITk).image;
 
         /* let's concat all of the values together into one string separated by commas */
@@ -375,7 +375,7 @@ export class ExecuteStatement {
             return;
         }
 
-        checkThrow(!identifiers || !identifiers[0] || identifiers[0] === 'at', 'must be show *at*');
+        checkThrow(!identifiers || !identifiers[0] || identifiers[0] === 'at', 'R&|must be show *at*');
         let location = this.h.getChildVpcVals(vals, tkstr.RuleLvl4Expression, false);
         let locationStr = location.map(v => v.readAsString()).join(',');
 
@@ -390,10 +390,10 @@ export class ExecuteStatement {
      */
     goSort(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals);
-        checkThrowEq(2, params.length, '');
+        checkThrowEq(2, params.length, 'R%|');
         let itemDel = this.outside.GetItemDelim();
         let [smethod, sorder] = params;
-        let sg = ensureDefined(this.h.findChildStr(vals, tkstr.tkChunkGranularity), '');
+        let sg = ensureDefined(this.h.findChildStr(vals, tkstr.tkChunkGranularity), 'R#|');
         let granularity = getStrToEnum<VpcGranularity>(VpcGranularity, 'Granularity', sg);
         let method = getStrToEnum<SortType>(SortType, 'SortType', smethod);
         let ascend = sorder.toLowerCase() !== 'descending';
@@ -413,12 +413,12 @@ export class ExecuteStatement {
      */
     goUnlock(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
-        checkThrow(params[0] === 'screen', 'only support lock screen');
+        checkThrow(params[0] === 'screen', 'R!|only support lock screen');
         this.outside.SetOption('screenLocked', false);
         if (params.length > 1) {
             let str = params.slice(1).join('|');
             this.outside.SetVarContents('$currentVisEffect', VpcValS(str));
-            checkThrow(false, 'visual effects are nyi');
+            checkThrow(false, 'R |visual effects are nyi');
         }
     }
     /**
@@ -426,12 +426,12 @@ export class ExecuteStatement {
      */
     goVisual(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let params = this.h.getLiteralParams(vals, tkstr.tkIdentifier);
-        checkThrow(params[0] === 'effect', 'only support lock screen');
+        checkThrow(params[0] === 'effect', 'Rz|only support lock screen');
         if (params.length > 1) {
             let str = params.slice(1).join('|');
             this.outside.DeclareGlobal('$currentVisEffect');
             this.outside.SetVarContents('$currentVisEffect', VpcValS(str));
-            checkThrow(false, 'visual effects are nyi');
+            checkThrow(false, 'Ry|visual effects are nyi');
         }
     }
     /**
@@ -443,7 +443,7 @@ export class ExecuteStatement {
         Util512.extendArray(params, this.h.getLiteralParams(vals, tkstr.tkOrdinal))
         let multiply = MapTermToMilliseconds.Ticks;
         if (params && params.length) {
-            checkThrowEq(1, params.length, 'expected something like `wait 400 ms`');
+            checkThrowEq(1, params.length, 'Rx|expected something like `wait 400 ms`');
             multiply = getStrToEnum<MapTermToMilliseconds>(MapTermToMilliseconds, 'MapTermToMilliseconds', params[0]);
         }
 

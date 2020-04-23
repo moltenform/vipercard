@@ -61,8 +61,8 @@ export class Util512BaseErr {
      * cast a class to an Error
      */
     clsAsErr() {
-        assertWarn((this as any).isUtil512BaseErr, '');
-        assertWarn((this as any).message, '');
+        assertWarn((this as any).isUtil512BaseErr, 'RW|');
+        assertWarn((this as any).message, 'RV|');
         return (this as any) as Error;
     }
 

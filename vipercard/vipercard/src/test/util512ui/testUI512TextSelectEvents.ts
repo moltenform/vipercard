@@ -46,23 +46,23 @@ t.test('ChangeSelSelectAll', () => {
 t.test('ConfirmThatFailureAsserts', () => {
     testChangeSel('^abc#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
     /* getting the wrong text should assert */
-    assertAsserts('', 'wrong text', () => {
+    assertAsserts('QL|', 'wrong text', () => {
         testChangeSel('^abd#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
     });
     /* missing caret should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('QK|', 'assert:', () => {
         testChangeSel('abd#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
     });
     /* missing end should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('QJ|', 'assert:', () => {
         testChangeSel('^abd', '^#abc', TextSelModifyImpl.changeSelSelectAll);
     });
     /* getting the wrong caret should assert */
-    assertAsserts('', 'incorrect caret', () => {
+    assertAsserts('QI|', 'incorrect caret', () => {
         testChangeSel('a^bc#', '^#abc', TextSelModifyImpl.changeSelSelectAll);
     });
     /* getting the wrong end should assert */
-    assertAsserts('', 'incorrect select-end', () => {
+    assertAsserts('QH|', 'incorrect select-end', () => {
         testChangeSel('^ab#c', '^#abc', TextSelModifyImpl.changeSelSelectAll);
     });
 });

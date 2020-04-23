@@ -262,7 +262,7 @@ export class VpcVisualEffectSpec {
      * parse visual effect params. they were already set up nicely in rewrites.
      */
     static getVisualEffect(params: string[]) {
-        checkThrowEq(4, params.length, '');
+        checkThrowEq(4, params.length, 'T^|');
         return new VpcVisualEffectSpec(
             getStrToEnum<VpcVisualEffectSpeed>(VpcVisualEffectSpeed, 'VpcVisualEffectSpeed', params[0]),
             getStrToEnum<VpcVisualEffectType>(VpcVisualEffectType, 'VpcVisualEffectType', params[1]),
@@ -435,7 +435,7 @@ export function originalToolNumberToTool(n: number): VpcTool {
         /* 17: regular polygon tool, not yet implemented */
         /* 18: polygon tool, not yet implemented */
         default:
-            checkThrow(false, `unknown or unsupported tool ${n}`);
+            checkThrow(false, `T]|unknown or unsupported tool ${n}`);
     }
 }
 

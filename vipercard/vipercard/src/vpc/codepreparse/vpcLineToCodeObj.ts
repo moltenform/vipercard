@@ -106,7 +106,7 @@ export class VpcLineToCodeObj {
         let firstImage = line[0].image;
         output.ctg = VpcLineCategory.HandlerStart;
         checkThrow(line.length > 1, `8F|cannot have a line that is just "${firstImage}"`);
-        checkThrow(line[1].image !== 'keydown', 'we support `on afterkeydown` but not `on keydown`');
+        checkThrow(line[1].image !== 'keydown', 'SP|we support `on afterkeydown` but not `on keydown`');
         checkCommonMistakenVarNames(line[1]);
         checkThrow(this.check.okHandlerName(line[1].image), `8E|name of handler like 'on ${line[1].image}' we don't support.`);
         checkThrowEq(
@@ -287,7 +287,7 @@ export class VpcLineToCodeObj {
      * by this point all loops have become just "repeat"
      */
     goRepeat(line: ChvITk[], output: VpcCodeLine) {
-        checkThrowEq(1, line.length, 'all repeats should have already been transformed.');
+        checkThrowEq(1, line.length, 'SO|all repeats should have already been transformed.');
         output.ctg = VpcLineCategory.RepeatForever;
     }
 
@@ -338,7 +338,7 @@ export class VpcLineToCodeObj {
      * line begins with send
      */
     goSend(line: ChvITk[], output: VpcCodeLine) {
-        checkThrow(line.length >= 2, `line is too short.`);
+        checkThrow(line.length >= 2, `SN|line is too short.`);
 
         /* other control blocks just parse a single expression,
         but this has to parse both an expression and an object,
@@ -352,7 +352,7 @@ export class VpcLineToCodeObj {
      * line begins with internalvpcmessagesdirective
      */
     goInternalvpcmessagesdirective(line: ChvITk[], output: VpcCodeLine) {
-        checkThrow(line.length === 3 || line.length === 2, `line must contain 2 or 3 tokens.`);
+        checkThrow(line.length === 3 || line.length === 2, `SM|line must contain 2 or 3 tokens.`);
         output.excerptToParse = line.slice();
         output.ctg = VpcLineCategory.IsInternalvpcmessagesdirective;
     }
@@ -364,7 +364,7 @@ export class VpcLineToCodeObj {
     protected isParsingNeeded(ctg: VpcLineCategory) {
         switch (ctg) {
             case VpcLineCategory.CallDynamic:
-                checkThrow(false, 'call dynamic should be handled elsewhere');
+                checkThrow(false, 'SL|call dynamic should be handled elsewhere');
                 break;
             case VpcLineCategory.HandlerStart: /* fall-through */
             case VpcLineCategory.HandlerEnd: /* fall-through */

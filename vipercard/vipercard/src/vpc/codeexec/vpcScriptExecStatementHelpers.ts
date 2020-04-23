@@ -44,7 +44,7 @@ export class VpcScriptExecuteStatementHelpers {
         let argsGiven: number[] = [];
         checkThrow(
             vals.vals[tkstr.RuleHBuiltinCmdDrag_1] && vals.vals[tkstr.RuleHBuiltinCmdDrag_1].length,
-            'no RuleHBuiltinCmdDrag_1'
+            'R>|no RuleHBuiltinCmdDrag_1'
         );
         for (let big of vals.vals[tkstr.RuleHBuiltinCmdDrag_1]) {
             let a1 = cast(IntermedMapOfIntermedVals, big);

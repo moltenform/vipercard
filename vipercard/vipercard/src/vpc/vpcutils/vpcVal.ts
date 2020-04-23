@@ -260,10 +260,10 @@ export class VpcVal extends VpcIntermedValBase {
      */
     readAsIntegerList(requireLength = -1): number[] {
         let ret = this.isIntegerList(-1 /* don't enforce yet, so we'll get a better error message */);
-        checkThrow(ret, 'Not a list of integers');
+        checkThrow(ret, 'T{|Not a list of integers');
         checkThrow(
             requireLength === -1 || requireLength === ret.length,
-            `expected ${requireLength} numbers but got ${ret.length}`
+            `T_|expected ${requireLength} numbers but got ${ret.length}`
         );
         return ret;
     }

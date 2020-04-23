@@ -129,10 +129,10 @@ export class VpcSuperRewrite {
      since rewritePut() has already been called and won't be called again! */
     protected addTerm(ret: ChvITk[][], term: string, args: ChvITk[][], realTokenAsBasis: ChvITk, needsToBePostProcess: boolean) {
         if (term.startsWith('%ARG')) {
-            checkThrowEq('%', term[term.length - 1], '');
+            checkThrowEq('%', term[term.length - 1], 'TK|');
             let sn = term.replace(/%ARG/g, '').replace(/%/g, '');
             let n = Util512.parseIntStrict(sn);
-            checkThrow(typeof n === 'number' && n >= 0 && n < args.length, 'internal error in template');
+            checkThrow(typeof n === 'number' && n >= 0 && n < args.length, 'TJ|internal error in template');
             Util512.extendArray(arLast(ret), args[n]);
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
             arLast(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
@@ -142,7 +142,7 @@ export class VpcSuperRewrite {
         } else {
             checkThrow(
                 !needsToBePostProcess || (term !== 'into' && term !== 'before' && term !== 'after'),
-                "it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead."
+                "TI|it's not safe to say 'put 4 into x' here. try 'put 4 %INTO% x' instead."
             );
             let newToken = this.tokenFromEnglishTerm(term, realTokenAsBasis);
             arLast(ret).push(newToken);
@@ -169,7 +169,7 @@ export class VpcSuperRewrite {
             tktype = tks.tkIdentifier;
             checkThrow(
                 term.match(/^[a-zA-Z$_][0-9a-zA-Z$_]*$/),
-                'internal error in template, not a known symbol or valid tkidentifier'
+                'TH|internal error in template, not a known symbol or valid tkidentifier'
             );
         }
 
@@ -186,7 +186,7 @@ export class VpcSuperRewrite {
     ) {
         let index = this.searchTokenGivenEnglishTermInParensLevel(0, line, realTokenAsBasis, term);
         if (index === -1) {
-            checkThrow(!mustExist, `did not see ${term} in a ${line[0].image}`);
+            checkThrow(!mustExist, `TG|did not see ${term} in a ${line[0].image}`);
             return false;
         } else {
             let marker = BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis, syntaxMarkerType);

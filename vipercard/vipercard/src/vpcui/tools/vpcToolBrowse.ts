@@ -59,6 +59,6 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
      * respond to backspace and edit->clear
      */
     onDeleteSelection() {
-        checkThrowNotifyMsg(false, 'Please press Backspace on the keyboard to \ndelete text.');
+        checkThrowNotifyMsg(false, 'UO|Please press Backspace on the keyboard to \ndelete text.');
     }
 }

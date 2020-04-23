@@ -214,9 +214,9 @@ export abstract class VpcElBase extends UI512Settable {
         context = ChangeContext.Default
     ) {
         if (this.isCardSpecificContent(key)) {
-            checkThrow(slength(cardId) > 0, 'invalid card id');
+            checkThrow(slength(cardId) > 0, 'Tp|invalid card id');
             let curVal = (this as any)['_' + key];
-            checkThrowEq(typeof curVal, typeof newv, '');
+            checkThrowEq(typeof curVal, typeof newv, 'To|');
             let specificKey = key + '_oncard_' + cardId;
             this.setImpl(specificKey, newv, defaultVal, context);
         } else {
@@ -237,7 +237,7 @@ export abstract class VpcElBase extends UI512Settable {
     getCardFmTxt(cardId: string): FormattedText {
         let got = this.getPossiblyCardSpecific(UI512Settable.fmtTxtVarName, new FormattedText(), cardId);
         let gotAsTxt = got as FormattedText;
-        checkThrow(gotAsTxt instanceof FormattedText, 'not FormattedText');
+        checkThrow(gotAsTxt instanceof FormattedText, 'Tn|not FormattedText');
         return gotAsTxt;
     }
 

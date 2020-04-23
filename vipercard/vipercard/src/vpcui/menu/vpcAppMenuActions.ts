@@ -522,7 +522,7 @@ export class VpcMenuActions {
     protected throwIfServerCodeInactive() {
         checkThrowNotifyMsg(
             getVpcSessionTools().enableServerCode,
-            'Server code currently not enabled. You can still save as a .json file, though.'
+            'U2|Server code currently not enabled. You can still save as a .json file, though.'
         );
     }
 

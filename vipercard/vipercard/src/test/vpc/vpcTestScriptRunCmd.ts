@@ -1183,7 +1183,7 @@ end sometimesSetResult`;
         undefined,
         codeBefore
     );
-    assertWarnEq('2a', got.readAsString(), '');
+    assertWarnEq('2a', got.readAsString(), 'RF|');
     codeBefore = `
 on sometimesSetResult p
     if p>=1 then return p * 2
@@ -1195,7 +1195,7 @@ end sometimesSetResult`;
         undefined,
         codeBefore
     );
-    assertWarnEq('2a', got.readAsString(), '');
+    assertWarnEq('2a', got.readAsString(), 'RE|');
     codeBefore = `
 function sometimesSetResult p
     if length(the result) > 0 then return "hmm"
@@ -1208,7 +1208,7 @@ end sometimesSetResult`;
         undefined,
         codeBefore
     );
-    assertWarnEq('2a', got.readAsString(), '');
+    assertWarnEq('2a', got.readAsString(), 'RD|');
 
     /* sending an event down, it can bubble back up */
 
@@ -1228,7 +1228,7 @@ end doTest
         )
     );
     got = h.testOneEvaluate('', 'doTest()');
-    assertWarnEq('13', got.readAsString(), '');
+    assertWarnEq('13', got.readAsString(), 'RC|');
 
     /* unless it is overridden in the button */
     let differentFn = `
@@ -1236,7 +1236,7 @@ function myCompute a, b
     return 0
 end myCompute`;
     got = h.testOneEvaluate('', 'doTest()', undefined, undefined, differentFn);
-    assertWarnEq('0', got.readAsString(), '');
+    assertWarnEq('0', got.readAsString(), 'RB|');
 
     /* or it is overridden in the card */
     h.vcstate.vci.undoableAction(() =>
@@ -1249,5 +1249,5 @@ end myCompute`
         )
     );
     got = h.testOneEvaluate('', 'doTest()');
-    assertWarnEq('1', got.readAsString(), '');
+    assertWarnEq('1', got.readAsString(), 'RA|');
 });

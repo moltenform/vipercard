@@ -101,7 +101,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             }
         }
 
-        checkThrow(ret && ret.length === 2, 'VelResolveReference invalid return');
+        checkThrow(ret && ret.length === 2, 'UL|VelResolveReference invalid return');
         let firstElem = ret[0];
         checkThrow(
             !firstElem || !firstElem.getS('name').includes('$$'),
@@ -258,7 +258,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (container.vel) {
             let resolved = this.ResolveVelRef(container.vel);
             let vel = resolved[0];
-            checkThrow(vel instanceof VpcElBase, `8;|element not found`);
+            checkThrow(vel instanceof VpcElBase, `UK|element not found`);
             checkThrow(
                 vel instanceof VpcElField,
                 longstr(`6[|currently we only support reading text from a
@@ -283,7 +283,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             checkThrow(vel, `8;|element not found`);
             checkThrow(
                 vel instanceof VpcElField,
-                longstr(`currently we only support writing text to
+                longstr(`UJ|currently we only support writing text to
                     a fld. to write label of button, use 'the label of cd btn 1'`)
             );
 
@@ -391,18 +391,18 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return VpcValN(resolveNum.go(vel));
         } else if (prop === 'owner') {
             /* put the owner of cd btn 1 into x */
-            checkThrow(ref, "8+|must say 'get the owner of cd btn 1' and not 'get the owner'");
+            checkThrow(ref, "UI|must say 'get the owner of cd btn 1' and not 'get the owner'");
             return VpcValS(this.getOwnerFullString(resolved, adjective));
         } else if (prop === 'target') {
             /* put the long target into x */
             checkThrow(
                 !ref || ref.type === VpcElType.Product,
-                "8+|must say 'get the target' and not 'get the target of cd btn 1'"
+                "UH|must say 'get the target' and not 'get the target of cd btn 1'"
             );
             return VpcValS(this.getTargetFullString(adjective));
         } else if (prop === 'date') {
             /* put the long date into x */
-            checkThrow(!ref || ref.type === VpcElType.Product, "8+|must say 'get the date' and not 'get the date of cd btn 1'");
+            checkThrow(!ref || ref.type === VpcElType.Product, "UG|must say 'get the date' and not 'get the date of cd btn 1'");
             return VpcBuiltinFunctionsDateUtils.go(adjective);
         } else if (prop === 'version') {
             /* get the long version */
@@ -592,7 +592,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         /* get a longer form of the id unless specifically said "short" */
         let frame = this.vci.findExecFrameStack()[1];
         let target = this.vci.getModel().findByIdUntyped(frame?.message?.targetId);
-        checkThrow(target, 'the target was not found');
+        checkThrow(target, 'UF|the target was not found');
         if (adjective === PropAdjective.Short) {
             return target.getS('name') ?? '';
         } else {
@@ -605,9 +605,9 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     protected getOwnerFullString(resolved: [O<VpcElBase>, VpcElCard], adjective: PropAdjective) {
         /* get a longer form of the id unless specifically said "short" */
-        checkThrow(resolved[0], 'the object was not found');
+        checkThrow(resolved[0], 'UE|the object was not found');
         if (resolved[0].getType() === VpcElType.Stack || resolved[0].getType() === VpcElType.Product) {
-            checkThrow(false, 'Cannot get owner of this type of object.');
+            checkThrow(false, 'UD|Cannot get owner of this type of object.');
         }
 
         let owner = this.vci.getModel().getOwnerUntyped(resolved[0]);

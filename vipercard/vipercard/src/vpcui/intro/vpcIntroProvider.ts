@@ -90,8 +90,8 @@ export class VpcIntroProvider {
         this.setFirstActionWhenLoaded(vpcState, pr);
 
         /* return the results */
-        checkThrow(pr, 'pr must be defined');
-        checkThrow(vpcState, 'vpcState must be defined');
+        checkThrow(pr, 'U1|pr must be defined');
+        checkThrow(vpcState, 'U0|vpcState must be defined');
         return [pr, vpcState];
     }
 

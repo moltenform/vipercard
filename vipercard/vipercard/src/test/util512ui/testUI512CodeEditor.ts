@@ -76,19 +76,19 @@ end if`
 t.test('CodeEditorConfirmThatFailureAsserts', () => {
     testAutoFormat(ed, `on z^`, `on z\n    ^\nend z`);
     /* getting the wrong text should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('QA|', 'assert:', () => {
         testAutoFormat(ed, `on z^`, `On z\n    ^\nend z`);
     });
     /* missing caret should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q9|', 'assert:', () => {
         testAutoFormat(ed, `on z^`, `On z\n    \nend z`);
     });
     /* two should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q8|', 'assert:', () => {
         testAutoFormat(ed, `on z^`, `On z\n    ^\n^end z`);
     });
     /* getting the wrong caret loc should assert */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('Q7|', 'assert:', () => {
         testAutoFormat(ed, `on z^`, `on z\n    \n^end z`);
     });
 });

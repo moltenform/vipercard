@@ -76,7 +76,7 @@ export class WritableContainerVar extends ReadableContainerVar implements Writab
     }
 
     static replaceAll(s: string, search: string, replace: string) {
-        checkThrow(slength(search) > 0, 'you cannot search for an empty string, replace "" with "" in s is not allowed.');
+        checkThrow(slength(search) > 0, 'Ts|you cannot search for an empty string, replace "" with "" in s is not allowed.');
 
         /* regular expressions would be faster, but we'd need to escape
         all metacharacters in the search string (hard to know if any metacharacters missed)

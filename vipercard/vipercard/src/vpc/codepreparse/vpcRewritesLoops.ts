@@ -15,11 +15,11 @@
 export namespace VpcRewritesLoops {
     /* begin to rewrite a loop */
     export function Go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
-        checkThrowEq('repeat', line[0].image, '');
+        checkThrowEq('repeat', line[0].image, 'TU|');
         if (line.length === 1) {
             return [line];
         } else if (line[1].image === 'forever') {
-            checkThrowEq(2, line.length, "didn't expect to see anything after 'repeat forever'");
+            checkThrowEq(2, line.length, "TT|didn't expect to see anything after 'repeat forever'");
             return [line.slice(0, 1)];
         } else if (line[1].image === 'until' || line[1].image === 'while') {
             return goUntilWhile(line, rw);
@@ -55,18 +55,18 @@ repeat
         }
 
         let conditionExpression = line.slice(2);
-        checkThrow(conditionExpression?.length, 'without an expression');
+        checkThrow(conditionExpression?.length, 'TS|without an expression');
         return rw.gen(template, line[0], [conditionExpression], undefined, false);
     }
 
     /* rewrite a loop of the form "repeat with x = 1 to 5" */
     function goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
-        checkThrowEq('repeat', line[0].image, '');
-        checkThrowEq('with', line[1].image, '');
-        checkThrow(couldTokenTypeBeAVariableName(line[2]), '');
-        checkThrowEq('=', line[3].image, '');
+        checkThrowEq('repeat', line[0].image, 'TR|');
+        checkThrowEq('with', line[1].image, 'TQ|');
+        checkThrow(couldTokenTypeBeAVariableName(line[2]), 'TP|');
+        checkThrowEq('=', line[3].image, 'TO|');
         let findTo = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'to');
-        checkThrow(findTo !== -1, 'repeat with, no "to" found');
+        checkThrow(findTo !== -1, 'TN|repeat with, no "to" found');
         let startFirstExpr = 4;
         let endFirstExpr = findTo - 1;
         let isDown = false;
@@ -104,8 +104,8 @@ repeat
             template = template.replace(/%CMPARE%/g, ' >= ');
         }
 
-        checkThrow(firstExpr?.length, 'wrong length');
-        checkThrow(secondExpr?.length, 'wrong length');
+        checkThrow(firstExpr?.length, 'TM|wrong length');
+        checkThrow(secondExpr?.length, 'TL|wrong length');
         return rw.gen(template, firstExpr[0], [[loopVar], firstExpr, secondExpr], undefined, false);
     }
 }

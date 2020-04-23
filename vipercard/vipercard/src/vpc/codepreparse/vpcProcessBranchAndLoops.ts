@@ -101,7 +101,7 @@ export class BranchProcessing {
             case VpcLineCategory.IfElsePlain:
                 checkThrow(
                     this.stack.length && VpcLineCategory.IfStart === arLast(this.stack).cat,
-                    `7;|cannot have an "else" interleaved within some other block.`
+                    `S*|cannot have an "else" interleaved within some other block.`
                 );
                 arLast(this.stack).add(line);
                 break;

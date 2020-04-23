@@ -81,8 +81,8 @@ export class VpcElProductOpts extends VpcElBase {
      */
     set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         assertWarn(s !== 'currentTool' || this.allowSetCurrentTool, 'Jt|');
-        assertWarn(s !== 'currentCardId' || this.allowSetCurrentCard, '');
-        assertTrue(s !== 'script', "you can't set script of Vpc");
+        assertWarn(s !== 'currentCardId' || this.allowSetCurrentCard, 'Tr|');
+        assertTrue(s !== 'script', "Tq|you can't set script of Vpc");
         return super.set(s, newVal, context);
     }
 

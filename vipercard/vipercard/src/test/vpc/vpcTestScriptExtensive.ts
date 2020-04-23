@@ -94,7 +94,7 @@ end testveryWeakHash
         let ret = expected[i];
         let pts = ret.split(':');
         if (pts.length > 1) {
-            assertWarnEq((i + 1).toString(), pts[0], '');
+            assertWarnEq((i + 1).toString(), pts[0], 'Q.|');
             return pts[1];
         } else {
             return ret;
@@ -111,10 +111,10 @@ end testveryWeakHash
             11011,00111,10111,01111,11111,`,
             ''
         );
-        assertWarnEq(expected, got.readAsString(), '');
+        assertWarnEq(expected, got.readAsString(), 'Q-|');
         h.runGeneralCode(this.helperCodeTests, 'testveryWeakHash');
         got = h.vcstate.runtime.codeExec.globals.get('allout');
-        assertWarnEq('9350163', got.readAsString(), '');
+        assertWarnEq('9350163', got.readAsString(), 'Q,|');
         /* confirm that we'll be writing to allout */
         h.vcstate.runtime.codeExec.globals.set('allout', VpcValS(''));
         h.runGeneralCode(
@@ -134,7 +134,7 @@ end if
 `
         );
         got = h.vcstate.runtime.codeExec.globals.get('allout');
-        assertWarnEq('2a34c', got.readAsString(), '');
+        assertWarnEq('2a34c', got.readAsString(), 'Q+|');
     }
 
     /*
@@ -185,7 +185,7 @@ end if
                 h.runGeneralCode('', code);
                 got = h.vcstate.runtime.codeExec.globals.get('allout').readAsString();
             } catch (e) {
-                assertWarn(e.message.includes('unexpected failure'), '');
+                assertWarn(e.message.includes('unexpected failure'), 'Q*|');
                 console.log(e.message);
                 got = 'compileErr';
             }

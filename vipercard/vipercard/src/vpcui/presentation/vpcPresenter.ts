@@ -124,7 +124,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * including sending closecard + opencard events
      */
     beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
-        assertTrue(!idSpecific || pos === OrdinalOrPosition.This, 'specifying an id, should set to This');
+        assertTrue(!idSpecific || pos === OrdinalOrPosition.This, 'UA|specifying an id, should set to This');
         let targetCardId = idSpecific ?? this.vci.getModel().getCardRelative(pos);
         if (this.getTool() === VpcTool.Browse) {
             this.vci
@@ -488,9 +488,9 @@ export class VpcPresenter extends VpcPresenterInit {
         if (found && (found.getType() === VpcElType.Btn || found.getType() === VpcElType.Fld)) {
             this.pasteVelImpl(id);
         } else if (id && id.length) {
-            checkThrowNotifyMsg(false, 'Pasting this type of element is not yet supported.');
+            checkThrowNotifyMsg(false, 'U9|Pasting this type of element is not yet supported.');
         } else {
-            checkThrowNotifyMsg(false, 'Nothing has been copied.');
+            checkThrowNotifyMsg(false, 'U8|Nothing has been copied.');
         }
     }
 
@@ -570,7 +570,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 dupe.getN('h')
             );
         } else {
-            checkThrowNotifyMsg(false, "Can't paste this.");
+            checkThrowNotifyMsg(false, "U7|Can't paste this.");
         }
     }
 
@@ -623,7 +623,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
                 let currentCard = this.vci.getModel().findById(VpcElCard, currentCardId);
                 if (!currentCard) {
-                    assertWarn(false, 'card has been deleted, going to card 1 instead.');
+                    assertWarn(false, 'U6|card has been deleted, going to card 1 instead.');
                     let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.First);
                     this.vci.setCurCardNoOpenCardEvt(card);
                 }

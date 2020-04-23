@@ -29,7 +29,7 @@ export class VpcGettableSerialization {
                 let v = vel.getGeneric(propName);
                 assertWarn(v !== undefined, propName, 'J||');
                 if (v instanceof FormattedText) {
-                    assertWarn(VpcGettableSerialization.propNameExpectFormattedText(propName), 'expected ftxt, got ', propName);
+                    assertWarn(VpcGettableSerialization.propNameExpectFormattedText(propName), 'T@|expected ftxt, got ', propName);
                     assertTrue(v instanceof FormattedText, 'J{|invalid ftxt');
                     ret[propName] = v.toSerialized();
                 } else {
@@ -79,7 +79,7 @@ export class VpcGettableSerialization {
                     prp[1] !== '_' &&
                     !VpcGettableSerialization.okNotToSee[prpSliced]
                 ) {
-                    checkThrowInternal(false, `in obj ${vel.id} did not see ${prpSliced}`);
+                    checkThrowInternal(false, `T?|in obj ${vel.id} did not see ${prpSliced}`);
                 }
             }
         } finally {
@@ -114,7 +114,7 @@ export class VpcGettableSerialization {
             vel.set(propName, new FormattedText());
             vel.set(propName, v);
         } else {
-            assertWarn(false, 'unknown data type for ' + v);
+            assertWarn(false, 'T>|unknown data type for ' + v);
         }
     }
 
@@ -129,7 +129,7 @@ export class VpcGettableSerialization {
      * copy over the prop values of one object onto another object
      */
     static copyPropsOver(getter: UI512Gettable, setter: UI512Settable) {
-        checkThrow(false, 'nyi -- use serialization instead');
+        checkThrow(false, 'T=|nyi -- use serialization instead');
     }
 
     /**

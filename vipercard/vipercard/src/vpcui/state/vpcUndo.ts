@@ -96,7 +96,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
             checkThrow(false, '6Y|Cannot delete this type of element');
         } else if (vel instanceof VpcElCard) {
             let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
-            checkThrow(ar.length > 1, '8%|Cannot delete the only card of a stack');
+            checkThrow(ar.length > 1, 'UN|Cannot delete the only card of a stack');
         } else if (vel.id === currentCard.id) {
             checkThrow(false, '6X|Cannot delete the current card');
         } else if (vel.id === currentCard.parentId) {

@@ -56,7 +56,7 @@ export class VpcChangeSelectedFont {
     protected setAlign(v: string) {
         let worked = this.setAlignImpl(v);
         if (!worked) {
-            checkThrow(false, 'No selection found. Select a button or field.');
+            checkThrow(false, 'U4|No selection found. Select a button or field.');
         }
     }
 
@@ -91,7 +91,7 @@ export class VpcChangeSelectedFont {
         if (!worked) {
             checkThrowNotifyMsg(
                 false,
-                longstr(`lngNo selection found. Either select a
+                longstr(`U3|lngNo selection found. Either select a
             button or {{NEWLINE}}field, or use the browse tool to select a
             few{{NEWLINE}} letters.`)
             );

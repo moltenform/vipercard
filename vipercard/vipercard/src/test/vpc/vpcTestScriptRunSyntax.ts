@@ -39,40 +39,40 @@ t.test('vpcTestScriptBasics', () => {
     ];
     h.testBatchEvaluate(batch);
     /* get a different string */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RN|', 'assert:', () => {
         batch = [['x = 4', 'PREPARSEERR:(incorrectmessage)']];
         h.testBatchEvaluate(batch);
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RM|', 'assert:', () => {
         batch = [['put unknownVar into x\\x', 'ERR:(incorrectmessage)x']];
         h.testBatchEvaluate(batch);
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RL|', 'assert:', () => {
         batch = [['put 9 into x\\x', '11111']];
         h.testBatchEvaluate(batch);
     });
     /* failure expected, but succeeds */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RK|', 'assert:', () => {
         batch = [['put 9 into x', 'PREPARSEERR:']];
         h.testBatchEvaluate(batch);
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RJ|', 'assert:', () => {
         batch = [['put 9 into x\\x', 'ERR:']];
         h.testBatchEvaluate(batch);
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RI|', 'assert:', () => {
         batch = [['put unknownVar into x\\x', '1111']];
         h.testBatchEvaluate(batch);
     });
     /* same as above, but more tests in the array */
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RH|', 'assert:', () => {
         batch = [
             ['put 5 into x\\x', '5'],
             ['put 9 into x\\x', 'ERR:']
         ];
         h.testBatchEvaluate(batch);
     });
-    assertAsserts('', 'assert:', () => {
+    assertAsserts('RG|', 'assert:', () => {
         batch = [
             ['put 3 into x\\x', '3'],
             ['put unknownVar into x\\x', '1111']

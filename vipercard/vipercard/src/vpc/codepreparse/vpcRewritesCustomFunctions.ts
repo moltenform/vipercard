@@ -174,7 +174,7 @@ export class ExpandCustomFunctions {
         let template = `put result ( ) %INTO% %ARG0%`;
         let tokenNewVarname = this.rw.tokenFromEnglishTerm(newvarname, line[0]);
         let fromTemplateLines = this.rw.gen(template, line[0], [[tokenNewVarname]]);
-        checkThrowEq(1, fromTemplateLines.length, '');
+        checkThrowEq(1, fromTemplateLines.length, 'TF|');
         ret.push(fromTemplateLines[0]);
     }
 }
