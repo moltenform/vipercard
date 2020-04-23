@@ -17,6 +17,19 @@ Source code:
     
 To learn about building from source, see [building.md](vipercard/building.md).
 
+New in 0.3 preview:
+
+* Drawing is more efficient
+* New grammar!
+    * Fewer parentheses needed
+    * Single-line if statements
+    * Block comments
+    * Increased compatibility with HyperCard
+* Better script errors
+* Scripts can set the content of other scripts
+* Scripts can create/delete objects
+* Better rendering on high-dpi screens
+
 Libraries:
 
 - [chevrotain](https://github.com/SAP/chevrotain)
