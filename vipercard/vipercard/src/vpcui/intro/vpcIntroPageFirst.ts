@@ -16,8 +16,6 @@
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
-import { getVpcSessionTools } from '../../vpc/request/vpcRequest';
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 

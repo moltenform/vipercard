@@ -31,7 +31,7 @@ BuiltinCmdBeep:=... [<Expr>]
 // in vipercard this only changes the tool for script running-simulated drawing purposes
 BuiltinCmdVpccalluntrappablechoose:=... <Expr>
 // simulate click. software rewrite "with" to tkSyntaxMark. supports click at x if x contains coords.
-BuiltinCmdClick:=... tkIdentifier <Lvl4Expression> [tkComma <Lvl4Expression>] [ tkSyntaxMark tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
+BuiltinCmdClick:=... tkIdentifier <HBuiltinCmdDrag_1> [ tkSyntaxMark tkIdentifier [ tkComma tkIdentifier [ tkComma tkIdentifier ] ] ]  
 // close. show NYI in rewrite
 // commandKeyDown, a way to simulate a keypress like Cmd+A. show NYI in rewrite
 // controlkey: goes up through message hierarchy, handled by vipercardstdlib
@@ -136,8 +136,8 @@ BuiltinCmdUnlock:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLit
 BuiltinCmdVisual:=... tkIdentifier [ tkStringLiteral tkStringLiteral tkStringLiteral tkStringLiteral ]
 // wait supports  second,seconds,milliseconds,ms,ticks. defaults to a tick, which is 60th of second
 // we rewrite `wait for 2 ms` into `wait 2 "ms"`
-// or "wait until/while" which we should just expand into a while loop
-BuiltinCmdWait:=... <Expr> [tkIdentifier]
+// or "wait until/while" which we should just expand into a while loop. note that "second" is a tkOrdinal
+BuiltinCmdWait:=... <Expr> [ { tkIdentifier | tkOrdinal  } ]
 // write. set NYI during rewrites
 // used internally
 CmdSend:=... <Expr> _to <Object>                    --->BuildMap
