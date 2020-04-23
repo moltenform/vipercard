@@ -49,7 +49,6 @@ export class FullRootUI512 implements RootHigher {
         /* this.presenter = new UI512DemoTextEdit(); */
         this.presenter = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
-        showMsgIfExceptionThrown(() => RootSetupHelpers.onceOnInit(this, gly), UI512CursorAccess.setCursor.name);
         showMsgIfExceptionThrown(() => UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor), UI512CursorAccess.setCursor.name);
         showMsgIfExceptionThrown(VpcInitIcons.go, VpcInitIcons.name)
         showMsgIfExceptionThrown(() => this.presenter.init(), 'root.init');

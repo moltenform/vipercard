@@ -13,7 +13,7 @@ export class Util512 {
      * checks for NaN and Infinity
      */
     static isValidNumber(value: unknown) {
-        return typeof value === 'number' && isFinite(value);
+        return typeof value === 'number' && Number.isFinite(value);
     }
 
     /**
