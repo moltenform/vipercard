@@ -16,15 +16,23 @@
  */
 export class RootSetupHelpers {
     static onceOnInit(root: RootHigher, gly: any) {
-        root.scaleMouseCoords = 1
-        let domElement = gly.domElement;
+        //~ root.scaleMouseCoords = 1
+        let domElement:HTMLCanvasElement = gly.domElement;
         gly.width = ScreenConsts.ScreenWidth;
         gly.height = ScreenConsts.ScreenHeight;
         domElement.style.width = ScreenConsts.ScreenWidth + 'px';
         domElement.style.height = ScreenConsts.ScreenHeight  + 'px';
         root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
         if (root.getBrowserInfo() === BrowserOSInfo.Windows) {
-            
+            if (Math.abs(1.25 - window.devicePixelRatio) < 0.01) {
+               /* css scaling:*/
+               //~ document.body.style.transform = 'scale(0.8)'
+               //~ document.body.style.transform = 'matrix(1.6, 0, 0, 1.6, 0, 0)'
+               document.body.style.transform = 'matrix(0.8, 0, 0, 0.8, 0, 0)'
+               document.body.style.transformOrigin = 'top left'
+               document.title = 'translated'
+               root.scaleMouseCoords = 1.25
+            }
         }
     }
 

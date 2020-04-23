@@ -53,7 +53,10 @@ export class IntroPageOpen extends IntroPageBase {
         /* draw the OK and cancel buttons */
         grp.getEl(this.getElId('windowBg'));
         this.drawBtn(app, grp, 1, this.x + 180, this.y + 287, 68, 21);
+        console.log("Cancel:", this.x + 180, this.y + 287)
+        console.log("Cancel:", 68 + this.x + 180, 21 + this.y + 287)
         this.drawBtn(app, grp, 0, this.x + 180 - (252 - 174), this.y + 287 - 4, 69, 29);
+
 
         /* get logo dimensions (centered within the area) */
         const footerHeight = 70;

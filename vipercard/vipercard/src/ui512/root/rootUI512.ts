@@ -106,8 +106,8 @@ export class FullRootUI512 implements RootHigher {
                 return false;
             }
 
-            details.mouseX = Math.trunc(details.mouseX / this.scaleMouseCoords);
-            details.mouseY = Math.trunc(details.mouseY / this.scaleMouseCoords);
+            details.mouseX = Math.round(details.mouseX * this.scaleMouseCoords);
+            details.mouseY = Math.round(details.mouseY * this.scaleMouseCoords);
         }
 
         if (details instanceof MouseMoveEventDetails) {
@@ -115,10 +115,10 @@ export class FullRootUI512 implements RootHigher {
                 return false;
             }
 
-            details.mouseX = Math.trunc(details.mouseX / this.scaleMouseCoords);
-            details.mouseY = Math.trunc(details.mouseY / this.scaleMouseCoords);
-            details.prevMouseX = Math.trunc(details.prevMouseX / this.scaleMouseCoords);
-            details.prevMouseY = Math.trunc(details.prevMouseY / this.scaleMouseCoords);
+            details.mouseX = Math.round(details.mouseX * this.scaleMouseCoords);
+            details.mouseY = Math.round(details.mouseY * this.scaleMouseCoords);
+            details.prevMouseX = Math.round(details.prevMouseX * this.scaleMouseCoords);
+            details.prevMouseY = Math.round(details.prevMouseY * this.scaleMouseCoords);
         }
 
         if (!details.handled()) {
