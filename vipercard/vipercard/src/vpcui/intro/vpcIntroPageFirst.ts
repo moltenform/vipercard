@@ -8,12 +8,13 @@
 /* auto */ import { VpcAboutDialog } from './../menu/vpcAboutDialog';
 /* auto */ import { RespondToErr, Util512Higher, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512 } from './../../ui512/utils/util512';
 /* auto */ import { IdleEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
+/* auto */ import { RootSetupHelpers } from './../../ui512/root/rootSetupHelpers';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -157,56 +158,10 @@ export class IntroPageFirst extends IntroPageBase {
      * see if the url is taking to us to a stack, and load the stack if so
      */
     async checkPageUrlParams(pr: VpcIntroInterface) {
-        let provider = IntroPageFirst.checkPageUrlParamsGetProvider(window.location.href);
+        let provider = RootSetupHelpers.checkPageUrlParamsGetProvider(window.location.href);
         if (provider) {
             pr.beginLoadDocument(provider);
         }
-    }
-
-    /**
-     * parse the page's url parameters and see if it refers to a stack
-     */
-    static checkPageUrlParamsGetProvider(fullLocation: string): O<VpcIntroProvider> {
-        let id = IntroPageFirst.parseStackIdFromParams(fullLocation);
-        if (id && slength(id)) {
-            id = id.replace(/%7C/g, '|').replace(/%7c/g, '|');
-            let pts = id.split('|');
-            if (pts.length === 1) {
-                /* sending reference to a demo stack is different */
-                /* saves some $ since no server code or even db hits need to be run */
-                let demoName = Util512.fromBase64UrlSafe(pts[0]);
-                if (demoName.startsWith('demo_') && demoName.match(/^[a-zA-Z0-9_-]{1,100}$/)) {
-                    /* open the document */
-                    let demoId = demoName + '.json';
-                    return new VpcIntroProvider(demoId, lng('lngfeatured stack'), VpcDocumentLocation.FromStaticDemo);
-                }
-            } else if (pts.length === 2) {
-                /* we're opening someone's online stack */
-                return new VpcIntroProvider(id, lng('lngstack'), VpcDocumentLocation.FromStackIdOnline);
-            }
-        }
-
-        return undefined;
-    }
-
-    /**
-     * if the url contains something like s=xxxxx, return the xxxxx
-     */
-    protected static parseStackIdFromParams(s: string): O<string> {
-        let spl = s.split('?');
-        if (spl.length === 2) {
-            let splParams = spl[1].split('&');
-            for (let splParam of splParams) {
-                let pair = splParam.split('=');
-                if (pair.length === 2) {
-                    if (pair[0] === 's') {
-                        return pair[1];
-                    }
-                }
-            }
-        }
-
-        return undefined;
     }
 
     /**

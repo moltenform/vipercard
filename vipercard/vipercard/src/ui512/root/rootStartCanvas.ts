@@ -1,11 +1,11 @@
 
 /* auto */ import { toShortcutString, ui512TranslateModifiers } from './../utils/utilsKeypressHelpers';
-/* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { setRoot, showMsgIfExceptionThrown } from './../utils/util512Higher';
-/* auto */ import { assertWarn, respondUI512Error } from './../utils/util512Assert';
+/* auto */ import { respondUI512Error } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { FullRootUI512 } from './rootUI512';
+/* auto */ import { RootSetupHelpers } from './rootSetupHelpers';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -31,7 +31,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
     let root = new FullRootUI512();
     let gly: any = fnMakeGolly(gollyParams);
     gly.desiredFrameTime = 60;
-    root.init(gly.domElement);
+    root.init(gly);
     gly.draw = () => {
         try {
             root.drawFrame(gly.frameCount, gly.milliseconds);
@@ -42,7 +42,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
 
     gly.onresize = () => {
         try {
-            mainOnResize(root, gly);
+            RootSetupHelpers.mainOnResize(root, gly);
         } catch (e) {
             respondUI512Error(e, 'onresize');
         }
@@ -223,49 +223,11 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
 
     showMsgIfExceptionThrown(() => {
         setRoot(root);
-        mainOnResize(root, gly);
+        RootSetupHelpers.mainOnResize(root, gly);
     }, 'rootStartCanvas');
 }
 
-function mainOnResize(root: FullRootUI512, gly: any) {
-    /* on high-dpi screens, automatically show bigger pixels, with no blurring */
 
-    let availW = window.innerWidth;
-    let availH = window.innerHeight;
-    let canFitW = Math.max(1, Math.trunc(availW / ScreenConsts.ScreenWidth));
-    let canFitH = Math.max(1, Math.trunc(availH / ScreenConsts.ScreenHeight));
-    let canFitTotal = Math.min(canFitW, canFitH);
-    if (!Util512.isValidNumber(canFitTotal)) {
-        assertWarn(false, `3?|invalid canFitW=${canFitW} canFitW=${canFitW}`);
-        return;
-    }
-
-    let elemMessageBelow = window.document.getElementById('elemMessageBelow');
-    if (elemMessageBelow) {
-        if (
-            Math.abs(window.devicePixelRatio - Math.round(window.devicePixelRatio)) > 0.01
-        ) {
-            elemMessageBelow.innerText =
-                'Please set your browser zoom level to 100% for the sharpest graphics...';
-        } else {
-            elemMessageBelow.innerText = '';
-        }
-    }
-
-    if (canFitTotal !== root.scaleMouseCoords) {
-        /* sets both priv['domElement']['width'] and priv['width'] */
-        gly.width = ScreenConsts.ScreenWidth;
-
-        /* sets both priv['domElement']['height'] and priv['height'] */
-        gly.height = ScreenConsts.ScreenHeight;
-
-        let domElement = gly.domElement;
-        domElement.style.width = ScreenConsts.ScreenWidth * canFitTotal + 'px';
-        domElement.style.height = ScreenConsts.ScreenHeight * canFitTotal + 'px';
-        root.scaleMouseCoords = canFitTotal;
-        root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
-    }
-}
 
 /* expose this function globally */
 (window as any).mainVPCStartCanvas = mainVPCStartCanvas; /* on window */

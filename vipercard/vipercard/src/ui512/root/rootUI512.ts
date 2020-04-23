@@ -5,7 +5,7 @@
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
-/* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, Root, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
+/* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { BrowserOSInfo, Util512 } from './../utils/util512';
@@ -14,11 +14,12 @@
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
+/* auto */ import { RootHigher, RootSetupHelpers } from './rootSetupHelpers';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-export class FullRootUI512 implements Root {
+export class FullRootUI512 implements RootHigher {
     domCanvas: CanvasWrapper;
     presenter: UI512Presenter;
     drawText: UI512DrawText;
@@ -32,7 +33,8 @@ export class FullRootUI512 implements Root {
     timerSendIdleEvent = new RepeatingTimer(100);
     mouseButtonsExpected = 0;
 
-    init(domCanvas: HTMLCanvasElement) {
+    init(gly:any) {
+        let domCanvas: HTMLCanvasElement = gly.domElement
         this.browserOSInfo = Util512.getBrowserOS(window.navigator.userAgent);
         this.drawText = new UI512DrawText();
         this.iconManager = new UI512IconManager();
@@ -47,8 +49,9 @@ export class FullRootUI512 implements Root {
         /* this.presenter = new UI512DemoTextEdit(); */
         this.presenter = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
-        UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor);
-        VpcInitIcons.go();
+        showMsgIfExceptionThrown(() => RootSetupHelpers.onceOnInit(this, gly), UI512CursorAccess.setCursor.name);
+        showMsgIfExceptionThrown(() => UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor), UI512CursorAccess.setCursor.name);
+        showMsgIfExceptionThrown(VpcInitIcons.go, VpcInitIcons.name)
         showMsgIfExceptionThrown(() => this.presenter.init(), 'root.init');
     }
 
