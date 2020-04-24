@@ -10,22 +10,22 @@
         "**/nocpy*": true,
 
 
-	"*.pyc": true,
-	".gitignore": true,
-	"BingSiteAuth.xml": true,
-	"favicon.ico": true,
-	"handle_bounced_email.py": true,
-	"index.yaml": true,
-	"package-lock.json": true,
-	"tsconfig.json": true,
-	"vpservermainshell.py": true,
+    "*.pyc": true,
+    ".gitignore": true,
+    "BingSiteAuth.xml": true,
+    "favicon.ico": true,
+    "handle_bounced_email.py": true,
+    "index.yaml": true,
+    "package-lock.json": true,
+    "tsconfig.json": true,
+    "vpservermainshell.py": true,
     
     // remove just this directory from list
-	"0.2": true,
-	"external": true,
-	"dist": true,
-	"tools": true,
-	"vpserver": true,
-	"resources/fonts": true,
+    "0.2": true,
+    "external": true,
+    "dist": true,
+    "tools": true,
+    "vpserver": true,
+    "resources/fonts": true,
     }
 }
