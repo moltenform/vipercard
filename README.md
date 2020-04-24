@@ -13,7 +13,7 @@ This is a community project, all source code is released to the public.
 Enjoy!
 
     ViperCard
-    Copyright (C) 2018 Ben Fisher
+    Copyright (C) 2020 Ben Fisher
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

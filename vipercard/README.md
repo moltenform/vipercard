@@ -15,9 +15,9 @@ Source code:
 
 - `./vipercard/src/vpcui` is ViperCard's user interface
     
-To learn about building from source, see [building.md](vipercard/building.md).
+To learn about building from source, see building.md.
 
-New in 0.3 preview:
+Some of the v0.3 features have arrived:
 
 * Drawing is more efficient
 * New grammar!
@@ -53,8 +53,10 @@ Libraries:
 - [Pizzicato](https://github.com/alemangui/pizzicato)
 
 - [Bowser](https://github.com/lancedikson/bowser)
-- 
+
 - [TypeScript Types for TextEncoding](https://github.com/DefinitelyTyped/DefinitelyTyped)
+
+- [deep-freeze](https://github.com/substack/deep-freeze)
   
 - pbkdf2 gist by Chris Veness
 

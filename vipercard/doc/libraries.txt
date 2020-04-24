@@ -1,12 +1,31 @@
 
 Uses:
+chevrotain
+    https://github.com/SAP/chevrotain
+    Shahar Soel, Apache-2.0
+
+FileSaver.js
+    https://github.com/eligrey/FileSaver.js
+    Eli Grey <me@eligrey.com> MIT license
+
 Golly
     https://github.com/dannygarcia/golly
     Copyright (c) 2012, Danny Garcia MIT license
     
-FileSaver.js
-    https://github.com/eligrey/FileSaver.js
-    Eli Grey <me@eligrey.com> MIT license
+js-lru
+    https://github.com/rsms/js-lru
+    MIT license
+
+Clipboard.js
+    https://github.com/zenorocha/clipboard.js/
+    MIT license
+
+[base64js](https://github.com/beatgammit/base64-js)
+
+
+JSGIF (libgif.js)
+    https://github.com/antimatter15/jsgif
+    MIT license
 
 easy.filter Bresenham
     http://members.chello.at/easyfilter/bresenham.html
@@ -14,38 +33,29 @@ easy.filter Bresenham
     Bresenham Curve Rasterizing Algorithms
     Used with explicit permission, e-mail on Oct 27 2017
 
-js-lru
-    https://github.com/rsms/js-lru
-    MIT license
+lz-string
+    https://github.com/pieroxy/lz-string
+    Sam Hocevar, released under WTFPL
+
+[Pizzicato](https://github.com/alemangui/pizzicato)
+
+[Bowser](https://github.com/lancedikson/bowser)
+
+[TypeScript Types for TextEncoding](https://github.com/DefinitelyTyped/DefinitelyTyped)
 
 deep-freeze
     https://github.com/substack/deep-freeze
     public domain
 
-node-binarysearch
-    https://github.com/soldair/node-binarysearch
-    MIT license
+pbkdf2 gist by Chris Veness
 
-lz-string
-    https://github.com/pieroxy/lz-string
-    Sam Hocevar, released under WTFPL
+Wikipedia's [description of Mac OS Roman](https://en.wikipedia.org/wiki/Mac_OS_Roman)
 
-chevrotain
-    https://github.com/SAP/chevrotain
-    Shahar Soel, Apache-2.0
-
-JSGIF (libgif.js)
-    https://github.com/antimatter15/jsgif
-    MIT license
-
-Small code excerpts from:
+A small code excerpt from:
 Scintilla
     http://www.scintilla.org/
     Scintilla license (public domain)
 
-Clipboard.js
-    https://github.com/zenorocha/clipboard.js/
-    MIT license
 
 
 
