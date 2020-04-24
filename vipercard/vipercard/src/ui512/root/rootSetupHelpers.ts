@@ -1,11 +1,11 @@
 
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
+/* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
 /* auto */ import { BrowserInfo, Root, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
-/* auto */ import { O } from './../utils/util512Base';
+/* auto */ import { O, coalesceIfFalseLike } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { BowserBrowsers, BowserPlatform } from './../../bridge/bridgeBrowserInfo';
-import { UI512CursorAccess } from '../utils/utilsCursors';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -16,18 +16,22 @@ import { UI512CursorAccess } from '../utils/utilsCursors';
 export class RootSetupHelpers {
     /**
      * called on init and on browser resize,
-     * shouldn't be slow since it gets called *during* the resize
+     * it gets called continually *during* the resize
      */
     static mainOnResize(root: RootHigher, gly: any) {
+        let res:[number, number]
         if (RootSetupHelpers.useNewResize()) {
-            RootSetupHelpers.mainOnResizeNew(root, gly);
+            res = RootSetupHelpers.mainOnResizeNew(root, gly);
         } else {
-            RootSetupHelpers.mainOnResizeClassic(root, gly);
+            res = RootSetupHelpers.mainOnResizeClassic(root, gly);
         }
+
+        let canFitMultiple = coalesceIfFalseLike(res[1], 1)
+        UI512CursorAccess.notifyScreenMult(canFitMultiple)
     }
 
     /**
-     * should we use the new scaling? hasn't been tested everywhere.
+     * let's not enable the new scaling everywhere yet
      */
     static useNewResize() {
         if (window.document.location.href.includes('newscaling')) {
@@ -72,7 +76,7 @@ export class RootSetupHelpers {
                 but when our app tells it to draw 1pixel, it will draw 4.
                 would work, but loading png images would be trickier.
     */
-    static mainOnResizeNew(root: RootHigher, gly: any) {
+    static mainOnResizeNew(root: RootHigher, gly: any):[number, number] {
         /* to be conservative, set everything to 1x, so that later failures won't
         destroy the ui */
         let domElement: HTMLCanvasElement = gly.domElement;
@@ -82,21 +86,20 @@ export class RootSetupHelpers {
         domElement.style.height = ScreenConsts.ScreenHeight + 'px';
         root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
         root.scaleMouseCoords = 1;
+        let ret:[number, number] = [1,1]
         justConsoleMsgIfExceptionThrown(
-            () => RootSetupHelpers.mainOnResizeNewAdvanced(root, gly),
+            () => {
+                ret = RootSetupHelpers.mainOnResizeNewAdvanced(root, gly)
+            },
             RootSetupHelpers.mainOnResizeNewAdvanced.name
         );
         
-        UI512CursorAccess.notifyScreenMult(1.0 / root.scaleMouseCoords)
+        return ret
     }
 
-    static mainOnResizeNewAdvanced(root: RootHigher, gly: any) {
-        let dpr = 1;
-        if (window.devicePixelRatio) {
-            dpr = window.devicePixelRatio;
-        }
-
-        /* note that window.innerWidth is affected by browser's current zoom setting */
+    static mainOnResizeNewAdvanced(root: RootHigher, gly: any):[number, number] {
+        /* note, window.innerWidth is affected by browser's current zoom setting */
+        let dpr = window.devicePixelRatio ?? 1;
         let domElement: HTMLCanvasElement = gly.domElement;
         let availW = window.innerWidth * dpr;
         let availH = window.innerHeight * dpr;
@@ -114,9 +117,10 @@ export class RootSetupHelpers {
 
         root.scaleMouseCoords = totalScaleR;
         root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
+        return [root.scaleMouseCoords, canFit]
     }
 
-    static mainOnResizeClassic(root: RootHigher, gly: any) {
+    static mainOnResizeClassic(root: RootHigher, gly: any):[number, number] {
         /* on high-dpi screens, automatically show bigger pixels, with no blurring */
 
         let availW = window.innerWidth;
@@ -126,7 +130,7 @@ export class RootSetupHelpers {
         let canFitTotal = Math.min(canFitW, canFitH);
         if (!Util512.isValidNumber(canFitTotal)) {
             assertWarn(false, `3?|invalid canFitW=${canFitW} canFitW=${canFitW}`);
-            return;
+            return [1,1];
         }
 
         let elemMessageBelow = window.document.getElementById('elemMessageBelow');
@@ -155,6 +159,8 @@ export class RootSetupHelpers {
             root.scaleMouseCoords = 1.0 / canFitTotal;
             root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
         }
+
+        return [root.scaleMouseCoords, canFitTotal]
     }
 }
 
@@ -165,3 +171,4 @@ export interface RootHigher extends Root {
     rawResize(width: number, height: number): void;
     scaleMouseCoords: O<number>;
 }
+

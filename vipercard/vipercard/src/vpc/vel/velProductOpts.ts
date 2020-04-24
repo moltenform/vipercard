@@ -144,7 +144,7 @@ export class VpcElProductOpts extends VpcElBase {
                 }
 
                 let n = getStrToEnum<UI512Cursors>(UI512Cursors, `cursor ${s} not supported`, s);
-                UI512CursorAccess.setCursor(n);
+                UI512CursorAccess.setCursorSupportRotate(n);
             }
         ];
 

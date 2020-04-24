@@ -1,5 +1,7 @@
 
-/* auto */ import { assertEq, MapKeyToObjectCanSet, Util512 } from './util512';
+/* auto */ import { tostring } from './util512Base';
+/* auto */ import { MapKeyToObjectCanSet, Util512 } from './util512';
+
 import { tostring } from './util512Base';
 import { Util512Higher } from './util512Higher';
 
@@ -40,18 +42,18 @@ export enum UI512Cursors {
 }
 
 const map1x = new MapKeyToObjectCanSet<string>()
-map1x.set(tostring(UI512Cursors.lbeam),  "caret1x7,3.png");
+map1x.set(tostring(UI512Cursors.lbeam),  "caret1x3,7.png");
 map1x.set(tostring(UI512Cursors.cross),  "cross1x7,7.png")
 map1x.set(tostring(UI512Cursors.plus),  "xtraplus1x7,7.png")
 map1x.set(tostring(UI512Cursors.watch),  "xtrawatch1x7,7.png")
-map1x.set(tostring(UI512Cursors.hand),  "hand1x0,6.png")
+map1x.set(tostring(UI512Cursors.hand),  "hand1x6,0.png")
 map1x.set(tostring(UI512Cursors.arrow),  "arrow1x3,1.png")
 map1x.set(tostring(UI512Cursors.busy),  "xtrabusya1x7,7.png");
 map1x.set(tostring(UI512Cursors.unknown), 'LIT:default');
-map1x.set(tostring(UI512Cursors.paintbrush),  "brush1x14,5.png")
+map1x.set(tostring(UI512Cursors.paintbrush),  "brush1x5,14.png")
 map1x.set(tostring(UI512Cursors.painterase),  "erase1x7,7.png")
-map1x.set(tostring(UI512Cursors.paintlasso),  "lasso1x13,2.png")
-map1x.set(tostring(UI512Cursors.paintpencil),  "pencil1x15,1.png")
+map1x.set(tostring(UI512Cursors.paintlasso),  "lasso1x2,13.png")
+map1x.set(tostring(UI512Cursors.paintpencil),  "pencil1x1,15.png")
 map1x.set(tostring(UI512Cursors.paintrectsel),  "rectsel1x7,7.png")
 map1x.set(tostring(UI512Cursors.paintspray),  "spray1x2,2.png")
 map1x.set(tostring(UI512Cursors.paintbucket),  "bucket1x14,14.png")
@@ -62,18 +64,18 @@ map1x.set(tostring(UI512Cursors.hosttext), 'LIT:text')
 map1x.set(tostring(UI512Cursors.hosthand),'LIT:pointer')
 map1x.set(tostring(UI512Cursors.hostarrow),'LIT:default')
 const map2x = new MapKeyToObjectCanSet<string>()
-map2x.set(tostring(UI512Cursors.lbeam),  "caret2x14,6.png")
+map2x.set(tostring(UI512Cursors.lbeam),  "caret2x6,14.png")
 map2x.set(tostring(UI512Cursors.cross),  "cross2x14,14.png")
 map2x.set(tostring(UI512Cursors.plus),  "xtraplus2x14,14.png")
 map2x.set(tostring(UI512Cursors.watch),  "xtrawatch2x14,14.png")
-map2x.set(tostring(UI512Cursors.hand),  "hand2x0,12.png")
+map2x.set(tostring(UI512Cursors.hand),  "hand2x12,0.png")
 map2x.set(tostring(UI512Cursors.arrow),  "arrow2x6,2.png")
 map2x.set(tostring(UI512Cursors.busy),  "xtrabusya2x14,14.png")
 map2x.set(tostring(UI512Cursors.unknown), 'LIT:default');
-map2x.set(tostring(UI512Cursors.paintbrush),  "brush2x28,10.png")
+map2x.set(tostring(UI512Cursors.paintbrush),  "brush2x10,28.png")
 map2x.set(tostring(UI512Cursors.painterase),  "erase2x14,14.png")
-map2x.set(tostring(UI512Cursors.paintlasso),  "lasso2x26,4.png")
-map2x.set(tostring(UI512Cursors.paintpencil),  "pencil2x30,2.png")
+map2x.set(tostring(UI512Cursors.paintlasso),  "lasso2x4,26.png")
+map2x.set(tostring(UI512Cursors.paintpencil),  "pencil2x2,30.png")
 map2x.set(tostring(UI512Cursors.paintrectsel),  "rectsel2x14,14.png")
 map2x.set(tostring(UI512Cursors.paintspray),  "spray2x4,4.png")
 map2x.set(tostring(UI512Cursors.paintbucket),  "bucket2x28,28.png")
@@ -146,5 +148,18 @@ export class UI512CursorAccess {
         }
 
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true)
+    }
+
+    static setCursorSupportRotate(nextCursor: UI512Cursors) {
+        if (nextCursor === UI512Cursors.busy) {
+            let cycle = [UI512Cursors.busy, UI512Cursors.busy2, UI512Cursors.busy3, UI512Cursors.busy4]
+            let index = cycle.findIndex(item => item===UI512CursorAccess.currentCursor)
+            if (index !== -1) {
+                index = (index + 1) % cycle.length
+                return UI512CursorAccess.setCursor(cycle[index])
+            }
+        } 
+
+        return UI512CursorAccess.setCursor(nextCursor)
     }
 }
