@@ -26,6 +26,8 @@ def getWereReferenced(f, origLines):
     lines = getFileLines(f, tryToStripComments='multilineonly')
     text = '\n'.join(lines)
     pts = text.split('let colls = [')
+    if len(pts) == 1:
+        pts = text.split('let colls: SimpleUtil512TestCollection[] = [')
     assertTrueMsg(len(pts) == 2, f"did not see 'let colls = ['", file=f)
     assertTrueMsg(']' in pts[1], f"did not see ']' after let colls", file=f)
     listColls = pts[1].split(']')[0]

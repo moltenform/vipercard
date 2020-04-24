@@ -1,0 +1,112 @@
+
+Summary:
+    gz for comparison, since we will serve over gz
+    with tests included
+        terser-minified 261k
+        no minify 441k
+        npm "strip-comments" (which leaves some)  356k
+        (couldn't find a way for terser to just strip comments)
+        uglify-minified 263k
+        uglify-uncompressed-but-all-on-one-line 304k
+        uglify-strip-comments-and-beautify 338k
+    without tests included
+        no minify 333k
+        uglify-minified 186k
+        uglify-strip-comments-and-beautify 248k
+        
+
+
+
+details:
+    it looks like babel can also do this: 
+    "build": "babel ./index.js --out-dir ./dist/index.js --no-comments"
+    
+    
+    goal: minimize by taking whitespace, leaving newlines, stripping comments, and not mangling
+    in webpack settings, the section
+    new HtmlWebpackPlugin({
+            hash: true,
+            inject: true,
+            template: '0.3/index.dev.html',
+            minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+            },
+        }),
+    the minify settings there seem to do nothing.
+    
+    add a new root level to really control it,
+    (it's now based on Terser. add 
+    const TerserPlugin = require('terser-webpack-plugin');
+    I want a non-minified one that still has no comments
+    this is as close as I got, but it still
+    really puts everything onto one line
+    optimization: {
+        minimize: true,
+        minimizer: [
+        new TerserPlugin({
+            terserOptions: {
+                mangle: false,
+            output: {
+                comments: false,
+            },
+            },
+        }),
+        ],
+    },
+    
+    so back to this to have no minification, and use a separate script to strip comments?
+    optimization: {
+        // Set this to false if you'd rather not minimize code,
+        // if you get a warning about asset size you can add hints: false here too.
+        minimize: false
+    },   
+    let text = fs.readFileSync(src, {encoding: "utf8"})
+    const strip = require('strip-comments');
+    const textOut = strip(text);
+    fs.writeFileSync(src+'.out.js', textOut, {encoding: "utf8"})
+    but this left many comments in the file :(
+    
+    online it looks like uglify can remove comments
+    could add it to the list
+   plugins: [ ,
+        new UglifyJsPlugin(),
+   ]
+    note that the UglifyJsPlugin options are different than plain uglify options
+    
+
+    current working solution: removes 
+    comments without minifying:
+    npm install --save-dev uglifyjs-webpack-plugin
+    const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    output: {
+                        comments: false,
+                        beautify: true,
+                    },
+                    mangle: false,
+                    compress: false,
+                },
+            }),
+        ],
+    },
+    
+            
+    
+    
+    
+    
+   
+         

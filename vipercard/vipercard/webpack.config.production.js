@@ -6,6 +6,7 @@ const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const main = [
     './src/ui512/root/rootStartCanvas.ts'
@@ -46,16 +47,18 @@ module.exports = {
         new webpack.DefinePlugin({
             //  note that the plugin does a direct text replacement.
             WEBPACK_PRODUCTION: true,
-        }),
+        })
     ],
     module: {
         rules: [
             {
                 test: /.tsx?$/,
                 use: [
-                    { loader: 'ts-loader', options: { 
-                        transpileOnly: true,
-                    }}
+                    {
+                        loader: 'ts-loader', options: {
+                            transpileOnly: true,
+                        }
+                    }
                 ],
             }
         ]
@@ -64,8 +67,19 @@ module.exports = {
         extensions: [".tsx", ".ts", ".js"]
     },
     optimization: {
-        // Set this to false if you'd rather not minimize code,
-        // if you get a warning about asset size you can add hints: false here too.
-        minimize: true
+        minimize: true,
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    output: {
+                        comments: false,
+                        beautify: true,
+                    },
+                    mangle: false,
+                    compress: false,
+                },
+            }),
+        ],
     },
 };
+
