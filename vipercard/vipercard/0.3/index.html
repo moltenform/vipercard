@@ -4,8 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5lfj95a+NP14NDh12X6FoCrbge+qtJYxnjAr9rKGCXk=' www.googletagmanager.com www.google-analytics.com; connect-src 'self' www.googletagmanager.com www.google-analytics.com; img-src 'self' www.google-analytics.com; font-src 'self'; style-src 'self'; manifest-src 'self'; media-src 'self'; object-src 'none'; worker-src 'self'; frame-src 'self' donorbox.org">
         <title>ViperCard</title>
-        <script src="../lib/externalmanualbundle_bigger.js"></script>
-        <script type="module" src="../build/ui512/root/rootStartCanvas.js"></script>
+        <script src="/external/externalmanualbundle_bigger.js"></script>
         <script>
             window.onload = function() {
                 var makeNewGolly = function(param) { return new GOLLY(param); }
@@ -21,7 +20,7 @@
             gtag('js', new Date());
             gtag('config', 'UA-115931349-1');
         </script>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="/0.3/style.css">
     </head>
     <body>
     <audio class="notvisible" autoplay="true" volume="0.9" preload="auto" id="vpcinitialaudio" >

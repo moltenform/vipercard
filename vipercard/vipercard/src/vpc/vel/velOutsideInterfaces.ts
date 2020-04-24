@@ -25,7 +25,8 @@
  */
 export interface OutsideWorldRead {
     /**
-     * try resolving a RequestedVelRef, and if resolution fails, return false
+     * try resolving a RequestedVelRef, if succeeds return its long id
+     * if resolution fails, return undefined
      */
     ElementExists(vel: RequestedVelRef): O<string>;
 

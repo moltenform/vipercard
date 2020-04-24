@@ -338,7 +338,7 @@ export function respondUI512Error(e: Error, context: string, logOnly = false) {
             /* do nothing, we've already logged it */
         } else if (UI512ErrorHandling.silenceWarningsAndMoreCount > 4) {
             /* unfortunately, we probably want an option like this,
-            otherwise if there's */
+            otherwise if there's a steady stream of dialogs it will be bad */
             let msgTotal =
                 sAllInfo +
                 ` -- we recommend that you save your` +

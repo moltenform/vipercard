@@ -73,10 +73,19 @@ module.exports = {
                 uglifyOptions: {
                     output: {
                         comments: false,
-                        beautify: true,
+                        beautify: false,
                     },
-                    mangle: false,
-                    compress: false,
+                    mangle: {
+                        properties: false
+                    },
+                    compress: true,
+                    chunkFilter: (chunk) => {
+                      if (chunk.name.endswith('Warn')||chunk.name.endswith('Message')||chunk.name.endswith('Err')) {
+                        return false;
+                      }
+
+                      return true;
+                    },
                 },
             }),
         ],

@@ -5,7 +5,7 @@
 /* auto */ import { VpcExecFrame } from './../../vpc/codeexec/vpcScriptExecFrame';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcErr, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
@@ -23,7 +23,7 @@
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512BaseErr, assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
@@ -93,7 +93,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             the vel can't be found. */
             ret = resolver.go(ref, me, target, cardHistory);
         } catch (e) {
-            let as = Util512BaseErr.errAsCls(VpcErr.name, e);
+            //let as = Util512BaseErr.errAsCls(VpcErr.name, e);
+            let as = e.isVpcErr;
             if (as) {
                 ret = [undefined, this.vci.getModel().getCurrentCard()];
             } else {
@@ -112,7 +113,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
-     * try resolving a RequestedVelRef, and if resolution fails, return false
+     * try resolving a RequestedVelRef, if succeeds return its long id
+     * if resolution fails, return undefined
      */
     ElementExists(vel: RequestedVelRef): O<string> {
         let found = this.ResolveVelRef(vel);
