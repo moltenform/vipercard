@@ -1,0 +1,7 @@
+
+don't use webpack's index.html, use my own
+
+refer to externalmanualbundle.js, not externalmanualbundle_bigger.js
+
+create an index_withtests.html and an index.html,
+adding the reference to vpc03amin_withtests.js and vpc03amin.js respectively.
