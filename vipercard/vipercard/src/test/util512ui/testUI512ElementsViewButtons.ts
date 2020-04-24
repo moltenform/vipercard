@@ -203,7 +203,7 @@ export class TestDrawUI512Buttons {
 
         return new CanvasTestParams(
             'drawButtons',
-            '/resources/test/drawbuttonsexpected.png',
+            '/resources03a/test/drawbuttonsexpected.png',
             draw,
             imWidth,
             imHeight,

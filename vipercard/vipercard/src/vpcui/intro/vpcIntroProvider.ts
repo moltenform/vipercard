@@ -109,7 +109,7 @@ export class VpcIntroProvider {
             assertTrue(!this.identifier.includes('\\'), 'KJ|');
             assertTrue(!this.identifier.includes('..'), 'KI|');
             assertTrue(this.identifier.endsWith('.json'), 'KH|');
-            let got = await Util512Higher.asyncLoadJson('/resources/docs/v03/' + this.identifier);
+            let got = await Util512Higher.asyncLoadJson('/resources03a/docs/v03/' + this.identifier);
             serializedSavedData = JSON.stringify(got);
         } else if (this.loc === VpcDocumentLocation.FromJsonFile) {
             /* we already have the json, it was given to us via identifier */

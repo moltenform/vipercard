@@ -20,7 +20,7 @@ export class VpcAudio {
         checkThrow(!key.includes('/'), 'K8|');
         checkThrow(!key.includes('\\'), 'K7|');
         checkThrow(key.match(/^[A-Za-z0-9_-]+$/), 'K6|');
-        return `/resources/sound/${key}.mp3`;
+        return `/resources03a/sound/${key}.mp3`;
     }
 
     /**

@@ -95,7 +95,7 @@ export class TestDrawUI512Text {
 
         return new CanvasTestParams(
             'drawtext1',
-            '/resources/test/drawtextexpected1.png',
+            '/resources03a/test/drawtextexpected1.png',
             draw,
             imWidth,
             imHeight,
@@ -137,7 +137,7 @@ export class TestDrawUI512Text {
 
         return new CanvasTestParams(
             'drawtext2',
-            '/resources/test/drawtextexpected2.png',
+            '/resources03a/test/drawtextexpected2.png',
             draw,
             imWidth,
             imHeight,
@@ -177,7 +177,7 @@ export class TestDrawUI512Text {
 
         return new CanvasTestParams(
             'drawtext3',
-            '/resources/test/drawtextexpected3.png',
+            '/resources03a/test/drawtextexpected3.png',
             draw,
             imWidth,
             imHeight,
@@ -323,7 +323,7 @@ export class TestDrawUI512Text {
 
         return new CanvasTestParams(
             'drawtext4',
-            '/resources/test/drawtextexpected4.png',
+            '/resources03a/test/drawtextexpected4.png',
             draw,
             imWidth,
             imHeight,

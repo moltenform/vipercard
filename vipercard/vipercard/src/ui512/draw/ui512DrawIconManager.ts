@@ -28,7 +28,7 @@ export class UI512IconManager implements UI512IsDrawIconInterface {
             );
             let iconGroup = new RenderIconGroup(iconGroupId);
             this.cachedIconGroups[iconGroupId] = iconGroup;
-            let url = `/resources/images/${iconGroupId}.png`;
+            let url = `/resources03a/images/${iconGroupId}.png`;
             iconGroup.image = new Image();
             Util512Higher.beginLoadImage(url, iconGroup.image, () => {
                 iconGroup.loadedImage = true;

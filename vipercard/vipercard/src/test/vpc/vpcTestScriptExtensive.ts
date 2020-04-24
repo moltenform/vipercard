@@ -82,9 +82,9 @@ on testveryWeakHash
 end testveryWeakHash
 `;
     async loadTestData() {
-        let url = '/resources/test/testScriptExtensiveConditionalsCollateral.txt';
+        let url = '/resources03a/test/testScriptExtensiveConditionalsCollateral.txt';
         let data = await Util512Higher.asyncLoadJsonString(url);
-        url = '/resources/test/testScriptExtensiveConditionalsExpected.txt';
+        url = '/resources03a/test/testScriptExtensiveConditionalsExpected.txt';
         let expected = await Util512Higher.asyncLoadJsonString(url);
         let expectedar = expected.trim().replace(/\r\n/g, '\n').split('\n');
         return [data.split('@'), expectedar];

@@ -87,7 +87,7 @@ export class UI512FontRequest {
             this.cachedGrids[gridkey] = pendingGrid;
 
             /* queue loading the image */
-            const imgUrl = '/resources/fonts/' + gridkey + '.png';
+            const imgUrl = '/resources03a/fonts/' + gridkey + '.png';
             pendingGrid.image = new Image();
             Util512Higher.beginLoadImage(imgUrl, pendingGrid.image, () => {
                 pendingGrid.loadedImage = true;
@@ -95,7 +95,7 @@ export class UI512FontRequest {
             });
 
             /* queue loading the metrics */
-            const jsonUrl = '/resources/fonts/' + gridkey + '.json';
+            const jsonUrl = '/resources03a/fonts/' + gridkey + '.json';
             let afn = async () => {
                 let obj = await Util512Higher.asyncLoadJson(jsonUrl);
                 pendingGrid.metrics = obj;

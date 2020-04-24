@@ -186,7 +186,7 @@ export class VpcAppUIToolStamp extends VpcAppUIToolBase {
         this.images = new UI512ImageCollectionCollection();
         this.currentImg = undefined;
         for (let [id, name, n] of this.directories) {
-            let cl = new UI512ImageCollection(id, name, '/resources/images/stamps/');
+            let cl = new UI512ImageCollection(id, name, '/resources03a/images/stamps/');
             cl.genChildren(n);
             this.images.children.push(cl);
         }

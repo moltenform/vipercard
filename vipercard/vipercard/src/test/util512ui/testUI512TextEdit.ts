@@ -383,7 +383,7 @@ export class TestDrawUI512TextEdit {
         let hasWrap = this.enableWordWrap ? '' : 'no';
         return new CanvasTestParams(
             'drawTextEdit',
-            `/resources/test/drawtextedit${hasWrap}wrapexpected.png`,
+            `/resources03a/test/drawtextedit${hasWrap}wrapexpected.png`,
             draw,
             w,
             totalH,

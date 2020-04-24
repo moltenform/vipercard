@@ -25,7 +25,7 @@ t.atest('Simple Draw Rectangles', async () => {
     let getParams = () => {
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -53,7 +53,7 @@ t.atest('Simple Draw Rectangles including no-op drawing', async () => {
     let getParams = () => {
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -74,7 +74,7 @@ t.atest('Should fail with 85 differences if shifted', async () => {
         let expectedDifferences = 85;
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -98,7 +98,7 @@ t.atest('1 different pixel', async () => {
         let expectedDifferences = 1;
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -123,7 +123,7 @@ t.atest('2 different pxls (NW)', async () => {
         let expectedDifferences = 2;
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -148,7 +148,7 @@ t.atest('2 different pxls (NE)', async () => {
         let expectedDifferences = 2;
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -173,7 +173,7 @@ t.atest('2 different pixels (SW)', async () => {
         let expectedDifferences = 2;
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -218,7 +218,7 @@ t.atest('2 different pixels (SE)', async () => {
         let expectedDifferences = 2;
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,
@@ -252,7 +252,7 @@ t.atest('continue looping until renderComplete', async () => {
     let getParams = () => {
         return new CanvasTestParams(
             'simpledrawrect',
-            '/resources/test/drawsimplerects.png',
+            '/resources03a/test/drawsimplerects.png',
             draw,
             imWidth,
             imHeight,

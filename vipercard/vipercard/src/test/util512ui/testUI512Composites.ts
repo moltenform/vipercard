@@ -267,7 +267,7 @@ end1`.replace(/\r\n/g, '\n')
         const totalH = h * screensToDraw;
         return new CanvasTestParams(
             'drawComposites',
-            '/resources/test/drawcompositesexpected.png',
+            '/resources03a/test/drawcompositesexpected.png',
             draw,
             w,
             totalH,

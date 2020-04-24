@@ -236,7 +236,7 @@ export class TestDrawUI512Menus {
         const totalH = h * drawMenuTestCases.length;
         return new CanvasTestParams(
             'drawMenus',
-            '/resources/test/drawmenusexpected.png',
+            '/resources03a/test/drawmenusexpected.png',
             draw,
             w,
             totalH,

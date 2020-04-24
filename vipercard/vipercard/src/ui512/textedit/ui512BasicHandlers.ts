@@ -213,7 +213,7 @@ export class BasicHandlers {
      */
     static showTestImage() {
         let img = window.document.createElement('img');
-        img.src = '/resources/test/messagefortests.png';
+        img.src = '/resources03a/test/messagefortests.png';
         window.document.body.appendChild(img);
 
         /* center image in the browser */

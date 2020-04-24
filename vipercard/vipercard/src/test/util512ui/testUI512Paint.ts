@@ -398,7 +398,7 @@ export class TestDrawUI512Paint {
         const totalH = h * screensToDraw;
         return new CanvasTestParams(
             'drawpaintshape',
-            '/resources/test/drawpaintshapeexpected.png',
+            '/resources03a/test/drawpaintshapeexpected.png',
             draw,
             w,
             totalH,
@@ -416,7 +416,7 @@ export class TestDrawUI512Paint {
 
         return new CanvasTestParams(
             'drawpaintflood',
-            '/resources/test/drawpaintfloodexpected.png',
+            '/resources03a/test/drawpaintfloodexpected.png',
             draw,
             floodfilltest.layout.getTotalWidth(),
             floodfilltest.layout.getTotalHeight(),
