@@ -1,5 +1,6 @@
 
 /* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from './vpcToolSelectBase';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { clrBlack, clrWhite } from './../../ui512/draw/ui512DrawPatterns';
@@ -71,5 +72,9 @@ export class VpcAppUIToolSelect extends VpcAppUIToolSelectBase {
         return (
             trueIfDefinedAndNotNull(this.st) && (this.st.maxX - this.st.minX <= minSize || this.st.maxY - this.st.minY <= minSize)
         );
+    }
+
+    protected mainCursor(): UI512Cursors {
+        return UI512Cursors.paintrectsel
     }
 }

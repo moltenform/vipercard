@@ -19,15 +19,15 @@ export class RootSetupHelpers {
      * it gets called continually *during* the resize
      */
     static mainOnResize(root: RootHigher, gly: any) {
-        let res:[number, number]
+        let res: [number, number];
         if (RootSetupHelpers.useNewResize()) {
             res = RootSetupHelpers.mainOnResizeNew(root, gly);
         } else {
             res = RootSetupHelpers.mainOnResizeClassic(root, gly);
         }
 
-        let canFitMultiple = coalesceIfFalseLike(res[1], 1)
-        UI512CursorAccess.notifyScreenMult(canFitMultiple)
+        let canFitMultiple = coalesceIfFalseLike(res[1], 1);
+        UI512CursorAccess.notifyScreenMult(canFitMultiple);
     }
 
     /**
@@ -76,7 +76,7 @@ export class RootSetupHelpers {
                 but when our app tells it to draw 1pixel, it will draw 4.
                 would work, but loading png images would be trickier.
     */
-    static mainOnResizeNew(root: RootHigher, gly: any):[number, number] {
+    static mainOnResizeNew(root: RootHigher, gly: any): [number, number] {
         /* to be conservative, set everything to 1x, so that later failures won't
         destroy the ui */
         let domElement: HTMLCanvasElement = gly.domElement;
@@ -86,18 +86,15 @@ export class RootSetupHelpers {
         domElement.style.height = ScreenConsts.ScreenHeight + 'px';
         root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
         root.scaleMouseCoords = 1;
-        let ret:[number, number] = [1,1]
-        justConsoleMsgIfExceptionThrown(
-            () => {
-                ret = RootSetupHelpers.mainOnResizeNewAdvanced(root, gly)
-            },
-            RootSetupHelpers.mainOnResizeNewAdvanced.name
-        );
-        
-        return ret
+        let ret: [number, number] = [1, 1];
+        justConsoleMsgIfExceptionThrown(() => {
+            ret = RootSetupHelpers.mainOnResizeNewAdvanced(root, gly);
+        }, RootSetupHelpers.mainOnResizeNewAdvanced.name);
+
+        return ret;
     }
 
-    static mainOnResizeNewAdvanced(root: RootHigher, gly: any):[number, number] {
+    static mainOnResizeNewAdvanced(root: RootHigher, gly: any): [number, number] {
         /* note, window.innerWidth is affected by browser's current zoom setting */
         let dpr = window.devicePixelRatio ?? 1;
         let domElement: HTMLCanvasElement = gly.domElement;
@@ -117,10 +114,10 @@ export class RootSetupHelpers {
 
         root.scaleMouseCoords = totalScaleR;
         root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
-        return [root.scaleMouseCoords, canFit]
+        return [root.scaleMouseCoords, canFit];
     }
 
-    static mainOnResizeClassic(root: RootHigher, gly: any):[number, number] {
+    static mainOnResizeClassic(root: RootHigher, gly: any): [number, number] {
         /* on high-dpi screens, automatically show bigger pixels, with no blurring */
 
         let availW = window.innerWidth;
@@ -130,7 +127,7 @@ export class RootSetupHelpers {
         let canFitTotal = Math.min(canFitW, canFitH);
         if (!Util512.isValidNumber(canFitTotal)) {
             assertWarn(false, `3?|invalid canFitW=${canFitW} canFitW=${canFitW}`);
-            return [1,1];
+            return [1, 1];
         }
 
         let elemMessageBelow = window.document.getElementById('elemMessageBelow');
@@ -160,7 +157,7 @@ export class RootSetupHelpers {
             root.rawResize(ScreenConsts.ScreenWidth, ScreenConsts.ScreenHeight);
         }
 
-        return [root.scaleMouseCoords, canFitTotal]
+        return [root.scaleMouseCoords, canFitTotal];
     }
 }
 
@@ -171,4 +168,3 @@ export interface RootHigher extends Root {
     rawResize(width: number, height: number): void;
     scaleMouseCoords: O<number>;
 }
-

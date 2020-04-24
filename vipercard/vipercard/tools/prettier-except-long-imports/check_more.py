@@ -6,6 +6,11 @@ def shouldWarnHasReplaceString(line):
     if re.search(r'''\.replace\(\s*['"`]''', line):
         return True
 
+def shouldWarnHasNewMap(line):
+    # don't use Map, they are es6 and we target es5
+    if re.search(r'''\bnew Map\b''', line):
+        return True
+
 def shouldWarnArraysThisLine(line):
     # let ar = []; silently gives you an array of type any!
     # warn you to provide an explicit type
@@ -52,6 +57,9 @@ def checkText(f, lines):
             showWarningGccStyle(f, i+1, f'''apply like a.apply(b) or a.apply(b, [c, d]) are ok, not a.apply(b, args)''')
             trace(f"we think it's unsafe because there could be max arg limits.")
             trace(f'use /* warn-apply-ok */ if this was intended')
+            warn('')
+        if shouldWarnHasNewMap(line):
+            showWarningGccStyle(f, i+1, f'''don't use es6 maps, we target es5''')
             warn('')
             
     # finds the case where it goes across different lines

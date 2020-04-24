@@ -396,7 +396,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
         ) {
             return UI512Cursors.arrow;
         } else {
-            return UI512Cursors.paintrectsel;
+            return this.mainCursor();
         }
     }
 
@@ -435,6 +435,11 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
      * draw the shape we want to select as a filled-in black shape
      */
     protected abstract makeBlack(): void;
+
+    /**
+     * get the main cursor
+     */
+    protected abstract mainCursor(): UI512Cursors;
 }
 
 /**

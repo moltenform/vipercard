@@ -1,5 +1,6 @@
 
 /* auto */ import { SelectToolState, VpcAppUIToolSelectBase } from './vpcToolSelectBase';
+/* auto */ import { UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../../ui512/utils/utilsCanvasDraw';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { cast, lastIfThere } from './../../ui512/utils/util512';
@@ -81,5 +82,9 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
                 this.st.recordXpts.length > minSize &&
                 this.st.recordYpts.length > minSize
         );
+    }
+
+    protected mainCursor(): UI512Cursors {
+        return UI512Cursors.paintlasso
     }
 }

@@ -212,4 +212,3 @@ export class VpcElProductOpts extends VpcElBase {
 
     static productOptsScript = VpcStandardLibScript.script;
 }
-
