@@ -1,0 +1,165 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>ViperCard - Events</title>
+<meta name="description" content="description">
+<meta name="keywords" content="keywords">
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Projects">
+<meta name="twitter:site" content="@vipercarddotnet">
+<meta name="twitter:creator" content="@vipercarddotnet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.vipercard.net/resources/intro/desc.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ViperCard">
+<meta property="og:url" content="https://www.vipercard.net/">
+<meta property="og:site_name" content="ViperCard">
+
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../../../resources/intro/script_reference/github-markdown.css">
+<style>
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 45px;
+	}
+
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+</style>
+
+<meta http-equiv="cleartype" content="on">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115931349-1"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'UA-115931349-1');
+</script>
+</head>
+
+<body id="page">
+
+<article class="markdown-body">
+	<h1>ViperCard Script Reference </h1>
+    <p>To see how to use ViperCard, first <a href="../video.html">see the videos here</a>.</p>
+    <p>
+<a href="01_fundamentals.html">Fundamentals</a> |
+<a href="02_functions.html">Functions</a> |
+Events |
+<a href="04_commands.html">Commands</a> |
+<a href="05_properties.html">Properties</a></p>
+</article>
+
+ <article class="markdown-body entry-content" itemprop="text">
+<h2><a id="user-content-on-afterkeydown" class="anchor" aria-hidden="true" href="#on-afterkeydown"></a>on afterKeyDown</h2>
+<p>Called when a key is pressed.
+You can use the functions <code>keyChar()</code>,  <code>shiftKey()</code>,  <code>optionKey()</code>,
+and <code>commandKey()</code>, to determine which key(s) where pressed.</p>
+<p><code>keyRepeated()</code> can be used to see if the key event comes from
+the key having been held down.</p>
+<p>Examples:</p>
+<pre><code>on afterKeyDown
+    if keyChar() is "i" and not shiftKey() and \
+            optionKey() and not commandKey() then
+        answer "you pressed option-i"
+    else if keyChar() is "U" and shiftKey() and \
+            not optionKey() and not commandKey() then
+        answer "you pressed shift-u"
+    end if
+end afterKeyDown
+</code></pre>
+<h2><a id="user-content-on-afterkeyup" class="anchor" aria-hidden="true" href="#on-afterkeyup"></a>on afterKeyUp</h2>
+<p>Called when a key is pressed and released.
+You can use the functions keyChar(), shiftKey(), optionKey(), and
+commandKey(), to determine which key(s) where pressed.</p>
+<p>Examples:</p>
+<pre><code>on afterKeyUp
+    if keyChar() is "i" and not shiftKey() and \
+            optionKey() and not commandKey() then
+        answer "you pressed option-i"
+    else if keyChar() is "U" and shiftKey() and \
+            not optionKey() and not commandKey() then
+        answer "you pressed shift-u"
+    end if
+end afterKeyUp
+</code></pre>
+<h2><a id="user-content-on-closecard" class="anchor" aria-hidden="true" href="#on-closecard"></a>on closeCard</h2>
+<p>This feature will arrive in a future version...</p>
+<h2><a id="user-content-on-idle" class="anchor" aria-hidden="true" href="#on-idle"></a>on idle</h2>
+<p>Sent repeatedly to the current card. Can be used for a game loop.</p>
+<p>(Note that to terminate a script that is being called repeatedly,
+you can change to the button or field tool.)</p>
+<p>To get faster idle calls, at the expense of heavier cpu usage,
+use
+<code>set the idlerate to "faster"</code></p>
+<h2><a id="user-content-on-mousedoubleclick" class="anchor" aria-hidden="true" href="#on-mousedoubleclick"></a>on mouseDoubleClick</h2>
+<p>Remember that scripts are only run when you're in the Browse
+tool (hand-shape). Create a button and type the example below.
+Now when you choose the browse tool and double-click the
+button, your code will run.</p>
+<p>Examples:</p>
+<pre><code>on mouseDoubleClick
+    answer "you double-clicked this button."
+end mouseDoubleClick
+</code></pre>
+<h2><a id="user-content-on-mousedown" class="anchor" aria-hidden="true" href="#on-mousedown"></a>on mouseDown</h2>
+<p>Remember that scripts are only run when you're in the
+Browse tool (hand-shape). Called whenever the mouse is
+pressed down onto the object. Create a button and type the
+example below. Now when you choose the browse tool and
+click the button, your code will run.</p>
+<p>Examples:</p>
+<pre><code>on mouseDown
+    answer "code is running."
+end mouseDown
+</code></pre>
+<h2><a id="user-content-on-mouseenter" class="anchor" aria-hidden="true" href="#on-mouseenter"></a>on mouseEnter</h2>
+<p>Remember that scripts are only run when you're in the Browse tool
+(hand-shape). Called whenever the mouse enters the object.</p>
+<h2><a id="user-content-on-mouseleave" class="anchor" aria-hidden="true" href="#on-mouseleave"></a>on mouseLeave</h2>
+<p>Remember that scripts are only run when you're in the Browse tool
+(hand-shape). Called whenever the mouse leaves the object.</p>
+<h2><a id="user-content-on-mouseup" class="anchor" aria-hidden="true" href="#on-mouseup"></a>on mouseUp</h2>
+<p>Remember that scripts are only run when you're in the Browse tool
+(hand-shape). Called whenever the mouse is clicked. To be precise,
+when the mouse is pressed down onto the object, and released on
+the same object. Create a button and type the example below.
+Now when you choose the browse tool and click the button,
+your code will run.</p>
+<p>Examples:</p>
+<pre><code>on mouseUp
+    answer "code is running."
+end mouseUp
+</code></pre>
+<h2><a id="user-content-on-mousewithin" class="anchor" aria-hidden="true" href="#on-mousewithin"></a>on mouseWithin</h2>
+<p>Called repeatedly when the cursor is inside the object.
+You can use the mouseloc() function to get the position of the
+cursor. This can be used to create drag/drop effects.</p>
+<p>(Note that to terminate a script that is being called repeatedly,
+you can change to the button or field tool.)</p>
+<h2><a id="user-content-on-opencard" class="anchor" aria-hidden="true" href="#on-opencard"></a>on openCard</h2>
+<p>This feature will arrive in a future version...</p>
+<h2><a id="user-content-on-openstack" class="anchor" aria-hidden="true" href="#on-openstack"></a>on openStack</h2>
+<p>This feature will arrive in a future version...</p>
+</article>
+
+</body>
+</html>
+

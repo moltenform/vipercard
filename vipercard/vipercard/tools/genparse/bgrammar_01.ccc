@@ -368,6 +368,7 @@ AnyPropertyVal:= ATLEASTONESEP{{ tkComma / <Lvl1Expression> }}ENDATLEASTONESEP  
 // chevrotain documentation notes that you can also flatten the tower to two tiers and do operator precedence in software,
 // which reduces the size of parse trees in memory 
 // note: to match the original product, operations do not short-circuit, so "true or myFunction()" will call myFunction
+// also, implementing short-circuit correctly would be tricky because custom-function expansion currently puts the calls on previous lines
 Expr:= <Lvl1Expression> MANY{{ <AndOrOr> <Lvl1Expression> }}ENDMANY                                                     --->BuildExpr|<AndOrOr>|<Lvl1Expression>|OpLogicalOrAnd
 Lvl1Expression:= <Lvl2Expression> MANY{{ <ContainsOrGreaterLessEqual> <Lvl2Expression> }}ENDMANY            --->BuildExpr|<ContainsOrGreaterLessEqual>|<Lvl2Expression>|OpEqualityGreaterLessOrContains
 Lvl2Expression:= <Lvl3Expression> MANY{{ _is <IsExpression> }}ENDMANY                                                           --->Custom--->VpcVal

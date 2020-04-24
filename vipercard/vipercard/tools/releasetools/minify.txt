@@ -6,13 +6,13 @@ Summary:
         no minify 441k
         npm "strip-comments" (which leaves some)  356k
         (couldn't find a way for terser to just strip comments)
-        uglify-minified 263k
-        uglify-uncompressed-but-all-on-one-line 304k
         uglify-strip-comments-and-beautify 338k
+        uglify-uncompressed-but-all-on-one-line 304k
+        uglify-minified 263k
     without tests included
         no minify 333k
-        uglify-minified 186k
         uglify-strip-comments-and-beautify 248k
+        uglify-minified 186k
         
 
 
@@ -103,8 +103,14 @@ details:
         ],
     },
     
-            
-    
+Note: using conventions like referring to myFunction.name might be dangerous,
+see what uglify does here:
+    function X(){var e=null!==Y&&Y.apply(this,arguments)||this;
+return e.isVpcNotificationMsg=!0,e.origClass=X.name,e}
+X.name probably returns "X" which isn't intended.
+
+
+
     
     
     

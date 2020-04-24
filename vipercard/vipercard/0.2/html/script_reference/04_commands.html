@@ -1,0 +1,481 @@
+<!doctype html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<title>ViperCard - Commands</title>
+<meta name="description" content="description">
+<meta name="keywords" content="keywords">
+
+<!-- Twitter Cards -->
+<meta name="twitter:title" content="Projects">
+<meta name="twitter:site" content="@vipercarddotnet">
+<meta name="twitter:creator" content="@vipercarddotnet">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.vipercard.net/resources/intro/desc.png">
+
+<!-- Open Graph -->
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ViperCard">
+<meta property="og:url" content="https://www.vipercard.net/">
+<meta property="og:site_name" content="ViperCard">
+
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="../../../resources/intro/script_reference/github-markdown.css">
+<style>
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 45px;
+	}
+
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+</style>
+
+<meta http-equiv="cleartype" content="on">
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115931349-1"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+	gtag('config', 'UA-115931349-1');
+</script>
+</head>
+
+<body id="page">
+
+<article class="markdown-body">
+	<h1>ViperCard Script Reference </h1>
+    <p>To see how to use ViperCard, first <a href="../video.html">see the videos here</a>.</p>
+    <p>
+<a href="01_fundamentals.html">Fundamentals</a> |
+<a href="02_functions.html">Functions</a> |
+<a href="03_events.html">Events</a> |
+Commands |
+<a href="05_properties.html">Properties</a></p>
+</article>
+
+<article class="markdown-body entry-content" itemprop="text">
+<h2><a id="user-content-add-number-to-chunk-of-container" class="anchor" aria-hidden="true" href="#add-number-to-chunk-of-container"></a>add {number} to [chunk of] {container}</h2>
+<p>Adds the value of number to the number in a container.</p>
+<p>Examples:</p>
+<pre><code>put 2 into x
+add 3 to x
+answer x -- will display "5"
+
+put "1,2,3" into x
+add 3 to item 2 of x
+answer x -- will display "1,5,3"
+</code></pre>
+<h2><a id="user-content-answer-text" class="anchor" aria-hidden="true" href="#answer-text"></a>answer {text}</h2>
+<p>answer {text} with {option1} or {option2} [or {option3}]</p>
+<p>Displays a dialog box.</p>
+<p>Examples:</p>
+<pre><code>answer "abc" -- will display "abc"
+
+answer "are you sure?" with "OK" or "cancel" 
+-- user can choose OK or cancel
+put it into whichChosen
+if whichChosen is 1 then
+    answer "clicked OK"
+else if whichChosen is 2 then
+    answer "clicked cancel"
+end if
+</code></pre>
+<h2><a id="user-content-ask-text" class="anchor" aria-hidden="true" href="#ask-text"></a>ask {text}</h2>
+<p>ask {text} with {defaulttext}</p>
+<p>Displays a dialog box allowing the user to type in a response.
+If the user clicks Cancel, the result will be an empty string "".</p>
+<p>Examples:</p>
+<pre><code>ask "what is your favorite color?" with "blue"
+put it into favColor
+answer ("you chose" &amp;&amp; favColor)
+</code></pre>
+<h2><a id="user-content-beep" class="anchor" aria-hidden="true" href="#beep"></a>beep</h2>
+<p>Play the system beep sound.</p>
+<h2><a id="user-content-choose-toolname-tool" class="anchor" aria-hidden="true" href="#choose-toolname-tool"></a>choose {toolname} tool</h2>
+<p>Use the choose command for programmatically drawing pictures.
+See the example.
+Doesn't set the actual tool, which is always Browse when scripts
+are running.
+See also: click, drag.</p>
+<p>Examples:</p>
+<pre><code>choose "pencil" tool
+click at 10,20
+-- this draws a black pixel at the coordinates x=10, y=20
+
+-- Currently supported tools include:
+brush
+bucket
+pencil
+line
+rect
+oval
+roundrect
+curve
+spray
+</code></pre>
+<h2><a id="user-content-click-at-x-y" class="anchor" aria-hidden="true" href="#click-at-x-y"></a>click at {x}, {y}</h2>
+<p>Use the click command for programmatically drawing pictures.
+Remember to first use the choose command to indicate what to
+draw.</p>
+<p>Examples:</p>
+<pre><code>choose "pencil" tool
+click at 10,20
+-- this draws a pixel at the coordinates x=10, y=20
+</code></pre>
+<h2><a id="user-content-create-btnfld" class="anchor" aria-hidden="true" href="#create-btnfld"></a>create btn|fld</h2>
+<p>This feature will arrive in a future version...</p>
+<h2><a id="user-content-delete-char-i-of-container" class="anchor" aria-hidden="true" href="#delete-char-i-of-container"></a>delete char {i} of {container}</h2>
+<p>delete char {i} to {j} of {container}
+delete btn|fld</p>
+<p>Examples:</p>
+<pre><code>put "abcde" into x
+delete char 2 of x
+answer x -- shows "acde"
+
+put "abcde" into x
+delete char 2 to 4 of x
+answer x -- shows "ae"
+
+As far as deleting a button or field, this feature will arrive in a 
+future version...
+</code></pre>
+<h2><a id="user-content-disable-button" class="anchor" aria-hidden="true" href="#disable-button"></a>disable {button}</h2>
+<p>Disables a button (sets the "enabled" property to true, so that the
+button no longer responds to clicks).</p>
+<h2><a id="user-content-divide-chunk-of-container-by-number" class="anchor" aria-hidden="true" href="#divide-chunk-of-container-by-number"></a>divide [chunk of] {container} by {number}</h2>
+<p>Divides the number in a container by a number.</p>
+<p>Examples:</p>
+<pre><code>put 12 into x
+divide x by 3
+answer x -- will display "4"
+
+put "1,12,3" into x
+divide item 2 of x by 3
+answer x -- will display "1,4,3"
+</code></pre>
+<h2><a id="user-content-drag-from-x1-y1-to-x2-y2" class="anchor" aria-hidden="true" href="#drag-from-x1-y1-to-x2-y2"></a>drag from {x1}, {y1} to {x2}, {y2}</h2>
+<p>Use the drag command for programmatically drawing pictures.
+Remember to first use the choose command to indicate what to
+draw.</p>
+<p>Examples:</p>
+<pre><code>choose "line" tool
+drag from 10,20 to 30,40
+-- this draws a line starting at the coordinates (10,20) 
+-- ending at (30,40)
+</code></pre>
+<h2><a id="user-content-enable-button" class="anchor" aria-hidden="true" href="#enable-button"></a>enable {button}</h2>
+<p>Enables a button (sets the "enabled" property to false, so that the
+button is no longer disabled).</p>
+<h2><a id="user-content-exit" class="anchor" aria-hidden="true" href="#exit"></a>exit</h2>
+<p>Exits the current function, skipping over any subsequent lines
+of code. Similar to return, but does not return a value.</p>
+<p>Examples:</p>
+<pre><code>on mouseUp
+    put cd fld "fld1" into x
+    if x is not a number then
+        answer "you did not type a number"
+        exit mouseUp
+    end if
+    put x * 2 into cd fld "fld1"
+end mouseUp
+</code></pre>
+<h2><a id="user-content-exit-repeat" class="anchor" aria-hidden="true" href="#exit-repeat"></a>exit repeat</h2>
+<p>Exit the current loop.
+Equivalent to "break" in C.</p>
+<p>Examples:</p>
+<pre><code>repeat with x = 1 to 3
+    if x == 2 then
+        break
+    end if
+    answer x
+end repeat
+-- displays 1
+-- and does not display 2 or 3
+</code></pre>
+<h2><a id="user-content-get-expression" class="anchor" aria-hidden="true" href="#get-expression"></a>get {expression}</h2>
+<p>Evaluates any expression and saves the result to the variable "it".</p>
+<p>Not very useful compared with the 'put' command, but it is here
+for tradition's sake.</p>
+<p>Examples:</p>
+<pre><code>get 2+3
+put it into x
+answer x -- shows 5
+
+get the width of cd btn "myBtn"
+put it into x
+answer x -- shows the width of the specified button
+</code></pre>
+<h2><a id="user-content-global-variablename" class="anchor" aria-hidden="true" href="#global-variablename"></a>global {variableName}</h2>
+<p>Indicates that a variable is a global.</p>
+<ol>
+<li>it can be accessed from any other script</li>
+<li>the contents are saved even after the function is complete.
+The contents are lost when the stack is exited, however, and are not saved to disk.</li>
+</ol>
+<p>Examples:</p>
+<pre><code>global currentData1, currentData2
+put "stored 1" into currentData1
+put "stored 2" into currentData2
+</code></pre>
+<h2><a id="user-content-go-number" class="anchor" aria-hidden="true" href="#go-number"></a>go {number}</h2>
+<p>go {ordinal}
+go {relativePosition}</p>
+<p>Go to a different card.</p>
+<p>Examples:</p>
+<pre><code>go to card 1 -- goes to first card
+go first -- goes to first card
+go last -- goes to last card
+go next -- goes to the next card
+go prev -- goes to the previous card
+
+The following are supported:
+last
+middle
+any
+first
+second
+third
+fourth
+fifth
+sixth
+seventh
+eigth
+ninth
+tenth
+next
+previous
+this
+mid
+prev
+</code></pre>
+<h2><a id="user-content-hide-buttonfield" class="anchor" aria-hidden="true" href="#hide-buttonfield"></a>hide {button|field}</h2>
+<p>Hides a button or field.</p>
+<h2><a id="user-content-ifthen" class="anchor" aria-hidden="true" href="#ifthen"></a>if/then</h2>
+<p>Like in C, if a branch can be taken, all other else branches
+will be skipped, as in the third example below.</p>
+<p>Examples:</p>
+<pre><code>if x &gt; 0 then
+    answer "x is greater than 0"
+end if
+
+if x &gt; 0 then
+    answer "x is greater than 0"
+else
+    answer "x is not greater than 0"
+end if
+
+if 3+3 is 6 then
+    answer "yes"
+else if 2+2 is 4 then
+    answer "not run, even though it is true"
+end if
+
+if x &gt; 50 then
+    answer "x is greater than 50"
+else if x &gt; 40 then
+    answer "x is greater than 40"
+else
+    answer "x is not greater than 40"
+end if
+</code></pre>
+<h2><a id="user-content-lock-screen" class="anchor" aria-hidden="true" href="#lock-screen"></a>lock screen</h2>
+<p>This feature will arrive in a future version...</p>
+<h2><a id="user-content-multiply-chunk-of-container-by-number" class="anchor" aria-hidden="true" href="#multiply-chunk-of-container-by-number"></a>multiply [chunk of] {container} by {number}</h2>
+<p>Multiplies the number in a container by a number.</p>
+<p>Examples:</p>
+<pre><code>put 12 into x
+multiply x by 3
+answer x -- will display "36"
+
+put "1,12,3" into x
+multiply item 2 of x by 3
+answer x -- will display "1,36,3"
+</code></pre>
+<h2><a id="user-content-next-repeat" class="anchor" aria-hidden="true" href="#next-repeat"></a>next repeat</h2>
+<p>Inside a loop, go back to the top of the loop, skipping the next
+line(s) of code. Equivalent to "continue" in C.</p>
+<p>Examples:</p>
+<pre><code>repeat with x = 1 to 3
+    if x == 2 then
+        next repeat
+    end if
+    answer x
+end repeat
+-- displays 1
+-- displays 3
+-- and does not display 2
+</code></pre>
+<h2><a id="user-content-pass" class="anchor" aria-hidden="true" href="#pass"></a>pass</h2>
+<p>Exits the current function and calls a function higher in the
+message hierarchy. For example, if a button has the script</p>
+<pre><code>on mouseUp
+    answer "button handling the event"
+end mouseUp
+and the current card has the script
+on mouseUp
+    answer "card handling the event"
+end mouseUp
+</code></pre>
+<p>and the button is clicked,
+only the button's code will be run.</p>
+<p>If you want both to be run, you can use the pass command.
+If a button has the script</p>
+<pre><code>on mouseUp
+    answer "button handling the event"
+    pass mouseUp
+    -- any code here will be skipped
+end mouseUp
+</code></pre>
+<p>and the current card has the script</p>
+<pre><code>on mouseUp
+    answer "card handling the event"
+end mouseUp
+</code></pre>
+<p>and the button is clicked,
+both will be run.</p>
+<h2><a id="user-content-play" class="anchor" aria-hidden="true" href="#play"></a>play</h2>
+<p>Play a sound effect.</p>
+<p>For example, to play a chime sound,</p>
+<pre><code>play "glider_1_Extra" load
+play "glider_1_Extra"
+</code></pre>
+<p>You should load the sounds you will use in advance,
+such as in a game initialize() routine,
+so that when you play them, there will not be a delay.</p>
+<p>ViperCard can play the following sounds:</p>
+<p><code>glider_1_Aww glider_1_Bass glider_1_BeamIn glider_1_BlowerOn glider_1_Bounce glider_1_Clock glider_1_Crunch glider_1_Drip glider_1_Energize glider_1_Extra glider_1_FireBand glider_1_GetBand glider_1_GoodMove glider_1_GreaseFall glider_1_Guitar glider_1_Hey! glider_1_Lightning glider_1_LightsOn glider_1_Pop glider_1_Push glider_1_Shredder glider_1_Tick glider_1_ToastDrop glider_1_ToastJump glider_1_Yow! glider_1_Zap</code></p>
+<h2><a id="user-content-put-expression-into-container" class="anchor" aria-hidden="true" href="#put-expression-into-container"></a>put {expression} into {container}</h2>
+<p>Evaluates any expression and saves the result to a variable or
+container.</p>
+<p>Examples:</p>
+<pre><code>put "hello" into cd fld "message"
+
+put 2+3 into x
+answer x -- shows 5
+
+put "aa,bb,cc" into x
+put "11" into item 2 of x
+answer x -- shows "aa,11,cc"
+
+put "abc" into x
+put "q" into char 2 of x
+answer x -- shows "aqc"
+
+put "appended text" after x
+put "prepended text" before x
+</code></pre>
+<h2><a id="user-content-repeat" class="anchor" aria-hidden="true" href="#repeat"></a>repeat</h2>
+<p>Use to create a loop.</p>
+<p>Examples:</p>
+<pre><code>repeat with x = 1 to 5
+    answer ("x is now" &amp; x)
+end repeat
+
+repeat with x = 5 down to 1
+    answer ("x is now" &amp; x)
+end repeat
+
+repeat 3 times
+    answer "hi"
+end repeat
+
+repeat forever
+    answer "this is an infinite loop"
+end repeat
+
+put 0 into counter
+repeat forever
+    answer "but not this"
+    add 1 to counter
+    if counter &gt; 3 then
+        exit repeat
+    end if
+end repeat
+
+put 0 into counter
+repeat until counter &gt; 3
+    add 1 to counter
+end repeat
+
+put 0 into counter
+repeat while counter &lt;= 3
+    add 1 to counter
+end repeat
+</code></pre>
+<h2><a id="user-content-return-expression" class="anchor" aria-hidden="true" href="#return-expression"></a>return {expression}</h2>
+<p>return a value from the current function.
+Note: no lines of code after the return statement will be run.</p>
+<p>Examples:</p>
+<pre><code>function myAddition p1, p2
+    return p1 + p2
+    answer "this line will never be reached"
+end myAddition
+on mouseUp
+    put myAddition(1,2) into x
+end mouseUp
+</code></pre>
+<h2><a id="user-content-set-the-property-of-buttonfield-to-value" class="anchor" aria-hidden="true" href="#set-the-property-of-buttonfield-to-value"></a>set the {property} of {button|field} to {value}</h2>
+<p>set the {property} to {value}
+set the {chunkproperty} of {chunk} of {field} to {value}</p>
+<p>Use the set command to change a property.</p>
+<p>Some example properties:</p>
+<pre><code>set the width of cd btn "myButton" to 100
+set the topLeft of cd btn "myButton" to 24, 25
+put the long name of btn "myButton" into x
+set the textsize of char 2 to 4 of cd fld "myFld" to 18 
+set the itemdelimiter to "|"
+</code></pre>
+<p>See the "Properties" section of documentation for more.</p>
+<h2><a id="user-content-show-buttonfield" class="anchor" aria-hidden="true" href="#show-buttonfield"></a>show {button|field}</h2>
+<p>Shows a button or field.</p>
+<h2><a id="user-content-sort-linesitemschars-of-container" class="anchor" aria-hidden="true" href="#sort-linesitemschars-of-container"></a>sort [lines|items|chars] of {container}</h2>
+<p>sort descending [lines|items|chars] of {container}
+sort [lines|items|chars] of {container} [numeric|text|international]</p>
+<p>Sort styles:
+For text sorting (default), compares text, not case sensitive.
+For numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
+For international sorting, compares text using current locale.</p>
+<p>Examples:</p>
+<pre><code>put "aa,cc,bb" into x
+sort items of x
+answer x -- displays "aa,bb,cc"
+</code></pre>
+<h2><a id="user-content-subtract-chunk-of-container-from-number" class="anchor" aria-hidden="true" href="#subtract-chunk-of-container-from-number"></a>subtract [chunk of] {container} from {number}</h2>
+<p>Subtracts a number from the number in a container.</p>
+<p>Examples:</p>
+<pre><code>put 12 into x
+subtract 3 from x
+answer x -- will display "9"
+
+put "1,12,3" into x
+subtract 3 from item 2 of x
+answer x -- will display "1,9,3"
+</code></pre>
+<h2><a id="user-content-unlock-screen" class="anchor" aria-hidden="true" href="#unlock-screen"></a>unlock screen</h2>
+<p>This feature will arrive in a future version...</p>
+<h2><a id="user-content-wait-number-secondsmillisecondsmsticks" class="anchor" aria-hidden="true" href="#wait-number-secondsmillisecondsmsticks"></a>wait {number} [seconds|milliseconds|ms|ticks]</h2>
+<p>Pauses the script.</p>
+<p>Examples:</p>
+<pre><code>wait 500 ms -- pauses for half a second.
+
+(A paused script can be terminated by clicking the Stop icon in the
+navigation palette, or by changing to the button or field tool.)
+</code></pre>
+</article>
+</body>
+</html>
+
