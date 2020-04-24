@@ -90,11 +90,10 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         let ret: [O<VpcElBase>, VpcElCard];
         try {
             /* for convenience, let's throw exceptions when
-            the vel can't be found. */
+            the vel can't be found. means we get less specific messages, though */
             ret = resolver.go(ref, me, target, cardHistory);
         } catch (e) {
-            //let as = Util512BaseErr.errAsCls(VpcErr.name, e);
-            let as = e.isVpcErr;
+            let as = e?.typeName?.includes('Vpc');
             if (as) {
                 ret = [undefined, this.vci.getModel().getCurrentCard()];
             } else {

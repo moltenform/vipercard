@@ -1,6 +1,6 @@
 
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, Util512Message, joinIntoMessage } from './../../ui512/utils/util512Assert';
 /* auto */ import { fitIntoInclusive, getStrToEnum, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
@@ -608,8 +608,8 @@ export interface IVpcCodeLine {
  * a vpc error. doesn't have to be a script error, but often is.
  */
 export class VpcErr extends Util512BaseErr {
-    isVpcErr = true;
-    origClass = VpcErr.name;
+    typeName = 'VpcErr';
+    origClass = 'VpcErr';
     scriptErrLine: O<number>;
     scriptErrVelid: O<string>;
     lineObj: O<IVpcCodeLine>;
@@ -666,8 +666,7 @@ export function checkThrowEq<T>(expected: T, got: unknown, msg: string, c1: unkn
  * and 'internal' unexpected conditions
  */
 export class VpcInternalErr extends Util512BaseErr {
-    isVpcInternalErr = true;
-    origClass = VpcInternalErr.name;
+    typeName = 'VpcInternalErr';
     protected static gen(message: string, level: string) {
         return new VpcInternalErr(message, level);
     }
@@ -699,8 +698,7 @@ export function checkThrowInternal(condition: unknown, msg: string, s1: unknown 
  * just a message we want to show the user.
  */
 export class VpcNotificationMsg extends Util512Message {
-    isVpcNotificationMsg = true;
-    origClass = VpcNotificationMsg.name;
+    typeName = 'VpcNotificationMsg';
     protected static gen(message: string, level: string) {
         return new VpcNotificationMsg(message, level);
     }
@@ -731,10 +729,14 @@ export function checkThrowNotifyMsg(condition: unknown, msg: string, s1: unknown
  * we're about to show it to the user, so make it look nicer
  */
 export function cleanExceptionMsg(e: Error): string {
-    let asNotification = Util512BaseErr.errAsCls(VpcNotificationMsg.name, e);
+    let isMsgCls = false;
+    if ((e as any)?.typeName?.includes('Message') || (e as any)?.typeName?.includes('Msg')) {
+        isMsgCls = true;
+    }
+
     let msg = e.message.trim();
-    let isMsg = bool(asNotification) || bool(msg.startsWith('vpcmessage:'));
-    if (isMsg) {
+    if (isMsgCls || msg.startsWith('vpcmessage:')) {
+        isMsgCls = true;
         /* remove the marker */
         let r = /\(..\|\)$/g;
         msg = msg.replace(r, '');
@@ -750,7 +752,7 @@ export function cleanExceptionMsg(e: Error): string {
         msg = msg.slice('ui512:'.length) + ' (ui512)';
     }
 
-    if (isMsg) {
+    if (isMsgCls) {
         return msg;
     } else {
         return 'Note: ' + msg;

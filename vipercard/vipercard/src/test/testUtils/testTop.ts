@@ -35,8 +35,6 @@
 /* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
 /* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
 
-
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
 

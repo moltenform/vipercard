@@ -310,7 +310,7 @@ export class VelResolveReference {
                 !ref || ref.onlyThisSpecified(),
                 `Jx|we don't currently support referring to stacks other than "this stack"`
             );
-            
+
             return [this.model.stack, currentCard];
         }
     }

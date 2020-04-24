@@ -1,5 +1,5 @@
 
-/* auto */ import { O, RingBufferLocalStorage, UI512Compress, callDebuggerIfNotInProduction, tostring } from './util512Base';
+/* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -40,17 +40,17 @@
  * https://github.com/bjyoungblood/es6-error
  */
 export class Util512BaseErr {
-    isUtil512BaseErr = true;
-    origClass = Util512BaseErr.name;
+    typeName = 'Util512BaseErr';
     protected constructor(public message: string, public level: string) {}
 
     /**
      * cast an Error instance to a Util512BaseErr, or return undefined
      * if the Error isn't marked as that classs.
+     * we used to use isUtil512BaseErr, which supported inheritance,
+     * but this doesn't support inheritance now
      */
-    static errAsCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
-        let fld = 'is' + nm;
-        if ((e as any)[fld]) {
+    static errIfExactCls<T extends Util512BaseErr>(nm: string, e: Error): O<T> {
+        if ((e as any).typeName === nm) {
             return (e as any) as T;
         } else {
             return undefined;
@@ -61,7 +61,7 @@ export class Util512BaseErr {
      * cast a class to an Error
      */
     clsAsErr() {
-        assertWarn((this as any).isUtil512BaseErr, 'RW|');
+        assertWarn(bool((this as any).typeName), 'RW|');
         assertWarn((this as any).message, 'RV|');
         return (this as any) as Error;
     }
@@ -119,8 +119,7 @@ export class Util512BaseErr {
  * we'll show a message to the user.
  */
 export class Util512Warn extends Util512BaseErr {
-    isUtil512Warn = true;
-    origClass = Util512Warn.name;
+    typeName = 'Util512Warn';
     protected static gen(message: string, level: string) {
         return new Util512Warn(message, level);
     }
@@ -133,8 +132,7 @@ export class Util512Warn extends Util512BaseErr {
  * just a message, not an error case.
  */
 export class Util512Message extends Util512BaseErr {
-    isUtil512Message = true;
-    origClass = Util512Message.name;
+    typeName = 'Util512Message';
     protected static gen(message: string, level: string) {
         return new Util512Message(message, level);
     }
@@ -285,9 +283,11 @@ export class UI512ErrorHandling {
  * how to respond to exception:
  */
 export function respondUI512Error(e: Error, context: string, logOnly = false) {
-    let message = Util512BaseErr.errAsCls(Util512Message.name, e);
-    let warn = Util512BaseErr.errAsCls(Util512Warn.name, e);
-    let structure = Util512BaseErr.errAsCls(Util512BaseErr.name, e);
+    let message =
+        bool((e as any).typeName?.includes('Message')) ||
+        (e as any).typeName?.includes('Msg');
+    let warn = (e as any).typeName?.includes('Warn');
+    let structure = bool((e as any).typeName);
     callDebuggerIfNotInProduction(e.message);
     if (message) {
         /* not really an error, just a message */

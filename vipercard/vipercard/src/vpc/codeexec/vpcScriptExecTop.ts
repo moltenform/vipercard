@@ -263,11 +263,11 @@ export class VpcExecTop {
     protected handleScriptException(e: Error, context: string) {
         this.forceStopRunning();
 
-        let scriptErr = Util512BaseErr.errAsCls<VpcErr>(VpcErr.name, e);
+        let scriptErr = Util512BaseErr.errIfExactCls<VpcErr>('VpcErr', e);
         if (!scriptErr) {
             scriptErr = VpcErr.createError('', 'runOneLine');
             scriptErr.addErr(e);
-            scriptErr.origClass = (e as any).origClass ?? '(javascript)';
+            scriptErr.origClass = (e as any).typeName ?? '(javascript)';
         }
 
         if (!scriptErr.scriptErrVelid) {

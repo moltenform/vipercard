@@ -79,13 +79,6 @@ module.exports = {
                         properties: false
                     },
                     compress: true,
-                    chunkFilter: (chunk) => {
-                      if (chunk.name.endswith('Warn')||chunk.name.endswith('Message')||chunk.name.endswith('Err')) {
-                        return false;
-                      }
-
-                      return true;
-                    },
                 },
             }),
         ],
