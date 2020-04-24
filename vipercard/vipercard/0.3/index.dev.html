@@ -2,9 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5lfj95a+NP14NDh12X6FoCrbge+qtJYxnjAr9rKGCXk=' www.googletagmanager.com www.google-analytics.com; connect-src 'self' www.googletagmanager.com www.google-analytics.com; img-src 'self' www.google-analytics.com; font-src 'self'; style-src 'self'; manifest-src 'self'; media-src 'self'; object-src 'none'; worker-src 'self'; frame-src 'self' donorbox.org">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5lfj95a+NP14NDh12X6FoCrbge+qtJYxnjAr9rKGCXk=' www.googletagmanager.com www.google-analytics.com https://www.google-analytics.com https://ssl.google-analytics.com; connect-src 'self' www.googletagmanager.com www.google-analytics.com https://www.google-analytics.com; img-src 'self' www.google-analytics.com https://www.google-analytics.com; font-src 'self'; style-src 'self'; manifest-src 'self'; media-src 'self'; object-src 'none'; worker-src 'self'; frame-src 'self' donorbox.org">
         <title>ViperCard</title>
-        <script src="/external/externalmanualbundle_bigger.js"></script>
         <script>
             window.onload = function() {
                 var makeNewGolly = function(param) { return new GOLLY(param); }
@@ -23,10 +22,13 @@
         <link rel="stylesheet" type="text/css" href="/0.3/style.css">
     </head>
     <body>
+    <img src="/resources03a/images/opening.png" id="idOpeningMsg" />
     <audio class="notvisible" autoplay="true" volume="0.9" preload="auto" id="vpcinitialaudio" >
         <source src="/resources03a/sound/sound.mp4" type="audio/mp4" autoplay="true" volume="0.9" preload="auto">
         <source src="/resources03a/sound/sound.ogg" type="audio/ogg" autoplay="true" volume="0.9" preload="auto">
     </audio>
     <p class="messageBelow" id="elemMessageBelow"></p>
+    <script src="/external/externalmanualbundle_bigger.js"></script>
+    <!-- scripts will be added here -->
     </body>
 </html>

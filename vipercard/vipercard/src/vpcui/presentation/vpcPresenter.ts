@@ -420,7 +420,7 @@ export class VpcPresenter extends VpcPresenterInit {
             let curs = this.getToolResponse(tl).whichCursor(tl, el);
             UI512CursorAccess.setCursor(curs);
         } else {
-            UI512CursorAccess.setCursor(UI512Cursors.Arrow);
+            UI512CursorAccess.setCursor(UI512Cursors.arrow);
         }
     }
 

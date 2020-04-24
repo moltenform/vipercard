@@ -113,7 +113,7 @@ export class VpcAppUIToolShape extends VpcAppUIToolBase {
      * which cursor should be shown if the mouse is over el.
      */
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
-        return UI512Cursors.Crosshair;
+        return UI512Cursors.cross;
     }
 }
 

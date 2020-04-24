@@ -3,7 +3,7 @@
 /* auto */ import { VpcInitIcons } from './../../vpc/vpcutils/vpcInitIcons';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
-/* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
+/* auto */ import { UI512CursorAccess, UI512Cursors } from './../utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
@@ -47,7 +47,7 @@ export class FullRootUI512 implements RootHigher {
         this.presenter = new VpcUiIntro();
         domCanvas.setAttribute('id', 'mainDomCanvas');
         showMsgIfExceptionThrown(
-            () => UI512CursorAccess.setCursor(UI512CursorAccess.defaultCursor),
+            () => UI512CursorAccess.setCursor(UI512Cursors.arrow),
             UI512CursorAccess.setCursor.name
         );
         showMsgIfExceptionThrown(VpcInitIcons.go, VpcInitIcons.name);

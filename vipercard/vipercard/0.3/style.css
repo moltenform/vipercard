@@ -12,39 +12,9 @@ canvas {
 }
 
 .messageBelow {color: white; font-family:sans-serif; font-size:60%; margin-left:90px; margin-top:200px }
-.arrowCursor {cursor:url('/resources03a/cursors/arrow.gif') 3 1, default;}
-.arrowCursor:active {cursor:url('/resources03a/cursors/arrow.gif') 3 1, default;}
-canvas.classCursor2 {cursor:url('/resources03a/cursors/arrow.gif') 3 1, default;}
-canvas.classCursor2:active {cursor:url('/resources03a/cursors/arrow.gif') 3 1, default;}
-canvas.classCursor3 {cursor:url('/resources03a/cursors/arrow.gif') 3 1, default;}
-canvas.classCursor3:active {cursor:url('/resources03a/cursors/arrow.gif') 3 1, default;}
-canvas.classCursor4 {cursor:text;}
-canvas.classCursor4:active {cursor:text;}
-canvas.classCursor5 {cursor:url('/resources03a/cursors/crosshair.gif') 7 7, default;}
-canvas.classCursor5:active {cursor:url('/resources03a/cursors/crosshair.gif') 7 7, default;}
-canvas.classCursor6 {cursor:url('/resources03a/cursors/hand.cur') 6 1, default;}
-canvas.classCursor6:active {cursor:url('/resources03a/cursors/hand.cur') 6 1, default;}
-canvas.classCursor7 {cursor:url('/resources03a/cursors/pencil.gif') 1 15, default;}
-canvas.classCursor7:active {cursor:url('/resources03a/cursors/pencil.gif') 1 15, default;}
-canvas.classCursor8 {cursor:url('/resources03a/cursors/plus.gif') 7 7, default;}
-canvas.classCursor8:active {cursor:url('/resources03a/cursors/plus.gif') 7 7, default;}
-canvas.classCursor9 {cursor:url('/resources03a/cursors/watch.gif') 7 7, default;}
-canvas.classCursor9:active {cursor:url('/resources03a/cursors/watch.gif') 7 7, default;}
-canvas.classCursor10 {cursor:url('/resources03a/cursors/paintbrush.gif') 7 15, default;}
-canvas.classCursor10:active {cursor:url('/resources03a/cursors/paintbrush.gif') 7 15, default;}
-canvas.classCursor11 {cursor:url('/resources03a/cursors/crosshair.gif') 7 7, default;}
-canvas.classCursor11:active {cursor:url('/resources03a/cursors/crosshair.gif') 7 7, default;}
-canvas.classCursor12 {cursor:text;}
-canvas.classCursor12:active {cursor:text;}
-canvas.classCursor13 {cursor:url('/resources03a/cursors/crosshair.gif') 7 7, default;}
-canvas.classCursor13:active {cursor:url('/resources03a/cursors/crosshair.gif') 7 7, default;}
-canvas.classCursor14 {cursor:url('/resources03a/cursors/box.gif') 7 7, default;}
-canvas.classCursor14:active {cursor:url('/resources03a/cursors/box.gif') 7 7, default;}
-canvas.classCursor15 {cursor:url('/resources03a/cursors/spraypaint.gif') 2 2, default;}
-canvas.classCursor15:active {cursor:url('/resources03a/cursors/spraypaint.gif') 2 2, default;}
-canvas.classCursor20 {cursor:hand;}
-canvas.classCursor20:active {cursor:hand;}
-canvas.classCursor21 {cursor:default;}
-canvas.classCursor21:active {cursor:default;}
-body { background-color: rgb(0,0,0); }
+body { background-color: rgb(0,0,0); cursor:url('/resources03a/cursors/arrow1x3\,1.png') 3 1, default; }
 .notvisible { display:none }
+
+#idOpeningMsg {
+    position:fixed; top:0px; left:0px; z-index: -999;
+}

@@ -134,7 +134,7 @@ export class VpcElProductOpts extends VpcElBase {
             PrpTyp.Str,
             (me: VpcElProductOpts, s: string) => {
                 if (s === '1') {
-                    s = 'beam';
+                    s = 'lbeam';
                 } else if (s === '2') {
                     s = 'cross';
                 } else if (s === '3') {
@@ -143,8 +143,8 @@ export class VpcElProductOpts extends VpcElBase {
                     s = 'watch';
                 }
 
-                let n = getStrToEnum<VpcCursors>(VpcCursors, `cursor ${s} not supported`, s);
-                UI512CursorAccess.setCursor(n.valueOf());
+                let n = getStrToEnum<UI512Cursors>(UI512Cursors, `cursor ${s} not supported`, s);
+                UI512CursorAccess.setCursor(n);
             }
         ];
 
@@ -213,23 +213,3 @@ export class VpcElProductOpts extends VpcElBase {
     static productOptsScript = VpcStandardLibScript.script;
 }
 
-/**
- * vipercard cursors
- */
-export enum VpcCursors {
-    __isUI512Enum = 1,
-    __UI512EnumCapitalize = -1,
-    Arrow = UI512Cursors.Arrow,
-    Beam = UI512Cursors.Beam,
-    Crosshair = UI512Cursors.Crosshair,
-    Hand = UI512Cursors.Hand,
-    Pencil = UI512Cursors.Pencil,
-    Plus = UI512Cursors.Plus,
-    Watch = UI512Cursors.Watch,
-    Paintbrush = UI512Cursors.PaintBrush,
-    Paintbucket = UI512Cursors.PaintBucket,
-    Painttext = UI512Cursors.PaintText,
-    Paintlasso = UI512Cursors.PaintLasso,
-    Painteraser = UI512Cursors.PaintEraser,
-    Paintspray = UI512Cursors.PaintSpray
-}

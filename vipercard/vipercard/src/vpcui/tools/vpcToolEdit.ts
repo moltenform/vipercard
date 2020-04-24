@@ -144,7 +144,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
      * which cursor should be shown if the mouse is over el.
      */
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
-        return UI512Cursors.Arrow;
+        return UI512Cursors.arrow;
     }
 
     /**

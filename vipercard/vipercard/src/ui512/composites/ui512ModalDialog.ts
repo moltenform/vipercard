@@ -211,7 +211,7 @@ export class UI512CompModalDialog extends UI512CompBase {
                 ? this.getElId(`inputfld`)
                 : undefined
         );
-        UI512CursorAccess.setCursor(UI512Cursors.Arrow);
+        UI512CursorAccess.setCursor(UI512Cursors.arrow);
         let nChosen = UI512CompStdDialogResult.NotChosen;
         let whenComplete = () => {
             /* restore listeners and run the callback */

@@ -101,6 +101,7 @@ export class Util512 {
         } else {
             ret = NaN;
         }
+        
         return Number.isFinite(ret) ? ret : undefined;
     }
 

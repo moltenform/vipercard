@@ -394,9 +394,9 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
             el &&
             el.id.endsWith('PlaceholderForCursor')
         ) {
-            return UI512Cursors.Arrow;
+            return UI512Cursors.arrow;
         } else {
-            return UI512Cursors.Crosshair;
+            return UI512Cursors.paintrectsel;
         }
     }
 

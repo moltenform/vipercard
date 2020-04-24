@@ -106,15 +106,15 @@ export class VpcAppUIToolSmear extends VpcAppUIToolBase {
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
         switch (tl) {
             case VpcTool.Pencil:
-                return UI512Cursors.Pencil;
+                return UI512Cursors.paintpencil;
             case VpcTool.Eraser:
-                return UI512Cursors.PaintEraser;
+                return UI512Cursors.painterase;
             case VpcTool.Brush:
-                return UI512Cursors.PaintBrush;
+                return UI512Cursors.paintbrush;
             case VpcTool.Spray:
-                return UI512Cursors.PaintSpray;
+                return UI512Cursors.paintspray;
             default:
-                return UI512Cursors.Arrow;
+                return UI512Cursors.arrow;
         }
     }
 

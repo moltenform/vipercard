@@ -48,10 +48,10 @@ export class VpcAppUIToolBrowse extends VpcAppUIToolBase {
     whichCursor(tl: VpcTool, el: O<UI512Element>): UI512Cursors {
         if (el && el.typename === 'UI512ElTextField' && el.getB('canselecttext')) {
             /* change the cursor if you can edit text in a field */
-            return UI512Cursors.Arrow;
+            return UI512Cursors.arrow;
         } else {
             /* otherwise, use the default hand cursor */
-            return UI512Cursors.Hand;
+            return UI512Cursors.hand;
         }
     }
 

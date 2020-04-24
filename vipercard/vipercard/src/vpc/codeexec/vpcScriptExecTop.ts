@@ -193,6 +193,7 @@ export class VpcExecTop {
         VpcCurrentScriptStage.dynamicCodeOrigin = undefined;
         VpcCurrentScriptStage.currentStage = VpcErrStage.Unknown;
 
+        
         this.outside.SetOption('screenLocked', false);
         this.outside.SetOption('mimicCurrentTool', VpcTool.Browse);
         this.outside.Model().productOpts.set('itemDel', ',');

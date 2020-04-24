@@ -5,6 +5,7 @@
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { BowserBrowsers, BowserPlatform } from './../../bridge/bridgeBrowserInfo';
+import { UI512CursorAccess } from '../utils/utilsCursors';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -85,6 +86,8 @@ export class RootSetupHelpers {
             () => RootSetupHelpers.mainOnResizeNewAdvanced(root, gly),
             RootSetupHelpers.mainOnResizeNewAdvanced.name
         );
+        
+        UI512CursorAccess.notifyScreenMult(1.0 / root.scaleMouseCoords)
     }
 
     static mainOnResizeNewAdvanced(root: RootHigher, gly: any) {
