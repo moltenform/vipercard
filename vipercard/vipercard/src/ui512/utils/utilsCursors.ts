@@ -62,13 +62,13 @@ export enum UI512Cursors {
     cross = 2,
     plus = 3,
     watch = 4,
-    hand,
-    arrow,
-    busy,
+    hand = 5,
+    arrow = 6,
+    busy = 7,
     __AlternateForm__none = arrow /* cursor = none would be frustrating */,
     /* order no longer matters */
-    unknown,
-    paintbrush,
+    unknown= 8,
+    paintbrush = 9,
     painterase,
     paintlasso,
     paintpencil,
@@ -78,12 +78,10 @@ export enum UI512Cursors {
     busy2,
     busy3,
     busy4,
-    hosttext,
-    hosthand,
-    hostarrow
 }
 
 const hotCoords = [
+    [0,0], /* placeholder */
     [3, 7],
     [7, 7],
     [7, 7],
@@ -103,6 +101,14 @@ const hotCoords = [
     [7, 7],
     [7, 7],
     ]
+
+const isInvert: { [key: number]: boolean } = {
+}
+isInvert[UI512Cursors.lbeam] = true
+isInvert[UI512Cursors.paintrectsel] = true
+isInvert[UI512Cursors.paintlasso] = true
+isInvert[UI512Cursors.paintbrush] = true
+isInvert[UI512Cursors.cross] = true
 
 
 /**
@@ -142,7 +148,7 @@ export class UI512CursorAccess {
             group ='0cursors3'
         }
 
-        let hots = hotCoords[nextCursor-1] ?? [0,0]
+        let hots = hotCoords[nextCursor] ?? [0,0]
         UI512CursorAccess.currentHotX = -hots[0] * UI512CursorAccess.currentMultCursorSize
         UI512CursorAccess.currentHotY = -hots[1] * UI512CursorAccess.currentMultCursorSize
         UI512CursorAccess.curInfo.iconGroup = group
@@ -199,6 +205,7 @@ export class UI512CursorAccess {
     static onmousemove(x: number, y:number) {
         UI512CursorAccess.currentMx = x
         UI512CursorAccess.currentMy = y
+        console.log(x,y)
     }
 
     static drawFinalWithCursor(buffer:CanvasWrapper, final:CanvasWrapper, drewAnything:boolean) {
@@ -216,8 +223,8 @@ export class UI512CursorAccess {
 
         /* trick: by hiding the cursor if it's by the edge,
         we are less likely to leave our fake cursor on the screen */
-        if (!(UI512CursorAccess.currentMx < 10 || UI512CursorAccess.currentMx > final.canvas.width - 10 ||
-            UI512CursorAccess.currentMy < 10 || UI512CursorAccess.currentMy > final.canvas.height - 10 )) {
+        if (!(UI512CursorAccess.currentMx < 15 || UI512CursorAccess.currentMx > final.canvas.width - 15 ||
+            UI512CursorAccess.currentMy < 15 || UI512CursorAccess.currentMy > final.canvas.height - 15 )) {
                 let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
                 let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
                 if (!found) {
@@ -228,7 +235,16 @@ export class UI512CursorAccess {
                     UI512CursorAccess.wasCursorLoaded = true
                     UI512CursorAccess.curInfo.adjustX = UI512CursorAccess.currentMx + UI512CursorAccess.currentHotX
                     UI512CursorAccess.curInfo.adjustY = UI512CursorAccess.currentMy + UI512CursorAccess.currentHotY
-                    found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
+                    if (isInvert[UI512CursorAccess.currentCursor]) {
+                        try {
+                            final.context.globalCompositeOperation = 'difference'
+                            found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
+                        } finally {
+                            final.context.globalCompositeOperation = 'source-over';
+                        }
+                    } else {
+                        found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
+                    }
                 }
             }
         

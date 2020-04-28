@@ -21,6 +21,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         eatallkeyevents: true,
         customsizing: true,
         trackFrameTime: false,
+        includeallmousemoveevents: true,
         fnaddtodom: (container: any, d: any) => {
             container.insertBefore(d, window.document.getElementById('elemMessageBelow'));
         }

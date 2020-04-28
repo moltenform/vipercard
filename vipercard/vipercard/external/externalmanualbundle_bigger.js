@@ -10265,13 +10265,20 @@ window['GOLLY'] = function(params) {
 		var shouldContinue = _this['mouseup'](x, y, e.button, e.buttons, e.ctrlKey, e.shiftKey, e.altKey, e.metaKey);
 	}, false);
 	
-	_privateParts['domElement'].addEventListener('mousemove', function(e) {
+	//~ _privateParts['domElement'].addEventListener('mousemove', function(e) {
+		//~ var x = e.pageX - _privateParts['offset'].x;
+		//~ var y = e.pageY - _privateParts['offset'].y;
+		//~ var shouldContinue = _this['mousemove'](x, y, e.button, e.buttons, _privateParts['pmouseX'], _privateParts['pmouseY']);
+		//~ _privateParts['pmouseX'] = x;
+		//~ _privateParts['pmouseY'] = y;
+    //~ }, false);
+    window.addEventListener('mousemove', function(e) {
 		var x = e.pageX - _privateParts['offset'].x;
 		var y = e.pageY - _privateParts['offset'].y;
 		var shouldContinue = _this['mousemove'](x, y, e.button, e.buttons, _privateParts['pmouseX'], _privateParts['pmouseY']);
 		_privateParts['pmouseX'] = x;
 		_privateParts['pmouseY'] = y;
-	}, false);
+    }, false);
 
 	// Internal loop.
 	if (params['trackFrameTime'] === false) {
