@@ -83,18 +83,39 @@ export enum UI512Cursors {
     hostarrow
 }
 
+const hotCoords = [
+    [3, 7],
+    [7, 7],
+    [7, 7],
+    [7, 7],
+    [6, 0],
+    [3, 1],
+    [7, 7],
+    [3, 1],
+    [5, 14],
+    [7, 7],
+    [2, 13],
+    [1, 15],
+    [7, 7],
+    [2, 2],
+    [14, 14],
+    [7, 7],
+    [7, 7],
+    [7, 7],
+    ]
+
 
 /**
  * cache the current cursor so that repeated calls to setCursor
  * won't have any effect on performance
  */
 export class UI512CursorAccess {
-    protected static currentCursor = UI512Cursors.arrow;
+    protected static currentCursor = UI512Cursors.unknown;
     protected static currentMx = 0;
     protected static currentMy = 0;
     protected static lastDrawnMx = -1;
     protected static lastDrawnMy = -1;
-    protected static lastDrawnCur = UI512Cursors.unknown;
+    protected static lastDrawnCur = -1
     protected static currentMultCursorSize = 1;
     protected static currentHotX = 0;
     protected static currentHotY = 0;
@@ -105,6 +126,10 @@ export class UI512CursorAccess {
     }
 
     static setCursor(nextCursor: UI512Cursors, always = false) {
+        if (!always && UI512CursorAccess.currentCursor === nextCursor) {
+            return
+        }
+
         let el = window.document.getElementById('mainDomCanvas');
         if (el) {
             el.style.cursor = 'none';
@@ -117,36 +142,14 @@ export class UI512CursorAccess {
             group ='0cursors3'
         }
 
-        UI512CursorAccess.curInfo.adjustX = 1
-        UI512CursorAccess.curInfo.adjustY = 1
+        let hots = hotCoords[nextCursor-1] ?? [0,0]
+        UI512CursorAccess.currentHotX = -hots[0] * UI512CursorAccess.currentMultCursorSize
+        UI512CursorAccess.currentHotY = -hots[1] * UI512CursorAccess.currentMultCursorSize
         UI512CursorAccess.curInfo.iconGroup = group
-        UI512CursorAccess.curInfo.iconNumber = nextCursor
+        UI512CursorAccess.curInfo.iconNumber = nextCursor - 1
         UI512CursorAccess.curInfo.centered = false
 
-        //~ if (nextCursor !== UI512CursorAccess.currentCursor || always) {
-            //~ let el = window.document.getElementById('mainDomCanvas');
-            //~ if (el) {
-                //~ let map: MapKeyToObjectCanSet<string>;
-                //~ if (UI512CursorAccess.currentMult === 2) {
-                    //~ map = map2x;
-                //~ } else if (UI512CursorAccess.currentMult === 3) {
-                    //~ map = map3x;
-                //~ } else {
-                    //~ map = map1x;
-                //~ }
-
-                //~ let mapped = map.get(nextCursor.toString());
-                //~ let spec = UI512CursorAccess.defaultCursor;
-                //~ if (mapped) {
-                    //~ let [x, y] = UI512CursorAccess.parseCursorName(mapped);
-                    //~ spec = `url('/resources03a/cursors/${mapped}') ${x} ${y}, default`;
-                //~ }
-
-                //~ el.style.cursor = spec;
-            //~ }
-
-            //~ UI512CursorAccess.currentCursor = nextCursor;
-        //~ }
+        UI512CursorAccess.currentCursor = nextCursor
     }
 
     static parseCursorName(s: string): [number, number] {
@@ -193,9 +196,9 @@ export class UI512CursorAccess {
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true);
     }
 
-    static onmousemove(unscaledx: number, unscaledy:number) {
-        UI512CursorAccess.currentMx = unscaledx
-        UI512CursorAccess.currentMy = unscaledy
+    static onmousemove(x: number, y:number) {
+        UI512CursorAccess.currentMx = x
+        UI512CursorAccess.currentMy = y
     }
 
     static drawFinalWithCursor(buffer:CanvasWrapper, final:CanvasWrapper, drewAnything:boolean) {
@@ -211,19 +214,24 @@ export class UI512CursorAccess {
             0,
         );
 
-
-        let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
-        let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
-        if (!found) {
-            /* hand-draw a little cursor */
-            UI512CursorAccess.wasCursorLoaded = false
-            final.fillRectUnchecked(UI512CursorAccess.currentMx, UI512CursorAccess.currentMy, 3, 3, 'black')
-        } else {
-            UI512CursorAccess.wasCursorLoaded = true
-            UI512CursorAccess.curInfo.adjustX = UI512CursorAccess.currentMx
-            UI512CursorAccess.curInfo.adjustY = UI512CursorAccess.currentMy
-            found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
-        }
+        /* trick: by hiding the cursor if it's by the edge,
+        we are less likely to leave our fake cursor on the screen */
+        if (!(UI512CursorAccess.currentMx < 10 || UI512CursorAccess.currentMx > final.canvas.width - 10 ||
+            UI512CursorAccess.currentMy < 10 || UI512CursorAccess.currentMy > final.canvas.height - 10 )) {
+                let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
+                let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
+                if (!found) {
+                    /* hand-draw a little cursor */
+                    UI512CursorAccess.wasCursorLoaded = false
+                    final.fillRectUnchecked(UI512CursorAccess.currentMx, UI512CursorAccess.currentMy, 8, 8, 'black')
+                } else {
+                    UI512CursorAccess.wasCursorLoaded = true
+                    UI512CursorAccess.curInfo.adjustX = UI512CursorAccess.currentMx + UI512CursorAccess.currentHotX
+                    UI512CursorAccess.curInfo.adjustY = UI512CursorAccess.currentMy + UI512CursorAccess.currentHotY
+                    found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
+                }
+            }
+        
         
         UI512CursorAccess.lastDrawnMx = UI512CursorAccess.currentMx
         UI512CursorAccess.lastDrawnMy = UI512CursorAccess.currentMy

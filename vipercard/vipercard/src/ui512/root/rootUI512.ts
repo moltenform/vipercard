@@ -104,11 +104,11 @@ export class FullRootUI512 implements RootHigher {
         }
 
         if (details instanceof MouseMoveEventDetails) {
-            UI512CursorAccess.onmousemove(details.mouseX, details.prevMouseY)
             details.mouseX = adjustMouseCoord(details.mouseX, this.scaleMouseCoords)
             details.mouseY = adjustMouseCoord(details.mouseY, this.scaleMouseCoords)
             details.prevMouseX = adjustMouseCoord(details.prevMouseX, this.scaleMouseCoords)
             details.prevMouseY = adjustMouseCoord(details.prevMouseY, this.scaleMouseCoords)
+            UI512CursorAccess.onmousemove(details.mouseX, details.prevMouseY)
         }
 
         if (!details.handled()) {
@@ -178,6 +178,10 @@ export class FullRootUI512 implements RootHigher {
         if (this.timerSendIdleEvent.isDue()) {
             this.timerSendIdleEvent.reset();
             this.event(new IdleEventDetails(milliseconds));
+        }
+        if (this.canvasBeforeCursor.canvas.width !== this.domCanvas.canvas.width ||
+            this.canvasBeforeCursor.canvas.height !== this.domCanvas.canvas.height)  {
+                this.canvasBeforeCursor = CanvasWrapper.createMemoryCanvas(this.domCanvas.canvas.width, this.domCanvas.canvas.height)
         }
 
         let complete = new RenderComplete();
