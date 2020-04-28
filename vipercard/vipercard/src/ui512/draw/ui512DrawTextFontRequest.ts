@@ -73,6 +73,8 @@ export class UI512FontRequest {
         let found = this.cachedGrids[gridkey];
         if (found === undefined) {
             /* case 1) you asked for an unsupported font, fall back to default font */
+            /* considered gracefully going to a similar font,
+            but that is confusing also, because it's not what you asked for either. */
             gridkey = UI512FontRequest.defaultFontAsId;
             found = this.cachedGrids[gridkey];
             assertTrue(found !== undefined, '3N|found is undefined');

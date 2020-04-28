@@ -738,7 +738,7 @@ export function cleanExceptionMsg(e: Error): string {
     if (isMsgCls || msg.startsWith('vpcmessage:')) {
         isMsgCls = true;
         /* remove the marker */
-        let r = /\(..\|\)$/g;
+        let r = / \(..\)$/g;
         msg = msg.replace(r, '');
     }
 
@@ -753,8 +753,8 @@ export function cleanExceptionMsg(e: Error): string {
     }
 
     if (isMsgCls) {
-        return msg;
+        return msg.trim();
     } else {
-        return 'Note: ' + msg;
+        return 'Note: ' + msg.trim();
     }
 }
