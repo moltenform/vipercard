@@ -382,8 +382,8 @@ export class VpcPresenter extends VpcPresenterInit {
     /**
      * main render method
      */
-    render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete) {
-        this.lyrModelRender.checkIfScreenWasJustUnlocked();
+    render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete):boolean {
+        //~ this.lyrModelRender.checkIfScreenWasJustUnlocked();
         let shouldUpdate = bool(this.lyrModelRender.needUIToolsRedraw) || bool(this.lyrModelRender.needFullRedraw);
 
         /* we used to put a finally here to ensure that needFullRedraw is
@@ -398,7 +398,7 @@ export class VpcPresenter extends VpcPresenterInit {
 
         this.lyrModelRender.needUIToolsRedraw = false;
         this.lyrModelRender.needFullRedraw = false;
-        super.render(canvas, ms, cmpTotal);
+        return super.render(canvas, ms, cmpTotal);
     }
 
     /**

@@ -769,8 +769,10 @@ export class UI512ViewDraw {
         needRedraw: boolean,
         clearBefore = true
     ) {
+        let drewAnything = false
         let needDrawBorders = false;
         if (needRedraw) {
+            drewAnything = true
             needDrawBorders = true;
             this.renderAllElements(
                 canvas,
@@ -783,8 +785,11 @@ export class UI512ViewDraw {
         }
 
         if (needDrawBorders && clearBefore) {
+            drewAnything = true
             this.renderBorders(canvas, cmpTotal);
         }
+
+        return drewAnything
     }
 
     /**

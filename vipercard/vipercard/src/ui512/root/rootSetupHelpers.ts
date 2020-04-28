@@ -167,5 +167,4 @@ export class RootSetupHelpers {
 export interface RootHigher extends Root {
     rawResize(width: number, height: number): void;
     scaleMouseCoords: number;
-    cursorOffset: number
 }

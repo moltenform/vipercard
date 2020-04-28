@@ -1,9 +1,10 @@
 
+/* auto */ import { CanvasWrapper } from './utilsCanvasDraw';
+/* auto */ import { getRoot } from './util512Higher';
 /* auto */ import { tostring } from './util512Base';
-/* auto */ import { ensureDefined } from './util512Assert';
-/* auto */ import { MapKeyToObjectCanSet, Util512 } from './util512';
-import { getRoot } from './util512Higher';
-import { RootHigher } from '../root/rootSetupHelpers';
+/* auto */ import { MapKeyToObjectCanSet, Util512, cast } from './util512';
+/* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
+/* auto */ import { IconInfo } from './../draw/ui512DrawIconClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -82,78 +83,6 @@ export enum UI512Cursors {
     hostarrow
 }
 
-const map1x = new MapKeyToObjectCanSet<string>();
-map1x.set(tostring(UI512Cursors.lbeam), 'caret1x3,7.png');
-map1x.set(tostring(UI512Cursors.cross), 'cross1x7,7.png');
-map1x.set(tostring(UI512Cursors.plus), 'xtraplus1x7,7.png');
-map1x.set(tostring(UI512Cursors.watch), 'xtrawatch1x7,7.png');
-map1x.set(tostring(UI512Cursors.hand), 'hand1x6,0.png');
-map1x.set(tostring(UI512Cursors.arrow), 'arrow1x3,1.png');
-map1x.set(tostring(UI512Cursors.busy), 'xtrabusya1x7,7.png');
-map1x.set(tostring(UI512Cursors.unknown), 'LIT:default');
-map1x.set(tostring(UI512Cursors.paintbrush), 'brush1x5,14.png');
-map1x.set(tostring(UI512Cursors.painterase), 'erase1x7,7.png');
-map1x.set(tostring(UI512Cursors.paintlasso), 'lasso1x2,13.png');
-map1x.set(tostring(UI512Cursors.paintpencil), 'pencil1x1,15.png');
-map1x.set(tostring(UI512Cursors.paintrectsel), 'rectsel1x7,7.png');
-map1x.set(tostring(UI512Cursors.paintspray), 'spray1x2,2.png');
-map1x.set(tostring(UI512Cursors.paintbucket), 'bucket1x14,14.png');
-map1x.set(tostring(UI512Cursors.busy2), 'xtrabusyb1x7,7.png');
-map1x.set(tostring(UI512Cursors.busy3), 'xtrabusyc1x7,7.png');
-map1x.set(tostring(UI512Cursors.busy4), 'xtrabusyd1x7,7.png');
-map1x.set(tostring(UI512Cursors.hosttext), 'LIT:text');
-map1x.set(tostring(UI512Cursors.hosthand), 'LIT:pointer');
-map1x.set(tostring(UI512Cursors.hostarrow), 'LIT:default');
-const map2x = new MapKeyToObjectCanSet<string>();
-map2x.set(tostring(UI512Cursors.lbeam), 'caret2x6,14.png');
-map2x.set(tostring(UI512Cursors.cross), 'cross2x14,14.png');
-map2x.set(tostring(UI512Cursors.plus), 'xtraplus2x14,14.png');
-map2x.set(tostring(UI512Cursors.watch), 'xtrawatch2x14,14.png');
-map2x.set(tostring(UI512Cursors.hand), 'hand2x12,0.png');
-map2x.set(tostring(UI512Cursors.arrow), 'arrow2x6,2.png');
-map2x.set(tostring(UI512Cursors.busy), 'xtrabusya2x14,14.png');
-map2x.set(tostring(UI512Cursors.unknown), 'LIT:default');
-map2x.set(tostring(UI512Cursors.paintbrush), 'brush2x10,28.png');
-map2x.set(tostring(UI512Cursors.painterase), 'erase2x14,14.png');
-map2x.set(tostring(UI512Cursors.paintlasso), 'lasso2x4,26.png');
-map2x.set(tostring(UI512Cursors.paintpencil), 'pencil2x2,30.png');
-//~ map2x.set(tostring(UI512Cursors.paintrectsel), 'rectsel2x14,14.png');
-map2x.set(tostring(UI512Cursors.paintrectsel), 'rectsel.cur');
-map2x.set(tostring(UI512Cursors.paintspray), 'spray2x4,4.png');
-map2x.set(tostring(UI512Cursors.paintbucket), 'bucket2x28,28.png');
-map2x.set(tostring(UI512Cursors.busy2), 'xtrabusyb2x14,14.png');
-map2x.set(tostring(UI512Cursors.busy3), 'xtrabusyc2x14,14.png');
-map2x.set(tostring(UI512Cursors.busy4), 'xtrabusyd2x14,14.png');
-map2x.set(tostring(UI512Cursors.hosttext), 'LIT:text');
-map2x.set(tostring(UI512Cursors.hosthand), 'LIT:pointer');
-map2x.set(tostring(UI512Cursors.hostarrow), 'LIT:default');
-
-const map3x = new MapKeyToObjectCanSet<string>();
-map3x.set(tostring(UI512Cursors.lbeam),  "caret3x9,21.png")
-map3x.set(tostring(UI512Cursors.cross),  "cross3x21,21.png")
-map3x.set(tostring(UI512Cursors.plus),  "xtraplus3x21,21.png")
-map3x.set(tostring(UI512Cursors.watch),  "xtrawatch3x21,21.png")
-map3x.set(tostring(UI512Cursors.hand),  "hand3x18,0.png")
-map3x.set(tostring(UI512Cursors.arrow),  "arrow3x9,3.png")
-map3x.set(tostring(UI512Cursors.busy),  "xtrabusya3x21,21.png")
-map3x.set(tostring(UI512Cursors.unknown), 'LIT:default');
-/* dropping back to 2x since coords >= 32 */
-map3x.set(tostring(UI512Cursors.paintbrush),  "brush2x10,28.png")
-map3x.set(tostring(UI512Cursors.painterase),  "erase3x21,21.png")
-/* dropping back to 2x since coords >= 32 */
-map3x.set(tostring(UI512Cursors.paintlasso),  "lasso2x4,26.png")
-/* dropping back to 2x since coords >= 32 */
-map3x.set(tostring(UI512Cursors.paintpencil),  "pencil2x2,30.png")
-map3x.set(tostring(UI512Cursors.paintrectsel),  "rectsel3x21,21.png")
-map3x.set(tostring(UI512Cursors.paintspray),  "spray3x6,6.png")
-/* dropping back to 2x since coords >= 32 */
-map3x.set(tostring(UI512Cursors.paintbucket),  "bucket2x28,28.png")
-map3x.set(tostring(UI512Cursors.busy2),  "xtrabusyb3x21,21.png")
-map3x.set(tostring(UI512Cursors.busy3),  "xtrabusyc3x21,21.png")
-map3x.set(tostring(UI512Cursors.busy4),  "xtrabusyd3x21,21.png")
-map3x.set(tostring(UI512Cursors.hosttext), 'LIT:text')
-map3x.set(tostring(UI512Cursors.hosthand),'LIT:pointer')
-map3x.set(tostring(UI512Cursors.hostarrow),'LIT:default')
 
 /**
  * cache the current cursor so that repeated calls to setCursor
@@ -161,8 +90,16 @@ map3x.set(tostring(UI512Cursors.hostarrow),'LIT:default')
  */
 export class UI512CursorAccess {
     protected static currentCursor = UI512Cursors.arrow;
-    protected static currentMult = 1;
-    static defaultCursor = "url('/resources03a/cursors/arrow1x3,1.png') 3 1, default";
+    protected static currentMx = 0;
+    protected static currentMy = 0;
+    protected static lastDrawnMx = -1;
+    protected static lastDrawnMy = -1;
+    protected static lastDrawnCur = UI512Cursors.unknown;
+    protected static currentMultCursorSize = 1;
+    protected static currentHotX = 0;
+    protected static currentHotY = 0;
+    protected static wasCursorLoaded = false;
+    protected static curInfo = new IconInfo('0cursors1', UI512Cursors.arrow)
     static getCursor(): UI512Cursors {
         return UI512CursorAccess.currentCursor;
     }
@@ -173,9 +110,18 @@ export class UI512CursorAccess {
             el.style.cursor = 'none';
         }
 
-        // adjust the hotspot
-        let parsed = UI512CursorAccess.parseCursorName('thecurrentcursor 3,5');
-        (getRoot() as any).cursorOffset = [CursorConstants.Offset + parsed[0], CursorConstants.Offset + parsed[1]]
+        let group = '0cursors1'
+        if (UI512CursorAccess.currentMultCursorSize === 2) {
+            group ='0cursors2'
+        } else if (UI512CursorAccess.currentMultCursorSize === 3) {
+            group ='0cursors3'
+        }
+
+        UI512CursorAccess.curInfo.adjustX = 1
+        UI512CursorAccess.curInfo.adjustY = 1
+        UI512CursorAccess.curInfo.iconGroup = group
+        UI512CursorAccess.curInfo.iconNumber = nextCursor
+        UI512CursorAccess.curInfo.centered = false
 
         //~ if (nextCursor !== UI512CursorAccess.currentCursor || always) {
             //~ let el = window.document.getElementById('mainDomCanvas');
@@ -237,27 +183,50 @@ export class UI512CursorAccess {
 
     static notifyScreenMult(mult: number) {
         if (mult > 2.5) {
-            UI512CursorAccess.currentMult = 3;
+            UI512CursorAccess.currentMultCursorSize = 3;
         } else if (mult > 1.5) {
-            UI512CursorAccess.currentMult = 2;
+            UI512CursorAccess.currentMultCursorSize = 2;
         } else {
-            UI512CursorAccess.currentMult = 1;
+            UI512CursorAccess.currentMultCursorSize = 1;
         }
 
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true);
     }
 
     static onmousemove(unscaledx: number, unscaledy:number) {
-        let dpr = window.devicePixelRatio ?? 1
-        let el = ensureDefined(document.getElementById('fakeCursor'), '')
-        el.style.left = `${unscaledx * dpr+CursorConstants.Offset }px`
-        el.style.top = `${unscaledy * dpr + CursorConstants.Offset}px`
+        UI512CursorAccess.currentMx = unscaledx
+        UI512CursorAccess.currentMy = unscaledy
     }
-}
 
-/**
- * should be as small as possible, but bigger than largest 3x cursor
- */
-export const enum CursorConstants {
-    Offset = 50
+    static drawFinalWithCursor(buffer:CanvasWrapper, final:CanvasWrapper, drewAnything:boolean) {
+        if (!drewAnything && UI512CursorAccess.currentMx === UI512CursorAccess.lastDrawnMx && UI512CursorAccess.currentMy === UI512CursorAccess.lastDrawnMy && 
+            UI512CursorAccess.lastDrawnCur === UI512CursorAccess.currentCursor && UI512CursorAccess.wasCursorLoaded) {
+            /* we're up to date, don't need to draw anything */
+            return
+        }
+
+        final.context.drawImage(
+            buffer.canvas,
+            0,
+            0,
+        );
+
+
+        let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
+        let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
+        if (!found) {
+            /* hand-draw a little cursor */
+            UI512CursorAccess.wasCursorLoaded = false
+            final.fillRectUnchecked(UI512CursorAccess.currentMx, UI512CursorAccess.currentMy, 3, 3, 'black')
+        } else {
+            UI512CursorAccess.wasCursorLoaded = true
+            UI512CursorAccess.curInfo.adjustX = UI512CursorAccess.currentMx
+            UI512CursorAccess.curInfo.adjustY = UI512CursorAccess.currentMy
+            found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
+        }
+        
+        UI512CursorAccess.lastDrawnMx = UI512CursorAccess.currentMx
+        UI512CursorAccess.lastDrawnMy = UI512CursorAccess.currentMy
+        UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor
+    }
 }

@@ -23,6 +23,4 @@ body {
     position:fixed; top:0px; left:0px; z-index: -999;
 }
 
-#fakeCursor {
-    position: fixed; top:40px; left:40px; z-index: 999;
-}
+
