@@ -184,6 +184,7 @@ export class VpcMenuActions {
      * flag stack inappropriate content
      */
     goMnuFlagStack() {
+        this.throwIfServerCodeInactive()
         if (this.save.busy) {
             console.log("Cannot start a new task until we've finished the other task.");
         } else {

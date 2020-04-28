@@ -104,6 +104,10 @@ export class FullRootUI512 implements RootHigher {
         }
 
         if (details instanceof MouseMoveEventDetails) {
+            /* we changed golly so that it sends mousemove events
+            for the entire document, even if outside the canvas.
+            this is useful for cursor movement -- if we stopped getting mouse events
+            when the cursor left the canvas, we wouldn't know to hide the cursor */
             details.mouseX = adjustMouseCoord(details.mouseX, this.scaleMouseCoords)
             details.mouseY = adjustMouseCoord(details.mouseY, this.scaleMouseCoords)
             details.prevMouseX = adjustMouseCoord(details.prevMouseX, this.scaleMouseCoords)

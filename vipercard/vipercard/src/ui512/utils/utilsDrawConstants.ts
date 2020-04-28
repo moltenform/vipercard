@@ -44,10 +44,6 @@ export enum ScreenConsts {
     yLowerMargin = 7,
     ScreenWidth = 928,
     ScreenHeight = 416,
-    /* give ourselves a margin, primarily so our fakecursor won't stay stuck
-    when user puts cursor below the screen  */
-    FullCanvasWidth = ScreenWidth + 32,
-    FullCanvasHeight = ScreenHeight + 32,
 }
 
 /**
@@ -92,5 +88,3 @@ assertEq(
  */
 assertEq(0, ScreenConsts.ScreenWidth % 8, '3y|');
 assertEq(0, ScreenConsts.ScreenHeight % 8, '3x|');
-assertEq(0, ScreenConsts.FullCanvasWidth % 8, '3y|');
-assertEq(0, ScreenConsts.FullCanvasHeight % 8, '3y|');

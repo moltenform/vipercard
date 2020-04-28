@@ -100,7 +100,6 @@ export class RootSetupHelpers {
         let domElement: HTMLCanvasElement = gly.domElement;
         let availW = window.innerWidth * dpr;
         let availH = window.innerHeight * dpr;
-        /* note: don't use FullCanvasWidth */
         let canFitW = Math.max(1, Math.trunc(availW / (ScreenConsts.ScreenWidth)));
         let canFitH = Math.max(1, Math.trunc(availH / (ScreenConsts.ScreenHeight)));
         let canFit = Math.min(canFitW, canFitH);
@@ -123,7 +122,6 @@ export class RootSetupHelpers {
 
         let availW = window.innerWidth;
         let availH = window.innerHeight;
-        /* note: don't use FullCanvasWidth */
         let canFitW = Math.max(1, Math.trunc(availW / ScreenConsts.ScreenWidth));
         let canFitH = Math.max(1, Math.trunc(availH / ScreenConsts.ScreenHeight));
         let canFitTotal = Math.min(canFitW, canFitH);

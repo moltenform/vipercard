@@ -104,12 +104,11 @@ const hotCoords = [
 
 const isInvert: { [key: number]: boolean } = {
 }
+
 isInvert[UI512Cursors.lbeam] = true
 isInvert[UI512Cursors.paintrectsel] = true
 isInvert[UI512Cursors.paintlasso] = true
-isInvert[UI512Cursors.paintbrush] = true
 isInvert[UI512Cursors.cross] = true
-
 
 /**
  * cache the current cursor so that repeated calls to setCursor
@@ -122,7 +121,6 @@ export class UI512CursorAccess {
     protected static lastDrawnMx = -1;
     protected static lastDrawnMy = -1;
     protected static lastDrawnCur = -1
-    protected static currentMultCursorSize = 1;
     protected static currentHotX = 0;
     protected static currentHotY = 0;
     protected static wasCursorLoaded = false;
@@ -141,20 +139,12 @@ export class UI512CursorAccess {
             el.style.cursor = 'none';
         }
 
-        let group = '0cursors1'
-        if (UI512CursorAccess.currentMultCursorSize === 2) {
-            group ='0cursors2'
-        } else if (UI512CursorAccess.currentMultCursorSize === 3) {
-            group ='0cursors3'
-        }
-
         let hots = hotCoords[nextCursor] ?? [0,0]
-        UI512CursorAccess.currentHotX = -hots[0] * UI512CursorAccess.currentMultCursorSize
-        UI512CursorAccess.currentHotY = -hots[1] * UI512CursorAccess.currentMultCursorSize
-        UI512CursorAccess.curInfo.iconGroup = group
+        UI512CursorAccess.currentHotX = -hots[0]
+        UI512CursorAccess.currentHotY = -hots[1]
+        UI512CursorAccess.curInfo.iconGroup = '0cursors1'
         UI512CursorAccess.curInfo.iconNumber = nextCursor - 1
         UI512CursorAccess.curInfo.centered = false
-
         UI512CursorAccess.currentCursor = nextCursor
     }
 
@@ -191,21 +181,14 @@ export class UI512CursorAccess {
     }
 
     static notifyScreenMult(mult: number) {
-        if (mult > 2.5) {
-            UI512CursorAccess.currentMultCursorSize = 3;
-        } else if (mult > 1.5) {
-            UI512CursorAccess.currentMultCursorSize = 2;
-        } else {
-            UI512CursorAccess.currentMultCursorSize = 1;
-        }
-
+        /* we don't need to care about mult anymore,
+        but we should still refresh cursor */
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true);
     }
 
     static onmousemove(x: number, y:number) {
         UI512CursorAccess.currentMx = x
         UI512CursorAccess.currentMy = y
-        console.log(x,y)
     }
 
     static drawFinalWithCursor(buffer:CanvasWrapper, final:CanvasWrapper, drewAnything:boolean) {
@@ -223,8 +206,8 @@ export class UI512CursorAccess {
 
         /* trick: by hiding the cursor if it's by the edge,
         we are less likely to leave our fake cursor on the screen */
-        if (!(UI512CursorAccess.currentMx < 15 || UI512CursorAccess.currentMx > final.canvas.width - 15 ||
-            UI512CursorAccess.currentMy < 15 || UI512CursorAccess.currentMy > final.canvas.height - 15 )) {
+        if (!(UI512CursorAccess.currentMx < 15 || UI512CursorAccess.currentMx > final.canvas.width - 5 ||
+            UI512CursorAccess.currentMy < 15 || UI512CursorAccess.currentMy > final.canvas.height - 5 )) {
                 let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
                 let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
                 if (!found) {
