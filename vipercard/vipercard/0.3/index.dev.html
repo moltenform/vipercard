@@ -2,13 +2,20 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-5lfj95a+NP14NDh12X6FoCrbge+qtJYxnjAr9rKGCXk=' www.googletagmanager.com www.google-analytics.com https://www.google-analytics.com https://ssl.google-analytics.com; connect-src 'self' www.googletagmanager.com www.google-analytics.com https://www.google-analytics.com; img-src 'self' www.google-analytics.com https://www.google-analytics.com; font-src 'self'; style-src 'self'; manifest-src 'self'; media-src 'self'; object-src 'none'; worker-src 'self'; frame-src 'self' donorbox.org">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-ALkdxhiBsSK0a+pHzbfOFLVCELwQ+VUp/9xwPRk2+Uw=' www.googletagmanager.com www.google-analytics.com https://www.google-analytics.com https://ssl.google-analytics.com; connect-src 'self' www.googletagmanager.com www.google-analytics.com https://www.google-analytics.com; img-src 'self' www.google-analytics.com https://www.google-analytics.com; font-src 'self'; style-src 'self'; manifest-src 'self'; media-src 'self'; object-src 'none'; worker-src 'self'; frame-src 'self' donorbox.org">
         <title>ViperCard</title>
         <script>
+            window.setTimeout(function() {
+                var open = document.getElementById('idOpeningMsg');
+                if (open) {
+                    open.style.display = 'block';
+                }
+            }, 500);
+
             window.onload = function() {
                 var makeNewGolly = function(param) { return new GOLLY(param); }
                 if (!window.mainVPCStartCanvas) {
-                    alert('Could not start ViperCard. This is usually caused by module loading errors.')
+                    alert('Could not start ViperCard. This is usually caused by module loading errors.');
                 } else {
                     window.mainVPCStartCanvas(makeNewGolly);
                 }

@@ -1,31 +1,44 @@
 
 canvas {
-    image-rendering: optimizeSpeed;             /* Older versions of FF          */
-    image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
-    image-rendering: -webkit-optimize-contrast; /* Safari                        */
-    image-rendering: -o-crisp-edges;            /* OS X, Windows Opera (12.02+) */
-    image-rendering: pixelated;                 /* Future browsers       */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE                */
-    margin:0px;
-    border:0px solid black;
-    padding:0px;
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -o-crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+    margin: 0px;
+    border: 0px solid black;
+    padding: 0px;
 }
 
-.messageBelow {color: white; font-family:sans-serif; font-size:60%; margin-left:90px; margin-top:200px }
-body { 
-    position: fixed; /* we never want a scrollbar on this page */
-    background-color: rgb(0,0,0); 
+.messageBelow {
+    color: white;
+    font-family: sans-serif;
+    font-size: 60%;
+    margin-left: 90px;
+    margin-top: 200px;
 }
 
-.notvisible { display:none }
+body {
+    /* we never want a scrollbar on this page */
+    position: fixed;
+    background-color: rgb(0, 0, 0);
+}
+
+.notvisible {
+    display: none;
+}
 
 #idOpeningMsg {
-    position:fixed; top:0px; left:0px; z-index: -999;
+    /* we'll wait a bit before showing it */
+    display: none;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: -999;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
 }
-
-
