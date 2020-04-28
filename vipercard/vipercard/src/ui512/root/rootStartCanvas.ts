@@ -1,7 +1,7 @@
 
 /* auto */ import { toShortcutString, ui512TranslateModifiers } from './../utils/utilsKeypressHelpers';
 /* auto */ import { BrowserInfo, setRoot, showMsgIfExceptionThrown } from './../utils/util512Higher';
-/* auto */ import { ensureDefined, respondUI512Error } from './../utils/util512Assert';
+/* auto */ import { respondUI512Error } from './../utils/util512Assert';
 /* auto */ import { KeyDownEventDetails, KeyUpEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { FullRootUI512 } from './rootUI512';
 /* auto */ import { RootSetupHelpers } from './rootSetupHelpers';
@@ -31,7 +31,6 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
     let gly: any = fnMakeGolly(gollyParams);
     gly.desiredFrameTime = 60;
     root.init(gly);
-    const shiftForCursor = 50
     gly.draw = () => {
         try {
             root.drawFrame(gly.frameCount, gly.milliseconds);
@@ -134,15 +133,13 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         prevMouseY: number
     ) => {
         try {
-            let el = ensureDefined(document.getElementById('fakeCursor'), '')
-            el.style.left = `${mouseX * window.devicePixelRatio+shiftForCursor }px`
-            el.style.top = `${mouseY * window.devicePixelRatio + shiftForCursor}px`
+            
             let details = new MouseMoveEventDetails(
                 gly.milliseconds,
-                mouseX - shiftForCursor,
-                mouseY - shiftForCursor,
-                prevMouseX - shiftForCursor,
-                prevMouseY - shiftForCursor
+                mouseX,
+                mouseY,
+                prevMouseX,
+                prevMouseY
             );
             root.event(details);
             if (buttons !== root.mouseButtonsExpected) {
@@ -176,8 +173,8 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
             );
             let details = new MouseUpEventDetails(
                 gly.milliseconds,
-                mouseX - shiftForCursor,
-                mouseY - shiftForCursor,
+                mouseX,
+                mouseY,
                 button,
                 mods
             );
@@ -210,8 +207,8 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
             );
             let details = new MouseDownEventDetails(
                 gly.milliseconds,
-                mouseX - shiftForCursor,
-                mouseY - shiftForCursor,
+                mouseX,
+                mouseY,
                 button,
                 mods
             );
@@ -228,12 +225,6 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         setRoot(root);
         RootSetupHelpers.mainOnResize(root, gly);
     }, 'rootStartCanvas');
-
-    // passing events through is tricky, let's just
-    // pretend the mouse is somewhere different and use
-    // shiftForCursor
-    //~ let ff = ensureDefined(document.getElementById('fakeCursor'), '')
-    //~ ff.addEventListener('mousemove', (ee) => gly.mousemove(ee) )
 }
 
 /* expose this function globally */

@@ -3,7 +3,7 @@
 /* auto */ import { VpcInitIcons } from './../../vpc/vpcutils/vpcInitIcons';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
-/* auto */ import { UI512CursorAccess, UI512Cursors } from './../utils/utilsCursors';
+/* auto */ import { CursorConstants, UI512CursorAccess, UI512Cursors } from './../utils/utilsCursors';
 /* auto */ import { CanvasWrapper } from './../utils/utilsCanvasDraw';
 /* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
@@ -24,7 +24,8 @@ export class FullRootUI512 implements RootHigher {
     drawText: UI512DrawText;
     iconManager: UI512IconManager;
     prevMouseDown: O<MouseDownEventDetails>;
-    scaleMouseCoords: O<number>;
+    scaleMouseCoords = 1
+    cursorOffset:number = CursorConstants.Offset;
     session: O<UI512IsSessionInterface>;
 
     /* send a ping to the apps every 0.1 seconds */
@@ -97,23 +98,16 @@ export class FullRootUI512 implements RootHigher {
 
     event(details: EventDetails) {
         if (details instanceof MouseEventDetails) {
-            if (!this.scaleMouseCoords) {
-                return false;
-            }
-
-            details.mouseX = Math.round(details.mouseX * this.scaleMouseCoords);
-            details.mouseY = Math.round(details.mouseY * this.scaleMouseCoords);
+            details.mouseX = adjustMouseCoord(details.mouseX, this.cursorOffset, this.scaleMouseCoords)
+            details.mouseY = adjustMouseCoord(details.mouseY, this.cursorOffset, this.scaleMouseCoords)
         }
 
         if (details instanceof MouseMoveEventDetails) {
-            if (!this.scaleMouseCoords) {
-                return false;
-            }
-
-            details.mouseX = Math.round(details.mouseX * this.scaleMouseCoords);
-            details.mouseY = Math.round(details.mouseY * this.scaleMouseCoords);
-            details.prevMouseX = Math.round(details.prevMouseX * this.scaleMouseCoords);
-            details.prevMouseY = Math.round(details.prevMouseY * this.scaleMouseCoords);
+            UI512CursorAccess.onmousemove(details.mouseX, details.prevMouseY)
+            details.mouseX = adjustMouseCoord(details.mouseX, this.cursorOffset, this.scaleMouseCoords)
+            details.mouseY = adjustMouseCoord(details.mouseY, this.cursorOffset, this.scaleMouseCoords)
+            details.prevMouseX = adjustMouseCoord(details.prevMouseX, this.cursorOffset, this.scaleMouseCoords)
+            details.prevMouseY = adjustMouseCoord(details.prevMouseY, this.cursorOffset, this.scaleMouseCoords)
         }
 
         if (!details.handled()) {
@@ -201,4 +195,9 @@ export class FullRootUI512 implements RootHigher {
             RespondToErr.Alert
         );
     }
+}
+
+function adjustMouseCoord(c:number, cursorOffset:number, scaleMouseCoords:number) {
+    c -= cursorOffset
+    return Math.round(c * scaleMouseCoords)
 }

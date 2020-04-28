@@ -1,4 +1,5 @@
 
+
 import type { Bowser } from '../../external/bowser-2.9/bowser';
 declare const bowser: typeof Bowser;
 

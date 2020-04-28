@@ -2,7 +2,7 @@
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
 /* auto */ import { BrowserInfo, Root, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
-/* auto */ import { O, coalesceIfFalseLike } from './../utils/util512Base';
+/* auto */ import { coalesceIfFalseLike } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
 /* auto */ import { BowserBrowsers, BowserPlatform } from './../../bridge/bridgeBrowserInfo';
@@ -166,5 +166,6 @@ export class RootSetupHelpers {
  */
 export interface RootHigher extends Root {
     rawResize(width: number, height: number): void;
-    scaleMouseCoords: O<number>;
+    scaleMouseCoords: number;
+    cursorOffset: number
 }

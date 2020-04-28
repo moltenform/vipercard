@@ -1,9 +1,53 @@
 
 /* auto */ import { tostring } from './util512Base';
+/* auto */ import { ensureDefined } from './util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512 } from './util512';
+import { getRoot } from './util512Higher';
+import { RootHigher } from '../root/rootSetupHelpers';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
+
+/**
+ * NEW CURSOR IMPLEMENTATION
+ * We used to use css to specify a cursor, e.g.
+ * el.style.cursor = "url('browse.png') 3 3, auto"
+ * the problem is that if window.devicePixelRatio != 1,
+ * chrome showed the cursor as BLURRY+GLITCHED.
+ * 
+ * The border between white and transparent gains a small
+ * gray line for some reason -- it makes no sense. and even
+ * if that were solved, it would look blurry.
+ * cursors are blurry. due to windows @ 1.25 scaling.
+ *    tried adjusting browser zoom
+ *    tried setting browser bg to white
+ *    tried making it only 95% transparent
+ *    tried not pnggauntlet
+ *    tried using a .cur not a .png file
+ *    tried on a simple page with no canvas
+ * 
+ * We could just draw the cursor on the canvas like everything else
+ *      Pros: enables better emulation (original product has cursors that invert)
+ *      Cons: would have to maintain a graphics buffer or it would be slow 
+ * We can fake a cursor with a <img> moved around by javascript
+ *      Pros: simpler code (if we use an offset, see below)
+ *      Cons: doesn't look right when page scrolls
+ * 
+ * Fortunately our page never scrolls, and we can enforce that with body {position:fixed}
+ * 
+ * Where it gets tricky: the mousemove events might get eaten by the <img>
+ * to get around this we can set an OFFSET
+ * where the true mouse position isn't where it looks like
+ * ok since we have a black perimeter, although we should test that all corners 
+ * of the screen are clickable. the OFFSET means that we'll 
+ * 
+ * problem: will all corners of the screen be clickable?
+ * problem: on touch devices the offset will mess with where you tap!!
+ * 
+ * see also:
+ * https://stackoverflow.com/questions/35561547/svg-mouse-cursor-blurry-on-retina-display
+ * https://jsfiddle.net/jhhbrook/ucuLefut/
+ */
 
 /**
  * assign a number to cursor
@@ -128,6 +172,11 @@ export class UI512CursorAccess {
         if (el) {
             el.style.cursor = 'none';
         }
+
+        // adjust the hotspot
+        let parsed = UI512CursorAccess.parseCursorName('thecurrentcursor 3,5');
+        (getRoot() as any).cursorOffset = [CursorConstants.Offset + parsed[0], CursorConstants.Offset + parsed[1]]
+
         //~ if (nextCursor !== UI512CursorAccess.currentCursor || always) {
             //~ let el = window.document.getElementById('mainDomCanvas');
             //~ if (el) {
@@ -197,4 +246,18 @@ export class UI512CursorAccess {
 
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true);
     }
+
+    static onmousemove(unscaledx: number, unscaledy:number) {
+        let dpr = window.devicePixelRatio ?? 1
+        let el = ensureDefined(document.getElementById('fakeCursor'), '')
+        el.style.left = `${unscaledx * dpr+CursorConstants.Offset }px`
+        el.style.top = `${unscaledy * dpr + CursorConstants.Offset}px`
+    }
+}
+
+/**
+ * should be as small as possible, but bigger than largest 3x cursor
+ */
+export const enum CursorConstants {
+    Offset = 50
 }

@@ -32,14 +32,15 @@ def collectExports(file):
             line.startswith('export function ') or \
             line.startswith('export enum ') or \
             line.startswith('export interface ') or \
-            line.startswith('export const ') or \
             line.startswith('export let ') or \
             line.startswith('export var ') or \
             line.startswith('export namespace ') or \
-            line.startswith('export type '):
+            line.startswith('export type ') or \
+            (line.startswith('export const ') and not line.startswith('export const enum')):
             collectExportsLine(line, found, 2)
         elif line.startswith('export abstract class ') or \
             line.startswith('export async function ') or \
+            line.startswith('export const enum ') or \
             line.startswith('export declare class ') or \
             line.startswith('export declare function ') or \
             line.startswith('export declare enum ') or \
@@ -50,6 +51,10 @@ def collectExports(file):
             line.startswith('export declare namespace ') or \
             line.startswith('export declare type '):
             collectExportsLine(line, found, 3)
+        elif line.startswith('export declare abstract class ') or \
+            line.startswith('export declare async function ') or \
+            line.startswith('export declare const enum '):
+            collectExportsLine(line, found, 4)
         elif line.startswith('/* ts_exports_read.py add '):
             collectExportsAddedManually(line, found)
         elif line.startswith('/* ts_exports_read.py ignore '):

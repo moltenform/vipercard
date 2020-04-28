@@ -41,7 +41,7 @@ def autoAddImports(config, srcdirectory, layers, useSingleQuotes):
         
         addNewForThisFile = []
         for line in lines:
-            if not line.strip().startswith('import ') and not line.strip().startswith('/* auto */ import'):
+            if not line.strip().startswith('import ') and not line.strip().startswith('/* auto */ import') and not 'import {' in line:
                 for symbol in getSymbolsFromLine(line):
                     foundFromExports = mapSymbolNameToLayer.get(symbol, None)
                     if foundFromExports is not None:
