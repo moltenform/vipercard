@@ -19,7 +19,7 @@ export class VpcEditPanelsEmpty extends VpcEditPanelsBase {
     readonly velType = VpcElType.Unknown;
     topInputs: [string, string, number][] = [];
     leftChoices: [string, string][] = [];
-    rightOptions: [string, string][] = [];
+    rightOptions: [string, string, boolean][] = [];
 
     /**
      * initialize layout

@@ -32,10 +32,10 @@ export class VpcEditPanelsBtn extends VpcEditPanelsBase {
         ['lngOS Default', 'default']
     ];
 
-    rightOptions: [string, string][] = [
-        ['lngShow Label', 'showlabel'],
-        ['lngAuto Hilite', 'autohilite'],
-        ['lngEnabled', 'enabled'],
-        ['lngShared Hilite', 'sharedhilite']
+    rightOptions: [string, string, boolean][] = [
+        ['lngShow Label', 'showlabel', false],
+        ['lngAuto Hilite', 'autohilite', false],
+        ['lngEnabled', 'enabled', false],
+        ['lngShared Hilite', 'sharedhilite', true]
     ];
 }

@@ -15,5 +15,5 @@ export class VpcEditPanelsCard extends VpcEditPanelsBase {
     readonly velType = VpcElType.Card;
     topInputs: [string, string, number][] = [['lngCard Name:', 'name', 190]];
     leftChoices: [string, string][] = [];
-    rightOptions: [string, string][] = [];
+    rightOptions: [string, string, boolean][] = [];
 }

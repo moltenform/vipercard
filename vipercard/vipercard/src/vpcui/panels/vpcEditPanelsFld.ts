@@ -26,11 +26,11 @@ export class VpcEditPanelsField extends VpcEditPanelsBase {
         ['lngTransparent', 'transparent']
     ];
 
-    rightOptions: [string, string][] = [
-        ['lngLock Text', 'locktext'],
-        ["lngDon't Wrap", 'dontwrap'],
-        ['lngSingle Line', 'singleline'],
-        ['lngEnabled', 'enabled'],
-        ['lngShare Text', 'sharedtext']
+    rightOptions: [string, string, boolean][] = [
+        ['lngLock Text', 'locktext', false],
+        ["lngDon't Wrap", 'dontwrap', false],
+        ['lngSingle Line', 'singleline', false],
+        ['lngEnabled', 'enabled', false],
+        ['lngShare Text', 'sharedtext', true]
     ];
 }

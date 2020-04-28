@@ -41,7 +41,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
     readonly leftChoicesW = 130;
     readonly leftChoicesH = 117;
     readonly rightOptionsX = 216;
-    rightOptions: [string, string][] = [];
+    rightOptions: [string, string, boolean][] = [];
     abstract readonly velType: VpcElType;
     cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;
     lblNamingTip: UI512ElLabel;
@@ -319,9 +319,11 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
         for (let lblTxtParts of this.rightOptions) {
             let inId = lblTxtParts[1];
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
-            let checked = el.getB('checkmark');
-            vel.setProp(inId, VpcValBool(checked), this.vci.getOptionS('currentCardId'));
-            this.saveChangesToModelSetProp(vel, inId, VpcValBool(checked), onlyCheckIfDirty);
+            if (el.getB('visible')) {
+                let checked = el.getB('checkmark');
+                vel.setProp(inId, VpcValBool(checked), this.vci.getOptionS('currentCardId'));
+                this.saveChangesToModelSetProp(vel, inId, VpcValBool(checked), onlyCheckIfDirty);
+            }
         }
     }
 
@@ -329,34 +331,14 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
      * e.g. certain properties only apply to bg items
      */
     showOrHideBgSpecific(app: UI512Application, isBgPart: boolean) {
-        if (this.velType === VpcElType.Btn) {
-            this.showOrHideBgSpecificImpl(app, 'sharedhilite', 200, isBgPart);
-        } else if (this.velType === VpcElType.Fld) {
-            this.showOrHideBgSpecificImpl(app, 'sharedtext', 180, isBgPart);
-        }
-    }
-
-    /**
-     * e.g. certain properties only apply to bg items
-     */
-    protected showOrHideBgSpecificImpl(app: UI512Application, prop: string, basey: number, isBgPart: boolean) {
         let grp = app.getGroup(this.grpId);
-        let chkbox = grp.getEl(this.getElId('toggle##' + prop));
-        const inputH = 15;
-        const inputMargin = 3;
-        if (isBgPart) {
-            chkbox.set('visible', true);
-            basey -= Math.round((inputH + inputMargin) / 2);
-        } else {
-            chkbox.set('visible', false);
-        }
-
-        let curY = basey;
         for (let lblTxtParts of this.rightOptions) {
             let inId = lblTxtParts[1];
-            let inp = grp.getEl(this.getElId(`toggle##${inId}`));
-            inp.setDimensions(inp.x, curY, inp.w, inp.h);
-            curY += inputH + inputMargin;
+            let isBgOnly = lblTxtParts[2];
+            let el = grp.getEl(this.getElId(`toggle##${inId}`));
+            if (isBgOnly && !isBgPart) {
+                el.set('visible', false)
+            }
         }
     }
 }

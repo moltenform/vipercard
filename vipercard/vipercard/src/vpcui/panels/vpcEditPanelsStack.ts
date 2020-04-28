@@ -20,7 +20,7 @@ export class VpcEditPanelsStack extends VpcEditPanelsBase {
     readonly velType = VpcElType.Stack;
     topInputs: [string, string, number][] = [['lngStack Name:', 'name', 190]];
     leftChoices: [string, string][] = [];
-    rightOptions: [string, string][] = [];
+    rightOptions: [string, string, boolean][] = [];
 
     /**
      * you should refer to a stack as 'this stack' rather than by name or id
