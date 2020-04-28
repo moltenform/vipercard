@@ -124,30 +124,34 @@ export class UI512CursorAccess {
     }
 
     static setCursor(nextCursor: UI512Cursors, always = false) {
-        if (nextCursor !== UI512CursorAccess.currentCursor || always) {
-            let el = window.document.getElementById('mainDomCanvas');
-            if (el) {
-                let map: MapKeyToObjectCanSet<string>;
-                if (UI512CursorAccess.currentMult === 2) {
-                    map = map2x;
-                } else if (UI512CursorAccess.currentMult === 3) {
-                    map = map3x;
-                } else {
-                    map = map1x;
-                }
-
-                let mapped = map.get(nextCursor.toString());
-                let spec = UI512CursorAccess.defaultCursor;
-                if (mapped) {
-                    let [x, y] = UI512CursorAccess.parseCursorName(mapped);
-                    spec = `url('/resources03a/cursors/${mapped}') ${x} ${y}, default`;
-                }
-
-                el.style.cursor = spec;
-            }
-
-            UI512CursorAccess.currentCursor = nextCursor;
+        let el = window.document.getElementById('mainDomCanvas');
+        if (el) {
+            el.style.cursor = 'none';
         }
+        //~ if (nextCursor !== UI512CursorAccess.currentCursor || always) {
+            //~ let el = window.document.getElementById('mainDomCanvas');
+            //~ if (el) {
+                //~ let map: MapKeyToObjectCanSet<string>;
+                //~ if (UI512CursorAccess.currentMult === 2) {
+                    //~ map = map2x;
+                //~ } else if (UI512CursorAccess.currentMult === 3) {
+                    //~ map = map3x;
+                //~ } else {
+                    //~ map = map1x;
+                //~ }
+
+                //~ let mapped = map.get(nextCursor.toString());
+                //~ let spec = UI512CursorAccess.defaultCursor;
+                //~ if (mapped) {
+                    //~ let [x, y] = UI512CursorAccess.parseCursorName(mapped);
+                    //~ spec = `url('/resources03a/cursors/${mapped}') ${x} ${y}, default`;
+                //~ }
+
+                //~ el.style.cursor = spec;
+            //~ }
+
+            //~ UI512CursorAccess.currentCursor = nextCursor;
+        //~ }
     }
 
     static parseCursorName(s: string): [number, number] {

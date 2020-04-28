@@ -1,4 +1,16 @@
+=====
+do {expression}
+=====
+        Take a string, and execute it as if it were a ViperCard script.
 
+        Similar to eval() in other languages.
+
+        Examples:
+
+        put "answer " into buildScript
+        put quote & "abc" & quote after buildScript
+        do buildScript
+        
 =====
 sort [lines|items|chars] of {container}
 sort [lines|items|chars] of {container} [descending|ascending]

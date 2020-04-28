@@ -94,7 +94,7 @@ export class SimpleUtil512Tests {
         }
 
         /* run tests from low level to high level */
-        colls.reverse();
+        colls.reverse(); 
         let colNamesSeen = new Map<string, boolean>();
         let mapSeen = new Map<string, boolean>();
         let countTotal = colls

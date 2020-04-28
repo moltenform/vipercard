@@ -396,7 +396,7 @@ function findMarkers(s: unknown, markers: string[]): O<string> {
  * a way to safely go from optional<T> to T
  */
 export function ensureDefined<T>(
-    v: O<T>,
+    v: T | null | undefined,
     s1: string,
     s2: unknown = '',
     s3: unknown = ''

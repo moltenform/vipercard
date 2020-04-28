@@ -206,18 +206,7 @@ dial {number}
 
 
 
-=====
-do {expression}
-=====
-        Take a string, and execute it as if it were a ViperCard script.
 
-        Similar to eval() in other languages.
-
-        Examples:
-
-        put "answer " into buildScript
-        put quote & "abc" & quote after buildScript
-        do buildScript
 
 =====
 send {expression} to {object}
@@ -526,22 +515,7 @@ next___repeat
         -- displays 3
         -- and does not display 2
 
-=====
-exit___repeat
-=====
-        Exit the current loop.
-        Equivalent to "break" in C.
 
-        Examples:
-
-        repeat with x = 1 to 3
-            if x == 2 then
-                break
-            end if
-            answer x
-        end repeat
-        -- displays 1
-        -- and does not display 2 or 3
 
 
         
@@ -588,22 +562,7 @@ repeat
             add 1 to counter
         end repeat
 
-=====
-exit
-=====
-        Exits the current function, skipping over any subsequent lines 
-        of code. Similar to return, but does not return a value.
 
-        Examples:
-
-        on mouseUp
-            put cd fld "fld1" into x
-            if x is not a number then
-                answer "you did not type a number"
-                exit mouseUp
-            end if
-            put x * 2 into cd fld "fld1"
-        end mouseUp
 
 
 =====

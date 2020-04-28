@@ -12,9 +12,17 @@ canvas {
 }
 
 .messageBelow {color: white; font-family:sans-serif; font-size:60%; margin-left:90px; margin-top:200px }
-body { background-color: rgb(0,0,0); cursor:url('/resources03a/cursors/arrow1x3\,1.png') 3 1, default; }
+body { 
+    position: fixed; /* we never want a scrollbar on this page */
+    background-color: rgb(0,0,0); 
+}
+
 .notvisible { display:none }
 
 #idOpeningMsg {
     position:fixed; top:0px; left:0px; z-index: -999;
+}
+
+#fakeCursor {
+    position: fixed; top:40px; left:40px; z-index: 999;
 }

@@ -62,3 +62,61 @@ if/then on a single-line
         
         if 3+3 is 7 then answer "it is not"
         else answer "it is"
+
+=====
+exit___repeat
+=====
+        Exit the current loop.
+        Equivalent to "break" in C.
+
+        Examples:
+
+        repeat with x = 1 to 3
+            if x == 2 then
+                exit repeat
+            end if
+            answer x
+        end repeat
+        -- displays 1
+        -- and does not display 2 or 3
+
+=====
+exit currentHandler
+=====
+        Skips to the end of the current handler, skipping over all subsequent lines 
+        of code. Similar to return, but does not point to a value.
+
+        Examples:
+
+        on mouseUp
+            put cd fld "fld1" into x
+            if x is not a number then
+                answer "you did not type a number"
+                exit mouseUp
+                answer "this will never get called"
+            end if
+            put x * 2 into cd fld "fld1"
+        end mouseUp
+
+=====
+exit to ViperCard
+=====
+        Exits the current handler and passes the message up to ViperCard.
+        Typically, this stops code execution completely.
+
+        For compatibility, `exit to HyperCard` is also accepted. `exit to ViperCard`
+        can also be useful if you have overridden a default message and want to
+        defer to the default behavior, see below.
+
+        Examples:
+
+        on myHandler
+            exit to ViperCard
+            answer "this will never get called"
+        end myHandler
+        on mouseUp
+            myHandler
+            answer "and even this will never get called"
+        end mouseUp
+        on 
+
