@@ -3,6 +3,7 @@
 /* auto */ import { VpcScriptMessage } from './../../vpc/vpcutils/vpcUtils';
 /* auto */ import { SelectToolMode, VpcAppUIToolSelectBase } from './../tools/vpcToolSelectBase';
 /* auto */ import { VpcStateSerialize } from './../state/vpcStateSerialize';
+/* auto */ import { GuessStackTrace } from './../../vpc/codeexec/vpcScriptExecTop';
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
 /* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
@@ -260,7 +261,9 @@ export class VpcPresenter extends VpcPresenterInit {
 
             /* open the code editor at the offending line */
             this.lyrPropPanel.updateUI512Els();
-            this.lyrPropPanel.editor.setLastErrInfo(velId, msg, lineNum, scriptErr.stage, scriptErr.traceInfo ?? '');
+            let gst = new GuessStackTrace(this.vci.getCodeExec(), this.vci.getOutside())
+            let renderedTrace = gst.goAsString(velId, lineNum, scriptErr.traceInfo );
+            this.lyrPropPanel.editor.setLastErrInfo(velId, msg, lineNum, scriptErr.stage, renderedTrace);
             this.lyrPropPanel.editor.refreshFromModel(this.app);
             this.lyrPropPanel.editor.scrollToErrorPosition(this);
         });

@@ -6,9 +6,8 @@
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
-/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCurrentScriptStage } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcTool, PropAdjective } from './../vpcutils/vpcEnums';
+/* auto */ import { PropAdjective, VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcTool } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
 /* auto */ import { VelResolveName } from './../vel/velResolveName';
@@ -265,7 +264,7 @@ export class VpcExecTop {
      * VpcCurrentScriptStage to the error.
      */
     protected handleScriptException(e: Error, context: string) {
-        let stackTrace = new GuessStackTrace(this, this.outside).goAsString()
+        let stackTrace = new GuessStackTrace(this, this.outside).go()
         this.forceStopRunning();
 
         let scriptErr = Util512BaseErr.errIfExactCls<VpcErr>('VpcErr', e);
@@ -364,7 +363,7 @@ export class VpcExecTop {
 /**
  * get a stack trace, just to show in the ui
  */
-class GuessStackTrace {
+export class GuessStackTrace {
     constructor(protected top:VpcExecTop, protected outside:OutsideWorldReadWrite) {}
     protected guessLatestFrame():O<VpcExecFrame>[] {
         let lastSeen = VpcCurrentScriptStage.latestDestLineSeen
@@ -382,27 +381,18 @@ class GuessStackTrace {
         return []
     }
 
-    protected findVel(velId : string):O<VpcElBase> {
-        let ref = new RequestedVelRef(VpcElType.Unknown)
-        let [found, cd] = this.outside.ResolveVelRef(ref)
-        return found
-    }
-
     go() {
         /* vel, handlername, origoffset */
-        let ret:[VpcElBase, string, number][] = []
+        let ret:[string, string, number][] = []
         let stack = this.guessLatestFrame()
         if (stack) {
             stack.reverse()
             for (let frame of stack) {
                 if (frame) {
                     let velId = frame.meId
-                    let found = this.findVel(velId)
-                    if (found) {
-                        let origoffset = frame?.codeSection?.lines[frame.getOffset() - 1]?.firstToken?.startLine
-                        origoffset = origoffset ?? 0
-                        ret.push([found, frame.handlerName, origoffset])
-                    }
+                    let origoffset = frame?.codeSection?.lines[frame.getOffset() - 1]?.firstToken?.startLine
+                    origoffset = origoffset ?? 0
+                    ret.push([velId, frame.handlerName, origoffset])
                 }
             }
         }
@@ -410,35 +400,38 @@ class GuessStackTrace {
         return ret;
     }
 
-    goAsString() {
-        let ar = this.go()
+    goAsString(actualMeId:string, actualLine:number, ar:O<[string, string, number][]>) {
         let arout:string[] = []
+        if (!ar || !ar.length) {
+            return ''
+        }
 
-        /* the top will already be shown in error message */
-        let meId = ar[0][0].id
+        /* Ignore the top of the stack trace!
+        It might be inaccurate because of dynamic code.
+        we **don't use** the me-id there.
+        we need to look at actualMeId */
         ar = ar.slice(1)
         
-        for (let [vel, handlername, origoffset] of ar) {
-            if (vel.getType() === VpcElType.Product) {
+        for (let [velId, handlername, origoffset] of ar) {
+            let vel = this.outside.Model().findByIdUntyped(velId)
+            if (!vel) {
+                arout.push('missing')
+            }
+            else if (vel.getType() === VpcElType.Product) {
                 arout.push('vpc')
             } else {
-                arout.push(this.renderVelAndLine(vel, meId, handlername, origoffset))
+                arout.push(this.renderVelAndLine(actualMeId, vel, handlername, origoffset))
             }
         }
         
-        let ret = arout.join(' < ')
-        if (arout.length) {
-            ret = 'via ' + ret
-        }
-
-        return ret
+        let ret = arout.join('\n')
+        return ret ? 'via ' + ret : ret
     }
 
-    renderVelAndLine(vel: VpcElBase, meId: string, handlername: string, origoffset: number): string {
+    renderVelAndLine(actualMeId:string, vel: VpcElBase, handlername: string, origoffset: number): string {
         let s = ''
-        if (vel.id.toString() !== meId.toString()) {
+        if (vel.id.toString() === actualMeId.toString()) {
             /* save space */
-            s += 'me'
         } else if (vel.getType() === VpcElType.Stack) {
             s += 'stack'
         } else if (vel.getS('name')) {
@@ -449,6 +442,6 @@ class GuessStackTrace {
             s += res.go(vel, PropAdjective.Short)
         }
 
-        return s + '.' + handlername + '@' + origoffset
+        return s + ' ' + handlername + ', line ' + origoffset
     }
 }

@@ -106,6 +106,22 @@ export class Util512 {
     }
 
     /**
+     * ensure that the string is <= maxLen
+     */
+    static truncateWithEllipsis(s:string, maxLen:number) {
+        if (s.length <= maxLen) {
+            return s
+        } else {
+            const ellipsis = '...'
+            if (maxLen < ellipsis.length) {
+                return s.slice(0, maxLen)
+            } else {
+                return s.slice(0, maxLen - ellipsis.length) + ellipsis
+            }
+        }
+    }
+
+    /**
      * useful for map/reduce
      */
     static add(n1: number, n2: number) {

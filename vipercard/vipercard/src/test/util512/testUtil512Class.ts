@@ -107,6 +107,19 @@ t.test('parseIntStrict', () => {
     assertEq(12, Util512.parseIntStrict('012'), 'N*|');
     assertEq(12, Util512.parseIntStrict('0012'), 'N)|');
 });
+t.test('truncateWithEllipsis', () => {
+    assertEq('',  Util512.truncateWithEllipsis('', 2), '')
+    assertEq('a',  Util512.truncateWithEllipsis('a', 2), '')
+    assertEq('ab',  Util512.truncateWithEllipsis('ab', 2), '')
+    assertEq('ab',  Util512.truncateWithEllipsis('abc', 2), '')
+    assertEq('ab',  Util512.truncateWithEllipsis('abcd', 2), '')
+    assertEq('',  Util512.truncateWithEllipsis('', 4), '')
+    assertEq('a',  Util512.truncateWithEllipsis('a', 4), '')
+    assertEq('ab',  Util512.truncateWithEllipsis('ab', 4), '')
+    assertEq('abcd',  Util512.truncateWithEllipsis('abcd', 4), '')
+    assertEq('a...',  Util512.truncateWithEllipsis('abcde', 4), '')
+    assertEq('a...',  Util512.truncateWithEllipsis('abcdef', 4), '')
+})
 t.test('add', () => {
     assertEq(0, Util512.add(0, 0), 'N(|');
     assertEq(9, Util512.add(4, 5), 'N&|');

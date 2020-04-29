@@ -4,7 +4,7 @@
 /* auto */ import { VpcErrStage, checkThrowNotifyMsg, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { MapKeyToObjectCanSet, getEnumToStrOrFallback } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, getEnumToStrOrFallback, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
@@ -38,7 +38,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     cbAnswerMsg: (s: string, cb: () => void) => void;
     protected status1a: UI512ElLabel;
     protected status2a: UI512ElLabel;
-    protected status2b: UI512ElLabel;
+    protected status3a: UI512ElLabel;
     protected lastErrInfo: O<[string, string, number, VpcErrStage, string]>;
     readonly monaco = `monaco_9_${textFontStylingToString(TextFontStyling.Default)}`;
     readonly genevaPlain = `geneva_10_${textFontStylingToString(TextFontStyling.Default)}`;
@@ -109,16 +109,14 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.el.set('nudgey', 2);
         this.el.setDimensions(this.x, curY, this.logicalWidth, this.y + this.logicalHeight - curY - footerHeight);
 
-        /* draw status text row 1 */
+        /* draw status text */
+        this.status3a = this.genChild(app, grp, 'status3a', UI512ElLabel);
+        this.status3a.setDimensions(this.el.x + 5, this.el.bottom + 36, this.el.w - 10, 20);
+        this.status2a = this.genChild(app, grp, 'status2a', UI512ElLabel);
+        this.status2a.setDimensions(this.el.x + 5, this.el.bottom + 22, this.el.w - 10, 17);
         this.status1a = this.genChild(app, grp, 'status1a', UI512ElLabel);
         this.status1a.setDimensions(this.el.x + 5, this.el.bottom, this.el.w - 10, 20);
-
-        /* draw status text row 2 */
-        this.status2a = this.genChild(app, grp, 'status2a', UI512ElLabel);
-        this.status2a.setDimensions(this.el.x + 5, this.el.bottom + 22, 90, 20);
-        this.status2b = this.genChild(app, grp, 'status2b', UI512ElLabel);
-        this.status2b.setDimensions(this.el.x + 60, this.el.bottom + 22, 224, 20);
-
+        
         /* draw Help buttton */
         const hlpspaceFromRight = 9;
         const hlpspaceFromBottom = 41;
@@ -186,24 +184,22 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      */
     refreshStatusLabels(app: UI512Application) {
         if (this.lastErrInfo) {
-            //~ let errDetails = this.lastErrInfo[1];
-            //~ let lineNum = this.lastErrInfo[2];
-            //~ let stage = this.lastErrInfo[3];
-            //~ let sStage = getEnumToStrOrFallback(VpcErrStage, stage);
-            //~ this.status1a.set('labeltext', sStage);
-            //~ let sLine = ` ${lineNum}`;
-            //~ sLine = UI512DrawText.setFont(sLine, this.monaco);
-            //~ this.status2a.set('labeltext', sLine);
-            //~ let sAll = `Script err: ${errDetails}`;
-            //~ sAll = UI512DrawText.setFont(sAll, this.monaco);
-            //~ this.status2b.set('labeltext', sAll);
-            this.status1a.set('labeltext', '1a1a1a1a1a1a1a1a')
-            this.status2a.set('labeltext', '2a2a2a2a2a2a2a2a')
-            this.status2b.set('labeltext', '2b2b2b2b2b2b2b2b')
+            this.status1a.set('labeltext', `Stopped on line ${this.lastErrInfo[2]},`)
+
+            let errDetails = this.lastErrInfo[1];
+            let sErr = `Script: ${errDetails}`;
+            const maxLen = 44
+            sErr = Util512.truncateWithEllipsis(sErr, maxLen)
+            sErr = UI512DrawText.setFont(sErr, this.monaco);
+            this.status2a.set('labeltext', sErr)
+
+            let strace = this.lastErrInfo[4].length>3 ? 'Trace' : ''
+            strace = UI512DrawText.setFont(strace, this.monaco);
+            this.status3a.set('labeltext', strace)
         } else {
             this.status1a.set('labeltext', '');
             this.status2a.set('labeltext', '');
-            this.status2b.set('labeltext', '');
+            this.status3a.set('labeltext', '');
         }
 
         /* does script have unsaved changes? */
@@ -242,7 +238,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      */
     scrollToErrorPosition(pr: O<UI512PresenterBase>) {
         if (this.lastErrInfo !== undefined) {
-            let lineNum = this.lastErrInfo[2] ?? 0;
+            let lineNum = this.lastErrInfo[2];
             lineNum -= 1; /* from 1-based to 0-based */
             lineNum = Math.max(0, lineNum);
             let gel = new UI512ElTextFieldAsGeneric(this.el);
@@ -310,21 +306,24 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             } else if (short === 'btnScriptHelp') {
                 /* user clicked help */
                 this.vci.setNonModalDialogByStr('VpcNonModalDocViewerReference');
-            } else if (short === 'status2a') {
+            } else if (short === 'status1a') {
                 /* user clicked the line number, scroll to that line */
                 this.scrollToErrorPosition(undefined);
-            } else if (short === 'status2b') {
+             } else if (short === 'status2a') {
                 /* user clicked the error message, show the details */
-                if (this.lastErrInfo) {
-                    let sDetails = this.lastErrInfo[1];
-                    if (!sDetails.startsWith('Note:')) {
-                        sDetails = 'Details: ' + sDetails;
-                    }
-
+                if (this.lastErrInfo && this.lastErrInfo[1]) {
+                    let sDetails = Util512.capitalizeFirst(this.lastErrInfo[1].trim());
                     this.cbAnswerMsg(sDetails, () => {});
                     /* remember to not run other code after showing modal dialog */
                 }
-            }
+            } else if (short === 'status3a') {
+                /* user clicked the stack trace, show details */
+                if (this.lastErrInfo && this.lastErrInfo[4]) {
+                    let sDetails = this.lastErrInfo[4]
+                    this.cbAnswerMsg(sDetails, () => {});
+                    /* remember to not run other code after showing modal dialog */
+                }
+            } 
         }
     }
 
