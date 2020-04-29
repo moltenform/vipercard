@@ -102,11 +102,11 @@ export abstract class UI512PresenterBase
         type: UI512EventType,
         fn: (pr: UI512PresenterInterface, d: EventDetails) => void
     ) {
-        let ar = this.listeners[type.valueOf()];
+        let ar = this.listeners[type];
         if (ar !== undefined) {
             ar.push(fn);
         } else {
-            this.listeners[type.valueOf()] = [fn];
+            this.listeners[type] = [fn];
         }
     }
 
@@ -114,7 +114,7 @@ export abstract class UI512PresenterBase
      * handle an incoming event, and dispatch it to all of the listeners
      */
     rawEventCanThrow(d: EventDetails) {
-        let evtNumber = d.type().valueOf();
+        let evtNumber = d.type();
         let ar = this.listeners[evtNumber];
         if (ar) {
             /* use a plain JS loop and not a for/of loop here, this area

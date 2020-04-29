@@ -17,7 +17,7 @@
 /* auto */ import { MenuListeners } from './../../ui512/menu/ui512MenuListeners';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
-/* auto */ import { EventDetails, FocusChangedEventDetails, IdleEventDetails, KeyDownEventDetails, KeyEventDetails, MenuItemClickedDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseEventDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { EventDetails, FocusChangedEventDetails, IdleEventDetails, KeyDownEventDetails, KeyEventDetails, MenuItemClickedDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEnterDetails, MouseLeaveDetails, MouseMoveEventDetails, MouseUpEventDetails, MouseUpOrDownDetails, PasteTextEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { BasicHandlers } from './../../ui512/textedit/ui512BasicHandlers';
@@ -43,7 +43,7 @@ export class VpcPresenterEvents {
         /* we must route text changes to a vel instead of directly setting the UI512 element */
         let editTextBehavior = new EditTextBehaviorSendToVel(pr);
 
-        pr.listeners[UI512EventType.MouseDown.valueOf()] = [
+        pr.listeners[UI512EventType.MouseDown] = [
             BasicHandlers.trackMouseStatusMouseDown,
             BasicHandlers.trackCurrentElMouseDown,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
@@ -55,7 +55,7 @@ export class VpcPresenterEvents {
             editTextBehavior.onMouseDownSelect.bind(editTextBehavior)
         ];
 
-        pr.listeners[UI512EventType.MouseUp.valueOf()] = [
+        pr.listeners[UI512EventType.MouseUp] = [
             BasicHandlers.trackMouseStatusMouseUp,
             BasicHandlers.trackCurrentElMouseUp,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
@@ -66,7 +66,7 @@ export class VpcPresenterEvents {
             editTextBehavior.onMouseUp.bind(editTextBehavior)
         ];
 
-        pr.listeners[UI512EventType.MouseMove.valueOf()] = [
+        pr.listeners[UI512EventType.MouseMove] = [
             BasicHandlers.trackCurrentElMouseMove,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondMouseMove,
@@ -75,7 +75,7 @@ export class VpcPresenterEvents {
             editTextBehavior.onMouseMoveSelect.bind(editTextBehavior)
         ];
 
-        pr.listeners[UI512EventType.MouseEnter.valueOf()] = [
+        pr.listeners[UI512EventType.MouseEnter] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.scheduleScriptEvent,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
@@ -83,7 +83,7 @@ export class VpcPresenterEvents {
             MenuListeners.onMouseEnter
         ];
 
-        pr.listeners[UI512EventType.MouseLeave.valueOf()] = [
+        pr.listeners[UI512EventType.MouseLeave] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.scheduleScriptEvent,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
@@ -91,7 +91,7 @@ export class VpcPresenterEvents {
             MenuListeners.onMouseLeave
         ];
 
-        pr.listeners[UI512EventType.MouseDownDouble.valueOf()] = [
+        pr.listeners[UI512EventType.MouseDownDouble] = [
             BasicHandlers.trackMouseDoubleDown,
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.scheduleScriptEvent,
@@ -100,19 +100,19 @@ export class VpcPresenterEvents {
             VpcPresenterEvents.respondMouseDoubleDown
         ];
 
-        pr.listeners[UI512EventType.KeyUp.valueOf()] = [
+        pr.listeners[UI512EventType.KeyUp] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondKeyUp,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool
         ];
 
-        pr.listeners[UI512EventType.KeyDown.valueOf()] = [
+        pr.listeners[UI512EventType.KeyDown] = [
             BasicHandlers.basicKeyShortcuts,
             (_pr: VpcPresenterInterface, d: KeyDownEventDetails) => VpcPresenterEvents.respondKeyDown(_pr, d, editTextBehavior),
             VpcPresenterEvents.cancelEvtIfNotBrowseTool
         ];
 
-        pr.listeners[UI512EventType.PasteText.valueOf()] = [
+        pr.listeners[UI512EventType.PasteText] = [
             (_pr: VpcPresenterInterface, d: PasteTextEventDetails) => {
                 _pr.vci.undoableAction(() => {
                     editTextBehavior.onPasteText(_pr, d);
@@ -120,17 +120,17 @@ export class VpcPresenterEvents {
             }
         ];
 
-        pr.listeners[UI512EventType.MenuItemClicked.valueOf()] = [
+        pr.listeners[UI512EventType.MenuItemClicked] = [
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondMenuItemClicked
         ];
 
-        pr.listeners[UI512EventType.FocusChanged.valueOf()] = [
+        pr.listeners[UI512EventType.FocusChanged] = [
             VpcPresenterEvents.respondFocusChanged,
             VpcPresenterEvents.cancelEvtIfCodeRunning
         ];
 
-        pr.listeners[UI512EventType.Idle.valueOf()] = [
+        pr.listeners[UI512EventType.Idle] = [
             VpcPresenterEvents.respondIdle,
             BasicHandlers.onIdleRunCallbackQueueFromAsyncs,
             editTextBehavior.onIdle.bind(editTextBehavior)
@@ -487,7 +487,7 @@ export class VpcPresenterEvents {
             if (d.elClick) {
                 target = d.elClick.id;
             }
-        } else if (d instanceof MouseEventDetails || d instanceof MouseEnterDetails || d instanceof MouseLeaveDetails) {
+        } else if (d instanceof MouseUpOrDownDetails || d instanceof MouseEnterDetails || d instanceof MouseLeaveDetails) {
             let affected = d.getAffectedElements();
             if (affected.length) {
                 target = arLast(affected).id;

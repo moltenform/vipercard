@@ -309,7 +309,7 @@ export class UI512TestCompositesPresenter extends UI512Presenter {
         super.init();
         addDefaultListeners(this.listeners);
         let editTextBehavior = new UI512TextEvents();
-        this.listeners[UI512EventType.KeyDown.valueOf()] = [
+        this.listeners[UI512EventType.KeyDown] = [
             BasicHandlers.basicKeyShortcuts,
             UI512TestCompositesPresenter.respondKeyDown,
             /* inserted before editTextBehavior so that we

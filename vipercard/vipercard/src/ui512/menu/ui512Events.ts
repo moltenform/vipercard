@@ -51,7 +51,7 @@ export abstract class KeyEventDetails extends EventDetails {
 /**
  * mouse event base class
  */
-export abstract class MouseEventDetails extends EventDetails {
+export abstract class MouseUpOrDownDetails extends EventDetails {
     isMouseEventDetails = true;
     constructor(
         public readonly timestamp: number,
@@ -217,7 +217,7 @@ export class KeyDownEventDetails extends KeyEventDetails {
  * if so, set "elClick".
  * otherwise, only "elRaw" is set.
  */
-export class MouseUpEventDetails extends MouseEventDetails {
+export class MouseUpEventDetails extends MouseUpOrDownDetails {
     isMouseUpEventDetails = true;
     elRaw: O<UI512Element>;
     elClick: O<UI512Element>;
@@ -244,7 +244,7 @@ export class MouseUpEventDetails extends MouseEventDetails {
  * mouse down event.
  * el is filled out later by a listener.
  */
-export class MouseDownEventDetails extends MouseEventDetails {
+export class MouseDownEventDetails extends MouseUpOrDownDetails {
     isMouseDownEventDetails = true;
     el: O<UI512Element>;
     type() {
@@ -264,7 +264,7 @@ export class MouseDownEventDetails extends MouseEventDetails {
  * mouse double-click event.
  * el is filled out later by a listener.
  */
-export class MouseDownDoubleEventDetails extends MouseEventDetails {
+export class MouseDownDoubleEventDetails extends MouseUpOrDownDetails {
     isMouseDownDoubleEventDetails = true;
     el: O<UI512Element>;
     type() {

@@ -46,7 +46,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * from tool to the corresponding tool response object
      */
     getToolResponse(t: VpcTool) {
-        return ensureDefined(this.tlNumToResponse[t.valueOf()], 'Kl|not found', t);
+        return ensureDefined(this.tlNumToResponse[t], 'Kl|not found', t);
     }
 
     /**

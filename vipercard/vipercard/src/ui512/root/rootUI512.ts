@@ -9,7 +9,7 @@
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
-/* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
+/* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, MouseUpOrDownDetails } from './../menu/ui512Events';
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
@@ -97,8 +97,8 @@ export class FullRootUI512 implements RootHigher {
         return this.event(details);
     }
 
-    event(details: EventDetails) {
-        if (details instanceof MouseEventDetails) {
+    event(details: EventDetails, skipScaleMouseClickEvent?:boolean) {
+        if (details instanceof MouseUpOrDownDetails && !skipScaleMouseClickEvent) {
             details.mouseX = adjustMouseCoord(details.mouseX, this.scaleMouseCoords)
             details.mouseY = adjustMouseCoord(details.mouseY, this.scaleMouseCoords)
         }
@@ -136,7 +136,8 @@ export class FullRootUI512 implements RootHigher {
                     );
 
                     /* don't set d.el yet, this.prevMouseDown.el might be out of date. */
-                    this.event(newevent);
+                    /* set skipScaleMouseClickEvent flag, don't scale coords twice. */
+                    this.event(newevent, true);
                 }
             }
 

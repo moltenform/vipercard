@@ -477,7 +477,7 @@ export class UI512TextEvents {
  */
 export function addDefaultListeners(listeners: { [t: number]: FnEventCallback[] }) {
     let editTextBehavior = new UI512TextEvents();
-    listeners[UI512EventType.MouseDown.valueOf()] = [
+    listeners[UI512EventType.MouseDown] = [
         BasicHandlers.trackMouseStatusMouseDown,
         BasicHandlers.trackCurrentElMouseDown,
         BasicHandlers.trackHighlightedButtonMouseDown,
@@ -486,7 +486,7 @@ export function addDefaultListeners(listeners: { [t: number]: FnEventCallback[] 
         editTextBehavior.onMouseDownSelect.bind(editTextBehavior)
     ];
 
-    listeners[UI512EventType.MouseUp.valueOf()] = [
+    listeners[UI512EventType.MouseUp] = [
         BasicHandlers.trackMouseStatusMouseUp,
         BasicHandlers.trackCurrentElMouseUp,
         BasicHandlers.trackHighlightedButtonMouseUp,
@@ -494,40 +494,40 @@ export function addDefaultListeners(listeners: { [t: number]: FnEventCallback[] 
         editTextBehavior.onMouseUp.bind(editTextBehavior)
     ];
 
-    listeners[UI512EventType.Idle.valueOf()] = [
+    listeners[UI512EventType.Idle] = [
         editTextBehavior.onIdle.bind(editTextBehavior),
         BasicHandlers.onIdleRunCallbackQueueFromAsyncs
     ];
 
-    listeners[UI512EventType.MouseMove.valueOf()] = [
+    listeners[UI512EventType.MouseMove] = [
         BasicHandlers.trackCurrentElMouseMove,
         editTextBehavior.onMouseMoveSetTextEditCursor.bind(editTextBehavior),
         editTextBehavior.onMouseMoveSelect.bind(editTextBehavior)
     ];
 
-    listeners[UI512EventType.MouseEnter.valueOf()] = [
+    listeners[UI512EventType.MouseEnter] = [
         BasicHandlers.trackHighlightedButtonMouseEnter,
         MenuListeners.onMouseEnter
     ];
 
-    listeners[UI512EventType.MouseLeave.valueOf()] = [
+    listeners[UI512EventType.MouseLeave] = [
         BasicHandlers.trackHighlightedButtonMouseLeave,
         MenuListeners.onMouseLeave
     ];
 
-    listeners[UI512EventType.KeyDown.valueOf()] = [
+    listeners[UI512EventType.KeyDown] = [
         BasicHandlers.basicKeyShortcuts,
         editTextBehavior.onKeyDown.bind(editTextBehavior)
     ];
 
-    listeners[UI512EventType.KeyUp.valueOf()] = [];
+    listeners[UI512EventType.KeyUp] = [];
 
-    listeners[UI512EventType.MouseDownDouble.valueOf()] = [
+    listeners[UI512EventType.MouseDownDouble] = [
         BasicHandlers.trackMouseDoubleDown,
         editTextBehavior.onMouseDoubleDown.bind(editTextBehavior)
     ];
 
-    listeners[UI512EventType.PasteText.valueOf()] = [
+    listeners[UI512EventType.PasteText] = [
         editTextBehavior.onPasteText.bind(editTextBehavior)
     ];
 }
