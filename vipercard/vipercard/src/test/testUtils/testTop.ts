@@ -14,7 +14,7 @@
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, ValHolder } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, Util512, ValHolder } from './../../ui512/utils/util512';
 /* auto */ import { testCollectionUtilsDraw } from './../util512/testUtilsDraw';
 /* auto */ import { testCollectionUtilsCanvasWrapper } from './../util512/testUtilsCanvasWrapper';
 /* auto */ import { SimpleUtil512TestCollection, notifyUserIfDebuggerIsSetToAllExceptions } from './testUtils';
@@ -95,8 +95,8 @@ export class SimpleUtil512Tests {
 
         /* run tests from low level to high level */
         colls.reverse(); 
-        let colNamesSeen = new Map<string, boolean>();
-        let mapSeen = new Map<string, boolean>();
+        let colNamesSeen = new MapKeyToObjectCanSet<boolean>()
+        let mapSeen = new MapKeyToObjectCanSet<boolean>()
         let countTotal = colls
             .filter(item => includeSlow || !item.slow)
             .map(item => item.tests.length)
@@ -107,7 +107,7 @@ export class SimpleUtil512Tests {
             .reduce(Util512.add);
         let counter = new ValHolder(1);
         for (let coll of colls) {
-            if (colNamesSeen.has(coll.name.toLowerCase())) {
+            if (colNamesSeen.exists(coll.name.toLowerCase())) {
                 assertTrue(false, 'O.|duplicate collection name', coll.name);
             }
 
@@ -140,7 +140,7 @@ export class SimpleUtil512Tests {
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
-        mapSeen: Map<string, boolean>
+        mapSeen: MapKeyToObjectCanSet<boolean>
     ) {
         notifyUserIfDebuggerIsSetToAllExceptions();
         assertWarn(
@@ -153,7 +153,7 @@ export class SimpleUtil512Tests {
         tests = tests.concat(coll.tests);
         for (let i = 0; i < tests.length; i++) {
             let [tstname, tstfn] = tests[i];
-            if (mapSeen.has(tstname.toLowerCase())) {
+            if (mapSeen.exists(tstname.toLowerCase())) {
                 assertWarn(false, 'Or|duplicate test name', tstname);
             }
 

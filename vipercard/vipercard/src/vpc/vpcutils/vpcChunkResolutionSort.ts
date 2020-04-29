@@ -69,7 +69,7 @@ export class ChunkResolutionSort {
      * written in vipercard itself so that it's easy to plug in the expression.
      */
     static internalDelim = '\x01\x01\x01vpcinternal\x01\x01\x01';
-    static writeCodeCustomSort(granularity: string, sortOptions: Map<string, string>) {
+    static writeCodeCustomSort(granularity: string, sortOptions: { [key: string]: string }) {
         /* let's build a sort here! use decorate-sort-undecorate */
         if (granularity !== 'items' && granularity !== 'lines') {
             checkThrow(false, 'T[|We only support sorting by lines or items');

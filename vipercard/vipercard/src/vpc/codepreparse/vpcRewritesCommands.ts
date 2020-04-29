@@ -413,7 +413,7 @@ put the result %ARG0%`;
         }
 
         /* go backwards and pick up sort options until we don't see the first that isn't one */
-        let sortOptions = new Map<string, string>();
+        let sortOptions: { [key: string]: string } = {}
         sortOptions['order'] = 'ascending';
         sortOptions['method'] = 'text';
 
@@ -545,7 +545,7 @@ end repeat`;
 
     /* interpret a visual effect, currently order doesn't matter */
     hParseVisualEffect(line: ChvITk[], prefix: string) {
-        let opts = new Map<string, string>();
+        let opts: { [key: string]: string } = {}
         opts['speed'] = '';
         opts['method'] = '';
         opts['direction'] = '';
@@ -579,6 +579,7 @@ end repeat`;
             `${prefix} "${opts['speed']}"
             "${opts['method']}" "${opts['direction']}" "${opts['dest']}" `
         );
+        
         return this.rw.gen(template, line[0]);
     }
 

@@ -16,7 +16,7 @@
 /* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512Assert';
-/* auto */ import { ValHolder, lastIfThere, slength } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, ValHolder, lastIfThere, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -346,10 +346,10 @@ export class VpcExecTop {
      * make sure there are no repeated ids
      */
     static checkNoRepeatedIds(stack: VpcElStack) {
-        let idsSeen = new Map<string, boolean>();
+        let idsSeen = new MapKeyToObjectCanSet<boolean>();
         idsSeen.set(stack.parentId, true);
         for (let vel of stack.iterEntireStack()) {
-            if (idsSeen.has(vel.id)) {
+            if (idsSeen.exists(vel.id)) {
                 /* use assertwarn, not throw, because it's sure to show
                 a dialog, but the user can also ignore subsquent ones */
                 assertWarn(false, 'R?|duplicate id seen: ' + vel.id);

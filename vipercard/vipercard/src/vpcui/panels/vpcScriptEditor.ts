@@ -4,7 +4,7 @@
 /* auto */ import { VpcErrStage, checkThrowNotifyMsg, vpcElTypeToString } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
-/* auto */ import { MapKeyToObjectCanSet, getEnumToStrOrFallback, Util512 } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, Util512 } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
 /* auto */ import { UI512TextEvents } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512PresenterBase } from './../../ui512/presentation/ui512PresenterBase';
