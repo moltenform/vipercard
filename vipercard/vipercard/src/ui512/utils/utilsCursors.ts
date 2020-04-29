@@ -1,8 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './utilsCanvasDraw';
 /* auto */ import { getRoot } from './util512Higher';
-/* auto */ import { tostring } from './util512Base';
-/* auto */ import { MapKeyToObjectCanSet, Util512, cast } from './util512';
+/* auto */ import { Util512, cast } from './util512';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { IconInfo } from './../draw/ui512DrawIconClasses';
 

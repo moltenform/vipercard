@@ -4,16 +4,20 @@
 /* auto */ import { CodeLimits, CountNumericId, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrameStack } from './vpcScriptExecFrameStack';
+/* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { VpcCacheParsedAST, VpcCacheParsedCST } from './vpcScriptCaches';
+/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcCurrentScriptStage } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcBuiltinMsg, VpcErr, VpcErrStage, VpcTool } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcBuiltinMsg, VpcElType, VpcErr, VpcErrStage, VpcTool, PropAdjective } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './../codepreparse/vpcCheckReserved';
 /* auto */ import { VpcElStack } from './../vel/velStack';
+/* auto */ import { VelResolveName } from './../vel/velResolveName';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VpcElBg } from './../vel/velBg';
+/* auto */ import { VpcElBase } from './../vel/velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, assertWarn, respondUI512Error } from './../../ui512/utils/util512Assert';
-/* auto */ import { ValHolder, slength } from './../../ui512/utils/util512';
+/* auto */ import { ValHolder, lastIfThere, slength } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -261,6 +265,7 @@ export class VpcExecTop {
      * VpcCurrentScriptStage to the error.
      */
     protected handleScriptException(e: Error, context: string) {
+        let stackTrace = new GuessStackTrace(this, this.outside).goAsString()
         this.forceStopRunning();
 
         let scriptErr = Util512BaseErr.errIfExactCls<VpcErr>('VpcErr', e);
@@ -284,6 +289,9 @@ export class VpcExecTop {
         }
         if (!scriptErr.dynamicCodeOrigin) {
             scriptErr.dynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin;
+        }
+        if (!scriptErr.traceInfo) {
+            scriptErr.traceInfo = stackTrace
         }
         if (VpcCurrentScriptStage.origClass) {
             scriptErr.origClass = VpcCurrentScriptStage.origClass;
@@ -350,5 +358,97 @@ export class VpcExecTop {
 
             idsSeen.set(vel.id, true);
         }
+    }
+}
+
+/**
+ * get a stack trace, just to show in the ui
+ */
+class GuessStackTrace {
+    constructor(protected top:VpcExecTop, protected outside:OutsideWorldReadWrite) {}
+    protected guessLatestFrame():O<VpcExecFrame>[] {
+        let lastSeen = VpcCurrentScriptStage.latestDestLineSeen
+        for (let stack of this.top.workQueue) {
+            let lastFrame = lastIfThere(stack.stack)
+            if (lastFrame) {
+                let lns = lastFrame?.codeSection?.lines
+                if (lns && (lns[lastFrame.getOffset()] === lastSeen ||
+                lns[lastFrame.getOffset() - 1] === lastSeen)) {
+                    return stack.stack
+                }
+            }
+        }
+        
+        return []
+    }
+
+    protected findVel(velId : string):O<VpcElBase> {
+        let ref = new RequestedVelRef(VpcElType.Unknown)
+        let [found, cd] = this.outside.ResolveVelRef(ref)
+        return found
+    }
+
+    go() {
+        /* vel, handlername, origoffset */
+        let ret:[VpcElBase, string, number][] = []
+        let stack = this.guessLatestFrame()
+        if (stack) {
+            stack.reverse()
+            for (let frame of stack) {
+                if (frame) {
+                    let velId = frame.meId
+                    let found = this.findVel(velId)
+                    if (found) {
+                        let origoffset = frame?.codeSection?.lines[frame.getOffset() - 1]?.firstToken?.startLine
+                        origoffset = origoffset ?? 0
+                        ret.push([found, frame.handlerName, origoffset])
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    goAsString() {
+        let ar = this.go()
+        let arout:string[] = []
+
+        /* the top will already be shown in error message */
+        let meId = ar[0][0].id
+        ar = ar.slice(1)
+        
+        for (let [vel, handlername, origoffset] of ar) {
+            if (vel.getType() === VpcElType.Product) {
+                arout.push('vpc')
+            } else {
+                arout.push(this.renderVelAndLine(vel, meId, handlername, origoffset))
+            }
+        }
+        
+        let ret = arout.join(' < ')
+        if (arout.length) {
+            ret = 'via ' + ret
+        }
+
+        return ret
+    }
+
+    renderVelAndLine(vel: VpcElBase, meId: string, handlername: string, origoffset: number): string {
+        let s = ''
+        if (vel.id.toString() !== meId.toString()) {
+            /* save space */
+            s += 'me'
+        } else if (vel.getType() === VpcElType.Stack) {
+            s += 'stack'
+        } else if (vel.getS('name')) {
+            s += `"${vel.getS('name')}"`
+        } else {
+            /* get the short name of v */
+            let res = new VelResolveName(this.outside.Model())
+            s += res.go(vel, PropAdjective.Short)
+        }
+
+        return s + '.' + handlername + '@' + origoffset
     }
 }

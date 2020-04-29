@@ -39,7 +39,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     protected status1a: UI512ElLabel;
     protected status2a: UI512ElLabel;
     protected status2b: UI512ElLabel;
-    protected lastErrInfo: O<[string, string, number, VpcErrStage]>;
+    protected lastErrInfo: O<[string, string, number, VpcErrStage, string]>;
     readonly monaco = `monaco_9_${textFontStylingToString(TextFontStyling.Default)}`;
     readonly genevaPlain = `geneva_10_${textFontStylingToString(TextFontStyling.Default)}`;
     readonly genevaBold = `geneva_10_${textFontStylingToString(TextFontStyling.Bold)}`;
@@ -62,10 +62,14 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     }
 
     /**
-     * a higher layer will tells us info about the current error
+     * a higher layer will tell us info about the current error
      */
-    setLastErrInfo(velId: string, errDetails: string, lineNum: number, stage: VpcErrStage) {
-        this.lastErrInfo = [velId, errDetails, lineNum, stage];
+    setLastErrInfo(velId: string, errDetails: string, lineNum: number, stage: VpcErrStage, trace: string) {
+        if (errDetails.startsWith('Note: ')) {
+            errDetails = errDetails.slice('Note: '.length)
+        }
+
+        this.lastErrInfo = [velId, errDetails, lineNum, stage, trace];
     }
 
     /**
@@ -182,17 +186,20 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      */
     refreshStatusLabels(app: UI512Application) {
         if (this.lastErrInfo) {
-            let errDetails = this.lastErrInfo[1];
-            let lineNum = this.lastErrInfo[2];
-            let stage = this.lastErrInfo[3];
-            let sStage = getEnumToStrOrFallback(VpcErrStage, stage);
-            this.status1a.set('labeltext', sStage);
-            let sLine = ` ${lineNum}`;
-            sLine = UI512DrawText.setFont(sLine, this.monaco);
-            this.status2a.set('labeltext', sLine);
-            let sAll = `Script error: ${errDetails}`;
-            sAll = UI512DrawText.setFont(sAll, this.monaco);
-            this.status2b.set('labeltext', sAll);
+            //~ let errDetails = this.lastErrInfo[1];
+            //~ let lineNum = this.lastErrInfo[2];
+            //~ let stage = this.lastErrInfo[3];
+            //~ let sStage = getEnumToStrOrFallback(VpcErrStage, stage);
+            //~ this.status1a.set('labeltext', sStage);
+            //~ let sLine = ` ${lineNum}`;
+            //~ sLine = UI512DrawText.setFont(sLine, this.monaco);
+            //~ this.status2a.set('labeltext', sLine);
+            //~ let sAll = `Script err: ${errDetails}`;
+            //~ sAll = UI512DrawText.setFont(sAll, this.monaco);
+            //~ this.status2b.set('labeltext', sAll);
+            this.status1a.set('labeltext', '1a1a1a1a1a1a1a1a')
+            this.status2a.set('labeltext', '2a2a2a2a2a2a2a2a')
+            this.status2b.set('labeltext', '2b2b2b2b2b2b2b2b')
         } else {
             this.status1a.set('labeltext', '');
             this.status2a.set('labeltext', '');

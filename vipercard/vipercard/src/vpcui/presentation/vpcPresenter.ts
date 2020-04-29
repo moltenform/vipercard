@@ -260,7 +260,7 @@ export class VpcPresenter extends VpcPresenterInit {
 
             /* open the code editor at the offending line */
             this.lyrPropPanel.updateUI512Els();
-            this.lyrPropPanel.editor.setLastErrInfo(velId, msg, lineNum, scriptErr.stage);
+            this.lyrPropPanel.editor.setLastErrInfo(velId, msg, lineNum, scriptErr.stage, scriptErr.traceInfo ?? '');
             this.lyrPropPanel.editor.refreshFromModel(this.app);
             this.lyrPropPanel.editor.scrollToErrorPosition(this);
         });

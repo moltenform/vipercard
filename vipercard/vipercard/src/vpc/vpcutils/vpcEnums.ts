@@ -614,6 +614,7 @@ export class VpcErr extends Util512BaseErr {
     scriptErrVelid: O<string>;
     lineObj: O<IVpcCodeLine>;
     stage = VpcErrStage.Unknown;
+    traceInfo: O<string>;
 
     /**
      * for example, when you say 'send "#$@#$@#" to cd btn 1'
