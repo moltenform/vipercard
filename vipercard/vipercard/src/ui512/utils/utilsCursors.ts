@@ -109,6 +109,13 @@ isInvert[UI512Cursors.paintrectsel] = true
 isInvert[UI512Cursors.paintlasso] = true
 isInvert[UI512Cursors.cross] = true
 
+const enum Constants {
+    HideCursorWhenThisCloseToLeft = 30,
+    HideCursorWhenThisCloseToTop = 30,
+    HideCursorWhenThisCloseToRight = 5,
+    HideCursorWhenThisCloseToBottom = 5,
+}
+
 /**
  * cache the current cursor so that repeated calls to setCursor
  * won't have any effect on performance
@@ -205,8 +212,8 @@ export class UI512CursorAccess {
 
         /* trick: by hiding the cursor if it's by the edge,
         we are less likely to leave our fake cursor on the screen */
-        if (!(UI512CursorAccess.currentMx < 15 || UI512CursorAccess.currentMx > final.canvas.width - 5 ||
-            UI512CursorAccess.currentMy < 15 || UI512CursorAccess.currentMy > final.canvas.height - 5 )) {
+        if (!(UI512CursorAccess.currentMx < Constants.HideCursorWhenThisCloseToLeft || UI512CursorAccess.currentMx > final.canvas.width - Constants.HideCursorWhenThisCloseToRight ||
+            UI512CursorAccess.currentMy < Constants.HideCursorWhenThisCloseToTop || UI512CursorAccess.currentMy > final.canvas.height - Constants.HideCursorWhenThisCloseToLeft )) {
                 let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
                 let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
                 if (!found) {
