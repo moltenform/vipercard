@@ -22,6 +22,7 @@
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
 /* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
 /* auto */ import { FocusChangedEventDetails } from './../../ui512/menu/ui512Events';
+/* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
@@ -409,7 +410,7 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     refreshCursor() {
         let elUnderCursor = this.app.coordsToElement(this.trackMouse[0], this.trackMouse[1]);
-        let isCursorWithinDocument = trueIfDefinedAndNotNull(elUnderCursor) && this.lyrModelRender.isVelOrBg(elUnderCursor.id);
+        let isCursorWithinDocument = trueIfDefinedAndNotNull(elUnderCursor) && this.lyrModelRender.isVelOrBaseLayer(elUnderCursor.id);
         this.refreshCursorElemKnown(elUnderCursor, isCursorWithinDocument);
     }
 
@@ -423,7 +424,11 @@ export class VpcPresenter extends VpcPresenterInit {
             let curs = this.getToolResponse(tl).whichCursor(tl, el);
             UI512CursorAccess.setCursor(curs);
         } else {
-            UI512CursorAccess.setCursor(UI512Cursors.arrow);
+            if (el && el instanceof UI512ElTextField && el.getB('canedit')) {
+                UI512CursorAccess.setCursor(UI512Cursors.lbeam);
+            } else {
+                UI512CursorAccess.setCursor(UI512Cursors.arrow);
+            }
         }
     }
 

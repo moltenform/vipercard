@@ -23,7 +23,7 @@ export class VpcAppUIToolEdit extends VpcAppUIToolBase {
      */
     respondMouseDown(tl: VpcTool, d: MouseDownEventDetails, isVelOrBg: boolean): void {
         this.lyrPanels.respondMouseDown(d);
-        if (d.el && d.el.id === 'VpcModelRender$$renderbg') {
+        if (d.el && d.el.id === 'VpcModelRender$$baselayer') {
             /* click on the screen but on no item: deselect all */
             this.vci.setOption('selectedVelId', '');
         } else if (d.el && d.el.id.startsWith('VpcModelRender$$')) {

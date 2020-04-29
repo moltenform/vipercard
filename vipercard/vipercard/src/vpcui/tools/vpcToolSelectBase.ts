@@ -285,8 +285,8 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
                 this.st.cvPiece.canvas.height
             );
 
-            /* make cvPiece a cut-out of the main bg */
-            let basePaint = this.cbPaintRender().getMainBg();
+            /* make cvPiece a cut-out of the main base layer */
+            let basePaint = this.cbPaintRender().getBaseLayer();
             this.st.cvPiece.temporarilyChangeCompositeMode('source-in', () => {
                 checkThrow(this.st, 'UP|');
                 this.st.cvPiece.drawFromImage(
@@ -364,7 +364,7 @@ export abstract class VpcAppUIToolSelectBase extends VpcAppUIToolBase {
     applyMove() {
         if (this.st) {
             if (this.st.elMask.getCanvasForWrite()) {
-                this.cbPaintRender().getMainBg();
+                this.cbPaintRender().getBaseLayer();
                 let incoming = this.st.areCopying
                     ? [this.st.elStage.getCanvasForWrite()]
                     : [this.st.elMask.getCanvasForWrite(), this.st.elStage.getCanvasForWrite()];

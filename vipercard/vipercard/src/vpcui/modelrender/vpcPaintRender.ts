@@ -46,7 +46,7 @@ export class VpcPaintRender extends VpcUILayer {
         this.userPaintH = this.vci.userBounds()[3];
         this.paintGrp = new UI512ElGroup('VpcPaintRender');
         this.vci.UI512App().addGroup(this.paintGrp);
-        this.makeAndAddFullsizeEl('VpcModelRender$$renderbg');
+        this.makeAndAddFullsizeEl('VpcModelRender$$baselayer');
     }
 
     /**
@@ -54,7 +54,7 @@ export class VpcPaintRender extends VpcUILayer {
      * use a UI512ElCanvasPiece to draw a piece of this canvas onto the main canvas
      */
     updateUI512Els(): void {
-        let mainPaint = cast(UI512ElCanvasPiece, this.vci.UI512App().getEl('VpcModelRender$$renderbg'));
+        let mainPaint = cast(UI512ElCanvasPiece, this.vci.UI512App().getEl('VpcModelRender$$baselayer'));
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         let currentlyCachedIm = this.refreshCachedPaintForCard(currentCardId)[1];
         mainPaint.setCanvas(currentlyCachedIm);
@@ -111,7 +111,7 @@ export class VpcPaintRender extends VpcUILayer {
      * clear all temporary paint elements
      */
     deleteTempPaintEls() {
-        let mainPaint = this.vci.UI512App().getEl('VpcModelRender$$renderbg');
+        let mainPaint = this.vci.UI512App().getEl('VpcModelRender$$baselayer');
         this.paintGrp.removeAllEls();
         this.paintGrp.addElement(this.vci.UI512App(), mainPaint);
     }
@@ -119,8 +119,8 @@ export class VpcPaintRender extends VpcUILayer {
     /**
      * get the main background paint hidden canvas piece
      */
-    getMainBg(): UI512ElCanvasPiece {
-        return cast(UI512ElCanvasPiece, this.vci.UI512App().getEl('VpcModelRender$$renderbg'));
+    getBaseLayer(): UI512ElCanvasPiece {
+        return cast(UI512ElCanvasPiece, this.vci.UI512App().getEl('VpcModelRender$$baselayer'));
     }
 
     /**
@@ -298,7 +298,7 @@ export class VpcPaintRender extends VpcUILayer {
     protected commitPaintOps(fn: (mainCanvas: CanvasWrapper, pnt: UI512Painter) => void) {
         /* make sure we have the latest paint */
         this.updateUI512Els();
-        let mainCanvas = this.getMainBg().getCanvasForWrite();
+        let mainCanvas = this.getBaseLayer().getCanvasForWrite();
         let painter = new UI512PainterCvCanvas(mainCanvas, mainCanvas.canvas.width, mainCanvas.canvas.height);
         fn(mainCanvas, painter);
         let serialized = new UI512ImageSerialization().writeToString(mainCanvas);

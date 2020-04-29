@@ -1,5 +1,6 @@
 
 /* auto */ import { ModifierKeys } from './../utils/utilsKeypressHelpers';
+/* auto */ import { UI512CursorAccess, UI512Cursors } from './../utils/utilsCursors';
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
 /* auto */ import { BrowserInfo } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
@@ -117,6 +118,19 @@ export class UI512TextEvents {
                         );
                     }
                 }
+            }
+        }
+    }
+
+     /**
+     * if cursor is in an editable field, change the cursor!
+     */
+    onMouseMoveSetTextEditCursor(pr: UI512PresenterWithMenuInterface, d: MouseMoveEventDetails) {
+        if (d.elPrev !== d.elNext) {
+            if (d.elNext && d.elNext instanceof UI512ElTextField && d.elNext.getB('canedit')) {
+                UI512CursorAccess.setCursor(UI512Cursors.lbeam)
+            } else {
+                UI512CursorAccess.setCursor(UI512Cursors.arrow)
             }
         }
     }
@@ -487,6 +501,7 @@ export function addDefaultListeners(listeners: { [t: number]: FnEventCallback[] 
 
     listeners[UI512EventType.MouseMove.valueOf()] = [
         BasicHandlers.trackCurrentElMouseMove,
+        editTextBehavior.onMouseMoveSetTextEditCursor.bind(editTextBehavior),
         editTextBehavior.onMouseMoveSelect.bind(editTextBehavior)
     ];
 

@@ -71,6 +71,7 @@ export class VpcPresenterEvents {
             VpcPresenterEvents.cancelEvtIfCodeRunning,
             VpcPresenterEvents.respondMouseMove,
             VpcPresenterEvents.cancelEvtIfNotBrowseTool,
+            /* don't need editTextBehavior.onMouseMoveSetTextEditCursor */
             editTextBehavior.onMouseMoveSelect.bind(editTextBehavior)
         ];
 
@@ -183,7 +184,7 @@ export class VpcPresenterEvents {
     static respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = trueIfDefinedAndNotNull(d.el) && bool(pr.lyrModelRender.isVelOrBg(d.el.id));
+                let isUserElOrBg = trueIfDefinedAndNotNull(d.el) && bool(pr.lyrModelRender.isVelOrBaseLayer(d.el.id));
                 pr.getToolResponse(pr.vci.getTool()).respondMouseDown(pr.vci.getTool(), d, isUserElOrBg);
                 pr.lyrNonModalDlgHolder.respondMouseDown(d);
 
@@ -208,7 +209,7 @@ export class VpcPresenterEvents {
     static respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
-                let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
+                let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBaseLayer(item.id)));
                 pr.getToolResponse(pr.vci.getTool()).respondMouseUp(pr.vci.getTool(), d, isUserElOrBg);
                 pr.lyrNonModalDlgHolder.respondMouseUp(d);
                 pr.lyrToolboxes.toolsMain.respondMouseUp(pr.app, d);
@@ -220,14 +221,14 @@ export class VpcPresenterEvents {
     }
 
     /**
-     * send mousemove event t ocurrent tool
+     * send mousemove event to current tool
      */
     static respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
-        let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBg(item.id)));
-        pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBg);
-        let isNextAVelOrBg = trueIfDefinedAndNotNull(d.elNext) && bool(pr.lyrModelRender.isVelOrBg(d.elNext.id));
+        let isUserElOrBaseLayer = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBaseLayer(item.id)));
+        pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBaseLayer);
+        let isNextAVelOrBaseLayer = trueIfDefinedAndNotNull(d.elNext) && bool(pr.lyrModelRender.isVelOrBaseLayer(d.elNext.id));
         if (d.elNext !== d.elPrev) {
-            pr.refreshCursorElemKnown(d.elNext, isNextAVelOrBg);
+            pr.refreshCursorElemKnown(d.elNext, isNextAVelOrBaseLayer);
         }
     }
 

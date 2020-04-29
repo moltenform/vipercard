@@ -73,12 +73,12 @@ export class VpcNonModalReplBox extends VpcNonModalBase {
         dashedLine.set('style', UI512BtnStyle.Opaque);
 
         this.entry = this.genChild(app, grp, 'entry', UI512ElTextField);
-        this.entry.setDimensions(this.x + 18 - 1, this.y + 15 + 9 + 1, 478, 30);
+        this.entry.setDimensions(this.x + 18 - 1, this.y + 15 + 9 + 1, 478, 20);
         this.entry.set('style', UI512FldStyle.Transparent);
-
         this.entry.set('multiline', false);
-        this.vci.getPresenter().setCurrentFocus(this.entry.id);
         this.entry.set('defaultFont', 'geneva');
+        this.vci.getPresenter().setCurrentFocus(this.entry.id);
+
         let msg = 'put "abc"';
         this.setFontAndText(this.entry, msg, 'geneva', 12);
         this.setFontAndText(this.showResults, '', 'monaco', 9);

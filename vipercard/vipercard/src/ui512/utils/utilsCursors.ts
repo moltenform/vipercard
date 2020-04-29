@@ -1,7 +1,7 @@
 
 /* auto */ import { CanvasWrapper } from './utilsCanvasDraw';
 /* auto */ import { getRoot } from './util512Higher';
-/* auto */ import { Util512, cast } from './util512';
+/* auto */ import { cast } from './util512';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { IconInfo } from './../draw/ui512DrawIconClasses';
 
@@ -25,26 +25,26 @@
  *    tried not pnggauntlet
  *    tried using a .cur not a .png file
  *    tried on a simple page with no canvas
- * 
- * We could just draw the cursor on the canvas like everything else
- *      Pros: enables better emulation (original product has cursors that invert)
- *      Cons: would have to maintain a graphics buffer or it would be slow 
- * We can fake a cursor with a <img> moved around by javascript
- *      Pros: simpler code (if we use an offset, see below)
+ * I then tried faking a cursor with a <img> moved around by javascript
+ *      Pros: simpler code
+ *      Pros: can still show the arrow cursor in the black margins, looks nicer
  *      Cons: doesn't look right when page scrolls
+ *          (our page never scrolls, enforce with body {position:fixed})
+ *      Cons: slightly blurry since it shows at 125% and css-scales to 80%
+ *          might get even more blurry as screenmult increases
+ *      complication:
+ *          the <img> will eat the mousemove events and the cursor gets stuck.
+ *          a simple workaround is to OFFSET the <img> and real cursor position
+ *          you don't notice, the real cursor is hidden and we can compensate in all clicks
+ *      problem: will all corners of the screen be clickable?
+ *      problem: on touch devices the offset will mess with where you tap!
+ * It would be possible to work around these problems, but let's do this instead:
+ * Just draw the cursor on the canvas like everything else
+ *      Pros: enables better emulation (original product has cursors that invert)
+ *      Pros: never blurry, and we get arbitrary screenmult for free
+ *      Cons: has to maintain a graphics buffer or it would be slow 
  * 
- * Fortunately our page never scrolls, and we can enforce that with body {position:fixed}
- * 
- * Where it gets tricky: the mousemove events might get eaten by the <img>
- * to get around this we can set an OFFSET
- * where the true mouse position isn't where it looks like
- * ok since we have a black perimeter, although we should test that all corners 
- * of the screen are clickable. the OFFSET means that we'll 
- * 
- * problem: will all corners of the screen be clickable?
- * problem: on touch devices the offset will mess with where you tap!!
- * 
- * see also:
+ * Other ppl hitting the same issue:
  * https://stackoverflow.com/questions/35561547/svg-mouse-cursor-blurry-on-retina-display
  * https://jsfiddle.net/jhhbrook/ucuLefut/
  */
@@ -79,8 +79,11 @@ export enum UI512Cursors {
     busy4,
 }
 
+/**
+ * x, y offset indicating the active pixel of the cursor
+ */
 const hotCoords = [
-    [0,0], /* placeholder */
+    [0, 0], /* placeholder */
     [3, 7],
     [7, 7],
     [7, 7],
@@ -101,14 +104,23 @@ const hotCoords = [
     [7, 7],
     ]
 
-const isInvert: { [key: number]: boolean } = {
-}
-
+/**
+ * certain cursors are neither black nor white,
+ * they are the opposite of the underlying content.
+ * in the original product, the paintbucket cursor
+ * has pixels of both normal and inverted type,
+ * but it's barely noticeable and not worth
+ * the effort to implement.
+ */
+const isInvert: { [key: number]: boolean } = {}
 isInvert[UI512Cursors.lbeam] = true
 isInvert[UI512Cursors.paintrectsel] = true
 isInvert[UI512Cursors.paintlasso] = true
 isInvert[UI512Cursors.cross] = true
 
+/**
+ * hide cursor when it leaves our canvas, otherwise it looks stuck.
+ */
 const enum Constants {
     HideCursorWhenThisCloseToLeft = 30,
     HideCursorWhenThisCloseToTop = 30,
@@ -131,43 +143,41 @@ export class UI512CursorAccess {
     protected static currentHotY = 0;
     protected static wasCursorLoaded = false;
     protected static curInfo = new IconInfo('0cursors1', UI512Cursors.arrow)
+
+    /**
+     * get the current cursor
+     */
     static getCursor(): UI512Cursors {
         return UI512CursorAccess.currentCursor;
     }
 
+    /**
+     * set the cursor
+     */
     static setCursor(nextCursor: UI512Cursors, always = false) {
         if (!always && UI512CursorAccess.currentCursor === nextCursor) {
+            /* for efficiency, exit early */
             return
         }
 
+        /* hide the real cursor */
         let el = window.document.getElementById('mainDomCanvas');
         if (el) {
             el.style.cursor = 'none';
         }
 
         let hots = hotCoords[nextCursor] ?? [0,0]
-        UI512CursorAccess.currentHotX = -hots[0]
-        UI512CursorAccess.currentHotY = -hots[1]
+        UI512CursorAccess.currentHotX = hots[0]
+        UI512CursorAccess.currentHotY = hots[1]
         UI512CursorAccess.curInfo.iconGroup = '0cursors1'
         UI512CursorAccess.curInfo.iconNumber = nextCursor - 1
         UI512CursorAccess.curInfo.centered = false
         UI512CursorAccess.currentCursor = nextCursor
     }
 
-    static parseCursorName(s: string): [number, number] {
-        let pts = s.split(/[0-9]x/);
-        if (pts.length <= 1) {
-            return [0, 0];
-        } else {
-            let xy = pts[1].split('.')[0];
-            let x = xy.split(',')[0];
-            let y = xy.split(',')[1];
-            let nx = Util512.parseInt(x) ?? 0;
-            let ny = Util512.parseInt(y) ?? 0;
-            return [nx, ny];
-        }
-    }
-
+    /**
+     * repeatedly calling set cursor to busy makes it spin
+     */
     static setCursorSupportRotate(nextCursor: UI512Cursors) {
         if (nextCursor === UI512Cursors.busy) {
             let cycle = [
@@ -186,17 +196,29 @@ export class UI512CursorAccess {
         return UI512CursorAccess.setCursor(nextCursor);
     }
 
+    /**
+     * called after resizing the window changes the current mult,
+     * also called on init()
+     */
     static notifyScreenMult(mult: number) {
         /* we don't need to care about mult anymore,
-        but we should still refresh cursor */
+        but we should still refresh the cursor */
         UI512CursorAccess.setCursor(UI512CursorAccess.getCursor(), true);
     }
 
+    /**
+     * keep track of the current mouse position!
+     * mouse events might be faster or slower than drawFrame events,
+     * so it makes sense to handle them separately.
+     */
     static onmousemove(x: number, y:number) {
         UI512CursorAccess.currentMx = x
         UI512CursorAccess.currentMy = y
     }
 
+    /**
+     * draw our virtual cursor onto the screen
+     */
     static drawFinalWithCursor(buffer:CanvasWrapper, final:CanvasWrapper, drewAnything:boolean) {
         if (!drewAnything && UI512CursorAccess.currentMx === UI512CursorAccess.lastDrawnMx && UI512CursorAccess.currentMy === UI512CursorAccess.lastDrawnMy && 
             UI512CursorAccess.lastDrawnCur === UI512CursorAccess.currentCursor && UI512CursorAccess.wasCursorLoaded) {
@@ -204,6 +226,7 @@ export class UI512CursorAccess {
             return
         }
 
+        /* draw the buffer */
         final.context.drawImage(
             buffer.canvas,
             0,
@@ -213,18 +236,20 @@ export class UI512CursorAccess {
         /* trick: by hiding the cursor if it's by the edge,
         we are less likely to leave our fake cursor on the screen */
         if (!(UI512CursorAccess.currentMx < Constants.HideCursorWhenThisCloseToLeft || UI512CursorAccess.currentMx > final.canvas.width - Constants.HideCursorWhenThisCloseToRight ||
-            UI512CursorAccess.currentMy < Constants.HideCursorWhenThisCloseToTop || UI512CursorAccess.currentMy > final.canvas.height - Constants.HideCursorWhenThisCloseToLeft )) {
+            UI512CursorAccess.currentMy < Constants.HideCursorWhenThisCloseToTop || UI512CursorAccess.currentMy > final.canvas.height - Constants.HideCursorWhenThisCloseToBottom )) {
                 let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
                 let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
                 if (!found) {
-                    /* hand-draw a little cursor */
+                    /* we haven't loaded the cursor image yet!
+                    in the meantime, hand-draw a little square cursor */
                     UI512CursorAccess.wasCursorLoaded = false
                     final.fillRectUnchecked(UI512CursorAccess.currentMx, UI512CursorAccess.currentMy, 8, 8, 'black')
                 } else {
                     UI512CursorAccess.wasCursorLoaded = true
-                    UI512CursorAccess.curInfo.adjustX = UI512CursorAccess.currentMx + UI512CursorAccess.currentHotX
-                    UI512CursorAccess.curInfo.adjustY = UI512CursorAccess.currentMy + UI512CursorAccess.currentHotY
+                    UI512CursorAccess.curInfo.adjustX = UI512CursorAccess.currentMx - UI512CursorAccess.currentHotX
+                    UI512CursorAccess.curInfo.adjustY = UI512CursorAccess.currentMy - UI512CursorAccess.currentHotY
                     if (isInvert[UI512CursorAccess.currentCursor]) {
+                        /* be 100% sure that the composite won't get stuck in the wrong mode */
                         try {
                             final.context.globalCompositeOperation = 'difference'
                             found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)

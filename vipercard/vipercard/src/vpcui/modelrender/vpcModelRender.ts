@@ -209,7 +209,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     /**
      * does this ui512element id belong to a vel or to the vpc background?
      */
-    isVelOrBg(id: string) {
+    isVelOrBaseLayer(id: string) {
         return id.startsWith('VpcModelRender$$') && !id.includes('##sb##');
     }
 
@@ -220,7 +220,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         if (id.includes('##sb##')) {
             /* scrollbar parts aren't considered part of the vel */
             return undefined;
-        } else if (id === 'VpcModelRender$$renderbg') {
+        } else if (id === 'VpcModelRender$$baselayer') {
             return undefined;
         } else if (id.startsWith('VpcModelRender$$')) {
             return id.substr('VpcModelRender$$'.length);
