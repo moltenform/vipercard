@@ -122,15 +122,22 @@ export class UI512TextEvents {
         }
     }
 
-     /**
+    /**
      * if cursor is in an editable field, change the cursor!
      */
-    onMouseMoveSetTextEditCursor(pr: UI512PresenterWithMenuInterface, d: MouseMoveEventDetails) {
+    onMouseMoveSetTextEditCursor(
+        pr: UI512PresenterWithMenuInterface,
+        d: MouseMoveEventDetails
+    ) {
         if (d.elPrev !== d.elNext) {
-            if (d.elNext && d.elNext instanceof UI512ElTextField && d.elNext.getB('canedit')) {
-                UI512CursorAccess.setCursor(UI512Cursors.lbeam)
+            if (
+                d.elNext &&
+                d.elNext instanceof UI512ElTextField &&
+                d.elNext.getB('canedit')
+            ) {
+                UI512CursorAccess.setCursor(UI512Cursors.lbeam);
             } else {
-                UI512CursorAccess.setCursor(UI512Cursors.arrow)
+                UI512CursorAccess.setCursor(UI512Cursors.arrow);
             }
         }
     }

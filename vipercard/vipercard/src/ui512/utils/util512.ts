@@ -108,15 +108,15 @@ export class Util512 {
     /**
      * ensure that the string is <= maxLen
      */
-    static truncateWithEllipsis(s:string, maxLen:number) {
+    static truncateWithEllipsis(s: string, maxLen: number) {
         if (s.length <= maxLen) {
-            return s
+            return s;
         } else {
-            const ellipsis = '...'
+            const ellipsis = '...';
             if (maxLen < ellipsis.length) {
-                return s.slice(0, maxLen)
+                return s.slice(0, maxLen);
             } else {
-                return s.slice(0, maxLen - ellipsis.length) + ellipsis
+                return s.slice(0, maxLen - ellipsis.length) + ellipsis;
             }
         }
     }

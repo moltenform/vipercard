@@ -52,7 +52,7 @@ export class IntroPagePickFile extends IntroPageBase {
         this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
 
         /* set the dimensions of the clickbounds */
-        let bounds = [0, 0, 9999, baseY - 50]
+        let bounds = [0, 0, 9999, baseY - 50];
         this.addPickerHtml(bounds);
         this.drawCommonLast(app, grp);
         grp.getEl(this.getElId('footerText')).set('visible', false);
@@ -82,8 +82,8 @@ export class IntroPagePickFile extends IntroPageBase {
         make a <label> for the input that contains an <img>, the image
         is a nearly-opaque png. so, clicking the png triggers the <input>.
         we make the hitbox as big as possible (nearly entire screen) so that
-        any rendering discrepencies won't affect too badly. 
-        
+        any rendering discrepencies won't affect too badly.
+
         used fixed, not absolute, we position relative to window not parent */
 
         let pDiv = window.document.createElement('div');
@@ -91,7 +91,7 @@ export class IntroPagePickFile extends IntroPageBase {
         pDiv.style.position = 'absolute';
         pDiv.style.left = `${bounds[0]}px`;
         pDiv.style.top = `${bounds[1]}px`;
-        pDiv.style.cursor = 'none'
+        pDiv.style.cursor = 'none';
 
         let pLabel = window.document.createElement('label');
         pLabel.setAttribute('for', 'idFilePicker');
@@ -101,7 +101,7 @@ export class IntroPagePickFile extends IntroPageBase {
         pLabel.style.width = `3`;
         pLabel.style.height = `3`;
         pLabel.innerText = ' ';
-        pLabel.style.cursor = 'none'
+        pLabel.style.cursor = 'none';
 
         let img = window.document.createElement('img');
         img.src = '/resources03a/images/choosejsonfilenearlytransparent.png';
@@ -110,7 +110,7 @@ export class IntroPagePickFile extends IntroPageBase {
         img.style.top = `${bounds[1]}px`;
         img.style.width = `${bounds[2]}px`;
         img.style.height = `${bounds[3]}px`;
-        img.style.cursor = 'none'
+        img.style.cursor = 'none';
         img.setAttribute('class', 'arrowCursor');
         pLabel.appendChild(img);
 
@@ -121,7 +121,7 @@ export class IntroPagePickFile extends IntroPageBase {
         pInput.style.position = 'fixed';
         pInput.style.left = `-9999px`;
         pInput.style.top = `-9999px`;
-        pInput.style.cursor = 'none'
+        pInput.style.cursor = 'none';
         pInput.addEventListener('change', () => this.loadFromFile());
         pDiv.appendChild(pLabel);
         pDiv.appendChild(pInput);

@@ -264,7 +264,7 @@ export class VpcExecTop {
      * VpcCurrentScriptStage to the error.
      */
     protected handleScriptException(e: Error, context: string) {
-        let stackTrace = new GuessStackTrace(this, this.outside).go()
+        let stackTrace = new GuessStackTrace(this, this.outside).go();
         this.forceStopRunning();
 
         let scriptErr = Util512BaseErr.errIfExactCls<VpcErr>('VpcErr', e);
@@ -290,7 +290,7 @@ export class VpcExecTop {
             scriptErr.dynamicCodeOrigin = VpcCurrentScriptStage.dynamicCodeOrigin;
         }
         if (!scriptErr.traceInfo) {
-            scriptErr.traceInfo = stackTrace
+            scriptErr.traceInfo = stackTrace;
         }
         if (VpcCurrentScriptStage.origClass) {
             scriptErr.origClass = VpcCurrentScriptStage.origClass;
@@ -364,35 +364,34 @@ export class VpcExecTop {
  * get a stack trace, just to show in the ui
  */
 export class GuessStackTrace {
-    constructor(protected top:VpcExecTop, protected outside:OutsideWorldReadWrite) {}
-    protected guessLatestFrame():O<VpcExecFrame>[] {
-        let lastSeen = VpcCurrentScriptStage.latestDestLineSeen
+    constructor(protected top: VpcExecTop, protected outside: OutsideWorldReadWrite) {}
+    protected guessLatestFrame(): O<VpcExecFrame>[] {
+        let lastSeen = VpcCurrentScriptStage.latestDestLineSeen;
         for (let stack of this.top.workQueue) {
-            let lastFrame = lastIfThere(stack.stack)
+            let lastFrame = lastIfThere(stack.stack);
             if (lastFrame) {
-                let lns = lastFrame?.codeSection?.lines
-                if (lns && (lns[lastFrame.getOffset()] === lastSeen ||
-                lns[lastFrame.getOffset() - 1] === lastSeen)) {
-                    return stack.stack
+                let lns = lastFrame?.codeSection?.lines;
+                if (lns && (lns[lastFrame.getOffset()] === lastSeen || lns[lastFrame.getOffset() - 1] === lastSeen)) {
+                    return stack.stack;
                 }
             }
         }
-        
-        return []
+
+        return [];
     }
 
     go() {
         /* vel, handlername, origoffset */
-        let ret:[string, string, number][] = []
-        let stack = this.guessLatestFrame()
+        let ret: [string, string, number][] = [];
+        let stack = this.guessLatestFrame();
         if (stack) {
-            stack.reverse()
+            stack.reverse();
             for (let frame of stack) {
                 if (frame) {
-                    let velId = frame.meId
-                    let origoffset = frame?.codeSection?.lines[frame.getOffset() - 1]?.firstToken?.startLine
-                    origoffset = origoffset ?? 0
-                    ret.push([velId, frame.handlerName, origoffset])
+                    let velId = frame.meId;
+                    let origoffset = frame?.codeSection?.lines[frame.getOffset() - 1]?.firstToken?.startLine;
+                    origoffset = origoffset ?? 0;
+                    ret.push([velId, frame.handlerName, origoffset]);
                 }
             }
         }
@@ -400,48 +399,47 @@ export class GuessStackTrace {
         return ret;
     }
 
-    goAsString(actualMeId:string, actualLine:number, ar:O<[string, string, number][]>) {
-        let arout:string[] = []
+    goAsString(actualMeId: string, actualLine: number, ar: O<[string, string, number][]>) {
+        let arout: string[] = [];
         if (!ar || !ar.length) {
-            return ''
+            return '';
         }
 
         /* Ignore the top of the stack trace!
         It might be inaccurate because of dynamic code.
         we **don't use** the me-id there.
         we need to look at actualMeId */
-        ar = ar.slice(1)
-        
+        ar = ar.slice(1);
+
         for (let [velId, handlername, origoffset] of ar) {
-            let vel = this.outside.Model().findByIdUntyped(velId)
+            let vel = this.outside.Model().findByIdUntyped(velId);
             if (!vel) {
-                arout.push('missing')
-            }
-            else if (vel.getType() === VpcElType.Product) {
-                arout.push('vpc')
+                arout.push('missing');
+            } else if (vel.getType() === VpcElType.Product) {
+                arout.push('vpc');
             } else {
-                arout.push(this.renderVelAndLine(actualMeId, vel, handlername, origoffset))
+                arout.push(this.renderVelAndLine(actualMeId, vel, handlername, origoffset));
             }
         }
-        
-        let ret = arout.join('\n')
-        return ret ? 'via ' + ret : ret
+
+        let ret = arout.join('\n');
+        return ret ? 'via ' + ret : ret;
     }
 
-    renderVelAndLine(actualMeId:string, vel: VpcElBase, handlername: string, origoffset: number): string {
-        let s = ''
+    renderVelAndLine(actualMeId: string, vel: VpcElBase, handlername: string, origoffset: number): string {
+        let s = '';
         if (vel.id.toString() === actualMeId.toString()) {
             /* save space */
         } else if (vel.getType() === VpcElType.Stack) {
-            s += 'stack'
+            s += 'stack';
         } else if (vel.getS('name')) {
-            s += `"${vel.getS('name')}"`
+            s += `"${vel.getS('name')}"`;
         } else {
             /* get the short name of v */
-            let res = new VelResolveName(this.outside.Model())
-            s += res.go(vel, PropAdjective.Short)
+            let res = new VelResolveName(this.outside.Model());
+            s += res.go(vel, PropAdjective.Short);
         }
 
-        return s + ' ' + handlername + ', line ' + origoffset
+        return s + ' ' + handlername + ', line ' + origoffset;
     }
 }

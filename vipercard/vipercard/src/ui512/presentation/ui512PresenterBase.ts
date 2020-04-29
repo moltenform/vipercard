@@ -180,7 +180,7 @@ export abstract class UI512PresenterBase
      * render - if an element has changed, draw all elements onto the canvas!
      */
     render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete): boolean {
-        let drewAnything = false
+        let drewAnything = false;
         if (!this.inited) {
             cmpTotal.complete = false;
             return drewAnything;
@@ -190,13 +190,15 @@ export abstract class UI512PresenterBase
             this.setPositionsForRender(cmpTotal);
         }
 
-        drewAnything = drewAnything || this.view.renderApp(
-            canvas,
-            cmpTotal,
-            this.app,
-            this.currentFocus,
-            this.needRedraw
-        );
+        drewAnything =
+            drewAnything ||
+            this.view.renderApp(
+                canvas,
+                cmpTotal,
+                this.app,
+                this.currentFocus,
+                this.needRedraw
+            );
         if (cmpTotal.complete) {
             this.needRedraw = false;
         }
@@ -204,7 +206,7 @@ export abstract class UI512PresenterBase
         if (this.tmpSuspend) {
             this.tmpSuspend.pulse(this, ms);
         }
-        
+
         return drewAnything;
     }
 

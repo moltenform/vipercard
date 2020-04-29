@@ -262,8 +262,8 @@ export class VpcPresenter extends VpcPresenterInit {
 
             /* open the code editor at the offending line */
             this.lyrPropPanel.updateUI512Els();
-            let gst = new GuessStackTrace(this.vci.getCodeExec(), this.vci.getOutside())
-            let renderedTrace = gst.goAsString(velId, lineNum, scriptErr.traceInfo );
+            let gst = new GuessStackTrace(this.vci.getCodeExec(), this.vci.getOutside());
+            let renderedTrace = gst.goAsString(velId, lineNum, scriptErr.traceInfo);
             this.lyrPropPanel.editor.setLastErrInfo(velId, msg, lineNum, scriptErr.stage, renderedTrace);
             this.lyrPropPanel.editor.refreshFromModel(this.app);
             this.lyrPropPanel.editor.scrollToErrorPosition(this);
@@ -386,7 +386,7 @@ export class VpcPresenter extends VpcPresenterInit {
     /**
      * main render method
      */
-    render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete):boolean {
+    render(canvas: CanvasWrapper, ms: number, cmpTotal: RenderComplete): boolean {
         //~ this.lyrModelRender.checkIfScreenWasJustUnlocked();
         let shouldUpdate = bool(this.lyrModelRender.needUIToolsRedraw) || bool(this.lyrModelRender.needFullRedraw);
 
@@ -410,7 +410,8 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     refreshCursor() {
         let elUnderCursor = this.app.coordsToElement(this.trackMouse[0], this.trackMouse[1]);
-        let isCursorWithinDocument = trueIfDefinedAndNotNull(elUnderCursor) && this.lyrModelRender.isVelOrBaseLayer(elUnderCursor.id);
+        let isCursorWithinDocument =
+            trueIfDefinedAndNotNull(elUnderCursor) && this.lyrModelRender.isVelOrBaseLayer(elUnderCursor.id);
         this.refreshCursorElemKnown(elUnderCursor, isCursorWithinDocument);
     }
 

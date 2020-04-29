@@ -25,7 +25,7 @@ export class FullRootUI512 implements RootHigher {
     drawText: UI512DrawText;
     iconManager: UI512IconManager;
     prevMouseDown: O<MouseDownEventDetails>;
-    scaleMouseCoords = 1
+    scaleMouseCoords = 1;
     session: O<UI512IsSessionInterface>;
 
     /* send a ping to the apps every 0.1 seconds */
@@ -34,7 +34,10 @@ export class FullRootUI512 implements RootHigher {
 
     init(gly: any) {
         let domCanvas: HTMLCanvasElement = gly.domElement;
-        this.canvasBeforeCursor = CanvasWrapper.createMemoryCanvas(domCanvas.width, domCanvas.height)
+        this.canvasBeforeCursor = CanvasWrapper.createMemoryCanvas(
+            domCanvas.width,
+            domCanvas.height
+        );
         this.drawText = new UI512DrawText();
         this.iconManager = new UI512IconManager();
         this.domCanvas = new CanvasWrapper(domCanvas);
@@ -97,10 +100,10 @@ export class FullRootUI512 implements RootHigher {
         return this.event(details);
     }
 
-    event(details: EventDetails, skipScaleMouseClickEvent?:boolean) {
+    event(details: EventDetails, skipScaleMouseClickEvent?: boolean) {
         if (details instanceof MouseUpOrDownDetails && !skipScaleMouseClickEvent) {
-            details.mouseX = adjustMouseCoord(details.mouseX, this.scaleMouseCoords)
-            details.mouseY = adjustMouseCoord(details.mouseY, this.scaleMouseCoords)
+            details.mouseX = adjustMouseCoord(details.mouseX, this.scaleMouseCoords);
+            details.mouseY = adjustMouseCoord(details.mouseY, this.scaleMouseCoords);
         }
 
         if (details instanceof MouseMoveEventDetails) {
@@ -108,11 +111,17 @@ export class FullRootUI512 implements RootHigher {
             for the entire document, even if outside the canvas.
             this is useful for cursor movement -- if we stopped getting mouse events
             when the cursor left the canvas, we wouldn't know to hide the cursor */
-            details.mouseX = adjustMouseCoord(details.mouseX, this.scaleMouseCoords)
-            details.mouseY = adjustMouseCoord(details.mouseY, this.scaleMouseCoords)
-            details.prevMouseX = adjustMouseCoord(details.prevMouseX, this.scaleMouseCoords)
-            details.prevMouseY = adjustMouseCoord(details.prevMouseY, this.scaleMouseCoords)
-            UI512CursorAccess.onmousemove(details.mouseX, details.prevMouseY)
+            details.mouseX = adjustMouseCoord(details.mouseX, this.scaleMouseCoords);
+            details.mouseY = adjustMouseCoord(details.mouseY, this.scaleMouseCoords);
+            details.prevMouseX = adjustMouseCoord(
+                details.prevMouseX,
+                this.scaleMouseCoords
+            );
+            details.prevMouseY = adjustMouseCoord(
+                details.prevMouseY,
+                this.scaleMouseCoords
+            );
+            UI512CursorAccess.onmousemove(details.mouseX, details.prevMouseY);
         }
 
         if (!details.handled()) {
@@ -184,14 +193,27 @@ export class FullRootUI512 implements RootHigher {
             this.timerSendIdleEvent.reset();
             this.event(new IdleEventDetails(milliseconds));
         }
-        if (this.canvasBeforeCursor.canvas.width !== this.domCanvas.canvas.width ||
-            this.canvasBeforeCursor.canvas.height !== this.domCanvas.canvas.height)  {
-                this.canvasBeforeCursor = CanvasWrapper.createMemoryCanvas(this.domCanvas.canvas.width, this.domCanvas.canvas.height)
+        if (
+            this.canvasBeforeCursor.canvas.width !== this.domCanvas.canvas.width ||
+            this.canvasBeforeCursor.canvas.height !== this.domCanvas.canvas.height
+        ) {
+            this.canvasBeforeCursor = CanvasWrapper.createMemoryCanvas(
+                this.domCanvas.canvas.width,
+                this.domCanvas.canvas.height
+            );
         }
 
         let complete = new RenderComplete();
-        let drewAnything = this.presenter.render(this.canvasBeforeCursor, milliseconds, complete);
-        UI512CursorAccess.drawFinalWithCursor(this.canvasBeforeCursor, this.domCanvas, drewAnything)
+        let drewAnything = this.presenter.render(
+            this.canvasBeforeCursor,
+            milliseconds,
+            complete
+        );
+        UI512CursorAccess.drawFinalWithCursor(
+            this.canvasBeforeCursor,
+            this.domCanvas,
+            drewAnything
+        );
     }
 
     setTimerRate(s: string): void {
@@ -208,6 +230,6 @@ export class FullRootUI512 implements RootHigher {
     }
 }
 
-function adjustMouseCoord(c:number, scaleMouseCoords:number) {
-    return Math.round(c * scaleMouseCoords)
+function adjustMouseCoord(c: number, scaleMouseCoords: number) {
+    return Math.round(c * scaleMouseCoords);
 }

@@ -337,7 +337,7 @@ export abstract class VpcEditPanelsBase extends UI512CompBase implements VpcEdit
             let isBgOnly = lblTxtParts[2];
             let el = grp.getEl(this.getElId(`toggle##${inId}`));
             if (isBgOnly && !isBgPart) {
-                el.set('visible', false)
+                el.set('visible', false);
             }
         }
     }

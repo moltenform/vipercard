@@ -43,7 +43,7 @@ export enum ScreenConsts {
     yAreaHeight = 342,
     yLowerMargin = 7,
     ScreenWidth = 928,
-    ScreenHeight = 416,
+    ScreenHeight = 416
 }
 
 /**

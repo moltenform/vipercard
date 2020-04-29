@@ -134,7 +134,6 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         prevMouseY: number
     ) => {
         try {
-            
             let details = new MouseMoveEventDetails(
                 gly.milliseconds,
                 mouseX,

@@ -66,7 +66,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      */
     setLastErrInfo(velId: string, errDetails: string, lineNum: number, stage: VpcErrStage, trace: string) {
         if (errDetails.startsWith('Note: ')) {
-            errDetails = errDetails.slice('Note: '.length)
+            errDetails = errDetails.slice('Note: '.length);
         }
 
         this.lastErrInfo = [velId, errDetails, lineNum, stage, trace];
@@ -116,7 +116,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
         this.status2a.setDimensions(this.el.x + 5, this.el.bottom + 22, this.el.w - 10, 17);
         this.status1a = this.genChild(app, grp, 'status1a', UI512ElLabel);
         this.status1a.setDimensions(this.el.x + 5, this.el.bottom, this.el.w - 10, 20);
-        
+
         /* draw Help buttton */
         const hlpspaceFromRight = 9;
         const hlpspaceFromBottom = 41;
@@ -184,18 +184,18 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
      */
     refreshStatusLabels(app: UI512Application) {
         if (this.lastErrInfo) {
-            this.status1a.set('labeltext', `Stopped on line ${this.lastErrInfo[2]},`)
+            this.status1a.set('labeltext', `Stopped on line ${this.lastErrInfo[2]},`);
 
             let errDetails = this.lastErrInfo[1];
             let sErr = `Script: ${errDetails}`;
-            const maxLen = 44
-            sErr = Util512.truncateWithEllipsis(sErr, maxLen)
+            const maxLen = 44;
+            sErr = Util512.truncateWithEllipsis(sErr, maxLen);
             sErr = UI512DrawText.setFont(sErr, this.monaco);
-            this.status2a.set('labeltext', sErr)
+            this.status2a.set('labeltext', sErr);
 
-            let strace = this.lastErrInfo[4].length>3 ? 'Trace' : ''
+            let strace = this.lastErrInfo[4].length > 3 ? 'Trace' : '';
             strace = UI512DrawText.setFont(strace, this.monaco);
-            this.status3a.set('labeltext', strace)
+            this.status3a.set('labeltext', strace);
         } else {
             this.status1a.set('labeltext', '');
             this.status2a.set('labeltext', '');
@@ -309,7 +309,7 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             } else if (short === 'status1a') {
                 /* user clicked the line number, scroll to that line */
                 this.scrollToErrorPosition(undefined);
-             } else if (short === 'status2a') {
+            } else if (short === 'status2a') {
                 /* user clicked the error message, show the details */
                 if (this.lastErrInfo && this.lastErrInfo[1]) {
                     let sDetails = Util512.capitalizeFirst(this.lastErrInfo[1].trim());
@@ -319,11 +319,11 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
             } else if (short === 'status3a') {
                 /* user clicked the stack trace, show details */
                 if (this.lastErrInfo && this.lastErrInfo[4]) {
-                    let sDetails = this.lastErrInfo[4]
+                    let sDetails = this.lastErrInfo[4];
                     this.cbAnswerMsg(sDetails, () => {});
                     /* remember to not run other code after showing modal dialog */
                 }
-            } 
+            }
         }
     }
 

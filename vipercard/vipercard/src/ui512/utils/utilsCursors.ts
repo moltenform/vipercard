@@ -14,7 +14,7 @@
  * el.style.cursor = "url('browse.png') 3 3, auto"
  * the problem is that if window.devicePixelRatio != 1,
  * chrome showed the cursor as BLURRY+GLITCHED.
- * 
+ *
  * The border between white and transparent gains a small
  * gray line for some reason -- it makes no sense. and even
  * if that were solved, it would look blurry.
@@ -42,8 +42,8 @@
  * Just draw the cursor on the canvas like everything else
  *      Pros: enables better emulation (original product has cursors that invert)
  *      Pros: never blurry, and we get arbitrary screenmult for free
- *      Cons: has to maintain a graphics buffer or it would be slow 
- * 
+ *      Cons: has to maintain a graphics buffer or it would be slow
+ *
  * Other ppl hitting the same issue:
  * https://stackoverflow.com/questions/35561547/svg-mouse-cursor-blurry-on-retina-display
  * https://jsfiddle.net/jhhbrook/ucuLefut/
@@ -66,7 +66,7 @@ export enum UI512Cursors {
     busy = 7,
     __AlternateForm__none = arrow /* cursor = none would be frustrating */,
     /* order no longer matters */
-    unknown= 8,
+    unknown = 8,
     paintbrush = 9,
     painterase,
     paintlasso,
@@ -76,14 +76,14 @@ export enum UI512Cursors {
     paintbucket,
     busy2,
     busy3,
-    busy4,
+    busy4
 }
 
 /**
  * x, y offset indicating the active pixel of the cursor
  */
 const hotCoords = [
-    [0, 0], /* placeholder */
+    [0, 0] /* placeholder */,
     [3, 7],
     [7, 7],
     [7, 7],
@@ -101,8 +101,8 @@ const hotCoords = [
     [14, 14],
     [7, 7],
     [7, 7],
-    [7, 7],
-    ]
+    [7, 7]
+];
 
 /**
  * certain cursors are neither black nor white,
@@ -112,11 +112,11 @@ const hotCoords = [
  * but it's barely noticeable and not worth
  * the effort to implement.
  */
-const isInvert: { [key: number]: boolean } = {}
-isInvert[UI512Cursors.lbeam] = true
-isInvert[UI512Cursors.paintrectsel] = true
-isInvert[UI512Cursors.paintlasso] = true
-isInvert[UI512Cursors.cross] = true
+const isInvert: { [key: number]: boolean } = {};
+isInvert[UI512Cursors.lbeam] = true;
+isInvert[UI512Cursors.paintrectsel] = true;
+isInvert[UI512Cursors.paintlasso] = true;
+isInvert[UI512Cursors.cross] = true;
 
 /**
  * hide cursor when it leaves our canvas, otherwise it looks stuck.
@@ -125,7 +125,7 @@ const enum Constants {
     HideCursorWhenThisCloseToLeft = 30,
     HideCursorWhenThisCloseToTop = 30,
     HideCursorWhenThisCloseToRight = 5,
-    HideCursorWhenThisCloseToBottom = 5,
+    HideCursorWhenThisCloseToBottom = 5
 }
 
 /**
@@ -138,11 +138,11 @@ export class UI512CursorAccess {
     protected static currentMy = 0;
     protected static lastDrawnMx = -1;
     protected static lastDrawnMy = -1;
-    protected static lastDrawnCur = -1
+    protected static lastDrawnCur = -1;
     protected static currentHotX = 0;
     protected static currentHotY = 0;
     protected static wasCursorLoaded = false;
-    protected static curInfo = new IconInfo('0cursors1', UI512Cursors.arrow)
+    protected static curInfo = new IconInfo('0cursors1', UI512Cursors.arrow);
 
     /**
      * get the current cursor
@@ -157,7 +157,7 @@ export class UI512CursorAccess {
     static setCursor(nextCursor: UI512Cursors, always = false) {
         if (!always && UI512CursorAccess.currentCursor === nextCursor) {
             /* for efficiency, exit early */
-            return
+            return;
         }
 
         /* hide the real cursor */
@@ -166,13 +166,13 @@ export class UI512CursorAccess {
             el.style.cursor = 'none';
         }
 
-        let hots = hotCoords[nextCursor] ?? [0,0]
-        UI512CursorAccess.currentHotX = hots[0]
-        UI512CursorAccess.currentHotY = hots[1]
-        UI512CursorAccess.curInfo.iconGroup = '0cursors1'
-        UI512CursorAccess.curInfo.iconNumber = nextCursor - 1
-        UI512CursorAccess.curInfo.centered = false
-        UI512CursorAccess.currentCursor = nextCursor
+        let hots = hotCoords[nextCursor] ?? [0, 0];
+        UI512CursorAccess.currentHotX = hots[0];
+        UI512CursorAccess.currentHotY = hots[1];
+        UI512CursorAccess.curInfo.iconGroup = '0cursors1';
+        UI512CursorAccess.curInfo.iconNumber = nextCursor - 1;
+        UI512CursorAccess.curInfo.centered = false;
+        UI512CursorAccess.currentCursor = nextCursor;
     }
 
     /**
@@ -211,60 +211,97 @@ export class UI512CursorAccess {
      * mouse events might be faster or slower than drawFrame events,
      * so it makes sense to handle them separately.
      */
-    static onmousemove(x: number, y:number) {
-        UI512CursorAccess.currentMx = x
-        UI512CursorAccess.currentMy = y
+    static onmousemove(x: number, y: number) {
+        UI512CursorAccess.currentMx = x;
+        UI512CursorAccess.currentMy = y;
     }
 
     /**
      * draw our virtual cursor onto the screen
      */
-    static drawFinalWithCursor(buffer:CanvasWrapper, final:CanvasWrapper, drewAnything:boolean) {
-        if (!drewAnything && UI512CursorAccess.currentMx === UI512CursorAccess.lastDrawnMx && UI512CursorAccess.currentMy === UI512CursorAccess.lastDrawnMy && 
-            UI512CursorAccess.lastDrawnCur === UI512CursorAccess.currentCursor && UI512CursorAccess.wasCursorLoaded) {
+    static drawFinalWithCursor(
+        buffer: CanvasWrapper,
+        final: CanvasWrapper,
+        drewAnything: boolean
+    ) {
+        if (
+            !drewAnything &&
+            UI512CursorAccess.currentMx === UI512CursorAccess.lastDrawnMx &&
+            UI512CursorAccess.currentMy === UI512CursorAccess.lastDrawnMy &&
+            UI512CursorAccess.lastDrawnCur === UI512CursorAccess.currentCursor &&
+            UI512CursorAccess.wasCursorLoaded
+        ) {
             /* we're up to date, don't need to draw anything */
-            return
+            return;
         }
 
         /* draw the buffer */
-        final.context.drawImage(
-            buffer.canvas,
-            0,
-            0,
-        );
+        final.context.drawImage(buffer.canvas, 0, 0);
 
         /* trick: by hiding the cursor if it's by the edge,
         we are less likely to leave our fake cursor on the screen */
-        if (!(UI512CursorAccess.currentMx < Constants.HideCursorWhenThisCloseToLeft || UI512CursorAccess.currentMx > final.canvas.width - Constants.HideCursorWhenThisCloseToRight ||
-            UI512CursorAccess.currentMy < Constants.HideCursorWhenThisCloseToTop || UI512CursorAccess.currentMy > final.canvas.height - Constants.HideCursorWhenThisCloseToBottom )) {
-                let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
-                let found = iconManager.findIcon(UI512CursorAccess.curInfo.iconGroup, UI512CursorAccess.curInfo.iconNumber)
-                if (!found) {
-                    /* we haven't loaded the cursor image yet!
+        if (
+            !(
+                UI512CursorAccess.currentMx < Constants.HideCursorWhenThisCloseToLeft ||
+                UI512CursorAccess.currentMx >
+                    final.canvas.width - Constants.HideCursorWhenThisCloseToRight ||
+                UI512CursorAccess.currentMy < Constants.HideCursorWhenThisCloseToTop ||
+                UI512CursorAccess.currentMy >
+                    final.canvas.height - Constants.HideCursorWhenThisCloseToBottom
+            )
+        ) {
+            let iconManager = cast(UI512IconManager, getRoot().getDrawIcon());
+            let found = iconManager.findIcon(
+                UI512CursorAccess.curInfo.iconGroup,
+                UI512CursorAccess.curInfo.iconNumber
+            );
+            if (!found) {
+                /* we haven't loaded the cursor image yet!
                     in the meantime, hand-draw a little square cursor */
-                    UI512CursorAccess.wasCursorLoaded = false
-                    final.fillRectUnchecked(UI512CursorAccess.currentMx, UI512CursorAccess.currentMy, 8, 8, 'black')
-                } else {
-                    UI512CursorAccess.wasCursorLoaded = true
-                    UI512CursorAccess.curInfo.adjustX = UI512CursorAccess.currentMx - UI512CursorAccess.currentHotX
-                    UI512CursorAccess.curInfo.adjustY = UI512CursorAccess.currentMy - UI512CursorAccess.currentHotY
-                    if (isInvert[UI512CursorAccess.currentCursor]) {
-                        /* be 100% sure that the composite won't get stuck in the wrong mode */
-                        try {
-                            final.context.globalCompositeOperation = 'difference'
-                            found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
-                        } finally {
-                            final.context.globalCompositeOperation = 'source-over';
-                        }
-                    } else {
-                        found.drawIntoBox(final, UI512CursorAccess.curInfo, 0, 0, final.canvas.width, final.canvas.height)
+                UI512CursorAccess.wasCursorLoaded = false;
+                final.fillRectUnchecked(
+                    UI512CursorAccess.currentMx,
+                    UI512CursorAccess.currentMy,
+                    8,
+                    8,
+                    'black'
+                );
+            } else {
+                UI512CursorAccess.wasCursorLoaded = true;
+                UI512CursorAccess.curInfo.adjustX =
+                    UI512CursorAccess.currentMx - UI512CursorAccess.currentHotX;
+                UI512CursorAccess.curInfo.adjustY =
+                    UI512CursorAccess.currentMy - UI512CursorAccess.currentHotY;
+                if (isInvert[UI512CursorAccess.currentCursor]) {
+                    /* be 100% sure that the composite won't get stuck in the wrong mode */
+                    try {
+                        final.context.globalCompositeOperation = 'difference';
+                        found.drawIntoBox(
+                            final,
+                            UI512CursorAccess.curInfo,
+                            0,
+                            0,
+                            final.canvas.width,
+                            final.canvas.height
+                        );
+                    } finally {
+                        final.context.globalCompositeOperation = 'source-over';
                     }
+                } else {
+                    found.drawIntoBox(
+                        final,
+                        UI512CursorAccess.curInfo,
+                        0,
+                        0,
+                        final.canvas.width,
+                        final.canvas.height
+                    );
                 }
             }
-        
-        
-        UI512CursorAccess.lastDrawnMx = UI512CursorAccess.currentMx
-        UI512CursorAccess.lastDrawnMy = UI512CursorAccess.currentMy
-        UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor
+        }
+
+        UI512CursorAccess.lastDrawnMx = UI512CursorAccess.currentMx;
+        UI512CursorAccess.lastDrawnMy = UI512CursorAccess.currentMy;
+        UI512CursorAccess.lastDrawnCur = UI512CursorAccess.currentCursor;
     }
 }

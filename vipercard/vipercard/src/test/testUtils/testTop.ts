@@ -94,9 +94,9 @@ export class SimpleUtil512Tests {
         }
 
         /* run tests from low level to high level */
-        colls.reverse(); 
-        let colNamesSeen = new MapKeyToObjectCanSet<boolean>()
-        let mapSeen = new MapKeyToObjectCanSet<boolean>()
+        colls.reverse();
+        let colNamesSeen = new MapKeyToObjectCanSet<boolean>();
+        let mapSeen = new MapKeyToObjectCanSet<boolean>();
         let countTotal = colls
             .filter(item => includeSlow || !item.slow)
             .map(item => item.tests.length)

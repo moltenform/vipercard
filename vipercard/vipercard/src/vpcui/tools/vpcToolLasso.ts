@@ -85,6 +85,6 @@ export class VpcAppUIToolLasso extends VpcAppUIToolSelectBase {
     }
 
     protected mainCursor(): UI512Cursors {
-        return UI512Cursors.paintlasso
+        return UI512Cursors.paintlasso;
     }
 }

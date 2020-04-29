@@ -112,27 +112,27 @@ export class VpcInitIcons {
         grpCursors3.gridWidth = 12;
         grpCursors3.totalIcons = 12 * 3;
 
-        let gps = [grpCursors1, grpCursors2, grpCursors3]
-        for (let i=0; i<gps.length; i++) {
-            let m = i+1
-            gps[i].customDims[0] = [m*8, m*16];
-            gps[i].customDims[1] = [m*17, m*17];
-            gps[i].customDims[2] = [m*16, m*16];
-            gps[i].customDims[3] = [m*16, m*16];
-            gps[i].customDims[4] = [m*16, m*16];
-            gps[i].customDims[5] = [m*16, m*16];
-            gps[i].customDims[6] = [m*15, m*15];
-            gps[i].customDims[7] = [m*16, m*16];
-            gps[i].customDims[8] = [m*12, m*16];
-            gps[i].customDims[9] = [m*16, m*16];
-            gps[i].customDims[10] = [m*16, m*16];
-            gps[i].customDims[11] = [m*16, m*16];
-            gps[i].customDims[12] = [m*17, m*17];
-            gps[i].customDims[13] = [m*16, m*16];
-            gps[i].customDims[14] = [m*16, m*17];
-            gps[i].customDims[15] = [m*15, m*15];
-            gps[i].customDims[16] = [m*15, m*15];
-            gps[i].customDims[17] = [m*15, m*15];
+        let gps = [grpCursors1, grpCursors2, grpCursors3];
+        for (let i = 0; i < gps.length; i++) {
+            let m = i + 1;
+            gps[i].customDims[0] = [m * 8, m * 16];
+            gps[i].customDims[1] = [m * 17, m * 17];
+            gps[i].customDims[2] = [m * 16, m * 16];
+            gps[i].customDims[3] = [m * 16, m * 16];
+            gps[i].customDims[4] = [m * 16, m * 16];
+            gps[i].customDims[5] = [m * 16, m * 16];
+            gps[i].customDims[6] = [m * 15, m * 15];
+            gps[i].customDims[7] = [m * 16, m * 16];
+            gps[i].customDims[8] = [m * 12, m * 16];
+            gps[i].customDims[9] = [m * 16, m * 16];
+            gps[i].customDims[10] = [m * 16, m * 16];
+            gps[i].customDims[11] = [m * 16, m * 16];
+            gps[i].customDims[12] = [m * 17, m * 17];
+            gps[i].customDims[13] = [m * 16, m * 16];
+            gps[i].customDims[14] = [m * 16, m * 17];
+            gps[i].customDims[15] = [m * 15, m * 15];
+            gps[i].customDims[16] = [m * 15, m * 15];
+            gps[i].customDims[17] = [m * 15, m * 15];
         }
     }
 

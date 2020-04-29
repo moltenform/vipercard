@@ -75,6 +75,6 @@ export class VpcAppUIToolSelect extends VpcAppUIToolSelectBase {
     }
 
     protected mainCursor(): UI512Cursors {
-        return UI512Cursors.paintrectsel
+        return UI512Cursors.paintrectsel;
     }
 }
