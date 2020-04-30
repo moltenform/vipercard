@@ -3,7 +3,8 @@
 /* auto */ import { RenderComplete, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
-/* auto */ import { TextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { longstr } from './../../ui512/utils/util512';
+/* auto */ import { TextFontStyling, specialCharOnePixelSpace, textFontStylingToString, typefacenameToTypefaceIdFull } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { DrawTextArgs } from './../../ui512/draw/ui512DrawTextArgs';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
@@ -30,7 +31,7 @@ export let testCollectionUI512DrawText = t;
 t.atest('Text Core Fonts', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw1())
 );
-t.atest('Text All Fonts', () =>
+t.atest('Text All 0.2 Fonts', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw2())
 );
 t.atest('Text Wrap, align, underlign', () =>
@@ -39,6 +40,9 @@ t.atest('Text Wrap, align, underlign', () =>
 t.atest('Text corner cases', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw4())
 );
+t.atest('Text All 0.3 fonts', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw5())
+);
 
 /**
  * A demo project showing text drawn in many fonts and alignments
@@ -46,6 +50,9 @@ t.atest('Text corner cases', () =>
 export class TestDrawUI512Text {
     uiContext = false;
     readonly margin = 1;
+    readonly demoText1 = 'File Edit Tools #123 Draw! :) ^^ {omnivore}';
+    readonly demoText2 = longstr(`a quick brown fox jumps over the lazy dog
+        QUICKBROWNFOXJUMPSVRTHELAZYDG,.:)0123456789!@#$%^&*(?/|\\_-=`);
 
     addFonts(listFonts: string[], sFaces: string, sSizes: string, sStyles: string) {
         let faces = sFaces.split(',');
@@ -60,12 +67,11 @@ export class TestDrawUI512Text {
         }
     }
 
-    getFormattedText(list: string[], addNewlines: boolean) {
+    getFormattedText(list: string[], addNewlines: boolean, demo: string) {
+        demo += addNewlines ? '\n' : '';
         let demoTextFormatted = '';
         for (let i = 0; i < list.length; i++) {
-            let demoText = 'File Edit Tools #123 Draw! :) ^^ {omnivore}';
-            demoText += addNewlines ? '\n' : '';
-            demoTextFormatted += UI512DrawText.setFont(demoText, list[i]);
+            demoTextFormatted += UI512DrawText.setFont(demo, list[i]);
         }
 
         return demoTextFormatted;
@@ -86,7 +92,7 @@ export class TestDrawUI512Text {
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = bool(
                 drawText.drawStringIntoBox(
-                    this.getFormattedText(list, true),
+                    this.getFormattedText(list, true, this.demoText1),
                     canvas,
                     new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
                 )
@@ -128,7 +134,7 @@ export class TestDrawUI512Text {
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = bool(
                 drawText.drawStringIntoBox(
-                    this.getFormattedText(list, true),
+                    this.getFormattedText(list, true, this.demoText1),
                     canvas,
                     new DrawTextArgs(this.margin, this.margin, imWidth - 5, imHeight - 5)
                 )
@@ -160,7 +166,7 @@ export class TestDrawUI512Text {
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = bool(
                 drawText.drawStringIntoBox(
-                    this.getFormattedText(list, false),
+                    this.getFormattedText(list, false, this.demoText1),
                     canvas,
                     new DrawTextArgs(
                         this.margin,
@@ -330,4 +336,88 @@ export class TestDrawUI512Text {
             this.uiContext
         );
     }
+
+    getFormattedTextAndShiftOutlines(list: string[], addNewlines: boolean, demo: string) {
+        demo += addNewlines ? '\n' : '';
+        let demoTextFormatted = '';
+        for (let i = 0; i < list.length; i++) {
+            if (!list[i].includes('+o')) {
+                //~ demoTextFormatted += specialCharOnePixelSpace
+                //~ demoTextFormatted += specialCharOnePixelSpace
+                //~ demoTextFormatted += specialCharOnePixelSpace
+                //~ demoTextFormatted += specialCharOnePixelSpace
+                //~ demoTextFormatted += specialCharOnePixelSpace
+            }
+
+            demoTextFormatted += UI512DrawText.setFont(demo, list[i]);
+        }
+
+        return demoTextFormatted;
+    }
+
+    getDraw5List() {
+        let allfonts = 'chicago,courier,geneva,new york,times'.split(',');
+        let allsizes = '24,18,14,12,10,9'.split(',');
+        return [allfonts, allsizes];
+    }
+
+    renderOneDraw5(font: string, size: string) {
+        let allstyles = longstr(
+            `biuosdce
+        |+biuosdce
+        |b+iuosdce
+        |biu+osdce
+        |+b+iuosdce
+        |b+iu+osdce
+        |+biu+osdce
+        |+b+iu+osdce`,
+            ''
+        ).split('|');
+        let list: string[] = [];
+        this.addFonts(list, font, size, allstyles.join(','));
+        let txt = this.getFormattedTextAndShiftOutlines(list, true, this.demoText2);
+
+        let maxWidths = {
+            '24': 1280,
+            '18': 1280,
+            '14': 1076,
+            '12': 960,
+            '10': 870,
+            '9': 750
+        };
+        let maxHeights = {
+            '24': 300,
+            '18': 256,
+            '14': 180,
+            '12': 150,
+            '10': 150,
+            '9': 140
+        };
+        let w = maxWidths[size];
+        let h = maxHeights[size];
+        assertTrue(w, 'could not find in maxWidths');
+        assertTrue(h, 'could not find in maxHeights');
+        let drawText = getRoot().getDrawText() as UI512DrawText;
+        let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
+            complete.complete = bool(
+                drawText.drawStringIntoBox(
+                    txt,
+                    canvas,
+                    new DrawTextArgs(3, 1, w - 3, h - 1, false, false, false)
+                )
+            );
+        };
+
+        let fontid = typefacenameToTypefaceIdFull(`${font}_12_biuosdce`).split('_')[0];
+        return new CanvasTestParams(
+            `drawtext5_${fontid}_${size}`,
+            `/resources03a/test/verifyfonts/${fontid}_${size}.png`,
+            draw,
+            w,
+            h,
+            this.uiContext
+        );
+    }
+
+    draw5() {}
 }

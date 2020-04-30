@@ -76,7 +76,7 @@ export class UI512DemoText extends UI512Presenter {
         /* choose alteration */
         let attributes = longstr(
             `narrow,valign,halign,wrap,mixsizes,
-        test,testdld1,testdld2,testdld3,testdld4`,
+            testdld1,testdld2,testdld3,testdld4,testdld5`,
             ''
         ).split(/,/);
         layoutv = new GridLayout(130, 90, 65, 15, [1], attributes, 5, 5);
@@ -94,7 +94,13 @@ export class UI512DemoText extends UI512Presenter {
         let caption = new UI512ElButton('caption');
         grp.addElement(this.app, caption);
         caption.set('style', UI512BtnStyle.Opaque);
-        caption.setDimensions(70, 300, 180, 15);
+        caption.setDimensions(54, 300, 220, 18);
+
+        let sayrightclick = new UI512ElButton('sayrightclick');
+        grp.addElement(this.app, sayrightclick);
+        sayrightclick.set('style', UI512BtnStyle.Opaque);
+        sayrightclick.set('labeltext', 'right-click testdldx to run test');
+        sayrightclick.setDimensions(54, 325, 220, 18);
 
         let mainfield = new UI512ElButton('mainfield');
         grp.addElement(this.app, mainfield);
@@ -142,10 +148,8 @@ export class UI512DemoText extends UI512Presenter {
     }
 
     protected static respondMouseUp(pr: UI512DemoText, d: MouseUpEventDetails) {
-        if (d.button !== 0) {
-            return;
-        }
-
+        /* if you rightclick we'll run the test, not just dld the image*/
+        let dldOnly = (d.button === 0)
         if (!d.elClick) {
             return;
         }
@@ -177,7 +181,7 @@ export class UI512DemoText extends UI512Presenter {
                 mainfield.setDimensions(mainfield.x, mainfield.y, newwidth, mainfield.h);
             } else if (attr.startsWith('test')) {
                 Util512Higher.syncToAsyncTransition(
-                    pr.runTest(attr),
+                    pr.runTest(attr, dldOnly),
                     'demotext',
                     RespondToErr.Alert
                 );
@@ -187,7 +191,7 @@ export class UI512DemoText extends UI512Presenter {
         pr.drawTextDemo();
     }
 
-    async runTest(params: string) {
+    async runTest(params: string, dldOnly: boolean) {
         let demoTextTests = [
             () => this.testrunner.draw1(),
             () => this.testrunner.draw2(),
@@ -195,16 +199,37 @@ export class UI512DemoText extends UI512Presenter {
             () => this.testrunner.draw4()
         ];
 
-        if (params.startsWith('testdld')) {
+        if (params === 'testdld5') {
+            return UI512DemoText.dldTest5(dldOnly)
+        } else if (params.startsWith('testdld')) {
             let testNumber = castVerifyIsNum(
                 Util512.parseInt(params.substr('testdld'.length))
             );
             return TestUtilsCanvas.RenderAndCompareImages(
-                true,
+                dldOnly,
                 demoTextTests[testNumber]
             );
-        } else {
-            return TestUtilsCanvas.RenderAndCompareImages(false, demoTextTests);
+        }
+    }
+
+    protected static async dldTest5(dldOnly: boolean) {
+        let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size).", "chicago_12")
+        if (testids)
+        {
+            for (let pt of testids.split(',')) {
+                pt = pt.trim()
+                let pts = pt.split('_')
+                if (pts.length !== 2 ||!pts[0] || !pts[1]) {
+                    alert("expected in the form chicago_12.")
+                } else {
+                    let [font, size] = pts
+                    let params = new TestDrawUI512Text().renderOneDraw5(font, size)
+                    await TestUtilsCanvas.RenderAndCompareImages(
+                        dldOnly,
+                        ()=>params
+                    );
+                }
+            }
         }
     }
 }

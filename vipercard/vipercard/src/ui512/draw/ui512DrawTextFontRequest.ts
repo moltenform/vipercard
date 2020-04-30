@@ -2,6 +2,7 @@
 /* auto */ import { RespondToErr, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../utils/util512Assert';
+/* auto */ import { longstr } from './../utils/util512';
 /* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, UI512FontGrid, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -18,25 +19,25 @@ export class UI512FontRequest {
     /* define a small 1-pt font which can be useful for UI spacing */
     static readonly smallestFont = 'symbol_1_biuosdce';
     static readonly smallestFontAsId = '07_1_biuosdce';
-    
-    static manualFonts: { [key: string]: boolean} = {
-        '00_12_biuosdce':true,
-        '00_12_biuos+dce':true,
-        '05_12_biuosdce':true,
-        '00_9_biuosdce':true,
-        '02_9_biuosdce':true,
-        '02_9_biuos+dce':true,
-        '06_9_biuosdce':true,
-        '06_12_biuosdce':true,
-        '07_12_biuosdce':true,
-        '07_1_biuosdce':true,
-    };
-    
-    static hasRealDisabledImage: { [key: string]: boolean} = {
+
+    static manualFonts: { [key: string]: boolean } = {
+        '00_12_biuosdce': true,
         '00_12_biuos+dce': true,
+        '05_12_biuosdce': true,
+        '00_9_biuosdce': true,
+        '02_9_biuosdce': true,
         '02_9_biuos+dce': true,
+        '06_9_biuosdce': true,
+        '06_12_biuosdce': true,
+        '07_12_biuosdce': true,
+        '07_1_biuosdce': true
     };
-    
+
+    static hasRealDisabledImage: { [key: string]: boolean } = {
+        '00_12_biuos+dce': true,
+        '02_9_biuos+dce': true
+    };
+
     /* 3 possible states
     1) undefined means that this font isn't supported at all
     2) NotYetLoaded means that the font is supported but hasn't been loaded yet
@@ -48,9 +49,17 @@ export class UI512FontRequest {
         /* pre-specify which fonts can be loaded */
         let fnts = '00,01,02,03,04,05,06,07'.split(/,/g);
         let sizes = '9,10,12,14,18,24'.split(/,/g);
-        let styls = 'biuosdce,+biuosdce,b+iuosdce,biu+osdce,+b+iuosdce,b+iu+osdce,+biu+osdce,+b+iu+osdce'.split(
-            /,/g
-        );
+        let styls = longstr(
+            `biuosdce
+        |+biuosdce
+        |b+iuosdce
+        |biu+osdce
+        |+b+iuosdce
+        |b+iu+osdce
+        |+biu+osdce
+        |+b+iu+osdce`,
+            ''
+        ).split('|');
         for (let fnt of fnts) {
             for (let style of styls) {
                 for (let sz of sizes) {
@@ -60,20 +69,28 @@ export class UI512FontRequest {
                 }
             }
         }
-        
+
         /* we captured the fonts in 5 different stages:
             1) got the ones in manualFonts, checked pixel-perfect
             2) cohort 1, used in v0.2release
-            listFonts=r'''00,01,02,03,04'''.split(',')
-                listSizes = r'''10,12,14,18,24'''
-                listStyles = r'''biuosdce
+            listFonts=r'''00,01,02,03,04'''
+            listSizes = r'''10,12,14,18,24'''
+            listStyles = r'''biuosdce
             +biuosdce
             b+iuosdce
             biu+osdce
             +b+iuosdce
-            b+iu+osdce'''.replace('\r\n','\n').split('\n')
+            b+iu+osdce'''
+            we confirmed that 'chicago,courier,geneva',
+            '10,12,14,18,24',
+            'biuosdce,+biuosdce'
+            were pixel perfect
             3) cohort 2, add missing styles
-        
+            listFonts=r'''00,01,02,03,04'''
+            listSizes = r'''10,12,14,18,24'''
+            listStyles = r'''+biu+osdce
+            +b+iu+osdce'''
+
             4) cohort 3, add 9pt size for the original 5 fonts
             5) cohort 4, add last 3 fonts in all styles+sizes
 
@@ -215,7 +232,7 @@ export class UI512FontRequest {
         if (!UI512FontRequest.hasRealDisabledImage[s]) {
             s = s.replace(/\+d/g, 'd');
         }
-        
+
         return s;
     }
 }
