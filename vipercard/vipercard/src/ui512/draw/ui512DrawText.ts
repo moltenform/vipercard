@@ -29,7 +29,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
      */
     isFontSupported(font: string) {
         font = typefacenameToTypefaceIdFull(font);
-        let gridkey = this.cache.stripManuallyAddedStyling(font);
+        let gridkey = this.cache.stripManuallyAddedStylingToGetGridKey(font);
         return this.cache.cachedGrids[gridkey] !== undefined;
     }
 

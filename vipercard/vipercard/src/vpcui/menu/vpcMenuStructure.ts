@@ -139,7 +139,10 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                     'mnuItemSetFontFaceGeneva|lngGeneva|',
                     'mnuItemSetFontFaceCourier|lngCourier|',
                     'mnuItemSetFontFaceTimes|lngTimes|',
-                    'mnuItemSetFontFaceNew York|lngNew York|'
+                    'mnuItemSetFontFaceNew York|lngNew York|',
+                    'mnuItemSetFontFaceHelvetica|lngHelvetica|',
+                    'mnuItemSetFontFaceMonaco|lngMonaco|',
+                    'mnuItemSetFontFaceSymbol|lngSymbol|'
                 ]
             ],
             [

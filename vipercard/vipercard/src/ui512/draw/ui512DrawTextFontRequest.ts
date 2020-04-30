@@ -11,14 +11,32 @@
  * cache the font data that has been loaded
  */
 export class UI512FontRequest {
-    /* default font, we currently fall back to this if a nonexistent font is requested */
+    /* default font, we fall back to this if a nonexistent font is requested */
     static readonly defaultFont = 'chicago_12_biuosdce';
     static readonly defaultFontAsId = '00_12_biuosdce';
 
     /* define a small 1-pt font which can be useful for UI spacing */
     static readonly smallestFont = 'symbol_1_biuosdce';
     static readonly smallestFontAsId = '07_1_biuosdce';
-
+    
+    static manualFonts: { [key: string]: boolean} = {
+        '00_12_biuosdce':true,
+        '00_12_biuos+dce':true,
+        '05_12_biuosdce':true,
+        '00_9_biuosdce':true,
+        '02_9_biuosdce':true,
+        '02_9_biuos+dce':true,
+        '06_9_biuosdce':true,
+        '06_12_biuosdce':true,
+        '07_12_biuosdce':true,
+        '07_1_biuosdce':true,
+    };
+    
+    static hasRealDisabledImage: { [key: string]: boolean} = {
+        '00_12_biuos+dce': true,
+        '02_9_biuos+dce': true,
+    };
+    
     /* 3 possible states
     1) undefined means that this font isn't supported at all
     2) NotYetLoaded means that the font is supported but hasn't been loaded yet
@@ -28,9 +46,9 @@ export class UI512FontRequest {
     adjustspacing: { [key: string]: number } = {};
     constructor() {
         /* pre-specify which fonts can be loaded */
-        let fnts = '00,01,02,03,04'.split(/,/g);
-        let sizes = '10,12,14,18,24'.split(/,/g);
-        let styls = 'biuosdce,+biuosdce,b+iuosdce,biu+osdce,+b+iuosdce,b+iu+osdce'.split(
+        let fnts = '00,01,02,03,04,05,06,07'.split(/,/g);
+        let sizes = '9,10,12,14,18,24'.split(/,/g);
+        let styls = 'biuosdce,+biuosdce,b+iuosdce,biu+osdce,+b+iuosdce,b+iu+osdce,+biu+osdce,+b+iu+osdce'.split(
             /,/g
         );
         for (let fnt of fnts) {
@@ -42,18 +60,31 @@ export class UI512FontRequest {
                 }
             }
         }
+        
+        /* we captured the fonts in 5 different stages:
+            1) got the ones in manualFonts, checked pixel-perfect
+            2) cohort 1, used in v0.2release
+            listFonts=r'''00,01,02,03,04'''.split(',')
+                listSizes = r'''10,12,14,18,24'''
+                listStyles = r'''biuosdce
+            +biuosdce
+            b+iuosdce
+            biu+osdce
+            +b+iuosdce
+            b+iu+osdce'''.replace('\r\n','\n').split('\n')
+            3) cohort 2, add missing styles
+        
+            4) cohort 3, add 9pt size for the original 5 fonts
+            5) cohort 4, add last 3 fonts in all styles+sizes
 
-        /* some typefaces we only support in a few sizes and styles */
-        this.cachedGrids['00_12_biuosdce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['00_12_biuos+dce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['05_12_biuosdce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['00_9_biuosdce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['02_9_biuosdce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['02_9_biuos+dce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['06_9_biuosdce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['06_12_biuosdce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['07_12_biuosdce'] = CacheState.NotYetLoaded;
-        this.cachedGrids['07_1_biuosdce'] = CacheState.NotYetLoaded;
+        */
+
+        /* these we've defined manually, e.g. to make a common font a pixel perfect match */
+        for (let key in UI512FontRequest.manualFonts) {
+            if (UI512FontRequest.manualFonts.hasOwnProperty(key)) {
+                this.cachedGrids[key] = CacheState.NotYetLoaded;
+            }
+        }
 
         /* tweak spacing to match original os */
         this.adjustspacing['02_12_b+iuosdce'] = 1;
@@ -69,7 +100,7 @@ export class UI512FontRequest {
      */
     findGrid(font: string): O<UI512FontGrid> {
         font = typefacenameToTypefaceIdFull(font);
-        let gridkey = this.stripManuallyAddedStyling(font);
+        let gridkey = this.stripManuallyAddedStylingToGetGridKey(font);
         let found = this.cachedGrids[gridkey];
         if (found === undefined) {
             /* case 1) you asked for an unsupported font, fall back to default font */
@@ -177,10 +208,14 @@ export class UI512FontRequest {
      * the decorations condense, extend, underline are added at runtime,
      * and aren't persisted in a json file
      */
-    stripManuallyAddedStyling(s: string) {
+    stripManuallyAddedStylingToGetGridKey(s: string) {
         s = s.replace(/\+c/g, 'c');
         s = s.replace(/\+e/g, 'e');
         s = s.replace(/\+u/g, 'u');
+        if (!UI512FontRequest.hasRealDisabledImage[s]) {
+            s = s.replace(/\+d/g, 'd');
+        }
+        
         return s;
     }
 }
