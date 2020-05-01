@@ -3,7 +3,7 @@
 /* auto */ import { UI512IsDrawTextInterface } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512Assert';
-/* auto */ import { Util512, arLast } from './../utils/util512';
+/* auto */ import { arLast } from './../utils/util512';
 /* auto */ import { FormattedText } from './ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { CharRectType, DrawCharResult, TextRendererFont, largeArea, specialCharFontChange, specialCharNumNewline, specialCharNumZeroPixelChar, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';

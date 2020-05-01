@@ -76,7 +76,7 @@ export class UI512DemoText extends UI512Presenter {
         /* choose alteration */
         let attributes = longstr(
             `narrow,valign,halign,wrap,mixsizes,
-            testdld1,testdld2,testdld3,testdld4,testdld5`,
+            testdld1,testdld2,testdld3,testdld4,testdld5,testdld6`,
             ''
         ).split(/,/);
         layoutv = new GridLayout(130, 90, 65, 15, [1], attributes, 5, 5);
@@ -94,13 +94,13 @@ export class UI512DemoText extends UI512Presenter {
         let caption = new UI512ElButton('caption');
         grp.addElement(this.app, caption);
         caption.set('style', UI512BtnStyle.Opaque);
-        caption.setDimensions(54, 300, 220, 18);
+        caption.setDimensions(54, 350, 220, 18);
 
         let sayrightclick = new UI512ElButton('sayrightclick');
         grp.addElement(this.app, sayrightclick);
         sayrightclick.set('style', UI512BtnStyle.Opaque);
         sayrightclick.set('labeltext', 'right-click testdldx to run test');
-        sayrightclick.setDimensions(54, 325, 220, 18);
+        sayrightclick.setDimensions(54, 370, 220, 18);
 
         let mainfield = new UI512ElButton('mainfield');
         grp.addElement(this.app, mainfield);
@@ -201,6 +201,8 @@ export class UI512DemoText extends UI512Presenter {
 
         if (params === 'testdld5') {
             return UI512DemoText.dldTest5(dldOnly)
+        } else if (params === 'testdld6') {
+            return UI512DemoText.dldTest6(dldOnly)
         } else if (params.startsWith('testdld')) {
             let testNumber = castVerifyIsNum(
                 Util512.parseInt(params.substr('testdld'.length))
@@ -213,7 +215,7 @@ export class UI512DemoText extends UI512Presenter {
     }
 
     protected static async dldTest5(dldOnly: boolean) {
-        let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size). Or 'any'.", 
+        let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size). Or 'all'.", 
             "symbol_9")
         if (testids === 'all') {
             /* runs them all in parallel */
@@ -237,6 +239,33 @@ export class UI512DemoText extends UI512Presenter {
                         ()=>params
                     );
                 }
+            }
+        }
+    }
+
+    protected static async dldTest6(dldOnly: boolean) {
+        let testid = prompt("Please type a test id or 'all'.", 
+            "underline__chicago_12+14")
+        if (testid === 'all') {
+            /* runs them all in parallel */
+            let fns = new TestDrawUI512Text().drawTest6DrawAll()
+            await TestUtilsCanvas.RenderAndCompareImages(
+                false /* dld */,
+                fns
+            );
+        } else if (testid) {
+            let pts = testid.split('_')
+            if (pts.length !== 4) {
+                alert('unknown drawTest6 test')
+            } else {
+                let grayed = pts[1]
+                let font = pts[2]
+                let sizes = pts[3]
+                let params = new TestDrawUI512Text().drawTest6DrawOne(font, sizes, grayed)
+                return TestUtilsCanvas.RenderAndCompareImages(
+                    dldOnly,
+                    ()=>params
+                );
             }
         }
     }

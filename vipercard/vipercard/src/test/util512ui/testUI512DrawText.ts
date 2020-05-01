@@ -43,6 +43,9 @@ t.atest('Text corner cases', () =>
 t.atest('Text All 0.3 fonts', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, new TestDrawUI512Text().drawTest5DrawAll())
 );
+t.atest('Text underline, condense, grayed', () =>
+    TestUtilsCanvas.RenderAndCompareImages(false, new TestDrawUI512Text().drawTest6DrawAll())
+);
 
 /**
  * A demo project showing text drawn in many fonts and alignments
@@ -337,16 +340,6 @@ export class TestDrawUI512Text {
         );
     }
 
-    getFormattedTextAndShiftOutlines(list: string[], addNewlines: boolean, demo: string) {
-        demo += addNewlines ? '\n' : '';
-        let demoTextFormatted = '';
-        for (let i = 0; i < list.length; i++) {
-            demoTextFormatted += UI512DrawText.setFont(demo, list[i]);
-        }
-
-        return demoTextFormatted;
-    }
-
     drawTest5DrawAll() {
         let allfonts = 'chicago,courier,geneva,new york,times,helvetica,monaco,symbol'.split(',');
         let allsizes = '24,18,14,12,10,9'.split(',');
@@ -374,7 +367,7 @@ export class TestDrawUI512Text {
         ).split('|');
         let list: string[] = [];
         this.addFonts(list, font, size, allstyles.join(','));
-        let txt = this.getFormattedTextAndShiftOutlines(list, true, this.demoText2);
+        let txt = this.getFormattedText(list, true, this.demoText2);
 
         let maxWidths = {
             '24': 1280,
@@ -416,5 +409,61 @@ export class TestDrawUI512Text {
             h,
             this.uiContext
         );
+    }
+
+    drawTest6DrawOne(font:string, sizes:string, grayed: string) {
+        const w = 1076
+        const h = 180
+        let d = grayed ? '+d' : 'd'
+        let listFonts:string[] = []
+        let arSizes = sizes.split('+')
+        for (let i=0; i<arSizes.length; i++) {
+            let style = `biuos${d}ce`
+            listFonts.push(`${font}_${arSizes[i]}_${style}`);
+            style = `bi+uos${d}ce`
+            listFonts.push(`${font}_${arSizes[i]}_${style}`);
+            style = `biuos${d}+ce`
+            listFonts.push(`${font}_${arSizes[i]}_${style}`);
+            style = `biuos${d}c+e`
+            listFonts.push(`${font}_${arSizes[i]}_${style}`);
+        }
+        let txt = this.getFormattedText(listFonts, true, this.demoText2)
+        let drawText = getRoot().getDrawText() as UI512DrawText;
+        let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
+            complete.complete = bool(
+                drawText.drawStringIntoBox(
+                    txt,
+                    canvas,
+                    new DrawTextArgs(3, 1, w, h, false, false, false)
+                )
+            );
+        };
+
+        let fontid = typefacenameToTypefaceIdFull(`${font}_12_biuosdce`).split('_')[0];
+        let filename = `${grayed}_${fontid}_${sizes}`
+        return new CanvasTestParams(
+            `drawtext6_${filename}`,
+            `/resources03a/test/verifyfonts/underline_${filename}.png`,
+            draw,
+            w,
+            h,
+            this.uiContext
+        );
+    }
+
+    drawTest6DrawAll() {
+        let allfonts = 'chicago,geneva,monaco'.split(',');
+        let allsizes = ['12+14']
+        let allgrayed = ['', 'grayed']
+        let ret: GetDrawParams[] = []
+        for (let font of allfonts) {
+            for (let size of allsizes) {
+                for (let grayed of allgrayed) {
+                    ret.push(() => this.drawTest6DrawOne(font, size, grayed))
+                }
+            }
+        }
+
+        return ret
     }
 }

@@ -244,6 +244,7 @@ function typefacenameToTypefaceId(s: string): string {
         case 'symbol':
             return '07';
         default:
+            assertTrue(!s.startsWith('0'), "expecting a string but looks like id given?")
             return '00';
     }
 }
