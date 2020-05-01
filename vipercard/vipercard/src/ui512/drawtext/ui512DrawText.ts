@@ -585,31 +585,28 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
     }
 
     /**
-     * disabled buttons should have the text grayed out,
-     * this function will set the font to disabled if there aren't other
-     * font customizations.
+     * will set the font to grayed.
      */
-    static makeInitialTextDisabled(s: string) {
-        let search1 =
-            specialCharFontChange + 'chicago_12_biuosdce' + specialCharFontChange;
-        let repl1 =
+    static makeInitialTextGrayed(s: string) {
+        let defaultGrayed =
             specialCharFontChange + 'chicago_12_biuos+dce' + specialCharFontChange;
-        let search2 = specialCharFontChange + 'geneva_9_biuosdce' + specialCharFontChange;
-        let repl2 = specialCharFontChange + 'geneva_9_biuos+dce' + specialCharFontChange;
-
         if (s.length === 0) {
             /* empty string, no point in changing style */
             return s;
         } else if (!s.startsWith(specialCharFontChange)) {
-            /* text uses the default font, so add disabled style */
-            return repl1 + s;
+            /* text uses the default font, so add grayed style */
+            return defaultGrayed + s;
         } else {
-            /* there are only 2 fonts where we support a disabled style,
-            if it's one of these we will make it disabled,
-            otherwise, leave formatting as is. */
-            return s
-                .replace(new RegExp(Util512.escapeForRegex(search1), 'ig'), repl1)
-                .replace(new RegExp(Util512.escapeForRegex(search2), 'ig'), repl2);
+            /* make it grayed everywhere */
+            let obj = new FormattedText()
+            obj.fromSerialized(s)
+            for (let i=0; i<obj.len(); i++) {
+                let spec = obj.fontAt(i)
+                spec = spec.replace(/sd/, 's+d')
+                obj.setFontAt(i, spec)
+            }
+
+            return obj.toSerialized()
         }
     }
 }

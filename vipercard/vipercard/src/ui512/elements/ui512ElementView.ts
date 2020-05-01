@@ -129,7 +129,7 @@ export class UI512ViewDraw {
     ) {
         let drawText = cast(UI512DrawText, getRoot().getDrawText());
         if (!styleEnabled) {
-            text = UI512DrawText.makeInitialTextDisabled(text);
+            text = UI512DrawText.makeInitialTextGrayed(text);
         }
 
         let drawn = drawText.drawStringIntoBox(text, b.canvas, opts);

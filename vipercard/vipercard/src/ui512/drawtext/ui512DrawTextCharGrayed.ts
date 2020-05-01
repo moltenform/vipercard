@@ -5,8 +5,6 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
-
 class UI512DrawTextCharGrayed {
     readonly maxCharWidth = 40;
     readonly maxCharHeight = 40;
@@ -25,6 +23,7 @@ class UI512DrawTextCharGrayed {
         boxW: number,
         boxH: number
     ) {
+        /* create the cached mem canvas if we don't have one */
         if (!this.tempCanvas) {
             this.tempCanvas = CanvasWrapper.createMemoryCanvas(this.maxCharWidth, this.maxCharHeight)
         }
@@ -39,8 +38,13 @@ class UI512DrawTextCharGrayed {
         let parity = (destX + destY) % 2;
         this.makeCheckered(this.tempCanvas, parity)
 
+        /* draw the results */
+        dest.drawFromImage(this.tempCanvas.canvas, 0, 0,this.tempCanvas.canvas.width, this.tempCanvas.canvas.height, destX, destY, boxX, boxY, boxW, boxH )
     }
 
+    /**
+     * make every other pixel transparent
+     */
     makeCheckered(c:CanvasWrapper, parity:number) {
         for (let y=0; y<c.canvas.height; y++) {
             for (let x=0; x<c.canvas.width; x++)  {
@@ -50,7 +54,6 @@ class UI512DrawTextCharGrayed {
             }
         }
     }
-
 }
 
 export const uI512DrawTextCharGrayed = new UI512DrawTextCharGrayed()

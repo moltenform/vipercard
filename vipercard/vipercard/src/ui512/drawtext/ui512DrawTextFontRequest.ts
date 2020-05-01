@@ -33,7 +33,7 @@ export class UI512FontRequest {
         '07_1_biuosdce': true
     };
 
-    static hasRealDisabledImage: { [key: string]: boolean } = {
+    static hasRealGrayedImage: { [key: string]: boolean } = {
         '00_12_biuos+dce': true,
         '02_9_biuos+dce': true
     };
@@ -178,8 +178,12 @@ export class UI512FontRequest {
             fontObj.condense = (spec.style & TextFontStyling.Condense) !== 0;
             fontObj.extend = (spec.style & TextFontStyling.Extend) !== 0;
             if ((spec.style & TextFontStyling.Grayed) !== 0) {
-                let gridkey = this.stripManuallyAddedStylingToGetGridKey(font);
-                if (!UI512FontRequest.hasRealDisabledImage[gridkey]) {
+                /* for "grayed", chicago12 and geneva9 have a special
+                one we've tested against emulator. the rest of the grayed,
+                we'll just do in software like an underline. */
+                let fontwId = typefacenameToTypefaceIdFull(font);
+                let gridkey = this.stripManuallyAddedStylingToGetGridKey(fontwId);
+                if (!UI512FontRequest.hasRealGrayedImage[gridkey]) {
                     fontObj.grayed = true
                 }
             }
@@ -210,7 +214,7 @@ export class UI512FontRequest {
         s = s.replace(/\+c/g, 'c');
         s = s.replace(/\+e/g, 'e');
         s = s.replace(/\+u/g, 'u');
-        if (!UI512FontRequest.hasRealDisabledImage[s]) {
+        if (!UI512FontRequest.hasRealGrayedImage[s]) {
             s = s.replace(/\+d/g, 'd');
         }
 

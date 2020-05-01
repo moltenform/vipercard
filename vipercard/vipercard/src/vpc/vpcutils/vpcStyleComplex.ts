@@ -44,6 +44,9 @@ export class SubstringStyleComplex {
                 case 'extend':
                     ret |= TextFontStyling.Extend;
                     break;
+                case 'grayed':
+                    ret |= TextFontStyling.Grayed;
+                    break;
                 default:
                     checkThrow(false, `67|warning: unrecognized text style ${s}`);
             }
