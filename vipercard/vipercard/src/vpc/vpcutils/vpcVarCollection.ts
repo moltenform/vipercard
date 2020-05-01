@@ -99,6 +99,7 @@ export class VariableCollectionConstants extends VarCollection {
         this.add('shadow', VpcValS('shadow'));
         this.add('condense', VpcValS('condense'));
         this.add('extend', VpcValS('extend'));
+        this.add('grayed', VpcValS('grayed'));
 
         /* button style */
         this.add('transparent', VpcValS('transparent'));

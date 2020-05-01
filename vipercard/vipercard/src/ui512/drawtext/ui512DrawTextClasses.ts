@@ -115,6 +115,7 @@ export class TextRendererFont {
     underline = false;
     condense = false;
     extend = false;
+    grayed = false;
     constructor(public readonly grid: UI512FontGrid) {}
 }
 
@@ -158,7 +159,7 @@ export enum TextFontStyling {
     Underline = 1 << 2,
     Outline = 1 << 3,
     Shadow = 1 << 4,
-    Disabled = 1 << 5,
+    Grayed = 1 << 5,
     Condense = 1 << 6,
     Extend = 1 << 7
 }
@@ -173,7 +174,7 @@ export function textFontStylingToString(e: TextFontStyling): string {
     ret += e & TextFontStyling.Underline ? '+u' : 'u';
     ret += e & TextFontStyling.Outline ? '+o' : 'o';
     ret += e & TextFontStyling.Shadow ? '+s' : 's';
-    ret += e & TextFontStyling.Disabled ? '+d' : 'd';
+    ret += e & TextFontStyling.Grayed ? '+d' : 'd';
     ret += e & TextFontStyling.Condense ? '+c' : 'c';
     ret += e & TextFontStyling.Extend ? '+e' : 'e';
     return ret;
@@ -203,7 +204,7 @@ export function stringToTextFontStyling(s: string): TextFontStyling {
                     ret |= TextFontStyling.Shadow;
                     break;
                 case 'd':
-                    ret |= TextFontStyling.Disabled;
+                    ret |= TextFontStyling.Grayed;
                     break;
                 case 'c':
                     ret |= TextFontStyling.Condense;

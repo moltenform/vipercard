@@ -4,6 +4,7 @@
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { DrawCharResult, TextFontStyling, TextRendererFont, specialCharNumNewline, specialCharNumNonBreakingSpace, specialCharNumOnePixelSpace, specialCharNumTab, specialCharNumZeroPixelChar } from './ui512DrawTextClasses';
+/* auto */ import { uI512DrawTextCharGrayed } from './ui512DrawTextCharGrayed';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -144,19 +145,36 @@ export class UI512DrawChar {
         }
 
         if (canvas) {
-            canvas.drawFromImage(
-                font.grid.image,
-                srcX,
-                srcY,
-                srcW,
-                srcH,
-                destX,
-                destY,
-                destX0,
-                destY0,
-                destW,
-                destH
-            );
+            if (font.grayed) {
+                uI512DrawTextCharGrayed.go(
+                    font.grid.image,
+                    canvas,
+                    srcX,
+                    srcY,
+                    srcW,
+                    srcH,
+                    destX,
+                    destY,
+                    destX0,
+                    destY0,
+                    destW,
+                    destH
+                );
+            } else {
+                canvas.drawFromImage(
+                    font.grid.image,
+                    srcX,
+                    srcY,
+                    srcW,
+                    srcH,
+                    destX,
+                    destY,
+                    destX0,
+                    destY0,
+                    destW,
+                    destH
+                );
+            }
 
             /* following original os, underline follows the drawn width
             if longer than the logical width */

@@ -155,6 +155,7 @@ export abstract class VpcAppMenuStructure extends VpcUILayer {
                     'mnuSetFontStyleOutline|lngOutline|',
                     'mnuSetFontStyleCondense|lngCondense|',
                     'mnuSetFontStyleExtend|lngExtend|',
+                    'mnuSetFontStyleGrayed|lngGrayed|',
                     '|---|',
                     'mnuSetAlignLeft|lngAlign Left|',
                     'mnuSetAlignCenter|lngAlign Center|',

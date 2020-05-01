@@ -89,6 +89,10 @@ export class SubstringStyleComplex {
             ret.push('extend');
         }
 
+        if ((style & TextFontStyling.Grayed) !== 0) {
+            ret.push('grayed');
+        }
+
         return ret.join(',');
     }
 

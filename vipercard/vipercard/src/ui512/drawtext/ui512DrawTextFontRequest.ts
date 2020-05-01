@@ -177,6 +177,13 @@ export class UI512FontRequest {
             fontObj.underline = (spec.style & TextFontStyling.Underline) !== 0;
             fontObj.condense = (spec.style & TextFontStyling.Condense) !== 0;
             fontObj.extend = (spec.style & TextFontStyling.Extend) !== 0;
+            if ((spec.style & TextFontStyling.Grayed) !== 0) {
+                let gridkey = this.stripManuallyAddedStylingToGetGridKey(font);
+                if (!UI512FontRequest.hasRealDisabledImage[gridkey]) {
+                    fontObj.grayed = true
+                }
+            }
+
             this.cachedFonts[font] = fontObj;
             return fontObj;
         } else {
