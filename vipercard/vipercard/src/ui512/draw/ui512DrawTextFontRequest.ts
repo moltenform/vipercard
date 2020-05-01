@@ -218,24 +218,127 @@ enum CacheState {
     NotYetLoaded = 1
 }
 
+export const mapAdjustLineHeight: { [key: string]: number } = {};
+mapAdjustLineHeight['00_9_biuosdce'] = 1
+mapAdjustLineHeight['00_9_+biuosdce'] = 2
+mapAdjustLineHeight['00_9_biu+osdce'] = 1
+mapAdjustLineHeight['01_9_biuosdce'] =2
+mapAdjustLineHeight['01_9_+biuosdce'] =4
+mapAdjustLineHeight['01_9_biu+osdce'] =2
+mapAdjustLineHeight['01_9_+b+iuosdce'] =1
+mapAdjustLineHeight['01_9_b+iu+osdce'] = -1
+mapAdjustLineHeight['01_9_+biu+osdce'] =1
+
+mapAdjustLineHeight['01_10_biuosdce'] = 1;
+mapAdjustLineHeight['01_10_+biuosdce'] = 2;
+mapAdjustLineHeight['01_10_b+iuosdce'] = 0;
+mapAdjustLineHeight['01_10_biu+osdce'] = 1;
+mapAdjustLineHeight['01_10_+b+iuosdce'] = 0;
+mapAdjustLineHeight['01_10_b+iu+osdce'] = 0;
+mapAdjustLineHeight['01_10_+biu+osdce'] = 0;
+mapAdjustLineHeight['01_10_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['01_12_biuosdce'] = 1;
+mapAdjustLineHeight['01_12_+biuosdce'] = 1;
+mapAdjustLineHeight['01_12_b+iuosdce'] = 1;
+mapAdjustLineHeight['01_12_biu+osdce'] = 0;
+mapAdjustLineHeight['01_12_+b+iuosdce'] = 1;
+mapAdjustLineHeight['01_12_b+iu+osdce'] = 0;
+mapAdjustLineHeight['01_12_+biu+osdce'] = 0;
+mapAdjustLineHeight['01_12_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['02_9_biuosdce'] = 1;
+mapAdjustLineHeight['02_9_+biuosdce'] = 1;
+mapAdjustLineHeight['02_9_b+iuosdce'] = 1;
+mapAdjustLineHeight['02_9_biu+osdce'] = 0;
+mapAdjustLineHeight['02_9_+b+iuosdce'] = 1;
+mapAdjustLineHeight['02_9_b+iu+osdce'] = 0;
+mapAdjustLineHeight['02_9_+biu+osdce'] = 0;
+mapAdjustLineHeight['02_9_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['03_9_biuosdce'] = 1;
+mapAdjustLineHeight['03_9_+biuosdce'] = 1;
+mapAdjustLineHeight['03_9_b+iuosdce'] = 1;
+mapAdjustLineHeight['03_9_biu+osdce'] = 0;
+mapAdjustLineHeight['03_9_+b+iuosdce'] = 1;
+mapAdjustLineHeight['03_9_b+iu+osdce'] = 0;
+mapAdjustLineHeight['03_9_+biu+osdce'] = 0;
+mapAdjustLineHeight['03_9_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['03_10_biuosdce'] = 1;
+mapAdjustLineHeight['03_10_+biuosdce'] = 1;
+mapAdjustLineHeight['03_10_b+iuosdce'] = 1;
+mapAdjustLineHeight['03_10_biu+osdce'] = 0;
+mapAdjustLineHeight['03_10_+b+iuosdce'] = 1;
+mapAdjustLineHeight['03_10_b+iu+osdce'] = 0;
+mapAdjustLineHeight['03_10_+biu+osdce'] = 0;
+mapAdjustLineHeight['03_10_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['04_9_biuosdce'] = 2;
+mapAdjustLineHeight['04_9_+biuosdce'] = 4;
+mapAdjustLineHeight['04_9_b+iuosdce'] = 0;
+mapAdjustLineHeight['04_9_biu+osdce'] = 2;
+mapAdjustLineHeight['04_9_+b+iuosdce'] = 1;
+mapAdjustLineHeight['04_9_b+iu+osdce'] = -1;
+mapAdjustLineHeight['04_9_+biu+osdce'] = 1;
+mapAdjustLineHeight['04_9_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['04_10_biuosdce'] = 1;
+mapAdjustLineHeight['04_10_+biuosdce'] = 2;
+mapAdjustLineHeight['04_10_b+iuosdce'] = 0;
+mapAdjustLineHeight['04_10_biu+osdce'] = 1;
+mapAdjustLineHeight['04_10_+b+iuosdce'] = 0;
+mapAdjustLineHeight['04_10_b+iu+osdce'] = 0;
+mapAdjustLineHeight['04_10_+biu+osdce'] = 0;
+mapAdjustLineHeight['04_10_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['04_12_biuosdce'] = 1;
+mapAdjustLineHeight['04_12_+biuosdce'] = 2;
+mapAdjustLineHeight['04_12_b+iuosdce'] = 0;
+mapAdjustLineHeight['04_12_biu+osdce'] = 1;
+mapAdjustLineHeight['04_12_+b+iuosdce'] = 0;
+mapAdjustLineHeight['04_12_b+iu+osdce'] = 0;
+mapAdjustLineHeight['04_12_+biu+osdce'] = 0;
+mapAdjustLineHeight['04_12_+b+iu+osdce'] = 0; /* not checked yet */
+
 /**
  * our font-screenshot gathering tool can't know the metrics
  * with 100% accuracy, so adjust metrics here
  */
 class AdjustFontMetrics {
     static go(gridkey:string, obj:UI512FontGrid) {
-        /* adjustHSpacing */
-        let adjustHSpacing = 0
-        if (gridkey.startsWith('02_24_')) {
-            adjustHSpacing = -1
+        obj.adjustHSpacing = 0
+       
+        /* to slide characters horizontally,
+            keep (adjustHSpacing - obj.metrics['leftmost']) a constant
+                and adjust both of them in lockstep
+            to stretch characters horizontally,
+                adjust (adjustHSpacing - obj.metrics['leftmost'])
+        */
+
+        if ((gridkey.startsWith('02_9_') && gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+            /* j is too wide */
+            obj.metrics.bounds['j'.charCodeAt(0)][4] += -1
         }
 
-        if (gridkey==='02_12_b+iuosdce' ||
-        gridkey==='02_24_b+iuosdce' ||
-        gridkey==='03_18_b+iuosdce') {
-            adjustHSpacing = 1
+        if ((gridkey.startsWith('02_12_') && gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += -1
         }
 
+        if ((gridkey.startsWith('02_24_') && gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += -1
+        } else if (gridkey.startsWith('02_24_')) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if ((gridkey.startsWith('03_18_') && gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += -1
+        }
+
+        if (gridkey.startsWith('04_18_')) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+  
 
         /* adjust leftmost */
         if (gridkey.includes("+o")) {
@@ -244,32 +347,11 @@ class AdjustFontMetrics {
 
 
         /* adjust line height */
-        if (gridkey === "00_9_biuosdce" ) {
-            obj.metrics.lineheight += 1
-        } else if (gridkey === "00_9_+biuosdce" ) {
-            obj.metrics.lineheight += 2
-        } else if (gridkey === "00_9_biu+osdce" ) {
-            obj.metrics.lineheight += 1
+        let adj = mapAdjustLineHeight[gridkey]
+        if (adj !== undefined) {
+            obj.metrics.lineheight += adj
         }
-
-        if (gridkey === '01_9_biuosdce') {
-            obj.metrics.lineheight += 2
-        } else if (gridkey === '01_9_+biuosdce') {
-            obj.metrics.lineheight += 4
-        } else if (gridkey === "01_9_biu+osdce" ) {
-            obj.metrics.lineheight += 2
-        } else if (gridkey === "01_9_+b+iuosdce" ) {
-            obj.metrics.lineheight += 1
-        } else if (gridkey === "01_9_b+iu+osdce" ) {
-            obj.metrics.lineheight -= 1
-        }else if (gridkey === "01_9_+biu+osdce" ) {
-            obj.metrics.lineheight += 1
-        }
-        
-
-
-        //~ this.adjustspacing['02_24_biu+osdce'] = -2;
-        obj.adjustHSpacing = adjustHSpacing
+   
 
     }
 

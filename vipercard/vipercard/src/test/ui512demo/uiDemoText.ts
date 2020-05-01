@@ -214,7 +214,7 @@ export class UI512DemoText extends UI512Presenter {
 
     protected static async dldTest5(dldOnly: boolean) {
         let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size).", 
-            "courier_9")
+            "times_9")
         if (testids)
         {
             for (let pt of testids.split(',')) {

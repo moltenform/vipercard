@@ -82,7 +82,7 @@ export class TestUtilsCanvas {
                     /* draw blue if it should have been black */
                     dataGot.data[i] = 0;
                     dataGot.data[i + 1] = 0;
-                    dataGot.data[i + 2] = 200;
+                    dataGot.data[i + 2] = 255;
                     dataGot.data[i + 3] = 255;
                 }
 
