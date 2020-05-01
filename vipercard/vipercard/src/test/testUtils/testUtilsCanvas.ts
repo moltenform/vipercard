@@ -178,6 +178,7 @@ export class TestUtilsCanvas {
 
     /**
      * run RenderAndCompareImage on an array
+     * we can do tests in parallel, faster than waiting for each individually
      */
     static async RenderAndCompareImages(
         download: boolean,
@@ -243,4 +244,4 @@ export class CanvasTestParams {
 /**
  * a function that returns a CanvasTestParams
  */
-type GetDrawParams = () => CanvasTestParams;
+export type GetDrawParams = () => CanvasTestParams;

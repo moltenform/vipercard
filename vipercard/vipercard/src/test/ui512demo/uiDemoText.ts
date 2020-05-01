@@ -207,15 +207,22 @@ export class UI512DemoText extends UI512Presenter {
             );
             return TestUtilsCanvas.RenderAndCompareImages(
                 dldOnly,
-                demoTextTests[testNumber]
+                demoTextTests[testNumber - 1]
             );
         }
     }
 
     protected static async dldTest5(dldOnly: boolean) {
-        let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size).", 
-            "symbol_10")
-        if (testids)
+        let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size). Or 'any'.", 
+            "chicago_12")
+        if (testids === 'all') {
+            /* runs them all in parallel */
+            let fns = new TestDrawUI512Text().drawTest5DrawAll()
+            await TestUtilsCanvas.RenderAndCompareImages(
+                false /* dld */,
+                fns
+            );
+        } else if (testids)
         {
             for (let pt of testids.split(',')) {
                 pt = pt.trim()
@@ -224,7 +231,7 @@ export class UI512DemoText extends UI512Presenter {
                     alert("expected in the form chicago_12.")
                 } else {
                     let [font, size] = pts
-                    let params = new TestDrawUI512Text().renderOneDraw5(font, size)
+                    let params = new TestDrawUI512Text().drawTest5DrawOne(font, size)
                     await TestUtilsCanvas.RenderAndCompareImages(
                         dldOnly,
                         ()=>params

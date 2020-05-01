@@ -8,6 +8,8 @@
 /* auto */ import { RenderComplete, RepeatingTimer, RespondToErr, UI512IsEventInterface, UI512IsSessionInterface, Util512Higher, showMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
+/* auto */ import { UI512DemoTextEdit } from './../../test/ui512demo/uiDemoTextEdit';
+/* auto */ import { UI512DemoText } from './../../test/ui512demo/uiDemoText';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, MouseUpOrDownDetails } from './../menu/ui512Events';
 /* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
@@ -47,9 +49,9 @@ export class FullRootUI512 implements RootHigher {
         /* this.presenter = new UI512DemoComposites(); */
         /* this.presenter = new UI512DemoMenus(); */
         /* this.presenter = new UI512DemoPaint(); */
-        /* this.presenter = new UI512DemoText(); */
-        /* this.presenter = new UI512DemoTextEdit(); */
-        this.presenter = new VpcUiIntro();
+        this.presenter = new UI512DemoText();
+         this.presenter = new UI512DemoTextEdit(); 
+         this.presenter = new VpcUiIntro(); 
         domCanvas.setAttribute('id', 'mainDomCanvas');
         showMsgIfExceptionThrown(
             () => UI512CursorAccess.setCursor(UI512Cursors.arrow),

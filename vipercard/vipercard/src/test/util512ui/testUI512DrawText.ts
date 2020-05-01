@@ -4,10 +4,10 @@
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
-/* auto */ import { TextFontStyling, largeArea, specialCharOnePixelSpace, textFontStylingToString, typefacenameToTypefaceIdFull } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { TextFontStyling, textFontStylingToString, typefacenameToTypefaceIdFull } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { DrawTextArgs } from './../../ui512/draw/ui512DrawTextArgs';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
-/* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
+/* auto */ import { CanvasTestParams, GetDrawParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -341,27 +341,26 @@ export class TestDrawUI512Text {
         demo += addNewlines ? '\n' : '';
         let demoTextFormatted = '';
         for (let i = 0; i < list.length; i++) {
-            if (!list[i].includes('+o')) {
-                //~ demoTextFormatted += specialCharOnePixelSpace
-                //~ demoTextFormatted += specialCharOnePixelSpace
-                //~ demoTextFormatted += specialCharOnePixelSpace
-                //~ demoTextFormatted += specialCharOnePixelSpace
-                //~ demoTextFormatted += specialCharOnePixelSpace
-            }
-
             demoTextFormatted += UI512DrawText.setFont(demo, list[i]);
         }
 
         return demoTextFormatted;
     }
 
-    getDraw5List() {
-        let allfonts = 'chicago,courier,geneva,new york,times'.split(',');
+    drawTest5DrawAll() {
+        let allfonts = 'chicago,courier,geneva,new york,times,helvetica,monaco,symbol'.split(',');
         let allsizes = '24,18,14,12,10,9'.split(',');
-        return [allfonts, allsizes];
+        let ret: GetDrawParams[] = []
+        for (let font of allfonts) {
+            for (let size of allsizes) {
+                ret.push(() => this.drawTest5DrawOne(font, size))
+            }
+        }
+
+        return ret
     }
 
-    renderOneDraw5(font: string, size: string) {
+    drawTest5DrawOne(font: string, size: string) {
         let allstyles = longstr(
             `biuosdce
         |+biuosdce

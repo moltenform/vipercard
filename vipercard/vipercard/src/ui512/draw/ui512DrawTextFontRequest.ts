@@ -2,7 +2,7 @@
 /* auto */ import { RespondToErr, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../utils/util512Assert';
-/* auto */ import { AnyUnshapedJson, longstr } from './../utils/util512';
+/* auto */ import { longstr } from './../utils/util512';
 /* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, UI512FontGrid, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -69,7 +69,8 @@ export class UI512FontRequest {
         }
 
         /* we captured the fonts in 5 different stages:
-            1) got the ones in manualFonts, checked pixel-perfect
+            1) got the ones in manualFonts,
+            confirmed pixel-perfect if not italic
             2) cohort 1, used in v0.2release
             listFonts=r'''00,01,02,03,04'''
             listSizes = r'''10,12,14,18,24'''
@@ -88,10 +89,8 @@ export class UI512FontRequest {
             listSizes = r'''10,12,14,18,24'''
             listStyles = r'''+biu+osdce
             +b+iu+osdce'''
-
             4) cohort 3, add 9pt size for the original 5 fonts
             5) cohort 4, add last 3 fonts in all styles+sizes
-
         */
 
         /* these we've defined manually, e.g. to make a common font a pixel perfect match */
@@ -101,8 +100,6 @@ export class UI512FontRequest {
             }
         }
 
-        /* tweak spacing to match original os */
-        
         Object.seal(this.cachedGrids);
     }
 
@@ -228,50 +225,33 @@ mapAdjustLineHeight['01_9_biu+osdce'] =2
 mapAdjustLineHeight['01_9_+b+iuosdce'] =1
 mapAdjustLineHeight['01_9_b+iu+osdce'] = -1
 mapAdjustLineHeight['01_9_+biu+osdce'] =1
-
+mapAdjustLineHeight['01_9_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['01_10_biuosdce'] = 1;
 mapAdjustLineHeight['01_10_+biuosdce'] = 2;
-mapAdjustLineHeight['01_10_b+iuosdce'] = 0;
 mapAdjustLineHeight['01_10_biu+osdce'] = 1;
-mapAdjustLineHeight['01_10_+b+iuosdce'] = 0;
-mapAdjustLineHeight['01_10_b+iu+osdce'] = 0;
-mapAdjustLineHeight['01_10_+biu+osdce'] = 0;
 mapAdjustLineHeight['01_10_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['01_12_biuosdce'] = 1;
 mapAdjustLineHeight['01_12_+biuosdce'] = 1;
 mapAdjustLineHeight['01_12_b+iuosdce'] = 1;
-mapAdjustLineHeight['01_12_biu+osdce'] = 0;
 mapAdjustLineHeight['01_12_+b+iuosdce'] = 1;
-mapAdjustLineHeight['01_12_b+iu+osdce'] = 0;
-mapAdjustLineHeight['01_12_+biu+osdce'] = 0;
 mapAdjustLineHeight['01_12_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['02_9_biuosdce'] = 1;
 mapAdjustLineHeight['02_9_+biuosdce'] = 1;
 mapAdjustLineHeight['02_9_b+iuosdce'] = 1;
-mapAdjustLineHeight['02_9_biu+osdce'] = 0;
 mapAdjustLineHeight['02_9_+b+iuosdce'] = 1;
-mapAdjustLineHeight['02_9_b+iu+osdce'] = 0;
-mapAdjustLineHeight['02_9_+biu+osdce'] = 0;
 mapAdjustLineHeight['02_9_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['03_9_biuosdce'] = 1;
 mapAdjustLineHeight['03_9_+biuosdce'] = 1;
 mapAdjustLineHeight['03_9_b+iuosdce'] = 1;
-mapAdjustLineHeight['03_9_biu+osdce'] = 0;
 mapAdjustLineHeight['03_9_+b+iuosdce'] = 1;
-mapAdjustLineHeight['03_9_b+iu+osdce'] = 0;
-mapAdjustLineHeight['03_9_+biu+osdce'] = 0;
 mapAdjustLineHeight['03_9_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['03_10_biuosdce'] = 1;
 mapAdjustLineHeight['03_10_+biuosdce'] = 1;
 mapAdjustLineHeight['03_10_b+iuosdce'] = 1;
-mapAdjustLineHeight['03_10_biu+osdce'] = 0;
 mapAdjustLineHeight['03_10_+b+iuosdce'] = 1;
-mapAdjustLineHeight['03_10_b+iu+osdce'] = 0;
-mapAdjustLineHeight['03_10_+biu+osdce'] = 0;
 mapAdjustLineHeight['03_10_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['04_9_biuosdce'] = 2;
 mapAdjustLineHeight['04_9_+biuosdce'] = 4;
-mapAdjustLineHeight['04_9_b+iuosdce'] = 0;
 mapAdjustLineHeight['04_9_biu+osdce'] = 2;
 mapAdjustLineHeight['04_9_+b+iuosdce'] = 1;
 mapAdjustLineHeight['04_9_b+iu+osdce'] = -1;
@@ -279,51 +259,34 @@ mapAdjustLineHeight['04_9_+biu+osdce'] = 1;
 mapAdjustLineHeight['04_9_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['04_10_biuosdce'] = 1;
 mapAdjustLineHeight['04_10_+biuosdce'] = 2;
-mapAdjustLineHeight['04_10_b+iuosdce'] = 0;
 mapAdjustLineHeight['04_10_biu+osdce'] = 1;
-mapAdjustLineHeight['04_10_+b+iuosdce'] = 0;
-mapAdjustLineHeight['04_10_b+iu+osdce'] = 0;
-mapAdjustLineHeight['04_10_+biu+osdce'] = 0;
 mapAdjustLineHeight['04_10_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['04_12_biuosdce'] = 1;
 mapAdjustLineHeight['04_12_+biuosdce'] = 2;
-mapAdjustLineHeight['04_12_b+iuosdce'] = 0;
 mapAdjustLineHeight['04_12_biu+osdce'] = 1;
-mapAdjustLineHeight['04_12_+b+iuosdce'] = 0;
-mapAdjustLineHeight['04_12_b+iu+osdce'] = 0;
-mapAdjustLineHeight['04_12_+biu+osdce'] = 0;
 mapAdjustLineHeight['04_12_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['05_9_biuosdce'] = 2;
-mapAdjustLineHeight['05_9_+biuosdce'] = 4;
-mapAdjustLineHeight['05_9_b+iuosdce'] = 0;
-mapAdjustLineHeight['05_9_biu+osdce'] = 2;
-mapAdjustLineHeight['05_9_+b+iuosdce'] = 1;
-mapAdjustLineHeight['05_9_b+iu+osdce'] = -1;
-mapAdjustLineHeight['05_9_+biu+osdce'] = 1;
-mapAdjustLineHeight['05_9_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['05_10_biuosdce'] = 1;
-mapAdjustLineHeight['05_10_+biuosdce'] = 2;
-mapAdjustLineHeight['05_10_b+iuosdce'] = 0;
-mapAdjustLineHeight['05_10_biu+osdce'] = 1;
-mapAdjustLineHeight['05_10_+b+iuosdce'] = 0;
-mapAdjustLineHeight['05_10_b+iu+osdce'] = 0;
-mapAdjustLineHeight['05_10_+biu+osdce'] = 0;
-mapAdjustLineHeight['05_10_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['06_9_biuosdce'] = 2;
-mapAdjustLineHeight['06_9_+biuosdce'] = 3;
-mapAdjustLineHeight['06_9_b+iuosdce'] = 1;
-mapAdjustLineHeight['06_9_biu+osdce'] = 1;
-mapAdjustLineHeight['06_9_+b+iuosdce'] = 1;
-mapAdjustLineHeight['06_9_b+iu+osdce'] = 0;
-mapAdjustLineHeight['06_9_+biu+osdce'] = 0;
-mapAdjustLineHeight['06_9_+b+iu+osdce'] = 0; /* not checked yet */
+//~ mapAdjustLineHeight['05_9_biuosdce'] = 2;
+//~ mapAdjustLineHeight['05_9_+biuosdce'] = 4;
+//~ mapAdjustLineHeight['05_9_biu+osdce'] = 2;
+//~ mapAdjustLineHeight['05_9_+b+iuosdce'] = 1;
+//~ mapAdjustLineHeight['05_9_b+iu+osdce'] = -1;
+//~ mapAdjustLineHeight['05_9_+biu+osdce'] = 1;
+//~ mapAdjustLineHeight['05_9_+b+iu+osdce'] = 0; /* not checked yet */
+//~ mapAdjustLineHeight['05_10_biuosdce'] = 1;
+//~ mapAdjustLineHeight['05_10_+biuosdce'] = 2;
+//~ mapAdjustLineHeight['05_10_biu+osdce'] = 1;
+//~ mapAdjustLineHeight['05_10_+b+iu+osdce'] = 0; /* not checked yet */
+//~ mapAdjustLineHeight['06_9_biuosdce'] = 2;
+//~ mapAdjustLineHeight['06_9_+biuosdce'] = 3;
+//~ mapAdjustLineHeight['06_9_b+iuosdce'] = 1;
+//~ mapAdjustLineHeight['06_9_biu+osdce'] = 1;
+//~ mapAdjustLineHeight['06_9_+b+iuosdce'] = 1;
+//~ mapAdjustLineHeight['06_9_+b+iu+osdce'] = 0; /* not checked yet */
 mapAdjustLineHeight['07_10_biuosdce'] = 2;
 mapAdjustLineHeight['07_10_+biuosdce'] = 3;
 mapAdjustLineHeight['07_10_b+iuosdce'] = 1;
 mapAdjustLineHeight['07_10_biu+osdce'] = 1;
 mapAdjustLineHeight['07_10_+b+iuosdce'] = 1;
-mapAdjustLineHeight['07_10_b+iu+osdce'] = 0;
-mapAdjustLineHeight['07_10_+biu+osdce'] = 0;
 mapAdjustLineHeight['07_10_+b+iu+osdce'] = 0; /* not checked yet */
 
 
@@ -349,81 +312,54 @@ class AdjustFontMetrics {
             obj.metrics['leftmost'] += 1
             /* j is too wide */
             obj.metrics.bounds['j'.charCodeAt(0)][4] += -1
-        }
-
-        if ((gridkey.startsWith('02_12_') && gridkey.includes('+i'))) {
+        } else if ((gridkey.startsWith('02_12_') && gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += -1
-        }
-
-        if ((gridkey.startsWith('02_24_') && gridkey.includes('+i'))) {
+        } else if ((gridkey.startsWith('02_24_') && gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += -1
         } else if (gridkey.startsWith('02_24_')) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if ((gridkey.startsWith('03_18_') && gridkey.includes('+i'))) {
+        } else if ((gridkey.startsWith('03_18_') && gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += -1
-        }
-
-        if (gridkey.startsWith('04_18_')) {
+        } else if (gridkey.startsWith('04_18_')) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if (gridkey.startsWith('05_18_')) {
+        } else if (gridkey.startsWith('05_18_')) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if (gridkey.startsWith('06_10_')) {
+        } else if (gridkey.startsWith('06_10_')) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if ((gridkey.startsWith('06_12_') && gridkey.includes('+i'))) {
+        } else if ((gridkey.startsWith('06_12_') && gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += -1
-        }
-
-        if (gridkey.startsWith('06_14_')) {
+        } else if (gridkey.startsWith('06_14_')) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if (gridkey.startsWith('06_18_')) {
+        } else if (gridkey.startsWith('06_18_')) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if ((gridkey.startsWith('06_24_') && gridkey.includes('+i'))) {
+        } else if ((gridkey.startsWith('06_24_') && gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if ((gridkey.startsWith('07_9_') && gridkey.includes('+i'))) {
+        } else if ((gridkey.startsWith('07_9_') && gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if (gridkey.startsWith('07_10_')) {
+        } else if (gridkey.startsWith('07_10_')) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
-        if ((gridkey.startsWith('07_14_') && !gridkey.includes('+i'))) {
+        } else if ((gridkey.startsWith('07_14_') && !gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
-        }
-
+        } 
+        
+        /* all outlines need to be offset */
         if (gridkey.includes("+o")) {
             obj.metrics['leftmost'] += 1
         }
-
-        
 
         let adj = mapAdjustLineHeight[gridkey]
         if (adj !== undefined) {

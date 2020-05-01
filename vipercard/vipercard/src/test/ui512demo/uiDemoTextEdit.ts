@@ -36,7 +36,7 @@ export class UI512DemoTextEdit extends UI512Presenter {
         let clientRect = this.getStandardWindowBounds();
         this.app = new UI512Application(clientRect, this);
         this.inited = true;
-        this.test.addElements(this, clientRect);
+        this.test.addElements(this, clientRect, true);
         this.test.uiContext = true;
 
         let grp = this.app.getGroup('grp');
@@ -46,8 +46,8 @@ export class UI512DemoTextEdit extends UI512Presenter {
         i.e. if this number is continually increasing we
         are leaking elements somewhere */
         let testBtns = [
-            'RunTest',
-            'DldImage',
+            'DldWrap',
+            'DldNoWrap',
             'ToggleScroll',
             'Count Elems',
             'WhichChoice'
@@ -97,19 +97,19 @@ export class UI512DemoTextEdit extends UI512Presenter {
     }
 
     protected static respondMouseUp(pr: UI512DemoTextEdit, d: MouseUpEventDetails) {
-        if (d.elClick && d.button === 0) {
-            if (d.elClick.id === 'btnDldImage') {
+        /* right-click to run the test */
+        let isDld = d.button === 0
+        if (d.elClick) {
+            if (d.elClick.id === 'btnDldWrap') {
                 Util512Higher.syncToAsyncTransition(
-                    TestUtilsCanvas.RenderAndCompareImages(true, () =>
-                        pr.test.testDrawTextEdit()
+                    TestUtilsCanvas.RenderAndCompareImages(isDld, () => pr.test.testDrawTextEdit(true)
                     ),
                     'demotextedit',
                     RespondToErr.Alert
                 );
-            } else if (d.elClick.id === 'btnRunTest') {
+            } else if (d.elClick.id === 'btnDldNoWrap') {
                 Util512Higher.syncToAsyncTransition(
-                    TestUtilsCanvas.RenderAndCompareImages(false, () =>
-                        pr.test.testDrawTextEdit()
+                    TestUtilsCanvas.RenderAndCompareImages(isDld, () => pr.test.testDrawTextEdit(false)
                     ),
                     'demotextedit',
                     RespondToErr.Alert

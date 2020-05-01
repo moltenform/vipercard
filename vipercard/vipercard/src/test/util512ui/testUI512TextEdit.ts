@@ -38,12 +38,12 @@ export let testCollectionUI512TextEdit = t;
 
 t.atest('Test Drawing Text Edits', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
-        new TestDrawUI512TextEdit().testDrawTextEdit()
+        new TestDrawUI512TextEdit().testDrawTextEdit(true)
     )
 );
 t.atest('Test Drawing Text Edits, No Word Wrap', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () =>
-        new TestDrawUI512TextEdit(false).testDrawTextEdit()
+        new TestDrawUI512TextEdit().testDrawTextEdit(false)
     )
 );
 
@@ -52,9 +52,9 @@ t.atest('Test Drawing Text Edits, No Word Wrap', () =>
  */
 export class TestDrawUI512TextEdit {
     uiContext = false;
-    constructor(public enableWordWrap = true) {}
+    constructor() {}
 
-    addElements(pr: UI512Presenter, bounds: number[]) {
+    addElements(pr: UI512Presenter, bounds: number[], wordWrap:boolean) {
         const b0 = 45;
         const b1 = 45;
         let grp = new UI512ElGroup('grp');
@@ -71,7 +71,7 @@ export class TestDrawUI512TextEdit {
         this.addElementsUpperLeft(grp, pr, b0, b1);
 
         /* test large scrolling fields in left */
-        this.addElementsLeft(b0, pr, grp);
+        this.addElementsLeft(b0, pr, grp, wordWrap);
 
         /* test field properties on the right */
         this.addElementsRight(pr, grp);
@@ -208,7 +208,7 @@ export class TestDrawUI512TextEdit {
         );
     }
 
-    protected addElementsLeft(b0: number, pr: UI512Presenter, grp: UI512ElGroup) {
+    protected addElementsLeft(b0: number, pr: UI512Presenter, grp: UI512ElGroup, wordWrap:boolean) {
         /* test large fields with varying amounts of text */
         /* why use NonBreakingSpace? this test was written before we
         had actual word wrapping, */
@@ -217,7 +217,7 @@ export class TestDrawUI512TextEdit {
         let shortSampleText = loremText.substr(0, 70);
         let longSampleText = loremText.substr(0, 700);
 
-        if (!this.enableWordWrap) {
+        if (!wordWrap) {
             /* uses the results from back before we had
             word-wrapping. */
             shortSampleText = shortSampleText.replace(/ /g, specialCharNonBreakingSpace);
@@ -312,6 +312,7 @@ export class TestDrawUI512TextEdit {
         w: number,
         h: number,
         i: number,
+        wordWrap:boolean,
         complete: RenderComplete
     ) {
         tmpCanvas.clear();
@@ -319,7 +320,7 @@ export class TestDrawUI512TextEdit {
         pr.init();
         pr.inited = true;
         pr.app = new UI512Application([0, 0, w, h], pr);
-        this.addElements(pr, pr.app.bounds);
+        this.addElements(pr, pr.app.bounds, wordWrap);
 
         /* first pass rendering adds the scrollbars */
         /* don't show any borders */
@@ -348,7 +349,7 @@ export class TestDrawUI512TextEdit {
         pr.render(tmpCanvas, 1, complete);
     }
 
-    testDrawTextEdit() {
+    testDrawTextEdit(wordWrap:boolean) {
         const w = 928;
         const h = 400;
         const screensToDraw = 3;
@@ -361,7 +362,7 @@ export class TestDrawUI512TextEdit {
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = true;
             for (let i = 0; i < screensToDraw; i++) {
-                this.drawTestCase(i, tmpCanvas, w, h, i, complete);
+                this.drawTestCase(i, tmpCanvas, w, h, i, wordWrap, complete);
                 let dest = [0, i * h, w, h];
                 canvas.drawFromImage(
                     tmpCanvas.canvas,
@@ -380,7 +381,7 @@ export class TestDrawUI512TextEdit {
         };
 
         const totalH = h * screensToDraw;
-        let hasWrap = this.enableWordWrap ? '' : 'no';
+        let hasWrap = wordWrap ? '' : 'no';
         return new CanvasTestParams(
             'drawTextEdit',
             `/resources03a/test/drawtextedit${hasWrap}wrapexpected.png`,
