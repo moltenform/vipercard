@@ -214,7 +214,7 @@ export class UI512DemoText extends UI512Presenter {
 
     protected static async dldTest5(dldOnly: boolean) {
         let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size). Or 'any'.", 
-            "chicago_12")
+            "symbol_9")
         if (testids === 'all') {
             /* runs them all in parallel */
             let fns = new TestDrawUI512Text().drawTest5DrawAll()

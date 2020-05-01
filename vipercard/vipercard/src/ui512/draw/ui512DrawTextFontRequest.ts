@@ -216,79 +216,32 @@ enum CacheState {
 }
 
 export const mapAdjustLineHeight: { [key: string]: number } = {};
-mapAdjustLineHeight['00_9_biuosdce'] = 1
-mapAdjustLineHeight['00_9_+biuosdce'] = 2
-mapAdjustLineHeight['00_9_biu+osdce'] = 1
-mapAdjustLineHeight['01_9_biuosdce'] =2
-mapAdjustLineHeight['01_9_+biuosdce'] =4
-mapAdjustLineHeight['01_9_biu+osdce'] =2
-mapAdjustLineHeight['01_9_+b+iuosdce'] =1
-mapAdjustLineHeight['01_9_b+iu+osdce'] = -1
-mapAdjustLineHeight['01_9_+biu+osdce'] =1
+
+mapAdjustLineHeight['00_9_+biuosdce'] = 1;
+mapAdjustLineHeight['01_9_+biuosdce'] = 2;
+mapAdjustLineHeight['01_9_b+iuosdce'] = -1;
+mapAdjustLineHeight['01_9_biu+osdce'] = 1;
+mapAdjustLineHeight['01_9_b+iu+osdce'] = -1;
+mapAdjustLineHeight['01_9_+biu+osdce'] = 1;
 mapAdjustLineHeight['01_9_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['01_10_biuosdce'] = 1;
-mapAdjustLineHeight['01_10_+biuosdce'] = 2;
-mapAdjustLineHeight['01_10_biu+osdce'] = 1;
-mapAdjustLineHeight['01_10_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['01_12_biuosdce'] = 1;
-mapAdjustLineHeight['01_12_+biuosdce'] = 1;
-mapAdjustLineHeight['01_12_b+iuosdce'] = 1;
-mapAdjustLineHeight['01_12_+b+iuosdce'] = 1;
-mapAdjustLineHeight['01_12_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['02_9_biuosdce'] = 1;
-mapAdjustLineHeight['02_9_+biuosdce'] = 1;
-mapAdjustLineHeight['02_9_b+iuosdce'] = 1;
-mapAdjustLineHeight['02_9_+b+iuosdce'] = 1;
-mapAdjustLineHeight['02_9_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['03_9_biuosdce'] = 1;
-mapAdjustLineHeight['03_9_+biuosdce'] = 1;
-mapAdjustLineHeight['03_9_b+iuosdce'] = 1;
-mapAdjustLineHeight['03_9_+b+iuosdce'] = 1;
-mapAdjustLineHeight['03_9_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['03_10_biuosdce'] = 1;
-mapAdjustLineHeight['03_10_+biuosdce'] = 1;
-mapAdjustLineHeight['03_10_b+iuosdce'] = 1;
-mapAdjustLineHeight['03_10_+b+iuosdce'] = 1;
-mapAdjustLineHeight['03_10_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['04_9_biuosdce'] = 2;
-mapAdjustLineHeight['04_9_+biuosdce'] = 4;
-mapAdjustLineHeight['04_9_biu+osdce'] = 2;
-mapAdjustLineHeight['04_9_+b+iuosdce'] = 1;
+mapAdjustLineHeight['01_10_+biuosdce'] = 1;
+mapAdjustLineHeight['04_9_+biuosdce'] = 2;
+mapAdjustLineHeight['04_9_b+iuosdce'] = -1;
+mapAdjustLineHeight['04_9_biu+osdce'] = 1;
 mapAdjustLineHeight['04_9_b+iu+osdce'] = -1;
 mapAdjustLineHeight['04_9_+biu+osdce'] = 1;
 mapAdjustLineHeight['04_9_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['04_10_biuosdce'] = 1;
-mapAdjustLineHeight['04_10_+biuosdce'] = 2;
-mapAdjustLineHeight['04_10_biu+osdce'] = 1;
-mapAdjustLineHeight['04_10_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['04_12_biuosdce'] = 1;
-mapAdjustLineHeight['04_12_+biuosdce'] = 2;
-mapAdjustLineHeight['04_12_biu+osdce'] = 1;
-mapAdjustLineHeight['04_12_+b+iu+osdce'] = 0; /* not checked yet */
-//~ mapAdjustLineHeight['05_9_biuosdce'] = 2;
-//~ mapAdjustLineHeight['05_9_+biuosdce'] = 4;
-//~ mapAdjustLineHeight['05_9_biu+osdce'] = 2;
-//~ mapAdjustLineHeight['05_9_+b+iuosdce'] = 1;
-//~ mapAdjustLineHeight['05_9_b+iu+osdce'] = -1;
-//~ mapAdjustLineHeight['05_9_+biu+osdce'] = 1;
-//~ mapAdjustLineHeight['05_9_+b+iu+osdce'] = 0; /* not checked yet */
-//~ mapAdjustLineHeight['05_10_biuosdce'] = 1;
-//~ mapAdjustLineHeight['05_10_+biuosdce'] = 2;
-//~ mapAdjustLineHeight['05_10_biu+osdce'] = 1;
-//~ mapAdjustLineHeight['05_10_+b+iu+osdce'] = 0; /* not checked yet */
-//~ mapAdjustLineHeight['06_9_biuosdce'] = 2;
-//~ mapAdjustLineHeight['06_9_+biuosdce'] = 3;
-//~ mapAdjustLineHeight['06_9_b+iuosdce'] = 1;
-//~ mapAdjustLineHeight['06_9_biu+osdce'] = 1;
-//~ mapAdjustLineHeight['06_9_+b+iuosdce'] = 1;
-//~ mapAdjustLineHeight['06_9_+b+iu+osdce'] = 0; /* not checked yet */
-mapAdjustLineHeight['07_10_biuosdce'] = 2;
-mapAdjustLineHeight['07_10_+biuosdce'] = 3;
-mapAdjustLineHeight['07_10_b+iuosdce'] = 1;
-mapAdjustLineHeight['07_10_biu+osdce'] = 1;
-mapAdjustLineHeight['07_10_+b+iuosdce'] = 1;
-mapAdjustLineHeight['07_10_+b+iu+osdce'] = 0; /* not checked yet */
-
+mapAdjustLineHeight['04_10_+biuosdce'] = 1;
+mapAdjustLineHeight['04_12_+biuosdce'] = 1;
+mapAdjustLineHeight['05_9_+biuosdce'] = 2;
+mapAdjustLineHeight['05_9_b+iuosdce'] = -1;
+mapAdjustLineHeight['05_9_biu+osdce'] = 1;
+mapAdjustLineHeight['05_9_b+iu+osdce'] = -1;
+mapAdjustLineHeight['05_9_+biu+osdce'] = 1;
+mapAdjustLineHeight['05_9_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['05_10_+biuosdce'] = 1;
+mapAdjustLineHeight['06_9_+biuosdce'] = 1;
+mapAdjustLineHeight['07_10_+biuosdce'] = 1;
 
 /**
  * our font-screenshot gathering tool can't know the metrics
@@ -306,7 +259,7 @@ class AdjustFontMetrics {
             to stretch characters horizontally,
                 adjust (adjustHSpacing - obj.metrics['leftmost'])
         */
-
+        
         if ((gridkey.startsWith('02_9_') && gridkey.includes('+i'))) {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1

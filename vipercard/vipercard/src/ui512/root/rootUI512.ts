@@ -50,8 +50,8 @@ export class FullRootUI512 implements RootHigher {
         /* this.presenter = new UI512DemoMenus(); */
         /* this.presenter = new UI512DemoPaint(); */
         this.presenter = new UI512DemoText();
-         this.presenter = new UI512DemoTextEdit(); 
-         this.presenter = new VpcUiIntro(); 
+         //~ this.presenter = new UI512DemoTextEdit(); 
+         //~ this.presenter = new VpcUiIntro(); 
         domCanvas.setAttribute('id', 'mainDomCanvas');
         showMsgIfExceptionThrown(
             () => UI512CursorAccess.setCursor(UI512Cursors.arrow),
