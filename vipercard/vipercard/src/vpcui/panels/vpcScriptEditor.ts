@@ -14,8 +14,8 @@
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
-/* auto */ import { TextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { TextFontStyling, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { WndBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
 /* auto */ import { UI512CompCodeEditorFont } from './../../ui512/composites/ui512CodeEditorAutoIndent';
 /* auto */ import { UI512CompCodeEditor } from './../../ui512/composites/ui512CodeEditor';

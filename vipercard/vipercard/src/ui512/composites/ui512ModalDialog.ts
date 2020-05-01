@@ -9,7 +9,7 @@
 /* auto */ import { UI512PresenterBase } from './../presentation/ui512PresenterBase';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { MouseDownEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
 /* auto */ import { UI512ElLabel } from './../elements/ui512ElementLabel';

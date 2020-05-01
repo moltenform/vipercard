@@ -5,7 +5,7 @@
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './velOutsideInterfaces';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { slength } from './../../ui512/utils/util512';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

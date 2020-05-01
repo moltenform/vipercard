@@ -7,9 +7,9 @@
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { GenericTextField } from './ui512GenericField';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
-/* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
+/* auto */ import { specialCharNumNewline } from './../drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

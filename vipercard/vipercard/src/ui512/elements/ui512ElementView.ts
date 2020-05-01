@@ -12,8 +12,8 @@
 /* auto */ import { UI512BtnStyle, UI512ElementButtonBase } from './ui512ElementButton';
 /* auto */ import { UI512Application } from './ui512ElementApp';
 /* auto */ import { UI512Element, UI512ElementWithHighlight } from './ui512Element';
-/* auto */ import { DrawTextArgs, drawTextArgsFromEl } from './../draw/ui512DrawTextArgs';
-/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { DrawTextArgs, drawTextArgsFromEl } from './../drawtext/ui512DrawTextArgs';
+/* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { IconInfo, RenderIconGroup } from './../draw/ui512DrawIconClasses';
 /* auto */ import { UI512ViewDrawBorders } from './../draw/ui512DrawBorders';

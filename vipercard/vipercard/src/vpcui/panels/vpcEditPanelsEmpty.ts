@@ -2,8 +2,8 @@
 /* auto */ import { VpcElType, VpcTool } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcEditPanelsBase } from './vpcEditPanelsBase';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
-/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { TextFontSpec } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */

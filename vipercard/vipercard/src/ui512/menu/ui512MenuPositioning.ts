@@ -9,7 +9,7 @@
 /* auto */ import { UI512ElGroup } from './../elements/ui512ElementGroup';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../elements/ui512ElementApp';
-/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 /* auto */ import { lng } from './../lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */

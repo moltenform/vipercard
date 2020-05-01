@@ -4,10 +4,10 @@
 /* auto */ import { assertTrue, assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512, arLast, assertWarnEq, lastIfThere, slength } from './../utils/util512';
 /* auto */ import { UI512Lines } from './../textedit/ui512TextLines';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
-/* auto */ import { TextFontStyling, specialCharNumNewline, textFontStylingToString } from './../draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { TextFontStyling, specialCharNumNewline, textFontStylingToString } from './../drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

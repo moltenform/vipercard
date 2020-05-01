@@ -6,8 +6,8 @@
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
-/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { TextFontSpec } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
 /* (c) 2019 moltenform(Ben Fisher) */

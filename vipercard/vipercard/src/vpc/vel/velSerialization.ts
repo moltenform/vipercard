@@ -4,9 +4,9 @@
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { AnyJson, Util512 } from './../../ui512/utils/util512';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { ElementObserverNoOp, ElementObserverVal, UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
-/* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { specialCharNumFontChange, specialCharNumNewline, specialCharNumTab } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { bridgedBase64Js } from './../../bridge/bridgeBase64Js';
 
 /* (c) 2019 moltenform(Ben Fisher) */

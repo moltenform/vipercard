@@ -7,16 +7,16 @@
 /* auto */ import { Util512, assertWarnEq, cast, fitIntoInclusive } from './../utils/util512';
 /* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { UI512ViewDraw } from './../elements/ui512ElementView';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
 /* auto */ import { UI512ElGroup } from './../elements/ui512ElementGroup';
 /* auto */ import { UI512ElButton } from './../elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../elements/ui512ElementApp';
 /* auto */ import { UI512Element } from './../elements/ui512Element';
-/* auto */ import { CharRectType, FoundCharByLocation, largeArea } from './../draw/ui512DrawTextClasses';
-/* auto */ import { DrawTextArgs, drawTextArgsFromEl } from './../draw/ui512DrawTextArgs';
-/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { CharRectType, FoundCharByLocation, largeArea } from './../drawtext/ui512DrawTextClasses';
+/* auto */ import { DrawTextArgs, drawTextArgsFromEl } from './../drawtext/ui512DrawTextArgs';
+/* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 /* auto */ import { UI512ViewDrawBorders } from './../draw/ui512DrawBorders';
 
 /* (c) 2019 moltenform(Ben Fisher) */

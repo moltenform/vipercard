@@ -57,7 +57,7 @@ export class UI512DrawChar {
             /* character is a zero-pixel placeholder representing the newline */
             return new DrawCharResult(x, x, baseline);
         } else if (n === specialCharNumZeroPixelChar) {
-            /* character is a zero-pixel placeholder, so empty fields remember the font */
+            /* character is a zero-pixel placeholder */
             return new DrawCharResult(x, x, baseline);
         } else if (n === specialCharNumNonBreakingSpace) {
             /* draw a nbsp as a space, the only place nbsp is different is in

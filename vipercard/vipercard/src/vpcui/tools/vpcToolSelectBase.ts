@@ -8,7 +8,7 @@
 /* auto */ import { MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElCanvasPiece } from './../../ui512/elements/ui512ElementCanvasPiece';
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
-/* auto */ import { largeArea } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { UI512Painter } from './../../ui512/draw/ui512DrawPainterClasses';
 /* auto */ import { UI512PainterCvCanvas } from './../../ui512/draw/ui512DrawPainter';
 

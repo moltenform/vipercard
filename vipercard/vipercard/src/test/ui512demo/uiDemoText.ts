@@ -8,8 +8,8 @@
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
-/* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
 /* auto */ import { TestDrawUI512Text } from './../util512ui/testUI512DrawText';
 

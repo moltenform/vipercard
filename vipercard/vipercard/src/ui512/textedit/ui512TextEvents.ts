@@ -10,7 +10,7 @@
 /* auto */ import { MenuListeners } from './../menu/ui512MenuListeners';
 /* auto */ import { FnEventCallback, MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
 /* auto */ import { GenericTextField, UI512ElTextFieldAsGeneric } from './ui512GenericField';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, PasteTextEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
 /* auto */ import { UI512ElButton } from './../elements/ui512ElementButton';

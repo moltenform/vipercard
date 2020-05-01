@@ -1,8 +1,8 @@
 
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { Util512, arLast, fitIntoInclusive } from './../utils/util512';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
-/* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
+/* auto */ import { specialCharNumNewline } from './../drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

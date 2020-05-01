@@ -2,11 +2,11 @@
 /* auto */ import { BrowserOSInfo } from './../../ui512/utils/util512Higher';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
-/* auto */ import { UI512FontRequest } from './../../ui512/draw/ui512DrawTextFontRequest';
-/* auto */ import { TextFontSpec, TextFontStyling, largeArea, specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { DrawTextArgs } from './../../ui512/draw/ui512DrawTextArgs';
-/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
+/* auto */ import { UI512FontRequest } from './../../ui512/drawtext/ui512DrawTextFontRequest';
+/* auto */ import { TextFontSpec, TextFontStyling, largeArea, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { DrawTextArgs } from './../../ui512/drawtext/ui512DrawTextArgs';
+/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

@@ -4,7 +4,7 @@
 /* auto */ import { getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { KeyDownEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';

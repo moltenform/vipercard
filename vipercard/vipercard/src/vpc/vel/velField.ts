@@ -9,9 +9,9 @@
 /* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { GenericTextField } from './../../ui512/textedit/ui512GenericField';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
-/* auto */ import { TextFontSpec, specialCharNumNewline } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { TextFontSpec, specialCharNumNewline } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

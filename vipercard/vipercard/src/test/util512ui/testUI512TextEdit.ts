@@ -6,14 +6,14 @@
 /* auto */ import { Util512, assertEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { addDefaultListeners } from './../../ui512/textedit/ui512TextEvents';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField, UI512FldStyle } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
-/* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange, specialCharNonBreakingSpace, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange, specialCharNonBreakingSpace, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
 /* auto */ import { TestTextEventInteractions } from './testUI512TextEditInteractions';

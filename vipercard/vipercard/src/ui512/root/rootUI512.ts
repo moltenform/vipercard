@@ -10,9 +10,10 @@
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { UI512DemoTextEdit } from './../../test/ui512demo/uiDemoTextEdit';
 /* auto */ import { UI512DemoText } from './../../test/ui512demo/uiDemoText';
+/* auto */ import { UI512DemoComposites } from './../../test/ui512demo/uiDemoComposites';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
 /* auto */ import { EventDetails, IdleEventDetails, MouseDownDoubleEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails, MouseUpOrDownDetails } from './../menu/ui512Events';
-/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
 /* auto */ import { RootHigher } from './rootSetupHelpers';
@@ -46,7 +47,7 @@ export class FullRootUI512 implements RootHigher {
 
         /* this.presenter = new UI512DemoBasic(); */
         /* this.presenter = new UI512DemoButtons(); */
-        /* this.presenter = new UI512DemoComposites(); */
+         //~ this.presenter = new UI512DemoComposites(); 
         /* this.presenter = new UI512DemoMenus(); */
         /* this.presenter = new UI512DemoPaint(); */
         this.presenter = new UI512DemoText();

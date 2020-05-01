@@ -1,8 +1,8 @@
 
 /* auto */ import { checkThrow } from './vpcEnums';
 /* auto */ import { Util512, fitIntoInclusive } from './../../ui512/utils/util512';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
-/* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
+/* auto */ import { TextFontSpec, TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

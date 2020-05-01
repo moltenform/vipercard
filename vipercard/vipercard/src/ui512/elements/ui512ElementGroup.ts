@@ -5,7 +5,7 @@
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
 /* auto */ import { ElementObserver, elementObserverDefault } from './ui512ElementGettable';
 /* auto */ import { UI512Element } from './ui512Element';
-/* auto */ import { largeArea } from './../draw/ui512DrawTextClasses';
+/* auto */ import { largeArea } from './../drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

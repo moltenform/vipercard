@@ -4,7 +4,7 @@
 /* auto */ import { SubstringStyleComplex } from './../../vpc/vpcutils/vpcStyleComplex';
 /* auto */ import { VpcOpCtg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
-/* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { TextFontStyling, stringToTextFontStyling, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

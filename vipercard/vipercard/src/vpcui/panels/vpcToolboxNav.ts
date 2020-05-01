@@ -3,8 +3,8 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { UI512CompToolbox } from './../../ui512/composites/ui512Toolbox';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
-/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
+/* auto */ import { TextFontSpec } from './../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

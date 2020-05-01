@@ -2,8 +2,8 @@
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
 /* auto */ import { TextSelModifyImpl } from './../../ui512/textedit/ui512TextSelModifyImpl';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
-/* auto */ import { TextFontStyling, specialCharFontChange, textFontStylingToString } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
+/* auto */ import { TextFontStyling, specialCharFontChange, textFontStylingToString } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

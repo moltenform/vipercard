@@ -1,7 +1,7 @@
 
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { UI512Settable } from './ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */

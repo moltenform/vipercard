@@ -5,13 +5,13 @@
 /* auto */ import { UI512Lines } from './../../ui512/textedit/ui512TextLines';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512ElTextFieldAsGeneric } from './../../ui512/textedit/ui512GenericField';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { GridLayout, UI512Application } from './../../ui512/elements/ui512ElementApp';
-/* auto */ import { largeArea, specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { largeArea, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

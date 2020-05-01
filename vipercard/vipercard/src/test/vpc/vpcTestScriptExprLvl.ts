@@ -13,8 +13,8 @@
 /* auto */ import { cProductName, vpcVersion } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertEq, longstr } from './../../ui512/utils/util512';
-/* auto */ import { FormattedText } from './../../ui512/draw/ui512FormattedText';
-/* auto */ import { specialCharFontChange } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
+/* auto */ import { specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts, assertThrows } from './../testUtils/testUtils';
 
 /* (c) 2019 moltenform(Ben Fisher) */

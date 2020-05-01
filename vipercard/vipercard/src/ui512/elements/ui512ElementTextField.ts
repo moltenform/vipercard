@@ -1,13 +1,13 @@
 
 /* auto */ import { ScrollConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { ChangeContext } from './../draw/ui512Interfaces';
-/* auto */ import { FormattedText } from './../draw/ui512FormattedText';
+/* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { UI512ElGroup } from './ui512ElementGroup';
 /* auto */ import { ElementObserver, ElementObserverVal, elementObserverDefault } from './ui512ElementGettable';
 /* auto */ import { UI512Application } from './ui512ElementApp';
 /* auto */ import { UI512Element } from './ui512Element';
-/* auto */ import { specialCharNumNewline } from './../draw/ui512DrawTextClasses';
-/* auto */ import { UI512DrawText } from './../draw/ui512DrawText';
+/* auto */ import { specialCharNumNewline } from './../drawtext/ui512DrawTextClasses';
+/* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

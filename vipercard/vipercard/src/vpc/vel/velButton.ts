@@ -6,7 +6,7 @@
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
-/* auto */ import { TextFontSpec } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { TextFontSpec } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
