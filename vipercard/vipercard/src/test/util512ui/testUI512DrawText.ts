@@ -41,7 +41,7 @@ t.atest('Text corner cases', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw4())
 );
 t.atest('Text All 0.3 fonts', () =>
-    TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw5())
+    TestUtilsCanvas.RenderAndCompareImages(false, new TestDrawUI512Text().drawTest5DrawAll())
 );
 
 /**
@@ -418,6 +418,4 @@ export class TestDrawUI512Text {
             this.uiContext
         );
     }
-
-    draw5() {}
 }
