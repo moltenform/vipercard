@@ -293,6 +293,39 @@ mapAdjustLineHeight['04_12_+b+iuosdce'] = 0;
 mapAdjustLineHeight['04_12_b+iu+osdce'] = 0;
 mapAdjustLineHeight['04_12_+biu+osdce'] = 0;
 mapAdjustLineHeight['04_12_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['05_9_biuosdce'] = 2;
+mapAdjustLineHeight['05_9_+biuosdce'] = 4;
+mapAdjustLineHeight['05_9_b+iuosdce'] = 0;
+mapAdjustLineHeight['05_9_biu+osdce'] = 2;
+mapAdjustLineHeight['05_9_+b+iuosdce'] = 1;
+mapAdjustLineHeight['05_9_b+iu+osdce'] = -1;
+mapAdjustLineHeight['05_9_+biu+osdce'] = 1;
+mapAdjustLineHeight['05_9_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['05_10_biuosdce'] = 1;
+mapAdjustLineHeight['05_10_+biuosdce'] = 2;
+mapAdjustLineHeight['05_10_b+iuosdce'] = 0;
+mapAdjustLineHeight['05_10_biu+osdce'] = 1;
+mapAdjustLineHeight['05_10_+b+iuosdce'] = 0;
+mapAdjustLineHeight['05_10_b+iu+osdce'] = 0;
+mapAdjustLineHeight['05_10_+biu+osdce'] = 0;
+mapAdjustLineHeight['05_10_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['06_9_biuosdce'] = 2;
+mapAdjustLineHeight['06_9_+biuosdce'] = 3;
+mapAdjustLineHeight['06_9_b+iuosdce'] = 1;
+mapAdjustLineHeight['06_9_biu+osdce'] = 1;
+mapAdjustLineHeight['06_9_+b+iuosdce'] = 1;
+mapAdjustLineHeight['06_9_b+iu+osdce'] = 0;
+mapAdjustLineHeight['06_9_+biu+osdce'] = 0;
+mapAdjustLineHeight['06_9_+b+iu+osdce'] = 0; /* not checked yet */
+mapAdjustLineHeight['07_10_biuosdce'] = 2;
+mapAdjustLineHeight['07_10_+biuosdce'] = 3;
+mapAdjustLineHeight['07_10_b+iuosdce'] = 1;
+mapAdjustLineHeight['07_10_biu+osdce'] = 1;
+mapAdjustLineHeight['07_10_+b+iuosdce'] = 1;
+mapAdjustLineHeight['07_10_b+iu+osdce'] = 0;
+mapAdjustLineHeight['07_10_+biu+osdce'] = 0;
+mapAdjustLineHeight['07_10_+b+iu+osdce'] = 0; /* not checked yet */
+
 
 /**
  * our font-screenshot gathering tool can't know the metrics
@@ -302,8 +335,10 @@ class AdjustFontMetrics {
     static go(gridkey:string, obj:UI512FontGrid) {
         obj.adjustHSpacing = 0
        
-        /* to slide characters horizontally,
-            keep (adjustHSpacing - obj.metrics['leftmost']) a constant
+        /* 
+            when addressing differences: move towards the blue.
+            to slide characters horizontally,
+                keep (adjustHSpacing - obj.metrics['leftmost']) a constant
                 and adjust both of them in lockstep
             to stretch characters horizontally,
                 adjust (adjustHSpacing - obj.metrics['leftmost'])
@@ -338,21 +373,62 @@ class AdjustFontMetrics {
             obj.adjustHSpacing += 0
             obj.metrics['leftmost'] += 1
         }
-  
 
-        /* adjust leftmost */
+        if (gridkey.startsWith('05_18_')) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if (gridkey.startsWith('06_10_')) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if ((gridkey.startsWith('06_12_') && gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += -1
+        }
+
+        if (gridkey.startsWith('06_14_')) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if (gridkey.startsWith('06_18_')) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if ((gridkey.startsWith('06_24_') && gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if ((gridkey.startsWith('07_9_') && gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if (gridkey.startsWith('07_10_')) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
+        if ((gridkey.startsWith('07_14_') && !gridkey.includes('+i'))) {
+            obj.adjustHSpacing += 0
+            obj.metrics['leftmost'] += 1
+        }
+
         if (gridkey.includes("+o")) {
             obj.metrics['leftmost'] += 1
         }
 
+        
 
-        /* adjust line height */
         let adj = mapAdjustLineHeight[gridkey]
         if (adj !== undefined) {
             obj.metrics.lineheight += adj
         }
-   
-
     }
 
 }
