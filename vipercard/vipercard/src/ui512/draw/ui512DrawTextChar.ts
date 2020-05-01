@@ -134,7 +134,7 @@ export class UI512DrawChar {
         /* for example, when drawing italics,
         the spacing < the width of the character drawn */
         let spacing = logicalHorizontalSpace - font.grid.metrics.leftmost;
-        spacing += font.grid.adjustSpacing ?? 0;
+        spacing += font.grid.adjustHSpacing ?? 0;
         if (font.extend && !font.condense) {
             spacing = Math.max(1, spacing + 1);
         } else if (font.condense && !font.extend) {

@@ -57,7 +57,7 @@ export class UI512FontGrid {
     loadedMetrics = false;
     loadedImage = false;
     spec: TextFontSpec;
-    adjustSpacing = 0;
+    adjustHSpacing = 0;
 
     freeze() {
         if (this.loadedImage && this.loadedMetrics) {

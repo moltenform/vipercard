@@ -2,7 +2,7 @@
 /* auto */ import { RespondToErr, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../utils/util512Assert';
-/* auto */ import { longstr } from './../utils/util512';
+/* auto */ import { AnyUnshapedJson, longstr } from './../utils/util512';
 /* auto */ import { TextFontSpec, TextFontStyling, TextRendererFont, UI512FontGrid, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -44,7 +44,6 @@ export class UI512FontRequest {
     3) UI512FontGrid, the loaded font */
     cachedGrids: { [key: string]: UI512FontGrid | CacheState | undefined } = {};
     cachedFonts: { [key: string]: TextRendererFont } = {};
-    adjustspacing: { [key: string]: number } = {};
     constructor() {
         /* pre-specify which fonts can be loaded */
         let fnts = '00,01,02,03,04,05,06,07'.split(/,/g);
@@ -65,7 +64,6 @@ export class UI512FontRequest {
                 for (let sz of sizes) {
                     let keyname = `${fnt}_${sz}_${style}`;
                     this.cachedGrids[keyname] = CacheState.NotYetLoaded;
-                    this.loadSpacingAdjustments(keyname);
                 }
             }
         }
@@ -104,12 +102,8 @@ export class UI512FontRequest {
         }
 
         /* tweak spacing to match original os */
-        this.adjustspacing['02_12_b+iuosdce'] = 1;
-        this.adjustspacing['02_24_b+iuosdce'] = 1;
-        this.adjustspacing['02_24_biu+osdce'] = -2;
-        this.adjustspacing['03_18_b+iuosdce'] = 1;
+        
         Object.seal(this.cachedGrids);
-        Object.freeze(this.adjustspacing);
     }
 
     /**
@@ -133,7 +127,6 @@ export class UI512FontRequest {
             to be loaded */
             let pendingGrid = new UI512FontGrid();
             pendingGrid.spec = TextFontSpec.fromString(gridkey);
-            pendingGrid.adjustSpacing = this.adjustspacing[gridkey];
             this.cachedGrids[gridkey] = pendingGrid;
 
             /* queue loading the image */
@@ -150,6 +143,7 @@ export class UI512FontRequest {
                 let obj = await Util512Higher.asyncLoadJson(jsonUrl);
                 pendingGrid.metrics = obj;
                 pendingGrid.loadedMetrics = true;
+                AdjustFontMetrics.go(gridkey, pendingGrid)
                 pendingGrid.freeze();
             };
 
@@ -163,23 +157,6 @@ export class UI512FontRequest {
                 /* case 4) font is loaded and ready to use. */
                 return found;
             }
-        }
-    }
-
-    /**
-     * outline fonts and a few other cases need slightly tighter spacing
-     */
-    loadSpacingAdjustments(keyname: string) {
-        if (
-            keyname.includes('+o') &&
-            (keyname.startsWith('00_') ||
-                keyname.startsWith('01_') ||
-                keyname.startsWith('02_') ||
-                keyname.startsWith('03_'))
-        ) {
-            this.adjustspacing[keyname] = -1;
-        } else if (keyname.startsWith('02_24_')) {
-            this.adjustspacing[keyname] = -1;
         }
     }
 
@@ -239,4 +216,61 @@ export class UI512FontRequest {
 
 enum CacheState {
     NotYetLoaded = 1
+}
+
+/**
+ * our font-screenshot gathering tool can't know the metrics
+ * with 100% accuracy, so adjust metrics here
+ */
+class AdjustFontMetrics {
+    static go(gridkey:string, obj:UI512FontGrid) {
+        /* adjustHSpacing */
+        let adjustHSpacing = 0
+        if (gridkey.startsWith('02_24_')) {
+            adjustHSpacing = -1
+        }
+
+        if (gridkey==='02_12_b+iuosdce' ||
+        gridkey==='02_24_b+iuosdce' ||
+        gridkey==='03_18_b+iuosdce') {
+            adjustHSpacing = 1
+        }
+
+
+        /* adjust leftmost */
+        if (gridkey.includes("+o")) {
+            obj.metrics['leftmost'] += 1
+        }
+
+
+        /* adjust line height */
+        if (gridkey === "00_9_biuosdce" ) {
+            obj.metrics.lineheight += 1
+        } else if (gridkey === "00_9_+biuosdce" ) {
+            obj.metrics.lineheight += 2
+        } else if (gridkey === "00_9_biu+osdce" ) {
+            obj.metrics.lineheight += 1
+        }
+
+        if (gridkey === '01_9_biuosdce') {
+            obj.metrics.lineheight += 2
+        } else if (gridkey === '01_9_+biuosdce') {
+            obj.metrics.lineheight += 4
+        } else if (gridkey === "01_9_biu+osdce" ) {
+            obj.metrics.lineheight += 2
+        } else if (gridkey === "01_9_+b+iuosdce" ) {
+            obj.metrics.lineheight += 1
+        } else if (gridkey === "01_9_b+iu+osdce" ) {
+            obj.metrics.lineheight -= 1
+        }else if (gridkey === "01_9_+biu+osdce" ) {
+            obj.metrics.lineheight += 1
+        }
+        
+
+
+        //~ this.adjustspacing['02_24_biu+osdce'] = -2;
+        obj.adjustHSpacing = adjustHSpacing
+
+    }
+
 }

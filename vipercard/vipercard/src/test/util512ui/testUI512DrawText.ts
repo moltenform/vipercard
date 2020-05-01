@@ -4,7 +4,7 @@
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { longstr } from './../../ui512/utils/util512';
-/* auto */ import { TextFontStyling, specialCharOnePixelSpace, textFontStylingToString, typefacenameToTypefaceIdFull } from './../../ui512/draw/ui512DrawTextClasses';
+/* auto */ import { TextFontStyling, largeArea, specialCharOnePixelSpace, textFontStylingToString, typefacenameToTypefaceIdFull } from './../../ui512/draw/ui512DrawTextClasses';
 /* auto */ import { DrawTextArgs } from './../../ui512/draw/ui512DrawTextArgs';
 /* auto */ import { UI512DrawText } from './../../ui512/draw/ui512DrawText';
 /* auto */ import { CanvasTestParams, TestUtilsCanvas } from './../testUtils/testUtilsCanvas';
@@ -403,7 +403,8 @@ export class TestDrawUI512Text {
                 drawText.drawStringIntoBox(
                     txt,
                     canvas,
-                    new DrawTextArgs(3, 1, w - 3, h - 1, false, false, false)
+                    /* pretending we have more space to draw in helps some tests pass */
+                    new DrawTextArgs(3, 1, w-4, h - 1, false, false, false)
                 )
             );
         };

@@ -72,10 +72,17 @@ export class TestUtilsCanvas {
             expected = expected === 't' ? 'w' : expected;
             got = got === 't' ? 'w' : got;
             if (expected !== got) {
-                if (drawRed) {
+                if (drawRed && expected==='w') {
+                    /* draw red if it should have been white */
                     dataGot.data[i] = 255;
                     dataGot.data[i + 1] = 0;
                     dataGot.data[i + 2] = 0;
+                    dataGot.data[i + 3] = 255;
+                } else if (drawRed) {
+                    /* draw blue if it should have been black */
+                    dataGot.data[i] = 0;
+                    dataGot.data[i + 1] = 0;
+                    dataGot.data[i + 2] = 200;
                     dataGot.data[i + 3] = 255;
                 }
 
