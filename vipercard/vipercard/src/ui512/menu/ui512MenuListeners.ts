@@ -15,12 +15,12 @@
 /**
  * menu listeners+behaviors, opening the menu when you click on it and so on.
  */
-export class MenuListeners {
+export const MenuListeners = {
     /**
      * open this menu and make all items unhighlighted
      * it is wrong if you'd open a window and one of the items is still highlighted from earlier
      */
-    static setwhichIsExpanded(
+    setwhichIsExpanded(
         pr: UI512PresenterWithMenuInterface,
         menuRoot: UI512MenuRoot,
         which: number,
@@ -38,12 +38,16 @@ export class MenuListeners {
                 }
             }
         }
-    }
+    },
+
+    myAdd(n1:number, n2:number) {
+        return n1+ n2
+    },
 
     /**
      * open this menu and close all others
      */
-    static setActiveMenu(pr: UI512PresenterWithMenuInterface, chosenid: string) {
+    setActiveMenu(pr: UI512PresenterWithMenuInterface, chosenid: string) {
         let menuRoot = MenuPositioning.getMenuRoot(pr.app);
         let dropDns = menuRoot.getchildren(pr.app);
         for (let i = 0; i < dropDns.length; i++) {
@@ -54,40 +58,40 @@ export class MenuListeners {
                 return;
             }
         }
-    }
+    },
 
     /**
      * can this item be highlighted
      */
-    static canHighlightMenuItem(el: UI512Element) {
+    canHighlightMenuItem(el: UI512Element) {
         if (el instanceof UI512MenuItem) {
             return el.enabled && el.getS('labeltext') !== '---';
         }
 
         return false;
-    }
+    },
 
     /**
      * close all the menus
      */
-    static closeAllActiveMenus(pr: UI512PresenterWithMenuInterface) {
+    closeAllActiveMenus(pr: UI512PresenterWithMenuInterface) {
         let menuRoot = MenuPositioning.getMenuRoot(pr.app);
         menuRoot.set('whichIsExpanded', -1);
-    }
+    },
 
     /**
      * is any menu active
      */
-    static isAnyMenuActive(pr: UI512PresenterWithMenuInterface) {
+    isAnyMenuActive(pr: UI512PresenterWithMenuInterface) {
         let menuRoot = MenuPositioning.getMenuRoot(pr.app);
         return menuRoot.getN('whichIsExpanded') >= 0;
-    }
+    },
 
     /**
      * when clicking a menu item,
      * queue the MenuItemClicked event and start the animation
      */
-    static respondToMenuItemClick(
+    respondToMenuItemClick(
         pr: UI512PresenterWithMenuInterface,
         item: UI512MenuItem,
         d: MouseUpEventDetails
@@ -107,12 +111,12 @@ export class MenuListeners {
 
         /* don't send the mouse-up event. playAnim will send the MenuItemClicked after animation */
         d.setHandled();
-    }
+    },
 
     /**
      * determine if you clicked on a menu dropdown
      */
-    static onMouseDown(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
+    onMouseDown(pr: UI512PresenterWithMenuInterface, d: MouseDownEventDetails) {
         if (d.button !== 0) {
             return;
         }
@@ -125,12 +129,12 @@ export class MenuListeners {
                 }
             }
         }
-    }
+    },
 
     /**
      * determine if you clicked on a dropdown or menu item
      */
-    static onMouseUp(pr: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
+    onMouseUp(pr: UI512PresenterWithMenuInterface, d: MouseUpEventDetails) {
         if (d.button !== 0) {
             return;
         }
@@ -158,12 +162,12 @@ export class MenuListeners {
             MenuListeners.closeAllActiveMenus(pr);
             pr.openState = MenuOpenState.MenusClosed;
         }
-    }
+    },
 
     /**
      * if one of the dropdowns is open, hovering the mouse on another menu should open that menu
      */
-    static onMouseEnter(pr: UI512PresenterWithMenuInterface, d: MouseEnterDetails) {
+    onMouseEnter(pr: UI512PresenterWithMenuInterface, d: MouseEnterDetails) {
         if (d.el && d.el instanceof UI512MenuItem) {
             d.el.set('highlightactive', true);
         }
@@ -187,12 +191,12 @@ export class MenuListeners {
         if (!d.el) {
             MenuListeners.closeAllActiveMenus(pr);
         }
-    }
+    },
 
     /**
      * un-highlight a menuitem after cursor leaves it
      */
-    static onMouseLeave(pr: UI512PresenterWithMenuInterface, d: MouseLeaveDetails) {
+    onMouseLeave(pr: UI512PresenterWithMenuInterface, d: MouseLeaveDetails) {
         if (d.el && d.el instanceof UI512MenuItem) {
             d.el.set('highlightactive', false);
         }

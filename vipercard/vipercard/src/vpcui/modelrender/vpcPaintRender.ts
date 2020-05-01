@@ -87,9 +87,8 @@ export class VpcPaintRender extends VpcUILayer {
         }
 
         if (currentlyCached[0] !== currentVersion) {
-            let worker = new UI512ImageSerialization();
             currentlyCached[0] = currentVersion;
-            worker.loadFromString(currentlyCached[1], cd.getS('paint'));
+            UI512ImageSerialization.loadFromString(currentlyCached[1], cd.getS('paint'));
         }
 
         return currentlyCached;
@@ -301,7 +300,7 @@ export class VpcPaintRender extends VpcUILayer {
         let mainCanvas = this.getBaseLayer().getCanvasForWrite();
         let painter = new UI512PainterCvCanvas(mainCanvas, mainCanvas.canvas.width, mainCanvas.canvas.height);
         fn(mainCanvas, painter);
-        let serialized = new UI512ImageSerialization().writeToString(mainCanvas);
+        let serialized = UI512ImageSerialization.writeToString(mainCanvas);
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         let currentCard = this.vci.getModel().getCardById(currentCardId);
         currentCard.set('paint', serialized);
@@ -332,7 +331,7 @@ export class VpcPaintRender extends VpcUILayer {
                 UI512PaintDispatch.go(item, painter);
             }
 
-            let serialized = new UI512ImageSerialization().writeToString(cvs);
+            let serialized = UI512ImageSerialization.writeToString(cvs);
             cd.set('paint', serialized);
         }
     }

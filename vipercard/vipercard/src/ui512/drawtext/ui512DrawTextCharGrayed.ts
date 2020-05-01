@@ -56,4 +56,4 @@ class UI512DrawTextCharGrayed {
     }
 }
 
-export const uI512DrawTextCharGrayed = new UI512DrawTextCharGrayed()
+export const instUI512DrawTextCharGrayed = new UI512DrawTextCharGrayed()

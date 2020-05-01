@@ -11,18 +11,18 @@
  * when the user copies text in, or pastes text out, we should
  * use this mapping to translate character sets.
  */
-export class TranslateCharset {
+class TranslateCharset {
     /* for faster load times, don't populate the map until it is requested. */
-    static romanToUn: O<{ [key: number]: string }>;
-    static unToRoman: O<{ [key: number]: string }>;
+    romanToUn: O<{ [key: number]: string }>;
+    unToRoman: O<{ [key: number]: string }>;
 
     /**
      * roman to unicode
      * https://en.wikipedia.org/wiki/Mac_OS_Roman
      */
-    protected static getRomanToUn() {
-        if (TranslateCharset.romanToUn === undefined) {
-            TranslateCharset.romanToUn = {
+    protected getRomanToUn() {
+        if (this.romanToUn === undefined) {
+            this.romanToUn = {
                 9: '\u0009',
                 10: '\u000A',
                 32: '\u0020',
@@ -240,18 +240,18 @@ export class TranslateCharset {
                 244: '\u00D9'
             };
 
-            Object.freeze(TranslateCharset.romanToUn);
+            Object.freeze(this.romanToUn);
         }
 
-        return TranslateCharset.romanToUn;
+        return this.romanToUn;
     }
 
     /**
      * get unicode to roman
      */
-    protected static getUnToRoman() {
-        if (TranslateCharset.unToRoman === undefined) {
-            TranslateCharset.unToRoman = {
+    protected getUnToRoman() {
+        if (this.unToRoman === undefined) {
+            this.unToRoman = {
                 9: '\u0009',
                 10: '\u000a',
                 32: '\u0020',
@@ -469,30 +469,30 @@ export class TranslateCharset {
                 217: '\u00f4'
             };
 
-            Object.freeze(TranslateCharset.unToRoman);
+            Object.freeze(this.unToRoman);
         }
 
-        return TranslateCharset.unToRoman;
+        return this.unToRoman;
     }
 
     /**
      * translate entire string, roman to unicode
      */
-    static translateRomanToUn(s: string, fallback = '?') {
-        return TranslateCharset.translate(s, TranslateCharset.getRomanToUn(), fallback);
+    translateRomanToUn(s: string, fallback = '?') {
+        return this.translate(s, this.getRomanToUn(), fallback);
     }
 
     /**
      * translate entire string, unicode to roman
      */
-    static translateUnToRoman(s: string, fallback = '?') {
-        return TranslateCharset.translate(s, TranslateCharset.getUnToRoman(), fallback);
+    translateUnToRoman(s: string, fallback = '?') {
+        return this.translate(s, this.getUnToRoman(), fallback);
     }
 
     /**
      * translate a string to different character set
      */
-    protected static translate(
+    protected translate(
         s: string,
         map: { [key: number]: string },
         fallback: string
@@ -506,3 +506,5 @@ export class TranslateCharset {
         return ret;
     }
 }
+
+export const instTranslateCharset = new TranslateCharset()

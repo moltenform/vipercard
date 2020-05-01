@@ -41,8 +41,8 @@
 /**
  * a very simple testing framework.
  */
-export class SimpleUtil512Tests {
-    static async runTests(includeSlow: boolean) {
+export const SimpleUtil512Tests = {
+    async runTests(includeSlow: boolean) {
         if (UI512ErrorHandling.runningTests) {
             console.log('Apparently already running tests...');
             return;
@@ -114,7 +114,7 @@ export class SimpleUtil512Tests {
             colNamesSeen.set(coll.name.toLowerCase(), true);
             console.log(`Collection: ${coll.name}`);
             if (includeSlow || !coll.slow) {
-                await SimpleUtil512Tests.runCollection(
+                await this.runCollection(
                     coll,
                     countTotal,
                     counter,
@@ -131,12 +131,12 @@ export class SimpleUtil512Tests {
         } else {
             console.log(`All tests complete.`);
         }
-    }
+    },
 
     /**
      * run a collection of tests
      */
-    static async runCollection(
+    async runCollection(
         coll: SimpleUtil512TestCollection,
         countTotal: number,
         counter: ValHolder<number>,
@@ -165,3 +165,4 @@ export class SimpleUtil512Tests {
         }
     }
 }
+

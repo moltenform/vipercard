@@ -7,7 +7,7 @@
 /* auto */ import { FormattedText } from './ui512FormattedText';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { CharRectType, DrawCharResult, TextRendererFont, largeArea, specialCharFontChange, specialCharNumNewline, specialCharNumZeroPixelChar, typefacenameToTypefaceIdFull } from './ui512DrawTextClasses';
-/* auto */ import { UI512DrawChar } from './ui512DrawTextChar';
+/* auto */ import { instUI512DrawChar } from './ui512DrawTextChar';
 /* auto */ import { DrawTextArgs } from './ui512DrawTextArgs';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -149,7 +149,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
             let c = s.charAt(i);
             let font = s.fontAt(i);
             let fontObj = this.cache.getFont(font);
-            measurements[i] = UI512DrawChar.draw(
+            measurements[i] = instUI512DrawChar.draw(
                 fontObj,
                 c,
                 0,
@@ -385,7 +385,7 @@ export class UI512DrawText implements UI512IsDrawTextInterface {
         );
         for (let i = 0; i < text.len(); i++) {
             let fontObj = this.cache.getFont(text.fontAt(i));
-            let drawn = UI512DrawChar.draw(
+            let drawn = instUI512DrawChar.draw(
                 fontObj,
                 text.charAt(i),
                 curX,

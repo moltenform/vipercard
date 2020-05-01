@@ -91,10 +91,9 @@ export class TestDrawUI512Paint {
         testSetPixelSupportingPattern.context.putImageData(arr2, 0, 0);
 
         /* test 4: serialize image to a string and round trip it */
-        let worker = new UI512ImageSerialization();
-        let serialized = worker.writeToString(testFillRect);
+        let serialized = UI512ImageSerialization.writeToString(testFillRect);
         assertTrue(serialized.length < w * h, 'Bz|');
-        worker.loadFromString(testDeserialize, serialized);
+        UI512ImageSerialization.loadFromString(testDeserialize, serialized);
 
         /* show these on the screen */
         let layout = new GridLayout(610, 50, w, h, [0], canvases, 5, 5);

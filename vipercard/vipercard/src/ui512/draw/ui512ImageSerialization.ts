@@ -16,13 +16,13 @@
  * one character for each pixel in the image.
  * then run lz to compress the string to binary data.
  */
-export class UI512ImageSerialization {
-    readonly asciiBlack = clrBlack.toString().charAt(0);
-    readonly asciiWhite = clrWhite.toString().charAt(0);
-    readonly asciiTransp = clrTransp.toString().charAt(0);
-    readonly asciiNumBlack = clrBlack.toString().charCodeAt(0);
-    readonly asciiNumWhite = clrWhite.toString().charCodeAt(0);
-    readonly asciiNumTransp = clrTransp.toString().charCodeAt(0);
+export const UI512ImageSerialization = {
+    asciiBlack : clrBlack.toString().charAt(0),
+    asciiWhite : clrWhite.toString().charAt(0),
+    asciiTransp : clrTransp.toString().charAt(0),
+    asciiNumBlack : clrBlack.toString().charCodeAt(0),
+    asciiNumWhite : clrWhite.toString().charCodeAt(0),
+    asciiNumTransp : clrTransp.toString().charCodeAt(0),
 
     /**
      * uncompress the string and paint the image onto the canvas
@@ -70,7 +70,7 @@ export class UI512ImageSerialization {
         }
 
         canvas.context.putImageData(data, 0, 0);
-    }
+    },
 
     /**
      * convert the image on the canvas to a compressed string
@@ -80,7 +80,7 @@ export class UI512ImageSerialization {
         const h = canvas.canvas.height;
         let data = canvas.context.getImageData(0, 0, w, h);
         return this.writeToStringFromData(data.data, w, h);
-    }
+    },
 
     /**
      * convert the given imagedata to a compressed string
@@ -104,3 +104,4 @@ export class UI512ImageSerialization {
         return UI512Compress.compressString(result);
     }
 }
+

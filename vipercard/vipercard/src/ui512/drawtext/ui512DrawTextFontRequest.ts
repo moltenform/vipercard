@@ -140,7 +140,7 @@ export class UI512FontRequest {
                 let obj = await Util512Higher.asyncLoadJson(jsonUrl);
                 pendingGrid.metrics = obj;
                 pendingGrid.loadedMetrics = true;
-                AdjustFontMetrics.go(gridkey, pendingGrid)
+                instAdjustFontMetrics.go(gridkey, pendingGrid)
                 pendingGrid.freeze();
             };
 
@@ -259,7 +259,7 @@ mapAdjustLineHeight['07_10_+biuosdce'] = 1;
  * with 100% accuracy, so adjust metrics here
  */
 class AdjustFontMetrics {
-    static go(gridkey:string, obj:UI512FontGrid) {
+    go(gridkey:string, obj:UI512FontGrid) {
         obj.adjustHSpacing = 0
        
         /* 
@@ -330,5 +330,6 @@ class AdjustFontMetrics {
             obj.metrics.lineheight += adj
         }
     }
-
 }
+
+const instAdjustFontMetrics = new AdjustFontMetrics()

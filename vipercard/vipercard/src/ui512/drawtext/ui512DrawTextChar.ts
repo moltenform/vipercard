@@ -4,7 +4,7 @@
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { DrawCharResult, TextFontStyling, TextRendererFont, specialCharNumNewline, specialCharNumNonBreakingSpace, specialCharNumOnePixelSpace, specialCharNumTab, specialCharNumZeroPixelChar } from './ui512DrawTextClasses';
-/* auto */ import { uI512DrawTextCharGrayed } from './ui512DrawTextCharGrayed';
+/* auto */ import { instUI512DrawTextCharGrayed } from './ui512DrawTextCharGrayed';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -15,12 +15,12 @@ const space = ' '.charCodeAt(0);
  * draw one character onto a canvas
  * returns metadata/dimensions of the character drawn
  */
-export class UI512DrawChar {
+class UI512DrawChar {
     /**
      * draw a character, does some redirection like unknown -> ?
      * and tab -> spaces
      */
-    static draw(
+    draw(
         font: TextRendererFont,
         n: number,
         x: number,
@@ -35,7 +35,7 @@ export class UI512DrawChar {
             /* to draw a tab, just draw 4 spaces */
             let ret = new DrawCharResult(0, 0, 0);
             for (let i = 0; i < ScrollConsts.TabSize; i++) {
-                ret = UI512DrawChar.draw(
+                ret = instUI512DrawChar.draw(
                     font,
                     space,
                     x,
@@ -69,7 +69,7 @@ export class UI512DrawChar {
             n = '?'.charCodeAt(0);
         }
 
-        return UI512DrawChar.drawImpl(
+        return instUI512DrawChar.drawImpl(
             font,
             n,
             x,
@@ -85,7 +85,7 @@ export class UI512DrawChar {
     /**
      * draws a character
      */
-    protected static drawImpl(
+    protected drawImpl(
         font: TextRendererFont,
         n: number,
         x: number,
@@ -146,7 +146,7 @@ export class UI512DrawChar {
 
         if (canvas) {
             if (font.grayed) {
-                uI512DrawTextCharGrayed.go(
+                instUI512DrawTextCharGrayed.go(
                     font.grid.image,
                     canvas,
                     srcX,
@@ -197,3 +197,5 @@ export class UI512DrawChar {
         return new DrawCharResult(x + spacing, destX + srcW, destY + srcH);
     }
 }
+
+export const instUI512DrawChar = new UI512DrawChar()
