@@ -1,11 +1,10 @@
 
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
-/* auto */ import { BrowserInfo, Root, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
+/* auto */ import { Root, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { coalesceIfFalseLike } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
-/* auto */ import { BowserBrowsers, BowserPlatform } from './../../bridge/bridgeBrowserInfo';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -31,24 +30,14 @@ export class RootSetupHelpers {
     }
 
     /**
-     * let's not enable the new scaling everywhere yet
+     * allow user to fallback to old scaling
      */
     static useNewResize() {
-        if (window.document.location.href.includes('newscaling')) {
-            return true;
+        if (window.document.location.href.includes('oldscaling')) {
+            return false;
         }
 
-        if (BrowserInfo.inst().platform === BowserPlatform.desktop) {
-            if (
-                BrowserInfo.inst().browser === BowserBrowsers.chrome ||
-                BrowserInfo.inst().browser === BowserBrowsers.chromium ||
-                BrowserInfo.inst().browser === BowserBrowsers.firefox
-            ) {
-                return true;
-            }
-        }
-
-        return false;
+        return true;
     }
 
     /*
@@ -94,6 +83,9 @@ export class RootSetupHelpers {
         return ret;
     }
 
+    /**
+     * place this math in another method just to be very cautious
+     */
     static mainOnResizeNewAdvanced(root: RootHigher, gly: any): [number, number] {
         /* note, window.innerWidth is affected by browser's current zoom setting */
         let dpr = window.devicePixelRatio ?? 1;
@@ -117,6 +109,11 @@ export class RootSetupHelpers {
         return [root.scaleMouseCoords, canFit];
     }
 
+    /**
+     * previous resizing,
+     * could expand to fit big screens,
+     * but looked blurry if window.devicePixelRatio != 1
+     */
     static mainOnResizeClassic(root: RootHigher, gly: any): [number, number] {
         /* on high-dpi screens, automatically show bigger pixels, with no blurring */
 
