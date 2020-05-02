@@ -2,15 +2,17 @@
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../utils/utilsCursors';
 /* auto */ import { RectUtils } from './../utils/utilsCanvasDraw';
+/* auto */ import { RespondToErr, Util512Higher } from './../utils/util512Higher';
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { addDefaultListeners } from './../textedit/ui512TextEvents';
 /* auto */ import { TemporarilySuspendEvents } from './../menu/ui512SuspendEvents';
+/* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { UI512PresenterBase } from './../presentation/ui512PresenterBase';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
-/* auto */ import { MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
+/* auto */ import { FnEventCallback, MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
-/* auto */ import { MouseDownEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
+/* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
 /* auto */ import { UI512ElLabel } from './../elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../elements/ui512ElementGroup';
@@ -37,6 +39,9 @@ export class UI512CompModalDialog extends UI512CompBase {
     dlgType = UI512CompStdDialogType.Answer;
     labelText = '';
     btnLabels = ['', '', ''];
+    redirect: O<TemporarilyRedirectForModal>
+    aboutToClose = false
+    chosen = UI512CompStdDialogResult.NotChosen
 
     /* caller can provide rectangle of a button that, if clicked on,
     exits out of the dialog */
@@ -212,45 +217,101 @@ export class UI512CompModalDialog extends UI512CompBase {
                 : undefined
         );
         UI512CursorAccess.setCursor(UI512Cursors.arrow);
-        let nChosen = UI512CompStdDialogResult.NotChosen;
         let whenComplete = () => {
             /* restore listeners and run the callback */
-            eventRedirect.restoreInteraction(app, this.grpId);
+            if (this.redirect) {
+                this.redirect.restoreInteraction(app, this.grpId);
+            }
+
             pr.setCurrentFocus(savedFocus);
             let grp = app.getGroup(this.grpId);
             let inputfld = grp.findEl(this.getElId(`inputfld`)) as UI512ElTextField;
             this.resultText = inputfld ? inputfld.getFmTxt().toUnformatted() : undefined;
             this.destroy(pr, app);
-            fnGetResult(nChosen);
+            fnGetResult(this.chosen);
             UI512CursorAccess.setCursor(savedCursor);
         };
 
         /* redirect events */
-        let eventRedirect = new TemporarilyRedirectForModal(whenComplete);
-        pr.tmpSuspend = eventRedirect;
-        eventRedirect.saveInteraction(app, this.grpId);
-        eventRedirect.start(pr);
+        this.redirect = new TemporarilyRedirectForModal(whenComplete);
+        pr.tmpSuspend = this.redirect;
+        this.redirect.saveInteraction(app, this.grpId);
+        this.redirect.start(pr);
         addDefaultListeners(pr.listeners);
+
+        /* add returnkey listener */
+        this.addReturnKeyListener(pr.listeners[UI512EventType.KeyDown], app)
 
         /* if you clicked on a special 'cancel' rect, close the dialog */
         pr.listenEvent(UI512EventType.MouseDown, (_, d: MouseDownEventDetails) => {
             if (this.isCancelRect(d.mouseX, d.mouseY)) {
-                nChosen = UI512CompStdDialogResult.Exit;
-                eventRedirect.completed = true;
-            }
-        });
-
-        /* if you clicked in a button, run the callback and close the dialog */
-        pr.listenEvent(UI512EventType.MouseUp, (_, d: MouseUpEventDetails) => {
-            nChosen = this.getWhichBtnFromClick(d);
-            if (nChosen !== UI512CompStdDialogResult.NotChosen) {
-                if (this.cbOnMouseUp) {
-                    this.cbOnMouseUp(nChosen);
+                this.chosen = UI512CompStdDialogResult.Exit;
+                if (this.redirect) {
+                    this.redirect.completed = true;
                 }
-
-                eventRedirect.completed = true;
             }
         });
+
+        /* set callback */
+        pr.listenEvent(UI512EventType.MouseUp, (_, d: MouseUpEventDetails) => {
+            this.chosen = this.getWhichBtnFromClick(d);
+            this.onClickChoiceBtn()
+        });
+    }
+
+    /* if you clicked in a button, run the callback and close the dialog */
+    onClickChoiceBtn() {
+        if (this.chosen !== UI512CompStdDialogResult.NotChosen) {
+            if (!this.children.length || this.aboutToClose) {
+                /* we're already closing */
+                return
+            }
+
+            if (this.cbOnMouseUp) {
+                this.cbOnMouseUp(this.chosen);
+            }
+
+            if (this.redirect) {
+                this.redirect.completed = true;
+            }
+            
+            this.aboutToClose = true
+        }
+    }
+
+    /**
+     * press Enter to confirm. note: our event should take precedence
+     * over textediting. 
+     */
+    addReturnKeyListener(cbs: FnEventCallback[], app: UI512Application) {
+        let onReturn = (    pr: UI512PresenterWithMenuInterface,
+            d: KeyDownEventDetails
+        ) => {
+            let btnId:string
+            let nChosen = UI512CompStdDialogResult.NotChosen
+            if (d.readableShortcut.toLowerCase() === "enter" || d.readableShortcut.toLowerCase() === "return") {
+                btnId = `choicebtn0`
+                nChosen = UI512CompStdDialogResult.Btn1
+            } else if (d.readableShortcut.toLowerCase() === "escape" && (this.btnLabels[1].toLowerCase() === lng("lngCancel").toLowerCase())) {
+                btnId = `choicebtn1`
+                nChosen = UI512CompStdDialogResult.Btn2
+            } else {
+                return
+            }
+
+            d.setHandled()
+            let fn = () => {
+                this.chosen = nChosen
+                this.onClickChoiceBtn()
+            }
+
+            let okbtn = this.getElId(btnId)
+            let el = app.getEl(okbtn)
+            el.set('highlightactive', true)
+            Util512Higher.syncToAsyncAfterPause(fn, 200, "HitEnter", RespondToErr.ConsoleErrOnly)
+        }
+
+        cbs.splice(0, 0, onReturn)
     }
 
     /**
