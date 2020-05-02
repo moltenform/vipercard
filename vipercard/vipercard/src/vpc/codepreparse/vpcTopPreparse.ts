@@ -5,7 +5,7 @@
 /* auto */ import { VpcRewritesLoops } from './vpcRewritesLoops';
 /* auto */ import { VpcRewritesGlobal, VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { ExpandCustomFunctions } from './vpcRewritesCustomFunctions';
-/* auto */ import { VpcRewriteNoElseIfClauses, VpcSplitSingleLineIf } from './vpcRewritesConditions';
+/* auto */ import { NoElseIfClausesTreeBuilder, VpcRewriteNoElseIfClauses, VpcSplitSingleLineIf } from './vpcRewritesConditions';
 /* auto */ import { VpcRewriteForCommands } from './vpcRewritesCommands';
 /* auto */ import { BranchProcessing } from './vpcProcessBranchAndLoops';
 /* auto */ import { MakeLowerCase, SplitIntoLinesAndMakeLowercase, VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage } from './vpcPreparseCommon';
@@ -133,7 +133,7 @@ export const VpcTopPreparse = /* static class */ {
         let splitter = new SplitIntoLinesAndMakeLowercase(lexed.tokens, lowercase);
         let rewrites = new VpcRewriteForCommands(rw);
         let exp = new ExpandCustomFunctions(idGen, new CheckReservedWords());
-        let buildTree = new VpcRewriteNoElseIfClauses.TreeBuilder();
+        let buildTree = new NoElseIfClausesTreeBuilder();
         let ifSplitter = new VpcSplitSingleLineIf();
         while (true) {
             let next = splitter.next();

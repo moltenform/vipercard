@@ -11,8 +11,8 @@
 /**
  * preparsing rewrites that aren't specific to a certain command
  */
-export namespace VpcRewritesGlobal {
-    const mapSynonyms = {
+export const VpcRewritesGlobal = /* static class */ {
+    mapSynonyms: {
         rect: 'rectangle',
         /* all these are in original product */
         highlight: 'hilite',
@@ -25,16 +25,16 @@ export namespace VpcRewritesGlobal {
         botright: 'bottomright'
         /* itemdel and itemdelimiter too, but it's
         a nullary prop, so it's done in productopts */
-    };
+    },
 
     /**
      * replace properties.
      * also go from 'the english date' to 'the long date' for compat.
      */
-    export function rewritePropertySynonyms(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
+    rewritePropertySynonyms(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
         for (let i = 0; i < line.length - 1; i++) {
             if (line[i + 1].image === 'of') {
-                let mapped = mapSynonyms[line[i].image];
+                let mapped = this.mapSynonyms[line[i].image];
                 if (mapped) {
                     line[i] = rw.tokenFromEnglishTerm(mapped, line[i]);
                 }
@@ -44,14 +44,14 @@ export namespace VpcRewritesGlobal {
         }
 
         return line;
-    }
+    },
 
     /**
      * from "short id of fld 1" to "short id of bg fld 1"
      * do this in software, at parse time it is difficult to clear
      * the ambiguity: the name of cd fld 1 could be parsed either way.
      */
-    export function rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
+    rewriteSpecifyCdOrBgPart(line: ChvITk[]): ChvITk[] {
         let ret: ChvITk[] = [];
         let copyLine = line.slice();
         copyLine.reverse();

@@ -6,8 +6,8 @@
 /* Released under the GPLv3 license */
 
 export const UI512DrawTextCharGrayed = /* static class */ {
-    maxCharWidth: 40,
-    maxCharHeight: 40,
+    maxCharWidth: 40 as const,
+    maxCharHeight: 40 as const,
     tempCanvas: undefined as O<CanvasWrapper>,
     go(
         img: DrawableImage,

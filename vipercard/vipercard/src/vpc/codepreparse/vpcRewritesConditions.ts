@@ -16,8 +16,8 @@
  * verified by both unit tests and vpcTestScriptExtensive.ts
  */
 export class VpcSplitSingleLineIf {
-    holdingFromBefore: O<ChvITk[]>;
-    protected classify(line: ChvITk[], rw: VpcSuperRewrite): [IfTypes, number, number] {
+    holdingFromBefore: O<ChvITk[]>
+    _classify(line: ChvITk[], rw: VpcSuperRewrite): [IfTypes, number, number] {
         if (line[0].image === 'if') {
             let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
             checkThrow(findThen !== -1, 'TE|if statement, no "then" found');
@@ -46,9 +46,9 @@ export class VpcSplitSingleLineIf {
         }
     }
 
-    public go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
+    go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         let ret: ChvITk[][] = [];
-        let got = this.classify(line, rw);
+        let got = this._classify(line, rw);
         let type = got[0];
         let cutStart = got[1];
         let cutEnd = got[2];
@@ -108,22 +108,22 @@ enum IfTypes {
  * (remembering if a clause has been taken) so it's more complex.
  * verified by both unit tests and vpcTestScriptExtensive.ts
  */
-export namespace VpcRewriteNoElseIfClauses {
+export const VpcRewriteNoElseIfClauses = /* static class */ {
     /**
      * we'll build the code into a tree structure,
      * then walk the tree recursively to flatten it.
      */
-    export function go(tree: TreeBuilder, rw: VpcSuperRewrite) {
+    go(tree: NoElseIfClausesTreeBuilder, rw: VpcSuperRewrite) {
         let ret: ChvITk[][] = [];
-        flattenTreeRecurse(tree.root, rw, ret);
+        this._flattenTreeRecurse(tree.root, rw, ret);
         return ret;
-    }
+    },
 
-    function isLineEndIf(l: ChvITk[]) {
+    _isLineEndIf(l: ChvITk[]) {
         return l.length === 2 && l[0].image === 'end' && l[1].image === 'if';
-    }
+    },
 
-    function isLineIf(l: ChvITk[]) {
+    _isLineIf(l: ChvITk[]) {
         if (l.length >= 1 && l[0].image === 'if') {
             checkThrow(l.length >= 3, "TB|expect line starting with if to be 'if condition then'");
             checkThrowEq('then', arLast(l).image, "TA|expect line starting with else to be 'if condition *then*'");
@@ -131,13 +131,13 @@ export namespace VpcRewriteNoElseIfClauses {
         }
 
         return undefined;
-    }
+    },
 
-    function isLineElsePlain(l: ChvITk[]) {
+    _isLineElsePlain(l: ChvITk[]) {
         return l.length === 1 && l[0].image === 'else';
-    }
+    },
 
-    function isLineElseCondition(l: ChvITk[]) {
+    _isLineElseCondition(l: ChvITk[]) {
         if (l.length > 1 && l[0].image === 'else') {
             checkThrow(l.length >= 4, "T9|expect line starting with else to be 'else if condition then'");
             checkThrowEq('if', l[1].image, "T8|expect line starting with else to be 'else *if* condition then'");
@@ -145,68 +145,13 @@ export namespace VpcRewriteNoElseIfClauses {
             return l.slice(2, -1);
         }
         return undefined;
-    }
-
-    class IfConstructClause {
-        children: (ChvITk[] | IfConstruct)[] = [];
-        constructor(public condition: ChvITk[], public isFirst: boolean) {}
-    }
-
-    class IfConstruct {
-        clauses: IfConstructClause[];
-        hasSeenPlainElse = false;
-        isRoot = false;
-        constructor(public parent: O<IfConstruct>) {}
-    }
-
-    /**
-     * make a tree, where each if statement has clauses,
-     * and each clause has either lines of code or if statements.
-     * no transformations applied yet - the IfConstruct
-     * will match 1-1 with the input code
-     */
-    export class TreeBuilder {
-        root = new IfConstruct(undefined);
-        current = this.root;
-        constructor() {
-            this.root.isRoot = true;
-            this.root.clauses = [new IfConstructClause([], true)];
-        }
-
-        addLine(line: ChvITk[]) {
-            let arisLineIf = isLineIf(line);
-            let arisLineElseCondition = isLineElseCondition(line);
-            if (arisLineIf) {
-                let clause = new IfConstructClause(arisLineIf, true);
-                let construct = new IfConstruct(this.current);
-                construct.clauses = [clause];
-                arLast(this.current.clauses).children.push(construct);
-                this.current = construct;
-            } else if (arisLineElseCondition) {
-                checkThrow(!this.current.isRoot, 'T6|else outside of if?');
-                checkThrow(!this.current.hasSeenPlainElse, "T5|can't have conditional else after plain else");
-                let clause = new IfConstructClause(arisLineElseCondition, false);
-                this.current.clauses.push(clause);
-            } else if (isLineElsePlain(line)) {
-                checkThrow(!this.current.isRoot, 'T4|else outside of if?');
-                checkThrow(!this.current.hasSeenPlainElse, "T3|can't have two plain elses");
-                this.current.hasSeenPlainElse = true;
-                let clause = new IfConstructClause([], false);
-                this.current.clauses.push(clause);
-            } else if (isLineEndIf(line)) {
-                checkThrow(!this.current.isRoot && this.current.parent, "T2|can't have an end if outside of if");
-                this.current = this.current.parent;
-            } else {
-                arLast(this.current.clauses).children.push(line);
-            }
-        }
-    }
+    },
 
     /**
      * flatten the tree, and while doing so,
      * write out the clauses as separate if statements.
      */
-    function flattenTreeRecurse(node: IfConstruct, rw: VpcSuperRewrite, output: ChvITk[][]) {
+    _flattenTreeRecurse(node: IfConstruct, rw: VpcSuperRewrite, output: ChvITk[][]) {
         let numberOfEndIfsNeeded = 0;
         if (!node.isRoot) {
             let firstLine = rw.gen('if %ARG0% then', node.clauses[0].condition[0], [node.clauses[0].condition]);
@@ -226,7 +171,7 @@ export namespace VpcRewriteNoElseIfClauses {
             }
             for (let item of clause.children) {
                 if (item instanceof IfConstruct) {
-                    flattenTreeRecurse(item, rw, output);
+                    this._flattenTreeRecurse(item, rw, output);
                 } else {
                     output.push(item);
                 }
@@ -241,3 +186,59 @@ export namespace VpcRewriteNoElseIfClauses {
         }
     }
 }
+
+class IfConstructClause  {
+    children: (ChvITk[] | IfConstruct)[] = [];
+    constructor(public condition: ChvITk[], public isFirst: boolean) {}
+}
+
+class IfConstruct {
+    clauses: IfConstructClause[];
+    hasSeenPlainElse = false;
+    isRoot = false;
+    constructor(public parent: O<IfConstruct>) {}
+}
+
+/**
+ * make a tree, where each if statement has clauses,
+ * and each clause has either lines of code or if statements.
+ * no transformations applied yet - the IfConstruct
+ * will match 1-1 with the input code
+ */
+export class NoElseIfClausesTreeBuilder {
+    root = new IfConstruct(undefined);
+    current = this.root;
+    constructor() {
+        this.root.isRoot = true;
+        this.root.clauses = [new IfConstructClause([], true)];
+    }
+
+    addLine(line: ChvITk[]) {
+        let arisLineIf = VpcRewriteNoElseIfClauses._isLineIf(line);
+        let arisLineElseCondition = VpcRewriteNoElseIfClauses._isLineElseCondition(line);
+        if (arisLineIf) {
+            let clause = new IfConstructClause(arisLineIf, true);
+            let construct = new IfConstruct(this.current);
+            construct.clauses = [clause];
+            arLast(this.current.clauses).children.push(construct);
+            this.current = construct;
+        } else if (arisLineElseCondition) {
+            checkThrow(!this.current.isRoot, 'T6|else outside of if?');
+            checkThrow(!this.current.hasSeenPlainElse, "T5|can't have conditional else after plain else");
+            let clause = new IfConstructClause(arisLineElseCondition, false);
+            this.current.clauses.push(clause);
+        } else if (VpcRewriteNoElseIfClauses._isLineElsePlain(line)) {
+            checkThrow(!this.current.isRoot, 'T4|else outside of if?');
+            checkThrow(!this.current.hasSeenPlainElse, "T3|can't have two plain elses");
+            this.current.hasSeenPlainElse = true;
+            let clause = new IfConstructClause([], false);
+            this.current.clauses.push(clause);
+        } else if (VpcRewriteNoElseIfClauses._isLineEndIf(line)) {
+            checkThrow(!this.current.isRoot && this.current.parent, "T2|can't have an end if outside of if");
+            this.current = this.current.parent;
+        } else {
+            arLast(this.current.clauses).children.push(line);
+        }
+    }
+}
+

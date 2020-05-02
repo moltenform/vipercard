@@ -12,9 +12,9 @@
  * this makes code-execution simpler because it doesn't have to hold separate state,
  * the state is now held in a normal local variable.
  */
-export namespace VpcRewritesLoops {
+export const VpcRewritesLoops = /* static class */ {
     /* begin to rewrite a loop */
-    export function Go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
+    Go(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, 'TU|');
         if (line.length === 1) {
             return [line];
@@ -22,9 +22,9 @@ export namespace VpcRewritesLoops {
             checkThrowEq(2, line.length, "TT|didn't expect to see anything after 'repeat forever'");
             return [line.slice(0, 1)];
         } else if (line[1].image === 'until' || line[1].image === 'while') {
-            return goUntilWhile(line, rw);
+            return this._goUntilWhile(line, rw);
         } else if (line[1].image === 'with') {
-            return goWith(line, rw);
+            return this._goWith(line, rw);
         } else {
             let times = rw.tokenFromEnglishTerm('times', line[0]);
             if (arLast(line).tokenType === times.tokenType && arLast(line).image === times.image) {
@@ -34,12 +34,12 @@ export namespace VpcRewritesLoops {
             let loopVar = rw.generateUniqueVariable(line[0], '$repeatTimes');
             let firstExpr = [BuildFakeTokens.makeTk(line[0], tks.tkNumLiteral, '1')];
             let secondExpr = line.slice(1);
-            return goWithImpl(firstExpr, secondExpr, loopVar, false, rw);
+            return this._goWithImpl(firstExpr, secondExpr, loopVar, false, rw);
         }
-    }
+    },
 
     /* rewrite a loop of the form "repeat while" or "repeat until" */
-    function goUntilWhile(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
+    _goUntilWhile(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         let template = `
 repeat
     if %NOTSTART% %ARG0% %NOTEND% then
@@ -57,10 +57,10 @@ repeat
         let conditionExpression = line.slice(2);
         checkThrow(conditionExpression?.length, 'TS|without an expression');
         return rw.gen(template, line[0], [conditionExpression], undefined, false);
-    }
+    },
 
     /* rewrite a loop of the form "repeat with x = 1 to 5" */
-    function goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
+    _goWith(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[][] {
         checkThrowEq('repeat', line[0].image, 'TR|');
         checkThrowEq('with', line[1].image, 'TQ|');
         checkThrow(couldTokenTypeBeAVariableName(line[2]), 'TP|');
@@ -76,11 +76,11 @@ repeat
         }
         let firstExpr = line.slice(startFirstExpr, endFirstExpr + 1);
         let secondExpr = line.slice(findTo + 1);
-        return goWithImpl(firstExpr, secondExpr, line[2], isDown, rw);
-    }
+        return this._goWithImpl(firstExpr, secondExpr, line[2], isDown, rw);
+    },
 
     /* build the code for a loop of the form "repeat with x = 1 to 5" */
-    function goWithImpl(
+    _goWithImpl(
         firstExpr: ChvITk[],
         secondExpr: ChvITk[],
         loopVar: ChvITk,
