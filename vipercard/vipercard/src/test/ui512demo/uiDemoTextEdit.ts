@@ -98,18 +98,20 @@ export class UI512DemoTextEdit extends UI512Presenter {
 
     protected static respondMouseUp(pr: UI512DemoTextEdit, d: MouseUpEventDetails) {
         /* right-click to run the test */
-        let isDld = d.button === 0
+        let isDld = d.button === 0;
         if (d.elClick) {
             if (d.elClick.id === 'btnDldWrap') {
                 Util512Higher.syncToAsyncTransition(
-                    TestUtilsCanvas.RenderAndCompareImages(isDld, () => pr.test.testDrawTextEdit(true)
+                    TestUtilsCanvas.RenderAndCompareImages(isDld, () =>
+                        pr.test.testDrawTextEdit(true)
                     ),
                     'demotextedit',
                     RespondToErr.Alert
                 );
             } else if (d.elClick.id === 'btnDldNoWrap') {
                 Util512Higher.syncToAsyncTransition(
-                    TestUtilsCanvas.RenderAndCompareImages(isDld, () => pr.test.testDrawTextEdit(false)
+                    TestUtilsCanvas.RenderAndCompareImages(isDld, () =>
+                        pr.test.testDrawTextEdit(false)
                     ),
                     'demotextedit',
                     RespondToErr.Alert

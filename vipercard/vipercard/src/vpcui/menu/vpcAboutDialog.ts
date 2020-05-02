@@ -11,7 +11,7 @@
 /**
  * ViperCard's about dialog
  */
-export class VpcAboutDialog {
+export const VpcAboutDialog = /* static class */ {
     /**
      * show main about screen
      *
@@ -25,7 +25,7 @@ export class VpcAboutDialog {
      * also, browser differences, with Firefox treating typing into the
      * donation page also sending the events to vipercard, which didn't look right.
      */
-    static show(pr: UI512Presenter, dlg: UI512CompModalDialog) {
+     show(pr: UI512Presenter, dlg: UI512CompModalDialog) {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn2) {
@@ -54,12 +54,12 @@ export class VpcAboutDialog {
             lng('lngDonate'),
             lng('lngMore')
         );
-    }
+    },
 
     /**
      * go directly to a dialog about Donation
      */
-    static showDonateDlg(pr: UI512Presenter, dlg: UI512CompModalDialog) {
+     showDonateDlg(pr: UI512Presenter, dlg: UI512CompModalDialog) {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn1) {
@@ -77,12 +77,12 @@ export class VpcAboutDialog {
             lng('lngDonate'),
             lng('lngClose')
         );
-    }
+    },
 
     /**
      * show more information, incl terms
      */
-    static showMore(pr: UI512Presenter, dlg: UI512CompModalDialog) {
+     showMore(pr: UI512Presenter, dlg: UI512CompModalDialog) {
         dlg.destroy(pr, pr.app);
         dlg.cbOnMouseUp = n => {
             if (n === UI512CompStdDialogResult.Btn3) {
@@ -114,12 +114,12 @@ export class VpcAboutDialog {
             lng('lngJS Libs Used'),
             lng('lngFull terms')
         );
-    }
+    },
 
     /**
      * show libraries, to fulfill terms of MIT license
      */
-    static showLibs(pr: UI512Presenter, dlg: UI512CompModalDialog) {
+     showLibs(pr: UI512Presenter, dlg: UI512CompModalDialog) {
         dlg.destroy(pr, pr.app);
         dlg.standardAnswer(
             pr,

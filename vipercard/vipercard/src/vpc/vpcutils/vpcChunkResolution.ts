@@ -21,13 +21,13 @@
  * the input is given as 1-based but
  * internally in this class we use 0-based indexes
  */
-export class ChunkResolution {
+export const ChunkResolution = /* static class */ {
     /**
      * make a table of positions where items start
      * positions are 0-based
      * "a,bb,c" -> [0, 2, 5]
      */
-    protected getPositionsTable(s: string, re: RegExp, isWords: boolean): number[] {
+    _getPositionsTable(s: string, re: RegExp, isWords: boolean): number[] {
         let positions: number[] = [];
         if (!isWords || (!s.startsWith(' ') && !s.startsWith('\n'))) {
             positions.push(0);
@@ -46,38 +46,38 @@ export class ChunkResolution {
         }
 
         return positions;
-    }
+    },
 
     /**
      * if the script has said something like
      * set the itemDel to "?"
      * make sure it is one-character and that the regex is escaped
      */
-    protected regexpForDelim(delim: string) {
+    _regexpForDelim(delim: string) {
         checkThrowEq(1, delim.length, '8m|delim should be length 1 but got', delim);
         let escaped = Util512.escapeForRegex(delim);
         return new RegExp(escaped, 'g');
-    }
+    },
 
     /**
      * get positions of the chunk, for chars.
      * return semi-inclusive bounds [start, end)
      */
-    protected charsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
+    _charsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
         if (start >= sInput.length) {
             return undefined;
         } else {
             end = Math.min(end, sInput.length);
             return [start, end];
         }
-    }
+    },
 
     /**
      * get positions of the chunk, for items.
      * return semi-inclusive bounds [start, end)
      */
-    protected itemsBoundsForGet(sInput: string, delim: string, start: number, end: number): O<[number, number]> {
-        let table = this.getPositionsTable(sInput, this.regexpForDelim(delim), false);
+    _itemsBoundsForGet(sInput: string, delim: string, start: number, end: number): O<[number, number]> {
+        let table = this._getPositionsTable(sInput, this._regexpForDelim(delim), false);
         if (start >= table.length) {
             return undefined;
         } else {
@@ -85,15 +85,15 @@ export class ChunkResolution {
             let lastchar = end >= table.length ? sInput.length : table[end] - 1;
             return [firstchar, lastchar];
         }
-    }
+    },
 
     /**
      * get positions of the chunk, for words.
      * confirmed in emulator: only spaces and newlines separate words, not punctuation.
      * return semi-inclusive bounds [start, end)
      */
-    protected wordsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
-        let table = this.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true);
+    _wordsBoundsForGet(sInput: string, start: number, end: number): O<[number, number]> {
+        let table = this._getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true);
         if (start >= table.length) {
             return undefined;
         } else {
@@ -105,25 +105,25 @@ export class ChunkResolution {
 
             return [firstchar, lastchar];
         }
-    }
+    },
 
     /**
      * when you say put "abc" into char x to y of z, which positions should be replaced with "abc"?
      */
-    protected charsBoundsForSet(sInput: string, start: number, end: number): any {
+    _charsBoundsForSet(sInput: string, start: number, end: number): any {
         if (start >= sInput.length) {
             return [sInput.length, sInput.length, ''];
         } else {
             end = Math.min(end, sInput.length);
             return [start, end, ''];
         }
-    }
+    },
 
     /**
      * when you say put "abc" into item x to y of z, which positions should be replaced with "abc"?
      */
-    protected itemsBoundsForSet(sInput: string, delim: string, start: number, end: number): any {
-        let table = this.getPositionsTable(sInput, this.regexpForDelim(delim), false);
+    _itemsBoundsForSet(sInput: string, delim: string, start: number, end: number): any {
+        let table = this._getPositionsTable(sInput, this._regexpForDelim(delim), false);
         if (start >= table.length) {
             /* you can set items beyond current content, add trailing commas! */
             let howmanytoadd = 1 + (start - table.length);
@@ -134,25 +134,25 @@ export class ChunkResolution {
             let lastchar = end >= table.length ? sInput.length : table[end] - 1;
             return [firstchar, lastchar, ''];
         }
-    }
+    },
 
     /**
      * when you say put "abc" into word x to y of z, which positions should be replaced with "abc"?
      */
-    protected wordsBoundsForSet(sInput: string, start: number, end: number): any {
-        let boundsGet = this.wordsBoundsForGet(sInput, start, end);
+    _wordsBoundsForSet(sInput: string, start: number, end: number): any {
+        let boundsGet = this._wordsBoundsForGet(sInput, start, end);
         if (boundsGet === undefined) {
             return [sInput.length, sInput.length, ''];
         } else {
             return [boundsGet[0], boundsGet[1], ''];
         }
-    }
+    },
 
     /**
      * we've been asked to get item x to y of z.
      * return semi-inclusive bounds [start, end)
      */
-    protected getBoundsForGet(s: string, itemDel: string, ch: RequestedChunk): O<[number, number]> {
+    _getBoundsForGet(s: string, itemDel: string, ch: RequestedChunk): O<[number, number]> {
         let first = ch.first;
         let last = ch.last;
         if (ch.ordinal !== undefined) {
@@ -185,23 +185,23 @@ export class ChunkResolution {
 
         /* type-specific actions */
         if (ch.type === VpcGranularity.Chars) {
-            return this.charsBoundsForGet(s, start, end);
+            return this._charsBoundsForGet(s, start, end);
         } else if (ch.type === VpcGranularity.Items) {
-            return this.itemsBoundsForGet(s, itemDel, start, end);
+            return this._itemsBoundsForGet(s, itemDel, start, end);
         } else if (ch.type === VpcGranularity.Lines) {
-            return this.itemsBoundsForGet(s, '\n', start, end);
+            return this._itemsBoundsForGet(s, '\n', start, end);
         } else if (ch.type === VpcGranularity.Words) {
-            return this.wordsBoundsForGet(s, start, end);
+            return this._wordsBoundsForGet(s, start, end);
         } else {
             checkThrow(false, `5<|unknown chunk type ${ch.type}`);
         }
-    }
+    },
 
     /**
      * we've been asked to get item x to y of z.
      * return semi-inclusive bounds [start, end)
      */
-    protected getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
+    _getBoundsForSet(sInput: string, itemDel: string, ch: RequestedChunk): [number, number, string] {
         let first = ch.first;
         let last = ch.last;
         if (ch.ordinal !== undefined) {
@@ -232,25 +232,23 @@ export class ChunkResolution {
 
         /* type-specific actions */
         if (ch.type === VpcGranularity.Chars) {
-            return this.charsBoundsForSet(sInput, start, end);
+            return this._charsBoundsForSet(sInput, start, end);
         } else if (ch.type === VpcGranularity.Items) {
-            return this.itemsBoundsForSet(sInput, itemDel, start, end);
+            return this._itemsBoundsForSet(sInput, itemDel, start, end);
         } else if (ch.type === VpcGranularity.Lines) {
-            return this.itemsBoundsForSet(sInput, '\n', start, end);
+            return this._itemsBoundsForSet(sInput, '\n', start, end);
         } else if (ch.type === VpcGranularity.Words) {
-            return this.wordsBoundsForSet(sInput, start, end);
+            return this._wordsBoundsForSet(sInput, start, end);
         } else {
             checkThrow(false, `5:|unknown chunk type ${ch.type}`);
         }
-    }
+    },
 
     /**
      * count chunks, e.g.
      * 'put the number of words in x into y'
      */
-    static applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
-        let self = new ChunkResolution();
-
+    applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
         /* in the public interface, change behavior to be
           closer (still not 100% match) to emulator */
         if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
@@ -260,32 +258,30 @@ export class ChunkResolution {
         if (type === VpcGranularity.Chars) {
             return sInput.length;
         } else if (type === VpcGranularity.Items) {
-            return self.getPositionsTable(sInput, self.regexpForDelim(itemDel), false).length;
+            return this._getPositionsTable(sInput, this._regexpForDelim(itemDel), false).length;
         } else if (type === VpcGranularity.Lines) {
-            return self.getPositionsTable(sInput, /\n/g, false).length;
+            return this._getPositionsTable(sInput, /\n/g, false).length;
         } else if (type === VpcGranularity.Words) {
-            return self.getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
+            return this._getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
         } else {
             checkThrow(false, `5-|unknown chunk type ${type}`);
         }
-    }
+    },
 
     /**
      * calls getBoundsForGet
      */
-    static resolveBoundsForGet(s: string, itemDel: string, chunk: RequestedChunk) {
-        let me = new ChunkResolution();
-        return me.getBoundsForGet(s, itemDel, chunk);
-    }
+    resolveBoundsForGet(s: string, itemDel: string, chunk: RequestedChunk) {
+        return this._getBoundsForGet(s, itemDel, chunk);
+    },
 
     /**
      * calls getBoundsForGet and retrieves the text from a container
      */
-    static applyRead(readContainer: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): string {
+    applyRead(readContainer: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): string {
         if (chunk) {
             let s = readContainer.getRawString();
-            let me = new ChunkResolution();
-            let bounds = me.getBoundsForGet(s, itemDel, chunk);
+            let bounds = this._getBoundsForGet(s, itemDel, chunk);
             if (bounds) {
                 return s.substring(bounds[0], bounds[1]);
             } else {
@@ -294,18 +290,17 @@ export class ChunkResolution {
         } else {
             return readContainer.getRawString();
         }
-    }
+    },
 
     /**
      * apply a modification like 'add 1 to item 3 of x'
      */
-    static applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, fn: (s: string) => string) {
+    applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, fn: (s: string) => string) {
         if (chunk) {
             /* confirmed in original product that modify uses "set" bounds not "get" bounds */
             /* so "multiply line 300 of x" extends the contents of x if necessary */
             let s = cont.getRawString();
-            let me = new ChunkResolution();
-            let bounds = me.getBoundsForSet(s, itemDel, chunk);
+            let bounds = this._getBoundsForSet(s, itemDel, chunk);
             let sInput = s.substring(bounds[0], bounds[1]);
             let result = bounds[2] + fn(sInput);
             cont.splice(bounds[0], bounds[1] - bounds[0], result);
@@ -314,12 +309,12 @@ export class ChunkResolution {
             let news = fn(s);
             cont.splice(0, cont.len(), news);
         }
-    }
+    },
 
     /**
      * apply a put like 'put "abc" into line x of y'
      */
-    static applyPut(
+    applyPut(
         cont: WritableContainer,
         chunk: O<RequestedChunk>,
         itemDel: string,
@@ -328,8 +323,7 @@ export class ChunkResolution {
     ): void {
         if (chunk) {
             let s = cont.getRawString();
-            let me = new ChunkResolution();
-            let bounds = me.getBoundsForSet(s, itemDel, chunk);
+            let bounds = this._getBoundsForSet(s, itemDel, chunk);
             if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
                 /* it's a brand new item, adding 'before' or 'after' isn't applicable */
                 let result = bounds[2] + news;

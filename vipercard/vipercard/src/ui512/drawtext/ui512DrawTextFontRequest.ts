@@ -140,7 +140,7 @@ export class UI512FontRequest {
                 let obj = await Util512Higher.asyncLoadJson(jsonUrl);
                 pendingGrid.metrics = obj;
                 pendingGrid.loadedMetrics = true;
-                instAdjustFontMetrics.go(gridkey, pendingGrid)
+                AdjustFontMetrics.go(gridkey, pendingGrid);
                 pendingGrid.freeze();
             };
 
@@ -184,7 +184,7 @@ export class UI512FontRequest {
                 let fontwId = typefacenameToTypefaceIdFull(font);
                 let gridkey = this.stripManuallyAddedStylingToGetGridKey(fontwId);
                 if (!UI512FontRequest.hasRealGrayedImage[gridkey]) {
-                    fontObj.grayed = true
+                    fontObj.grayed = true;
                 }
             }
 
@@ -258,11 +258,11 @@ mapAdjustLineHeight['07_10_+biuosdce'] = 1;
  * our font-screenshot gathering tool can't know the metrics
  * with 100% accuracy, so adjust metrics here
  */
-class AdjustFontMetrics {
-    go(gridkey:string, obj:UI512FontGrid) {
-        obj.adjustHSpacing = 0
-       
-        /* 
+const AdjustFontMetrics = /* static class */ {
+    go(gridkey: string, obj: UI512FontGrid) {
+        obj.adjustHSpacing = 0;
+
+        /*
             when addressing differences: move towards the blue.
             to slide characters horizontally,
                 keep (adjustHSpacing - obj.metrics['leftmost']) a constant
@@ -270,66 +270,65 @@ class AdjustFontMetrics {
             to stretch characters horizontally,
                 adjust (adjustHSpacing - obj.metrics['leftmost'])
         */
-        
-        if ((gridkey.startsWith('02_9_') && gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
+
+        if (gridkey.startsWith('02_9_') && gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
             /* j is too wide */
-            obj.metrics.bounds['j'.charCodeAt(0)][4] += -1
-        } else if ((gridkey.startsWith('02_12_') && gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += -1
-        } else if ((gridkey.startsWith('02_24_') && gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += -1
+            obj.metrics.bounds['j'.charCodeAt(0)][4] += -1;
+        } else if (gridkey.startsWith('02_12_') && gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += -1;
+        } else if (gridkey.startsWith('02_24_') && gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += -1;
         } else if (gridkey.startsWith('02_24_')) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
-        } else if ((gridkey.startsWith('03_18_') && gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += -1
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
+        } else if (gridkey.startsWith('03_18_') && gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += -1;
         } else if (gridkey.startsWith('04_18_')) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
         } else if (gridkey.startsWith('05_18_')) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
         } else if (gridkey.startsWith('06_10_')) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
-        } else if ((gridkey.startsWith('06_12_') && gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += -1
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
+        } else if (gridkey.startsWith('06_12_') && gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += -1;
         } else if (gridkey.startsWith('06_14_')) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
         } else if (gridkey.startsWith('06_18_')) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
-        } else if ((gridkey.startsWith('06_24_') && gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
-        } else if ((gridkey.startsWith('07_9_') && gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
+        } else if (gridkey.startsWith('06_24_') && gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
+        } else if (gridkey.startsWith('07_9_') && gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
         } else if (gridkey.startsWith('07_10_')) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
-        } else if ((gridkey.startsWith('07_14_') && !gridkey.includes('+i'))) {
-            obj.adjustHSpacing += 0
-            obj.metrics['leftmost'] += 1
-        } 
-        
-        /* all outlines need to be offset */
-        if (gridkey.includes("+o")) {
-            obj.metrics['leftmost'] += 1
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
+        } else if (gridkey.startsWith('07_14_') && !gridkey.includes('+i')) {
+            obj.adjustHSpacing += 0;
+            obj.metrics['leftmost'] += 1;
         }
 
-        let adj = mapAdjustLineHeight[gridkey]
+        /* all outlines need to be offset */
+        if (gridkey.includes('+o')) {
+            obj.metrics['leftmost'] += 1;
+        }
+
+        let adj = mapAdjustLineHeight[gridkey];
         if (adj !== undefined) {
-            obj.metrics.lineheight += adj
+            obj.metrics.lineheight += adj;
         }
     }
 }
 
-const instAdjustFontMetrics = new AdjustFontMetrics()

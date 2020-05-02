@@ -16,13 +16,13 @@
  * one character for each pixel in the image.
  * then run lz to compress the string to binary data.
  */
-export const UI512ImageSerialization = {
-    asciiBlack : clrBlack.toString().charAt(0),
-    asciiWhite : clrWhite.toString().charAt(0),
-    asciiTransp : clrTransp.toString().charAt(0),
-    asciiNumBlack : clrBlack.toString().charCodeAt(0),
-    asciiNumWhite : clrWhite.toString().charCodeAt(0),
-    asciiNumTransp : clrTransp.toString().charCodeAt(0),
+export const UI512ImageSerialization = /* static class */ {
+    asciiBlack: clrBlack.toString().charAt(0),
+    asciiWhite: clrWhite.toString().charAt(0),
+    asciiTransp: clrTransp.toString().charAt(0),
+    asciiNumBlack: clrBlack.toString().charCodeAt(0),
+    asciiNumWhite: clrWhite.toString().charCodeAt(0),
+    asciiNumTransp: clrTransp.toString().charCodeAt(0),
 
     /**
      * uncompress the string and paint the image onto the canvas
@@ -103,5 +103,4 @@ export const UI512ImageSerialization = {
 
         return UI512Compress.compressString(result);
     }
-}
-
+};

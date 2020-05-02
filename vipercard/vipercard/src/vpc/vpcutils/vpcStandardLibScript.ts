@@ -9,17 +9,17 @@
  * if code here needs special abilities, we'll call
  * internalvpcmessagesdirective, which can do anything.
  */
-export class VpcStandardLibScript {
-    static handlersImplementedInSoftware = {
+export const VpcStandardLibScript = /* static class */ {
+    handlersImplementedInSoftware : {
         push: true,
         pop: true,
         internalvpcdeletebghelper: true,
         choose: true,
         domenu: true,
         help: true
-    };
+    },
 
-    static script = `
+    script: `
 -- we don't need default handlers for "on mousedown" etc...
 -- we have a list of handlers where it's always ok if they are missing (equivalent).
 -- perhaps a slight benefit, because events like "idle" won't create a stack frame
@@ -201,5 +201,5 @@ end goCardDestinationFromObjectId
 
 
 
-       `;
+       `
 }

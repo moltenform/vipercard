@@ -41,7 +41,7 @@
 /**
  * a very simple testing framework.
  */
-export const SimpleUtil512Tests = {
+export const SimpleUtil512Tests = /* static class */ {
     async runTests(includeSlow: boolean) {
         if (UI512ErrorHandling.runningTests) {
             console.log('Apparently already running tests...');
@@ -114,12 +114,7 @@ export const SimpleUtil512Tests = {
             colNamesSeen.set(coll.name.toLowerCase(), true);
             console.log(`Collection: ${coll.name}`);
             if (includeSlow || !coll.slow) {
-                await this.runCollection(
-                    coll,
-                    countTotal,
-                    counter,
-                    mapSeen
-                );
+                await this.runCollection(coll, countTotal, counter, mapSeen);
             } else {
                 console.log('(Skipped)');
             }
@@ -164,5 +159,4 @@ export const SimpleUtil512Tests = {
             counter.val += 1;
         }
     }
-}
-
+};

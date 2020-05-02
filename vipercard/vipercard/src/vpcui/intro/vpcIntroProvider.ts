@@ -184,9 +184,7 @@ export class VpcIntroProvider {
             await this.yieldTime();
             let serVel = JSON.parse(serializedSavedData);
             await this.yieldTime();
-            let des = new VpcStateSerialize();
-            await this.yieldTime();
-            des.deserializeAll(fullVci, serVel);
+            VpcStateSerialize.deserializeAll(fullVci, serVel);
             await this.yieldTime();
         } else {
             /* only call this *after* the presenter has set up useThisObserverForVpcEls */

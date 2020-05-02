@@ -9,14 +9,14 @@
 /**
  * utilities for sorting text
  */
-export class ChunkResolutionSort {
+export const ChunkResolutionSort = /* static class */ {
     /**
      * sort a container by chunks.
      * text sorting (default), compares text, not case sensitive.
      * numeric sorting, interpret as numbers, e.g. 10 sorts after 2.
      * international sorting, compares text using current locale.
      */
-    static applySort(cont: WritableContainer, itemDel: string, type: VpcGranularity, sortType: SortType, ascend: boolean) {
+    applySort(cont: WritableContainer, itemDel: string, type: VpcGranularity, sortType: SortType, ascend: boolean) {
         let splitBy: string;
         if (type === VpcGranularity.Chars) {
             splitBy = '';
@@ -62,14 +62,14 @@ export class ChunkResolutionSort {
 
         let result = split.join(splitBy);
         cont.splice(0, cont.len(), result);
-    }
+    },
 
     /**
      * lets you sort by a custom expression.
      * written in vipercard itself so that it's easy to plug in the expression.
      */
-    static internalDelim = '\x01\x01\x01vpcinternal\x01\x01\x01';
-    static writeCodeCustomSort(granularity: string, sortOptions: { [key: string]: string }) {
+    internalDelim: '\x01\x01\x01vpcinternal\x01\x01\x01',
+    writeCodeCustomSort(granularity: string, sortOptions: { [key: string]: string }) {
         /* let's build a sort here! use decorate-sort-undecorate */
         if (granularity !== 'items' && granularity !== 'lines') {
             checkThrow(false, 'T[|We only support sorting by lines or items');

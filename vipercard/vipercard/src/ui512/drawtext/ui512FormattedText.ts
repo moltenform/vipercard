@@ -3,7 +3,7 @@
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../utils/util512Assert';
 /* auto */ import { assertEq, assertWarnEq } from './../utils/util512';
-/* auto */ import { instTranslateCharset } from './ui512TranslateCharset';
+/* auto */ import { TranslateCharset } from './ui512TranslateCharset';
 /* auto */ import { UI512FontRequest } from './ui512DrawTextFontRequest';
 /* auto */ import { specialCharFontChange } from './ui512DrawTextClasses';
 
@@ -195,7 +195,7 @@ export class FormattedText {
      */
     static fromExternalCharset(s: string, info: BrowserOSInfo, fallback = '?') {
         s = FormattedText.filterAndConvertNewlines(s);
-        s = instTranslateCharset.translateUnToRoman(s, fallback);
+        s = TranslateCharset.translateUnToRoman(s, fallback);
         return s;
     }
 
@@ -205,7 +205,7 @@ export class FormattedText {
      */
     static toExternalCharset(s: string, info: BrowserOSInfo, fallback = '?') {
         s = FormattedText.filterAndConvertNewlines(s);
-        s = instTranslateCharset.translateRomanToUn(s, fallback);
+        s = TranslateCharset.translateRomanToUn(s, fallback);
         if (info === BrowserOSInfo.Windows) {
             /* eslint-disable-next-line no-control-regex */
             s = s.replace(new RegExp('\n', 'g'), '\r\n');

@@ -1061,8 +1061,7 @@ t.atest('testVpcStateSerialize', async () => {
     });
 
     /* serialize */
-    let obj = new VpcStateSerialize();
-    let serializedJson = obj.serializeAll(h.vcstate.vci);
+    let serializedJson = VpcStateSerialize.serializeAll(h.vcstate.vci);
     let s = JSON.stringify(serializedJson);
     let restoredJson = JSON.parse(s);
 

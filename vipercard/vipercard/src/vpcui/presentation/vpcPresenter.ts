@@ -697,8 +697,7 @@ export class VpcPresenter extends VpcPresenterInit {
      * get complete state as a string
      */
     getSerializedStack() {
-        let serializer = new VpcStateSerialize();
-        let serialized = serializer.serializeAll(this.vci);
+        let serialized = VpcStateSerialize.serializeAll(this.vci);
         return JSON.stringify(serialized);
     }
 

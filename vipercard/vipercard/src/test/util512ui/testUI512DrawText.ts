@@ -41,10 +41,16 @@ t.atest('Text corner cases', () =>
     TestUtilsCanvas.RenderAndCompareImages(false, () => new TestDrawUI512Text().draw4())
 );
 t.atest('Text All 0.3 fonts', () =>
-    TestUtilsCanvas.RenderAndCompareImages(false, new TestDrawUI512Text().drawTest5DrawAll())
+    TestUtilsCanvas.RenderAndCompareImages(
+        false,
+        new TestDrawUI512Text().drawTest5DrawAll()
+    )
 );
 t.atest('Text underline, condense, grayed', () =>
-    TestUtilsCanvas.RenderAndCompareImages(false, new TestDrawUI512Text().drawTest6DrawAll())
+    TestUtilsCanvas.RenderAndCompareImages(
+        false,
+        new TestDrawUI512Text().drawTest6DrawAll()
+    )
 );
 
 /**
@@ -341,16 +347,18 @@ export class TestDrawUI512Text {
     }
 
     drawTest5DrawAll() {
-        let allfonts = 'chicago,courier,geneva,new york,times,helvetica,monaco,symbol'.split(',');
+        let allfonts = 'chicago,courier,geneva,new york,times,helvetica,monaco,symbol'.split(
+            ','
+        );
         let allsizes = '24,18,14,12,10,9'.split(',');
-        let ret: GetDrawParams[] = []
+        let ret: GetDrawParams[] = [];
         for (let font of allfonts) {
             for (let size of allsizes) {
-                ret.push(() => this.drawTest5DrawOne(font, size))
+                ret.push(() => this.drawTest5DrawOne(font, size));
             }
         }
 
-        return ret
+        return ret;
     }
 
     drawTest5DrawOne(font: string, size: string) {
@@ -395,7 +403,7 @@ export class TestDrawUI512Text {
                 drawText.drawStringIntoBox(
                     txt,
                     canvas,
-                    new DrawTextArgs(3, 1, w-4, h - 1, false, false, false)
+                    new DrawTextArgs(3, 1, w - 4, h - 1, false, false, false)
                 )
             );
         };
@@ -411,23 +419,23 @@ export class TestDrawUI512Text {
         );
     }
 
-    drawTest6DrawOne(font:string, sizes:string, grayed: string) {
-        const w = 1076
-        const h = 180
-        let d = grayed ? '+d' : 'd'
-        let listFonts:string[] = []
-        let arSizes = sizes.split('+')
-        for (let i=0; i<arSizes.length; i++) {
-            let style = `biuos${d}ce`
+    drawTest6DrawOne(font: string, sizes: string, grayed: string) {
+        const w = 1076;
+        const h = 180;
+        let d = grayed ? '+d' : 'd';
+        let listFonts: string[] = [];
+        let arSizes = sizes.split('+');
+        for (let i = 0; i < arSizes.length; i++) {
+            let style = `biuos${d}ce`;
             listFonts.push(`${font}_${arSizes[i]}_${style}`);
-            style = `bi+uos${d}ce`
+            style = `bi+uos${d}ce`;
             listFonts.push(`${font}_${arSizes[i]}_${style}`);
-            style = `biuos${d}+ce`
+            style = `biuos${d}+ce`;
             listFonts.push(`${font}_${arSizes[i]}_${style}`);
-            style = `biuos${d}c+e`
+            style = `biuos${d}c+e`;
             listFonts.push(`${font}_${arSizes[i]}_${style}`);
         }
-        let txt = this.getFormattedText(listFonts, true, this.demoText2)
+        let txt = this.getFormattedText(listFonts, true, this.demoText2);
         let drawText = getRoot().getDrawText() as UI512DrawText;
         let draw = (canvas: CanvasWrapper, complete: RenderComplete) => {
             complete.complete = bool(
@@ -440,7 +448,7 @@ export class TestDrawUI512Text {
         };
 
         let fontid = typefacenameToTypefaceIdFull(`${font}_12_biuosdce`).split('_')[0];
-        let filename = `${grayed}_${fontid}_${sizes}`
+        let filename = `${grayed}_${fontid}_${sizes}`;
         return new CanvasTestParams(
             `drawtext6_${filename}`,
             `/resources03a/test/verifyfonts/underline_${filename}.png`,
@@ -453,17 +461,17 @@ export class TestDrawUI512Text {
 
     drawTest6DrawAll() {
         let allfonts = 'chicago,geneva,monaco'.split(',');
-        let allsizes = ['12+14']
-        let allgrayed = ['', 'grayed']
-        let ret: GetDrawParams[] = []
+        let allsizes = ['12+14'];
+        let allgrayed = ['', 'grayed'];
+        let ret: GetDrawParams[] = [];
         for (let font of allfonts) {
             for (let size of allsizes) {
                 for (let grayed of allgrayed) {
-                    ret.push(() => this.drawTest6DrawOne(font, size, grayed))
+                    ret.push(() => this.drawTest6DrawOne(font, size, grayed));
                 }
             }
         }
 
-        return ret
+        return ret;
     }
 }

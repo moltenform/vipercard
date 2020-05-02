@@ -9,32 +9,32 @@
  * specify the icon dimensions for ViperCard-specific icons.
  * define rectangles where each icon is in the image.
  */
-export class VpcInitIcons {
+export const VpcInitIcons = /* static class */ {
     /**
      * define icons, if needed.
      */
-    static go() {
+    go() {
         if (RenderIconGroup.cachedGridInfo['000']) {
             /* exit early if we've already loaded. */
             return;
         }
 
-        VpcInitIcons.defineGroup000();
-        VpcInitIcons.defineGroup001();
-        VpcInitIcons.defineGroup002();
-        VpcInitIcons.defineCursors();
-        VpcInitIcons.defineGroupDissolve();
-        VpcInitIcons.defineGroupSpace();
-        VpcInitIcons.defineGroupLogo();
-        VpcInitIcons.defineGroupGlider();
-        VpcInitIcons.setGliderSprites();
+        VpcInitIcons._defineGroup000();
+        VpcInitIcons._defineGroup001();
+        VpcInitIcons._defineGroup002();
+        VpcInitIcons._defineCursors();
+        VpcInitIcons._defineGroupDissolve();
+        VpcInitIcons._defineGroupSpace();
+        VpcInitIcons._defineGroupLogo();
+        VpcInitIcons._defineGroupGlider();
+        VpcInitIcons._setGliderSprites();
         Util512.freezeRecurse(RenderIconGroup.cachedGridInfo);
-    }
+    },
 
     /**
      * icon set for the vipercard logo
      */
-    protected static defineGroupLogo() {
+    _defineGroupLogo() {
         let grpLogo = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['logo'] = grpLogo;
         grpLogo.totalIcons = 3;
@@ -44,24 +44,24 @@ export class VpcInitIcons {
         grpLogo.customDims[1] = [284, 512];
         grpLogo.customOffsets[2] = [1, 491];
         grpLogo.customDims[2] = [22, 20];
-    }
+    },
 
     /**
      * icon set for dissolve & visual fx implementation
      */
-    protected static defineGroupDissolve() {
+     _defineGroupDissolve() {
         let grpDissolve = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['fordissolve'] = grpDissolve;
         grpDissolve.gridSize = 64;
         grpDissolve.gridSpacing = 0;
         grpDissolve.gridWidth = 64;
         grpDissolve.totalIcons = 11;
-    }
+    },
 
     /**
      * icon group 0, background textures
      */
-    protected static defineGroup000() {
+     _defineGroup000() {
         let grp000 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['000'] = grp000;
         grp000.totalIcons = 4;
@@ -73,24 +73,24 @@ export class VpcInitIcons {
         grp000.customDims[2] = [896, 64];
         grp000.customOffsets[3] = [0, 48 + 48 + 64];
         grp000.customDims[3] = [896, 24];
-    }
+    },
 
     /**
      * icon group 2, "icons" for vipercard buttons
      */
-    protected static defineGroup002() {
+     _defineGroup002() {
         let grp002 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['002'] = grp002;
         grp002.gridSize = 32;
         grp002.gridSpacing = 1;
         grp002.gridWidth = 12;
         grp002.totalIcons = 12 * 23;
-    }
+    },
 
     /**
      * icon groups for cursors
      */
-    protected static defineCursors() {
+     _defineCursors() {
         let grpCursors1 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['0cursors1'] = grpCursors1;
         grpCursors1.gridSize = 32;
@@ -134,12 +134,12 @@ export class VpcInitIcons {
             gps[i].customDims[16] = [m * 15, m * 15];
             gps[i].customDims[17] = [m * 15, m * 15];
         }
-    }
+    },
 
     /**
      * icon group 1, parts of the ui like scrollbar arrows, patterns, tools
      */
-    protected static defineGroup001() {
+     _defineGroup001() {
         let grp001 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['001'] = grp001;
         grp001.gridSize = 32;
@@ -185,12 +185,12 @@ export class VpcInitIcons {
         /* second gray pattern */
         grp001.customOffsets[145] = [0, 529 + 384];
         grp001.customDims[145] = [304, 383];
-    }
+    },
 
     /**
      * icon set for space game
      */
-    protected static defineGroupSpace() {
+     _defineGroupSpace() {
         let grpSpace = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['spacegame'] = grpSpace;
         grpSpace.gridSize = 14;
@@ -205,12 +205,12 @@ export class VpcInitIcons {
         grpSpace.customDims[grpSpace.totalIcons - 2] = [253, 27];
         grpSpace.customOffsets[grpSpace.totalIcons - 1] = [145, 1];
         grpSpace.customDims[grpSpace.totalIcons - 1] = [36, 30];
-    }
+    },
 
     /**
      * icon set for glider game
      */
-    protected static defineGroupGlider() {
+     _defineGroupGlider() {
         let gliderBg = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['gliderBg'] = gliderBg;
         gliderBg.totalIcons = 43;
@@ -218,13 +218,13 @@ export class VpcInitIcons {
             gliderBg.customOffsets[i] = [0, i * 343];
             gliderBg.customDims[i] = [512, 343];
         }
-    }
+    },
 
     /**
      * icon set for glider sprites,
      * the glider icons aren't in a fixed grid and need custom dims
      */
-    protected static setGliderSprites() {
+     _setGliderSprites() {
         let grpGlider = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['gliderSprites'] = grpGlider;
         grpGlider.totalIcons = 80;

@@ -11,16 +11,16 @@
  * when the user copies text in, or pastes text out, we should
  * use this mapping to translate character sets.
  */
-class TranslateCharset {
+export const TranslateCharset = /* static class */ {
     /* for faster load times, don't populate the map until it is requested. */
-    romanToUn: O<{ [key: number]: string }>;
-    unToRoman: O<{ [key: number]: string }>;
+    romanToUn: undefined as O<{ [key: number]: string }>,
+    unToRoman: undefined as O<{ [key: number]: string }>,
 
     /**
      * roman to unicode
      * https://en.wikipedia.org/wiki/Mac_OS_Roman
      */
-    protected getRomanToUn() {
+    _getRomanToUn() {
         if (this.romanToUn === undefined) {
             this.romanToUn = {
                 9: '\u0009',
@@ -244,12 +244,12 @@ class TranslateCharset {
         }
 
         return this.romanToUn;
-    }
+    },
 
     /**
      * get unicode to roman
      */
-    protected getUnToRoman() {
+    _getUnToRoman() {
         if (this.unToRoman === undefined) {
             this.unToRoman = {
                 9: '\u0009',
@@ -473,30 +473,26 @@ class TranslateCharset {
         }
 
         return this.unToRoman;
-    }
+    },
 
     /**
      * translate entire string, roman to unicode
      */
     translateRomanToUn(s: string, fallback = '?') {
-        return this.translate(s, this.getRomanToUn(), fallback);
-    }
+        return this._translate(s, this._getRomanToUn(), fallback);
+    },
 
     /**
      * translate entire string, unicode to roman
      */
     translateUnToRoman(s: string, fallback = '?') {
-        return this.translate(s, this.getUnToRoman(), fallback);
-    }
+        return this._translate(s, this._getUnToRoman(), fallback);
+    },
 
     /**
      * translate a string to different character set
      */
-    protected translate(
-        s: string,
-        map: { [key: number]: string },
-        fallback: string
-    ) {
+    _translate(s: string, map: { [key: number]: string }, fallback: string) {
         let ret = '';
         for (let i = 0; i < s.length; i++) {
             let found = map[s.charCodeAt(i)];
@@ -507,4 +503,3 @@ class TranslateCharset {
     }
 }
 
-export const instTranslateCharset = new TranslateCharset()

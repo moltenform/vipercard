@@ -109,8 +109,8 @@ Part 2: execution
         the scheduler will call into us again in a few milliseconds.
     If the stack of execution frames is empty, we've completed the script.
 */
-export namespace VpcTopPreparse {
-    export function goPreparseOrThrow(code: string, idGen: CountNumericId): VpcParsedCodeCollection {
+export const VpcTopPreparse = /* static class */ {
+    goPreparseOrThrow(code: string, idGen: CountNumericId): VpcParsedCodeCollection {
         /* set current status */
         VpcCurrentScriptStage.currentStage = VpcErrStage.Lex;
         VpcCurrentScriptStage.latestSrcLineSeen = undefined;
@@ -143,7 +143,7 @@ export namespace VpcTopPreparse {
 
             /* the stage 1 transformations must be done first */
             VpcCurrentScriptStage.latestSrcLineSeen = next[0].startLine;
-            let nextSublines = stage1Process(next, rw);
+            let nextSublines = this._stage1Process(next, rw);
             if (nextSublines) {
                 for (let subline of nextSublines) {
                     let sublines2 = ifSplitter.go(subline, rw);
@@ -177,10 +177,10 @@ export namespace VpcTopPreparse {
         let branchProcessor = new BranchProcessing(idGen);
         for (let line of lines) {
             VpcCurrentScriptStage.latestSrcLineSeen = line[0].startLine;
-            let nextLines2 = stage2Process(line, rewrites) ?? [line];
+            let nextLines2 = this._stage2Process(line, rewrites) ?? [line];
             for (let line2 of nextLines2) {
                 VpcCurrentScriptStage.latestSrcLineSeen = line2[0].startLine;
-                let nextLines3 = stage3Process(line2, exp, rw);
+                let nextLines3 = this._stage3Process(line2, exp, rw);
                 for (let line3 of nextLines3) {
                     VpcCurrentScriptStage.latestSrcLineSeen = line3[0].startLine;
                     /* make it lowercase again, just in case */
@@ -207,25 +207,25 @@ export namespace VpcTopPreparse {
         VpcCurrentScriptStage.latestDestLineSeen = undefined;
         VpcCurrentScriptStage.origClass = undefined;
         return new VpcParsedCodeCollection(branchProcessor.handlers, totalOutput);
-    }
+    },
 
     /* apply the 1st stage of rewriting */
-    function stage1Process(line: ChvITk[], rw: VpcSuperRewrite): O<ChvITk[][]> {
+    _stage1Process(line: ChvITk[], rw: VpcSuperRewrite): O<ChvITk[][]> {
         if (line.length && line[0].image === 'repeat') {
             return VpcRewritesLoops.Go(line, rw);
         } else {
             return undefined;
         }
-    }
+    },
 
     /* apply the 3nd stage of rewriting */
-    function stage2Process(line: ChvITk[], rwcmd: VpcRewriteForCommands): O<ChvITk[][]> {
+    _stage2Process(line: ChvITk[], rwcmd: VpcRewriteForCommands): O<ChvITk[][]> {
         let methodName = 'rewrite' + Util512.capitalizeFirst(line[0].image);
         return Util512.callAsMethodOnClass(VpcRewriteForCommands.name, rwcmd, methodName, [line], true) as O<ChvITk[][]>;
-    }
+    },
 
     /* apply the 3rd stage of rewriting */
-    function stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
+    _stage3Process(line: ChvITk[], exp: ExpandCustomFunctions, rw: VpcSuperRewrite): ChvITk[][] {
         line = VpcRewritesGlobal.rewriteSpecifyCdOrBgPart(line);
         line = VpcRewritesGlobal.rewritePropertySynonyms(line, rw);
         let outlines = exp.go(line);

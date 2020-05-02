@@ -15,11 +15,11 @@
 /**
  * serialization of VPC objects, preparing them for JSON.serialize
  */
-export class VpcGettableSerialization {
+export const VpcGettableSerialization = /* static class */ {
     /**
      * serialize a Gettable to a JS object
      */
-    static serializeGettable(vel: UI512Gettable) {
+    serializeGettable(vel: UI512Gettable) {
         let ret: { [key: string]: string | number | boolean } = {};
         let keys = Util512.getMapKeys(vel as any);
         for (let i = 0, len = keys.length; i < len; i++) {
@@ -30,7 +30,7 @@ export class VpcGettableSerialization {
                 assertWarn(v !== undefined, propName, 'J||');
                 if (v instanceof FormattedText) {
                     assertWarn(
-                        VpcGettableSerialization.propNameExpectFormattedText(propName),
+                        VpcGettableSerialization._propNameExpectFormattedText(propName),
                         'T@|expected ftxt, got ',
                         propName
                     );
@@ -43,12 +43,12 @@ export class VpcGettableSerialization {
         }
 
         return ret;
-    }
+    },
 
     /**
      * deserialize a JS object to a Settable
      */
-    static deserializeSettable(vel: UI512Settable, vals: AnyJson) {
+    deserializeSettable(vel: UI512Settable, vals: AnyJson) {
         let savedObserver = vel.observer;
         try {
             vel.observer = new ElementObserverNoOp();
@@ -59,17 +59,17 @@ export class VpcGettableSerialization {
                 let propName = keys[i];
                 whichWereSet[propName] = true;
                 let v = vals[propName];
-                if (VpcGettableSerialization.propNameExpectFormattedText(propName)) {
+                if (VpcGettableSerialization._propNameExpectFormattedText(propName)) {
                     if (typeof v === 'string') {
                         let vAsText = FormattedText.newFromSerialized(v);
-                        VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, vAsText);
+                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, vAsText);
                     } else {
                         assertTrue(v instanceof FormattedText, 'J`|not a string or FormattedText');
-                        VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, v);
+                        VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, v);
                     }
                 } else {
                     let decoded = VpcGettableSerialization.deserializePlain(v);
-                    VpcGettableSerialization.setAnyAndSendChangeNotification(vel, propName, decoded);
+                    VpcGettableSerialization._setAnyAndSendChangeNotification(vel, propName, decoded);
                 }
             }
 
@@ -89,18 +89,18 @@ export class VpcGettableSerialization {
         } finally {
             vel.observer = savedObserver;
         }
-    }
+    },
 
-    protected static okNotToSee: { [key: string]: boolean } = {
+    okNotToSee: {
         sharedtext: true,
         sharedhilite: true,
         marked: true
-    };
+    } as { [key: string]: boolean },
 
     /**
      * set a property, and set to 2 different values to ensure that the 'change' event is sent
      */
-    protected static setAnyAndSendChangeNotification(vel: UI512Settable, propName: string, v: ElementObserverVal) {
+    _setAnyAndSendChangeNotification(vel: UI512Settable, propName: string, v: ElementObserverVal) {
         if (typeof v === 'boolean') {
             (vel as any)['_' + propName] = false;
             vel.set(propName, !v);
@@ -120,49 +120,49 @@ export class VpcGettableSerialization {
         } else {
             assertWarn(false, 'T>|unknown data type for ' + v);
         }
-    }
+    },
 
     /**
      * do we expect the type of this property to be a formattedtext
      */
-    protected static propNameExpectFormattedText(propName: string) {
+    _propNameExpectFormattedText(propName: string) {
         return bool(propName === UI512Settable.fmtTxtVarName) || bool(propName.startsWith(UI512Settable.fmtTxtVarName + '_'));
-    }
+    },
 
     /**
      * copy over the prop values of one object onto another object
      */
-    static copyPropsOver(getter: UI512Gettable, setter: UI512Settable) {
+    copyPropsOver(getter: UI512Gettable, setter: UI512Settable) {
         checkThrow(false, 'T=|nyi -- use serialization instead');
-    }
+    },
 
     /**
      * use base64 if the string contains nonprintable or nonascii chars
      */
-    static serializePlain(v: string | number | boolean): string | number | boolean {
+    serializePlain(v: string | number | boolean): string | number | boolean {
         if (typeof v === 'string' && VpcGettableSerialization.containsNonSimpleAscii(v.toString())) {
             return 'b64``' + VpcGettableSerialization.jsBinaryStringToUtf16Base64(v.toString());
         } else {
             return v;
         }
-    }
+    },
 
     /**
      * decode a string encoded by serializePlain
      */
-    static deserializePlain(v: string | number | boolean): string | number | boolean {
+    deserializePlain(v: string | number | boolean): string | number | boolean {
         if (typeof v === 'string' && v.toString().startsWith('b64``')) {
             let s = v.toString();
             return VpcGettableSerialization.Base64Utf16ToJsBinaryString(s.substr('b64``'.length));
         } else {
             return v;
         }
-    }
+    },
 
     /**
      * does the string contain nonprintable or nonascii chars?
      */
-    static containsNonSimpleAscii(s: string) {
+    containsNonSimpleAscii(s: string) {
         for (let i = 0, len = s.length; i < len; i++) {
             let c = s.charCodeAt(i);
             if (
@@ -174,7 +174,7 @@ export class VpcGettableSerialization {
         }
 
         return false;
-    }
+    },
 
     /**
      * to base64
@@ -184,7 +184,7 @@ export class VpcGettableSerialization {
      * use utf16le instead of utf8 because it was measured to be 40% more
      * space-efficient for dense unicode data like this.
      */
-    static jsBinaryStringToUtf16Base64(str: string) {
+    jsBinaryStringToUtf16Base64(str: string) {
         let bytes: Uint8Array = new Uint8Array(str.length * 2);
         for (let i = 0, len = str.length; i < len; i++) {
             let n = str.charCodeAt(i) | 0;
@@ -193,12 +193,12 @@ export class VpcGettableSerialization {
         }
 
         return bridgedBase64Js.fromByteArray(bytes);
-    }
+    },
 
     /**
      * decode a string encoded by jsBinaryStringToUtf16Base64
      */
-    static Base64Utf16ToJsBinaryString(str: string) {
+    Base64Utf16ToJsBinaryString(str: string) {
         let bytes = bridgedBase64Js.toByteArray(str);
         let s = '';
         for (let i = 0, len = bytes.length; i < len; i += 2) {

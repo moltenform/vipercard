@@ -149,7 +149,7 @@ export class UI512DemoText extends UI512Presenter {
 
     protected static respondMouseUp(pr: UI512DemoText, d: MouseUpEventDetails) {
         /* if you rightclick we'll run the test, not just dld the image*/
-        let dldOnly = (d.button === 0)
+        let dldOnly = d.button === 0;
         if (!d.elClick) {
             return;
         }
@@ -200,9 +200,9 @@ export class UI512DemoText extends UI512Presenter {
         ];
 
         if (params === 'testdld5') {
-            return UI512DemoText.dldTest5(dldOnly)
+            return UI512DemoText.dldTest5(dldOnly);
         } else if (params === 'testdld6') {
-            return UI512DemoText.dldTest6(dldOnly)
+            return UI512DemoText.dldTest6(dldOnly);
         } else if (params.startsWith('testdld')) {
             let testNumber = castVerifyIsNum(
                 Util512.parseInt(params.substr('testdld'.length))
@@ -215,57 +215,53 @@ export class UI512DemoText extends UI512Presenter {
     }
 
     protected static async dldTest5(dldOnly: boolean) {
-        let testids = prompt("Please type in some test ids, separated by commas, in the form (fontid)_(size). Or 'all'.", 
-            "symbol_9")
+        let testids = prompt(
+             longstr(`Please type in some test ids, separated by
+             commas, in the form (fontid)_(size). Or 'all'.`),
+            'symbol_9'
+        );
         if (testids === 'all') {
             /* runs them all in parallel */
-            let fns = new TestDrawUI512Text().drawTest5DrawAll()
-            await TestUtilsCanvas.RenderAndCompareImages(
-                false /* dld */,
-                fns
-            );
-        } else if (testids)
-        {
+            let fns = new TestDrawUI512Text().drawTest5DrawAll();
+            await TestUtilsCanvas.RenderAndCompareImages(false /* dld */, fns);
+        } else if (testids) {
             for (let pt of testids.split(',')) {
-                pt = pt.trim()
-                let pts = pt.split('_')
-                if (pts.length !== 2 ||!pts[0] || !pts[1]) {
-                    alert("expected in the form chicago_12.")
+                pt = pt.trim();
+                let pts = pt.split('_');
+                if (pts.length !== 2 || !pts[0] || !pts[1]) {
+                    alert('expected in the form chicago_12.');
                 } else {
-                    let [font, size] = pts
-                    let params = new TestDrawUI512Text().drawTest5DrawOne(font, size)
-                    await TestUtilsCanvas.RenderAndCompareImages(
-                        dldOnly,
-                        ()=>params
-                    );
+                    let [font, size] = pts;
+                    let params = new TestDrawUI512Text().drawTest5DrawOne(font, size);
+                    await TestUtilsCanvas.RenderAndCompareImages(dldOnly, () => params);
                 }
             }
         }
     }
 
     protected static async dldTest6(dldOnly: boolean) {
-        let testid = prompt("Please type a test id or 'all'.", 
-            "underline__chicago_12+14")
+        let testid = prompt(
+            "Please type a test id or 'all'.",
+            'underline__chicago_12+14'
+        );
         if (testid === 'all') {
             /* runs them all in parallel */
-            let fns = new TestDrawUI512Text().drawTest6DrawAll()
-            await TestUtilsCanvas.RenderAndCompareImages(
-                false /* dld */,
-                fns
-            );
+            let fns = new TestDrawUI512Text().drawTest6DrawAll();
+            await TestUtilsCanvas.RenderAndCompareImages(false /* dld */, fns);
         } else if (testid) {
-            let pts = testid.split('_')
+            let pts = testid.split('_');
             if (pts.length !== 4) {
-                alert('unknown drawTest6 test')
+                alert('unknown drawTest6 test');
             } else {
-                let grayed = pts[1]
-                let font = pts[2]
-                let sizes = pts[3]
-                let params = new TestDrawUI512Text().drawTest6DrawOne(font, sizes, grayed)
-                return TestUtilsCanvas.RenderAndCompareImages(
-                    dldOnly,
-                    ()=>params
+                let grayed = pts[1];
+                let font = pts[2];
+                let sizes = pts[3];
+                let params = new TestDrawUI512Text().drawTest6DrawOne(
+                    font,
+                    sizes,
+                    grayed
                 );
+                return TestUtilsCanvas.RenderAndCompareImages(dldOnly, () => params);
             }
         }
     }

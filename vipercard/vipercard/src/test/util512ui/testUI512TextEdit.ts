@@ -54,7 +54,7 @@ export class TestDrawUI512TextEdit {
     uiContext = false;
     constructor() {}
 
-    addElements(pr: UI512Presenter, bounds: number[], wordWrap:boolean) {
+    addElements(pr: UI512Presenter, bounds: number[], wordWrap: boolean) {
         const b0 = 45;
         const b1 = 45;
         let grp = new UI512ElGroup('grp');
@@ -208,7 +208,12 @@ export class TestDrawUI512TextEdit {
         );
     }
 
-    protected addElementsLeft(b0: number, pr: UI512Presenter, grp: UI512ElGroup, wordWrap:boolean) {
+    protected addElementsLeft(
+        b0: number,
+        pr: UI512Presenter,
+        grp: UI512ElGroup,
+        wordWrap: boolean
+    ) {
         /* test large fields with varying amounts of text */
         /* why use NonBreakingSpace? this test was written before we
         had actual word wrapping, */
@@ -312,7 +317,7 @@ export class TestDrawUI512TextEdit {
         w: number,
         h: number,
         i: number,
-        wordWrap:boolean,
+        wordWrap: boolean,
         complete: RenderComplete
     ) {
         tmpCanvas.clear();
@@ -349,7 +354,7 @@ export class TestDrawUI512TextEdit {
         pr.render(tmpCanvas, 1, complete);
     }
 
-    testDrawTextEdit(wordWrap:boolean) {
+    testDrawTextEdit(wordWrap: boolean) {
         const w = 928;
         const h = 400;
         const screensToDraw = 3;

@@ -15,7 +15,7 @@
 /**
  * menu listeners+behaviors, opening the menu when you click on it and so on.
  */
-export const MenuListeners = {
+export const MenuListeners = /* static class */ {
     /**
      * open this menu and make all items unhighlighted
      * it is wrong if you'd open a window and one of the items is still highlighted from earlier
@@ -40,8 +40,8 @@ export const MenuListeners = {
         }
     },
 
-    myAdd(n1:number, n2:number) {
-        return n1+ n2
+    myAdd(n1: number, n2: number) {
+        return n1 + n2;
     },
 
     /**
@@ -201,4 +201,4 @@ export const MenuListeners = {
             d.el.set('highlightactive', false);
         }
     }
-}
+};

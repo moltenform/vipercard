@@ -83,7 +83,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
         super(vel.id, vel.parentId, vel.getType(), -1);
         UndoableActionDeleteVel.checkIfCanDelete(vel, vci);
         this.insertIndex = this.determineIndexInAr(vel, vci);
-        this.storedVelData = new VpcStateSerialize().serializeVelCompressed(vci, vel, this.insertIndex);
+        this.storedVelData = VpcStateSerialize.serializeVelCompressed(vci, vel, this.insertIndex);
     }
 
     /**
@@ -129,7 +129,7 @@ export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implem
     undo(vci: VpcStateInterface) {
         checkThrow(!vci.getCodeExec().isCodeRunning(), "8$|currently can't do this while code is running");
 
-        let vel = new VpcStateSerialize().deserializeVelCompressed(vci, this.storedVelData);
+        let vel = VpcStateSerialize.deserializeVelCompressed(vci, this.storedVelData);
         vci.rawRevive(vel);
     }
 }

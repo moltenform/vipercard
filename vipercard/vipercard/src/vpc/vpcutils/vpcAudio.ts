@@ -10,18 +10,18 @@
 /**
  * support the "play" command in vipercard
  */
-export class VpcAudio {
-    static isLoaded: { [key: string]: boolean } = {};
+export const VpcAudio = /* static class */ {
+    isLoaded: {} as { [key: string]: boolean },
 
     /**
      * get url for a sound
      */
-    static urlFromKey(key: string) {
+    urlFromKey(key: string) {
         checkThrow(!key.includes('/'), 'K8|');
         checkThrow(!key.includes('\\'), 'K7|');
         checkThrow(key.match(/^[A-Za-z0-9_-]+$/), 'K6|');
         return `/resources03a/sound/${key}.mp3`;
-    }
+    },
 
     /**
      * preload the sound, so that it will be
@@ -31,11 +31,11 @@ export class VpcAudio {
      * note: safari seems to not let the sound work, as the audio
      * element hasn't been 'interacted' with.
      */
-    static preloadNoThrow(key: string) {
-        justConsoleMsgIfExceptionThrown(() => VpcAudio.preloadImpl(key), 'preloadAudio');
-    }
+    preloadNoThrow(key: string) {
+        justConsoleMsgIfExceptionThrown(() => VpcAudio._preloadImpl(key), 'preloadAudio');
+    },
 
-    private static preloadImpl(key: string) {
+    _preloadImpl(key: string) {
         if (!VpcAudio.isLoaded[key]) {
             let span = window.document.createElement('span');
             span.setAttribute('id', 'vpcaudiospan' + key);
@@ -48,43 +48,43 @@ export class VpcAudio {
             window.document.body.appendChild(span);
             VpcAudio.isLoaded[key] = true;
         }
-    }
+    },
 
-    private static playAsyncImpl(aud: HTMLAudioElement) {
+    _playAsyncImpl(aud: HTMLAudioElement) {
         aud.currentTime = 0;
         let fn = async function () {
             return aud.play();
         };
 
         Util512Higher.syncToAsyncTransition(fn(), 'play audio', RespondToErr.ConsoleErrOnly);
-    }
+    },
 
     /**
      * play the sound
      * asynchronous
      * will interrupt a sound that is currently playing
      */
-    static play(key: string) {
+    play(key: string) {
         return bool(
             justConsoleMsgIfExceptionThrown(() => {
                 let aud = window.document.getElementById('vpcaudiohtmlel' + key) as HTMLAudioElement;
                 if (aud) {
-                    VpcAudio.playAsyncImpl(aud);
+                    VpcAudio._playAsyncImpl(aud);
                     return true;
                 } else {
                     return false;
                 }
             }, 'audio play')
         );
-    }
+    },
 
     /**
      * play system beep sound
      */
-    static beep() {
+    beep() {
         let aud = window.document.getElementById('vpcinitialaudio') as HTMLAudioElement;
         if (aud) {
-            VpcAudio.playAsyncImpl(aud);
+            VpcAudio._playAsyncImpl(aud);
         }
     }
 }
@@ -92,11 +92,11 @@ export class VpcAudio {
 /**
  * support the "dial" command in vipercard
  */
-export class VpcPhoneDial {
+export const VpcPhoneDial = /* static class */ {
     /**
      * dials a number, and call cbWhenComplete when complete
      */
-    static goDial(s: string, cbWhenComplete: VoidFn) {
+    goDial(s: string, cbWhenComplete: VoidFn) {
         let alreadyRun = new ValHolder(false);
         let runCallbackUnlessAlreadyRun = () => {
             if (!alreadyRun.val) {
@@ -114,7 +114,7 @@ export class VpcPhoneDial {
         }
         /* start playback */
         let padding = 30;
-        let arr = VpcPhoneDial.intoArray(s);
+        let arr = VpcPhoneDial._intoArray(s);
         if (!arr.length) {
             Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, 1, 'dial', RespondToErr.ConsoleErrOnly);
             return;
@@ -129,12 +129,12 @@ export class VpcPhoneDial {
         /* schedule returing to the script */
         let totalTime = durations.reduce(Util512.add) + 500;
         Util512Higher.syncToAsyncAfterPause(runCallbackUnlessAlreadyRun, totalTime, 'dial', RespondToErr.ConsoleErrOnly);
-    }
+    },
 
     /**
      * from '123' to [1,2,3]
      */
-    protected static intoArray(s: string): number[] {
+    _intoArray(s: string): number[] {
         let ret: number[] = [];
         for (let i = 0; i < s.length; i++) {
             if (s.charCodeAt(i) >= '0'.charCodeAt(0) && s.charCodeAt(i) <= '9'.charCodeAt(0)) {
@@ -143,12 +143,12 @@ export class VpcPhoneDial {
         }
 
         return ret;
-    }
+    },
 
     /**
      * durations in milliseconds of the sounds
      */
-    static mapDialDurations: { [key: number]: number } = {
+    mapDialDurations:  {
         0: 261,
         1: 261,
         2: 235,
@@ -159,5 +159,5 @@ export class VpcPhoneDial {
         7: 235,
         8: 313,
         9: 313
-    };
+    } as { [key: number]: number }
 }

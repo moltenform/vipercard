@@ -4,7 +4,7 @@
 /* auto */ import { O } from './../utils/util512Base';
 /* auto */ import { assertTrue } from './../utils/util512Assert';
 /* auto */ import { DrawCharResult, TextFontStyling, TextRendererFont, specialCharNumNewline, specialCharNumNonBreakingSpace, specialCharNumOnePixelSpace, specialCharNumTab, specialCharNumZeroPixelChar } from './ui512DrawTextClasses';
-/* auto */ import { instUI512DrawTextCharGrayed } from './ui512DrawTextCharGrayed';
+/* auto */ import { UI512DrawTextCharGrayed } from './ui512DrawTextCharGrayed';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -15,7 +15,7 @@ const space = ' '.charCodeAt(0);
  * draw one character onto a canvas
  * returns metadata/dimensions of the character drawn
  */
-class UI512DrawChar {
+export const UI512DrawChar = /* static class */ {
     /**
      * draw a character, does some redirection like unknown -> ?
      * and tab -> spaces
@@ -35,7 +35,7 @@ class UI512DrawChar {
             /* to draw a tab, just draw 4 spaces */
             let ret = new DrawCharResult(0, 0, 0);
             for (let i = 0; i < ScrollConsts.TabSize; i++) {
-                ret = instUI512DrawChar.draw(
+                ret = UI512DrawChar.draw(
                     font,
                     space,
                     x,
@@ -69,7 +69,7 @@ class UI512DrawChar {
             n = '?'.charCodeAt(0);
         }
 
-        return instUI512DrawChar.drawImpl(
+        return UI512DrawChar._drawImpl(
             font,
             n,
             x,
@@ -80,12 +80,12 @@ class UI512DrawChar {
             destH,
             canvas
         );
-    }
+    },
 
     /**
      * draws a character
      */
-    protected drawImpl(
+    _drawImpl(
         font: TextRendererFont,
         n: number,
         x: number,
@@ -146,7 +146,7 @@ class UI512DrawChar {
 
         if (canvas) {
             if (font.grayed) {
-                instUI512DrawTextCharGrayed.go(
+                UI512DrawTextCharGrayed.go(
                     font.grid.image,
                     canvas,
                     srcX,
@@ -198,4 +198,4 @@ class UI512DrawChar {
     }
 }
 
-export const instUI512DrawChar = new UI512DrawChar()
+

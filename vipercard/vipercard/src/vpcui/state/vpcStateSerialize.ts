@@ -13,10 +13,9 @@
 /**
  * from a stack to a plain JSON object, and vice-versa
  */
-export class VpcStateSerialize {
-    readonly latestMajor = 3;
-    readonly latestMinor = 0;
-
+export const VpcStateSerialize = /* static class */ {
+    latestMajor: 3,
+    latestMinor: 0,
     /**
      * serialize an entire project, to a plain JSON object
      *
@@ -44,7 +43,7 @@ export class VpcStateSerialize {
         }
 
         return ret;
-    }
+    },
 
     /**
      * serialize a vel
@@ -61,7 +60,7 @@ export class VpcStateSerialize {
         /* adds unnecessary noise to the file */
         delete ret['__isUtil512Serializable'];
         return ret;
-    }
+    },
 
     /**
      * deserialize an entire project, from a plain JSON object
@@ -86,7 +85,7 @@ export class VpcStateSerialize {
                 this.deserializeVel(building, incoming.elements[i]);
             }
         });
-    }
+    },
 
     /**
      * deserialize a vel, from a plain JSON object
@@ -113,7 +112,7 @@ export class VpcStateSerialize {
         } else {
             assertWarn(false, 'Kx|unsupported type', incoming.type);
         }
-    }
+    },
 
     /**
      * serialize to a string and compress
@@ -126,7 +125,7 @@ export class VpcStateSerialize {
         });
 
         return UI512Compress.compressString(s);
-    }
+    },
 
     /**
      * deserialize from serializeVelCompressed
