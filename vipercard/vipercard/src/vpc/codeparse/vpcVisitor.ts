@@ -569,31 +569,29 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
 /**
  * cache the lexer, parser, and visitor
+ * singleton
  */
-class CachedObjects {
-    lexer: O<chevrotain.Lexer> = undefined;
-    parser: O<VpcChvParser> = undefined;
-    visitor: O<VpcVisitorInterface> = undefined;
-
-    /* singleton */
-    static inst = new CachedObjects();
-}
+const CachedObjects = {
+    lexer: undefined as O<chevrotain.Lexer>,
+    parser: undefined as O<VpcChvParser>,
+    visitor: undefined as O<VpcVisitorInterface>
+};
 
 /**
  * retrieve cached objects, creating if needed
  */
 export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser] {
-    if (!CachedObjects.inst.lexer) {
-        CachedObjects.inst.lexer = new chevrotain.Lexer(allVpcTokens, {
+    if (!CachedObjects.lexer) {
+        CachedObjects.lexer = new chevrotain.Lexer(allVpcTokens, {
             ensureOptimizations: true
         });
     }
 
-    if (!CachedObjects.inst.parser) {
-        CachedObjects.inst.parser = new VpcChvParser();
+    if (!CachedObjects.parser) {
+        CachedObjects.parser = new VpcChvParser();
     }
 
-    return [CachedObjects.inst.lexer, CachedObjects.inst.parser];
+    return [CachedObjects.lexer, CachedObjects.parser];
 }
 
 /**
@@ -602,10 +600,10 @@ export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser] {
  */
 export function getChvVisitor(outside: OutsideWorldRead): VpcVisitorInterface {
     let parser = getParsingObjects()[1];
-    if (!CachedObjects.inst.visitor) {
-        CachedObjects.inst.visitor = createVisitor(parser);
+    if (!CachedObjects.visitor) {
+        CachedObjects.visitor = createVisitor(parser);
     }
 
-    CachedObjects.inst.visitor.outside = outside;
-    return CachedObjects.inst.visitor;
+    CachedObjects.visitor.outside = outside;
+    return CachedObjects.visitor;
 }

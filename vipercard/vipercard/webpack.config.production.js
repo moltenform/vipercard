@@ -1,6 +1,6 @@
 
-// we're not actually in a typescript environment, this is just a config file,
-// so safe to disable the warnings about require statements
+/* we're not actually in a typescript environment, this is just a config file, */
+/* so it's fine to disable the warnings about require statements */
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -13,7 +13,8 @@ const main = [
 ];
 
 module.exports = {
-    context: process.cwd(), // to automatically find tsconfig.json
+    /* automatically find tsconfig.json */
+    context: process.cwd(),
     entry: {
         main: main
     },
@@ -45,7 +46,7 @@ module.exports = {
             },
         }),
         new webpack.DefinePlugin({
-            //  note that the plugin does a direct text replacement.
+            /*  note that the plugin does a direct text replacement. */
             WEBPACK_PRODUCTION: true,
         })
     ],
@@ -65,6 +66,10 @@ module.exports = {
     },
     resolve: {
         extensions: [".tsx", ".ts", ".js"]
+    },
+    performance: {
+        /* suppress warning about large asset size */
+        hints: false
     },
     optimization: {
         minimize: true,

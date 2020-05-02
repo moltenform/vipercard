@@ -1133,16 +1133,8 @@ listOfAllWordLikeTokens['%MARK%'] = tks.tkSyntaxMark;
  * look just as if it had come from the lexer.
  * use this class to build a fake token based on a real token
  */
-export class BuildFakeTokens {
-    readonly knownImages: { [tkname: string]: string } = {};
-    readonly strSyntaxMark = Util512.repeat(9, '?').join('');
-    static inst = new BuildFakeTokens();
-    constructor() {
-        this.knownImages[tks.tkNewLine.name] = '\n';
-        this.knownImages[tks.tkComma.name] = ',';
-        this.knownImages[tks.tkSyntaxMark.name] = this.strSyntaxMark;
-    }
-
+export const BuildFakeTokens = /* static class */ {
+    strSyntaxMark: Util512.repeat(9, '?').join(''),
     /**
      * make a syntax marker token
      */
@@ -1154,23 +1146,23 @@ export class BuildFakeTokens {
         } else {
             assertTrue(false, '8]|expected "" or ","', whichMarker);
         }
-    }
+    },
 
     /**
      * make an arbitrary token, pass in the constructor
      */
     make(basis: chevrotain.IToken, type: chevrotain.TokenType) {
-        let image = this.knownImages[type.name];
+        let image = knownImages[type.name];
         assertTrue(trueIfDefinedAndNotNull(image), '8@|image is undefined', type.name);
         return this.makeTk(basis, type, image);
-    }
+    },
 
     /**
      * make a string literal
      */
     makeStringLiteral(basis: chevrotain.IToken, unquoted: string) {
         return this.makeTk(basis, tks.tkStringLiteral, '"' + unquoted + '"');
-    }
+    },
 
     /**
      * implementation
@@ -1186,4 +1178,9 @@ export class BuildFakeTokens {
         cloned.tokenTypeIdx = type.tokenTypeIdx;
         return cloned;
     }
-}
+};
+
+const knownImages: { [tkname: string]: string } = {};
+knownImages[tks.tkNewLine.name] = '\n';
+knownImages[tks.tkComma.name] = ',';
+knownImages[tks.tkSyntaxMark.name] = BuildFakeTokens.strSyntaxMark;
