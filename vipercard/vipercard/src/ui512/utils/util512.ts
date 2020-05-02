@@ -8,18 +8,18 @@
 /**
  * typescript utilities
  */
-export class Util512 {
+export const Util512 = /* static class */ {
     /**
      * checks for NaN and Infinity
      */
-    static isValidNumber(value: unknown) {
+     isValidNumber(value: unknown) {
         return typeof value === 'number' && Number.isFinite(value);
-    }
+    },
 
     /**
      * like Python's range()
      */
-    static range(start: number, end: O<number>, inc = 1) {
+    range(start: number, end: O<number>, inc = 1) {
         if (end === undefined || end === null) {
             end = start;
             start = 0;
@@ -40,7 +40,7 @@ export class Util512 {
     /**
      * like Python's [x] * y
      */
-    static repeat<T>(amount: number, item: T) {
+     , repeat<T>(amount: number, item: T) {
         let ret: T[] = [];
         for (let i = 0; i < amount; i++) {
             ret.push(item);
@@ -52,7 +52,7 @@ export class Util512 {
     /**
      * sets an element, expands array if necessary
      */
-    static setarr<T>(ar: O<T>[], index: number, val: T, fill: T) {
+     , setarr<T>(ar: O<T>[], index: number, val: T, fill: T) {
         assertTrue(index >= 0, 'Oy|must be >= 0');
         if (index >= ar.length) {
             for (let i = ar.length; i <= index; i++) {
@@ -67,7 +67,7 @@ export class Util512 {
      * as distinct from Array.concat which returns a new object
      * don't use splice+apply, might run into issues with max-args-pased
      */
-    static extendArray<T>(ar: T[], added: T[]) {
+     , extendArray<T>(ar: T[], added: T[]) {
         for (let i = 0; i < added.length; i++) {
             ar.push(added[i]);
         }
@@ -76,14 +76,14 @@ export class Util512 {
     /*
      * plain parseInt allows trailing text
      */
-    static parseIntStrict(s: O<string>): O<number> {
+     , parseIntStrict(s: O<string>): O<number> {
         if (!s) {
             return undefined;
         }
 
         s = s.trim();
         if (s.match(/^\d+$/)) {
-            return Util512.parseInt(s);
+            return this.parseInt(s);
         } else {
             return undefined;
         }
@@ -92,7 +92,7 @@ export class Util512 {
     /*
      * use this, not parseInt where you might forget to specify base 10
      */
-    static parseInt(s: O<string>): O<number> {
+     , parseInt(s: O<string>): O<number> {
         let ret = 0;
         if (s) {
             /* ok to use, we remembered to say base 10 */
@@ -108,7 +108,7 @@ export class Util512 {
     /**
      * ensure that the string is <= maxLen
      */
-    static truncateWithEllipsis(s: string, maxLen: number) {
+     , truncateWithEllipsis(s: string, maxLen: number) {
         if (s.length <= maxLen) {
             return s;
         } else {
@@ -124,14 +124,14 @@ export class Util512 {
     /**
      * useful for map/reduce
      */
-    static add(n1: number, n2: number) {
+     , add(n1: number, n2: number) {
         return n1 + n2;
     }
 
     /**
      * is map empty
      */
-    static isMapEmpty<U>(map: { [key: string]: U }) {
+     , isMapEmpty<U>(map: { [key: string]: U }) {
         for (let key in map) {
             if (map.hasOwnProperty(key)) {
                 return false;
@@ -144,14 +144,14 @@ export class Util512 {
     /**
      * shallow clone of an object
      */
-    static shallowClone<T extends object>(o: object): T {
+     , shallowClone<T extends object>(o: object): T {
         return Object.assign({}, o) as T;
     }
 
     /**
      * freeze a property
      */
-    static freezeProperty(o: object, propName: string) {
+     , freezeProperty(o: object, propName: string) {
         Object.freeze(o[propName]);
         Object.defineProperty(o, propName, { configurable: false, writable: false });
     }
@@ -160,7 +160,7 @@ export class Util512 {
      * https://github.com/substack/deep-freeze
      * public domain
      */
-    static freezeRecurse(o: object) {
+     , freezeRecurse(o: object) {
         Object.freeze(o);
         for (let prop in o) {
             if (
@@ -178,14 +178,14 @@ export class Util512 {
     /**
      * like Python's re.escape.
      */
-    static escapeForRegex(s: string) {
+     , escapeForRegex(s: string) {
         return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
     }
 
     /**
      * make the first character uppercase.
      */
-    static capitalizeFirst(s: string) {
+     , capitalizeFirst(s: string) {
         return s.substr(0, 1).toLocaleUpperCase() + s.substr(1);
     }
 
@@ -202,7 +202,7 @@ export class Util512 {
      * let method = 'goAbc'
      * callAsMethodOnClass(MyClass.name, inst, method, [], true)
      */
-    static callAsMethodOnClass(
+     , callAsMethodOnClass(
         clsname: string,
         me: any,
         s: string,
@@ -238,14 +238,14 @@ export class Util512 {
     /**
      * for use with callAsMethodOnClass
      */
-    static isMethodOnClass(me: object, s: string) {
+     , isMethodOnClass(me: object, s: string) {
         return me[s] !== undefined && typeof me[s] === 'function' ? me[s] : undefined;
     }
 
     /**
      * returns list of keys.
      */
-    static getMapKeys(map: object): string[] {
+     , getMapKeys(map: object): string[] {
         let ret: string[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -259,7 +259,7 @@ export class Util512 {
     /**
      * returns list of vals.
      */
-    static getMapVals<T>(map: { [key: string]: T }): T[] {
+     , getMapVals<T>(map: { [key: string]: T }): T[] {
         let ret: T[] = [];
         for (let key in map) {
             if (Object.prototype.hasOwnProperty.call(map, key)) {
@@ -274,7 +274,7 @@ export class Util512 {
      * padStart, from reference implementation on mozilla.org
      * from 1 to 001.
      */
-    static padStart(sIn: string | number, targetLength: number, padString: string) {
+     , padStart(sIn: string | number, targetLength: number, padString: string) {
         let s = tostring(sIn);
         padString = typeof padString !== 'undefined' ? padString : ' ';
         if (s.length > targetLength) {
@@ -293,7 +293,7 @@ export class Util512 {
     /**
      * to base64 with / and + characters
      */
-    static arrayToBase64(b: number[] | Uint8Array) {
+     , arrayToBase64(b: number[] | Uint8Array) {
         let s = '';
         for (let i = 0, len = b.length; i < len; i++) {
             s += String.fromCharCode(b[i]);
@@ -306,7 +306,7 @@ export class Util512 {
      * to base64 with _ and - characters.
      * note: strips off final = padding
      */
-    static toBase64UrlSafe(s: string) {
+     , toBase64UrlSafe(s: string) {
         return btoa(s).replace(/\//g, '_').replace(/\+/g, '-').replace(/=+$/, '');
     }
 
@@ -314,7 +314,7 @@ export class Util512 {
      * from base64 with _ and - characters.
      * re-adds final = padding if needed.
      */
-    static fromBase64UrlSafe(s: string) {
+     , fromBase64UrlSafe(s: string) {
         if (s.length % 4 !== 0) {
             s += '==='.slice(0, 4 - (s.length % 4));
         }
@@ -325,7 +325,7 @@ export class Util512 {
      * split by character. decided not to use the
      * Array.prototype.map.call trick.
      */
-    static stringToCharArray(s: string) {
+     , stringToCharArray(s: string) {
         let ar: string[] = [];
         for (let i = 0; i < s.length; i++) {
             ar.push(s[i]);
@@ -338,7 +338,7 @@ export class Util512 {
      * split to bytes. decided not to use the
      * Array.prototype.map.call trick.
      */
-    static stringToByteArray(s: string) {
+     , stringToByteArray(s: string) {
         let ar: number[] = [];
         for (let i = 0; i < s.length; i++) {
             ar.push(s.charCodeAt(i));
@@ -353,7 +353,7 @@ export class Util512 {
      * we know we are sorting strings. our util512 sort is
      * usually better though because it checks types at runtime.
      */
-    static sortStringArray(arr: string[]) {
+     , sortStringArray(arr: string[]) {
         /* eslint-disable-next-line @typescript-eslint/require-array-sort-compare */
         arr.sort();
     }
@@ -363,7 +363,7 @@ export class Util512 {
      * like Python's sort(key=fn)
      * often more efficient than passing a comparison function.
      */
-    static sortDecorated<T>(ar: T[], fn: (a: T) => unknown): T[] {
+     , sortDecorated<T>(ar: T[], fn: (a: T) => unknown): T[] {
         /* 1) decorate */
         let decorated = ar.map(val => [fn(val), val] as [unknown, T]);
         /* 2) sort */
@@ -375,14 +375,14 @@ export class Util512 {
     /**
      * normalize newlines to \n
      */
-    static normalizeNewlines(s: string) {
+     , normalizeNewlines(s: string) {
         return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     }
 
     /**
      * filter a list, keeping only unique values.
      */
-    static keepOnlyUnique(ar: string[]) {
+     , keepOnlyUnique(ar: string[]) {
         let ret: string[] = [];
         let seen: { [key: string]: boolean } = {};
         for (let i = 0; i < ar.length; i++) {
@@ -393,17 +393,12 @@ export class Util512 {
         }
 
         return ret;
-    }
-}
+    },
 
-/**
- * more utils that might be less useful
- */
-export namespace Util512 {
     /**
      * array that can be locked
      */
-    export class LockableArr<T> {
+     LockableArr:class<T> {
         protected vals: T[] = [];
         protected locked = false;
         constructor(vals: T[] = []) {
@@ -427,7 +422,7 @@ export namespace Util512 {
             return this.vals[i];
         }
         getUnlockedCopy() {
-            let other = new LockableArr<T>();
+            let other = new Util512.LockableArr<T>();
             other.locked = false;
             other.vals = this.vals.slice(0);
             return other;
