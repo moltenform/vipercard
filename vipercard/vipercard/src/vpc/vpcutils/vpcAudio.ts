@@ -87,7 +87,7 @@ export const VpcAudio = /* static class */ {
             VpcAudio._playAsyncImpl(aud);
         }
     }
-}
+};
 
 /**
  * support the "dial" command in vipercard
@@ -148,7 +148,7 @@ export const VpcPhoneDial = /* static class */ {
     /**
      * durations in milliseconds of the sounds
      */
-    mapDialDurations:  {
+    mapDialDurations: {
         0: 261,
         1: 261,
         2: 235,
@@ -160,4 +160,4 @@ export const VpcPhoneDial = /* static class */ {
         8: 313,
         9: 313
     } as { [key: number]: number }
-}
+};

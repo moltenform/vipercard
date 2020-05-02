@@ -314,13 +314,7 @@ export const ChunkResolution = /* static class */ {
     /**
      * apply a put like 'put "abc" into line x of y'
      */
-    applyPut(
-        cont: WritableContainer,
-        chunk: O<RequestedChunk>,
-        itemDel: string,
-        news: string,
-        prep: VpcChunkPreposition
-    ): void {
+    applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition): void {
         if (chunk) {
             let s = cont.getRawString();
             let bounds = this._getBoundsForSet(s, itemDel, chunk);
@@ -352,7 +346,7 @@ export const ChunkResolution = /* static class */ {
             cont.setAll(result);
         }
     }
-}
+};
 
 /**
  * a requested chunk from a script.

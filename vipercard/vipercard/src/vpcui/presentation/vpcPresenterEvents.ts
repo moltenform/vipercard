@@ -140,7 +140,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * by calling setHandled, this stops event propagation
      */
-     cancelEvtIfCodeRunning(pr: VpcPresenterInterface, d: EventDetails) {
+    cancelEvtIfCodeRunning(pr: VpcPresenterInterface, d: EventDetails) {
         if (pr.vci.isCodeRunning()) {
             let isElemStopRunning = d.getAffectedElements().some(el => pr.lyrToolboxes.isElemStopRunning(el));
             if (!isElemStopRunning) {
@@ -155,7 +155,7 @@ export const VpcPresenterEvents = /* static class */ {
      * without this check here, you'd be able to click on a vel button even when
      * you are in the pencil tool
      */
-     cancelEvtIfNotBrowseTool(pr: VpcPresenterInterface, d: EventDetails) {
+    cancelEvtIfNotBrowseTool(pr: VpcPresenterInterface, d: EventDetails) {
         let isVel = d.getAffectedElements().some(item => bool(pr.lyrModelRender.elIdToVelId(item.id)));
         if (isVel && pr.vci.getTool() !== VpcTool.Browse) {
             d.setHandled();
@@ -165,7 +165,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * double-click the eraser tool to erase all paint on the screen
      */
-     respondMouseDoubleDown(pr: VpcPresenterInterface, d: MouseDownDoubleEventDetails) {
+    respondMouseDoubleDown(pr: VpcPresenterInterface, d: MouseDownDoubleEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.el && d.el.id) {
                 let short = pr.lyrToolboxes.toolsMain.fromFullId(d.el.id);
@@ -181,7 +181,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * send mousedown event to the current tool
      */
-     respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
+    respondMouseDown(pr: VpcPresenterInterface, d: MouseDownEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
                 let isUserElOrBg = trueIfDefinedAndNotNull(d.el) && bool(pr.lyrModelRender.isVelOrBaseLayer(d.el.id));
@@ -206,7 +206,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * send mouseup event to the current tool, and any layers that need to respond to it
      */
-     respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
+    respondMouseUp(pr: VpcPresenterInterface, d: MouseUpEventDetails) {
         pr.vci.undoableAction(() => {
             if (d.button === 0) {
                 let isUserElOrBg = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBaseLayer(item.id)));
@@ -223,7 +223,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * send mousemove event to current tool
      */
-     respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
+    respondMouseMove(pr: VpcPresenterInterface, d: MouseMoveEventDetails) {
         let isUserElOrBaseLayer = d.getAffectedElements().some(item => bool(pr.lyrModelRender.isVelOrBaseLayer(item.id)));
         pr.getToolResponse(pr.vci.getTool()).respondMouseMove(pr.vci.getTool(), d, isUserElOrBaseLayer);
         let isNextAVelOrBaseLayer = trueIfDefinedAndNotNull(d.elNext) && bool(pr.lyrModelRender.isVelOrBaseLayer(d.elNext.id));
@@ -235,7 +235,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * respond to keyboard shortcuts for undo and redo
      */
-     _checkIfUndoRedo(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
+    _checkIfUndoRedo(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
         /* these must be done outside of a undoableAction() block */
         if (!d.handled() && !pr.vci.isCodeRunning() && !d.repeated) {
             if (d.readableShortcut === 'Cmd+Z') {
@@ -251,7 +251,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * respond to keydown event
      */
-     respondKeyDown(pr: VpcPresenterInterface, d: KeyDownEventDetails, ed: EditTextBehaviorSendToVel) {
+    respondKeyDown(pr: VpcPresenterInterface, d: KeyDownEventDetails, ed: EditTextBehaviorSendToVel) {
         VpcPresenterEvents._checkIfUndoRedo(pr, d);
         if (d.handled()) {
             return;
@@ -332,7 +332,7 @@ export const VpcPresenterEvents = /* static class */ {
      * track when we've typed normal text in a field, to
      * know if we should call closeField or exitField
      */
-     updateFieldsRecentlyEdited(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
+    updateFieldsRecentlyEdited(pr: VpcPresenterInterface, d: KeyDownEventDetails) {
         if (UI512TextEvents.keyDownProbablyCausesTextChange(d)) {
             let el = TextSelModify.getSelectedField(pr);
             if (el) {
@@ -347,14 +347,14 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * schedule a script event
      */
-     scheduleScriptEvent(pr: VpcPresenterInterface, d: EventDetails) {
+    scheduleScriptEvent(pr: VpcPresenterInterface, d: EventDetails) {
         VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d);
     },
 
     /**
      * send keyup to current script
      */
-     respondKeyUp(pr: VpcPresenterInterface, d: EventDetails) {
+    respondKeyUp(pr: VpcPresenterInterface, d: EventDetails) {
         if (!d.handled() && pr.vci.getTool() === VpcTool.Browse) {
             VpcPresenterEvents.scheduleScriptMsg(pr, pr.vci, d);
         }
@@ -367,7 +367,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * respond to menu item
      */
-     respondMenuItemClicked(pr: VpcPresenterInterface, d: MenuItemClickedDetails) {
+    respondMenuItemClicked(pr: VpcPresenterInterface, d: MenuItemClickedDetails) {
         if (!d.handled()) {
             pr.vci.performMenuAction(d.id);
         }
@@ -376,7 +376,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * on focus changed (user highlighted something)
      */
-     respondFocusChanged(pr: VpcPresenterInterface, d: FocusChangedEventDetails) {
+    respondFocusChanged(pr: VpcPresenterInterface, d: FocusChangedEventDetails) {
         if (!d.handled()) {
             pr.beginScheduleFldOpenCloseEvent(d);
         }
@@ -385,7 +385,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * on idle (this event is continuously sent)
      */
-     respondIdle(pr: VpcPresenterInterface, d: IdleEventDetails) {
+    respondIdle(pr: VpcPresenterInterface, d: IdleEventDetails) {
         let curtool = pr.vci.getTool();
         let codeRunning = pr.vci.isCodeRunning();
         if (pr.cursorRefreshPending && pr.trackMouse[0] !== -1 && pr.trackMouse[1] !== -1) {
@@ -460,7 +460,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * is the menubar open
      */
-     _menuIsOpen(pr: VpcPresenterInterface) {
+    _menuIsOpen(pr: VpcPresenterInterface) {
         let grpMenubar = pr.app.findGroup('$$grpmenubar');
         if (grpMenubar) {
             let menubar = grpMenubar.findEl('$$menubarforapp');
@@ -476,7 +476,7 @@ export const VpcPresenterEvents = /* static class */ {
      * finds target vel id and
      * schedules a script message (only if browse tool is active)
      */
-     scheduleScriptMsg(pr: VpcPresenterInterface, vci: VpcStateInterface, d: EventDetails, mouseX = -1, mouseY = -1) {
+    scheduleScriptMsg(pr: VpcPresenterInterface, vci: VpcStateInterface, d: EventDetails, mouseX = -1, mouseY = -1) {
         if (d.handled() || vci.getTool() !== VpcTool.Browse) {
             return;
         }
@@ -528,7 +528,7 @@ export const VpcPresenterEvents = /* static class */ {
     /**
      * schedule a script message (only if browse tool is active)
      */
-     scheduleScriptMsgImpl(pr: VpcPresenterInterface, d: EventDetails, targetVelId: string, isOnIdleEvent: boolean) {
+    scheduleScriptMsgImpl(pr: VpcPresenterInterface, d: EventDetails, targetVelId: string, isOnIdleEvent: boolean) {
         /* don't start scripts if menu is open */
         if (VpcPresenterEvents._menuIsOpen(pr)) {
             return;
@@ -558,7 +558,7 @@ export const VpcPresenterEvents = /* static class */ {
 
         pr.vci.getCodeExec().scheduleCodeExec(msg);
     }
-}
+};
 
 /**
  * we must route text changes to a vel instead of directly setting the UI512 element

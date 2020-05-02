@@ -15,7 +15,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * parse a list ["bold", "italic"] into bitfield bold|italic
      */
-     vpcStyleToInt(list: string[]): TextFontStyling {
+    vpcStyleToInt(list: string[]): TextFontStyling {
         let ret = TextFontStyling.Default;
         for (let i = 0, len = list.length; i < len; i++) {
             let s = list[i];
@@ -58,7 +58,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * from bitfield bold|italic to ["bold", "italic"]
      */
-     vpcStyleFromInt(style: TextFontStyling) {
+    vpcStyleFromInt(style: TextFontStyling) {
         let ret: string[] = [];
         if (style === 0) {
             ret.push('plain');
@@ -102,7 +102,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * ['italic', 'outline'] to "b+iu+osdce"
      */
-     ui512styleFromVpcStyleList(vpcStyles: string[]) {
+    ui512styleFromVpcStyleList(vpcStyles: string[]) {
         let n = SubstringStyleComplex.vpcStyleToInt(vpcStyles);
         return textFontStylingToString(n);
     },
@@ -110,7 +110,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * "b+iu+osdce" to ['italic', 'outline']
      */
-     ui512styleToVpcStyleList(style: string) {
+    ui512styleToVpcStyleList(style: string) {
         let enumStyle = stringToTextFontStyling(style);
         return SubstringStyleComplex.vpcStyleFromInt(enumStyle).split(',');
     },
@@ -119,7 +119,7 @@ export const SubstringStyleComplex = /* static class */ {
      * when you say set the textstyle of char 999 of cd fld "fld1",
      * adjust to fit into what's actually there
      */
-     fitBounds(txtlen: number, inStart: number, inLen: number, isGet: boolean) {
+    fitBounds(txtlen: number, inStart: number, inLen: number, isGet: boolean) {
         if (isGet && inLen === 0) {
             inLen = 1;
         }
@@ -134,13 +134,7 @@ export const SubstringStyleComplex = /* static class */ {
      * get attribute of a chunk of text
      * note that if it varies, we'll return "mixed".
      */
-     _getChunkTextAttribute(
-        txt: FormattedText,
-        defaultFont: string,
-        inStart: number,
-        inLen: number,
-        fn: (s: string) => string
-    ) {
+    _getChunkTextAttribute(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, fn: (s: string) => string) {
         if (txt.len() === 0 || inStart >= txt.len()) {
             return fn(defaultFont);
         }
@@ -162,13 +156,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * set attribute of a chunk of text
      */
-     _setChunkTextAttribute(
-        txt: FormattedText,
-        defaultFont: string,
-        inStart: number,
-        inLen: number,
-        fn: (s: string) => string
-    ) {
+    _setChunkTextAttribute(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, fn: (s: string) => string) {
         if (txt.len() === 0 || inStart >= txt.len()) {
             return;
         }
@@ -182,7 +170,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * get typeface of chunk, or "mixed" if there's more than one typeface
      */
-     getChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string {
+    getChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string {
         let fn = (s: string) => TextFontSpec.getTypeface(s);
         return SubstringStyleComplex._getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     },
@@ -190,7 +178,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * set typeface of chunk
      */
-     setChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, snext: string) {
+    setChunkTextFace(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, snext: string) {
         let fn = (scurrent: string) => TextFontSpec.setTypeface(scurrent, snext);
         return SubstringStyleComplex._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     },
@@ -198,7 +186,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * get point size of chunk, or "mixed" if it varies
      */
-     getChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): number | string {
+    getChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): number | string {
         let fn = (s: string) => TextFontSpec.getFontSize(s);
         let ret = SubstringStyleComplex._getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
         let n = Util512.parseInt(ret);
@@ -208,7 +196,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * set point size of chunk
      */
-     setChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, next: number) {
+    setChunkTextSize(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, next: number) {
         let ssize = next.toString();
         let fn = (scurrent: string) => TextFontSpec.setFontSize(scurrent, ssize);
         return SubstringStyleComplex._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
@@ -217,7 +205,7 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * get font style of chunk, or "mixed" if it varies
      */
-     getChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string[] {
+    getChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number): string[] {
         let fn = (s: string) => TextFontSpec.getFontStyle(s);
         let ret = SubstringStyleComplex._getChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
         return ret === 'mixed' ? ['mixed'] : SubstringStyleComplex.ui512styleToVpcStyleList(ret);
@@ -226,9 +214,9 @@ export const SubstringStyleComplex = /* static class */ {
     /**
      * set font style of chunk
      */
-     setChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, list: string[]) {
+    setChunkTextStyle(txt: FormattedText, defaultFont: string, inStart: number, inLen: number, list: string[]) {
         let snext = SubstringStyleComplex.ui512styleFromVpcStyleList(list);
         let fn = (scurrent: string) => TextFontSpec.setFontStyle(scurrent, snext);
         return SubstringStyleComplex._setChunkTextAttribute(txt, defaultFont, inStart, inLen, fn);
     }
-}
+};

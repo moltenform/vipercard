@@ -501,5 +501,4 @@ export const TranslateCharset = /* static class */ {
 
         return ret;
     }
-}
-
+};

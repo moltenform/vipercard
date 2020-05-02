@@ -64,7 +64,7 @@
 // aren't yet supported in software include:
 //      you can't say `part id 4`
 //      you can't refer to other stacks besides "this stack"
-//      domenu can't be handled/trapped
+//      domenu can't (yet) be handled/trapped
 
 // changes from v1:
 //      put the sin of 4 into x is now supported

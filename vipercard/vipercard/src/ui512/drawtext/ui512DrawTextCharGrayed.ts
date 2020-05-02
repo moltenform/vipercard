@@ -81,5 +81,4 @@ export const UI512DrawTextCharGrayed = /* static class */ {
             }
         }
     }
-}
-
+};

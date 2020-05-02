@@ -49,7 +49,7 @@ export const VpcInitIcons = /* static class */ {
     /**
      * icon set for dissolve & visual fx implementation
      */
-     _defineGroupDissolve() {
+    _defineGroupDissolve() {
         let grpDissolve = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['fordissolve'] = grpDissolve;
         grpDissolve.gridSize = 64;
@@ -61,7 +61,7 @@ export const VpcInitIcons = /* static class */ {
     /**
      * icon group 0, background textures
      */
-     _defineGroup000() {
+    _defineGroup000() {
         let grp000 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['000'] = grp000;
         grp000.totalIcons = 4;
@@ -78,7 +78,7 @@ export const VpcInitIcons = /* static class */ {
     /**
      * icon group 2, "icons" for vipercard buttons
      */
-     _defineGroup002() {
+    _defineGroup002() {
         let grp002 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['002'] = grp002;
         grp002.gridSize = 32;
@@ -90,7 +90,7 @@ export const VpcInitIcons = /* static class */ {
     /**
      * icon groups for cursors
      */
-     _defineCursors() {
+    _defineCursors() {
         let grpCursors1 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['0cursors1'] = grpCursors1;
         grpCursors1.gridSize = 32;
@@ -139,7 +139,7 @@ export const VpcInitIcons = /* static class */ {
     /**
      * icon group 1, parts of the ui like scrollbar arrows, patterns, tools
      */
-     _defineGroup001() {
+    _defineGroup001() {
         let grp001 = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['001'] = grp001;
         grp001.gridSize = 32;
@@ -190,7 +190,7 @@ export const VpcInitIcons = /* static class */ {
     /**
      * icon set for space game
      */
-     _defineGroupSpace() {
+    _defineGroupSpace() {
         let grpSpace = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['spacegame'] = grpSpace;
         grpSpace.gridSize = 14;
@@ -210,7 +210,7 @@ export const VpcInitIcons = /* static class */ {
     /**
      * icon set for glider game
      */
-     _defineGroupGlider() {
+    _defineGroupGlider() {
         let gliderBg = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['gliderBg'] = gliderBg;
         gliderBg.totalIcons = 43;
@@ -224,7 +224,7 @@ export const VpcInitIcons = /* static class */ {
      * icon set for glider sprites,
      * the glider icons aren't in a fixed grid and need custom dims
      */
-     _setGliderSprites() {
+    _setGliderSprites() {
         let grpGlider = new IconGroupInfo();
         RenderIconGroup.cachedGridInfo['gliderSprites'] = grpGlider;
         grpGlider.totalIcons = 80;
@@ -375,4 +375,4 @@ export const VpcInitIcons = /* static class */ {
         grpGlider.customOffsets[71] = [512, 0];
         grpGlider.customDims[71] = [16, 342];
     }
-}
+};

@@ -1,6 +1,6 @@
 
 /* auto */ import { CodeLimits, CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcSuperRewrite } from './vpcRewritesGlobal';
 /* auto */ import { LoopLimit } from './vpcPreparseCommon';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
@@ -32,7 +32,6 @@
     put 2 * tmp002 into x
  */
 export class ExpandCustomFunctions {
-    protected buildToken = new BuildFakeTokens();
     protected skipExpansion: { [key: string]: boolean } = {};
     protected rw: VpcSuperRewrite;
     constructor(protected idgenThisScript: CountNumericId, protected check: CheckReservedWords) {

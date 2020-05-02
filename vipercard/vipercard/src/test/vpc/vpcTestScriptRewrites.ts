@@ -842,7 +842,7 @@ class VpcCacheParsedASTForTest extends VpcCacheParsedAST {
             'Q_|preparse failed'
         );
         let reSyntaxMark = new RegExp(
-            Util512.escapeForRegex(BuildFakeTokens.inst.strSyntaxMark),
+            Util512.escapeForRegex(BuildFakeTokens.strSyntaxMark),
             'g'
         );
         let got = transformedCode.lines.map(

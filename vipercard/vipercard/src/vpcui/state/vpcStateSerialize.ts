@@ -150,4 +150,4 @@ export const VpcStateSerialize = /* static class */ {
 
         return ensureDefined(created, 'Kv|');
     }
-}
+};

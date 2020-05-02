@@ -330,5 +330,4 @@ const AdjustFontMetrics = /* static class */ {
             obj.metrics.lineheight += adj;
         }
     }
-}
-
+};

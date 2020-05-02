@@ -308,9 +308,9 @@ export class TestParseHelpers {
         line.splice(
             0,
             1,
-            BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
-            BuildFakeTokens.inst.makeSyntaxMarker(line[0]),
-            BuildFakeTokens.inst.makeSyntaxMarker(line[0])
+            BuildFakeTokens.makeSyntaxMarker(line[0]),
+            BuildFakeTokens.makeSyntaxMarker(line[0]),
+            BuildFakeTokens.makeSyntaxMarker(line[0])
         );
         this.parser.input = line;
         let cst = Util512.callAsMethodOnClass(
@@ -396,7 +396,7 @@ function assertFailsCmdSet(sInput: string, sErrExpected: string) {
  */
 function testCmd(sInput: string, sExpected: string) {
     /* manually make a syntax marker */
-    let sSyntaxMarker = BuildFakeTokens.inst.strSyntaxMark;
+    let sSyntaxMarker = BuildFakeTokens.strSyntaxMark;
     sInput = sInput.replace(/\{MK\}/g, sSyntaxMarker);
     let sCmd = sInput.split(' ')[0];
     assertTrue(sInput.startsWith(sCmd + ' '), '1.|expected start with ' + sCmd);

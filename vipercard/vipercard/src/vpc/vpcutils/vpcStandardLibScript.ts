@@ -10,7 +10,7 @@
  * internalvpcmessagesdirective, which can do anything.
  */
 export const VpcStandardLibScript = /* static class */ {
-    handlersImplementedInSoftware : {
+    handlersImplementedInSoftware: {
         push: true,
         pop: true,
         internalvpcdeletebghelper: true,
@@ -202,4 +202,4 @@ end goCardDestinationFromObjectId
 
 
        `
-}
+};

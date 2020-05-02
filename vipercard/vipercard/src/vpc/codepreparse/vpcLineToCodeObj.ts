@@ -29,9 +29,9 @@ export class VpcLineToCodeObj {
 
         /* the offsets here won't be right, but we shouldn't encounter errs here anyways */
         this.cachedStartOnes = [
-            BuildFakeTokens.inst.makeSyntaxMarker(basis),
-            BuildFakeTokens.inst.makeSyntaxMarker(basis),
-            BuildFakeTokens.inst.makeSyntaxMarker(basis)
+            BuildFakeTokens.makeSyntaxMarker(basis),
+            BuildFakeTokens.makeSyntaxMarker(basis),
+            BuildFakeTokens.makeSyntaxMarker(basis)
         ];
     }
 

@@ -216,7 +216,7 @@ export class UI512DemoText extends UI512Presenter {
 
     protected static async dldTest5(dldOnly: boolean) {
         let testids = prompt(
-             longstr(`Please type in some test ids, separated by
+            longstr(`Please type in some test ids, separated by
              commas, in the form (fontid)_(size). Or 'all'.`),
             'symbol_9'
         );

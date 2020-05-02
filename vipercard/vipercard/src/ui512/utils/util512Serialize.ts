@@ -12,7 +12,7 @@
  * fields beginning with "__" will be skipped.
  * unknown incoming fields are skipped silently.
  */
-export const Util512SerializableHelpers  = /* static class */ {
+export const Util512SerializableHelpers = /* static class */ {
     /**
      * serialize a typescript object to a plain json map of strings to strings
      */
@@ -136,7 +136,7 @@ export const Util512SerializableHelpers  = /* static class */ {
             typeof obj[prop] !== 'function'
         );
     }
-}
+};
 
 /**
  * essentially just a signal that this class can be serialized

@@ -231,7 +231,7 @@ export const VpcTopPreparse = /* static class */ {
         let outlines = exp.go(line);
         return outlines;
     }
-}
+};
 
 /**
  * the top level collection of parsed and processed code.

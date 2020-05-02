@@ -105,4 +105,4 @@ end if`;
 
         return template;
     }
-}
+};

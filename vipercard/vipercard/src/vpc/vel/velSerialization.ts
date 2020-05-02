@@ -208,7 +208,7 @@ export const VpcGettableSerialization = /* static class */ {
 
         return s;
     }
-}
+};
 
 /**
  * defines what a saved document is

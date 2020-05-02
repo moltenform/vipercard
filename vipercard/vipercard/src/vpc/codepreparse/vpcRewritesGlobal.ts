@@ -68,7 +68,7 @@ export namespace VpcRewritesGlobal {
 
             ret.push(copyLine[i]);
             if (insertIt) {
-                ret.push(BuildFakeTokens.inst.makeTk(copyLine[i], insertIt, s));
+                ret.push(BuildFakeTokens.makeTk(copyLine[i], insertIt, s));
             }
         }
 
@@ -135,10 +135,10 @@ export class VpcSuperRewrite {
             checkThrow(typeof n === 'number' && n >= 0 && n < args.length, 'TJ|internal error in template');
             Util512.extendArray(arLast(ret), args[n]);
         } else if (term === '%INTO%' || term === '%BEFORE%' || term === '%AFTER%') {
-            arLast(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
+            arLast(ret).push(BuildFakeTokens.makeSyntaxMarker(realTokenAsBasis));
             let newToken = this.tokenFromEnglishTerm(term.replace(/%/g, '').toLowerCase(), realTokenAsBasis);
             arLast(ret).push(newToken);
-            arLast(ret).push(BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis));
+            arLast(ret).push(BuildFakeTokens.makeSyntaxMarker(realTokenAsBasis));
         } else {
             checkThrow(
                 !needsToBePostProcess || (term !== 'into' && term !== 'before' && term !== 'after'),
@@ -173,7 +173,7 @@ export class VpcSuperRewrite {
             );
         }
 
-        return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tktype, term);
+        return BuildFakeTokens.makeTk(realTokenAsBasis, tktype, term);
     }
 
     /* safer to replace only when not in parens, see searchTokenGivenEnglishTermInParensLevel */
@@ -189,7 +189,7 @@ export class VpcSuperRewrite {
             checkThrow(!mustExist, `TG|did not see ${term} in a ${line[0].image}`);
             return false;
         } else {
-            let marker = BuildFakeTokens.inst.makeSyntaxMarker(realTokenAsBasis, syntaxMarkerType);
+            let marker = BuildFakeTokens.makeSyntaxMarker(realTokenAsBasis, syntaxMarkerType);
             line[index] = marker;
             return true;
         }
@@ -226,6 +226,6 @@ export class VpcSuperRewrite {
     /* generates a unique variable name */
     generateUniqueVariable(realTokenAsBasis: ChvITk, prefix: string) {
         let image = '$unique_' + prefix + this.idGen.nextAsStr();
-        return BuildFakeTokens.inst.makeTk(realTokenAsBasis, tks.tkIdentifier, image);
+        return BuildFakeTokens.makeTk(realTokenAsBasis, tks.tkIdentifier, image);
     }
 }

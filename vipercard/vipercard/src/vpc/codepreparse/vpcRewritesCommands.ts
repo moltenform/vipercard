@@ -102,7 +102,7 @@ export class VpcRewriteForCommands {
             let im = line[i].image;
             let en = findStrToEnum<VpcTool>(VpcTool, im);
             if (en !== undefined) {
-                line[i] = BuildFakeTokens.inst.makeStringLiteral(line[i], im);
+                line[i] = BuildFakeTokens.makeStringLiteral(line[i], im);
             }
         }
 
@@ -324,8 +324,8 @@ put the result %ARG0%`;
         }
 
         /* transform to put "abc" (TkSyntaxMarker) into (TkSyntaxMarker) x */
-        line.splice(foundPreposition + 1, 0, BuildFakeTokens.inst.makeSyntaxMarker(line[0]));
-        line.splice(foundPreposition, 0, BuildFakeTokens.inst.makeSyntaxMarker(line[0]));
+        line.splice(foundPreposition + 1, 0, BuildFakeTokens.makeSyntaxMarker(line[0]));
+        line.splice(foundPreposition, 0, BuildFakeTokens.makeSyntaxMarker(line[0]));
         return [line];
     }
     rewriteRead(line: ChvITk[]): ChvITk[][] {
@@ -356,7 +356,7 @@ put the result %ARG0%`;
         checkThrow(line.length > 1, 'S>|not enough args');
         if (line[1].image === 'empty') {
             checkThrowEq(1, line.length, 'S=|select empty should be alone');
-            return [[line[0], BuildFakeTokens.inst.makeStringLiteral(line[0], 'empty')]];
+            return [[line[0], BuildFakeTokens.makeStringLiteral(line[0], 'empty')]];
         } else {
             let startContainer = 1;
             let ret = [line[0]];
@@ -380,7 +380,7 @@ put the result %ARG0%`;
             }
 
             let container = line.slice(startContainer);
-            ret.push(BuildFakeTokens.inst.makeStringLiteral(line[0], whereToSelect));
+            ret.push(BuildFakeTokens.makeStringLiteral(line[0], whereToSelect));
             return [ret.concat(container)];
         }
     }
@@ -585,10 +585,7 @@ end repeat`;
 
     /* doesn't produce a pre-parse error, produces a runtime error */
     hBuildNyi(msg: string, basis: ChvITk) {
-        return [
-            BuildFakeTokens.inst.makeTk(basis, tks.tkIdentifier, 'errordialog'),
-            BuildFakeTokens.inst.makeStringLiteral(basis, msg)
-        ];
+        return [BuildFakeTokens.makeTk(basis, tks.tkIdentifier, 'errordialog'), BuildFakeTokens.makeStringLiteral(basis, msg)];
     }
 
     /* helper that builds an nyi if 'menu' is seen */

@@ -196,6 +196,4 @@ export const UI512DrawChar = /* static class */ {
 
         return new DrawCharResult(x + spacing, destX + srcW, destY + srcH);
     }
-}
-
-
+};
