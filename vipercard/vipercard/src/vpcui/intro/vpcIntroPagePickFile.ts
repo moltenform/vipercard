@@ -210,7 +210,7 @@ export class IntroPagePickFile extends IntroPageBase {
     /**
      * respond to button click
      */
-    static respondBtnClick(pr: VpcIntroInterface, self: IntroPagePickFile, el: UI512Element) {
+    respondToBtnClick(pr: VpcIntroInterface, self: IntroPagePickFile, el: UI512Element) {
         if (el.id.endsWith('choicebtn0') || el.id.endsWith('choicebtn1')) {
             /* user clicked cancel, go back to first screen */
             pr.goBackToFirstScreen();

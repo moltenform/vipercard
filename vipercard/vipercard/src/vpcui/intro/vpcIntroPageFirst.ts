@@ -163,10 +163,32 @@ export class IntroPageFirst extends IntroPageBase {
         }
     }
 
+    static onDoOpenstack(pr: VpcIntroInterface) {
+        if (getVpcSessionTools().enableServerCode) {
+            pr.getModal().standardAnswer(
+                pr,
+                pr.app,
+                'From which location would you like to open?',
+                n => {
+                    if (n === 0) {
+                        IntroPageFirst.goPage(pr, VpcDocumentLocation.ShowLoginForm);
+                    } else if (n === 1) {
+                        IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
+                    }
+                },
+                'Online',
+                'Json file',
+                'Cancel'
+            );
+        } else {
+            IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
+        }
+    }
+
     /**
      * respond to button click
      */
-    static respondBtnClick(pr: VpcIntroInterface, self: O<IntroPageFirst>, el: UI512Element) {
+    respondToBtnClick(pr: VpcIntroInterface, self: IntroPageOpen, el: UI512Element) {
         if (el.id.endsWith('choiceNewStack')) {
             pr.beginNewDocument();
         } else if (el.id.endsWith('choiceShowAbout')) {
@@ -174,25 +196,7 @@ export class IntroPageFirst extends IntroPageBase {
         } else if (el.id.endsWith('choiceShowFeatured')) {
             IntroPageFirst.goPage(pr, VpcDocumentLocation.FromStaticDemo);
         } else if (el.id.endsWith('choiceOpenStack')) {
-            if (getVpcSessionTools().enableServerCode) {
-                pr.getModal().standardAnswer(
-                    pr,
-                    pr.app,
-                    'From which location would you like to open?',
-                    n => {
-                        if (n === 0) {
-                            IntroPageFirst.goPage(pr, VpcDocumentLocation.ShowLoginForm);
-                        } else if (n === 1) {
-                            IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
-                        }
-                    },
-                    'Online',
-                    'Json file',
-                    'Cancel'
-                );
-            } else {
-                IntroPageFirst.goPage(pr, VpcDocumentLocation.FromJsonFile);
-            }
+            IntroPageFirst.onDoOpenstack(pr)   
         }
     }
 

@@ -108,8 +108,6 @@ export class UI512CompCodeEditor extends UI512CompBase {
                 /* Ctrl Q adds or removes based on what is there */
                 TextSelModify.changeTextToggleLinePrefix(gel, this.lineCommentPrefix);
                 break;
-            case 'NumpadEnter':
-            /* falls through */
             case 'Enter':
                 /* run auto-indent when you hit Enter */
                 TextSelModify.changeTextInsert(gel, '\n');

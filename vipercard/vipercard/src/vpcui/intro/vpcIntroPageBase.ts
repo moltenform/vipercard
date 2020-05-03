@@ -1,13 +1,17 @@
 
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, fitIntoInclusive } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
+/* auto */ import { UI512PresenterInterface } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { IdleEventDetails, KeyDownEventDetails, MouseDownEventDetails, MouseMoveEventDetails, MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { UI512ElGroup } from './../../ui512/elements/ui512ElementGroup';
 /* auto */ import { UI512BtnStyle, UI512ElButton } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { UI512Application } from './../../ui512/elements/ui512ElementApp';
+/* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512CompBase, WndBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
+
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -24,6 +28,8 @@ export abstract class IntroPageBase extends UI512CompBase {
     protected dragOffsetY = 0;
     protected screenBounds: number[];
     hasCloseBtn = false;
+    cancelBtnId: O<string>
+    acceptBtnId: O<string>
 
     constructor(compId: string, bounds: number[], x?: number, y?: number) {
         super(compId);
@@ -168,10 +174,22 @@ export abstract class IntroPageBase extends UI512CompBase {
     /**
      * respond to key press, can be overridden in child class
      */
-    respondKeyDown(pr: UI512Presenter, d: KeyDownEventDetails) {}
+    respondKeyDown(pr: UI512Presenter, d: KeyDownEventDetails) {
+
+        //~ //if (d.readableShortcut.toLowerCase() === 'enter' ||
+        //~ //d.readableShortcut.toLowerCase() === 'return') {
+        //~ //    if (this.acceptBtnId)
+        //~ //}
+    }
 
     /**
      * event called continuously, can be overridden in child class
      */
-    respondIdle(pr: UI512Presenter, d: IdleEventDetails) {}
+    respondIdle(pr: UI512Presenter, d: IdleEventDetails) {
+    }
+
+    /**
+     * a button was clicked
+     */
+    respondToBtnClick(pr: UI512PresenterInterface, self: O<IntroPageBase>, el: UI512Element) {}
 }

@@ -175,7 +175,7 @@ export class IntroPageOpen extends IntroPageBase {
     /**
      * user clicked OK or cancel
      */
-    static respondBtnClick(pr: VpcIntroInterface, self: IntroPageOpen, el: UI512Element) {
+    respondToBtnClick(pr: VpcIntroInterface, self: IntroPageOpen, el: UI512Element) {
         if (el.id.endsWith('choicebtn0')) {
             let chosenId = IntroPageOpen.getChosen(self);
             if (chosenId && slength(chosenId)) {

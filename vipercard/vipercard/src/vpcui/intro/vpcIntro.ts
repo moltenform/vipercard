@@ -1,9 +1,8 @@
 
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './vpcIntroProvider';
-/* auto */ import { IntroPagePickFile } from './vpcIntroPagePickFile';
-/* auto */ import { IntroPageOpen } from './vpcIntroPageOpen';
 /* auto */ import { IntroPageLoading } from './vpcIntroPageLoading';
 /* auto */ import { IntroPageFirst } from './vpcIntroPageFirst';
+/* auto */ import { IntroPageBase } from './vpcIntroPageBase';
 /* auto */ import { VpcIntroInterface } from './vpcIntroInterface';
 /* auto */ import { getUI512WindowBounds } from './../../ui512/utils/utilsDrawConstants';
 /* auto */ import { getRoot } from './../../ui512/utils/util512Higher';
@@ -112,12 +111,8 @@ export class VpcUiIntro extends VpcIntroInterface {
             pr.activePage.respondMouseUp(pr, d);
         }
 
-        if (d.elClick && pr.activePage instanceof IntroPageFirst) {
-            IntroPageFirst.respondBtnClick(pr, pr.activePage, d.elClick);
-        } else if (d.elClick && pr.activePage instanceof IntroPageOpen) {
-            IntroPageOpen.respondBtnClick(pr, pr.activePage, d.elClick);
-        } else if (d.elClick && pr.activePage instanceof IntroPagePickFile) {
-            IntroPagePickFile.respondBtnClick(pr, pr.activePage, d.elClick);
+        if (d.elClick && pr.activePage instanceof IntroPageBase) {
+            pr.activePage.respondToBtnClick(pr, pr.activePage, d.elClick)
         }
     }
 
@@ -170,8 +165,7 @@ export class VpcUiIntro extends VpcIntroInterface {
             if (mineOnly) {
                 IntroPageFirst.goPage(pr, VpcDocumentLocation.ShowLoginForm);
             } else {
-                let fakebtn = new UI512ElButton('_choiceOpenStack');
-                IntroPageFirst.respondBtnClick(pr, undefined, fakebtn);
+                IntroPageFirst.onDoOpenstack(pr)
             }
         };
     }

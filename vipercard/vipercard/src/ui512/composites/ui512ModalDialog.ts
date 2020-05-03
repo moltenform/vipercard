@@ -7,10 +7,9 @@
 /* auto */ import { assertTrue, checkThrow512 } from './../utils/util512Assert';
 /* auto */ import { addDefaultListeners } from './../textedit/ui512TextEvents';
 /* auto */ import { TemporarilySuspendEvents } from './../menu/ui512SuspendEvents';
-/* auto */ import { UI512PresenterWithMenuInterface } from './../menu/ui512PresenterWithMenu';
 /* auto */ import { UI512PresenterBase } from './../presentation/ui512PresenterBase';
 /* auto */ import { UI512Presenter } from './../presentation/ui512Presenter';
-/* auto */ import { FnEventCallback, MouseDragStatus, UI512EventType } from './../draw/ui512Interfaces';
+/* auto */ import { FnEventCallback, MouseDragStatus, UI512EventType, UI512PresenterInterface } from './../draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../drawtext/ui512FormattedText';
 /* auto */ import { KeyDownEventDetails, MouseDownEventDetails, MouseUpEventDetails } from './../menu/ui512Events';
 /* auto */ import { UI512ElTextField } from './../elements/ui512ElementTextField';
@@ -284,7 +283,7 @@ export class UI512CompModalDialog extends UI512CompBase {
      * over textediting. 
      */
     addReturnKeyListener(cbs: FnEventCallback[], app: UI512Application) {
-        let onReturn = (    pr: UI512PresenterWithMenuInterface,
+        let onReturn = (    pr: UI512PresenterInterface,
             d: KeyDownEventDetails
         ) => {
             let btnId:string
@@ -305,8 +304,7 @@ export class UI512CompModalDialog extends UI512CompBase {
                 this.onClickChoiceBtn()
             }
 
-            let okbtn = this.getElId(btnId)
-            let el = app.getEl(okbtn)
+            let el = app.getEl(this.getElId(btnId))
             el.set('highlightactive', true)
             Util512Higher.syncToAsyncAfterPause(fn, 200, "HitEnter", RespondToErr.ConsoleErrOnly)
         }

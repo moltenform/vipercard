@@ -303,9 +303,6 @@ export class UI512TextEvents {
             case 'Enter':
                 TextSelModify.changeTextInsert(gel, '\n');
                 break;
-            case 'NumpadEnter':
-                TextSelModify.changeTextInsert(gel, '\n');
-                break;
             case 'Cmd+C':
                 this.sendCutOrCopy(pr, el, false);
                 break;
