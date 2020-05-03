@@ -112,7 +112,9 @@ export class VpcUiIntro extends VpcIntroInterface {
         }
 
         if (d.elClick && pr.activePage instanceof IntroPageBase) {
-            pr.activePage.respondToBtnClick(pr, pr.activePage, d.elClick)
+            if (pr.activePage.children.length) {
+                pr.activePage.respondToBtnClick(pr, pr.activePage, d.elClick)
+            }
         }
     }
 

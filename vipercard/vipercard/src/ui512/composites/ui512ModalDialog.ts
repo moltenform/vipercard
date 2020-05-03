@@ -56,6 +56,14 @@ export class UI512CompModalDialog extends UI512CompBase {
     /* result text the user typed in */
     resultText: O<string>;
 
+    /* in case dialog was re-used */
+    create(
+        pr: UI512Presenter,
+        app: UI512Application) {
+            this.aboutToClose = false
+super.create(pr, app)
+        }
+
     /**
      * "answer", like an alert() box
      */

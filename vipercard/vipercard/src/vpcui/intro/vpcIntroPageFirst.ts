@@ -91,6 +91,7 @@ export class IntroPageFirst extends IntroPageBase {
             }
         });
 
+        this.acceptBtnId = this.getElId('choiceShowFeatured')
         this.drawCommonLast(app, grp);
     }
 

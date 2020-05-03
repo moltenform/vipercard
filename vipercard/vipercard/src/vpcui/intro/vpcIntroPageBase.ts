@@ -1,4 +1,5 @@
 
+/* auto */ import { RespondToErr, Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, fitIntoInclusive } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
@@ -11,7 +12,6 @@
 /* auto */ import { UI512Element } from './../../ui512/elements/ui512Element';
 /* auto */ import { UI512CompBase, WndBorderDecorationConsts } from './../../ui512/composites/ui512Composites';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
-
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -175,11 +175,24 @@ export abstract class IntroPageBase extends UI512CompBase {
      * respond to key press, can be overridden in child class
      */
     respondKeyDown(pr: UI512Presenter, d: KeyDownEventDetails) {
+        let elId:O<string>
+        if (d.readableShortcut.toLowerCase() === 'enter' ||
+        d.readableShortcut.toLowerCase() === 'return') {
+            elId = this.acceptBtnId
+        } else if (d.readableShortcut.toLowerCase() === 'escape') {
+            elId = this.cancelBtnId
+        }
 
-        //~ //if (d.readableShortcut.toLowerCase() === 'enter' ||
-        //~ //d.readableShortcut.toLowerCase() === 'return') {
-        //~ //    if (this.acceptBtnId)
-        //~ //}
+        let fnd = pr?.app?.findEl(elId)
+        if (fnd) {
+            fnd.set('highlightactive', true)
+            let fn = () => { 
+                if (fnd && this.children.length) {
+                    this.respondToBtnClick(pr, this, fnd)
+                }
+            }
+            Util512Higher.syncToAsyncAfterPause(fn, 200, "Hit return to click a button", RespondToErr.ConsoleErrOnly)
+        }
     }
 
     /**

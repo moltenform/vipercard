@@ -45,11 +45,12 @@ export class IntroPagePickFile extends IntroPageBase {
             )
         );
 
-        /* draw the ok button */
+        /* draw the cancel button */
         let windowBg = grp.getEl(this.getElId('windowBg'));
         const baseX = windowBg.right - 170;
         const baseY = windowBg.bottom - 50;
-        this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
+        let btnCancel = this.drawBtn(app, grp, 1, baseX + (252 - 174), baseY + (68 - 64), 68, 21);
+        this.cancelBtnId = btnCancel.id
 
         /* set the dimensions of the clickbounds */
         let bounds = [0, 0, 9999, baseY - 50];
