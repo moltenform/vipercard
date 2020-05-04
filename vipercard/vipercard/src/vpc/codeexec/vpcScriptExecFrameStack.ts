@@ -5,6 +5,7 @@
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed, tks } from './../codeparse/vpcTokens';
+/* auto */ import { VpcTables } from './../vpcutils/vpcTables';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
 /* auto */ import { AsyncCodeOpState, VpcPendingAsyncOps } from './vpcScriptExecAsync';
@@ -57,6 +58,7 @@
  */
 export class VpcExecFrameStack {
     stack: O<VpcExecFrame>[] = [undefined];
+    vpcTables = new VpcTables()
     constructor(
         protected outside: OutsideWorldReadWrite,
         protected cacheParsedCST: VpcCacheParsedCST,

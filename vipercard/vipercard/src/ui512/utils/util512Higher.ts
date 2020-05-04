@@ -441,7 +441,7 @@ export class BrowserInfo {
     browser = BowserBrowsers.unknown;
     platform = BowserPlatform.unknown;
     static cached: O<BrowserInfo>;
-    static inst() {
+    static get() {
         if (!BrowserInfo.cached) {
             BrowserInfo.cached = new BrowserInfo();
         }

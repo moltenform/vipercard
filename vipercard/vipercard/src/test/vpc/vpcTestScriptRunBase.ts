@@ -276,7 +276,7 @@ export class TestVpcScriptRunBase {
             ${codeIn}
             end mouseup`;
         built = built.replace(/{BSLASH}/g, '\\');
-        built = FormattedText.fromExternalCharset(built, BrowserInfo.inst().os);
+        built = FormattedText.fromExternalCharset(built, BrowserInfo.get().os);
 
         let btnGo = this.vcstate.model.getById(VpcElButton, this.elIds.btn_go);
         this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));

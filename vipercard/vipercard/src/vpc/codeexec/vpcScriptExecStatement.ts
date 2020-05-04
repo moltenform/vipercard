@@ -190,7 +190,12 @@ export class ExecuteStatement {
      * simulate a menu command
      */
     goVpccalluntrappabledomenu(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
-        checkThrow(false, 'R=|not yet implemented');
+        let exprs = vals.vals[tkstr.RuleExpr];
+        checkThrow(exprs.length === 1 || exprs.length === 2, '')
+        let firstP = cast(VpcVal, exprs[0]).readAsString()
+        let secondP = exprs.length === 1 ? '' : cast(VpcVal, exprs[1]).readAsString()
+        let result = this.outside.DoMenuAction(firstP, secondP)
+        this.outside.SetVarContents('$result', VpcValS(result))
     }
     /**
      * drag from {x1}, {y1} to {x2}, {y2}
@@ -305,8 +310,8 @@ export class ExecuteStatement {
      */
     goReplace(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let exprs = vals.vals[tkstr.RuleExpr];
-        let expr1 = exprs[0] as VpcVal;
-        let expr2 = exprs[1] as VpcVal;
+        let expr1 = exprs[0];
+        let expr2 = exprs[1];
         checkThrowEq(2, exprs.length, 'R/|');
         checkThrow(expr1 instanceof VpcVal, 'R.|');
         checkThrow(expr2 instanceof VpcVal, 'R-|');

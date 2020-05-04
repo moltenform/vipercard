@@ -587,6 +587,13 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
+     * perform a "domenu" action
+     */
+    DoMenuAction(arg1: string, arg2: string): string {
+        checkThrow(false, "nyi")
+    }
+
+    /**
      * put the target into x (the vel that was interacted with)
      */
     protected getTargetFullString(adjective: PropAdjective): string {

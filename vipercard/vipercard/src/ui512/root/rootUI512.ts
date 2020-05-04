@@ -1,4 +1,5 @@
 
+/* auto */ import { RootHigher } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { VpcUiIntro } from './../../vpcui/intro/vpcIntro';
 /* auto */ import { VpcInitIcons } from './../../vpc/vpcutils/vpcInitIcons';
 /* auto */ import { checkThrow } from './../../vpc/vpcutils/vpcEnums';
@@ -13,7 +14,8 @@
 /* auto */ import { UI512DrawText } from './../drawtext/ui512DrawText';
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
-/* auto */ import { RootHigher } from './rootSetupHelpers';
+
+import { Util512 } from '../utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -27,12 +29,15 @@ export class FullRootUI512 implements RootHigher {
     prevMouseDown: O<MouseDownEventDetails>;
     scaleMouseCoords = 1;
     session: O<UI512IsSessionInterface>;
+    hasLoadedExternalDelay = ''
 
     /* send a ping to the apps every 0.1 seconds */
     timerSendIdleEvent = new RepeatingTimer(100);
     mouseButtonsExpected = 0;
 
     init(gly: any) {
+        this.beginDelayLoad()
+        
         let domCanvas: HTMLCanvasElement = gly.domElement;
         this.canvasBeforeCursor = CanvasWrapper.createMemoryCanvas(
             domCanvas.width,
@@ -57,6 +62,19 @@ export class FullRootUI512 implements RootHigher {
         );
         showMsgIfExceptionThrown(VpcInitIcons.go, 'VpcInitIcons');
         showMsgIfExceptionThrown(() => this.presenter.init(), 'root.init');
+    }
+
+    protected beginDelayLoad() {
+        let fn = async() => {
+            try {
+                await Util512Higher.asyncLoadJsIfNotAlreadyLoaded('/external/externaldelaybundlemin.js')
+                this.hasLoadedExternalDelay = 'success'
+            } catch (e) {
+                this.hasLoadedExternalDelay = e.toString()
+            }
+        }
+        
+        Util512Higher.syncToAsyncTransition(fn(), 'Delay-loading external code', RespondToErr.Alert)
     }
 
     invalidateAll() {

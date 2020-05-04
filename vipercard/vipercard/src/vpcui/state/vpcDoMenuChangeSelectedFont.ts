@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
-/* auto */ import { VpcStateInterface } from './../state/vpcInterface';
+/* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';

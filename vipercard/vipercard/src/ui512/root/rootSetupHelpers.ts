@@ -1,7 +1,8 @@
 
+/* auto */ import { RootHigher } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { ScreenConsts } from './../utils/utilsDrawConstants';
 /* auto */ import { UI512CursorAccess } from './../utils/utilsCursors';
-/* auto */ import { Root, justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
+/* auto */ import { justConsoleMsgIfExceptionThrown } from './../utils/util512Higher';
 /* auto */ import { coalesceIfFalseLike } from './../utils/util512Base';
 /* auto */ import { assertWarn } from './../utils/util512Assert';
 /* auto */ import { Util512 } from './../utils/util512';
@@ -156,12 +157,4 @@ export class RootSetupHelpers {
 
         return [root.scaleMouseCoords, canFitTotal];
     }
-}
-
-/**
- * a higher level root interface
- */
-export interface RootHigher extends Root {
-    rawResize(width: number, height: number): void;
-    scaleMouseCoords: number;
 }

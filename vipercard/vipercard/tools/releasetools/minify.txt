@@ -13,8 +13,11 @@ Summary:
         no minify 333k
         uglify-strip-comments-and-beautify 248k
         uglify-minified 186k
-        
 
+Make chevrotain load async?
+    Including externalbundle, not including tests:1,085kb
+    Including externalbundle, not including tests over gz:282kb
+    Let's make chevrotain async, only around 39kb but that's 14%...
 
 
 details:

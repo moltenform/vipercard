@@ -100,6 +100,11 @@ export interface OutsideWorldRead {
      * get the current card
      */
     GetCurrentCardId(): string;
+
+    /**
+     * perform a "domenu" action
+     */
+    DoMenuAction(arg1: string, arg2: string): string; 
 }
 
 /**

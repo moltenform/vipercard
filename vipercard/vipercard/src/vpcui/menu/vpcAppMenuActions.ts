@@ -7,7 +7,7 @@
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
-/* auto */ import { VpcChangeSelectedFont } from './vpcChangeSelectedFont';
+/* auto */ import { VpcChangeSelectedFont } from './../state/vpcDoMenuChangeSelectedFont';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
@@ -361,7 +361,7 @@ export class VpcMenuActions {
      * show info about painting many copies
      */
     goMnuPaintManyCopies() {
-        let keyname = BrowserInfo.inst().os === BrowserOSInfo.Mac ? 'Option' : 'Alt';
+        let keyname = BrowserInfo.get().os === BrowserOSInfo.Mac ? 'Option' : 'Alt';
         this.showModal(
             longstr(`lngTo make many of copies of a shape, first use the
                 'lasso' or 'select' tool to select the region. Then, hold
@@ -373,7 +373,7 @@ export class VpcMenuActions {
      * cut, has to be done from keyboard
      */
     goMnuCut() {
-        let keyname = BrowserInfo.inst().os === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
+        let keyname = BrowserInfo.get().os === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
         this.showModal(`lngPlease use the keyboard shortcut ${keyname}+X to \ncut text.`);
     }
 
@@ -381,7 +381,7 @@ export class VpcMenuActions {
      * copy, has to be done from keyboard
      */
     goMnuCopy() {
-        let keyname = BrowserInfo.inst().os === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
+        let keyname = BrowserInfo.get().os === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
         this.showModal(`lngPlease use the keyboard shortcut ${keyname}+C to \ncopy text.`);
     }
 
@@ -389,7 +389,7 @@ export class VpcMenuActions {
      * paste, currently has to be done from keyboard
      */
     goMnuPaste() {
-        let keyname = BrowserInfo.inst().os === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
+        let keyname = BrowserInfo.get().os === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
         this.showModal(`lngPlease use the keyboard shortcut ${keyname}+V to \npaste text.`);
     }
 

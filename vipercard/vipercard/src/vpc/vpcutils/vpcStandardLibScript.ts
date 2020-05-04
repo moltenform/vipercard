@@ -34,8 +34,45 @@ on choose whichTool
 end choose
 
 on domenu pa, pb
-    vpccalluntrappabledomenu pa, pb
+    pl = lower(pa)
+    if "|" in pl then
+        errordialog "not a valid domenu"
+    end if
+    put false into handled
+    put "|" & pl & "|" into key
+    put handled and domenu_movecard(key, pa, pb) into handled
+    put handled and domenu_paintsetting(key, pa, pb) into handled
+    put handled and domenu_changefont(key, pa, pb) into handled
+    put handled and domenu_changefontsize(key, pa, pb) into handled
+    put handled and domenu_changetextstyle(key, pa, pb) into handled
+    put handled and domenu_changetextstyletoggle(key, pa, pb) into handled
+    if not handled then
+        vpccalluntrappabledomenu pa, pb
+    end if
 end domenu
+
+on domenu_movecard
+
+on domenu_changefont key, pa, pb
+    put "|chicago|courier|geneva|new york|times|helvetica|monaco|symbol|" into keys
+    if key in keys then
+        set the textfont of the selection to key
+        return true
+    else
+        return false
+    end if
+end domenu_changefont
+on domenu_changefontsize key, pa, pb
+    put "|9|10|12|14|18|24|" into keys
+    if key in keys then
+        set the textfont of the selection to key
+        return true
+    else
+        return false
+    end if
+end domenu_changefontsize
+
+
 
 on errorDialog pa
     vpccalluntrappableerrordialog pa
@@ -48,8 +85,7 @@ end help
 on arrowkey direction
     if direction == "right" then
         go next
-    end if
-    if direction == "left" then
+    else if direction == "left" then
         go prev
     end if
 end arrowkey

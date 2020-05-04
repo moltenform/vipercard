@@ -209,7 +209,7 @@ export class VpcSave implements VpcSaveInterface {
      */
     beginShareLink() {
         let gotLink = this.getShareLink();
-        let br = BrowserInfo.inst().os;
+        let br = BrowserInfo.get().os;
         let key = br === BrowserOSInfo.Mac ? 'Cmd' : 'Ctrl';
         this.pr.askMsg(lng(`lngPress ${key}+C to copy this link!`), gotLink, () => {});
     }

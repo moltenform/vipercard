@@ -14,11 +14,12 @@
 /* auto */ import { UndoableActionCreateOrDelVel } from './../state/vpcCreateOrDelVel';
 /* auto */ import { VpcElStackLineageEntry } from './../../vpc/vel/velStack';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
-/* auto */ import { RespondToErr, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
-/* auto */ import { bool, vpcWebsite } from './../../ui512/utils/util512Base';
+/* auto */ import { RespondToErr, Root, Util512Higher, getRoot, justConsoleMsgIfExceptionThrown } from './../../ui512/utils/util512Higher';
+/* auto */ import { O, bool, vpcWebsite } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, respondUI512Error } from './../../ui512/utils/util512Assert';
 /* auto */ import { assertWarnEq, longstr, slength } from './../../ui512/utils/util512';
 /* auto */ import { UI512Presenter } from './../../ui512/presentation/ui512Presenter';
+/* auto */ import { UI512ElLabel } from './../../ui512/elements/ui512ElementLabel';
 /* auto */ import { ElementObserverNoOp } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
@@ -29,6 +30,7 @@
  * download, construct, and initialize a ViperCard project
  */
 export class VpcIntroProvider {
+    prompt: O<UI512ElLabel>;
     cbExitToMainMenu: () => void;
     cbExitToNewDocument: () => void;
     cbExitToOpen: (mineOnly: boolean) => void;
@@ -69,6 +71,24 @@ export class VpcIntroProvider {
      * load the document
      */
     async loadDocumentTop(): Promise<[VpcPresenter, VpcState]> {
+        /* wait for delay-loaded javascript */
+        if (this.prompt) {
+            this.prompt.set('labeltext', 'Opening delay-loaded libraries...')
+        }
+        while (true) {
+            let rootHigher = getRoot() as RootHigher
+            if (rootHigher?.hasLoadedExternalDelay === 'success') {
+                break
+            } else if (rootHigher?.hasLoadedExternalDelay) {
+                checkThrow(false, "Failed to delay-load" + rootHigher?.hasLoadedExternalDelay)
+            } else {
+                await Util512Higher.sleep(100)
+            }
+        }
+        if (this.prompt) {
+            this.prompt.set('labeltext', 'Loading...')
+        }
+
         /* download the stack data */
         let serialized = await this.getSerializedStackData();
 
@@ -313,3 +333,14 @@ export enum VpcDocumentLocation {
     FromStackIdOnline,
     ShowLoginForm
 }
+
+/**
+ * a higher level root interface
+ */
+export interface RootHigher extends Root {
+    rawResize(width: number, height: number): void;
+    scaleMouseCoords: number;
+    hasLoadedExternalDelay: string
+}
+
+

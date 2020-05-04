@@ -27,7 +27,7 @@ function mainVPCStartCanvas(fnMakeGolly: any) {
         }
     };
 
-    let browserOSInfo = BrowserInfo.inst().os;
+    let browserOSInfo = BrowserInfo.get().os;
     let root = new FullRootUI512();
     let gly: any = fnMakeGolly(gollyParams);
     gly.desiredFrameTime = 60;
