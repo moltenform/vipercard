@@ -1,5 +1,5 @@
 
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcElField } from './velField';
@@ -8,7 +8,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { AnyParameterCtor, MapKeyToObject, cast } from './../../ui512/utils/util512';
 /* auto */ import { ElementObserverDefault } from './../../ui512/elements/ui512ElementGettable';
 
@@ -137,16 +137,6 @@ export class VpcModelTop {
         let found = this.getCardById(cardId);
         checkThrow(found instanceof VpcElCard && found.getType() === VpcElType.Card, '79|getCurrentCard failed');
         return found;
-    }
-
-    /**
-     * set the current card based on relative position
-     */
-    getCardRelative(pos: OrdinalOrPosition) {
-        let curcardid =
-            bool(pos === OrdinalOrPosition.First) || bool(pos === OrdinalOrPosition.Last) ? '' : this.getCurrentCard().id;
-        let found = this.stack.getCardByOrdinal(curcardid, pos);
-        return found.id;
     }
 
     /**

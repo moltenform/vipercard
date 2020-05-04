@@ -80,11 +80,9 @@ export abstract class UndoableActionCreateOrDelVel {
      * create a vel
      */
     protected create(vci: VpcStateInterface) {
-        checkThrow(!vci.getCodeExec().isCodeRunning(), "Ks|currently can't add or remove an element while code is running");
-
         let ctr = UndoableActionCreateOrDelVel.getConstructor(this.type);
-        let el = vci.rawCreate(this.velId, this.parentId, ctr);
-        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, el.getType());
+        let vel = vci.rawCreate(this.velId, this.parentId, ctr);
+        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, vel.getType());
         if (this.insertIndex === -1) {
             /* note, save this for undo posterity */
             this.insertIndex = ar.length;
@@ -96,7 +94,15 @@ export abstract class UndoableActionCreateOrDelVel {
             ar.length < CodeLimits.MaxVelChildren,
             `8)|exceeded maximum number of child elements (${CodeLimits.MaxVelChildren})`
         );
-        ar.splice(this.insertIndex, 0, el);
+
+        ar.splice(this.insertIndex, 0, vel);
+        if (vel.getType() === VpcElType.Card) {
+            let order = vci.getModel().stack.getCardOrder()
+            let found = order.findIndex(s=> s === vci.getCurrentCardId())
+            found = found === -1 ? order.length-1 : found
+            order.splice(found+1, 0, vel.id)
+            vci.getModel().stack.alterCardOrder((currentOrder) => order)
+        }
     }
 
     /**
@@ -104,12 +110,15 @@ export abstract class UndoableActionCreateOrDelVel {
      */
     protected remove(vci: VpcStateInterface) {
         vci.causeFullRedraw();
-        let el = vci.getModel().getByIdUntyped(this.velId);
-        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(el.parentId, vci, el.getType());
-        assertWarnEq(el.id, ar[this.insertIndex].id, '6b|');
+        let vel = vci.getModel().getByIdUntyped(this.velId);
+        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
+        assertWarnEq(vel.id, ar[this.insertIndex].id, '6b|');
         assertWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
         ar.splice(this.insertIndex, 1);
-        vci.getModel().removeIdFromMapOfElements(el.id);
+        vci.getModel().removeIdFromMapOfElements(vel.id);
+        if (vel.getType() === VpcElType.Card) {
+            vci.getModel().stack.alterCardOrder((list) => list.filter(s => s!== vel.id))
+        }
     }
 
     /**

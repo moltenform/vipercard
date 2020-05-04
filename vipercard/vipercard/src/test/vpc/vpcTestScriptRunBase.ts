@@ -90,10 +90,15 @@ export class TestVpcScriptRunBase {
         let bg_b = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
         let bg_c = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
         let card_a_a = bg_a.cards[0];
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_a_a.id)
         let card_b_b = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_b.id)
         let card_b_c = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_c.id)
         let card_b_d = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_d.id)
         let card_c_d = this.vcstate.createVel(bg_c.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_c_d.id)
         let fld_b_c_1 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
         let fld_b_c_2 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
         let fld_b_c_3 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);

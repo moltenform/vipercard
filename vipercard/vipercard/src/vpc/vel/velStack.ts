@@ -1,11 +1,10 @@
 
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, checkThrowInternal, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
-/* auto */ import { VpcElCard } from './velCard';
+/* auto */ import { VpcElType, checkThrow, checkThrowEq, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, arLast, slength } from './../../ui512/utils/util512';
+import { assertTrue } from '../../ui512/utils/util512Assert';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -47,8 +46,20 @@ export class VpcElStack extends VpcElBase {
     in the form author|1b2v123c|stack name||author|1b2v123c|stack name */
     protected _stacklineage = '';
 
+    /* stored as a string so that undo is easier */
+    protected _cardorder = '';
+
     /* child backgrounds */
     bgs: VpcElBg[] = [];
+
+    getCardOrder() {
+        return this._cardorder ? this._cardorder.split('|') : []
+    }
+    alterCardOrder(fn:(a:string[])=>string[]) {
+        let got = fn(this.getCardOrder())
+        assertTrue(got.length, '')
+        this.set('cardorder', got.join('|'))
+    }
 
     /**
      * get next id for created element
@@ -135,90 +146,6 @@ export class VpcElStack extends VpcElBase {
      */
     getType() {
         return VpcElType.Stack;
-    }
-
-    /**
-     * find card by name
-     */
-    findCardByName(name: string) {
-        for (let bg of this.bgs) {
-            let found = VpcElBase.findByName(bg.cards, name, VpcElType.Card);
-            if (found) {
-                return found;
-            }
-        }
-
-        return undefined;
-    }
-
-    /**
-     * position of card within the stack. return undefined if card not found
-     */
-    findCardStackPosition(cardId: string) {
-        let count = 0;
-        for (let bg of this.bgs) {
-            for (let cd of bg.cards) {
-                if (cd.id === cardId) {
-                    return count;
-                }
-
-                count += 1;
-            }
-        }
-
-        return undefined;
-    }
-
-    /**
-     * position of card within the stack. throw if card not found
-     */
-    getCardStackPosition(cardId: string) {
-        return ensureDefined(this.findCardStackPosition(cardId), '4v|card id not found', cardId);
-    }
-
-    /**
-     * position of card within the stack, to card. "go to card 6", which card is it?
-     */
-    findFromCardStackPosition(pos: number) {
-        let count = 0;
-        for (let bg of this.bgs) {
-            for (let cd of bg.cards) {
-                if (count === pos) {
-                    return cd;
-                }
-
-                count += 1;
-            }
-        }
-
-        return undefined;
-    }
-
-    /**
-     * position of card within the stack, to card.
-     * "go to card 6", which card is it? throws if not exist
-     */
-    getFromCardStackPosition(pos: number) {
-        return ensureDefined(this.findFromCardStackPosition(pos), '4u|card number not found', pos);
-    }
-
-    /**
-     * ordinal of card within the stack, to card. "go next card", which card is it?
-     */
-    getCardByOrdinal(currentCardId: string, pos: OrdinalOrPosition): VpcElCard {
-        if (pos === OrdinalOrPosition.First) {
-            return this.bgs[0].cards[0];
-        }
-
-        let totalCards = this.bgs.map(bg => bg.cards.length).reduce(Util512.add);
-        let lastCdPosition = totalCards - 1;
-        if (pos === OrdinalOrPosition.Last) {
-            return this.getFromCardStackPosition(lastCdPosition);
-        }
-
-        let currentCdPosition = this.getCardStackPosition(currentCardId);
-        let nextCdPosition = getPositionFromOrdinalOrPosition(pos, currentCdPosition, 0, lastCdPosition);
-        return this.getFromCardStackPosition(nextCdPosition);
     }
 
     /**

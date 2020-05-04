@@ -2,12 +2,15 @@
 /* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { StackOrderHelpers } from './velStackOrderHelpers';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { O, bool, cProductName, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback } from './../../ui512/utils/util512';
+
+import { VpcElStack } from './velStack';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -201,12 +204,7 @@ export class VelResolveReference {
                 retCard = VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
             }
         } else if (ref.cardLookAtMarkedOnly) {
-            let arrAllCards: VpcElCard[] = [];
-            for (let bg of this.model.stack.bgs) {
-                for (let cd of bg.cards) {
-                    arrAllCards.push(cd);
-                }
-            }
+            let arrAllCards: VpcElCard[] = this.model.stack.getCardOrder().map(s=> this.model.getCardById(s))
             if (ref.lookByAbsolute !== undefined) {
                 let arrOnlyMarked = arrAllCards.filter(c => c.getB('marked'));
                 retCard = arrOnlyMarked[ref.lookByAbsolute - 1];
@@ -238,15 +236,16 @@ export class VelResolveReference {
         } else {
             if (ref.lookByAbsolute !== undefined) {
                 /* put the name of card 2 into x */
-                retCard = this.model.stack.findFromCardStackPosition(ref.lookByAbsolute - 1);
+                retCard = StackOrderHelpers.findFromCardStackPosition(this.model, ref.lookByAbsolute - 1 )
             } else if (ref.lookByName !== undefined) {
                 /* put the name of card "myCard" into x */
-                retCard = this.model.stack.findCardByName(ref.lookByName);
+                retCard = StackOrderHelpers.findCardByName(ref.lookByName, this.model)
             } else if (ref.lookByRelative !== undefined) {
                 /* put the name of next card into x */
-                retCard = this.model.stack.getCardByOrdinal(currentCard.id, ref.lookByRelative);
+                retCard = StackOrderHelpers.getCardByOrdinal(currentCard.id, ref.lookByRelative, this.model);
             }
         }
+        
 
         return [retCard, currentCard];
     }

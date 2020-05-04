@@ -213,6 +213,9 @@ export class VpcIntroProvider {
             await this.yieldTime();
             VpcStateSerialize.deserializeAll(fullVci, serVel);
             await this.yieldTime();
+            /* load card order if not set */
+            this.rebuildCardOrderIfNeeded(fullVci.getModel())
+            await this.yieldTime();
         } else {
             /* only call this *after* the presenter has set up useThisObserverForVpcEls */
             vpcState.model.uuid = Util512Higher.weakUuid();
@@ -232,6 +235,23 @@ export class VpcIntroProvider {
             let card = vpcState.model.stack.bgs[0].cards[0].id;
             pr.setCurCardNoOpenCardEvt(card);
         });
+    }
+
+    /**
+     * older stacks won't have this set
+     */
+    protected rebuildCardOrderIfNeeded(model:VpcModelTop) {
+        if (!model.stack.getS('cardorder')) {
+            model.stack.alterCardOrder((current)=> {
+                let order:string[] = []
+                for (let bg of model.stack.bgs) {
+                    for (let cd of bg.cards) {
+                        order.push(cd.id)
+                    }
+                }
+                return order
+            })
+        }
     }
 
     /**

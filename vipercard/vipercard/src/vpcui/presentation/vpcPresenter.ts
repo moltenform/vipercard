@@ -7,6 +7,7 @@
 /* auto */ import { VpcNonModalReplBox } from './../nonmodaldialogs/vpcReplMessageBox';
 /* auto */ import { VpcPresenterInit } from './vpcPresenterInit';
 /* auto */ import { OrdinalOrPosition, VpcBuiltinMsg, VpcElType, VpcErr, VpcTool, VpcToolCtg, checkThrow, checkThrowInternal, checkThrowNotifyMsg, cleanExceptionMsg, getToolCategory, vpcElTypeShowInUI } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { StackOrderHelpers } from './../../vpc/vel/velStackOrderHelpers';
 /* auto */ import { VpcGettableSerialization } from './../../vpc/vel/velSerialization';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
@@ -39,7 +40,7 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     getCurrentCardNum() {
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        return this.vci.getModel().stack.getCardStackPosition(currentCardId);
+        return StackOrderHelpers.getCardStackPosition(this.vci.getModel().stack, currentCardId )
     }
 
     /**
@@ -127,7 +128,7 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
         assertTrue(!idSpecific || pos === OrdinalOrPosition.This, 'UA|specifying an id, should set to This');
-        let targetCardId = idSpecific ?? this.vci.getModel().getCardRelative(pos);
+        let targetCardId = idSpecific ?? StackOrderHelpers.getCardRelative(this.vci.getModel(), pos);
         if (this.getTool() === VpcTool.Browse) {
             this.vci
                 .getCodeExec()
@@ -633,7 +634,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCard = this.vci.getModel().findById(VpcElCard, currentCardId);
                 if (!currentCard) {
                     assertWarn(false, 'U6|card has been deleted, going to card 1 instead.');
-                    let card = this.vci.getModel().getCardRelative(OrdinalOrPosition.First);
+                    let card = StackOrderHelpers.getCardRelative(this.vci.getModel(), OrdinalOrPosition.First);
                     this.vci.setCurCardNoOpenCardEvt(card);
                 }
 

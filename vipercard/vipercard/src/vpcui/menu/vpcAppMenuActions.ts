@@ -289,23 +289,24 @@ export class VpcMenuActions {
      * note that we have to move away from this card first before deleting it
      */
     goMnuDelCard() {
-        if (this.vci.getTool() === VpcTool.Browse) {
-            /* previously, called a handler in productopts that
-            would move to a different card and delete the current card, but this is simpler */
-            this.vci.setTool(VpcTool.Button);
-        }
+        //~ if (this.vci.getTool() === VpcTool.Browse) {
+            //~ /* previously, called a handler in productopts that
+            //~ would move to a different card and delete the current card, but this is simpler */
+            //~ this.vci.setTool(VpcTool.Button);
+        //~ }
 
-        /* either go forwards or backwards, as long as we're somewhere else */
-        let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        let wasCurrentCard = this.vci.getModel().getCardById(wasCurrentCardId);
-        let otherCardId = this.vci.getModel().getCardRelative(OrdinalOrPosition.Previous);
-        if (otherCardId === wasCurrentCardId) {
-            otherCardId = this.vci.getModel().getCardRelative(OrdinalOrPosition.Next);
-        }
+        //~ /* either go forwards or backwards, as long as we're somewhere else */
+        //~ let wasCurrentCardId = this.vci.getModel().productOpts.getS('currentCardId');
+        //~ let wasCurrentCard = this.vci.getModel().getCardById(wasCurrentCardId);
+        //~ let otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Previous);
+        //~ if (otherCardId === wasCurrentCardId) {
+            //~ otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Next);
+        //~ }
 
-        /* RemoveCard itself will do further checks, like preventing deleting the only card */
-        this.vci.setCurCardNoOpenCardEvt(otherCardId);
-        this.vci.getOutside().RemoveCard(wasCurrentCard);
+        //~ /* RemoveCard itself will do further checks, like preventing deleting the only card */
+        //~ this.vci.setCurCardNoOpenCardEvt(otherCardId);
+        //~ this.vci.getOutside().RemoveCard(wasCurrentCard);
+        checkThrow(false, "nyi")
     }
 
     /**
