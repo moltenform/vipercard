@@ -303,7 +303,7 @@ export const ChunkResolution = /* static class */ {
             }
         } else {
             assertTrue(!news, '')
-            assertTrue(!prep, '')
+            assertTrue(!prep || prep === VpcChunkPreposition.Into, '')
             retbounds = this._getBoundsForGet(unformatted, itemDel, request)
         }
         
@@ -376,10 +376,7 @@ export const ChunkResolutionApplication = /* static class */ {
         chunk.setCanModifyRecurse(false)
         let current: O<RequestedChunk> = chunk
         while (current && resolved) {
-            if (current.child) {
-                resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into)
-            }
-
+            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into)
             current = current.child
         }
 

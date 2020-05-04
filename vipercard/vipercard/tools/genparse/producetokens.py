@@ -22,6 +22,7 @@ def goTokensDefnOne(st):
     # the map, and the creation
     out.append('/* as a map so that we get quick access */')
     out.append('export function initAllVpcTokens() {')
+    out.append('if (!tks.tkStringLiteral) {')
     for tk in st.tokens:
         out.append(f'tks.{tk.name} = chevrotain.createToken' + '({')
         out.append(f'name: "{tk.name}",')
@@ -29,14 +30,21 @@ def goTokensDefnOne(st):
         if tk.tokenParams:
             out.append(tk.tokenParams + ',')
         out.append('});')
+    out.append('}')
+    out.append('')
+    out.append('Object.freeze(tks);')
+    out.append('')
     
     # the array (needed since order matters)
     out.append('/* as an array, since order matters */')
+    out.append('if (allVpcTokens.length <= 1) {')
     for i, tk in enumerate(st.tokens):
         out.append(f'allVpcTokens[{i}] = tks.{tk.name}')
-    out.append('')
+    out.append('Object.freeze(allVpcTokens);')
     out.append('')
     
+
+    out.append('}')
     out.append('}')
     out.append('')
     out.append('')

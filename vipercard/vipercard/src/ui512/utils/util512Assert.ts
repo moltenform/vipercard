@@ -1,5 +1,6 @@
 
 /* auto */ import { O, RingBufferLocalStorage, UI512Compress, bool, callDebuggerIfNotInProduction, tostring } from './util512Base';
+/* auto */ import { BridgedLZString } from './../../bridge/bridgeLzString';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -252,10 +253,11 @@ export class UI512ErrorHandling {
 
     protected static encodeErrMsg(s: string) {
         s = s.substr(0, UI512ErrorHandling.maxEntryLength);
-        return UI512Compress.compressString(s);
+        return BridgedLZString() ? UI512Compress.compressString(s) : s;
     }
 
     protected static decodeErrMsg(compressed: string) {
+        assertTrue(BridgedLZString(), "lzstring not yet loaded")
         return UI512Compress.decompressString(compressed);
     }
 

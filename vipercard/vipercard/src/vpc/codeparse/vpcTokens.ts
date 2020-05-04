@@ -293,6 +293,7 @@ export const allVpcTokens:chevrotain.TokenType[] = []
 
 /* as a map so that we get quick access */
 export function initAllVpcTokens() {
+if (!tks.tkStringLiteral) {
 tks.tkStringLiteral = chevrotain.createToken({
 name: "tkStringLiteral",
 pattern: /"[^"\n]*"(?![a-zA-Z0-9_])/i,
@@ -557,7 +558,12 @@ tks.tkIdentifier = chevrotain.createToken({
 name: "tkIdentifier",
 pattern: /[a-zA-Z][0-9a-zA-Z$_]*/i,
 });
+}
+
+Object.freeze(tks);
+
 /* as an array, since order matters */
+if (allVpcTokens.length <= 1) {
 allVpcTokens[0] = tks.tkStringLiteral
 allVpcTokens[1] = tks.tkBlockComment
 allVpcTokens[2] = tks.tkLineComment
@@ -623,8 +629,9 @@ allVpcTokens[61] = tks.tkUnaryVipercardProperties
 allVpcTokens[62] = tks.tkAllUnaryPropertiesIfNotAlready
 allVpcTokens[63] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready
 allVpcTokens[64] = tks.tkIdentifier
+Object.freeze(allVpcTokens);
 
-
+}
 }
 
 
@@ -1177,8 +1184,6 @@ export const tkstr = {
 /* generated code, any changes above this point will be lost: --------------- */
 
 Object.freeze(alsoReservedWordsList);
-Object.freeze(tks);
-Object.freeze(allVpcTokens);
 
 export type ChvITk = chevrotain.IToken;
 export type ChvITkType = chevrotain.ITokenConfig;
@@ -1220,8 +1225,7 @@ export const BuildFakeTokens = /* static class */ {
      * make an arbitrary token, pass in the constructor
      */
     make(basis: chevrotain.IToken, type: chevrotain.TokenType) {
-        checkThrow(false, "use getKnownImages")
-        let image = knownImages[type.name];
+        let image = getKnownImages()[type.name];
         assertTrue(trueIfDefinedAndNotNull(image), '8@|image is undefined', type.name);
         return this.makeTk(basis, type, image);
     },
@@ -1251,10 +1255,12 @@ export const BuildFakeTokens = /* static class */ {
 
 const knownImages: { [tkname: string]: string } = {};
 function getKnownImages() {
-    if (!knownImages.length) {
+    if (!knownImages[tks.tkNewLine.name]) {
         knownImages[tks.tkNewLine.name] = '\n';
         knownImages[tks.tkComma.name] = ',';
         knownImages[tks.tkSyntaxMark.name] = BuildFakeTokens.strSyntaxMark;
     }
+
+    return knownImages
 }
 

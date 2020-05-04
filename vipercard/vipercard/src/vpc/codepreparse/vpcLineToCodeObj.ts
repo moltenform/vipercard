@@ -1,7 +1,7 @@
 
 /* auto */ import { getParsingObjects } from './../codeparse/vpcVisitor';
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
+/* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcCodeLine, VpcLineCategory, checkCommonMistakenVarNames } from './vpcPreparseCommon';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
@@ -66,7 +66,7 @@ export class VpcLineToCodeObj {
                 if (this.isParsingNeeded(output.ctg)) {
                     /* construct an array to be sent to the parser */
                     output.excerptToParse = this.cachedStartOnes.concat(output.excerptToParse);
-                    output.setParseRule(this.parser.RuleInternalCmdRequestEval);
+                    output.setParseRule(this.parser[tkstr.RuleInternalCmdRequestEval]);
                 }
             }
 
@@ -214,7 +214,7 @@ export class VpcLineToCodeObj {
                 myHandler, but this is a reserved word, we don't support that here.`)
         );
         output.excerptToParse = this.cachedStartOnes.concat(line.slice(1));
-        output.setParseRule(this.parser.RuleInternalCmdUserHandler);
+        output.setParseRule(this.parser[tkstr.RuleInternalCmdUserHandler]);
     }
 
     /**
@@ -341,7 +341,7 @@ export class VpcLineToCodeObj {
         /* other control blocks just parse a single expression,
         but this has to parse both an expression and an object,
         so use a separate parse rule */
-        output.setParseRule(this.parser.RuleCmdSend);
+        output.setParseRule(this.parser[tkstr.RuleCmdSend]);
         output.excerptToParse = this.cachedStartOnes.concat(line.slice(1));
         output.ctg = VpcLineCategory.CallDynamic;
     }
