@@ -1,6 +1,7 @@
 
 /* auto */ import { getParsingObjects } from './../../vpc/codeparse/vpcVisitor';
 /* auto */ import { BuildFakeTokens, cloneToken } from './../../vpc/codeparse/vpcTokens';
+/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, assertEq, assertWarnEq, longstr, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, assertAsserts } from './../testUtils/testUtils';
@@ -224,7 +225,7 @@ t.test('LexerRemembersInitialLine', () => {
     /* if chevrotain didn't remember this,
         when there was a runtime error,
         we'd take you to the wrong line number */
-    let lexer = TestParseHelpers.instance.lexer;
+    let lexer = TestParseHelpers.instance().lexer;
     let input = 'put\\\n 4\\\n into\\\n x\nput 5\\\n into y';
     let lexResult = lexer.tokenize(input);
     assertTrue(!lexResult.errors.length, `HX|${lexResult.errors[0]?.message}`);
@@ -242,7 +243,7 @@ t.test('LexerRemembersInitialLine', () => {
     );
 });
 t.test('CloneToken', () => {
-    let lexer = TestParseHelpers.instance.lexer;
+    let lexer = TestParseHelpers.instance().lexer;
     let input = 'put 4 into x';
     let lexResult = lexer.tokenize(input);
     assertTrue(!lexResult.errors.length, `HS|${lexResult.errors[0]?.message}`);
@@ -270,7 +271,7 @@ t.test('CloneToken', () => {
  * helpers for testing parsing
  */
 export class TestParseHelpers {
-    static instance = new TestParseHelpers();
+    protected static _instance: O<TestParseHelpers>
     lexer: chevrotain.Lexer;
     parser: chevrotain.CstParser;
     constructor() {
@@ -278,6 +279,18 @@ export class TestParseHelpers {
         assertTrue(this.lexer, '1<|could not getParsingObjects');
         assertTrue(this.parser, '1;|could not getParsingObjects');
     }
+
+    /**
+    * make an instance or use cached
+    */
+    static instance() {
+        if (!TestParseHelpers._instance) {
+            TestParseHelpers._instance = new TestParseHelpers()
+        }
+
+        return TestParseHelpers._instance
+    }
+
 
     /**
      * parse the input, flatten the resulting syntax tree into a string,
@@ -368,7 +381,7 @@ export class TestParseHelpers {
  */
 function testCmdSet(sInput: string, sExpected: string) {
     assertTrue(sInput.startsWith('set '), '1:|expected start with set');
-    return TestParseHelpers.instance.testParse(
+    return TestParseHelpers.instance().testParse(
         sInput,
         'RuleBuiltinCmdSet',
         sExpected,
@@ -381,7 +394,7 @@ function testCmdSet(sInput: string, sExpected: string) {
  */
 function assertFailsCmdSet(sInput: string, sErrExpected: string) {
     assertTrue(sInput.startsWith('set '), '1/|expected start with set');
-    return TestParseHelpers.instance.testParse(
+    return TestParseHelpers.instance().testParse(
         sInput,
         'RuleBuiltinCmdSet',
         '',
@@ -401,7 +414,7 @@ function testCmd(sInput: string, sExpected: string) {
     assertTrue(sInput.startsWith(sCmd + ' '), '1.|expected start with ' + sCmd);
     let firstCapital = sCmd[0].toUpperCase() + sCmd.slice(1).toLowerCase();
     firstCapital = firstCapital === 'Go' ? 'GoCard' : firstCapital;
-    return TestParseHelpers.instance.testParse(
+    return TestParseHelpers.instance().testParse(
         sInput,
         'RuleBuiltinCmd' + firstCapital,
         sExpected,
@@ -417,7 +430,7 @@ function assertFailsCmd(sInput: string, sErrExpected: string) {
     assertTrue(sInput.startsWith(sCmd + ' '), '1-|expected start with ' + sCmd);
     let firstCapital = sCmd[0].toUpperCase() + sCmd.slice(1).toLowerCase();
     firstCapital = firstCapital === 'Go' ? 'GoCard' : firstCapital;
-    return TestParseHelpers.instance.testParse(
+    return TestParseHelpers.instance().testParse(
         sInput,
         'RuleBuiltinCmd' + firstCapital,
         '',

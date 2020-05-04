@@ -487,7 +487,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let str = evaledvpc.readAsString();
             let stype = ctx.tkChunkGranularity[0].image;
             let type = getStrToEnum<VpcGranularity>(VpcGranularity, 'VpcGranularity', stype);
-            let result = ChunkResolution.applyCount(str, this.outside.GetItemDelim(), type, true);
+            let result = ChunkResolutionApplication.applyCount(str, this.outside.GetItemDelim(), type, true);
             return VpcValN(result);
         }
 

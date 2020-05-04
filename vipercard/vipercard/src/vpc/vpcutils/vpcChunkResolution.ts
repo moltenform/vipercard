@@ -170,7 +170,7 @@ const ChunkResolution = /* static class */ {
         let first = ch.first555;
         let last = ch.last555;
         if (ch.ordinal555 !== undefined) {
-            let count = ChunkResolution.applyCount(s, itemDel, ch.type555, false);
+            let count = ChunkResolutionApplication.applyCount(s, itemDel, ch.type555, false);
             first = getPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, count);
             last = first;
         }
@@ -219,7 +219,7 @@ const ChunkResolution = /* static class */ {
         let first = ch.first555;
         let last = ch.last555;
         if (ch.ordinal555 !== undefined) {
-            let count = ChunkResolution.applyCount(sInput, itemDel, ch.type555, false);
+            let count = ChunkResolutionApplication.applyCount(sInput, itemDel, ch.type555, false);
             first = getPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, count);
             last = first;
         }
@@ -255,30 +255,6 @@ const ChunkResolution = /* static class */ {
             return this._wordsBoundsForSet(sInput, start, end);
         } else {
             checkThrow(false, `5:|unknown chunk type ${ch.type555}`);
-        }
-    },
-
-    /**
-     * count chunks, e.g.
-     * 'put the number of words in x into y'
-     */
-    applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
-        /* in the public interface, change behavior to be
-          closer (still not 100% match) to emulator */
-        if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
-            return 0;
-        }
-
-        if (type === VpcGranularity.Chars) {
-            return sInput.length;
-        } else if (type === VpcGranularity.Items) {
-            return this._getPositionsTable(sInput, this._regexpForDelim(itemDel), false).length;
-        } else if (type === VpcGranularity.Lines) {
-            return this._getPositionsTable(sInput, /\n/g, false).length;
-        } else if (type === VpcGranularity.Words) {
-            return this._getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
-        } else {
-            checkThrow(false, `5-|unknown chunk type ${type}`);
         }
     },
 
@@ -370,12 +346,6 @@ export const ChunkResolutionApplication = /* static class */ {
 
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len())
-        if (!chunk) {
-            chunk = new RequestedChunk(1)
-            chunk.type555 = VpcGranularity.Chars
-            chunk.last555 = cont.len()
-        }
-
         chunk.setCanModifyRecurse(true)
         let current: O<RequestedChunk> = chunk
         while (current) {
@@ -398,6 +368,7 @@ export const ChunkResolutionApplication = /* static class */ {
             let s = cont.getRawString();
             let news = fn(s);
             cont.splice(0, cont.len(), news);
+            return
         }
 
         /* does it exist? 
@@ -436,7 +407,31 @@ export const ChunkResolutionApplication = /* static class */ {
     applyReadToString(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string) {
         let resolved = this.applyRead(cont, chunk, itemDel)
         return resolved ? resolved.container.getRawString().substring(resolved.startPos, resolved.endPos) : ''
-    }
+    },
+
+    /**
+     * count chunks, e.g.
+     * 'put the number of words in x into y'
+     */
+    applyCount(sInput: string, itemDel: string, type: VpcGranularity, isPublicCall: boolean) {
+        /* in the public interface, change behavior to be
+          closer (still not 100% match) to emulator */
+        if (isPublicCall && sInput === '' && (type === VpcGranularity.Items || VpcGranularity.Lines)) {
+            return 0;
+        }
+
+        if (type === VpcGranularity.Chars) {
+            return sInput.length;
+        } else if (type === VpcGranularity.Items) {
+            return ChunkResolution._getPositionsTable(sInput, ChunkResolution._regexpForDelim(itemDel), false).length;
+        } else if (type === VpcGranularity.Lines) {
+            return ChunkResolution._getPositionsTable(sInput, /\n/g, false).length;
+        } else if (type === VpcGranularity.Words) {
+            return ChunkResolution._getPositionsTable(sInput, new RegExp('(\\n| )+', 'g'), true).length;
+        } else {
+            checkThrow(false, `5-|unknown chunk type ${type}`);
+        }
+    },
 };
 
 

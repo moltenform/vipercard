@@ -17,6 +17,7 @@
 /* auto */ import { VpcElProductOpts } from './../../vpc/vel/velProductOpts';
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
+/* auto */ import { VpcFontSpecialChunk } from './../../vpc/vel/velFieldChangeFont';
 /* auto */ import { VpcElField } from './../../vpc/vel/velField';
 /* auto */ import { VpcElCard } from './../../vpc/vel/velCard';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
@@ -316,9 +317,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * modify a container
      */
     ContainerModify(contRef: RequestedContainerRef, fn: (s: string) => string) {
-        //~ //let cont = this.ResolveContainerWritable(contRef);
-        //~ //return ChunkResolution.applyModify(cont, contRef.chunk, this.GetItemDelim(), fn);
-        checkThrow(false, "nyi")
+        let cont = this.ResolveContainerWritable(contRef);
+        ChunkResolutionApplication.applyModify(cont, contRef.chunk, this.GetItemDelim(), fn);
     }
 
     /**
@@ -348,7 +348,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
         if (chunk) {
             let fld = vel as VpcElField;
             checkThrow(fld instanceof VpcElField, `8.|can only say 'set the (prop) of char 1 to 2' on fields.`);
-            fld.specialSetPropChunk(cardId, prop, chunk, v, this.GetItemDelim());
+            new VpcFontSpecialChunk(fld).specialSetPropChunk(cardId, prop, chunk, v, this.GetItemDelim());
         } else {
             vel.setProp(prop, v, cardId);
         }
@@ -377,7 +377,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             /* put the textstyle of char 2 to 4 of fld "myFld" into x */
             let fld = vel as VpcElField;
             checkThrow(fld instanceof VpcElField, `8,|can only say 'get the (prop) of char 1 to 2' on fields.`);
-            return fld.specialGetPropChunk(cardId, prop, chunk, this.GetItemDelim());
+            return new VpcFontSpecialChunk(fld).specialGetPropChunk(cardId, prop, chunk, this.GetItemDelim());
         } else if (prop === 'name') {
             /* put the long name of card "myCard" into x */
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;

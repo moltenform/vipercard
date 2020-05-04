@@ -540,7 +540,7 @@ t.test('disallow double identifiers', () => {
  * and then strips the command out of the output as well
  */
 function testExp(sInput: string, sExpected: string) {
-    return TestParseHelpers.instance.testParse(
+    return TestParseHelpers.instance().testParse(
         'RuleInternalCmdRequestEval ' + sInput,
         'RuleInternalCmdRequestEval',
         sExpected,
@@ -552,7 +552,7 @@ function testExp(sInput: string, sExpected: string) {
  * wrapper around testParse, asserts that it fails with the expected message
  */
 function assertFailsParseExp(sInput: string, sErrExpected: string) {
-    return TestParseHelpers.instance.testParse(
+    return TestParseHelpers.instance().testParse(
         'RuleInternalCmdRequestEval ' + sInput,
         'RuleInternalCmdRequestEval',
         '',

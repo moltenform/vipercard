@@ -5,7 +5,7 @@
 /* auto */ import { VpcStateInterface } from './../state/vpcInterface';
 /* auto */ import { VpcNonModalFormSendReport } from './../nonmodaldialogs/vpcFormSendReport';
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
-/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
 /* auto */ import { VpcChangeSelectedFont } from './../../vpc/vel/velFieldChangeFont';
@@ -520,7 +520,8 @@ export class VpcMenuActions {
             return true;
         }
 
-        return this.fontChanger.runFontMenuActionsIfApplicable(s);
+        checkThrow(false, "fontmenu not yet implemented")
+        //~ return this.fontChanger.runFontMenuActionsIfApplicable(s);
     }
 
     /**
