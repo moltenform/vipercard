@@ -1,10 +1,12 @@
 
-/* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
-/* auto */ import { VpcStateInterface } from './vpcInterface';
-/* auto */ import { PropAdjective, VpcElType, VpcGranularity, VpcTool, checkThrow, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
-/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
+/* auto */ import { VpcVal, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
+/* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
+/* auto */ import { PropAdjective, VpcElType, VpcGranularity, checkThrow, checkThrowNotifyMsg } from './../vpcutils/vpcEnums';
+/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { ReadableContainerField } from './velResolveContainer';
+/* auto */ import { VpcElField } from './velField';
+/* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, fitIntoInclusive, longstr } from './../../ui512/utils/util512';
@@ -17,19 +19,14 @@
  */
 export class VpcChangeSelectedFont {
     cbGetEditToolSelectedFldOrBtn: () => O<VpcElBase>;
-    constructor(protected vci: VpcStateInterface) {}
+    cbGetCurrentCardId: () => string;
 
     /**
      * user is setting font from the Font or Style menu
      * returns false if not handled
      */
     runFontMenuActionsIfApplicable(s: string) {
-        if (s.startsWith('mnuItemTool')) {
-            let toolNumber = Util512.parseInt(s.substr('mnuItemTool'.length));
-            toolNumber = toolNumber ?? VpcTool.Browse;
-            this.vci.setTool(toolNumber);
-            return true;
-        } else if (s.startsWith('mnuItemSetFontFace')) {
+        if (s.startsWith('mnuItemSetFontFace')) {
             let v = s.substr('mnuItemSetFontFace'.length);
             this.setFont(v, 'textfont');
             return true;
@@ -66,7 +63,7 @@ export class VpcChangeSelectedFont {
     protected setAlignImpl(v: string) {
         v = v.toLowerCase();
         let vel = this.cbGetEditToolSelectedFldOrBtn();
-        let currentCardId = this.vci.getOptionS('currentCardId');
+        let currentCardId = this.cbGetCurrentCardId()
 
         if (vel) {
             vel.setProp('textalign', VpcValS(v), currentCardId);
@@ -150,7 +147,7 @@ export class VpcChangeSelectedFont {
         if (vel) {
             /* note: get from focused, not vel, since it's more up to date? */
             /* no, since we're acting on the vel, get everything from one for consistency */
-            let currentCardId = this.vci.getOptionS('currentCardId');
+            let currentCardId = this.cbGetCurrentCardId()
             let selcaret = fitIntoInclusive(vel.getN('selcaret'), 0, vel.getCardFmTxt(currentCardId).len());
             let selend = fitIntoInclusive(vel.getN('selend'), 0, vel.getCardFmTxt(currentCardId).len());
             if (selcaret !== selend) {
@@ -208,7 +205,7 @@ export class VpcChangeSelectedFont {
      * set font of a vel
      */
     protected setFontBtnFld(vel: VpcElBase, v: string, typeOfChange: string) {
-        let currentCardId = this.vci.getOptionS('currentCardId');
+        let currentCardId = this.cbGetCurrentCardId()
         if (typeOfChange !== 'textstyle') {
             vel.setProp(typeOfChange, VpcValS(v), currentCardId);
             return true;
@@ -219,4 +216,115 @@ export class VpcChangeSelectedFont {
             return true;
         }
     }
+}
+
+export class VpcFontSpecialChunk {
+    vel:VpcElField
+    /**
+     * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
+     */
+    specialSetPropChunkImpl(cardId: string, prop: string, s: string, charstart: number, charend: number): void {
+        let newTxt = this.vel.getCardFmTxt(cardId).getUnlockedCopy();
+        let len = charend - charstart;
+        if (prop === 'textstyle') {
+            let list = s.split(',').map(item => item.trim());
+            SubstringStyleComplex.setChunkTextStyle(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, list);
+        } else if (prop === 'textfont') {
+            SubstringStyleComplex.setChunkTextFace(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, s);
+        } else if (prop === 'textsize') {
+            let n = VpcValS(s).readAsStrictInteger();
+            SubstringStyleComplex.setChunkTextSize(newTxt, this.vel.getDefaultFontAsUi512(), charstart, len, n);
+        } else {
+            checkThrow(
+                false,
+                longstr(`4x|can only say 'set the (prop) of char 1 to 2'
+                    for textstyle, textfont, or textsize`)
+            );
+        }
+
+        this.vel.setCardFmTxt(cardId, newTxt);
+    }
+
+    /**
+     * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
+     */
+    specialGetPropChunkImpl(cardId: string, prop: string, charstart: number, charend: number): string {
+        let len = charend - charstart;
+        if (prop === 'textstyle') {
+            /* returns comma-delimited styles, or the string 'mixed' */
+            let list = SubstringStyleComplex.getChunkTextStyle(
+                this.vel.getCardFmTxt(cardId),
+                this.vel.getDefaultFontAsUi512(),
+                charstart,
+                len
+            );
+
+            return list.join(',');
+        } else if (prop === 'textfont') {
+            /* returns typeface name or the string 'mixed' */
+            return SubstringStyleComplex.getChunkTextFace(
+                this.vel.getCardFmTxt(cardId),
+                this.vel.getDefaultFontAsUi512(),
+                charstart,
+                len
+            );
+        } else if (prop === 'textsize') {
+            /* as per spec this can return either an integer or the string 'mixed' */
+            return SubstringStyleComplex.getChunkTextSize(
+                this.vel.getCardFmTxt(cardId),
+                this.vel.getDefaultFontAsUi512(),
+                charstart,
+                len
+            ).toString();
+        } else {
+            checkThrow(
+                false,
+                longstr(`4w|can only say 'get the (prop) of char 1 to 2'
+                    for textstyle, textfont, or textsize`)
+            );
+        }
+    }
+
+    /**
+     * when you say set the textstyle of char 999 to 1000...
+     * how do we respond when outside content length
+     */
+    protected resolveChunkBounds(cardId: string, chunk: RequestedChunk, itemDel: string) {
+        let newChunk = chunk.getClone();
+        if (
+            newChunk.type555 === VpcGranularity.Chars &&
+            !newChunk.ordinal555 &&
+            newChunk.last555 !== undefined &&
+            newChunk.last555 < newChunk.first555
+        ) {
+            /* for consistency with emulator, interesting behavior for negative intervals */
+            newChunk.first555 = newChunk.first555 - 1;
+            newChunk.last555 = newChunk.first555 + 1;
+        }
+        
+        let unformatted = this.vel.getCardFmTxt(cardId).toUnformatted();
+        newChunk.first555 = fitIntoInclusive(newChunk.first555, 1, unformatted.length);
+
+        /* we've already handled the formattedText.len() === 0 case in getChunkTextAttribute */
+        let cont = new ReadableContainerField(this.vel, cardId)
+        let bounds = ChunkResolutionApplication.applyRead(cont, chunk, itemDel)
+        return bounds ? [bounds.startPos, bounds.endPos] : [0, 0]
+    }
+
+    /**
+     * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
+     */
+    specialSetPropChunk(cardId: string, prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
+        let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
+        return this.specialSetPropChunkImpl(cardId, prop, val.readAsString(), start, end);
+    }
+
+    /**
+     * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
+     */
+    specialGetPropChunk(cardId: string, prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
+        let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
+        return VpcValS(this.specialGetPropChunkImpl(cardId, prop, start, end));
+    }
+
 }

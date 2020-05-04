@@ -9,6 +9,20 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
+
+/**
+   Places where we need chunks:
+    Note: we treat "the selection" as a chunk, since it is one.
+   
+   READING (any expression context)          put char 3 to 5 of x into y
+   PUT                                       put x into char 3 to 5 of y
+   MODIFY                                    add 1 to char 3 to 5 of y
+   PROPERTY                                  set the textsize of char 3 to 5 of y to 12
+   
+   
+   
+ */
+
 /**
  * it turns out to be kind of complicated to evaluate something like
  * put item x to y of myList into z,
@@ -21,7 +35,7 @@
  * the input is given as 1-based but
  * internally in this class we use 0-based indexes
  */
-export const ChunkResolution = /* static class */ {
+const ChunkResolution = /* static class */ {
     /**
      * make a table of positions where items start
      * positions are 0-based
@@ -269,13 +283,6 @@ export const ChunkResolution = /* static class */ {
     },
 
     /**
-     * calls getBoundsForGet
-     */
-    resolveBoundsForGet(s: string, itemDel: string, chunk: RequestedChunk) {
-        return this._getBoundsForGet(s, itemDel, chunk);
-    },
-
-    /**
      * resolve the chunk, getting start+end positions
      * remember to adjust the results based on parent.startPos!!!
      */
@@ -317,7 +324,7 @@ export const ChunkResolution = /* static class */ {
     //~ /**
      //~ * apply a modification like 'add 1 to item 3 of x'
      //~ */
-    //~ applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, fn: (s: string) => string) {
+    //~ applyModify() {
         //~ if (chunk) {
             //~ /* confirmed in original product that modify uses "set" bounds not "get" bounds */
             //~ /* so "multiply line 300 of x" extends the contents of x if necessary */
@@ -341,6 +348,26 @@ export const ChunkResolution = /* static class */ {
 
 export const ChunkResolutionApplication = /* static class */ {
     applyPut(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, news: string, prep: VpcChunkPreposition): void {
+        if (!chunk) {
+            /* needs to be handled separately,
+            since we might be inserting into a never-before-seen variable */
+            let result: string;
+            if (prep === VpcChunkPreposition.After) {
+                let prevs = cont.isDefined() ? cont.getRawString() : '';
+                result = prevs + news;
+            } else if (prep === VpcChunkPreposition.Before) {
+                let prevs = cont.isDefined() ? cont.getRawString() : '';
+                result = news + prevs;
+            } else if (prep === VpcChunkPreposition.Into) {
+                result = news;
+            } else {
+                checkThrow(false, `5+|unknown preposition ${prep}`);
+            }
+
+            cont.setAll(result);
+            return;
+        }
+
         /* make parent objects */
         let resolved = new ResolvedChunk(cont, 0, cont.len())
         if (!chunk) {
@@ -362,6 +389,29 @@ export const ChunkResolutionApplication = /* static class */ {
 
             current = current.child
         }
+    },
+
+    applyModify(cont: WritableContainer, chunk: O<RequestedChunk>, itemDel: string, fn: (s: string) => string) {
+        if (!chunk) {
+            /* needs to be handled separately,
+            since we might be inserting into a never-before-seen variable */
+            let s = cont.getRawString();
+            let news = fn(s);
+            cont.splice(0, cont.len(), news);
+        }
+
+        /* does it exist? 
+        if not, make it. (follow emulator) */
+        let found = this.applyRead(cont, chunk, itemDel)
+        if (!found) {
+            this.applyPut(cont, chunk, itemDel, "", VpcChunkPreposition.Into)
+            found = this.applyRead(cont, chunk, itemDel)
+        }
+
+        checkThrow(found, "could not modify")
+        let foundContent = cont.getRawString().substring(found.startPos, found.endPos)
+        let newContent = fn(foundContent)
+        cont.splice(found.startPos, found.endPos - found.startPos, newContent)
     },
 
     applyRead(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): O<ResolvedChunk> {

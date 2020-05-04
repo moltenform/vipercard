@@ -61,7 +61,7 @@ export const SimpleUtil512Tests = /* static class */ {
             //~ testCollectionScriptRunCmd,
             //~ testCollectionvpcScriptEval,
             //~ testCollectionvpcScriptRunSyntax,
-            //~ testCollectionScriptExprLvl,
+            testCollectionScriptExprLvl,
             //~ testCollectionvpcScriptParseCmd,
             //~ testCollectionvpcScriptParseExpr,
             testCollectionvpcChunkResolution,

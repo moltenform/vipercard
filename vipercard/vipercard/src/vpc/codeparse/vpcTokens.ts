@@ -1,5 +1,4 @@
 
-/* auto */ import { checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { cAltProductName, cProductName, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
@@ -632,103 +631,7 @@ allVpcTokens[64] = tks.tkIdentifier
 Object.freeze(allVpcTokens);
 
 }
-}
-
-
-
-
-alsoReservedWordsList['stack'] = true;
-alsoReservedWordsList['background'] = true;
-alsoReservedWordsList['bkgnd'] = true;
-alsoReservedWordsList['bg'] = true;
-alsoReservedWordsList['backgrounds'] = true;
-alsoReservedWordsList['bkgnds'] = true;
-alsoReservedWordsList['bgs'] = true;
-alsoReservedWordsList['card'] = true;
-alsoReservedWordsList['cd'] = true;
-alsoReservedWordsList['cards'] = true;
-alsoReservedWordsList['cds'] = true;
-alsoReservedWordsList['button'] = true;
-alsoReservedWordsList['btn'] = true;
-alsoReservedWordsList['buttons'] = true;
-alsoReservedWordsList['btns'] = true;
-alsoReservedWordsList['field'] = true;
-alsoReservedWordsList['fld'] = true;
-alsoReservedWordsList['fields'] = true;
-alsoReservedWordsList['flds'] = true;
-alsoReservedWordsList['part'] = true;
-alsoReservedWordsList['parts'] = true;
-alsoReservedWordsList['hypercard'] = true;
-alsoReservedWordsList['vipercard'] = true;
-alsoReservedWordsList['long'] = true;
-alsoReservedWordsList['short'] = true;
-alsoReservedWordsList['abbrev'] = true;
-alsoReservedWordsList['abbr'] = true;
-alsoReservedWordsList['abbreviated'] = true;
-alsoReservedWordsList['last'] = true;
-alsoReservedWordsList['mid'] = true;
-alsoReservedWordsList['middle'] = true;
-alsoReservedWordsList['any'] = true;
-alsoReservedWordsList['first'] = true;
-alsoReservedWordsList['second'] = true;
-alsoReservedWordsList['third'] = true;
-alsoReservedWordsList['fourth'] = true;
-alsoReservedWordsList['fifth'] = true;
-alsoReservedWordsList['sixth'] = true;
-alsoReservedWordsList['seventh'] = true;
-alsoReservedWordsList['eighth'] = true;
-alsoReservedWordsList['ninth'] = true;
-alsoReservedWordsList['tenth'] = true;
-alsoReservedWordsList['this'] = true;
-alsoReservedWordsList['prev'] = true;
-alsoReservedWordsList['previous'] = true;
-alsoReservedWordsList['next'] = true;
-alsoReservedWordsList['characters'] = true;
-alsoReservedWordsList['character'] = true;
-alsoReservedWordsList['chars'] = true;
-alsoReservedWordsList['char'] = true;
-alsoReservedWordsList['words'] = true;
-alsoReservedWordsList['word'] = true;
-alsoReservedWordsList['items'] = true;
-alsoReservedWordsList['item'] = true;
-alsoReservedWordsList['lines'] = true;
-alsoReservedWordsList['line'] = true;
-alsoReservedWordsList['in'] = true;
-alsoReservedWordsList['of'] = true;
-alsoReservedWordsList['a'] = true;
-alsoReservedWordsList['an'] = true;
-alsoReservedWordsList['not'] = true;
-alsoReservedWordsList['there'] = true;
-alsoReservedWordsList['is'] = true;
-alsoReservedWordsList['no'] = true;
-alsoReservedWordsList['and'] = true;
-alsoReservedWordsList['or'] = true;
-alsoReservedWordsList['contains'] = true;
-alsoReservedWordsList['within'] = true;
-alsoReservedWordsList['the'] = true;
-alsoReservedWordsList['msg'] = true;
-alsoReservedWordsList['message'] = true;
-alsoReservedWordsList['window'] = true;
-alsoReservedWordsList['windows'] = true;
-alsoReservedWordsList['box'] = true;
-alsoReservedWordsList['me'] = true;
-alsoReservedWordsList['recent'] = true;
-alsoReservedWordsList['back'] = true;
-alsoReservedWordsList['forth'] = true;
-alsoReservedWordsList['marked'] = true;
-alsoReservedWordsList['to'] = true;
-alsoReservedWordsList['menuitems'] = true;
-alsoReservedWordsList['menuitem'] = true;
-alsoReservedWordsList['menu'] = true;
-alsoReservedWordsList['id'] = true;
-alsoReservedWordsList['number'] = true;
-alsoReservedWordsList['selection'] = true;
-alsoReservedWordsList['target'] = true;
-
-
-/* map word-like tokens to the token type, useful for 
- fabricating new tokens in rewrite stage. */
-export const listOfAllWordLikeTokens:{ [key: string]: chevrotain.TokenType } = { }
+if (!listOfAllWordLikeTokens["stack"]) {
 listOfAllWordLikeTokens['stack'] = tks.tkStack;
 listOfAllWordLikeTokens['background'] = tks.tkBg;
 listOfAllWordLikeTokens['bkgnd'] = tks.tkBg;
@@ -878,6 +781,106 @@ listOfAllWordLikeTokens['textheight'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAl
 listOfAllWordLikeTokens['textsize'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['textstyle'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
 listOfAllWordLikeTokens['version'] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready;
+manuallyAddToListOfAllWordLikeTokens();
+Object.freeze(listOfAllWordLikeTokens);
+}
+}
+
+
+
+
+alsoReservedWordsList['stack'] = true;
+alsoReservedWordsList['background'] = true;
+alsoReservedWordsList['bkgnd'] = true;
+alsoReservedWordsList['bg'] = true;
+alsoReservedWordsList['backgrounds'] = true;
+alsoReservedWordsList['bkgnds'] = true;
+alsoReservedWordsList['bgs'] = true;
+alsoReservedWordsList['card'] = true;
+alsoReservedWordsList['cd'] = true;
+alsoReservedWordsList['cards'] = true;
+alsoReservedWordsList['cds'] = true;
+alsoReservedWordsList['button'] = true;
+alsoReservedWordsList['btn'] = true;
+alsoReservedWordsList['buttons'] = true;
+alsoReservedWordsList['btns'] = true;
+alsoReservedWordsList['field'] = true;
+alsoReservedWordsList['fld'] = true;
+alsoReservedWordsList['fields'] = true;
+alsoReservedWordsList['flds'] = true;
+alsoReservedWordsList['part'] = true;
+alsoReservedWordsList['parts'] = true;
+alsoReservedWordsList['hypercard'] = true;
+alsoReservedWordsList['vipercard'] = true;
+alsoReservedWordsList['long'] = true;
+alsoReservedWordsList['short'] = true;
+alsoReservedWordsList['abbrev'] = true;
+alsoReservedWordsList['abbr'] = true;
+alsoReservedWordsList['abbreviated'] = true;
+alsoReservedWordsList['last'] = true;
+alsoReservedWordsList['mid'] = true;
+alsoReservedWordsList['middle'] = true;
+alsoReservedWordsList['any'] = true;
+alsoReservedWordsList['first'] = true;
+alsoReservedWordsList['second'] = true;
+alsoReservedWordsList['third'] = true;
+alsoReservedWordsList['fourth'] = true;
+alsoReservedWordsList['fifth'] = true;
+alsoReservedWordsList['sixth'] = true;
+alsoReservedWordsList['seventh'] = true;
+alsoReservedWordsList['eighth'] = true;
+alsoReservedWordsList['ninth'] = true;
+alsoReservedWordsList['tenth'] = true;
+alsoReservedWordsList['this'] = true;
+alsoReservedWordsList['prev'] = true;
+alsoReservedWordsList['previous'] = true;
+alsoReservedWordsList['next'] = true;
+alsoReservedWordsList['characters'] = true;
+alsoReservedWordsList['character'] = true;
+alsoReservedWordsList['chars'] = true;
+alsoReservedWordsList['char'] = true;
+alsoReservedWordsList['words'] = true;
+alsoReservedWordsList['word'] = true;
+alsoReservedWordsList['items'] = true;
+alsoReservedWordsList['item'] = true;
+alsoReservedWordsList['lines'] = true;
+alsoReservedWordsList['line'] = true;
+alsoReservedWordsList['in'] = true;
+alsoReservedWordsList['of'] = true;
+alsoReservedWordsList['a'] = true;
+alsoReservedWordsList['an'] = true;
+alsoReservedWordsList['not'] = true;
+alsoReservedWordsList['there'] = true;
+alsoReservedWordsList['is'] = true;
+alsoReservedWordsList['no'] = true;
+alsoReservedWordsList['and'] = true;
+alsoReservedWordsList['or'] = true;
+alsoReservedWordsList['contains'] = true;
+alsoReservedWordsList['within'] = true;
+alsoReservedWordsList['the'] = true;
+alsoReservedWordsList['msg'] = true;
+alsoReservedWordsList['message'] = true;
+alsoReservedWordsList['window'] = true;
+alsoReservedWordsList['windows'] = true;
+alsoReservedWordsList['box'] = true;
+alsoReservedWordsList['me'] = true;
+alsoReservedWordsList['recent'] = true;
+alsoReservedWordsList['back'] = true;
+alsoReservedWordsList['forth'] = true;
+alsoReservedWordsList['marked'] = true;
+alsoReservedWordsList['to'] = true;
+alsoReservedWordsList['menuitems'] = true;
+alsoReservedWordsList['menuitem'] = true;
+alsoReservedWordsList['menu'] = true;
+alsoReservedWordsList['id'] = true;
+alsoReservedWordsList['number'] = true;
+alsoReservedWordsList['selection'] = true;
+alsoReservedWordsList['target'] = true;
+
+
+/* map word-like tokens to the token type, useful for 
+ fabricating new tokens in rewrite stage. */
+export const listOfAllWordLikeTokens:{ [key: string]: chevrotain.TokenType } = { }
 
 
 /* list commands, even the ones we don't support. */
@@ -1188,6 +1191,7 @@ Object.freeze(alsoReservedWordsList);
 export type ChvITk = chevrotain.IToken;
 export type ChvITkType = chevrotain.ITokenConfig;
 
+function manuallyAddToListOfAllWordLikeTokens() {
 listOfAllWordLikeTokens['+'] = tks.tkPlusOrMinus;
 listOfAllWordLikeTokens['-'] = tks.tkPlusOrMinus;
 listOfAllWordLikeTokens['('] = tks.tkLParen;
@@ -1198,8 +1202,8 @@ listOfAllWordLikeTokens['>'] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['>='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['=='] = tks.tkGreaterOrLessEqualOrEqual;
 listOfAllWordLikeTokens['\n'] = tks.tkNewLine;
-listOfAllWordLikeTokens['%SYNPLACEHOLDER%'] = tks.tkSyntaxMark;
 listOfAllWordLikeTokens['%MARK%'] = tks.tkSyntaxMark;
+}
 
 /**
  * when re-writing syntax, sometimes we want to construct a token, and make it

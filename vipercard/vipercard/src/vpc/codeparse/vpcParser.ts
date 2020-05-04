@@ -732,8 +732,9 @@ this.SUBRULE1(this.RuleHSimpleContainer)
 });
 
 RuleHChunk = this.RULE('RuleHChunk', () => {
-this.MANY1(() => {
 this.SUBRULE1(this.RuleHChunkOne)
+this.MANY1(() => {
+this.SUBRULE2(this.RuleHChunkOne)
 });
 });
 

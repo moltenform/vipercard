@@ -1,12 +1,11 @@
 
-/* auto */ import { VpcVal, VpcValN, VpcValS } from './../vpcutils/vpcVal';
+/* auto */ import { VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcElType, VpcGranularity, checkThrow } from './../vpcutils/vpcEnums';
-/* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBase, VpcElSizable } from './velBase';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, fitIntoInclusive, getEnumToStrOrFallback, getStrToEnum, longstr } from './../../ui512/utils/util512';
+/* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { GenericTextField } from './../../ui512/textedit/ui512GenericField';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
@@ -267,111 +266,7 @@ export class VpcElField extends VpcElSizable {
         }
     }
 
-    /**
-     * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
-     */
-    specialSetPropChunkImpl(cardId: string, prop: string, s: string, charstart: number, charend: number): void {
-        let newTxt = this.getCardFmTxt(cardId).getUnlockedCopy();
-        let len = charend - charstart;
-        if (prop === 'textstyle') {
-            let list = s.split(',').map(item => item.trim());
-            SubstringStyleComplex.setChunkTextStyle(newTxt, this.getDefaultFontAsUi512(), charstart, len, list);
-        } else if (prop === 'textfont') {
-            SubstringStyleComplex.setChunkTextFace(newTxt, this.getDefaultFontAsUi512(), charstart, len, s);
-        } else if (prop === 'textsize') {
-            let n = VpcValS(s).readAsStrictInteger();
-            SubstringStyleComplex.setChunkTextSize(newTxt, this.getDefaultFontAsUi512(), charstart, len, n);
-        } else {
-            checkThrow(
-                false,
-                longstr(`4x|can only say 'set the (prop) of char 1 to 2'
-                    for textstyle, textfont, or textsize`)
-            );
-        }
-
-        this.setCardFmTxt(cardId, newTxt);
-    }
-
-    /**
-     * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
-     */
-    specialGetPropChunkImpl(cardId: string, prop: string, charstart: number, charend: number): string {
-        let len = charend - charstart;
-        if (prop === 'textstyle') {
-            /* returns comma-delimited styles, or the string 'mixed' */
-            let list = SubstringStyleComplex.getChunkTextStyle(
-                this.getCardFmTxt(cardId),
-                this.getDefaultFontAsUi512(),
-                charstart,
-                len
-            );
-
-            return list.join(',');
-        } else if (prop === 'textfont') {
-            /* returns typeface name or the string 'mixed' */
-            return SubstringStyleComplex.getChunkTextFace(
-                this.getCardFmTxt(cardId),
-                this.getDefaultFontAsUi512(),
-                charstart,
-                len
-            );
-        } else if (prop === 'textsize') {
-            /* as per spec this can return either an integer or the string 'mixed' */
-            return SubstringStyleComplex.getChunkTextSize(
-                this.getCardFmTxt(cardId),
-                this.getDefaultFontAsUi512(),
-                charstart,
-                len
-            ).toString();
-        } else {
-            checkThrow(
-                false,
-                longstr(`4w|can only say 'get the (prop) of char 1 to 2'
-                    for textstyle, textfont, or textsize`)
-            );
-        }
-    }
-
-    /**
-     * when you say set the textstyle of char 999 to 1000...
-     * how do we respond when outside content length
-     */
-    protected resolveChunkBounds(cardId: string, chunk: RequestedChunk, itemDel: string) {
-        let newChunk = chunk.getClone();
-        if (
-            newChunk.type === VpcGranularity.Chars &&
-            !newChunk.ordinal &&
-            newChunk.last !== undefined &&
-            newChunk.last < newChunk.first
-        ) {
-            /* for consistency with emulator, interesting behavior for negative intervals */
-            newChunk.first = newChunk.first - 1;
-            newChunk.last = newChunk.first + 1;
-        }
-
-        /* we handle the formattedText.len() === 0 case in getChunkTextAttribute */
-        let unformatted = this.getCardFmTxt(cardId).toUnformatted();
-        newChunk.first = fitIntoInclusive(newChunk.first, 1, unformatted.length);
-        let bounds = ChunkResolution.resolveBoundsForGet(unformatted, itemDel, newChunk);
-        bounds = bounds === undefined ? [0, 0] : bounds;
-        return bounds;
-    }
-
-    /**
-     * chunk set, e.g. 'set the textstyle of char 2 to 4 of cd fld...'
-     */
-    specialSetPropChunk(cardId: string, prop: string, chunk: RequestedChunk, val: VpcVal, itemDel: string) {
-        let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
-        return this.specialSetPropChunkImpl(cardId, prop, val.readAsString(), start, end);
-    }
-
-    /**
-     * chunk get, e.g. 'get the textstyle of char 2 to 4 of cd fld...'
-     */
-    specialGetPropChunk(cardId: string, prop: string, chunk: RequestedChunk, itemDel: string): VpcVal {
-        let [start, end] = this.resolveChunkBounds(cardId, chunk, itemDel);
-        return VpcValS(this.specialGetPropChunkImpl(cardId, prop, start, end));
-    }
+    
 }
 
 /**

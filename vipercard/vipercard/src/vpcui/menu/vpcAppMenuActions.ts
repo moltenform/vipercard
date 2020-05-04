@@ -7,8 +7,8 @@
 /* auto */ import { VpcNonModalFormLogin } from './../nonmodaldialogs/vpcFormLogin';
 /* auto */ import { OrdinalOrPosition, VpcElType, VpcTool, checkThrowNotifyMsg } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { DialogDocsType, VpcNonModalDocViewer } from './../nonmodaldialogs/vpcDocViewer';
-/* auto */ import { VpcChangeSelectedFont } from './../state/vpcDoMenuChangeSelectedFont';
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
+/* auto */ import { VpcChangeSelectedFont } from './../../vpc/vel/velFieldChangeFont';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { BrowserInfo, BrowserOSInfo, getRoot } from './../../ui512/utils/util512Higher';
@@ -28,7 +28,7 @@ export class VpcMenuActions {
     fontChanger: VpcChangeSelectedFont;
     save: VpcSaveInterface;
     constructor(protected vci: VpcStateInterface) {
-        this.fontChanger = new VpcChangeSelectedFont(vci);
+        this.fontChanger = new VpcChangeSelectedFont();
     }
 
     /**
@@ -513,6 +513,13 @@ export class VpcMenuActions {
      * user has chosen something from the Font or Style menu
      */
     runFontMenuActionsIfApplicable(s: string) {
+        if (s.startsWith('mnuItemTool')) {
+            let toolNumber = Util512.parseInt(s.substr('mnuItemTool'.length));
+            toolNumber = toolNumber ?? VpcTool.Browse;
+            this.vci.setTool(toolNumber);
+            return true;
+        }
+
         return this.fontChanger.runFontMenuActionsIfApplicable(s);
     }
 

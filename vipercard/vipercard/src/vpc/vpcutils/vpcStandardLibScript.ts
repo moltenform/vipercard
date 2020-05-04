@@ -34,20 +34,20 @@ on choose whichTool
 end choose
 
 on domenu pa, pb
-    pl = lower(pa)
+    put tolowercase(pa) into pl
     if "|" in pl then
         errordialog "not a valid domenu"
     end if
     put false into handled
     put "|" & pl & "|" into key
-    put handled and domenu_movecard(key, pa, pb) into handled
-    put handled and domenu_paintsetting(key, pa, pb) into handled
-    put handled and domenu_changefont(key, pa, pb) into handled
-    put handled and domenu_changefontsize(key, pa, pb) into handled
-    put handled and domenu_changetextstyle(key, pa, pb) into handled
-    put handled and domenu_changetextstyletoggle(key, pa, pb) into handled
+    put handled and domenu_movecard(key, pl, pb) into handled
+    put handled and domenu_paintsetting(key, pl, pb) into handled
+    put handled and domenu_changefont(key, pl, pb) into handled
+    put handled and domenu_changefontsize(key, pl, pb) into handled
+    put handled and domenu_changetextstyle(key, pl, pb) into handled
+    put handled and domenu_changetextstyletoggle(key, pl, pb) into handled
     if not handled then
-        vpccalluntrappabledomenu pa, pb
+        vpccalluntrappabledomenu pl, pb
     end if
 end domenu
 
@@ -55,27 +55,27 @@ on domenu_movecard key, pl, pb
     put true into ret 
     if pl == "back" then
         go back
-    else if pl == "Home" then
+    else if pl == "home" then
         go to card 1
-    else if pl == "Help" then
+    else if pl == "help" then
         send "help" to this card
-    else if pl == "Recent" then
+    else if pl == "recent" then
         go recent
-    else if pl == "First" then
+    else if pl == "first" then
         go first
-    else if pl == "Prev" then
+    else if pl == "prev" then
         go Prev
-    else if pl == "Next" then
+    else if pl == "next" then
         go Next
-    else if pl == "Last" then
+    else if pl == "last" then
         go Last
-    else if pl == "PrevNoWrap" then
+    else if pl == "prevnowrap" then
         if the number of this cd is 1 then
             answer "You are already at the first card."
         else 
             go prev
         end if
-    else if pl == "NextNoWrap" then
+    else if pl == "nextnowrap" then
         if the number of this cd is the number of cards in this stack then
             answer "You are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
         else 
@@ -96,7 +96,7 @@ on domenu_changefont key, pl, pb
         return false
     end if
 end domenu_changefont
-on domenu_changefontsize key, pa, pb
+on domenu_changefontsize key, pl, pb
     put "|9|10|12|14|18|24|" into keys
     if key in keys then
         set the textfont of the selection to pl

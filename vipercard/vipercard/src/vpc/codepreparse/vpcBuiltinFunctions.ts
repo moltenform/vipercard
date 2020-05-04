@@ -52,6 +52,8 @@ export class VpcBuiltinFunctions {
         numtochar: 1,
         strtonumber: 1,
         numbertostr: 1,
+        touppercase: 1,
+        tolowercase: 1,
         length: 1,
         offset: 2,
         annuity: 2,
@@ -349,6 +351,20 @@ export class VpcBuiltinFunctions {
      */
     callNumbertostr(args: VpcVal[]) {
         return VpcValS(args[0].readAsString());
+    }
+
+    /**
+     * Convert to uppercase
+     */
+    callTouppercase(args: VpcVal[]) {
+        return VpcValS(args[0].readAsString().toUpperCase());
+    }
+
+    /**
+     * Convert to lowercase
+     */
+    callTolowercase(args: VpcVal[]) {
+        return VpcValS(args[0].readAsString().toLowerCase());
     }
 
     /**

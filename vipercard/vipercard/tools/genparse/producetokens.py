@@ -42,14 +42,19 @@ def goTokensDefnOne(st):
         out.append(f'allVpcTokens[{i}] = tks.{tk.name}')
     out.append('Object.freeze(allVpcTokens);')
     out.append('')
+    out.append('}')
     
-
+    # the listOfAllWordLikeTokens
+    out.append('if (!listOfAllWordLikeTokens["stack"]) {')
+    for v, tk in getListOfWordLikeTokens(st.tokens, True):
+        out.append(f"listOfAllWordLikeTokens['{v.lower()}'] = tks.{tk.name};")
+    out.append('manuallyAddToListOfAllWordLikeTokens();')
+    out.append('Object.freeze(listOfAllWordLikeTokens);')
+    
     out.append('}')
     out.append('}')
     out.append('')
     out.append('')
-    
-    
     
     # add to list of alsoReservedWordsList
     addToListOfReservedWords(st, out, st.tokens)
@@ -148,8 +153,6 @@ def addToListOfReservedWords(st, out, tokens):
     out.append('/* map word-like tokens to the token type, useful for ')
     out.append(' fabricating new tokens in rewrite stage. */')
     out.append('export const listOfAllWordLikeTokens:{ [key: string]: chevrotain.TokenType } = { }')
-    for v, tk in getListOfWordLikeTokens(tokens, True):
-        out.append(f"listOfAllWordLikeTokens['{v.lower()}'] = tks.{tk.name};")
     out.append('')
     out.append('')
     

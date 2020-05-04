@@ -4,7 +4,7 @@
 /* auto */ import { IntermedMapOfIntermedVals, VpcIntermedValBase, VpcVal, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { CodeLimits, RememberHistory, VpcScriptMessage, VpcScriptMessageMsgBoxCode } from './../vpcutils/vpcUtils';
 /* auto */ import { VpcParsedCodeCollection } from './../codepreparse/vpcTopPreparse';
-/* auto */ import { VpcParsed, tks } from './../codeparse/vpcTokens';
+/* auto */ import { VpcParsed, tks, tkstr } from './../codeparse/vpcTokens';
 /* auto */ import { VpcTables } from './../vpcutils/vpcTables';
 /* auto */ import { ExecuteStatement } from './vpcScriptExecStatement';
 /* auto */ import { VpcExecFrame } from './vpcScriptExecFrame';
@@ -256,7 +256,7 @@ export class VpcExecFrameStack {
         VpcCurrentScriptStage.origClass = undefined;
         assertTrue(curLine.ctg !== VpcLineCategory.Statement, '5b|', curLine.ctg);
         assertTrue(
-            this.cacheParsedCST.parser.RuleInternalCmdRequestEval === curLine.getParseRule(),
+            this.cacheParsedCST.parser[tkstr.RuleInternalCmdRequestEval] === curLine.getParseRule(),
             '5a|expected eval parse rule'
         );
 
@@ -343,7 +343,7 @@ export class VpcExecFrameStack {
         VpcCurrentScriptStage.origClass = 'visit';
         VpcCurrentScriptStage.latestVelID = curFrame.meId;
         VpcCurrentScriptStage.dynamicCodeOrigin = curFrame.dynamicCodeOrigin;
-        let customOk = curLine.getParseRule() === this.cacheParsedCST.parser.RuleBuiltinCmdPut;
+        let customOk = curLine.getParseRule() === this.cacheParsedCST.parser[tkstr.RuleBuiltinCmdPut];
         let visited = parsed ? this.evalGeneralVisit(parsed, curLine, customOk) : VpcVal.Empty;
         VpcCurrentScriptStage.currentStage = VpcErrStage.Execute;
         VpcCurrentScriptStage.latestSrcLineSeen = curLine.firstToken.startLine;
@@ -548,7 +548,7 @@ export class VpcExecFrameStack {
      */
     visitCallHandler(curFrame: VpcExecFrame, curLine: VpcCodeLine, parsed: VpcParsed) {
         let newHandlerName = curLine.firstToken.image;
-        checkThrow(curLine.getParseRule() === this.cacheParsedCST.parser.RuleInternalCmdUserHandler, 'Rw|');
+        checkThrow(curLine.getParseRule() === this.cacheParsedCST.parser[tkstr.RuleInternalCmdUserHandler], 'Rw|');
         let evaluated = this.evalGeneralVisit(parsed, curLine, true);
         checkThrow(Array.isArray(evaluated), 'Rv|');
         let args = evaluated as VpcVal[];
@@ -592,7 +592,7 @@ export class VpcExecFrameStack {
      * so can't use the same old evalRequestedExpression
      */
     protected visitSendStatement(curLine: VpcCodeLine, parsed: VpcParsed): [VpcVal, VpcElBase] {
-        assertTrue(this.cacheParsedCST.parser.RuleCmdSend === curLine.getParseRule(), 'Ru|expected "send" parse rule');
+        assertTrue(this.cacheParsedCST.parser[tkstr.RuleCmdSend] === curLine.getParseRule(), 'Ru|expected "send" parse rule');
 
         let visited = this.evalGeneralVisit(parsed, curLine);
         checkThrow(visited instanceof IntermedMapOfIntermedVals, '7w|visitSendStatement wrong type');
