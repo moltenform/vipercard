@@ -9,4 +9,7 @@ import type { LRUMap } from '../../external/js-lru/js-lru';
 // the actual build is clean, and it works at runtime which is what is most important.
 
 export type BridgedLRUMap<K, V> = LRUMap<K, V>;
-export const BridgedLRUMap = LRUMap;
+export function BridgedLRUMap() {
+    return LRUMap;
+}
+

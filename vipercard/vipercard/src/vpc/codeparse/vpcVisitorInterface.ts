@@ -46,6 +46,7 @@ export interface VpcCompleteVisitor {
     RuleHSimpleContainer(ctx: VisitingContext): RequestedContainerRef;
     RuleHContainer(ctx: VisitingContext): RequestedContainerRef;
     RuleHChunk(ctx: VisitingContext): RequestedChunk;
+    RuleHChunkOne(ctx: VisitingContext): RequestedChunk;
     RuleHChunkBound(ctx: VisitingContext): VpcVal;
     RuleHSource(ctx: VisitingContext): VpcVal;
     RuleHSource_1(ctx: VisitingContext): VpcVal;
@@ -113,8 +114,8 @@ export interface VpcCompleteVisitor {
 
 /* for nicer auto-complete in a visitor implementation */
 export interface VisitingContext {
-    /* you can add something like [index: string]: any if you want to */
-    /* silence type errors during development */
+/* you can add something like [index: string]: any if you want to */
+/* silence type errors during development */
     RuleHAllPropertiesThatCouldBeUnary: any[];
     RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary: any[];
     RuleHAnyFnName: any[];
@@ -140,6 +141,7 @@ export interface VisitingContext {
     RuleHSimpleContainer: any[];
     RuleHContainer: any[];
     RuleHChunk: any[];
+    RuleHChunkOne: any[];
     RuleHChunkBound: any[];
     RuleHSource: any[];
     RuleHSource_1: any[];

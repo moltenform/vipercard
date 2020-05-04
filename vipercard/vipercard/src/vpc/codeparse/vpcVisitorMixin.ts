@@ -6,7 +6,7 @@
 /* auto */ import { tkstr } from './vpcTokens';
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { OrdinalOrPosition, PropAdjective, VpcElType, VpcGranularity, VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
-/* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolution, ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VelResolveId } from './../vel/velResolveName';
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
@@ -296,7 +296,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                         ret.vel.lookById = Util512.parseIntStrict(selFld.id);
                         checkThrow(ret.vel.lookById, 'S7|');
                         ret.chunk = new RequestedChunk(bounds[0]);
-                        ret.chunk.last = bounds[1];
+                        ret.chunk.last555 = bounds[1];
                     }
                 }
             } else if (ctx.RuleObjectPart && ctx.RuleObjectPart[0]) {
@@ -312,6 +312,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             } else {
                 checkThrowInternal(false, 'S6|HsimpleContainer no branch taken');
             }
+
             return ret;
         }
 
@@ -319,28 +320,52 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             let ret = this.visit(ctx.RuleHSimpleContainer[0]) as RequestedContainerRef;
             checkThrow(ret instanceof RequestedContainerRef, `S5|internal error, expected IntermedValContainer`);
             if (ctx.RuleHChunk && ctx.RuleHChunk[0]) {
-                checkThrow(
-                    !ret.chunk,
-                    `S4|a chunk has already been set. for example, we don't currently support 'put "a" into char 2 of the selection`
-                );
-                ret.chunk = this.visit(ctx.RuleHChunk[0]);
-                checkThrow(ret.chunk && ret.chunk instanceof RequestedChunk, `9W|chunk not valid`);
+                let newChunk = this.visit(ctx.RuleHChunk[0]);
+                checkThrow(newChunk && newChunk instanceof RequestedChunk, `9W|chunk not valid`);
+                if (ret.chunk) {
+                    /* append our chunk. e.g. "char 3 of the selectedtext" */
+                    let wasThere = ret.chunk
+                    ret.chunk = newChunk
+                    ret.chunk.child = wasThere
+                } else {
+                    ret.chunk = newChunk
+                }
             }
+
             return ret;
         }
 
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
+            checkThrow(ctx.RuleHChunkOne && ctx.RuleHChunkOne[0], 'S3|RuleHChunkOne');
+            //~ let ret = this.visit(ctx.RuleHChunkOne[0]);
+            //~ let current = ret;
+            //~ for (let i=1; i<ctx.RuleHChunkOne.length; i++) {
+                //~ current.child = this.visit(ctx.RuleHChunkOne[i]);
+                //~ current = current.child
+            //~ }
+            let ret = this.visit(arLast(ctx.RuleHChunkOne));
+            let current = ret;
+            for (let i=ctx.RuleHChunkOne.length-2; i>= 0; i--) {
+                current.child = this.visit(ctx.RuleHChunkOne[i]);
+                current = current.child
+            }
+            
+            return ret;
+        }
+
+        RuleHChunkOne(ctx: VisitingContext): RequestedChunk {
             let ret = new RequestedChunk(-1);
             checkThrow(ctx.tkChunkGranularity && ctx.tkChunkGranularity[0], 'S3|RuleHChunk');
-            ret.type = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
+            ret.type555 = getStrToEnum<VpcGranularity>(VpcGranularity, tkstr.RuleHChunk, ctx.tkChunkGranularity[0].image);
             if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ret.ordinal = this.visit(ctx.RuleOrdinal[0]);
+                ret.ordinal555 = this.visit(ctx.RuleOrdinal[0]);
             } else {
-                ret.first = this.visit(ctx.RuleHChunkBound[0]).readAsStrictNumeric(this.tmpArr);
+                ret.first555 = this.visit(ctx.RuleHChunkBound[0]).readAsStrictNumeric(this.tmpArr);
                 if (ctx.RuleHChunkBound[1]) {
-                    ret.last = this.visit(ctx.RuleHChunkBound[1]).readAsStrictNumeric(this.tmpArr);
+                    ret.last555 = this.visit(ctx.RuleHChunkBound[1]).readAsStrictNumeric(this.tmpArr);
                 }
             }
+
             return ret;
         }
 
@@ -591,7 +616,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 let chunk = this.visit(ctx.RuleHChunk[0]) as RequestedChunk;
                 checkThrow(chunk instanceof RequestedChunk, '8_|not a RequestedChunk', chunk);
                 let reader = new ReadableContainerStr(val.readAsString());
-                let result = ChunkResolution.applyRead(reader, chunk, this.outside.GetItemDelim());
+                let result = ChunkResolutionApplication.applyReadToString(reader, chunk, this.outside.GetItemDelim());
                 val = VpcValS(result);
             }
 

@@ -293,7 +293,8 @@ MessageBox:=[_the] _message [ { _box | _window } ]      --->Constant|"{msgBoxExp
 HSimpleContainer:={ <Menu> | <MessageBox> | [_the] _selection | _target | <ObjectPart> | <HAnyAllowedVariableName> }  --->Custom--->RequestedContainerRef
 // fyi: HContainer is only used for 'put' command, never in expression evaluation
 HContainer:=[<HChunk>] <HSimpleContainer>                                                                                         --->Custom--->RequestedContainerRef
-HChunk:={ <Ordinal> tkChunkGranularity | tkChunkGranularity <HChunkBound> [_to <HChunkBound>] } <Of>        --->Custom--->RequestedChunk
+HChunk:=MANY{{ <HChunkOne> }}ENDMANY                                                                                    --->Custom--->RequestedChunk
+HChunkOne:={ <Ordinal> tkChunkGranularity | tkChunkGranularity <HChunkBound> [_to <HChunkBound>] } <Of>       --->Custom--->RequestedChunk
 // we restrict what can be in chunkbounds to reduce the chances for parser ambiguity. this is just the "4" in get char 4 of "abcd", nothing special
 HChunkBound:= { tkLParen <Expr> tkRParen | tkNumLiteral  | <HSimpleContainer> }                --->Custom--->VpcVal
 

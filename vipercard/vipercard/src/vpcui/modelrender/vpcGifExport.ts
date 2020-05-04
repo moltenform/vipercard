@@ -103,7 +103,7 @@ export class PaintGifExport {
             await Util512Higher.sleep(100);
             encoder.finish();
             let blob = new Blob([encoder.getUint8Array()], { type: 'image/gif' });
-            bridgedSaveAs(blob, `made with ${cProductName}.gif`);
+            bridgedSaveAs()(blob, `made with ${cProductName}.gif`);
 
             return this.showMsgAndClose('lngCreating .gif complete.');
         } catch (e) {

@@ -146,7 +146,7 @@ export class TestUtilsCanvas {
         if (download) {
             console.log('Image sent to download, test complete.');
             imGot.canvas.toBlob((blob: any) => {
-                bridgedSaveAs(blob, 'test' + p.testName + '.png');
+                bridgedSaveAs()(blob, 'test' + p.testName + '.png');
             });
         } else {
             let countDifferences = TestUtilsCanvas.compareCanvas(
@@ -168,7 +168,7 @@ export class TestUtilsCanvas {
 
                 console.log('Delta image sent to download, failures marked in red.');
                 imGot.canvas.toBlob((blob: any) => {
-                    bridgedSaveAs(blob, `failed${p.testName}.png`);
+                    bridgedSaveAs()(blob, `failed${p.testName}.png`);
                 });
 
                 assertTrue(false, '3r|test failed');

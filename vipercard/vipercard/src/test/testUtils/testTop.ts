@@ -12,6 +12,7 @@
 /* auto */ import { testCollectionvpcScriptEval } from './../vpc/vpcTestScriptEval';
 /* auto */ import { testCollectionvpcElements } from './../vpc/vpcTestElements';
 /* auto */ import { testCollectionvpcChunkResolution } from './../vpc/vpcTestChunkResolution';
+/* auto */ import { VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { AsyncFn, VoidFn } from './../../ui512/utils/util512Higher';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, ValHolder } from './../../ui512/utils/util512';
@@ -55,37 +56,37 @@ export const SimpleUtil512Tests = /* static class */ {
         let colls: SimpleUtil512TestCollection[] = [
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
-            testCollectionScriptRewrites,
-            testCollectionScriptRunCustomFns,
-            testCollectionScriptRunCmd,
-            testCollectionvpcScriptEval,
-            testCollectionvpcScriptRunSyntax,
-            testCollectionScriptExprLvl,
-            testCollectionvpcScriptParseCmd,
-            testCollectionvpcScriptParseExpr,
+            //~ testCollectionScriptRewrites,
+            //~ testCollectionScriptRunCustomFns,
+            //~ testCollectionScriptRunCmd,
+            //~ testCollectionvpcScriptEval,
+            //~ testCollectionvpcScriptRunSyntax,
+            //~ testCollectionScriptExprLvl,
+            //~ testCollectionvpcScriptParseCmd,
+            //~ testCollectionvpcScriptParseExpr,
             testCollectionvpcChunkResolution,
-            testCollectionvpcElements,
-            testCollectionvpcuiMsgBox,
-            testCollectionvpcuiIntroProvider,
-            testCollectionvpcVpcVal,
-            testCollectionUI512CodeEditor,
-            testCollectionUI512Composites,
-            testCollectionUI512DrawText,
-            testCollectionUI512Elements,
-            testCollectionUI512ElementsViewButtons,
-            testCollectionUI512FormattedText,
-            testCollectionUI512MenuRender,
-            testCollectionUI512Paint,
-            testCollectionUI512TextEdit,
-            testCollectionUI512TextModify,
-            testCollectionUI512TextSelectEvents,
-            testCollectionUtilsCanvasWrapper,
-            testCollectionUtilsDraw,
-            testCollectionUtil512Higher,
-            testCollectionUtil512Class,
-            testCollectionUtil512,
-            testCollectionUtil512Assert,
-            testCollectionExternalLibs
+            //~ testCollectionvpcElements,
+            //~ testCollectionvpcuiMsgBox,
+            //~ testCollectionvpcuiIntroProvider,
+            //~ testCollectionvpcVpcVal,
+            //~ testCollectionUI512CodeEditor,
+            //~ testCollectionUI512Composites,
+            //~ testCollectionUI512DrawText,
+            //~ testCollectionUI512Elements,
+            //~ testCollectionUI512ElementsViewButtons,
+            //~ testCollectionUI512FormattedText,
+            //~ testCollectionUI512MenuRender,
+            //~ testCollectionUI512Paint,
+            //~ testCollectionUI512TextEdit,
+            //~ testCollectionUI512TextModify,
+            //~ testCollectionUI512TextSelectEvents,
+            //~ testCollectionUtilsCanvasWrapper,
+            //~ testCollectionUtilsDraw,
+            //~ testCollectionUtil512Higher,
+            //~ testCollectionUtil512Class,
+            //~ testCollectionUtil512,
+            //~ testCollectionUtil512Assert,
+            //~ testCollectionExternalLibs
         ];
 
         if (!colls || !colls.length) {
@@ -106,6 +107,7 @@ export const SimpleUtil512Tests = /* static class */ {
             .map(item => item.atests.length)
             .reduce(Util512.add);
         let counter = new ValHolder(1);
+        await VpcIntroProvider.waitForDelayLoadedJs(undefined)
         for (let coll of colls) {
             if (colNamesSeen.exists(coll.name.toLowerCase())) {
                 assertTrue(false, 'O.|duplicate collection name', coll.name);

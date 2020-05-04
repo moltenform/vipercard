@@ -178,11 +178,11 @@ export class UI512Compress {
     protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
     protected static reNewline = /\n/g;
     static compressString(s: string): string {
-        let compressed = BridgedLZString.compressToUTF16(s);
+        let compressed = BridgedLZString().compressToUTF16(s);
         return compressed;
     }
 
     static decompressString(s: string): string {
-        return BridgedLZString.decompressFromUTF16(s) ?? '';
+        return BridgedLZString().decompressFromUTF16(s) ?? '';
     }
 }

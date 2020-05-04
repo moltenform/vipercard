@@ -3,9 +3,9 @@
 /* auto */ import { VisitingContext } from './vpcVisitorInterface';
 /* auto */ import { VpcEvalHelpers } from './../vpcutils/vpcValEval';
 /* auto */ import { IntermedMapOfIntermedVals, VpcVal } from './../vpcutils/vpcVal';
-/* auto */ import { ChvITk, allVpcTokens } from './vpcTokens';
+/* auto */ import { ChvITk, allVpcTokens, initAllVpcTokens } from './vpcTokens';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcChvParser } from './vpcParser';
+/* auto */ import { MakeVpcChvParser } from './vpcParser';
 /* auto */ import { VpcOpCtg, checkThrow, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
@@ -20,7 +20,7 @@
  * create a Visitor class instance
  * a Visitor can recurse through a CST to produce a single value.
  */
-export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
+export function createVisitor(parser: chevrotain.CstParser): VpcVisitorInterface {
     let BaseVisitor = parser.getBaseCstVisitorConstructor();
     class VPCCustomVisitor extends BaseVisitor {
         evalAllExpressions = true;
@@ -87,172 +87,293 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
         /* generated code, any changes past this point will be lost: --------------- */
 
-        RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): ChvITk {
-            if (ctx.tkAllUnaryPropertiesIfNotAlready && ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllUnaryPropertiesIfNotAlready[0];
-            } else if (ctx.tkUnaryVipercardProperties && ctx.tkUnaryVipercardProperties[0]) {
-                return ctx.tkUnaryVipercardProperties[0];
-            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
-            } else if (ctx._id && ctx._id[0]) {
-                return ctx._id[0];
-            } else if (ctx._marked && ctx._marked[0]) {
-                return ctx._marked[0];
-            } else if (ctx._number && ctx._number[0]) {
-                return ctx._number[0];
-            } else {
-                checkThrowInternal(false, '<,|OR in HAllPropertiesThatCouldBeUnary, no branch found');
-            }
-        }
+RuleHAllPropertiesThatCouldBeUnary(ctx: VisitingContext): ChvITk {
+if (ctx.tkAllUnaryPropertiesIfNotAlready && ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllUnaryPropertiesIfNotAlready[0]; 
+}
+ else 
+if (ctx.tkUnaryVipercardProperties && ctx.tkUnaryVipercardProperties[0]) {
+ return ctx.tkUnaryVipercardProperties[0]; 
+}
+ else 
+if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
+}
+ else 
+if (ctx._id && ctx._id[0]) {
+ return ctx._id[0]; 
+}
+ else 
+if (ctx._marked && ctx._marked[0]) {
+ return ctx._marked[0]; 
+}
+ else 
+if (ctx._number && ctx._number[0]) {
+ return ctx._number[0]; 
+}
+ else { checkThrowInternal(false, '<,|OR in HAllPropertiesThatCouldBeUnary, no branch found'); }
+}
 
-        RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): ChvITk {
-            if (ctx.RuleHAnyFnName && ctx.RuleHAnyFnName[0]) {
-                return this.visit(ctx.RuleHAnyFnName[0]);
-            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
-            } else {
-                checkThrowInternal(false, '<-|OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found');
-            }
-        }
 
-        RuleHAnyFnName(ctx: VisitingContext): ChvITk {
-            if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
-                return ctx.tkIdentifier[0];
-            } else if (ctx._target && ctx._target[0]) {
-                return ctx._target[0];
-            } else if (ctx._windows && ctx._windows[0]) {
-                return ctx._windows[0];
-            } else {
-                checkThrowInternal(false, '<.|OR in HAnyFnName, no branch found');
-            }
-        }
+RuleHAnyFnNameOrAllPropertiesThatCouldBeNullary(ctx: VisitingContext): ChvITk {
+if (ctx.RuleHAnyFnName && ctx.RuleHAnyFnName[0]) {
+ return this.visit(ctx.RuleHAnyFnName[0]); 
+}
+ else 
+if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
+}
+ else { checkThrowInternal(false, '<-|OR in HAnyFnNameOrAllPropertiesThatCouldBeNullary, no branch found'); }
+}
 
-        RuleHCouldBeAPropertyToSet(ctx: VisitingContext): ChvITk {
-            if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
-                return ctx.tkIdentifier[0];
-            } else if (ctx.RuleHAllPropertiesThatCouldBeUnary && ctx.RuleHAllPropertiesThatCouldBeUnary[0]) {
-                return this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]);
-            } else {
-                checkThrowInternal(false, '</|OR in HCouldBeAPropertyToSet, no branch found');
-            }
-        }
 
-        RuleHAnyAllowedVariableName(ctx: VisitingContext): ChvITk {
-            if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
-                return ctx.tkIdentifier[0];
-            } else if (ctx._number && ctx._number[0]) {
-                return ctx._number[0];
-            } else if (ctx.tkA && ctx.tkA[0]) {
-                return ctx.tkA[0];
-            } else if (ctx.tkAllUnaryPropertiesIfNotAlready && ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllUnaryPropertiesIfNotAlready[0];
-            } else if (ctx.tkUnaryVipercardProperties && ctx.tkUnaryVipercardProperties[0]) {
-                return ctx.tkUnaryVipercardProperties[0];
-            } else if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
-                return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0];
-            } else {
-                checkThrowInternal(false, '<:|OR in HAnyAllowedVariableName, no branch found');
-            }
-        }
+RuleHAnyFnName(ctx: VisitingContext): ChvITk {
+if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
+ return ctx.tkIdentifier[0]; 
+}
+ else 
+if (ctx._target && ctx._target[0]) {
+ return ctx._target[0]; 
+}
+ else 
+if (ctx._windows && ctx._windows[0]) {
+ return ctx._windows[0]; 
+}
+ else { checkThrowInternal(false, '<.|OR in HAnyFnName, no branch found'); }
+}
 
-        RuleObject(ctx: VisitingContext): RequestedVelRef {
-            if (ctx.RuleObjectSpecial && ctx.RuleObjectSpecial[0]) {
-                return this.visit(ctx.RuleObjectSpecial[0]);
-            } else if (ctx.RuleObjectInterpretedFromString && ctx.RuleObjectInterpretedFromString[0]) {
-                return this.visit(ctx.RuleObjectInterpretedFromString[0]);
-            } else if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
-                return this.visit(ctx.RuleObjectBtn[0]);
-            } else if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
-                return this.visit(ctx.RuleObjectFld[0]);
-            } else if (ctx.RuleObjectCard && ctx.RuleObjectCard[0]) {
-                return this.visit(ctx.RuleObjectCard[0]);
-            } else if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
-                return this.visit(ctx.RuleObjectBg[0]);
-            } else if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
-                return this.visit(ctx.RuleObjectStack[0]);
-            } else {
-                checkThrowInternal(false, '<;|OR in Object, no branch found');
-            }
-        }
 
-        RuleOf(ctx: VisitingContext): ChvITk {
-            if (ctx.tkOfOnly && ctx.tkOfOnly[0]) {
-                return ctx.tkOfOnly[0];
-            } else if (ctx.tkInOnly && ctx.tkInOnly[0]) {
-                return ctx.tkInOnly[0];
-            } else {
-                checkThrowInternal(false, '<<|OR in Of, no branch found');
-            }
-        }
+RuleHCouldBeAPropertyToSet(ctx: VisitingContext): ChvITk {
+if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
+ return ctx.tkIdentifier[0]; 
+}
+ else 
+if (ctx.RuleHAllPropertiesThatCouldBeUnary && ctx.RuleHAllPropertiesThatCouldBeUnary[0]) {
+ return this.visit(ctx.RuleHAllPropertiesThatCouldBeUnary[0]); 
+}
+ else { checkThrowInternal(false, '</|OR in HCouldBeAPropertyToSet, no branch found'); }
+}
 
-        RuleMenuItem(ctx: VisitingContext): string {
-            return '{menuitemExpr}';
-        }
 
-        RuleMenu(ctx: VisitingContext): string {
-            return '{menuExpr}';
-        }
+RuleHAnyAllowedVariableName(ctx: VisitingContext): ChvITk {
+if (ctx.tkIdentifier && ctx.tkIdentifier[0]) {
+ return ctx.tkIdentifier[0]; 
+}
+ else 
+if (ctx._number && ctx._number[0]) {
+ return ctx._number[0]; 
+}
+ else 
+if (ctx.tkA && ctx.tkA[0]) {
+ return ctx.tkA[0]; 
+}
+ else 
+if (ctx.tkAllUnaryPropertiesIfNotAlready && ctx.tkAllUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllUnaryPropertiesIfNotAlready[0]; 
+}
+ else 
+if (ctx.tkUnaryVipercardProperties && ctx.tkUnaryVipercardProperties[0]) {
+ return ctx.tkUnaryVipercardProperties[0]; 
+}
+ else 
+if (ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready && ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]) {
+ return ctx.tkAllNullaryOrUnaryPropertiesIfNotAlready[0]; 
+}
+ else { checkThrowInternal(false, '<:|OR in HAnyAllowedVariableName, no branch found'); }
+}
 
-        RuleWindow_1(ctx: VisitingContext): string {
-            return '{windowExpr}';
-        }
 
-        RuleWindow(ctx: VisitingContext): string {
-            return '{windowExpr}';
-        }
+RuleObject(ctx: VisitingContext): RequestedVelRef {
+if (ctx.RuleObjectSpecial && ctx.RuleObjectSpecial[0]) {
+ return this.visit(ctx.RuleObjectSpecial[0]); 
+}
+ else 
+if (ctx.RuleObjectInterpretedFromString && ctx.RuleObjectInterpretedFromString[0]) {
+ return this.visit(ctx.RuleObjectInterpretedFromString[0]); 
+}
+ else 
+if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
+ return this.visit(ctx.RuleObjectBtn[0]); 
+}
+ else 
+if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
+ return this.visit(ctx.RuleObjectFld[0]); 
+}
+ else 
+if (ctx.RuleObjectCard && ctx.RuleObjectCard[0]) {
+ return this.visit(ctx.RuleObjectCard[0]); 
+}
+ else 
+if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
+ return this.visit(ctx.RuleObjectBg[0]); 
+}
+ else 
+if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
+ return this.visit(ctx.RuleObjectStack[0]); 
+}
+ else { checkThrowInternal(false, '<;|OR in Object, no branch found'); }
+}
 
-        RuleMessageBox(ctx: VisitingContext): string {
-            return '{msgBoxExpr}';
-        }
 
-        RuleHGenericFunctionCall(ctx: VisitingContext): VpcVal {
-            if (ctx.RuleFnCallNumberOf && ctx.RuleFnCallNumberOf[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf[0]);
-            } else if (ctx.RuleFnCallThereIs && ctx.RuleFnCallThereIs[0]) {
-                return this.visit(ctx.RuleFnCallThereIs[0]);
-            } else if (ctx.RuleHFnCallWParens && ctx.RuleHFnCallWParens[0]) {
-                return this.visit(ctx.RuleHFnCallWParens[0]);
-            } else if (ctx.RuleHUnaryPropertyGet && ctx.RuleHUnaryPropertyGet[0]) {
-                return this.visit(ctx.RuleHUnaryPropertyGet[0]);
-            } else if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
-                return this.visit(ctx.RuleHOldStyleFnNonNullary[0]);
-            } else if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
-                return this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]);
-            } else {
-                checkThrowInternal(false, '<=|OR in HGenericFunctionCall, no branch found');
-            }
-        }
 
-        RuleFnCallNumberOf(ctx: VisitingContext): VpcVal {
-            if (ctx.RuleFnCallNumberOf_1 && ctx.RuleFnCallNumberOf_1[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_1[0]);
-            } else if (ctx.RuleFnCallNumberOf_5 && ctx.RuleFnCallNumberOf_5[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_5[0]);
-            } else if (ctx.RuleFnCallNumberOf_6 && ctx.RuleFnCallNumberOf_6[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_6[0]);
-            } else if (ctx.RuleFnCallNumberOf_7 && ctx.RuleFnCallNumberOf_7[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_7[0]);
-            } else if (ctx.RuleFnCallNumberOf_8 && ctx.RuleFnCallNumberOf_8[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_8[0]);
-            } else if (ctx.RuleFnCallNumberOf_9 && ctx.RuleFnCallNumberOf_9[0]) {
-                return this.visit(ctx.RuleFnCallNumberOf_9[0]);
-            } else {
-                checkThrowInternal(false, '<>|OR in FnCallNumberOf, no branch found');
-            }
-        }
 
-        RuleAnyPropertyVal(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RuleOf(ctx: VisitingContext): ChvITk {
+if (ctx.tkOfOnly && ctx.tkOfOnly[0]) {
+ return ctx.tkOfOnly[0]; 
+}
+ else 
+if (ctx.tkInOnly && ctx.tkInOnly[0]) {
+ return ctx.tkInOnly[0]; 
+}
+ else { checkThrowInternal(false, '<<|OR in Of, no branch found'); }
+}
+
+
+
+
+
+
+RuleMenuItem(ctx: VisitingContext): string {
+return "{menuitemExpr}";
+}
+
+
+RuleMenu(ctx: VisitingContext): string {
+return "{menuExpr}";
+}
+
+
+RuleWindow_1(ctx: VisitingContext): string {
+return "{windowExpr}";
+}
+
+
+RuleWindow(ctx: VisitingContext): string {
+return "{windowExpr}";
+}
+
+
+RuleMessageBox(ctx: VisitingContext): string {
+return "{msgBoxExpr}";
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RuleHGenericFunctionCall(ctx: VisitingContext): VpcVal {
+if (ctx.RuleFnCallNumberOf && ctx.RuleFnCallNumberOf[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf[0]); 
+}
+ else 
+if (ctx.RuleFnCallThereIs && ctx.RuleFnCallThereIs[0]) {
+ return this.visit(ctx.RuleFnCallThereIs[0]); 
+}
+ else 
+if (ctx.RuleHFnCallWParens && ctx.RuleHFnCallWParens[0]) {
+ return this.visit(ctx.RuleHFnCallWParens[0]); 
+}
+ else 
+if (ctx.RuleHUnaryPropertyGet && ctx.RuleHUnaryPropertyGet[0]) {
+ return this.visit(ctx.RuleHUnaryPropertyGet[0]); 
+}
+ else 
+if (ctx.RuleHOldStyleFnNonNullary && ctx.RuleHOldStyleFnNonNullary[0]) {
+ return this.visit(ctx.RuleHOldStyleFnNonNullary[0]); 
+}
+ else 
+if (ctx.RuleHOldStyleFnNullaryOrNullaryPropGet && ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]) {
+ return this.visit(ctx.RuleHOldStyleFnNullaryOrNullaryPropGet[0]); 
+}
+ else { checkThrowInternal(false, '<=|OR in HGenericFunctionCall, no branch found'); }
+}
+
+
+RuleFnCallNumberOf(ctx: VisitingContext): VpcVal {
+if (ctx.RuleFnCallNumberOf_1 && ctx.RuleFnCallNumberOf_1[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_1[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_5 && ctx.RuleFnCallNumberOf_5[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_5[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_6 && ctx.RuleFnCallNumberOf_6[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_6[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_7 && ctx.RuleFnCallNumberOf_7[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_7[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_8 && ctx.RuleFnCallNumberOf_8[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_8[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_9 && ctx.RuleFnCallNumberOf_9[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_9[0]); 
+}
+ else { checkThrowInternal(false, '<>|OR in FnCallNumberOf, no branch found'); }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+RuleAnyPropertyVal(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
 
         RuleExpr(ctx: VisitingContext): VpcVal {
-            let operatorList = ctx.RuleAndOrOr;
-            let operatorListLen = operatorList ? operatorList.length : 0;
-            if (
-                !ctx.RuleLvl1Expression ||
-                !ctx.RuleLvl1Expression.length ||
-                operatorListLen + 1 !== ctx.RuleLvl1Expression.length
-            ) {
+            let operatorList = ctx.RuleAndOrOr
+            let operatorListLen = operatorList ? operatorList.length : 0
+            if (!ctx.RuleLvl1Expression || !ctx.RuleLvl1Expression.length || operatorListLen + 1 !== ctx.RuleLvl1Expression.length) {
                 checkThrowInternal(false, `<?|RuleExpr:${operatorListLen},${ctx.RuleLvl1Expression.length}.`);
             }
 
@@ -270,15 +391,14 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
 
         RuleLvl1Expression(ctx: VisitingContext): VpcVal {
-            let operatorList = ctx.RuleContainsOrGreaterLessEqual;
-            let operatorListLen = operatorList ? operatorList.length : 0;
-            if (
-                !ctx.RuleLvl2Expression ||
-                !ctx.RuleLvl2Expression.length ||
-                operatorListLen + 1 !== ctx.RuleLvl2Expression.length
-            ) {
+            let operatorList = ctx.RuleContainsOrGreaterLessEqual
+            let operatorListLen = operatorList ? operatorList.length : 0
+            if (!ctx.RuleLvl2Expression || !ctx.RuleLvl2Expression.length || operatorListLen + 1 !== ctx.RuleLvl2Expression.length) {
                 checkThrowInternal(false, `<^|RuleLvl1Expression:${operatorListLen},${ctx.RuleLvl2Expression.length}.`);
             }
 
@@ -296,15 +416,16 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
+
+
 
         RuleLvl3Expression(ctx: VisitingContext): VpcVal {
-            let operatorList = ctx.tkStringConcat;
-            let operatorListLen = operatorList ? operatorList.length : 0;
-            if (
-                !ctx.RuleLvl4Expression ||
-                !ctx.RuleLvl4Expression.length ||
-                operatorListLen + 1 !== ctx.RuleLvl4Expression.length
-            ) {
+            let operatorList = ctx.tkStringConcat
+            let operatorListLen = operatorList ? operatorList.length : 0
+            if (!ctx.RuleLvl4Expression || !ctx.RuleLvl4Expression.length || operatorListLen + 1 !== ctx.RuleLvl4Expression.length) {
                 checkThrowInternal(false, `<}|RuleLvl3Expression:${operatorListLen},${ctx.RuleLvl4Expression.length}.`);
             }
 
@@ -322,15 +443,14 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
 
         RuleLvl4Expression(ctx: VisitingContext): VpcVal {
-            let operatorList = ctx.tkPlusOrMinus;
-            let operatorListLen = operatorList ? operatorList.length : 0;
-            if (
-                !ctx.RuleLvl5Expression ||
-                !ctx.RuleLvl5Expression.length ||
-                operatorListLen + 1 !== ctx.RuleLvl5Expression.length
-            ) {
+            let operatorList = ctx.tkPlusOrMinus
+            let operatorListLen = operatorList ? operatorList.length : 0
+            if (!ctx.RuleLvl5Expression || !ctx.RuleLvl5Expression.length || operatorListLen + 1 !== ctx.RuleLvl5Expression.length) {
                 checkThrowInternal(false, `=2|RuleLvl4Expression:${operatorListLen},${ctx.RuleLvl5Expression.length}.`);
             }
 
@@ -348,15 +468,14 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
+
+
 
         RuleLvl5Expression(ctx: VisitingContext): VpcVal {
-            let operatorList = ctx.tkMultDivideExpDivMod;
-            let operatorListLen = operatorList ? operatorList.length : 0;
-            if (
-                !ctx.RuleLvl6Expression ||
-                !ctx.RuleLvl6Expression.length ||
-                operatorListLen + 1 !== ctx.RuleLvl6Expression.length
-            ) {
+            let operatorList = ctx.tkMultDivideExpDivMod
+            let operatorListLen = operatorList ? operatorList.length : 0
+            if (!ctx.RuleLvl6Expression || !ctx.RuleLvl6Expression.length || operatorListLen + 1 !== ctx.RuleLvl6Expression.length) {
                 checkThrowInternal(false, `=6|RuleLvl5Expression:${operatorListLen},${ctx.RuleLvl6Expression.length}.`);
             }
 
@@ -374,164 +493,210 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
 
             return total;
         }
+        
 
-        RuleAndOrOr(ctx: VisitingContext): string {
-            if (ctx._or && ctx._or[0]) {
-                return ctx._or[0].image;
-            } else if (ctx._and && ctx._and[0]) {
-                return ctx._and[0].image;
-            } else {
-                checkThrowInternal(false, '=A|OR in AndOrOr, no branch found');
-            }
-        }
 
-        RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string {
-            if (ctx._contains && ctx._contains[0]) {
-                return ctx._contains[0].image;
-            } else if (ctx.tkGreaterOrLessEqualOrEqual && ctx.tkGreaterOrLessEqualOrEqual[0]) {
-                return ctx.tkGreaterOrLessEqualOrEqual[0].image;
-            } else {
-                checkThrowInternal(false, '=B|OR in ContainsOrGreaterLessEqual, no branch found');
-            }
-        }
 
-        RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdAdd(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleAndOrOr(ctx: VisitingContext): string {
+if (ctx._or && ctx._or[0]) {
+ return ctx._or[0].image; 
+}
+ else 
+if (ctx._and && ctx._and[0]) {
+ return ctx._and[0].image; 
+}
+ else { checkThrowInternal(false, '=A|OR in AndOrOr, no branch found'); }
+}
 
-        RuleBuiltinCmdAnswer(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdAsk(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleContainsOrGreaterLessEqual(ctx: VisitingContext): string {
+if (ctx._contains && ctx._contains[0]) {
+ return ctx._contains[0].image; 
+}
+ else 
+if (ctx.tkGreaterOrLessEqualOrEqual && ctx.tkGreaterOrLessEqualOrEqual[0]) {
+ return ctx.tkGreaterOrLessEqualOrEqual[0].image; 
+}
+ else { checkThrowInternal(false, '=B|OR in ContainsOrGreaterLessEqual, no branch found'); }
+}
 
-        RuleBuiltinCmdBeep(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdVpccalluntrappablechoose(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleIsExpression(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdClick(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdDelete(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdAdd(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdDial(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdDisable(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdAnswer(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdDivide(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdVpccalluntrappabledomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdAsk(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleHBuiltinCmdDrag_1(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdBeep(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdEnable(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdVpccalluntrappableerrordialog(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdVpccalluntrappablechoose(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdLock(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdClick(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdMultiply(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdDelete(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdPlay(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdDial(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdReplace(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdSelect(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdDisable(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdShow(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdDivide(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdSort(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdStart(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdVpccalluntrappabledomenu(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdStop(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdSubtract(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdDrag(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdUnlock(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleBuiltinCmdVisual(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleHBuiltinCmdDrag_1(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
 
-        RuleCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals {
-            return this.H$BuildMap(ctx);
-        }
+RuleBuiltinCmdEnable(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
 
-        /* generated code, any changes above this point will be lost: --------------- */
+
+RuleBuiltinCmdVpccalluntrappableerrordialog(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdHide(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdLock(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdMark(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdMultiply(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdPlay(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+
+
+RuleBuiltinCmdReset(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdReplace(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdSelect(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdSet(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdShow(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdSort(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdStart(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdStop(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdSubtract(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdUnlock(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdVisual(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleBuiltinCmdWait(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+RuleCmdSend(ctx: VisitingContext): IntermedMapOfIntermedVals {
+return this.H$BuildMap(ctx);
+}
+
+
+
+
+/* generated code, any changes above this point will be lost: --------------- */
 
         /**
          * for slightly faster performance, hand-write the put command,
@@ -573,22 +738,23 @@ export function createVisitor(parser: VpcChvParser): VpcVisitorInterface {
  */
 const CachedObjects = {
     lexer: undefined as O<chevrotain.Lexer>,
-    parser: undefined as O<VpcChvParser>,
+    parser: undefined as O<chevrotain.CstParser>,
     visitor: undefined as O<VpcVisitorInterface>
 };
 
 /**
  * retrieve cached objects, creating if needed
  */
-export function getParsingObjects(): [chevrotain.Lexer, VpcChvParser] {
+export function getParsingObjects(): [chevrotain.Lexer, chevrotain.CstParser] {
     if (!CachedObjects.lexer) {
+        initAllVpcTokens()
         CachedObjects.lexer = new chevrotain.Lexer(allVpcTokens, {
             ensureOptimizations: true
         });
     }
 
     if (!CachedObjects.parser) {
-        CachedObjects.parser = new VpcChvParser();
+        CachedObjects.parser = MakeVpcChvParser();
     }
 
     return [CachedObjects.lexer, CachedObjects.parser];

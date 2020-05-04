@@ -7,7 +7,7 @@
 /* auto */ import { VpcCodeLine, VpcLineCategory } from './../codepreparse/vpcPreparseCommon';
 /* auto */ import { MapTermToMilliseconds, SortType, VpcChunkPreposition, VpcGranularity, VpcTool, VpcToolCtg, checkThrow, checkThrowEq, checkThrowNotifyMsg, getToolCategory, originalToolNumberToTool } from './../vpcutils/vpcEnums';
 /* auto */ import { ChunkResolutionSort } from './../vpcutils/vpcChunkResolutionSort';
-/* auto */ import { ChunkResolution, RequestedChunk } from './../vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../vpcutils/vpcChunkResolution';
 /* auto */ import { VpcAudio } from './../vpcutils/vpcAudio';
 /* auto */ import { OutsideWorldReadWrite } from './../vel/velOutsideInterfaces';
 /* auto */ import { VoidFn } from './../../ui512/utils/util512Higher';
@@ -154,9 +154,10 @@ export class ExecuteStatement {
             /* it's not as simple as 'put "" into item 2 of x' because */
             /* delete item 2 of "a,b,c" should be "a,c" not "a,,c" */
             checkThrow(
-                chunk.type === VpcGranularity.Chars,
+                chunk.type555 === VpcGranularity.Chars,
                 "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
             );
+            
             this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.Into);
         }
     }
@@ -295,7 +296,7 @@ export class ExecuteStatement {
         let contRef = cast(RequestedContainerRef, ar[2]);
         let cont = this.outside.ResolveContainerWritable(contRef);
         let itemDel = this.outside.GetItemDelim();
-        ChunkResolution.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);
+        ChunkResolutionApplication.applyPut(cont, contRef.chunk, itemDel, val.readAsString(), prep);
     }
     /**
      * reset paint/ menubar

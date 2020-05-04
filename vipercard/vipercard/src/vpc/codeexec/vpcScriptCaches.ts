@@ -4,7 +4,6 @@
 /* auto */ import { VpcParsedCodeCollection, VpcTopPreparse } from './../codepreparse/vpcTopPreparse';
 /* auto */ import { VpcParsed } from './../codeparse/vpcTokens';
 /* auto */ import { ChvRuleFnType, VpcCodeLine, VpcCodeLineReference, VpcCurrentScriptStage } from './../codepreparse/vpcPreparseCommon';
-/* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { VpcErrStage, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
@@ -27,8 +26,8 @@
  * the cache is an LRU so that it doesn't have unbounded memory usage
  */
 export class VpcCacheParsedCST {
-    cache = new BridgedLRUMap<string, VpcParsed>(CodeLimits.CacheThisManyParsedLines);
-    parser: VpcChvParser;
+    cache = new (BridgedLRUMap())<string, VpcParsed>(CodeLimits.CacheThisManyParsedLines);
+    parser: chevrotain.CstParser;
     static ensureNotChanged = true;
     constructor() {
         this.parser = getParsingObjects()[1];
@@ -101,7 +100,7 @@ export class VpcCacheParsedCST {
  * it can even delete itself with no issues.
  */
 export class VpcCacheParsedAST {
-    cache = new BridgedLRUMap<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyScripts);
+    cache = new (BridgedLRUMap())<string, VpcParsedCodeCollection>(CodeLimits.CacheThisManyScripts);
     constructor(public idGen: CountNumericId) {}
 
     /**

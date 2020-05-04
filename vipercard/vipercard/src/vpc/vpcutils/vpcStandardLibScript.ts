@@ -51,12 +51,46 @@ on domenu pa, pb
     end if
 end domenu
 
-on domenu_movecard
+on domenu_movecard key, pl, pb
+    put true into ret 
+    if pl == "back" then
+        go back
+    else if pl == "Home" then
+        go to card 1
+    else if pl == "Help" then
+        send "help" to this card
+    else if pl == "Recent" then
+        go recent
+    else if pl == "First" then
+        go first
+    else if pl == "Prev" then
+        go Prev
+    else if pl == "Next" then
+        go Next
+    else if pl == "Last" then
+        go Last
+    else if pl == "PrevNoWrap" then
+        if the number of this cd is 1 then
+            answer "You are already at the first card."
+        else 
+            go prev
+        end if
+    else if pl == "NextNoWrap" then
+        if the number of this cd is the number of cards in this stack then
+            answer "You are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
+        else 
+            go next
+        end if
+    else
+        put false into ret 
+    end if
+    return ret
+end domenu_movecard
 
-on domenu_changefont key, pa, pb
+on domenu_changefont key, pl, pb
     put "|chicago|courier|geneva|new york|times|helvetica|monaco|symbol|" into keys
     if key in keys then
-        set the textfont of the selection to key
+        set the textfont of the selection to pl
         return true
     else
         return false
@@ -65,7 +99,7 @@ end domenu_changefont
 on domenu_changefontsize key, pa, pb
     put "|9|10|12|14|18|24|" into keys
     if key in keys then
-        set the textfont of the selection to key
+        set the textfont of the selection to pl
         return true
     else
         return false

@@ -9,28 +9,39 @@ def goTokensDefnOne(st):
     assertEq('tkIdentifier', st.tokens[-1].name,
         'expect the last to be tkIdentifier')
     
-    # the map, and the creation
+    # the fake map
     out.append('/* as a map so that we get quick access */')
     out.append('export const tks = {')
     for tk in st.tokens:
-        out.append(f'{tk.name}: chevrotain.createToken' + '({')
+        out.append(f'{tk.name}: undefined as any as chevrotain.TokenType,')
+    out.append('}')
+    out.append('export const allVpcTokens:chevrotain.TokenType[] = []')
+    out.append('')
+    out.append('')
+    
+    # the map, and the creation
+    out.append('/* as a map so that we get quick access */')
+    out.append('export function initAllVpcTokens() {')
+    for tk in st.tokens:
+        out.append(f'tks.{tk.name} = chevrotain.createToken' + '({')
         out.append(f'name: "{tk.name}",')
         out.append(f'pattern: {getPatternFromTk(tk)},')
         if tk.tokenParams:
             out.append(tk.tokenParams + ',')
-        out.append('}),')
+        out.append('});')
+    
+    # the array (needed since order matters)
+    out.append('/* as an array, since order matters */')
+    for i, tk in enumerate(st.tokens):
+        out.append(f'allVpcTokens[{i}] = tks.{tk.name}')
+    out.append('')
+    out.append('')
+    
     out.append('}')
     out.append('')
     out.append('')
     
-    # the array (needed since order matters)
-    out.append('/* as an array, since order matters */')
-    out.append('export const allVpcTokens = [')
-    for tk in st.tokens:
-        out.append(f'tks.{tk.name},')
-    out.append(f']')
-    out.append('')
-    out.append('')
+    
     
     # add to list of alsoReservedWordsList
     addToListOfReservedWords(st, out, st.tokens)

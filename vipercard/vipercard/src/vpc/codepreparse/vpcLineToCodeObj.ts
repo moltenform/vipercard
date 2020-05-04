@@ -3,7 +3,6 @@
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
 /* auto */ import { BuildFakeTokens, ChvITk, isTkType, tks } from './../codeparse/vpcTokens';
 /* auto */ import { VpcCodeLine, VpcLineCategory, checkCommonMistakenVarNames } from './vpcPreparseCommon';
-/* auto */ import { VpcChvParser } from './../codeparse/vpcParser';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { CheckReservedWords } from './vpcCheckReserved';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
@@ -17,7 +16,7 @@
  * determine the category of a line of code
  */
 export class VpcLineToCodeObj {
-    parser: VpcChvParser;
+    parser: chevrotain.CstParser;
     cachedStartOnes: ChvITk[];
     constructor(protected idGen: CountNumericId, protected check: CheckReservedWords) {}
 

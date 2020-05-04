@@ -234,7 +234,7 @@ export class VpcSave implements VpcSaveInterface {
         let blob = new Blob([this.pr.getSerializedStack()], {
             type: 'text/plain;charset=utf-8'
         });
-        bridgedSaveAs(blob, defaultFilename);
+        bridgedSaveAs()(blob, defaultFilename);
         this.pr.vci.setOption('lastSavedStateId', this.pr.vci.getCurrentStateId());
 
         /* count json saves, send to our server to count */

@@ -1,7 +1,7 @@
 
 /* auto */ import { VpcVal, VpcValS } from './../../vpc/vpcutils/vpcVal';
 /* auto */ import { VpcChunkPreposition, VpcGranularity } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolutionApplication, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { ReadableContainerVar, WritableContainerVar } from './../../vpc/vel/velResolveContainer';
 /* auto */ import { OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { assertEq } from './../../ui512/utils/util512';
@@ -481,9 +481,9 @@ function testGetChunk(
     let reader = new ReadableContainerVar(world.getMock(), 'varName');
     world.result = s;
     let ch = new RequestedChunk(first);
-    ch.last = last;
-    ch.type = type;
-    let got = ChunkResolution.applyRead(reader, ch, itemDel);
+    ch.last555 = last;
+    ch.type555 = type;
+    let got = ChunkResolutionApplication.applyReadToString(reader, ch, itemDel);
     assertEq(s, world.result, '2l|');
     assertEq(sExpected, got, '2k|');
 }
@@ -504,9 +504,9 @@ function testSetChunk(
     world.result = s;
     const sReplace = '123';
     let ch = new RequestedChunk(first);
-    ch.last = last;
-    ch.type = type;
-    ChunkResolution.applyPut(writer, ch, itemDel, sReplace, VpcChunkPreposition.Into);
+    ch.last555 = last;
+    ch.type555 = type;
+    ChunkResolutionApplication.applyPut(writer, ch, itemDel, sReplace, VpcChunkPreposition.Into);
     assertEq(sExpected, world.result, '2j|');
 }
 

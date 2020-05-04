@@ -6,7 +6,7 @@
 /* auto */ import { RequestedContainerRef, RequestedVelRef } from './../../vpc/vpcutils/vpcRequestedReference';
 /* auto */ import { VpcStateInterface } from './vpcInterface';
 /* auto */ import { PropAdjective, VpcChunkPreposition, VpcElType, VpcTool, checkThrow, toolToDispatchShapes } from './../../vpc/vpcutils/vpcEnums';
-/* auto */ import { ChunkResolution, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
+/* auto */ import { ChunkResolution, ChunkResolutionApplication, RequestedChunk } from './../../vpc/vpcutils/vpcChunkResolution';
 /* auto */ import { CheckReservedWords } from './../../vpc/codepreparse/vpcCheckReserved';
 /* auto */ import { VpcBuiltinFunctionsDateUtils } from './../../vpc/codepreparse/vpcBuiltinFunctionsUtils';
 /* auto */ import { VpcBuiltinFunctions } from './../../vpc/codepreparse/vpcBuiltinFunctions';
@@ -301,7 +301,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     ContainerRead(contRef: RequestedContainerRef): string {
         let cont = this.ResolveContainerReadable(contRef);
-        return ChunkResolution.applyRead(cont, contRef.chunk, this.GetItemDelim());
+        return ChunkResolutionApplication.applyReadToString(cont, contRef.chunk, this.GetItemDelim());
     }
 
     /**
@@ -309,15 +309,16 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      */
     ContainerWrite(contRef: RequestedContainerRef, newContent: string, prep: VpcChunkPreposition) {
         let cont = this.ResolveContainerWritable(contRef);
-        return ChunkResolution.applyPut(cont, contRef.chunk, this.GetItemDelim(), newContent, prep);
+        return ChunkResolutionApplication.applyPut(cont, contRef.chunk, this.GetItemDelim(), newContent, prep);
     }
 
     /**
      * modify a container
      */
     ContainerModify(contRef: RequestedContainerRef, fn: (s: string) => string) {
-        let cont = this.ResolveContainerWritable(contRef);
-        return ChunkResolution.applyModify(cont, contRef.chunk, this.GetItemDelim(), fn);
+        //~ //let cont = this.ResolveContainerWritable(contRef);
+        //~ //return ChunkResolution.applyModify(cont, contRef.chunk, this.GetItemDelim(), fn);
+        checkThrow(false, "nyi")
     }
 
     /**

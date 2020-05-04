@@ -68,12 +68,11 @@ export class VpcIntroProvider {
     }
 
     /**
-     * load the document
+     * wait for delay loaded javascript
      */
-    async loadDocumentTop(): Promise<[VpcPresenter, VpcState]> {
-        /* wait for delay-loaded javascript */
-        if (this.prompt) {
-            this.prompt.set('labeltext', 'Opening delay-loaded libraries...')
+    static async waitForDelayLoadedJs(prompt: O<UI512ElLabel>) {
+        if (prompt) {
+            prompt.set('labeltext', 'Opening delay-loaded libraries...')
         }
         while (true) {
             let rootHigher = getRoot() as RootHigher
@@ -85,9 +84,17 @@ export class VpcIntroProvider {
                 await Util512Higher.sleep(100)
             }
         }
-        if (this.prompt) {
-            this.prompt.set('labeltext', 'Loading...')
+        if (prompt) {
+            prompt.set('labeltext', 'Loading...')
         }
+    }
+
+    /**
+     * load the document
+     */
+    async loadDocumentTop(): Promise<[VpcPresenter, VpcState]> {
+        /* wait for delay-loaded javascript */
+        await VpcIntroProvider.waitForDelayLoadedJs(this.prompt)
 
         /* download the stack data */
         let serialized = await this.getSerializedStackData();

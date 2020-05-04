@@ -101,7 +101,7 @@ export class VpcNonModalFormSendReport extends VpcNonModalFormBase {
         let s = JSON.stringify(obj);
         let defaultFilename = 'vpc logs.json';
         let blob = new Blob([s], { type: 'text/plain;charset=utf-8' });
-        bridgedSaveAs(blob, defaultFilename);
+        bridgedSaveAs()(blob, defaultFilename);
     }
 
     /**

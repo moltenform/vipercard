@@ -1,4 +1,5 @@
 
+/* auto */ import { initAllVpcTokens } from './../../vpc/codeparse/vpcTokens';
 /* auto */ import { RootHigher } from './../../vpcui/intro/vpcIntroProvider';
 /* auto */ import { VpcUiIntro } from './../../vpcui/intro/vpcIntro';
 /* auto */ import { VpcInitIcons } from './../../vpc/vpcutils/vpcInitIcons';
@@ -69,6 +70,7 @@ export class FullRootUI512 implements RootHigher {
             try {
                 await Util512Higher.asyncLoadJsIfNotAlreadyLoaded('/external/externaldelaybundlemin.js')
                 this.hasLoadedExternalDelay = 'success'
+                initAllVpcTokens()
             } catch (e) {
                 this.hasLoadedExternalDelay = e.toString()
             }
