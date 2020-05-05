@@ -28,8 +28,8 @@ export abstract class IntroPageBase extends UI512CompBase {
     protected dragOffsetY = 0;
     protected screenBounds: number[];
     hasCloseBtn = false;
-    cancelBtnId: O<string>
-    acceptBtnId: O<string>
+    cancelBtnId: O<string>;
+    acceptBtnId: O<string>;
 
     constructor(compId: string, bounds: number[], x?: number, y?: number) {
         super(compId);
@@ -175,31 +175,29 @@ export abstract class IntroPageBase extends UI512CompBase {
      * respond to key press, can be overridden in child class
      */
     respondKeyDown(pr: UI512Presenter, d: KeyDownEventDetails) {
-        let elId:O<string>
-        if (d.readableShortcut.toLowerCase() === 'enter' ||
-        d.readableShortcut.toLowerCase() === 'return') {
-            elId = this.acceptBtnId
+        let elId: O<string>;
+        if (d.readableShortcut.toLowerCase() === 'enter' || d.readableShortcut.toLowerCase() === 'return') {
+            elId = this.acceptBtnId;
         } else if (d.readableShortcut.toLowerCase() === 'escape') {
-            elId = this.cancelBtnId
+            elId = this.cancelBtnId;
         }
 
-        let fnd = pr?.app?.findEl(elId)
+        let fnd = pr?.app?.findEl(elId);
         if (fnd) {
-            fnd.set('highlightactive', true)
-            let fn = () => { 
+            fnd.set('highlightactive', true);
+            let fn = () => {
                 if (fnd && this.children.length) {
-                    this.respondToBtnClick(pr, this, fnd)
+                    this.respondToBtnClick(pr, this, fnd);
                 }
-            }
-            Util512Higher.syncToAsyncAfterPause(fn, 200, "Hit return to click a button", RespondToErr.ConsoleErrOnly)
+            };
+            Util512Higher.syncToAsyncAfterPause(fn, 200, 'Hit return to click a button', RespondToErr.ConsoleErrOnly);
         }
     }
 
     /**
      * event called continuously, can be overridden in child class
      */
-    respondIdle(pr: UI512Presenter, d: IdleEventDetails) {
-    }
+    respondIdle(pr: UI512Presenter, d: IdleEventDetails) {}
 
     /**
      * a button was clicked

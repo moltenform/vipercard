@@ -80,13 +80,7 @@ repeat
     },
 
     /* build the code for a loop of the form "repeat with x = 1 to 5" */
-    _goWithImpl(
-        firstExpr: ChvITk[],
-        secondExpr: ChvITk[],
-        loopVar: ChvITk,
-        isDown: boolean,
-        rw: VpcSuperRewrite
-    ): ChvITk[][] {
+    _goWithImpl(firstExpr: ChvITk[], secondExpr: ChvITk[], loopVar: ChvITk, isDown: boolean, rw: VpcSuperRewrite): ChvITk[][] {
         let template = `
 put ( %ARG1% ) -  %ADJUST%  into %ARG0%
 put %ARG2% into $loopbound%UNIQUE%
@@ -108,4 +102,4 @@ repeat
         checkThrow(secondExpr?.length, 'TL|wrong length');
         return rw.gen(template, firstExpr[0], [[loopVar], firstExpr, secondExpr], undefined, false);
     }
-}
+};

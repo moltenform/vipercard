@@ -95,7 +95,7 @@ export const VpcGettableSerialization = /* static class */ {
         sharedtext: true,
         sharedhilite: true,
         marked: true,
-        cardorder: true,
+        cardorder: true
     } as { [key: string]: boolean },
 
     /**

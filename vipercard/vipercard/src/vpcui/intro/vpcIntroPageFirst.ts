@@ -91,7 +91,7 @@ export class IntroPageFirst extends IntroPageBase {
             }
         });
 
-        this.acceptBtnId = this.getElId('choiceShowFeatured')
+        this.acceptBtnId = this.getElId('choiceShowFeatured');
         this.drawCommonLast(app, grp);
     }
 
@@ -197,7 +197,7 @@ export class IntroPageFirst extends IntroPageBase {
         } else if (el.id.endsWith('choiceShowFeatured')) {
             IntroPageFirst.goPage(pr, VpcDocumentLocation.FromStaticDemo);
         } else if (el.id.endsWith('choiceOpenStack')) {
-            IntroPageFirst.onDoOpenstack(pr)   
+            IntroPageFirst.onDoOpenstack(pr);
         }
     }
 

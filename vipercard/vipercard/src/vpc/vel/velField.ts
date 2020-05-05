@@ -265,8 +265,6 @@ export class VpcElField extends VpcElSizable {
             Util512.freezeRecurse(VpcElField.cachedSetters);
         }
     }
-
-    
 }
 
 /**

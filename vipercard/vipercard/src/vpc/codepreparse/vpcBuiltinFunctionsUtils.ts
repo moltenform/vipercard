@@ -4,7 +4,6 @@
 /* auto */ import { vpcVersion } from './../../ui512/utils/util512Base';
 /* auto */ import { lng } from './../../ui512/lang/langBase';
 
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
@@ -72,6 +71,19 @@ const month_names = [
     'lngDecember'
 ];
 
-const month_names_short = ['lngJan', 'lngFeb', 'lngMar', 'lngApr', 'lngMay', 'lngJun', 'lngJul', 'lngAug', 'lngSep', 'lngOct', 'lngNov', 'lngDec'];
+const month_names_short = [
+    'lngJan',
+    'lngFeb',
+    'lngMar',
+    'lngApr',
+    'lngMay',
+    'lngJun',
+    'lngJul',
+    'lngAug',
+    'lngSep',
+    'lngOct',
+    'lngNov',
+    'lngDec'
+];
 const day_names = ['lngSunday', 'lngMonday', 'lngTuesday', 'lngWednesday', 'lngThursday', 'lngFriday', 'lngSaturday'];
 const day_names_short = ['lngSun', 'lngMon', 'lngTue', 'lngWed', 'lngThu', 'lngFri', 'lngSat'];

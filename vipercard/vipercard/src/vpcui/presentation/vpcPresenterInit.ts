@@ -169,7 +169,7 @@ export abstract class VpcPresenterInit extends VpcPresenterInterface {
         /* provide a callback to menuActions */
         this.menuActions.save = new VpcSave(this);
         this.menuActions.fontChanger.cbGetEditToolSelectedFldOrBtn = () => this.lyrPropPanel.selectedFldOrBtn();
-        this.menuActions.fontChanger.cbGetCurrentCardId = () => this.vci.getCurrentCardId()
+        this.menuActions.fontChanger.cbGetCurrentCardId = () => this.vci.getCurrentCardId();
         this.setUpUnbeforeloadWarning();
     }
 

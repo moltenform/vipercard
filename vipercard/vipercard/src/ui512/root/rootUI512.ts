@@ -30,15 +30,15 @@ export class FullRootUI512 implements RootHigher {
     prevMouseDown: O<MouseDownEventDetails>;
     scaleMouseCoords = 1;
     session: O<UI512IsSessionInterface>;
-    hasLoadedExternalDelay = ''
+    hasLoadedExternalDelay = '';
 
     /* send a ping to the apps every 0.1 seconds */
     timerSendIdleEvent = new RepeatingTimer(100);
     mouseButtonsExpected = 0;
 
     init(gly: any) {
-        this.beginDelayLoad()
-        
+        this.beginDelayLoad();
+
         let domCanvas: HTMLCanvasElement = gly.domElement;
         this.canvasBeforeCursor = CanvasWrapper.createMemoryCanvas(
             domCanvas.width,
@@ -66,17 +66,23 @@ export class FullRootUI512 implements RootHigher {
     }
 
     protected beginDelayLoad() {
-        let fn = async() => {
+        let fn = async () => {
             try {
-                await Util512Higher.asyncLoadJsIfNotAlreadyLoaded('/external/externaldelaybundlemin.js')
-                this.hasLoadedExternalDelay = 'success'
-                initAllVpcTokens()
+                await Util512Higher.asyncLoadJsIfNotAlreadyLoaded(
+                    '/external/externaldelaybundlemin.js'
+                );
+                this.hasLoadedExternalDelay = 'success';
+                initAllVpcTokens();
             } catch (e) {
-                this.hasLoadedExternalDelay = e.toString()
+                this.hasLoadedExternalDelay = e.toString();
             }
-        }
-        
-        Util512Higher.syncToAsyncTransition(fn(), 'Delay-loading external code', RespondToErr.Alert)
+        };
+
+        Util512Higher.syncToAsyncTransition(
+            fn(),
+            'Delay-loading external code',
+            RespondToErr.Alert
+        );
     }
 
     invalidateAll() {

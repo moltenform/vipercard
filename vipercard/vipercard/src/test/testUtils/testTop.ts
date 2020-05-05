@@ -5,6 +5,7 @@
 /* auto */ import { testCollectionvpcScriptRunSyntax } from './../vpc/vpcTestScriptRunSyntax';
 /* auto */ import { testCollectionScriptRunCustomFns } from './../vpc/vpcTestScriptRunCustomFns';
 /* auto */ import { testCollectionScriptRunCmd } from './../vpc/vpcTestScriptRunCmd';
+/* auto */ import { ScriptTestBatch } from './../vpc/vpcTestScriptRunBase';
 /* auto */ import { testCollectionScriptRewrites } from './../vpc/vpcTestScriptRewrites';
 /* auto */ import { testCollectionvpcScriptParseExpr } from './../vpc/vpcTestScriptParseExpr';
 /* auto */ import { testCollectionvpcScriptParseCmd } from './../vpc/vpcTestScriptParseCmd';
@@ -107,7 +108,7 @@ export const SimpleUtil512Tests = /* static class */ {
             .map(item => item.atests.length)
             .reduce(Util512.add);
         let counter = new ValHolder(1);
-        await VpcIntroProvider.waitForDelayLoadedJs(undefined)
+        await VpcIntroProvider.waitForDelayLoadedJs(undefined);
         for (let coll of colls) {
             if (colNamesSeen.exists(coll.name.toLowerCase())) {
                 assertTrue(false, 'O.|duplicate collection name', coll.name);
@@ -122,7 +123,7 @@ export const SimpleUtil512Tests = /* static class */ {
             }
         }
 
-        ScriptTestBatch.checkPending()
+        ScriptTestBatch.checkPending();
         UI512ErrorHandling.runningTests = false;
         if (UI512ErrorHandling.silenceWarnings) {
             console.log(`A test may have failed, warning occurred.`);

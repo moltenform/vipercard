@@ -9,18 +9,17 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-
 /**
    Places where we need chunks:
     Note: we treat "the selection" as a chunk, since it is one.
-   
+
    READING (any expression context)          put char 3 to 5 of x into y
    PUT                                       put x into char 3 to 5 of y
    MODIFY                                    add 1 to char 3 to 5 of y
    PROPERTY                                  set the textsize of char 3 to 5 of y to 12
-   
-   
-   
+
+
+
  */
 
 /**
@@ -262,64 +261,69 @@ const ChunkResolution = /* static class */ {
      * resolve the chunk, getting start+end positions
      * remember to adjust the results based on parent.startPos!!!
      */
-    doResolveOne(request:RequestedChunk, parent:ResolvedChunk, itemDel: string, news:O<string>, prep:O<VpcChunkPreposition>):O<ResolvedChunk> {
-        let unformatted = parent.container.getRawString()
-        unformatted = unformatted.substring(parent.startPos, parent.endPos)
-        let retbounds:O<[number, number]>
+    doResolveOne(
+        request: RequestedChunk,
+        parent: ResolvedChunk,
+        itemDel: string,
+        news: O<string>,
+        prep: O<VpcChunkPreposition>
+    ): O<ResolvedChunk> {
+        let unformatted = parent.container.getRawString();
+        unformatted = unformatted.substring(parent.startPos, parent.endPos);
+        let retbounds: O<[number, number]>;
         if (request.canModify) {
-            let bounds = this._getBoundsForSet(unformatted, itemDel, request)
-            news = news ?? ''
-            let writeParentContainer = parent.container as WritableContainer
+            let bounds = this._getBoundsForSet(unformatted, itemDel, request);
+            news = news ?? '';
+            let writeParentContainer = parent.container as WritableContainer;
             if (prep === VpcChunkPreposition.Into || (bounds[2] && bounds[2].length)) {
                 /* it's a brand new item, adding 'before' or 'after' isn't applicable */
                 let result = bounds[2] + news;
                 writeParentContainer.splice(parent.startPos + bounds[0], bounds[1] - bounds[0], result);
-                retbounds = [bounds[0], result.length]
+                retbounds = [bounds[0], result.length];
             } else if (prep === VpcChunkPreposition.After) {
                 writeParentContainer.splice(parent.startPos + bounds[1], 0, news);
-                retbounds = [bounds[1], bounds[1] + news.length]
+                retbounds = [bounds[1], bounds[1] + news.length];
             } else if (prep === VpcChunkPreposition.Before) {
                 writeParentContainer.splice(parent.startPos + bounds[0], 0, news);
-                retbounds = [0, news.length]
+                retbounds = [0, news.length];
             } else {
                 checkThrow(false, `5,|unknown preposition ${prep}`);
             }
         } else {
-            assertTrue(!news, '')
-            assertTrue(!prep || prep === VpcChunkPreposition.Into, '')
-            retbounds = this._getBoundsForGet(unformatted, itemDel, request)
+            assertTrue(!news, '');
+            assertTrue(!prep || prep === VpcChunkPreposition.Into, '');
+            retbounds = this._getBoundsForGet(unformatted, itemDel, request);
         }
-        
+
         if (retbounds) {
-            return new ResolvedChunk(parent.container, parent.startPos + retbounds[0], parent.startPos + retbounds[1])
+            return new ResolvedChunk(parent.container, parent.startPos + retbounds[0], parent.startPos + retbounds[1]);
         } else {
-            return undefined
+            return undefined;
         }
     }
 
     //~ /**
-     //~ * apply a modification like 'add 1 to item 3 of x'
-     //~ */
+    //~ * apply a modification like 'add 1 to item 3 of x'
+    //~ */
     //~ applyModify() {
-        //~ if (chunk) {
-            //~ /* confirmed in original product that modify uses "set" bounds not "get" bounds */
-            //~ /* so "multiply line 300 of x" extends the contents of x if necessary */
-            //~ let s = cont.getRawString();
-            //~ let bounds = this._getBoundsForSet(s, itemDel, chunk);
-            //~ let sInput = s.substring(bounds[0], bounds[1]);
-            //~ let result = bounds[2] + fn(sInput);
-            //~ cont.splice(bounds[0], bounds[1] - bounds[0], result);
-        //~ } else {
-            //~ let s = cont.getRawString();
-            //~ let news = fn(s);
-            //~ cont.splice(0, cont.len(), news);
-        //~ }
+    //~ if (chunk) {
+    //~ /* confirmed in original product that modify uses "set" bounds not "get" bounds */
+    //~ /* so "multiply line 300 of x" extends the contents of x if necessary */
+    //~ let s = cont.getRawString();
+    //~ let bounds = this._getBoundsForSet(s, itemDel, chunk);
+    //~ let sInput = s.substring(bounds[0], bounds[1]);
+    //~ let result = bounds[2] + fn(sInput);
+    //~ cont.splice(bounds[0], bounds[1] - bounds[0], result);
+    //~ } else {
+    //~ let s = cont.getRawString();
+    //~ let news = fn(s);
+    //~ cont.splice(0, cont.len(), news);
+    //~ }
     //~ },
 
     //~ /**
-     //~ * apply a put like 'put "abc" into line x of y'
-     //~ */
-    
+    //~ * apply a put like 'put "abc" into line x of y'
+    //~ */
 };
 
 export const ChunkResolutionApplication = /* static class */ {
@@ -345,19 +349,22 @@ export const ChunkResolutionApplication = /* static class */ {
         }
 
         /* make parent objects */
-        let resolved = new ResolvedChunk(cont, 0, cont.len())
-        chunk.setCanModifyRecurse(true)
-        let current: O<RequestedChunk> = chunk
+        let resolved = new ResolvedChunk(cont, 0, cont.len());
+        chunk.setCanModifyRecurse(true);
+        let current: O<RequestedChunk> = chunk;
         while (current) {
             if (current.child) {
                 /* narrow it down, add extra commas but not the real text */
-                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into), '')
+                resolved = ensureDefined(
+                    ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into),
+                    ''
+                );
             } else {
                 /* insert the real text */
-                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, prep), '')
+                resolved = ensureDefined(ChunkResolution.doResolveOne(current, resolved, itemDel, news, prep), '');
             }
 
-            current = current.child
+            current = current.child;
         }
     },
 
@@ -368,45 +375,45 @@ export const ChunkResolutionApplication = /* static class */ {
             let s = cont.getRawString();
             let news = fn(s);
             cont.splice(0, cont.len(), news);
-            return
+            return;
         }
 
-        /* does it exist? 
+        /* does it exist?
         if not, make it. (follow emulator) */
-        let found = this.applyRead(cont, chunk, itemDel)
+        let found = this.applyRead(cont, chunk, itemDel);
         if (!found) {
-            this.applyPut(cont, chunk, itemDel, "", VpcChunkPreposition.Into)
-            found = this.applyRead(cont, chunk, itemDel)
+            this.applyPut(cont, chunk, itemDel, '', VpcChunkPreposition.Into);
+            found = this.applyRead(cont, chunk, itemDel);
         }
 
-        checkThrow(found, "could not modify")
-        let foundContent = cont.getRawString().substring(found.startPos, found.endPos)
-        let newContent = fn(foundContent)
-        cont.splice(found.startPos, found.endPos - found.startPos, newContent)
+        checkThrow(found, 'could not modify');
+        let foundContent = cont.getRawString().substring(found.startPos, found.endPos);
+        let newContent = fn(foundContent);
+        cont.splice(found.startPos, found.endPos - found.startPos, newContent);
     },
 
     applyRead(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string): O<ResolvedChunk> {
         /* make parent objects */
-        let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len())
+        let resolved: O<ResolvedChunk> = new ResolvedChunk(cont, 0, cont.len());
         if (!chunk) {
-            chunk = new RequestedChunk(1)
-            chunk.type555 = VpcGranularity.Chars
-            chunk.last555 = cont.len()
+            chunk = new RequestedChunk(1);
+            chunk.type555 = VpcGranularity.Chars;
+            chunk.last555 = cont.len();
         }
 
-        chunk.setCanModifyRecurse(false)
-        let current: O<RequestedChunk> = chunk
+        chunk.setCanModifyRecurse(false);
+        let current: O<RequestedChunk> = chunk;
         while (current && resolved) {
-            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into)
-            current = current.child
+            resolved = ChunkResolution.doResolveOne(current, resolved, itemDel, undefined, VpcChunkPreposition.Into);
+            current = current.child;
         }
 
-        return resolved
+        return resolved;
     },
 
     applyReadToString(cont: ReadableContainer, chunk: O<RequestedChunk>, itemDel: string) {
-        let resolved = this.applyRead(cont, chunk, itemDel)
-        return resolved ? resolved.container.getRawString().substring(resolved.startPos, resolved.endPos) : ''
+        let resolved = this.applyRead(cont, chunk, itemDel);
+        return resolved ? resolved.container.getRawString().substring(resolved.startPos, resolved.endPos) : '';
     },
 
     /**
@@ -431,9 +438,8 @@ export const ChunkResolutionApplication = /* static class */ {
         } else {
             checkThrow(false, `5-|unknown chunk type ${type}`);
         }
-    },
+    }
 };
-
 
 /**
  * a requested chunk from a script.
@@ -443,7 +449,7 @@ export class RequestedChunk extends VpcIntermedValBase {
     first555: number;
     last555: O<number>;
     ordinal555: O<OrdinalOrPosition>;
-    canModify = false
+    canModify = false;
     child: O<RequestedChunk>;
     constructor(first: number) {
         super();
@@ -467,12 +473,12 @@ export class RequestedChunk extends VpcIntermedValBase {
     /**
      * recursive setcanmodify
      */
-    setCanModifyRecurse(v:boolean) {
-        this.canModify = v
-        let current = this.child
-        while(current) {
-            current.canModify = v
-            current = current.child
+    setCanModifyRecurse(v: boolean) {
+        this.canModify = v;
+        let current = this.child;
+        while (current) {
+            current.canModify = v;
+            current = current.child;
         }
     }
 
@@ -498,6 +504,5 @@ export class RequestedChunk extends VpcIntermedValBase {
  * a resolved chunk.
  */
 export class ResolvedChunk {
-    constructor(public container: ReadableContainer, public startPos: number, public endPos: number){}
+    constructor(public container: ReadableContainer, public startPos: number, public endPos: number) {}
 }
-

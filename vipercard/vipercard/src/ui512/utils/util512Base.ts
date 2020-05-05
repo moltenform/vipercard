@@ -177,7 +177,7 @@ export class UI512Compress {
     protected static stringEscapeNewline = '##Newline##';
     protected static reEscapeNewline = new RegExp(UI512Compress.stringEscapeNewline, 'g');
     protected static reNewline = /\n/g;
-    static compressString(s: string): string {        
+    static compressString(s: string): string {
         let compressed = BridgedLZString().compressToUTF16(s);
         return compressed;
     }

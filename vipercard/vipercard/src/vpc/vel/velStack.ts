@@ -53,12 +53,12 @@ export class VpcElStack extends VpcElBase {
     bgs: VpcElBg[] = [];
 
     getCardOrder() {
-        return this._cardorder ? this._cardorder.split('|') : []
+        return this._cardorder ? this._cardorder.split('|') : [];
     }
-    alterCardOrder(fn:(a:string[])=>string[]) {
-        let got = fn(this.getCardOrder())
-        assertTrue(got.length, '')
-        this.set('cardorder', got.join('|'))
+    alterCardOrder(fn: (a: string[]) => string[]) {
+        let got = fn(this.getCardOrder());
+        assertTrue(got.length, '');
+        this.set('cardorder', got.join('|'));
     }
 
     /**

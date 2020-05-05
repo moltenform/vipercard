@@ -76,7 +76,7 @@ export const VpcRewritesGlobal = /* static class */ {
         ret.reverse();
         return ret;
     }
-}
+};
 
 /**
  * helps rewrite code

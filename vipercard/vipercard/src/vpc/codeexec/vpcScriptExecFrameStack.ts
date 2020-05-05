@@ -58,7 +58,7 @@
  */
 export class VpcExecFrameStack {
     stack: O<VpcExecFrame>[] = [undefined];
-    vpcTables = new VpcTables()
+    vpcTables = new VpcTables();
     constructor(
         protected outside: OutsideWorldReadWrite,
         protected cacheParsedCST: VpcCacheParsedCST,

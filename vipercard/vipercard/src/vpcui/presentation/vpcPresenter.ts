@@ -40,7 +40,7 @@ export class VpcPresenter extends VpcPresenterInit {
      */
     getCurrentCardNum() {
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
-        return StackOrderHelpers.getCardStackPosition(this.vci.getModel().stack, currentCardId )
+        return StackOrderHelpers.getCardStackPosition(this.vci.getModel().stack, currentCardId);
     }
 
     /**

@@ -327,10 +327,7 @@ export class UI512TextEvents {
         ) {
             let char = d.keyChar;
             let charcode = d.keyChar.charCodeAt(0);
-            let toRoman = FormattedText.fromHostCharsetStrict(
-                char,
-                BrowserInfo.get().os
-            );
+            let toRoman = FormattedText.fromHostCharsetStrict(char, BrowserInfo.get().os);
             if (
                 toRoman &&
                 toRoman.length === 1 &&

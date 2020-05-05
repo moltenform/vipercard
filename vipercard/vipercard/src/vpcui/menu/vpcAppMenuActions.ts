@@ -290,9 +290,9 @@ export class VpcMenuActions {
      */
     goMnuDelCard() {
         //~ if (this.vci.getTool() === VpcTool.Browse) {
-            //~ /* previously, called a handler in productopts that
-            //~ would move to a different card and delete the current card, but this is simpler */
-            //~ this.vci.setTool(VpcTool.Button);
+        //~ /* previously, called a handler in productopts that
+        //~ would move to a different card and delete the current card, but this is simpler */
+        //~ this.vci.setTool(VpcTool.Button);
         //~ }
 
         //~ /* either go forwards or backwards, as long as we're somewhere else */
@@ -300,13 +300,13 @@ export class VpcMenuActions {
         //~ let wasCurrentCard = this.vci.getModel().getCardById(wasCurrentCardId);
         //~ let otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Previous);
         //~ if (otherCardId === wasCurrentCardId) {
-            //~ otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Next);
+        //~ otherCardId = this.vci.getModel().getCa7rdRelative(OrdinalOrPosition.Next);
         //~ }
 
         //~ /* RemoveCard itself will do further checks, like preventing deleting the only card */
         //~ this.vci.setCurCardNoOpenCardEvt(otherCardId);
         //~ this.vci.getOutside().RemoveCard(wasCurrentCard);
-        checkThrow(false, "nyi")
+        checkThrow(false, 'nyi');
     }
 
     /**
@@ -521,7 +521,7 @@ export class VpcMenuActions {
             return true;
         }
 
-        checkThrow(false, "fontmenu not yet implemented")
+        checkThrow(false, 'fontmenu not yet implemented');
         //~ return this.fontChanger.runFontMenuActionsIfApplicable(s);
     }
 

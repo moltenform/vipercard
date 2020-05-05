@@ -16,7 +16,7 @@
  * verified by both unit tests and vpcTestScriptExtensive.ts
  */
 export class VpcSplitSingleLineIf {
-    holdingFromBefore: O<ChvITk[]>
+    holdingFromBefore: O<ChvITk[]>;
     _classify(line: ChvITk[], rw: VpcSuperRewrite): [IfTypes, number, number] {
         if (line[0].image === 'if') {
             let findThen = rw.searchTokenGivenEnglishTermInParensLevel(0, line, line[0], 'then');
@@ -185,9 +185,9 @@ export const VpcRewriteNoElseIfClauses = /* static class */ {
             ]);
         }
     }
-}
+};
 
-class IfConstructClause  {
+class IfConstructClause {
     children: (ChvITk[] | IfConstruct)[] = [];
     constructor(public condition: ChvITk[], public isFirst: boolean) {}
 }
@@ -241,4 +241,3 @@ export class NoElseIfClausesTreeBuilder {
         }
     }
 }
-

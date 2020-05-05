@@ -52,7 +52,7 @@ on domenu pa, pb
 end domenu
 
 on domenu_movecard key, pl, pb
-    put true into ret 
+    put true into ret
     if pl == "back" then
         go back
     else if pl == "home" then
@@ -72,17 +72,17 @@ on domenu_movecard key, pl, pb
     else if pl == "prevnowrap" then
         if the number of this cd is 1 then
             answer "You are already at the first card."
-        else 
+        else
             go prev
         end if
     else if pl == "nextnowrap" then
         if the number of this cd is the number of cards in this stack then
             answer "You are at the last-most card. You can create a new card by selecting 'New Card' from the Edit menu."
-        else 
+        else
             go next
         end if
     else
-        put false into ret 
+        put false into ret
     end if
     return ret
 end domenu_movecard

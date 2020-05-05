@@ -204,7 +204,7 @@ export class VelResolveReference {
                 retCard = VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
             }
         } else if (ref.cardLookAtMarkedOnly) {
-            let arrAllCards: VpcElCard[] = this.model.stack.getCardOrder().map(s=> this.model.getCardById(s))
+            let arrAllCards: VpcElCard[] = this.model.stack.getCardOrder().map(s => this.model.getCardById(s));
             if (ref.lookByAbsolute !== undefined) {
                 let arrOnlyMarked = arrAllCards.filter(c => c.getB('marked'));
                 retCard = arrOnlyMarked[ref.lookByAbsolute - 1];
@@ -236,16 +236,15 @@ export class VelResolveReference {
         } else {
             if (ref.lookByAbsolute !== undefined) {
                 /* put the name of card 2 into x */
-                retCard = StackOrderHelpers.findFromCardStackPosition(this.model, ref.lookByAbsolute - 1 )
+                retCard = StackOrderHelpers.findFromCardStackPosition(this.model, ref.lookByAbsolute - 1);
             } else if (ref.lookByName !== undefined) {
                 /* put the name of card "myCard" into x */
-                retCard = StackOrderHelpers.findCardByName(ref.lookByName, this.model)
+                retCard = StackOrderHelpers.findCardByName(ref.lookByName, this.model);
             } else if (ref.lookByRelative !== undefined) {
                 /* put the name of next card into x */
                 retCard = StackOrderHelpers.getCardByOrdinal(currentCard.id, ref.lookByRelative, this.model);
             }
         }
-        
 
         return [retCard, currentCard];
     }

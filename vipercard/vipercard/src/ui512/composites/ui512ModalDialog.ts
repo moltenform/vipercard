@@ -38,9 +38,9 @@ export class UI512CompModalDialog extends UI512CompBase {
     dlgType = UI512CompStdDialogType.Answer;
     labelText = '';
     btnLabels = ['', '', ''];
-    redirect: O<TemporarilyRedirectForModal>
-    aboutToClose = false
-    chosen = UI512CompStdDialogResult.NotChosen
+    redirect: O<TemporarilyRedirectForModal>;
+    aboutToClose = false;
+    chosen = UI512CompStdDialogResult.NotChosen;
 
     /* caller can provide rectangle of a button that, if clicked on,
     exits out of the dialog */
@@ -57,12 +57,10 @@ export class UI512CompModalDialog extends UI512CompBase {
     resultText: O<string>;
 
     /* in case dialog was re-used */
-    create(
-        pr: UI512Presenter,
-        app: UI512Application) {
-            this.aboutToClose = false
-super.create(pr, app)
-        }
+    create(pr: UI512Presenter, app: UI512Application) {
+        this.aboutToClose = false;
+        super.create(pr, app);
+    }
 
     /**
      * "answer", like an alert() box
@@ -247,7 +245,7 @@ super.create(pr, app)
         addDefaultListeners(pr.listeners);
 
         /* add returnkey listener */
-        this.addReturnKeyListener(pr.listeners[UI512EventType.KeyDown], app)
+        this.addReturnKeyListener(pr.listeners[UI512EventType.KeyDown], app);
 
         /* if you clicked on a special 'cancel' rect, close the dialog */
         pr.listenEvent(UI512EventType.MouseDown, (_, d: MouseDownEventDetails) => {
@@ -262,7 +260,7 @@ super.create(pr, app)
         /* set callback */
         pr.listenEvent(UI512EventType.MouseUp, (_, d: MouseUpEventDetails) => {
             this.chosen = this.getWhichBtnFromClick(d);
-            this.onClickChoiceBtn()
+            this.onClickChoiceBtn();
         });
     }
 
@@ -271,7 +269,7 @@ super.create(pr, app)
         if (this.chosen !== UI512CompStdDialogResult.NotChosen) {
             if (!this.children.length || this.aboutToClose) {
                 /* we're already closing */
-                return
+                return;
             }
 
             if (this.cbOnMouseUp) {
@@ -281,43 +279,52 @@ super.create(pr, app)
             if (this.redirect) {
                 this.redirect.completed = true;
             }
-            
-            this.aboutToClose = true
+
+            this.aboutToClose = true;
         }
     }
 
     /**
      * press Enter to confirm. note: our event should take precedence
-     * over textediting. 
+     * over textediting.
      */
     addReturnKeyListener(cbs: FnEventCallback[], app: UI512Application) {
-        let onReturn = (    pr: UI512PresenterInterface,
-            d: KeyDownEventDetails
-        ) => {
-            let btnId:string
-            let nChosen = UI512CompStdDialogResult.NotChosen
-            if (d.readableShortcut.toLowerCase() === "enter" || d.readableShortcut.toLowerCase() === "return") {
-                btnId = `choicebtn0`
-                nChosen = UI512CompStdDialogResult.Btn1
-            } else if (d.readableShortcut.toLowerCase() === "escape" && (this.btnLabels[1].toLowerCase() === lng("lngCancel").toLowerCase())) {
-                btnId = `choicebtn1`
-                nChosen = UI512CompStdDialogResult.Btn2
+        let onReturn = (pr: UI512PresenterInterface, d: KeyDownEventDetails) => {
+            let btnId: string;
+            let nChosen = UI512CompStdDialogResult.NotChosen;
+            if (
+                d.readableShortcut.toLowerCase() === 'enter' ||
+                d.readableShortcut.toLowerCase() === 'return'
+            ) {
+                btnId = `choicebtn0`;
+                nChosen = UI512CompStdDialogResult.Btn1;
+            } else if (
+                d.readableShortcut.toLowerCase() === 'escape' &&
+                this.btnLabels[1].toLowerCase() === lng('lngCancel').toLowerCase()
+            ) {
+                btnId = `choicebtn1`;
+                nChosen = UI512CompStdDialogResult.Btn2;
             } else {
-                return
+                return;
             }
 
-            d.setHandled()
+            d.setHandled();
             let fn = () => {
-                this.chosen = nChosen
-                this.onClickChoiceBtn()
-            }
+                this.chosen = nChosen;
+                this.onClickChoiceBtn();
+            };
 
-            let el = app.getEl(this.getElId(btnId))
-            el.set('highlightactive', true)
-            Util512Higher.syncToAsyncAfterPause(fn, 200, "HitEnter", RespondToErr.ConsoleErrOnly)
-        }
+            let el = app.getEl(this.getElId(btnId));
+            el.set('highlightactive', true);
+            Util512Higher.syncToAsyncAfterPause(
+                fn,
+                200,
+                'HitEnter',
+                RespondToErr.ConsoleErrOnly
+            );
+        };
 
-        cbs.splice(0, 0, onReturn)
+        cbs.splice(0, 0, onReturn);
     }
 
     /**

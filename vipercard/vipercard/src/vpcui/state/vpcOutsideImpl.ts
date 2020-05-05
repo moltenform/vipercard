@@ -591,7 +591,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * perform a "domenu" action
      */
     DoMenuAction(arg1: string, arg2: string): string {
-        checkThrow(false, "nyi")
+        checkThrow(false, 'nyi');
     }
 
     /**

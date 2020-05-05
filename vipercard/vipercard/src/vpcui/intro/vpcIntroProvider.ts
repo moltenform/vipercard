@@ -72,20 +72,20 @@ export class VpcIntroProvider {
      */
     static async waitForDelayLoadedJs(prompt: O<UI512ElLabel>) {
         if (prompt) {
-            prompt.set('labeltext', 'Opening delay-loaded libraries...')
+            prompt.set('labeltext', 'Opening delay-loaded libraries...');
         }
         while (true) {
-            let rootHigher = getRoot() as RootHigher
+            let rootHigher = getRoot() as RootHigher;
             if (rootHigher?.hasLoadedExternalDelay === 'success') {
-                break
+                break;
             } else if (rootHigher?.hasLoadedExternalDelay) {
-                checkThrow(false, "Failed to delay-load" + rootHigher?.hasLoadedExternalDelay)
+                checkThrow(false, 'Failed to delay-load' + rootHigher?.hasLoadedExternalDelay);
             } else {
-                await Util512Higher.sleep(100)
+                await Util512Higher.sleep(100);
             }
         }
         if (prompt) {
-            prompt.set('labeltext', 'Loading...')
+            prompt.set('labeltext', 'Loading...');
         }
     }
 
@@ -94,7 +94,7 @@ export class VpcIntroProvider {
      */
     async loadDocumentTop(): Promise<[VpcPresenter, VpcState]> {
         /* wait for delay-loaded javascript */
-        await VpcIntroProvider.waitForDelayLoadedJs(this.prompt)
+        await VpcIntroProvider.waitForDelayLoadedJs(this.prompt);
 
         /* download the stack data */
         let serialized = await this.getSerializedStackData();
@@ -214,7 +214,7 @@ export class VpcIntroProvider {
             VpcStateSerialize.deserializeAll(fullVci, serVel);
             await this.yieldTime();
             /* load card order if not set */
-            this.rebuildCardOrderIfNeeded(fullVci.getModel())
+            this.rebuildCardOrderIfNeeded(fullVci.getModel());
             await this.yieldTime();
         } else {
             /* only call this *after* the presenter has set up useThisObserverForVpcEls */
@@ -240,17 +240,17 @@ export class VpcIntroProvider {
     /**
      * older stacks won't have this set
      */
-    protected rebuildCardOrderIfNeeded(model:VpcModelTop) {
+    protected rebuildCardOrderIfNeeded(model: VpcModelTop) {
         if (!model.stack.getS('cardorder')) {
-            model.stack.alterCardOrder((current)=> {
-                let order:string[] = []
+            model.stack.alterCardOrder(current => {
+                let order: string[] = [];
                 for (let bg of model.stack.bgs) {
                     for (let cd of bg.cards) {
-                        order.push(cd.id)
+                        order.push(cd.id);
                     }
                 }
-                return order
-            })
+                return order;
+            });
         }
     }
 
@@ -367,7 +367,5 @@ export enum VpcDocumentLocation {
 export interface RootHigher extends Root {
     rawResize(width: number, height: number): void;
     scaleMouseCoords: number;
-    hasLoadedExternalDelay: string
+    hasLoadedExternalDelay: string;
 }
-
-

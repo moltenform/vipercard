@@ -324,11 +324,11 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 checkThrow(newChunk && newChunk instanceof RequestedChunk, `9W|chunk not valid`);
                 if (ret.chunk) {
                     /* append our chunk. e.g. "char 3 of the selectedtext" */
-                    let wasThere = ret.chunk
-                    ret.chunk = newChunk
-                    ret.chunk.child = wasThere
+                    let wasThere = ret.chunk;
+                    ret.chunk = newChunk;
+                    ret.chunk.child = wasThere;
                 } else {
-                    ret.chunk = newChunk
+                    ret.chunk = newChunk;
                 }
             }
 
@@ -340,16 +340,16 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             //~ let ret = this.visit(ctx.RuleHChunkOne[0]);
             //~ let current = ret;
             //~ for (let i=1; i<ctx.RuleHChunkOne.length; i++) {
-                //~ current.child = this.visit(ctx.RuleHChunkOne[i]);
-                //~ current = current.child
+            //~ current.child = this.visit(ctx.RuleHChunkOne[i]);
+            //~ current = current.child
             //~ }
             let ret = this.visit(arLast(ctx.RuleHChunkOne));
             let current = ret;
-            for (let i=ctx.RuleHChunkOne.length-2; i>= 0; i--) {
+            for (let i = ctx.RuleHChunkOne.length - 2; i >= 0; i--) {
                 current.child = this.visit(ctx.RuleHChunkOne[i]);
-                current = current.child
+                current = current.child;
             }
-            
+
             return ret;
         }
 

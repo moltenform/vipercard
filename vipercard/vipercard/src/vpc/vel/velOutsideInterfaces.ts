@@ -104,7 +104,7 @@ export interface OutsideWorldRead {
     /**
      * perform a "domenu" action
      */
-    DoMenuAction(arg1: string, arg2: string): string; 
+    DoMenuAction(arg1: string, arg2: string): string;
 }
 
 /**

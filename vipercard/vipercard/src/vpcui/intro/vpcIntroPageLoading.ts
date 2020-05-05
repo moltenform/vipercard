@@ -54,7 +54,7 @@ export class IntroPageLoading extends IntroPageBase {
      * the loader will run the callback to update the label
      */
     go(currentCntrl: UI512Presenter) {
-        this.loader.prompt = this.prompt
+        this.loader.prompt = this.prompt;
         this.loader.startLoadDocument(currentCntrl, s => {
             if (this.prompt) {
                 this.prompt.set('labeltext', s);

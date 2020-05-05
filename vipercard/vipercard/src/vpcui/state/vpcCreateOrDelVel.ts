@@ -97,11 +97,11 @@ export abstract class UndoableActionCreateOrDelVel {
 
         ar.splice(this.insertIndex, 0, vel);
         if (vel.getType() === VpcElType.Card) {
-            let order = vci.getModel().stack.getCardOrder()
-            let found = order.findIndex(s=> s === vci.getCurrentCardId())
-            found = found === -1 ? order.length-1 : found
-            order.splice(found+1, 0, vel.id)
-            vci.getModel().stack.alterCardOrder((currentOrder) => order)
+            let order = vci.getModel().stack.getCardOrder();
+            let found = order.findIndex(s => s === vci.getCurrentCardId());
+            found = found === -1 ? order.length - 1 : found;
+            order.splice(found + 1, 0, vel.id);
+            vci.getModel().stack.alterCardOrder(currentOrder => order);
         }
     }
 
@@ -117,7 +117,7 @@ export abstract class UndoableActionCreateOrDelVel {
         ar.splice(this.insertIndex, 1);
         vci.getModel().removeIdFromMapOfElements(vel.id);
         if (vel.getType() === VpcElType.Card) {
-            vci.getModel().stack.alterCardOrder((list) => list.filter(s => s!== vel.id))
+            vci.getModel().stack.alterCardOrder(list => list.filter(s => s !== vel.id));
         }
     }
 

@@ -157,7 +157,7 @@ export class ExecuteStatement {
                 chunk.type555 === VpcGranularity.Chars,
                 "7Q|not yet supported. 'delete char 1 of x' works but not 'delete item 1 of x'"
             );
-            
+
             this.outside.ContainerWrite(contRef, '', VpcChunkPreposition.Into);
         }
     }
@@ -192,11 +192,11 @@ export class ExecuteStatement {
      */
     goVpccalluntrappabledomenu(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, blocked: ValHolder<AsyncCodeOpState>) {
         let exprs = vals.vals[tkstr.RuleExpr];
-        checkThrow(exprs.length === 1 || exprs.length === 2, '')
-        let firstP = cast(VpcVal, exprs[0]).readAsString()
-        let secondP = exprs.length === 1 ? '' : cast(VpcVal, exprs[1]).readAsString()
-        let result = this.outside.DoMenuAction(firstP, secondP)
-        this.outside.SetVarContents('$result', VpcValS(result))
+        checkThrow(exprs.length === 1 || exprs.length === 2, '');
+        let firstP = cast(VpcVal, exprs[0]).readAsString();
+        let secondP = exprs.length === 1 ? '' : cast(VpcVal, exprs[1]).readAsString();
+        let result = this.outside.DoMenuAction(firstP, secondP);
+        this.outside.SetVarContents('$result', VpcValS(result));
     }
     /**
      * drag from {x1}, {y1} to {x2}, {y2}

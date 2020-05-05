@@ -91,8 +91,8 @@ export function toShortcutString(mods: ModifierKeys, code: string) {
     }
 
     /* e.g. numpadenter -> enter */
-    if (code.toLowerCase().startsWith("Numpad")) {
-        code = code.substr("Numpad".length)
+    if (code.toLowerCase().startsWith('Numpad')) {
+        code = code.substr('Numpad'.length);
     }
 
     return s + code;

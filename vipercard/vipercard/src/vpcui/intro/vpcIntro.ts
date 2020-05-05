@@ -113,7 +113,7 @@ export class VpcUiIntro extends VpcIntroInterface {
 
         if (d.elClick && pr.activePage instanceof IntroPageBase) {
             if (pr.activePage.children.length) {
-                pr.activePage.respondToBtnClick(pr, pr.activePage, d.elClick)
+                pr.activePage.respondToBtnClick(pr, pr.activePage, d.elClick);
             }
         }
     }
@@ -167,7 +167,7 @@ export class VpcUiIntro extends VpcIntroInterface {
             if (mineOnly) {
                 IntroPageFirst.goPage(pr, VpcDocumentLocation.ShowLoginForm);
             } else {
-                IntroPageFirst.onDoOpenstack(pr)
+                IntroPageFirst.onDoOpenstack(pr);
             }
         };
     }
