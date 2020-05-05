@@ -90,15 +90,15 @@ export class TestVpcScriptRunBase {
         let bg_b = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
         let bg_c = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
         let card_a_a = bg_a.cards[0];
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_a_a.id)
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_a_a.id);
         let card_b_b = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_b.id)
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_b.id);
         let card_b_c = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_c.id)
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_c.id);
         let card_b_d = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_d.id)
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_d.id);
         let card_c_d = this.vcstate.createVel(bg_c.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_c_d.id)
+        this.vcstate.vci.setCurCardNoOpenCardEvt(card_c_d.id);
         let fld_b_c_1 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
         let fld_b_c_2 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
         let fld_b_c_3 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
@@ -523,8 +523,8 @@ put ${s} into testresult`;
             return [pts[2] + ' ' + pts[1] + ' ' + pts[0], item[1]];
         });
 
-        this.testBatchEvaluate(testsSameorder,  floatingPoint);
-        this.testBatchEvaluate(testsDifferentOrder,  floatingPoint);
+        this.testBatchEvaluate(testsSameorder, floatingPoint);
+        this.testBatchEvaluate(testsDifferentOrder, floatingPoint);
     }
 
     testBatchEvalInvert(tests: [string, string][]) {
@@ -622,46 +622,61 @@ export enum BatchType {
     default = 1,
     testBatchEvalInvertAndCommute,
     testBatchEvalInvert,
-    testBatchEvalCommutative
+    testBatchEvalCommutative,
+    floatingPoint,
+    floatingPointCommutative
 }
 
 export class ScriptTestBatch {
-    protected static keepTrackOfPending = new MapKeyToObjectCanSet<boolean>()
-    id:string
-    tests: [string, string][] = []
+    protected static keepTrackOfPending = new MapKeyToObjectCanSet<boolean>();
+    id: string;
+    tests: [string, string][] = [];
     constructor() {
-        this.id = Math.random().toString()
-        ScriptTestBatch.keepTrackOfPending.add(this.id, true)
+        this.id = Math.random().toString();
+        ScriptTestBatch.keepTrackOfPending.add(this.id, true);
     }
 
-    t(s1:string, s2:string) {
-        this.tests.push([s1, s2])
+    t(s1: string, s2: string) {
+        this.tests.push([s1, s2]);
     }
 
-    batchEvaluate(runner:TestVpcScriptRunBase, typ = BatchType.default, onlyTestsWithPrefix='') {
+    batchEvaluate(
+        runner: TestVpcScriptRunBase,
+        typ = BatchType.default,
+        onlyTestsWithPrefix = ''
+    ) {
         if (!onlyTestsWithPrefix) {
-            ScriptTestBatch.keepTrackOfPending.add(this.id, false)
+            ScriptTestBatch.keepTrackOfPending.add(this.id, false);
         }
 
-        let whichTests = this.tests.filter((t) => t[1].startsWith(onlyTestsWithPrefix))
+        let isFloatingPt = false;
+        if (typ === BatchType.floatingPoint) {
+            typ = BatchType.default;
+            isFloatingPt = true;
+        } else if (typ === BatchType.floatingPointCommutative) {
+            typ = BatchType.testBatchEvalCommutative;
+            isFloatingPt = true;
+        }
+
+        let whichTests = this.tests.filter(t => t[1].startsWith(onlyTestsWithPrefix));
         if (typ === BatchType.default) {
-            runner.testBatchEvaluate(whichTests)
+            runner.testBatchEvaluate(whichTests, isFloatingPt);
         } else if (typ === BatchType.testBatchEvalCommutative) {
-            runner.testBatchEvalCommutative(whichTests)
+            runner.testBatchEvalCommutative(whichTests, isFloatingPt);
         } else if (typ === BatchType.testBatchEvalInvert) {
-            runner.testBatchEvalInvert(whichTests)
+            runner.testBatchEvalInvert(whichTests);
         } else if (typ === BatchType.testBatchEvalInvertAndCommute) {
-            runner.testBatchEvalInvertAndCommute(whichTests)
+            runner.testBatchEvalInvertAndCommute(whichTests);
         } else {
-            checkThrow(false, "unknown batchtype " + typ)
+            checkThrow(false, 'unknown batchtype ' + typ);
         }
 
         /* prevent you from re-using the object */
-        this.tests = SetToInvalidObjectAtEndOfExecution(this.tests)
+        this.tests = SetToInvalidObjectAtEndOfExecution(this.tests);
     }
 
     static checkPending() {
-        let vals = ScriptTestBatch.keepTrackOfPending.getVals()
-        assertTrue(!vals.some(v => true), "Test batch left pending")
+        let vals = ScriptTestBatch.keepTrackOfPending.getVals();
+        assertTrue(!vals.some(v => true), 'Test batch left pending');
     }
 }

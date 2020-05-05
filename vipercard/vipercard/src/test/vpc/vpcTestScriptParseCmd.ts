@@ -271,7 +271,7 @@ t.test('CloneToken', () => {
  * helpers for testing parsing
  */
 export class TestParseHelpers {
-    protected static _instance: O<TestParseHelpers>
+    protected static _instance: O<TestParseHelpers>;
     lexer: chevrotain.Lexer;
     parser: chevrotain.CstParser;
     constructor() {
@@ -281,16 +281,15 @@ export class TestParseHelpers {
     }
 
     /**
-    * make an instance or use cached
-    */
+     * make an instance or use cached
+     */
     static instance() {
         if (!TestParseHelpers._instance) {
-            TestParseHelpers._instance = new TestParseHelpers()
+            TestParseHelpers._instance = new TestParseHelpers();
         }
 
-        return TestParseHelpers._instance
+        return TestParseHelpers._instance;
     }
-
 
     /**
      * parse the input, flatten the resulting syntax tree into a string,

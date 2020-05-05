@@ -24,104 +24,104 @@ t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
     return h.initEnvironment();
 });
 t.test('vpcTestScriptBasics', () => {
-    let b = new ScriptTestBatch()
+    let b = new ScriptTestBatch();
     /* runtime error */
-    b.t('put unknownVar into x\\x', 'ERR:no variable')
+    b.t('put unknownVar into x\\x', 'ERR:no variable');
     /* valid statement */
-    b.t('put 9 into x\\x', '9')
+    b.t('put 9 into x\\x', '9');
     /* also a valid statement */
-    b.t('9', '9')
+    b.t('9', '9');
     /* preparse error1 */
-    b.t('x = 4', "PREPARSEERR:this isn't C")
+    b.t('x = 4', "PREPARSEERR:this isn't C");
     /* preparse error2 */
-    b.t('put ?? into x', 'PREPARSEERR:')
-    b.batchEvaluate(h)
+    b.t('put ?? into x', 'PREPARSEERR:');
+    b.batchEvaluate(h);
 
     /* get a different string */
     assertAsserts('RN|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('x = 4', 'PREPARSEERR:(incorrectmessage)')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('x = 4', 'PREPARSEERR:(incorrectmessage)');
+        b.batchEvaluate(h);
     });
     assertAsserts('RM|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('put unknownVar into x\\x', 'ERR:(incorrectmessage)x')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('put unknownVar into x\\x', 'ERR:(incorrectmessage)x');
+        b.batchEvaluate(h);
     });
     assertAsserts('RL|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('put 9 into x\\x', '11111')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('put 9 into x\\x', '11111');
+        b.batchEvaluate(h);
     });
     /* failure expected, but succeeds */
     assertAsserts('RK|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('put 9 into x', 'PREPARSEERR:')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('put 9 into x', 'PREPARSEERR:');
+        b.batchEvaluate(h);
     });
     assertAsserts('RJ|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('put 9 into x\\x', 'ERR:')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('put 9 into x\\x', 'ERR:');
+        b.batchEvaluate(h);
     });
     assertAsserts('RI|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('put unknownVar into x\\x', '1111')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('put unknownVar into x\\x', '1111');
+        b.batchEvaluate(h);
     });
     /* same as above, but more tests in the array */
     assertAsserts('RH|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('put 5 into x\\x', '5')
-        b.t('put 9 into x\\x', 'ERR:')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('put 5 into x\\x', '5');
+        b.t('put 9 into x\\x', 'ERR:');
+        b.batchEvaluate(h);
     });
     assertAsserts('RG|', 'assert:', () => {
-        let b = new ScriptTestBatch()
-        b.t('put 3 into x\\x', '3')
-        b.t('put unknownVar into x\\x', '1111')
-        b.batchEvaluate(h)
+        let b = new ScriptTestBatch();
+        b.t('put 3 into x\\x', '3');
+        b.t('put unknownVar into x\\x', '1111');
+        b.batchEvaluate(h);
     });
 });
 t.test('checkLexing', () => {
-    let b = new ScriptTestBatch()
-        /* empty lines don't interfere with scripts */
+    let b = new ScriptTestBatch();
+    /* empty lines don't interfere with scripts */
     b.t('\n\n\n\nput 1 into t1\n\n\n\\t1', '1');
 
-        /* wrong indentation doesn't interfere with scripts */
+    /* wrong indentation doesn't interfere with scripts */
     b.t('\n         put 1 into t2\n\\t2', '1');
     b.t('\n\t\t\t\t\tput 1 into t3\n\\t3', '1');
 
-        /* trailing whitespace doesn't interfere with scripts */
+    /* trailing whitespace doesn't interfere with scripts */
     b.t('\nput 1 into t4           \n\\t4', '1');
     b.t('\nput 1 into t5\t\t\t\t\t\n\\t5', '1');
 
-        /* continued lines */
+    /* continued lines */
     b.t('put 1 {BSLASH}\n into t6\\t6', '1');
     b.t('put {BSLASH}\n 1 {BSLASH}\n into {BSLASH}\n t7\\t7', '1');
     b.t('put 8 into t8{BSLASH}\n{BSLASH}\n{BSLASH}\n\\t8', '8');
     b.t('{BSLASH}\n{BSLASH}\n{BSLASH}\nput 9 into t9\\t9', '9');
 
-        /* continued lines with whitespace after the backslash */
+    /* continued lines with whitespace after the backslash */
     b.t('put 1 {BSLASH} \n into t6\\t6', '1');
     b.t('put {BSLASH}\t  \n 1 {BSLASH}\t  \n into {BSLASH}\t  \n t7\\t7', '1');
 
-        /* continued lines should still show errors on the expected line */
+    /* continued lines should still show errors on the expected line */
     b.t('put {BSLASH}\n xyz000 into tnot\\tnot', 'ERR:no variable found with this name');
     b.t('put xyz000 into tnot\\tnot', 'ERR:no variable found with this name');
     b.t('1 {BSLASH}\n + {BSLASH}\n xyz000', 'ERR:no variable found with this name');
 
-        /* continue a across a line */
+    /* continue a across a line */
     b.t('put "a" & {BSLASH}\n "b" into test\\test', 'ab');
     b.t('put 2 + {BSLASH}\n 3 into test\\test', '5');
 
-        /* string literal can contain comment symbols */
+    /* string literal can contain comment symbols */
     b.t('put "--thetest" into test\\test', '--thetest');
     b.t('put "  --thetest" into test\\test', '  --thetest');
     b.t('put "aa--thetest" into test\\test', 'aa--thetest');
     b.t('put "aa--thetest--test" into test\\test', 'aa--thetest--test');
 
-        /* lexing: most but not all constructs need whitespace */
+    /* lexing: most but not all constructs need whitespace */
     b.t('2*3*4', '24');
     b.t('2 * 3 * 4', '24');
     b.t('put 2 into myvar\\myvar', '2');
@@ -131,16 +131,16 @@ t.test('checkLexing', () => {
     b.t('put 90 into mod3\\mod3', '90');
     b.t('put 91 into div3\\div3', '91');
 
-        /* lexing: strings don't need space */
+    /* lexing: strings don't need space */
     b.t('"a"&"b"', 'ab');
     b.t('"a"&&"b"', 'a b');
     b.t('"single\'quotes ok"', "single'quotes ok");
-     b.t('"single\'quotes\'ok"', "single'quotes'ok");
+    b.t('"single\'quotes\'ok"', "single'quotes'ok");
 
-        /* it is ok if identifiers contain a keyword. ("of" is a keyword) */
-        /* if "of" is a keyword, "of_" is still an ok variable name */
-        /* this is why it's important that the lexer regex is */
-        /* /of(?![a-zA-Z0-9_])/ and not just /of/ */
+    /* it is ok if identifiers contain a keyword. ("of" is a keyword) */
+    /* if "of" is a keyword, "of_" is still an ok variable name */
+    /* this is why it's important that the lexer regex is */
+    /* /of(?![a-zA-Z0-9_])/ and not just /of/ */
     b.t('put 9 into put4into\\put4into', '9');
     b.t('put 9 into ofa\\ofa', '9');
     b.t('put 9 into ofcards\\ofcards', '9');
@@ -153,11 +153,11 @@ t.test('checkLexing', () => {
     b.t('put 9 into aof\\aof', '9');
     b.t('put 9 into Aof\\Aof', '9');
     b.t('put 9 into Zof\\Zof', '9');
-        ['put 9 into a\\a', '9'] /* used to be disallowed */,
+    b.t('put 9 into a\\a', '9'); /* used to be disallowed */
     b.t('put 9 into aa\\aa', '9');
     b.t('put 9 into a4\\a4', '9');
 
-        /* most token types can't be used as a var name */
+    /* most token types can't be used as a var name */
     b.t('put 9 into length\\0', 'ERR:name not');
     b.t('put 9 into if\\0', 'ERR:name not allowed');
     b.t('put 9 into 4\\0', 'ERR:parse error');
@@ -167,20 +167,20 @@ t.test('checkLexing', () => {
     b.t('put 9 into in', 'PREPARSEERR:');
     b.t('put 9 into and', 'PREPARSEERR:');
 
-        /* constants can't be used as a var name */
+    /* constants can't be used as a var name */
     b.t('put 9 into pi\\0', 'ERR:a constant');
     b.t('put 9 into space\\0', 'ERR:a constant');
     b.t('put 9 into left\\0', 'ERR:a constant');
     b.t('put 9 into underline\\0', 'ERR:a constant');
     b.t('put 9 into radio\\0', 'ERR:a constant');
 
-        /* other reserved words can't be used as a var name */
+    /* other reserved words can't be used as a var name */
     b.t('put 9 into dialogs\\0', 'ERR:name not allowed');
     b.t('put 9 into set\\0', 'ERR:name not allowed');
     b.t('put 9 into pass\\0', 'ERR:name not allowed');
     b.t('put 9 into exit\\0', 'ERR:name not allowed');
 
-        /* property names can be used as a var name, even
+    /* property names can be used as a var name, even
         if they are a different token type.
         go through every HAnyAllowedVariableName */
     b.t('put 9 into autohilite\\autohilite', '9');
@@ -192,7 +192,7 @@ t.test('checkLexing', () => {
     b.t('put 9 into label\\label', '9');
     b.t('put 9 into alltext\\alltext', '9');
 
-        /* different tkidentifiers */
+    /* different tkidentifiers */
     b.t('put 9 into _underscore_ok\\_underscore_ok', 'PREPARSEERR:lex err');
     b.t('put 9 into underscore_ok\\underscore_ok', '9');
     b.t('put 9 into $dollar$ok\\$dollar$ok', 'PREPARSEERR:lex err');
@@ -200,7 +200,8 @@ t.test('checkLexing', () => {
     b.t('put 9 into 1var1\\1var1', 'PREPARSEERR:lex err');
     b.t('put 9 into var1\\var1', '9');
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* string literal cannot contain contline symbol since it has a newline */
     h.assertPreparseErrLn('put "a\nb" into test', '', 3);
@@ -235,79 +236,49 @@ t.test('checkLexing', () => {
     b.t('put 7 div3 into x\\x', 'ERR:parse error');
     b.t('put 7 mod3 into x\\x', 'ERR:parse error');
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* for keywords/semikeywords that would be a common variable name, check */
     b.t('x = 4', "PREPARSEERR:this isn't C");
     b.t('xyz(4)', "PREPARSEERR:this isn't C");
     b.t('sin(4)', "PREPARSEERR:this isn't C");
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
+    b.t(`get 1 + 2 -- + 3 -- + 4\n put it into x\\x`, '3');
+    b.t(`get 1 + 2 -- + 3 + 4\n put it into x\\x`, '3');
+    b.t(`get 1 + 2 -- + 3\n put it into x\\x`, '3');
+    b.t(`get 1 + 2 -- 3\n put it into x\\x`, '3');
+    b.t(`get 1 + 2 --3\n put it into x\\x`, '3');
+    b.t(`get 1 + 2--3\n put it into x\\x`, '3');
+    b.t(`get 1 + 2-- 3\n put it into x\\x`, '3');
+    b.t(`get 1 + 2- -3\n put it into x\\x`, '6');
+    b.t(`get 1 + 2 - -3\n put it into x\\x`, '6');
+    b.t(`get 1 + 2 - - 3\n put it into x\\x`, '6');
+    b.t(`put 1 into x\n -- put x + 1 into x\n put x into x\\x`, '1');
     b.t(
-            `get 1 + 2 -- + 3 -- + 4\n put it into x\\x`,
-            '3'
-        ); 
- b.t(
-            `get 1 + 2 -- + 3 + 4\n put it into x\\x`,
-            '3'
-        ); 
- b.t(
-            `get 1 + 2 -- + 3\n put it into x\\x`,
-            '3'
-        ); 
- b.t(
-            `get 1 + 2 -- 3\n put it into x\\x`,
-            '3'
-        ); 
- b.t(
-            `get 1 + 2 --3\n put it into x\\x`,
-            '3'
-        ); 
- b.t(
-            `get 1 + 2--3\n put it into x\\x`,
-            '3'
-        ); 
- b.t(
-            `get 1 + 2-- 3\n put it into x\\x`,
-            '3'
-        ); 
- b.t(
-            `get 1 + 2- -3\n put it into x\\x`,
-            '6'
-        ); 
- b.t(
-            `get 1 + 2 - -3\n put it into x\\x`,
-            '6'
-        ); 
- b.t(
-            `get 1 + 2 - - 3\n put it into x\\x`,
-            '6'
-        ); 
- b.t(
-            `put 1 into x\n -- put x + 1 into x\n put x into x\\x`,
-            '1'
-        ); 
- b.t(
-            `put 1 into x
+        `put 1 into x
 -- put x + 1 into x
 -- put x + 1 into x
 -- put x + 1 into x
 put x into x\\x`,
-            '1'
-        ); 
- b.t(
-            `put 1 into x--'lex''error' #$%$%
+        '1'
+    );
+    b.t(
+        `put 1 into x--'lex''error' #$%$%
 -- put x + 1 into x 'lex''error' #$%$%
 put x into x\\x`,
-            '1'
-        ); 
- b.t(
-            `put 1 into x--parse 0 error 0 number number number
+        '1'
+    );
+    b.t(
+        `put 1 into x--parse 0 error 0 number number number
 -- put x + 1 into x 0 parse 0 error 0 number number number
 put x into x\\x`,
-            '1'
-       )
-    h.testBatchEvaluate(batch);
+        '1'
+    );
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* lexing: baseline for runGeneralCode */
     h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
@@ -319,47 +290,49 @@ put x into x\\x`,
     );
 
     /* lexing: invalid num literals */
-    h.assertPreparseErrLn('put . into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put .5 into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put x.5 into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put e.5 into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put .e into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put .e2 into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put .e+2 into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put .3e into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3.4e into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3.4e 2 into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3.4ee into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3.4e4e into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3.44. into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 0..1 into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 4.. into x', 'unexpected character', 3);
+    b.t('put . into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put .5 into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put x.5 into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put e.5 into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put .e into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put .e2 into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put .e+2 into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put .3e into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4e into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4e 2 into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4ee into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4e4e into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.44. into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put 0..1 into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put 4.. into x', 'PREPARSEERR:3:unexpected character');
 
     /* lexing: invalid string literals */
-    h.assertPreparseErrLn('put "abc into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put "abc\ndef" into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put "\n" into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put " into x', 'unexpected character', 3);
-    h.assertPreparseErrLn('put """ into x', 'unexpected character', 3);
-    h.assertLineErr('put a"" into x', 'Expecting', 3);
-    h.assertPreparseErrLn('put ""a into x', 'unexpected', 3);
-    h.assertPreparseErrLn('put a""a into x', 'unexpected', 3);
-    h.assertLineErr('put 1"" into x', 'Expecting', 3);
-    h.assertPreparseErrLn('put ""1 into x', 'unexpected', 3);
-    h.assertPreparseErrLn('put 1""1 into x', 'unexpected', 3);
-    h.assertLineErr('put """" into x', 'Expecting', 3);
-    h.assertLineErr('put "a""b" into x', 'Expecting', 3);
-    h.assertLineErr('put "a" "b" into x', 'Expecting', 3);
+    b.t('put "abc into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc\ndef" into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put "\n" into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put " into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put """ into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put a"" into x', 'ERR:3:Expecting');
+    b.t('put ""a into x', 'PREPARSEERR:3:unexpected');
+    b.t('put a""a into x', 'PREPARSEERR:3:unexpected');
+    b.t('put 1"" into x', 'ERR:3:Expecting');
+    b.t('put ""1 into x', 'PREPARSEERR:3:unexpected');
+    b.t('put 1""1 into x', 'PREPARSEERR:3:unexpected');
+    b.t('put """" into x', 'ERR:3:Expecting');
+    b.t('put "a""b" into x', 'ERR:3:Expecting');
+    b.t('put "a" "b" into x', 'ERR:3:Expecting');
 
     /* invalid identifiers */
-    h.assertLineErr('put "abc" into 1', 'parse err', 3);
-    h.assertLineErr('put "abc" into 1 x', 'parse err', 3);
-    h.assertLineErr('put "abc" into b c', 'parse err', 3);
-    h.assertLineErr('put "abc" into "def"', 'parse err', 3);
-    h.assertPreparseErrLn('put "abc" into \x03', 'unexpected character', 3);
-    h.assertPreparseErrLn('put "abc" into b\x03', 'unexpected character', 3);
-    h.assertPreparseErrLn('put "abc" into \xf1', 'unexpected character', 3);
-    h.assertPreparseErrLn('put "abc" into b\xf1', 'unexpected character', 3);
+    b.t('put "abc" into 1', 'ERR:3:parse err');
+    b.t('put "abc" into 1 x', 'ERR:3:parse err');
+    b.t('put "abc" into b c', 'ERR:3:parse err');
+    b.t('put "abc" into "def"', 'ERR:3:parse err');
+    b.t('put "abc" into \x03', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc" into b\x03', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc" into \xf1', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc" into b\xf1', 'PREPARSEERR:3:unexpected character');
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* not valid because it's something else */
     let notvalid = longstr(
@@ -418,87 +391,86 @@ put x into x\\x`,
     }
 });
 t.test('ifStatementsAndRepeats', () => {
-    let batch: [string, string][];
-    batch = [
-        [
-            `put 2 into x
+    let b = new ScriptTestBatch();
+    b.t(
+        `put 2 into x
 if 2+3 > 4 then
 put 3 into x
 end if` + '\\x',
-            '3'
-        ],
-        [
-            `put 2 into x
+        '3'
+    );
+    b.t(
+        `put 2 into x
 if 2+3 < 4 then
 put 3 into x
 end if` + '\\x',
-            '2'
-        ],
-        [
-            `put 2 into x
+        '2'
+    );
+    b.t(
+        `put 2 into x
 if 2+3 > 4 and the number of cds in this stack is in "456" then
 put 3 into x
 end if` + '\\x',
-            '3'
-        ],
-        [
-            `put 2 into x
+        '3'
+    );
+    b.t(
+        `put 2 into x
 if 2+3 > 4 and the number of cds in this stack is not in "456" then
 put 3 into x
 end if` + '\\x',
-            '2'
-        ],
-        [
-            `put 2 into x
+        '2'
+    );
+    b.t(
+        `put 2 into x
 if 2+3 < 4 or the number of cds in this stack is in "456" then
 put 3 into x
 end if` + '\\x',
-            '3'
-        ],
-        [
-            `put 2 into x
+        '3'
+    );
+    b.t(
+        `put 2 into x
 if 2+3 < 4 or the number of cds in this stack is not in "456" then
 put 3 into x
 end if` + '\\x',
-            '2'
-        ],
-        [
-            `put 2 into x
+        '2'
+    );
+    b.t(
+        `put 2 into x
 if 2+3 < 4 then
 put 3 into x
 else if 2+3 is 6 then
 put 4 into x
 end if` + '\\x',
-            '2'
-        ],
-        [
-            `put 2 into x
+        '2'
+    );
+    b.t(
+        `put 2 into x
 if 2+3 < 4 then
 put 3 into x
 else if 2+3 is 5 then
 put 4 into x
 end if` + '\\x',
-            '4'
-        ],
-        [
-            `if 2+3 < 4 then
+        '4'
+    );
+    b.t(
+        `if 2+3 < 4 then
 put 100 into x
 else
 put 101 into x
 end if` + '\\x',
-            '101'
-        ],
-        [
-            `if 2+3 > 4 then
+        '101'
+    );
+    b.t(
+        `if 2+3 > 4 then
 put 100 into x
 else
 put 101 into x
 end if` + '\\x',
-            '100'
-        ],
-        /* use counter to see which loop conditions have been evaluated */
-        [
-            `put counting() into cfirst
+        '100'
+    );
+    /* use counter to see which loop conditions have been evaluated */
+    b.t(
+        `put counting() into cfirst
 if char 1 of counting() is "z" or 2+3 is 5 then
 put 1000 into x
 else if char 1 of counting() is "z" or 2+3 is 6 then
@@ -508,10 +480,10 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-            '1000 2'
-        ],
-        [
-            `put counting() into cfirst
+        '1000 2'
+    );
+    b.t(
+        `put counting() into cfirst
 if char 1 of counting() is "z" or 2+3 is 4 then
 put 1000 into x
 else if char 1 of counting() is "z" or 2+3 is 5 then
@@ -521,10 +493,10 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-            '1001 3'
-        ],
-        [
-            `put counting() into cfirst
+        '1001 3'
+    );
+    b.t(
+        `put counting() into cfirst
 if char 1 of counting() is "z" or 2+3 is 3 then
 put 1000 into x
 else if char 1 of counting() is "z" or 2+3 is 4 then
@@ -534,10 +506,10 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-            '1002 4'
-        ],
-        [
-            `put counting() into cfirst
+        '1002 4'
+    );
+    b.t(
+        `put counting() into cfirst
 if char 1 of counting() is "z" or 2+3 is 2 then
 put 1000 into x
 else if char 1 of counting() is "z" or 2+3 is 3 then
@@ -547,82 +519,81 @@ put 1002 into x
 else
 put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
-            '1003 4'
-        ],
-        /* order matters */
-        [
-            `if char 1 of "abc" is "b" then
+        '1003 4'
+    );
+    /* order matters */
+    b.t(
+        `if char 1 of "abc" is "b" then
 put 20 into x
 else if char 1 of "abc" is "a" then
 put 21 into x
 else if true then
 put 22 into x
 end if\\x`,
-            '21'
-        ],
-        /* nested if */
-        [
-            `if 4 > 3 then
+        '21'
+    );
+    /* nested if */
+    b.t(
+        `if 4 > 3 then
 if 4 > 2 then
 if 4 > 1 then
 put 100 into x
 end if
 end if
 end if\\x`,
-            '100'
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        '100'
+    );
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* repeats */
     /* we use 'counting()' to see how often the condition is evaluated. */
     /* confirmed in the product that a loop bound like
     repeat with x = 1 to the length of abc
     is only evaluated once! */
-    batch = [
-        /* simple loop */
-        [
-            `put "a" into s
+    /* simple loop */
+    b.t(
+        `put "a" into s
 put 0 into i
 repeat while i<3
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-            `a 0 1 2`
-        ],
-        /* condition never true */
-        [
-            `put "a" into s
+        `a 0 1 2`
+    );
+    /* condition never true */
+    b.t(
+        `put "a" into s
 put 0 into i
 repeat while i>0
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-            `a`
-        ],
-        /* simple loop */
-        [
-            `put "b" into s
+        `a`
+    );
+    /* simple loop */
+    b.t(
+        `put "b" into s
 put 0 into i
 repeat until i>=3
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-            `b 0 1 2`
-        ],
-        /* condition never true */
-        [
-            `put "b" into s
+        `b 0 1 2`
+    );
+    /* condition never true */
+    b.t(
+        `put "b" into s
 put 0 into i
 repeat until i>=0
 put s && i into s
 put i+1 into i
 end repeat\\s`,
-            `b`
-        ],
-        /* nested loop, and a second loop right after the first */
-        [
-            `put "a" into s
+        `b`
+    );
+    /* nested loop, and a second loop right after the first */
+    b.t(
+        `put "a" into s
 put 0 into i
 repeat while i<3
 put 0 into j
@@ -637,11 +608,11 @@ repeat while j<4
 put s && "j" & j into s
 put j+1 into j
 end repeat\\s`,
-            `a j0 j1 0 j0 j1 1 j0 j1 2 j2 j3`
-        ],
-        /* inner loop changes iteration count */
-        [
-            `put "a" into s
+        `a j0 j1 0 j0 j1 1 j0 j1 2 j2 j3`
+    );
+    /* inner loop changes iteration count */
+    b.t(
+        `put "a" into s
 put 0 into i
 repeat while i<3
 put i+1 into i
@@ -651,104 +622,104 @@ put s && i & "," & j into s
 put j+1 into j
 end repeat
 end repeat\\s`,
-            `a 1,0 2,0 2,1 3,0 3,1 3,2`
-        ],
-        /* condition must be checked every iteration */
-        [
-            `put "b" into s
+        `a 1,0 2,0 2,1 3,0 3,1 3,2`
+    );
+    /* condition must be checked every iteration */
+    b.t(
+        `put "b" into s
 put 0 into i
 put counting() into firstc
 repeat until i>=(3 + counting() * 0)
 put s && i into s
 put i+1 into i
 end repeat\\s && (counting() - firstc)`,
-            `b 0 1 2 5`
-        ],
+        `b 0 1 2 5`
+    );
 
-        /* "with" syntax rewriting, simplest form. */
-        [
-            `put "a" into s
+    /* "with" syntax rewriting, simplest form. */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = 1 to (counting() * 0 + 3)
 put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
-            `a a1 a2 a3 2`
-        ],
-        /* "with" syntax rewriting, loop never done */
-        [
-            `put "a" into s
+        `a a1 a2 a3 2`
+    );
+    /* "with" syntax rewriting, loop never done */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = 1 to (counting() * 0 + 0)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
-        /* "with" syntax rewriting, loop never done */
-        [
-            `put "a" into s
+        `a 2`
+    );
+    /* "with" syntax rewriting, loop never done */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = 1 to (counting() * 0 - 1)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
-        /* "with" syntax rewriting, loop done once */
-        [
-            `put "a" into s
+        `a 2`
+    );
+    /* "with" syntax rewriting, loop done once */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = 1 to (counting() * 0 + 1)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a a 2`
-        ],
-        /* "with down" syntax rewriting, simplest form. */
-        [
-            `put "a" into s
+        `a a 2`
+    );
+    /* "with down" syntax rewriting, simplest form. */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = 3 down to (counting() * 0)
 put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
-            `a a3 a2 a1 a0 2`
-        ],
-        /* "with down" syntax rewriting, loop never done */
-        [
-            `put "a" into s
+        `a a3 a2 a1 a0 2`
+    );
+    /* "with down" syntax rewriting, loop never done */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = 0 down to (counting() * 0 + 1)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
-        /* "with down" syntax rewriting, loop never done */
-        [
-            `put "a" into s
+        `a 2`
+    );
+    /* "with down" syntax rewriting, loop never done */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = -1 down to (counting() * 0 + 1)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
-        /* "with down" syntax rewriting, loop done once */
-        [
-            `put "a" into s
+        `a 2`
+    );
+    /* "with down" syntax rewriting, loop done once */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = 4 down to (counting() * 0 + 4)
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a a 2`
-        ],
-        /* "with" syntax rewriting, expect start only eval'd once */
-        [
-            `put "a" into s
+        `a a 2`
+    );
+    /* "with" syntax rewriting, expect start only eval'd once */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat with x = (counting() * 0 + 1) to 3
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a a a a 2`
-        ],
-        /* "with" syntax rewriting, nested loop */
-        [
-            `put "a" into s
+        `a a a a 2`
+    );
+    /* "with" syntax rewriting, nested loop */
+    b.t(
+        `put "a" into s
 repeat with i = 0 to 2
     repeat with j = 0 to 1
         put s && "j" & j into s
@@ -758,68 +729,68 @@ end repeat
 repeat with k = j to 4
     put s && "k" & k into s
 end repeat\\s`,
-            `a j0 j1 0 j0 j1 1 j0 j1 2 k1 k2 k3 k4`
-        ],
-        /* "with" syntax rewriting, inner loop count changes */
-        [
-            `put "a" into s
+        `a j0 j1 0 j0 j1 1 j0 j1 2 k1 k2 k3 k4`
+    );
+    /* "with" syntax rewriting, inner loop count changes */
+    b.t(
+        `put "a" into s
 repeat with i = 0 + 0 to 2 + 0
 repeat with j = 0 + 0 to i
 put s && (i+1) & "," & j into s
 end repeat
 end repeat\\s`,
-            `a 1,0 2,0 2,1 3,0 3,1 3,2`
-        ],
-        /* "times" syntax rewriting, simplest form. */
-        [
-            `put "a" into s
+        `a 1,0 2,0 2,1 3,0 3,1 3,2`
+    );
+    /* "times" syntax rewriting, simplest form. */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat (counting() * 0 + 3) times
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a a a a 2`
-        ],
-        /* "times" syntax rewriting, loop never done */
-        [
-            `put "a" into s
+        `a a a a 2`
+    );
+    /* "times" syntax rewriting, loop never done */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat (counting() * 0 + 0) times
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
-        /* "times" syntax rewriting, loop never done */
-        [
-            `put "a" into s
+        `a 2`
+    );
+    /* "times" syntax rewriting, loop never done */
+    b.t(
+        `put "a" into s
 put counting() into firstc
 repeat (counting() * 0 - 1) times
 put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
-            `a 2`
-        ],
-        /* simple test next repeat */
-        [
-            `put "a" into s
+        `a 2`
+    );
+    /* simple test next repeat */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 3
 put s && x into s
 next repeat
 put "_" into s
 end repeat\\s`,
-            `a 1 2 3`
-        ],
-        /* simple test exit repeat */
-        [
-            `put "a" into s
+        `a 1 2 3`
+    );
+    /* simple test exit repeat */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 3
 put s && x into s
 exit repeat
 put "_" into s
 end repeat\\s`,
-            `a 1`
-        ],
-        /* next repeat in the nested loop */
-        [
-            `put "a" into s
+        `a 1`
+    );
+    /* next repeat in the nested loop */
+    b.t(
+        `put "a" into s
 repeat with i = 0 to 2
 repeat with j = 0 to i
 put s && (i+1) & "," & j into s
@@ -827,11 +798,11 @@ next repeat
 put "_" into s
 end repeat
 end repeat\\s`,
-            `a 1,0 2,0 2,1 3,0 3,1 3,2`
-        ],
-        /* next repeat out of the nested loop */
-        [
-            `put "a" into s
+        `a 1,0 2,0 2,1 3,0 3,1 3,2`
+    );
+    /* next repeat out of the nested loop */
+    b.t(
+        `put "a" into s
 repeat with i = 0 to 2
 repeat with j = 0 to i
 put s && (i+1) into s
@@ -840,11 +811,11 @@ end repeat
 next repeat
 put "_" into s
 end repeat\\s`,
-            `a 1,0 2,0 2,1 3,0 3,1 3,2`
-        ],
-        /* exit repeat in the nested loop */
-        [
-            `put "a" into s
+        `a 1,0 2,0 2,1 3,0 3,1 3,2`
+    );
+    /* exit repeat in the nested loop */
+    b.t(
+        `put "a" into s
 repeat with i = 0 to 2
 repeat with j = 0 to i
 put s && (i+1) & "," & j into s
@@ -852,11 +823,11 @@ exit repeat
 put "_" into s
 end repeat
 end repeat\\s`,
-            `a 1,0 2,0 3,0`
-        ],
-        /* exit repeat out of the nested loop */
-        [
-            `put "a" into s
+        `a 1,0 2,0 3,0`
+    );
+    /* exit repeat out of the nested loop */
+    b.t(
+        `put "a" into s
 repeat with i = 0 to 2
 repeat with j = 0 to i
 put s && (i+1) into s
@@ -865,27 +836,26 @@ end repeat
 exit repeat
 put "_" into s
 end repeat\\s`,
-            `a 1,0`
-        ]
-    ];
+        `a 1,0`
+    );
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* repeats and if statements */
-    batch = [
-        /* if statement inside a loop */
-        [
-            `put "a" into s
+    /* if statement inside a loop */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 4
 if x == 2 or x == 4 then
 put s && x into s
 end if
 end repeat\\s`,
-            `a 2 4`
-        ],
-        /* nested if statement inside a loop */
-        [
-            `put "a" into s
+        `a 2 4`
+    );
+    /* nested if statement inside a loop */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 5
 if x >= 3 then
 if x >= 4 then
@@ -909,22 +879,22 @@ else
 end if
 end if
 end repeat\\s`,
-            `agot1got2got3got4got5`
-        ],
-        /* if statement and exit repeat */
-        [
-            `put "a" into s
+        `agot1got2got3got4got5`
+    );
+    /* if statement and exit repeat */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 4
 put s && x into s
 if x == 2 then
 exit repeat
 end if
 end repeat\\s`,
-            `a 1 2`
-        ],
-        /* if statement and next repeat */
-        [
-            `put "a" into s
+        `a 1 2`
+    );
+    /* if statement and next repeat */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 4
 put s && x into s
 if x == 2 then
@@ -932,11 +902,11 @@ next repeat
 end if
 put s & "-" into s
 end repeat\\s`,
-            `a 1- 2 3- 4-`
-        ],
-        /* nested if statement and exit repeat */
-        [
-            `put "a" into s
+        `a 1- 2 3- 4-`
+    );
+    /* nested if statement and exit repeat */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 6
 put s && x into s
 if x mod 2 is 0 then
@@ -945,11 +915,11 @@ exit repeat
 end if
 end if
 end repeat\\s`,
-            `a 1 2 3 4`
-        ],
-        /* nested if statement and next repeat */
-        [
-            `put "a" into s
+        `a 1 2 3 4`
+    );
+    /* nested if statement and next repeat */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 6
 put s && x into s
 if x mod 2 is 0 then
@@ -959,22 +929,22 @@ end if
 end if
 put s & "-" into s
 end repeat\\s`,
-            `a 1- 2- 3- 4 5- 6`
-        ],
-        /* exit repeat out of infinite loop */
-        [
-            `put "a" into s
+        `a 1- 2- 3- 4 5- 6`
+    );
+    /* exit repeat out of infinite loop */
+    b.t(
+        `put "a" into s
 repeat
 put s & "a" into s
 if the length of s > 4 then
 exit repeat
 end if
 end repeat\\s`,
-            `aaaaa`
-        ],
-        /* if statements *must* be reset */
-        [
-            `put "a" into s
+        `aaaaa`
+    );
+    /* if statements *must* be reset */
+    b.t(
+        `put "a" into s
 repeat with x = 1 to 4
 if x is 1 then
     put s && "a" into s
@@ -987,11 +957,11 @@ else
 end if
 put s & "-" into s
 end repeat\\s`,
-            `a a- b- z-`
-        ],
-        /* loop inside of an if */
-        [
-            `put "a" into s
+        `a a- b- z-`
+    );
+    /* loop inside of an if */
+    b.t(
+        `put "a" into s
 if char 1 of "abc" is "a" then
 repeat with x = 1 to 3
 put s&&x into s
@@ -999,15 +969,15 @@ end repeat
 else
 put "_" into s
 end if\\s`,
-            `a 1 2 3`
-        ],
-        /*
+        `a 1 2 3`
+    );
+    /*
         important to reset flags in a loop:
         the state of which if branch has been taken
         must not be re-used after encountering "next repeat"
         */
-        [
-            `put "" into s
+    b.t(
+        `put "" into s
     repeat with x = 1 to 4
         if x = 2 then
             put "a" after s
@@ -1019,11 +989,11 @@ end if\\s`,
         put "." after s
     end repeat
         \\s`,
-            `b.a.b.`
-        ],
-        /* test that flags are reset 2 */
-        [
-            `put "" into s
+        `b.a.b.`
+    );
+    /* test that flags are reset 2 */
+    b.t(
+        `put "" into s
     repeat with x = 1 to 4
         if x = 2 then
             next repeat
@@ -1035,10 +1005,11 @@ end if\\s`,
         put "." after s
     end repeat
         \\s`,
-            `b.a.b.`
-        ] /* test that flags are reset 3 */,
-        [
-            `put "" into s
+        `b.a.b.`
+    );
+    /* test that flags are reset 3 */
+    b.t(
+        `put "" into s
     repeat with x = 4 down to 1
         if x = 2 then
             next repeat
@@ -1050,10 +1021,11 @@ end if\\s`,
         put "." after s
     end repeat
         \\s`,
-            `b.a.b.`
-        ] /* test that flags are reset 4 */,
-        [
-            `put "" into s
+        `b.a.b.`
+    );
+    /* test that flags are reset 4 */
+    b.t(
+        `put "" into s
     repeat with x = 4 down to 1
         if x = 2 then
             next repeat
@@ -1067,64 +1039,61 @@ end if\\s`,
         put "." after s
     end repeat
         \\s`,
-            `a.c.b.`
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        `a.c.b.`
+    );
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* locals, globals, and variable scopes */
     h.vcstate.runtime.codeExec.globals.set('testvar', VpcValS('1'));
-    batch = [
-        /* simple locals read/write */
-        ['put 3 into x\\x', '3'],
-        ['3 * x', '9'],
-        ['put 4 into x\\x', '4'],
-        ['3 * x', '12'],
+    /* simple locals read/write */
+    b.t('put 3 into x\\x', '3');
+    b.t('3 * x', '9');
+    b.t('put 4 into x\\x', '4');
+    b.t('3 * x', '12');
 
-        /* simple globals read/write */
-        ['global gx\\0', '0'],
-        ['put 3 into gx\\gx', '3'],
-        ['3 * gx', '9'],
-        ['put 4 into gx\\gx', '4'],
-        ['3 * gx', '12'],
+    /* simple globals read/write */
+    b.t('global gx\\0', '0');
+    b.t('put 3 into gx\\gx', '3');
+    b.t('3 * gx', '9');
+    b.t('put 4 into gx\\gx', '4');
+    b.t('3 * gx', '12');
 
-        /* variable not defined */
-        ['3 * undefinedlocal', 'ERR:no variable found'],
+    /* variable not defined */
+    b.t('3 * undefinedlocal', 'ERR:no variable found');
 
-        /* declaring a global gives it "" */
-        ['global newlydefinedglobal\\"a" & newlydefinedglobal', 'a'],
-        ['global newlydefinedglobal\\newlydefinedglobal is ""', 'true'],
+    /* declaring a global gives it "" */
+    b.t('global newlydefinedglobal\\"a" & newlydefinedglobal', 'a');
+    b.t('global newlydefinedglobal\\newlydefinedglobal is ""', 'true');
 
-        /* if you don't declare it as a global, it is treated as a local */
-        ['3 * testvar', 'ERR:no variable found'],
-        ['put "z" into testvar\\testvar', 'z'],
-        ['put "z" into testvar\nglobal testvar\\testvar', '1']
-    ];
-    h.testBatchEvaluate(batch);
+    /* if you don't declare it as a global, it is treated as a local */
+    b.t('3 * testvar', 'ERR:no variable found');
+    b.t('put "z" into testvar\\testvar', 'z');
+    b.t('put "z" into testvar\nglobal testvar\\testvar', '1');
+    b.batchEvaluate(h);
 });
 t.test('calls', () => {
-    let batch: [string, string][];
-    batch = [
-        /* attempt to call something that isn't a valid custom handler */
-        ['3 + abs(4)', '7'],
-        ['3 + xyz(4)', 'ERR:no handler'],
-        ['3 + mousewithin(4)', 'ERR:no such function'],
-        ['3 + with(4)', 'ERR:no such function'],
-        ['3 + at(4)', 'ERR:no such function'],
-        ['3 + from(4)', 'ERR:no such function'],
-        ['3 + autohilite(4)', 'ERR:Expecting token'],
-        ['3 + style(4)', 'ERR:Expecting token'],
-        ['3 + locktext(4)', 'ERR:Expecting token'],
-        ['3 + one(4)', 'ERR:no such function'],
-        ['3 + pi(4)', 'ERR:no such function'],
+    let b = new ScriptTestBatch();
+    /* attempt to call something that isn't a valid custom handler */
+    b.t('3 + abs(4)', '7');
+    b.t('3 + xyz(4)', 'ERR:no handler');
+    b.t('3 + mousewithin(4)', 'ERR:no such function');
+    b.t('3 + with(4)', 'ERR:no such function');
+    b.t('3 + at(4)', 'ERR:no such function');
+    b.t('3 + from(4)', 'ERR:no such function');
+    b.t('3 + autohilite(4)', 'ERR:Expecting token');
+    b.t('3 + style(4)', 'ERR:Expecting token');
+    b.t('3 + locktext(4)', 'ERR:Expecting token');
+    b.t('3 + one(4)', 'ERR:no such function');
+    b.t('3 + pi(4)', 'ERR:no such function');
 
-        /* the result before anything is called */
-        ['put 3 into result\\0', 'ERR:name not allowed'],
-        ['result()', ''],
-        ['the result', '']
-    ];
-    h.testBatchEvaluate(batch);
-    h.assertPreparseErr('put 3 + into(4) into x', 'one of');
+    /* the result before anything is called */
+    b.t('put 3 into result\\0', 'ERR:name not allowed');
+    b.t('put 3 + into(4) into x', 'PREPARSEERR:one of');
+    b.t('result()', '');
+    b.t('the result', '');
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
     /* call a custom handler */
     h.vcstate.runtime.codeExec.globals.set('testresult', VpcValS('(placeholder)'));
@@ -1433,141 +1402,140 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
     return "m" & g & "(" & p1 & "," & p2 & "," & p3 & ")"
     end mm`
     );
-    batch = [
-        /* simple calls */
-        ['global g\nput 0 into g\\0', '0'],
-        ['put mm() into ret\\ret', 'm1(,,)'],
-        ['put mm(1) into ret\\ret', 'm2(1,,)'],
-        ['put mm(1,2) into ret\\ret', 'm3(1,2,)'],
-        ['put mm(1,2,3) into ret\\ret', 'm4(1,2,3)'],
-        /* expect to be called left to right */
-        ['global g\nput 0 into g\\0', '0'],
-        ['put mm(10) && mm(11) into ret\\ret', 'm1(10,,) m2(11,,)'],
-        [
-            'put (char 2 to 4 of mm(10)) && (char 2 to 4 of mm(11)) into ret\\ret',
-            '3(1 4(1'
-        ],
-        /* custom nested within builtin */
-        ['global g\nput 0 into g\\0', '0'],
-        ['put length(mm(1)) into ret\\ret', '7'],
-        ['put max(0,1,max(1,2,length(mm(1)))) into ret\\ret', '7'],
-        ['put sum(1,sum(1,2,length(mm(1)), 3), 4) into ret\\ret', '18'],
-        ['put offset(mm(),3) into ret\\ret', '0'],
-        ['put offset(mm(1),3) into ret\\ret', '0'],
-        ['put offset(mm(1,2),3) into ret\\ret', '0'],
-        ['put offset(mm(1,")"),3) into ret\\ret', '0'],
-        /* builtin nested within custom */
-        ['global g\nput 0 into g\\0', '0'],
-        ['mm(max(1))', 'm1(1,,)'],
-        ['mm(max(1,2))', 'm2(2,,)'],
-        ['mm(max(1,2,3))', 'm3(3,,)'],
-        ['mm(max(1),max(2))', 'm4(1,2,)'],
-        ['mm(max(1,2),max(1,3))', 'm5(2,3,)'],
-        ['mm(max(1,2,3),max(1,2,4))', 'm6(3,4,)'],
-        ['mm(max(1,2,3),max(max(min(1,2),2),2,4),5)', 'm7(3,4,5)'],
-        [
-            'char (2) to (999) of (mm(max(1,2,3),max(max(min(1,2),2),2,4),5)) & (abs(-1))',
-            '8(3,4,5)1'
-        ],
-        /* custom inside custom */
-        ['global g\nput 0 into g\\0', '0'],
-        ['abs(1) && mm(mm()) && abs(1)', '1 m2(m1(,,),,) 1'],
-        ['abs(1) && mm(mm(1)) && abs(1)', '1 m4(m3(1,,),,) 1'],
-        ['abs(1) && mm(mm(1,max(2))) && abs(1)', '1 m6(m5(1,2,),,) 1'],
-        ['abs(1) && mm(mm(1,max(2),max(3)),max(4)) && abs(1)', '1 m8(m7(1,2,3),4,) 1'],
-        ['abs(1) && mm(max(1),mm(2),max(3)) && abs(1)', '1 m10(1,m9(2,,),3) 1'],
-        /* even more nesting */
-        ['global g\nput 0 into g\\0', '0'],
-        ['abs(1) && mm(mm(mm(1))) && abs(1)', '1 m3(m2(m1(1,,),,),,) 1'],
-        ['abs(1) && mm(mm(1),abs(2),mm(3)) && abs(1)', '1 m6(m4(1,,),2,m5(3,,)) 1'],
-        [
-            'abs(1) && mm(abs(1),mm(abs(2),mm(abs(3)))) && abs(1)',
-            '1 m9(1,m8(2,m7(3,,),),) 1'
-        ],
-        [
-            'abs(1) && mm(90+(1),90+(2),"" & mm(90+(3),90+(4),"" & mm(90+(5),90+(6)))) && abs(1)',
-            '1 m12(91,92,m11(93,94,m10(95,96,))) 1'
-        ],
-        /* currently allow the call on the other side as well */
-        ['global g\nput 0 into g\\0', '0'],
-        [
-            'put "" into ret\nput "abc" into item (the length of mm(1)) of ret\\ret',
-            ',,,,,,abc'
-        ],
-        ['mm 2\nput the result into ret\\ret', 'm2(2,,)'],
-        /* we can now call it from some other types of statements! */
-        ['global g\nput 0 into g\\0', '0'],
-        ['get mm(1)\\it', 'm1(1,,)'],
-        ['put 0 into ret\nadd (the length of mm(1)) to ret\\ret', '7'],
-        [
-            'put "0,0,0,0,0,0,0,0,0" into ret\nadd 3 to item (the length of mm(1)) of ret\\ret',
-            '0,0,0,0,0,0,3,0,0'
-        ],
-        ['get abs(mm(1))\\0', 'ERR:expected a number'],
-        ['there is a cd btn mm(1)', 'false'],
-        ['show cd btn mm(1)\\0', 'ERR:could not find'],
-        ['enable cd btn mm(1)\\0', 'ERR:could not find'],
-        /* can expand custom functions in condition */
-        [
-            `if char 1 of mm(1) is "m" then
+    /* simple calls */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('put mm() into ret\\ret', 'm1(,,)');
+    b.t('put mm(1) into ret\\ret', 'm2(1,,)');
+    b.t('put mm(1,2) into ret\\ret', 'm3(1,2,)');
+    b.t('put mm(1,2,3) into ret\\ret', 'm4(1,2,3)');
+    /* expect to be called left to right */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('put mm(10) && mm(11) into ret\\ret', 'm1(10,,) m2(11,,)');
+    b.t(
+        'put (char 2 to 4 of mm(10)) && (char 2 to 4 of mm(11)) into ret\\ret',
+        '3(1 4(1'
+    );
+    /* custom nested within builtin */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('put length(mm(1)) into ret\\ret', '7');
+    b.t('put max(0,1,max(1,2,length(mm(1)))) into ret\\ret', '7');
+    b.t('put sum(1,sum(1,2,length(mm(1)), 3), 4) into ret\\ret', '18');
+    b.t('put offset(mm(),3) into ret\\ret', '0');
+    b.t('put offset(mm(1),3) into ret\\ret', '0');
+    b.t('put offset(mm(1,2),3) into ret\\ret', '0');
+    b.t('put offset(mm(1,")"),3) into ret\\ret', '0');
+    /* builtin nested within custom */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('mm(max(1))', 'm1(1,,)');
+    b.t('mm(max(1,2))', 'm2(2,,)');
+    b.t('mm(max(1,2,3))', 'm3(3,,)');
+    b.t('mm(max(1),max(2))', 'm4(1,2,)');
+    b.t('mm(max(1,2),max(1,3))', 'm5(2,3,)');
+    b.t('mm(max(1,2,3),max(1,2,4))', 'm6(3,4,)');
+    b.t('mm(max(1,2,3),max(max(min(1,2),2),2,4),5)', 'm7(3,4,5)');
+    b.t(
+        'char (2) to (999) of (mm(max(1,2,3),max(max(min(1,2),2),2,4),5)) & (abs(-1))',
+        '8(3,4,5)1'
+    );
+    /* custom inside custom */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('abs(1) && mm(mm()) && abs(1)', '1 m2(m1(,,),,) 1');
+    b.t('abs(1) && mm(mm(1)) && abs(1)', '1 m4(m3(1,,),,) 1');
+    b.t('abs(1) && mm(mm(1,max(2))) && abs(1)', '1 m6(m5(1,2,),,) 1');
+    b.t('abs(1) && mm(mm(1,max(2),max(3)),max(4)) && abs(1)', '1 m8(m7(1,2,3),4,) 1');
+    b.t('abs(1) && mm(max(1),mm(2),max(3)) && abs(1)', '1 m10(1,m9(2,,),3) 1');
+    /* even more nesting */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('abs(1) && mm(mm(mm(1))) && abs(1)', '1 m3(m2(m1(1,,),,),,) 1');
+    b.t('abs(1) && mm(mm(1),abs(2),mm(3)) && abs(1)', '1 m6(m4(1,,),2,m5(3,,)) 1');
+    b.t(
+        'abs(1) && mm(abs(1),mm(abs(2),mm(abs(3)))) && abs(1)',
+        '1 m9(1,m8(2,m7(3,,),),) 1'
+    );
+    b.t(
+        'abs(1) && mm(90+(1),90+(2),"" & mm(90+(3),90+(4),"" & mm(90+(5),90+(6)))) && abs(1)',
+        '1 m12(91,92,m11(93,94,m10(95,96,))) 1'
+    );
+    /* currently allow the call on the other side as well */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t(
+        'put "" into ret\nput "abc" into item (the length of mm(1)) of ret\\ret',
+        ',,,,,,abc'
+    );
+    b.t('mm 2\nput the result into ret\\ret', 'm2(2,,)');
+    /* we can now call it from some other types of statements! */
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('get mm(1)\\it', 'm1(1,,)');
+    b.t('put 0 into ret\nadd (the length of mm(1)) to ret\\ret', '7');
+    b.t(
+        'put "0,0,0,0,0,0,0,0,0" into ret\nadd 3 to item (the length of mm(1)) of ret\\ret',
+        '0,0,0,0,0,0,3,0,0'
+    );
+    b.t('get abs(mm(1))\\0', 'ERR:expected a number');
+    b.t('there is a cd btn mm(1)', 'false');
+    b.t('show cd btn mm(1)\\0', 'ERR:could not find');
+    b.t('enable cd btn mm(1)\\0', 'ERR:could not find');
+    /* can expand custom functions in condition */
+    b.t(
+        `if char 1 of mm(1) is "m" then
         get 1
         else
         get 2
         end if\\it`,
-            '1'
-        ],
-        /* custom fn error reporting */
-        ['get mm(1\\it', 'ERR:Expecting'],
-        /* using blank lines, line number reporting should be affected */
-        [
-            `put "abc" into x
+        '1'
+    );
+    /* custom fn error reporting */
+    b.t('get mm(1\\it', 'ERR:Expecting');
+    /* using blank lines, line number reporting should be affected */
+    b.t(
+        `put "abc" into x
 
         show cd btn "notfound"\\0`,
-            'ERR:6:could not find'
-        ],
-        [
-            `put "abc" into x
+        'ERR:6:could not find'
+    );
+    b.t(
+        `put "abc" into x
 
 
         show cd btn "notfound"\\0`,
-            'ERR:7:could not find'
-        ],
-        /* using continued lines, line number reporting should be affected */
-        [
-            `put "abc" {BSLASH}\n into x
+        'ERR:7:could not find'
+    );
+    /* using continued lines, line number reporting should be affected */
+    b.t(
+        `put "abc" {BSLASH}\n into x
         show cd btn "notfound"\\0`,
-            'ERR:6:could not find'
-        ],
-        [
-            `put "abc" {BSLASH}\n into {BSLASH}\n x
+        'ERR:6:could not find'
+    );
+    b.t(
+        `put "abc" {BSLASH}\n into {BSLASH}\n x
         show cd btn "notfound"\\0`,
-            'ERR:7:could not find'
-        ],
-        [
-            `put {BSLASH}\n "abc" {BSLASH}\n into {BSLASH}\n x
+        'ERR:7:could not find'
+    );
+    b.t(
+        `put {BSLASH}\n "abc" {BSLASH}\n into {BSLASH}\n x
         show cd btn "notfound"\\0`,
-            'ERR:8:could not find'
-        ],
-        /* but using put-expansion, line number reporting
+        'ERR:8:could not find'
+    );
+    /* but using put-expansion, line number reporting
         should not be affected, even though we're adding calls */
-        [
-            `put mm(1) into x
+    b.t(
+        `put mm(1) into x
         show cd btn "notfound"\\0`,
-            'ERR:5:could not find'
-        ],
-        [
-            `put mm(1) && mm(1) into x
+        'ERR:5:could not find'
+    );
+    b.t(
+        `put mm(1) && mm(1) into x
         show cd btn "notfound"\\0`,
-            'ERR:5:could not find'
-        ],
-        [
-            `put mm(mm(1)) into x
+        'ERR:5:could not find'
+    );
+    b.t(
+        `put mm(mm(1)) into x
         show cd btn "notfound"\\0`,
-            'ERR:5:could not find'
-        ],
-        ['global g\nput 0 into g\\0', '0'],
-        ['mm ("")\\the result', 'm1(,,)'],
-        /* difference between what is allowed and what is not.
+        'ERR:5:could not find'
+    );
+    b.t('global g\nput 0 into g\\0', '0');
+    b.t('mm ("")\\the result', 'm1(,,)');
+    /* difference between what is allowed and what is not.
         we can look at token start pos to see if it is 'a()' or 'a ()'
         myFunction() -- disallow, looks too much like C
         myFunction(1) -- disallow, looks too much like C
@@ -1581,18 +1549,18 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         myFunction (1, "") && "" -- does not parse
         myFunction  1, "" && "" -- allow
         */
-        ['global g\nput 0 into g\nmm ()\\the result', 'ERR:6:parse error'],
-        ['global g\nput 0 into g\nmm (1)\\the result', 'm1(1,,)'],
-        ['global g\nput 0 into g\nmm() && ""\\the result', 'ERR:6:'],
-        ['global g\nput 0 into g\nmm(1) && ""\\the result', 'm1(1 ,,)'],
-        ['global g\nput 0 into g\nmm (1) && ""\\the result', 'm1(1 ,,)'],
-        ['global g\nput 0 into g\nmm (1), "o"\\the result', 'm1(1,o,)'],
-        ['global g\nput 0 into g\nmm (1, "")\\the result', 'ERR:6:parse error'],
-        ['global g\nput 0 into g\nmm (1, "") && ""\\the result', 'ERR:6:parse error'],
-        ['global g\nput 0 into g\nmm 1, "" && ""\\the result', 'm1(1, ,)'],
-        ['global g\nput 0 into g\nmm (1),(2)\\the result', 'm1(1,2,)']
-    ];
-    h.testBatchEvaluate(batch);
+    b.t('global g\nput 0 into g\nmm ()\\the result', 'ERR:6:parse error');
+    b.t('global g\nput 0 into g\nmm (1)\\the result', 'm1(1,,)');
+    b.t('global g\nput 0 into g\nmm() && ""\\the result', 'ERR:6:');
+    b.t('global g\nput 0 into g\nmm(1) && ""\\the result', 'm1(1 ,,)');
+    b.t('global g\nput 0 into g\nmm (1) && ""\\the result', 'm1(1 ,,)');
+    b.t('global g\nput 0 into g\nmm (1), "o"\\the result', 'm1(1,o,)');
+    b.t('global g\nput 0 into g\nmm (1, "")\\the result', 'ERR:6:parse error');
+    b.t('global g\nput 0 into g\nmm (1, "") && ""\\the result', 'ERR:6:parse error');
+    b.t('global g\nput 0 into g\nmm 1, "" && ""\\the result', 'm1(1, ,)');
+    b.t('global g\nput 0 into g\nmm (1),(2)\\the result', 'm1(1,2,)');
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
     h.assertPreparseErrLn('get mm(abs(1', 'missing )');
     h.assertPreparseErrLn('global g\nput 0 into g\nmm()', `isn't C`);
     h.assertPreparseErrLn('global g\nput 0 into g\nmm(1)', `isn't C`);

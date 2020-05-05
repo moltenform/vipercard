@@ -506,7 +506,13 @@ function testSetChunk(
     let ch = new RequestedChunk(first);
     ch.last555 = last;
     ch.type555 = type;
-    ChunkResolutionApplication.applyPut(writer, ch, itemDel, sReplace, VpcChunkPreposition.Into);
+    ChunkResolutionApplication.applyPut(
+        writer,
+        ch,
+        itemDel,
+        sReplace,
+        VpcChunkPreposition.Into
+    );
     assertEq(sExpected, world.result, '2j|');
 }
 

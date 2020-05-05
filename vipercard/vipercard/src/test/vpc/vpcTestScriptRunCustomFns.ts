@@ -1,5 +1,5 @@
 
-/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
+/* auto */ import { ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { VpcElStack } from './../../vpc/vel/velStack';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
@@ -26,69 +26,69 @@ t.atest('--init--vpcTestScriptRunCustomFns', async () => {
     return h.initEnvironment();
 });
 t.test('run code with single-line if', () => {
-    let batch: [string, string][] = [
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t(
+        `
 if 3 > 2 then put 1 into ret
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 3 > 2 then put 1 into ret
 if 3 > 2 then add 1 to ret
 if 3 > 2 then add 1 to ret
 \\ret`,
-            '3'
-        ],
-        [
-            `
+        '3'
+    );
+    b.t(
+        `
 if 3 > 2 then
 if 2 > 1 then put 1 into ret
 end if
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 3 > 2 then put 1 into ret
 else put 0 into ret
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 3 > 4 then put 1 into ret
 else put 0 into ret
 \\ret`,
-            '0'
-        ],
-        [
-            `
+        '0'
+    );
+    b.t(
+        `
 if 4 > 3 then put 2 into ret
 else if 3 > 2 then put 1 into ret
 else put 0 into ret
 \\ret`,
-            '2'
-        ],
-        [
-            `
+        '2'
+    );
+    b.t(
+        `
 if 3 > 3 then put 2 into ret
 else if 3 > 2 then put 1 into ret
 else put 0 into ret
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 3 > 3 then put 2 into ret
 else if 3 > 3 then put 1 into ret
 else put 0 into ret
 \\ret`,
-            '0'
-        ],
-        [
-            `
+        '0'
+    );
+    b.t(
+        `
 if 6>5 then
 if 3 > 4 then put 1 into ret
 else put 0 into ret
@@ -96,10 +96,10 @@ else
 put -1 into ret
 end if
 \\ret`,
-            '0'
-        ],
-        [
-            `
+        '0'
+    );
+    b.t(
+        `
 if 6>5 then
 if 3 > 4 then put 0 into ret
 else if 2 > 1 then put 1 into ret
@@ -110,10 +110,10 @@ else
 put -1 into ret
 end if
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 6>5 then
 if 3 > 4 then put 0 into ret
 else if 2 > 1 then put 1 into ret
@@ -122,10 +122,10 @@ else
 put -1 into ret
 end if
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 6>5 then
 if 3 > 4 then put 0 into ret
 else if 2 > 1 then put 1 into ret
@@ -134,20 +134,20 @@ else if true then
 put -1 into ret
 end if
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 6>5 then
 if 3 > 4 then put 0 into ret
 else if 2 > 1 then put 1 into ret
 else put 0 into ret
 else if true then put -1 into ret
 \\ret`,
-            '1'
-        ],
-        [
-            `
+        '1'
+    );
+    b.t(
+        `
 if 6>5 then
 if 3 > 4 then
     put 0 into ret
@@ -155,11 +155,10 @@ else if 2 > 1 then put 1 into ret
 else put 0 into ret
 end if
 \\ret`,
-            '1'
-        ]
-    ];
+        '1'
+    );
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
 });
 t.test('expand with nested calls', () => {
     h.provideCustomFnInStackScript(`
@@ -169,74 +168,73 @@ add 1 to countCalls
 return p1 & p2 & p3
 lineShouldBeSkipped
 end myConcat`);
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    b.t(
+        `
 put 0 into countCalls
 put myConcat(2,3) into ret
 \\ret && countCalls`,
-            '23 1'
-        ],
-        [
-            `
+        '23 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myConcat(2,3,4) into ret
 \\ret && countCalls`,
-            '234 1'
-        ],
-        [
-            `
+        '234 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myConcat(2,3,myConcat("(", 1)) into ret
 \\ret && countCalls`,
-            '23(1 2'
-        ],
-        [
-            `
+        '23(1 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myConcat(2,3,myConcat(")", 1)) into ret
 \\ret && countCalls`,
-            '23)1 2'
-        ],
-        [
-            `
+        '23)1 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myConcat(2,3,myMult(4,5)) into ret
 \\ret && countCalls`,
-            '2320 2'
-        ],
-        [
-            `
+        '2320 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myConcat(2,3,-myMult(4,5)) into ret
 \\ret && countCalls`,
-            '23-20 2'
-        ],
-        [
-            `
+        '23-20 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myConcat(2,3,- myMult(4,5)) into ret
 \\ret && countCalls`,
-            '23-20 2'
-        ],
-        [
-            `
+        '23-20 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myMult(2,myMult(myMult(2, 3), 4)) into ret
 \\ret && countCalls`,
-            '48 3'
-        ],
-        [
-            `
+        '48 3'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put myMult(2,myMult(myMult((2), 3), (4))) into ret
 \\ret && countCalls`,
-            '48 3'
-        ]
-    ];
+        '48 3'
+    );
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
 });
 t.test("don't need to expand custom fns on these lines", () => {
     /* VpcLineCategory_.HandlerStart */
@@ -349,29 +347,28 @@ on theTest
     thisLineShouldNotBeHit
 end theTest
 `);
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        ['theTest\\the result && countCalls', '24 2']
-    ];
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    b.t('theTest\\the result && countCalls', '24 2');
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
 });
 t.test('expand in VpcLineCategory_.IfStart', () => {
     h.provideCustomFnInStackScript();
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
 if myMult(2, myMult(3, x)) is 24 then
 put 1 into ret
 end if\\ret && countCalls`,
-            '1 2'
-        ],
-        [
-            `
+        '1 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
@@ -380,19 +377,18 @@ if myMult(4, 5) is 20 then
     put 1 into ret
 end if
 end if\\ret && countCalls`,
-            '1 3'
-        ]
-    ];
+        '1 3'
+    );
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
 });
 t.test('expand in VpcLineCategory_.IfElse', () => {
     h.provideCustomFnInStackScript();
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        /* take first branch */
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    /* take first branch */
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
@@ -405,11 +401,11 @@ put 30 into ret
 else
 put 40 into ret
 end if\\ret && countCalls`,
-            '10 2'
-        ],
-        /* take second branch */
-        [
-            `
+        '10 2'
+    );
+    /* take second branch */
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
@@ -422,11 +418,11 @@ put 30 into ret
 else
 put 40 into ret
 end if\\ret && countCalls`,
-            '20 4'
-        ],
-        /* take third branch */
-        [
-            `
+        '20 4'
+    );
+    /* take third branch */
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
@@ -439,11 +435,11 @@ put 30 into ret
 else
 put 40 into ret
 end if\\ret && countCalls`,
-            '30 6'
-        ],
-        /* take fourth branch */
-        [
-            `
+        '30 6'
+    );
+    /* take fourth branch */
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
@@ -456,11 +452,11 @@ put 30 into ret
 else
 put 40 into ret
 end if\\ret && countCalls`,
-            '40 6'
-        ],
-        /* nested if */
-        [
-            `
+        '40 6'
+    );
+    /* nested if */
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
@@ -479,11 +475,11 @@ end if
 else if myMult(3, myMult(3, x)) is 36 then
 put 50 into ret
 end if\\ret && countCalls`,
-            '1 13'
-        ],
-        /* nested if, 3 levels */
-        [
-            `
+        '1 13'
+    );
+    /* nested if, 3 levels */
+    b.t(
+        `
 put 0 into countCalls
 put 4 into x
 put 0 into ret
@@ -506,101 +502,100 @@ else if myMult(myMult(myMult(1,2),3),7) is 42 then
     put 60 into ret
 end if
 end if\\ret && countCalls`,
-            '1 14'
-        ]
-    ];
+        '1 14'
+    );
 
-    h.testBatchEvaluate(batch);
+    b.batchEvaluate(h);
 });
 t.test('expand in simple repeats', () => {
     h.provideCustomFnInStackScript();
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        /* repeat with x */
-        /* confirmed in emulator the fn only called once */
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    /* repeat with x */
+    /* confirmed in emulator the fn only called once */
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat with x = 1 to myMult(2,3)
 put x after s
 end repeat\\s && countCalls`,
-            '123456 1'
-        ],
-        [
-            `
+        '123456 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat with x = 9 down to myMult(2,3)
 put x after s
 end repeat\\s && countCalls`,
-            '9876 1'
-        ],
-        [
-            `
+        '9876 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat with x = myMult(2,3) to 9
 put x after s
 end repeat\\s && countCalls`,
-            '6789 1'
-        ],
-        [
-            `
+        '6789 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat with x = myMult(2,3) down to 1
 put x after s
 end repeat\\s && countCalls`,
-            '654321 1'
-        ],
-        [
-            `
+        '654321 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat with x = myMult(2,3) to myMult(3,3)
 put x after s
 end repeat\\s && countCalls`,
-            '6789 2'
-        ],
-        [
-            `
+        '6789 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat with x = myMult(3,3) down to myMult(2,3)
 put x after s
 end repeat\\s && countCalls`,
-            '9876 2'
-        ],
-        [
-            `
+        '9876 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat myMult(2,3) times
 put "-" after s
 end repeat\\s && countCalls`,
-            '------ 1'
-        ],
-        [
-            `
+        '------ 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put "" into s
 repeat myMult(1,3)
 put "-" after s
 end repeat\\s && countCalls`,
-            '--- 1'
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        '--- 1'
+    );
+
+    b.batchEvaluate(h);
 });
 t.test('expand in repeat while/until', () => {
     h.provideCustomFnInStackScript();
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        /* repeat while */
-        /* confirmed in emulator the fn is called at every point */
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    /* repeat while */
+    /* confirmed in emulator the fn is called at every point */
+    b.t(
+        `
 put 0 into countCalls
 put 1 into x
 put "" into s
@@ -608,10 +603,10 @@ repeat while x < myMult(2,3)
 put x after s
 add 1 to x
 end repeat\\s && countCalls`,
-            '12345 6'
-        ],
-        [
-            `
+        '12345 6'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into x
 put "" into s
@@ -619,10 +614,10 @@ repeat while myMult(2,3) >= x
 put x after s
 add 1 to x
 end repeat\\s && countCalls`,
-            '123456 7'
-        ],
-        [
-            `
+        '123456 7'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into x
 put "" into s
@@ -630,10 +625,10 @@ repeat until myMult(2,3) < x
 put x after s
 add 1 to x
 end repeat\\s && countCalls`,
-            '123456 7'
-        ],
-        [
-            `
+        '123456 7'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into x
 put "" into s
@@ -641,11 +636,11 @@ repeat until x >= myMult(2,3)
 put x after s
 add 1 to x
 end repeat\\s && countCalls`,
-            '12345 6'
-        ],
-        /* nested repeat */
-        [
-            `
+        '12345 6'
+    );
+    /* nested repeat */
+    b.t(
+        `
 put 0 into countCalls
 put 1 into x
 put "" into s
@@ -657,193 +652,193 @@ repeat while y < myMult(1,3)
 end repeat
 add 1 to x
 end repeat\\s && countCalls`,
-            '1/1,1/2,2/1,2/2,3/1,3/2,4/1,4/2,5/1,5/2, 21'
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        '1/1,1/2,2/1,2/2,3/1,3/2,4/1,4/2,5/1,5/2, 21'
+    );
+
+    b.batchEvaluate(h);
 });
 t.test('expand in VpcLineCategory_.built in command', () => {
     h.provideCustomFnInStackScript();
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    b.t(
+        `
 put 0 into countCalls
 set the left of cd fld "p1" of card "c" to 1
 set the left of cd fld "p1" of card "c" to myMult(2,3)
 \\the left of cd fld "p1" of card "c" && countCalls`,
-            '6 1'
-        ],
-        [
-            `
+        '6 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 set the left of cd fld "p1" of card "c" to 1
 set the left of cd fld ("p" & myMult(1,1)) of card "c" to myMult(2,3)
 \\the left of cd fld "p1" of card "c" && countCalls`,
-            '6 2'
-        ],
-        [
-            `
+        '6 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into x
 add myMult(2,3) to x\\x && countCalls`,
-            '7 1'
-        ],
-        [
-            `
+        '7 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into x
 add myMult(2,myMult(1,3)) to x\\x && countCalls`,
-            '7 2'
-        ],
-        [
-            `
+        '7 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into cd fld "p1" of card "c"
 add myMult(2,3) to cd fld "p1" of card "c"
 \\cd fld "p1" of card "c" && countCalls`,
-            '7 1'
-        ],
-        [
-            `
+        '7 1'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into cd fld "p1" of card "c"
 add myMult(2,3) to cd fld ("p" & myMult(1,1)) of card "c"
 \\cd fld "p1" of card "c" && countCalls`,
-            '7 2'
-        ],
-        [
-            `
+        '7 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into cd fld "p1" of card "c"
 put myMult(2,myMult(1,3)) into cd fld "p1" of card "c"
 \\cd fld "p1" of card "c" && countCalls`,
-            '6 2'
-        ],
-        [
-            `
+        '6 2'
+    );
+    b.t(
+        `
 put 0 into countCalls
 put 1 into cd fld "p1" of card "c"
 put myMult(2,myMult(1,3)) into cd fld ("p" & myMult(1,1)) of card "c"
 \\cd fld "p1" of card "c" && countCalls`,
-            '6 3'
-        ],
-        /* across escaped lines */
-        [
-            `
+        '6 3'
+    );
+    /* across escaped lines */
+    b.t(
+        `
 put myMult(2,3) + myMult(1,3) into x
 {RESULT}x`,
-            '9'
-        ],
-        [
-            `
+        '9'
+    );
+    b.t(
+        `
 put myMult(2,3) + \\\n myMult(1,3) into x
 {RESULT}x`,
-            '9'
-        ],
-        [
-            `
+        '9'
+    );
+    b.t(
+        `
 put 6 + \\\n myMult(1,3) into x
 {RESULT}x`,
-            '9'
-        ],
-        [
-            `
+        '9'
+    );
+    b.t(
+        `
 put 6 + \\\n myMult(1, \\\n 3) into x
 {RESULT}x`,
-            '9'
-        ],
-        [
-            `
+        '9'
+    );
+    b.t(
+        `
 put 6 + \\\n myMult(\\\n 1, 3\\\n) into x
 {RESULT}x`,
-            '9'
-        ],
-        [
-            `
+        '9'
+    );
+    b.t(
+        `
 put 6 + \\\n myMult(\\\n1\\\n,\\\n3\\\n) into x
 {RESULT}x`,
-            '9'
-        ],
-        [
-            `
+        '9'
+    );
+    b.t(
+        `
 put 6 + \\\n myMult(2, \\\n myMult(3, \\\n 4)) into x
 {RESULT}x`,
-            '30'
-        ],
-        [
-            `
+        '30'
+    );
+    b.t(
+        `
 put 6 + \\\n myMult(1, \\\n 3) + myMult(\\\n 1, 3) + myMult(1, 3 \\\n) into x
 {RESULT}x`,
-            '15'
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        '15'
+    );
+
+    b.batchEvaluate(h);
 });
 t.test('expand in VpcLineCategory_.GoCardImpl', () => {
     h.provideCustomFnInStackScript();
     let numExpectedCalls = 2;
     /* in rewrites we currently expand it twice, not perfect but good enough */
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        /* go to card */
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    /* go to card */
+    b.t(
+        `
     put 0 into countCalls
     go to card myMult(1,1)
     put the short id of this cd is the short id of card 1 into ret
     \\ret && countCalls`,
-            `true ${numExpectedCalls}`
-        ],
-        [
-            `
+        `true ${numExpectedCalls}`
+    );
+    b.t(
+        `
     put 0 into countCalls
     go to card (1 + myMult(1,1))
     put the short id of this cd is the short id of card 2 into ret
     \\ret && countCalls`,
-            `true ${numExpectedCalls}`
-        ],
-        [
-            `
+        `true ${numExpectedCalls}`
+    );
+    b.t(
+        `
     put 0 into countCalls
     go to card myMult(1,3)
     put the short id of this cd is the short id of card 3 into ret
     \\ret && countCalls`,
-            `true ${numExpectedCalls}`
-        ],
-        [
-            `
+        `true ${numExpectedCalls}`
+    );
+    b.t(
+        `
     put 0 into countCalls
     go to card (myMult(3,1) + myMult(1,1))
     put the short id of this cd is the short id of card 4 into ret
     \\ret && countCalls`,
-            `true ${2 * numExpectedCalls}`
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        `true ${2 * numExpectedCalls}`
+    );
+
+    b.batchEvaluate(h);
 });
 t.test('expand in VpcLineCategory_.CallDynamic', () => {
     h.provideCustomFnInStackScript();
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    b.t(
+        `
 global g
 put 0 into countCalls
 do "global g" & cr & "put " & myMult(2,3) & " + 1 into g"
 \\g && countCalls`,
-            '7 1'
-        ],
-        [
-            `
+        '7 1'
+    );
+    b.t(
+        `
 global g
 put 0 into countCalls
 send "global g" & cr & "put " & myMult(2,3) & " + 1 into g" to this card
 \\g && countCalls`,
-            '7 1'
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        '7 1'
+    );
+
+    b.batchEvaluate(h);
 });
 t.test('expand in VpcLineCategory_.CallHandler', () => {
     h.provideCustomFnInStackScript(`
@@ -852,42 +847,42 @@ global g
 put p1+p2 into g
 end theTest
 `);
-    let batch: [string, string][] = [
-        ['global countCalls\\0', '0'],
-        [
-            `
+    let b = new ScriptTestBatch();
+    b.t('global countCalls\\0', '0');
+    b.t(
+        `
 global g
 put 0 into countCalls
 theTest 4, 5
 \\g && countCalls`,
-            '9 0'
-        ],
-        [
-            `
+        '9 0'
+    );
+    b.t(
+        `
 global g
 put 0 into countCalls
 theTest 4, myMult(2,3)
 \\g && countCalls`,
-            '10 1'
-        ],
-        [
-            `
+        '10 1'
+    );
+    b.t(
+        `
 global g
 put 0 into countCalls
 theTest myMult(2,3), myMult(3,3)
 \\g && countCalls`,
-            '15 2'
-        ],
-        [
-            `
+        '15 2'
+    );
+    b.t(
+        `
 global g
 put 0 into countCalls
 theTest myMult(2,myMult(3,4)), myMult(5,6)
 \\g && countCalls`,
-            '54 3'
-        ]
-    ];
-    h.testBatchEvaluate(batch);
+        '54 3'
+    );
+
+    b.batchEvaluate(h);
 });
 
 /**
