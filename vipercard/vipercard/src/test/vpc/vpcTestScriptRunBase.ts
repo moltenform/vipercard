@@ -6,7 +6,7 @@
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal, checkThrow } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { BrowserInfo, SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
@@ -369,7 +369,6 @@ put ${s} into testresult`;
     }
 
     testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
-        ScriptTestBatch.keepTrackOfPending.set( false)
         assertWarn(tests.length > 0, 'R6|');
         let getBeforeLine = (s: string): [string, string] => {
             let ptsWithRes = s.split('{RESULT}');
@@ -639,16 +638,20 @@ export class ScriptTestBatch {
         this.tests.push([s1, s2])
     }
 
-    batchEvaluate(runner:TestVpcScriptRunBase, typ = BatchType.default) {
-        ScriptTestBatch.keepTrackOfPending.add(this.id, false)
+    batchEvaluate(runner:TestVpcScriptRunBase, typ = BatchType.default, onlyTestsWithPrefix='') {
+        if (!onlyTestsWithPrefix) {
+            ScriptTestBatch.keepTrackOfPending.add(this.id, false)
+        }
+
+        let whichTests = this.tests.filter((t) => t[1].startsWith(onlyTestsWithPrefix))
         if (typ === BatchType.default) {
-            runner.testBatchEvaluate(this.tests)
+            runner.testBatchEvaluate(whichTests)
         } else if (typ === BatchType.testBatchEvalCommutative) {
-            runner.testBatchEvalCommutative(this.tests)
+            runner.testBatchEvalCommutative(whichTests)
         } else if (typ === BatchType.testBatchEvalInvert) {
-            runner.testBatchEvalInvert(this.tests)
+            runner.testBatchEvalInvert(whichTests)
         } else if (typ === BatchType.testBatchEvalInvertAndCommute) {
-            runner.testBatchEvalInvertAndCommute(this.tests)
+            runner.testBatchEvalInvertAndCommute(whichTests)
         } else {
             checkThrow(false, "unknown batchtype " + typ)
         }

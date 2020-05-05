@@ -36,167 +36,169 @@ t.test('vpcTestScriptBasics', () => {
     /* preparse error2 */
     b.t('put ?? into x', 'PREPARSEERR:')
     b.batchEvaluate(h)
-    
+
     /* get a different string */
     assertAsserts('RN|', 'assert:', () => {
-        batch = [['x = 4', 'PREPARSEERR:(incorrectmessage)']];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('x = 4', 'PREPARSEERR:(incorrectmessage)')
+        b.batchEvaluate(h)
     });
     assertAsserts('RM|', 'assert:', () => {
-        batch = [['put unknownVar into x\\x', 'ERR:(incorrectmessage)x']];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('put unknownVar into x\\x', 'ERR:(incorrectmessage)x')
+        b.batchEvaluate(h)
     });
     assertAsserts('RL|', 'assert:', () => {
-        batch = [['put 9 into x\\x', '11111']];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('put 9 into x\\x', '11111')
+        b.batchEvaluate(h)
     });
     /* failure expected, but succeeds */
     assertAsserts('RK|', 'assert:', () => {
-        batch = [['put 9 into x', 'PREPARSEERR:']];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('put 9 into x', 'PREPARSEERR:')
+        b.batchEvaluate(h)
     });
     assertAsserts('RJ|', 'assert:', () => {
-        batch = [['put 9 into x\\x', 'ERR:']];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('put 9 into x\\x', 'ERR:')
+        b.batchEvaluate(h)
     });
     assertAsserts('RI|', 'assert:', () => {
-        batch = [['put unknownVar into x\\x', '1111']];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('put unknownVar into x\\x', '1111')
+        b.batchEvaluate(h)
     });
     /* same as above, but more tests in the array */
     assertAsserts('RH|', 'assert:', () => {
-        batch = [
-            ['put 5 into x\\x', '5'],
-            ['put 9 into x\\x', 'ERR:']
-        ];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('put 5 into x\\x', '5')
+        b.t('put 9 into x\\x', 'ERR:')
+        b.batchEvaluate(h)
     });
     assertAsserts('RG|', 'assert:', () => {
-        batch = [
-            ['put 3 into x\\x', '3'],
-            ['put unknownVar into x\\x', '1111']
-        ];
-        h.testBatchEvaluate(batch);
+        let b = new ScriptTestBatch()
+        b.t('put 3 into x\\x', '3')
+        b.t('put unknownVar into x\\x', '1111')
+        b.batchEvaluate(h)
     });
 });
 t.test('checkLexing', () => {
-    let batch: [string, string][];
-    batch = [
+    let b = new ScriptTestBatch()
         /* empty lines don't interfere with scripts */
-        ['\n\n\n\nput 1 into t1\n\n\n\\t1', '1'],
+    b.t('\n\n\n\nput 1 into t1\n\n\n\\t1', '1');
 
         /* wrong indentation doesn't interfere with scripts */
-        ['\n         put 1 into t2\n\\t2', '1'],
-        ['\n\t\t\t\t\tput 1 into t3\n\\t3', '1'],
+    b.t('\n         put 1 into t2\n\\t2', '1');
+    b.t('\n\t\t\t\t\tput 1 into t3\n\\t3', '1');
 
         /* trailing whitespace doesn't interfere with scripts */
-        ['\nput 1 into t4           \n\\t4', '1'],
-        ['\nput 1 into t5\t\t\t\t\t\n\\t5', '1'],
+    b.t('\nput 1 into t4           \n\\t4', '1');
+    b.t('\nput 1 into t5\t\t\t\t\t\n\\t5', '1');
 
         /* continued lines */
-        ['put 1 {BSLASH}\n into t6\\t6', '1'],
-        ['put {BSLASH}\n 1 {BSLASH}\n into {BSLASH}\n t7\\t7', '1'],
-        ['put 8 into t8{BSLASH}\n{BSLASH}\n{BSLASH}\n\\t8', '8'],
-        ['{BSLASH}\n{BSLASH}\n{BSLASH}\nput 9 into t9\\t9', '9'],
+    b.t('put 1 {BSLASH}\n into t6\\t6', '1');
+    b.t('put {BSLASH}\n 1 {BSLASH}\n into {BSLASH}\n t7\\t7', '1');
+    b.t('put 8 into t8{BSLASH}\n{BSLASH}\n{BSLASH}\n\\t8', '8');
+    b.t('{BSLASH}\n{BSLASH}\n{BSLASH}\nput 9 into t9\\t9', '9');
 
         /* continued lines with whitespace after the backslash */
-        ['put 1 {BSLASH} \n into t6\\t6', '1'],
-        ['put {BSLASH}\t  \n 1 {BSLASH}\t  \n into {BSLASH}\t  \n t7\\t7', '1'],
+    b.t('put 1 {BSLASH} \n into t6\\t6', '1');
+    b.t('put {BSLASH}\t  \n 1 {BSLASH}\t  \n into {BSLASH}\t  \n t7\\t7', '1');
 
         /* continued lines should still show errors on the expected line */
-        ['put {BSLASH}\n xyz000 into tnot\\tnot', 'ERR:no variable found with this name'],
-        ['put xyz000 into tnot\\tnot', 'ERR:no variable found with this name'],
-        ['1 {BSLASH}\n + {BSLASH}\n xyz000', 'ERR:no variable found with this name'],
+    b.t('put {BSLASH}\n xyz000 into tnot\\tnot', 'ERR:no variable found with this name');
+    b.t('put xyz000 into tnot\\tnot', 'ERR:no variable found with this name');
+    b.t('1 {BSLASH}\n + {BSLASH}\n xyz000', 'ERR:no variable found with this name');
 
         /* continue a across a line */
-        ['put "a" & {BSLASH}\n "b" into test\\test', 'ab'],
-        ['put 2 + {BSLASH}\n 3 into test\\test', '5'],
+    b.t('put "a" & {BSLASH}\n "b" into test\\test', 'ab');
+    b.t('put 2 + {BSLASH}\n 3 into test\\test', '5');
 
         /* string literal can contain comment symbols */
-        ['put "--thetest" into test\\test', '--thetest'],
-        ['put "  --thetest" into test\\test', '  --thetest'],
-        ['put "aa--thetest" into test\\test', 'aa--thetest'],
-        ['put "aa--thetest--test" into test\\test', 'aa--thetest--test'],
+    b.t('put "--thetest" into test\\test', '--thetest');
+    b.t('put "  --thetest" into test\\test', '  --thetest');
+    b.t('put "aa--thetest" into test\\test', 'aa--thetest');
+    b.t('put "aa--thetest--test" into test\\test', 'aa--thetest--test');
 
         /* lexing: most but not all constructs need whitespace */
-        ['2*3*4', '24'],
-        ['2 * 3 * 4', '24'],
-        ['put 2 into myvar\\myvar', '2'],
-        ['2*myvar*3', '12'],
-        ['7 mod 3', '1'],
-        ['7 div 3', '2'],
-        ['put 90 into mod3\\mod3', '90'],
-        ['put 91 into div3\\div3', '91'],
+    b.t('2*3*4', '24');
+    b.t('2 * 3 * 4', '24');
+    b.t('put 2 into myvar\\myvar', '2');
+    b.t('2*myvar*3', '12');
+    b.t('7 mod 3', '1');
+    b.t('7 div 3', '2');
+    b.t('put 90 into mod3\\mod3', '90');
+    b.t('put 91 into div3\\div3', '91');
 
         /* lexing: strings don't need space */
-        ['"a"&"b"', 'ab'],
-        ['"a"&&"b"', 'a b'],
-        ['"single\'quotes ok"', "single'quotes ok"],
-        ['"single\'quotes\'ok"', "single'quotes'ok"],
+    b.t('"a"&"b"', 'ab');
+    b.t('"a"&&"b"', 'a b');
+    b.t('"single\'quotes ok"', "single'quotes ok");
+     b.t('"single\'quotes\'ok"', "single'quotes'ok");
 
         /* it is ok if identifiers contain a keyword. ("of" is a keyword) */
         /* if "of" is a keyword, "of_" is still an ok variable name */
         /* this is why it's important that the lexer regex is */
         /* /of(?![a-zA-Z0-9_])/ and not just /of/ */
-        ['put 9 into put4into\\put4into', '9'],
-        ['put 9 into ofa\\ofa', '9'],
-        ['put 9 into ofcards\\ofcards', '9'],
-        ['put 9 into ofnumber\\ofnumber', '9'],
-        ['put 9 into ofto\\ofto', '9'],
-        ['put 9 into of_to\\of_to', '9'],
-        ['put 9 into ofa\\ofa', '9'],
-        ['put 9 into ofA\\ofA', '9'],
-        ['put 9 into of1\\of1', '9'],
-        ['put 9 into aof\\aof', '9'],
-        ['put 9 into Aof\\Aof', '9'],
-        ['put 9 into Zof\\Zof', '9'],
+    b.t('put 9 into put4into\\put4into', '9');
+    b.t('put 9 into ofa\\ofa', '9');
+    b.t('put 9 into ofcards\\ofcards', '9');
+    b.t('put 9 into ofnumber\\ofnumber', '9');
+    b.t('put 9 into ofto\\ofto', '9');
+    b.t('put 9 into of_to\\of_to', '9');
+    b.t('put 9 into ofa\\ofa', '9');
+    b.t('put 9 into ofA\\ofA', '9');
+    b.t('put 9 into of1\\of1', '9');
+    b.t('put 9 into aof\\aof', '9');
+    b.t('put 9 into Aof\\Aof', '9');
+    b.t('put 9 into Zof\\Zof', '9');
         ['put 9 into a\\a', '9'] /* used to be disallowed */,
-        ['put 9 into aa\\aa', '9'],
-        ['put 9 into a4\\a4', '9'],
+    b.t('put 9 into aa\\aa', '9');
+    b.t('put 9 into a4\\a4', '9');
 
         /* most token types can't be used as a var name */
-        ['put 9 into length\\0', 'ERR:name not'],
-        ['put 9 into if\\0', 'ERR:name not allowed'],
-        ['put 9 into 4\\0', 'ERR:parse error'],
-        ['put 9 into short', 'PREPARSEERR:'],
-        ['put 9 into long', 'PREPARSEERR:'],
-        ['put 9 into id', 'PREPARSEERR:'],
-        ['put 9 into in', 'PREPARSEERR:'],
-        ['put 9 into and', 'PREPARSEERR:'],
+    b.t('put 9 into length\\0', 'ERR:name not');
+    b.t('put 9 into if\\0', 'ERR:name not allowed');
+    b.t('put 9 into 4\\0', 'ERR:parse error');
+    b.t('put 9 into short', 'PREPARSEERR:');
+    b.t('put 9 into long', 'PREPARSEERR:');
+    b.t('put 9 into id', 'PREPARSEERR:');
+    b.t('put 9 into in', 'PREPARSEERR:');
+    b.t('put 9 into and', 'PREPARSEERR:');
 
         /* constants can't be used as a var name */
-        ['put 9 into pi\\0', 'ERR:a constant'],
-        ['put 9 into space\\0', 'ERR:a constant'],
-        ['put 9 into left\\0', 'ERR:a constant'],
-        ['put 9 into underline\\0', 'ERR:a constant'],
-        ['put 9 into radio\\0', 'ERR:a constant'],
+    b.t('put 9 into pi\\0', 'ERR:a constant');
+    b.t('put 9 into space\\0', 'ERR:a constant');
+    b.t('put 9 into left\\0', 'ERR:a constant');
+    b.t('put 9 into underline\\0', 'ERR:a constant');
+    b.t('put 9 into radio\\0', 'ERR:a constant');
 
         /* other reserved words can't be used as a var name */
-        ['put 9 into dialogs\\0', 'ERR:name not allowed'],
-        ['put 9 into set\\0', 'ERR:name not allowed'],
-        ['put 9 into pass\\0', 'ERR:name not allowed'],
-        ['put 9 into exit\\0', 'ERR:name not allowed'],
+    b.t('put 9 into dialogs\\0', 'ERR:name not allowed');
+    b.t('put 9 into set\\0', 'ERR:name not allowed');
+    b.t('put 9 into pass\\0', 'ERR:name not allowed');
+    b.t('put 9 into exit\\0', 'ERR:name not allowed');
 
         /* property names can be used as a var name, even
         if they are a different token type.
         go through every HAnyAllowedVariableName */
-        ['put 9 into autohilite\\autohilite', '9'],
-        ['put 9 into number\\number', '9'],
-        ['put 9 into a\\a', '9'],
-        ['put 9 into autotab\\autotab', '9'],
-        ['put 9 into enabled\\enabled', '9'],
-        ['put 9 into textfont\\textfont', '9'],
-        ['put 9 into label\\label', '9'],
-        ['put 9 into alltext\\alltext', '9'],
+    b.t('put 9 into autohilite\\autohilite', '9');
+    b.t('put 9 into number\\number', '9');
+    b.t('put 9 into a\\a', '9');
+    b.t('put 9 into autotab\\autotab', '9');
+    b.t('put 9 into enabled\\enabled', '9');
+    b.t('put 9 into textfont\\textfont', '9');
+    b.t('put 9 into label\\label', '9');
+    b.t('put 9 into alltext\\alltext', '9');
 
         /* different tkidentifiers */
-        ['put 9 into _underscore_ok\\_underscore_ok', 'PREPARSEERR:lex err'],
-        ['put 9 into underscore_ok\\underscore_ok', '9'],
-        ['put 9 into $dollar$ok\\$dollar$ok', 'PREPARSEERR:lex err'],
-        ['put 9 into dollar$ok\\dollar$ok', '9'],
-        ['put 9 into 1var1\\1var1', 'PREPARSEERR:lex err'],
-        ['put 9 into var1\\var1', '9']
-    ];
+    b.t('put 9 into _underscore_ok\\_underscore_ok', 'PREPARSEERR:lex err');
+    b.t('put 9 into underscore_ok\\underscore_ok', '9');
+    b.t('put 9 into $dollar$ok\\$dollar$ok', 'PREPARSEERR:lex err');
+    b.t('put 9 into dollar$ok\\dollar$ok', '9');
+    b.t('put 9 into 1var1\\1var1', 'PREPARSEERR:lex err');
+    b.t('put 9 into var1\\var1', '9');
 
     h.testBatchEvaluate(batch);
 
@@ -220,106 +222,91 @@ t.test('checkLexing', () => {
     );
 
     /* we changed lexer to disallow this, since it is clearly wrong */
-    h.assertPreparseErrLn('put 3into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3into into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3sin into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3of into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3id into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 3e into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 7mod3 into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 7mod 3 into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 7div3 into test', 'unexpected character', 3);
-    h.assertPreparseErrLn('put 7div 3 into test', 'unexpected character', 3);
-    batch = [
-        ['put 7 div3 into x\\x', 'ERR:parse error'],
-        ['put 7 mod3 into x\\x', 'ERR:parse error']
-    ];
+    b.t('put 3into test', 'PREPARSEERR:unexpected character');
+    b.t('put 3into into test', 'PREPARSEERR:unexpected character');
+    b.t('put 3sin into test', 'PREPARSEERR:unexpected character');
+    b.t('put 3of into test', 'PREPARSEERR:unexpected character');
+    b.t('put 3id into test', 'PREPARSEERR:unexpected character');
+    b.t('put 3e into test', 'PREPARSEERR:unexpected character');
+    b.t('put 7mod3 into test', 'PREPARSEERR:unexpected character');
+    b.t('put 7mod 3 into test', 'PREPARSEERR:unexpected character');
+    b.t('put 7div3 into test', 'PREPARSEERR:unexpected character');
+    b.t('put 7div 3 into test', 'PREPARSEERR:unexpected character');
+    b.t('put 7 div3 into x\\x', 'ERR:parse error');
+    b.t('put 7 mod3 into x\\x', 'ERR:parse error');
+
     h.testBatchEvaluate(batch);
 
     /* for keywords/semikeywords that would be a common variable name, check */
-    h.assertPreparseErrLn('x = 4', "this isn't C", 3);
-    h.assertPreparseErrLn('xyz(4)', "this isn't C", 3);
-    h.assertPreparseErrLn('sin(4)', "this isn't C", 3);
+    b.t('x = 4', "PREPARSEERR:this isn't C");
+    b.t('xyz(4)', "PREPARSEERR:this isn't C");
+    b.t('sin(4)', "PREPARSEERR:this isn't C");
+    h.testBatchEvaluate(batch);
 
-    batch = [
-        /* comments */
-        [
-            `get 1 + 2 -- + 3 -- + 4
-put it into x\\x`,
+    b.t(
+            `get 1 + 2 -- + 3 -- + 4\n put it into x\\x`,
             '3'
-        ],
-        [
-            `get 1 + 2 -- + 3 + 4
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2 -- + 3 + 4\n put it into x\\x`,
             '3'
-        ],
-        [
-            `get 1 + 2 -- + 3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2 -- + 3\n put it into x\\x`,
             '3'
-        ],
-        [
-            `get 1 + 2 -- 3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2 -- 3\n put it into x\\x`,
             '3'
-        ],
-        [
-            `get 1 + 2 --3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2 --3\n put it into x\\x`,
             '3'
-        ],
-        [
-            `get 1 + 2--3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2--3\n put it into x\\x`,
             '3'
-        ],
-        [
-            `get 1 + 2-- 3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2-- 3\n put it into x\\x`,
             '3'
-        ],
-        [
-            `get 1 + 2- -3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2- -3\n put it into x\\x`,
             '6'
-        ],
-        [
-            `get 1 + 2 - -3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2 - -3\n put it into x\\x`,
             '6'
-        ],
-        [
-            `get 1 + 2 - - 3
-put it into x\\x`,
+        ); 
+ b.t(
+            `get 1 + 2 - - 3\n put it into x\\x`,
             '6'
-        ],
-        [
-            `put 1 into x
--- put x + 1 into x
-put x into x\\x`,
+        ); 
+ b.t(
+            `put 1 into x\n -- put x + 1 into x\n put x into x\\x`,
             '1'
-        ],
-        [
+        ); 
+ b.t(
             `put 1 into x
 -- put x + 1 into x
 -- put x + 1 into x
 -- put x + 1 into x
 put x into x\\x`,
             '1'
-        ],
-        [
+        ); 
+ b.t(
             `put 1 into x--'lex''error' #$%$%
 -- put x + 1 into x 'lex''error' #$%$%
 put x into x\\x`,
             '1'
-        ],
-        [
+        ); 
+ b.t(
             `put 1 into x--parse 0 error 0 number number number
 -- put x + 1 into x 0 parse 0 error 0 number number number
 put x into x\\x`,
             '1'
-        ]
-    ];
+       )
     h.testBatchEvaluate(batch);
 
     /* lexing: baseline for runGeneralCode */
