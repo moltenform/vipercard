@@ -1,5 +1,5 @@
 
-/* auto */ import { OrdinalOrPosition, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, findPositionFromOrdinalOrPosition, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElCard } from './velCard';
@@ -70,7 +70,8 @@ export const StackOrderHelpers = /* static class */ {
         let cdids = model.stack.getCardOrder();
         let currentCdPosition = this.getCardStackPosition(model.stack, currentCardId);
         let lastCdPosition = cdids.length - 1;
-        let nextCdPosition = getPositionFromOrdinalOrPosition(pos, currentCdPosition, 0, lastCdPosition);
+        let nextCdPosition = findPositionFromOrdinalOrPosition(pos, currentCdPosition, 0, lastCdPosition);
+        checkThrow(nextCdPosition !== undefined, "card ordinal not found")
         return this.getFromCardStackPosition(model, nextCdPosition);
     },
 

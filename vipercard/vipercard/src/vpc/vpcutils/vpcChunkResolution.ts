@@ -1,10 +1,11 @@
 
 /* auto */ import { VpcIntermedValBase, VpcVal } from './vpcVal';
 /* auto */ import { ReadableContainer, WritableContainer } from './vpcUtils';
-/* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, getPositionFromOrdinalOrPosition } from './vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcChunkPreposition, VpcGranularity, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition } from './vpcEnums';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
+import { largeArea } from '../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -170,7 +171,13 @@ const ChunkResolution = /* static class */ {
         let last = ch.last555;
         if (ch.ordinal555 !== undefined) {
             let count = ChunkResolutionApplication.applyCount(s, itemDel, ch.type555, false);
-            first = getPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, count);
+            let maybeFirst = findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, count);
+            if (maybeFirst === undefined) {
+                return undefined
+            } else {
+                first = maybeFirst
+            }
+
             last = first;
         }
 
@@ -219,7 +226,7 @@ const ChunkResolution = /* static class */ {
         let last = ch.last555;
         if (ch.ordinal555 !== undefined) {
             let count = ChunkResolutionApplication.applyCount(sInput, itemDel, ch.type555, false);
-            first = getPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, count);
+            first = ensureDefined(findPositionFromOrdinalOrPosition(ch.ordinal555, 0, 1, largeArea), "too big an index")
             last = first;
         }
 

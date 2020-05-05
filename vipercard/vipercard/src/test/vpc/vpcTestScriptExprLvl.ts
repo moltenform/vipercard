@@ -737,12 +737,12 @@ t.test('evalRuleLvl6', () => {
     b.t('second char of "abcd"', 'b');
     b.t('third char of "abcd"', 'c');
     b.t('fourth char of "abcd"', 'd');
-    b.t('fifth char of "abcd"', 'd');
-    b.t('sixth char of "abcd"', 'd');
-    b.t('seventh char of "abcd"', 'd');
-    b.t('eighth char of "abcd"', 'd');
-    b.t('ninth char of "abcd"', 'd');
-    b.t('tenth char of "abcd"', 'd');
+    b.t('fifth char of "abcd"', '');
+    b.t('sixth char of "abcd"', '');
+    b.t('seventh char of "abcd"', '');
+    b.t('eighth char of "abcd"', '');
+    b.t('ninth char of "abcd"', '');
+    b.t('tenth char of "abcd"', '');
     b.t('middle char of "abcd"', 'c');
     b.t('last char of "abcd"', 'd');
 

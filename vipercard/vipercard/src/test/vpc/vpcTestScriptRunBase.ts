@@ -9,8 +9,8 @@
 /* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrow, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { BrowserInfo, SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, coalesceIfFalseLike, checkIsProductionBuild } from './../../ui512/utils/util512Base';
+/* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
+/* auto */ import { O, bool, checkIsProductionBuild, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
@@ -19,6 +19,84 @@
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
+
+/**
+ * run a set of script tests.
+ * 
+ * features: use ERR:details or PARSEERR:details
+ * to indicate an expected exception
+ * use ERR:5:details to indicate line failure
+ * use MARK: to point to a line, is ignored
+ * specify BatchType.floatingPoint to allow small differences
+ * specify BatchType.testBatchEvalCommutative to test both orders
+ * use "onlyTestsWithPrefix" to enable only certain tests, for debugging
+ */
+export class ScriptTestBatch {
+    protected static keepTrackOfPending = new MapKeyToObjectCanSet<string>();
+    id: string;
+    locked = false
+    tests: [string, string][] = [];
+    constructor() {
+        let getTraceback = checkIsProductionBuild() ? '(traceback not supported)' : new Error().stack?.toString()
+        getTraceback = getTraceback ?? '(traceback not supported)'
+        this.id = Math.random().toString();
+        ScriptTestBatch.keepTrackOfPending.add(this.id, getTraceback);
+    }
+
+    t(s1: string, s2: string) {
+        assertTrue(!this.locked, "forgot to create a new batch after evaluating?")
+        this.tests.push([s1, s2]);
+    }
+
+    batchEvaluate(
+        runner: TestVpcScriptRunBase,
+        typ = BatchType.default,
+        onlyTestsWithPrefix = ''
+    ) {
+        if (!onlyTestsWithPrefix) {
+            ScriptTestBatch.keepTrackOfPending.set(this.id, '');
+        }
+
+        let isFloatingPt = false;
+        if (typ === BatchType.floatingPoint) {
+            typ = BatchType.default;
+            isFloatingPt = true;
+        } else if (typ === BatchType.floatingPointCommutative) {
+            typ = BatchType.testBatchEvalCommutative;
+            isFloatingPt = true;
+        }
+
+        let whichTests = this.tests.filter(t => t[1].startsWith(onlyTestsWithPrefix));
+        if (typ === BatchType.default) {
+            runner.testBatchEvaluate(whichTests, isFloatingPt);
+        } else if (typ === BatchType.testBatchEvalCommutative) {
+            runner.testBatchEvalCommutative(whichTests, isFloatingPt);
+        } else if (typ === BatchType.testBatchEvalInvert) {
+            runner.testBatchEvalInvert(whichTests);
+        } else if (typ === BatchType.testBatchEvalInvertAndCommute) {
+            runner.testBatchEvalInvertAndCommute(whichTests);
+        } else {
+            checkThrow(false, 'unknown batchtype ' + typ);
+        }
+
+        /* prevent you from re-using the object */
+        this.locked = true
+    }
+
+    static checkPending() {
+        let vals = ScriptTestBatch.keepTrackOfPending.getVals();
+        let foundSome = false;
+        for (let val of vals) {
+            if (val) {
+                foundSome = true;
+                console.error("Still pending from:")
+                console.error(val)
+            }
+        }
+
+        assertTrue(!foundSome, 'Test batch(es) left pending');
+    }
+}
 
 /**
  * infrastructure to set up a mock ViperCard environment
@@ -368,8 +446,8 @@ put ${s} into testresult`;
         return this.vcstate.runtime.codeExec.globals.get('testresult');
     }
 
-    testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
-        assertWarn(tests.length > 0, 'R6|');
+    testBatchEvaluate(testsRaw: [string, string][], floatingPoint = false) {
+        assertWarn(testsRaw.length > 0, 'R6|');
         let getBeforeLine = (s: string): [string, string] => {
             let ptsWithRes = s.split('{RESULT}');
             if (ptsWithRes.length > 1) {
@@ -382,6 +460,7 @@ put ${s} into testresult`;
             }
         };
 
+        let tests: [string, string][] = testsRaw.map(item => [item[0], item[1].replace(/MARK:/, '')]);
         let testsErr = tests.filter(item => item[1].startsWith('ERR:'));
         let testsPreparseErr = tests.filter(item => item[1].startsWith('PREPARSEERR:'));
         let testsNoErr = tests.filter(
@@ -513,6 +592,7 @@ put ${s} into testresult`;
     }
 
     testBatchEvalCommutative(tests: [string, string][], floatingPoint = false) {
+        tests = tests.map(item => [item[0], item[1].replace(/MARK:/, '')]);
         let testsSameorder = tests.map((item): [string, string] => {
             return [item[0].replace(/_/g, ''), item[1]];
         });
@@ -528,6 +608,7 @@ put ${s} into testresult`;
     }
 
     testBatchEvalInvert(tests: [string, string][]) {
+        tests = tests.map(item => [item[0], item[1].replace(/MARK:/, '')]);
         let flipOperation = (op: string): [string, boolean] => {
             if (op === 'is') {
                 return ['is not', false];
@@ -553,6 +634,7 @@ put ${s} into testresult`;
     }
 
     testBatchEvalInvertAndCommute(tests: [string, string][]) {
+        tests = tests.map(item => [item[0], item[1].replace(/MARK:/, '')]);
         let flipOperation = (op: string): [string, string] => {
             /* first is the op when order is reversed */
             /* second is the op that is logical inverse */
@@ -627,69 +709,3 @@ export enum BatchType {
     floatingPointCommutative
 }
 
-export class ScriptTestBatch {
-    protected static keepTrackOfPending = new MapKeyToObjectCanSet<string>();
-    id: string;
-    locked = false
-    tests: [string, string][] = [];
-    constructor() {
-        let getTraceback = checkIsProductionBuild() ? '(traceback not supported)' : new Error().stack?.toString()
-        getTraceback = getTraceback ?? '(traceback not supported)'
-        this.id = Math.random().toString();
-        ScriptTestBatch.keepTrackOfPending.add(this.id, getTraceback);
-    }
-
-    t(s1: string, s2: string) {
-        assertTrue(!this.locked, "forgot to create a new batch after evaluating?")
-        this.tests.push([s1, s2]);
-    }
-
-    batchEvaluate(
-        runner: TestVpcScriptRunBase,
-        typ = BatchType.default,
-        onlyTestsWithPrefix = ''
-    ) {
-        if (!onlyTestsWithPrefix) {
-            ScriptTestBatch.keepTrackOfPending.set(this.id, '');
-        }
-
-        let isFloatingPt = false;
-        if (typ === BatchType.floatingPoint) {
-            typ = BatchType.default;
-            isFloatingPt = true;
-        } else if (typ === BatchType.floatingPointCommutative) {
-            typ = BatchType.testBatchEvalCommutative;
-            isFloatingPt = true;
-        }
-
-        let whichTests = this.tests.filter(t => t[1].startsWith(onlyTestsWithPrefix));
-        if (typ === BatchType.default) {
-            runner.testBatchEvaluate(whichTests, isFloatingPt);
-        } else if (typ === BatchType.testBatchEvalCommutative) {
-            runner.testBatchEvalCommutative(whichTests, isFloatingPt);
-        } else if (typ === BatchType.testBatchEvalInvert) {
-            runner.testBatchEvalInvert(whichTests);
-        } else if (typ === BatchType.testBatchEvalInvertAndCommute) {
-            runner.testBatchEvalInvertAndCommute(whichTests);
-        } else {
-            checkThrow(false, 'unknown batchtype ' + typ);
-        }
-
-        /* prevent you from re-using the object */
-        this.locked = true
-    }
-
-    static checkPending() {
-        let vals = ScriptTestBatch.keepTrackOfPending.getVals();
-        let foundSome = false;
-        for (let val of vals) {
-            if (val) {
-                foundSome = true;
-                console.error("Still pending from:")
-                console.error(val)
-            }
-        }
-
-        assertTrue(!foundSome, 'Test batch(es) left pending');
-    }
-}

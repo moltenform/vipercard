@@ -201,7 +201,7 @@ export class VelResolveReference {
             } else if (ref.lookByRelative !== undefined) {
                 /* put the name of next card of bg "myBg" into x */
                 let currentPos = arr.findIndex(vel => vel.id === currentCard.id);
-                retCard = VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
+                retCard = VpcElBase.findByOrdinal(VpcElCard, arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
             }
         } else if (ref.cardLookAtMarkedOnly) {
             let arrAllCards: VpcElCard[] = this.model.stack.getCardOrder().map(s => this.model.getCardById(s));
@@ -227,7 +227,7 @@ export class VelResolveReference {
                 }
             } else if (ref.lookByRelative) {
                 let arrOnlyMarked = arrAllCards.filter(c => c.getB('marked'));
-                retCard = VpcElBase.findByOrdinal(
+                retCard = VpcElBase.findByOrdinal(VpcElCard,
                     arrOnlyMarked,
                     0 /* we only have Ordinals left, so the current position doesn't matter */,
                     ref.lookByRelative
@@ -269,7 +269,7 @@ export class VelResolveReference {
             let currentCard = this.model.getCurrentCard();
             let currentBg = currentCard.parentId;
             let currentPos = arr.findIndex(vel => vel.id === currentBg);
-            retBg = VpcElBase.findByOrdinal(arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
+            retBg = VpcElBase.findByOrdinal(VpcElBg, arr, currentPos === -1 ? 0 : currentPos, ref.lookByRelative);
         }
 
         let currentCard = this.model.getCurrentCard();

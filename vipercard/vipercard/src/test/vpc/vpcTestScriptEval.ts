@@ -1187,8 +1187,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a this bg`, 'true');
     b.t(`there _is_ a next bg`, 'true');
     b.t(`there _is_ a first bg`, 'true');
-    b.t(`there _is_ a tenth bg`, 'true');
-    //~ /* todo: not really right? */,
+    b.t(`there _is_ a tenth bg`, 'false');
 
     /* card */
     b.t(`there _is_ a card 1`, 'true');
@@ -1201,8 +1200,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a this card`, 'true');
     b.t(`there _is_ a next card`, 'true');
     b.t(`there _is_ a first card`, 'true');
-    b.t(`there _is_ a tenth card`, 'true');
-    //~ /* todo: not really right? */
+    b.t(`there _is_ a tenth card`, 'false');
     b.t(`there _is_ a card 2 of this bg`, 'true');
     b.t(`there _is_ a card 2 of bg 2`, 'true');
     b.t(`there _is_ a card 2 of bg 1`, 'false');

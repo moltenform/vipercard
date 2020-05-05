@@ -1,11 +1,11 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, getPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { slength } from './../../ui512/utils/util512';
+/* auto */ import { AnyParameterCtor, cast, slength } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { ElementObserverVal, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
@@ -201,9 +201,13 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * look for a child element by ordinal ("first", "next")
      */
-    static findByOrdinal<T extends VpcElBase>(list: VpcElBase[], currentIndex: number, pos: OrdinalOrPosition) {
-        let index = getPositionFromOrdinalOrPosition(pos, currentIndex, 0, list.length - 1);
-        return list[index] ? (list[index] as T) : undefined;
+    static findByOrdinal<T extends VpcElBase>(ctor: AnyParameterCtor<T>, list: VpcElBase[], currentIndex: number, pos: OrdinalOrPosition) {
+        let index = findPositionFromOrdinalOrPosition(pos, currentIndex, 0, list.length - 1);
+        if (index === undefined) {
+            return undefined
+        } else {
+            return list[index] ? cast(ctor, list[index]) : undefined;
+        }
     }
 
     setPossiblyCardSpecific(

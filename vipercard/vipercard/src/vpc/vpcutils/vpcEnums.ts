@@ -2,7 +2,7 @@
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, Util512Message, joinIntoMessage } from './../../ui512/utils/util512Assert';
-/* auto */ import { fitIntoInclusive, getStrToEnum, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { getStrToEnum, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
@@ -522,58 +522,58 @@ export enum VpcOpCtg {
     OpMultDivideExpDivMod
 }
 
+function getPositionUnbounded(rel: OrdinalOrPosition, current: number, min: number, max: number) {
+    switch (rel) {
+        case OrdinalOrPosition.Last:
+            return max;
+        case OrdinalOrPosition.Middle:
+            /* confirmed in emulator that this rounds to highest */
+            return Math.ceil((min + max) / 2);
+        case OrdinalOrPosition.Any:
+            return Util512Higher.getRandIntInclusiveWeak(min, max);
+        case OrdinalOrPosition.First:
+            return min;
+        case OrdinalOrPosition.Second:
+            return min + 1;
+        case OrdinalOrPosition.Third:
+            return min + 2;
+        case OrdinalOrPosition.Fourth:
+            return min + 3;
+        case OrdinalOrPosition.Fifth:
+            return min + 4;
+        case OrdinalOrPosition.Sixth:
+            return min + 5;
+        case OrdinalOrPosition.Seventh:
+            return min + 6;
+        case OrdinalOrPosition.Eighth:
+            return min + 7;
+        case OrdinalOrPosition.Ninth:
+            return min + 8;
+        case OrdinalOrPosition.Tenth:
+            return min + 9;
+        case OrdinalOrPosition.Next: {
+            /* cycle back to the beginning */
+            let tmp = current + 1;
+            return tmp > max ? min : tmp;
+        }
+        case OrdinalOrPosition.Previous: {
+            /* cycle back to the end */
+            let tmp = current - 1;
+            return tmp < min ? max : tmp;
+        }
+        case OrdinalOrPosition.This:
+            return current;
+        default:
+            checkThrow(false, `4-|unknown ordinal ${rel}`);
+    }
+}
+
 /**
  * evaulate an OrdinalOrPosition
  */
-export function getPositionFromOrdinalOrPosition(rel: OrdinalOrPosition, current: number, min: number, max: number): number {
-    let getPositionUnbounded = () => {
-        switch (rel) {
-            case OrdinalOrPosition.Last:
-                return max;
-            case OrdinalOrPosition.Middle:
-                /* confirmed in emulator that this rounds to highest */
-                return Math.ceil((min + max) / 2);
-            case OrdinalOrPosition.Any:
-                return Util512Higher.getRandIntInclusiveWeak(min, max);
-            case OrdinalOrPosition.First:
-                return min;
-            case OrdinalOrPosition.Second:
-                return min + 1;
-            case OrdinalOrPosition.Third:
-                return min + 2;
-            case OrdinalOrPosition.Fourth:
-                return min + 3;
-            case OrdinalOrPosition.Fifth:
-                return min + 4;
-            case OrdinalOrPosition.Sixth:
-                return min + 5;
-            case OrdinalOrPosition.Seventh:
-                return min + 6;
-            case OrdinalOrPosition.Eighth:
-                return min + 7;
-            case OrdinalOrPosition.Ninth:
-                return min + 8;
-            case OrdinalOrPosition.Tenth:
-                return min + 9;
-            case OrdinalOrPosition.Next: {
-                /* cycle back to the beginning */
-                let tmp = current + 1;
-                return tmp > max ? min : tmp;
-            }
-            case OrdinalOrPosition.Previous: {
-                /* cycle back to the end */
-                let tmp = current - 1;
-                return tmp < min ? max : tmp;
-            }
-            case OrdinalOrPosition.This:
-                return current;
-            default:
-                checkThrow(false, `4-|unknown ordinal ${rel}`);
-        }
-    };
-
-    let ret = getPositionUnbounded();
-    return fitIntoInclusive(ret, min, max);
+export function findPositionFromOrdinalOrPosition(rel: OrdinalOrPosition, current: number, min: number, max: number): O<number> {
+    let ret = getPositionUnbounded(rel, current, min, max);
+    return (ret >= min && ret <= max) ? ret : undefined
 }
 
 /**
