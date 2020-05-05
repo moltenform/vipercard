@@ -189,6 +189,22 @@ export class TextSelModify {
     }
 
     /**
+     * add/remove a block comment
+     */
+    static changeTextToggleBlockComment(el: GenericTextField, startChars: string, endChars: string) {
+        TextSelModify.changeTextInField(el, (t, nCaret, nEnd) =>
+            TextSelModifyImpl.changeTextToggleBlockComment(
+                t,
+                nCaret,
+                nEnd,
+                startChars,
+                endChars,
+                el.getDefaultFont()
+            )
+        );
+    }
+
+    /**
      * what happens when you type a letter in a field
      */
     static changeTextInsert(el: GenericTextField, s: string) {

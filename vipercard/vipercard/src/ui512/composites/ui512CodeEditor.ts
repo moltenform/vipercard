@@ -25,6 +25,8 @@ export class UI512CompCodeEditor extends UI512CompBase {
     autoCreateBlock = true;
     compositeType = 'editor';
     lineCommentPrefix = '//~ ';
+    blockCommentStart = '/*';
+    blockCommentEnd = '*/';
     el: UI512ElTextField;
     autoIndent = new UI512AutoIndent();
     constructor(compositeId: string) {
@@ -100,13 +102,12 @@ export class UI512CompCodeEditor extends UI512CompBase {
                 TextSelModify.changeTextDeleteLine(gel);
                 break;
             case 'Cmd+Q':
-                /* would use Ctrl Q to add comment, Ctrl Shift Q to uncomment */
-                /* or Ctrl - to add comment, Ctrl Shift - to uncomment */
-                /* but Ctrl Shift Q always exits chrome event if preventDefault==true */
-                /* and Ctrl - is about setting zoom level, so don't use it */
-                /* so I guess I'll just follow SciTE's model where */
-                /* Ctrl Q adds or removes based on what is there */
+                /* Ctrl Q comments/uncomments a line */
                 TextSelModify.changeTextToggleLinePrefix(gel, this.lineCommentPrefix);
+                break;
+            case 'Cmd+Shift+Q':
+                /* Note: Ctrl-Shift-Q in older Chrome exits the browser */
+                TextSelModify.changeTextToggleBlockComment(gel, this.blockCommentStart, this.blockCommentEnd);
                 break;
             case 'Enter':
                 /* run auto-indent when you hit Enter */

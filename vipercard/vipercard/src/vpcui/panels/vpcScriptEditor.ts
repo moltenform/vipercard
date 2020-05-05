@@ -32,6 +32,8 @@ export class VpcPanelScriptEditor extends UI512CompCodeEditor implements VpcEdit
     autoCreateBlock = true;
     compositeType = 'VpcPanelScriptEditor';
     lineCommentPrefix = '--~ ';
+    blockCommentStart = '--[[';
+    blockCommentEnd = ']]';
     vci: VpcStateInterface;
     needsToBeSaved = new MapKeyToObjectCanSet<boolean>();
     cbGetAndValidateSelectedVel: (prp: string) => O<VpcElBase>;

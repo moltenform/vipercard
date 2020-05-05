@@ -49,5 +49,33 @@ t.test('03stringliterals', () => {
     b.t('there is a cd btn"xyz"', 'false')
     b.batchEvaluate(h3);
 });
+t.test('03blockcomment', () => {
+    let b = new ScriptTestBatch();
+    /* block comments */
+    b.t('put "abc" --[[ignore this]] into x\\x', 'abc')
+    b.t('put "abc" --[[ignore ??? this @@@ ]] into x\\x', 'abc')
+    b.t('put "abc" --[[put "d" into x]] into x\\x', 'abc')
+    b.t('put "A" into x\n--[[put "B" into x]]\\x', 'A')
+    b.t('--[[]]\\1', '1')
+    b.t('--[[commented out]]\\1', '1')
+    /* block comments containing odd characters */
+    b.t('put "a" --[[ + "b"]] + "c" into x\\x', 'ac')
+    b.t('put "a" --[[ + "b"] + "c" ]] + "c" into x\\x', 'ac')
+    b.t('put "abc" --[[put "d" into x]] into x\\x', 'abc')
+    b.t('put "abc" --[[put "d" into x --]] into x\\x', 'abc')
+    b.t('put "abc" --[[put "d" into x -- line]] into x\\x', 'abc')
+    b.t('put "" --[[ no nested --[[ ? ]] ? ]] into x\\x', 'PREPARSEERR:lex')
+    b.t('put "a" --[[ + "]] + "c" into x\\x', 'ac')
+    /* block comments span lines */
+    b.t('--[[\n]]\\1', '1')
+    b.t('put "a" --[[\n]] + "c" into x\\x', 'ac')
+    b.t('put "a" --[[ + "b"\n]] + "c" into x\\x', 'ac')
+    b.t('put "a" into x\n--[[put "d" into x ]]\\x', 'a')
+    b.t('put "a" into x\n--[[put "d" into x\nput "d" into x ]]\\x', 'a')
+    b.t('put "a" into x\n--[[put "d" into x\nput "d" into x ]]put "b" into x\\x', 'b')
+    b.t('put "a" into x\n--[[put "d" into x\nput "d" into x ]]\nput "b" into x\\x', 'b')
+    b.batchEvaluate(h3);
+
+})
 
 export class TestVpc03 extends TestVpcScriptRunBase {}
