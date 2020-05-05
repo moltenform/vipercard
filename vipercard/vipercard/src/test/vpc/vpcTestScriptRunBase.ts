@@ -10,7 +10,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { BrowserInfo, SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool, coalesceIfFalseLike, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
@@ -628,15 +628,19 @@ export enum BatchType {
 }
 
 export class ScriptTestBatch {
-    protected static keepTrackOfPending = new MapKeyToObjectCanSet<boolean>();
+    protected static keepTrackOfPending = new MapKeyToObjectCanSet<string>();
     id: string;
+    locked = false
     tests: [string, string][] = [];
     constructor() {
+        let getTraceback = checkIsProductionBuild() ? '(traceback not supported)' : new Error().stack?.toString()
+        getTraceback = getTraceback ?? '(traceback not supported)'
         this.id = Math.random().toString();
-        ScriptTestBatch.keepTrackOfPending.add(this.id, true);
+        ScriptTestBatch.keepTrackOfPending.add(this.id, getTraceback);
     }
 
     t(s1: string, s2: string) {
+        assertTrue(!this.locked, "forgot to create a new batch after evaluating?")
         this.tests.push([s1, s2]);
     }
 
@@ -646,7 +650,7 @@ export class ScriptTestBatch {
         onlyTestsWithPrefix = ''
     ) {
         if (!onlyTestsWithPrefix) {
-            ScriptTestBatch.keepTrackOfPending.add(this.id, false);
+            ScriptTestBatch.keepTrackOfPending.set(this.id, '');
         }
 
         let isFloatingPt = false;
@@ -672,11 +676,20 @@ export class ScriptTestBatch {
         }
 
         /* prevent you from re-using the object */
-        this.tests = SetToInvalidObjectAtEndOfExecution(this.tests);
+        this.locked = true
     }
 
     static checkPending() {
         let vals = ScriptTestBatch.keepTrackOfPending.getVals();
-        assertTrue(!vals.some(v => true), 'Test batch left pending');
+        let foundSome = false;
+        for (let val of vals) {
+            if (val) {
+                foundSome = true;
+                console.error("Still pending from:")
+                console.error(val)
+            }
+        }
+
+        assertTrue(!foundSome, 'Test batch(es) left pending');
     }
 }

@@ -312,27 +312,26 @@ put x into x\\x`,
     b.t('put "\n" into x', 'PREPARSEERR:3:unexpected character');
     b.t('put " into x', 'PREPARSEERR:3:unexpected character');
     b.t('put """ into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put a"" into x', 'ERR:3:Expecting');
+    b.t('put a"" into x\\0', 'ERR:4:Expecting');
     b.t('put ""a into x', 'PREPARSEERR:3:unexpected');
     b.t('put a""a into x', 'PREPARSEERR:3:unexpected');
-    b.t('put 1"" into x', 'ERR:3:Expecting');
+    b.t('put 1"" into x\\0', 'ERR:4:Expecting');
     b.t('put ""1 into x', 'PREPARSEERR:3:unexpected');
     b.t('put 1""1 into x', 'PREPARSEERR:3:unexpected');
-    b.t('put """" into x', 'ERR:3:Expecting');
-    b.t('put "a""b" into x', 'ERR:3:Expecting');
-    b.t('put "a" "b" into x', 'ERR:3:Expecting');
+    b.t('put """" into x\\0', 'ERR:4:Expecting');
+    b.t('put "a""b" into x\\0', 'ERR:4:Expecting');
+    b.t('put "a" "b" into x\\0', 'ERR:4:Expecting');
 
     /* invalid identifiers */
-    b.t('put "abc" into 1', 'ERR:3:parse err');
-    b.t('put "abc" into 1 x', 'ERR:3:parse err');
-    b.t('put "abc" into b c', 'ERR:3:parse err');
-    b.t('put "abc" into "def"', 'ERR:3:parse err');
+    b.t('put "abc" into 1\\0', 'ERR:4:parse err');
+    b.t('put "abc" into 1 x\\0', 'ERR:4:parse err');
+    b.t('put "abc" into b c\\0', 'ERR:4:parse err');
+    b.t('put "abc" into "def"\\0', 'ERR:4:parse err');
     b.t('put "abc" into \x03', 'PREPARSEERR:3:unexpected character');
     b.t('put "abc" into b\x03', 'PREPARSEERR:3:unexpected character');
     b.t('put "abc" into \xf1', 'PREPARSEERR:3:unexpected character');
     b.t('put "abc" into b\xf1', 'PREPARSEERR:3:unexpected character');
     b.batchEvaluate(h);
-    b = new ScriptTestBatch();
 
     /* not valid because it's something else */
     let notvalid = longstr(
@@ -1560,7 +1559,6 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
     b.t('global g\nput 0 into g\nmm 1, "" && ""\\the result', 'm1(1, ,)');
     b.t('global g\nput 0 into g\nmm (1),(2)\\the result', 'm1(1,2,)');
     b.batchEvaluate(h);
-    b = new ScriptTestBatch();
     h.assertPreparseErrLn('get mm(abs(1', 'missing )');
     h.assertPreparseErrLn('global g\nput 0 into g\nmm()', `isn't C`);
     h.assertPreparseErrLn('global g\nput 0 into g\nmm(1)', `isn't C`);

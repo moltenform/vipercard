@@ -83,6 +83,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('true _or_ false', 'true');
     b.t('false _or_ false', 'false');
     b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
+    b = new ScriptTestBatch()
 
     /* Lvl1Expression greater less, strings */
     b.t('"abc" _>=_ "abc"', 'true');
@@ -113,6 +114,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('"abc" _is_ "abb"', 'false');
     b.t('"abc" _is_ "abc "', 'false');
     b.batchEvaluate(h, BatchType.testBatchEvalInvertAndCommute);
+    b = new ScriptTestBatch()
 
     /* Lvl1Expression string/number differences */
     b.t('"z11" _>_ "z2"', 'false');
@@ -195,6 +197,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('123 _is_ 0', 'false');
 
     b.batchEvaluate(h, BatchType.testBatchEvalInvertAndCommute);
+    b = new ScriptTestBatch()
 
     /* test chaining or any other that can't easily be unverted */
 
@@ -226,13 +229,12 @@ t.test('evalRuleExpr,RuleLvl1', () => {
 t.test('evalExprConfirmFailure', () => {
     /* succeeds */
     let b = new ScriptTestBatch();
-
     b.t('true and true', 'true');
     b.t('true and false', 'false');
     b.t('1 is a integer', 'true');
     b.t('1 is a integer1', 'ERR:needs one of');
-
     b.batchEvaluate(h);
+
     /* fails, wrong result */
     assertAsserts('Q)|', 'DIFF RESULT', () => {
         b = new ScriptTestBatch();
@@ -356,6 +358,7 @@ t.test('evalRuleLvl2', () => {
     b.t('" 12,13,14,15 , " _is_ a rect', 'false');
 
     b.batchEvaluate(h, BatchType.testBatchEvalInvert);
+    b = new ScriptTestBatch()
 
     /* Lvl2Expression, is within */
     b.t('"" _is_ in "abc"', 'true');
@@ -435,6 +438,7 @@ t.test('evalArithmetic', () => {
     b.t('123 _*_ -0', '0');
 
     b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
+    b = new ScriptTestBatch()
 
     /* the communitative ones, floating point */
 
@@ -456,6 +460,7 @@ t.test('evalArithmetic', () => {
     b.t('123.9 _*_ -0', '0');
 
     b.batchEvaluate(h, BatchType.floatingPointCommutative);
+    b = new ScriptTestBatch()
 
     /* the non-communitative ones integer */
 
@@ -505,6 +510,7 @@ t.test('evalArithmetic', () => {
     b.t('-34 mod -5', '-4');
 
     b.batchEvaluate(h);
+    b = new ScriptTestBatch()
 
     /* the non-communitative ones floating point */
 
@@ -544,6 +550,7 @@ t.test('evalArithmetic', () => {
     b.t('12 mod 2.3', '0.5');
 
     b.batchEvaluate(h, BatchType.floatingPoint);
+    b = new ScriptTestBatch()
 
     /* old-style functions should not eat too much.
     confirmed these in the emulator */
@@ -572,6 +579,7 @@ t.test('evalArithmetic', () => {
     b.t('12 / 34 / 56 / 78', '0.00008080155');
 
     b.batchEvaluate(h, BatchType.floatingPoint);
+    b = new ScriptTestBatch()
 
     /* test wrong types given (communitative works) */
 
@@ -859,6 +867,7 @@ t.test('vpcvalnumbers', () => {
     b.t('(2^80 - 5^35)/(2e22)', 'ERR:> 1e18');
 
     b.batchEvaluate(h, BatchType.floatingPoint);
+    b = new ScriptTestBatch()
 
     /* scientific notation not applied for strings */
     b.t('"12.e0"', '12.e0');

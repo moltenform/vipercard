@@ -460,7 +460,9 @@ t.test('vpcProperties', () => {
             .replace(new RegExp(`${h.elIds.btn_b_c_1}`, 'g'), `${h.elIds.fld_b_c_1}`),
         item[1]
     ]);
+
     b.batchEvaluate(h);
+    b = new ScriptTestBatch()
 
     /* btn simple get/set */
     b.t('the autohilite of cd btn "p1"', 'true');
@@ -1240,6 +1242,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a cd fld "p2" of cd "d" of bg 2`, 'true');
     b.t(`there _is_ a cd fld "p2" of cd "d" of bg 3`, 'false');
     b.batchEvaluate(h, BatchType.testBatchEvalInvert);
+    b = new ScriptTestBatch()
 
     /* fn calls without parens */
     b.t('the paramcount', '0');
@@ -1412,6 +1415,7 @@ t.test('builtinFunctions', () => {
     b.t('log2(5)', '2.321928094887362');
     b.t('exp2(2.321928094887362)', '5');
     b.batchEvaluate(h, BatchType.floatingPoint);
+    b = new ScriptTestBatch()
 
     let userBounds = h.pr.userBounds;
 
