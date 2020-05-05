@@ -36,6 +36,7 @@
 /* auto */ import { testCollectionUI512Composites } from './../util512ui/testUI512Composites';
 /* auto */ import { testCollectionUI512CodeEditor } from './../util512ui/testUI512CodeEditor';
 /* auto */ import { testCollectionExternalLibs } from './../util512/testExternalLibs';
+/* auto */ import { testCollection03lexer } from './../vpc03/test03lexer';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the MIT license */
@@ -57,6 +58,7 @@ export const SimpleUtil512Tests = /* static class */ {
         let colls: SimpleUtil512TestCollection[] = [
             /* testCollectionvpcuiServer, */
             /* testCollectionScriptExtensive, */
+            testCollection03lexer,
             testCollectionScriptRewrites,
             testCollectionScriptRunCustomFns,
             testCollectionScriptRunCmd,

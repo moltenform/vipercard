@@ -5,7 +5,7 @@
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
-import { largeArea } from '../../ui512/drawtext/ui512DrawTextClasses';
+/* auto */ import { largeArea } from './../../ui512/drawtext/ui512DrawTextClasses';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */

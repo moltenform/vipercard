@@ -263,6 +263,93 @@ export class TestVpcScriptRunBase {
         this.simClickX = b.getN('x') + 7;
         this.simClickY = b.getN('y') + 8;
     }
+    
+    protected onScriptErr(
+        scriptErr: VpcErr,
+        built: string,
+        expectErrMsg?: string,
+        expectErrLine?: number,
+        expectPreparseErr?: boolean,
+        addNoHandler?: boolean
+    ){
+        let msg = scriptErr.message;
+        let velId = scriptErr.scriptErrVelid ?? 'unknown';
+        let line = scriptErr.scriptErrLine ?? -1;
+        this.vcstate.vci.undoableAction(() => {
+            this.vcstate.vci.setTool(VpcTool.Browse);
+        });
+
+        let makeWarningUseful = '';
+        let lns = built.split('\n');
+        if (line) {
+            line -= 1; /* from 1-based index */
+        }
+        if (expectErrLine) {
+            expectErrLine -= 1; /* from 1-based index */
+        }
+        if (line >= 0 && line < lns.length) {
+            makeWarningUseful += `culprit line: <${lns[line]
+                .replace(/\s+/, ' ')
+                .trim()}>`;
+            if (bool(expectPreparseErr) || expectErrMsg) {
+                makeWarningUseful += ` lines: <${lns
+                    .join('; ')
+                    .replace(/\s+/, ' ')
+                    .trim()}>`;
+            }
+        } else {
+            makeWarningUseful += `culprit lines: <${lns
+                .join('; ')
+                .replace(/\s+/, ' ')
+                .trim()}>`;
+        }
+        
+        makeWarningUseful = makeWarningUseful.replace(/global testresult; /g, '');
+        makeWarningUseful += ` v=${velId} msg=\n${msg}`;
+
+        if (expectErrMsg !== undefined) {
+            if (expectErrMsg.startsWith('ERR:')) {
+                expectErrMsg = expectErrMsg.slice('ERR:'.length);
+            }
+
+            if (msg.includes('parse error:')) {
+                /* add the exception name for compatibility */
+                if (getParsingObjects()[1].errors?.length) {
+                    msg = getParsingObjects()[1].errors[0].name + ': ' + msg;
+                }
+            }
+            assertWarn(
+                msg.includes(expectErrMsg),
+                `wrong err message, expected <${expectErrMsg}>`,
+                makeWarningUseful
+            );
+        }
+
+        if (expectErrLine !== undefined) {
+            assertWarnEq(
+                expectErrLine + 1,
+                line + 1,
+                'wrong line',
+                makeWarningUseful
+            );
+        }
+
+        if (expectPreparseErr) {
+            assertWarn(
+                scriptErr.stage !== VpcErrStage.Execute &&
+                    scriptErr.stage !== VpcErrStage.Visit &&
+                    scriptErr.stage !== VpcErrStage.SyntaxStep,
+                makeWarningUseful
+            );
+        }
+
+        assertWarn(
+            expectErrMsg !== undefined,
+            'unexpected failure',
+            makeWarningUseful
+        );
+        return scriptErr
+    }
 
     runGeneralCode(
         codeBefore: string,
@@ -274,82 +361,7 @@ export class TestVpcScriptRunBase {
     ) {
         let caughtErr: O<VpcErr>;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
-            caughtErr = scriptErr;
-            let msg = scriptErr.message;
-            let velId = scriptErr.scriptErrVelid ?? 'unknown';
-            let line = scriptErr.scriptErrLine ?? -1;
-            this.vcstate.vci.undoableAction(() => {
-                this.vcstate.vci.setTool(VpcTool.Browse);
-            });
-
-            let makeWarningUseful = '';
-            let lns = built.split('\n');
-            if (line) {
-                line -= 1; /* from 1-based index */
-            }
-            if (expectErrLine) {
-                expectErrLine -= 1; /* from 1-based index */
-            }
-            if (line >= 0 && line < lns.length) {
-                makeWarningUseful += `culprit line: <${lns[line]
-                    .replace(/\s+/, ' ')
-                    .trim()}>`;
-                if (bool(expectPreparseErr) || expectErrMsg) {
-                    makeWarningUseful += ` lines: <${lns
-                        .join('; ')
-                        .replace(/\s+/, ' ')
-                        .trim()}>`;
-                }
-            } else {
-                makeWarningUseful += `culprit lines: <${lns
-                    .join('; ')
-                    .replace(/\s+/, ' ')
-                    .trim()}>`;
-            }
-            makeWarningUseful = makeWarningUseful.replace(/global testresult; /g, '');
-            makeWarningUseful += ` v=${velId} msg=\n${msg}`;
-
-            if (expectErrMsg !== undefined) {
-                if (expectErrMsg.startsWith('ERR:')) {
-                    expectErrMsg = expectErrMsg.slice('ERR:'.length);
-                }
-
-                if (msg.includes('parse error:')) {
-                    /* add the exception name for compatibility */
-                    if (getParsingObjects()[1].errors?.length) {
-                        msg = getParsingObjects()[1].errors[0].name + ': ' + msg;
-                    }
-                }
-                assertWarn(
-                    msg.includes(expectErrMsg),
-                    `wrong err message, expected <${expectErrMsg}>`,
-                    makeWarningUseful
-                );
-            }
-
-            if (expectErrLine !== undefined) {
-                assertWarnEq(
-                    expectErrLine + 1,
-                    line + 1,
-                    'wrong line',
-                    makeWarningUseful
-                );
-            }
-
-            if (expectPreparseErr) {
-                assertWarn(
-                    scriptErr.stage !== VpcErrStage.Execute &&
-                        scriptErr.stage !== VpcErrStage.Visit &&
-                        scriptErr.stage !== VpcErrStage.SyntaxStep,
-                    makeWarningUseful
-                );
-            }
-
-            assertWarn(
-                expectErrMsg !== undefined,
-                'unexpected failure',
-                makeWarningUseful
-            );
+            caughtErr = this.onScriptErr(scriptErr, built, expectErrMsg, expectErrLine, expectPreparseErr, addNoHandler)
         };
 
         let built = addNoHandler

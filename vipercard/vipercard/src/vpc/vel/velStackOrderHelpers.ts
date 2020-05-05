@@ -1,5 +1,5 @@
 
-/* auto */ import { OrdinalOrPosition, findPositionFromOrdinalOrPosition, checkThrow } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, checkThrow, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcModelTop } from './velModelTop';
 /* auto */ import { VpcElCard } from './velCard';
