@@ -723,6 +723,7 @@ put myMult(2,myMult(1,3)) into cd fld ("p" & myMult(1,1)) of card "c"
 \\cd fld "p1" of card "c" && countCalls`,
         '6 3'
     );
+
     /* across escaped lines */
     b.t(
         `
@@ -781,6 +782,7 @@ t.test('expand in VpcLineCategory_.GoCardImpl', () => {
     /* in rewrites we currently expand it twice, not perfect but good enough */
     let b = new ScriptTestBatch();
     b.t('global countCalls\\0', '0');
+    
     /* go to card */
     b.t(
         `

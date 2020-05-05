@@ -57,17 +57,18 @@ t.test('getProp', () => {
     b.t(`the short id of xyz`, `ERR:no variable`);
     b.t(`the short id of the xyz`, `ERR:no such function`);
 
-    /* target, me, productOpts
+    /* target, me, productOpts have different behavior
         confirmed these in emulator */
     b.t(`the short id of the target`, `${h.elIds.btn_go}`);
     b.t(`the short id of target`, `${h.elIds.btn_go}`);
     b.t(`put 1 into target\\0`, `ERR:writing text to`);
     b.t(`the short id of target()`, `ERR:parse err`);
     b.t(`the short id of (target())`, `ERR:no such function`);
+    /* tries to pull its contents */
     b.t(
         `the short id of (target)`,
         `ERR:only support reading text`
-    ); /* tries to pull its contents */
+    ); 
     b.t(`the short id of the me`, `ERR:parse err`);
     b.t(`the short id of me()`, `ERR:parse err`);
     b.t(`the short id of (me)`, `ERR:parse err`);
@@ -264,6 +265,7 @@ t.test('vpcProperties', () => {
     b.t('set the id of cd fld "p1" to 100\\0', 'ERR:unknown property');
     b.t('set the hilite of cd fld "p1" to true\\0', 'ERR:unknown property');
     b.t('set the number of cd fld "p1" to 6\\0', 'ERR:unknown property');
+    
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
@@ -288,9 +290,9 @@ t.test('vpcProperties', () => {
     b.t('set the itemdelimiter to ",," \\ 0', 'ERR:length of itemDel must be 1');
     b.t('set the cursor to "plus" \\ the cursor', 'plus');
     b.t('set the cursor to "arrow" \\ the cursor', 'arrow');
+    
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-
     h.setScript(h.vcstate.model.stack.id, 'on stackscript\nend stackscript');
     h.setScript(h.vcstate.model.stack.bgs[1].id, 'on bgscript\nend bgscript');
     h.setScript(h.vcstate.model.stack.bgs[1].cards[1].id, 'on cdscript\nend cdscript');
@@ -327,7 +329,6 @@ t.test('vpcProperties', () => {
 
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
 
     /* size properties */
@@ -347,17 +348,16 @@ t.test('vpcProperties', () => {
     b.t('the botright of cd btn "p1"', '40,60');
     b.t('the loc of cd btn "p1"', '25,40');
 
+    /* plain dimensions */
     b.t('set the left of cd btn "p1" to 100\\0', '0');
     b.t('set the top of cd btn "p1" to 200\\0', '0');
     b.t('set the width of cd btn "p1" to 300\\0', '0');
     b.t('set the height of cd btn "p1" to 400\\0', '0');
     b.t('the rect of cd btn "p1"', '100,200,400,600');
     b.t('the loc of cd btn "p1"', '250,400');
-
     b.t('set the right of cd btn "p1" to 401\\0', '0');
     b.t('set the bottom of cd btn "p1" to 601\\0', '0');
     b.t('the rect of cd btn "p1"', '101,201,401,601');
-
     b.t('set the topleft of cd btn "p1" to 10,20\\0', '0');
     b.t('set the botright of cd btn "p1" to 40,60\\0', '0');
     b.t('the rect of cd btn "p1"', '10,20,40,60');
@@ -450,8 +450,9 @@ t.test('vpcProperties', () => {
     b.t('set the left of cd btn "p1" to "10a"\\0', 'ERR:expected an integer');
     b.t('set the left of cd btn "p1" to "a10"\\0', 'ERR:expected an integer');
     b.t('set the left of cd btn "p1" to "10.1"\\0', 'ERR:expected an integer');
-    let savedTests = b.tests;
 
+    /* run the tests again with fld instead of btn */
+    let savedTests = b.tests;
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
     b.tests = savedTests.map((item): [string, string] => [
@@ -460,7 +461,6 @@ t.test('vpcProperties', () => {
             .replace(new RegExp(`${h.elIds.btn_b_c_1}`, 'g'), `${h.elIds.fld_b_c_1}`),
         item[1]
     ]);
-
     b.batchEvaluate(h);
     b = new ScriptTestBatch()
 
@@ -543,6 +543,7 @@ t.test('vpcProperties', () => {
         'set the textalign of cd btn "p1" to center\\the textalign of cd btn "p1"',
         'center'
     );
+
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
@@ -667,7 +668,6 @@ t.test('vpcProperties', () => {
     /* setting style */
     const fld = h.vcstate.model.getById(VpcElField, h.elIds.fld_b_c_1);
     assertEq(UI512FldStyle.Rectangle, fld.getN('style'), '1 |');
-
     b.t('the style of cd fld "p1"', 'rectangle');
     b.t('set the style of cd fld "p1" to "xyz"\\0', 'ERR:Field style or');
     b.t('set the style of cd fld "p1" to "opaque"\\the style of cd fld "p1"', 'opaque');
@@ -1079,7 +1079,6 @@ t.test('setting a property can use variety of expression levels', () => {
     );
     b.t('set hilite of cd btn "p1" to (2 == 3)\\hilite of cd btn "p1"', 'false');
     b.t('set hilite of cd btn "p1" to (3 > 2)\\hilite of cd btn "p1"', 'true');
-
     b.batchEvaluate(h);
 });
 t.test('builtinFunctions', () => {
@@ -1108,7 +1107,6 @@ t.test('builtinFunctions', () => {
 
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
 
     /* length */
@@ -1159,12 +1157,12 @@ t.test('builtinFunctions', () => {
     b.t('the number of cards of bg 1', '1');
     b.t('the number of cards of bg 2', '3');
     b.t('the number of cards of bg 3', '1');
-    b.t('the number of cards of bg 4', 'ERR:find this object');
+
     /* confirmed in emulator that it should throw */
+    b.t('the number of cards of bg 4', 'ERR:find this object');
     b.t('the number of bgs', '3');
     b.t('the number of bgs of this stack', '3');
     b.t('selectedtext()', '');
-    /* use as breakpoint */
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
@@ -1204,7 +1202,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a next card`, 'true');
     b.t(`there _is_ a first card`, 'true');
     b.t(`there _is_ a tenth card`, 'true');
-    /* todo: not really right? */
+    //~ /* todo: not really right? */
     b.t(`there _is_ a card 2 of this bg`, 'true');
     b.t(`there _is_ a card 2 of bg 2`, 'true');
     b.t(`there _is_ a card 2 of bg 1`, 'false');
@@ -1300,7 +1298,7 @@ t.test('builtinFunctions', () => {
     b.t('sum(4,5,6)', '15');
     b.t('sum(1,2,3)', '6');
     b.t('min("1,2,3")', '1');
-    b.t('min("1,2,3,")', '1'); /* a bit odd, but confirmed in emulator */
+    b.t('min("1,2,3,")', '1'); /* confirmed in emulator */
     b.t('min(",1,2,3")', '0');
     b.t('min(",1,2,3,")', '0');
     b.t('min("1,2,3,,")', '0');
@@ -1414,9 +1412,9 @@ t.test('builtinFunctions', () => {
     b.t('exp1(1.9459101490553132)', '6');
     b.t('log2(5)', '2.321928094887362');
     b.t('exp2(2.321928094887362)', '5');
+    
     b.batchEvaluate(h, BatchType.floatingPoint);
     b = new ScriptTestBatch()
-
     let userBounds = h.pr.userBounds;
 
     /* unknown */

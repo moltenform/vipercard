@@ -243,9 +243,11 @@ t.test('checkLexing', () => {
     b.t('x = 4', "PREPARSEERR:this isn't C");
     b.t('xyz(4)', "PREPARSEERR:this isn't C");
     b.t('sin(4)', "PREPARSEERR:this isn't C");
+
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
+    /* plus and minus */
     b.t(`get 1 + 2 -- + 3 -- + 4\n put it into x\\x`, '3');
     b.t(`get 1 + 2 -- + 3 + 4\n put it into x\\x`, '3');
     b.t(`get 1 + 2 -- + 3\n put it into x\\x`, '3');
@@ -342,6 +344,7 @@ put x into x\\x`,
             end,exit,pass,return,if,else,while,until,global`,
         ''
     );
+
     /* not 'id' 'of' 'length' 'first' because they are different tokens */
     let disallowedAsHandler = notvalid.split(',');
 
@@ -467,6 +470,7 @@ put 101 into x
 end if` + '\\x',
         '100'
     );
+
     /* use counter to see which loop conditions have been evaluated */
     b.t(
         `put counting() into cfirst
@@ -520,6 +524,7 @@ put 1003 into x
 end if` + '\\x && (counting() - cfirst)',
         '1003 4'
     );
+
     /* order matters */
     b.t(
         `if char 1 of "abc" is "b" then
@@ -531,6 +536,7 @@ put 22 into x
 end if\\x`,
         '21'
     );
+
     /* nested if */
     b.t(
         `if 4 > 3 then
@@ -550,6 +556,7 @@ end if\\x`,
     /* confirmed in the product that a loop bound like
     repeat with x = 1 to the length of abc
     is only evaluated once! */
+
     /* simple loop */
     b.t(
         `put "a" into s
@@ -560,6 +567,7 @@ put i+1 into i
 end repeat\\s`,
         `a 0 1 2`
     );
+
     /* condition never true */
     b.t(
         `put "a" into s
@@ -570,6 +578,7 @@ put i+1 into i
 end repeat\\s`,
         `a`
     );
+
     /* simple loop */
     b.t(
         `put "b" into s
@@ -580,6 +589,7 @@ put i+1 into i
 end repeat\\s`,
         `b 0 1 2`
     );
+
     /* condition never true */
     b.t(
         `put "b" into s
@@ -590,6 +600,7 @@ put i+1 into i
 end repeat\\s`,
         `b`
     );
+
     /* nested loop, and a second loop right after the first */
     b.t(
         `put "a" into s
@@ -609,6 +620,7 @@ put j+1 into j
 end repeat\\s`,
         `a j0 j1 0 j0 j1 1 j0 j1 2 j2 j3`
     );
+
     /* inner loop changes iteration count */
     b.t(
         `put "a" into s
@@ -623,6 +635,7 @@ end repeat
 end repeat\\s`,
         `a 1,0 2,0 2,1 3,0 3,1 3,2`
     );
+
     /* condition must be checked every iteration */
     b.t(
         `put "b" into s
@@ -644,6 +657,7 @@ put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
         `a a1 a2 a3 2`
     );
+
     /* "with" syntax rewriting, loop never done */
     b.t(
         `put "a" into s
@@ -653,6 +667,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a 2`
     );
+
     /* "with" syntax rewriting, loop never done */
     b.t(
         `put "a" into s
@@ -662,6 +677,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a 2`
     );
+
     /* "with" syntax rewriting, loop done once */
     b.t(
         `put "a" into s
@@ -671,6 +687,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a a 2`
     );
+
     /* "with down" syntax rewriting, simplest form. */
     b.t(
         `put "a" into s
@@ -680,6 +697,7 @@ put s && "a" & x into s
 end repeat\\s && (counting() - firstc)`,
         `a a3 a2 a1 a0 2`
     );
+
     /* "with down" syntax rewriting, loop never done */
     b.t(
         `put "a" into s
@@ -689,6 +707,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a 2`
     );
+
     /* "with down" syntax rewriting, loop never done */
     b.t(
         `put "a" into s
@@ -698,6 +717,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a 2`
     );
+
     /* "with down" syntax rewriting, loop done once */
     b.t(
         `put "a" into s
@@ -707,6 +727,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a a 2`
     );
+
     /* "with" syntax rewriting, expect start only eval'd once */
     b.t(
         `put "a" into s
@@ -716,6 +737,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a a a a 2`
     );
+
     /* "with" syntax rewriting, nested loop */
     b.t(
         `put "a" into s
@@ -730,6 +752,7 @@ repeat with k = j to 4
 end repeat\\s`,
         `a j0 j1 0 j0 j1 1 j0 j1 2 k1 k2 k3 k4`
     );
+
     /* "with" syntax rewriting, inner loop count changes */
     b.t(
         `put "a" into s
@@ -740,6 +763,7 @@ end repeat
 end repeat\\s`,
         `a 1,0 2,0 2,1 3,0 3,1 3,2`
     );
+
     /* "times" syntax rewriting, simplest form. */
     b.t(
         `put "a" into s
@@ -749,6 +773,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a a a a 2`
     );
+
     /* "times" syntax rewriting, loop never done */
     b.t(
         `put "a" into s
@@ -758,6 +783,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a 2`
     );
+
     /* "times" syntax rewriting, loop never done */
     b.t(
         `put "a" into s
@@ -767,6 +793,7 @@ put s && "a" into s
 end repeat\\s && (counting() - firstc)`,
         `a 2`
     );
+
     /* simple test next repeat */
     b.t(
         `put "a" into s
@@ -777,6 +804,7 @@ put "_" into s
 end repeat\\s`,
         `a 1 2 3`
     );
+
     /* simple test exit repeat */
     b.t(
         `put "a" into s
@@ -787,6 +815,7 @@ put "_" into s
 end repeat\\s`,
         `a 1`
     );
+
     /* next repeat in the nested loop */
     b.t(
         `put "a" into s
@@ -799,6 +828,7 @@ end repeat
 end repeat\\s`,
         `a 1,0 2,0 2,1 3,0 3,1 3,2`
     );
+
     /* next repeat out of the nested loop */
     b.t(
         `put "a" into s
@@ -812,6 +842,7 @@ put "_" into s
 end repeat\\s`,
         `a 1,0 2,0 2,1 3,0 3,1 3,2`
     );
+
     /* exit repeat in the nested loop */
     b.t(
         `put "a" into s
@@ -824,6 +855,7 @@ end repeat
 end repeat\\s`,
         `a 1,0 2,0 3,0`
     );
+
     /* exit repeat out of the nested loop */
     b.t(
         `put "a" into s
@@ -1223,6 +1255,7 @@ myhandler counting(), counting(), counting()`
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1~|'
     );
+
     /* variadic handlers / giving a handler the wrong number of args */
     h.runGeneralCode(
         `on printargs a1, a2
@@ -1279,6 +1312,7 @@ put ret & x into testresult`
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1||'
     );
+
     /* exit handler and exit product */
     h.runGeneralCode(
         `on myhandler arg1
@@ -1305,6 +1339,7 @@ myhandler 14`
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1{|'
     );
+
     /* recursion in a handler */
     h.runGeneralCode(
         `on myhandler p
@@ -1326,6 +1361,7 @@ put the result into testresult`
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1`|'
     );
+
     /* a simple custom function! */
     h.runGeneralCode(
         `${h.customFunc} myfn p
@@ -1340,6 +1376,7 @@ put myfn(2+myfn(3)) into testresult`
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1_|'
     );
+
     /* recursion. use g to 1) verify number of recursive calls and */
     /* 2) run a real statement like "put" that can't be part of an eval'd expression */
     h.runGeneralCode(
@@ -1363,6 +1400,7 @@ put testresult && g into testresult`
         h.vcstate.runtime.codeExec.globals.get('testresult').readAsString(),
         '1^|'
     );
+
     /* mutual recursion */
     h.runGeneralCode(
         `${h.customFunc} isEven n
@@ -1548,6 +1586,8 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         myFunction (1, "") && "" -- does not parse
         myFunction  1, "" && "" -- allow
         */
+    b.t('global g\nput 0 into g\nmm()', `PREPARSEERR:5:isn't C`);
+    b.t('global g\nput 0 into g\nmm(1)', `PREPARSEERR:5:isn't C`);
     b.t('global g\nput 0 into g\nmm ()\\the result', 'ERR:6:parse error');
     b.t('global g\nput 0 into g\nmm (1)\\the result', 'm1(1,,)');
     b.t('global g\nput 0 into g\nmm() && ""\\the result', 'ERR:6:');
@@ -1558,15 +1598,13 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
     b.t('global g\nput 0 into g\nmm (1, "") && ""\\the result', 'ERR:6:parse error');
     b.t('global g\nput 0 into g\nmm 1, "" && ""\\the result', 'm1(1, ,)');
     b.t('global g\nput 0 into g\nmm (1),(2)\\the result', 'm1(1,2,)');
+    b.t('global g\nput 0 into g\nmm(1),(2)', `PREPARSEERR:5:isn't C`);
+    b.t('get mm(abs(1', 'PREPARSEERR:missing )');
     b.batchEvaluate(h);
-    h.assertPreparseErrLn('get mm(abs(1', 'missing )');
-    h.assertPreparseErrLn('global g\nput 0 into g\nmm()', `isn't C`);
-    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1)', `isn't C`);
-    h.assertPreparseErrLn('global g\nput 0 into g\nmm(1),(2)', `isn't C`);
     h.setScript(h.elIds.card_a_a, ``);
 
-    /* disallow C-like function calls. if printargs is a handler, printargs ("a") is ok (I guess) */
-    /* but not printargs("a") */
+    /* disallow C-like function calls. if printargs is a handler,
+    printargs ("a") is ok (I guess) - but not printargs("a") */
     h.assertPreparseErrLn(
         `put 1 into x
 sin(3)
@@ -1581,7 +1619,6 @@ put 1 into x`,
         `this isn't C`,
         4
     );
-
     /* only block starts outside of scope */
     h.assertPreparseErr(
         `put 1 into x
@@ -1870,7 +1907,6 @@ next repeat`,
         'wrong length',
         3
     );
-
     /* interleaved blocks */
     h.assertPreparseErrLn(
         `repeat while false

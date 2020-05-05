@@ -37,9 +37,8 @@ t.atest('--init--vpcTestScriptRunCmd', async () => {
     return h.initEnvironment();
 });
 t.test('execCommands choose', () => {
+    /* not valid tools */
     let b = new ScriptTestBatch();
-
-    /* not valid */
     b.t('choose tool\\tool()', 'ERR:not a valid tool');
     b.t('choose pencil def tool\\tool()', 'ERR:NotAllInputParsedException');
     b.t('choose tool 3 tool\\tool()', 'ERR:Redundant input');
@@ -55,7 +54,7 @@ t.test('execCommands choose', () => {
     b.t('choose "pencil" xyz', 'PREPARSEERR:tool');
     b.t('choose "pencil" "tool"', 'PREPARSEERR:tool');
 
-    /* updated style */
+    /* our new preferred style */
     b.t('choose "browse" tool\\tool()', 'browse');
     b.t('choose "button" tool\\tool()', 'ERR:drawing only');
     b.t('choose "field" tool\\tool()', 'ERR:drawing only');
@@ -132,9 +131,9 @@ t.test('execCommands choose', () => {
 });
 t.test('execCommands arithmetic invalid parse', () => {
     /* add, subtract, divide, multiply */
+    let b = new ScriptTestBatch();
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     h.runGeneralCode('', 'put "0" into cd fld "p1"');
-    let b = new ScriptTestBatch();
     b.t('add 4 with cd fld "p1"\\0', 'ERR:4:MismatchedTokenException');
     b.t('add 4 into cd fld "p1"\\0', 'ERR:4:MismatchedTokenException');
     b.t('add 4 from cd fld "p1"\\0', 'ERR:4:MismatchedTokenException');
@@ -244,6 +243,7 @@ confirmed in emulator */
     b.t(`go card 1\ngo to cd id 8888\\the short id of this cd`, `${h.elIds.card_a_a}`);
     b.t(`go card 1\ngo to cd "notexist"\\the short id of this cd`, `${h.elIds.card_a_a}`);
     b.t(`go card 1\ngo to bg 8888\\the short id of this cd`, `${h.elIds.card_a_a}`);
+
     /* going to different types of objects is an error,
 confirmed in emulator  */
     b.t(
@@ -256,6 +256,7 @@ confirmed in emulator  */
     );
     b.t(`go to vipercard\\the short id of this cd`, `ERR:expected a number`);
     b.t(`go card 1\ngo to cd btn id 1\\the short id of this cd`, `${h.elIds.card_a_a}`);
+
     /* go by id */
     b.t(
         `go card 1\ngo to card id ${h.elIds.card_b_d}\\the short id of this cd`,
@@ -360,6 +361,7 @@ do not change the current card */
         'go to card 1 of bg 3 of this stack\\the short id of this cd',
         `${h.elIds.card_c_d}`
     );
+
     /* go by variable lookup - correct, confirmed in emulator */
     b.t(
         longstr(`go card 1{{NEWLINE}}put "card id ${h.elIds.card_b_d}" into
@@ -376,6 +378,7 @@ do not change the current card */
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
         `${h.elIds.card_b_d}`
     );
+
     /* go by variable lookup - incorrect, confirmed in emulator */
     b.t(
         longstr(`go card 1{{NEWLINE}}put "card id ${h.elIds.card_b_d}" into xx{{NEWLINE}}go to
@@ -464,6 +467,7 @@ t.test('execCommands hide and show', () => {
 t.test('execCommands sort', () => {
     let b = new ScriptTestBatch();
 
+    /* sort by item */
     b.t('put "pear,Apple2,z11,z2,11,2,apple1,peach" into initlist\\0', '0');
     b.t('put initlist into x\\0', `0`);
     b.t('sort items of x\\x', `11,2,apple1,Apple2,peach,pear,z11,z2`);
@@ -513,8 +517,8 @@ t.test('execCommands sort', () => {
     b.t('sort xyz xyz of x\\x', `PREPARSEERR:expect something like`);
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-    /* cool new sort-by-expression feature */
 
+    /* new sort-by-expression! (very interesting to implement) */
     b.t('put "ac,bb,ca" into li\\0', '0');
     b.t('sort items of li by char 2 of each\\li', 'ca,bb,ac');
     b.t('put "ac" & cr & "bb" & cr & "ca" into li\\0', '0');
@@ -579,6 +583,7 @@ t.test('execCommands put', () => {
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
     let b = new ScriptTestBatch();
 
+    /* testing a lot of prepositions */
     b.t('put "abc"\\0', '0');
     b.t('put "abc" xyz\\0', 'ERR:MismatchedTokenException');
     b.t('put "abc" xyz x\\0', 'ERR:MismatchedTokenException');
@@ -744,7 +749,6 @@ t.test('execCommands put', () => {
 });
 t.test('execCommands get', () => {
     let b = new ScriptTestBatch();
-
     b.t('get 1+2\\it', `3`);
     b.t('get xyz()\\it', `ERR:no handler`);
     b.t('get the environment\\it', `development`);
@@ -784,6 +788,7 @@ replace "aa" with "bb" of s
 \\s`,
         'ERR:5:MismatchedTokenException'
     );
+
     /* correct usage */
     b.t(
         `put "" into s
@@ -853,6 +858,7 @@ replace "a" & "a" with "b" & "b" in s
 \\s`,
         'cc bb bb bb'
     );
+
     /* test with empty string */
     b.t(
         `put "cc aa aa bb" into s
@@ -872,6 +878,7 @@ replace "" with "" in s
 \\s`,
         'ERR:5:empty string'
     );
+
     /* use regex trip-up chars */
     b.t(
         `put "a**a" into s
@@ -943,21 +950,25 @@ t.test('dynamicCode do', () => {
     );
     b.t('put "put 0 into x" into code\ndo code\\0', '0');
     b.t('put "" into code\ndo code\\0', '0');
+
     /* runtime error */
     b.t(
         'global g\ndo ("global g" & cr & "put abcde into g")\\g',
         'ERR:5:no variable found'
     );
     b.t('global g\ndo "callNonExist"\\g', 'ERR:5:of this name found');
+
     /* lex error */
     b.t('put "$$$" into code\ndo code\\0', 'ERR:5:lex error');
     b.t('put "put " & quote & "unterminated" into code\ndo code\\0', 'ERR:5:unexpected');
+
     /* syntax error */
     b.t('put "on abc" into code\ndo code\\0', 'ERR:5:cannot begin');
     b.t('put "end if" into code\ndo code\\0', 'ERR:5:outside of if');
     b.t('put "if true then" into code\ndo code\\0', 'ERR:5:interleaved');
     b.t('put "put" into code\ndo code\\0', 'ERR:5:not enough args');
     b.t('put 123 into do\\0', `ERR:variable name not allowed`);
+
     /* nested (do calls do) */
     b.t('put counting() into cfirst\\counting() - cfirst', '1');
     b.t(
@@ -968,6 +979,7 @@ put ("do " & quote & code1 & quote) into code2
 do code2\\counting() - cfirst`,
         '2'
     );
+
     /* nested (do calls do calls do) */
     b.t(
         `
@@ -1025,6 +1037,7 @@ put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
         `${h.elIds.stack}`
     );
+
     /* not valid */
     b.t('send\\0', 'PREPARSEERR:too short');
     b.t('send "put 1 into x"\\0', 'ERR:MismatchedTokenException');
@@ -1035,6 +1048,7 @@ send code to this stack\\g`,
     b.t('send "put 1 into x" of this stack\\0', 'ERR:MismatchedTokenException');
     b.t('send "put 1 into x" to "string"\\0', 'ERR:expected something like');
     b.t('put 123 into send\\0', `ERR:variable name not allowed`);
+
     /* syntax error in sent code */
     b.t('send "put" to this stack\\0', 'ERR:4:not enough args');
     b.t('send "put 1 into" to this stack\\0', 'ERR:4:parse err');
@@ -1043,6 +1057,7 @@ send code to this stack\\g`,
     b.t('send "on h" to this stack\\0', 'ERR:4:cannot begin');
     b.t('send "put 10 11 into x" to this stack\\0', 'ERR:4:MismatchedTokenException');
     b.t('send "put 1 into cd fld id 99999" to this stack\\0', 'ERR:4:element not found');
+
     /* not exist */
     b.t('send "put 1 into x" to card 10\\0', "ERR:target of 'send' not found");
     b.t('send "put 1 into x" to bg "notfound"\\0', "ERR:target of 'send' not found");
@@ -1195,7 +1210,6 @@ end sometimesSetResult`;
     assertWarnEq('2a', got.readAsString(), 'RD|');
 
     /* sending an event down, it can bubble back up */
-
     h.vcstate.vci.undoableAction(() =>
         h.vcstate.model.stack.set(
             'script',

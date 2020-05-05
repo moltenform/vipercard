@@ -203,7 +203,7 @@ export class VpcLineToCodeObj {
                     arLast(line).image !== ')' ||
                     line[1].startOffset > firstToken.endOffset + 1,
                 longstr(`8L|this isn't C... you need to say
-                 'put fn() into x' or 'get fn()' but not 'fn()' alone`)
+                 'put fn() into x' or 'fn (1)' but not 'fn()' alone`)
             );
         }
 

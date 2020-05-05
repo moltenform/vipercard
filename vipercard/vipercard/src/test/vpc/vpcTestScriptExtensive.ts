@@ -28,6 +28,8 @@ t.atest('runConditionalTests', () => {
  * writing a python script to generate thousands of examples,
  * running the examples on the original product in an emulator,
  * then running the script in vipercard and comparing them.
+ * 
+ * all tests pass - matches the original product perfectly!
  */
 class RunExtensiveConditionalTests {
     helperCode = `
@@ -161,9 +163,7 @@ end if
 
         await this.testHelpers();
 
-        /* well, there shouldn't be too much overhead
-        to starting and re-starting code execution each time */
-
+        /* it's ok to stop and re-start code execution each time */
         let [data, expectedar] = await this.loadTestData();
         let countTests = Math.min(expectedar.length, data.length);
         let failures = 0;
@@ -198,7 +198,6 @@ end if
         }
 
         console.log(`ran verification for ${countTests} tests. ${failures} failures.`);
-
         h.vcstate.vci.undoableAction(() => stack.set('script', ''));
     }
 

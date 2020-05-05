@@ -15,6 +15,10 @@ t.atest('--init--testCollection03lexer', async () => {
         return h3.initEnvironment();
     }
 });
-t.test('stringliterals', () => {});
+t.test('stringliterals', () => {
+
+
+
+});
 
 export class TestVpc03 extends TestVpcScriptRunBase {}

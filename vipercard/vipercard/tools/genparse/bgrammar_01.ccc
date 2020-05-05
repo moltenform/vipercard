@@ -54,6 +54,7 @@
 //      NEW FEATURE: owner is more useful
 //      NEW FEATURE: label and name are separate properties
 //      CHANGE: the "long id" of objects is now more useful. 
+//              if you put the long id into x, you can set properties of x
 //      the string versions of "the target" and "the owner of" look a little different, they return the long id
 //      we need parens for if the short id of the owner of cd id prevCard is not the short id of the owner of cd id nextCard then answer "j"
 //      we don't support char x + 1 of abc, need char (x + 1) of abc

@@ -82,6 +82,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('true _or_ true', 'true');
     b.t('true _or_ false', 'true');
     b.t('false _or_ false', 'false');
+
     b.batchEvaluate(h, BatchType.testBatchEvalCommutative);
     b = new ScriptTestBatch()
 
@@ -113,6 +114,7 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b.t('"abc" _is_ "abc"', 'true');
     b.t('"abc" _is_ "abb"', 'false');
     b.t('"abc" _is_ "abc "', 'false');
+
     b.batchEvaluate(h, BatchType.testBatchEvalInvertAndCommute);
     b = new ScriptTestBatch()
 
@@ -200,7 +202,6 @@ t.test('evalRuleExpr,RuleLvl1', () => {
     b = new ScriptTestBatch()
 
     /* test chaining or any other that can't easily be unverted */
-
     b.t('true and true and true', 'true');
     b.t('true and true and true and true', 'true');
     b.t('true and true and false', 'false');
@@ -259,7 +260,34 @@ t.test('evalExprConfirmFailure', () => {
         b.t('true and false', 'ERR:(incorrectmessage)');
         b.batchEvaluate(h);
     });
-    /* same as above but happen lower in the list */
+    /* fails, wrong result, lower */
+    assertAsserts('Q)|', 'DIFF RESULT', () => {
+        b = new ScriptTestBatch();
+        b.t('true and true', 'true');
+        b.t('true and false', 'true');
+        b.batchEvaluate(h);
+    });
+    /* fails, runtime err, lower */
+    assertAsserts('Q(|', 'needs one of', () => {
+        b = new ScriptTestBatch();
+        b.t('true and true', 'true');
+        b.t('1 is a integer1', 'true');
+        b.batchEvaluate(h);
+    });
+    /* fails, runtime err with wrong message, lower */
+    assertAsserts('Q&|', 'wrong err message', () => {
+        b = new ScriptTestBatch();
+        b.t('true and true', 'true');
+        b.t('1 is a integer1', 'ERR:(incorrectmessage)');
+        b.batchEvaluate(h);
+    });
+    /* runtime err expected but not got, lower */
+    assertAsserts('Q%|', 'error not seen', () => {
+        b = new ScriptTestBatch();
+        b.t('true and true', 'true');
+        b.t('true and false', 'ERR:(incorrectmessage)');
+        b.batchEvaluate(h);
+    });
 });
 t.test('evalRuleLvl2', () => {
     let b = new ScriptTestBatch();
@@ -387,8 +415,8 @@ t.test('evalRuleLvl2', () => {
     b.batchEvaluate(h, BatchType.testBatchEvalInvert);
 });
 t.test('evalRuleLvl3', () => {
+    /* lvl3 expressions */
     let b = new ScriptTestBatch();
-
     b.t('"" & ""', '');
     b.t('"" & "abc"', 'abc');
     b.t('"abc" & ""', 'abc');
@@ -419,7 +447,6 @@ t.test('evalRuleLvl3', () => {
 t.test('evalArithmetic', () => {
     /* the communitative ones, integer */
     let b = new ScriptTestBatch();
-
     b.t('12 _+_ 34', '46');
     b.t('12 _+_ " 34 "', '46');
     b.t('12 _+_ " 0034.00 "', '46');
@@ -441,7 +468,6 @@ t.test('evalArithmetic', () => {
     b = new ScriptTestBatch()
 
     /* the communitative ones, floating point */
-
     b.t('12 _+_ 34.1', '46.1');
     b.t('12 _+_ " 34.1 "', '46.1');
     b.t('12.7 _+_ " 0034.00 "', '46.7');
@@ -458,12 +484,10 @@ t.test('evalArithmetic', () => {
     b.t('1.1 _*_ -1', '-1.1');
     b.t('123.9 _*_ 0', '0');
     b.t('123.9 _*_ -0', '0');
-
     b.batchEvaluate(h, BatchType.floatingPointCommutative);
     b = new ScriptTestBatch()
 
-    /* the non-communitative ones integer */
-
+    /* the non-commutive ones integer */
     b.t('12 - 34', '-22');
     b.t('12 - " 34 "', '-22');
     b.t('12 - " 0034.00 "', '-22');
@@ -512,8 +536,7 @@ t.test('evalArithmetic', () => {
     b.batchEvaluate(h);
     b = new ScriptTestBatch()
 
-    /* the non-communitative ones floating point */
-
+    /* the non-commutive ones floating point */
     b.t('12.1 - 3.4', '8.7');
     b.t('12.1 - 34', '-21.9');
     b.t('12.1 - " 34 "', '-21.9');
@@ -524,11 +547,11 @@ t.test('evalArithmetic', () => {
     b.t('123.4 - 0', '123.4');
     b.t('123.4 - -0', '123.4');
 
+    /* the non-commutive ones exponent */
     b.t('12 ^ 13', '106993205379072');
     b.t('12 ^ " 13 "', '106993205379072');
     b.t('12 ^ " 0013.00 "', '106993205379072');
     b.t('12 ^ 34', 'ERR:> 1e18');
-
     b.t('12.1 ^ 3.4', '4802.531908907492');
     b.t('12.1 ^ " 3.4 "', '4802.531908907492');
     b.t('12.1 ^ " 003.400 "', '4802.531908907492');
@@ -554,7 +577,6 @@ t.test('evalArithmetic', () => {
 
     /* old-style functions should not eat too much.
     confirmed these in the emulator */
-
     b.t('length ("abc") > 1', 'true');
     b.t('the length of "abc" > 1', 'true');
     b.t('the length of "a" is a number', 'true');
@@ -563,12 +585,10 @@ t.test('evalArithmetic', () => {
     b.t('the length of - 12', '3');
     b.t('the length of not true', '5');
     b.t('the length of (10 + 1)', '2');
-
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
     /* test chained */
-
     b.t('12 + 34 + 56 + 78', '180');
     b.t('12 + 34 + 56', '102');
     b.t('12 + 34 - 56 + 78', '68');
@@ -577,12 +597,11 @@ t.test('evalArithmetic', () => {
     b.t('12 * 34 * 56', '22848');
     b.t('12 * 34 / 56 * 78', '568.285714285714285');
     b.t('12 / 34 / 56 / 78', '0.00008080155');
-
+    
     b.batchEvaluate(h, BatchType.floatingPoint);
-    b = new ScriptTestBatch()
+    b = new ScriptTestBatch();
 
-    /* test wrong types given (communitative works) */
-
+    /* test wrong types given (commutative works) */
     b.t('12 _+_ "12a"', 'ERR:expected a number');
     b.t('12 _+_ "12 a"', 'ERR:expected a number');
     b.t('12 _+_ "12.3."', 'ERR:expected a number');
@@ -771,7 +790,6 @@ t.test('evalRuleLvl6', () => {
 
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-
     h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
 
     /* order of operations */
