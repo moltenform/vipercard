@@ -122,6 +122,7 @@ export const SimpleUtil512Tests = /* static class */ {
             }
         }
 
+        TestBatch.checkPending()
         UI512ErrorHandling.runningTests = false;
         if (UI512ErrorHandling.silenceWarnings) {
             console.log(`A test may have failed, warning occurred.`);

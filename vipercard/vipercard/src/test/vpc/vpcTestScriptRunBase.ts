@@ -6,13 +6,13 @@
 /* auto */ import { VpcPresenterEvents } from './../../vpcui/presentation/vpcPresenterEvents';
 /* auto */ import { VpcPresenter } from './../../vpcui/presentation/vpcPresenter';
 /* auto */ import { VpcDocumentLocation, VpcIntroProvider } from './../../vpcui/intro/vpcIntroProvider';
-/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal } from './../../vpc/vpcutils/vpcEnums';
+/* auto */ import { VpcElType, VpcErr, VpcErrStage, VpcOpCtg, VpcTool, checkThrowInternal, checkThrow } from './../../vpc/vpcutils/vpcEnums';
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
-/* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
+/* auto */ import { BrowserInfo, SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
 /* auto */ import { O, bool, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
+/* auto */ import { MapKeyToObjectCanSet, Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
 /* auto */ import { MouseUpEventDetails } from './../../ui512/menu/ui512Events';
 /* auto */ import { SimpleUtil512TestCollection } from './../testUtils/testUtils';
@@ -369,6 +369,7 @@ put ${s} into testresult`;
     }
 
     testBatchEvaluate(tests: [string, string][], floatingPoint = false) {
+        ScriptTestBatch.keepTrackOfPending.set( false)
         assertWarn(tests.length > 0, 'R6|');
         let getBeforeLine = (s: string): [string, string] => {
             let ptsWithRes = s.split('{RESULT}');
@@ -523,8 +524,8 @@ put ${s} into testresult`;
             return [pts[2] + ' ' + pts[1] + ' ' + pts[0], item[1]];
         });
 
-        this.testBatchEvaluate(testsSameorder, floatingPoint);
-        this.testBatchEvaluate(testsDifferentOrder, floatingPoint);
+        this.testBatchEvaluate(testsSameorder,  floatingPoint);
+        this.testBatchEvaluate(testsDifferentOrder,  floatingPoint);
     }
 
     testBatchEvalInvert(tests: [string, string][]) {
@@ -615,5 +616,49 @@ put ${s} into testresult`;
         this.testBatchEvaluate(testsDifferentOrder);
         this.testBatchEvaluate(testsInvert);
         this.testBatchEvaluate(testsInvertAndOrder);
+    }
+}
+
+export enum BatchType {
+    default = 1,
+    testBatchEvalInvertAndCommute,
+    testBatchEvalInvert,
+    testBatchEvalCommutative
+}
+
+export class ScriptTestBatch {
+    protected static keepTrackOfPending = new MapKeyToObjectCanSet<boolean>()
+    id:string
+    tests: [string, string][] = []
+    constructor() {
+        this.id = Math.random().toString()
+        ScriptTestBatch.keepTrackOfPending.add(this.id, true)
+    }
+
+    t(s1:string, s2:string) {
+        this.tests.push([s1, s2])
+    }
+
+    batchEvaluate(runner:TestVpcScriptRunBase, typ = BatchType.default) {
+        ScriptTestBatch.keepTrackOfPending.add(this.id, false)
+        if (typ === BatchType.default) {
+            runner.testBatchEvaluate(this.tests)
+        } else if (typ === BatchType.testBatchEvalCommutative) {
+            runner.testBatchEvalCommutative(this.tests)
+        } else if (typ === BatchType.testBatchEvalInvert) {
+            runner.testBatchEvalInvert(this.tests)
+        } else if (typ === BatchType.testBatchEvalInvertAndCommute) {
+            runner.testBatchEvalInvertAndCommute(this.tests)
+        } else {
+            checkThrow(false, "unknown batchtype " + typ)
+        }
+
+        /* prevent you from re-using the object */
+        this.tests = SetToInvalidObjectAtEndOfExecution(this.tests)
+    }
+
+    static checkPending() {
+        let vals = ScriptTestBatch.keepTrackOfPending.getVals()
+        assertTrue(!vals.some(v => true), "Test batch left pending")
     }
 }

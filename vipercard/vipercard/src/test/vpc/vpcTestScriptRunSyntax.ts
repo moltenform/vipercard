@@ -1,6 +1,6 @@
 
 /* auto */ import { VpcValS } from './../../vpc/vpcutils/vpcVal';
-/* auto */ import { TestVpcScriptRunBase } from './vpcTestScriptRunBase';
+/* auto */ import { ScriptTestBatch, TestVpcScriptRunBase } from './vpcTestScriptRunBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertEq, assertWarnEq, longstr } from './../../ui512/utils/util512';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper, assertAsserts } from './../testUtils/testUtils';
@@ -24,20 +24,19 @@ t.atest('--init--testCollectionvpcScriptRunSyntax', async () => {
     return h.initEnvironment();
 });
 t.test('vpcTestScriptBasics', () => {
-    let batch: [string, string][];
-    batch = [
-        /* runtime error */
-        ['put unknownVar into x\\x', 'ERR:no variable'],
-        /* valid statement */
-        ['put 9 into x\\x', '9'],
-        /* also a valid statement */
-        ['9', '9'],
-        /* preparse error1 */
-        ['x = 4', "PREPARSEERR:this isn't C"],
-        /* preparse error2 */
-        ['put ?? into x', 'PREPARSEERR:']
-    ];
-    h.testBatchEvaluate(batch);
+    let b = new ScriptTestBatch()
+    /* runtime error */
+    b.t('put unknownVar into x\\x', 'ERR:no variable')
+    /* valid statement */
+    b.t('put 9 into x\\x', '9')
+    /* also a valid statement */
+    b.t('9', '9')
+    /* preparse error1 */
+    b.t('x = 4', "PREPARSEERR:this isn't C")
+    /* preparse error2 */
+    b.t('put ?? into x', 'PREPARSEERR:')
+    b.batchEvaluate(h)
+    
     /* get a different string */
     assertAsserts('RN|', 'assert:', () => {
         batch = [['x = 4', 'PREPARSEERR:(incorrectmessage)']];
