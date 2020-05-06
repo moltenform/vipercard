@@ -2,7 +2,7 @@
 /* auto */ import { Util512Higher } from './../../ui512/utils/util512Higher';
 /* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512BaseErr, Util512Message, joinIntoMessage } from './../../ui512/utils/util512Assert';
-/* auto */ import { getStrToEnum, util512Sort } from './../../ui512/utils/util512';
+/* auto */ import { fitIntoInclusive, getStrToEnum, util512Sort } from './../../ui512/utils/util512';
 /* auto */ import { UI512EventType } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { UI512PaintDispatchShapes } from './../../ui512/draw/ui512DrawPaintDispatch';
 
@@ -569,9 +569,11 @@ function getPositionUnbounded(rel: OrdinalOrPosition, current: number, min: numb
 }
 
 /**
- * evaulate an OrdinalOrPosition
+ * evaluate an OrdinalOrPosition
+ * current === -1 is allowed! it will be fit within the bounds.
  */
 export function findPositionFromOrdinalOrPosition(rel: OrdinalOrPosition, current: number, min: number, max: number): O<number> {
+    current = fitIntoInclusive(current, min, max)
     let ret = getPositionUnbounded(rel, current, min, max);
     return (ret >= min && ret <= max) ? ret : undefined
 }

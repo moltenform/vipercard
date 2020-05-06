@@ -2,7 +2,8 @@
 /* auto */ import { VpcIntermedValBase } from './vpcVal';
 /* auto */ import { OrdinalOrPosition, VpcElType } from './vpcEnums';
 /* auto */ import { RequestedChunk } from './vpcChunkResolution';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
+/* auto */ import { O, checkIsProductionBuild } from './../../ui512/utils/util512Base';
+/* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { UI512Gettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -40,16 +41,26 @@ export class RequestedVelRef extends VpcIntermedValBase {
     }
 
     /**
-     * does the reference only refer to this.
-     * e.g. "this card" or "this stack"
+     * should only have one specified
      */
-    onlyThisSpecified() {
-        return (
-            this.lookById === undefined &&
-            this.lookByName === undefined &&
-            this.lookByAbsolute === undefined &&
-            (!this.lookByRelative || this.lookByRelative === OrdinalOrPosition.This)
-        );
+    checkOnlyOneSpecified() {
+        if (!checkIsProductionBuild()) {
+            let total = 0
+            if (this.lookByAbsolute) {
+                total += 1
+            }
+            if (this.lookById) {
+                total += 1
+            }
+            if (this.lookByName) {
+                total += 1
+            }
+            if (this.lookByRelative) {
+                total += 1
+            }
+
+            assertWarn(total <= 1, "too many specified")
+        }
     }
 }
 

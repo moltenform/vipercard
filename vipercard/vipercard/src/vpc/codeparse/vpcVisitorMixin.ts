@@ -53,8 +53,8 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         Helper$SetByNumberOrName(ret: RequestedVelRef, ctx: VisitingContext, subrule: string) {
             let val = this.Helper$ReadVpcVal(ctx, subrule, this.Helper$SetByNumberOrName.name);
-            if (val.isItNumeric()) {
-                ret.lookByAbsolute = val.readAsStrictNumeric(this.tmpArr);
+            if (val.isItInteger()) {
+                ret.lookByAbsolute = val.readAsStrictInteger(this.tmpArr);
             } else {
                 ret.lookByName = val.readAsString();
             }

@@ -1,18 +1,18 @@
 
 /* auto */ import { RememberHistory } from './../vpcutils/vpcUtils';
 /* auto */ import { RequestedVelRef } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { OrdinalOrPosition, VpcElType, checkThrow, checkThrowEq, findPositionFromOrdinalOrPosition } from './../vpcutils/vpcEnums';
 /* auto */ import { StackOrderHelpers } from './velStackOrderHelpers';
+/* auto */ import { VpcElStack } from './velStack';
+/* auto */ import { VpcElProductOpts } from './velProductOpts';
 /* auto */ import { VpcModelTop } from './velModelTop';
+/* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElCard } from './velCard';
+/* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
-/* auto */ import { O, bool, cProductName, trueIfDefinedAndNotNull, tostring } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, getEnumToStrOrFallback, cast } from './../../ui512/utils/util512';
-
-import { VpcElStack } from './velStack';
-import { VpcElButton } from './velButton';
-import { assertTrue } from '../../ui512/utils/util512Assert';
+/* auto */ import { O, bool, cProductName, tostring, trueIfDefinedAndNotNull } from './../../ui512/utils/util512Base';
+/* auto */ import { Util512, cast, getEnumToStrOrFallback } from './../../ui512/utils/util512'
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -371,6 +371,7 @@ export class VelResolveReference2 {
     go(ref: RequestedVelRef, me: O<VpcElBase>, target: O<VpcElBase>, cardHistory: RememberHistory): [O<VpcElBase>, VpcElCard] {
         const currentCard = this.model.getCurrentCard();
         checkThrow(ref instanceof RequestedVelRef, '76|invalid RequestedElRef');
+        ref.checkOnlyOneSpecified()
 
         /* special categories */
         checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, 'T<|');
@@ -413,9 +414,9 @@ export class VelResolveReference2 {
         /* optimize looking by id */
         let ret: [O<VpcElBase>, VpcElCard]
         if (ref.lookById) {
-            let found = this.lookById(ref, currentCard, parentCard, parentBg)
+            let found = this.model.findByIdUntyped(tostring(ref.lookById))
             this.doParentsHaveRightHierarchy(found, ref, parentCard, parentBg)
-            return this.getResultsFromFound(found, currentCard, ref, parentCard, parentBg)
+            ret = this.getResultsFromFound(found, currentCard, ref, parentCard, parentBg)
         } else {
             let methodName = 'go' + Util512.capitalizeFirst(getEnumToStrOrFallback(VpcElType, ref.type));
             let found = Util512.callAsMethodOnClass(
@@ -446,6 +447,27 @@ export class VelResolveReference2 {
             checkThrow(!parentBg, "break, not found, cannot have this this type of parent")
         } else if (found && found.getType() === VpcElType.Card) {
             checkThrow(!parentCard, "break, not found, cannot have this this type of parent")
+        }
+
+        checkThrow(!ref.cardLookAtMarkedOnly || ref.type === VpcElType.Card, "marked only is only for cards")
+        if (found && found.getType() !== VpcElType.Fld && found.getType() !== VpcElType.Btn) {
+            checkThrow(!ref.partIsBg, "does not make sense to belong to bg")
+            checkThrow(!ref.partIsCd, "does not make sense to belong to cd")
+        }
+
+        /* double-check classes */
+        if (found && found.getType() === VpcElType.Card) {
+            checkThrow(found instanceof VpcElCard, "incorrect class")
+        } else if (found && found.getType() === VpcElType.Fld) {
+            checkThrow(found instanceof VpcElField, "incorrect class")
+        } else if (found && found.getType() === VpcElType.Product) {
+            checkThrow(found instanceof VpcElProductOpts, "incorrect class")
+        } else if (found && found.getType() === VpcElType.Stack) {
+            checkThrow(found instanceof VpcElStack, "incorrect class")
+        } else if (found && found.getType() === VpcElType.Bg) {
+            checkThrow(found instanceof VpcElBg, "incorrect class")
+        } else if (found && found.getType() === VpcElType.Btn) {
+            checkThrow(found instanceof VpcElButton, "incorrect class")
         }
     }
 
@@ -542,12 +564,202 @@ export class VelResolveReference2 {
     }
 
     /**
-     * looking by id has similar logic for all types
+     * share logic for buttons and fields
      */
-    protected lookById(ref: RequestedVelRef, currentCard: VpcElCard, parentCard: O<VpcElCard>, parentBg: O<VpcElBg>): [O<VpcElBase>, VpcElCard] {
-        let found = this.model.findByIdUntyped(tostring(ref.lookById))
-        return [found, currentCard]
+    protected goFld(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>) {
+        return this.goBtnOrFld(ref, parentCd, parentBg);
     }
+
+    /**
+     * share logic for buttons and fields
+     */
+    protected goBtn(ref: RequestedVelRef, parentCd: O<VpcElCard>, parentBg: O<VpcElBg>) {
+        return this.goBtnOrFld(ref, parentCd, parentBg);
+    }
+
+    /**
+     * resolve a productopts
+     */
+    protected goProduct(
+        ref: RequestedVelRef,
+        parentCd: O<VpcElCard>,
+        parentBg: O<VpcElBg>,
+    ): O<VpcElBase> {
+        checkThrow(!ref.lookByAbsolute && !ref.lookById && !ref.lookByName && !ref.lookByRelative, "only one productOpts")
+        return this.model.productOpts
+    }
+
+    /**
+     * resolve a stack
+     */
+    protected goStack(
+        ref: RequestedVelRef,
+        parentCd: O<VpcElCard>,
+        parentBg: O<VpcElBg>,
+    ): O<VpcElBase> {
+        if (ref.lookByName) {
+            /* `the short id of stack "myStack"` */
+            return ref.lookByName === this.model.stack.getS('name') ? this.model.stack : undefined
+        } else if (ref.lookByAbsolute) {
+            /* `the short id of stack 1` */
+            return ref.lookByAbsolute === 1 ? this.model.stack : undefined
+        } else if (ref.lookByRelative) {
+            /* `the short id of this stack` */
+            if (ref.lookByRelative === OrdinalOrPosition.This ||
+            ref.lookByRelative === OrdinalOrPosition.Any ||
+            ref.lookByRelative === OrdinalOrPosition.Middle ||
+            ref.lookByRelative === OrdinalOrPosition.Last ||
+            ref.lookByRelative === OrdinalOrPosition.First
+            ) {
+                return this.model.stack
+            } else {
+                return undefined
+            }
+        } else {
+            /* it's ok if no specifiers were given
+            it is valid to say `get the number of cards of stack` */
+            return this.model.stack
+        }
+    }
+
+    /**
+     * resolve a bg
+     */
+    protected goBg(
+        ref: RequestedVelRef,
+        parentCd: O<VpcElCard>,
+        parentBg: O<VpcElBg>,
+    ): O<VpcElBase> {
+        let found: O<VpcElBase>;
+        let arr = this.model.stack.bgs
+        if (ref.lookByName) {
+            /* `the short id of bg "theName"` */
+            found = arr.find(vel =>
+                vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase())
+        } else if (ref.lookByAbsolute) {
+            /* `the short id of bg 2` */
+            found = arr[ref.lookByAbsolute - 1];
+        } else if (ref.lookByRelative) {
+            /* `the short id of first bg, the short id of next bg` */
+            let cur = this.model.getCurrentCard().parentId
+            let curIndex = arr.findIndex(item => item.id === cur)
+            let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, curIndex, 0, arr.length-1)
+            found = index === undefined ? undefined : arr[index]
+        } else {
+            checkThrow(false, 'T,|unknown object reference');
+        }
+
+        return found
+    }
+
+    /**
+     * resolve a card
+     */
+    protected goCard(
+        ref: RequestedVelRef,
+        parentCd: O<VpcElCard>,
+        parentBg: O<VpcElBg>,
+    ): O<VpcElBase> {
+        let found: O<VpcElBase>;
+        let arr = this.model.stack.getCardOrder().map(item => this.model.getCardById(item))
+        if (parentBg) {
+            arr = parentBg.cards
+        }
+
+        let currCdId = this.model.getCurrentCard().id
+        if (ref.lookByName) {
+            if (ref.cardLookAtMarkedOnly) {
+                arr = arr.filter(cd => cd.getB('marked'))
+            }
+            /* `the short id of cd "theName"` */
+            found = arr.find(vel =>
+                vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase())
+        } else if (ref.lookByAbsolute) {
+            if (ref.cardLookAtMarkedOnly) {
+                arr = arr.filter(cd => cd.getB('marked'))
+            }
+            /* `the short id of cd 2` */
+            found = arr[ref.lookByAbsolute - 1];
+        } else if (ref.lookByRelative) {
+            /* `the short id of first cd, the short id of next cd` */
+            let cur = this.model.getCurrentCard().parentId
+            if (ref.cardLookAtMarkedOnly && (ref.lookByRelative === OrdinalOrPosition.Previous || ref.lookByRelative === OrdinalOrPosition.Next)) {
+                let temparr = arr.filter(cd => cd.getB('marked'))
+                checkThrow(temparr.length, "break, not found, no marked cards")
+                /* add current one to it as a place of comparison */
+                /* we should still use findPositionFromOrdinalOrPosition 
+                since we still want wrap-around behavior */
+                arr = arr.filter(cd => cd.getB('marked') || cd.id === currCdId)
+            } else if (ref.cardLookAtMarkedOnly) {
+                arr = arr.filter(cd => cd.getB('marked'))
+                checkThrow(arr.length, "break, not found, no marked cards")
+            }
+
+            /* confirmed in emulator: */
+            /* `the short id of this marked cd` should fail if this cd is not marked */
+            /* `the short id of this cd of bg 2` should fail if this cd is not in bg 2 */
+            let curIndex = arr.findIndex(item => item.id === cur)
+            checkThrow(!(ref.lookByRelative === OrdinalOrPosition.This && curIndex===-1), "break, not found, 'this' card does not meet criteria")
+            let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, curIndex, 0, arr.length-1)
+            found = index === undefined ? undefined : arr[index]
+        } else {
+            checkThrow(false, 'T,|unknown object reference');
+        }
+
+        return found
+    }
+
+    /**
+     * resolve a button or field
+     */
+    protected goBtnOrFld(
+        ref: RequestedVelRef,
+        parentCd: O<VpcElCard>,
+        parentBg: O<VpcElBg>,
+    ): O<VpcElBase> {
+        let found: O<VpcElBase>;
+        if (ref.partIsBg) {
+            parentBg = parentBg ?? this.model.getById(VpcElBg, this.model.getCurrentCard().parentId)
+            if (ref.lookByName) {
+                /* `the short id of bg btn "theName"` */
+                found = parentBg.parts.find(vel => vel.getType() === ref.type &&
+                    vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase())
+            } else if (ref.lookByAbsolute) {
+                /* `the short id of bg btn 2` */
+                let arr = parentBg.parts.filter(vel => vel.getType() === ref.type);
+                found = arr[ref.lookByAbsolute - 1];
+            } else if (ref.lookByRelative) {
+                /* `the short id of first bg btn` */
+                let arr = parentBg.parts.filter(vel => vel.getType() === ref.type);
+                let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, 0, 0, arr.length-1)
+                found = index === undefined ? undefined : arr[index]
+            } else {
+                checkThrow(false, 'T,|unknown object reference');
+            }
+        } else {
+            parentCd = parentCd ?? this.model.getCurrentCard()
+            if (ref.lookByName) {
+                /* `the short id of cd btn "theName"` */
+                found = parentCd.parts.find(vel => vel.getType() === ref.type &&
+                    vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase())
+            } else if (ref.lookByAbsolute) {
+                /* `the short id of cd btn 2` */
+                let arr = parentCd.parts.filter(vel => vel.getType() === ref.type);
+                found = arr[ref.lookByAbsolute - 1];
+            } else if (ref.lookByRelative) {
+                /* `the short id of first cd btn` */
+                let arr = parentCd.parts.filter(vel => vel.getType() === ref.type);
+                let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, 0, 0, arr.length-1)
+                found = index === undefined ? undefined : arr[index]
+            } else {
+                checkThrow(false, 'T,|unknown object reference');
+            }
+        }
+
+        return found
+    }
+
+    
 }
 
 
