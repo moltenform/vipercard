@@ -32,6 +32,9 @@ export class VpcElField extends VpcElSizable {
     protected _name = '';
     protected _scroll = 0;
     protected _ftxt = new FormattedText();
+
+    protected _is_bg_velement_id = ''
+
     /* always true if belongs to a card */
     protected _sharedtext = true;
     /* specific-card content will be in the form: */

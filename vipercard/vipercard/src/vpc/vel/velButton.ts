@@ -30,6 +30,9 @@ export class VpcElButton extends VpcElSizable {
     protected _visible = true;
     protected _script = '';
     protected _name = '';
+
+    protected _is_bg_velement_id = ''
+
     /* always true if belongs to a card */
     protected _sharedhilite = true;
     /* specific-card content will be in the form: */

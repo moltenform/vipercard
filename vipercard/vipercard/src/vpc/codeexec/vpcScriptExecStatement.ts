@@ -18,7 +18,7 @@
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 
-/* see the top of vpcTopPreparse.ts to read how we execute code. */
+/* see the section in internaldocs.md to read how we execute code. */
 
 /**
  * execute a single line of code
