@@ -132,7 +132,7 @@ t.test('execCommands choose', () => {
 t.test('execCommands arithmetic invalid parse', () => {
     /* add, subtract, divide, multiply */
     let b = new ScriptTestBatch();
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
     h.runGeneralCode('', 'put "0" into cd fld "p1"');
     b.t('add 4 with cd fld "p1"\\0', 'ERR:4:MismatchedTokenException');
     b.t('add 4 into cd fld "p1"\\0', 'ERR:4:MismatchedTokenException');
@@ -225,7 +225,7 @@ t.test('execCommands arithmetic valid', () => {
 });
 t.test('execCommands go to card', () => {
     /* changing current card */
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
     h.assertPreparseErrLn('go', 'on its own', 3);
     h.assertLineErr('go "a"', 'something like', 3);
     h.assertLineErr('go 1', 'NoViableAltException', 3);
@@ -234,171 +234,171 @@ t.test('execCommands go to card', () => {
 
     /* go by id */
     b.t(
-        `go card 1\ngo to card id ${h.elIds.card_b_d}\\the short id of this cd`,
-        `${h.elIds.card_b_d}`
+        `go card 1\ngo to card id ${h.ids.cdBD}\\the short id of this cd`,
+        `${h.ids.cdBD}`
     );
 
     /* going to nonexistant cards is a no-op,
 confirmed in emulator */
-    b.t(`go card 1\ngo to cd id 8888\\the short id of this cd`, `${h.elIds.card_a_a}`);
-    b.t(`go card 1\ngo to cd "notexist"\\the short id of this cd`, `${h.elIds.card_a_a}`);
-    b.t(`go card 1\ngo to bg 8888\\the short id of this cd`, `${h.elIds.card_a_a}`);
+    b.t(`go card 1\ngo to cd id 8888\\the short id of this cd`, `${h.ids.cdA}`);
+    b.t(`go card 1\ngo to cd "notexist"\\the short id of this cd`, `${h.ids.cdA}`);
+    b.t(`go card 1\ngo to bg 8888\\the short id of this cd`, `${h.ids.cdA}`);
 
     /* going to different types of objects is an error,
 confirmed in emulator  */
     b.t(
-        `go card id ${h.elIds.card_b_c}\ngo to cd btn "p1"\\the short id of this cd`,
+        `go card id ${h.ids.cdBC}\ngo to cd btn "p1"\\the short id of this cd`,
         `ERR:5:Cannot go to a`
     );
     b.t(
-        `go card id ${h.elIds.card_b_c}\ngo to cd fld 1\\the short id of this cd`,
+        `go card id ${h.ids.cdBC}\ngo to cd fld 1\\the short id of this cd`,
         `ERR:5:Cannot go to a`
     );
     b.t(`go to vipercard\\the short id of this cd`, `ERR:expected a number`);
-    b.t(`go card 1\ngo to cd btn id 1\\the short id of this cd`, `${h.elIds.card_a_a}`);
+    b.t(`go card 1\ngo to cd btn id 1\\the short id of this cd`, `${h.ids.cdA}`);
 
     /* go by id */
     b.t(
-        `go card 1\ngo to card id ${h.elIds.card_b_d}\\the short id of this cd`,
-        `${h.elIds.card_b_d}`
+        `go card 1\ngo to card id ${h.ids.cdBD}\\the short id of this cd`,
+        `${h.ids.cdBD}`
     );
     b.t(
-        `go card 1\ngo to card id ${h.elIds.card_c_d}\\the short id of this cd`,
-        `${h.elIds.card_c_d}`
+        `go card 1\ngo to card id ${h.ids.cdCD}\\the short id of this cd`,
+        `${h.ids.cdCD}`
     );
 
     /* go by number */
-    b.t('go to card 1\\the short id of this cd', `${h.elIds.card_a_a}`);
-    b.t('go to card 2\\the short id of this cd', `${h.elIds.card_b_b}`);
-    b.t('go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go to card 4\\the short id of this cd', `${h.elIds.card_b_d}`);
-    b.t('go to card 5\\the short id of this cd', `${h.elIds.card_c_d}`);
+    b.t('go to card 1\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to card 2\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to card 3\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to card 4\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go to card 5\\the short id of this cd', `${h.ids.cdCD}`);
 
     /* get by relative (tests getCardByOrdinal) */
-    b.t('go to card 1\\the short id of next cd', `${h.elIds.card_b_b}`);
-    b.t('go to card 2\\the short id of next cd', `${h.elIds.card_b_c}`);
-    b.t('go to card 3\\the short id of next cd', `${h.elIds.card_b_d}`);
-    b.t('go to card 4\\the short id of next cd', `${h.elIds.card_c_d}`);
-    b.t('go to card 2\\the short id of prev cd', `${h.elIds.card_a_a}`);
-    b.t('go to card 3\\the short id of prev cd', `${h.elIds.card_b_b}`);
-    b.t('go to card 4\\the short id of prev cd', `${h.elIds.card_b_c}`);
-    b.t('go to card 5\\the short id of prev cd', `${h.elIds.card_b_d}`);
+    b.t('go to card 1\\the short id of next cd', `${h.ids.cdBB}`);
+    b.t('go to card 2\\the short id of next cd', `${h.ids.cdBC}`);
+    b.t('go to card 3\\the short id of next cd', `${h.ids.cdBD}`);
+    b.t('go to card 4\\the short id of next cd', `${h.ids.cdCD}`);
+    b.t('go to card 2\\the short id of prev cd', `${h.ids.cdA}`);
+    b.t('go to card 3\\the short id of prev cd', `${h.ids.cdBB}`);
+    b.t('go to card 4\\the short id of prev cd', `${h.ids.cdBC}`);
+    b.t('go to card 5\\the short id of prev cd', `${h.ids.cdBD}`);
 
     /* ord/position */
-    b.t('go to card 3\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go next\\the short id of this cd', `${h.elIds.card_b_d}`);
-    b.t('go prev\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go previous\\the short id of this cd', `${h.elIds.card_b_b}`);
-    b.t('go next\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go first\\the short id of this cd', `${h.elIds.card_a_a}`);
-    b.t('go last\\the short id of this cd', `${h.elIds.card_c_d}`);
-    b.t('go third\\the short id of this cd', `${h.elIds.card_b_c}`);
+    b.t('go to card 3\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go next\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go prev\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go previous\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go next\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go first\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go last\\the short id of this cd', `${h.ids.cdCD}`);
+    b.t('go third\\the short id of this cd', `${h.ids.cdBC}`);
 
     /* should wrap around */
-    b.t('go first\ngo prev\\the short id of this cd', `${h.elIds.card_c_d}`);
-    b.t('go last\ngo next\\the short id of this cd', `${h.elIds.card_a_a}`);
+    b.t('go first\ngo prev\\the short id of this cd', `${h.ids.cdCD}`);
+    b.t('go last\ngo next\\the short id of this cd', `${h.ids.cdA}`);
 
     /* reference by name */
-    b.t('go card 1\ngo to card "a"\\the short id of this cd', `${h.elIds.card_a_a}`);
-    b.t('go card 1\ngo to card "b"\\the short id of this cd', `${h.elIds.card_b_b}`);
-    b.t('go card 1\ngo to card "c"\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go card 1\ngo to card "d"\\the short id of this cd', `${h.elIds.card_b_d}`);
+    b.t('go card 1\ngo to card "a"\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go card 1\ngo to card "b"\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go card 1\ngo to card "c"\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go card 1\ngo to card "d"\\the short id of this cd', `${h.ids.cdBD}`);
     b.t(
         'go card 1\ngo to card "d" of bg 2\\the short id of this cd',
-        `${h.elIds.card_b_d}`
+        `${h.ids.cdBD}`
     );
     b.t(
         'go card 1\ngo to card "d" of bg 3\\the short id of this cd',
-        `${h.elIds.card_c_d}`
+        `${h.ids.cdCD}`
     );
 
     /* confirmed in emulator: if there are ambiguous card names,
 use whichever comes first in the stack, regardless of current bg */
     b.t(
-        `go card id ${h.elIds.card_a_a}\ngo to card "d"\\the short id of this cd`,
-        `${h.elIds.card_b_d}`
+        `go card id ${h.ids.cdA}\ngo to card "d"\\the short id of this cd`,
+        `${h.ids.cdBD}`
     );
     b.t(
-        `go card id ${h.elIds.card_b_d}\ngo to card "d"\\the short id of this cd`,
-        `${h.elIds.card_b_d}`
+        `go card id ${h.ids.cdBD}\ngo to card "d"\\the short id of this cd`,
+        `${h.ids.cdBD}`
     );
     b.t(
-        `go card id ${h.elIds.card_c_d}\ngo to card "d"\\the short id of this cd`,
-        `${h.elIds.card_b_d}`
+        `go card id ${h.ids.cdCD}\ngo to card "d"\\the short id of this cd`,
+        `${h.ids.cdBD}`
     );
 
     /* reference by bg */
-    b.t('go to card 1\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`);
-    b.t('go to card 2\ngo to bg 1\\the short id of this cd', `${h.elIds.card_a_a}`);
-    b.t('go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`);
-    b.t('go to card 5\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`);
-    b.t('go to card 5\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`);
-    b.t('go to card 2\ngo to bg 3\\the short id of this cd', `${h.elIds.card_c_d}`);
+    b.t('go to card 1\ngo to bg 1\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to card 2\ngo to bg 1\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to card 2\ngo to bg 2\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to card 5\ngo to bg 2\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to card 5\ngo to bg 3\\the short id of this cd', `${h.ids.cdCD}`);
+    b.t('go to card 2\ngo to bg 3\\the short id of this cd', `${h.ids.cdCD}`);
 
     /* confirmed in emulator: if sent to the same bg,
 do not change the current card */
-    b.t('go to card 2\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_b}`);
-    b.t('go to card 3\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go to card 4\ngo to bg 2\\the short id of this cd', `${h.elIds.card_b_d}`);
+    b.t('go to card 2\ngo to bg 2\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to card 3\ngo to bg 2\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go to card 4\ngo to bg 2\\the short id of this cd', `${h.ids.cdBD}`);
 
     /* object reference */
-    b.t('go third\ngo to this stack\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go third\ngo to stack "other"\\the short id of this cd', `${h.elIds.card_b_c}`);
-    b.t('go third\ngo to stack id 999\\the short id of this cd', `${h.elIds.card_b_c}`);
+    b.t('go third\ngo to this stack\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go third\ngo to stack "other"\\the short id of this cd', `${h.ids.cdBC}`);
+    b.t('go third\ngo to stack id 999\\the short id of this cd', `${h.ids.cdBC}`);
     b.t(
         `go third\ngo to stack id ${h.vcstate.model.stack.id}\\the short id of this cd`,
-        `${h.elIds.card_b_c}`
+        `${h.ids.cdBC}`
     );
-    b.t('go to card 1 of this stack\\the short id of this cd', `${h.elIds.card_a_a}`);
-    b.t('go to card 4 of this stack\\the short id of this cd', `${h.elIds.card_b_d}`);
-    b.t('go to card 1 of bg 2\\the short id of this cd', `${h.elIds.card_b_b}`);
-    b.t('go to card 1 of bg 3\\the short id of this cd', `${h.elIds.card_c_d}`);
+    b.t('go to card 1 of this stack\\the short id of this cd', `${h.ids.cdA}`);
+    b.t('go to card 4 of this stack\\the short id of this cd', `${h.ids.cdBD}`);
+    b.t('go to card 1 of bg 2\\the short id of this cd', `${h.ids.cdBB}`);
+    b.t('go to card 1 of bg 3\\the short id of this cd', `${h.ids.cdCD}`);
     b.t(
         'go to card 1 of bg 2 of this stack\\the short id of this cd',
-        `${h.elIds.card_b_b}`
+        `${h.ids.cdBB}`
     );
     b.t(
         'go to card 1 of bg 3 of this stack\\the short id of this cd',
-        `${h.elIds.card_c_d}`
+        `${h.ids.cdCD}`
     );
 
     /* go by variable lookup - correct, confirmed in emulator */
     b.t(
-        longstr(`go card 1{{NEWLINE}}put "card id ${h.elIds.card_b_d}" into
+        longstr(`go card 1{{NEWLINE}}put "card id ${h.ids.cdBD}" into
                 xx{{NEWLINE}}go to xx\\the short id of this cd`),
-        `${h.elIds.card_b_d}`
+        `${h.ids.cdBD}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put the long id of card id ${h.elIds.card_b_d} into
+        longstr(`go card 1{{NEWLINE}}put the long id of card id ${h.ids.cdBD} into
                 xx{{NEWLINE}}go to xx\\the short id of this cd`),
-        `${h.elIds.card_b_d}`
+        `${h.ids.cdBD}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put the short name of card id ${h.elIds.card_b_d} into
+        longstr(`go card 1{{NEWLINE}}put the short name of card id ${h.ids.cdBD} into
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
-        `${h.elIds.card_b_d}`
+        `${h.ids.cdBD}`
     );
 
     /* go by variable lookup - incorrect, confirmed in emulator */
     b.t(
-        longstr(`go card 1{{NEWLINE}}put "card id ${h.elIds.card_b_d}" into xx{{NEWLINE}}go to
+        longstr(`go card 1{{NEWLINE}}put "card id ${h.ids.cdBD}" into xx{{NEWLINE}}go to
                 card xx\\the short id of this cd`),
-        `${h.elIds.card_a_a}`
+        `${h.ids.cdA}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put "cd id ${h.elIds.card_b_c}" into
+        longstr(`go card 1{{NEWLINE}}put "cd id ${h.ids.cdBC}" into
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
-        `${h.elIds.card_a_a}`
+        `${h.ids.cdA}`
     );
     b.t(
-        longstr(`go card 1{{NEWLINE}}put the long id of cd id ${h.elIds.card_b_c} into
+        longstr(`go card 1{{NEWLINE}}put the long id of cd id ${h.ids.cdBC} into
                 xx{{NEWLINE}}go to card xx\\the short id of this cd`),
-        `${h.elIds.card_a_a}`
+        `${h.ids.cdA}`
     );
     b.batchEvaluate(h);
 });
 t.test('execCommands disable and enable', () => {
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
     let b = new ScriptTestBatch();
 
     /* not valid */
@@ -417,7 +417,7 @@ t.test('execCommands disable and enable', () => {
     b.batchEvaluate(h);
 });
 t.test('execCommands hide and show', () => {
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
     let b = new ScriptTestBatch();
 
     /* not valid */
@@ -580,7 +580,7 @@ t.test('execCommands delete', () => {
     b.batchEvaluate(h);
 });
 t.test('execCommands put', () => {
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
     let b = new ScriptTestBatch();
 
     /* testing a lot of prepositions */
@@ -902,7 +902,7 @@ replace "b" with "$&" in s
     b = new ScriptTestBatch();
 
     /* use a real field */
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
 
     b.t(
         `put "" into cd fld "p1"
@@ -997,45 +997,45 @@ do s\\counting() - cfirst`,
     b.batchEvaluate(h);
 });
 t.test('dynamicCode send', () => {
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_a_a);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdA);
     let b = new ScriptTestBatch();
 
     /* valid */
     b.t(
         `global g
         put "global g" & cr & "put the short id of me into g" into code
-        send code to cd fld id ${h.elIds.fld_c_d_1}\\g`,
-        `${h.elIds.fld_c_d_1}`
+        send code to cd fld id ${h.ids.fCD1}\\g`,
+        `${h.ids.fCD1}`
     );
     b.t(
         `global g
         put "global g" & cr & "put the short id of me into g" into code
-        send code to cd btn id ${h.elIds.btn_b_c_1}\\g`,
-        `${h.elIds.btn_b_c_1}`
+        send code to cd btn id ${h.ids.bBC1}\\g`,
+        `${h.ids.bBC1}`
     );
     b.t(
         `global g
         put "global g" & cr & "put the short id of me into g" into code
         send code to card "a"\\g`,
-        `${h.elIds.card_a_a}`
+        `${h.ids.cdA}`
     );
     b.t(
         `global g
         put "global g" & cr & "put the short id of me into g" into code
-        send code to card id ${h.elIds.card_c_d}\\g`,
-        `${h.elIds.card_c_d}`
+        send code to card id ${h.ids.cdCD}\\g`,
+        `${h.ids.cdCD}`
     );
     b.t(
         `global g
         put "global g" & cr & "put the short id of me into g" into code
         send code to bg "b"\\g`,
-        `${h.elIds.bg_b}`
+        `${h.ids.bgB}`
     );
     b.t(
         `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
-        `${h.elIds.stack}`
+        `${h.ids.stack}`
     );
 
     /* not valid */
@@ -1067,7 +1067,7 @@ send code to this stack\\g`,
     b = new ScriptTestBatch();
 
     /* make sure that invalid code is cleaned out after a preparse failure. */
-    let stack = h.vcstate.vci.getModel().getById(VpcElStack, h.elIds.stack);
+    let stack = h.vcstate.vci.getModel().getById(VpcElStack, h.ids.stack);
     h.vcstate.vci.undoableAction(() => stack.set('script', ``));
     b.t('send "$$$#$%#$" to this stack\\0', 'ERR:4:lex error');
     b.batchEvaluate(h);
@@ -1077,7 +1077,7 @@ send code to this stack\\g`,
         `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
-        `${h.elIds.stack}`
+        `${h.ids.stack}`
     );
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
@@ -1094,13 +1094,13 @@ send code to this stack\\g`,
         `global g
 put "global g" & cr & "put the short id of me into g" into code
 send code to this stack\\g`,
-        `${h.elIds.stack}`
+        `${h.ids.stack}`
     );
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
     /* calling as a handler, like the original product could do */
-    let v = h.vcstate.vci.getModel().getById(VpcElButton, h.elIds.btn_b_c_1);
+    let v = h.vcstate.vci.getModel().getById(VpcElButton, h.ids.bBC1);
     h.vcstate.vci.undoableAction(() =>
         v.set(
             'script',
@@ -1112,12 +1112,12 @@ end myCompute`
     );
 
     b.t(
-        `send "myCompute 2, 3" to cd btn id ${h.elIds.btn_b_c_1}
+        `send "myCompute 2, 3" to cd btn id ${h.ids.bBC1}
         \\the result`,
         `7`
     );
     b.t(
-        `send "myCompute 2, 3" & cr & "return the result" to cd btn id ${h.elIds.btn_b_c_1}
+        `send "myCompute 2, 3" & cr & "return the result" to cd btn id ${h.ids.bBC1}
         \\the result`,
         `7`
     );
@@ -1136,12 +1136,12 @@ end myCompute`
     );
 
     b.t(
-        `send "myCompute(2, 3)" to cd btn id ${h.elIds.btn_b_c_1}
+        `send "myCompute(2, 3)" to cd btn id ${h.ids.bBC1}
         \\the result`,
         `ERR:4:this isn't C`
     );
     b.t(
-        `send "return myCompute(3, 3)" to cd btn id ${h.elIds.btn_b_c_1}
+        `send "return myCompute(3, 3)" to cd btn id ${h.ids.bBC1}
         \\the result`,
         `12`
     );
@@ -1164,7 +1164,7 @@ end myCompute`
     );
 
     b.t(
-        `send "return myCompute(2, 3)" to cd btn id ${h.elIds.btn_b_c_1}
+        `send "return myCompute(2, 3)" to cd btn id ${h.ids.bBC1}
         \\the result`,
         `10`
     );
@@ -1219,7 +1219,7 @@ return a * a + b
 end myCompute
 
 on doTest
-    send "myCompute 3, 4" to cd btn id ${h.elIds.btn_go}
+    send "myCompute 3, 4" to cd btn id ${h.ids.go}
     return the result
 end doTest
 `

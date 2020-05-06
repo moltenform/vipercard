@@ -112,7 +112,7 @@ export class ScriptTestBatch {
 export class TestVpcScriptRunBase {
     pr: VpcPresenter;
     vcstate: VpcState;
-    elIds: { [key: string]: string } = {};
+    ids: { [key: string]: string } = {};
     evalHelpers = new VpcEvalHelpers();
     initedAppl = false;
     simMouseX: number;
@@ -164,95 +164,95 @@ export class TestVpcScriptRunBase {
         assertEq(1, model.stack.bgs.length, '2f|');
         assertEq(1, model.stack.bgs[0].cards.length, '2e|');
 
-        let bg_a = model.stack.bgs[0];
-        let bg_b = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
-        let bg_c = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
-        let card_a_a = bg_a.cards[0];
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_a_a.id);
-        let card_b_b = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_b.id);
-        let card_b_c = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_c.id);
-        let card_b_d = this.vcstate.createVel(bg_b.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_b_d.id);
-        let card_c_d = this.vcstate.createVel(bg_c.id, VpcElType.Card, -1);
-        this.vcstate.vci.setCurCardNoOpenCardEvt(card_c_d.id);
-        let fld_b_c_1 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
-        let fld_b_c_2 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
-        let fld_b_c_3 = this.vcstate.createVel(card_b_c.id, VpcElType.Fld, -1);
-        let btn_b_c_1 = this.vcstate.createVel(card_b_c.id, VpcElType.Btn, -1);
-        let btn_b_c_2 = this.vcstate.createVel(card_b_c.id, VpcElType.Btn, -1);
-        let fld_b_d_1 = this.vcstate.createVel(card_b_d.id, VpcElType.Fld, -1);
-        let fld_b_d_2 = this.vcstate.createVel(card_b_d.id, VpcElType.Fld, -1);
-        let btn_b_d_1 = this.vcstate.createVel(card_b_d.id, VpcElType.Btn, -1);
-        let fld_c_d_1 = this.vcstate.createVel(card_c_d.id, VpcElType.Fld, -1);
-        let btn_c_d_1 = this.vcstate.createVel(card_c_d.id, VpcElType.Btn, -1);
+        let bgA = model.stack.bgs[0];
+        let bgB = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
+        let bgC = this.vcstate.createVel(model.stack.id, VpcElType.Bg, -1);
+        let cdA = bgA.cards[0];
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdA.id);
+        let cdBB = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBB.id);
+        let cdBC = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBC.id);
+        let cdBD = this.vcstate.createVel(bgB.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdBD.id);
+        let cdCD = this.vcstate.createVel(bgC.id, VpcElType.Card, -1);
+        this.vcstate.vci.setCurCardNoOpenCardEvt(cdCD.id);
+        let fBC1 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
+        let fBC2 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
+        let fBC3 = this.vcstate.createVel(cdBC.id, VpcElType.Fld, -1);
+        let bBC1 = this.vcstate.createVel(cdBC.id, VpcElType.Btn, -1);
+        let bBC2 = this.vcstate.createVel(cdBC.id, VpcElType.Btn, -1);
+        let fBD1 = this.vcstate.createVel(cdBD.id, VpcElType.Fld, -1);
+        let fBD2 = this.vcstate.createVel(cdBD.id, VpcElType.Fld, -1);
+        let bBD1 = this.vcstate.createVel(cdBD.id, VpcElType.Btn, -1);
+        let fCD1 = this.vcstate.createVel(cdCD.id, VpcElType.Fld, -1);
+        let bCD1 = this.vcstate.createVel(cdCD.id, VpcElType.Btn, -1);
 
-        let bgfld_b_1 = this.vcstate.createVel(bg_b.id, VpcElType.Fld, -1);
-        let bgfld_b_2 = this.vcstate.createVel(bg_b.id, VpcElType.Fld, -1);
-        let bgfld_c_1 = this.vcstate.createVel(bg_c.id, VpcElType.Fld, -1);
-        let bgbtn_b_1 = this.vcstate.createVel(bg_b.id, VpcElType.Btn, -1);
-        let bgbtn_b_2 = this.vcstate.createVel(bg_b.id, VpcElType.Btn, -1);
-        let bgbtn_c_1 = this.vcstate.createVel(bg_c.id, VpcElType.Btn, -1);
-        let btn_go = this.vcstate.createVel(card_a_a.id, VpcElType.Btn, -1);
+        let bgfB1 = this.vcstate.createVel(bgB.id, VpcElType.Fld, -1);
+        let bgfB2 = this.vcstate.createVel(bgB.id, VpcElType.Fld, -1);
+        let bgfC1 = this.vcstate.createVel(bgC.id, VpcElType.Fld, -1);
+        let bgbB1 = this.vcstate.createVel(bgB.id, VpcElType.Btn, -1);
+        let bgbB2 = this.vcstate.createVel(bgB.id, VpcElType.Btn, -1);
+        let bgbC1 = this.vcstate.createVel(bgC.id, VpcElType.Btn, -1);
+        let go = this.vcstate.createVel(cdA.id, VpcElType.Btn, -1);
 
         model.stack.set('name', 'teststack');
-        bg_a.set('name', 'a');
-        bg_b.set('name', 'b');
-        bg_c.set('name', 'c');
-        card_a_a.set('name', 'a');
-        card_b_b.set('name', 'b');
-        card_b_c.set('name', 'c');
-        card_b_d.set('name', 'd');
-        card_c_d.set('name', 'd');
-        fld_b_c_1.set('name', 'p1');
-        fld_b_c_2.set('name', 'p2');
-        fld_b_c_3.set('name', 'p3');
-        btn_b_c_1.set('name', 'p1');
-        btn_b_c_2.set('name', 'p2');
-        fld_b_d_1.set('name', 'p1');
-        fld_b_d_2.set('name', 'p2');
-        btn_b_d_1.set('name', 'p1');
-        fld_c_d_1.set('name', 'p1');
-        btn_c_d_1.set('name', 'p1');
-        bgfld_b_1.set('name', 'p1');
-        bgfld_b_2.set('name', 'p2');
-        bgfld_c_1.set('name', 'p1');
-        bgbtn_b_1.set('name', 'p1');
-        bgbtn_b_2.set('name', 'p2');
-        bgbtn_c_1.set('name', 'p1');
-        btn_go.set('name', 'go');
+        bgA.set('name', 'a');
+        bgB.set('name', 'b');
+        bgC.set('name', 'c');
+        cdA.set('name', 'a');
+        cdBB.set('name', 'b');
+        cdBC.set('name', 'c');
+        cdBD.set('name', 'd');
+        cdCD.set('name', 'd');
+        fBC1.set('name', 'p1');
+        fBC2.set('name', 'p2');
+        fBC3.set('name', 'p3');
+        bBC1.set('name', 'p1');
+        bBC2.set('name', 'p2');
+        fBD1.set('name', 'p1');
+        fBD2.set('name', 'p2');
+        bBD1.set('name', 'p1');
+        fCD1.set('name', 'p1');
+        bCD1.set('name', 'p1');
+        bgfB1.set('name', 'p1');
+        bgfB2.set('name', 'p2');
+        bgfC1.set('name', 'p1');
+        bgbB1.set('name', 'p1');
+        bgbB2.set('name', 'p2');
+        bgbC1.set('name', 'p1');
+        go.set('name', 'go');
 
-        this.elIds = {
+        this.ids = {
             stack: model.stack.id,
-            bg_a: bg_a.id,
-            bg_b: bg_b.id,
-            bg_c: bg_c.id,
-            card_a_a: card_a_a.id,
-            card_b_b: card_b_b.id,
-            card_b_c: card_b_c.id,
-            card_b_d: card_b_d.id,
-            card_c_d: card_c_d.id,
-            fld_b_c_1: fld_b_c_1.id,
-            fld_b_c_2: fld_b_c_2.id,
-            fld_b_c_3: fld_b_c_3.id,
-            btn_b_c_1: btn_b_c_1.id,
-            btn_b_c_2: btn_b_c_2.id,
-            fld_b_d_1: fld_b_d_1.id,
-            fld_b_d_2: fld_b_d_2.id,
-            btn_b_d_1: btn_b_d_1.id,
-            fld_c_d_1: fld_c_d_1.id,
-            btn_c_d_1: btn_c_d_1.id,
-            bgfld_b_1: bgfld_b_1.id,
-            bgfld_b_2: bgfld_b_2.id,
-            bgfld_c_1: bgfld_c_1.id,
-            bgbtn_b_1: bgbtn_b_1.id,
-            bgbtn_b_2: bgbtn_b_2.id,
-            bgbtn_c_1: bgbtn_c_1.id,
-            btn_go: btn_go.id
+            bgA: bgA.id,
+            bgB: bgB.id,
+            bgC: bgC.id,
+            cdA: cdA.id,
+            cdBB: cdBB.id,
+            cdBC: cdBC.id,
+            cdBD: cdBD.id,
+            cdCD: cdCD.id,
+            fBC1: fBC1.id,
+            fBC2: fBC2.id,
+            fBC3: fBC3.id,
+            bBC1: bBC1.id,
+            bBC2: bBC2.id,
+            fBD1: fBD1.id,
+            fBD2: fBD2.id,
+            bBD1: bBD1.id,
+            fCD1: fCD1.id,
+            bCD1: bCD1.id,
+            bgfB1: bgfB1.id,
+            bgfB2: bgfB2.id,
+            bgfC1: bgfC1.id,
+            bgbB1: bgbB1.id,
+            bgbB2: bgbB2.id,
+            bgbC1: bgbC1.id,
+            go: go.id
         };
 
-        let b = btn_go as VpcElButton;
+        let b = go as VpcElButton;
         assertTrue(b instanceof VpcElButton, '2c|not a button');
         let userBounds = this.pr.userBounds;
 
@@ -270,7 +270,6 @@ export class TestVpcScriptRunBase {
         expectErrMsg?: string,
         expectErrLine?: number,
         expectPreparseErr?: boolean,
-        addNoHandler?: boolean
     ){
         let msg = scriptErr.message;
         let velId = scriptErr.scriptErrVelid ?? 'unknown';
@@ -361,7 +360,7 @@ export class TestVpcScriptRunBase {
     ) {
         let caughtErr: O<VpcErr>;
         this.vcstate.runtime.codeExec.cbOnScriptError = scriptErr => {
-            caughtErr = this.onScriptErr(scriptErr, built, expectErrMsg, expectErrLine, expectPreparseErr, addNoHandler)
+            caughtErr = this.onScriptErr(scriptErr, built, expectErrMsg, expectErrLine, expectPreparseErr)
         };
 
         let built = addNoHandler
@@ -373,7 +372,7 @@ export class TestVpcScriptRunBase {
         built = built.replace(/{BSLASH}/g, '\\');
         built = FormattedText.fromExternalCharset(built, BrowserInfo.get().os);
 
-        let btnGo = this.vcstate.model.getById(VpcElButton, this.elIds.btn_go);
+        let btnGo = this.vcstate.model.getById(VpcElButton, this.ids.go);
         this.vcstate.vci.doWithoutAbilityToUndo(() => btnGo.set('script', built));
 
         /* fake a click inside btnGo */

@@ -51,7 +51,7 @@ t.test('getProp', () => {
     let b = new ScriptTestBatch();
 
     /* object resolution */
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
 
     /* invalid */
     b.t(`the short id of xyz`, `ERR:no variable`);
@@ -59,8 +59,8 @@ t.test('getProp', () => {
 
     /* target, me, productOpts have different behavior
         confirmed these in emulator */
-    b.t(`the short id of the target`, `${h.elIds.btn_go}`);
-    b.t(`the short id of target`, `${h.elIds.btn_go}`);
+    b.t(`the short id of the target`, `${h.ids.go}`);
+    b.t(`the short id of target`, `${h.ids.go}`);
     b.t(`put 1 into target\\0`, `ERR:writing text to`);
     b.t(`the short id of target()`, `ERR:parse err`);
     b.t(`the short id of (target())`, `ERR:no such function`);
@@ -72,7 +72,7 @@ t.test('getProp', () => {
     b.t(`the short id of the me`, `ERR:parse err`);
     b.t(`the short id of me()`, `ERR:parse err`);
     b.t(`the short id of (me)`, `ERR:parse err`);
-    b.t(`the short id of me`, `${h.elIds.btn_go}`);
+    b.t(`the short id of me`, `${h.ids.go}`);
     b.t(`the short id of ${cProductName}`, `WILD`);
     b.t(`the short id of ${cAltProductName}`, `WILD`);
 
@@ -86,139 +86,139 @@ t.test('getProp', () => {
     b.t(`the short id of stack "other"`, `ERR:could not find`);
     b.t(`the short id of stack id 921`, `921`);
     b.t(`the short id of stack id 600`, `ERR:could not find`);
-    b.t(`the short id of stack id ${h.elIds.bg_a}`, `ERR:could not find`);
+    b.t(`the short id of stack id ${h.ids.bgA}`, `ERR:could not find`);
 
     /* bg absolute */
-    b.t(`the short id of bg id ${h.elIds.bg_a}`, `${h.elIds.bg_a}`);
-    b.t(`the short id of bg id ${h.elIds.bg_c}`, `${h.elIds.bg_c}`);
-    b.t(`the short id of bg id (${h.elIds.bg_c})`, `${h.elIds.bg_c}`);
+    b.t(`the short id of bg id ${h.ids.bgA}`, `${h.ids.bgA}`);
+    b.t(`the short id of bg id ${h.ids.bgC}`, `${h.ids.bgC}`);
+    b.t(`the short id of bg id (${h.ids.bgC})`, `${h.ids.bgC}`);
     b.t(`the short id of bg id 99`, `ERR:could not find`);
-    b.t(`the short id of bg "a"`, `${h.elIds.bg_a}`);
-    b.t(`the short id of bg "c"`, `${h.elIds.bg_c}`);
-    b.t(`the short id of bg ("c")`, `${h.elIds.bg_c}`);
+    b.t(`the short id of bg "a"`, `${h.ids.bgA}`);
+    b.t(`the short id of bg "c"`, `${h.ids.bgC}`);
+    b.t(`the short id of bg ("c")`, `${h.ids.bgC}`);
     b.t(`the short id of bg ""`, `ERR:could not find`);
     b.t(`the short id of bg "notfound"`, `ERR:could not find`);
-    b.t(`the short id of bg 1`, `${h.elIds.bg_a}`);
-    b.t(`the short id of bg 3`, `${h.elIds.bg_c}`);
-    b.t(`the short id of bg (3)`, `${h.elIds.bg_c}`);
+    b.t(`the short id of bg 1`, `${h.ids.bgA}`);
+    b.t(`the short id of bg 3`, `${h.ids.bgC}`);
+    b.t(`the short id of bg (3)`, `${h.ids.bgC}`);
     b.t(`the short id of bg -1`, `ERR:could not find`);
     b.t(`the short id of bg 5`, `ERR:could not find`);
 
     /* bg relative */
-    b.t(`the short id of this bg`, `${h.elIds.bg_b}`);
-    b.t(`the short id of next bg`, `${h.elIds.bg_c}`);
-    b.t(`the short id of first bg`, `${h.elIds.bg_a}`);
-    b.t(`the short id of last bg`, `${h.elIds.bg_c}`);
-    b.t(`the short id of the first bg`, `${h.elIds.bg_a}`);
-    b.t(`the short id of the second bg`, `${h.elIds.bg_b}`);
-    b.t(`the short id of the next bg`, `${h.elIds.bg_c}`);
+    b.t(`the short id of this bg`, `${h.ids.bgB}`);
+    b.t(`the short id of next bg`, `${h.ids.bgC}`);
+    b.t(`the short id of first bg`, `${h.ids.bgA}`);
+    b.t(`the short id of last bg`, `${h.ids.bgC}`);
+    b.t(`the short id of the first bg`, `${h.ids.bgA}`);
+    b.t(`the short id of the second bg`, `${h.ids.bgB}`);
+    b.t(`the short id of the next bg`, `${h.ids.bgC}`);
     b.t(`the short id of xyz bg`, `ERR:parse error`);
     b.t(`the short id of the xyz bg`, `ERR:parse error`);
 
     /* bg with parent */
-    b.t(`the short id of bg id ${h.elIds.bg_a} of this stack`, `${h.elIds.bg_a}`);
-    b.t(`the short id of bg 1 of this stack`, `${h.elIds.bg_a}`);
-    b.t(`the short id of bg "a" of this stack`, `${h.elIds.bg_a}`);
-    b.t(`the short id of this bg of this stack`, `${h.elIds.bg_b}`);
+    b.t(`the short id of bg id ${h.ids.bgA} of this stack`, `${h.ids.bgA}`);
+    b.t(`the short id of bg 1 of this stack`, `${h.ids.bgA}`);
+    b.t(`the short id of bg "a" of this stack`, `${h.ids.bgA}`);
+    b.t(`the short id of this bg of this stack`, `${h.ids.bgB}`);
 
     /* card absolute */
-    b.t(`the short id of card id ${h.elIds.card_a_a}`, `${h.elIds.card_a_a}`);
-    b.t(`the short id of card id ${h.elIds.card_c_d}`, `${h.elIds.card_c_d}`);
-    b.t(`the short id of card id (${h.elIds.card_c_d})`, `${h.elIds.card_c_d}`);
+    b.t(`the short id of card id ${h.ids.cdA}`, `${h.ids.cdA}`);
+    b.t(`the short id of card id ${h.ids.cdCD}`, `${h.ids.cdCD}`);
+    b.t(`the short id of card id (${h.ids.cdCD})`, `${h.ids.cdCD}`);
     b.t(`the short id of card id 99`, `ERR:could not find`);
-    b.t(`the short id of card "a"`, `${h.elIds.card_a_a}`);
-    b.t(`the short id of card "d"`, `${h.elIds.card_b_d}`);
-    b.t(`the short id of card ("d")`, `${h.elIds.card_b_d}`);
+    b.t(`the short id of card "a"`, `${h.ids.cdA}`);
+    b.t(`the short id of card "d"`, `${h.ids.cdBD}`);
+    b.t(`the short id of card ("d")`, `${h.ids.cdBD}`);
     b.t(`the short id of card ""`, `ERR:could not find`);
     b.t(`the short id of card "notfound"`, `ERR:could not find`);
-    b.t(`the short id of card 1`, `${h.elIds.card_a_a}`);
-    b.t(`the short id of card 3`, `${h.elIds.card_b_c}`);
-    b.t(`the short id of card (3)`, `${h.elIds.card_b_c}`);
+    b.t(`the short id of card 1`, `${h.ids.cdA}`);
+    b.t(`the short id of card 3`, `${h.ids.cdBC}`);
+    b.t(`the short id of card (3)`, `${h.ids.cdBC}`);
     b.t(`the short id of card -1`, `ERR:could not find`);
     b.t(`the short id of card 99`, `ERR:could not find`);
 
     /* card relative */
-    b.t(`the short id of this card`, `${h.elIds.card_b_c}`);
-    b.t(`the short id of next card`, `${h.elIds.card_b_d}`);
-    b.t(`the short id of first card`, `${h.elIds.card_a_a}`);
-    b.t(`the short id of last card`, `${h.elIds.card_c_d}`);
-    b.t(`the short id of the first card`, `${h.elIds.card_a_a}`);
-    b.t(`the short id of the second card`, `${h.elIds.card_b_b}`);
-    b.t(`the short id of the next card`, `${h.elIds.card_b_d}`);
+    b.t(`the short id of this card`, `${h.ids.cdBC}`);
+    b.t(`the short id of next card`, `${h.ids.cdBD}`);
+    b.t(`the short id of first card`, `${h.ids.cdA}`);
+    b.t(`the short id of last card`, `${h.ids.cdCD}`);
+    b.t(`the short id of the first card`, `${h.ids.cdA}`);
+    b.t(`the short id of the second card`, `${h.ids.cdBB}`);
+    b.t(`the short id of the next card`, `${h.ids.cdBD}`);
     b.t(`the short id of xyz card`, `ERR:parse err`);
     b.t(`the short id of the xyz card`, `ERR:parse err`);
 
     /* card with parent */
-    b.t(`the short id of card "d" of this bg`, `${h.elIds.card_b_d}`);
-    b.t(`the short id of card "d" of bg "c"`, `${h.elIds.card_c_d}`);
-    b.t(`the short id of card "d" of bg 3`, `${h.elIds.card_c_d}`);
-    b.t(`the short id of card 1 of this bg`, `${h.elIds.card_b_b}`);
-    b.t(`the short id of card 1 of bg 2`, `${h.elIds.card_b_b}`);
-    b.t(`the short id of card 1 of bg 3`, `${h.elIds.card_c_d}`);
-    b.t(`the short id of card 2 of bg 2`, `${h.elIds.card_b_c}`);
+    b.t(`the short id of card "d" of this bg`, `${h.ids.cdBD}`);
+    b.t(`the short id of card "d" of bg "c"`, `${h.ids.cdCD}`);
+    b.t(`the short id of card "d" of bg 3`, `${h.ids.cdCD}`);
+    b.t(`the short id of card 1 of this bg`, `${h.ids.cdBB}`);
+    b.t(`the short id of card 1 of bg 2`, `${h.ids.cdBB}`);
+    b.t(`the short id of card 1 of bg 3`, `${h.ids.cdCD}`);
+    b.t(`the short id of card 2 of bg 2`, `${h.ids.cdBC}`);
     b.t(`the short id of card 2 of bg 1`, `ERR:could not find`);
-    b.t(`the short id of card "d" of this bg of this stack`, `${h.elIds.card_b_d}`);
+    b.t(`the short id of card "d" of this bg of this stack`, `${h.ids.cdBD}`);
 
     /* field */
-    b.t(`the short id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`);
-    b.t(`the short id of cd fld id ${h.elIds.fld_c_d_1}`, `${h.elIds.fld_c_d_1}`);
-    b.t(`the short id of cd fld id (${h.elIds.fld_c_d_1})`, `${h.elIds.fld_c_d_1}`);
+    b.t(`the short id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
+    b.t(`the short id of cd fld id ${h.ids.fCD1}`, `${h.ids.fCD1}`);
+    b.t(`the short id of cd fld id (${h.ids.fCD1})`, `${h.ids.fCD1}`);
     b.t(`the short id of cd fld id 99`, `ERR:could not find`);
-    b.t(`the short id of cd fld "p1"`, `${h.elIds.fld_b_c_1}`);
-    b.t(`the short id of cd fld "p2"`, `${h.elIds.fld_b_c_2}`);
-    b.t(`the short id of cd fld ("p2")`, `${h.elIds.fld_b_c_2}`);
+    b.t(`the short id of cd fld "p1"`, `${h.ids.fBC1}`);
+    b.t(`the short id of cd fld "p2"`, `${h.ids.fBC2}`);
+    b.t(`the short id of cd fld ("p2")`, `${h.ids.fBC2}`);
     b.t(`the short id of cd fld "notfound"`, `ERR:could not find`);
-    b.t(`the short id of cd fld 1`, `${h.elIds.fld_b_c_1}`);
+    b.t(`the short id of cd fld 1`, `${h.ids.fBC1}`);
 
     /* field with parent */
     b.t(
-        `the short id of cd fld id ${h.elIds.fld_b_c_1} of this cd`,
-        `${h.elIds.fld_b_c_1}`
+        `the short id of cd fld id ${h.ids.fBC1} of this cd`,
+        `${h.ids.fBC1}`
     );
     b.t(
-        `the short id of cd fld id ${h.elIds.fld_c_d_1} of this cd`,
-        `${h.elIds.fld_c_d_1}`
+        `the short id of cd fld id ${h.ids.fCD1} of this cd`,
+        `${h.ids.fCD1}`
     );
     b.t(`the short id of cd fld "p1" of cd 1`, `ERR:could not find`);
-    b.t(`the short id of cd fld "p1" of this cd`, `${h.elIds.fld_b_c_1}`);
-    b.t(`the short id of cd fld "p1" of fifth cd`, `${h.elIds.fld_c_d_1}`);
-    b.t(`the short id of cd fld "p1" of cd 4`, `${h.elIds.fld_b_d_1}`);
-    b.t(`the short id of cd fld "p1" of cd "d"`, `${h.elIds.fld_b_d_1}`);
-    b.t(`the short id of cd fld "p1" of cd "d" of bg 3`, `${h.elIds.fld_c_d_1}`);
+    b.t(`the short id of cd fld "p1" of this cd`, `${h.ids.fBC1}`);
+    b.t(`the short id of cd fld "p1" of fifth cd`, `${h.ids.fCD1}`);
+    b.t(`the short id of cd fld "p1" of cd 4`, `${h.ids.fBD1}`);
+    b.t(`the short id of cd fld "p1" of cd "d"`, `${h.ids.fBD1}`);
+    b.t(`the short id of cd fld "p1" of cd "d" of bg 3`, `${h.ids.fCD1}`);
     b.t(
         `the short id of cd fld "p1" of cd "d" of bg 3 of this stack`,
-        `${h.elIds.fld_c_d_1}`
+        `${h.ids.fCD1}`
     );
 
     /* button */
-    b.t(`the short id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`);
-    b.t(`the short id of cd btn id ${h.elIds.btn_c_d_1}`, `${h.elIds.btn_c_d_1}`);
-    b.t(`the short id of cd btn id (${h.elIds.btn_c_d_1})`, `${h.elIds.btn_c_d_1}`);
+    b.t(`the short id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
+    b.t(`the short id of cd btn id ${h.ids.bCD1}`, `${h.ids.bCD1}`);
+    b.t(`the short id of cd btn id (${h.ids.bCD1})`, `${h.ids.bCD1}`);
     b.t(`the short id of cd btn id 99`, `ERR:could not find`);
-    b.t(`the short id of cd btn "p1"`, `${h.elIds.btn_b_c_1}`);
-    b.t(`the short id of cd btn "p2"`, `${h.elIds.btn_b_c_2}`);
-    b.t(`the short id of cd btn ("p2")`, `${h.elIds.btn_b_c_2}`);
+    b.t(`the short id of cd btn "p1"`, `${h.ids.bBC1}`);
+    b.t(`the short id of cd btn "p2"`, `${h.ids.bBC2}`);
+    b.t(`the short id of cd btn ("p2")`, `${h.ids.bBC2}`);
     b.t(`the short id of cd btn "notfound"`, `ERR:could not find`);
-    b.t(`the short id of cd btn 1`, `${h.elIds.btn_b_c_1}`);
+    b.t(`the short id of cd btn 1`, `${h.ids.bBC1}`);
 
     /* button with parent */
     b.t(
-        `the short id of cd btn id ${h.elIds.btn_b_c_1} of this cd`,
-        `${h.elIds.btn_b_c_1}`
+        `the short id of cd btn id ${h.ids.bBC1} of this cd`,
+        `${h.ids.bBC1}`
     );
     b.t(
-        `the short id of cd btn id ${h.elIds.btn_c_d_1} of this cd`,
-        `${h.elIds.btn_c_d_1}`
+        `the short id of cd btn id ${h.ids.bCD1} of this cd`,
+        `${h.ids.bCD1}`
     );
     b.t(`the short id of cd btn "p1" of cd 1`, `ERR:could not find`);
-    b.t(`the short id of cd btn "p1" of this cd`, `${h.elIds.btn_b_c_1}`);
-    b.t(`the short id of cd btn "p1" of fifth cd`, `${h.elIds.btn_c_d_1}`);
-    b.t(`the short id of cd btn "p1" of cd 4`, `${h.elIds.btn_b_d_1}`);
-    b.t(`the short id of cd btn "p1" of cd "d"`, `${h.elIds.btn_b_d_1}`);
-    b.t(`the short id of cd btn "p1" of cd "d" of bg 3`, `${h.elIds.btn_c_d_1}`);
+    b.t(`the short id of cd btn "p1" of this cd`, `${h.ids.bBC1}`);
+    b.t(`the short id of cd btn "p1" of fifth cd`, `${h.ids.bCD1}`);
+    b.t(`the short id of cd btn "p1" of cd 4`, `${h.ids.bBD1}`);
+    b.t(`the short id of cd btn "p1" of cd "d"`, `${h.ids.bBD1}`);
+    b.t(`the short id of cd btn "p1" of cd "d" of bg 3`, `${h.ids.bCD1}`);
     b.t(
         `the short id of cd btn "p1" of cd "d" of bg 3 of this stack`,
-        `${h.elIds.btn_c_d_1}`
+        `${h.ids.bCD1}`
     );
     b.batchEvaluate(h);
 });
@@ -329,7 +329,7 @@ t.test('vpcProperties', () => {
 
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
 
     /* size properties */
     b.t('the left of cd btn "p1"', '0');
@@ -381,18 +381,18 @@ t.test('vpcProperties', () => {
     b.t('the rect of cd btn "p1"', '10,20,42,62');
 
     /* set name */
-    b.t(`the short name of cd btn id ${h.elIds.btn_b_c_1}`, 'p1');
+    b.t(`the short name of cd btn id ${h.ids.bBC1}`, 'p1');
     b.t(
         longstr(
-            `set the name of cd btn id ${h.elIds.btn_b_c_1} to
-                "newname" \\ the short name of cd btn id ${h.elIds.btn_b_c_1}`
+            `set the name of cd btn id ${h.ids.bBC1} to
+                "newname" \\ the short name of cd btn id ${h.ids.bBC1}`
         ),
         'newname'
     );
     b.t(
         longstr(
-            `set the name of cd btn id ${h.elIds.btn_b_c_1} to
-                "p1" \\ the short name of cd btn id ${h.elIds.btn_b_c_1}`
+            `set the name of cd btn id ${h.ids.bBC1} to
+                "p1" \\ the short name of cd btn id ${h.ids.bBC1}`
         ),
         'p1'
     );
@@ -458,7 +458,7 @@ t.test('vpcProperties', () => {
     b.tests = savedTests.map((item): [string, string] => [
         item[0]
             .replace(/ cd btn /g, ' cd fld ')
-            .replace(new RegExp(`${h.elIds.btn_b_c_1}`, 'g'), `${h.elIds.fld_b_c_1}`),
+            .replace(new RegExp(`${h.ids.bBC1}`, 'g'), `${h.ids.fBC1}`),
         item[1]
     ]);
     b.batchEvaluate(h);
@@ -666,7 +666,7 @@ t.test('vpcProperties', () => {
     b = new ScriptTestBatch();
 
     /* setting style */
-    const fld = h.vcstate.model.getById(VpcElField, h.elIds.fld_b_c_1);
+    const fld = h.vcstate.model.getById(VpcElField, h.ids.fBC1);
     assertEq(UI512FldStyle.Rectangle, fld.getN('style'), '1 |');
     b.t('the style of cd fld "p1"', 'rectangle');
     b.t('set the style of cd fld "p1" to "xyz"\\0', 'ERR:Field style or');
@@ -687,7 +687,7 @@ t.test('vpcProperties', () => {
     /* reading per-character formatting */
     /* here's what we'll set it to: Courier/Bold/24"ab"
         Courier/ItalicShadow/18"cd"Times/Plain/18ef */
-    const fldPerChar = h.vcstate.model.getById(VpcElField, h.elIds.fld_b_c_2);
+    const fldPerChar = h.vcstate.model.getById(VpcElField, h.ids.fBC2);
     let sfmt = '';
     sfmt += UI512DrawText.setFont(
         'ab',
@@ -875,7 +875,7 @@ t.test('vpcProperties', () => {
         assertEq(expected, contents, '1v|');
     }
 
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
 
     /* productopts */
     b.t(`the name of ${cProductName}`, `${cProductName}`);
@@ -902,21 +902,21 @@ t.test('vpcProperties', () => {
     b.t('the abbr name of bg 2', 'bkgnd "b"');
     b.t('the short name of bg 2', 'b');
     b.t('the long name of bg 2', 'bkgnd "b" of this stack');
-    b.t('the id of bg 2', `${h.elIds.bg_b}`);
-    b.t('the abbr id of bg 2', `${h.elIds.bg_b}`);
-    b.t('the short id of bg 2', `${h.elIds.bg_b}`);
-    b.t('the long id of bg 2', `bkgnd id ${h.elIds.bg_b}`);
+    b.t('the id of bg 2', `${h.ids.bgB}`);
+    b.t('the abbr id of bg 2', `${h.ids.bgB}`);
+    b.t('the short id of bg 2', `${h.ids.bgB}`);
+    b.t('the long id of bg 2', `bkgnd id ${h.ids.bgB}`);
 
     /* bkgnd with no name */
     b.t('set the name of bg 2 to ""\\0', '0');
-    b.t('the name of bg 2', `bkgnd id ${h.elIds.bg_b}`);
-    b.t('the abbr name of bg 2', `bkgnd id ${h.elIds.bg_b}`);
-    b.t('the short name of bg 2', `bkgnd id ${h.elIds.bg_b}`);
-    b.t('the long name of bg 2', `bkgnd id ${h.elIds.bg_b} of this stack`);
-    b.t('the id of bg 2', `${h.elIds.bg_b}`);
-    b.t('the abbr id of bg 2', `${h.elIds.bg_b}`);
-    b.t('the short id of bg 2', `${h.elIds.bg_b}`);
-    b.t('the long id of bg 2', `bkgnd id ${h.elIds.bg_b}`);
+    b.t('the name of bg 2', `bkgnd id ${h.ids.bgB}`);
+    b.t('the abbr name of bg 2', `bkgnd id ${h.ids.bgB}`);
+    b.t('the short name of bg 2', `bkgnd id ${h.ids.bgB}`);
+    b.t('the long name of bg 2', `bkgnd id ${h.ids.bgB} of this stack`);
+    b.t('the id of bg 2', `${h.ids.bgB}`);
+    b.t('the abbr id of bg 2', `${h.ids.bgB}`);
+    b.t('the short id of bg 2', `${h.ids.bgB}`);
+    b.t('the long id of bg 2', `bkgnd id ${h.ids.bgB}`);
     b.t('set the name of bg 2 to "b"\\0', '0');
 
     /* card with a name */
@@ -924,21 +924,21 @@ t.test('vpcProperties', () => {
     b.t('the abbr name of cd 4', 'card "d"');
     b.t('the short name of cd 4', 'd');
     b.t('the long name of cd 4', 'card "d" of this stack');
-    b.t('the id of cd 4', `card id ${h.elIds.card_b_d}`);
-    b.t('the abbr id of cd 4', `card id ${h.elIds.card_b_d}`);
-    b.t('the short id of cd 4', `${h.elIds.card_b_d}`);
-    b.t('the long id of cd 4', `card id ${h.elIds.card_b_d} of this stack`);
+    b.t('the id of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the abbr id of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the short id of cd 4', `${h.ids.cdBD}`);
+    b.t('the long id of cd 4', `card id ${h.ids.cdBD} of this stack`);
 
     /* card with no name */
     b.t('set the name of cd 4 to ""\\0', '0');
-    b.t('the name of cd 4', `card id ${h.elIds.card_b_d}`);
-    b.t('the abbr name of cd 4', `card id ${h.elIds.card_b_d}`);
-    b.t('the short name of cd 4', `card id ${h.elIds.card_b_d}`);
-    b.t('the long name of cd 4', `card id ${h.elIds.card_b_d} of this stack`);
-    b.t('the id of cd 4', `card id ${h.elIds.card_b_d}`);
-    b.t('the abbr id of cd 4', `card id ${h.elIds.card_b_d}`);
-    b.t('the short id of cd 4', `${h.elIds.card_b_d}`);
-    b.t('the long id of cd 4', `card id ${h.elIds.card_b_d} of this stack`);
+    b.t('the name of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the abbr name of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the short name of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the long name of cd 4', `card id ${h.ids.cdBD} of this stack`);
+    b.t('the id of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the abbr id of cd 4', `card id ${h.ids.cdBD}`);
+    b.t('the short id of cd 4', `${h.ids.cdBD}`);
+    b.t('the long id of cd 4', `card id ${h.ids.cdBD} of this stack`);
     b.t('set the name of cd 4 to "d"\\0', '0');
 
     /* button with a name */
@@ -946,102 +946,102 @@ t.test('vpcProperties', () => {
     b.t('the abbr name of cd btn "p1"', 'card button "p1"');
     b.t('the short name of cd btn "p1"', 'p1');
     b.t('the long name of cd btn "p1"', 'card button "p1" of card "c" of this stack');
-    b.t('the id of cd btn "p1"', `${h.elIds.btn_b_c_1}`);
-    b.t('the abbr id of cd btn "p1"', `${h.elIds.btn_b_c_1}`);
-    b.t('the short id of cd btn "p1"', `${h.elIds.btn_b_c_1}`);
-    b.t('the long id of cd btn "p1"', `card button id ${h.elIds.btn_b_c_1}`);
+    b.t('the id of cd btn "p1"', `${h.ids.bBC1}`);
+    b.t('the abbr id of cd btn "p1"', `${h.ids.bBC1}`);
+    b.t('the short id of cd btn "p1"', `${h.ids.bBC1}`);
+    b.t('the long id of cd btn "p1"', `card button id ${h.ids.bBC1}`);
 
     /* button with no name */
-    b.t(`set the name of cd btn id ${h.elIds.btn_b_c_1} to ""\\0`, '0');
+    b.t(`set the name of cd btn id ${h.ids.bBC1} to ""\\0`, '0');
     b.t(
-        `the name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1}`
+        `the name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1}`
     );
     b.t(
-        `the abbr name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1}`
+        `the abbr name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1}`
     );
     b.t(
-        `the short name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1}`
+        `the short name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1}`
     );
     b.t(
-        `the long name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1} of card "c" of this stack`
+        `the long name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1} of card "c" of this stack`
     );
-    b.t(`the id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`);
-    b.t(`the abbr id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`);
-    b.t(`the short id of cd btn id ${h.elIds.btn_b_c_1}`, `${h.elIds.btn_b_c_1}`);
+    b.t(`the id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
+    b.t(`the abbr id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
+    b.t(`the short id of cd btn id ${h.ids.bBC1}`, `${h.ids.bBC1}`);
     b.t(
-        `the long id of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1}`
+        `the long id of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1}`
     );
-    b.t(`set the name of cd btn id ${h.elIds.btn_b_c_1} to "p1"\\0`, `0`);
+    b.t(`set the name of cd btn id ${h.ids.bBC1} to "p1"\\0`, `0`);
 
     /* field with a name */
     b.t('the name of cd fld "p1"', 'card field "p1"');
     b.t('the abbr name of cd fld "p1"', 'card field "p1"');
     b.t('the short name of cd fld "p1"', 'p1');
     b.t('the long name of cd fld "p1"', 'card field "p1" of card "c" of this stack');
-    b.t('the id of cd fld "p1"', `${h.elIds.fld_b_c_1}`);
-    b.t('the abbr id of cd fld "p1"', `${h.elIds.fld_b_c_1}`);
-    b.t('the short id of cd fld "p1"', `${h.elIds.fld_b_c_1}`);
-    b.t('the long id of cd fld "p1"', `card field id ${h.elIds.fld_b_c_1}`);
+    b.t('the id of cd fld "p1"', `${h.ids.fBC1}`);
+    b.t('the abbr id of cd fld "p1"', `${h.ids.fBC1}`);
+    b.t('the short id of cd fld "p1"', `${h.ids.fBC1}`);
+    b.t('the long id of cd fld "p1"', `card field id ${h.ids.fBC1}`);
 
     /* field with no name */
-    b.t(`set the name of cd fld id ${h.elIds.fld_b_c_1} to ""\\0`, '0');
+    b.t(`set the name of cd fld id ${h.ids.fBC1} to ""\\0`, '0');
     b.t(
-        `the name of cd fld id ${h.elIds.fld_b_c_1}`,
-        `card field id ${h.elIds.fld_b_c_1}`
+        `the name of cd fld id ${h.ids.fBC1}`,
+        `card field id ${h.ids.fBC1}`
     );
     b.t(
-        `the abbr name of cd fld id ${h.elIds.fld_b_c_1}`,
-        `card field id ${h.elIds.fld_b_c_1}`
+        `the abbr name of cd fld id ${h.ids.fBC1}`,
+        `card field id ${h.ids.fBC1}`
     );
     b.t(
-        `the short name of cd fld id ${h.elIds.fld_b_c_1}`,
-        `card field id ${h.elIds.fld_b_c_1}`
+        `the short name of cd fld id ${h.ids.fBC1}`,
+        `card field id ${h.ids.fBC1}`
     );
     b.t(
-        `the long name of cd fld id ${h.elIds.fld_b_c_1}`,
-        `card field id ${h.elIds.fld_b_c_1} of card "c" of this stack`
+        `the long name of cd fld id ${h.ids.fBC1}`,
+        `card field id ${h.ids.fBC1} of card "c" of this stack`
     );
-    b.t(`the id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`);
-    b.t(`the abbr id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`);
-    b.t(`the short id of cd fld id ${h.elIds.fld_b_c_1}`, `${h.elIds.fld_b_c_1}`);
+    b.t(`the id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
+    b.t(`the abbr id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
+    b.t(`the short id of cd fld id ${h.ids.fBC1}`, `${h.ids.fBC1}`);
     b.t(
-        `the long id of cd fld id ${h.elIds.fld_b_c_1}`,
-        `card field id ${h.elIds.fld_b_c_1}`
+        `the long id of cd fld id ${h.ids.fBC1}`,
+        `card field id ${h.ids.fBC1}`
     );
-    b.t(`set the name of cd fld id ${h.elIds.fld_b_c_1} to "p1"\\0`, `0`);
+    b.t(`set the name of cd fld id ${h.ids.fBC1} to "p1"\\0`, `0`);
 
     /* when nothing has names, we get different output */
     b.t('set the name of this stack to ""\\0', '0');
     b.t('set the name of this bg to ""\\0', '0');
     b.t('set the name of this card to ""\\0', '0');
-    b.t(`set the name of cd btn id ${h.elIds.btn_b_c_1} to ""\\0`, `0`);
+    b.t(`set the name of cd btn id ${h.ids.bBC1} to ""\\0`, `0`);
     b.t(
-        `the name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1}`
+        `the name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1}`
     );
     b.t(
-        `the abbr name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1}`
+        `the abbr name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1}`
     );
     b.t(
-        `the short name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1}`
+        `the short name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1}`
     );
     b.t(
-        `the long name of cd btn id ${h.elIds.btn_b_c_1}`,
-        `card button id ${h.elIds.btn_b_c_1} of card id ${h.elIds.card_b_c} of this stack`
+        `the long name of cd btn id ${h.ids.bBC1}`,
+        `card button id ${h.ids.bBC1} of card id ${h.ids.cdBC} of this stack`
     );
     b.t('set the name of this stack to "teststack"\\0', '0');
     b.t('set the name of this bg to "b"\\0', '0');
     b.t('set the name of this card to "c"\\0', '0');
-    b.t(`set the name of cd btn id ${h.elIds.btn_b_c_1} to "p1"\\0`, `0`);
+    b.t(`set the name of cd btn id ${h.ids.bBC1} to "p1"\\0`, `0`);
 
-    /* the target (h.objids.btn_go) */
+    /* the target (h.objids.go) */
     b.t('the target', 'card button id 1024');
     b.t('the abbr target', 'card button id 1024');
     b.t('the short target', 'go');
@@ -1063,7 +1063,7 @@ t.test('vpcProperties', () => {
     b.batchEvaluate(h);
 });
 t.test('setting a property can use variety of expression levels', () => {
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
     let b = new ScriptTestBatch();
     b.t('set hilite of cd btn "p1" to 2 == 3\\hilite of cd btn "p1"', 'false');
     b.t('set hilite of cd btn "p1" to 3 > 2\\hilite of cd btn "p1"', 'true');
@@ -1082,7 +1082,7 @@ t.test('setting a property can use variety of expression levels', () => {
     b.batchEvaluate(h);
 });
 t.test('builtinFunctions', () => {
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
     let b = new ScriptTestBatch();
 
     /* RuleExprSource and RuleHSimpleContainer */
@@ -1107,7 +1107,7 @@ t.test('builtinFunctions', () => {
 
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
-    h.pr.setCurCardNoOpenCardEvt(h.elIds.card_b_c);
+    h.pr.setCurCardNoOpenCardEvt(h.ids.cdBC);
 
     /* length */
     b.t('the length of ""', '0');
@@ -1180,7 +1180,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a bg 1`, 'true');
     b.t(`there _is_ a bg 2`, 'true');
     b.t(`there _is_ a bg 4`, 'false');
-    b.t(`there _is_ a bg id ${h.elIds.bg_b}`, 'true');
+    b.t(`there _is_ a bg id ${h.ids.bgB}`, 'true');
     b.t(`there _is_ a bg id 99`, 'false');
     b.t(`there _is_ a bg "a"`, 'true');
     b.t(`there _is_ a bg "notexist"`, 'false');
@@ -1193,7 +1193,7 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a card 1`, 'true');
     b.t(`there _is_ a card 4`, 'true');
     b.t(`there _is_ a card 8`, 'false');
-    b.t(`there _is_ a card id ${h.elIds.card_b_d}`, 'true');
+    b.t(`there _is_ a card id ${h.ids.cdBD}`, 'true');
     b.t(`there _is_ a card id 99`, 'false');
     b.t(`there _is_ a card "a"`, 'true');
     b.t(`there _is_ a card "notexist"`, 'false');
@@ -1213,8 +1213,8 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a cd btn 70`, 'false');
     b.t(`there _is_ a cd btn "p1"`, 'true');
     b.t(`there _is_ a cd btn "p"`, 'false');
-    b.t(`there _is_ a cd btn id ${h.elIds.btn_b_c_1}`, 'true');
-    b.t(`there _is_ a cd btn id ${h.elIds.btn_b_d_1}`, 'true');
+    b.t(`there _is_ a cd btn id ${h.ids.bBC1}`, 'true');
+    b.t(`there _is_ a cd btn id ${h.ids.bBD1}`, 'true');
     b.t(`there _is_ a cd btn id 99`, 'false');
     b.t(`there _is_ a cd btn "p1" of this cd`, 'true');
     b.t(`there _is_ a cd btn "p1" of cd 2`, 'false');
@@ -1228,8 +1228,8 @@ t.test('builtinFunctions', () => {
     b.t(`there _is_ a cd fld 70`, 'false');
     b.t(`there _is_ a cd fld "p1"`, 'true');
     b.t(`there _is_ a cd fld "p"`, 'false');
-    b.t(`there _is_ a cd fld id ${h.elIds.fld_b_c_1}`, 'true');
-    b.t(`there _is_ a cd fld id ${h.elIds.fld_b_d_2}`, 'true');
+    b.t(`there _is_ a cd fld id ${h.ids.fBC1}`, 'true');
+    b.t(`there _is_ a cd fld id ${h.ids.fBD2}`, 'true');
     b.t(`there _is_ a cd fld id 99`, 'false');
     b.t(`there _is_ a cd fld "p1" of this cd`, 'true');
     b.t(`there _is_ a cd fld "p1" of cd 2`, 'false');

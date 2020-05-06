@@ -16,8 +16,6 @@
 /* auto */ import { UI512IconManager } from './../draw/ui512DrawIconManager';
 /* auto */ import { SimpleUtil512Tests } from './../../test/testUtils/testTop';
 
-import { Util512 } from '../utils/util512';
-
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
 

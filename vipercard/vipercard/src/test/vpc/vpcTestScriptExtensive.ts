@@ -158,7 +158,7 @@ end if
 
     /* runs the test */
     async goImpl() {
-        let stack = h.vcstate.model.getById(VpcElStack, h.elIds.stack);
+        let stack = h.vcstate.model.getById(VpcElStack, h.ids.stack);
         h.vcstate.vci.undoableAction(() => stack.set('script', this.helperCode));
 
         await this.testHelpers();
