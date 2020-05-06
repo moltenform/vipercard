@@ -522,9 +522,19 @@ put ${s} into testresult`;
         }
 
         for (let i = 0; i < testsPreparseErr.length; i++) {
-            /* for convenience allow "foo()\\0" but we'll ignore the 0. */
+            let line:string
             let pts = getBeforeLine(testsPreparseErr[i][0]);
-            let line = coalesceIfFalseLike(pts[0], pts[1]);
+            if (pts[0] && pts[1]) {
+            /* if it's like "doSomeCode\\0" then it is a line of code */
+            assertTrue(pts[1] === 'x' || pts[1] === '0',
+                    "use \\\\0 instead, \\\\x is ignored for preparseerr")
+                line = pts[0]
+            } else {
+                /* if it's like "doSomeCode" then it is a statement */
+                assertTrue(pts[1], "blank?")
+                line = `put ${pts[1]} into testpreparseerr`
+            }
+            
             let expectErr = testsPreparseErr[i][1].replace(/PREPARSEERR:/g, '');
             let errOnLine = 3;
             let tryLine = Util512.parseInt(expectErr.split(':')[0]);

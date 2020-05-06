@@ -93,17 +93,17 @@ t.test('03LineComment', () => {
     b.t('put "a" into x\nput "b" --into x\\x', 'a')
     b.t('put "abc" into x -- ? -- ?\\x', 'abc')
     /* line comments shouldn't be carried over */
-    b.t('put "a" into x --{BSLASH}put "c" into x\\x', 'a')
-    b.t('put "a" into x -- a {BSLASH}put "c" into x\\x', 'a')
-    b.t('put "a" into x -- a {BSLASH}put --"c" into x\\x', 'ERR:')
+    b.t('put "a" into x --{BSLASH}\nput "c" into x\\x', 'c')
+    b.t('put "a" into x -- a {BSLASH}\nput "c" into x\\x', 'c')
+    b.t('put "a" into x -- a {BSLASH}\nput --"c" into x\\x', 'PREPARSEERR:4:not enough')
     b.batchEvaluate(h3);
 })
 t.test('03ContinuedLineOrWhiteSpace', () => {
-    /* \xC2 is logical not in mac-roman encoding utf8 is ¬*/
+    /* \xC2 is logical not in mac-roman encoding (utf8 is ¬)*/
     let b = new ScriptTestBatch();
-    b.t('put "123" \n into x --\\x', 'ERR:')
+    b.t('put "123" \n into x --\\x', 'PREPARSEERR:4:looked like')
     b.t('put "123" {BSLASH}\n into x --\\x', '123')
-    b.t('put "456" \xC2\n into x --\\x', '456')
+    b.t('put "456" ¬\n into x --\\x', '456')
     /* can continue with no whitespace */
     b.t('put 4*{BSLASH}\n5 into x --\\x', '20')
     b.batchEvaluate(h3);
@@ -115,10 +115,10 @@ t.test('03NewLine', () => {
     b.t('put 1 into x\n\nadd 1 to x\\x', '2')
     b.t('put 1 into x\n\n\nadd 1 to x\\x', '2')
     b.t('put 1 into x\n  \n  \nadd 1 to x\\x', '2')
-    /* we only support linux newlines internally */
-    b.t('put 1 into x\radd 1 to x\\x', 'PREPARSEERR:lex')
-    b.t('put 1 into x\r\nadd 1 to x\\x', 'PREPARSEERR:lex')
-    b.t('put 1 into x\r\radd 1 to x\\x', 'PREPARSEERR:lex')
+    /* our test framework converts to linux newlines */
+    b.t('put 1 into x\radd 1 to x\\x', '2')
+    b.t('put 1 into x\r\nadd 1 to x\\x', '2')
+    b.t('put 1 into x\r\radd 1 to x\\x', '2')
     b.batchEvaluate(h3);
 })
 t.test('03NumLiteral', () => {
@@ -161,9 +161,12 @@ t.test('03NumLiteral', () => {
     b.t('2.3e00', '2.3')
     b.t('2.3e01', '23')
     b.t('2.3e02', '230')
+    /* we are case insensitive */
+    b.t('2E0', '2')
+    b.t('2E1', '20')
+    b.t('2E2', '200')
     /* invalid sci notation */
     b.t('2a0', 'PREPARSEERR:lex')
-    b.t('2E0', 'PREPARSEERR:lex')
     b.t('2ee0', 'PREPARSEERR:lex')
     b.t('2e1.3', 'PREPARSEERR:lex')
     b.t('2e.3', 'PREPARSEERR:lex')
@@ -174,15 +177,15 @@ t.test('03NumLiteral', () => {
     b.t('2 e +1', 'ERR:')
     b.t('2 e -1', 'ERR:')
     /* something right before */
-    b.t('put1 into x\\x', '1')
-    b.t('put 4 into x\ndivide x by2\\x', '2')
-    b.t('put 4 into x\nsubtract1 from x\\x', '3')
-    b.t('put --[[c]]4 into x\\x', '3')
+    b.t('put1 into x\\x', 'ERR:parse err')
+    b.t('put 4 into x\ndivide x by2\\x', 'PREPARSEERR:4:did not see by')
+    b.t('put 4 into x\nsubtract1 from x\\x', 'ERR:5:parse err')
+    b.t('put --[[c]]4 into x\\x', '4')
     /* something right after */
     b.t('put 1into x\\x', 'PREPARSEERR:lex')
-    b.t('put 4 into x\nadd 1to x\\x', 'PREPARSEERR:lex')
-    b.t('put 4 into x\nsubtract 1from x\\x', 'PREPARSEERR:lex')
-    b.t('put 4--[[c]] into x\\x', 'PREPARSEERR:lex')
+    b.t('put 4 into x\nadd 1to x\\x', 'PREPARSEERR:4:lex')
+    b.t('put 4 into x\nsubtract 1from x\\x', 'PREPARSEERR:4:lex')
+    b.t('put 4--[[c]] into x\\x', '4')
     /* surrounded by symbols */
     b.t('put 3 into x\\x/1', '3')
     b.t('put 3 into x\\x+1', '4')
@@ -193,10 +196,8 @@ t.test('03NumLiteral', () => {
     b.t('3/1', '3')
     b.t('1+1', '2')
     b.t('1+(1)', '2')
+    b.t('there is a cd btn1234', 'ERR:no variable')
     b.batchEvaluate(h3, BatchType.floatingPoint);
-    b = new ScriptTestBatch();
-    b.t('there is a cd btn1234', 'false')
-    b.batchEvaluate(h3);
 })
 
 /* no customizations yet */

@@ -32,15 +32,15 @@ t.test('vpcTestScriptBasics', () => {
     /* also a valid statement */
     b.t('9', '9');
     /* preparse error1 */
-    b.t('x = 4', "PREPARSEERR:this isn't C");
+    b.t('x = 4\\0', "PREPARSEERR:this isn't C");
     /* preparse error2 */
-    b.t('put ?? into x', 'PREPARSEERR:');
+    b.t('put ?? into x\\0', 'PREPARSEERR:');
     b.batchEvaluate(h);
 
     /* get a different string */
     assertAsserts('RN|', 'assert:', () => {
         let b = new ScriptTestBatch();
-        b.t('x = 4', 'PREPARSEERR:(incorrectmessage)');
+        b.t('x = 4\\0', 'PREPARSEERR:(incorrectmessage)');
         b.batchEvaluate(h);
     });
     assertAsserts('RM|', 'assert:', () => {
@@ -56,7 +56,7 @@ t.test('vpcTestScriptBasics', () => {
     /* failure expected, but succeeds */
     assertAsserts('RK|', 'assert:', () => {
         let b = new ScriptTestBatch();
-        b.t('put 9 into x', 'PREPARSEERR:');
+        b.t('put 9 into x\\0', 'PREPARSEERR:');
         b.batchEvaluate(h);
     });
     assertAsserts('RJ|', 'assert:', () => {
@@ -161,11 +161,11 @@ t.test('checkLexing', () => {
     b.t('put 9 into length\\0', 'ERR:name not');
     b.t('put 9 into if\\0', 'ERR:name not allowed');
     b.t('put 9 into 4\\0', 'ERR:parse error');
-    b.t('put 9 into short', 'PREPARSEERR:');
-    b.t('put 9 into long', 'PREPARSEERR:');
-    b.t('put 9 into id', 'PREPARSEERR:');
-    b.t('put 9 into in', 'PREPARSEERR:');
-    b.t('put 9 into and', 'PREPARSEERR:');
+    b.t('put 9 into short\\0', 'PREPARSEERR:');
+    b.t('put 9 into long\\0', 'PREPARSEERR:');
+    b.t('put 9 into id\\0', 'PREPARSEERR:');
+    b.t('put 9 into in\\0', 'PREPARSEERR:');
+    b.t('put 9 into and\\0', 'PREPARSEERR:');
 
     /* constants can't be used as a var name */
     b.t('put 9 into pi\\0', 'ERR:a constant');
@@ -193,13 +193,36 @@ t.test('checkLexing', () => {
     b.t('put 9 into alltext\\alltext', '9');
 
     /* different tkidentifiers */
-    b.t('put 9 into _underscore_ok\\_underscore_ok', 'PREPARSEERR:lex err');
+    b.t('put 9 into _underscore_ok\\0', 'PREPARSEERR:lex err');
     b.t('put 9 into underscore_ok\\underscore_ok', '9');
-    b.t('put 9 into $dollar$ok\\$dollar$ok', 'PREPARSEERR:lex err');
+    b.t('put 9 into $dollar$ok\\0', 'PREPARSEERR:lex err');
     b.t('put 9 into dollar$ok\\dollar$ok', '9');
-    b.t('put 9 into 1var1\\1var1', 'PREPARSEERR:lex err');
+    b.t('put 9 into 1var1\\0', 'PREPARSEERR:lex err');
     b.t('put 9 into var1\\var1', '9');
+    b.batchEvaluate(h);
+    b = new ScriptTestBatch();
 
+    /* adding a letter or number makes it ok as a var name */
+    b.t('put 9 into ofa\\ofa', '9')
+    b.t('put 9 into lengtha\\lengtha', '9')
+    b.t('put 9 into ifa\\ifa', '9')
+    b.t('put 9 into shorta\\shorta', '9')
+    b.t('put 9 into ida\\ida', '9')
+    b.t('put 9 into ina\\ina', '9')
+    b.t('put 9 into pia\\pia', '9')
+    b.t('put 9 into dialogsa\\dialogsa', '9')
+    b.t('put 9 into exita\\exita', '9')
+    b.t('put 9 into labela\\labela', '9')
+    b.t('put 9 into of1\\ofa', '9')
+    b.t('put 9 into length1\\lengtha', '9')
+    b.t('put 9 into if1\\ifa', '9')
+    b.t('put 9 into short1\\shorta', '9')
+    b.t('put 9 into id1\\ida', '9')
+    b.t('put 9 into in1\\ina', '9')
+    b.t('put 9 into pi1\\pia', '9')
+    b.t('put 9 into dialogs1\\dialogsa', '9')
+    b.t('put 9 into exit1\\exita', '9')
+    b.t('put 9 into label1\\labela', '9')
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
 
@@ -223,16 +246,16 @@ t.test('checkLexing', () => {
     );
 
     /* we changed lexer to disallow this, since it is clearly wrong */
-    b.t('put 3into test', 'PREPARSEERR:unexpected character');
-    b.t('put 3into into test', 'PREPARSEERR:unexpected character');
-    b.t('put 3sin into test', 'PREPARSEERR:unexpected character');
-    b.t('put 3of into test', 'PREPARSEERR:unexpected character');
-    b.t('put 3id into test', 'PREPARSEERR:unexpected character');
-    b.t('put 3e into test', 'PREPARSEERR:unexpected character');
-    b.t('put 7mod3 into test', 'PREPARSEERR:unexpected character');
-    b.t('put 7mod 3 into test', 'PREPARSEERR:unexpected character');
-    b.t('put 7div3 into test', 'PREPARSEERR:unexpected character');
-    b.t('put 7div 3 into test', 'PREPARSEERR:unexpected character');
+    b.t('put 3into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 3into into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 3sin into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 3of into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 3id into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 3e into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 7mod3 into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 7mod 3 into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 7div3 into test\\0', 'PREPARSEERR:unexpected character');
+    b.t('put 7div 3 into test\\0', 'PREPARSEERR:unexpected character');
     b.t('put 7 div3 into x\\x', 'ERR:parse error');
     b.t('put 7 mod3 into x\\x', 'ERR:parse error');
 
@@ -240,9 +263,9 @@ t.test('checkLexing', () => {
     b = new ScriptTestBatch();
 
     /* for keywords/semikeywords that would be a common variable name, check */
-    b.t('x = 4', "PREPARSEERR:this isn't C");
-    b.t('xyz(4)', "PREPARSEERR:this isn't C");
-    b.t('sin(4)', "PREPARSEERR:this isn't C");
+    b.t('x = 4\\0', "PREPARSEERR:this isn't C");
+    b.t('xyz(4)\\0', "PREPARSEERR:this isn't C");
+    b.t('sin(4)\\0', "PREPARSEERR:this isn't C");
 
     b.batchEvaluate(h);
     b = new ScriptTestBatch();
@@ -292,34 +315,34 @@ put x into x\\x`,
     );
 
     /* lexing: invalid num literals */
-    b.t('put . into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put .5 into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put x.5 into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put e.5 into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put .e into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put .e2 into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put .e+2 into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put .3e into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put 3.4e into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put 3.4e 2 into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put 3.4ee into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put 3.4e4e into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put 3.44. into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put 0..1 into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put 4.. into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put . into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put .5 into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put x.5 into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put e.5 into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put .e into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put .e2 into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put .e+2 into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put .3e into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4e into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4e 2 into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4ee into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.4e4e into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put 3.44. into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put 0..1 into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put 4.. into x\\0', 'PREPARSEERR:3:unexpected character');
 
     /* lexing: invalid string literals */
-    b.t('put "abc into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put "abc\ndef" into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put "\n" into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put " into x', 'PREPARSEERR:3:unexpected character');
-    b.t('put """ into x', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc\ndef" into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put "\n" into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put " into x\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put """ into x\\0', 'PREPARSEERR:3:unexpected character');
     b.t('put a"" into x\\0', 'ERR:4:Expecting');
-    b.t('put ""a into x', 'PREPARSEERR:3:unexpected');
-    b.t('put a""a into x', 'PREPARSEERR:3:unexpected');
+    b.t('put ""a into x\\0', 'PREPARSEERR:3:unexpected');
+    b.t('put a""a into x\\0', 'PREPARSEERR:3:unexpected');
     b.t('put 1"" into x\\0', 'ERR:4:Expecting');
-    b.t('put ""1 into x', 'PREPARSEERR:3:unexpected');
-    b.t('put 1""1 into x', 'PREPARSEERR:3:unexpected');
+    b.t('put ""1 into x\\0', 'PREPARSEERR:3:unexpected');
+    b.t('put 1""1 into x\\0', 'PREPARSEERR:3:unexpected');
     b.t('put """" into x\\0', 'ERR:4:Expecting');
     b.t('put "a""b" into x\\0', 'ERR:4:Expecting');
     b.t('put "a" "b" into x\\0', 'ERR:4:Expecting');
@@ -329,10 +352,10 @@ put x into x\\x`,
     b.t('put "abc" into 1 x\\0', 'ERR:4:parse err');
     b.t('put "abc" into b c\\0', 'ERR:4:parse err');
     b.t('put "abc" into "def"\\0', 'ERR:4:parse err');
-    b.t('put "abc" into \x03', 'PREPARSEERR:3:unexpected character');
-    b.t('put "abc" into b\x03', 'PREPARSEERR:3:unexpected character');
-    b.t('put "abc" into \xf1', 'PREPARSEERR:3:unexpected character');
-    b.t('put "abc" into b\xf1', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc" into \x03\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc" into b\x03\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc" into \xf1\\0', 'PREPARSEERR:3:unexpected character');
+    b.t('put "abc" into b\xf1\\0', 'PREPARSEERR:3:unexpected character');
     b.batchEvaluate(h);
 
     /* not valid because it's something else */
@@ -1120,7 +1143,7 @@ t.test('calls', () => {
 
     /* the result before anything is called */
     b.t('put 3 into result\\0', 'ERR:name not allowed');
-    b.t('put 3 + into(4) into x', 'PREPARSEERR:one of');
+    b.t('put 3 + into(4) into x\\0', 'PREPARSEERR:one of');
     b.t('result()', '');
     b.t('the result', '');
     b.batchEvaluate(h);
@@ -1586,8 +1609,8 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
         myFunction (1, "") && "" -- does not parse
         myFunction  1, "" && "" -- allow
         */
-    b.t('global g\nput 0 into g\nmm()', `PREPARSEERR:5:isn't C`);
-    b.t('global g\nput 0 into g\nmm(1)', `PREPARSEERR:5:isn't C`);
+    b.t('global g\nput 0 into g\nmm()\\0', `PREPARSEERR:5:isn't C`);
+    b.t('global g\nput 0 into g\nmm(1)\\0', `PREPARSEERR:5:isn't C`);
     b.t('global g\nput 0 into g\nmm ()\\the result', 'ERR:6:parse error');
     b.t('global g\nput 0 into g\nmm (1)\\the result', 'm1(1,,)');
     b.t('global g\nput 0 into g\nmm() && ""\\the result', 'ERR:6:');
@@ -1598,8 +1621,8 @@ put isEven(8) && isEven(9) && isEven(10) into testresult`
     b.t('global g\nput 0 into g\nmm (1, "") && ""\\the result', 'ERR:6:parse error');
     b.t('global g\nput 0 into g\nmm 1, "" && ""\\the result', 'm1(1, ,)');
     b.t('global g\nput 0 into g\nmm (1),(2)\\the result', 'm1(1,2,)');
-    b.t('global g\nput 0 into g\nmm(1),(2)', `PREPARSEERR:5:isn't C`);
-    b.t('get mm(abs(1', 'PREPARSEERR:missing )');
+    b.t('global g\nput 0 into g\nmm(1),(2)\\0', `PREPARSEERR:5:isn't C`);
+    b.t('get mm(abs(1\\0', 'PREPARSEERR:missing )');
     b.batchEvaluate(h);
     h.setScript(h.ids.cdA, ``);
 
