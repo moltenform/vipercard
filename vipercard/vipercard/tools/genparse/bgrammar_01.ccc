@@ -336,16 +336,16 @@ HOldStyleFnNullaryOrNullaryPropGet:= _the [ tkAdjective ] <HAnyFnNameOrAllProper
 // but it is true, "the number of cd btn id 5" and "the number of cd btns" do have the same prefix
 HGenericFunctionCall:={ MAX_LOOKAHEAD=5 <FnCallNumberOf> | <FnCallThereIs> | <HFnCallWParens> | <HUnaryPropertyGet> | <HOldStyleFnNonNullary> | <HOldStyleFnNullaryOrNullaryPropGet> }   --->ProcessOr--->VpcVal
 
+// we used to support more here, but pared it down to match the original product
+// we do though support "the number of marked cds of bg 1" which the product could not do
+FnCallNumberOf:= _the _number tkOfOnly { <FnCallNumberOf_1>|<FnCallNumberOf_2>|<FnCallNumberOf_3>|<FnCallNumberOf_4>|<FnCallNumberOf_5>  }      --->ProcessOr--->VpcVal
+FnCallNumberOf_1:=[{tkCard | tkBg}] { tkBtnPlural | tkFldPlural | tkPartPlural }      --->Custom--->VpcVal
+FnCallNumberOf_2:=[_marked] tkCardPlural  [ <Of> { <ObjectBg> | <ObjectStack> } ]           --->Custom--->VpcVal
+FnCallNumberOf_3:=tkBgPlural [ <Of> <ObjectStack> ]                                                       --->Custom--->VpcVal
+FnCallNumberOf_4:={_windows | _menu | _menuItem <Of> <Menu>}                             --->Custom--->VpcVal
+FnCallNumberOf_5:=tkChunkGranularity <Of> <Lvl3Expression>                                        --->Custom--->VpcVal
+
 // you can't say "there is a line 1000 of cd fld 1" or "there is a line 1000 of "abc"", confirmed in the product
-// you can't say "the number of cd btns of cd 2", confirmed in the product, but I'll add it, just for cards, because I'm generous
-// you can't say "the number of marked cds of bg 1", confirmed in the product
-FnCallNumberOf:= _the _number tkOfOnly { <FnCallNumberOf_1>|<FnCallNumberOf_5>|<FnCallNumberOf_6>|<FnCallNumberOf_7>|<FnCallNumberOf_8>|<FnCallNumberOf_9>  }      --->ProcessOr--->VpcVal
-FnCallNumberOf_1:=[{tkCard | tkBg}] { tkBtnPlural | tkPartPlural | tkFldPlural } [ <Of> <ObjectCard> ]     --->Custom--->VpcVal
-FnCallNumberOf_5:=_marked tkCardPlural                                                                                                  --->Custom--->VpcVal
-FnCallNumberOf_6:=tkCardPlural  [ <Of> { <ObjectBg> | <ObjectStack> } ]                                               --->Custom--->VpcVal
-FnCallNumberOf_7:=tkBgPlural [ <Of> <ObjectStack> ]                                                       --->Custom--->VpcVal
-FnCallNumberOf_8:={_windows | _menu | _menuItem <Of> <Menu>}                             --->Custom--->VpcVal
-FnCallNumberOf_9:=tkChunkGranularity <Of> <Lvl3Expression>                                        --->Custom--->VpcVal
 FnCallThereIs:= _there _is {_no | [_not] tkA} <Object>                   --->Custom--->VpcVal
 
 // we want AnyPropertyVal to take many things

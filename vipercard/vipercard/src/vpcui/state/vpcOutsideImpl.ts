@@ -129,37 +129,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
      * count the number of elements of a certain type
      */
     CountElements(type: VpcElType, parentRef: RequestedVelRef): number {
-        let countOnlyMarked = false;
-        if (parentRef.type === VpcElType.Stack && parentRef.cardLookAtMarkedOnly) {
-            countOnlyMarked = true;
-            parentRef.cardLookAtMarkedOnly = false;
-        }
-
-        let parent = ensureDefined(this.ResolveVelRef(parentRef)[0], '6t|Cannot find this object.');
-        let parentAsCard = parent as VpcElCard;
-        let parentAsBg = parent as VpcElBg;
-        let parentAsStack = parent as VpcElStack;
-        if (type === VpcElType.Product) {
-            return 1;
-        } else if (type === VpcElType.Stack) {
-            return 1;
-        } else if (type === VpcElType.Bg && parentAsStack instanceof VpcElStack) {
-            return parentAsStack.bgs.length;
-        } else if (type === VpcElType.Card && parentAsStack instanceof VpcElStack) {
-            if (countOnlyMarked) {
-                return parentAsStack.bgs.map(bg => bg.cards.filter(c => c.getB('marked')).length).reduce(Util512.add);
-            } else {
-                return parentAsStack.bgs.map(bg => bg.cards.length).reduce(Util512.add);
-            }
-        } else if (type === VpcElType.Card && parentAsBg instanceof VpcElBg) {
-            return parentAsBg.cards.length;
-        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsBg instanceof VpcElBg) {
-            return parentAsBg.parts.filter(ch => ch.getType() === type).length;
-        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && parentAsCard instanceof VpcElCard) {
-            return parentAsCard.parts.filter(ch => ch.getType() === type).length;
-        } else {
-            checkThrow(false, `6s|cannot count types ${type} parent of type ${parent.getType()} ${parent.id}`);
-        }
+        return new VelResolveReference(this.vci.getModel()).countElements(type, parentRef, this.vci.getCodeExec().cardHistory)
     }
 
     /**

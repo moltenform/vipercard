@@ -327,29 +327,23 @@ if (ctx.RuleFnCallNumberOf_1 && ctx.RuleFnCallNumberOf_1[0]) {
  return this.visit(ctx.RuleFnCallNumberOf_1[0]); 
 }
  else 
+if (ctx.RuleFnCallNumberOf_2 && ctx.RuleFnCallNumberOf_2[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_2[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_3 && ctx.RuleFnCallNumberOf_3[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_3[0]); 
+}
+ else 
+if (ctx.RuleFnCallNumberOf_4 && ctx.RuleFnCallNumberOf_4[0]) {
+ return this.visit(ctx.RuleFnCallNumberOf_4[0]); 
+}
+ else 
 if (ctx.RuleFnCallNumberOf_5 && ctx.RuleFnCallNumberOf_5[0]) {
  return this.visit(ctx.RuleFnCallNumberOf_5[0]); 
 }
- else 
-if (ctx.RuleFnCallNumberOf_6 && ctx.RuleFnCallNumberOf_6[0]) {
- return this.visit(ctx.RuleFnCallNumberOf_6[0]); 
-}
- else 
-if (ctx.RuleFnCallNumberOf_7 && ctx.RuleFnCallNumberOf_7[0]) {
- return this.visit(ctx.RuleFnCallNumberOf_7[0]); 
-}
- else 
-if (ctx.RuleFnCallNumberOf_8 && ctx.RuleFnCallNumberOf_8[0]) {
- return this.visit(ctx.RuleFnCallNumberOf_8[0]); 
-}
- else 
-if (ctx.RuleFnCallNumberOf_9 && ctx.RuleFnCallNumberOf_9[0]) {
- return this.visit(ctx.RuleFnCallNumberOf_9[0]); 
-}
  else { checkThrowInternal(false, '<>|OR in FnCallNumberOf, no branch found'); }
 }
-
-
 
 
 

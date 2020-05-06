@@ -935,27 +935,22 @@ this.SUBRULE1(this.RuleFnCallNumberOf_1)
 },
 {
 ALT: () => {
+this.SUBRULE1(this.RuleFnCallNumberOf_2)
+}
+},
+{
+ALT: () => {
+this.SUBRULE1(this.RuleFnCallNumberOf_3)
+}
+},
+{
+ALT: () => {
+this.SUBRULE1(this.RuleFnCallNumberOf_4)
+}
+},
+{
+ALT: () => {
 this.SUBRULE1(this.RuleFnCallNumberOf_5)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_6)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_7)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_8)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleFnCallNumberOf_9)
 }
 }
 ]);
@@ -984,29 +979,23 @@ this.CONSUME1(tks.tkBtnPlural)
 },
 {
 ALT: () => {
-this.CONSUME1(tks.tkPartPlural)
+this.CONSUME1(tks.tkFldPlural)
 }
 },
 {
 ALT: () => {
-this.CONSUME1(tks.tkFldPlural)
+this.CONSUME1(tks.tkPartPlural)
 }
 }
 ]);
-this.OPTION2(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectCard)
-});
 });
 
-RuleFnCallNumberOf_5 = this.RULE('RuleFnCallNumberOf_5', () => {
-this.CONSUME1(tks._marked)
-this.CONSUME1(tks.tkCardPlural)
-});
-
-RuleFnCallNumberOf_6 = this.RULE('RuleFnCallNumberOf_6', () => {
-this.CONSUME1(tks.tkCardPlural)
+RuleFnCallNumberOf_2 = this.RULE('RuleFnCallNumberOf_2', () => {
 this.OPTION1(() => {
+this.CONSUME1(tks._marked)
+});
+this.CONSUME1(tks.tkCardPlural)
+this.OPTION2(() => {
 this.SUBRULE1(this.RuleOf)
 this.OR1([
 {
@@ -1023,7 +1012,7 @@ this.SUBRULE1(this.RuleObjectStack)
 });
 });
 
-RuleFnCallNumberOf_7 = this.RULE('RuleFnCallNumberOf_7', () => {
+RuleFnCallNumberOf_3 = this.RULE('RuleFnCallNumberOf_3', () => {
 this.CONSUME1(tks.tkBgPlural)
 this.OPTION1(() => {
 this.SUBRULE1(this.RuleOf)
@@ -1031,7 +1020,7 @@ this.SUBRULE1(this.RuleObjectStack)
 });
 });
 
-RuleFnCallNumberOf_8 = this.RULE('RuleFnCallNumberOf_8', () => {
+RuleFnCallNumberOf_4 = this.RULE('RuleFnCallNumberOf_4', () => {
 this.OR1([
 {
 ALT: () => {
@@ -1053,7 +1042,7 @@ this.SUBRULE1(this.RuleMenu)
 ]);
 });
 
-RuleFnCallNumberOf_9 = this.RULE('RuleFnCallNumberOf_9', () => {
+RuleFnCallNumberOf_5 = this.RULE('RuleFnCallNumberOf_5', () => {
 this.CONSUME1(tks.tkChunkGranularity)
 this.SUBRULE1(this.RuleOf)
 this.SUBRULE1(this.RuleLvl3Expression)

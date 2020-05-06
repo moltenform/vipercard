@@ -423,14 +423,13 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleFnCallNumberOf_1(ctx: VisitingContext): VpcVal {
-            checkThrow(!ctx.tkPartPlural || !ctx.tkPartPlural[0], "R~|we don't yet support looking up an object by 'part'");
             let type: VpcElType;
             if (ctx.tkFldPlural) {
                 type = VpcElType.Fld;
             } else if (ctx.tkBtnPlural) {
                 type = VpcElType.Btn;
             } else {
-                checkThrow(false, 'R}|no branch taken');
+                checkThrow(false, "R~|we don't yet support looking up an object by 'part'");
             }
             let contextIsBg = type === VpcElType.Fld;
             if (ctx.tkBg && ctx.tkBg[0]) {
@@ -440,50 +439,45 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 contextIsBg = false;
             }
 
+            /* indicate whether context is cd or bg */
             let parentRef = new RequestedVelRef(contextIsBg ? VpcElType.Bg : VpcElType.Card);
-            if (ctx.RuleObjectCard && ctx.RuleObjectCard[0]) {
-                checkThrow(!contextIsBg, "R||number of bg btns of card 3 doesn't really make sense");
-                parentRef = this.visit(ctx.RuleObjectCard[0]);
-            } else {
-                parentRef.lookByRelative = OrdinalOrPosition.This;
-            }
-
+            parentRef.lookByRelative = OrdinalOrPosition.This
             return VpcValN(this.outside.CountElements(type, parentRef));
         }
 
-        RuleFnCallNumberOf_5(ctx: VisitingContext): VpcVal {
-            /* number of marked cards */
-            let parentRef = new RequestedVelRef(VpcElType.Stack);
-            parentRef.cardLookAtMarkedOnly = true;
-            parentRef.lookByRelative = OrdinalOrPosition.This;
-            return VpcValN(this.outside.CountElements(VpcElType.Card, parentRef));
-        }
-
-        RuleFnCallNumberOf_6(ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_2(ctx: VisitingContext): VpcVal {
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.lookByRelative = OrdinalOrPosition.This;
             if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
                 parentRef = this.visit(ctx.RuleObjectBg[0]);
+            } else if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
+                parentRef = this.visit(ctx.RuleObjectStack[0]);
+            }
+
+            if (ctx._marked && ctx._marked[0]) {
+                /* indicate only counting marked */
+                parentRef.cardLookAtMarkedOnly = true;
             }
             return VpcValN(this.outside.CountElements(VpcElType.Card, parentRef));
         }
 
-        RuleFnCallNumberOf_7(ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_3(ctx: VisitingContext): VpcVal {
             let parentRef = new RequestedVelRef(VpcElType.Stack);
             parentRef.lookByRelative = OrdinalOrPosition.This;
             if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
                 parentRef = this.visit(ctx.RuleObjectStack[0]);
             }
+
             return VpcValN(this.outside.CountElements(VpcElType.Bg, parentRef));
         }
 
-        RuleFnCallNumberOf_8(_ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_4(_ctx: VisitingContext): VpcVal {
             checkThrow(false, "R{|we don't yet support getting the number of custom menus or windows");
         }
 
-        RuleFnCallNumberOf_9(ctx: VisitingContext): VpcVal {
+        RuleFnCallNumberOf_5(ctx: VisitingContext): VpcVal {
             /* put the number of card buttons into x */
-            let evaledvpc = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl3Expression, this.RuleFnCallNumberOf_9.name);
+            let evaledvpc = this.Helper$ReadVpcVal(ctx, tkstr.RuleLvl3Expression, this.RuleFnCallNumberOf_5.name);
             let str = evaledvpc.readAsString();
             let stype = ctx.tkChunkGranularity[0].image;
             let type = getStrToEnum<VpcGranularity>(VpcGranularity, 'VpcGranularity', stype);
