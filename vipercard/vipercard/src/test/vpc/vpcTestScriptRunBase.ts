@@ -10,7 +10,7 @@
 /* auto */ import { VpcElButton } from './../../vpc/vel/velButton';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { BrowserInfo } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool, checkIsProductionBuild, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
+/* auto */ import { O, bool, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { UI512ErrorHandling, assertTrue, assertWarn } from './../../ui512/utils/util512Assert';
 /* auto */ import { MapKeyToObjectCanSet, Util512, assertEq, assertWarnEq } from './../../ui512/utils/util512';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
@@ -149,7 +149,7 @@ export class TestVpcScriptRunBase {
 
     populateModel() {
         /*
-         1st bg "a" has 1 card named "a"
+         1st bg "a" has 1 card named "a", btn "go"
          2nd bg "b" has 3 cards named "b", "c", "d"
                card "c" has 3 flds "p1", "p2", "p3"
                        and 2 btns "p1", "p2"

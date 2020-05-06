@@ -359,7 +359,18 @@ export const ChunkResolutionApplication = /* static class */ {
         let resolved = new ResolvedChunk(cont, 0, cont.len());
         chunk.setCanModifyRecurse(true);
         let current: O<RequestedChunk> = chunk;
+        /* a line or item cannot be the child of a char or word
+        the original product had weird behavior here we don't need
+        to replicate */
+        let seenCharOrWord = false
         while (current) {
+            if (current.type555 === VpcGranularity.Chars || current.type555 === VpcGranularity.Words) {
+                seenCharOrWord = true
+            } else {
+                checkThrow(!seenCharOrWord, "we don't yet support a line or item being the child of a char or word." + 
+                    "please use an intermediate variable.")
+            }
+
             if (current.child) {
                 /* narrow it down, add extra commas but not the real text */
                 resolved = ensureDefined(

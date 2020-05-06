@@ -55,10 +55,12 @@
 //      NEW FEATURE: label and name are separate properties
 //      CHANGE: the "long id" of objects is now more useful. 
 //              if you put the long id into x, you can set properties of x
+//      we are more lenient refering to objects. 
+//          e.g. we allow 'get the name of cd 1 of this stack', why not since 'go to cd 1 of this stack' and 'the number of cards in this stack' is valid
+//          e.g. we allow stack-at-end-of-line in a few more contexts
 //      the string versions of "the target" and "the owner of" look a little different, they return the long id
 //      we need parens for if the short id of the owner of cd id prevCard is not the short id of the owner of cd id nextCard then answer "j"
 //      we don't support char x + 1 of abc, need char (x + 1) of abc
-//      we allow 'get the name of cd 1 of this stack', after all 'go to cd 1 of this stack' and 'the number of cards in this stack' is valid
 //      NEW FEATURE: set the fontstyle to grayed
             
             

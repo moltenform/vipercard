@@ -199,6 +199,30 @@ t.test('03NumLiteral', () => {
     b.t('there is a cd btn1234', 'ERR:no variable')
     b.batchEvaluate(h3, BatchType.floatingPoint);
 })
+t.test('03Identifier', () => {
+    let b = new ScriptTestBatch();
+    /* basics */
+    b.t('put 9 into b\\b', '9')
+    b.t('put 9 into a9\\a9', '9')
+    b.t('put 9 into a9$\\a9$', '9')
+    b.t('put 9 into a9$_\\a9$_', '9')
+    b.t('put 9 into 9\\0', 'PREPARSEERR:')
+    b.t('put 9 into 9a\\0', 'PREPARSEERR:')
+    b.t('put 9 into $a\\0', 'PREPARSEERR:')
+    /* varnames explicitly allowed */
+    b.t('put 9 into a\\a', '9')
+    b.t('put 9 into an\\an', '9')
+    b.t('put 9 into number\\number', '9')
+    /* properties can be valid var names,
+    this is also covered in 02 tests */
+    b.t('put 9 into alltext\\alltext', '9')
+    b.t('put 9 into defaulttextstyle\\defaulttextstyle', '9')
+    b.t('put 9 into autoselect\\autoselect', '9')
+    b.t('put 9 into cantdelete\\cantdelete', '9')
+    b.t('put 9 into textsize\\textsize', '9')
+    b.t('put 9 into textstyle\\textstyle', '9')
+    b.t('put 9 into id\\id', '9')
+})
 
 /* no customizations yet */
 export class TestVpc03 extends TestVpcScriptRunBase {}

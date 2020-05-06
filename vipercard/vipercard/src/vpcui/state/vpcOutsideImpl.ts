@@ -94,7 +94,7 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             the vel can't be found. means we get less specific messages, though */
             ret = resolver.go(ref, me, target, cardHistory);
         } catch (e) {
-            let as = e?.typeName?.includes('Vpc');
+            let as = e?.typeName?.includes('Vpc') && e?.message?.includes('break, not found');
             if (as) {
                 ret = [undefined, this.vci.getModel().getCurrentCard()];
             } else {
