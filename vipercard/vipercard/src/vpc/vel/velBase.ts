@@ -198,18 +198,6 @@ export abstract class VpcElBase extends UI512Settable {
         return undefined;
     }
 
-    /**
-     * look for a child element by ordinal ("first", "next")
-     */
-    static findByOrdinal<T extends VpcElBase>(ctor: AnyParameterCtor<T>, list: VpcElBase[], currentIndex: number, pos: OrdinalOrPosition) {
-        let index = findPositionFromOrdinalOrPosition(pos, currentIndex, 0, list.length - 1);
-        if (index === undefined) {
-            return undefined
-        } else {
-            return list[index] ? cast(ctor, list[index]) : undefined;
-        }
-    }
-
     setPossiblyCardSpecific(
         key: string,
         newv: ElementObserverVal,

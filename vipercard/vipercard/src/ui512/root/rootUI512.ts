@@ -63,11 +63,23 @@ export class FullRootUI512 implements RootHigher {
         showMsgIfExceptionThrown(() => this.presenter.init(), 'root.init');
     }
 
+    protected useMinified() {
+        if (window.location.href.split('#')[0].includes("test")) {
+            return false
+        } else if (window.location.href.split('#')[0].includes(':80')) {
+            return false
+        } else {
+            return true
+        }
+    }
+
     protected beginDelayLoad() {
         let fn = async () => {
             try {
                 await Util512Higher.asyncLoadJsIfNotAlreadyLoaded(
-                    '/external/externaldelaybundlemin.js'
+                    this.useMinified() ?
+                    '/external/externaldelaybundlemin.js':
+                    '/external/externaldelaybundlebig.js'
                 );
                 this.hasLoadedExternalDelay = 'success';
                 initAllVpcTokens();

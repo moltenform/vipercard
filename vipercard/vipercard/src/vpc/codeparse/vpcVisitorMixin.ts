@@ -51,31 +51,28 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             return evaledVpc;
         }
 
-        Helper$SetByNumberOrName(ret: RequestedVelRef, ctx: VisitingContext, subrule: string) {
+        Helper$SetByNumberOrName(ref: RequestedVelRef, ctx: VisitingContext, subrule: string) {
             let val = this.Helper$ReadVpcVal(ctx, subrule, this.Helper$SetByNumberOrName.name);
             if (val.isItInteger()) {
-                ret.lookByAbsolute = val.readAsStrictInteger(this.tmpArr);
+                ref.lookByAbsolute = val.readAsStrictInteger(this.tmpArr);
             } else {
-                ret.lookByName = val.readAsString();
+                ref.lookByName = val.readAsString();
             }
         }
 
         RuleObjectBtn(ctx: VisitingContext): RequestedVelRef {
-            let ret = new RequestedVelRef(VpcElType.Btn);
-            return this.help$ObjBtnOrFld(ctx, tkstr.tkBtn, ret);
+            let ref = new RequestedVelRef(VpcElType.Btn);
+            return this.help$ObjBtnOrFld(ctx, tkstr.tkBtn, ref);
         }
 
         RuleObjectFld(ctx: VisitingContext): RequestedVelRef {
-            let ret = new RequestedVelRef(VpcElType.Fld);
-            return this.help$ObjBtnOrFld(ctx, tkstr.tkFld, ret);
+            let ref = new RequestedVelRef(VpcElType.Fld);
+            return this.help$ObjBtnOrFld(ctx, tkstr.tkFld, ref);
         }
 
-        help$ObjBtnOrFld(ctx: VisitingContext, tokenName: string, ret: RequestedVelRef): RequestedVelRef {
+        help$ObjBtnOrFld(ctx: VisitingContext, tokenName: string, ref: RequestedVelRef): RequestedVelRef {
             if (ctx.RuleObjectCard && ctx.RuleObjectCard[0]) {
-                ret.parentCdInfo = this.visit(ctx.RuleObjectCard[0]);
-            } else {
-                ret.parentCdInfo = new RequestedVelRef(VpcElType.Card);
-                ret.parentCdInfo.lookByRelative = OrdinalOrPosition.This;
+                ref.parentCdInfo = this.visit(ctx.RuleObjectCard[0]);
             }
 
             let isBg = tokenName === tkstr.tkFld;
@@ -85,62 +82,63 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
             if (ctx.tkCard && ctx.tkCard[0]) {
                 isBg = false;
             }
-            ret.partIsBg = isBg;
-            ret.partIsCd = !isBg;
+            
+            ref.partIsBg = isBg;
+            ref.partIsCd = !isBg;
             if (ctx.RuleOrdinal && ctx.RuleOrdinal[0] && ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
                 checkThrow(false, "SH|you can't say 'the first cd btn 1'");
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
+                ref.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(
+                ref.lookById = this.Helper$ReadVpcVal(
                     ctx,
                     tkstr.RuleLvl6Expression,
                     this.help$ObjBtnOrFld.name
                 ).readAsStrictNumeric(this.tmpArr);
             } else {
-                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
+                this.Helper$SetByNumberOrName(ref, ctx, tkstr.RuleLvl6Expression);
             }
 
-            return ret;
+            return ref;
         }
 
         RuleObjectCard(ctx: VisitingContext): RequestedVelRef {
-            let ret = new RequestedVelRef(VpcElType.Card);
+            let ref = new RequestedVelRef(VpcElType.Card);
             if (ctx.RuleObjectBg && ctx.RuleObjectBg[0]) {
-                ret.parentBgInfo = this.visit(ctx.RuleObjectBg[0]);
+                ref.parentBgInfo = this.visit(ctx.RuleObjectBg[0]);
             }
             if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
-                ret.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
+                ref.parentStackInfo = this.visit(ctx.RuleObjectStack[0]);
             }
             if (ctx._marked && ctx._marked[0]) {
-                ret.cardLookAtMarkedOnly = true;
+                ref.cardLookAtMarkedOnly = true;
             }
 
             if (ctx._recent && ctx._recent[0]) {
-                ret.cardIsRecentHistory = 'recent';
+                ref.cardIsRecentHistory = 'recent';
             } else if (ctx._back && ctx._back[0]) {
-                ret.cardIsRecentHistory = 'back';
+                ref.cardIsRecentHistory = 'back';
             } else if (ctx._forth && ctx._forth[0]) {
-                ret.cardIsRecentHistory = 'forth';
+                ref.cardIsRecentHistory = 'forth';
             } else if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(
+                ref.lookById = this.Helper$ReadVpcVal(
                     ctx,
                     tkstr.RuleLvl6Expression,
                     this.RuleObjectCard.name
                 ).readAsStrictNumeric(this.tmpArr);
             } else if (ctx.RuleOrdinal && ctx.RuleOrdinal[0]) {
-                ret.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
+                ref.lookByRelative = this.visit(ctx.RuleOrdinal[0]);
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
+                ref.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
-                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
+                this.Helper$SetByNumberOrName(ref, ctx, tkstr.RuleLvl6Expression);
             } else if (ctx.tkCardAtEndOfLine && ctx.tkCardAtEndOfLine[0]) {
-                ret.lookByRelative = OrdinalOrPosition.This;
+                ref.lookByRelative = OrdinalOrPosition.This;
             } else {
                 checkThrow(false, 'SG|no branch taken');
             }
 
-            return ret;
+            return ref;
         }
 
         RuleObjectBg(ctx: VisitingContext): RequestedVelRef {
@@ -168,42 +166,42 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
         }
 
         RuleObjectStack(ctx: VisitingContext): RequestedVelRef {
-            let ret = new RequestedVelRef(VpcElType.Stack);
+            let ref = new RequestedVelRef(VpcElType.Stack);
             if (ctx._id && ctx._id[0]) {
-                ret.lookById = this.Helper$ReadVpcVal(
+                ref.lookById = this.Helper$ReadVpcVal(
                     ctx,
                     tkstr.RuleLvl6Expression,
                     this.RuleObjectStack.name
                 ).readAsStrictNumeric(this.tmpArr);
             } else if (ctx.RulePosition && ctx.RulePosition[0]) {
-                ret.lookByRelative = this.visit(ctx.RulePosition[0]);
+                ref.lookByRelative = this.visit(ctx.RulePosition[0]);
             } else if (ctx.tkStackAtEndOfLine && ctx.tkStackAtEndOfLine[0]) {
-                ret.lookByRelative = OrdinalOrPosition.This;
+                ref.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx.RuleLvl6Expression && ctx.RuleLvl6Expression[0]) {
-                this.Helper$SetByNumberOrName(ret, ctx, tkstr.RuleLvl6Expression);
+                this.Helper$SetByNumberOrName(ref, ctx, tkstr.RuleLvl6Expression);
             } else {
                 checkThrow(false, 'SE|no branch taken');
             }
 
-            return ret;
+            return ref;
         }
 
         RuleObjectSpecial(ctx: VisitingContext): RequestedVelRef {
-            let ret: RequestedVelRef;
+            let ref: RequestedVelRef;
             if (ctx.tkProductName && ctx.tkProductName[0]) {
-                ret = new RequestedVelRef(VpcElType.Product);
-                ret.lookByRelative = OrdinalOrPosition.This;
+                ref = new RequestedVelRef(VpcElType.Product);
+                ref.lookByRelative = OrdinalOrPosition.This;
             } else if (ctx._me && ctx._me[0]) {
-                ret = new RequestedVelRef(VpcElType.Unknown);
-                ret.isReferenceToMe = true;
+                ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToMe = true;
             } else if (ctx._target && ctx._target[0]) {
-                ret = new RequestedVelRef(VpcElType.Unknown);
-                ret.isReferenceToTarget = true;
+                ref = new RequestedVelRef(VpcElType.Unknown);
+                ref.isReferenceToTarget = true;
             } else {
                 checkThrowInternal(false, 'SD|null');
             }
 
-            return ret;
+            return ref;
         }
 
         RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef {
@@ -337,12 +335,6 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
 
         RuleHChunk(ctx: VisitingContext): RequestedChunk {
             checkThrow(ctx.RuleHChunkOne && ctx.RuleHChunkOne[0], 'S3|RuleHChunkOne');
-            //~ let ret = this.visit(ctx.RuleHChunkOne[0]);
-            //~ let current = ret;
-            //~ for (let i=1; i<ctx.RuleHChunkOne.length; i++) {
-            //~ current.child = this.visit(ctx.RuleHChunkOne[i]);
-            //~ current = current.child
-            //~ }
             let ret = this.visit(arLast(ctx.RuleHChunkOne));
             let current = ret;
             for (let i = ctx.RuleHChunkOne.length - 2; i >= 0; i--) {

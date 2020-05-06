@@ -11,21 +11,6 @@
 
 export const StackOrderHelpers = /* static class */ {
     /**
-     * find card by name
-     */
-    findCardByName(name: string, model: VpcModelTop) {
-        let cdids = model.stack.getCardOrder();
-        for (let cdid of cdids) {
-            let vel = model.getByIdUntyped(cdid);
-            if (vel.getS('name') === name) {
-                return vel;
-            }
-        }
-
-        return undefined;
-    },
-
-    /**
      * position of card within the stack. return undefined if card not found
      */
     findCardStackPosition(stack: VpcElStack, cardId: string): O<number> {
@@ -62,26 +47,4 @@ export const StackOrderHelpers = /* static class */ {
     getFromCardStackPosition(model: VpcModelTop, pos: number) {
         return ensureDefined(this.findFromCardStackPosition(model, pos), '4u|card number not found', pos);
     },
-
-    /**
-     * ordinal of card within the stack, to card. "go next card", which card is it?
-     */
-    getCardByOrdinal(currentCardId: string, pos: OrdinalOrPosition, model: VpcModelTop): VpcElCard {
-        let cdids = model.stack.getCardOrder();
-        let currentCdPosition = this.getCardStackPosition(model.stack, currentCardId);
-        let lastCdPosition = cdids.length - 1;
-        let nextCdPosition = findPositionFromOrdinalOrPosition(pos, currentCdPosition, 0, lastCdPosition);
-        checkThrow(nextCdPosition !== undefined, "card ordinal not found")
-        return this.getFromCardStackPosition(model, nextCdPosition);
-    },
-
-    /**
-     * get relative position card
-     */
-    getCardRelative(model: VpcModelTop, pos: OrdinalOrPosition) {
-        let curcardid =
-            bool(pos === OrdinalOrPosition.First) || bool(pos === OrdinalOrPosition.Last) ? '' : model.getCurrentCard().id;
-        let found = this.getCardByOrdinal(curcardid, pos, model);
-        return found.id;
-    }
 };

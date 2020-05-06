@@ -127,15 +127,10 @@ export class VpcPresenter extends VpcPresenterInit {
      * including sending closecard + opencard events
      */
     beginSetCurCardWithOpenCardEvt(pos: OrdinalOrPosition, idSpecific: O<string>) {
-        assertTrue(!idSpecific || pos === OrdinalOrPosition.This, 'UA|specifying an id, should set to This');
-        let targetCardId = idSpecific ?? StackOrderHelpers.getCardRelative(this.vci.getModel(), pos);
-        if (this.getTool() === VpcTool.Browse) {
-            this.vci
-                .getCodeExec()
-                .runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
-        } else {
-            this.setCurCardNoOpenCardEvt(targetCardId);
-        }
+        checkThrow(false, "nyi")
+        //~ this.vci
+            //~ .getCodeExec()
+            //~ .runMsgBoxCodeOrThrow(`go to card id ${targetCardId}`, tostring(this.getCurrentCardNum()), false);
     }
 
     /**
@@ -634,7 +629,7 @@ export class VpcPresenter extends VpcPresenterInit {
                 let currentCard = this.vci.getModel().findById(VpcElCard, currentCardId);
                 if (!currentCard) {
                     assertWarn(false, 'U6|card has been deleted, going to card 1 instead.');
-                    let card = StackOrderHelpers.getCardRelative(this.vci.getModel(), OrdinalOrPosition.First);
+                    let card = this.vci.getModel().stack.bgs[0].cards[0].id
                     this.vci.setCurCardNoOpenCardEvt(card);
                 }
 
