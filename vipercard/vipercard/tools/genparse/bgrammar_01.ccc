@@ -90,16 +90,17 @@
 // strings (only way for the user to get a quote char is `put quote & "hi" & quote into s` )
 tkStringLiteral=/"[^"\n]*"{{nothingdirectlyafter}}/
 // block comments, based on lua. --[[ to ]]
-tkBlockComment=/--\[\[.*?\]\]/|||||group: chevrotain.Lexer.SKIPPED,line_breaks:true
-// line comment
-tkLineComment=/--[^\n]*/|||||group: chevrotain.Lexer.SKIPPED
+// use [\s\S] to match any char, dotall is new and not supported in all browsers
+tkBlockComment=/--\[\[[\s\S]*?\]\]/|||||group: chevrotain.Lexer.SKIPPED,line_breaks:true
+// line comment. use negative lookahead so that --[[ is never a line comment
+tkLineComment=/--(?!\[\[)[^\n]*/|||||group: chevrotain.Lexer.SKIPPED
 // whitespace or a line-continuation. \xC2 is logical not in mac-roman encoding
 tkContinuedLineOrWhiteSpace=/(?:[ \t]+)|(?:[\\\xC2][ \t]*\n)/|||||group: chevrotain.Lexer.SKIPPED,line_breaks:true
-// official grammar says this. lookahead to see if it's the last token on the line
+// official grammar uses this. lookahead to see if it's the last token on the line
 tkCardAtEndOfLine=/(?:card|cd)(?=\s*\n)/
-// official grammar says this. lookahead to see if it's the last token on the line
+// official grammar uses this. lookahead to see if it's the last token on the line
 tkBgAtEndOfLine=/(?:background|bkgnd|bg)(?=\s*\n)/
-// official grammar says this. lookahead to see if it's the last token on the line
+// official grammar uses this. lookahead to see if it's the last token on the line
 tkStackAtEndOfLine=/stack(?=\s*\n)/
 // a new line
 tkNewLine=/\n+/|||||line_breaks:true
