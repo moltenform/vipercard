@@ -32,6 +32,29 @@ export interface GenericTextField {
 }
 
 /**
+ * IGenericTextField, a generic text-field-like object.
+ *
+ * let's say you are typing on the keyboard to insert a letter into the text field.
+ * if this is a UI512 text field, we can directly insert the letter.
+ * but if it is a ViperCard text field,
+ * we need to update the _VpcElField_ model first, for undoability,
+ * and let modelrender insert the letter into the field.
+ */
+export interface GenericTextField {
+    getFmtTxt(): FormattedText;
+    canEdit(): boolean;
+    canSelectText(): boolean;
+    isMultiline(): boolean;
+    setSel(a: number, b: number): void;
+    getSel(): [number, number];
+    getHeight(): number;
+    getDefaultFont(): string;
+    getReadOnlyUI512(): UI512ElTextField;
+    getScrollAmt(): number;
+    setScrollAmt(n: O<number>): void;
+}
+
+/**
  * GenericTextField wrapping a normal UI512ElTextField
  */
 export class UI512ElTextFieldAsGeneric implements GenericTextField {

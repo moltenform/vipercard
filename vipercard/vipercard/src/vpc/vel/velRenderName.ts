@@ -10,7 +10,7 @@
 /* auto */ import { VpcElBg } from './velBg';
 /* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, arLast, castVerifyIsStr, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
+/* auto */ import { Util512, castVerifyIsStr, findStrToEnum, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -101,9 +101,9 @@ export class VelRenderName {
         } else {
             /* no name, fall back to showing the id */
             if (adjective === PropAdjective.Long) {
-                return `card id ${vel.id555} of this stack`;
+                return `card id ${vel.getUserFacingId()} of this stack`;
             } else {
-                return `card id ${vel.id555}`;
+                return `card id ${vel.getUserFacingId()}`;
             }
         }
     }
@@ -126,9 +126,9 @@ export class VelRenderName {
         } else {
             /* no name, fall back to showing the id */
             if (adjective === PropAdjective.Long) {
-                return `bkgnd id ${vel.id555} of this stack`;
+                return `bkgnd id ${vel.getUserFacingId()} of this stack`;
             } else {
-                return `bkgnd id ${vel.id555}`;
+                return `bkgnd id ${vel.getUserFacingId()}`;
             }
         }
     }
@@ -191,12 +191,13 @@ export class VelRenderId {
      * and more verbose than other objects
      */
     protected goCard(vel: VpcElCard, adjective: PropAdjective) {
+        let userFacingId = vel.getUserFacingId()
         if (adjective === PropAdjective.Short) {
-            return vel.id555;
+            return userFacingId;
         } else if (adjective === PropAdjective.Long) {
-            return `card id ${vel.id555} of this stack`;
+            return `card id ${userFacingId} of this stack`;
         } else {
-            return `card id ${vel.id555}`;
+            return `card id ${userFacingId}`;
         }
     }
 
@@ -204,71 +205,136 @@ export class VelRenderId {
      * the long id of a cd btn is the same as the short id of a cd btn
      */
     protected goOtherTypes(vel: VpcElBase, adjective: PropAdjective) {
+        let userFacingId = vel.getUserFacingId()
         if (adjective === PropAdjective.Long) {
             if (vel instanceof VpcElButton || vel instanceof VpcElField) {
-                let userFacingId = vel.getUserFacingId()
                 let cdOrBg = vel.getS('is_bg_velement_id').length ? 'bkgnd' : 'card'
-                /* NOTE: this is ambiguous - for a bg btn,
+                /* NOTE: this is ambiguous - for a bg object,
                 it won't precisely identify the object.
-                but this is the way the original product worked.
-                consider the case of "the target" */
-
-
-                let parent = this.model.getOwnerUntyped(vel);
-                if (parent instanceof VpcElBg) {
-                    checkThrow(false, `T(|nyi. probably write something like "bg id 123 via cd id 567"`);
-                } else {
-                    return `${vpcElTypeShowInUI(VpcElType.Card)} ${vpcElTypeShowInUI(vel.getType())} id ${vel.id}`;
-                }
+                but this is the way the original product worked. */
+                return `${cdOrBg} ${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`
             } else {
-                return `${vpcElTypeShowInUI(vel.getType())} id ${vel.id}`;
+                return `${vpcElTypeShowInUI(vel.getType())} id ${userFacingId}`;
             }
         } else {
-            return vel.id;
+            return userFacingId
         }
     }
 
     /**
-     * go from card id 123 back to a RequestedVelRef
+     * go from "card id 123" back to a RequestedVelRef
+     * an alternative would be to spin up the full parser/visitor and use it,
+     * but that's awkward because we might be calling this from the visitor
+     * 
+     * supports:
+     *      at most one parent
+     *      "this"
+     *      lookup by id
+     *      lookup by name
+     *      but nothing more!
+     * 
+     * what is most important is that it supports everything "the long id"
+     * will render as!
      */
     static parseFromString(s: string) {
-        let words = s.split(/\s+/);
-        if (
-            words.length >= 3 &&
-            arLast(words) === 'stack' &&
-            words[words.length - 2] === 'this' &&
-            words[words.length - 3] === 'of'
-        ) {
-            words = words.slice(0, -3);
+        s = s.trim()
+
+        /* remove of this stack, of this bg */
+        let sRemove = ' of this stack'
+        if (s.endsWith(sRemove)) {
+            s = s.substr(0, s.length - sRemove.length).trim()
+        }
+        sRemove = ' of this background'
+        if (s.endsWith(sRemove)) {
+            s = s.substr(0, s.length - sRemove.length).trim()
+        }
+        sRemove = ' of this bkgnd'
+        if (s.endsWith(sRemove)) {
+            s = s.substr(0, s.length - sRemove.length).trim()
+        }
+        sRemove = ' of this bg'
+        if (s.endsWith(sRemove)) {
+            s = s.substr(0, s.length - sRemove.length).trim()
+        }
+        sRemove = ' of this card'
+        if (s.endsWith(sRemove)) {
+            s = s.substr(0, s.length - sRemove.length).trim()
+        }
+        sRemove = ' of this cd'
+        if (s.endsWith(sRemove)) {
+            s = s.substr(0, s.length - sRemove.length).trim()
         }
 
+        let ret = new RequestedVelRef(VpcElType.Unknown)
+        let ptsStackParent = s.split(' of stack ')
+        if (ptsStackParent.length === 2) {
+            ret.parentStackInfo = VelRenderId.parseFromString('stack ' + ptsStackParent[1])
+            s = ptsStackParent[0]
+        }
+        let ptsBgParent = s.split(/ of (?:background|bkgnd|bg) /)
+        if (ptsBgParent.length === 2) {
+            ret.parentBgInfo = VelRenderId.parseFromString('bkgnd ' + ptsBgParent[1])
+            s = ptsBgParent[0]
+        }
+        let ptsCardParent = s.split(/ of (?:card|cd) /)
+        if (ptsCardParent.length === 2) {
+            ret.parentCdInfo = VelRenderId.parseFromString('card ' + ptsCardParent[1])
+            s = ptsCardParent[0]
+        }
+
+        /* by only splitting by single space we won't accept "this  stack"
+        but we can also losslessly join by space later (to accept names with spaces) */
+        let words = s.trim().split(/\s/);
         if (words.length === 2 && words[0] === 'this' && words[1] === 'stack') {
-            let ref = new RequestedVelRef(VpcElType.Stack);
-            ref.lookByRelative = OrdinalOrPosition.This;
-            return ref;
+            ret.type = VpcElType.Stack
+            ret.lookByRelative = OrdinalOrPosition.This
+            return ret
+        } else if (words.length === 2 && words[0] === 'this' && findStrToEnum<VpcElType>(VpcElType, words[1])===VpcElType.Bg) {
+            ret.type = VpcElType.Bg
+            ret.lookByRelative = OrdinalOrPosition.This
+            return ret
+        } else if (words.length === 2 && words[0] === 'this' && findStrToEnum<VpcElType>(VpcElType, words[1])===VpcElType.Card) {
+            ret.type = VpcElType.Card
+            ret.lookByRelative = OrdinalOrPosition.This
+            return ret
         }
 
-        checkThrow(!words.some(w => w === 'name'), 'T&|we only support looking by id, like `card id 123`');
-        checkThrow(!words.some(w => w.startsWith('"')), 'T%|we only support looking by id, like `card id 123`');
-        checkThrow(words.length === 3 || words.length === 4, 'T#|expected something like `card id 123`');
-        let getType = (s: string) => {
-            return getStrToEnum<VpcElType>(VpcElType, 'expected something like `card id 123`', s);
+        let getType = (sIn: string) => {
+            return getStrToEnum<VpcElType>(VpcElType, 'expected something like `card id 123`', sIn);
         };
-        let firstType = getType(words[0]);
-        let realType = VpcElType.Unknown;
-        if ((firstType === VpcElType.Card || firstType === VpcElType.Bg) && words[1] !== 'id') {
-            checkThrow(firstType !== VpcElType.Bg, 'T!|nyi, would probably need something like via card 2');
-            realType = getType(words[1]);
-            words.splice(1, 1);
-        } else {
-            realType = firstType;
+
+        checkThrow(words.length >=3 , "too short")
+        let isPartFld = findStrToEnum<VpcElType>(VpcElType, words[1])===VpcElType.Fld
+        let isPartBtn = findStrToEnum<VpcElType>(VpcElType, words[1])===VpcElType.Btn
+        if (isPartFld || isPartBtn) {
+            let cdOrBg = getType(words[0])
+            if (cdOrBg === VpcElType.Card) {
+                ret.partIsCd = true
+            } else if (cdOrBg === VpcElType.Bg) {
+                ret.partIsBg = true
+            } else {
+                checkThrow(false, 'expected something like `cd btn id 123`, got something like `stack btn id 123`' )
+            }
+
+            /* remove the cd/bg prefix */
+            words.splice(0, 1)
         }
 
-        checkThrow(words[1] === 'id', 'T |expected something like `card id 123`');
-        let theId = Util512.parseInt(words[2]);
-        checkThrow(theId, 'Tz|invalid number. expected something like `card id 123`');
-        let ret = new RequestedVelRef(realType);
-        ret.lookById = theId;
+        let realType = getType(words[0])
+        ret.type = realType
+        if (words[1] === 'id') {
+            let theId = Util512.parseInt(words[2]);
+            checkThrow(theId, 'Tz|invalid number. expected something like `card id 123`');
+            ret.lookById = theId    
+        } else {
+            let restOfString = words.slice(1).join(' ')
+            if (restOfString.startsWith('"') && restOfString.endsWith('"')) {
+                ret.lookByName = restOfString.slice(1, -1)
+            } else {
+                checkThrow(false, 'expected either `cd id 123` or `cd "name"`')
+            }
+        }        
+        
         return ret;
     }
 }
@@ -297,23 +363,18 @@ export class VelGetNumberProperty {
     goOtherTypes(vel: VpcElBase) {
         let parentList: VpcElBase[] = [];
         if (vel.getType() === VpcElType.Bg) {
-            let parent = this.model.getOwner(VpcElStack, vel);
+            let parent = this.model.getOwner555(VpcElStack, vel);
             parentList = parent.bgs;
         } else if (vel.getType() === VpcElType.Card) {
-            let parent = this.model.getOwner(VpcElBg, vel);
-            parentList = parent.cards;
-        } else if (vel.getType() === VpcElType.Btn) {
-            let parent = this.model.getOwnerUntyped(vel);
-            checkThrow(parent instanceof VpcElCard, 'Tw|bg not yet implemented');
-            parentList = parent.parts.filter(e => e.getType() === VpcElType.Btn);
-        } else if (vel.getType() === VpcElType.Fld) {
-            let parent = this.model.getOwnerUntyped(vel);
-            checkThrow(parent instanceof VpcElCard, 'Tv|bg not yet implemented');
-            parentList = parent.parts.filter(e => e.getType() === VpcElType.Fld);
+            parentList = this.model.stack.getCardOrder().map(id=>this.model.getByIdUntyped(id))
+        } else if (vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld) {
+            let parent = this.model.getOwner555(VpcElCard, vel);
+            let isBg = vel.getS('is_bg_velement_id').length > 0
+            parentList = parent.parts.filter(e => e.getType() === vel.getType() && isBg === e.getS('is_bg_velement_id').length > 0);
         }
 
         checkThrow(parentList && parentList.length, 'Tu|parent list not found or empty');
-        let index = parentList.findIndex(e => e.id === vel.id);
+        let index = parentList.findIndex(e => e.id555 === vel.id555);
         checkThrow(index !== -1, 'Tt|object not found belonging to its parent');
         return index + 1; /* one-based indexing */
     }

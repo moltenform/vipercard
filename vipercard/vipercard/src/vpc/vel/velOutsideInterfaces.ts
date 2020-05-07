@@ -66,6 +66,11 @@ export interface OutsideWorldRead {
     GetSelectedField(): O<VpcElField>;
 
     /**
+     * get the selected text chunk
+     */
+    GetSelectedTextChunk(): O<RequestedContainerRef>;
+
+    /**
      * get the current tool, specify the 'real' tool or the 'simulated' tool chosen by a script
      */
     GetCurrentTool(realOrMimic: boolean): VpcTool;

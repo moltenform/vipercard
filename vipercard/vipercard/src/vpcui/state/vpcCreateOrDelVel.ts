@@ -45,18 +45,12 @@ export abstract class UndoableActionCreateOrDelVel {
      */
     static getChildVelsArray(velId: string, vci: VpcStateInterface, type: VpcElType): VpcElBase[] {
         let vel = vci.getModel().getByIdUntyped(velId);
-        let velAsCard = vel as VpcElCard;
-        let velAsBg = vel as VpcElBg;
-        let velAsStack = vel as VpcElStack;
-
-        if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsCard instanceof VpcElCard) {
-            return velAsCard.parts;
-        } else if ((type === VpcElType.Btn || type === VpcElType.Fld) && velAsBg instanceof VpcElBg) {
-            return velAsBg.parts;
-        } else if (type === VpcElType.Card && velAsBg instanceof VpcElBg) {
-            return velAsBg.cards;
-        } else if (type === VpcElType.Bg && velAsStack instanceof VpcElStack) {
-            return velAsStack.bgs;
+        if ((type === VpcElType.Btn || type === VpcElType.Fld) && vel instanceof VpcElCard) {
+            return vel.parts;
+        } else if (type === VpcElType.Card && vel instanceof VpcElBg) {
+            return vel.cards;
+        } else if (type === VpcElType.Bg && vel instanceof VpcElStack) {
+            return vel.bgs;
         } else {
             checkThrowInternal(false, `6e|incorrect type/parent. child is a ${type} and parent is a `);
         }
@@ -68,12 +62,12 @@ export abstract class UndoableActionCreateOrDelVel {
     protected determineIndexInAr(vel: VpcElBase, vci: VpcStateInterface) {
         let ar = UndoableActionCreateOrDelVel.getChildVelsArray(this.parentId, vci, vel.getType());
         for (let i = 0; i < ar.length; i++) {
-            if (ar[i].id === vel.id) {
+            if (ar[i].id555 === vel.id555) {
                 return i;
             }
         }
 
-        checkThrowInternal(false, `6d|could not find place in parent array for ${vel.id}`);
+        checkThrowInternal(false, `6d|could not find place in parent array for ${vel.id555}`);
     }
 
     /**
@@ -102,8 +96,8 @@ export abstract class UndoableActionCreateOrDelVel {
             let order = vci.getModel().stack.getCardOrder();
             let found = order.findIndex(s => s === vci.getCurrentCardId());
             found = found === -1 ? order.length - 1 : found;
-            order.splice(found + 1, 0, vel.id);
-            vci.getModel().stack.alterCardOrder(currentOrder => order);
+            order.splice(found + 1, 0, vel.id555);
+            vci.getModel().stack.alterCardOrder(currentOrder => order, vci.getModel());
         }
     }
 
@@ -113,13 +107,13 @@ export abstract class UndoableActionCreateOrDelVel {
     protected remove(vci: VpcStateInterface) {
         vci.causeFullRedraw();
         let vel = vci.getModel().getByIdUntyped(this.velId);
-        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId, vci, vel.getType());
-        assertWarnEq(vel.id, ar[this.insertIndex].id, '6b|');
+        let ar = UndoableActionCreateOrDelVel.getChildVelsArray(vel.parentId555, vci, vel.getType());
+        assertWarnEq(vel.id555, ar[this.insertIndex].id555, '6b|');
         assertWarn(this.insertIndex >= 0 && this.insertIndex < ar.length, '6a|incorrect insertion point');
         ar.splice(this.insertIndex, 1);
-        vci.getModel().removeIdFromMapOfElements(vel.id);
+        vci.getModel().removeIdFromMapOfElements(vel.id555);
         if (vel.getType() === VpcElType.Card) {
-            vci.getModel().stack.alterCardOrder(list => list.filter(s => s !== vel.id));
+            vci.getModel().stack.alterCardOrder(list => list.filter(s => s !== vel.id555), vci.getModel());
         }
     }
 
@@ -141,10 +135,11 @@ export abstract class UndoableActionCreateOrDelVel {
         if (!model.stack) {
             vci.doWithoutAbilityToUndo(() => {
                 /* create a new stack */
-                model.stack = vci.rawCreate(VpcElStack.initStackId, model.productOpts.id, VpcElStack);
+                model.stack = vci.rawCreate(VpcElStack.initStackId, model.productOpts.id555, VpcElStack);
+                model.stack.setOnVel('name', 'my stack', model)
                 if (createFirstCard) {
-                    let firstBg = vci.createVel(model.stack.id, VpcElType.Bg, -1);
-                    vci.createVel(firstBg.id, VpcElType.Card, -1);
+                    let firstBg = vci.createVel(model.stack.id555, VpcElType.Bg, -1);
+                    vci.createVel(firstBg.id555, VpcElType.Card, -1);
                 }
             });
         }

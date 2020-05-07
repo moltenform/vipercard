@@ -17,12 +17,15 @@
 /* auto */ import { OutsideWorldRead, OutsideWorldReadWrite } from './../../vpc/vel/velOutsideInterfaces';
 /* auto */ import { VpcModelTop } from './../../vpc/vel/velModelTop';
 /* auto */ import { VpcFontSpecialChunk } from './../../vpc/vel/velFieldChangeFont';
-/* auto */ import { VpcElField } from './../../vpc/vel/velField';
+/* auto */ import { VpcElField, VpcTextFieldAsGeneric } from './../../vpc/vel/velField';
+/* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
 /* auto */ import { VpcElBase, VpcElSizable } from './../../vpc/vel/velBase';
 /* auto */ import { ModifierKeys } from './../../ui512/utils/utilsKeypressHelpers';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { assertEq, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { Util512, assertEq, longstr, slength } from './../../ui512/utils/util512';
+/* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
+/* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
 /* auto */ import { ElementObserverVal } from './../../ui512/elements/ui512ElementGettable';
 /* auto */ import { UI512PaintDispatch } from './../../ui512/draw/ui512DrawPaintDispatch';
 
@@ -292,6 +295,35 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
     }
 
     /**
+     * get the selected text chunk
+     */
+    GetSelectedTextChunk(): O<RequestedContainerRef> {
+        let selFld = this.GetSelectedField();
+        if (selFld) {
+            let ret = new RequestedContainerRef();
+            ret.vel = new RequestedVelRef(VpcElType.Fld);
+            let generic = new VpcTextFieldAsGeneric(
+                undefined as unknown as UI512ElTextField,
+                selFld,
+                this.Model()
+            );
+
+            let bounds = TextSelModify.getSelectedTextBounds(generic);
+            if (bounds) {
+                ret.vel = new RequestedVelRef(VpcElType.Fld);
+                ret.vel.lookById = Util512.parseIntStrict(selFld.id555);
+                checkThrow(ret.vel.lookById, 'S7|');
+                ret.chunk = new RequestedChunk(bounds[0]);
+                ret.chunk.last555 = bounds[1];
+            }
+
+            return ret
+        } else {
+            return undefined
+        }
+    }
+
+    /**
      * set a property
      */
     SetProp(ref: RequestedVelRef, prop: string, v: VpcVal, chunk: O<RequestedChunk>): void {
@@ -320,18 +352,18 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             return new VpcFontSpecialChunk(vel).specialGetPropChunk(this.Model(), prop, chunk, this.GetItemDelim());
         } else if (prop === 'name') {
             /* put the long name of card "myCard" into x */
-            let resolver = new VelRenderName(this.vci.getModel());
+            let renderer = new VelRenderName(this.vci.getModel());
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
-            return VpcValS(resolver.go(vel, adjective));
+            return VpcValS(renderer.go(vel, adjective));
         } else if (prop === 'id') {
             /* put the id of card "myCard" into x */
-            let resolveId = new VelRenderId(this.vci.getModel());
+            let renderer = new VelRenderId(this.vci.getModel());
             adjective = adjective === PropAdjective.Empty ? PropAdjective.Abbrev : adjective;
-            return VpcValS(resolveId.go(vel, adjective));
+            return VpcValS(renderer.go(vel, adjective));
         } else if (prop === 'number') {
             /* put the number of card "myCard" into x */
-            let resolveNum = new VelGetNumberProperty(this.vci.getModel());
-            return VpcValN(resolveNum.go(vel));
+            let renderer = new VelGetNumberProperty(this.vci.getModel());
+            return VpcValN(renderer.go(vel));
         } else if (prop === 'owner') {
             /* put the owner of cd btn 1 into x */
             checkThrow(ref, "UI|must say 'get the owner of cd btn 1' and not 'get the owner'");
@@ -537,6 +569,8 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
 
     /**
      * put the target into x (the vel that was interacted with)
+     * note that for bg elements this is ambiguous, but we follow
+     * the behavior of the original product.
      */
     protected getTargetFullString(adjective: PropAdjective): string {
         /* get a longer form of the id unless specifically said "short" */
@@ -560,7 +594,15 @@ export class VpcOutsideImpl implements OutsideWorldReadWrite {
             checkThrow(false, 'UD|Cannot get owner of this type of object.');
         }
 
-        let owner = this.vci.getModel().getOwnerUntyped555(vel);
+        let owner:VpcElBase
+        if (vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length) {
+            /* it's a bg object, so return the bg */
+            let card = this.vci.getModel().getCardById(vel.parentId555);
+            owner = this.vci.getModel().getById(VpcElBg, card.parentId555)
+        } else {
+            owner = this.vci.getModel().getByIdUntyped(vel.parentId555);
+        }
+
         if (adjective === PropAdjective.Short) {
             return owner.getS('name') ?? '';
         } else {

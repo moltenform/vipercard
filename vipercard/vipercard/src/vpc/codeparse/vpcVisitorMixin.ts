@@ -10,11 +10,9 @@
 /* auto */ import { ReadableContainerStr } from './../vel/velResolveContainer';
 /* auto */ import { VelRenderId } from './../vel/velRenderName';
 /* auto */ import { OutsideWorldRead } from './../vel/velOutsideInterfaces';
-/* auto */ import { VpcTextFieldAsGeneric } from './../vel/velField';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
-/* auto */ import { Util512, arLast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
-/* auto */ import { TextSelModify } from './../../ui512/textedit/ui512TextSelModify';
-/* auto */ import { UI512ElTextField } from './../../ui512/elements/ui512ElementTextField';
+/* auto */ import { ensureDefined } from './../../ui512/utils/util512Assert';
+/* auto */ import { arLast, castVerifyIsStr, getStrToEnum } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -279,24 +277,7 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.vel = new RequestedVelRef(VpcElType.Unknown);
                 ret.vel.isReferenceToTarget = true;
             } else if (ctx._selection && ctx._selection[0]) {
-                ret.vel = new RequestedVelRef(VpcElType.Fld);
-                ret.vel.lookByName = 'there is no selection';
-                let selFld = this.outside.GetSelectedField();
-                if (selFld) {
-                    let generic = new VpcTextFieldAsGeneric(
-                        (-1 as unknown) as UI512ElTextField,
-                        selFld,
-                        this.outside.GetCurrentCardId()
-                    );
-                    let bounds = TextSelModify.getSelectedTextBounds(generic);
-                    if (bounds) {
-                        ret.vel = new RequestedVelRef(VpcElType.Fld);
-                        ret.vel.lookById = Util512.parseIntStrict(selFld.id);
-                        checkThrow(ret.vel.lookById, 'S7|');
-                        ret.chunk = new RequestedChunk(bounds[0]);
-                        ret.chunk.last555 = bounds[1];
-                    }
-                }
+                ret = ensureDefined(this.outside.GetSelectedTextChunk(), "nothing is selected")
             } else if (ctx.RuleObjectPart && ctx.RuleObjectPart[0]) {
                 ret.vel = this.visit(ctx.RuleObjectPart[0]);
                 checkThrow(ret.vel instanceof RequestedVelRef, `9a|internal error, not an element reference`);

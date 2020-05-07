@@ -1,8 +1,7 @@
 
 /* auto */ import { CountNumericId } from './../vpcutils/vpcUtils';
-/* auto */ import { BuildFakeTokens, ChvITk, ChvITkType, listOfAllWordLikeTokens, tks } from './../codeparse/vpcTokens';
+/* auto */ import { BuildFakeTokens, ChvITk, listOfAllWordLikeTokens, tks } from './../codeparse/vpcTokens';
 /* auto */ import { checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
-/* auto */ import { O } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, arLast } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
