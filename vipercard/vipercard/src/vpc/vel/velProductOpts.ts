@@ -1,13 +1,12 @@
 
 /* auto */ import { VpcStandardLibScript } from './../vpcutils/vpcStandardLibScript';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType, VpcTool, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElStack } from './velStack';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from './velBase';
 /* auto */ import { UI512CursorAccess, UI512Cursors } from './../../ui512/utils/utilsCursors';
 /* auto */ import { bool, cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { assertTrue, assertWarn } from './../../ui512/utils/util512Assert';

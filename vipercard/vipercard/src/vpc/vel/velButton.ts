@@ -1,8 +1,7 @@
 
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
-/* auto */ import { VpcElBase, VpcElSizable } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcFindByIdInterface } from './velBase';
 /* auto */ import { bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
@@ -20,7 +19,9 @@ export class VpcElButton extends VpcElSizable {
     protected _autohilite = true;
     protected _enabled = true;
     protected _hilite = false;
+    protected _hilite_uniquetocard = false;
     protected _checkmark = false;
+    protected _checkmark_uniquetocard = false;
     protected _icon = 0;
     protected _showlabel = true;
     protected _style: number = VpcBtnStyle.Rectangle;
@@ -33,12 +34,8 @@ export class VpcElButton extends VpcElSizable {
     protected _script = '';
     protected _name = '';
 
-
-    /* always true if belongs to a card */
     protected _sharedhilite = true;
-    /* specific-card content will be in the form: */
-    /* _hilite_oncard_12345 */
-    /* _checkmark_oncard_12345 */
+    
     constructor(id: string, parentId: string) {
         super(id, parentId);
     }
@@ -56,10 +53,10 @@ export class VpcElButton extends VpcElSizable {
         return VpcElType.Btn;
     }
 
-    /* e.g. a background btn can have a different hilite on every card */
-    isCardSpecificContent(key: string) {
-        return !this.getB('sharedhilite') && (bool(key === 'hilite') || bool(key === 'checkmark'));
-    }
+    //~ /* e.g. a background btn can have a different hilite on every card */
+    //~ isCardSpecificContent(key: string) {
+        //~ return !this.getB('sharedhilite') && (bool(key === 'hilite') || bool(key === 'checkmark'));
+    //~ }
 
     /**
      * re-use cached getters and setter callback functions for better perf
@@ -86,15 +83,17 @@ export class VpcElButton extends VpcElSizable {
 
         getters['hilite'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, cardId: string) => {
-                return me.getPossiblyCardSpecific('hilite', false, cardId) as boolean;
+            (me: VpcElButton) => {
+                let p = me.getB('sharedhilite') ?'hilite':'hilite_uniquetocard'
+                return  me.getB(p)
             }
         ];
 
         getters['checkmark'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, cardId: string) => {
-                return me.getPossiblyCardSpecific('checkmark', false, cardId) as boolean;
+            (me: VpcElButton) => {
+                let p = me.getB('sharedhilite') ?'checkmark':'checkmark_uniquetocard'
+                return  me.getB(p)
             }
         ];
     }
@@ -106,29 +105,29 @@ export class VpcElButton extends VpcElSizable {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['textstyle'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string) => {
+            (me: VpcElButton, s: string, h:VpcFindByIdInterface) => {
                 let list = s.split(',').map(item => item.trim());
-                me.set('textstyle', SubstringStyleComplex.vpcStyleToInt(list));
+                me.setOnVel('textstyle', SubstringStyleComplex.vpcStyleToInt(list), h);
             }
         ];
 
         setters['style'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string) => {
+            (me: VpcElButton, s: string, h:VpcFindByIdInterface) => {
                 let styl = getStrToEnum<VpcBtnStyle>(VpcBtnStyle, 'Button style', s);
                 checkThrow((styl as any) !== VpcBtnStyle.Osboxmodal, '7D|this style is only supported internally');
-                me.set('style', styl);
+                me.setOnVel('style', styl, h);
             }
         ];
 
         setters['textalign'] = [
             PrpTyp.Str,
-            (me: VpcElButton, s: string) => {
+            (me: VpcElButton, s: string, h:VpcFindByIdInterface) => {
                 s = s.toLowerCase().trim();
                 if (s === 'left') {
-                    me.set('textalign', 'left');
+                    me.setOnVel('textalign', 'left', h);
                 } else if (s === 'center') {
-                    me.set('textalign', 'center');
+                    me.setOnVel('textalign', 'center', h);
                 } else {
                     checkThrow(false, `4z|we don't currently support setting text align to ${s}`);
                 }
@@ -137,15 +136,17 @@ export class VpcElButton extends VpcElSizable {
 
         setters['hilite'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, cardId: string) => {
-                me.setPossiblyCardSpecific('hilite', v, false, cardId);
+            (me: VpcElButton, v: boolean, h:VpcFindByIdInterface) => {
+                let p = me.getB('sharedhilite') ?'hilite':'hilite_uniquetocard'
+                me.setOnVel(p, v, h)
             }
         ];
 
         setters['checkmark'] = [
             PrpTyp.Bool,
-            (me: VpcElButton, v: boolean, cardId: string) => {
-                me.setPossiblyCardSpecific('checkmark', v, false, cardId);
+            (me: VpcElButton, v: boolean, h:VpcFindByIdInterface) => {
+                let p = me.getB('sharedhilite') ?'checkmark':'checkmark_uniquetocard'
+                me.setOnVel(p, v, h)
             }
         ];
     }

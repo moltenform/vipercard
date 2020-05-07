@@ -1,8 +1,7 @@
 
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType, checkThrow, checkThrowEq, checkThrowInternal } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from './velBase';
 /* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { Util512, arLast, slength } from './../../ui512/utils/util512';
 

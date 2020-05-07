@@ -96,7 +96,7 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(this.originalMsg.targetId, chain, this.originalMsg.msgName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
-            this.pushStackFrame(this.originalMsg.msgName, this.originalMsg, ast, lineRef, vel.id, vel.parentId, undefined);
+            this.pushStackFrame(this.originalMsg.msgName, this.originalMsg, ast, lineRef, vel.id555, vel.parentId555, undefined);
         }
     }
 
@@ -323,7 +323,7 @@ export class VpcExecFrameStack {
 
             let v = this.outside.Model().findByIdUntyped(velId);
             if (v) {
-                let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(v.getS('script'), handlername, v.id);
+                let [codeColl, lineRef] = this.cacheParsedAST.getHandlerOrThrow(v.getS('script'), handlername, v.id555);
                 if (codeColl && lineRef) {
                     return [codeColl, lineRef, v];
                 }
@@ -426,7 +426,7 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, curFrame.handlerName, true);
         if (found) {
             let [ast, lineRef, vel] = found;
-            this.pushStackFrame(curFrame.handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId, undefined);
+            this.pushStackFrame(curFrame.handlerName, curFrame.message, ast, lineRef, vel.id555, vel.parentId555, undefined);
         }
     }
 
@@ -565,7 +565,7 @@ export class VpcExecFrameStack {
         let found = this.getHandlerUpwardsOrThrow(curFrame.meId, curFrame.messageChain, handlerName, false);
         if (found) {
             let [ast, lineRef, vel] = found;
-            let newFrame = this.pushStackFrame(handlerName, curFrame.message, ast, lineRef, vel.id, vel.parentId, undefined);
+            let newFrame = this.pushStackFrame(handlerName, curFrame.message, ast, lineRef, vel.id555, vel.parentId555, undefined);
             newFrame.args = args;
             Util512.freezeRecurse(newFrame.args);
             if (vel.getType() === VpcElType.Product && !curFrame.dynamicCodeOrigin) {
@@ -624,8 +624,8 @@ export class VpcExecFrameStack {
         let [val, velTarget] = this.visitSendStatement(curLine, parsed);
         let codeToCompile = val.readAsString();
         curFrame.next();
-        let meId = velTarget.id;
-        let statedParentId = velTarget.id;
+        let meId = velTarget.id555;
+        let statedParentId = velTarget.id555;
         let dynamicCodeOrigin: [string, number] = [curFrame.meId, curLine.firstToken.startLine ?? 0];
 
         /* confirmed in original product: if there's no return statement,
@@ -636,7 +636,7 @@ export class VpcExecFrameStack {
             codeToCompile,
             meId,
             statedParentId,
-            velTarget.id,
+            velTarget.id555,
             dynamicCodeOrigin
         );
         this.callCodeAtATarget(
@@ -646,7 +646,7 @@ export class VpcExecFrameStack {
             newHandlerName,
             meId,
             statedParentId,
-            velTarget.id,
+            velTarget.id555,
             VpcBuiltinMsg.SendCode,
             dynamicCodeOrigin
         );
@@ -751,15 +751,15 @@ export class VpcExecFrameStack {
         let currentCardId = this.outside.GetOptionS('currentCardId');
         if (directive === 'closeorexitfield') {
             let seld = this.outside.GetSelectedField();
-            if (seld && seld.parentId === currentCardId) {
+            if (seld && seld.parentId555 === currentCardId) {
                 let fieldsRecent = this.outside.GetFieldsRecentlyEdited().val;
-                if (fieldsRecent[seld.id]) {
+                if (fieldsRecent[seld.id555]) {
                     sendMsg = 'closefield';
-                    sendMsgTarget = seld.id;
-                    fieldsRecent[seld.id] = false;
+                    sendMsgTarget = seld.id555;
+                    fieldsRecent[seld.id555] = false;
                 } else {
                     sendMsg = 'exitfield';
-                    sendMsgTarget = seld.id;
+                    sendMsgTarget = seld.id555;
                 }
 
                 /* we're changing cards, so mark the other ones false too */
@@ -806,7 +806,7 @@ export class VpcExecFrameStack {
             );
             if (found) {
                 let [ast, lineRef, vel] = found;
-                this.callCodeAtATarget(curFrame, ast, lineRef, sendMsg, vel.id, vel.parentId, sendMsgTarget, theMsg, undefined);
+                this.callCodeAtATarget(curFrame, ast, lineRef, sendMsg, vel.id555, vel.parentId555, sendMsgTarget, theMsg, undefined);
             }
         }
     }

@@ -1,14 +1,13 @@
 
 /* auto */ import { VpcVal, VpcValBool, VpcValN, VpcValS } from './../vpcutils/vpcVal';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
-/* auto */ import { VpcElType, checkThrow, checkThrowEq } from './../vpcutils/vpcEnums';
+/* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
 /* auto */ import { SetToInvalidObjectAtEndOfExecution } from './../../ui512/utils/util512Higher';
-/* auto */ import { O, bool } from './../../ui512/utils/util512Base';
-/* auto */ import { assertTrue, ensureDefined } from './../../ui512/utils/util512Assert';
-/* auto */ import { slength } from './../../ui512/utils/util512';
+/* auto */ import { O, coalesceIfFalseLike } from './../../ui512/utils/util512Base';
+/* auto */ import { assertTrue } from './../../ui512/utils/util512Assert';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
 /* auto */ import { FormattedText } from './../../ui512/drawtext/ui512FormattedText';
-/* auto */ import { ElementObserverVal, UI512PublicSettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+/* auto */ import { ElementObserverVal, UI512Gettable, UI512PublicSettable, UI512Settable } from './../../ui512/elements/ui512ElementGettable';
+import { cast } from '../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -66,7 +65,18 @@ export abstract class VpcElBase extends UI512Settable {
      * can link to all siblings for a bg vel!
      */
     setOnVel(s: string, newVal: ElementObserverVal, higher:VpcFindByIdInterface, context = ChangeContext.Default) {
-        higher.setOnVelLinked(this, s, newVal, this.setImplInternalExposedOnlyInVelBase.bind(this))
+        higher.setOnVelLinked(this, s, newVal, this.setImplInternalExposedOnlyInVelBase)
+    }
+
+    /**
+     * for bg elements, the one shown to user is NOT the same as our internal one
+     */
+    getUserFacingId() {
+        if (this.ui512GettableHas('is_bg_velement_id')) {
+            return coalesceIfFalseLike(this.getS('is_bg_velement_id'), this.id555)
+        } else {
+            return this.id555
+        }
     }
 
     /**
@@ -87,74 +97,74 @@ export abstract class VpcElBase extends UI512Settable {
     /**
      * high-level property get, from a vpc script
      */
-    getProp(propName: string, cardId: string): VpcVal {
+    getProp(propName: string): VpcVal {
         let found = this.getters[propName];
         if (found) {
             let type = found[0];
             let mappedProp = found[1];
             if (type === PrpTyp.Str) {
                 if (typeof mappedProp === 'function') {
-                    return VpcValS(mappedProp(this, cardId) as string);
+                    return VpcValS(mappedProp(this) as string);
                 } else {
                     assertTrue(typeof mappedProp === 'string', '4,|not a string');
                     return VpcValS(this.getS(mappedProp));
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
-                    return VpcValN(mappedProp(this, cardId) as number);
+                    return VpcValN(mappedProp(this) as number);
                 } else {
                     assertTrue(typeof mappedProp === 'string', '4+|not a string');
                     return VpcValN(this.getN(mappedProp));
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
-                    return VpcValBool(mappedProp(this, cardId) as boolean);
+                    return VpcValBool(mappedProp(this) as boolean);
                 } else {
                     assertTrue(typeof mappedProp === 'string', '4*|not a string');
                     return VpcValBool(this.getB(mappedProp));
                 }
             } else {
-                checkThrow(false, `4)|invalid PrpTyp ${type} for el id ${this.id}`);
+                checkThrow(false, `4)|invalid PrpTyp ${type} for el id ${this.id555}`);
             }
         } else {
-            checkThrow(false, `4(|unknown property ${propName} for el id ${this.id}`);
+            checkThrow(false, `4(|unknown property ${propName} for el id ${this.id555}`);
         }
     }
 
     /**
      * high-level property set, from a vpc script
      */
-    setProp(propName: string, val: VpcVal, cardId: string): void {
+    setProp(propName: string, val: VpcVal, higher:VpcFindByIdInterface): void {
         let found = this.setters[propName];
         if (found) {
             let type = found[0];
             let mappedProp = found[1];
             if (type === PrpTyp.Str) {
                 if (typeof mappedProp === 'function') {
-                    mappedProp(this, val.readAsString(), cardId);
+                    mappedProp(this, val.readAsString(), higher);
                 } else {
                     assertTrue(typeof mappedProp === 'string', '4&|prop name not a string');
-                    this.set(mappedProp, val.readAsString());
+                    this.setOnVel(mappedProp, val.readAsString(), higher);
                 }
             } else if (type === PrpTyp.Num) {
                 if (typeof mappedProp === 'function') {
-                    mappedProp(this, val.readAsStrictInteger(this.tmpArray), cardId);
+                    mappedProp(this, val.readAsStrictInteger(this.tmpArray), higher);
                 } else {
                     assertTrue(typeof mappedProp === 'string', '4%|prop name not a string');
-                    this.set(mappedProp, val.readAsStrictInteger(this.tmpArray));
+                    this.setOnVel(mappedProp, val.readAsStrictInteger(this.tmpArray), higher);
                 }
             } else if (type === PrpTyp.Bool) {
                 if (typeof mappedProp === 'function') {
-                    mappedProp(this, val.readAsStrictBoolean(this.tmpArray), cardId);
+                    mappedProp(this, val.readAsStrictBoolean(this.tmpArray), higher);
                 } else {
                     assertTrue(typeof mappedProp === 'string', '4$|prop name not a string');
-                    this.set(mappedProp, val.readAsStrictBoolean(this.tmpArray));
+                    this.setOnVel(mappedProp, val.readAsStrictBoolean(this.tmpArray), higher);
                 }
             } else {
-                checkThrow(false, `4#|invalid PrpTyp ${type} for el id ${this.id}`);
+                checkThrow(false, `4#|invalid PrpTyp ${type} for el id ${this.id555}`);
             }
         } else {
-            checkThrow(false, `4!|unknown property ${propName} for el id ${this.id}`);
+            checkThrow(false, `4!|unknown property ${propName} for el id ${this.id555}`);
         }
     }
 
@@ -171,30 +181,8 @@ export abstract class VpcElBase extends UI512Settable {
     destroy() {
         this.getters = SetToInvalidObjectAtEndOfExecution(this.getters);
         this.setters = SetToInvalidObjectAtEndOfExecution(this.setters);
-        this.set = SetToInvalidObjectAtEndOfExecution(this.set);
+        this.setOnVel = SetToInvalidObjectAtEndOfExecution(this.setOnVel);
         this.setCardFmTxt = SetToInvalidObjectAtEndOfExecution(this.setCardFmTxt);
-    }
-
-    /**
-     * look for the index (z-order) of a child element
-     * return undefined if not found
-     */
-    static findIndexById<T extends VpcElBase>(list: T[], id: string) {
-        for (let i = 0; i < list.length; i++) {
-            if (list[i].id === id) {
-                return i;
-            }
-        }
-
-        return undefined;
-    }
-
-    /**
-     * look for the index (z-order) of a child element
-     * throw if not found
-     */
-    static getIndexById<T extends VpcElBase>(list: T[], id: string) {
-        return ensureDefined(VpcElBase.findIndexById(list, id), '4 |id not found in this list', id);
     }
 
     /**
@@ -213,44 +201,21 @@ export abstract class VpcElBase extends UI512Settable {
         return undefined;
     }
 
-    setPossiblyCardSpecific(
-        key: string,
-        newv: ElementObserverVal,
-        defaultVal: ElementObserverVal,
-        cardId: string,
-        context = ChangeContext.Default
-    ) {
-        if (this.isCardSpecificContent(key)) {
-            checkThrow(slength(cardId) > 0, 'Tp|invalid card id');
-            let curVal = (this as any)['_' + key];
-            checkThrowEq(typeof curVal, typeof newv, 'To|');
-            let specificKey = key + '_oncard_' + cardId;
-            this.setImpl(specificKey, newv, defaultVal, context);
+    getCardFmTxt(): FormattedText {
+        if (this.getB('sharedtext')) {
+            return  cast(FormattedText, this.getGeneric('ftxt'))
         } else {
-            this.setImpl(key, newv, undefined, context);
+            return cast(FormattedText, this.getGeneric('ftxt_uniquetocard'))
         }
     }
 
-    getPossiblyCardSpecific(key: string, defaultVal: ElementObserverVal, cardId: string): ElementObserverVal {
-        if (this.isCardSpecificContent(key)) {
-            let specificKey = key + '_oncard_' + cardId;
-            let curVal = (this as any)['_' + specificKey];
-            return bool(curVal === null) || bool(curVal === undefined) ? defaultVal : curVal;
-        } else {
-            return (this as any)['_' + key];
-        }
-    }
-
-    getCardFmTxt(cardId: string): FormattedText {
-        let got = this.getPossiblyCardSpecific(UI512PublicSettable.fmtTxtVarName, new FormattedText(), cardId);
-        let gotAsTxt = got as FormattedText;
-        checkThrow(gotAsTxt instanceof FormattedText, 'Tn|not FormattedText');
-        return gotAsTxt;
-    }
-
-    setCardFmTxt(cardId: string, newTxt: FormattedText, context = ChangeContext.Default) {
+    setCardFmTxt(newTxt: FormattedText, h:VpcFindByIdInterface, context = ChangeContext.Default) {
         newTxt.lock();
-        this.setPossiblyCardSpecific(UI512PublicSettable.fmtTxtVarName, newTxt, new FormattedText(), cardId);
+        if (this.getB('sharedtext')) {
+            this.setOnVel('ftxt', newTxt, h)
+        } else {
+            this.setOnVel('ftxt_uniquetocard', newTxt, h)
+        }
     }
 }
 
@@ -270,13 +235,13 @@ export abstract class VpcElSizable extends VpcElBase {
     /**
      * a quick way to set dimensions of an object
      */
-    setDimensions(newX: number, newY: number, newW: number, newH: number, context = ChangeContext.Default) {
+    setDimensions(newX: number, newY: number, newW: number, newH: number, h:VpcFindByIdInterface, context = ChangeContext.Default) {
         checkThrow(newW >= 0, `7H|width must be >= 0 but got ${newW}`);
         checkThrow(newH >= 0, `7G|height must be >= 0 but got ${newH}`);
-        this.set('x', newX, context);
-        this.set('y', newY, context);
-        this.set('w', newW, context);
-        this.set('h', newH, context);
+        this.setOnVel('x', newX, h, context);
+        this.setOnVel('y', newY, h, context);
+        this.setOnVel('w', newW, h, context);
+        this.setOnVel('h', newH, h, context);
     }
 
     /**
@@ -304,49 +269,83 @@ export abstract class VpcElSizable extends VpcElBase {
      */
     static initSizeSetters(setters: { [key: string]: PropSetter<VpcElBase> }) {
         setters['script'] = [PrpTyp.Str, 'script'];
-        setters['width'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, n, me._h)];
-        setters['height'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, me._y, me._w, n)];
-        setters['left'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(n, me._y, me._w, me._h)];
-        setters['top'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n, me._w, me._h)];
-        setters['right'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(n - me._w, me._y, me._w, me._h)];
-        setters['bottom'] = [PrpTyp.Num, (me: VpcElSizable, n: number) => me.setDimensions(me._x, n - me._h, me._w, me._h)];
+        setters['width'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, me._y, n, me._h, h)];
+        setters['height'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, me._y, me._w, n, h)];
+        setters['left'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(n, me._y, me._w, me._h, h)];
+        setters['top'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, n, me._w, me._h, h)];
+        setters['right'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(n - me._w, me._y, me._w, me._h, h)];
+        setters['bottom'] = [PrpTyp.Num, (me: VpcElSizable, n: number,  h:VpcFindByIdInterface) => me.setDimensions(me._x, n - me._h, me._w, me._h, h)];
         setters['topleft'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) => {
+            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
-                me.setDimensions(coords[0], coords[1], me._w, me._h);
+                me.setDimensions(coords[0], coords[1], me._w, me._h, h);
             }
         ];
         setters['bottomright'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) => {
+            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
-                me.setDimensions(me._x, me._y, coords[0] - me._x, coords[1] - me._y);
+                me.setDimensions(me._x, me._y, coords[0] - me._x, coords[1] - me._y, h);
             }
         ];
         setters['rectangle'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) => {
+            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
                 let coords = VpcValS(s).readAsIntegerList(4);
-                me.setDimensions(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1]);
+                me.setDimensions(coords[0], coords[1], coords[2] - coords[0], coords[3] - coords[1], h);
             }
         ];
         setters['location'] = [
             PrpTyp.Str,
-            (me: VpcElSizable, s: string) => {
+            (me: VpcElSizable, s: string, h:VpcFindByIdInterface) => {
                 let coords = VpcValS(s).readAsIntegerList(2);
                 let wasLocX = me._x + Math.trunc(me._w / 2);
                 let wasLocY = me._y + Math.trunc(me._h / 2);
                 let moveX = coords[0] - wasLocX;
                 let moveY = coords[1] - wasLocY;
-                me.setDimensions(me._x + moveX, me._y + moveY, me._w, me._h);
+                me.setDimensions(me._x + moveX, me._y + moveY, me._w, me._h, h);
             }
         ];
     }
 }
 
+/**
+ * will currently be a ModelTop
+ */
 export interface VpcFindByIdInterface {
     findByIdUntyped(id: O<string>):O<VpcElBase>
     getByIdUntyped(id: string):VpcElBase
     setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void
 }
+
+
+/**
+ * type of property.
+ * string, numeric (integer), or boolean
+ */
+export enum PrpTyp {
+    __isUI512Enum = 1,
+    Str,
+    Num,
+    Bool
+}
+
+/**
+ * a vel prop-getter can be either a
+ * string (1-1 map from vel property to ui512el property)
+ * or a
+ * function (dynamic code to retrieve the property)
+ */
+export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T) => string | number | boolean)];
+
+/**
+ * a vel prop-setter can be either a
+ * string (1-1 map from vel property to ui512el property)
+ * or a
+ * function (dynamic code to set the property)
+ */
+export type PropSetter<T extends UI512Settable> = [
+    PrpTyp,
+    string | ((me: T, v: string | number | boolean, higher: VpcFindByIdInterface) => void)
+];

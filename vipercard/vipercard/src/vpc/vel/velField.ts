@@ -1,9 +1,8 @@
 
 /* auto */ import { VpcValN, VpcValS } from './../vpcutils/vpcVal';
 /* auto */ import { SubstringStyleComplex } from './../vpcutils/vpcStyleComplex';
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType, checkThrow } from './../vpcutils/vpcEnums';
-/* auto */ import { VpcElBase, VpcElSizable } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase, VpcElSizable, VpcFindByIdInterface } from './velBase';
 /* auto */ import { O, bool } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 /* auto */ import { ChangeContext } from './../../ui512/draw/ui512Interfaces';
@@ -33,24 +32,9 @@ export class VpcElField extends VpcElSizable {
     protected _textalign = 'left';
     protected _name = '';
     protected _scroll = 0;
+    protected _scroll_uniquetocard = 0;
     protected _ftxt = new FormattedText();
-
-
-    /* always true if belongs to a card */
-    protected _sharedtext = true;
-    /* specific-card content will be in the form: */
-    /* _scroll_oncard_12345 */
-    /* _ftxt_oncard_12345 */
-    constructor(id: string, parentId: string) {
-        super(id, parentId);
-        this.getCardFmTxt('').lock();
-    }
-
-    /* cached getters */
-    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
-
-    /* cached setters */
-    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+    protected _ftxt_uniquetocard = new FormattedText();
 
     /* confirmed that there is a separate 'defaultfont' property
     try this in an emulator:
@@ -61,10 +45,28 @@ export class VpcElField extends VpcElSizable {
     protected _defaulttextsize = 12;
     protected _defaulttextstyle = 0;
 
-    /* e.g. a background field has different content on every card */
-    isCardSpecificContent(key: string): boolean {
-        return !this.getB('sharedtext') && (bool(key === 'scroll') || bool(key === 'ftxt'));
+
+    /* always true if belongs to a card */
+    protected _sharedtext = true;
+    
+    constructor(id: string, parentId: string) {
+        super(id, parentId);
+        this._ftxt.lock();
+        this._ftxt_uniquetocard.lock();
     }
+
+    /* cached getters */
+    static cachedGetters: { [key: string]: PropGetter<VpcElBase> };
+
+    /* cached setters */
+    static cachedSetters: { [key: string]: PropSetter<VpcElBase> };
+
+    
+
+    //~ /* e.g. a background field has different content on every card */
+    //~ isCardSpecificContent(key: string): boolean {
+        //~ return !this.getB('sharedtext') && (bool(key === 'scroll') || bool(key === 'ftxt'));
+    //~ }
 
     /**
      * type of element
@@ -101,11 +103,11 @@ export class VpcElField extends VpcElSizable {
     /**
      * for convenience, set entire font
      */
-    protected setEntireFontFromDefaultFont(cardId: string) {
+    protected setEntireFontFromDefaultFont(h:VpcFindByIdInterface) {
         let font = this.getDefaultFontAsUi512();
-        let newTxt = this.getCardFmTxt(cardId).getUnlockedCopy();
+        let newTxt = this.getCardFmTxt().getUnlockedCopy();
         newTxt.setFontEverywhere(font);
-        this.setCardFmTxt(cardId, newTxt);
+        this.setCardFmTxt(newTxt, h);
     }
 
     /**
@@ -114,7 +116,7 @@ export class VpcElField extends VpcElSizable {
     static fldGetters(getters: { [key: string]: PropGetter<VpcElBase> }) {
         getters['singleline'] = [PrpTyp.Bool, 'singleline'];
         getters['textalign'] = [PrpTyp.Str, 'textalign'];
-        getters['alltext'] = [PrpTyp.Str, (me: VpcElField, cardId: string) => me.getCardFmTxt(cardId).toUnformatted()];
+        getters['alltext'] = [PrpTyp.Str, (me: VpcElField) => me.getCardFmTxt().toUnformatted()];
         getters['defaulttextstyle'] = [
             PrpTyp.Str,
             (me: VpcElField) => SubstringStyleComplex.vpcStyleFromInt(me._defaulttextstyle)
@@ -136,8 +138,8 @@ export class VpcElField extends VpcElSizable {
 
         getters['scroll'] = [
             PrpTyp.Num,
-            (me: VpcElField, cardId: string) => {
-                return me.getPossiblyCardSpecific('scroll', 0, cardId) as number;
+            (me: VpcElField) => {
+                return (me.getB('sharedtext')) ? me.getN('scroll') : me.getN('scroll_uniquetocard')
             }
         ];
     }
@@ -149,36 +151,36 @@ export class VpcElField extends VpcElSizable {
         setters['name'] = [PrpTyp.Str, 'name'];
         setters['style'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, cardId: string) => {
+            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
                 let styl = getStrToEnum<VpcFldStyleInclScroll>(VpcFldStyleInclScroll, 'Field style or "scrolling"', s);
-                me.set('style', styl);
+                me.setOnVel('style', styl, h);
 
                 /* changing style resets scroll amount */
-                me.setProp('scroll', VpcValN(0), cardId);
+                me.setProp('scroll', VpcValN(0), h);
             }
         ];
 
         setters['textstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, cardId: string) => {
-                me.setProp('defaulttextstyle', VpcValS(s), cardId);
-                me.setEntireFontFromDefaultFont(cardId);
+            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+                me.setProp('defaulttextstyle', VpcValS(s), h);
+                me.setEntireFontFromDefaultFont(h);
             }
         ];
 
         setters['textfont'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, cardId: string) => {
-                me.set('defaulttextfont', s);
-                me.setEntireFontFromDefaultFont(cardId);
+            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
+                me.setOnVel('defaulttextfont', s,h);
+                me.setEntireFontFromDefaultFont(h);
             }
         ];
 
         setters['textsize'] = [
             PrpTyp.Num,
-            (me: VpcElField, n: number, cardId: string) => {
-                me.set('defaulttextsize', n);
-                me.setEntireFontFromDefaultFont(cardId);
+            (me: VpcElField, n: number, h:VpcFindByIdInterface) => {
+                me.setOnVel('defaulttextsize', n, h);
+                me.setEntireFontFromDefaultFont(h);
             }
         ];
 
@@ -186,29 +188,29 @@ export class VpcElField extends VpcElSizable {
         or when saying put "abc" into cd fld 1 with no chunk qualifications */
         setters['alltext'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string, cardId: string) => {
+            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
                 let newTxt = FormattedText.newFromUnformatted(s);
                 newTxt.setFontEverywhere(me.getDefaultFontAsUi512());
-                me.setCardFmTxt(cardId, newTxt);
+                me.setCardFmTxt(newTxt, h);
             }
         ];
 
         setters['defaulttextstyle'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string) => {
+            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
                 let list = s.split(',').map(item => item.trim());
-                me.set('defaulttextstyle', SubstringStyleComplex.vpcStyleToInt(list));
+                me.setOnVel('defaulttextstyle', SubstringStyleComplex.vpcStyleToInt(list), h);
             }
         ];
 
         setters['textalign'] = [
             PrpTyp.Str,
-            (me: VpcElField, s: string) => {
+            (me: VpcElField, s: string, h:VpcFindByIdInterface) => {
                 s = s.toLowerCase().trim();
                 if (s === 'left') {
-                    me.set('textalign', 'left');
+                    me.setOnVel('textalign', 'left', h);
                 } else if (s === 'center') {
-                    me.set('textalign', 'center');
+                    me.setOnVel('textalign', 'center', h);
                 } else {
                     checkThrow(false, `4y|we don't currently support setting text align to ${s}`);
                 }
@@ -217,14 +219,14 @@ export class VpcElField extends VpcElSizable {
 
         setters['singleline'] = [
             PrpTyp.Bool,
-            (me: VpcElField, b: boolean, cardId: string) => {
-                me.set('singleline', b);
+            (me: VpcElField, b: boolean, h:VpcFindByIdInterface) => {
+                me.setOnVel('singleline', b, h);
                 if (b) {
-                    let hasNewLine = me.getCardFmTxt(cardId).indexOf(specialCharNumNewline);
+                    let hasNewLine = me.getCardFmTxt().indexOf(specialCharNumNewline);
                     if (hasNewLine !== -1) {
                         let newTxt = new FormattedText();
-                        newTxt.appendSubstring(me.getCardFmTxt(cardId), 0, hasNewLine);
-                        me.setCardFmTxt(cardId, newTxt);
+                        newTxt.appendSubstring(me.getCardFmTxt(), 0, hasNewLine);
+                        me.setCardFmTxt(newTxt, h);
                     }
                 }
             }
@@ -232,8 +234,8 @@ export class VpcElField extends VpcElSizable {
 
         setters['scroll'] = [
             PrpTyp.Num,
-            (me: VpcElField, n: number, cardId: string) => {
-                me.setPossiblyCardSpecific('scroll', n, 0, cardId);
+            (me: VpcElField, n: number, h:VpcFindByIdInterface) => {
+                 me.setOnVel(me.getB('sharedtext') ?'scroll' : 'scroll_uniquetocard', n, h)
             }
         ];
     }
@@ -280,14 +282,14 @@ export class VpcElField extends VpcElSizable {
  * we need to update the _VpcElField_ model first
  */
 export class VpcTextFieldAsGeneric implements GenericTextField {
-    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected cardId: string) {}
+    constructor(protected el512: UI512ElTextField, protected impl: VpcElField, protected h:VpcFindByIdInterface) {}
 
     setFmtTxt(newTxt: FormattedText, context: ChangeContext) {
-        this.impl.setCardFmTxt(this.cardId, newTxt, context);
+        this.impl.setCardFmTxt(newTxt, this.h, context);
     }
 
     getFmtTxt(): FormattedText {
-        return this.impl.getCardFmTxt(this.cardId);
+        return this.impl.getCardFmTxt();
     }
 
     canEdit() {
@@ -303,17 +305,17 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     }
 
     setSel(a: number, b: number): void {
-        this.impl.set('selcaret', a);
-        this.impl.set('selend', b);
+        this.impl.setOnVel('selcaret', a, this.h);
+        this.impl.setOnVel('selend', b, this.h);
     }
 
     getSel(): [number, number] {
         return [this.impl.getN('selcaret'), this.impl.getN('selend')];
     }
 
-    getID(): string {
-        return this.impl.id;
-    }
+    //~ getID(): string {
+        //~ return this.impl.id;
+    //~ }
 
     getHeight(): number {
         return this.impl.getN('h');
@@ -328,13 +330,12 @@ export class VpcTextFieldAsGeneric implements GenericTextField {
     }
 
     getScrollAmt(): number {
-        let got = this.impl.getPossiblyCardSpecific('scroll', 0, this.cardId);
-        return got as number;
+        return this.impl.getProp('scroll').readAsStrictNumeric()
     }
 
     setScrollAmt(n: O<number>): void {
         if (n !== undefined && n !== null) {
-            return this.impl.setPossiblyCardSpecific('scroll', n, 0, this.cardId);
+            this.impl.setProp('scroll', VpcValN(n), this.h)
         }
     }
 }

@@ -149,7 +149,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
         } else if (propName === 'script') {
             this.needUIToolsRedraw = true;
         } else if (type === VpcElType.Fld || type === VpcElType.Btn) {
-            if (vel.parentId === currentCardId) {
+            if (vel.parentId555 === currentCardId) {
                 this.applyOneChange(vel, propName, newVal, fromScratch);
             }
         } else if (type === VpcElType.Card && vel.id === currentCardId) {
@@ -238,7 +238,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     findElIdToVel(id: string): O<VpcElBase> {
         let card = this.vci.getModel().getCurrentCard();
         let vel = this.vci.getModel().findByIdUntyped(this.elIdToVelId(id));
-        if (vel && vel.parentId === card.id) {
+        if (vel && vel.parentId555 === card.id) {
             return vel;
         } else {
             return undefined;
@@ -368,19 +368,13 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
             /* field not enabled/visible */
             this.vci.setCurrentFocus(undefined);
         } else {
-            let parent = this.vci.getModel().getCardById(focusedVel.parentId);
+            let parent = this.vci.getModel().getCardById(focusedVel.parentId555);
             let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
             if (parent.getType() === VpcElType.Card && parent.id !== currentCardId) {
                 /* field not on the current card */
                 this.vci.setCurrentFocus(undefined);
-            } else if (parent.getType() === VpcElType.Bg) {
-                let currentCard = this.vci.getModel().getCardById(currentCardId);
-                if (parent.id !== currentCard.parentId) {
-                    /* field not on the current bg */
-                    this.vci.setCurrentFocus(undefined);
-                }
             }
-        }
+          }
     }
 
     /**

@@ -1,9 +1,8 @@
 
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElField } from './velField';
 /* auto */ import { VpcElButton } from './velButton';
-/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from './velBase';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */

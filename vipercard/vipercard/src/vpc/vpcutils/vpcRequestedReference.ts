@@ -4,7 +4,6 @@
 /* auto */ import { RequestedChunk } from './vpcChunkResolution';
 /* auto */ import { O, checkIsProductionBuild } from './../../ui512/utils/util512Base';
 /* auto */ import { assertWarn } from './../../ui512/utils/util512Assert';
-/* auto */ import { UI512Gettable, UI512PublicSettable } from './../../ui512/elements/ui512ElementGettable';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -74,33 +73,3 @@ export class RequestedContainerRef extends VpcIntermedValBase {
     variable: O<string>;
     chunk: O<RequestedChunk>;
 }
-
-/**
- * type of property.
- * string, numeric (integer), or boolean
- */
-export enum PrpTyp {
-    __isUI512Enum = 1,
-    Str,
-    Num,
-    Bool
-}
-
-/**
- * a vel prop-getter can be either a
- * string (1-1 map from vel property to ui512el property)
- * or a
- * function (dynamic code to retrieve the property)
- */
-export type PropGetter<T extends UI512Gettable> = [PrpTyp, string | ((me: T, cardId: string) => string | number | boolean)];
-
-/**
- * a vel prop-setter can be either a
- * string (1-1 map from vel property to ui512el property)
- * or a
- * function (dynamic code to set the property)
- */
-export type PropSetter<T extends UI512PublicSettable> = [
-    PrpTyp,
-    string | ((me: T, v: string | number | boolean, cardId: string) => void)
-];

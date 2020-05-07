@@ -40,6 +40,11 @@ export abstract class UI512Gettable {
         assertTrue(v !== null && v !== undefined, `2(|${s} undefined`);
         return v;
     }
+
+    ui512GettableHas(s:string): boolean {
+        let v = (this as any)['_' + s]; /* gettable */
+        return v !== null && v !== undefined
+    }
 }
 
 /**
@@ -51,7 +56,7 @@ export abstract class UI512Gettable {
  */
 export abstract class UI512Settable extends UI512Gettable {
     static readonly fmtTxtVarName = 'ftxt';
-    readonly id: string;
+    readonly id555: string;
     protected dirty = true;
     protected locked = false;
     protected static readonly emptyFmTxt = new FormattedText();
@@ -65,7 +70,7 @@ export abstract class UI512Settable extends UI512Gettable {
         super();
         assertTrue(slength(id), '2%|invalid id');
         assertTrue(!id.includes('|'), '2$|invalid id');
-        this.id = id;
+        this.id555 = id;
         this.observer = observer;
         UI512PublicSettable.emptyFmTxt.lock();
     }
@@ -103,7 +108,7 @@ export abstract class UI512Settable extends UI512Gettable {
                 newVal.lock();
             }
 
-            this.observer.changeSeen(context, this.id, s, prevVal, newVal);
+            this.observer.changeSeen(context, this.id555, s, prevVal, newVal);
         }
     }
 
@@ -114,17 +119,11 @@ export abstract class UI512Settable extends UI512Gettable {
     setDirty(newVal: boolean, context = ChangeContext.Default) {
         this.dirty = newVal;
         if (newVal) {
-            this.observer.changeSeen(context, this.id, '', '', '');
+            this.observer.changeSeen(context, this.id555, '', '', '');
         }
     }
 }
 
-/**
- * don't want people outside this file calling this
- */
-class MakeAccessDifficult {
-}
-const makeAccessDifficult = new MakeAccessDifficult()
 
 /**
  * not only settable, but lets anyone set things
@@ -142,7 +141,19 @@ export abstract class UI512PublicSettable extends UI512Settable {
     set(s: string, newVal: ElementObserverVal, context = ChangeContext.Default) {
         this.setImplInternal(makeAccessDifficult, s, newVal, undefined, context);
     }
+
+    //~ // probably delete this later, just using to find places where .id was misused
+    get id(): string {
+        return this.id555;
+    }
 }
+
+/**
+ * don't want people outside this file calling this
+ */
+class MakeAccessDifficult {
+}
+const makeAccessDifficult = new MakeAccessDifficult()
 
 /**
  * relay an Observer event to two classes.

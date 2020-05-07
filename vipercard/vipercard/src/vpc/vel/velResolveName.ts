@@ -8,7 +8,7 @@
 /* auto */ import { VpcElCard } from './velCard';
 /* auto */ import { VpcElButton } from './velButton';
 /* auto */ import { VpcElBg } from './velBg';
-/* auto */ import { VpcElBase, VpcElSizable } from './velBase';
+/* auto */ import { VpcElBase } from './velBase';
 /* auto */ import { cProductName } from './../../ui512/utils/util512Base';
 /* auto */ import { Util512, arLast, castVerifyIsStr, getEnumToStrOrFallback, getStrToEnum } from './../../ui512/utils/util512';
 
@@ -36,7 +36,7 @@ export class VelResolveName {
      */
     protected goResolveNameBtn(vel: VpcElButton, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElButton, 'J[|');
-        return this.belongsToBg(vel) ? this.goResolveBgBtnOrFld(vel, adjective) : this.goResolveCdBtnOrFld(vel, adjective);
+        return this.goResolveBtnOrFld(vel, adjective);
     }
 
     /**
@@ -44,32 +44,34 @@ export class VelResolveName {
      */
     protected goResolveNameFld(vel: VpcElField, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElField, 'J@|');
-        return this.belongsToBg(vel) ? this.goResolveBgBtnOrFld(vel, adjective) : this.goResolveCdBtnOrFld(vel, adjective);
+        return this.goResolveBtnOrFld(vel, adjective);
     }
 
     /**
-     * get the name of a card button or field
+     * get the name of a button or field
      */
-    protected goResolveCdBtnOrFld(vel: VpcElButton | VpcElField, adjective: PropAdjective) {
+    protected goResolveBtnOrFld(vel: VpcElButton | VpcElField, adjective: PropAdjective) {
         let typ = vel.getType() === VpcElType.Btn ? 'button' : 'field';
         let name = vel.getS('name');
+        let cdOrBg = vel.getS('is_bg_velement_id').length ? 'bkgnd' : 'card'
         if (name.length) {
             /* name exists, show the name */
             if (adjective === PropAdjective.Long) {
-                let parent = this.model.getCardById(vel.parentId);
-                return `card ${typ} "${name}" of ${this.goResolveNameCard(parent, adjective)}`;
+                let parent = this.model.getCardById(vel.parentId555);
+                return `${cdOrBg} ${typ} "${name}" of ${this.goResolveNameCard(parent, adjective)}`;
             } else if (adjective === PropAdjective.Short) {
                 return `${name}`;
             } else {
-                return `card ${typ} "${name}"`;
+                return `${cdOrBg} ${typ} "${name}"`;
             }
         } else {
             /* no name, fall back to showing the id */
+            let userFacingId = vel.getUserFacingId()
             if (adjective === PropAdjective.Long) {
-                let parent = this.model.getCardById(vel.parentId);
-                return `card ${typ} id ${vel.id} of ${this.goResolveNameCard(parent, adjective)}`;
+                let parent = this.model.getCardById(vel.parentId555);
+                return `${cdOrBg} ${typ} id ${userFacingId} of ${this.goResolveNameCard(parent, adjective)}`;
             } else {
-                return `card ${typ} id ${vel.id}`;
+                return `${cdOrBg} ${typ} id ${userFacingId}`;
             }
         }
     }
@@ -99,9 +101,9 @@ export class VelResolveName {
         } else {
             /* no name, fall back to showing the id */
             if (adjective === PropAdjective.Long) {
-                return `card id ${vel.id} of this stack`;
+                return `card id ${vel.id555} of this stack`;
             } else {
-                return `card id ${vel.id}`;
+                return `card id ${vel.id555}`;
             }
         }
     }
@@ -124,9 +126,9 @@ export class VelResolveName {
         } else {
             /* no name, fall back to showing the id */
             if (adjective === PropAdjective.Long) {
-                return `bkgnd id ${vel.id} of this stack`;
+                return `bkgnd id ${vel.id555} of this stack`;
             } else {
-                return `bkgnd id ${vel.id}`;
+                return `bkgnd id ${vel.id555}`;
             }
         }
     }
@@ -154,14 +156,6 @@ export class VelResolveName {
     protected goResolveNameProduct(vel: VpcElProductOpts, adjective: PropAdjective) {
         checkThrow(vel instanceof VpcElProductOpts, 'J;|');
         return cProductName;
-    }
-
-    /**
-     * does the object belong to a background
-     */
-    belongsToBg(part: VpcElSizable): boolean {
-        let parent = this.model.getByIdUntyped(part.parentId);
-        return parent.getType() === VpcElType.Bg;
     }
 }
 
@@ -198,11 +192,11 @@ export class VelResolveId {
      */
     protected goCard(vel: VpcElCard, adjective: PropAdjective) {
         if (adjective === PropAdjective.Short) {
-            return vel.id;
+            return vel.id555;
         } else if (adjective === PropAdjective.Long) {
-            return `card id ${vel.id} of this stack`;
+            return `card id ${vel.id555} of this stack`;
         } else {
-            return `card id ${vel.id}`;
+            return `card id ${vel.id555}`;
         }
     }
 

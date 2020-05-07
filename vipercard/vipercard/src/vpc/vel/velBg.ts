@@ -1,8 +1,7 @@
 
-/* auto */ import { PropGetter, PropSetter, PrpTyp } from './../vpcutils/vpcRequestedReference';
 /* auto */ import { VpcElType } from './../vpcutils/vpcEnums';
 /* auto */ import { VpcElCard } from './velCard';
-/* auto */ import { VpcElBase } from './velBase';
+/* auto */ import { PropGetter, PropSetter, PrpTyp, VpcElBase } from './velBase';
 /* auto */ import { Util512 } from './../../ui512/utils/util512';
 
 /* (c) 2019 moltenform(Ben Fisher) */
@@ -28,6 +27,11 @@ export class VpcElBg extends VpcElBase {
 
     /* child cards */
     cards: VpcElCard[] = [];
+
+    /* get template card, for bg vel replication */
+    getTemplateCard() {
+        return this.cards[0]
+    }
 
     /**
      * type of element

@@ -10,7 +10,6 @@
 /* auto */ import { VpcAboutDialog } from './vpcAboutDialog';
 /* auto */ import { VpcChangeSelectedFont } from './../../vpc/vel/velFieldChangeFont';
 /* auto */ import { VpcElBg } from './../../vpc/vel/velBg';
-/* auto */ import { VpcElBase } from './../../vpc/vel/velBase';
 /* auto */ import { BrowserInfo, BrowserOSInfo, getRoot } from './../../ui512/utils/util512Higher';
 /* auto */ import { Util512, longstr } from './../../ui512/utils/util512';
 /* auto */ import { UI512CompModalDialog } from './../../ui512/composites/ui512ModalDialog';
@@ -206,10 +205,10 @@ export class VpcMenuActions {
     goMnuNewCard() {
         let currentCardId = this.vci.getModel().productOpts.getS('currentCardId');
         let currentCard = this.vci.getModel().getCardById(currentCardId);
-        let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentId);
-        let currentIndex = VpcElBase.findIndexById(currentBg.cards, currentCardId);
-        let created = this.vci.getOutside().CreateCard(currentIndex === undefined ? 0 : currentIndex + 1);
-        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id);
+        let currentBg = this.vci.getModel().getById(VpcElBg, currentCard.parentId555);
+        let currentIndex = currentBg.cards.findIndex(cd => cd.id === currentCardId);
+        let created = this.vci.getOutside().CreateCard(currentIndex === -1 ? 0 : currentIndex + 1);
+        this.vci.beginSetCurCardWithOpenCardEvt(OrdinalOrPosition.This, created.id555);
     }
 
     /**
