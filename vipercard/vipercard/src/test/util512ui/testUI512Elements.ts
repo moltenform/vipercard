@@ -210,7 +210,7 @@ t.test('UI512ElTextFieldAsGeneric', () => {
     assertEq(true, gel.canEdit(), 'AB|');
     assertEq(true, gel.canSelectText(), 'AA|');
     assertEq(true, gel.isMultiline(), 'A9|');
-    assertEq('fld1', gel['impl'].id, 'A8|');
+    assertEq('fld1', gel['el'].id, 'A8|');
     assertEq(123, gel.getHeight(), 'A7|');
     assertEq('chicago_12_biuosdce', gel.getDefaultFont(), 'A6|');
     assertEq(el.id, gel.getReadOnlyUI512().id, 'A5|');
@@ -226,7 +226,7 @@ t.test('UI512ElTextFieldAsGeneric', () => {
 t.test('VpcTextFieldAsGeneric', () => {
     let el = new UI512ElTextField('fld1');
     el.observer = new ElementObserverNoOp();
-    let higher = new MockHigher()
+    let higher = new HigherNoReplication_TestOnly()
 
     let vel = new VpcElField('12', '34');
     vel.observer = new ElementObserverNoOp();
@@ -428,8 +428,8 @@ function listElems(grp: UI512ElGroup) {
 /**
  * test-only implementation, doesn't support any replication to other elements
  */
-export class MockHigher implements VpcHandleLinkedVels {
+export class HigherNoReplication_TestOnly implements VpcHandleLinkedVels {
     setOnVelLinked(me:VpcElBase, s: string, newVal: ElementObserverVal, cb:(s:string, newVal:ElementObserverVal, ctx:ChangeContext)=>void):void {
-        cb(s, newVal, ChangeContext.Default)
+        cb.apply(me, [s, newVal, ChangeContext.Default])
     }
 }

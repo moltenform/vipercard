@@ -106,9 +106,9 @@ export class VelResolveReference {
             /* remember that for bg parts, userfacing id IS NOT THE SAME AS internal velid */
             let lookById = ref.lookById.toString()
             return arr.find(vel=>vel.getS('is_bg_velement_id') === lookById)
-        } else if (ref.lookByAbsolute) {
+        } else if (ref.lookByAbsolute !== undefined) {
             return arr[ref.lookByAbsolute - 1]
-        } else if (ref.lookByName) {
+        } else if (ref.lookByName !== undefined) {
             return arr.find(vel=>vel.getS('name').toLowerCase() === ref.lookByName?.toLowerCase())
         } else if (ref.lookByRelative) {
             let index = findPositionFromOrdinalOrPosition(ref.lookByRelative, 0, 0, arr.length - 1)
@@ -276,10 +276,10 @@ export class VelResolveReference {
         parentCd: O<VpcElCard>,
         parentBg: O<VpcElBg>,
     ): O<VpcElBase> {
-        if (ref.lookByName) {
+        if (ref.lookByName !== undefined) {
             /* `the short id of stack "myStack"` */
             return ref.lookByName === this.model.stack.getS('name') ? this.model.stack : undefined
-        } else if (ref.lookByAbsolute) {
+        } else if (ref.lookByAbsolute !== undefined) {
             /* `the short id of stack 1` */
             return ref.lookByAbsolute === 1 ? this.model.stack : undefined
         } else if (ref.lookByRelative) {
@@ -310,11 +310,11 @@ export class VelResolveReference {
         parentBg: O<VpcElBg>,
     ): O<VpcElBase> {
         let arr = this.model.stack.bgs
-        if (ref.lookByName) {
+        if (ref.lookByName !== undefined) {
             /* `the short id of bg "theName"` */
             return arr.find(vel =>
                 vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase())
-        } else if (ref.lookByAbsolute) {
+        } else if (ref.lookByAbsolute !== undefined) {
             /* `the short id of bg 2` */
             return arr[ref.lookByAbsolute - 1];
         } else if (ref.lookByRelative) {
@@ -342,14 +342,14 @@ export class VelResolveReference {
         }
 
         let currCdId = this.model.getCurrentCard().idInternal
-        if (ref.lookByName) {
+        if (ref.lookByName !== undefined) {
             if (ref.cardLookAtMarkedOnly) {
                 arr = arr.filter(cd => cd.getB('marked'))
             }
             /* `the short id of cd "theName"` */
             return arr.find(vel =>
                 vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase())
-        } else if (ref.lookByAbsolute) {
+        } else if (ref.lookByAbsolute !== undefined) {
             if (ref.cardLookAtMarkedOnly) {
                 arr = arr.filter(cd => cd.getB('marked'))
             }
@@ -393,11 +393,11 @@ export class VelResolveReference {
         checkThrow(!ref.partIsBg, "should be covered elsewhere")
         checkThrow(!parentBg, "does not make sense to have a parent bg")
         parentCd = parentCd ?? this.model.getCurrentCard()
-        if (ref.lookByName) {
+        if (ref.lookByName !== undefined) {
             /* `the short id of cd btn "theName"` */
             return parentCd.parts.find(vel => vel.getType() === ref.type &&
                 vel.getS('name').toLowerCase() === ref?.lookByName?.toLowerCase() && !vel.getS('is_bg_velement_id').length)
-        } else if (ref.lookByAbsolute) {
+        } else if (ref.lookByAbsolute !== undefined) {
             /* `the short id of cd btn 2` */
             let arr = parentCd.parts.filter(vel => vel.getType() === ref.type&& !vel.getS('is_bg_velement_id').length);
             return arr[ref.lookByAbsolute - 1];
@@ -425,7 +425,7 @@ export class VelResolveReference {
             return 1
         } else if (type === VpcElType.Bg) {
             /* ensure parent exists and is a stack */
-            cast(VpcElStack, parent)
+            checkThrow(parent && parent instanceof VpcElStack, "could not find this object parent")
             return this.model.stack.bgs.length
         } else if (type === VpcElType.Card) {
             if (parent instanceof VpcElStack) {
@@ -445,7 +445,7 @@ export class VelResolveReference {
                     return arr.length
                 }
             } else {
-                checkThrow(false, "unknown parent type")
+                checkThrow(false, "could not find this object parent or unknown type")
             }
         } else if (type === VpcElType.Btn || type === VpcElType.Fld) {
             if (parent instanceof VpcElBg) {
@@ -455,7 +455,7 @@ export class VelResolveReference {
                 let arr = parent.parts.filter(vel=>vel.getType() === type && !vel.getS('is_bg_velement_id').length)
                 return arr.length
             } else {
-                checkThrow(false, "unexpected parent type")
+                checkThrow(false, "could not find this object parent or unknown type")
             }
         } else {
             checkThrow(false, "unknown type")

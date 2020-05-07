@@ -55,15 +55,6 @@ export const VpcRewritesGlobal = /* static class */ {
     rewriteSpecifyCdOrBgPart(line: ChvITk[], rw: VpcSuperRewrite): ChvITk[] {
         let ret: ChvITk[] = [];
         for (let i = 0; i < line.length - 1; i++) {
-            if (line[i+1].tokenType === tks.tkBtn || line[i+1].tokenType === tks.tkFld) {
-                if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
-                    /* insert a missing 'bg' or 'cd' */
-                    let s = line[i+1].tokenType === tks.tkFld ? 'bg' : 'cd';
-                    let newTk = rw.tokenFromEnglishTerm(s, line[i])
-                    ret.push(newTk)
-                }
-            }
-
             /* omit "the" if it is in "hilite of the target" */
             /* see "Pseudo-functions that refer to objects" in internaldocs.md */
             if (!(i >= 2 && (line[i-2].tokenType === tks.tkAllUnaryPropertiesIfNotAlready || 
@@ -74,6 +65,15 @@ export const VpcRewritesGlobal = /* static class */ {
                 line[i+1].tokenType === tks._target
                 )) {
                     ret.push(line[i])
+                }
+
+                if (line[i+1].tokenType === tks.tkBtn || line[i+1].tokenType === tks.tkFld) {
+                    if (line[i].tokenType !== tks.tkCard && line[i].tokenType !== tks.tkBg) {
+                        /* insert a missing 'bg' or 'cd' */
+                        let s = line[i+1].tokenType === tks.tkFld ? 'bg' : 'cd';
+                        let newTk = rw.tokenFromEnglishTerm(s, line[i])
+                        ret.push(newTk)
+                    }
                 }
         }
 

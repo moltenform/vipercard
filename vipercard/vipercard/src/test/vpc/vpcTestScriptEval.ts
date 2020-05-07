@@ -9,7 +9,7 @@
 /* auto */ import { TextFontSpec, TextFontStyling, specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { UI512DrawText } from './../../ui512/drawtext/ui512DrawText';
 /* auto */ import { SimpleUtil512TestCollection, YetToBeDefinedTestHelper } from './../testUtils/testUtils';
-/* auto */ import { MockHigher } from './../util512ui/testUI512Elements';
+/* auto */ import { HigherNoReplication_TestOnly } from './../util512ui/testUI512Elements';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -42,7 +42,7 @@ let t = new SimpleUtil512TestCollection('testCollectionvpcScriptEval');
 export let testCollectionvpcScriptEval = t;
 
 let h = YetToBeDefinedTestHelper<TestVpcScriptRunBase>();
-let higher = new MockHigher()
+let higher = new HigherNoReplication_TestOnly()
 
 t.atest('--init--vpcTestScriptExprLvl', async () => {
     h = new TestVpcScriptRunBase(t);
@@ -177,9 +177,10 @@ t.test('getProp', () => {
         `the short id of cd fld id ${h.ids.fBC1} of this cd`,
         `${h.ids.fBC1}`
     );
+    /* can't find even though it exists, wrong card parent */
     b.t(
         `the short id of cd fld id ${h.ids.fCD1} of this cd`,
-        `${h.ids.fCD1}`
+        `ERR:could not find`
     );
     b.t(`the short id of cd fld "p1" of cd 1`, `ERR:could not find`);
     b.t(`the short id of cd fld "p1" of this cd`, `${h.ids.fBC1}`);
@@ -208,9 +209,10 @@ t.test('getProp', () => {
         `the short id of cd btn id ${h.ids.bBC1} of this cd`,
         `${h.ids.bBC1}`
     );
+    /* can't find even though it exists, wrong card parent */
     b.t(
         `the short id of cd btn id ${h.ids.bCD1} of this cd`,
-        `${h.ids.bCD1}`
+        `ERR:could not find`
     );
     b.t(`the short id of cd btn "p1" of cd 1`, `ERR:could not find`);
     b.t(`the short id of cd btn "p1" of this cd`, `${h.ids.bBC1}`);
@@ -1043,11 +1045,11 @@ t.test('vpcProperties', () => {
     b.t('set the name of this card to "c"\\0', '0');
     b.t(`set the name of cd btn id ${h.ids.bBC1} to "p1"\\0`, `0`);
 
-    /* the target (h.objids.go) */
-    b.t('the target', 'card button id 1024');
-    b.t('the abbr target', 'card button id 1024');
-    b.t('the short target', 'go');
-    b.t('the long target', 'card button id 1024');
+    /* the target */
+    b.t(`the target`, `card button id ${h.ids.go}`);
+    b.t(`the abbr target`, `card button id ${h.ids.go}`);
+    b.t(`the short target`, `go`);
+    b.t(`the long target`, `card button id ${h.ids.go}`);
 
     /* owner */
     b.t('the owner of vipercard', 'ERR:get owner');
@@ -1093,8 +1095,8 @@ t.test('builtinFunctions', () => {
     b.t('put "qwerty" into cd fld "p3"\\cd fld "p3"', 'qwerty');
     b.t('put "" into cd fld "p3"\\cd fld "p3"', '');
     b.t('cd fld "p4"', 'ERR:element not found');
-    b.t('cd btn "p1"', 'ERR:we do not currently allow placing text');
-    b.t('cd btn "p4"', 'ERR:we do not currently allow placing text');
+    b.t('cd btn "p1"', 'ERR:we do not allow placing text');
+    b.t('cd btn "p4"', 'ERR:we do not allow placing text');
 
     /* casing */
     b.t('PUT 5 Into myVar\\myVar', '5');

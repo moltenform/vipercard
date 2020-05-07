@@ -45,16 +45,16 @@ export class RequestedVelRef extends VpcIntermedValBase {
     checkOnlyOneSpecified() {
         if (!checkIsProductionBuild()) {
             let total = 0
-            if (this.lookByAbsolute) {
+            if (this.lookByAbsolute !== undefined) {
                 total += 1
             }
-            if (this.lookById) {
+            if (this.lookById !== undefined) {
                 total += 1
             }
-            if (this.lookByName) {
+            if (this.lookByName !== undefined) {
                 total += 1
             }
-            if (this.lookByRelative) {
+            if (this.lookByRelative !== undefined) {
                 total += 1
             }
 

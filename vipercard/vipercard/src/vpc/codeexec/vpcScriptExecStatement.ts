@@ -499,7 +499,7 @@ export class ExecuteStatement {
     protected setEnabled(line: VpcCodeLine, vals: IntermedMapOfIntermedVals, b: boolean) {
         let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '59|');
         let vel = this.outside.ResolveVelRef(ref)
-        checkThrow(vel, "object not found")
+        checkThrow(vel, "could not find this object")
         checkThrow(vel.getType() === VpcElType.Btn || vel.getType() === VpcElType.Fld, "object not a btn or fld")
         this.outside.SetProp(ref, 'enabled', VpcValBool(b), undefined);
     }

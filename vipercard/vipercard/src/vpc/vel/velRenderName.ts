@@ -303,7 +303,7 @@ export class VelRenderId {
             return getStrToEnum<VpcElType>(VpcElType, 'expected something like `card id 123`', sIn);
         };
 
-        checkThrow(words.length >=3 , "too short")
+        checkThrow(words.length >=3 , "too short, expected something like `card id 123`")
         let isPartFld = findStrToEnum<VpcElType>(VpcElType, words[1])===VpcElType.Fld
         let isPartBtn = findStrToEnum<VpcElType>(VpcElType, words[1])===VpcElType.Btn
         if (isPartFld || isPartBtn) {

@@ -124,10 +124,10 @@ export abstract class VpcElBase extends UI512Settable {
                     return VpcValBool(this.getB(mappedProp));
                 }
             } else {
-                checkThrow(false, `4)|invalid PrpTyp ${type} for el id ${this.idInternal}`);
+                checkThrow(false, `4)|invalid PrpTyp ${type} for el id ${this.getUserFacingId()}`);
             }
         } else {
-            checkThrow(false, `4(|unknown property ${propName} for el id ${this.idInternal}`);
+            checkThrow(false, `4(|unknown property ${propName} for el id ${this.getUserFacingId()}`);
         }
     }
 
@@ -161,10 +161,10 @@ export abstract class VpcElBase extends UI512Settable {
                     this.setOnVel(mappedProp, val.readAsStrictBoolean(this.tmpArray), higher);
                 }
             } else {
-                checkThrow(false, `4#|invalid PrpTyp ${type} for el id ${this.idInternal}`);
+                checkThrow(false, `4#|invalid PrpTyp ${type} for el id ${this.getUserFacingId()}`);
             }
         } else {
-            checkThrow(false, `4!|unknown property ${propName} for el id ${this.idInternal}`);
+            checkThrow(false, `4!|unknown property ${propName} for el id ${this.getUserFacingId()}`);
         }
     }
 

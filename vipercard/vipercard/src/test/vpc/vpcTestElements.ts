@@ -13,7 +13,7 @@
 /* auto */ import { UI512BtnStyle } from './../../ui512/elements/ui512ElementButton';
 /* auto */ import { specialCharFontChange } from './../../ui512/drawtext/ui512DrawTextClasses';
 /* auto */ import { SimpleUtil512TestCollection, assertThrows } from './../testUtils/testUtils';
-/* auto */ import { MockHigher } from './../util512ui/testUI512Elements';
+/* auto */ import { HigherNoReplication_TestOnly } from './../util512ui/testUI512Elements';
 
 /* (c) 2019 moltenform(Ben Fisher) */
 /* Released under the GPLv3 license */
@@ -23,7 +23,7 @@
  */
 let t = new SimpleUtil512TestCollection('testCollectionvpcElements');
 export let testCollectionvpcElements = t;
-let higher = new MockHigher()
+let higher = new HigherNoReplication_TestOnly()
 
 t.test('ChangeToSingleLine.Should Preserve Text That Is Already One Line', () => {
     let vel = new VpcElField('id1', 'parentid1');

@@ -422,13 +422,13 @@ t.test('execCommands hide and show', () => {
 
     /* not valid */
     b.t('hide\\0', `ERR:NoViableAltException`);
-    b.t('hide cd 1\\0', `ERR:NoViableAltException`);
-    b.t('hide bg 1\\0', `ERR:NoViableAltException`);
-    b.t('hide this stack\\0', `ERR:parse err`);
+    b.t('hide cd 1\\0', `ERR:unknown property visible`);
+    b.t('hide bg 1\\0', `ERR:unknown property visible`);
+    b.t('hide this stack\\0', `ERR:unknown property visible`);
     b.t('show\\0', `ERR:NoViableAltException`);
-    b.t('show cd 1\\0', `ERR:parse error`);
-    b.t('show bg 1\\0', `ERR:NoViableAltException`);
-    b.t('show this stack\\0', `ERR:parse error`);
+    b.t('show cd 1\\0', `ERR:unknown property visible`);
+    b.t('show bg 1\\0', `ERR:unknown property visible`);
+    b.t('show this stack\\0', `ERR:unknown property visible`);
     b.t('show cd btn "p1" from 12, 23\\0', `ERR:must be show *at*`);
     b.t('show cd btn "p1" into 12, 23\\0', `ERR:must be show *at*`);
     b.t('show cd btn "p1" xyz 12, 23\\0', `ERR:must be show *at*`);
@@ -448,6 +448,8 @@ t.test('execCommands hide and show', () => {
     b.t('hide cd fld "p1"\\the visible of cd fld "p1"', `false`);
     b.t('show cd fld "p1"\\the visible of cd fld "p1"', `true`);
     b.t('show cd fld "p1"\\the visible of cd fld "p1"', `true`);
+    b.t('hide me\\the visible of me', `false`);
+    b.t('show me\\the visible of me', `true`);
 
     /* set locations */
     b.t('set the rect of cd btn "p1" to 10, 20, 40, 60\\0', `0`);
@@ -533,8 +535,8 @@ t.test('execCommands delete', () => {
     b.t('put initlist into x\\0', '0');
     b.t('delete cd btn "a1"\\0', 'ERR:not yet supported');
     b.t('delete cd fld "a1"\\0', 'ERR:not yet supported');
-    b.t('delete cd 1\\0', 'ERR:NoViableAltException');
-    b.t('put "a" into x\ndelete x\\0', 'ERR:5:NoViableAltException');
+    b.t('delete cd 1\\0', 'ERR:not yet supported');
+    b.t('put "a" into x\ndelete x\\0', 'ERR:5:expected something like');
     b.t('put "abcdef,123,456" into x\ndelete item 2 of x\\x', 'ERR:5:not yet supported');
     b.t(
         'put "abcdef,123,456" into x\ndelete item 1 to 2 of x\\x',
