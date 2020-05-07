@@ -278,13 +278,14 @@ export function VpcVisitorAddMixinMethods<T extends Constructor<VpcVisitorInterf
                 ret.vel.isReferenceToTarget = true;
             } else if (ctx._selection && ctx._selection[0]) {
                 ret = ensureDefined(this.outside.GetSelectedTextChunk(), "nothing is selected")
-            } else if (ctx.RuleObjectPart && ctx.RuleObjectPart[0]) {
-                ret.vel = this.visit(ctx.RuleObjectPart[0]);
-                checkThrow(ret.vel instanceof RequestedVelRef, `9a|internal error, not an element reference`);
+            } else if (ctx.RuleObjectBtn && ctx.RuleObjectBtn[0]) {
                 checkThrow(
-                    ret.vel && ret.vel.type === VpcElType.Fld,
-                    `9Z|we do not currently allow placing text into btns, or retrieving text from btns, please fields instead`
+                    false,
+                    `9Z|we do not allow placing text into btns, or retrieving text from btns, please fields instead`
                 );
+            } else if (ctx.RuleObjectFld && ctx.RuleObjectFld[0]) {
+                ret.vel = this.visit(ctx.RuleObjectFld[0]);
+                checkThrow(ret.vel instanceof RequestedVelRef, `9a|internal error, not an element reference`);
             } else if (ctx.RuleHAnyAllowedVariableName && ctx.RuleHAnyAllowedVariableName[0]) {
                 let token = this.visit(ctx.RuleHAnyAllowedVariableName[0]);
                 ret.variable = token.image;

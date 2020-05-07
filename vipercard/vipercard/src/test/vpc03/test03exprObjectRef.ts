@@ -12,6 +12,8 @@
 
 let t = new SimpleUtil512TestCollection('testCollection03exprObjectRef');
 export let testCollection03exprObjectRef = t;
+//~ enable this when we support bg elements
+let useBg = false
 
 t.atest('--init--testCollection03exprObjectRef', async () => {
     assertTrue(h3, longstr(`forgot to include the
@@ -19,32 +21,31 @@ t.atest('--init--testCollection03exprObjectRef', async () => {
 });
 t.test('03ObjectSpecial', () => {
     let b = new ScriptTestBatch();
-
-    //~ todo: don't just get fld 1, get all the objects in all possible ways
-
     /* special objects */
-    //~ b.t(`the short id of ${cProductName}`, `WILD`)
-    //~ b.t(`the short id of ${cAltProductName}`, `WILD`)
-    //~ b.t(`the short id of me`, `${h3.ids.go}`)
-    //~ /* invalid syntax objects */
-    //~ b.t(`the short id of 9`, `ERR:parse`)
-    //~ b.t(`the short id of 9 card`, `ERR:parse`)
-    //~ b.t(`the short id of 9 me`, `ERR:parse`)
-    //~ b.t(`the short id of card card 1`, `ERR:parse`)
-    //~ b.t(`the short id of id`, `ERR:parse`)
-    //~ b.t(`the short id of part`, `ERR:parse`)
-    //~ b.t(`the short id of button`, `ERR:parse`)
-    b.t(`the short id of bg btn id ${h3.ids.bgbB1}`, `${h3.ids.bgbB1}`)
+    b.t(`the short id of ${cProductName}`, `WILD`)
+    b.t(`the short id of ${cAltProductName}`, `WILD`)
+    b.t(`the short id of me`, `${h3.ids.go}`)
+    /* invalid syntax objects */
+    b.t(`the short id of 9`, `ERR:parse`)
+    b.t(`the short id of 9 card`, `ERR:parse`)
+    b.t(`the short id of 9 me`, `ERR:parse`)
+    b.t(`the short id of card card 1`, `ERR:parse`)
+    b.t(`the short id of id`, `ERR:parse`)
+    b.t(`the short id of part`, `ERR:parse`)
+    b.t(`the short id of button`, `ERR:parse`)
     evaluateForBothShortIdAndThereIs(b, h3)
-    /* exists, but wrong type */
+    /* exists, but wrong type
+    test every combination! */
     let map = new MapKeyToObjectCanSet<string>()
     map.set(h3.ids.stack, "stack")
     map.set(h3.ids.bgA, "bg")
     map.set(h3.ids.cdA, "cd")
     map.set(h3.ids.bBC1, "cd btn")
     map.set(h3.ids.fBC1, "cd fld")
-    map.set(h3.ids.bgbB1, "bg btn")
-    map.set(h3.ids.bgfB1, "bg fld")
+    if (useBg) {
+        map.set(h3.ids.bgbB1, "bg btn")
+        map.set(h3.ids.bgfB1, "bg fld")
+    }
     b = new ScriptTestBatch();
     for (let key of map.getKeys()) {
         for (let val of map.getVals()) {
@@ -66,15 +67,15 @@ t.test('03ObjectPart', () => {
     /* we don't yet support referring by part.
     because we support object lookup by string (set the loc of x to 2,3)
     it's not really necessary */
-    b.t(`show cd part id 1\\0`, `ERR:don't yet support`)
-    b.t(`show bg part id 1\\0`, `ERR:don't yet support`)
-    b.t(`show part id 1\\0`, `ERR:don't yet support`)
-    b.t(`show cd part 1\\0`, `ERR:don't yet support`)
-    b.t(`show bg part 1\\0`, `ERR:don't yet support`)
-    b.t(`show part 1\\0`, `ERR:don't yet support`)
-    b.t(`show part (1 + 1)\\0`, `ERR:don't yet support`)
-    b.t(`show first part\\0`, `ERR:don't yet support`)
-    b.t(`show first part of this card\\0`, `ERR:don't yet support`)
+    b.t(`show cd part id 1\\0`, `ERR:parse`)
+    b.t(`show bg part id 1\\0`, `ERR:parse`)
+    b.t(`show part id 1\\0`, `ERR:parse err`)
+    b.t(`show cd part 1\\0`, `ERR:parse err`)
+    b.t(`show bg part 1\\0`, `ERR:parse err`)
+    b.t(`show part 1\\0`, `ERR:parse err`)
+    b.t(`show part (1 + 1)\\0`, `ERR:parse err`)
+    b.t(`show first part\\0`, `ERR:parse err`)
+    b.t(`show first part of this card\\0`, `ERR:parse err`)
     b.batchEvaluate(h3);
 })
 t.test('03ObjectStack', () => {
@@ -149,6 +150,7 @@ t.test('03ObjectBg', () => {
     b.tests = savedTests.map(item=>[item[0]+' of stack 1', item[1]])
     b.batchEvaluate(h3);
 })
+    //~ todo: don't just get fld 1, get all the objects in all possible ways
 
     
 function evaluateForBothShortIdAndThereIs(b:ScriptTestBatch, h3:TestVpc03) {

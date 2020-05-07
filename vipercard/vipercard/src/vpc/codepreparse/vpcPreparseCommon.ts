@@ -269,8 +269,6 @@ export function checkCommonMistakenVarNames(tk: O<ChvITk>) {
     checkThrow(tk.tokenType !== tks.tkBtnPlural, "Sz|we don't support variable names like buttons,btns");
     checkThrow(tk.tokenType !== tks.tkFld, "Sy|we don't support variable names like field,fld");
     checkThrow(tk.tokenType !== tks.tkFldPlural, "Sx|we don't support variable names like fields,flds");
-    checkThrow(tk.tokenType !== tks.tkPart, "Sw|we don't support variable names like part");
-    checkThrow(tk.tokenType !== tks.tkPartPlural, "Sv|we don't support variable names like parts");
     checkThrow(tk.tokenType !== tks.tkProductName, "Su|we don't support variable names like hypercard,vipercard");
     checkThrow(tk.tokenType !== tks.tkAdjective, "St|we don't support variable names like long,short,abbrev,abbr,abbreviated");
     checkThrow(

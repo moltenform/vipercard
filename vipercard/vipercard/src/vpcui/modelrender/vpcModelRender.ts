@@ -94,7 +94,7 @@ export class VpcModelRender extends VpcUILayer implements ElementObserver {
     changeSeen(context: ChangeContext, velId: string, propName: string, prev: ElementObserverVal, newVal: ElementObserverVal) {
         if (!this.vci) {
             checkThrow(
-                propName.startsWith('increasingnum') || propName.startsWith('cardorder'),
+                propName.startsWith('increasingnum') || propName.startsWith('cardorder') || propName.startsWith('name'),
                 'KV|we only expect increasingnum or cardorder to be changed before init()'
             );
             return;

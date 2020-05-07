@@ -44,7 +44,7 @@ export class VpcState {
         }
 
         checkThrow(newId.match(/^[0-9]+$/), 'Ku|id should be purely numeric', newId);
-        let cr = new UndoableActionCreateVel(newId, parentId, type, insertIndex);
+        let cr = new UndoableActionCreateVel(newId, parentId, type, false, insertIndex);
         this.undoManager.changeSeenCreationDeletion(cr);
         cr.do(this.vci);
         return this.model.getByIdUntyped(newId);
@@ -64,6 +64,7 @@ export class VpcState {
             checkThrow(vel.idInternal !== curCard, 'UM|cannot delete the current card');
 
             /* if deleting a card, first delete all of its children */
+            /* that way there won't be orphan parts in the mapModelById */
             let partsToRemove: VpcElBase[] = [];
             for (let part of vel.parts) {
                 assertTrue(part instanceof VpcElButton || part instanceof VpcElField, '6M|bad type');

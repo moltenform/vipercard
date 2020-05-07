@@ -19,7 +19,8 @@
  * create or delete a vel
  */
 export abstract class UndoableActionCreateOrDelVel {
-    constructor(public velId: string, public parentId: string, public type: VpcElType, public insertIndex: number) {}
+    constructor(public velId: string, public parentId: string, public type: VpcElType, public isBg:boolean, public insertIndex: number,
+        ) {}
 
     /**
      * from VpcElType to class object
@@ -90,6 +91,11 @@ export abstract class UndoableActionCreateOrDelVel {
         );
 
         ar.splice(this.insertIndex, 0, vel);
+        //~ if (isBg) {
+            //~ /* create the linked ones */
+            //~ let userFacingId = this.vcstate.model.stack.getNextId(this.vcstate.model)
+        //~ }
+
         if (vel.getType() === VpcElType.Card) {
             vci.getModel().copyBgVelsOnNewCard(vel)
 
@@ -127,7 +133,7 @@ export abstract class UndoableActionCreateOrDelVel {
                 model.productOpts = vci.rawCreate(
                     VpcElStack.initProductOptsId,
                     '(VpcElProductOpts has no parent)',
-                    VpcElProductOpts
+                    VpcElProductOpts,
                 );
             });
         }

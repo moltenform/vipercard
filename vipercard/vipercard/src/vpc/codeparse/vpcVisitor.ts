@@ -229,8 +229,6 @@ if (ctx.RuleObjectStack && ctx.RuleObjectStack[0]) {
 
 
 
-
-
 RuleOf(ctx: VisitingContext): ChvITk {
 if (ctx.tkOfOnly && ctx.tkOfOnly[0]) {
  return ctx.tkOfOnly[0]; 

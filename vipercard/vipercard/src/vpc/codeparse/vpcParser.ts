@@ -463,64 +463,6 @@ this.CONSUME2(tks.tkStackAtEndOfLine)
 ]);
 });
 
-RuleObjectPart = this.RULE('RuleObjectPart', () => {
-this.OR1([
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectBtn)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleObjectFld)
-}
-},
-{
-ALT: () => {
-this.OPTION1(() => {
-this.OR2([
-{
-ALT: () => {
-this.CONSUME1(tks.tkCard)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkBg)
-}
-}
-]);
-});
-this.OR3([
-{
-ALT: () => {
-this.CONSUME1(tks.tkPart)
-this.CONSUME1(tks._id)
-this.SUBRULE1(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.CONSUME2(tks.tkPart)
-this.SUBRULE2(this.RuleLvl6Expression)
-}
-},
-{
-ALT: () => {
-this.SUBRULE1(this.RuleOrdinal)
-this.CONSUME3(tks.tkPart)
-}
-}
-]);
-this.OPTION2(() => {
-this.SUBRULE1(this.RuleOf)
-this.SUBRULE1(this.RuleObjectCard)
-});
-}
-}
-]);
-});
-
 RuleObjectSpecial = this.RULE('RuleObjectSpecial', () => {
 this.OR1([
 {
@@ -713,7 +655,12 @@ this.CONSUME1(tks._target)
 },
 {
 ALT: () => {
-this.SUBRULE1(this.RuleObjectPart)
+this.SUBRULE1(this.RuleObjectBtn)
+}
+},
+{
+ALT: () => {
+this.SUBRULE1(this.RuleObjectFld)
 }
 },
 {
@@ -999,11 +946,6 @@ this.CONSUME1(tks.tkBtnPlural)
 {
 ALT: () => {
 this.CONSUME1(tks.tkFldPlural)
-}
-},
-{
-ALT: () => {
-this.CONSUME1(tks.tkPartPlural)
 }
 }
 ]);

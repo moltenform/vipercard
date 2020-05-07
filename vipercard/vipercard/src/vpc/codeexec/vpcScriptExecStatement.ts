@@ -403,7 +403,7 @@ export class ExecuteStatement {
         let location = this.h.getChildVpcVals(vals, tkstr.RuleLvl4Expression, false);
         let locationStr = location.map(v => v.readAsString()).join(',');
 
-        let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObjectPart), '4||');
+        let ref = ensureDefined(this.h.findChildVelRef(vals, tkstr.RuleObject), '4||');
         this.outside.SetProp(ref, 'visible', VpcVal.True, undefined);
         if (locationStr) {
             this.outside.SetProp(ref, 'location', VpcValS(locationStr), undefined);

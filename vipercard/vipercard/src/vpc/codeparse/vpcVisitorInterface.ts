@@ -32,7 +32,6 @@ export interface VpcCompleteVisitor {
     RuleObjectCard(ctx: VisitingContext): RequestedVelRef;
     RuleObjectBg(ctx: VisitingContext): RequestedVelRef;
     RuleObjectStack(ctx: VisitingContext): RequestedVelRef;
-    RuleObjectPart(ctx: VisitingContext): RequestedVelRef;
     RuleObjectSpecial(ctx: VisitingContext): RequestedVelRef;
     RuleObjectInterpretedFromString(ctx: VisitingContext): RequestedVelRef;
     RuleOf(ctx: VisitingContext): ChvITk;
@@ -126,7 +125,6 @@ export interface VisitingContext {
     RuleObjectCard: any[];
     RuleObjectBg: any[];
     RuleObjectStack: any[];
-    RuleObjectPart: any[];
     RuleObjectSpecial: any[];
     RuleObjectInterpretedFromString: any[];
     RuleOf: any[];
@@ -222,8 +220,6 @@ export interface VisitingContext {
     tkBtnPlural: ChvITk[];
     tkFld: ChvITk[];
     tkFldPlural: ChvITk[];
-    tkPart: ChvITk[];
-    tkPartPlural: ChvITk[];
     tkProductName: ChvITk[];
     tkAdjective: ChvITk[];
     tkOrdinal: ChvITk[];

@@ -359,14 +359,13 @@ export class VpcExecTop {
         }
 
         /* check that each bg element is correctly present on each card */
-        let idsSeenAcrossBgs = new MapKeyToObjectCanSet<boolean>();
         for (let bg of stack.bgs) {
             let template = bg.getTemplateCard()
             let bgParts = template.parts.filter(vel=>vel.getS('is_bg_velement_id').length)
             let bgIdsSeen = new OrderedHash<VpcElType>()
             for (let pt of bgParts) {
-                assertWarn(!idsSeenAcrossBgs.exists(pt.getS('is_bg_velement_id')), "bg id seen twice across bgs")
-                idsSeenAcrossBgs.add(pt.getS('is_bg_velement_id'), true)
+                assertWarn(!idsSeen.exists(pt.getS('is_bg_velement_id')), "bg id seen twice across bgs")
+                idsSeen.add(pt.getS('is_bg_velement_id'), true)
                 assertWarn(!bgIdsSeen.find(pt.getS('is_bg_velement_id')), "bg id seen twice")
                 bgIdsSeen.insertNew(pt.getS('is_bg_velement_id'), pt.getType())
             }

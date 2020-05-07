@@ -62,11 +62,10 @@
 //      we need parens for if the short id of the owner of cd id prevCard is not the short id of the owner of cd id nextCard then answer "j"
 //      we don't support char x + 1 of abc, need char (x + 1) of abc
 //      NEW FEATURE: set the fontstyle to grayed
+//      we don't support "part"
             
             
 // aren't yet supported in software include:
-//      you can't say `part id 4`
-//      you can't refer to other stacks besides "this stack"
 //      domenu can't (yet) be handled/trapped
 
 // changes from v1:
@@ -124,8 +123,6 @@ tkBtn=OneOfWords(button,btn)
 tkBtnPlural=OneOfWords(buttons,btns)
 tkFld=OneOfWords(field,fld)
 tkFldPlural=OneOfWords(fields,flds)
-tkPart=OneOfWords(part)
-tkPartPlural=OneOfWords(parts)
 tkProductName=OneOfWords(hypercard,vipercard)
 tkAdjective=OneOfWords(long,short,abbrev,abbr,abbreviated)
 tkOrdinal=OneOfWords(last,mid,middle,any,first,second,third,fourth,fifth,sixth,seventh,eighth,ninth,tenth)
@@ -235,7 +232,7 @@ ObjectCard:= { _recent { tkCard | tkCardPlural | tkCardAtEndOfLine} | _back | _f
 ObjectBg:={tkBg _id <Lvl6Expression> | tkBg <Lvl6Expression> | <Ordinal> { tkBg | tkBgAtEndOfLine } | <Position> { tkBg | \
                         tkBgAtEndOfLine } | tkBgAtEndOfLine} [ <Of> <ObjectStack> ]                                                                          --->Custom--->RequestedVelRef
 ObjectStack:={<Position> { tkStack | tkStackAtEndOfLine} | tkStack <Lvl6Expression> | tkStack _id <Lvl6Expression> | tkStackAtEndOfLine }                                         --->Custom--->RequestedVelRef  
-ObjectPart:={<ObjectBtn> | <ObjectFld> | [{tkCard | tkBg}] {tkPart _id <Lvl6Expression> | tkPart <Lvl6Expression> | <Ordinal> tkPart} [ <Of> <ObjectCard> ] }     --->Custom--->RequestedVelRef
+
 
 ObjectSpecial:={tkProductName | _me }       --->Custom--->RequestedVelRef
 // support variables, HOldStyleFnNonNullary (basically for the target), and HOldStyleFnNullaryOrNullaryPropGet (basically for the owner of),
@@ -284,7 +281,7 @@ MessageBox:=[_the] _message [ { _box | _window } ]      --->Constant|"{msgBoxExp
 // the emulator lets you put text into a button, doesn't seem to do anything
 // references to the messagebox are turned into references to a special global variable that is checked after every run
 // handling the selection is tricky... let's support "get the selection, get char 1 of the selection, put "abc" into the selection" but not "put "a" into char 1 of the selection"
-HSimpleContainer:={ <Menu> | <MessageBox> | [_the] _selection | _target | <ObjectPart> | <HAnyAllowedVariableName> }  --->Custom--->RequestedContainerRef
+HSimpleContainer:={ <Menu> | <MessageBox> | [_the] _selection | _target | <ObjectBtn> | <ObjectFld> | <HAnyAllowedVariableName> }  --->Custom--->RequestedContainerRef
 // fyi: HContainer is only used for 'put' command, never in expression evaluation
 HContainer:=[<HChunk>] <HSimpleContainer>                                                                                         --->Custom--->RequestedContainerRef
 HChunk:=<HChunkOne> MANY{{ <HChunkOne> }}ENDMANY                                                                                    --->Custom--->RequestedChunk
@@ -329,7 +326,7 @@ HGenericFunctionCall:={ MAX_LOOKAHEAD=5 <FnCallNumberOf> | <FnCallThereIs> | <HF
 // we used to support more here, but pared it down to match the original product
 // we do though support "the number of marked cds of bg 1" which the product could not do
 FnCallNumberOf:= _the _number tkOfOnly { <FnCallNumberOf_1>|<FnCallNumberOf_2>|<FnCallNumberOf_3>|<FnCallNumberOf_4>|<FnCallNumberOf_5>  }      --->ProcessOr--->VpcVal
-FnCallNumberOf_1:=[{tkCard | tkBg}] { tkBtnPlural | tkFldPlural | tkPartPlural }      --->Custom--->VpcVal
+FnCallNumberOf_1:=[{tkCard | tkBg}] { tkBtnPlural | tkFldPlural }      --->Custom--->VpcVal
 FnCallNumberOf_2:=[_marked] tkCardPlural  [ <Of> { <ObjectBg> | <ObjectStack> } ]           --->Custom--->VpcVal
 FnCallNumberOf_3:=tkBgPlural [ <Of> <ObjectStack> ]                                                       --->Custom--->VpcVal
 FnCallNumberOf_4:={_windows | _menu | _menuItem <Of> <Menu>}                             --->Custom--->VpcVal

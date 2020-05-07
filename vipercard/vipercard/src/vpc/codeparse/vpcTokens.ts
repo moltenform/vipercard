@@ -240,8 +240,6 @@ tkBtn: undefined as any as chevrotain.TokenType,
 tkBtnPlural: undefined as any as chevrotain.TokenType,
 tkFld: undefined as any as chevrotain.TokenType,
 tkFldPlural: undefined as any as chevrotain.TokenType,
-tkPart: undefined as any as chevrotain.TokenType,
-tkPartPlural: undefined as any as chevrotain.TokenType,
 tkProductName: undefined as any as chevrotain.TokenType,
 tkAdjective: undefined as any as chevrotain.TokenType,
 tkOrdinal: undefined as any as chevrotain.TokenType,
@@ -372,14 +370,6 @@ pattern: /(?:field(?![a-zA-Z0-9_]))|(?:fld(?![a-zA-Z0-9_]))/i,
 tks.tkFldPlural = chevrotain.createToken({
 name: "tkFldPlural",
 pattern: /(?:fields(?![a-zA-Z0-9_]))|(?:flds(?![a-zA-Z0-9_]))/i,
-});
-tks.tkPart = chevrotain.createToken({
-name: "tkPart",
-pattern: /(?:part(?![a-zA-Z0-9_]))/i,
-});
-tks.tkPartPlural = chevrotain.createToken({
-name: "tkPartPlural",
-pattern: /(?:parts(?![a-zA-Z0-9_]))/i,
 });
 tks.tkProductName = chevrotain.createToken({
 name: "tkProductName",
@@ -582,52 +572,50 @@ allVpcTokens[15] = tks.tkBtn
 allVpcTokens[16] = tks.tkBtnPlural
 allVpcTokens[17] = tks.tkFld
 allVpcTokens[18] = tks.tkFldPlural
-allVpcTokens[19] = tks.tkPart
-allVpcTokens[20] = tks.tkPartPlural
-allVpcTokens[21] = tks.tkProductName
-allVpcTokens[22] = tks.tkAdjective
-allVpcTokens[23] = tks.tkOrdinal
-allVpcTokens[24] = tks.tkPosition
-allVpcTokens[25] = tks.tkChunkGranularity
-allVpcTokens[26] = tks.tkInOnly
-allVpcTokens[27] = tks.tkOfOnly
-allVpcTokens[28] = tks.tkA
-allVpcTokens[29] = tks._not
-allVpcTokens[30] = tks._there
-allVpcTokens[31] = tks._is
-allVpcTokens[32] = tks._no
-allVpcTokens[33] = tks._and
-allVpcTokens[34] = tks._or
-allVpcTokens[35] = tks._contains
-allVpcTokens[36] = tks._within
-allVpcTokens[37] = tks._the
-allVpcTokens[38] = tks._message
-allVpcTokens[39] = tks._window
-allVpcTokens[40] = tks._windows
-allVpcTokens[41] = tks._box
-allVpcTokens[42] = tks._me
-allVpcTokens[43] = tks._recent
-allVpcTokens[44] = tks._back
-allVpcTokens[45] = tks._forth
-allVpcTokens[46] = tks._marked
-allVpcTokens[47] = tks._to
-allVpcTokens[48] = tks._menuItem
-allVpcTokens[49] = tks._menu
-allVpcTokens[50] = tks._id
-allVpcTokens[51] = tks._number
-allVpcTokens[52] = tks._selection
-allVpcTokens[53] = tks._target
-allVpcTokens[54] = tks.tkComma
-allVpcTokens[55] = tks.tkLParen
-allVpcTokens[56] = tks.tkRParen
-allVpcTokens[57] = tks.tkPlusOrMinus
-allVpcTokens[58] = tks.tkMultDivideExpDivMod
-allVpcTokens[59] = tks.tkStringConcat
-allVpcTokens[60] = tks.tkGreaterOrLessEqualOrEqual
-allVpcTokens[61] = tks.tkUnaryVipercardProperties
-allVpcTokens[62] = tks.tkAllUnaryPropertiesIfNotAlready
-allVpcTokens[63] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready
-allVpcTokens[64] = tks.tkIdentifier
+allVpcTokens[19] = tks.tkProductName
+allVpcTokens[20] = tks.tkAdjective
+allVpcTokens[21] = tks.tkOrdinal
+allVpcTokens[22] = tks.tkPosition
+allVpcTokens[23] = tks.tkChunkGranularity
+allVpcTokens[24] = tks.tkInOnly
+allVpcTokens[25] = tks.tkOfOnly
+allVpcTokens[26] = tks.tkA
+allVpcTokens[27] = tks._not
+allVpcTokens[28] = tks._there
+allVpcTokens[29] = tks._is
+allVpcTokens[30] = tks._no
+allVpcTokens[31] = tks._and
+allVpcTokens[32] = tks._or
+allVpcTokens[33] = tks._contains
+allVpcTokens[34] = tks._within
+allVpcTokens[35] = tks._the
+allVpcTokens[36] = tks._message
+allVpcTokens[37] = tks._window
+allVpcTokens[38] = tks._windows
+allVpcTokens[39] = tks._box
+allVpcTokens[40] = tks._me
+allVpcTokens[41] = tks._recent
+allVpcTokens[42] = tks._back
+allVpcTokens[43] = tks._forth
+allVpcTokens[44] = tks._marked
+allVpcTokens[45] = tks._to
+allVpcTokens[46] = tks._menuItem
+allVpcTokens[47] = tks._menu
+allVpcTokens[48] = tks._id
+allVpcTokens[49] = tks._number
+allVpcTokens[50] = tks._selection
+allVpcTokens[51] = tks._target
+allVpcTokens[52] = tks.tkComma
+allVpcTokens[53] = tks.tkLParen
+allVpcTokens[54] = tks.tkRParen
+allVpcTokens[55] = tks.tkPlusOrMinus
+allVpcTokens[56] = tks.tkMultDivideExpDivMod
+allVpcTokens[57] = tks.tkStringConcat
+allVpcTokens[58] = tks.tkGreaterOrLessEqualOrEqual
+allVpcTokens[59] = tks.tkUnaryVipercardProperties
+allVpcTokens[60] = tks.tkAllUnaryPropertiesIfNotAlready
+allVpcTokens[61] = tks.tkAllNullaryOrUnaryPropertiesIfNotAlready
+allVpcTokens[62] = tks.tkIdentifier
 Object.freeze(allVpcTokens);
 
 }
@@ -651,8 +639,6 @@ listOfAllWordLikeTokens['field'] = tks.tkFld;
 listOfAllWordLikeTokens['fld'] = tks.tkFld;
 listOfAllWordLikeTokens['fields'] = tks.tkFldPlural;
 listOfAllWordLikeTokens['flds'] = tks.tkFldPlural;
-listOfAllWordLikeTokens['part'] = tks.tkPart;
-listOfAllWordLikeTokens['parts'] = tks.tkPartPlural;
 listOfAllWordLikeTokens['hypercard'] = tks.tkProductName;
 listOfAllWordLikeTokens['vipercard'] = tks.tkProductName;
 listOfAllWordLikeTokens['long'] = tks.tkAdjective;
@@ -808,8 +794,6 @@ alsoReservedWordsList['field'] = true;
 alsoReservedWordsList['fld'] = true;
 alsoReservedWordsList['fields'] = true;
 alsoReservedWordsList['flds'] = true;
-alsoReservedWordsList['part'] = true;
-alsoReservedWordsList['parts'] = true;
 alsoReservedWordsList['hypercard'] = true;
 alsoReservedWordsList['vipercard'] = true;
 alsoReservedWordsList['long'] = true;
@@ -1039,7 +1023,6 @@ export const tkstr = {
     RuleObjectCard: 'RuleObjectCard',
     RuleObjectBg: 'RuleObjectBg',
     RuleObjectStack: 'RuleObjectStack',
-    RuleObjectPart: 'RuleObjectPart',
     RuleObjectSpecial: 'RuleObjectSpecial',
     RuleObjectInterpretedFromString: 'RuleObjectInterpretedFromString',
     RuleOf: 'RuleOf',
@@ -1135,8 +1118,6 @@ export const tkstr = {
     tkBtnPlural: 'tkBtnPlural',
     tkFld: 'tkFld',
     tkFldPlural: 'tkFldPlural',
-    tkPart: 'tkPart',
-    tkPartPlural: 'tkPartPlural',
     tkProductName: 'tkProductName',
     tkAdjective: 'tkAdjective',
     tkOrdinal: 'tkOrdinal',

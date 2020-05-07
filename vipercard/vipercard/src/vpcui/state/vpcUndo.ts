@@ -54,8 +54,8 @@ export interface UndoableAction {
  * an action creating a vel, thin wrapper around UndoableActionCreateOrDelVel
  */
 export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implements UndoableAction {
-    constructor(id: string, parentId: string, type: VpcElType, insertIndex = -1 /* default to add-to-end */) {
-        super(id, parentId, type, insertIndex);
+    constructor(id: string, parentId: string, type: VpcElType, isBg:boolean, insertIndex = -1 /* default to add-to-end */) {
+        super(id, parentId, type, isBg, insertIndex);
     }
 
     /**
@@ -80,7 +80,8 @@ export class UndoableActionCreateVel extends UndoableActionCreateOrDelVel implem
 export class UndoableActionDeleteVel extends UndoableActionCreateOrDelVel implements UndoableAction {
     storedVelData = '';
     constructor(vel: VpcElBase, vci: VpcStateInterface) {
-        super(vel.idInternal, vel.parentIdInternal, vel.getType(), -1);
+        super(vel.idInternal, vel.parentIdInternal, vel.getType(), false, -1);
+        this.isBg = vel.ui512GettableHas('is_bg_velement_id') && vel.getS('is_bg_velement_id').length > 0
         UndoableActionDeleteVel.checkIfCanDelete(vel, vci);
         this.insertIndex = this.determineIndexInAr(vel, vci);
         this.storedVelData = VpcStateSerialize.serializeVelCompressed(vci, vel, this.insertIndex);
